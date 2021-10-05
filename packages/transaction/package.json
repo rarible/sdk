@@ -1,0 +1,23 @@
+{
+  "name": "@rarible/sdk-transaction",
+  "version": "0.0.0",
+  "homepage": "Transaction type",
+  "license": "ISC",
+  "main": "build/index.js",
+  "files": [
+    "src"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "test": "jest --maxWorkers=1 --silent",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rarible/ethereum-provider": "0.5.3",
+    "@rarible/sdk-types": "^0.0.0"
+  },
+  "devDependencies": {
+    "typescript": "4.3.5"
+  }
+}

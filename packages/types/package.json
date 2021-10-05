@@ -1,7 +1,7 @@
 {
-  "name": "@rarible/sdk-interfaces",
+  "name": "@rarible/sdk-types",
   "version": "0.0.0",
-  "homepage": "",
+  "homepage": "Reusable types",
   "license": "ISC",
   "main": "build/index.js",
   "files": [
@@ -12,6 +12,9 @@
     "clean": "rimraf ./build",
     "test": "jest --maxWorkers=1 --silent",
     "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rarible/types": "0.1.7"
   },
   "devDependencies": {
     "typescript": "4.3.5"
