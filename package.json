@@ -1,0 +1,40 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "bootstrap": "lerna bootstrap && lerna link",
+    "clean": "lerna run clean --parallel",
+    "build-test-common": "yarn workspace @rarible/ethereum-sdk-test-common run build",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
+    "prettify:packages": "lerna exec -- sort-package-json && sort-package-json",
+    "prettify": "run-s prettify:*",
+    "test": "lerna run test --parallel",
+    "verify": "lerna run verify --parallel",
+    "lint-staged": "lint-staged",
+    "precommit": "run-s verify lint",
+    "release": "lerna publish from-package",
+    "publish-all": "lerna publish from-package"
+  },
+  "lint-staged": {
+    "**/src/package.json": [
+      "yarn run prettify:packages"
+    ],
+    "package.json": [
+      "yarn run prettify:packages"
+    ]
+  },
+  "devDependencies": {
+    "@rarible/eslint-config-ts": "^0.0.5",
+    "eslint": "^7.32.0",
+    "husky": "^7.0.2",
+    "lerna": "^4.0.0",
+    "lint-staged": "10.4.0",
+    "npm-run-all": "4.1.5",
+    "sort-package-json": "^1.52.0",
+    "typescript": "^4.3.5"
+  }
+}

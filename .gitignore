@@ -1,0 +1,17 @@
+node_modules/
+.idea
+*.iml
+
+tsconfig.tsbuildinfo
+platforms/
+plugins/
+coverage/
+
+# Build
+build/
+test-reports/
+cypress/screenshots/
+source/locales/_build/
+storybook-static
+yarn-error.log
+lerna-debug.log
