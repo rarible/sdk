@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
-    "@rarible/action": "0.2.8",
+    "@rarible/action": "0.2.11",
     "@rarible/eslint-config-ts": "^0.0.5",
     "@rarible/types": "0.1.7",
     "eslint": "^7.32.0",

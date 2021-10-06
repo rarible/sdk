@@ -1,11 +1,12 @@
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { ItemId, EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
-import type { ActionBuilder } from "@rarible/action/build"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction/build/domain"
+import type { IAction } from "@rarible/action/build"
 import type { PaymentAssetType } from "../../common/domain"
 
 export type PrepareSellRequest = {
+	/**
+	 * Item to sell
+	 */
 	itemId: ItemId
 }
 
@@ -14,11 +15,14 @@ export type PrepareSellResponse = {
 	 * assets that can be taken
 	 */
 	availableTakeAssets: PaymentAssetType[]
+	/**
+	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
+	 */
 	maxAmount: BigNumber
 	/**
-	 * protocol base fee in basis points. If undefined - it doesn't supported by contract
+	 * protocol base fee in basis points
 	 */
-	baseFee: number | undefined
+	baseFee: number
 }
 
 export enum SellActionEnum {
@@ -27,22 +31,26 @@ export enum SellActionEnum {
 	FLOW_SEND_TRANSACTION = "send-transaction"
 }
 
-export type SellConfig = {
+export type SellRequest = {
 	/**
-	 * How much editions to sell
+	 * Item to sell
 	 */
-	value: BigNumber
+	itemId: ItemId
+	/**
+	 * How many editions to sell
+	 */
+	amount: BigNumber
 	/**
 	 * Price per edition
 	 */
 	price: BigNumber
+	/**
+	 * Currency of the trade
+	 */
 	currency: EthErc20AssetType | EthEthereumAssetType | FlowAssetType
 }
 
-type SellAction = ActionBuilder<SellActionEnum, void, [...unknown[], IBlockchainTransaction]>
-
 export interface ISellSdk {
-	(wallet: BlockchainWallet): ISellSdk
-	prepare: (config: PrepareSellRequest) => Promise<PrepareSellResponse>
-	submit: (data: SellConfig) => Promise<SellAction>
+	prepare: (request: PrepareSellRequest) => Promise<PrepareSellResponse>
+	submit: IAction<SellRequest, SellActionEnum, void>
 }
