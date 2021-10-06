@@ -1,6 +1,11 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { UnionAddress, Blockchain } from "@rarible/api-client"
-import { EthereumNetwork, FlowNetwork } from "packages/types/build"
+
+// @todo replace with types from ethereum-sdk, flow-sdk etc
+
+export type EthereumNetwork = "mainnet" | "ropsten" | "rinkeby" | "e2e"
+export type FlowNetwork = "mainnet" | "testnet"
+
 
 interface AbstractWallet {
 	blockchain: Blockchain

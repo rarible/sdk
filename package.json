@@ -9,7 +9,6 @@
     "clean": "lerna run clean --parallel",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
-    "build-sdk-types": "yarn workspace @rarible/sdk-types run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",

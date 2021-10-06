@@ -18,10 +18,8 @@ export type PrepareSellResponse = {
 	/**
 	 * protocol base fee in basis points. If undefined - it doesn't supported by contract
 	 */
-	baseFee: BigNumber | undefined
+	baseFee: number | undefined
 }
-
-export type PrepareSellFunction = (config: PrepareSellRequest) => Promise<PrepareSellResponse>
 
 export enum SellActionEnum {
 	ETHEREUM_APPROVE = "approve",
@@ -42,10 +40,9 @@ export type SellConfig = {
 }
 
 type SellAction = ActionBuilder<SellActionEnum, void, [...unknown[], IBlockchainTransaction]>
-export type SellFunction = (data: SellConfig) => Promise<SellAction>
 
 export interface ISellSdk {
 	(wallet: BlockchainWallet): ISellSdk
-	prepare: PrepareSellFunction
-	submit: SellFunction
+	prepare: (config: PrepareSellRequest) => Promise<PrepareSellResponse>
+	submit: (data: SellConfig) => Promise<SellAction>
 }
