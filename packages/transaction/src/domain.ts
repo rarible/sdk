@@ -1,5 +1,5 @@
-import type { EthereumTransaction } from "@rarible/ethereum-provider/build"
-import { BlockchainAddress, BlockchainTransactionHash, BlockchainTypeEnum } from "@rarible/sdk-types"
+import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { UnionAddress, Blockchain } from "@rarible/api-client"
 
 export enum BlockchainTransactionStatusEnum {
 	CONFIRMED = "confirmed",
@@ -9,24 +9,27 @@ export enum BlockchainTransactionStatusEnum {
 
 interface BlockchainTransactionDictionary extends Record<BlockchainTransactionStatusEnum, any> {
 	[BlockchainTransactionStatusEnum.CONFIRMED]: {
-		hash: BlockchainTransactionHash
-		from: BlockchainAddress
+		blockchain: Blockchain
+		hash: string
+		from: UnionAddress
 	},
 	[BlockchainTransactionStatusEnum.SENT]: {
-		hash: BlockchainTransactionHash
-		from: BlockchainAddress
+		blockchain: Blockchain
+		hash: string
+		from: UnionAddress
 	},
 	[BlockchainTransactionStatusEnum.REJECTED]: {
+		blockchain: Blockchain
 		reason: unknown
 	},
 }
 
-interface TransactionIndexer extends Record<BlockchainTypeEnum, any> {
-	[BlockchainTypeEnum.ETHEREUM]: EthereumTransaction
-	[BlockchainTypeEnum.FLOW]: any // @todo add typings from flow-sdk
+interface TransactionIndexer extends Record<Blockchain, any> {
+	"ETHEREUM": EthereumTransaction
+	"FLOW": any // @todo add typings from flow-sdk
 }
 
-export interface IBlockchainTransaction<T extends BlockchainTypeEnum = BlockchainTypeEnum> {
+export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
 

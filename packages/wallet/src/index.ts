@@ -1,18 +1,18 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { BlockchainTypeEnum, EthereumAddress, EthereumNetwork, FlowAddress, FlowNetwork, toEthereumAddress, toFlowAddress } from "packages/types/build"
+import type { UnionAddress, Blockchain } from "@rarible/api-client"
+import { EthereumNetwork, FlowNetwork } from "packages/types/build"
 
 interface AbstractWallet {
-	blockchain: BlockchainTypeEnum
+	blockchain: Blockchain
 	signPersonalMessage(message: string): Promise<string>
 }
 
 export class EthereumWallet implements AbstractWallet {
-	readonly address: EthereumAddress = toEthereumAddress(this.addressRaw)
-	readonly blockchain = BlockchainTypeEnum.ETHEREUM
+	readonly blockchain = "ETHEREUM"
 
 	constructor(
 		public readonly ethereum: Ethereum,
-		private readonly addressRaw: string,
+		public readonly address: UnionAddress,
 		public readonly network: EthereumNetwork
 	) {}
 
@@ -22,12 +22,11 @@ export class EthereumWallet implements AbstractWallet {
 }
 
 export class FlowWallet implements AbstractWallet {
-	readonly address: FlowAddress = toFlowAddress(this.addressRaw)
-	readonly blockchain = BlockchainTypeEnum.FLOW
+	readonly blockchain = "FLOW"
 
 	constructor(
 		public readonly fcl: any,
-		private readonly addressRaw: string,
+		public readonly address: UnionAddress,
 		public readonly network: FlowNetwork
 	) {}
 

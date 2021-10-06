@@ -15,7 +15,8 @@
   },
   "dependencies": {
     "@rarible/ethereum-provider": "0.5.3",
-    "@rarible/sdk-types": "^0.0.0"
+    "@rarible/sdk-types": "^0.0.0",
+    "@rarible/api-client": "0.0.2"
   },
   "devDependencies": {
     "typescript": "4.3.5"

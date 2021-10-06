@@ -1429,15 +1429,17 @@
   dependencies:
     "@octokit/openapi-types" "^10.6.4"
 
-"@rarible/action@0.2.7":
-  version "0.2.7"
-  resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.2.7.tgz#8c137cccbb41a4d319614dfbe983cf378399ac2c"
-  integrity sha512-BHF8O3ZigY943fSA1oy5iR7yvnENvOYIS/yUDnOhOuKcRH7JAHyrsfPi2DmzqZl1zK3V/O6WBmV+VRgWlPQ48w==
-
 "@rarible/action@0.2.8":
   version "0.2.8"
   resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.2.8.tgz#9009f6d2912b8f6fa97b7a94fb90eb4f5730e7f5"
   integrity sha512-1O/ursHYUDBACHmnGaitcS02NZ2TzrVyzPNA1zFQi+cJaxmUKWK/J4WqmNTDMmLKZfBqntACwnPg0inZ7dgCCQ==
+
+"@rarible/api-client@0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.2.tgz#aa39011be6493129a6e93ce3e519941b6f3eb724"
+  integrity sha512-O1LH3/xC6gtTWS2G1nUSxnLonHhuAtpBgzMWbz45Alwwjbd2rlK/teZzTRyurxRrHINdGH8Al+Txv1RO15tVKw==
+  dependencies:
+    "@rarible/types" "^0.1.9"
 
 "@rarible/eslint-config-ts@^0.0.5":
   version "0.0.5"
@@ -1452,40 +1454,20 @@
     eslint-plugin-jest "24.4.0"
     eslint-plugin-unicorn "35.0.0"
 
-"@rarible/ethereum-provider@0.5.3", "@rarible/ethereum-provider@^0.5.3":
+"@rarible/ethereum-provider@0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.5.3.tgz#88e6ed6b60c1c139a0a71c58abaa1656be32ad7a"
   integrity sha512-Kh6mFmk7bw8O/E2blLz9U6a/ManEkPIuPzoaIdhLXb7oD3S2yrdERo6Yn3vqg69Owzp/CPajKdBFYOcD4arwPw==
 
-"@rarible/protocol-api-client@0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-api-client/-/protocol-api-client-0.1.7.tgz#7a125eaed2083052deb5f7bf7dba409246011d47"
-  integrity sha512-MWNPJlil3Wg6R+bn2wDWdQVI22jo0C1H4ajudhceGpfMBLnB1lRM38SAdRfpm3FgLwB/N2I4FwVQIeZObZKgtA==
-  dependencies:
-    "@rarible/types" "^0.1.7"
-
-"@rarible/protocol-ethereum-sdk@0.5.3":
-  version "0.5.3"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.5.3.tgz#83e586081ba71d9814249fc958552caf3dc66df4"
-  integrity sha512-4QboslCtt0C2H0jOc8jzDU5Qb5ioZdT7PfdgS0oEtOF66KlFqJPlCCDsZ6KTwLeRgieytamT9+H9YqSiXKFSwA==
-  dependencies:
-    "@rarible/action" "0.2.7"
-    "@rarible/ethereum-provider" "^0.5.3"
-    "@rarible/protocol-api-client" "0.1.7"
-    "@rarible/utils" "^0.0.7"
-    exponential-backoff "3.1.0"
-
-"@rarible/types@0.1.7", "@rarible/types@^0.1.7":
+"@rarible/types@0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.7.tgz#b88eeb7961f461067207c9f9cab73cf23dba1da3"
   integrity sha512-rq0vGMQlnTQstTPwmFy8lajkOaCTOe7Odf/W1g6o3uLUD6Dlj0Vroh2/erfiyA6vuDALrATWsP5mw2berdwrTw==
 
-"@rarible/utils@^0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.0.7.tgz#9e5e83757fdb6572bda1e1ff3222990d33f684f6"
-  integrity sha512-Q48JeisVM63/ha+JLmtujTeR7/NIcM6EfZQXhB4+v8w6mtUOp3te5n4sPSS2hcxeYOZG4izXEM9nw6t6IzZbjA==
-  dependencies:
-    bignumber.js "9.0.1"
+"@rarible/types@^0.1.9":
+  version "0.1.9"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.9.tgz#e396e59a7cf04c6d366dc9127f26ec9f58f2f113"
+  integrity sha512-r/SlX1uZMdULnxD0MG7KFpUI1U7FPdd91JWtpPUnCM8t966kEBr2MWfswrBJYzxxe4le2e6Zwa2fH+Yxi87ScA==
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
@@ -2118,11 +2100,6 @@ before-after-hook@^2.2.0:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.2.2.tgz#a6e8ca41028d90ee2c24222f201c90956091613e"
   integrity sha512-3pZEU3NT5BFUo/AD5ERPWOgQOCZITni6iavr5AUw5AUwQjMlI0kzu5btnyD39AF0gUEsDPwJT+oY1ORBJijPjQ==
-
-bignumber.js@9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
-  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
 
 blakejs@^1.1.0:
   version "1.1.1"
@@ -3401,11 +3378,6 @@ expect@^27.2.4:
     jest-matcher-utils "^27.2.4"
     jest-message-util "^27.2.4"
     jest-regex-util "^27.0.6"
-
-exponential-backoff@3.1.0:
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/exponential-backoff/-/exponential-backoff-3.1.0.tgz#9409c7e579131f8bd4b32d7d8094a911040f2e68"
-  integrity sha512-oBuz5SYz5zzyuHINoe9ooePwSu0xApKWgeNzok4hZ5YKXFh9zrQBEM15CXqoZkJJPuI2ArvqjPQd8UKJA753XA==
 
 extend@~3.0.2:
   version "3.0.2"
