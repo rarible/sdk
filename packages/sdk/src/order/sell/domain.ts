@@ -1,20 +1,20 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { ItemId, EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
-import type { IAction } from "@rarible/action/build"
-import type { PaymentAssetType } from "../../common/domain"
+import type { ItemId, EthErc20AssetType, EthEthereumAssetType, FlowAssetType, Blockchain } from "@rarible/api-client"
+import type { ActionBuilder } from "@rarible/action"
+import type { CurrencyType } from "../../common/domain"
 
 export type PrepareSellRequest = {
 	/**
-	 * Item to sell
+	 * Blockchain where trade will happen
 	 */
-	itemId: ItemId
+	blockchain: Blockchain
 }
 
 export type PrepareSellResponse = {
 	/**
-	 * assets that can be taken
+	 * currencies supported by the blockchain
 	 */
-	availableTakeAssets: PaymentAssetType[]
+	supportedCurrencies: CurrencyType[]
 	/**
 	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
 	 */
@@ -52,5 +52,5 @@ export type SellRequest = {
 
 export interface ISellSdk {
 	prepare: (request: PrepareSellRequest) => Promise<PrepareSellResponse>
-	submit: IAction<SellRequest, SellActionEnum, void>
+	submit: ActionBuilder<Blockchain, SellActionEnum, SellRequest, void> //todo Out should be correct here
 }

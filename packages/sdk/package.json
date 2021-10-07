@@ -29,7 +29,7 @@
     "typescript": "4.3.5"
   },
   "peerDependencies": {
-    "@rarible/action": "0.2.11",
+    "@rarible/action": "0.3.2",
     "@rarible/types": "0.1.7"
   }
 }

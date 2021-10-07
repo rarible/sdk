@@ -1429,10 +1429,12 @@
   dependencies:
     "@octokit/openapi-types" "^10.6.4"
 
-"@rarible/action@0.2.11":
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.2.11.tgz#f8d021c578f788c9220290cdf4a1ec4ffe227453"
-  integrity sha512-Pz42PTTkVpKMmM57HrFgn13TyXdmQGaEWHeU0nDc/vU+0+zOD9iasIWLv/ZOpR0Uhf9N7t93odcGMakct4xAHQ==
+"@rarible/action@0.3.2":
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.3.2.tgz#477a6d6e54fad898fa5b4b0cac0e75b370a86a60"
+  integrity sha512-T9T8F00uKQYfVUuaICzx/wsvthLoCVuAZT5UWeLJG8xcojUiIuxs+Eec7dUE5ZV5qHr/JDem+pvlpmqQXrsuAg==
+  dependencies:
+    callable-instance "2.0.0"
 
 "@rarible/api-client@0.0.2":
   version "0.0.2"
@@ -2255,6 +2257,11 @@ call-bind@^1.0.0, call-bind@^1.0.2:
   dependencies:
     function-bind "^1.1.1"
     get-intrinsic "^1.0.2"
+
+callable-instance@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/callable-instance/-/callable-instance-2.0.0.tgz#0fada1c68b8b89117093c7dd4e0edde6323acba2"
+  integrity sha512-wOBp/J1CRZLsbFxG1alxefJjoG1BW/nocXkUanAe2+leiD/+cVr00j8twSZoDiRy03o5vibq9pbrZc+EDjjUTw==
 
 callsites@^3.0.0:
   version "3.1.0"
