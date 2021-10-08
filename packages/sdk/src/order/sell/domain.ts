@@ -5,9 +5,9 @@ import type { CurrencyType } from "../../common/domain"
 
 export type PrepareSellRequest = {
 	/**
-	 * Blockchain where trade will happen
+	 * Item identifier to sell
 	 */
-	blockchain: Blockchain
+	itemId: ItemId
 }
 
 export type PrepareSellResponse = {
