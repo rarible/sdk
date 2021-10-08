@@ -2,9 +2,9 @@ import type { Blockchain, Collection } from "@rarible/api-client"
 import { Creator } from "@rarible/api-client/build/models/Creator"
 import { Royalty } from "@rarible/api-client/build/models/Royalty"
 import { ActionBuilder } from "@rarible/action"
-import { CurrencyType } from "../../common/domain"
 import { ItemId } from "@rarible/api-client"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction/src/domain"
+import { CurrencyType } from "../../common/domain"
 
 export type PrepareMintRequest = {
 	collection: Collection
