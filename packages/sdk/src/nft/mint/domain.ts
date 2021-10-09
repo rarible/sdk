@@ -2,8 +2,8 @@ import type { Collection } from "@rarible/api-client"
 import { ItemId } from "@rarible/api-client"
 import { Creator } from "@rarible/api-client/build/models/Creator"
 import { Royalty } from "@rarible/api-client/build/models/Royalty"
-import { Action } from "@rarible/action"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction/src/domain"
+import { AbstractPrepareResponse } from "../../common/domain"
 
 export type PrepareMintRequest = {
 	collection: Collection
@@ -40,11 +40,10 @@ type OffChainMintResponse = MintResponseCommon & {
 
 export type MintResponse = OnChainMintResponse | OffChainMintResponse
 
-export type PrepareMintResponse = {
+export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", MintRequest, MintResponse>{
 	multiple: true
 	supportsRoyalties: boolean
 	supportsLazyMint: boolean
-	submit: Action<"mint", MintRequest, MintResponse>
 }
 
 type MintFunction = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
