@@ -1,6 +1,7 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { ItemId, EthErc20AssetType, EthEthereumAssetType, FlowAssetType, Blockchain } from "@rarible/api-client"
 import type { ActionBuilder } from "@rarible/action"
+import { Action } from "@rarible/action"
 import type { CurrencyType } from "../../common/domain"
 
 export type PrepareSellRequest = {
@@ -8,6 +9,27 @@ export type PrepareSellRequest = {
 	 * Item identifier to sell
 	 */
 	itemId: ItemId
+}
+
+export enum SellActionEnum {
+	ETHEREUM_APPROVE = "approve",
+	ETHEREUM_SIGN_ORDER = "sign-order",
+	FLOW_SEND_TRANSACTION = "send-transaction"
+}
+
+export type SellRequest = {
+	/**
+	 * How many editions to sell
+	 */
+	amount: BigNumber
+	/**
+	 * Price per edition
+	 */
+	price: BigNumber
+	/**
+	 * Currency of the trade
+	 */
+	currency: EthErc20AssetType | EthEthereumAssetType | FlowAssetType
 }
 
 export type PrepareSellResponse = {
@@ -23,34 +45,8 @@ export type PrepareSellResponse = {
 	 * protocol base fee in basis points
 	 */
 	baseFee: number
+
+	submit: Action<SellActionEnum, SellRequest, void>
 }
 
-export enum SellActionEnum {
-	ETHEREUM_APPROVE = "approve",
-	ETHEREUM_SIGN_ORDER = "sign-order",
-	FLOW_SEND_TRANSACTION = "send-transaction"
-}
-
-export type SellRequest = {
-	/**
-	 * Item to sell
-	 */
-	itemId: ItemId
-	/**
-	 * How many editions to sell
-	 */
-	amount: BigNumber
-	/**
-	 * Price per edition
-	 */
-	price: BigNumber
-	/**
-	 * Currency of the trade
-	 */
-	currency: EthErc20AssetType | EthEthereumAssetType | FlowAssetType
-}
-
-export interface ISellSdk {
-	prepare: (request: PrepareSellRequest) => Promise<PrepareSellResponse>
-	submit: ActionBuilder<Blockchain, SellActionEnum, SellRequest, void> //todo Out should be correct here
-}
+type SellFunction = (request: PrepareSellRequest) => Promise<PrepareSellResponse>
