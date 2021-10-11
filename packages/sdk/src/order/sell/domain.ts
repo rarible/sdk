@@ -2,6 +2,7 @@ import type { BigNumber } from "@rarible/types/build/big-number"
 import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId } from "@rarible/api-client"
 import type { CurrencyType } from "../../common/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
+import { Action } from "@rarible/action"
 
 export type PrepareSellRequest = {
 	/**
@@ -44,6 +45,10 @@ export interface PrepareSellResponse extends AbstractPrepareResponse<SellActionE
 	 * protocol base fee in basis points
 	 */
 	baseFee: number
+
+	submit: Action<SellActionEnum, SellRequest, void>
 }
 
-type SellFunction = (request: PrepareSellRequest) => Promise<PrepareSellResponse>
+export interface ISell {
+	prepare: (request: PrepareSellRequest) => Promise<PrepareSellResponse>
+}
