@@ -1429,7 +1429,7 @@
   dependencies:
     "@octokit/openapi-types" "^10.6.4"
 
-"@rarible/action@0.3.2":
+"@rarible/action@0.3.2", "@rarible/action@^0.3.2":
   version "0.3.2"
   resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.3.2.tgz#477a6d6e54fad898fa5b4b0cac0e75b370a86a60"
   integrity sha512-T9T8F00uKQYfVUuaICzx/wsvthLoCVuAZT5UWeLJG8xcojUiIuxs+Eec7dUE5ZV5qHr/JDem+pvlpmqQXrsuAg==
@@ -1461,15 +1461,45 @@
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.5.3.tgz#88e6ed6b60c1c139a0a71c58abaa1656be32ad7a"
   integrity sha512-Kh6mFmk7bw8O/E2blLz9U6a/ManEkPIuPzoaIdhLXb7oD3S2yrdERo6Yn3vqg69Owzp/CPajKdBFYOcD4arwPw==
 
+"@rarible/ethereum-provider@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.6.0.tgz#0d6e0ae8a0134c882e7237da47c84f76e70c7fcc"
+  integrity sha512-15Wov7hG0swgOJNoRjLA+chfATkT74E3k/5RrEpvhwhEMkehEM2mkyxA4pPbNI2DsU3nJbVo+4L2X+iQcQKqdA==
+
+"@rarible/protocol-api-client@0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-api-client/-/protocol-api-client-0.1.7.tgz#7a125eaed2083052deb5f7bf7dba409246011d47"
+  integrity sha512-MWNPJlil3Wg6R+bn2wDWdQVI22jo0C1H4ajudhceGpfMBLnB1lRM38SAdRfpm3FgLwB/N2I4FwVQIeZObZKgtA==
+  dependencies:
+    "@rarible/types" "^0.1.7"
+
+"@rarible/protocol-ethereum-sdk@^0.6.0":
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.6.0.tgz#0703ef65f00d674ddf12f9097d1bdccab2d5a65e"
+  integrity sha512-CVTxylorZUjh8VGG+D5QxmjYPUjoQtD5Yey+TY7mTgqQk8to898Ub2PmEwAj2k731dhZ/MBoziif/OPOOIVzng==
+  dependencies:
+    "@rarible/action" "^0.3.2"
+    "@rarible/ethereum-provider" "^0.6.0"
+    "@rarible/protocol-api-client" "0.1.7"
+    "@rarible/utils" "^0.0.7"
+    exponential-backoff "3.1.0"
+
 "@rarible/types@0.1.7":
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.7.tgz#b88eeb7961f461067207c9f9cab73cf23dba1da3"
   integrity sha512-rq0vGMQlnTQstTPwmFy8lajkOaCTOe7Odf/W1g6o3uLUD6Dlj0Vroh2/erfiyA6vuDALrATWsP5mw2berdwrTw==
 
-"@rarible/types@^0.1.9":
+"@rarible/types@^0.1.7", "@rarible/types@^0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.9.tgz#e396e59a7cf04c6d366dc9127f26ec9f58f2f113"
   integrity sha512-r/SlX1uZMdULnxD0MG7KFpUI1U7FPdd91JWtpPUnCM8t966kEBr2MWfswrBJYzxxe4le2e6Zwa2fH+Yxi87ScA==
+
+"@rarible/utils@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.0.7.tgz#9e5e83757fdb6572bda1e1ff3222990d33f684f6"
+  integrity sha512-Q48JeisVM63/ha+JLmtujTeR7/NIcM6EfZQXhB4+v8w6mtUOp3te5n4sPSS2hcxeYOZG4izXEM9nw6t6IzZbjA==
+  dependencies:
+    bignumber.js "9.0.1"
 
 "@sinonjs/commons@^1.7.0":
   version "1.8.3"
@@ -2102,6 +2132,11 @@ before-after-hook@^2.2.0:
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/before-after-hook/-/before-after-hook-2.2.2.tgz#a6e8ca41028d90ee2c24222f201c90956091613e"
   integrity sha512-3pZEU3NT5BFUo/AD5ERPWOgQOCZITni6iavr5AUw5AUwQjMlI0kzu5btnyD39AF0gUEsDPwJT+oY1ORBJijPjQ==
+
+bignumber.js@9.0.1:
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/bignumber.js/-/bignumber.js-9.0.1.tgz#8d7ba124c882bfd8e43260c67475518d0689e4e5"
+  integrity sha512-IdZR9mh6ahOBv/hYGiXyVuyCetmGJhtYkqLBpTStdhEGjegpPlUawydyaF3pbIOFynJTpllEs+NP+CS9jKFLjA==
 
 blakejs@^1.1.0:
   version "1.1.1"
@@ -3385,6 +3420,11 @@ expect@^27.2.4:
     jest-matcher-utils "^27.2.4"
     jest-message-util "^27.2.4"
     jest-regex-util "^27.0.6"
+
+exponential-backoff@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/exponential-backoff/-/exponential-backoff-3.1.0.tgz#9409c7e579131f8bd4b32d7d8094a911040f2e68"
+  integrity sha512-oBuz5SYz5zzyuHINoe9ooePwSu0xApKWgeNzok4hZ5YKXFh9zrQBEM15CXqoZkJJPuI2ArvqjPQd8UKJA753XA==
 
 extend@~3.0.2:
   version "3.0.2"
