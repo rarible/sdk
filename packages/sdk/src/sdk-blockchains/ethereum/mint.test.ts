@@ -5,17 +5,12 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toBigNumber, toUnionAddress } from "@rarible/types"
 import { MintType } from "../../nft/mint/domain"
 import { createEthereumSdk } from "./index"
-// import {} from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 
 describe("mint", () => {
 	const { provider } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
-	const ethereumWallet = new EthereumWallet(
-		ethereum,
-		"e2e"
-	)
-
+	const ethereumWallet = new EthereumWallet(ethereum, "e2e")
 	const sdk = createEthereumSdk(ethereumWallet)
 
 	const erc721Address = toUnionAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
@@ -70,4 +65,5 @@ describe("mint", () => {
 			await result.transaction.wait()
 		}
 	})
+
 })

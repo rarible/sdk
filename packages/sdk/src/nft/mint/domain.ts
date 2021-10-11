@@ -1,22 +1,9 @@
-import type { Collection } from "@rarible/api-client"
 import { ItemId } from "@rarible/api-client"
-// import { ItemId } from "@rarible/types";
-import { Creator } from "@rarible/api-client/build/models/Creator"
-import { Royalty } from "@rarible/api-client/build/models/Royalty"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction/src/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
+import { MintRequest } from "./mint-request.type"
+import { PrepareMintRequest } from "./prepare-mint-request.type"
 
-export type PrepareMintRequest = {
-	collection: Collection
-}
-
-export type MintRequest = {
-	uri: string
-	supply: number
-	lazyMint: boolean
-	creators?: Creator[]
-	royalties?: Royalty[]
-}
 
 type MintResponseCommon = {
 	/**

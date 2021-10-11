@@ -1,28 +1,5 @@
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import type { UnionAddress, Blockchain } from "@rarible/api-client"
-
-export enum BlockchainTransactionStatusEnum {
-	CONFIRMED = "confirmed",
-	SENT = "sent",
-	REJECTED = "rejected",
-}
-
-interface BlockchainTransactionDictionary extends Record<BlockchainTransactionStatusEnum, any> {
-	[BlockchainTransactionStatusEnum.CONFIRMED]: {
-		blockchain: Blockchain
-		hash: string
-		from: UnionAddress
-	},
-	[BlockchainTransactionStatusEnum.SENT]: {
-		blockchain: Blockchain
-		hash: string
-		from: UnionAddress
-	},
-	[BlockchainTransactionStatusEnum.REJECTED]: {
-		blockchain: Blockchain
-		reason: unknown
-	},
-}
+import type { Blockchain } from "@rarible/api-client"
 
 interface Transaction<T extends Blockchain> {
 	blockchain: T

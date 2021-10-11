@@ -15,11 +15,13 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction/src"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import {
 	IMint,
-	MintRequest,
 	MintType,
-	PrepareMintRequest,
 	PrepareMintResponse,
 } from "../../nft/mint/domain"
+import { MintRequest } from "../../nft/mint/mint-request.type"
+import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
+import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
+import { validateMintRequest } from "../../nft/mint/mint-request.type.validator"
 
 export class Mint implements IMint {
 	constructor(private sdk: RaribleSdk) {}
@@ -96,6 +98,8 @@ export class Mint implements IMint {
 			throw new Error("Unsupported collection type")
 		}
 
+		validatePrepareMintRequest(prepareRequest)
+
 		const nftCollection: NftCollection = {
 			...prepareRequest.collection,
 			id: toAddress(prepareRequest.collection.id),
@@ -113,6 +117,7 @@ export class Mint implements IMint {
 				id: "mint" as const,
 				run: async (request: MintRequest) => {
 
+					validateMintRequest(request)
 					const mintResponse = await this.handleSubmit(request, nftCollection)
 
 					switch (mintResponse.type) {

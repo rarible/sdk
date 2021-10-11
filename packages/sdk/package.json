@@ -13,7 +13,8 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --maxWorkers=1 --silent",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit",
+    "create-validators": "create-validator-ts src/**/*.type.ts"
   },
   "dependencies": {
     "@ethereumjs/common": "2.5.0",
@@ -25,6 +26,7 @@
     "@rarible/sdk-wallet": "^0.0.0",
     "@rarible/types": "^0.1.9",
     "@rarible/web3-ethereum": "^0.6.0",
+    "create-validator-ts": "^2.0.0",
     "eth-sig-util": "3.0.1",
     "ethereumjs-util": "7.1.2",
     "node-fetch": "2.6.1",

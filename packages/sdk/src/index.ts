@@ -1,6 +1,4 @@
-// import { SellSdk } from "./order/sell"
-// import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { BlockchainWallet } from "../../wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { IRaribleSdk } from "./domain"
 import { getSDKBlockchainInstance } from "./sdk-blockchains"
 
