@@ -98,3 +98,7 @@ function getEthTakeAssetType(currency: EthEthereumAssetType | EthErc20AssetType 
 
 
 
+// @todo add implementation
+// export class SellSdk implements ISellSdk {
+//     constructor(wallet: BlockchainWallet) {}
+// }

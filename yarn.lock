@@ -566,6 +566,17 @@
     "@types/yargs" "^16.0.0"
     chalk "^4.0.0"
 
+"@jest/types@^27.2.5":
+  version "27.2.5"
+  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.2.5.tgz#420765c052605e75686982d24b061b4cbba22132"
+  integrity sha512-nmuM4VuDtCZcY+eTpw+0nvstwReMsjPoj7ZR80/BbixulhLaiX+fbv8oeLW8WZlJMcsGQsTmMKT/iTZu1Uy/lQ==
+  dependencies:
+    "@types/istanbul-lib-coverage" "^2.0.0"
+    "@types/istanbul-reports" "^3.0.0"
+    "@types/node" "*"
+    "@types/yargs" "^16.0.0"
+    chalk "^4.0.0"
+
 "@lerna/add@4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@lerna/add/-/add-4.0.0.tgz#c36f57d132502a57b9e7058d1548b7a565ef183f"
@@ -1466,28 +1477,23 @@
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.6.0.tgz#0d6e0ae8a0134c882e7237da47c84f76e70c7fcc"
   integrity sha512-15Wov7hG0swgOJNoRjLA+chfATkT74E3k/5RrEpvhwhEMkehEM2mkyxA4pPbNI2DsU3nJbVo+4L2X+iQcQKqdA==
 
-"@rarible/protocol-api-client@0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-api-client/-/protocol-api-client-0.1.7.tgz#7a125eaed2083052deb5f7bf7dba409246011d47"
-  integrity sha512-MWNPJlil3Wg6R+bn2wDWdQVI22jo0C1H4ajudhceGpfMBLnB1lRM38SAdRfpm3FgLwB/N2I4FwVQIeZObZKgtA==
+"@rarible/protocol-api-client@^0.1.8":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-api-client/-/protocol-api-client-0.1.8.tgz#7ccf73f3fd6335a8adfb11af113a24ca437fbbcc"
+  integrity sha512-rsKxzs8xKB+p7lMOnxP+l+oIOustoQpn6XVulSNhqrKaK8zzs4Norlpyliy1l5hutRyZIyaLgxXH9HkpynJ6rQ==
   dependencies:
     "@rarible/types" "^0.1.7"
 
-"@rarible/protocol-ethereum-sdk@^0.6.0":
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.6.0.tgz#0703ef65f00d674ddf12f9097d1bdccab2d5a65e"
-  integrity sha512-CVTxylorZUjh8VGG+D5QxmjYPUjoQtD5Yey+TY7mTgqQk8to898Ub2PmEwAj2k731dhZ/MBoziif/OPOOIVzng==
+"@rarible/protocol-ethereum-sdk@^0.6.1":
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.6.1.tgz#93c78c42e81d6c3ddd06c1cb3edce8e05ffddfb2"
+  integrity sha512-zS3EOmztgt3U8urnKIXRZa5E9npfPFCCggHwvJPwzZ8AJLTuMJ0FwUITIq8RFN3PoPuM1GCNiTJPHqHunK6Q3g==
   dependencies:
     "@rarible/action" "^0.3.2"
     "@rarible/ethereum-provider" "^0.6.0"
-    "@rarible/protocol-api-client" "0.1.7"
+    "@rarible/protocol-api-client" "^0.1.8"
     "@rarible/utils" "^0.0.7"
     exponential-backoff "3.1.0"
-
-"@rarible/types@0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.7.tgz#b88eeb7961f461067207c9f9cab73cf23dba1da3"
-  integrity sha512-rq0vGMQlnTQstTPwmFy8lajkOaCTOe7Odf/W1g6o3uLUD6Dlj0Vroh2/erfiyA6vuDALrATWsP5mw2berdwrTw==
 
 "@rarible/types@^0.1.7", "@rarible/types@^0.1.9":
   version "0.1.9"
@@ -1600,6 +1606,14 @@
   integrity sha512-c3mAZEuK0lvBp8tmuL74XRKn1+y2dcwOUpH7x4WrF6gk1GIgiluDRgMYQtw2OFcBvAJWlt6ASU3tSqxp0Uu0Aw==
   dependencies:
     "@types/istanbul-lib-report" "*"
+
+"@types/jest@^27.0.2":
+  version "27.0.2"
+  resolved "https://registry.yarnpkg.com/@types/jest/-/jest-27.0.2.tgz#ac383c4d4aaddd29bbf2b916d8d105c304a5fcd7"
+  integrity sha512-4dRxkS/AFX0c5XW6IPMNOydLn2tEhNhJV7DnYK+0bjoJZ+QTmfucBlihX7aoEsh/ocYtkLC73UbnBXBXIxsULA==
+  dependencies:
+    jest-diff "^27.0.0"
+    pretty-format "^27.0.0"
 
 "@types/json-schema@^7.0.7":
   version "7.0.9"
@@ -4476,6 +4490,16 @@ jest-config@^27.2.4:
     micromatch "^4.0.4"
     pretty-format "^27.2.4"
 
+jest-diff@^27.0.0:
+  version "27.2.5"
+  resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.2.5.tgz#908f7a6aca5653824516ad30e0a9fd9767e53623"
+  integrity sha512-7gfwwyYkeslOOVQY4tVq5TaQa92mWfC9COsVYMNVYyJTOYAqbIkoD3twi5A+h+tAPtAelRxkqY6/xu+jwTr0dA==
+  dependencies:
+    chalk "^4.0.0"
+    diff-sequences "^27.0.6"
+    jest-get-type "^27.0.6"
+    pretty-format "^27.2.5"
+
 jest-diff@^27.2.4:
   version "27.2.4"
   resolved "https://registry.yarnpkg.com/jest-diff/-/jest-diff-27.2.4.tgz#171c51d3d2c105c457100fee6e7bf7cee51c8d8c"
@@ -5503,6 +5527,11 @@ neo-async@^2.6.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+nested-error-stacks@^2:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/nested-error-stacks/-/nested-error-stacks-2.1.0.tgz#0fbdcf3e13fe4994781280524f8b96b0cdff9c61"
+  integrity sha512-AO81vsIO1k1sM4Zrd6Hu7regmJN1NSiAja10gc4bX3F0wd+9rQmcuHQaHVQCYIEC8iFXnE+mavh23GOt7wBgug==
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/nice-try/-/nice-try-1.0.5.tgz#a3378a7696ce7d223e88fc9b764bd7ef1089e366"
@@ -6157,6 +6186,16 @@ prelude-ls@~1.1.2:
   resolved "https://registry.yarnpkg.com/prelude-ls/-/prelude-ls-1.1.2.tgz#21932a549f5e52ffd9a827f570e04be62a97da54"
   integrity sha1-IZMqVJ9eUv/ZqCf1cOBL5iqX2lQ=
 
+pretty-format@^27.0.0, pretty-format@^27.2.5:
+  version "27.2.5"
+  resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.5.tgz#7cfe2a8e8f01a5b5b29296a0b70f4140df0830c5"
+  integrity sha512-+nYn2z9GgicO9JiqmY25Xtq8SYfZ/5VCpEU3pppHHNAhd1y+ZXxmNPd1evmNcAd6Hz4iBV2kf0UpGth5A/VJ7g==
+  dependencies:
+    "@jest/types" "^27.2.5"
+    ansi-regex "^5.0.1"
+    ansi-styles "^5.0.0"
+    react-is "^17.0.1"
+
 pretty-format@^27.2.4:
   version "27.2.4"
   resolved "https://registry.yarnpkg.com/pretty-format/-/pretty-format-27.2.4.tgz#08ea39c5eab41b082852d7093059a091f6ddc748"
@@ -6422,6 +6461,11 @@ redent@^3.0.0:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
 
+reflect-metadata@>=0.1.12:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/reflect-metadata/-/reflect-metadata-0.1.13.tgz#67ae3ca57c972a2aa1642b10fe363fe32d49dc08"
+  integrity sha512-Ts1Y/anZELhSsjMcU605fU9RE4Oi3p5ORujwbIKXfWa+0Zxs510Qrmrce5/Jowq3cHSZSJqBjypxmHarc+vEWg==
+
 regexp-tree@^0.1.23, regexp-tree@~0.1.1:
   version "0.1.24"
   resolved "https://registry.yarnpkg.com/regexp-tree/-/regexp-tree-0.1.24.tgz#3d6fa238450a4d66e5bc9c4c14bb720e2196829d"
@@ -6485,7 +6529,7 @@ resolve-from@^5.0.0:
   resolved "https://registry.yarnpkg.com/resolve-from/-/resolve-from-5.0.0.tgz#c35225843df8f776df21c57557bc087e9dfdfc69"
   integrity sha512-qYg9KP24dD5qka9J47d0aVky0N+b4fTU89LN9iDnjB5waksiC49rvMB0PrUJQGoTmH50XPiqOvAjDfaijGxYZw==
 
-resolve@^1.10.0, resolve@^1.20.0:
+resolve@>=1.9.0, resolve@^1.10.0, resolve@^1.20.0:
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
   integrity sha512-wENBPt4ySzg4ybFQW2TT1zMQucPK95HSh/nq2CFTZVOGut2+pQvSsgtda4d26YrYcr067wjbmzOG8byDPBX63A==
@@ -7276,12 +7320,19 @@ tslib@^1.8.1, tslib@^1.9.0:
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
 
-tsutils@^3.21.0:
+tsutils@^3.17.1, tsutils@^3.21.0:
   version "3.21.0"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.21.0.tgz#b48717d394cea6c1e096983eed58e9d61715b623"
   integrity sha512-mHKK3iUXL+3UF6xL5k0PEhKRUBKPBCv/+RkEOpjRWxxx27KKRBmmA60A9pgOUvMi8GKhRMPEmjBRPzs2W7O1OA==
   dependencies:
     tslib "^1.8.1"
+
+ttypescript@^1.5.12:
+  version "1.5.12"
+  resolved "https://registry.yarnpkg.com/ttypescript/-/ttypescript-1.5.12.tgz#27a8356d7d4e719d0075a8feb4df14b52384f044"
+  integrity sha512-1ojRyJvpnmgN9kIHmUnQPlEV1gq+VVsxVYjk/NfvMlHSmYxjK5hEvOOU2MQASrbekTUiUM7pR/nXeCc8bzvMOQ==
+  dependencies:
+    resolve ">=1.9.0"
 
 tunnel-agent@^0.6.0:
   version "0.6.0"
@@ -7365,6 +7416,16 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+
+typescript-is@^0.18.3:
+  version "0.18.3"
+  resolved "https://registry.yarnpkg.com/typescript-is/-/typescript-is-0.18.3.tgz#143ce2b348684083fc3963b95a6c2e24abd89389"
+  integrity sha512-kBgZIJt3AKrtye1H2GYf9bWu1YS0Z9AZZl4OZG4z2Ps2jPMZuycilP9RkxPLP+tPxCUjXfmaJti9TNGoz5schA==
+  dependencies:
+    nested-error-stacks "^2"
+    tsutils "^3.17.1"
+  optionalDependencies:
+    reflect-metadata ">=0.1.12"
 
 typescript@4.3.5:
   version "4.3.5"

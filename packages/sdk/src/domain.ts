@@ -1,7 +1,9 @@
-import { ISellSdk } from "./order/sell/domain"
+// import { ISellSdk } from "./order/sell/domain"
+import {IMint} from "./nft/mint/domain";
 
 export interface IRaribleSdk {
 	nft: {
-		sell: ISellSdk
+		// sell: ISellSdk
+		mint: IMint
 	}
 }
