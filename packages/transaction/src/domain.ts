@@ -24,7 +24,12 @@ interface BlockchainTransactionDictionary extends Record<BlockchainTransactionSt
 	},
 }
 
-interface TransactionIndexer extends Record<Blockchain, any> {
+interface BlockchainTransaction<T extends Blockchain> {
+	blockchain: T
+	hash: string
+}
+
+export interface TransactionIndexer extends Record<Blockchain, any> {
 	"ETHEREUM": EthereumTransaction
 	"FLOW": any // @todo add typings from flow-sdk
 }
@@ -33,15 +38,5 @@ export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
 
-	(type: T, transaction: TransactionIndexer[T]): IBlockchainTransaction<T>
-
-	once<T extends BlockchainTransactionStatusEnum>(
-		type: T,
-		handler: (data: BlockchainTransactionDictionary[T]) => void
-	): void
-
-	/**
-	 * @param type if exists will wait for concrete status OR it'll wait for `CONFIRMED`
-	 */
-	wait<T extends BlockchainTransactionStatusEnum>(type?: T): Promise<BlockchainTransactionDictionary[T]>
+	wait(): Promise<BlockchainTransaction<T>>
 }

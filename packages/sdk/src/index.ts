@@ -1,9 +1,9 @@
 // import { SellSdk } from "./order/sell"
 // import type { BlockchainWallet } from "@rarible/sdk-wallet"
-// import type { IRaribleSdk } from './domain'
+import type { BlockchainWallet } from "../../wallet/src"
+import type { IRaribleSdk } from './domain'
+import {getSDKBlockchainInstance} from "./sdk-blockchains";
 
-// export class RaribleSdk implements IRaribleSdk {
-//     constructor(wallet: BlockchainWallet) {
-//         this.sell = new SellSdk(wallet)
-//     }
-// }
+export function createRaribleSdk(wallet: BlockchainWallet): IRaribleSdk {
+    return getSDKBlockchainInstance(wallet)
+}

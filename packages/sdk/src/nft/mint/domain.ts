@@ -1,5 +1,6 @@
 import type { Collection } from "@rarible/api-client"
 import { ItemId } from "@rarible/api-client"
+// import { ItemId } from "@rarible/types";
 import { Creator } from "@rarible/api-client/build/models/Creator"
 import { Royalty } from "@rarible/api-client/build/models/Royalty"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction/src/domain"
@@ -29,21 +30,23 @@ export enum MintType {
 	ON_CHAIN = "on-chain"
 }
 
-type OnChainMintResponse = MintResponseCommon & {
+export type OnChainMintResponse = MintResponseCommon & {
 	type: MintType.ON_CHAIN
 	transaction: IBlockchainTransaction
 }
 
-type OffChainMintResponse = MintResponseCommon & {
+export type OffChainMintResponse = MintResponseCommon & {
 	type: MintType.OFF_CHAIN
 }
 
 export type MintResponse = OnChainMintResponse | OffChainMintResponse
 
 export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", MintRequest, MintResponse>{
-	multiple: true
+	multiple: boolean,
 	supportsRoyalties: boolean
 	supportsLazyMint: boolean
 }
 
-type MintFunction = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
+export interface IMint {
+	prepare: (request: PrepareMintRequest) => Promise<PrepareMintResponse>
+}
