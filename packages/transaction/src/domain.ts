@@ -24,7 +24,7 @@ interface BlockchainTransactionDictionary extends Record<BlockchainTransactionSt
 	},
 }
 
-interface BlockchainTransaction<T extends Blockchain> {
+interface Transaction<T extends Blockchain> {
 	blockchain: T
 	hash: string
 }
@@ -38,5 +38,5 @@ export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
 
-	wait(): Promise<BlockchainTransaction<T>>
+	wait(): Promise<Transaction<T>>
 }

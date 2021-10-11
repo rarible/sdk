@@ -1,8 +1,7 @@
-import {BlockchainWallet} from "@rarible/sdk-wallet/src";
-import {createEthereumSdk} from "./ethereum";
-import {Blockchain} from "@rarible/api-client";
-import {IRaribleSdk} from "../domain";
-import {createFlowSdk} from "./flow";
+import { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import { IRaribleSdk } from "../domain"
+import { createEthereumSdk } from "./ethereum"
+import { createFlowSdk } from "./flow"
 
 export function getSDKBlockchainInstance(wallet: BlockchainWallet): IRaribleSdk {
 	if (wallet.blockchain === "ETHEREUM") {

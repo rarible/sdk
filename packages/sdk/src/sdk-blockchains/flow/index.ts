@@ -1,6 +1,6 @@
-import {MintRequest} from "../../nft/mint/domain";
-import {IRaribleSdk} from "../../domain";
-import {BlockchainWallet, EthereumWallet, FlowWallet} from "@rarible/sdk-wallet/src";
+import { BlockchainWallet, EthereumWallet, FlowWallet } from "@rarible/sdk-wallet/src"
+import { MintRequest } from "../../nft/mint/domain"
+import { IRaribleSdk } from "../../domain"
 
 export function createFlowSdk(wallet: FlowWallet): IRaribleSdk {
 	// const sdk = createRaribleSdk(wallet, options.env, ...)
@@ -9,7 +9,7 @@ export function createFlowSdk(wallet: FlowWallet): IRaribleSdk {
 		nft: {
 			mint: {
 				prepare: null as any,
-			}
-		}
+			},
+		},
 	}
 }
