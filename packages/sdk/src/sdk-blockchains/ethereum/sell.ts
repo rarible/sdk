@@ -1,13 +1,13 @@
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import type { ISell, PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 import { SellRequest } from "../../order/sell/domain"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
+import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, OrderId } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress } from "@rarible/types"
+import { toAddress, toOrderId } from "@rarible/types"
 
 export class Sell implements ISell {
-	constructor(private sdk: RaribleSdk, private wallet: BlockchainWallet) {
+	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
 	}
 
 	private getEthTakeAssetType(currency: EthEthereumAssetType | EthErc20AssetType | FlowAssetType) {
@@ -32,10 +32,10 @@ export class Sell implements ISell {
 	async prepare(request: PrepareSellRequest): Promise<PrepareSellResponse> {
 		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: request.itemId })
 		const sellAction = this.sdk.order.sell
-			.before<SellRequest>((sellFormRequest: SellRequest) => {
+			.before(async (sellFormRequest: SellRequest) => {
 				const takeAssetType = this.getEthTakeAssetType(sellFormRequest.currency)
 				return {
-					maker: toAddress(this.wallet.address),
+					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
 						tokenId: toBigNumber(request.itemId),
 						contract: toAddress(item.contract),
@@ -47,15 +47,17 @@ export class Sell implements ISell {
 					originFees: [], // todo
 				}
 			})
+			.after((order): OrderId => {
+				return toOrderId(`${this.wallet.blockchain}:${order.hash}`)
+			})
 		return {
 			supportedCurrencies: [{ blockchain: "ETHEREUM", type: "NATIVE" }, {
 				blockchain: "ETHEREUM",
 				type: "ERC20",
 			}],
 			maxAmount: item.supply,
-			baseFee: 10,//todo where we can get it?
+			baseFee: 10,//todo
 			submit: sellAction,
 		}
 	}
 }
-

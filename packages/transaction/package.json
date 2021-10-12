@@ -10,7 +10,6 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --maxWorkers=1 --silent",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
