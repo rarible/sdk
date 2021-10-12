@@ -10,7 +10,7 @@
     "typings.d.ts"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig-build.json",
+    "build": "tsc --project tsconfig-build.json && yarn run create-validators",
     "clean": "rimraf ./build",
     "test": "jest --maxWorkers=1 --silent",
     "verify": "tsc --noEmit",
@@ -26,6 +26,7 @@
     "@rarible/sdk-wallet": "^0.0.0",
     "@rarible/types": "^0.1.9",
     "@rarible/web3-ethereum": "^0.6.0",
+    "ajv": "^8.6.3",
     "create-validator-ts": "^2.0.0",
     "eth-sig-util": "3.0.1",
     "ethereumjs-util": "7.1.2",
