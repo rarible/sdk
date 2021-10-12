@@ -2,7 +2,6 @@ import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import { AssetType, Order } from "@rarible/api-client"
 import { AssetType as EthereumAssetType } from "@rarible/protocol-api-client"
-import { Action } from "@rarible/action"
 import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import {
 	SimpleLegacyOrder,
@@ -14,15 +13,16 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { BigNumber } from "@rarible/types/build/big-number"
 import {
 	FillRequest,
-	IFill,
 	OriginFeeSupport,
 	PayoutsSupport,
 	PrepareFillRequest,
 	PrepareFillResponse,
 } from "../../order/fill/domain"
 
-export class Fill implements IFill {
-	constructor(private sdk: RaribleSdk) {}
+export class Fill {
+	constructor(private sdk: RaribleSdk) {
+		this.fill = this.fill.bind(this)
+	}
 
 	convertAssetType(assetType: AssetType): EthereumAssetType {
 		switch (assetType["@type"]) {
@@ -237,24 +237,16 @@ export class Fill implements IFill {
 			throw new Error("Incorrect request")
 		}
 
+		const submit = this.sdk.order.fill
+			.before((fillRequest: FillRequest) => this.getFillOrderRequest(order, fillRequest))
+			.after((tx => new BlockchainEthereumTransaction(tx)))
+
 		return {
 			maxAmount: makeStock,
 			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
 			originFeeSupport: this.getOriginFeeSupport(order),
 			payoutsSupport: this.getPayoutsSupport(order),
-			submit: Action.create({
-				id: "send-transaction" as const,
-				run: async (fillRequest: FillRequest) => {
-
-					const fillOrderRequest = this.getFillOrderRequest(order, fillRequest)
-					return this.sdk.order.fill
-						.after((transaction) => {
-							return new BlockchainEthereumTransaction(transaction)
-						})
-						.start(fillOrderRequest)
-						.runAll()
-				},
-			}),
+			submit,
 		}
 	}
 }

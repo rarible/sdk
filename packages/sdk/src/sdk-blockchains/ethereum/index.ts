@@ -9,10 +9,10 @@ export function createEthereumSdk(wallet: EthereumWallet): IRaribleSdk {
 
 	return {
 		nft: {
-			mint: new Mint(sdk),
+			mint: new Mint(sdk).prepare,
 		},
 		order: {
-			fill: new Fill(sdk),
+			fill: new Fill(sdk).fill,
 		},
 	}
 }

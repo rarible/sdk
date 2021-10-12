@@ -14,7 +14,6 @@ import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction/src"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import {
-	IMint,
 	MintType,
 	PrepareMintResponse,
 } from "../../nft/mint/domain"
@@ -23,8 +22,10 @@ import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
 import { validateMintRequest } from "../../nft/mint/mint-request.type.validator"
 
-export class Mint implements IMint {
-	constructor(private sdk: RaribleSdk) {}
+export class Mint {
+	constructor(private sdk: RaribleSdk) {
+		this.prepare = this.prepare.bind(this)
+	}
 
 	handleSubmit(request: MintRequest, nftCollection: NftCollection) {
 

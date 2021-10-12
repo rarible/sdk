@@ -47,7 +47,7 @@ export interface FillRequest {
 	infiniteApproval?: boolean
 }
 
-export interface PrepareFillResponse extends AbstractPrepareResponse<"send-transaction", FillRequest, IBlockchainTransaction> {
+export interface PrepareFillResponse extends AbstractPrepareResponse<"approve" | "send-tx", FillRequest, IBlockchainTransaction> {
 	/**
 	 * Maximum amount to fill (of NFTs)
 	 */
@@ -66,8 +66,4 @@ export interface PrepareFillResponse extends AbstractPrepareResponse<"send-trans
 	payoutsSupport: PayoutsSupport
 }
 
-export type FillFunction = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
-
-export interface IFill {
-	fill: FillFunction
-}
+export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
