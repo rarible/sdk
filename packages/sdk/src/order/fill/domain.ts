@@ -67,3 +67,7 @@ export interface PrepareFillResponse extends AbstractPrepareResponse<"send-trans
 }
 
 export type FillFunction = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
+
+export interface IFill {
+	fill: FillFunction
+}
