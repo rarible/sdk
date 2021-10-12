@@ -1,3 +1,6 @@
 {
-	"extends": ["@rarible/ts"]
+	"extends": ["@rarible/ts"],
+	"rules": {
+		"object-curly-spacing": ["error", "always"]
+	}
 }
