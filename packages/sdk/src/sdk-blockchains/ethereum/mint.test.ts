@@ -19,7 +19,7 @@ describe("mint", () => {
 	test("should mint ERC721 token", async () => {
 		const sender = await ethereum.getFrom()
 
-		const action = await sdk.nft.mint.prepare({
+		const action = await sdk.nft.mint({
 			collection: {
 				name: "Test-collection",
 				id: erc721Address,
@@ -44,7 +44,7 @@ describe("mint", () => {
 	test("should mint ERC1155 token", async () => {
 		const sender = await ethereum.getFrom()
 
-		const action = await sdk.nft.mint.prepare({
+		const action = await sdk.nft.mint({
 			collection: {
 				features: ["MINT_AND_TRANSFER"],
 				id: erc1155Address,

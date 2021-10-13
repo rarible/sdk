@@ -33,6 +33,4 @@ export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", Min
 	supportsLazyMint: boolean
 }
 
-export interface IMint {
-	prepare: (request: PrepareMintRequest) => Promise<PrepareMintResponse>
-}
+export type IMint = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
