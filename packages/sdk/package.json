@@ -12,9 +12,9 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json && yarn run create-validators",
     "clean": "rimraf ./build",
+    "create-validators": "create-validator-ts src/**/*.type.ts",
     "test": "jest --maxWorkers=1 --silent",
-    "verify": "tsc --noEmit",
-    "create-validators": "create-validator-ts src/**/*.type.ts"
+    "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@ethereumjs/common": "2.5.0",

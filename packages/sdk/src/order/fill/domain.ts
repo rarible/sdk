@@ -64,6 +64,10 @@ export interface PrepareFillResponse extends AbstractPrepareResponse<"approve" |
 	 * Whether the underlying exchange contract supports specifying payouts
 	 */
 	payoutsSupport: PayoutsSupport
+	/**
+	 * Whether the underlying exchange contract supports partial fill
+	 */
+	supportsPartialFill: boolean
 }
 
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>

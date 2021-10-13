@@ -1,16 +1,11 @@
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
+import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
 import { AssetType, Order } from "@rarible/api-client"
 import { AssetType as EthereumAssetType } from "@rarible/protocol-api-client"
 import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
-import {
-	SimpleLegacyOrder,
-	SimpleOpenSeaV1Order, SimpleOrder,
-	SimpleRaribleV2Order,
-} from "@rarible/protocol-ethereum-sdk/build/order/types"
-import { toBn } from "@rarible/utils/build/bn"
+import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
+import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { BigNumber } from "@rarible/types/build/big-number"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -18,6 +13,14 @@ import {
 	PrepareFillRequest,
 	PrepareFillResponse,
 } from "../../order/fill/domain"
+
+export type SupportFlagsResponse = {
+	originFeeSupport: OriginFeeSupport,
+	payoutsSupport: PayoutsSupport,
+	supportsPartialFill: boolean
+}
+
+export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
 export class Fill {
 	constructor(private sdk: RaribleSdk) {
@@ -98,7 +101,7 @@ export class Fill {
 		}
 	}
 
-	convertToSimpleOrder(order: Order): SimpleLegacyOrder | SimpleRaribleV2Order | SimpleOpenSeaV1Order {
+	convertToSimpleOrder(order: Order): SimplePreparedOrder {
 		const common = {
 			maker: toAddress(order.maker),
 			taker: order.taker && toAddress(order.taker),
@@ -114,6 +117,7 @@ export class Fill {
 			start: order.startedAt !== undefined ? parseInt(order.startedAt) : undefined,
 			end: order.endedAt !== undefined ? parseInt(order.endedAt): undefined,
 			signature: order.signature !== undefined ? toBinary(order.signature) : undefined,
+			makeStock: order.makeStock,
 
 		}
 		switch (order.data["@type"]) {
@@ -204,48 +208,72 @@ export class Fill {
 		}
 	}
 
-	getPayoutsSupport(order: SimpleOrder) {
+	getSupportFlags(order: SimpleOrder): SupportFlagsResponse {
 		switch (order.type) {
-			case "RARIBLE_V1": return PayoutsSupport.SINGLE
-			case "RARIBLE_V2": return PayoutsSupport.MULTIPLE
-			case "OPEN_SEA_V1": return PayoutsSupport.NONE
+			case "RARIBLE_V1": {
+				return {
+					originFeeSupport: OriginFeeSupport.AMOUNT_ONLY,
+					payoutsSupport: PayoutsSupport.SINGLE,
+					supportsPartialFill: true,
+				}
+			}
+			case "RARIBLE_V2": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.MULTIPLE,
+					supportsPartialFill: true,
+				}
+			}
+			case "OPEN_SEA_V1": {
+				return {
+					originFeeSupport: OriginFeeSupport.NONE,
+					payoutsSupport: PayoutsSupport.NONE,
+					supportsPartialFill: false,
+				}
+			}
 			default: throw new Error("Unsupported order type")
 		}
 	}
 
-	getOriginFeeSupport(order: SimpleOrder) {
-		switch (order.type) {
-			case "RARIBLE_V1": return OriginFeeSupport.AMOUNT_ONLY
-			case "RARIBLE_V2": return OriginFeeSupport.FULL
-			case "OPEN_SEA_V1": return OriginFeeSupport.NONE
-			default: throw new Error("Unsupported order type")
+	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber> {
+		if (
+			order.take.assetType.assetClass === "ERC721" ||
+			order.take.assetType.assetClass === "ERC721_LAZY" ||
+			order.take.assetType.assetClass === "ERC1155" ||
+			order.take.assetType.assetClass === "ERC1155_LAZY"
+		) {
+			const response = await this.sdk.apis.nftOwnership.getNftOwnershipsByItem({
+				contract: order.take.assetType.contract,
+				tokenId: order.take.assetType.tokenId,
+			})
+
+			return toBigNumber(BigNumberClass.min(response.total, order.take.value).toFixed())
+		} else {
+			return order.makeStock
+		}
+	}
+
+	async getPreparedOrder(request: PrepareFillRequest): Promise<SimplePreparedOrder> {
+		if ("order" in request) {
+			return this.convertToSimpleOrder(request.order)
+		} else if ("orderId" in request) {
+			return this.sdk.apis.order.getOrderByHash({ hash: request.orderId })
+		} else {
+			throw new Error("Incorrect request")
 		}
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		let order: SimpleOrder
-		let makeStock: BigNumber
-
-		if ("order" in request) {
-			order = this.convertToSimpleOrder(request.order)
-			makeStock = request.order.makeStock
-		} else if ("orderId" in request) {
-			const fullOrder = await this.sdk.apis.order.getOrderByHash({ hash: request.orderId })
-			makeStock = fullOrder.makeStock
-			order = fullOrder
-		} else {
-			throw new Error("Incorrect request")
-		}
+		const order: SimplePreparedOrder = await this.getPreparedOrder(request)
 
 		const submit = this.sdk.order.fill
 			.before((fillRequest: FillRequest) => this.getFillOrderRequest(order, fillRequest))
 			.after((tx => new BlockchainEthereumTransaction(tx)))
 
 		return {
-			maxAmount: makeStock,
+			...this.getSupportFlags(order),
+			maxAmount: await this.getMaxAmount(order),
 			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
-			originFeeSupport: this.getOriginFeeSupport(order),
-			payoutsSupport: this.getPayoutsSupport(order),
 			submit,
 		}
 	}
