@@ -2,9 +2,9 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import type { ISell, PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 import { SellRequest } from "../../order/sell/domain"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, OrderId } from "@rarible/api-client"
+import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toOrderId } from "@rarible/types"
+import { toAddress } from "@rarible/types"
 
 export class Sell implements ISell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
@@ -47,8 +47,7 @@ export class Sell implements ISell {
 					originFees: [], // todo
 				}
 			})
-			.after((order): OrderId => {
-				return toOrderId(`${this.wallet.blockchain}:${order.hash}`)
+			.after(() => {
 			})
 		return {
 			supportedCurrencies: [{ blockchain: "ETHEREUM", type: "NATIVE" }, {
