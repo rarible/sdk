@@ -1686,10 +1686,10 @@
   dependencies:
     "@rarible/types" "^0.1.7"
 
-"@rarible/protocol-ethereum-sdk@^0.6.1":
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.6.1.tgz#93c78c42e81d6c3ddd06c1cb3edce8e05ffddfb2"
-  integrity sha512-zS3EOmztgt3U8urnKIXRZa5E9npfPFCCggHwvJPwzZ8AJLTuMJ0FwUITIq8RFN3PoPuM1GCNiTJPHqHunK6Q3g==
+"@rarible/protocol-ethereum-sdk@^0.6.3":
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.6.3.tgz#cfdc38972091eed06181cdb0fd274a6a48918f8f"
+  integrity sha512-1E5ZxlkA82Xsz2kxHGixl4om+7EJKMNMXjLHXDnAVLA5gZ2E2FCLwqIJBIhqPzTq7DAYD7A64H/KFS69jHMaGA==
   dependencies:
     "@rarible/action" "^0.3.2"
     "@rarible/ethereum-provider" "^0.6.0"

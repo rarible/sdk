@@ -21,7 +21,7 @@
     "@ethereumjs/tx": "3.3.2",
     "@rarible/api-client": "0.0.2",
     "@rarible/ethereum-provider": "0.5.3",
-    "@rarible/protocol-ethereum-sdk": "^0.6.1",
+    "@rarible/protocol-ethereum-sdk": "^0.6.3",
     "@rarible/sdk-transaction": "^0.0.0",
     "@rarible/sdk-wallet": "^0.0.0",
     "@rarible/types": "^0.1.9",

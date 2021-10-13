@@ -12,7 +12,7 @@ export function createEthereumSdk(wallet: EthereumWallet): IRaribleSdk {
 			mint: new Mint(sdk).prepare,
 		},
 		order: {
-			fill: new Fill(sdk).fill,
+			fill: new Fill(sdk, wallet).fill,
 		},
 	}
 }

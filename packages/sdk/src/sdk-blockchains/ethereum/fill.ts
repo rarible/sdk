@@ -6,6 +6,9 @@ import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fil
 import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
+import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
+import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -23,7 +26,10 @@ export type SupportFlagsResponse = {
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
 export class Fill {
-	constructor(private sdk: RaribleSdk) {
+	constructor(
+		private sdk: RaribleSdk,
+		private wallet: EthereumWallet
+	) {
 		this.fill = this.fill.bind(this)
 	}
 
@@ -235,19 +241,24 @@ export class Fill {
 		}
 	}
 
+
 	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber> {
-		if (
-			order.take.assetType.assetClass === "ERC721" ||
-			order.take.assetType.assetClass === "ERC721_LAZY" ||
-			order.take.assetType.assetClass === "ERC1155" ||
-			order.take.assetType.assetClass === "ERC1155_LAZY"
-		) {
-			const response = await this.sdk.apis.nftOwnership.getNftOwnershipsByItem({
-				contract: order.take.assetType.contract,
-				tokenId: order.take.assetType.tokenId,
+		if (isNft(order.take.assetType)) {
+			const ownershipId = getOwnershipId(
+				order.take.assetType.contract,
+				order.take.assetType.tokenId,
+				toAddress(await this.wallet.ethereum.getFrom())
+			)
+
+			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipByIdRaw({
+				ownershipId,
 			})
 
-			return toBigNumber(BigNumberClass.min(response.total, order.take.value).toFixed())
+			if (ownership.status === 200) {
+				return toBigNumber(BigNumberClass.min(ownership.value.value, order.take.value).toFixed())
+			} else {
+				throw new Error("Ownership has not been found")
+			}
 		} else {
 			return order.makeStock
 		}
