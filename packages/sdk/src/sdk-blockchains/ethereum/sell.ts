@@ -1,10 +1,10 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import type { ISell, PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
-import { SellRequest } from "../../order/sell/domain"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress } from "@rarible/types"
+import { SellRequest } from "../../order/sell/domain"
+import type { ISell, PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 
 export class Sell implements ISell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
@@ -43,19 +43,25 @@ export class Sell implements ISell {
 					amount: parseInt(sellFormRequest.amount),
 					takeAssetType,
 					price: sellFormRequest.price,
-					payouts: [], // todo
-					originFees: [], // todo
+					payouts: sellFormRequest.payouts?.map(p => ({
+						account: toAddress(p.account),
+						value: parseInt(p.value),
+					})) || [],
+					originFees: sellFormRequest.originFees?.map(fee => ({
+						account: toAddress(fee.account),
+						value: parseInt(fee.value),
+					})) || [],
 				}
 			})
-			.after(() => {
-			})
+			.after(() => {})
+
 		return {
-			supportedCurrencies: [{ blockchain: "ETHEREUM", type: "NATIVE" }, {
-				blockchain: "ETHEREUM",
-				type: "ERC20",
-			}],
+			supportedCurrencies: [
+				{ blockchain: "ETHEREUM", type: "NATIVE" },
+				{ blockchain: "ETHEREUM", type: "ERC20" },
+			],
 			maxAmount: item.supply,
-			baseFee: 10,//todo
+			baseFee: await this.sdk.order.getBaseOrderFee("RARIBLE_V2"),
 			submit: sellAction,
 		}
 	}
