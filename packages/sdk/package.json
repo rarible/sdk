@@ -46,5 +46,8 @@
   "peerDependencies": {
     "@rarible/action": "0.3.2",
     "@rarible/types": "0.1.9"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
