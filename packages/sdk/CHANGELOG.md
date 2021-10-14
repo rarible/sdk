@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.1](https://github.com/rarible/sdk/compare/v0.1.0...v0.1.1) (2021-10-14)
+
+
+### Bug Fixes
+
+* sale method was fixed and common sale test has been added ([37dc5f1](https://github.com/rarible/sdk/commit/37dc5f1d3098429b608bb0953c72135a5f14519e))
+
+
+
+
+
 # 0.1.0 (2021-10-14)
 
 
