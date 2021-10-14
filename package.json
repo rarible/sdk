@@ -30,9 +30,6 @@
       "yarn run prettify:packages"
     ]
   },
-  "dependencies": {
-    "@rarible/action": "0.3.2"
-  },
   "devDependencies": {
     "@babel/core": "7.15.5",
     "@rarible/eslint-config-ts": "^0.0.5",

@@ -2,7 +2,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress } from "@rarible/types"
+import { toAddress, toOrderId } from "@rarible/types"
 import { SellRequest } from "../../order/sell/domain"
 import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 
@@ -11,7 +11,7 @@ export class Sell {
 		this.sell = this.sell.bind(this)
 	}
 
-	private getEthTakeAssetType(currency: EthEthereumAssetType | EthErc20AssetType | FlowAssetType) {
+	static getEthTakeAssetType(currency: EthEthereumAssetType | EthErc20AssetType | FlowAssetType) {
 		switch (currency["@type"]) {
 			case "ERC20": {
 				return {
@@ -34,11 +34,11 @@ export class Sell {
 		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: request.itemId })
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: SellRequest) => {
-				const takeAssetType = this.getEthTakeAssetType(sellFormRequest.currency)
+				const takeAssetType = Sell.getEthTakeAssetType(sellFormRequest.currency)
 				return {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
-						tokenId: toBigNumber(request.itemId),
+						tokenId: toBigNumber(item.tokenId),
 						contract: toAddress(item.contract),
 					},
 					amount: parseInt(sellFormRequest.amount),
@@ -54,7 +54,8 @@ export class Sell {
 					})) || [],
 				}
 			})
-			.after(() => {})
+			.after((order) =>  toOrderId(order.hash))
+
 
 		return {
 			supportedCurrencies: [
