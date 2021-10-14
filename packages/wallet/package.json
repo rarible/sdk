@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -13,8 +13,8 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "0.5.3",
-    "@rarible/api-client": "0.0.2"
+    "@rarible/api-client": "0.0.2",
+    "@rarible/ethereum-provider": "0.5.3"
   },
   "devDependencies": {
     "typescript": "4.3.5"
