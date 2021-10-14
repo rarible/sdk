@@ -1,4 +1,5 @@
 import { IMint } from "./nft/mint/domain"
+import { ISell } from "./order/sell/domain"
 import { IFill } from "./order/fill/domain"
 
 export interface IRaribleSdk {
@@ -6,6 +7,7 @@ export interface IRaribleSdk {
 		mint: IMint
 	},
 	order: {
+		sell: ISell,
 		fill: IFill
 	}
 }

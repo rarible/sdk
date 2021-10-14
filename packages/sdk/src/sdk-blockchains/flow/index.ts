@@ -1,4 +1,4 @@
-import { BlockchainWallet, EthereumWallet, FlowWallet } from "@rarible/sdk-wallet/src"
+import { FlowWallet } from "@rarible/sdk-wallet/src"
 import { IRaribleSdk } from "../../domain"
 import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 
@@ -11,6 +11,7 @@ export function createFlowSdk(wallet: FlowWallet): IRaribleSdk {
 		},
 		order: {
 			fill: null as any,
+			sell: null as any,
 		},
 	}
 }

@@ -1,5 +1,6 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId } from "@rarible/api-client"
+import { EthOrderPayout } from "@rarible/api-client/build/models/EthOrderPayout"
 import type { CurrencyType } from "../../common/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
 
@@ -29,9 +30,18 @@ export type SellRequest = {
 	 * Currency of the trade
 	 */
 	currency: EthErc20AssetType | EthEthereumAssetType | FlowAssetType
+	/**
+	 * Origin fees, if not supported by the underlying contract, will throw Error
+	 */
+	originFees?: EthOrderPayout[]
+	/**
+	 * Payouts, if not supported by the underlying contract, will throw Error
+	 */
+	payouts?: EthOrderPayout[]
 }
 
-export interface PrepareSellResponse extends AbstractPrepareResponse<SellActionEnum, SellRequest, void> {
+
+export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign", SellRequest, void> {
 	/**
 	 * currencies supported by the blockchain
 	 */
@@ -46,4 +56,4 @@ export interface PrepareSellResponse extends AbstractPrepareResponse<SellActionE
 	baseFee: number
 }
 
-type SellFunction = (request: PrepareSellRequest) => Promise<PrepareSellResponse>
+export type ISell = (request: PrepareSellRequest) => Promise<PrepareSellResponse>

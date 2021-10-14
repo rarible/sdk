@@ -31,8 +31,7 @@
     ]
   },
   "dependencies": {
-    "@rarible/action": "0.3.2",
-    "@rarible/protocol-ethereum-sdk": "^0.6.3"
+    "@rarible/action": "0.3.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
