@@ -1,5 +1,5 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId, Order } from "@rarible/api-client"
+import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId } from "@rarible/api-client"
 import { EthOrderPayout } from "@rarible/api-client/build/models/EthOrderPayout"
 import type { CurrencyType } from "../../common/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
@@ -56,6 +56,4 @@ export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" |
 	baseFee: number
 }
 
-export interface ISell {
-	prepare: (request: PrepareSellRequest) => Promise<PrepareSellResponse>
-}
+export type ISell = (request: PrepareSellRequest) => Promise<PrepareSellResponse>

@@ -4,10 +4,11 @@ import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress } from "@rarible/types"
 import { SellRequest } from "../../order/sell/domain"
-import type { ISell, PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
+import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 
-export class Sell implements ISell {
+export class Sell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
+		this.sell = this.sell.bind(this)
 	}
 
 	private getEthTakeAssetType(currency: EthEthereumAssetType | EthErc20AssetType | FlowAssetType) {
@@ -29,7 +30,7 @@ export class Sell implements ISell {
 		}
 	}
 
-	async prepare(request: PrepareSellRequest): Promise<PrepareSellResponse> {
+	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
 		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: request.itemId })
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: SellRequest) => {
@@ -61,7 +62,7 @@ export class Sell implements ISell {
 				{ blockchain: "ETHEREUM", type: "ERC20" },
 			],
 			maxAmount: item.supply,
-			baseFee: await this.sdk.order.getBaseOrderFee("RARIBLE_V2"),
+			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit: sellAction,
 		}
 	}

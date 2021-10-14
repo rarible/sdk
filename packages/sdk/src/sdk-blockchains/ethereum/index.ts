@@ -14,7 +14,7 @@ export function createEthereumSdk(wallet: EthereumWallet): IRaribleSdk {
 		},
 		order: {
 			fill: new Fill(sdk, wallet).fill,
-			sell: new Sell(sdk, wallet),
+			sell: new Sell(sdk, wallet).sell,
 		},
 	}
 }
