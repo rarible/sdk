@@ -1,5 +1,5 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId } from "@rarible/api-client"
+import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId, OrderId } from "@rarible/api-client"
 import { EthOrderPayout } from "@rarible/api-client/build/models/EthOrderPayout"
 import type { CurrencyType } from "../../common/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
@@ -41,7 +41,7 @@ export type SellRequest = {
 }
 
 
-export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign", SellRequest, void> {
+export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign", SellRequest, OrderId> {
 	/**
 	 * currencies supported by the blockchain
 	 */
