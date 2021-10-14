@@ -1654,7 +1654,7 @@
   dependencies:
     "@octokit/openapi-types" "^10.6.4"
 
-"@rarible/action@^0.3.3":
+"@rarible/action@0.3.3", "@rarible/action@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.3.3.tgz#4ba26d7e306e79bd50f3d49b85d20d8c8df829a4"
   integrity sha512-0Vhw+uDQxncydy9sXPbPt6tYVrt8pWDRz7a5uGHtSO5eN4ySxcWsuwyEaQ7MD3fkivrSLkhwoRTsRhgumZ0hUQ==
