@@ -63,6 +63,7 @@ export const SCHEMA = {
 				"ERC721",
 				"ERC1155",
 				"FLOW",
+				"TEZOS",
 			],
 		},
 		"Collection_Features": {

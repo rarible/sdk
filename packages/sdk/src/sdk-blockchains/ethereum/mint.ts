@@ -95,7 +95,7 @@ export class Mint {
 
 	async prepare(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
 		const { collection } = prepareRequest
-		if (collection.type === "CRYPTO_PUNKS" || collection.type === "FLOW") {
+		if (collection.type === "CRYPTO_PUNKS" || collection.type === "FLOW" || collection.type === "TEZOS") {
 			throw new Error("Unsupported collection type")
 		}
 

@@ -40,4 +40,18 @@ export class FlowWallet implements AbstractWallet {
 	}
 }
 
-export type BlockchainWallet = EthereumWallet | FlowWallet
+export class TezosWallet implements AbstractWallet {
+	readonly blockchain = "TEZOS"
+
+	constructor(
+		public readonly tz: any,
+		public readonly network: EthereumNetwork
+	) {}
+
+	signPersonalMessage(message: string): Promise<string> {
+		// return this.ethereum.personalSign(message)
+		return "" as any
+	}
+}
+
+export type BlockchainWallet = EthereumWallet | FlowWallet | TezosWallet
