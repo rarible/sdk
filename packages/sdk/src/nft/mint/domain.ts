@@ -11,6 +11,9 @@ type MintResponseCommon = {
 	itemId: ItemId
 }
 
+/**
+ * Mint type
+ */
 export enum MintType {
 	OFF_CHAIN = "off-chain",
 	ON_CHAIN = "on-chain"
