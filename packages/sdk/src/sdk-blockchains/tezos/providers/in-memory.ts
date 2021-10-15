@@ -1,7 +1,7 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "tezos/sdk/providers/in_memory/in_memory_provider"
 
-export async function createInMemoryProvider({ node, apiUrl }: {node: string, apiUrl: string}) {
+export async function createInMemoryProvider({ node }: {node: string}) {
 	const tezos = in_memory_provider(
 		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
 		node)
@@ -13,7 +13,6 @@ export async function createInMemoryProvider({ node, apiUrl }: {node: string, ap
 
 	return {
 		tezos,
-		api: apiUrl,
 		config,
 	}
 }

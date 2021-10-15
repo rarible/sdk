@@ -1,20 +1,38 @@
-import { TezosProvider, Provider } from "tezos/sdk/common/base"
-import { Config } from "tezos/sdk/config/type"
+import {  Provider } from "tezos/sdk/common/base"
+// import { TezosNetwork } from "@rarible/sdk-wallet"
+import { TezosNetwork } from "../../../../../wallet/src"
 import { createInMemoryProvider } from "./in-memory"
-import { createBeaconProvider } from "./beacon"
 
-export async function createProvider(): Promise<Provider> {
-	const urls = {
-		api_url: "http://localhost:8080/v0.1/",
-		node: "https://granada.tz.functori.com",
+// eslint-disable-next-line camelcase
+export function getProviderUrls(network: TezosNetwork): { apiUrl: string, node: string } {
+	switch (network) {
+		case "granada": {
+			return {
+				apiUrl: "https://rarible-api.functori.com/v0.1",
+				node: "https://granada.tz.functori.com",
+			}
+		}
+		case "local": {
+			return {
+				apiUrl: "http://localhost:8080/v0.1",
+				node: "https://granada.tz.functori.com",
+			}
+		}
+		default: {
+			throw new Error(`Unsupported ${network} network`)
+		}
 	}
+}
+
+export async function createProvider(network: TezosNetwork): Promise<Provider> {
+	const { apiUrl, node } = getProviderUrls(network)
 
 	// const tezos = await createBeaconProvider({ node: urls.node })
-	const { tezos, config, api } = await createInMemoryProvider({ node: urls.node, apiUrl: urls.api_url })
+	const { tezos, config } = await createInMemoryProvider({ node })
 
 	return {
 		tezos,
-		api,
+		api: apiUrl,
 		config,
 	}
 }

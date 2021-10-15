@@ -48,7 +48,7 @@ export type SellRequest = {
 }
 
 
-export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign", SellRequest, OrderId> {
+export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", SellRequest, OrderId> {
 	/**
 	 * currencies supported by the blockchain
 	 */

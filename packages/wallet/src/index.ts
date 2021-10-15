@@ -5,7 +5,7 @@ import type { UnionAddress, Blockchain } from "@rarible/api-client"
 
 export type EthereumNetwork = "mainnet" | "ropsten" | "rinkeby" | "e2e"
 export type FlowNetwork = "mainnet" | "testnet"
-
+export type TezosNetwork = "mainnet" | "granada" | "local"
 
 interface AbstractWallet {
 	blockchain: Blockchain
@@ -44,13 +44,13 @@ export class TezosWallet implements AbstractWallet {
 	readonly blockchain = "TEZOS"
 
 	constructor(
-		public readonly tz: any,
-		public readonly network: EthereumNetwork
+		public readonly network: TezosNetwork
 	) {}
 
 	signPersonalMessage(message: string): Promise<string> {
 		// return this.ethereum.personalSign(message)
-		return "" as any
+		// @todo implement
+		return Promise.resolve(message)
 	}
 }
 
