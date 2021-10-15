@@ -1,8 +1,10 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetType, ItemId, OrderId } from "@rarible/api-client"
-import { EthOrderPayout } from "@rarible/api-client/build/models/EthOrderPayout"
+import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetTypeNft, FlowAssetTypeFt, ItemId, OrderId } from "@rarible/api-client"
+import { OrderPayout } from "@rarible/api-client"
+import { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
 import type { CurrencyType } from "../../common/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
+
 
 export type PrepareSellRequest = {
 	/**
@@ -17,6 +19,11 @@ export enum SellActionEnum {
 	FLOW_SEND_TRANSACTION = "send-transaction"
 }
 
+export type SellRequestCurrency =
+	EthErc20AssetType | EthEthereumAssetType |
+	FlowAssetTypeNft | FlowAssetTypeFt |
+	TezosXTZAssetType | TezosFA12AssetType
+
 export type SellRequest = {
 	/**
 	 * How many editions to sell
@@ -29,19 +36,19 @@ export type SellRequest = {
 	/**
 	 * Currency of the trade
 	 */
-	currency: EthErc20AssetType | EthEthereumAssetType | FlowAssetType
+	currency: SellRequestCurrency
 	/**
 	 * Origin fees, if not supported by the underlying contract, will throw Error
 	 */
-	originFees?: EthOrderPayout[]
+	originFees?: OrderPayout[]
 	/**
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
-	payouts?: EthOrderPayout[]
+	payouts?: OrderPayout[]
 }
 
 
-export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign", SellRequest, OrderId> {
+export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", SellRequest, OrderId> {
 	/**
 	 * currencies supported by the blockchain
 	 */

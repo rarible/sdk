@@ -13,7 +13,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "0.0.2",
+    "@rarible/api-client": "0.0.3",
     "@rarible/ethereum-provider": "0.7.2"
   },
   "devDependencies": {

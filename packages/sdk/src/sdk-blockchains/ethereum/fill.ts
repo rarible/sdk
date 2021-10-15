@@ -124,7 +124,6 @@ export class Fill {
 			end: order.endedAt !== undefined ? parseInt(order.endedAt): undefined,
 			signature: order.signature !== undefined ? toBinary(order.signature) : undefined,
 			makeStock: order.makeStock,
-
 		}
 		switch (order.data["@type"]) {
 			case "ETH_RARIBLE_V1": {
