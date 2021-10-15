@@ -64,7 +64,9 @@ export class Fill {
 		return {
 			type: "RARIBLE_V2",
 			maker: order.maker,
+			maker_edpk: order.data.makerEdpk!,
 			taker: order.taker,
+			taker_edpk: order.data.takerEdpk,
 			make: {
 				asset_type: Fill.getTezosAssetType(order.make.type),
 				value: BigInt(order.make.value),

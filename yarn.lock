@@ -1685,10 +1685,10 @@
   dependencies:
     callable-instance "2.0.0"
 
-"@rarible/api-client@0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.3.tgz#52a459538a5a0e164d5deb00397652838185043e"
-  integrity sha512-9kz+IQE+hWz2vbMtMhiy4YHxsQYyEF8/9FEvlhLjv7KMTscPeSsOtyJzvtlVdaVPE7Gn3GpNRV9AGW+/fLMdeg==
+"@rarible/api-client@0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.4.tgz#3c0af8ba8e355b44dabf0ac22db4e6a19293c022"
+  integrity sha512-FbX94veQ6IIv8++zBTaxM9yzr8y3NU5jsYIW+GsONP+HILG6YhjUFJ6NBHyLF4u205FBeO2HXzd14bRLWyiC1Q==
   dependencies:
     "@rarible/types" "^0.1.9"
 
@@ -11759,9 +11759,9 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-"tezos@https://gitlab.com/tezos-paris-hub/rarible/rarible-backend.git#b62984ba96e7ad3f0a82cd2d01691e39a2d348d0":
+"tezos@https://gitlab.com/tezos-paris-hub/rarible/rarible-backend.git#c77922b67076f066b6d90b18b07e06462b6959bc":
   version "0.0.0"
-  resolved "https://gitlab.com/tezos-paris-hub/rarible/rarible-backend.git#b62984ba96e7ad3f0a82cd2d01691e39a2d348d0"
+  resolved "https://gitlab.com/tezos-paris-hub/rarible/rarible-backend.git#c77922b67076f066b6d90b18b07e06462b6959bc"
 
 throat@^6.0.1:
   version "6.0.1"

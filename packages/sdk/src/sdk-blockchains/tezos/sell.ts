@@ -41,7 +41,7 @@ export class Sell {
 
 		if (!Array.isArray(payouts) || payouts.length === 0) {
 			return [{
-				account: pk_to_pkh(await this.getMaker()),
+				account: pk_to_pkh(await this.getMakerPublicKey()),
 				value: 10000n,
 			}]
 		}
@@ -52,7 +52,7 @@ export class Sell {
 		})) || []
 	}
 
-	async getMaker(): Promise<string> {
+	async getMakerPublicKey(): Promise<string> {
 		const maker = await get_public_key(this.provider)
 		if (!maker) {
 			throw new Error("Maker does not exist")
@@ -67,13 +67,14 @@ export class Sell {
 
 	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {
 		const item = await this.getItem(prepareSellRequest.itemId)
-		const maker = await this.getMaker()
+		const makerPublicKey = await this.getMakerPublicKey()
 
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: SellRequest) => {
 				const tezosRequest : TezosSellRequest = {
-					maker,
+					maker: pk_to_pkh(makerPublicKey),
+					maker_edpk: makerPublicKey,
 					make_asset_type: {
 						contract: item.contract,
 						token_id: BigInt(item.tokenId),
