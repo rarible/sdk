@@ -1,5 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { UnionAddress, Blockchain } from "@rarible/api-client"
+import type { Blockchain, UnionAddress } from "@rarible/api-client"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
@@ -9,6 +9,7 @@ export type FlowNetwork = "mainnet" | "testnet"
 
 interface AbstractWallet {
 	blockchain: Blockchain
+
 	signPersonalMessage(message: string): Promise<string>
 }
 
@@ -17,8 +18,9 @@ export class EthereumWallet implements AbstractWallet {
 
 	constructor(
 		public readonly ethereum: Ethereum,
-		public readonly network: EthereumNetwork
-	) {}
+		public readonly network: EthereumNetwork,
+	) {
+	}
 
 	signPersonalMessage(message: string): Promise<string> {
 		return this.ethereum.personalSign(message)
@@ -31,13 +33,39 @@ export class FlowWallet implements AbstractWallet {
 	constructor(
 		public readonly fcl: any,
 		public readonly address: UnionAddress,
-		public readonly network: FlowNetwork
-	) {}
-
-	signPersonalMessage(message: string): Promise<string> {
-		// @todo implement
-		return Promise.resolve(message)
+		public readonly network: FlowNetwork,
+	) {
 	}
+
+	async signPersonalMessage(message: string): Promise<string> {
+		const currentUser: CurrentUser = this.fcl.currentUser()
+		const userAddress = (await currentUser.snapshot()).addr
+		const messageHex = Buffer.from(message).toString("hex")
+		const signatures: Signature[] = await currentUser.signUserMessage(messageHex)
+		if (signatures.length) {
+			const signature = signatures.find(s => s.addr.toLowerCase() === userAddress.toLowerCase())?.signature
+			if (signature) {
+				return signature
+			} else {
+				throw Error(`Signature of user address "${userAddress}" not found`)
+			}
+		} else {
+			throw Error("Response of signUserMessage is empty")
+		}
+	}
+}
+
+//todo remove these type when it shipped from flow-sdk
+interface CurrentUser {
+	snapshot(): Promise<any>
+
+	signUserMessage(message: string): Promise<Signature[]>
+}
+
+//todo remove these type when it shipped from flow-sdk
+type Signature = {
+	addr: string
+	signature: string
 }
 
 export type BlockchainWallet = EthereumWallet | FlowWallet
