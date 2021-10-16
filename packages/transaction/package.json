@@ -15,7 +15,7 @@
   "dependencies": {
     "@rarible/api-client": "0.0.4",
     "@rarible/ethereum-provider": "0.7.2",
-    "tezos": "https://gitlab.com/tezos-paris-hub/rarible/rarible-backend.git#c77922b67076f066b6d90b18b07e06462b6959bc"
+    "tezos-sdk-module": "^0.0.3"
   },
   "devDependencies": {
     "typescript": "4.3.5"

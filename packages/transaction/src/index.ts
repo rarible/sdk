@@ -1,6 +1,6 @@
 import { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import { OperationResult } from "tezos/sdk/common/base"
+import { OperationResult } from "tezos-sdk-module/dist/common/base"
 import { IBlockchainTransaction } from "./domain"
 
 export class BlockchainEthereumTransaction implements IBlockchainTransaction {

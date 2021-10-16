@@ -1,10 +1,10 @@
 // eslint-disable-next-line camelcase
-import { AssetType as TezosAssetType, get_address, Provider } from "tezos/sdk/common/base"
+import { AssetType as TezosAssetType, get_address, Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
 import { AssetType, Order, OrderId, OrderPayout } from "@rarible/api-client"
-import { OrderForm, Part as TezosPart } from "tezos/sdk/order/utils"
+import { OrderForm, Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 // eslint-disable-next-line camelcase
-import { fill_order } from "tezos/sdk/order"
+import { fill_order } from "tezos-sdk-module/dist/order"
 import { BigNumber, toBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import {

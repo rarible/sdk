@@ -1,5 +1,5 @@
-import { Config as TezosConfig } from "tezos/sdk/config/type"
-import { TezosProvider } from "tezos/sdk/common/base"
+import { Config as TezosConfig } from "tezos-sdk-module/dist/config/type"
+import { TezosProvider } from "tezos-sdk-module/dist/common/base"
 
 export type ItemType = {
 	id: string,

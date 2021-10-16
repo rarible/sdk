@@ -1,4 +1,4 @@
-import {  Provider } from "tezos/sdk/common/base"
+import {  Provider } from "tezos-sdk-module/dist/common/base"
 // import { TezosNetwork } from "@rarible/sdk-wallet"
 import { TezosNetwork } from "@rarible/sdk-wallet"
 import { createInMemoryProvider } from "./in-memory"

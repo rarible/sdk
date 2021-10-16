@@ -1,8 +1,8 @@
-import { SellRequest as TezosSellRequest, sell } from "tezos/sdk/order/sell"
+import { SellRequest as TezosSellRequest, sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
-import { Provider, get_public_key } from "tezos/sdk/common/base"
+import { Provider, get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
-import { pk_to_pkh } from "tezos/sdk/main"
+import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"

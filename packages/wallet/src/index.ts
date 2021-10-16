@@ -1,6 +1,6 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Blockchain, UnionAddress } from "@rarible/api-client"
-import { Provider } from "tezos/sdk/common/base"
+import { Provider } from "tezos-sdk-module/dist/common/base"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
