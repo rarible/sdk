@@ -4,13 +4,13 @@ import { createEthereumSdk } from "./ethereum"
 import { createFlowSdk } from "./flow"
 import { createTezosSdk } from "./tezos"
 
-export async function getSDKBlockchainInstance(wallet: BlockchainWallet): Promise<IRaribleSdk> {
+export function getSDKBlockchainInstance(wallet: BlockchainWallet): IRaribleSdk {
 	if (wallet.blockchain === "ETHEREUM") {
 		return createEthereumSdk(wallet)
 	} else if (wallet.blockchain === "FLOW") {
 		return createFlowSdk(wallet)
 	} else if (wallet.blockchain === "TEZOS") {
-		return await createTezosSdk(wallet)
+		return createTezosSdk(wallet)
 	} else {
 		throw new Error("Unsupported wallet blockchain")
 	}

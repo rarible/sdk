@@ -3,7 +3,7 @@ import { IRaribleSdk } from "../../domain"
 import { Sell } from "./sell"
 import { Fill } from "./fill"
 
-export async function createTezosSdk(wallet: TezosWallet): Promise<IRaribleSdk> {
+export function createTezosSdk(wallet: TezosWallet): IRaribleSdk {
 	return {
 		nft: {
 			mint: null as any,
