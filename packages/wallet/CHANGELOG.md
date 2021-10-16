@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.6](https://github.com/rarible/sdk/compare/v0.1.5...v0.1.6) (2021-10-16)
+
+
+### Bug Fixes
+
+* minor change ([3c06b84](https://github.com/rarible/sdk/commit/3c06b84efd1a1e46cb3b044453a6455a0b40e156))
+
+
+
+
+
 ## [0.1.4](https://github.com/rarible/sdk/compare/v0.1.3...v0.1.4) (2021-10-16)
 
 
