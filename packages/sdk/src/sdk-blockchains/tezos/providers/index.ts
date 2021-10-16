@@ -1,7 +1,9 @@
-import {  Provider } from "tezos-sdk-module/dist/common/base"
+import { Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
 // import { TezosNetwork } from "@rarible/sdk-wallet"
 import { TezosNetwork } from "@rarible/sdk-wallet"
+import { Config as TezosConfig } from "tezos-sdk-module/dist/config/type"
 import { createInMemoryProvider } from "./in-memory"
+import { createBeaconProvider } from "./beacon"
 
 // eslint-disable-next-line camelcase
 export function getProviderUrls(network: TezosNetwork): { apiUrl: string, node: string } {
@@ -27,12 +29,19 @@ export function getProviderUrls(network: TezosNetwork): { apiUrl: string, node: 
 export async function createProvider(network: TezosNetwork): Promise<Provider> {
 	const { apiUrl, node } = getProviderUrls(network)
 
-	// const tezos = await createBeaconProvider({ node: urls.node })
-	const { tezos, config } = await createInMemoryProvider({ node })
-
-	return {
-		tezos,
-		api: apiUrl,
-		config,
+	if (network === "local") {
+		const response = await createInMemoryProvider({ node })
+		return {
+			...response,
+			api: apiUrl,
+		}
+	} else if (network === "granada") {
+		const response = await createBeaconProvider({ node: node })
+		return {
+			...response,
+			api: apiUrl,
+		}
+	} else {
+		throw new Error("Unsupported tezos network")
 	}
 }
