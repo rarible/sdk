@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.9](https://github.com/rarible/sdk/compare/v0.1.8...v0.1.9) (2021-10-16)
+
+
+### Bug Fixes
+
+* use tezos-sdk-module ([184304f](https://github.com/rarible/sdk/commit/184304f2e58ade0dae1ac16a814f6757949ab790))
+
+
+
+
+
 ## [0.1.8](https://github.com/rarible/sdk/compare/v0.1.7...v0.1.8) (2021-10-16)
 
 
