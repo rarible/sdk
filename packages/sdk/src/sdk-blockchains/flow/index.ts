@@ -1,4 +1,4 @@
-import { FlowWallet } from "@rarible/sdk-wallet/src"
+import { FlowWallet } from "@rarible/sdk-wallet"
 import { IRaribleSdk } from "../../domain"
 import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 

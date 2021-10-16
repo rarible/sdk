@@ -1,4 +1,4 @@
-import { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import { BlockchainWallet } from "@rarible/sdk-wallet"
 import { IRaribleSdk } from "../domain"
 import { createEthereumSdk } from "./ethereum"
 import { createFlowSdk } from "./flow"

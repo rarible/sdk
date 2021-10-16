@@ -1,6 +1,6 @@
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet/src"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toBigNumber, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"

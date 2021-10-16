@@ -6,7 +6,7 @@ import { OrderForm, Part as TezosPart } from "tezos/sdk/order/utils"
 // eslint-disable-next-line camelcase
 import { fill_order } from "tezos/sdk/order"
 import { BigNumber, toBigNumber } from "@rarible/types"
-import { BlockchainTezosTransaction } from "@rarible/sdk-transaction/src"
+import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import {
 	FillRequest,
 	OriginFeeSupport,

@@ -1,7 +1,7 @@
 import { Order, OrderId } from "@rarible/api-client"
 import { BigNumber } from "@rarible/types/build/big-number"
 import { OrderPayout } from "@rarible/api-client"
-import { IBlockchainTransaction } from "@rarible/sdk-transaction/src/domain"
+import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { AbstractPrepareResponse } from "../../common/domain"
 
 export type PrepareFillRequest = {

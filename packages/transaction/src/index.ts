@@ -30,3 +30,5 @@ export class BlockchainTezosTransaction implements IBlockchainTransaction {
 		}
 	}
 }
+
+export * from "./domain"

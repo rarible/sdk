@@ -1,6 +1,6 @@
 import {  Provider } from "tezos/sdk/common/base"
 // import { TezosNetwork } from "@rarible/sdk-wallet"
-import { TezosNetwork } from "../../../../../wallet/src"
+import { TezosNetwork } from "@rarible/sdk-wallet"
 import { createInMemoryProvider } from "./in-memory"
 
 // eslint-disable-next-line camelcase

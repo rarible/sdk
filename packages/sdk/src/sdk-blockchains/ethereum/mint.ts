@@ -11,7 +11,7 @@ import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/m
 import { toAddress, toItemId } from "@rarible/types"
 import { NftCollection } from "@rarible/protocol-api-client"
 import { toBn } from "@rarible/utils/build/bn"
-import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction/src"
+import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import {
 	MintType,
