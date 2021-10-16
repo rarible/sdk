@@ -10,6 +10,7 @@ export type TezosNetwork = "mainnet" | "granada" | "local"
 
 interface AbstractWallet {
 	blockchain: Blockchain
+
 	signPersonalMessage(message: string): Promise<string>
 }
 
@@ -18,8 +19,9 @@ export class EthereumWallet implements AbstractWallet {
 
 	constructor(
 		public readonly ethereum: Ethereum,
-		public readonly network: EthereumNetwork
-	) {}
+		public readonly network: EthereumNetwork,
+	) {
+	}
 
 	signPersonalMessage(message: string): Promise<string> {
 		return this.ethereum.personalSign(message)
@@ -32,8 +34,9 @@ export class FlowWallet implements AbstractWallet {
 	constructor(
 		public readonly fcl: any,
 		public readonly address: UnionAddress,
-		public readonly network: FlowNetwork
-	) {}
+		public readonly network: FlowNetwork,
+	) {
+	}
 
 	signPersonalMessage(message: string): Promise<string> {
 		// @todo implement
@@ -45,8 +48,9 @@ export class TezosWallet implements AbstractWallet {
 	readonly blockchain = "TEZOS"
 
 	constructor(
-		public readonly provider: Provider
-	) {}
+		public readonly provider: Provider,
+	) {
+	}
 
 	signPersonalMessage(message: string): Promise<string> {
 		// return this.ethereum.personalSign(message)
