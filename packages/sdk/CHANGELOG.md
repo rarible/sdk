@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.8](https://github.com/rarible/sdk/compare/v0.1.7...v0.1.8) (2021-10-16)
+
+
+### Bug Fixes
+
+* simplify createRaribleSdk function ([e8f6b06](https://github.com/rarible/sdk/commit/e8f6b0676f9712573f29af31ad7e10cc79964ac5))
+
+
+
+
+
 ## [0.1.7](https://github.com/rarible/sdk/compare/v0.1.6...v0.1.7) (2021-10-16)
 
 
