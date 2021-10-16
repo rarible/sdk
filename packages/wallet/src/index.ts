@@ -1,5 +1,6 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { UnionAddress, Blockchain } from "@rarible/api-client"
+import type { Blockchain, UnionAddress } from "@rarible/api-client"
+import { Provider } from "tezos/sdk/common/base"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
@@ -44,7 +45,7 @@ export class TezosWallet implements AbstractWallet {
 	readonly blockchain = "TEZOS"
 
 	constructor(
-		public readonly network: TezosNetwork
+		public readonly provider: Provider
 	) {}
 
 	signPersonalMessage(message: string): Promise<string> {

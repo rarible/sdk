@@ -4,7 +4,7 @@ import { Provider, get_public_key } from "tezos/sdk/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos/sdk/main"
 import { Action } from "@rarible/action"
-import { ItemId, OrderPayout } from "@rarible/api-client"
+import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { PrepareSellRequest, PrepareSellResponse, SellRequest, SellRequestCurrency } from "../../order/sell/domain"
 import { ItemType, TezosOrder } from "./domain"
@@ -60,13 +60,16 @@ export class Sell {
 		return maker
 	}
 
-	async getItem(itemId: ItemId): Promise<ItemType> {
+	private async getItem(itemId: string): Promise<ItemType> {
 		const response = await fetch(`${this.provider.api}/items/${itemId}`)
 		return await response.json()
 	}
 
 	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {
-		const item = await this.getItem(prepareSellRequest.itemId)
+		if (!prepareSellRequest.itemId.startsWith("TEZOS")) {
+			throw new Error("Not a tezos item")
+		}
+		const item = await this.getItem(prepareSellRequest.itemId.substring(6))
 		const makerPublicKey = await this.getMakerPublicKey()
 
 		const submit = Action.create({
@@ -76,6 +79,7 @@ export class Sell {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
 					make_asset_type: {
+						asset_class: "FA_2",
 						contract: item.contract,
 						token_id: BigInt(item.tokenId),
 					},
@@ -91,7 +95,7 @@ export class Sell {
 
 				const sellOrder: TezosOrder = await sell(this.provider, tezosRequest)
 
-				return toOrderId(sellOrder.hash)
+				return toOrderId(`TEZOS:${sellOrder.hash}`)
 			},
 		})
 
