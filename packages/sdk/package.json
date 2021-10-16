@@ -6,8 +6,7 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
-    "build",
-    "typings.d.ts"
+    "build"
   ],
   "scripts": {
     "build": "run-s create-validators validators-lint-fix && tsc --project tsconfig-build.json",
