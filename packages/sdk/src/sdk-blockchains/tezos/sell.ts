@@ -62,7 +62,12 @@ export class Sell {
 
 	private async getItem(itemId: string): Promise<ItemType> {
 		const response = await fetch(`${this.provider.api}/items/${itemId}`)
-		return await response.json()
+		const json = await response.json()
+
+		if ("code" in json && json.code === "INVALID_ARGUMENT") {
+			throw new Error("Item does not exist")
+		}
+		return json
 	}
 
 	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {

@@ -3,7 +3,7 @@
 	"rules": {
 		"object-curly-spacing": ["error", "always"]
 	},
-	"globals":{
-		"BigInt":true
-	}
+    "globals":{
+      "BigInt": true
+    }
 }
