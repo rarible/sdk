@@ -8,7 +8,7 @@
     "build"
   ],
   "scripts": {
-    "build": "yarn run build-babel",
+    "build": "yarn run build-old",
     "build-old": "tsc --project tsconfig-build.json",
     "build-babel": "babel --extensions \".ts,.tsx,.mjs\" ./src --out-dir build && yarn run build-old && yarn run replace-mjs",
     "replace-mjs": "find ./build -type f -name \"*.js\" -exec sed -i '' 's#./jsbi.mjs#jsbi#' {} \\;",

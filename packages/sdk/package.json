@@ -9,7 +9,7 @@
     "build"
   ],
   "scripts": {
-    "build": "run-s create-validators validators-lint-fix build-babel",
+    "build": "run-s create-validators validators-lint-fix build-ts",
     "build-ts": "tsc --project tsconfig-build.json",
     "build-babel": "babel --extensions \".ts,.tsx\" ./src --out-dir build && tsc --project tsconfig-build.json --emitDeclarationOnly && yarn run replace-mjs",
     "replace-mjs": "find ./build -type f -name \"*.js\" -exec sed -i '' 's#./jsbi.mjs#jsbi#' {} \\;",
