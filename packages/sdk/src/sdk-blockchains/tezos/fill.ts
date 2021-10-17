@@ -8,8 +8,6 @@ import { fill_order } from "tezos-sdk-module/dist/order"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import { Address, BigNumber, Binary, toBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
-import { TezosFA12AssetType, TezosFA2AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
 import { OrderRaribleV2DataV1 } from "@rarible/protocol-api-client/build/models/OrderData"
 import { OrderPriceHistoryRecord } from "@rarible/protocol-api-client/build/models/OrderPriceHistoryRecord"
 import { OrderExchangeHistory } from "@rarible/protocol-api-client/build/models/OrderExchangeHistory"
@@ -267,24 +265,18 @@ export class Fill {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
-				const fillResponse = await fill_order(
-					this.provider,
-					preparedOrder,
-					{
-						amount: BigInt(fillRequest.amount),
-						payouts: this.convertOrderPayout(fillRequest.payouts),
-						origin_fees: this.convertOrderPayout(fillRequest.originFees),
-						infinite: fillRequest.infiniteApproval,
-						edpk: await this.provider.tezos.public_key(),
-					})
-
-				console.log("fill request", fillRequest, "order", preparedOrder, "request", {
+				const request = {
 					amount: BigInt(fillRequest.amount),
 					payouts: this.convertOrderPayout(fillRequest.payouts),
 					origin_fees: this.convertOrderPayout(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
 					edpk: await this.provider.tezos.public_key(),
-				})
+				}
+				const fillResponse = await fill_order(
+					this.provider,
+					preparedOrder,
+					request,
+				)
 				return new BlockchainTezosTransaction(fillResponse)
 			},
 		})
