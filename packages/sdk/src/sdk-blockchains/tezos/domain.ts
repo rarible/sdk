@@ -34,3 +34,14 @@ export type GetNftOwnershipByIdResponse = {
 	value: string,
 	lazyValue: string,
 }
+
+export type Collection = {
+	id: string,
+	owner: string,
+	type: string,
+	name: string,
+	features: [],
+	// eslint-disable-next-line camelcase
+	supports_lazy_mint: boolean,
+	minters: string[]
+}

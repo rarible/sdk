@@ -860,7 +860,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.14.5"
 
-"@babel/plugin-transform-typescript@^7.14.5", "@babel/plugin-transform-typescript@^7.8.3":
+"@babel/plugin-transform-typescript@^7.14.5", "@babel/plugin-transform-typescript@^7.15.8", "@babel/plugin-transform-typescript@^7.8.3":
   version "7.15.8"
   resolved "https://registry.yarnpkg.com/@babel/plugin-transform-typescript/-/plugin-transform-typescript-7.15.8.tgz#ff0e6a47de9b2d58652123ab5a879b2ff20665d8"
   integrity sha512-ZXIkJpbaf6/EsmjeTbiJN/yMxWPFWvlr7sEG1P95Xb4S4IBcrf2n7s/fItIhsAmOf8oSh3VJPDppO6ExfAfKRQ==
@@ -12885,10 +12885,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-sdk-module@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.3.tgz#a13e7acdc29a58b3d0b32a7b30d4baaa88a5f8b0"
-  integrity sha512-OZV3y2QlDgKpZHOSS9TH+DLGdTj8oK3xY7w5HOEMw1+8VA7qy+zCJ2byuNbgo+3YPzG1/U2dP6XhtUv0eaf6Eg==
+tezos-sdk-module@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.5.tgz#2eac7ea4d542139e9dfe9d629c6acaa3e9a90b3c"
+  integrity sha512-QcrYKfoZoVh5rmcnDGL/7UliZSjWutoOs6q9eqC9RDx6O7XQAitLuQpVwvsF+VELMNwUk9+sUpMcSBg7N42Szg==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.2"
     "@taquito/beacon-wallet" "^10.1.2"

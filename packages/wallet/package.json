@@ -19,19 +19,20 @@
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "0.0.4",
     "@rarible/ethereum-provider": "0.7.2",
-    "tezos-sdk-module": "^0.0.3",
-    "jsbi": "^3.2.5"
+    "jsbi": "^3.2.5",
+    "tezos-sdk-module": "^0.0.5"
   },
   "devDependencies": {
-    "typescript": "4.3.5",
     "@babel/cli": "7.14.8",
     "@babel/core": "7.14.8",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
     "@babel/plugin-syntax-bigint": "^7.8.3",
-    "@babel/plugin-transform-typescript": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.15.8",
+    "@babel/plugin-transform-typescript": "^7.15.8",
     "@babel/preset-env": "^7.8.3",
-    "@babel/preset-typescript": "^7.14.5"
+    "@babel/preset-typescript": "^7.14.5",
+    "typescript": "4.3.5"
   },
   "publishConfig": {
     "access": "public"

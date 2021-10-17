@@ -39,18 +39,20 @@
     "ethereumjs-wallet": "^1.0.2",
     "jsbi": "^3.2.5",
     "node-fetch": "2.6.1",
-    "tezos-sdk-module": "^0.0.3"
+    "tezos-sdk-module": "^0.0.5"
   },
   "devDependencies": {
     "@airgap/beacon-sdk": "^2.3.2",
     "@babel/cli": "7.14.8",
     "@babel/core": "7.14.8",
+    "@babel/plugin-proposal-class-properties": "^7.14.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.15.6",
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
     "@babel/plugin-syntax-bigint": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.15.8",
     "@babel/plugin-transform-typescript": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
-    "@babel/plugin-transform-runtime": "^7.15.8",
     "@rarible/ethereum-sdk-test-common": "^0.7.2",
     "@rarible/test-provider": "^0.1.22",
     "@taquito/beacon-wallet": "^10.1.2",

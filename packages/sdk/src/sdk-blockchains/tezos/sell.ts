@@ -6,8 +6,9 @@ import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
+import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import { PrepareSellRequest, PrepareSellResponse, SellRequest, SellRequestCurrency } from "../../order/sell/domain"
-import { ItemType, TezosOrder } from "./domain"
+import { Collection, ItemType, TezosOrder } from "./domain"
 
 
 export class Sell {
@@ -64,17 +65,70 @@ export class Sell {
 		const response = await fetch(`${this.provider.api}/items/${itemId}`)
 		const json = await response.json()
 
-		if ("code" in json && json.code === "INVALID_ARGUMENT") {
+		if (json.code === "INVALID_ARGUMENT" || json.code === "UNEXPECTED_API_ERROR") {
 			throw new Error("Item does not exist")
 		}
 		return json
 	}
 
+	private async getCollection(collectionId: string): Promise<Collection> {
+		const response = await fetch(`${this.provider.api}/collections/${collectionId}`)
+		const json = await response.json()
+
+		if (json.code === "INVALID_ARGUMENT" || json.code === "UNEXPECTED_API_ERROR") {
+			throw new Error("Collection does not exist")
+		}
+		return json
+	}
+
+	assetTypeToJSON(a: TezosLibAssetType) : any {
+		switch (a.asset_class) {
+			case "FA_2":
+				return {
+					assetClass: a.asset_class,
+					contract: a.contract,
+					tokenId: a.token_id.toString(),
+				}
+			case "XTZ":
+				return { assetClass: a.asset_class }
+			case "FA_1_2":
+				return { assetClass: a.asset_class, contract: a.contract }
+		}
+	}
+
+	mutezToTez(mu: bigint) : number {
+		const factor = BigInt(1000000)
+		return Number(mu / factor) + Number(mu % factor) / Number(factor)
+	}
+
+	assetToJSON(a: TezosLibAsset) : any {
+		// todo handle different decimal for FA_1_2
+		switch (a.asset_type.asset_class) {
+			case "FA_2":
+				return {
+					assetType: this.assetTypeToJSON(a.asset_type),
+					value: a.value.toString(),
+				}
+			default:
+				const value = this.mutezToTez(a.value)
+				return {
+					assetType: this.assetTypeToJSON(a.asset_type),
+					value: value.toString(),
+				}
+		}
+	}
+
 	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {
-		if (!prepareSellRequest.itemId.startsWith("TEZOS")) {
+		if (!prepareSellRequest.itemId) {
+			throw new Error("ItemId is not exists")
+		}
+
+		const [domain, collection, tokenId] = prepareSellRequest.itemId.split(":")
+		if (domain !== "TEZOS") {
 			throw new Error("Not a tezos item")
 		}
 		const item = await this.getItem(prepareSellRequest.itemId.substring(6))
+		const itemCollection = await this.getCollection(collection)
 		const makerPublicKey = await this.getMakerPublicKey()
 
 		const submit = Action.create({
@@ -84,7 +138,8 @@ export class Sell {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
 					make_asset_type: {
-						asset_class: "FA_2",
+						//todo fix make asset type
+						asset_class: itemCollection.type as any,
 						contract: item.contract,
 						token_id: BigInt(item.tokenId),
 					},
@@ -98,6 +153,7 @@ export class Sell {
 					})) || [],
 				}
 
+				console.log("sell request", tezosRequest)
 				const sellOrder: TezosOrder = await sell(this.provider, tezosRequest)
 
 				return toOrderId(`TEZOS:${sellOrder.hash}`)

@@ -5,6 +5,7 @@ import { AssetType, Order, OrderId, OrderPayout } from "@rarible/api-client"
 import { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 // eslint-disable-next-line camelcase
 import { fill_order } from "tezos-sdk-module/dist/order"
+import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import { Address, BigNumber, Binary, toBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
@@ -167,22 +168,46 @@ export class Fill {
 		}
 	}
 
+	assetTypeOfJson(a: any) : TezosLibAssetType {
+		switch (a.assetClass) {
+			case "FA_2":
+				return {
+					asset_class: a.assetClass,
+					contract: a.contract,
+					token_id: BigInt(a.tokenId),
+				}
+			case "XTZ":
+				return { asset_class: a.assetClass }
+			case "FA_1_2":
+				return { asset_class: a.assetClass, contract: a.contract }
+			default: throw new Error("Unknown Asset Class")
+		}
+	}
+
+	assetOfJson(a: any): TezosLibAsset {
+		const factor = 1000000.
+		switch (a.assetType.assetClass) {
+			case "FA_2":
+				return {
+					asset_type: this.assetTypeOfJson(a.assetType),
+					value: BigInt(a.value),
+				}
+			default:
+				return {
+					asset_type: this.assetTypeOfJson(a.assetType),
+					value: BigInt(a.value * factor),
+				}
+		}
+	}
+
 	async convertTezosOrderToForm(order: TezosOrder): Promise<PreparedOrder> {
 
 		return {
 			type: "RARIBLE_V2",
 			maker: order.maker,
 			maker_edpk: order.makerEdpk,
-			taker: await this.provider.tezos.address(),
-			taker_edpk: await this.provider.tezos.public_key(),
-			make: {
-				asset_type: Fill.getTezosAssetTypeFromCommonType(order.make.assetType),
-				value: BigInt(order.make.value),
-			},
-			take: {
-				asset_type: Fill.getTezosAssetTypeFromCommonType(order.take.assetType),
-				value: BigInt(order.make.value),
-			},
+			make: this.assetOfJson(order.make),
+			take: this.assetOfJson(order.take),
 			salt: BigInt(order.salt),
 			start: order.start,
 			end: order.end,
@@ -250,8 +275,16 @@ export class Fill {
 						payouts: this.convertOrderPayout(fillRequest.payouts),
 						origin_fees: this.convertOrderPayout(fillRequest.originFees),
 						infinite: fillRequest.infiniteApproval,
+						edpk: await this.provider.tezos.public_key(),
 					})
 
+				console.log("fill request", fillRequest, "order", preparedOrder, "request", {
+					amount: BigInt(fillRequest.amount),
+					payouts: this.convertOrderPayout(fillRequest.payouts),
+					origin_fees: this.convertOrderPayout(fillRequest.originFees),
+					infinite: fillRequest.infiniteApproval,
+					edpk: await this.provider.tezos.public_key(),
+				})
 				return new BlockchainTezosTransaction(fillResponse)
 			},
 		})
