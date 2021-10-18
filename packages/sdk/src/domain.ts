@@ -1,10 +1,12 @@
 import { IMint } from "./nft/mint/domain"
 import { ISell } from "./order/sell/domain"
 import { IFill } from "./order/fill/domain"
+import { ITransfer } from "./nft/transfer/domain"
 
 export interface IRaribleSdk {
 	nft: {
-		mint: IMint
+		mint: IMint,
+		transfer: ITransfer,
 	},
 	order: {
 		sell: ISell,
