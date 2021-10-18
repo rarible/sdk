@@ -11,7 +11,7 @@ import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/m
 import { toAddress, toItemId } from "@rarible/types"
 import { NftCollection } from "@rarible/protocol-api-client"
 import { toBn } from "@rarible/utils/build/bn"
-import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction/src"
+import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import {
 	MintType,
@@ -95,7 +95,7 @@ export class Mint {
 
 	async prepare(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
 		const { collection } = prepareRequest
-		if (collection.type === "CRYPTO_PUNKS" || collection.type === "FLOW") {
+		if (collection.type === "CRYPTO_PUNKS" || collection.type === "FLOW" || collection.type === "TEZOS") {
 			throw new Error("Unsupported collection type")
 		}
 

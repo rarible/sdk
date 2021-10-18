@@ -1,4 +1,4 @@
-import { EthereumWallet } from "@rarible/sdk-wallet/src"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { IRaribleSdk } from "../../domain"
 import { Mint } from "./mint"

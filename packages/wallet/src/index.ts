@@ -1,11 +1,12 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Blockchain, UnionAddress } from "@rarible/api-client"
+import { Provider } from "tezos-sdk-module/dist/common/base"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
 export type EthereumNetwork = "mainnet" | "ropsten" | "rinkeby" | "e2e"
 export type FlowNetwork = "mainnet" | "testnet"
-
+export type TezosNetwork = "mainnet" | "granada" | "local"
 
 interface AbstractWallet {
 	blockchain: Blockchain
@@ -25,6 +26,19 @@ export class EthereumWallet implements AbstractWallet {
 	signPersonalMessage(message: string): Promise<string> {
 		return this.ethereum.personalSign(message)
 	}
+}
+
+//todo remove these type when it shipped from flow-sdk
+interface CurrentUser {
+	snapshot(): Promise<any>
+
+	signUserMessage(message: string): Promise<Signature[]>
+}
+
+//todo remove these type when it shipped from flow-sdk
+type Signature = {
+	addr: string
+	signature: string
 }
 
 export class FlowWallet implements AbstractWallet {
@@ -55,17 +69,19 @@ export class FlowWallet implements AbstractWallet {
 	}
 }
 
-//todo remove these type when it shipped from flow-sdk
-interface CurrentUser {
-	snapshot(): Promise<any>
+export class TezosWallet implements AbstractWallet {
+	readonly blockchain = "TEZOS"
 
-	signUserMessage(message: string): Promise<Signature[]>
+	constructor(
+		public readonly provider: Provider,
+	) {
+	}
+
+	signPersonalMessage(message: string): Promise<string> {
+		// return this.ethereum.personalSign(message)
+		// @todo implement
+		return Promise.resolve(message)
+	}
 }
 
-//todo remove these type when it shipped from flow-sdk
-type Signature = {
-	addr: string
-	signature: string
-}
-
-export type BlockchainWallet = EthereumWallet | FlowWallet
+export type BlockchainWallet = EthereumWallet | FlowWallet | TezosWallet

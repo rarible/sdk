@@ -1,4 +1,4 @@
-import { EthereumWallet } from "@rarible/sdk-wallet/src"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"

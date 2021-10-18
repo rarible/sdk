@@ -1,9 +1,8 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { EthErc20AssetType, EthEthereumAssetType, FlowAssetType } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress, toOrderId } from "@rarible/types"
-import { SellRequest } from "../../order/sell/domain"
+import { SellRequest, SellRequestCurrency } from "../../order/sell/domain"
 import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 
 export class Sell {
@@ -11,7 +10,7 @@ export class Sell {
 		this.sell = this.sell.bind(this)
 	}
 
-	static getEthTakeAssetType(currency: EthEthereumAssetType | EthErc20AssetType | FlowAssetType) {
+	static getEthTakeAssetType(currency: SellRequestCurrency) {
 		switch (currency["@type"]) {
 			case "ERC20": {
 				return {

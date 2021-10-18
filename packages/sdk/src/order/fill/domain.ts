@@ -1,7 +1,7 @@
 import { Order, OrderId } from "@rarible/api-client"
 import { BigNumber } from "@rarible/types/build/big-number"
-import { EthOrderPayout } from "@rarible/api-client/build/models/EthOrderPayout"
-import { IBlockchainTransaction } from "@rarible/sdk-transaction/src/domain"
+import { OrderPayout } from "@rarible/api-client"
+import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { AbstractPrepareResponse } from "../../common/domain"
 
 export type PrepareFillRequest = {
@@ -36,11 +36,11 @@ export interface FillRequest {
 	/**
 	 * Origin fees, if not supported by the underlying contract, will throw Error
 	 */
-	originFees?: EthOrderPayout[]
+	originFees?: OrderPayout[]
 	/**
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
-	payouts?: EthOrderPayout[]
+	payouts?: OrderPayout[]
 	/**
 	 * Use infinite approvals (for ERC-20)
 	 */
