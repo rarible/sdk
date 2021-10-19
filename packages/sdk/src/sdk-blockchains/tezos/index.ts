@@ -7,6 +7,7 @@ export function createTezosSdk(wallet: TezosWallet): IRaribleSdk {
 	return {
 		nft: {
 			mint: null as any,
+			burn: null as any,
 		},
 		order: {
 			fill: new Fill(wallet.provider).fill,

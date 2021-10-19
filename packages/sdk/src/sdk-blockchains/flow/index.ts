@@ -8,6 +8,7 @@ export function createFlowSdk(wallet: FlowWallet): IRaribleSdk {
 	return {
 		nft: {
 			mint: null as any,
+			burn: null as any,
 		},
 		order: {
 			fill: null as any,
