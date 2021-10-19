@@ -13,16 +13,16 @@ export class Transfer {
 
 	async transfer(prepare: PrepareTransferRequest) {
 
-		const itemId = await this.sdk.apis.nftItem.getNftItemById({
+		const item = await this.sdk.apis.nftItem.getNftItemById({
 			itemId: prepare.itemId,
 		})
 		const contract = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: itemId.contract,
+			collection: item.contract,
 		})
 
 		return {
 			multiple: contract.type === "ERC1155",
-			maxAmount: itemId.supply,
+			maxAmount: item.supply,
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: TransferRequest) => {
@@ -30,8 +30,8 @@ export class Transfer {
 
 					const tx = await this.sdk.nft.transfer(
 						{
-						  contract: itemId.contract,
-						  tokenId: itemId.tokenId,
+						  contract: item.contract,
+						  tokenId: item.tokenId,
 					  },
 						toAddress(request.to),
 						amount
