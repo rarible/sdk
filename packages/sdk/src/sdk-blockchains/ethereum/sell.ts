@@ -2,38 +2,19 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress, toOrderId } from "@rarible/types"
-import { SellRequest, SellRequestCurrency } from "../../order/sell/domain"
+import { SellRequest } from "../../order/sell/domain"
 import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
+import { getEthTakeAssetType } from "./common"
 
 export class Sell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
 		this.sell = this.sell.bind(this)
 	}
 
-	static getEthTakeAssetType(currency: SellRequestCurrency) {
-		switch (currency["@type"]) {
-			case "ERC20": {
-				return {
-					assetClass: currency["@type"],
-					contract: toAddress(currency.contract),
-				}
-			}
-			case "ETH": {
-				return {
-					assetClass: currency["@type"],
-				}
-			}
-			default: {
-				throw Error("Invalid take asset type")
-			}
-		}
-	}
-
 	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
 		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: request.itemId })
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: SellRequest) => {
-				const takeAssetType = Sell.getEthTakeAssetType(sellFormRequest.currency)
 				return {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
@@ -41,7 +22,7 @@ export class Sell {
 						contract: toAddress(item.contract),
 					},
 					amount: parseInt(sellFormRequest.amount),
-					takeAssetType,
+					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
 					price: sellFormRequest.price,
 					payouts: sellFormRequest.payouts?.map(p => ({
 						account: toAddress(p.account),
