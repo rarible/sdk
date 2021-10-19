@@ -30,6 +30,9 @@ export type BidRequest = {
 }
 
 export interface PrepareBidResponse extends AbstractPrepareResponse<"approve" | "sign", BidRequest, Order> {
+	/*
+	 * is multiple token
+	 */
 	multiple: boolean
 	/**
    * currencies supported by the blockchain
