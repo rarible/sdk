@@ -14,7 +14,7 @@ export type BurnRequest = {
 	amount?: number
 } | void
 
-export interface PrepareTransferResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction>{
+export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction>{
 	/**
    * Is supports multiple values
    */
@@ -26,4 +26,4 @@ export interface PrepareTransferResponse extends AbstractPrepareResponse<"burn",
 	maxAmount: BigNumber
 }
 
-export type IBurn = (request: PrepareBurnRequest) => Promise<PrepareTransferResponse>
+export type IBurn = (request: PrepareBurnRequest) => Promise<PrepareBurnResponse>
