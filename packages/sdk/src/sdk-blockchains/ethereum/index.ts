@@ -4,6 +4,7 @@ import { IRaribleSdk } from "../../domain"
 import { Mint } from "./mint"
 import { Sell } from "./sell"
 import { Fill } from "./fill"
+import { Transfer } from "./transfer"
 import { Bid } from "./bid"
 
 export function createEthereumSdk(wallet: EthereumWallet): IRaribleSdk {
@@ -11,6 +12,7 @@ export function createEthereumSdk(wallet: EthereumWallet): IRaribleSdk {
 
 	return {
 		nft: {
+			transfer: new Transfer(sdk).transfer,
 			mint: new Mint(sdk).prepare,
 		},
 		order: {

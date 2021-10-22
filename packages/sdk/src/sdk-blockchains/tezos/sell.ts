@@ -124,7 +124,7 @@ export class Sell {
 			throw new Error("ItemId is not exists")
 		}
 
-		const [domain, collection, tokenId] = prepareSellRequest.itemId.split(":")
+		const [domain, collection] = prepareSellRequest.itemId.split(":")
 		if (domain !== "TEZOS") {
 			throw new Error("Not a tezos item")
 		}
