@@ -1,6 +1,7 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Blockchain, UnionAddress } from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 import { Provider } from "tezos-sdk-module/dist/common/base"
+import { FlowAccount, FlowCurrentUser, FlowSignature } from "./fcl-types"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
@@ -8,10 +9,14 @@ export type EthereumNetwork = "mainnet" | "ropsten" | "rinkeby" | "e2e"
 export type FlowNetwork = "mainnet" | "testnet"
 export type TezosNetwork = "mainnet" | "granada" | "local"
 
+type SignUserMessageResponse = {
+	signature: string
+}
+
 interface AbstractWallet {
 	blockchain: Blockchain
 
-	signPersonalMessage(message: string): Promise<string>
+	signPersonalMessage(message: string): Promise<SignUserMessageResponse>
 }
 
 export class EthereumWallet implements AbstractWallet {
@@ -23,22 +28,13 @@ export class EthereumWallet implements AbstractWallet {
 	) {
 	}
 
-	signPersonalMessage(message: string): Promise<string> {
-		return this.ethereum.personalSign(message)
+	async signPersonalMessage(message: string): Promise<SignUserMessageResponse> {
+		return { signature: await this.ethereum.personalSign(message) }
 	}
 }
 
-//todo remove these type when it shipped from flow-sdk
-interface CurrentUser {
-	snapshot(): Promise<any>
-
-	signUserMessage(message: string): Promise<Signature[]>
-}
-
-//todo remove these type when it shipped from flow-sdk
-type Signature = {
-	addr: string
-	signature: string
+interface FlowSignedMessageResponse extends SignUserMessageResponse {
+	pubKey: string
 }
 
 export class FlowWallet implements AbstractWallet {
@@ -46,25 +42,37 @@ export class FlowWallet implements AbstractWallet {
 
 	constructor(
 		public readonly fcl: any,
-		public readonly address: UnionAddress,
 		public readonly network: FlowNetwork,
 	) {
 	}
 
-	async signPersonalMessage(message: string): Promise<string> {
-		const currentUser: CurrentUser = this.fcl.currentUser()
-		const userAddress = (await currentUser.snapshot()).addr
+	async signPersonalMessage(message: string): Promise<FlowSignedMessageResponse> {
+		if (!message.length) {
+			throw Error("Message can't be empty")
+		}
 		const messageHex = Buffer.from(message).toString("hex")
-		const signatures: Signature[] = await currentUser.signUserMessage(messageHex)
-		if (signatures.length) {
-			const signature = signatures.find(s => s.addr.toLowerCase() === userAddress.toLowerCase())?.signature
-			if (signature) {
-				return signature
-			} else {
-				throw Error(`Signature of user address "${userAddress}" not found`)
+		const currentUser: FlowCurrentUser = await this.fcl.currentUser()
+		const { addr } = await currentUser.snapshot()
+		const account: FlowAccount = await this.fcl.account(addr)
+
+		const signatures: FlowSignature[] = await currentUser.signUserMessage(messageHex)
+		if (typeof signatures === "string") {
+			throw Error(signatures)
+		}
+
+		const signature = signatures.find(s => s.addr.toLowerCase() === addr.toLowerCase())
+		if (signature) {
+			const { keyId } = signature
+			const pubKey = account.keys.find(k => k.index === keyId)
+			if (!pubKey) {
+				throw Error(`Key with index "${keyId}" not found on account with address ${addr}`)
+			}
+			return {
+				signature: signature.signature,
+				pubKey: pubKey.publicKey,
 			}
 		} else {
-			throw Error("Response of signUserMessage is empty")
+			throw Error(`Signature of user address "${addr}" not found`)
 		}
 	}
 }
@@ -77,10 +85,10 @@ export class TezosWallet implements AbstractWallet {
 	) {
 	}
 
-	signPersonalMessage(message: string): Promise<string> {
+	async signPersonalMessage(message: string): Promise<SignUserMessageResponse> {
 		// return this.ethereum.personalSign(message)
 		// @todo implement
-		return Promise.resolve(message)
+		return { signature: message }
 	}
 }
 
