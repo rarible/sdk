@@ -9,10 +9,12 @@ export function createFlowSdk(wallet: FlowWallet): IRaribleSdk {
 		nft: {
 			mint: null as any,
 			burn: null as any,
+			transfer: null as any,
 		},
 		order: {
 			fill: null as any,
 			sell: null as any,
+			bid: null as any,
 		},
 	}
 }

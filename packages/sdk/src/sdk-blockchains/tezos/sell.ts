@@ -7,7 +7,8 @@ import { Action } from "@rarible/action"
 import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { PrepareSellRequest, PrepareSellResponse, SellRequest, SellRequestCurrency } from "../../order/sell/domain"
+import { PrepareSellRequest, PrepareSellResponse, SellRequest } from "../../order/sell/domain"
+import { RequestCurrency } from "../../common/domain"
 import { Collection, ItemType, TezosOrder } from "./domain"
 
 
@@ -18,7 +19,7 @@ export class Sell {
 		this.sell = this.sell.bind(this)
 	}
 
-	parseTakeAssetType(type: SellRequestCurrency) {
+	parseTakeAssetType(type: RequestCurrency) {
 		switch (type["@type"]) {
 			case "XTZ": {
 				return {
@@ -123,7 +124,7 @@ export class Sell {
 			throw new Error("ItemId is not exists")
 		}
 
-		const [domain, collection, tokenId] = prepareSellRequest.itemId.split(":")
+		const [domain, collection] = prepareSellRequest.itemId.split(":")
 		if (domain !== "TEZOS") {
 			throw new Error("Not a tezos item")
 		}

@@ -1,7 +1,5 @@
-import { Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
-// import { TezosNetwork } from "@rarible/sdk-wallet"
+import { Provider } from "tezos-sdk-module/dist/common/base"
 import { TezosNetwork } from "@rarible/sdk-wallet"
-import { Config as TezosConfig } from "tezos-sdk-module/dist/config/type"
 import { createInMemoryProvider } from "./in-memory"
 import { createBeaconProvider } from "./beacon"
 
