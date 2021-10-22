@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.2.0](https://github.com/rarible/sdk/compare/v0.1.11...v0.2.0) (2021-10-22)
+
+
+### Features
+
+* bid method ([eff9eba](https://github.com/rarible/sdk/commit/eff9eba7e485400369e1b44af6b069b62cabfc7b))
+* burn method ([d7031fb](https://github.com/rarible/sdk/commit/d7031fbf318e0b247293e94fcf1602fdfd10c4cb))
+* ethereum transfer method + test ([0a3b00c](https://github.com/rarible/sdk/commit/0a3b00c0c41459ec5d98d8a82919d413665b2474))
+
+
+
+
+
 ## [0.1.11](https://github.com/rarible/sdk/compare/v0.1.10...v0.1.11) (2021-10-17)
 
 **Note:** Version bump only for package root
