@@ -12,6 +12,7 @@ export function createTezosSdk(wallet: TezosWallet): IRaribleSdk {
 		order: {
 			fill: new Fill(wallet.provider).fill,
 			sell: new Sell(wallet.provider).sell,
+			bid: null as any,
 		},
 	}
 }

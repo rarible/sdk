@@ -1,8 +1,7 @@
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetTypeNft, FlowAssetTypeFt, ItemId, OrderId } from "@rarible/api-client"
+import type { ItemId, OrderId } from "@rarible/api-client"
 import { OrderPayout } from "@rarible/api-client"
-import { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
-import type { CurrencyType } from "../../common/domain"
+import type { CurrencyType, RequestCurrency } from "../../common/domain"
 import { AbstractPrepareResponse } from "../../common/domain"
 
 
@@ -19,11 +18,6 @@ export enum SellActionEnum {
 	FLOW_SEND_TRANSACTION = "send-transaction"
 }
 
-export type SellRequestCurrency =
-	EthErc20AssetType | EthEthereumAssetType |
-	FlowAssetTypeNft | FlowAssetTypeFt |
-	TezosXTZAssetType | TezosFA12AssetType
-
 export type SellRequest = {
 	/**
 	 * How many editions to sell
@@ -36,7 +30,7 @@ export type SellRequest = {
 	/**
 	 * Currency of the trade
 	 */
-	currency: SellRequestCurrency
+	currency: RequestCurrency
 	/**
 	 * Origin fees, if not supported by the underlying contract, will throw Error
 	 */
