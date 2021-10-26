@@ -44,7 +44,7 @@ export class Sell {
 		if (!Array.isArray(payouts) || payouts.length === 0) {
 			return [{
 				account: pk_to_pkh(await this.getMakerPublicKey()),
-				value: 10000n,
+				value: BigInt(10000),
 			}]
 		}
 

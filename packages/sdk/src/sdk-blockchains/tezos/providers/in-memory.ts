@@ -8,7 +8,7 @@ export async function createInMemoryProvider({ node }: {node: string}) {
 
 	const config = {
 		exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
-		fees: 0n,
+		fees: BigInt(0),
 	}
 
 	return {

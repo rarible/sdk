@@ -12,7 +12,11 @@ export class Sell {
 	}
 
 	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
-		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: request.itemId })
+		const [domain, contract, tokenId] = request.itemId.split(":")
+		if (domain !== "ETHEREUM") {
+			throw new Error("Not an ethereum item")
+		}
+		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: SellRequest) => {
 				return {
@@ -34,8 +38,7 @@ export class Sell {
 					})) || [],
 				}
 			})
-			.after((order) =>  toOrderId(order.hash))
-
+			.after((order) => toOrderId(`ETHEREUM:${order.hash}`))
 
 		return {
 			supportedCurrencies: [

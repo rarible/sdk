@@ -5,7 +5,7 @@ import { TezosProviderResponse } from "../domain"
 export async function createBeaconProvider({ node }: {node: string}): Promise<TezosProviderResponse> {
 	const config = {
 		exchange: "KT1XgQ52NeNdjo3jLpbsPBRfg8YhWoQ5LB7g",
-		fees: 0n,
+		fees: BigInt(0),
 	}
 
 	return {

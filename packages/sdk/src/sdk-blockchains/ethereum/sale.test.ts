@@ -16,8 +16,8 @@ describe("sale", () => {
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createEthereumSdk(new EthereumWallet(ethereum1, "e2e"))
-	const sdk2 = createEthereumSdk(new EthereumWallet(ethereum2, "e2e"))
+	const sdk1 = createEthereumSdk(new EthereumWallet(ethereum1, toUnionAddress(wallet1.getAddressString()), "e2e"))
+	const sdk2 = createEthereumSdk(new EthereumWallet(ethereum2, toUnionAddress(wallet2.getAddressString()), "e2e"))
 	const raribleSdk = createRaribleSdk(ethereum1, "e2e")
 
 	const conf = awaitAll({
@@ -34,14 +34,15 @@ describe("sale", () => {
 
 		await awaitItem(raribleSdk, itemId)
 
-		const sellAction = await sdk1.order.sell({ itemId })
-		const hash = await sellAction.submit.start({
+		const sellAction = await sdk1.order.sell({ itemId: toItemId(`ETHEREUM:${itemId}`) })
+		const hash = await sellAction.submit({
 			amount: toBigNumber("1"),
 			price: toBigNumber("1"),
 			currency: { "@type": "ERC20", contract: toUnionAddress(conf.testErc20.options.address) },
-		}).runAll()
+		})
+		const [, realHash] = hash.split(":")
 
-		await awaitStockToBe(raribleSdk, hash, 1)
+		await awaitStockToBe(raribleSdk, realHash, 1)
 
 		const fillAction = await sdk2.order.fill({ orderId: toOrderId(hash) })
 
@@ -49,6 +50,6 @@ describe("sale", () => {
 			.runAll()
 		await tx.wait()
 
-		await awaitStockToBe(raribleSdk, hash, 0)
+		await awaitStockToBe(raribleSdk, realHash, 0)
 	})
 })
