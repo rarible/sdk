@@ -10,6 +10,7 @@ export type TezosNetwork = "mainnet" | "granada" | "local"
 
 interface AbstractWallet {
 	blockchain: Blockchain
+	address: UnionAddress
 
 	signPersonalMessage(message: string): Promise<string>
 }
@@ -19,6 +20,7 @@ export class EthereumWallet implements AbstractWallet {
 
 	constructor(
 		public readonly ethereum: Ethereum,
+		public readonly address: UnionAddress,
 		public readonly network: EthereumNetwork,
 	) {
 	}
@@ -49,6 +51,7 @@ export class TezosWallet implements AbstractWallet {
 
 	constructor(
 		public readonly provider: Provider,
+		public readonly address: UnionAddress,
 	) {
 	}
 

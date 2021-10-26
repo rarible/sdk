@@ -14,12 +14,13 @@ describe("transfer", () => {
 
 	const {
 		web31,
+		wallet1,
 		web32,
 	} = initProviders({})
 
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const receipentEthereum = new Web3Ethereum({ web3: web32 })
-	const senderSdk = createEthereumSdk(new EthereumWallet(senderEthereum, "e2e"))
+	const senderSdk = createEthereumSdk(new EthereumWallet(senderEthereum, toUnionAddress(wallet1.getAddressString()), "e2e"))
 
 	const raribleSdk = createRaribleSdk(senderEthereum, "e2e")
 

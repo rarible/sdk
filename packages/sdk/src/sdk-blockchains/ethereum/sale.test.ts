@@ -16,8 +16,8 @@ describe("sale", () => {
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createEthereumSdk(new EthereumWallet(ethereum1, "e2e"))
-	const sdk2 = createEthereumSdk(new EthereumWallet(ethereum2, "e2e"))
+	const sdk1 = createEthereumSdk(new EthereumWallet(ethereum1, toUnionAddress(wallet1.getAddressString()), "e2e"))
+	const sdk2 = createEthereumSdk(new EthereumWallet(ethereum2, toUnionAddress(wallet2.getAddressString()), "e2e"))
 	const raribleSdk = createRaribleSdk(ethereum1, "e2e")
 
 	const conf = awaitAll({
