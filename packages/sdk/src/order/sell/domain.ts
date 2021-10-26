@@ -18,6 +18,8 @@ export enum SellActionEnum {
 	FLOW_SEND_TRANSACTION = "send-transaction"
 }
 
+export type SellActionTypes = "approve" | "sign" | "send-tx"
+
 export type SellRequest = {
 	/**
 	 * How many editions to sell
@@ -42,7 +44,7 @@ export type SellRequest = {
 }
 
 
-export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", SellRequest, OrderId> {
+export interface PrepareSellResponse extends AbstractPrepareResponse<SellActionTypes, SellRequest, OrderId> {
 	/**
 	 * currencies supported by the blockchain
 	 */
