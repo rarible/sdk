@@ -263,7 +263,11 @@ export class Fill {
 		if ("order" in request) {
 			return this.convertToSimpleOrder(request.order)
 		} else if ("orderId" in request) {
-			return this.sdk.apis.order.getOrderByHash({ hash: request.orderId })
+			const [domain, hash] = request.orderId.split(":")
+			if (domain !== "ETHEREUM") {
+				throw new Error("Not an ethereum order")
+			}
+			return this.sdk.apis.order.getOrderByHash({ hash })
 		} else {
 			throw new Error("Incorrect request")
 		}
