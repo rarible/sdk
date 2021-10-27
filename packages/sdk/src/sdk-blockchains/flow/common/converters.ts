@@ -1,6 +1,7 @@
-import { Blockchain, ItemId } from "@rarible/api-client"
+import { ItemId } from "@rarible/api-client"
 import { UnionAddress } from "@rarible/types"
 import { withPrefix } from "@rarible/flow-sdk/build/common/utils"
+import { FlowItemId } from "../../../common/domain"
 
 
 const FLOW_COLLECTION_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
@@ -18,11 +19,11 @@ export function getFlowCollection(collection: string): string {
 
 const FLOW_ITEM_ID_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}\:[0-9]{1,}/
 
-type FlowItemId = {
-	blockchain: Blockchain
-	collectionId: string
-	itemId: string
-}
+// type FlowItemId = {
+// 	blockchain: Blockchain
+// 	collectionId: string
+// 	itemId: string
+// }
 
 /**
  * Parse union item id
