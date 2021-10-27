@@ -1,6 +1,6 @@
 ## Rarible Protocol Software Development Kit
 
-Rarible Protocol SDK enables applications to easily interact with Rarible protocol: query, issue, trade NFTs on any blockchain supported.
+Rarible Protocol SDK enables applications to easily interact with Rarible protocol: [query](#querying), issue, [trade](#trading) NFTs on any blockchain supported.
 
 Currently, these blockchains are supported:
 - Ethereum
