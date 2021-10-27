@@ -10,8 +10,8 @@ describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
-	const ethereumWallet = new EthereumWallet(ethereum, toUnionAddress(wallet.getAddressString()), "e2e")
-	const sdk = createEthereumSdk(ethereumWallet)
+	const ethereumWallet = new EthereumWallet(ethereum, toUnionAddress(wallet.getAddressString()))
+	const sdk = createEthereumSdk(ethereumWallet, "e2e")
 
 	const erc721Address = toUnionAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 	const erc1155Address = toUnionAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d")

@@ -12,7 +12,7 @@ describe("burn", () => {
 	const { web31, wallet1 } = initProviders({})
 
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
-	const senderSdk = createEthereumSdk(new EthereumWallet(senderEthereum, toUnionAddress(wallet1.getAddressString()), "e2e"))
+	const senderSdk = createEthereumSdk(new EthereumWallet(senderEthereum, toUnionAddress(wallet1.getAddressString())), "e2e")
 
 	const raribleSdk = createRaribleSdk(senderEthereum, "e2e")
 
@@ -31,7 +31,7 @@ describe("burn", () => {
 				type: "ERC721",
 			},
 		})
-		const mintResult  = await mintAction.submit.start({
+		const mintResult = await mintAction.submit.start({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
@@ -62,7 +62,7 @@ describe("burn", () => {
 				type: "ERC1155",
 			},
 		})
-		const mintResult  = await mintAction.submit.start({
+		const mintResult = await mintAction.submit.start({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],

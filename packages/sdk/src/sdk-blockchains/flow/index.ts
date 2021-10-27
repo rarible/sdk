@@ -6,7 +6,7 @@ import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
 
-export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): IRaribleSdk {
+export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): Omit<IRaribleSdk, "apis"> {
 	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
 
 	return {

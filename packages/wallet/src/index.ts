@@ -21,7 +21,6 @@ export class EthereumWallet implements AbstractWallet {
 	constructor(
 		public readonly ethereum: Ethereum,
 		public readonly address: UnionAddress,
-		public readonly network: EthereumNetwork,
 	) {
 	}
 
