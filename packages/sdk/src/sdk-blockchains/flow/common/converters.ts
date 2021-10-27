@@ -33,20 +33,20 @@ const FLOW_ITEM_ID_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}\:[0-9]{1,}
 export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
 	if (FLOW_ITEM_ID_REGEXP.test(unionItemId)) {
 		const [blockchain, collectionId, itemId] = unionItemId.split(":")
-		if (blockchain !== "FLOW") {
-			throw Error(`Invalid item id, "${blockchain}" is not FLOW item`)
-		}
 		if (!collectionId) {
 			throw Error("Invalid collection id, identifier is empty")
 		}
 		if (!itemId) {
 			throw Error("Invalid item id, identifier is empty")
 		}
-		return {
-			blockchain,
-			collectionId,
-			itemId,
+		if (blockchain === "FLOW") {
+			return {
+				blockchain,
+				collectionId,
+				itemId,
+			}
 		}
+		throw Error(`Invalid item id, "${blockchain}" is not FLOW item`)
 	}
 	throw Error("Invalid item ID")
 }
