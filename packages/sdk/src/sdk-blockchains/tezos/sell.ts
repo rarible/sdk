@@ -1,12 +1,13 @@
 import { SellRequest as TezosSellRequest, sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
-import { Provider, get_public_key } from "tezos-sdk-module/dist/common/base"
+import { Provider, get_public_key, mutez_to_tez } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
+import BigNumber from "bignumber.js"
 import { PrepareSellRequest, PrepareSellResponse, SellRequest } from "../../order/sell/domain"
 import { RequestCurrency } from "../../common/domain"
 import { Collection, ItemType, TezosOrder } from "./domain"
@@ -44,13 +45,13 @@ export class Sell {
 		if (!Array.isArray(payouts) || payouts.length === 0) {
 			return [{
 				account: pk_to_pkh(await this.getMakerPublicKey()),
-				value: BigInt(10000),
+				value: new BigNumber(10000),
 			}]
 		}
 
 		return payouts.map(p => ({
 			account: pk_to_pkh(p.account),
-			value: BigInt(p.value),
+			value: new BigNumber(p.value),
 		})) || []
 	}
 
@@ -94,12 +95,10 @@ export class Sell {
 				return { assetClass: a.asset_class }
 			case "FA_1_2":
 				return { assetClass: a.asset_class, contract: a.contract }
+			default: {
+				throw new Error("Unsupported asset class")
+			}
 		}
-	}
-
-	mutezToTez(mu: bigint) : number {
-		const factor = BigInt(1000000)
-		return Number(mu / factor) + Number(mu % factor) / Number(factor)
 	}
 
 	assetToJSON(a: TezosLibAsset) : any {
@@ -111,7 +110,7 @@ export class Sell {
 					value: a.value.toString(),
 				}
 			default:
-				const value = this.mutezToTez(a.value)
+				const value = mutez_to_tez(a.value)
 				return {
 					assetType: this.assetTypeToJSON(a.asset_type),
 					value: value.toString(),
@@ -142,15 +141,15 @@ export class Sell {
 						//todo fix make asset type
 						asset_class: itemCollection.type as any,
 						contract: item.contract,
-						token_id: BigInt(item.tokenId),
+						token_id: new BigNumber(item.tokenId),
 					},
 					take_asset_type: this.parseTakeAssetType(request.currency),
-					amount: BigInt(request.amount),
-					price: BigInt(request.price),
+					amount: new BigNumber(request.amount),
+					price: new BigNumber(request.price),
 					payouts: await this.getPayouts(request.payouts),
 					origin_fees: request.originFees?.map(p => ({
 						account: p.account,
-						value: BigInt(p.value),
+						value: new BigNumber(p.value),
 					})) || [],
 				}
 

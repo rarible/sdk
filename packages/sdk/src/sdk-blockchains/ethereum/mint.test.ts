@@ -61,6 +61,7 @@ describe("mint", () => {
 			supply: 1,
 		}).runAll()
 
+
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()
 		}

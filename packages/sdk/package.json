@@ -32,6 +32,7 @@
     "@rarible/types": "^0.1.9",
     "@rarible/web3-ethereum": "^0.7.2",
     "ajv": "^8.6.3",
+    "bignumber.js": "^9.0.1",
     "create-validator-ts": "^2.0.0",
     "eth-rpc-errors": "^4.0.3",
     "eth-sig-util": "^3.0.1",
@@ -39,7 +40,7 @@
     "ethereumjs-wallet": "^1.0.2",
     "jsbi": "^3.2.5",
     "node-fetch": "2.6.1",
-    "tezos-sdk-module": "^0.0.5"
+    "tezos-sdk-module": "^0.0.6"
   },
   "devDependencies": {
     "@airgap/beacon-sdk": "^2.3.2",

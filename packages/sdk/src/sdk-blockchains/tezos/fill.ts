@@ -6,11 +6,12 @@ import { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/
 // eslint-disable-next-line camelcase
 import { fill_order } from "tezos-sdk-module/dist/order"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { Address, BigNumber, Binary, toBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
+import { Address, Binary, toBigNumber as toRaribleBigNumber, BigNumber as RaribleBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { OrderRaribleV2DataV1 } from "@rarible/protocol-api-client/build/models/OrderData"
 import { OrderPriceHistoryRecord } from "@rarible/protocol-api-client/build/models/OrderPriceHistoryRecord"
 import { OrderExchangeHistory } from "@rarible/protocol-api-client/build/models/OrderExchangeHistory"
+import BigNumber from "bignumber.js"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -33,10 +34,10 @@ export type SimpleTezosOrder = {
 		assetType: TezosAsset,
 		value: string
 	},
-	fill: BigNumber;
+	fill: RaribleBigNumber;
 	start?: number;
 	end?: number;
-	makeStock: BigNumber;
+	makeStock: RaribleBigNumber;
 	cancelled: boolean;
 	salt: Word;
 	signature?: Binary;
@@ -44,9 +45,9 @@ export type SimpleTezosOrder = {
 	lastUpdateAt: string;
 	pending?: Array<OrderExchangeHistory>;
 	hash: Word;
-	makeBalance?: BigNumber;
-	makePriceUsd?: BigNumber;
-	takePriceUsd?: BigNumber;
+	makeBalance?: RaribleBigNumber;
+	makePriceUsd?: RaribleBigNumber;
+	takePriceUsd?: RaribleBigNumber;
 	priceHistory?: Array<OrderPriceHistoryRecord>;
 	data: OrderRaribleV2DataV1;
 }
@@ -61,10 +62,10 @@ export type TezosOrderFA12AssetType = {
 export type TezosOrderFA2AssetType = {
 	assetClass: "FA_2";
 	contract: UnionAddress;
-	tokenId: BigNumber;
+	tokenId: RaribleBigNumber;
 }
 export type TezosAsset = TezosOrderXTZAssetType | TezosOrderFA12AssetType | TezosOrderFA2AssetType
-export type PreparedOrder = OrderForm & { makeStock: BigNumber }
+export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
 export class Fill {
 	constructor(
@@ -88,7 +89,7 @@ export class Fill {
 				return {
 					asset_class: type.assetClass,
 					contract: type.contract,
-					token_id: BigInt(type.tokenId),
+					token_id: new BigNumber(type.tokenId),
 				}
 			}
 			case "FA_1_2": {
@@ -114,7 +115,7 @@ export class Fill {
 				return {
 					asset_class: type["@type"],
 					contract: type.contract,
-					token_id: BigInt(type.tokenId),
+					token_id: new BigNumber(type.tokenId),
 				}
 			}
 			case "FA_1_2": {
@@ -147,13 +148,13 @@ export class Fill {
 			taker_edpk: order.data.takerEdpk,
 			make: {
 				asset_type: Fill.getTezosAssetType(order.make.type),
-				value: BigInt(order.make.value),
+				value: new BigNumber(order.make.value),
 			},
 			take: {
 				asset_type: Fill.getTezosAssetType(order.make.type),
-				value: BigInt(order.make.value),
+				value: new BigNumber(order.make.value),
 			},
-			salt: BigInt(order.salt),
+			salt: new BigNumber(order.salt),
 			start: order.startedAt ? parseInt(order.startedAt) : undefined,
 			end: order.endedAt ? parseInt(order.endedAt) : undefined,
 			signature: order.signature,
@@ -162,7 +163,7 @@ export class Fill {
 				payouts: this.convertOrderPayout(order.data.payouts),
 				origin_fees: this.convertOrderPayout(order.data.originFees),
 			},
-			makeStock: order.makeStock,
+			makeStock: toRaribleBigNumber(order.makeStock),
 		}
 	}
 
@@ -172,7 +173,7 @@ export class Fill {
 				return {
 					asset_class: a.assetClass,
 					contract: a.contract,
-					token_id: BigInt(a.tokenId),
+					token_id: new BigNumber(a.tokenId),
 				}
 			case "XTZ":
 				return { asset_class: a.assetClass }
@@ -183,17 +184,17 @@ export class Fill {
 	}
 
 	assetOfJson(a: any): TezosLibAsset {
-		const factor = 1000000.
+		const factor = 1000000
 		switch (a.assetType.assetClass) {
 			case "FA_2":
 				return {
 					asset_type: this.assetTypeOfJson(a.assetType),
-					value: BigInt(a.value),
+					value: new BigNumber(a.value),
 				}
 			default:
 				return {
 					asset_type: this.assetTypeOfJson(a.assetType),
-					value: BigInt(a.value * factor),
+					value: new BigNumber(a.value).multipliedBy(factor),
 				}
 		}
 	}
@@ -206,7 +207,7 @@ export class Fill {
 			maker_edpk: order.makerEdpk,
 			make: this.assetOfJson(order.make),
 			take: this.assetOfJson(order.take),
-			salt: BigInt(order.salt),
+			salt: new BigNumber(order.salt),
 			start: order.start,
 			end: order.end,
 			signature: order.signature,
@@ -222,7 +223,7 @@ export class Fill {
 	convertOrderPayout(payout?: OrderPayout[] | Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
 		return payout?.map(p => ({
 			account: p.account,
-			value: BigInt(p.value),
+			value: new BigNumber(p.value),
 		})) || []
 	}
 
@@ -246,16 +247,16 @@ export class Fill {
 		return await response.json()
 	}
 
-	async getMaxAmount(order: PreparedOrder): Promise<BigNumber> {
+	async getMaxAmount(order: PreparedOrder): Promise<RaribleBigNumber> {
 		if (order.take.asset_type.asset_class === "FA_2") {
 			const response = await this.getOwnershipId(
 				order.take.asset_type.contract,
 				order.take.asset_type.token_id.toString(),
 				await get_address(this.provider)
 			)
-			return toBigNumber(response.value)
+			return toRaribleBigNumber(response.value)
 		} else {
-			return toBigNumber(order.makeStock)
+			return toRaribleBigNumber(order.makeStock)
 		}
 	}
 
@@ -266,7 +267,7 @@ export class Fill {
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
 				const request = {
-					amount: BigInt(fillRequest.amount),
+					amount: new BigNumber(fillRequest.amount),
 					payouts: this.convertOrderPayout(fillRequest.payouts),
 					origin_fees: this.convertOrderPayout(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
