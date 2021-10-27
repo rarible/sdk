@@ -39,5 +39,5 @@ describe("test flow mint, order creation, and buy", () => {
 		const prepareBuy = await sdk2.order.fill({ order: createOrder })
 		const buyResult = await prepareBuy.submit({ amount: 1 })
 		expect(buyResult.transaction.status).toEqual(4)
-	}, 500000)
+	}, 200000)
 })

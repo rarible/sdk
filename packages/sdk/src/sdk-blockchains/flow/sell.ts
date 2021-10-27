@@ -3,7 +3,7 @@ import { toBigNumber } from "@rarible/types/build/big-number"
 import { toOrderId } from "@rarible/types"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import type { PrepareSellRequest, PrepareSellResponse, SellActionTypes } from "../../order/sell/domain"
+import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
 import { SellRequest } from "../../order/sell/domain"
 import { parseUnionItemId } from "./common/converters"
 
@@ -13,16 +13,21 @@ export class FlowSell {
 	}
 
 	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
-		const action: SellActionTypes = "send-tx"
+
 		const sellAction = Action.create({
-			id: action,
+			id: "send-tx" as const,
 			run: async (sellRequest: SellRequest) => {
-				if (sellRequest.currency["@type"] !== "FLOW_FT") {
-					throw Error(`Unsupported currency: ${sellRequest.currency["@type"]}`)
+				if (sellRequest.currency["@type"] === "FLOW_FT") {
+					const currency = "FLOW" //todo
+					const { collectionId, itemId } = parseUnionItemId(request.itemId)
+					return await this.sdk.order.sell(
+						collectionId,
+						currency,
+						parseInt(itemId), //todo leave string when support it on flow-sdk transactions
+						sellRequest.price
+					)
 				}
-				const currency = "FLOW" //todo
-				const { collectionId, flowItemId } = parseUnionItemId(request.itemId)
-				return await this.sdk.order.sell(collectionId, currency, flowItemId, sellRequest.price)
+				throw Error(`Unsupported currency: ${sellRequest.currency["@type"]}`)
 			},
 		}).after((tx) => {
 			const orderId = tx.events.find(e => {

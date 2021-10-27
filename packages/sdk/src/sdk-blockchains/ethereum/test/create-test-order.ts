@@ -1,7 +1,7 @@
 import { Order } from "@rarible/api-client"
 import { toBigNumber, toOrderId, toUnionAddress } from "@rarible/types"
 
-export function createTestOrder(orderId: number): Order {
+export function createTestOrder(orderId: string): Order {
 	return {
 		id: toOrderId(`FLOW:${orderId}`),
 		fill: toBigNumber("0"),

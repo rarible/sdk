@@ -4,7 +4,6 @@ import { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { Blockchain, Order } from "@rarible/api-client"
 import {
-	FillActionTypes,
 	FillRequest,
 	OriginFeeSupport,
 	PayoutsSupport,
@@ -23,18 +22,18 @@ export class FlowBuy {
 		if ("order" in request) {
 			return request.order
 		} else if ("orderId" in request) {
-			//todo maybe add retry
-			return await api(this.wallet.network).orderController.getOrderById({ id: request.orderId })
+			// todo replace this api call for call from flow-sdk when it supported
+			return api(this.wallet.network).orderController.getOrderById({ id: request.orderId })
 		} else {
 			throw new Error("Incorrect request")
 		}
 	}
 
 	getFlowContract(order: Order): string {
-		if (order.make.type["@type"] !== "FLOW_NFT") {
-			throw Error("This is not FLOW order")
+		if (order.make.type["@type"] === "FLOW_NFT") {
+			return order.make.type.contract
 		}
-		return order.make.type.contract
+		throw Error("This is not FLOW order")
 	}
 
 	getFlowCurrency(order: Order) {
@@ -44,18 +43,16 @@ export class FlowBuy {
 		throw Error("Invalid order take asset")
 	}
 
-	private action: FillActionTypes = "send-tx"
-
 	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
 		const buyAction = Action.create({
-			id: this.action,
+			id: "send-tx" as const,
 			run: async (buyRequest: FillRequest) => {
 				const currency = this.getFlowCurrency(order)
 				const owner = parseFlowMaker(order.maker)
 				const collectionId = getFlowCollection(this.getFlowContract(order))
-				const orderId = parseOrderId(order.id)
-				return await this.sdk.order.buy(collectionId, currency, orderId, owner)
+				const orderId = parseInt(parseOrderId(order.id))//todo leave string when support it on flow-sdk transactions
+				return this.sdk.order.buy(collectionId, currency, orderId, owner)
 			},
 		}).after((tx) => {
 			const blockchain: Blockchain = "FLOW"
@@ -75,8 +72,8 @@ export class FlowBuy {
 			maxAmount: toBigNumber("1"),
 			baseFee: 0, //todo
 			supportsPartialFill: false,
-			originFeeSupport: OriginFeeSupport.NONE, //todo
-			payoutsSupport: PayoutsSupport.NONE, //todo
+			originFeeSupport: OriginFeeSupport.NONE, //todo not supported on flow yet
+			payoutsSupport: PayoutsSupport.NONE, //todo not supported on flow yet
 			submit: buyAction,
 		}
 	}
