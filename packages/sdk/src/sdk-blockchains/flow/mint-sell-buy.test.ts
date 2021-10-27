@@ -1,7 +1,7 @@
 import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { toBigNumber, toItemId, toUnionAddress } from "@rarible/types"
-import { createTestOrder } from "../ethereum/test/create-test-order"
+import { createTestOrder } from "./test/create-test-order"
 import { api } from "./common/api"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { parseOrderId } from "./common/converters"

@@ -2,7 +2,8 @@ import { FlowWallet } from "@rarible/sdk-wallet"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import { Blockchain, Order } from "@rarible/api-client"
+import { Order } from "@rarible/api-client"
+import { BlockchainFlowTransaction } from "@rarible/sdk-transaction/src"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -55,17 +56,7 @@ export class FlowBuy {
 				return this.sdk.order.buy(collectionId, currency, orderId, owner)
 			},
 		}).after((tx) => {
-			const blockchain: Blockchain = "FLOW"
-			return {
-				blockchain,
-				transaction: tx,
-				async wait() {
-					return {
-						blockchain,
-						hash: tx.txId,
-					}
-				},
-			}
+			return new BlockchainFlowTransaction(tx)
 		})
 
 		return {

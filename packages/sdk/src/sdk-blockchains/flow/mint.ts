@@ -1,6 +1,7 @@
 import { Action } from "@rarible/action"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { toItemId } from "@rarible/types"
+import { BlockchainFlowTransaction } from "@rarible/sdk-transaction/src"
 import { MintType, PrepareMintResponse } from "../../nft/mint/domain"
 import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
@@ -28,16 +29,7 @@ export class FlowMint {
 						return {
 							type: MintType.ON_CHAIN,
 							itemId: toItemId(`${mintResponse.tokenId}`),
-							transaction: {
-								blockchain: "FLOW",
-								transaction: mintResponse,
-								async wait() {
-									return {
-										blockchain: "FLOW",
-										hash: mintResponse.txId,
-									}
-								},
-							},
+							transaction: new BlockchainFlowTransaction(mintResponse),
 						}
 					},
 				}),
