@@ -5,6 +5,8 @@ import { IRaribleSdk } from "../../domain"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
+import { FlowTransfer } from "./transfer"
+import { FlowBurn } from "./burn"
 
 export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): Omit<IRaribleSdk, "apis"> {
 	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
@@ -12,8 +14,8 @@ export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): Om
 	return {
 		nft: {
 			mint: new FlowMint(sdk).prepare,
-			burn: null as any,
-			transfer: null as any,
+			burn: new FlowBurn(sdk).burn,
+			transfer: new FlowTransfer(sdk).transfer,
 		},
 		order: {
 			sell: new FlowSell(sdk, wallet).sell,
