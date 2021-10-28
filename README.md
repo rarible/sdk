@@ -1,6 +1,6 @@
 ## Rarible Protocol Software Development Kit
 
-Rarible Protocol SDK enables applications to easily interact with Rarible protocol: [query](#querying), [issue](#creating-nfts-minting), [trade](#trading) NFTs on any blockchain supported.
+Rarible Protocol SDK enables applications to easily interact with Rarible protocol: [query](#querying), [issue](#mint), [trade](#sell) NFTs on any blockchain supported.
 
 Currently, these blockchains are supported:
 - Ethereum (rinkeby, mainnet)
@@ -65,7 +65,11 @@ You can use SDK to create(mint), trade, transfer, burn NFTs. All actions are han
 
 You can find more information about Action abstraction in dedicated github readme. Or you can use it as a regular async function and work with regular Promises.
 
-### Trading
+### Mint
+
+TODO
+
+### Sell
 
 First, sell-order should be created:
 
@@ -113,8 +117,17 @@ const tx = await submit({
 })
 ```
 
-After call submit action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed). 
+After call submit action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
 
-### Creating NFTs (minting)
+
+### Bid
+
+TODO
+
+### Transfer
+
+TODO
+
+### Burn
 
 TODO
