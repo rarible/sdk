@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.4](https://github.com/rarible/sdk/compare/v0.2.3...v0.2.4) (2021-10-28)
+
+
+### Bug Fixes
+
+* collection to eth collection ([0142cdf](https://github.com/rarible/sdk/commit/0142cdf620c173203a6457e82f3b17144d8a552f))
+
+
+
+
+
 ## [0.2.3](https://github.com/rarible/sdk/compare/v0.2.2...v0.2.3) (2021-10-28)
 
 
