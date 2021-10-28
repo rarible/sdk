@@ -37,11 +37,11 @@ describe("transfer", () => {
 		await awaitItem(raribleSdk, itemId)
 
 		const transfer = await senderSdk.order.bid({ itemId })
-		const order = await transfer.submit.start({
+		const order = await transfer.submit({
 			amount: toBigNumber("1"),
 			price: toBigNumber("1"),
 			currency: { "@type": "ERC20", contract: toUnionAddress(it.testErc20.options.address) },
-		}).runAll()
+		})
 
 		await awaitStockToBe(raribleSdk, order.id, 1)
 

@@ -1,39 +1,10 @@
 import { BigNumber } from "@rarible/types/build/big-number"
-import { ItemId, Order, OrderPayout } from "@rarible/api-client"
-import { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../common/domain"
+import { Order } from "@rarible/api-client"
+import { AbstractPrepareResponse, CurrencyType } from "../../common/domain"
+import { OrderRequest, PrepareOrderRequest } from "../common"
 
-export type PrepareBidRequest = {
-	itemId: ItemId
-}
-
-export type BidRequest = {
-	/**
-   * Currency of the trade
-   */
-	currency: RequestCurrency
-	/**
-   * Bid amount
-   */
-	amount: BigNumber
-	/*
-   * Price per nft
-   */
-	price: BigNumber
-	/**
-   * Origin fees, if not supported by the underlying contract, will throw Error
-   */
-	originFees?: OrderPayout[]
-	/**
-   * Payouts, if not supported by the underlying contract, will throw Error
-   */
-	payouts?: OrderPayout[]
-}
-
-export interface PrepareBidResponse extends AbstractPrepareResponse<"approve" | "sign", BidRequest, Order> {
-	/*
-	 * is multiple token
-	 */
-	multiple: boolean
+//todo use the same type as PrepareSellResponse. multiple is not needed
+export interface PrepareBidResponse extends AbstractPrepareResponse<"approve" | "sign", OrderRequest, Order> {
 	/**
    * currencies supported by the blockchain
    */
@@ -48,4 +19,4 @@ export interface PrepareBidResponse extends AbstractPrepareResponse<"approve" | 
 	baseFee: number
 }
 
-export type IBid = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
+export type IBid = (request: PrepareOrderRequest) => Promise<PrepareBidResponse>
