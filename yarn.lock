@@ -2398,6 +2398,11 @@
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.7.2.tgz#98e6743c139c3d7583e44ad610527552ea466f10"
   integrity sha512-kJk5pO2hJiCJL2Nkb4X3UQB9/awzejrHYp6T9WEotVJ0HeyrUVGZXWyWwtFopwpy1iWZDLpWU1kdU59dIQ3tWA==
 
+"@rarible/ethereum-provider@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.8.0.tgz#7569a611942436a22c58604b761bc16f6998ad8d"
+  integrity sha512-5ka3NbuUhFgRZk4BW1EN8eukSbiy15fAST4H/bH1M0m00DztG2QL/4X16EgqsaKicX58QiNVd2SSl/BbNd2evw==
+
 "@rarible/ethereum-sdk-test-common@^0.7.2":
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.7.2.tgz#0fea931c3b505c0fe86809c10de1fd1dea034e5c"
@@ -2416,13 +2421,13 @@
   dependencies:
     "@rarible/types" "^0.1.7"
 
-"@rarible/protocol-ethereum-sdk@0.7.4":
-  version "0.7.4"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.7.4.tgz#6cd139301436e82c21cfc1fd8a7e5254ffb59899"
-  integrity sha512-ALS+cwKh2Y8hMKR5ZMm8TNn516FC9tSoFXVQU1a1WigM556U7RoUknsejXGRVgNboeXKEQS/pTgEreeHDlVS2A==
+"@rarible/protocol-ethereum-sdk@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.8.1.tgz#86363133efae3c94f61dd7de50cd09de6656a3b9"
+  integrity sha512-i79zt7/BnEDp9U0xqq+YATsU/YKaVGky1N/BvVhyhIrH1J0nHgSSKo64p3OrVsiG3WayCxKz1krDdXpgKFPvXQ==
   dependencies:
     "@rarible/action" "^0.3.3"
-    "@rarible/ethereum-provider" "^0.7.2"
+    "@rarible/ethereum-provider" "^0.8.0"
     "@rarible/protocol-api-client" "^0.1.8"
     "@rarible/utils" "^0.0.7"
     exponential-backoff "3.1.0"

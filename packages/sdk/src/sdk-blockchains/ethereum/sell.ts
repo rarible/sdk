@@ -2,8 +2,8 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress, toOrderId } from "@rarible/types"
-import { SellRequest } from "../../order/sell/domain"
-import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
+import type { PrepareSellResponse } from "../../order/sell/domain"
+import { OrderRequest, PrepareOrderRequest } from "../../order/common"
 import { getEthTakeAssetType } from "./common"
 
 export class Sell {
@@ -11,21 +11,25 @@ export class Sell {
 		this.sell = this.sell.bind(this)
 	}
 
-	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
+	async sell(request: PrepareOrderRequest): Promise<PrepareSellResponse> {
 		const [domain, contract, tokenId] = request.itemId.split(":")
 		if (domain !== "ETHEREUM") {
 			throw new Error("Not an ethereum item")
 		}
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: contract,
+		})
+
 		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
 		const sellAction = this.sdk.order.sell
-			.before(async (sellFormRequest: SellRequest) => {
+			.before(async (sellFormRequest: OrderRequest) => {
 				return {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
 						tokenId: toBigNumber(item.tokenId),
 						contract: toAddress(item.contract),
 					},
-					amount: parseInt(sellFormRequest.amount),
+					amount: sellFormRequest.amount,
 					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
 					price: sellFormRequest.price,
 					payouts: sellFormRequest.payouts?.map(p => ({
@@ -41,6 +45,7 @@ export class Sell {
 			.after((order) => toOrderId(`ETHEREUM:${order.hash}`))
 
 		return {
+			multiple: collection.type === "ERC1155",
 			supportedCurrencies: [
 				{ blockchain: "ETHEREUM", type: "NATIVE" },
 				{ blockchain: "ETHEREUM", type: "ERC20" },

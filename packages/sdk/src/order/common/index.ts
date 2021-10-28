@@ -16,7 +16,7 @@ export type OrderRequest = {
 	/**
 	 * How many NFTs to sell or create bid for
 	 */
-	amount: BigNumberValue
+	amount: number
 	/**
 	 * Price per one NFT
 	 */

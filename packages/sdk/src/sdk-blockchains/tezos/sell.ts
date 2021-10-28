@@ -7,8 +7,9 @@ import { Action } from "@rarible/action"
 import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { PrepareSellRequest, PrepareSellResponse, SellRequest } from "../../order/sell/domain"
+import { PrepareSellResponse } from "../../order/sell/domain"
 import { RequestCurrency } from "../../common/domain"
+import { OrderRequest, PrepareOrderRequest } from "../../order/common"
 import { Collection, ItemType, TezosOrder } from "./domain"
 
 
@@ -119,7 +120,7 @@ export class Sell {
 		}
 	}
 
-	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {
+	async sell(prepareSellRequest: PrepareOrderRequest): Promise<PrepareSellResponse> {
 		if (!prepareSellRequest.itemId) {
 			throw new Error("ItemId is not exists")
 		}
@@ -134,7 +135,7 @@ export class Sell {
 
 		const submit = Action.create({
 			id: "send-tx" as const,
-			run: async (request: SellRequest) => {
+			run: async (request: OrderRequest) => {
 				const tezosRequest : TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -145,8 +146,8 @@ export class Sell {
 						token_id: BigInt(item.tokenId),
 					},
 					take_asset_type: this.parseTakeAssetType(request.currency),
-					amount: BigInt(request.amount),
-					price: BigInt(request.price),
+					amount: BigInt(+request.amount),
+					price: BigInt(+request.price),
 					payouts: await this.getPayouts(request.payouts),
 					origin_fees: request.originFees?.map(p => ({
 						account: p.account,
@@ -162,6 +163,7 @@ export class Sell {
 		})
 
 		return {
+			multiple: false,
 			maxAmount: toBigNumber(item.supply),
 			supportedCurrencies: [{
 				blockchain: "TEZOS",

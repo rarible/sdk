@@ -6,6 +6,10 @@ import { OrderRequest, PrepareOrderRequest } from "../common"
 //todo use the same type as PrepareSellResponse. multiple is not needed
 export interface PrepareBidResponse extends AbstractPrepareResponse<"approve" | "sign", OrderRequest, Order> {
 	/**
+   * is multiple nft
+   */
+	multiple: boolean
+	/**
    * currencies supported by the blockchain
    */
 	supportedCurrencies: CurrencyType[]

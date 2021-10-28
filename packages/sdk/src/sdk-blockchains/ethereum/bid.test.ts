@@ -38,7 +38,7 @@ describe("transfer", () => {
 
 		const transfer = await senderSdk.order.bid({ itemId })
 		const order = await transfer.submit({
-			amount: toBigNumber("1"),
+			amount: 1,
 			price: toBigNumber("1"),
 			currency: { "@type": "ERC20", contract: toUnionAddress(it.testErc20.options.address) },
 		})

@@ -36,7 +36,7 @@ describe("sale", () => {
 
 		const sellAction = await sdk1.order.sell({ itemId: toItemId(`ETHEREUM:${itemId}`) })
 		const hash = await sellAction.submit({
-			amount: toBigNumber("1"),
+			amount: 1,
 			price: toBigNumber("1"),
 			currency: { "@type": "ERC20", contract: toUnionAddress(conf.testErc20.options.address) },
 		})

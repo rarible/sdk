@@ -49,6 +49,10 @@ export interface FillRequest {
 
 export interface PrepareFillResponse extends AbstractPrepareResponse<"approve" | "send-tx", FillRequest, IBlockchainTransaction> {
 	/**
+   * is multiple nft
+   */
+	multiple: boolean
+	/**
 	 * Maximum amount to fill (of NFTs)
 	 */
 	maxAmount: BigNumber

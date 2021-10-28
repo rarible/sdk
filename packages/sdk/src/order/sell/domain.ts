@@ -6,6 +6,10 @@ import { OrderRequest, PrepareOrderRequest } from "../common"
 
 export interface PrepareSellResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", OrderRequest, OrderId> {
 	/**
+   * is multiple nft
+   */
+	multiple: boolean
+	/**
 	 * currencies supported by the blockchain
 	 */
 	supportedCurrencies: CurrencyType[]

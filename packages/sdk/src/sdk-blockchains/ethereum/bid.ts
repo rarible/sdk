@@ -6,7 +6,9 @@ import { Order as EthereumOrder, Asset as EthereumAsset, OrderData as EthereumOr
 import { AssetType, Order, Asset, PendingOrder, OrderData } from "@rarible/api-client"
 import { AssetType as EthereumAssetType } from "@rarible/protocol-api-client/build/models/AssetType"
 import { OrderExchangeHistory } from "@rarible/protocol-api-client/build/models/OrderExchangeHistory"
-import { BidRequest, PrepareBidRequest, PrepareBidResponse } from "../../order/bid/domain"
+import { toBn } from "@rarible/utils/build/bn"
+import { PrepareBidResponse } from "../../order/bid/domain"
+import { OrderRequest, PrepareOrderRequest } from "../../order/common"
 import { getEthTakeAssetType } from "./common"
 
 export class Bid {
@@ -185,7 +187,7 @@ export class Bid {
 		}
 	}
 
-	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+	async bid(prepare: PrepareOrderRequest): Promise<PrepareBidResponse> {
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}
@@ -193,12 +195,12 @@ export class Bid {
 		const item = await this.sdk.apis.nftItem.getNftItemById({
 			itemId: prepare.itemId,
 		})
-		const contract = await this.sdk.apis.nftCollection.getNftCollectionById({
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
 			collection: item.contract,
 		})
 
 		const submit = this.sdk.order.bid
-			.before(async (request: BidRequest) => {
+			.before(async (request: OrderRequest) => {
 				return {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: getEthTakeAssetType(request.currency),
@@ -206,8 +208,8 @@ export class Bid {
 						tokenId: toBigNumber(item.tokenId),
 						contract: toAddress(item.contract),
 					},
-					amount: parseInt(request.amount),
-					price: request.price,
+					amount: request.amount,
+					price: toBn(request.price),
 					payouts: request.payouts?.map(p => ({
 						account: toAddress(p.account),
 						value: parseInt(p.value),
@@ -225,7 +227,7 @@ export class Bid {
 				{ blockchain: "ETHEREUM", type: "NATIVE" },
 				{ blockchain: "ETHEREUM", type: "ERC20" },
 			],
-			multiple: contract.type === "ERC1155",
+			multiple: collection.type === "ERC1155",
 			maxAmount: item.supply,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit,

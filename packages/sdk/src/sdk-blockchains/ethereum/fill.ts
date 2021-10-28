@@ -1,7 +1,7 @@
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
+import { toAddress, toBigNumber, BigNumber, toBinary, toWord, Address } from "@rarible/types"
 import { AssetType, Order } from "@rarible/api-client"
-import { AssetType as EthereumAssetType } from "@rarible/protocol-api-client"
+import { AssetType as EthereumAssetType, NftCollection } from "@rarible/protocol-api-client"
 import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
@@ -259,6 +259,23 @@ export class Fill {
 		}
 	}
 
+	async isMultiple(order: SimplePreparedOrder): Promise<boolean> {
+		let contract: string
+
+		if (isNft(order.take.assetType)) {
+			contract = order.take.assetType.contract
+		} else if (isNft(order.make.assetType)) {
+			contract = order.make.assetType.contract
+		} else {
+			throw new Error("Nft has not been found")
+		}
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: contract,
+		})
+
+		return collection.type === "ERC1155"
+	}
+
 	async getPreparedOrder(request: PrepareFillRequest): Promise<SimplePreparedOrder> {
 		if ("order" in request) {
 			return this.convertToSimpleOrder(request.order)
@@ -282,6 +299,7 @@ export class Fill {
 
 		return {
 			...this.getSupportFlags(order),
+			multiple: await this.isMultiple(order),
 			maxAmount: await this.getMaxAmount(order),
 			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
 			submit,
