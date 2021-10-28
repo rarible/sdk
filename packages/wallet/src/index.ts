@@ -1,5 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Blockchain } from "@rarible/api-client"
+import type { Blockchain, UnionAddress } from "@rarible/api-client"
 import { Provider } from "tezos-sdk-module/dist/common/base"
 import { FlowAccount, FlowCurrentUser, FlowSignature } from "./fcl-types"
 
@@ -15,6 +15,7 @@ type SignUserMessageResponse = {
 
 interface AbstractWallet {
 	blockchain: Blockchain
+	address: UnionAddress
 
 	signPersonalMessage(message: string): Promise<SignUserMessageResponse>
 }
@@ -24,7 +25,7 @@ export class EthereumWallet implements AbstractWallet {
 
 	constructor(
 		public readonly ethereum: Ethereum,
-		public readonly network: EthereumNetwork,
+		public readonly address: UnionAddress,
 	) {
 	}
 
@@ -42,6 +43,7 @@ export class FlowWallet implements AbstractWallet {
 
 	constructor(
 		public readonly fcl: any,
+		public readonly address: UnionAddress,
 		public readonly network: FlowNetwork,
 	) {
 	}
@@ -82,6 +84,7 @@ export class TezosWallet implements AbstractWallet {
 
 	constructor(
 		public readonly provider: Provider,
+		public readonly address: UnionAddress,
 	) {
 	}
 

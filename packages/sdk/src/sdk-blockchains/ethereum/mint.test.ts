@@ -7,11 +7,11 @@ import { MintType } from "../../nft/mint/domain"
 import { createEthereumSdk } from "./index"
 
 describe("mint", () => {
-	const { provider } = createE2eProvider()
+	const { provider, wallet } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
-	const ethereumWallet = new EthereumWallet(ethereum, "e2e")
-	const sdk = createEthereumSdk(ethereumWallet)
+	const ethereumWallet = new EthereumWallet(ethereum, toUnionAddress(wallet.getAddressString()))
+	const sdk = createEthereumSdk(ethereumWallet, "e2e")
 
 	const erc721Address = toUnionAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 	const erc1155Address = toUnionAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d")
@@ -28,13 +28,13 @@ describe("mint", () => {
 			},
 		})
 
-		const result = await action.submit.start({
+		const result = await action.submit({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-		}).runAll()
+		})
 
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()
@@ -53,13 +53,13 @@ describe("mint", () => {
 			},
 		})
 
-		const result = await action.submit.start({
+		const result = await action.submit({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-		}).runAll()
+		})
 
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()

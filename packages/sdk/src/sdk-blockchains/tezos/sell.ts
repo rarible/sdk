@@ -4,10 +4,10 @@ import { Provider, get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
-import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { PrepareSellRequest, PrepareSellResponse, SellRequest, SellRequestCurrency } from "../../order/sell/domain"
+import { RequestCurrency } from "../../common/domain"
+import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../order/common"
 import { Collection, ItemType, TezosOrder } from "./domain"
 
 
@@ -18,7 +18,7 @@ export class Sell {
 		this.sell = this.sell.bind(this)
 	}
 
-	parseTakeAssetType(type: SellRequestCurrency) {
+	parseTakeAssetType(type: RequestCurrency) {
 		switch (type["@type"]) {
 			case "XTZ": {
 				return {
@@ -37,13 +37,13 @@ export class Sell {
 		}
 	}
 
-	async getPayouts(requestPayouts?: OrderPayout[]) {
+	async getPayouts(requestPayouts?: UnionPart[]) {
 		let payouts = requestPayouts || []
 
 		if (!Array.isArray(payouts) || payouts.length === 0) {
 			return [{
 				account: pk_to_pkh(await this.getMakerPublicKey()),
-				value: 10000n,
+				value: BigInt(10000),
 			}]
 		}
 
@@ -118,12 +118,12 @@ export class Sell {
 		}
 	}
 
-	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {
+	async sell(prepareSellRequest: PrepareOrderRequest): Promise<PrepareOrderResponse> {
 		if (!prepareSellRequest.itemId) {
 			throw new Error("ItemId is not exists")
 		}
 
-		const [domain, collection, tokenId] = prepareSellRequest.itemId.split(":")
+		const [domain, collection] = prepareSellRequest.itemId.split(":")
 		if (domain !== "TEZOS") {
 			throw new Error("Not a tezos item")
 		}
@@ -133,7 +133,7 @@ export class Sell {
 
 		const submit = Action.create({
 			id: "send-tx" as const,
-			run: async (request: SellRequest) => {
+			run: async (request: OrderRequest) => {
 				const tezosRequest : TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -144,8 +144,8 @@ export class Sell {
 						token_id: BigInt(item.tokenId),
 					},
 					take_asset_type: this.parseTakeAssetType(request.currency),
-					amount: BigInt(request.amount),
-					price: BigInt(request.price),
+					amount: BigInt(+request.amount),
+					price: BigInt(+request.price),
 					payouts: await this.getPayouts(request.payouts),
 					origin_fees: request.originFees?.map(p => ({
 						account: p.account,
@@ -161,6 +161,7 @@ export class Sell {
 		})
 
 		return {
+			multiple: false,
 			maxAmount: toBigNumber(item.supply),
 			supportedCurrencies: [{
 				blockchain: "TEZOS",

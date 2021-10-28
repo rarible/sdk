@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/rarible/sdk/compare/v0.2.2...v0.2.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* add apis + some doc ([be42e33](https://github.com/rarible/sdk/commit/be42e3303b5dcdfef9f7c8ef806129585aec5fb4))
+* more generic version for sell/bid ([311d968](https://github.com/rarible/sdk/commit/311d968150d9ee0d0cda9db445294ab4a8d284da))
+
+
+
+
+
+## [0.2.2](https://github.com/rarible/sdk/compare/v0.2.1...v0.2.2) (2021-10-26)
+
+
+### Bug Fixes
+
+* add address to Wallet ([001234b](https://github.com/rarible/sdk/commit/001234b02ec9433b83167bc811574b24856f2a09))
+
+
+
+
+
+## [0.2.1](https://github.com/rarible/sdk/compare/v0.2.0...v0.2.1) (2021-10-26)
+
+
+### Bug Fixes
+
+* ETHEREUM prefixes support ([22f2e5e](https://github.com/rarible/sdk/commit/22f2e5eeaa1171b820204374a2ca834618f5023d))
+
+
+
+
+
+# [0.2.0](https://github.com/rarible/sdk/compare/v0.1.11...v0.2.0) (2021-10-22)
+
+
+### Features
+
+* bid method ([eff9eba](https://github.com/rarible/sdk/commit/eff9eba7e485400369e1b44af6b069b62cabfc7b))
+* burn method ([d7031fb](https://github.com/rarible/sdk/commit/d7031fbf318e0b247293e94fcf1602fdfd10c4cb))
+* ethereum transfer method + test ([0a3b00c](https://github.com/rarible/sdk/commit/0a3b00c0c41459ec5d98d8a82919d413665b2474))
+
+
+
+
+
 ## [0.1.11](https://github.com/rarible/sdk/compare/v0.1.10...v0.1.11) (2021-10-17)
 
 **Note:** Version bump only for package root

@@ -1,7 +1,7 @@
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toBigNumber, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
@@ -16,8 +16,8 @@ describe("sale", () => {
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createEthereumSdk(new EthereumWallet(ethereum1, "e2e"))
-	const sdk2 = createEthereumSdk(new EthereumWallet(ethereum2, "e2e"))
+	const sdk1 = createEthereumSdk(new EthereumWallet(ethereum1, toUnionAddress(wallet1.getAddressString())), "e2e")
+	const sdk2 = createEthereumSdk(new EthereumWallet(ethereum2, toUnionAddress(wallet2.getAddressString())), "e2e")
 	const raribleSdk = createRaribleSdk(ethereum1, "e2e")
 
 	const conf = awaitAll({
@@ -34,21 +34,21 @@ describe("sale", () => {
 
 		await awaitItem(raribleSdk, itemId)
 
-		const sellAction = await sdk1.order.sell({ itemId })
-		const hash = await sellAction.submit.start({
-			amount: toBigNumber("1"),
-			price: toBigNumber("1"),
+		const sellAction = await sdk1.order.sell({ itemId: toItemId(`ETHEREUM:${itemId}`) })
+		const hash = await sellAction.submit({
+			amount: 1,
+			price: "0.000000000000000001",
 			currency: { "@type": "ERC20", contract: toUnionAddress(conf.testErc20.options.address) },
-		}).runAll()
+		})
+		const [, realHash] = hash.split(":")
 
-		await awaitStockToBe(raribleSdk, hash, 1)
+		await awaitStockToBe(raribleSdk, realHash, 1)
 
 		const fillAction = await sdk2.order.fill({ orderId: toOrderId(hash) })
 
-		const tx = await fillAction.submit.start({ amount: 1 })
-			.runAll()
+		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
 
-		await awaitStockToBe(raribleSdk, hash, 0)
+		await awaitStockToBe(raribleSdk, realHash, 0)
 	})
 })

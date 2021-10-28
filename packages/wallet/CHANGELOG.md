@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/rarible/sdk/compare/v0.2.2...v0.2.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* add apis + some doc ([be42e33](https://github.com/rarible/sdk/commit/be42e3303b5dcdfef9f7c8ef806129585aec5fb4))
+
+
+
+
+
+## [0.2.2](https://github.com/rarible/sdk/compare/v0.2.1...v0.2.2) (2021-10-26)
+
+
+### Bug Fixes
+
+* add address to Wallet ([001234b](https://github.com/rarible/sdk/commit/001234b02ec9433b83167bc811574b24856f2a09))
+
+
+
+
+
+# [0.2.0](https://github.com/rarible/sdk/compare/v0.1.11...v0.2.0) (2021-10-22)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
 ## [0.1.11](https://github.com/rarible/sdk/compare/v0.1.10...v0.1.11) (2021-10-17)
 
 **Note:** Version bump only for package @rarible/sdk-wallet
