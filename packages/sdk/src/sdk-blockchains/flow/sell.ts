@@ -3,8 +3,7 @@ import { toBigNumber } from "@rarible/types/build/big-number"
 import { toOrderId } from "@rarible/types"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
-import { SellRequest } from "../../order/sell/domain"
+import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
 import { parseUnionItemId } from "./common/converters"
 
 export class FlowSell {
@@ -12,11 +11,11 @@ export class FlowSell {
 		this.sell = this.sell.bind(this)
 	}
 
-	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
+	async sell(request: PrepareOrderRequest): Promise<PrepareOrderResponse> {
 
 		const sellAction = Action.create({
 			id: "send-tx" as const,
-			run: async (sellRequest: SellRequest) => {
+			run: async (sellRequest: OrderRequest) => {
 				if (sellRequest.currency["@type"] === "FLOW_FT") {
 					const currency = "FLOW" //todo
 					const { collectionId, itemId } = parseUnionItemId(request.itemId)
@@ -24,7 +23,7 @@ export class FlowSell {
 						collectionId,
 						currency,
 						parseInt(itemId), //todo leave string when support it on flow-sdk transactions
-						sellRequest.price
+						sellRequest.price.toString(),
 					)
 				}
 				throw Error(`Unsupported currency: ${sellRequest.currency["@type"]}`)
@@ -42,6 +41,7 @@ export class FlowSell {
 
 
 		return {
+			multiple: false,
 			supportedCurrencies: [
 				{ blockchain: "FLOW", type: "NATIVE" },
 			],

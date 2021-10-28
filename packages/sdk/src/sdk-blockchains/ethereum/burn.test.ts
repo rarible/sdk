@@ -31,18 +31,18 @@ describe("burn", () => {
 				type: "ERC721",
 			},
 		})
-		const mintResult = await mintAction.submit.start({
+		const mintResult  = await mintAction.submit({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-		}).runAll()
+		})
 
 		await awaitItem(raribleSdk, mintResult.itemId)
 
 		const burn = await senderSdk.nft.burn({ itemId: mintResult.itemId })
-		const tx = await burn.submit.start().runAll()
+		const tx = await burn.submit()
 
 		await tx.wait()
 
@@ -62,20 +62,20 @@ describe("burn", () => {
 				type: "ERC1155",
 			},
 		})
-		const mintResult = await mintAction.submit.start({
+		const mintResult  = await mintAction.submit({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 10,
-		}).runAll()
+		})
 
 		await awaitItem(raribleSdk, mintResult.itemId)
 
 		const burn = await senderSdk.nft.burn({
 			itemId: mintResult.itemId,
 		})
-		const tx = await burn.submit.start({ amount: 5 }).runAll()
+		const tx = await burn.submit({ amount: 5 })
 
 		await tx.wait()
 

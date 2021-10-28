@@ -282,6 +282,7 @@ export class Fill {
 		})
 
 		return {
+			multiple: false,
 			maxAmount: await this.getMaxAmount(preparedOrder),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,

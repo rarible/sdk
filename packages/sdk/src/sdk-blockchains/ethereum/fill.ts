@@ -182,7 +182,7 @@ export class Fill {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
-					originFee: fillRequest.originFees?.[0]?.value ? parseInt(fillRequest.originFees[0].value): 0,
+					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value: 0,
 					payout: fillRequest.payouts?.[0]?.account ? toAddress(fillRequest.payouts[0].account): undefined,
 				}
 			}
@@ -193,11 +193,11 @@ export class Fill {
 					infinite: fillRequest.infiniteApproval,
 					payouts: fillRequest.payouts?.map(payout => ({
 						account: toAddress(payout.account),
-						value: parseInt(payout.value),
+						value: payout.value,
 					})),
 					originFees: fillRequest.originFees?.map(fee => ({
 						account: toAddress(fee.account),
-						value: parseInt(fee.value),
+						value: fee.value,
 					})),
 				}
 			}
@@ -259,6 +259,23 @@ export class Fill {
 		}
 	}
 
+	async isMultiple(order: SimplePreparedOrder): Promise<boolean> {
+		let contract: string
+
+		if (isNft(order.take.assetType)) {
+			contract = order.take.assetType.contract
+		} else if (isNft(order.make.assetType)) {
+			contract = order.make.assetType.contract
+		} else {
+			throw new Error("Nft has not been found")
+		}
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: contract,
+		})
+
+		return collection.type === "ERC1155"
+	}
+
 	async getPreparedOrder(request: PrepareFillRequest): Promise<SimplePreparedOrder> {
 		if ("order" in request) {
 			return this.convertToSimpleOrder(request.order)
@@ -282,6 +299,7 @@ export class Fill {
 
 		return {
 			...this.getSupportFlags(order),
+			multiple: await this.isMultiple(order),
 			maxAmount: await this.getMaxAmount(order),
 			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
 			submit,

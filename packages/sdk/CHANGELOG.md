@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.3](https://github.com/rarible/sdk/compare/v0.2.2...v0.2.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* add apis + some doc ([be42e33](https://github.com/rarible/sdk/commit/be42e3303b5dcdfef9f7c8ef806129585aec5fb4))
+* more generic version for sell/bid ([311d968](https://github.com/rarible/sdk/commit/311d968150d9ee0d0cda9db445294ab4a8d284da))
+
+
+
+
+
 ## [0.2.2](https://github.com/rarible/sdk/compare/v0.2.1...v0.2.2) (2021-10-26)
 
 

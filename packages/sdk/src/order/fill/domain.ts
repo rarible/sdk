@@ -2,6 +2,7 @@ import { Order, OrderId, OrderPayout } from "@rarible/api-client"
 import { BigNumber } from "@rarible/types/build/big-number"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { AbstractPrepareResponse } from "../../common/domain"
+import { UnionPart } from "../common"
 
 export type PrepareFillRequest = {
 	/**
@@ -35,11 +36,11 @@ export interface FillRequest {
 	/**
 	 * Origin fees, if not supported by the underlying contract, will throw Error
 	 */
-	originFees?: OrderPayout[]
+	originFees?: UnionPart[]
 	/**
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
-	payouts?: OrderPayout[]
+	payouts?: UnionPart[]
 	/**
 	 * Use infinite approvals (for ERC-20)
 	 */
@@ -50,6 +51,10 @@ export type FillActionTypes = "approve" | "send-tx"
 
 export interface PrepareFillResponse
 	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction> {
+	/**
+   * is multiple nft
+   */
+	multiple: boolean
 	/**
 	 * Maximum amount to fill (of NFTs)
 	 */

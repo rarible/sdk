@@ -41,7 +41,7 @@ describe("test flow mint, order creation, and buy", () => {
 			itemId: toItemId(`${collection.id}:${itemId}`),
 		})
 		const sellResult = await submit({
-			amount: toBigNumber("1"),
+			amount: 1,
 			price: toBigNumber("0.1"),
 			currency: { "@type": "FLOW_FT", contract: collection.id },
 		})
@@ -57,5 +57,5 @@ describe("test flow mint, order creation, and buy", () => {
 		const burn = await sdk2.nft.burn({ itemId: toItemId(`${collectionId}:${itemId}`) })
 		const burnResult = await burn.submit()
 		expect(burnResult.transaction.status).toEqual(4)
-	}, 200000)
+	}, 300000)
 })

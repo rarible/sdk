@@ -60,6 +60,7 @@ export class FlowBuy {
 		})
 
 		return {
+			multiple: false,
 			maxAmount: toBigNumber("1"),
 			baseFee: 0, //todo
 			supportsPartialFill: false,
