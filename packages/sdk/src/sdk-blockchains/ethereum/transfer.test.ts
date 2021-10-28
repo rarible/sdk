@@ -41,9 +41,9 @@ describe("transfer", () => {
 		await awaitItem(raribleSdk, itemId)
 
 		const transfer = await senderSdk.nft.transfer({ itemId })
-		const tx = await transfer.submit.start({
+		const tx = await transfer.submit({
 			to: toUnionAddress(receipent),
-		}).runAll()
+		})
 
 		await tx.wait()
 
@@ -62,10 +62,10 @@ describe("transfer", () => {
 		await awaitItem(raribleSdk, itemId)
 
 		const transfer = await senderSdk.nft.transfer({ itemId })
-		const tx = await transfer.submit.start({
+		const tx = await transfer.submit({
 			to: toUnionAddress(receipent),
 			amount: 10,
-		}).runAll()
+		})
 
 		await tx.wait()
 

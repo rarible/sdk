@@ -2,8 +2,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress, toOrderId } from "@rarible/types"
-import type { PrepareSellResponse } from "../../order/sell/domain"
-import { OrderRequest, PrepareOrderRequest } from "../../order/common"
+import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
 import { getEthTakeAssetType } from "./common"
 
 export class Sell {
@@ -11,7 +10,7 @@ export class Sell {
 		this.sell = this.sell.bind(this)
 	}
 
-	async sell(request: PrepareOrderRequest): Promise<PrepareSellResponse> {
+	async sell(request: PrepareOrderRequest): Promise<PrepareOrderResponse> {
 		const [domain, contract, tokenId] = request.itemId.split(":")
 		if (domain !== "ETHEREUM") {
 			throw new Error("Not an ethereum item")
@@ -31,14 +30,14 @@ export class Sell {
 					},
 					amount: sellFormRequest.amount,
 					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
-					price: sellFormRequest.price,
+					priceDecimal: sellFormRequest.price,
 					payouts: sellFormRequest.payouts?.map(p => ({
 						account: toAddress(p.account),
-						value: parseInt(p.value),
+						value: p.value,
 					})) || [],
 					originFees: sellFormRequest.originFees?.map(fee => ({
 						account: toAddress(fee.account),
-						value: parseInt(fee.value),
+						value: fee.value,
 					})) || [],
 				}
 			})

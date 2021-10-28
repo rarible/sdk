@@ -28,13 +28,13 @@ describe("mint", () => {
 			},
 		})
 
-		const result = await action.submit.start({
+		const result = await action.submit({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-		}).runAll()
+		})
 
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()
@@ -53,13 +53,13 @@ describe("mint", () => {
 			},
 		})
 
-		const result = await action.submit.start({
+		const result = await action.submit({
 			uri: "uri",
 			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-		}).runAll()
+		})
 
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()

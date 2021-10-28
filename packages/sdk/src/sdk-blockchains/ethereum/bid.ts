@@ -7,8 +7,7 @@ import { AssetType, Order, Asset, PendingOrder, OrderData } from "@rarible/api-c
 import { AssetType as EthereumAssetType } from "@rarible/protocol-api-client/build/models/AssetType"
 import { OrderExchangeHistory } from "@rarible/protocol-api-client/build/models/OrderExchangeHistory"
 import { toBn } from "@rarible/utils/build/bn"
-import { PrepareBidResponse } from "../../order/bid/domain"
-import { OrderRequest, PrepareOrderRequest } from "../../order/common"
+import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
 import { getEthTakeAssetType } from "./common"
 
 export class Bid {
@@ -187,7 +186,7 @@ export class Bid {
 		}
 	}
 
-	async bid(prepare: PrepareOrderRequest): Promise<PrepareBidResponse> {
+	async bid(prepare: PrepareOrderRequest): Promise<PrepareOrderResponse> {
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}
@@ -209,18 +208,18 @@ export class Bid {
 						contract: toAddress(item.contract),
 					},
 					amount: request.amount,
-					price: toBn(request.price),
+					priceDecimal: toBn(request.price),
 					payouts: request.payouts?.map(p => ({
 						account: toAddress(p.account),
-						value: parseInt(p.value),
+						value: p.value,
 					})) || [],
 					originFees: request.originFees?.map(fee => ({
 						account: toAddress(fee.account),
-						value: parseInt(fee.value),
+						value: fee.value,
 					})) || [],
 				}
 			})
-			.after(order => this.convertOrderEthToUnion(order))
+			.after(order => toOrderId(`ETHEREUM:${order.hash}`))
 
 		return {
 			supportedCurrencies: [

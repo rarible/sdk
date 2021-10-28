@@ -1,12 +1,38 @@
-import { ItemId, OrderPayout } from "@rarible/api-client"
+import { ItemId, OrderId } from "@rarible/api-client"
 import { BigNumberValue } from "@rarible/utils"
-import { RequestCurrency } from "../../common/domain"
+import { BigNumber } from "@rarible/types/build/big-number"
+import { UnionAddress } from "@rarible/types"
+import { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../common/domain"
 
 export type PrepareOrderRequest = {
 	/**
 	 * Item identifier to sell or bid
 	 */
 	itemId: ItemId
+}
+
+export type UnionPart = {
+	account: UnionAddress
+	value: number
+}
+
+export interface PrepareOrderResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", OrderRequest, OrderId> {
+	/**
+	 * is multiple nft
+	 */
+	multiple: boolean
+	/**
+	 * currencies supported by the blockchain
+	 */
+	supportedCurrencies: CurrencyType[]
+	/**
+	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
+	 */
+	maxAmount: BigNumber
+	/**
+	 * protocol base fee in basis points
+	 */
+	baseFee: number
 }
 
 /**
@@ -28,12 +54,9 @@ export type OrderRequest = {
 	/**
 	 * Origin fees, if not supported by the underlying contract, will throw Error
 	 */
-	originFees?: OrderPayout[]
+	originFees?: UnionPart[]
 	/**
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
-	payouts?: OrderPayout[]
+	payouts?: UnionPart[]
 }
-
-//todo how we should treat payouts, fees? basis points? or what
-//todo what should we use for number in requests and responses? BigNumberValue?
