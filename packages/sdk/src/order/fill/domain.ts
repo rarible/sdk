@@ -1,4 +1,4 @@
-import { Order, OrderId } from "@rarible/api-client"
+import { Order, OrderId, OrderPayout } from "@rarible/api-client"
 import { BigNumber } from "@rarible/types/build/big-number"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { AbstractPrepareResponse } from "../../common/domain"
@@ -47,7 +47,10 @@ export interface FillRequest {
 	infiniteApproval?: boolean
 }
 
-export interface PrepareFillResponse extends AbstractPrepareResponse<"approve" | "send-tx", FillRequest, IBlockchainTransaction> {
+export type FillActionTypes = "approve" | "send-tx"
+
+export interface PrepareFillResponse
+	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction> {
 	/**
    * is multiple nft
    */
