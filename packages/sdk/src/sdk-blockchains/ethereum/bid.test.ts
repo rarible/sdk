@@ -40,7 +40,6 @@ describe("bid", () => {
 
 		await awaitStockToBe(sdk, orderId, "2e-18")
 
-		// await delay(500)
 		const updateAction = await sdk.order.bidUpdate({ orderId: toOrderId(orderId) })
 		await updateAction.submit({ price: "0.000000000000000004" })
 	})
