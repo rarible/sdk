@@ -1,7 +1,7 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toOrderId, toWord } from "@rarible/types"
+import { toAddress, toWord } from "@rarible/types"
 import {
 	OrderRequest, OrderUpdateRequest,
 	PrepareOrderRequest,
