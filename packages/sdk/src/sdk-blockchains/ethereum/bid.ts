@@ -6,7 +6,6 @@ import { Order as EthereumOrder, Asset as EthereumAsset, OrderData as EthereumOr
 import { AssetType, Order, Asset, PendingOrder, OrderData } from "@rarible/api-client"
 import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import { toBn } from "@rarible/utils/build/bn"
 import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
 import { getEthTakeAssetType } from "./common"
 
@@ -191,9 +190,12 @@ export class Bid {
 			throw new Error("ItemId has not been specified")
 		}
 
-		const item = await this.sdk.apis.nftItem.getNftItemById({
-			itemId: prepare.itemId,
-		})
+		const [domain, contract, tokenId] = prepare.itemId.split(":")
+		if (domain !== "ETHEREUM") {
+			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
+		}
+
+		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
 			collection: item.contract,
 		})
@@ -204,11 +206,11 @@ export class Bid {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: getEthTakeAssetType(request.currency),
 					takeAssetType: {
-						tokenId: toBigNumber(item.tokenId),
-						contract: toAddress(item.contract),
+						tokenId: item.tokenId,
+						contract: item.contract,
 					},
 					amount: request.amount,
-					priceDecimal: toBn(request.price),
+					priceDecimal: request.price,
 					payouts: request.payouts?.map(p => ({
 						account: toAddress(p.account),
 						value: p.value,

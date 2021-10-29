@@ -1,14 +1,13 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
 import { deployTestErc1155 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc1155"
 import { toItemId, toUnionAddress } from "@rarible/types"
+import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
-import { createEthereumSdk } from "./index"
 
 describe("transfer", () => {
 
@@ -20,9 +19,7 @@ describe("transfer", () => {
 
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const receipentEthereum = new Web3Ethereum({ web3: web32 })
-	const senderSdk = createEthereumSdk(new EthereumWallet(senderEthereum, toUnionAddress(wallet1.getAddressString())), "e2e")
-
-	const raribleSdk = createRaribleSdk(senderEthereum, "e2e")
+	const sdk = createRaribleSdk(new EthereumWallet(senderEthereum, toUnionAddress(`ETHEREUM:${wallet1.getAddressString()}`)), "e2e")
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -35,12 +32,12 @@ describe("transfer", () => {
 		const receipent = await receipentEthereum.getFrom()
 
 		const tokenId = "1"
-		const itemId = toItemId(`${it.testErc721.options.address}:${tokenId}`)
+		const itemId = toItemId(`ETHEREUM:${it.testErc721.options.address}:${tokenId}`)
 		await it.testErc721.methods.mint(sender, tokenId, "").send({ from: sender, gas: 500000 })
 
-		await awaitItem(raribleSdk, itemId)
+		await awaitItem(sdk, itemId)
 
-		const transfer = await senderSdk.nft.transfer({ itemId })
+		const transfer = await sdk.nft.transfer({ itemId })
 		const tx = await transfer.submit({
 			to: toUnionAddress(receipent),
 		})
@@ -56,12 +53,12 @@ describe("transfer", () => {
 		const receipent = await receipentEthereum.getFrom()
 
 		const tokenId = "1"
-		const itemId = toItemId(`${it.testErc1155.options.address}:${tokenId}`)
+		const itemId = toItemId(`ETHEREUM:${it.testErc1155.options.address}:${tokenId}`)
 		await it.testErc1155.methods.mint(sender, tokenId, 100, "123").send({ from: sender, gas: 200000 })
 
-		await awaitItem(raribleSdk, itemId)
+		await awaitItem(sdk, itemId)
 
-		const transfer = await senderSdk.nft.transfer({ itemId })
+		const transfer = await sdk.nft.transfer({ itemId })
 		const tx = await transfer.submit({
 			to: toUnionAddress(receipent),
 			amount: 10,
