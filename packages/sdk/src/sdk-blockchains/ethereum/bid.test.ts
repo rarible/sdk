@@ -4,7 +4,8 @@ import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { toItemId, toUnionAddress } from "@rarible/types"
+import { toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { delay } from "@rarible/protocol-ethereum-sdk/build/common/retry"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStockToBe } from "./test/await-stock-to-be"
@@ -24,7 +25,7 @@ describe("bid", () => {
 		testErc721: deployTestErc721(web31, "Test2", "TST2"),
 	})
 
-	test("bid on erc721", async () => {
+	test("bid on erc721 and update bid", async () => {
 		const sender = await senderEthereum.getFrom()
 
 		const tokenId = "1"
@@ -37,12 +38,16 @@ describe("bid", () => {
 		const response = await senderSdk.order.bid({ itemId })
 		const orderId = await response.submit({
 			amount: 1,
-			price: "0.000000000000000001",
+			price: "0.000000000000000002",
 			currency: { "@type": "ERC20", contract: toUnionAddress(it.testErc20.options.address) },
 		})
 
 		const [,hash] = orderId.split(":")
 		await awaitStockToBe(raribleSdk, hash, 1)
+
+		await delay(500)
+		const updateAction = await senderSdk.order.bidUpdate({ orderId: toOrderId(orderId) })
+		await updateAction.submit({ price: "0.000000000000000004" })
 	})
 
 })

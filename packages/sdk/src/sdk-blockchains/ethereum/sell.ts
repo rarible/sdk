@@ -1,13 +1,20 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toOrderId } from "@rarible/types"
-import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
-import { getEthTakeAssetType } from "./common"
+import { toAddress, toOrderId, toWord } from "@rarible/types"
+import {
+	OrderRequest, OrderUpdateRequest,
+	PrepareOrderRequest,
+	PrepareOrderResponse,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
+} from "../../order/common"
+import { getEthTakeAssetType, getSupportedCurrencies } from "./common"
 
 export class Sell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
 		this.sell = this.sell.bind(this)
+		this.update = this.update.bind(this)
 	}
 
 	async sell(request: PrepareOrderRequest): Promise<PrepareOrderResponse> {
@@ -45,13 +52,35 @@ export class Sell {
 
 		return {
 			multiple: collection.type === "ERC1155",
-			supportedCurrencies: [
-				{ blockchain: "ETHEREUM", type: "NATIVE" },
-				{ blockchain: "ETHEREUM", type: "ERC20" },
-			],
+			supportedCurrencies: getSupportedCurrencies(),
 			maxAmount: item.supply,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit: sellAction,
+		}
+	}
+
+	async update(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+		if (!prepareRequest.orderId) {
+			throw new Error("OrderId has not been specified")
+		}
+		const [blockchain, orderId] = prepareRequest.orderId.split(":")
+		if (blockchain !== "ETHEREUM") {
+			throw new Error("Not an ethereum order")
+		}
+
+		const sellUpdateAction = this.sdk.order.sellUpdate
+			.before((request: OrderUpdateRequest) => {
+				return {
+					orderHash: toWord(orderId),
+					priceDecimal: request.price,
+				}
+			})
+			.after(order => toOrderId(`ETHEREUM:${order.hash}`))
+
+		return {
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+			submit: sellUpdateAction,
 		}
 	}
 }

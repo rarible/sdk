@@ -1,5 +1,5 @@
 import { toAddress } from "@rarible/types"
-import { RequestCurrency } from "../../../common/domain"
+import { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export function getEthTakeAssetType(currency: RequestCurrency) {
 	switch (currency["@type"]) {
@@ -18,4 +18,11 @@ export function getEthTakeAssetType(currency: RequestCurrency) {
 			throw Error("Invalid take asset type")
 		}
 	}
+}
+
+export function getSupportedCurrencies(): CurrencyType[] {
+	return [
+		{ blockchain: "ETHEREUM", type: "NATIVE" },
+		{ blockchain: "ETHEREUM", type: "ERC20" },
+	]
 }

@@ -8,9 +8,9 @@ import { fill_order } from "tezos-sdk-module/dist/order"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import { Address, BigNumber, Binary, toBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import { OrderRaribleV2DataV1 } from "@rarible/protocol-api-client/build/models/OrderData"
-import { OrderPriceHistoryRecord } from "@rarible/protocol-api-client/build/models/OrderPriceHistoryRecord"
-import { OrderExchangeHistory } from "@rarible/protocol-api-client/build/models/OrderExchangeHistory"
+import { OrderRaribleV2DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
+import { OrderPriceHistoryRecord } from "@rarible/ethereum-api-client/build/models/OrderPriceHistoryRecord"
+import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
 import {
 	FillRequest,
 	OriginFeeSupport,
