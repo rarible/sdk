@@ -35,26 +35,26 @@ export class Mint {
 				uri: request.uri,
 			})
 		}
-		if (isErc721v2Collection(nftCollection) && request.royalties) {
+		if (isErc721v2Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
-				royalties: request.royalties.map(r => ({
+				royalties: (request.royalties || []).map(r => ({
 					account: toAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 			})
 		}
-		if (isErc721v3Collection(nftCollection) && request.royalties && request.creators) {
+		if (isErc721v3Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
 				lazy: request.lazyMint,
-				royalties: request.royalties.map(r => ({
+				royalties: (request.royalties || []).map(r => ({
 					account: toAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
-				creators: request.creators.map(c => ({
+				creators: (request.creators || []).map(c => ({
 					account: toAddress(c.account),
 					value: toBn(c.value).toNumber(),
 				})),
