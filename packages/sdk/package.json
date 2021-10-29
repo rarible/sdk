@@ -58,7 +58,6 @@
     "@rarible/ethereum-sdk-test-common": "^0.7.2",
     "@rarible/test-provider": "^0.1.22",
     "@rarible/flow-test-common": "^0.0.90",
-    "@rarible/fcl-types": "^0.0.90",
     "@taquito/beacon-wallet": "^10.1.2",
     "@taquito/signer": "^10.1.2",
     "@temple-wallet/dapp": "^5.0.2",
