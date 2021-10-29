@@ -57,5 +57,5 @@ describe("test flow mint, order creation, and buy", () => {
 		const burn = await sdk2.nft.burn({ itemId: toItemId(`${collectionId}:${itemId}`) })
 		const burnResult = await burn.submit()
 		expect(burnResult.transaction.status).toEqual(4)
-	}, 300000)
+	}, 1500000)
 })

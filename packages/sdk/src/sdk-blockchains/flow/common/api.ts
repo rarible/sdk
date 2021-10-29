@@ -1,5 +1,5 @@
 import { CollectionControllerApi, Configuration, ItemControllerApi, OrderControllerApi } from "@rarible/api-client"
-import { FlowNetwork } from "@rarible/sdk-wallet/src"
+import { FlowNetwork } from "@rarible/sdk-wallet"
 
 type Api = {
 	itemController: ItemControllerApi

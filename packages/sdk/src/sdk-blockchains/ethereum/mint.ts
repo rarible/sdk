@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { Action } from "@rarible/action"
 import {
 	isErc1155v1Collection,
@@ -13,10 +14,9 @@ import { NftCollection } from "@rarible/protocol-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
-import {
-	MintType,
-	PrepareMintResponse,
-} from "../../nft/mint/domain"
+import { Collection } from "@rarible/api-client"
+import type { NftCollection_Type } from "@rarible/protocol-api-client/build/models/NftCollection"
+import { MintType, PrepareMintResponse } from "../../nft/mint/domain"
 import { MintRequest } from "../../nft/mint/mint-request.type"
 import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
@@ -89,8 +89,8 @@ export class Mint {
 				})),
 			})
 		}
-		throw new Error("Unsupported NFT Collection")
 
+		throw new Error("Unsupported NFT Collection")
 	}
 
 	async prepare(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
@@ -101,15 +101,7 @@ export class Mint {
 
 		validatePrepareMintRequest(prepareRequest)
 
-		const nftCollection: NftCollection = {
-			...prepareRequest.collection,
-			id: toAddress(prepareRequest.collection.id),
-			type: collection.type,
-			owner: collection.owner && toAddress(collection.owner),
-			name: collection.name,
-			symbol: collection.symbol,
-			features: collection.features,
-		}
+		const nftCollection: NftCollection = toNftCollection(collection)
 		const prepareMintRequestData = prepareMintRequest(nftCollection)
 
 		return {
@@ -139,6 +131,21 @@ export class Mint {
 				},
 			}),
 		}
+	}
+}
 
+function toNftCollection(collection: Collection): NftCollection {
+	const [domain, address] = collection.id.split(":")
+	if (domain !== "ETHEREUM") {
+		throw new Error(`Not an ethereum collection: ${JSON.stringify(collection)}`)
+	}
+	return {
+		...collection,
+		id: toAddress(address),
+		type: collection.type as NftCollection_Type, //TODO delete when will update client
+		owner: collection.owner && toAddress(collection.owner),
+		name: collection.name,
+		symbol: collection.symbol,
+		features: collection.features,
 	}
 }

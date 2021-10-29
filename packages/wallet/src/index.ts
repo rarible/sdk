@@ -1,7 +1,8 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Blockchain, UnionAddress } from "@rarible/api-client"
 import { Provider } from "tezos-sdk-module/dist/common/base"
-import { FlowAccount, FlowCurrentUser, FlowSignature } from "./fcl-types"
+import { Fcl } from "@rarible/fcl-types"
+import { FlowAccount } from "./fcl-types"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
@@ -42,7 +43,7 @@ export class FlowWallet implements AbstractWallet {
 	readonly blockchain = "FLOW"
 
 	constructor(
-		public readonly fcl: any,
+		public readonly fcl: Fcl,
 		public readonly address: UnionAddress,
 		public readonly network: FlowNetwork,
 	) {
@@ -53,11 +54,11 @@ export class FlowWallet implements AbstractWallet {
 			throw Error("Message can't be empty")
 		}
 		const messageHex = Buffer.from(message).toString("hex")
-		const currentUser: FlowCurrentUser = await this.fcl.currentUser()
+		const currentUser = await this.fcl.currentUser()
 		const { addr } = await currentUser.snapshot()
 		const account: FlowAccount = await this.fcl.account(addr)
 
-		const signatures: FlowSignature[] = await currentUser.signUserMessage(messageHex)
+		const signatures = await currentUser.signUserMessage(messageHex)
 		if (typeof signatures === "string") {
 			throw Error(signatures)
 		}
