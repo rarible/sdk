@@ -9,8 +9,8 @@ import { createFlowSdk } from "./index"
 
 describe("test flow mint, order creation, and buy", () => {
 	const { authUser1, authUser2 } = createTestFlowAuth(fcl)
-	const wallet1 = new FlowWallet(fcl, toUnionAddress(""), "testnet")
-	const wallet2 = new FlowWallet(fcl, toUnionAddress(""), "testnet")
+	const wallet1 = new FlowWallet(fcl, toUnionAddress("FLOW:"), "testnet")
+	const wallet2 = new FlowWallet(fcl, toUnionAddress("FLOW:"), "testnet")
 	const sdk1 = createFlowSdk(wallet1, authUser1)
 	const sdk2 = createFlowSdk(wallet2, authUser2)
 	const collectionId = "FLOW:A.01658d9b94068f3c.CommonNFT"

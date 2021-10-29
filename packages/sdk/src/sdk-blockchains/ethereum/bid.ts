@@ -1,14 +1,24 @@
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toAddress, toBinary, toOrderId, toUnionAddress } from "@rarible/types"
+import { toAddress, toBinary, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { Order as EthereumOrder, Asset as EthereumAsset, OrderData as EthereumOrderData } from "@rarible/ethereum-api-client"
 import { AssetType, Order, Asset, PendingOrder, OrderData } from "@rarible/api-client"
 import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import { toBn } from "@rarible/utils/build/bn"
-import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
-import { getEthTakeAssetType } from "./common"
+import {
+	OrderRequest, OrderUpdateRequest,
+	PrepareOrderRequest,
+	PrepareOrderResponse,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
+} from "../../order/common"
+import {
+	convertOrderHashToOrderId,
+	convertUnionToEthereumAddress,
+	getEthTakeAssetType,
+	getSupportedCurrencies,
+} from "./common"
 
 export class Bid {
 	constructor(
@@ -16,6 +26,7 @@ export class Bid {
 		private wallet: EthereumWallet
 	) {
 		this.bid = this.bid.bind(this)
+		this.update = this.update.bind(this)
 	}
 
 
@@ -191,9 +202,12 @@ export class Bid {
 			throw new Error("ItemId has not been specified")
 		}
 
-		const item = await this.sdk.apis.nftItem.getNftItemById({
-			itemId: prepare.itemId,
-		})
+		const [domain, contract, tokenId] = prepare.itemId.split(":")
+		if (domain !== "ETHEREUM") {
+			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
+		}
+
+		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
 			collection: item.contract,
 		})
@@ -204,22 +218,22 @@ export class Bid {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: getEthTakeAssetType(request.currency),
 					takeAssetType: {
-						tokenId: toBigNumber(item.tokenId),
-						contract: toAddress(item.contract),
+						tokenId: item.tokenId,
+						contract: item.contract,
 					},
 					amount: request.amount,
-					priceDecimal: toBn(request.price),
+					priceDecimal: request.price,
 					payouts: request.payouts?.map(p => ({
-						account: toAddress(p.account),
+						account: convertUnionToEthereumAddress(p.account),
 						value: p.value,
 					})) || [],
 					originFees: request.originFees?.map(fee => ({
-						account: toAddress(fee.account),
+						account: convertUnionToEthereumAddress(fee.account),
 						value: fee.value,
 					})) || [],
 				}
 			})
-			.after(order => toOrderId(`ETHEREUM:${order.hash}`))
+			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
 			supportedCurrencies: [
@@ -230,6 +244,31 @@ export class Bid {
 			maxAmount: item.supply,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit,
+		}
+	}
+
+	async update(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse>  {
+		if (!prepareRequest.orderId) {
+			throw new Error("OrderId has not been specified")
+		}
+		const [blockchain, orderId] = prepareRequest.orderId.split(":")
+		if (blockchain !== "ETHEREUM") {
+			throw new Error("Not an ethereum order")
+		}
+
+		const sellUpdateAction = this.sdk.order.bidUpdate
+			.before((request: OrderUpdateRequest) => {
+				return {
+					orderHash: toWord(orderId),
+					priceDecimal: request.price,
+				}
+			})
+			.after(order => convertOrderHashToOrderId(order.hash))
+
+		return {
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+			submit: sellUpdateAction,
 		}
 	}
 }

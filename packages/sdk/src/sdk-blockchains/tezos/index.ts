@@ -13,7 +13,9 @@ export function createTezosSdk(wallet: TezosWallet): Omit<IRaribleSdk, "apis"> {
 		order: {
 			fill: new Fill(wallet.provider).fill,
 			sell: new Sell(wallet.provider).sell,
+			sellUpdate: null as any,
 			bid: null as any,
+			bidUpdate: null as any,
 		},
 	}
 }
