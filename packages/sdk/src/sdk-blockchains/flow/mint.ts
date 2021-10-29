@@ -7,6 +7,7 @@ import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
 import { MintRequest } from "../../nft/mint/mint-request.type"
 import { getFlowCollection } from "./common/converters"
+import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
 export class FlowMint {
 	constructor(private sdk: FlowSdk) {
@@ -25,7 +26,11 @@ export class FlowMint {
 				submit: Action.create({
 					id: "mint" as const,
 					run: async (request: MintRequest) => {
-						const mintResponse = await this.sdk.nft.mint(flowCollection, request.uri, request.royalties || [])
+						const mintResponse = await this.sdk.nft.mint(
+							flowCollection,
+							request.uri,
+							prepareFlowRoyalties(request.royalties)
+						)
 						return {
 							type: MintType.ON_CHAIN,
 							itemId: toItemId(`${mintResponse.tokenId}`),
