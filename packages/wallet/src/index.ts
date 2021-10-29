@@ -2,7 +2,6 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Blockchain, UnionAddress } from "@rarible/api-client"
 import { Provider } from "tezos-sdk-module/dist/common/base"
 import { Fcl } from "@rarible/fcl-types"
-import { FlowAccount } from "./fcl-types"
 
 // @todo replace with types from ethereum-sdk, flow-sdk etc
 
@@ -56,7 +55,7 @@ export class FlowWallet implements AbstractWallet {
 		const messageHex = Buffer.from(message).toString("hex")
 		const currentUser = await this.fcl.currentUser()
 		const { addr } = await currentUser.snapshot()
-		const account: FlowAccount = await this.fcl.account(addr)
+		const account = await this.fcl.account(addr)
 
 		const signatures = await currentUser.signUserMessage(messageHex)
 		if (typeof signatures === "string") {
