@@ -3,6 +3,7 @@ import { toBigNumber } from "@rarible/types/build/big-number"
 import { toOrderId } from "@rarible/types"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
+import { toBn } from "@rarible/utils/build/bn"
 import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
 import { parseUnionItemId } from "./common/converters"
 
@@ -23,7 +24,7 @@ export class FlowSell {
 						collectionId,
 						currency,
 						parseInt(itemId), //todo leave string when support it on flow-sdk transactions
-						sellRequest.price.toString(),
+						toBn(sellRequest.price).decimalPlaces(8).toString(),
 					)
 				}
 				throw Error(`Unsupported currency: ${sellRequest.currency["@type"]}`)
