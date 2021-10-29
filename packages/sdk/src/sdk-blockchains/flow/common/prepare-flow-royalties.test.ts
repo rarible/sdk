@@ -19,10 +19,10 @@ describe("Test convert Royalty to FlowRoyalty", () => {
 		)
 		expect(result2[0].value).toEqual("0")
 
-		const result3 = prepareFlowRoyalties(
+		const result3 = () => prepareFlowRoyalties(
 			[{ account: toUnionAddress("0x0"), value: toBigNumber("999999") }],
 		)
-		expect(result3[0].value).toEqual("99.9999")
+		expect(result3).toThrow(Error)
 
 		const dummy = undefined
 		const result4 = prepareFlowRoyalties(dummy)
