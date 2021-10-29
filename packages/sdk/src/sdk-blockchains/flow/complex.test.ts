@@ -24,7 +24,7 @@ describe("test flow mint, order creation, and buy", () => {
 		features: [],
 	}
 
-	test("Should create flow NFT order, create order, buy by created order", async () => {
+	test.skip("Should create flow NFT order, create order, buy by created order", async () => {
 
 		//Mint
 		const prepareMint = await sdk2.nft.mint({ collection })
