@@ -5,7 +5,7 @@ import { toBn } from "@rarible/utils/build/bn"
 export function prepareFlowRoyalties(royalty: Royalty[] | undefined): FlowRoyalty[] {
 	if (royalty) {
 		return royalty.map(r => {
-			if (r.value.toString().length > 5) {
+			if (toBn(r.value).gt(10000)) {
 				throw Error("Value for royalty too big")
 			}
 			return {
