@@ -54,27 +54,26 @@ export class FlowWallet implements AbstractWallet {
 		}
 		const messageHex = Buffer.from(message).toString("hex")
 		const currentUser = await this.fcl.currentUser()
-		const { addr } = await currentUser.snapshot()
-		const account = await this.fcl.account(addr)
+		const account = await this.fcl.account(this.address)
 
 		const signatures = await currentUser.signUserMessage(messageHex)
 		if (typeof signatures === "string") {
 			throw Error(signatures)
 		}
 
-		const signature = signatures.find(s => s.addr.toLowerCase() === addr.toLowerCase())
+		const signature = signatures.find(s => s.addr.toLowerCase() === this.address.toLowerCase())
 		if (signature) {
 			const { keyId } = signature
 			const pubKey = account.keys.find(k => k.index === keyId)
 			if (!pubKey) {
-				throw Error(`Key with index "${keyId}" not found on account with address ${addr}`)
+				throw Error(`Key with index "${keyId}" not found on account with address ${this.address}`)
 			}
 			return {
 				signature: signature.signature,
 				pubKey: pubKey.publicKey,
 			}
 		} else {
-			throw Error(`Signature of user address "${addr}" not found`)
+			throw Error(`Signature of user address "${this.address}" not found`)
 		}
 	}
 }
