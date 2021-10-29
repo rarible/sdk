@@ -1,7 +1,7 @@
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
 import { AssetType, Order } from "@rarible/api-client"
-import { AssetType as EthereumAssetType } from "@rarible/protocol-api-client"
+import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
 import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
