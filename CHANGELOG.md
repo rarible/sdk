@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.10](https://github.com/rarible/sdk/compare/v0.2.9...v0.2.10) (2021-10-29)
+
+
+### Bug Fixes
+
+* skip tests ([fc5f5df](https://github.com/rarible/sdk/commit/fc5f5dfaf498e60e00c014920bb5c84683a113b9))
+
+
+
+
+
 ## [0.2.9](https://github.com/rarible/sdk/compare/v0.2.8...v0.2.9) (2021-10-29)
 
 **Note:** Version bump only for package root
