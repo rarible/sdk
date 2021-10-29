@@ -13,7 +13,12 @@ import {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../order/common"
-import { convertUnionToEthereumAddress, getEthTakeAssetType, getSupportedCurrencies } from "./common"
+import {
+	convertOrderHashToOrderId,
+	convertUnionToEthereumAddress,
+	getEthTakeAssetType,
+	getSupportedCurrencies,
+} from "./common"
 
 export class Bid {
 	constructor(
@@ -228,7 +233,7 @@ export class Bid {
 					})) || [],
 				}
 			})
-			.after(order => toOrderId(`ETHEREUM:${order.hash}`))
+			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
 			supportedCurrencies: [
@@ -258,7 +263,7 @@ export class Bid {
 					priceDecimal: request.price,
 				}
 			})
-			.after(order => toOrderId(`ETHEREUM:${order.hash}`))
+			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
 			supportedCurrencies: getSupportedCurrencies(),

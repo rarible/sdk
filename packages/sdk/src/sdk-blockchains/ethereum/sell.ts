@@ -9,7 +9,12 @@ import {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../order/common"
-import { convertUnionToEthereumAddress, getEthTakeAssetType, getSupportedCurrencies } from "./common"
+import {
+	convertOrderHashToOrderId,
+	convertUnionToEthereumAddress,
+	getEthTakeAssetType,
+	getSupportedCurrencies,
+} from "./common"
 
 export class Sell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
@@ -48,7 +53,7 @@ export class Sell {
 					})) || [],
 				}
 			})
-			.after((order) => toOrderId(`ETHEREUM:${order.hash}`))
+			.after((order) => convertOrderHashToOrderId(order.hash))
 
 		return {
 			multiple: collection.type === "ERC1155",
@@ -75,7 +80,7 @@ export class Sell {
 					priceDecimal: request.price,
 				}
 			})
-			.after(order => toOrderId(`ETHEREUM:${order.hash}`))
+			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
 			supportedCurrencies: getSupportedCurrencies(),

@@ -1,5 +1,6 @@
-import { Address, toAddress, UnionAddress } from "@rarible/types"
+import { Address, toAddress, toOrderId, toUnionAddress, UnionAddress, Word } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
+import { OrderId } from "@rarible/api-client"
 import { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export function getEthTakeAssetType(currency: RequestCurrency) {
@@ -37,6 +38,6 @@ export function convertUnionToEthereumAddress(unionAddress: UnionAddress): Addre
 	return toAddress(address)
 }
 
-export function convertOrderHashToId() {
-
+export function convertOrderHashToOrderId(hash: Word): OrderId {
+	return toOrderId(`ETHEREUM:${hash}`)
 }
