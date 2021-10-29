@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { toItemId } from "@rarible/types"
-import { BlockchainFlowTransaction } from "@rarible/sdk-transaction/src"
+import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import { MintType, PrepareMintResponse } from "../../nft/mint/domain"
 import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"

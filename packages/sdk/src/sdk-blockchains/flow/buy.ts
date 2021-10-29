@@ -3,7 +3,7 @@ import { toBigNumber } from "@rarible/types/build/big-number"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { Order } from "@rarible/api-client"
-import { BlockchainFlowTransaction } from "@rarible/sdk-transaction/src"
+import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import {
 	FillRequest,
 	OriginFeeSupport,
