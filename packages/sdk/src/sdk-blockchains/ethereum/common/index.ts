@@ -1,4 +1,5 @@
-import { toAddress } from "@rarible/types"
+import { Address, toAddress, UnionAddress } from "@rarible/types"
+import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export function getEthTakeAssetType(currency: RequestCurrency) {
@@ -6,7 +7,7 @@ export function getEthTakeAssetType(currency: RequestCurrency) {
 		case "ERC20": {
 			return {
 				assetClass: currency["@type"],
-				contract: toAddress(currency.contract),
+				contract: convertUnionToEthereumAddress(currency.contract),
 			}
 		}
 		case "ETH": {
@@ -25,4 +26,17 @@ export function getSupportedCurrencies(): CurrencyType[] {
 		{ blockchain: "ETHEREUM", type: "NATIVE" },
 		{ blockchain: "ETHEREUM", type: "ERC20" },
 	]
+}
+
+export function convertUnionToEthereumAddress(unionAddress: UnionAddress): Address {
+	if (!isBlockchainSpecified(unionAddress)) {
+		throw new Error("Not a UnionAddress: " + unionAddress)
+	}
+
+	const [, address] = unionAddress.split(":")
+	return toAddress(address)
+}
+
+export function convertOrderHashToId() {
+
 }

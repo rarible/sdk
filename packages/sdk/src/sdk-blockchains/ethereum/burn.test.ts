@@ -4,7 +4,7 @@ import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
-import { createTestErc1155, createTestErc721 } from "./test/create-contracts"
+import { awaitItemValue } from "./test/await-item-value"
 
 describe("burn", () => {
 
@@ -17,14 +17,16 @@ describe("burn", () => {
 	const contractErc1155 = toAddress("0x8812cFb55853da0968a02AaaEA84CD93EC4b42A1")
 
 	test("burn erc721", async () => {
-		const contract = createTestErc721(web31, contractErc721)
 		const sender = await senderEthereum.getFrom()
 
 		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
 		const mintAction = await sdk.nft.mint({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
+			creators: [{
+				account: toUnionAddress(`ETHEREUM:${sender}`),
+				value: toBigNumber("10000"),
+			}],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
@@ -37,36 +39,36 @@ describe("burn", () => {
 
 		await tx.wait()
 
-		const balanceRecipient = await contract.methods.balanceOf(sender).call()
-		expect(balanceRecipient).toBe("0")
+		await awaitItemValue(sdk, mintResult.itemId, toBigNumber("0"))
 	})
 
-	test("transfer erc1155", async () => {
-		const contract = createTestErc1155(web31, contractErc1155)
+	test("burn erc1155", async () => {
 		const sender = await senderEthereum.getFrom()
 
-		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc1155}` })
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: `ETHEREUM:${contractErc1155}`,
+		})
 		const mintAction = await sdk.nft.mint({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
+			creators: [{
+				account: toUnionAddress(`ETHEREUM:${sender}`),
+				value: toBigNumber("10000"),
+			}],
 			royalties: [],
 			lazyMint: false,
 			supply: 10,
 		})
 
-		await awaitItem(sdk, mintResult.itemId)
+		await awaitItemValue(sdk, mintResult.itemId, toBigNumber("10"))
 
 		const burn = await sdk.nft.burn({
 			itemId: mintResult.itemId,
 		})
 		const tx = await burn.submit({ amount: 5 })
-
 		await tx.wait()
 
-		const tokenId = mintResult.itemId.split(":")[1]
-		const balanceRecipient = await contract.methods.balanceOf(sender, tokenId).call()
-		expect(balanceRecipient).toBe("5")
+		await awaitItemValue(sdk, mintResult.itemId, toBigNumber("5"))
 	})
 
 })

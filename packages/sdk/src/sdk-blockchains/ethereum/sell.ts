@@ -9,7 +9,7 @@ import {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../order/common"
-import { getEthTakeAssetType, getSupportedCurrencies } from "./common"
+import { convertUnionToEthereumAddress, getEthTakeAssetType, getSupportedCurrencies } from "./common"
 
 export class Sell {
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
@@ -39,11 +39,11 @@ export class Sell {
 					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
 					priceDecimal: sellFormRequest.price,
 					payouts: sellFormRequest.payouts?.map(p => ({
-						account: toAddress(p.account),
+						account: convertUnionToEthereumAddress(p.account),
 						value: p.value,
 					})) || [],
 					originFees: sellFormRequest.originFees?.map(fee => ({
-						account: toAddress(fee.account),
+						account: convertUnionToEthereumAddress(fee.account),
 						value: fee.value,
 					})) || [],
 				}

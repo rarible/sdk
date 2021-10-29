@@ -21,6 +21,7 @@ import { MintRequest } from "../../nft/mint/mint-request.type"
 import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
 import { validateMintRequest } from "../../nft/mint/mint-request.type.validator"
+import { convertUnionToEthereumAddress } from "./common"
 
 export class Mint {
 	constructor(private sdk: RaribleSdk) {
@@ -40,7 +41,7 @@ export class Mint {
 				collection: nftCollection,
 				uri: request.uri,
 				royalties: (request.royalties || []).map(r => ({
-					account: toAddress(r.account),
+					account: convertUnionToEthereumAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 			})
@@ -51,11 +52,11 @@ export class Mint {
 				uri: request.uri,
 				lazy: request.lazyMint,
 				royalties: (request.royalties || []).map(r => ({
-					account: toAddress(r.account),
+					account: convertUnionToEthereumAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 				creators: (request.creators || []).map(c => ({
-					account: toAddress(c.account),
+					account: convertUnionToEthereumAddress(c.account),
 					value: toBn(c.value).toNumber(),
 				})),
 			})
@@ -67,7 +68,7 @@ export class Mint {
 				uri: request.uri,
 				supply: request.supply,
 				royalties: request.royalties.map(r => ({
-					account: toAddress(r.account),
+					account: convertUnionToEthereumAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 			})
@@ -80,11 +81,11 @@ export class Mint {
 				supply: request.supply,
 				lazy: request.lazyMint,
 				royalties: request.royalties.map(r => ({
-					account: toAddress(r.account),
+					account: convertUnionToEthereumAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 				creators: request.creators.map(c => ({
-					account: toAddress(c.account),
+					account: convertUnionToEthereumAddress(c.account),
 					value: toBn(c.value).toNumber(),
 				})),
 			})
@@ -117,13 +118,13 @@ export class Mint {
 						case MintResponseTypeEnum.ON_CHAIN:
 							return {
 								type: MintType.ON_CHAIN,
-								itemId: toItemId(mintResponse.itemId),
+								itemId: toItemId(`ETHEREUM:${mintResponse.itemId}`),
 								transaction: new BlockchainEthereumTransaction(mintResponse.transaction),
 							}
 						case MintResponseTypeEnum.OFF_CHAIN:
 							return {
 								type: MintType.OFF_CHAIN,
-								itemId: toItemId(mintResponse.itemId),
+								itemId: toItemId(`ETHEREUM:${mintResponse.itemId}`),
 							}
 						default:
 							throw new Error("Unrecognized mint response type")
@@ -143,7 +144,7 @@ function toNftCollection(collection: Collection): NftCollection {
 		...collection,
 		id: toAddress(address),
 		type: collection.type as NftCollection_Type, //TODO delete when will update client
-		owner: collection.owner && toAddress(collection.owner),
+		owner: collection.owner && convertUnionToEthereumAddress(collection.owner),
 		name: collection.name,
 		symbol: collection.symbol,
 		features: collection.features,

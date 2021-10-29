@@ -39,7 +39,7 @@ describe("transfer", () => {
 
 		const transfer = await sdk.nft.transfer({ itemId })
 		const tx = await transfer.submit({
-			to: toUnionAddress(receipent),
+			to: toUnionAddress(`ETHEREUM:${receipent}`),
 		})
 
 		await tx.wait()
@@ -60,7 +60,7 @@ describe("transfer", () => {
 
 		const transfer = await sdk.nft.transfer({ itemId })
 		const tx = await transfer.submit({
-			to: toUnionAddress(receipent),
+			to: toUnionAddress(`ETHEREUM:${receipent}`),
 			amount: 10,
 		})
 

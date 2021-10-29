@@ -24,7 +24,7 @@ describe("mint", () => {
 
 		const result = await action.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
+			creators: [{ account: toUnionAddress(`ETHEREUM:${sender}`), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
@@ -43,7 +43,7 @@ describe("mint", () => {
 
 		const result = await action.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(sender), value: toBigNumber("10000") }],
+			creators: [{ account: toUnionAddress(`ETHEREUM:${sender}`), value: toBigNumber("10000") }],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,

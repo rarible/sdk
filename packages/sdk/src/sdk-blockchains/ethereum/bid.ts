@@ -6,17 +6,14 @@ import { Order as EthereumOrder, Asset as EthereumAsset, OrderData as EthereumOr
 import { AssetType, Order, Asset, PendingOrder, OrderData } from "@rarible/api-client"
 import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../order/common"
-import { getEthTakeAssetType } from "./common"
-import { toBn } from "@rarible/utils/build/bn"
 import {
-  OrderRequest, OrderUpdateRequest,
-  PrepareOrderRequest,
-  PrepareOrderResponse,
-  PrepareOrderUpdateRequest,
-  PrepareOrderUpdateResponse,
+	OrderRequest, OrderUpdateRequest,
+	PrepareOrderRequest,
+	PrepareOrderResponse,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
 } from "../../order/common"
-import { getEthTakeAssetType, getSupportedCurrencies } from "./common"
+import { convertUnionToEthereumAddress, getEthTakeAssetType, getSupportedCurrencies } from "./common"
 
 export class Bid {
 	constructor(
@@ -222,11 +219,11 @@ export class Bid {
 					amount: request.amount,
 					priceDecimal: request.price,
 					payouts: request.payouts?.map(p => ({
-						account: toAddress(p.account),
+						account: convertUnionToEthereumAddress(p.account),
 						value: p.value,
 					})) || [],
 					originFees: request.originFees?.map(fee => ({
-						account: toAddress(fee.account),
+						account: convertUnionToEthereumAddress(fee.account),
 						value: fee.value,
 					})) || [],
 				}
