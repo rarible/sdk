@@ -11,12 +11,19 @@ export type PrepareOrderRequest = {
 	itemId: ItemId
 }
 
+export type PrepareOrderInternalRequest = {
+	/**
+	 * Collection id, where Item is from
+	 */
+	collectionId: UnionAddress
+}
+
 export type UnionPart = {
 	account: UnionAddress
 	value: number
 }
 
-export interface PrepareOrderResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", OrderRequest, OrderId> {
+type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, OrderId> & {
 	/**
 	 * is multiple nft
 	 */
@@ -26,14 +33,19 @@ export interface PrepareOrderResponse extends AbstractPrepareResponse<"approve" 
 	 */
 	supportedCurrencies: CurrencyType[]
 	/**
-	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
-	 */
-	maxAmount: BigNumber
-	/**
 	 * protocol base fee in basis points
 	 */
 	baseFee: number
 }
+
+export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequest> {
+	/**
+	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
+	 */
+	maxAmount: BigNumber
+}
+
+export type PrepareOrderInternalResponse = BasePrepareOrderResponse<OrderInternalRequest>
 
 /**
  * Request to create a sell-order or bid-order
@@ -59,4 +71,11 @@ export type OrderRequest = {
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
 	payouts?: UnionPart[]
+}
+
+export type OrderInternalRequest = OrderRequest & {
+	/**
+	 * Id of Item to sell or bid
+	 */
+	itemId: ItemId
 }
