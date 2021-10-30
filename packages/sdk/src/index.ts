@@ -71,7 +71,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 
 		const mintAction = mintResponse.submit
 			.around(
-				(input: MintAndSellRequest) => input,
+				(input: MintAndSellRequest) => ({ ...input }),
 				(mintResponse, initial): MiddleMintType => ({ initial, mintResponse })
 			)
 
