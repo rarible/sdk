@@ -1,22 +1,29 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { toAddress, toUnionAddress, toWord } from "@rarible/types"
 import { ItemId } from "@rarible/api-client"
 import {
 	OrderInternalRequest,
-	OrderRequest, PrepareOrderInternalRequest,
-	PrepareOrderInternalResponse,
+	OrderRequest, OrderUpdateRequest, PrepareOrderInternalRequest, PrepareOrderInternalResponse,
 	PrepareOrderRequest,
 	PrepareOrderResponse,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
 } from "../../order/common"
-import { getEthTakeAssetType } from "./common"
+import {
+	convertOrderHashToOrderId,
+	convertUnionToEthereumAddress,
+	getEthTakeAssetType,
+	getSupportedCurrencies,
+} from "./common"
 
 export class Sell {
 	private readonly internal: SellInternal
 
 	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
 		this.sell = this.sell.bind(this)
+		this.update = this.update.bind(this)
 		this.internal = new SellInternal(sdk, wallet)
 	}
 
@@ -36,6 +43,31 @@ export class Sell {
 			...internalResponse,
 			maxAmount: item.supply,
 			submit,
+		}
+	}
+
+	async update(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+		if (!prepareRequest.orderId) {
+			throw new Error("OrderId has not been specified")
+		}
+		const [blockchain, orderId] = prepareRequest.orderId.split(":")
+		if (blockchain !== "ETHEREUM") {
+			throw new Error("Not an ethereum order")
+		}
+
+		const sellUpdateAction = this.sdk.order.sellUpdate
+			.before((request: OrderUpdateRequest) => {
+				return {
+					orderHash: toWord(orderId),
+					priceDecimal: request.price,
+				}
+			})
+			.after(order => convertOrderHashToOrderId(order.hash))
+
+		return {
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+			submit: sellUpdateAction,
 		}
 	}
 }
@@ -68,23 +100,20 @@ export class SellInternal {
 					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
 					priceDecimal: sellFormRequest.price,
 					payouts: sellFormRequest.payouts?.map(p => ({
-						account: toAddress(p.account),
+						account: convertUnionToEthereumAddress(p.account),
 						value: p.value,
 					})) || [],
 					originFees: sellFormRequest.originFees?.map(fee => ({
-						account: toAddress(fee.account),
+						account: convertUnionToEthereumAddress(fee.account),
 						value: fee.value,
 					})) || [],
 				}
 			})
-			.after((order) => toOrderId(`ETHEREUM:${order.hash}`))
+			.after((order) => convertOrderHashToOrderId(order.hash))
 
 		return {
 			multiple: collection.type === "ERC1155",
-			supportedCurrencies: [
-				{ blockchain: "ETHEREUM", type: "NATIVE" },
-				{ blockchain: "ETHEREUM", type: "ERC20" },
-			],
+			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit: sellAction,
 		}

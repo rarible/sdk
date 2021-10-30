@@ -79,3 +79,25 @@ export type OrderInternalRequest = OrderRequest & {
 	 */
 	itemId: ItemId
 }
+
+export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", OrderUpdateRequest, OrderId> {
+	/**
+   * currencies supported by the blockchain
+   */
+	supportedCurrencies: CurrencyType[]
+	/**
+   * protocol base fee in basis points
+   */
+	baseFee: number
+}
+
+/**
+ * Order identifier to update sell or bid order
+ */
+export type PrepareOrderUpdateRequest = {
+	orderId: OrderId
+}
+
+export type OrderUpdateRequest = {
+	price: BigNumberValue
+}

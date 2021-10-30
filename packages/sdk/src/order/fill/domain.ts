@@ -1,4 +1,4 @@
-import { Order, OrderId, OrderPayout } from "@rarible/api-client"
+import { Order, OrderId } from "@rarible/api-client"
 import { BigNumber } from "@rarible/types/build/big-number"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { AbstractPrepareResponse } from "../../common/domain"

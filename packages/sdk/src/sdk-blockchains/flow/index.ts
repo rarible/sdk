@@ -19,8 +19,10 @@ export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): Om
 		},
 		order: {
 			sell: new FlowSell(sdk, wallet).sell,
+			sellUpdate: null as any,
 			fill: new FlowBuy(sdk, wallet).buy,
 			bid: null as any,
+			bidUpdate: null as any,
 		},
 	}
 }
