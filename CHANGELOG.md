@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.12](https://github.com/rarible/sdk/compare/v0.2.11...v0.2.12) (2021-10-30)
+
+
+### Bug Fixes
+
+* mintAndSell small fix ([fc2cd1d](https://github.com/rarible/sdk/commit/fc2cd1d798f9ba04802d48a70f4a6a0d9e67b755))
+
+
+
+
+
 ## [0.2.11](https://github.com/rarible/sdk/compare/v0.2.10...v0.2.11) (2021-10-30)
 
 
