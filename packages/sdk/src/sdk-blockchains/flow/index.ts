@@ -1,14 +1,14 @@
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import { IRaribleSdk } from "../../domain"
+import { IRaribleInternalSdk } from "../../domain"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
 import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 
-export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): Omit<IRaribleSdk, "apis"> {
+export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
 
 	return {
@@ -18,7 +18,7 @@ export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): Om
 			transfer: new FlowTransfer(sdk).transfer,
 		},
 		order: {
-			sell: new FlowSell(sdk, wallet).sell,
+			sell: new FlowSell(sdk, wallet).sell as any, //todo fix
 			sellUpdate: null as any,
 			fill: new FlowBuy(sdk, wallet).buy,
 			bid: null as any,

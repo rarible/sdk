@@ -1,7 +1,7 @@
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toBigNumber, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { toItemId, toUnionAddress } from "@rarible/types"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
 import { createRaribleSdk } from "../../index"
@@ -33,24 +33,23 @@ describe("sale", () => {
 		await awaitItem(sdk1, itemId)
 
 		const sellAction = await sdk1.order.sell({ itemId })
-		const hash = await sellAction.submit({
+		const orderId = await sellAction.submit({
 			amount: 1,
 			price: "0.000000000000000002",
 			currency: { "@type": "ERC20", contract: toUnionAddress(`ETHEREUM:${conf.testErc20.options.address}`) },
 		})
 
-		await awaitStockToBe(sdk1, hash, 1)
+		await awaitStockToBe(sdk1, orderId, 1)
+		const updateAction = await sdk1.order.sellUpdate({ orderId })
+		await updateAction.submit({ price: "0.000000000000000001" })
 
-		const updateAction = await sdk1.order.sellUpdate({ orderId: hash })
-		await updateAction.submit({ price: toBigNumber("0.000000000000000001") })
+		await sdk1.apis.order.getOrderById({ id: orderId })
 
-		await sdk1.apis.order.getOrderById({ id: hash })
-
-		const fillAction = await sdk2.order.fill({ orderId: toOrderId(hash) })
+		const fillAction = await sdk2.order.fill({ orderId })
 
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
 
-		await awaitStockToBe(sdk1, hash, 0)
+		await awaitStockToBe(sdk1, orderId, 0)
 	})
 })

@@ -2,6 +2,7 @@ import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { toBigNumber, toItemId, toUnionAddress } from "@rarible/types"
 import { TEST_ACCOUNT_1 } from "@rarible/flow-test-common"
+import { IRaribleSdk } from "../../domain"
 import { createTestOrder } from "./test/create-test-order"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { parseOrderId } from "./common/converters"
@@ -11,8 +12,8 @@ describe("test flow mint, order creation, and buy", () => {
 	const { authUser1, authUser2 } = createTestFlowAuth(fcl)
 	const wallet1 = new FlowWallet(fcl, toUnionAddress("FLOW:"), "testnet")
 	const wallet2 = new FlowWallet(fcl, toUnionAddress("FLOW:"), "testnet")
-	const sdk1 = createFlowSdk(wallet1, authUser1)
-	const sdk2 = createFlowSdk(wallet2, authUser2)
+	const sdk1 = createFlowSdk(wallet1, authUser1) as any as IRaribleSdk //todo fix - create sdk using createRaribleSdk
+	const sdk2 = createFlowSdk(wallet2, authUser2) as any as IRaribleSdk //todo fix
 	const collectionId = "FLOW:A.01658d9b94068f3c.CommonNFT"
 	const meta = "ipfs://ipfs/QmNe7Hd9xiqm1MXPtQQjVtksvWX6ieq9Wr6kgtqFo9D4CU"
 	const collection = {

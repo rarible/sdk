@@ -153,7 +153,6 @@ export class Sell {
 					})) || [],
 				}
 
-				console.log("sell request", tezosRequest)
 				const sellOrder: TezosOrder = await sell(this.provider, tezosRequest)
 
 				return toOrderId(`TEZOS:${sellOrder.hash}`)
