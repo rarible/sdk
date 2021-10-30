@@ -35,7 +35,8 @@ export class FlowSell {
 				return eventType === "OrderAvailable"
 			})
 			if (orderId) {
-				return toOrderId(`FLOW:${orderId.data.orderId}`)
+				const { collectionId } = parseUnionItemId(request.itemId)
+				return toOrderId(`FLOW:${collectionId}:${orderId.data.orderId}`)
 			}
 			throw Error("Creation order event not fount in transaction result")
 		})
