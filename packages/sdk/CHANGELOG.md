@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.11](https://github.com/rarible/sdk/compare/v0.2.10...v0.2.11) (2021-10-30)
+
+
+### Bug Fixes
+
+* initial mintAndSell version ([340231c](https://github.com/rarible/sdk/commit/340231c5750f02b531c4b6c9381c1501e169fd80))
+* internal sell function ([12749a9](https://github.com/rarible/sdk/commit/12749a9114f7b01bc800755ded92468640de9858))
+
+
+
+
+
 ## [0.2.10](https://github.com/rarible/sdk/compare/v0.2.9...v0.2.10) (2021-10-29)
 
 
