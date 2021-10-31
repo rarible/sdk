@@ -22,9 +22,7 @@ export class FlowTransfer {
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: Omit<TransferRequest, "amount">) => {
-					console.log(request.to)
 					const toAddress = parseFlowMaker(request.to)
-					console.log(toAddress)
 					//todo remove parseInt when strings are supports by flow-sdk
 					const tx = await this.sdk.nft.transfer(collectionId, parseInt(itemId), toAddress)
 					return new BlockchainFlowTransaction(tx)
