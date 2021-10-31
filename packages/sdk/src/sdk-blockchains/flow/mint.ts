@@ -33,7 +33,7 @@ export class FlowMint {
 						)
 						return {
 							type: MintType.ON_CHAIN,
-							itemId: toItemId(`FLOW:${mintResponse.tokenId}`),
+							itemId: toItemId(`FLOW:${flowCollection}:${mintResponse.tokenId}`),
 							transaction: new BlockchainFlowTransaction(mintResponse),
 						}
 					},

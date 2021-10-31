@@ -3,7 +3,7 @@ import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import { FlowSdk } from "@rarible/flow-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { PrepareTransferRequest, TransferRequest } from "../../nft/transfer/domain"
-import { parseUnionItemId } from "./common/converters"
+import { parseFlowMaker, parseUnionItemId } from "./common/converters"
 
 export class FlowTransfer {
 	constructor(
@@ -22,8 +22,11 @@ export class FlowTransfer {
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: Omit<TransferRequest, "amount">) => {
+					console.log(request.to)
+					const toAddress = parseFlowMaker(request.to)
+					console.log(toAddress)
 					//todo remove parseInt when strings are supports by flow-sdk
-					const tx = await this.sdk.nft.transfer(collectionId, parseInt(itemId), request.to)
+					const tx = await this.sdk.nft.transfer(collectionId, parseInt(itemId), toAddress)
 					return new BlockchainFlowTransaction(tx)
 				},
 			}),

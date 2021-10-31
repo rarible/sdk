@@ -10,6 +10,7 @@ import { FlowBurn } from "./burn"
 
 export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
+	const sellService = new FlowSell(sdk, wallet)
 
 	return {
 		nft: {
@@ -18,8 +19,8 @@ export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): IR
 			transfer: new FlowTransfer(sdk).transfer,
 		},
 		order: {
-			sell: new FlowSell(sdk, wallet).sell as any, //todo fix
-			sellUpdate: null as any,
+			sell: sellService.sell,
+			sellUpdate: sellService.update,
 			fill: new FlowBuy(sdk, wallet).buy,
 			bid: null as any,
 			bidUpdate: null as any,

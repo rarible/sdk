@@ -16,7 +16,7 @@ export function createTestOrder(orderId: string): Order {
 		make: {
 			type: {
 				"@type": "FLOW_NFT",
-				contract: toUnionAddress("FLOW:A.01658d9b94068f3c.CommonNFT"),
+				contract: toUnionAddress("FLOW:A.ebf4ae01d1284af8.RaribleNFT"),
 				tokenId: toBigNumber("617"),
 			},
 			value: toBigNumber("1"),
