@@ -10,7 +10,7 @@ import { initProviders } from "./test/init-providers"
 import { awaitStockToBe } from "./test/await-stock-to-be"
 import { awaitItem } from "./test/await-item"
 
-describe("sale", () => {
+describe("cancel", () => {
 
 	const { web31, wallet1 } = initProviders({})
 

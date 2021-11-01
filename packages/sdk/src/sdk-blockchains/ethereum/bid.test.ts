@@ -40,7 +40,7 @@ describe("bid", () => {
 			currency: { "@type": "ERC20", contract: toUnionAddress(`ETHEREUM:${it.testErc20.options.address}`) },
 		})
 
-		await awaitStockToBe(sdk, orderId, "2e-18")
+		await awaitStockToBe(sdk, orderId, "0.000000000000000002")
 
 		const updateAction = await sdk.order.bidUpdate({ orderId: toOrderId(orderId) })
 		await updateAction.submit({ price: "0.000000000000000004" })
