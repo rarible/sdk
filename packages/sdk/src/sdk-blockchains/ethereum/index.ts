@@ -11,8 +11,8 @@ import { Bid } from "./bid"
 
 export function createEthereumSdk(wallet: EthereumWallet, env: keyof typeof CONFIGS): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet.ethereum, env)
-	const sellService = new SellInternal(sdk, wallet)
-	const bidService = new Bid(sdk, wallet)
+	const sellService = new SellInternal(sdk)
+	const bidService = new Bid(sdk)
 
 	return {
 		nft: {

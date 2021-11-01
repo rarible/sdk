@@ -1,13 +1,13 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toWord } from "@rarible/types"
+import { toWord } from "@rarible/types"
 import { ItemId } from "@rarible/api-client"
 import {
-	OrderInternalRequest, OrderUpdateRequest,
+	OrderInternalRequest,
+	OrderUpdateRequest,
 	PrepareOrderInternalRequest,
 	PrepareOrderInternalResponse,
-	PrepareOrderUpdateRequest, PrepareOrderUpdateResponse,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
 } from "../../order/common"
 import {
 	convertOrderHashToOrderId,
@@ -17,7 +17,7 @@ import {
 } from "./common"
 
 export class SellInternal {
-	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
+	constructor(private sdk: RaribleSdk) {
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
 	}
@@ -36,7 +36,6 @@ export class SellInternal {
 				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
 				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
 				return {
-					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
 						tokenId: item.tokenId,
 						contract: item.contract,

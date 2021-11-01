@@ -22,8 +22,7 @@ import {
 
 export class Bid {
 	constructor(
-		private sdk: RaribleSdk,
-		private wallet: EthereumWallet
+		private sdk: RaribleSdk
 	) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
@@ -215,7 +214,6 @@ export class Bid {
 		const submit = this.sdk.order.bid
 			.before(async (request: OrderRequest) => {
 				return {
-					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: getEthTakeAssetType(request.currency),
 					takeAssetType: {
 						tokenId: item.tokenId,
