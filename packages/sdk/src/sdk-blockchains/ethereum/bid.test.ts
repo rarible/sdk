@@ -31,7 +31,9 @@ describe("bid", () => {
 
 		await awaitItem(sdk, itemId)
 
+		console.log(`sdk.bid ${itemId}`)
 		const response = await sdk.order.bid({ itemId })
+		console.log(`sdk.bid submit ${itemId}`)
 		const orderId = await response.submit({
 			amount: 1,
 			price: "0.000000000000000002",

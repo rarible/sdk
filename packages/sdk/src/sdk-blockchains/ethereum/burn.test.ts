@@ -4,7 +4,7 @@ import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
-import { awaitItemValue } from "./test/await-item-value"
+import { awaitItemSupply } from "./test/await-item-supply"
 
 describe("burn", () => {
 
@@ -39,7 +39,7 @@ describe("burn", () => {
 
 		await tx.wait()
 
-		await awaitItemValue(sdk, mintResult.itemId, toBigNumber("0"))
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
 	})
 
 	test("burn erc1155", async () => {
@@ -60,7 +60,7 @@ describe("burn", () => {
 			supply: 10,
 		})
 
-		await awaitItemValue(sdk, mintResult.itemId, toBigNumber("10"))
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
 		const burn = await sdk.nft.burn({
 			itemId: mintResult.itemId,
@@ -68,7 +68,7 @@ describe("burn", () => {
 		const tx = await burn.submit({ amount: 5 })
 		await tx.wait()
 
-		await awaitItemValue(sdk, mintResult.itemId, toBigNumber("5"))
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	})
 
 })
