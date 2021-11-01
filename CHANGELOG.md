@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.14](https://github.com/rarible/sdk/compare/v0.2.13...v0.2.14) (2021-11-01)
+
+
+### Bug Fixes
+
+* fill fix (convert union address to eth address) ([f0eb6db](https://github.com/rarible/sdk/commit/f0eb6dbb9e22467fc7e8c8c76900729aec126c95))
+
+
+
+
+
 ## [0.2.13](https://github.com/rarible/sdk/compare/v0.2.12...v0.2.13) (2021-11-01)
 
 **Note:** Version bump only for package root
