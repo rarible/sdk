@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.19](https://github.com/rarible/sdk/compare/v0.2.18...v0.2.19) (2021-11-01)
+
+
+### Bug Fixes
+
+* added originFeeSupport to sell/bid, updated baseFee for flow (2.5%) ([301747f](https://github.com/rarible/sdk/commit/301747fa6976fde9e86b7f9c89fdfe68092cdfd6))
+
+
+
+
+
 ## [0.2.18](https://github.com/rarible/sdk/compare/v0.2.17...v0.2.18) (2021-11-01)
 
 
