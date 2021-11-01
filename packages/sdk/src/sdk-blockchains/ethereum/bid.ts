@@ -17,6 +17,7 @@ import {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
 import {
 	convertOrderHashToOrderId,
 	convertUnionToEthereumAddress,
@@ -238,6 +239,8 @@ export class Bid {
 			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: [
 				{ blockchain: "ETHEREUM", type: "NATIVE" },
 				{ blockchain: "ETHEREUM", type: "ERC20" },
@@ -253,23 +256,30 @@ export class Bid {
 		if (!prepareRequest.orderId) {
 			throw new Error("OrderId has not been specified")
 		}
-		const [blockchain, orderId] = prepareRequest.orderId.split(":")
+		const [blockchain, hash] = prepareRequest.orderId.split(":")
 		if (blockchain !== "ETHEREUM") {
 			throw new Error("Not an ethereum order")
+		}
+
+		const order = await this.sdk.apis.order.getOrderByHash({ hash })
+		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
+			throw new Error(`Unable to update bid ${JSON.stringify(order)}`)
 		}
 
 		const sellUpdateAction = this.sdk.order.bidUpdate
 			.before((request: OrderUpdateRequest) => {
 				return {
-					orderHash: toWord(orderId),
+					orderHash: toWord(hash),
 					priceDecimal: request.price,
 				}
 			})
 			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
+			originFeeSupport: order.type === "RARIBLE_V2" ? OriginFeeSupport.FULL : OriginFeeSupport.AMOUNT_ONLY,
+			payoutsSupport: order.type === "RARIBLE_V2" ? PayoutsSupport.MULTIPLE : PayoutsSupport.SINGLE,
 			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: await this.sdk.order.getBaseOrderFee(),
+			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
 		}
 	}

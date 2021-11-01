@@ -62,7 +62,7 @@ export class FlowBuy {
 		return {
 			multiple: false,
 			maxAmount: toBigNumber("1"),
-			baseFee: 0, //todo
+			baseFee: 250,
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE, //todo not supported on flow yet
 			payoutsSupport: PayoutsSupport.NONE, //todo not supported on flow yet

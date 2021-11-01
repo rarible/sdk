@@ -3,6 +3,7 @@ import { BigNumberValue } from "@rarible/utils"
 import { BigNumber } from "@rarible/types/build/big-number"
 import { UnionAddress } from "@rarible/types"
 import { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../common/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 
 export type PrepareOrderRequest = {
 	/**
@@ -36,6 +37,14 @@ type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"approve" | "sign" | 
 	 * protocol base fee in basis points
 	 */
 	baseFee: number
+	/**
+	 * Whether the underlying exchange contract supports origin fees
+	 */
+	originFeeSupport: OriginFeeSupport
+	/**
+	 * Whether the underlying exchange contract supports specifying payouts
+	 */
+	payoutsSupport: PayoutsSupport
 }
 
 export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequest> {
@@ -89,6 +98,14 @@ export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"app
    * protocol base fee in basis points
    */
 	baseFee: number
+	/**
+	 * Whether the underlying exchange contract supports origin fees
+	 */
+	originFeeSupport: OriginFeeSupport
+	/**
+	 * Whether the underlying exchange contract supports specifying payouts
+	 */
+	payoutsSupport: PayoutsSupport
 }
 
 /**

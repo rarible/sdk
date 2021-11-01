@@ -8,6 +8,7 @@ import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import { RequestCurrency } from "../../common/domain"
 import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
 import { Collection, ItemType, TezosOrder } from "./domain"
 
 
@@ -162,6 +163,8 @@ export class Sell {
 		return {
 			multiple: false,
 			maxAmount: toBigNumber(item.supply),
+			originFeeSupport: OriginFeeSupport.FULL, //todo check
+			payoutsSupport: PayoutsSupport.MULTIPLE, //todo check
 			supportedCurrencies: [{
 				blockchain: "TEZOS",
 				type: "NATIVE",

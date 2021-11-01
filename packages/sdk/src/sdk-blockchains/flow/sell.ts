@@ -12,6 +12,7 @@ import {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
 import { getFungibleTokenName, parseUnionItemId } from "./common/converters"
 import { api } from "./common/api"
 
@@ -62,7 +63,9 @@ export class FlowSell {
 			supportedCurrencies: [
 				{ blockchain: "FLOW", type: "NATIVE" },
 			],
-			baseFee: 0, //todo
+			baseFee: 250,
+			originFeeSupport: OriginFeeSupport.NONE,
+			payoutsSupport: PayoutsSupport.NONE,
 			submit: sellAction,
 		}
 	}
@@ -106,7 +109,9 @@ export class FlowSell {
 			supportedCurrencies: [
 				{ blockchain: "FLOW", type: "NATIVE" },
 			],
-			baseFee: 0, //todo
+			originFeeSupport: OriginFeeSupport.NONE,
+			payoutsSupport: PayoutsSupport.NONE,
+			baseFee: 250,
 			submit: sellAction,
 		}
 	}
