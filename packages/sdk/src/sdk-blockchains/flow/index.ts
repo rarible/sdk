@@ -24,6 +24,7 @@ export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): IR
 			fill: new FlowBuy(sdk, wallet).buy,
 			bid: null as any,
 			bidUpdate: null as any,
+			cancel: null as any,
 		},
 	}
 }
