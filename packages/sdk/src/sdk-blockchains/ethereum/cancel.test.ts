@@ -22,7 +22,7 @@ describe("cancel", () => {
 		testErc721: deployTestErc721(web31, "Test2", "TST2"),
 	})
 
-	test("erc721 sell/buy using erc-20", async () => {
+	test.skip("erc721 sell/buy using erc-20", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		await conf.testErc721.methods.mint(wallet1Address, 1, "").send({ from: wallet1Address, gas: 200000 })
 		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:1`)
