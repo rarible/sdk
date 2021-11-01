@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.15](https://github.com/rarible/sdk/compare/v0.2.14...v0.2.15) (2021-11-01)
+
+
+### Bug Fixes
+
+* logging improvement ([2856e4b](https://github.com/rarible/sdk/commit/2856e4b65a1cab7dec3db2fe59b926ad67e14203))
+* upgrade ethereum sdk, simplified bid, sell ([879b58e](https://github.com/rarible/sdk/commit/879b58e6916ea4ae5aa73788d28f00aa95a9992e))
+
+
+
+
+
 ## [0.2.14](https://github.com/rarible/sdk/compare/v0.2.13...v0.2.14) (2021-11-01)
 
 
