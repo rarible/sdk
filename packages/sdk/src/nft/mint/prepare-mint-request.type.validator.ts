@@ -6,19 +6,82 @@ import * as apiTypes from "./prepare-mint-request.type"
 
 export const SCHEMA = {
 	"$schema": "http://json-schema.org/draft-07/schema#",
-	"$ref": "#/definitions/PrepareMintRequest",
 	"definitions": {
 		"PrepareMintRequest": {
+			"anyOf": [
+				{
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"collection": {
+							"$ref": "#/definitions/Collection",
+						},
+						"tokenId": {
+							"$ref": "#/definitions/NftTokenId",
+						},
+					},
+					"required": [
+						"collection",
+					],
+				},
+				{
+					"type": "object",
+					"additionalProperties": false,
+					"properties": {
+						"collectionId": {
+							"$ref": "#/definitions/UnionAddress",
+						},
+						"tokenId": {
+							"$ref": "#/definitions/NftTokenId",
+						},
+					},
+					"required": [
+						"collectionId",
+					],
+				},
+			],
+		},
+		"NftTokenId": {
 			"type": "object",
 			"properties": {
-				"collection": {
-					"$ref": "#/definitions/Collection",
+				"tokenId": {
+					"$ref": "#/definitions/BigNumber",
+				},
+				"signature": {
+					"$ref": "#/definitions/NftSignature",
 				},
 			},
 			"required": [
-				"collection",
+				"tokenId",
+				"signature",
 			],
 			"additionalProperties": false,
+		},
+		"BigNumber": {
+			"type": "string",
+		},
+		"NftSignature": {
+			"type": "object",
+			"properties": {
+				"v": {
+					"type": "number",
+				},
+				"r": {
+					"$ref": "#/definitions/Binary",
+				},
+				"s": {
+					"$ref": "#/definitions/Binary",
+				},
+			},
+			"required": [
+				"v",
+				"r",
+				"s",
+			],
+			"additionalProperties": false,
+		},
+		"Binary": {
+			"type": "string",
 		},
 		"Collection": {
 			"type": "object",
@@ -77,6 +140,30 @@ export const SCHEMA = {
 				"MINT_AND_TRANSFER",
 			],
 		},
+		"HasCollection": {
+			"type": "object",
+			"properties": {
+				"collection": {
+					"$ref": "#/definitions/Collection",
+				},
+			},
+			"required": [
+				"collection",
+			],
+			"additionalProperties": false,
+		},
+		"HasCollectionId": {
+			"type": "object",
+			"properties": {
+				"collectionId": {
+					"$ref": "#/definitions/UnionAddress",
+				},
+			},
+			"required": [
+				"collectionId",
+			],
+			"additionalProperties": false,
+		},
 	},
 }
 const ajv = new Ajv({ removeAdditional: true }).addSchema(SCHEMA, "SCHEMA")
@@ -92,5 +179,35 @@ export function validatePrepareMintRequest(payload: unknown): apiTypes.PrepareMi
 export function isPrepareMintRequest(payload: unknown): payload is apiTypes.PrepareMintRequest {
 	/** Schema is defined in {@link SCHEMA.definitions.PrepareMintRequest } **/
 	const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/PrepareMintRequest" })
+	return ajvValidate(payload)
+}
+
+export function validateHasCollection(payload: unknown): apiTypes.HasCollection {
+	if (!isHasCollection(payload)) {
+		const error = new Error("invalid payload: HasCollection")
+		error.name = "ValidationError"
+		throw error
+	}
+	return payload
+}
+
+export function isHasCollection(payload: unknown): payload is apiTypes.HasCollection {
+	/** Schema is defined in {@link SCHEMA.definitions.HasCollection } **/
+	const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/HasCollection" })
+	return ajvValidate(payload)
+}
+
+export function validateHasCollectionId(payload: unknown): apiTypes.HasCollectionId {
+	if (!isHasCollectionId(payload)) {
+		const error = new Error("invalid payload: HasCollectionId")
+		error.name = "ValidationError"
+		throw error
+	}
+	return payload
+}
+
+export function isHasCollectionId(payload: unknown): payload is apiTypes.HasCollectionId {
+	/** Schema is defined in {@link SCHEMA.definitions.HasCollectionId } **/
+	const ajvValidate = ajv.compile({ "$ref": "SCHEMA#/definitions/HasCollectionId" })
 	return ajvValidate(payload)
 }
