@@ -70,16 +70,16 @@ You can find more information about Action abstraction in dedicated github readm
 ```ts
 //Invoke mint function. It will return a PrepareResponse with some useful information 
 const { 
-  multiple, // Does the NFT supports multiple editions or not
-  supportsRoyalties, // Does the NFT supports royalties or not
-  supportsLazyMint, // Does the NFT supports lazy minting or not
+  multiple, // Does the smart contract supports multiple editions or not
+  supportsRoyalties, // Does the smart contract supports royalties or not
+  supportsLazyMint, // Does the smart contract supports lazy minting or not
 } = await sdk.order.mint({ itemId })
 
 //collect information from the user (show the form etc)
 //then use submit Action to execute this action
 
 const orderId = await submit({
-  collection, // Address of the NFT collection
+  collection, // Information about the NFT collection (id, type, name, etc.)
   uri, // URI of the NFT token
   supply, // Amount of the NFT tokens to be minted
   lazyMint, // Minting the NFT token off-chain until the moment it's sold to its first buyer
@@ -146,7 +146,7 @@ A bid is just an unmatched buy order. The bidder submits the order to the indexe
 //Invoke bid function. It will return a PrepareResponse with some useful information 
 const { 
   supportedCurrencies, // list of currency types supported by the blockchain (ETH, ERC20 etc.)
-  multiple, // does the NFT supports multiple editions or not
+  multiple, // does the smart contract supports multiple editions or not
   maxAmount, // max amount of the NFT that can be put on sale
   baseFee, // present it to a user, it's a base protocol fee that is taken on the trade
   submit, // use this Action to submit information after user input
@@ -194,7 +194,7 @@ After call submit action, you will get IBlockchainTransaction object which can b
 ```ts
 //Invoke transfer function. It will return a PrepareResponse with some useful information 
 const { 
-  multiple, // Does the NFT supports multiple editions or not
+  multiple, // Does the smart contract supports multiple editions or not
   maxAmount, // Max amount of NFTs available for transfer
 } = await sdk.order.transfer({ itemId })
 
@@ -212,7 +212,7 @@ const orderId = await submit({
 ```ts
 //Invoke burn function. It will return a PrepareResponse with some useful information 
 const { 
-  multiple, // Does the NFT supports multiple editions or not
+  multiple, // Does the smart contract supports multiple editions or not
   maxAmount, // Max amount of NFTs available for burn
 } = await sdk.order.burn({ itemId })
 
