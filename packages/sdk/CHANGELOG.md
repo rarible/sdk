@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.16](https://github.com/rarible/sdk/compare/v0.2.15...v0.2.16) (2021-11-01)
+
+
+### Bug Fixes
+
+* collection | collection id in mint request + nftTokenId in Prepare mint request ([2b7344a](https://github.com/rarible/sdk/commit/2b7344a38d504450982813b63894c50ceceab10c))
+
+
+
+
+
 ## [0.2.15](https://github.com/rarible/sdk/compare/v0.2.14...v0.2.15) (2021-11-01)
 
 
