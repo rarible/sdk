@@ -16,6 +16,7 @@ export function createTezosSdk(wallet: TezosWallet): IRaribleInternalSdk {
 			sellUpdate: null as any,
 			bid: null as any,
 			bidUpdate: null as any,
+			cancel: null as any,
 		},
 	}
 }

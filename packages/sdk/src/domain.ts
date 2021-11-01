@@ -12,6 +12,7 @@ import { IBurn } from "./nft/burn/domain"
 import { ITransfer } from "./nft/transfer/domain"
 import { IBid, IBidUpdate } from "./order/bid/domain"
 import { IMintAndSell } from "./nft/mint-and-sell/domain"
+import { ICancel } from "./order/cancel/domain"
 
 export interface IRaribleSdk {
 	apis: {
@@ -38,6 +39,7 @@ export interface IOrderSdk {
 	fill: IFill,
 	bid: IBid,
 	bidUpdate: IBidUpdate,
+	cancel: ICancel,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis"> & {

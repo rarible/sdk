@@ -8,6 +8,7 @@ import { Fill } from "./fill"
 import { Burn } from "./burn"
 import { Transfer } from "./transfer"
 import { Bid } from "./bid"
+import { CancelOrder } from "./cancel"
 
 export function createEthereumSdk(wallet: EthereumWallet, env: keyof typeof CONFIGS): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet.ethereum, env)
@@ -26,6 +27,7 @@ export function createEthereumSdk(wallet: EthereumWallet, env: keyof typeof CONF
 			sellUpdate: sellService.update,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
+			cancel: new CancelOrder(sdk, wallet).cancel,
 		},
 	}
 }
