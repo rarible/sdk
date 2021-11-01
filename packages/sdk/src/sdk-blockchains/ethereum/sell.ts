@@ -38,8 +38,8 @@ export class SellInternal {
 				return {
 					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
-						tokenId: toBigNumber(item.tokenId),
-						contract: toAddress(item.contract),
+						tokenId: item.tokenId,
+						contract: item.contract,
 					},
 					amount: sellFormRequest.amount,
 					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
