@@ -79,7 +79,12 @@ const {
 //then use submit Action to execute this action
 
 const orderId = await submit({
-  collection, // Information about the NFT collection (id, type, name, etc.)
+  collection: {
+    id, // Address of the NFT collection
+    type, // Collection type, on of the: CRYPTO_PUNKS, ERC721, ERC1155, FLOW, TEZOS
+    name, // Collection name
+    features, // Collection feature (SECONDARY_SALE_FEES, MINT_AND_TRANSFER, etc.)
+  },
   uri, // URI of the NFT token
   supply, // Amount of the NFT tokens to be minted
   lazyMint, // Minting the NFT token off-chain until the moment it's sold to its first buyer
