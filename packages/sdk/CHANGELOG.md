@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.20](https://github.com/rarible/sdk/compare/v0.2.19...v0.2.20) (2021-11-02)
+
+
+### Bug Fixes
+
+* Unsupported NFT Collection ([8b487e8](https://github.com/rarible/sdk/commit/8b487e88dd55cae5d0f95a5d2a39555e278fe642))
+
+
+
+
+
 ## [0.2.19](https://github.com/rarible/sdk/compare/v0.2.18...v0.2.19) (2021-11-01)
 
 
