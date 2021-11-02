@@ -68,12 +68,12 @@ export class Mint {
 			})
 		}
 
-		if (isErc1155v1Collection(nftCollection) && request.royalties) {
+		if (isErc1155v1Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
 				supply: request.supply,
-				royalties: request.royalties.map(r => ({
+				royalties: (request.royalties || []).map(r => ({
 					account: convertUnionToEthereumAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
@@ -81,17 +81,17 @@ export class Mint {
 			})
 		}
 
-		if (isErc1155v2Collection(nftCollection) && request.royalties && request.creators) {
+		if (isErc1155v2Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
 				supply: request.supply,
 				lazy: request.lazyMint,
-				royalties: request.royalties.map(r => ({
+				royalties: (request.royalties || []).map(r => ({
 					account: convertUnionToEthereumAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
-				creators: request.creators.map(c => ({
+				creators: (request.creators || []).map(c => ({
 					account: convertUnionToEthereumAddress(c.account),
 					value: toBn(c.value).toNumber(),
 				})),
