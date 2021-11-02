@@ -89,7 +89,7 @@ const FLOW_FT_CONTRACT_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
  */
 export function getFungibleTokenName(contract: string): "FLOW" | "FUSD" {
 	if (FLOW_FT_CONTRACT_REGEXP.test(contract)) {
-		const [_, __, name] = contract.split(".")
+		const [, , name] = contract.split(".")
 		switch (name) {
 			case "FlowToken": {
 				return "FLOW"
@@ -98,9 +98,9 @@ export function getFungibleTokenName(contract: string): "FLOW" | "FUSD" {
 				return "FUSD"
 			}
 			default: {
-				throw Error("Unsupported contract ID")
+				throw Error(`Unsupported contract ID: ${contract}`)
 			}
 		}
 	}
-	throw Error("Unsupported contract ID")
+	throw Error(`Unsupported contract ID: ${contract}`)
 }
