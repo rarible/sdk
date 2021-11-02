@@ -1,9 +1,14 @@
 import { TezosWallet } from "@rarible/sdk-wallet"
+import { NftCollectionControllerApi } from "tezos-api-client"
 import { IRaribleInternalSdk } from "../../domain"
 import { Sell } from "./sell"
 import { Fill } from "./fill"
 
 export function createTezosSdk(wallet: TezosWallet): IRaribleInternalSdk {
+	// const apis = {
+	// 	collection: new NftCollectionControllerApi(),
+	//   item: new
+	// }
 	return {
 		nft: {
 			mint: null as any,

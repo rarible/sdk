@@ -7,6 +7,7 @@ export async function awaitStockToBe(sdk: IRaribleSdk, id: OrderId, value: strin
 	await logTime(`awaiting stock of ${id} to be ${value}`, async () => {
 		await retry(3, async () => {
 			const o = await sdk.apis.order.getOrderById({ id })
+			console.log(o)
 			expect(`${o.makeStock}`).toBe(`${value}`)
 		})
 	})
