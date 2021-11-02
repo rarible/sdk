@@ -1,53 +1,103 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toOrderId } from "@rarible/types"
-import { SellRequest } from "../../order/sell/domain"
-import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
-import { getEthTakeAssetType } from "./common"
+import { toWord } from "@rarible/types"
+import { ItemId } from "@rarible/api-client"
+import {
+	OrderInternalRequest,
+	OrderUpdateRequest,
+	PrepareOrderInternalRequest,
+	PrepareOrderInternalResponse,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
+} from "../../order/common"
+import {
+	convertOrderHashToOrderId,
+	convertUnionToEthereumAddress,
+	getEthTakeAssetType,
+	getSupportedCurrencies,
+} from "./common"
 
-export class Sell {
-	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
+export class SellInternal {
+	constructor(private sdk: RaribleSdk) {
 		this.sell = this.sell.bind(this)
+		this.update = this.update.bind(this)
 	}
 
-	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
-		const [domain, contract, tokenId] = request.itemId.split(":")
+	async sell(request: PrepareOrderInternalRequest): Promise<PrepareOrderInternalResponse> {
+		const [domain, contract] = request.collectionId.split(":")
 		if (domain !== "ETHEREUM") {
 			throw new Error("Not an ethereum item")
 		}
-		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: contract,
+		})
+
 		const sellAction = this.sdk.order.sell
-			.before(async (sellFormRequest: SellRequest) => {
+			.before(async (sellFormRequest: OrderInternalRequest) => {
+				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
+				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
 				return {
-					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
-						tokenId: toBigNumber(item.tokenId),
-						contract: toAddress(item.contract),
+						tokenId: item.tokenId,
+						contract: item.contract,
 					},
-					amount: parseInt(sellFormRequest.amount),
+					amount: sellFormRequest.amount,
 					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
-					price: sellFormRequest.price,
+					priceDecimal: sellFormRequest.price,
 					payouts: sellFormRequest.payouts?.map(p => ({
-						account: toAddress(p.account),
-						value: parseInt(p.value),
+						account: convertUnionToEthereumAddress(p.account),
+						value: p.value,
 					})) || [],
 					originFees: sellFormRequest.originFees?.map(fee => ({
-						account: toAddress(fee.account),
-						value: parseInt(fee.value),
+						account: convertUnionToEthereumAddress(fee.account),
+						value: fee.value,
 					})) || [],
 				}
 			})
-			.after((order) => toOrderId(`ETHEREUM:${order.hash}`))
+			.after(order => convertOrderHashToOrderId(order.hash))
 
 		return {
-			supportedCurrencies: [
-				{ blockchain: "ETHEREUM", type: "NATIVE" },
-				{ blockchain: "ETHEREUM", type: "ERC20" },
-			],
-			maxAmount: item.supply,
+			multiple: collection.type === "ERC1155",
+			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit: sellAction,
 		}
+	}
+
+	async update(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+		if (!prepareRequest.orderId) {
+			throw new Error("OrderId has not been specified")
+		}
+		const [blockchain, orderId] = prepareRequest.orderId.split(":")
+		if (blockchain !== "ETHEREUM") {
+			throw new Error("Not an ethereum order")
+		}
+
+		const sellUpdateAction = this.sdk.order.sellUpdate
+			.before((request: OrderUpdateRequest) => {
+				return {
+					orderHash: toWord(orderId),
+					priceDecimal: request.price,
+				}
+			})
+			.after(order => convertOrderHashToOrderId(order.hash))
+
+		return {
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+			submit: sellUpdateAction,
+		}
+	}
+}
+
+function getEthereumItemId(itemId: ItemId) {
+	const [domain, contract, tokenId] = itemId.split(":")
+	if (domain !== "ETHEREUM") {
+		throw new Error(`Not an ethereum item: ${itemId}`)
+	}
+	return {
+		itemId: `${contract}:${tokenId}`,
+		contract,
+		tokenId,
+		domain,
 	}
 }

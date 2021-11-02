@@ -4,12 +4,11 @@ import { Provider, get_public_key, mutez_to_tez } from "tezos-sdk-module/dist/co
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
-import { OrderPayout } from "@rarible/api-client"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import BigNumber from "bignumber.js"
-import { PrepareSellRequest, PrepareSellResponse, SellRequest } from "../../order/sell/domain"
 import { RequestCurrency } from "../../common/domain"
+import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../order/common"
 import { Collection, ItemType, TezosOrder } from "./domain"
 
 
@@ -39,7 +38,7 @@ export class Sell {
 		}
 	}
 
-	async getPayouts(requestPayouts?: OrderPayout[]) {
+	async getPayouts(requestPayouts?: UnionPart[]) {
 		let payouts = requestPayouts || []
 
 		if (!Array.isArray(payouts) || payouts.length === 0) {
@@ -118,7 +117,7 @@ export class Sell {
 		}
 	}
 
-	async sell(prepareSellRequest: PrepareSellRequest): Promise<PrepareSellResponse> {
+	async sell(prepareSellRequest: PrepareOrderRequest): Promise<PrepareOrderResponse> {
 		if (!prepareSellRequest.itemId) {
 			throw new Error("ItemId is not exists")
 		}
@@ -133,7 +132,7 @@ export class Sell {
 
 		const submit = Action.create({
 			id: "send-tx" as const,
-			run: async (request: SellRequest) => {
+			run: async (request: OrderRequest) => {
 				const tezosRequest : TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -153,7 +152,6 @@ export class Sell {
 					})) || [],
 				}
 
-				console.log("sell request", tezosRequest)
 				const sellOrder: TezosOrder = await sell(this.provider, tezosRequest)
 
 				return toOrderId(`TEZOS:${sellOrder.hash}`)
@@ -161,6 +159,7 @@ export class Sell {
 		})
 
 		return {
+			multiple: false,
 			maxAmount: toBigNumber(item.supply),
 			supportedCurrencies: [{
 				blockchain: "TEZOS",

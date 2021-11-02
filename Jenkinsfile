@@ -18,21 +18,7 @@ pipeline {
         sh 'yarn bootstrap'
         sh 'yarn clean'
         sh 'yarn build-all'
-        script {
-          testSuccess = 0 == sh(returnStatus: true, script: 'yarn test')
-        }
-      }
-      post {
-        always {
-          script {
-            def color = testSuccess ? "good" : "danger"
-            slackSend(
-              channel: "#protocol-duty",
-              color: color,
-              message: "\n *[ethereum-sdk] [${env.GIT_BRANCH}] Test Summary*: " + (testSuccess ? "SUCCESS" : "FAILED")
-            )
-          }
-        }
+        sh 'yarn test'
       }
     }
     stage('build and deploy') {

@@ -6,11 +6,25 @@ import { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/
 // eslint-disable-next-line camelcase
 import { fill_order } from "tezos-sdk-module/dist/order"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { Address, Binary, toBigNumber as toRaribleBigNumber, BigNumber as RaribleBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
+import {
+	Address,
+	Binary,
+	toBigNumber as toRaribleBigNumber,
+	BigNumber as RaribleBigNumber,
+	toOrderId,
+	UnionAddress,
+	Word,
+	toBigNumber,
+} from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import { OrderRaribleV2DataV1 } from "@rarible/protocol-api-client/build/models/OrderData"
-import { OrderPriceHistoryRecord } from "@rarible/protocol-api-client/build/models/OrderPriceHistoryRecord"
-import { OrderExchangeHistory } from "@rarible/protocol-api-client/build/models/OrderExchangeHistory"
+import { OrderRaribleV2DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
+import { OrderPriceHistoryRecord } from "@rarible/ethereum-api-client/build/models/OrderPriceHistoryRecord"
+import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
+import {
+	Order as TezosOrder,
+	// AssetType as TezosAssetType
+	AssetType as TezosClientAssetType,
+} from "tezos-api-client"
 import BigNumber from "bignumber.js"
 import {
 	FillRequest,
@@ -21,6 +35,7 @@ import {
 } from "../../order/fill/domain"
 import { GetNftOwnershipByIdResponse } from "./domain"
 
+/*
 export type SimpleTezosOrder = {
 	type: "RARIBLE_V2";
 	maker: Address;
@@ -51,20 +66,21 @@ export type SimpleTezosOrder = {
 	priceHistory?: Array<OrderPriceHistoryRecord>;
 	data: OrderRaribleV2DataV1;
 }
-export type TezosOrder = SimpleTezosOrder & { makerEdpk: string }
-export type TezosOrderXTZAssetType = {
-	assetClass: "XTZ"
-}
-export type TezosOrderFA12AssetType = {
-	assetClass: "FA_1_2",
-	contract: UnionAddress
-}
-export type TezosOrderFA2AssetType = {
-	assetClass: "FA_2";
-	contract: UnionAddress;
-	tokenId: RaribleBigNumber;
-}
-export type TezosAsset = TezosOrderXTZAssetType | TezosOrderFA12AssetType | TezosOrderFA2AssetType
+ */
+// export type TezosOrder = SimpleTezosOrder & { makerEdpk: string }
+// export type TezosOrderXTZAssetType = {
+// 	assetClass: "XTZ"
+// }
+// export type TezosOrderFA12AssetType = {
+// 	assetClass: "FA_1_2",
+// 	contract: UnionAddress
+// }
+// export type TezosOrderFA2AssetType = {
+// 	assetClass: "FA_2";
+// 	contract: UnionAddress;
+// 	tokenId: RaribleBigNumber;
+// }
+// export type TezosAsset = TezosOrderXTZAssetType | TezosOrderFA12AssetType | TezosOrderFA2AssetType
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
 export class Fill {
@@ -83,7 +99,7 @@ export class Fill {
 		return json
 	}
 
-	static getTezosAssetTypeFromCommonType(type: TezosAsset): TezosAssetType {
+	static getTezosAssetTypeFromCommonType(type: TezosClientAssetType): TezosAssetType {
 		switch (type.assetClass) {
 			case "FA_2": {
 				return {
@@ -216,7 +232,7 @@ export class Fill {
 				payouts: this.convertOrderPayout(order.data.payouts),
 				origin_fees: this.convertOrderPayout(order.data.originFees),
 			},
-			makeStock: order.makeStock,
+			makeStock: toBigNumber(order.makeStock),
 		}
 	}
 
@@ -283,6 +299,7 @@ export class Fill {
 		})
 
 		return {
+			multiple: false,
 			maxAmount: await this.getMaxAmount(preparedOrder),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,

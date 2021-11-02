@@ -1,20 +1,30 @@
 import { FlowWallet } from "@rarible/sdk-wallet"
-import { IRaribleSdk } from "../../domain"
-import { PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
+import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
+import { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import { IRaribleInternalSdk } from "../../domain"
+import { FlowMint } from "./mint"
+import { FlowSell } from "./sell"
+import { FlowBuy } from "./buy"
+import { FlowTransfer } from "./transfer"
+import { FlowBurn } from "./burn"
 
-export function createFlowSdk(wallet: FlowWallet): Omit<IRaribleSdk, "apis"> {
-	// const sdk = createRaribleSdk(wallet, options.env, ...)
+export function createFlowSdk(wallet: FlowWallet, auth?: AuthWithPrivateKey): IRaribleInternalSdk {
+	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
+	const sellService = new FlowSell(sdk, wallet)
 
 	return {
 		nft: {
-			mint: null as any,
-			burn: null as any,
-			transfer: null as any,
+			mint: new FlowMint(sdk).prepare,
+			burn: new FlowBurn(sdk).burn,
+			transfer: new FlowTransfer(sdk).transfer,
 		},
 		order: {
-			fill: null as any,
-			sell: null as any,
+			sell: sellService.sell,
+			sellUpdate: sellService.update,
+			fill: new FlowBuy(sdk, wallet).buy,
 			bid: null as any,
+			bidUpdate: null as any,
+			cancel: null as any,
 		},
 	}
 }

@@ -1,9 +1,9 @@
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { IRaribleSdk } from "../../domain"
+import { IRaribleInternalSdk } from "../../domain"
 import { Sell } from "./sell"
 import { Fill } from "./fill"
 
-export function createTezosSdk(wallet: TezosWallet): Omit<IRaribleSdk, "apis"> {
+export function createTezosSdk(wallet: TezosWallet): IRaribleInternalSdk {
 	return {
 		nft: {
 			mint: null as any,
@@ -12,8 +12,11 @@ export function createTezosSdk(wallet: TezosWallet): Omit<IRaribleSdk, "apis"> {
 		},
 		order: {
 			fill: new Fill(wallet.provider).fill,
-			sell: new Sell(wallet.provider).sell,
+			sell: new Sell(wallet.provider).sell as any, //todo FIX
+			sellUpdate: null as any,
 			bid: null as any,
+			bidUpdate: null as any,
+			cancel: null as any,
 		},
 	}
 }
