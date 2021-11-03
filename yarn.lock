@@ -2616,13 +2616,6 @@
   dependencies:
     callable-instance "2.0.0"
 
-"@rarible/api-client@0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.4.tgz#3c0af8ba8e355b44dabf0ac22db4e6a19293c022"
-  integrity sha512-FbX94veQ6IIv8++zBTaxM9yzr8y3NU5jsYIW+GsONP+HILG6YhjUFJ6NBHyLF4u205FBeO2HXzd14bRLWyiC1Q==
-  dependencies:
-    "@rarible/types" "^0.1.9"
-
 "@rarible/api-client@0.0.5", "@rarible/api-client@^0.0.5":
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.5.tgz#b1030892321a7a03da33205f22ed9f896596e587"
@@ -2650,7 +2643,7 @@
   dependencies:
     "@rarible/types" "^0.1.10"
 
-"@rarible/ethereum-provider@0.7.2", "@rarible/ethereum-provider@^0.7.2":
+"@rarible/ethereum-provider@^0.7.2":
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.7.2.tgz#98e6743c139c3d7583e44ad610527552ea466f10"
   integrity sha512-kJk5pO2hJiCJL2Nkb4X3UQB9/awzejrHYp6T9WEotVJ0HeyrUVGZXWyWwtFopwpy1iWZDLpWU1kdU59dIQ3tWA==
@@ -2735,11 +2728,6 @@
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.7.tgz#b88eeb7961f461067207c9f9cab73cf23dba1da3"
   integrity sha512-rq0vGMQlnTQstTPwmFy8lajkOaCTOe7Odf/W1g6o3uLUD6Dlj0Vroh2/erfiyA6vuDALrATWsP5mw2berdwrTw==
-
-"@rarible/types@^0.1.9":
-  version "0.1.9"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.1.9.tgz#e396e59a7cf04c6d366dc9127f26ec9f58f2f113"
-  integrity sha512-r/SlX1uZMdULnxD0MG7KFpUI1U7FPdd91JWtpPUnCM8t966kEBr2MWfswrBJYzxxe4le2e6Zwa2fH+Yxi87ScA==
 
 "@rarible/utils@^0.0.7":
   version "0.0.7"
