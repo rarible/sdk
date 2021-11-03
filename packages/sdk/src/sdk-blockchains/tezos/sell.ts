@@ -10,6 +10,7 @@ import BigNumber from "bignumber.js"
 import { RequestCurrency } from "../../common/domain"
 import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../order/common"
 import { Collection, ItemType, TezosOrder } from "./domain"
+import { getMakerPublicKey, getPayouts, getSupportedCurrencies } from "./common"
 
 
 export class Sell {
@@ -36,30 +37,6 @@ export class Sell {
 				throw new Error("Unsupported take asset type")
 			}
 		}
-	}
-
-	async getPayouts(requestPayouts?: UnionPart[]) {
-		let payouts = requestPayouts || []
-
-		if (!Array.isArray(payouts) || payouts.length === 0) {
-			return [{
-				account: pk_to_pkh(await this.getMakerPublicKey()),
-				value: new BigNumber(10000),
-			}]
-		}
-
-		return payouts.map(p => ({
-			account: pk_to_pkh(p.account),
-			value: new BigNumber(p.value),
-		})) || []
-	}
-
-	async getMakerPublicKey(): Promise<string> {
-		const maker = await get_public_key(this.provider)
-		if (!maker) {
-			throw new Error("Maker does not exist")
-		}
-		return maker
 	}
 
 	private async getItem(itemId: string): Promise<ItemType> {
@@ -128,7 +105,7 @@ export class Sell {
 		}
 		const item = await this.getItem(prepareSellRequest.itemId.substring(6))
 		const itemCollection = await this.getCollection(collection)
-		const makerPublicKey = await this.getMakerPublicKey()
+		const makerPublicKey = await getMakerPublicKey(this.provider)
 
 		const submit = Action.create({
 			id: "send-tx" as const,
@@ -145,7 +122,7 @@ export class Sell {
 					take_asset_type: this.parseTakeAssetType(request.currency),
 					amount: new BigNumber(request.amount),
 					price: new BigNumber(request.price),
-					payouts: await this.getPayouts(request.payouts),
+					payouts: await getPayouts(this.provider, request.payouts),
 					origin_fees: request.originFees?.map(p => ({
 						account: p.account,
 						value: new BigNumber(p.value),
@@ -161,10 +138,7 @@ export class Sell {
 		return {
 			multiple: false,
 			maxAmount: toBigNumber(item.supply),
-			supportedCurrencies: [{
-				blockchain: "TEZOS",
-				type: "NATIVE",
-			}],
+			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit,
 		}
