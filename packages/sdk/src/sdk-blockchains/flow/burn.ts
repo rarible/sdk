@@ -2,7 +2,7 @@ import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import { FlowSdk } from "@rarible/flow-sdk"
-import { BurnRequest, PrepareBurnRequest } from "../../nft/burn/domain"
+import { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 import { parseUnionItemId } from "./common/converters"
 
 export class FlowBurn {

@@ -2,7 +2,7 @@ import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { PrepareTransferRequest, TransferRequest } from "../../nft/transfer/domain"
+import { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import { convertUnionToEthereumAddress } from "./common"
 
 export class Transfer {

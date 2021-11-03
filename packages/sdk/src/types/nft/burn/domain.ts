@@ -1,7 +1,7 @@
 import { ItemId } from "@rarible/api-client"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BigNumber } from "@rarible/types/build/big-number"
-import { AbstractPrepareResponse } from "../../common/domain"
+import { AbstractPrepareResponse } from "../../../common/domain"
 
 export type PrepareBurnRequest = {
 	itemId: ItemId

@@ -10,16 +10,16 @@ import {
 } from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import { toAddress, toItemId } from "@rarible/types"
-import { NftCollection, NftTokenId } from "@rarible/ethereum-api-client"
+import { NftCollection, NftCollectionFeatures, NftCollectionType, NftTokenId } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import { Collection, CollectionControllerApi } from "@rarible/api-client"
-import { MintType, PrepareMintResponse } from "../../nft/mint/domain"
-import { MintRequest } from "../../nft/mint/mint-request.type"
-import { HasCollection, HasCollectionId, PrepareMintRequest } from "../../nft/mint/prepare-mint-request.type"
-import { validatePrepareMintRequest } from "../../nft/mint/prepare-mint-request.type.validator"
-import { validateMintRequest } from "../../nft/mint/mint-request.type.validator"
+import { MintType, PrepareMintResponse } from "../../types/nft/mint/domain"
+import { MintRequest } from "../../types/nft/mint/mint-request.type"
+import { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
+import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type.validator"
+import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import { IApisSdk } from "../../domain"
 import { convertUnionToEthereumAddress } from "./common"
 
@@ -164,10 +164,10 @@ function toNftCollection(collection: Collection): NftCollection {
 	return {
 		...collection,
 		id: toAddress(address),
-		type: collection.type,
+		type: NftCollectionType[collection.type],
 		owner: collection.owner && convertUnionToEthereumAddress(collection.owner),
 		name: collection.name,
 		symbol: collection.symbol,
-		features: collection.features,
+		features: collection.features?.map(feature => NftCollectionFeatures[feature]),
 	}
 }

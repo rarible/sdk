@@ -11,11 +11,11 @@ import { toUnionAddress, UnionAddress } from "@rarible/types"
 import type { IApisSdk, IRaribleSdk } from "./domain"
 import { getSDKBlockchainInstance } from "./sdk-blockchains"
 import { CONFIGS } from "./config"
-import { ISell, ISellInternal } from "./order/sell/domain"
-import { OrderRequest } from "./order/common"
-import { IMint, MintResponse } from "./nft/mint/domain"
-import { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./nft/mint-and-sell/domain"
-import { HasCollection, HasCollectionId } from "./nft/mint/prepare-mint-request.type"
+import { ISell, ISellInternal } from "./types/order/sell/domain"
+import { OrderRequest } from "./types/order/common"
+import { IMint, MintResponse } from "./types/nft/mint/domain"
+import { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
+import { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 
 export function createRaribleSdk(wallet: BlockchainWallet, env: keyof typeof CONFIGS): IRaribleSdk {
 	const config = CONFIGS[env]

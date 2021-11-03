@@ -17,7 +17,7 @@ import {
 	PayoutsSupport,
 	PrepareFillRequest,
 	PrepareFillResponse,
-} from "../../order/fill/domain"
+} from "../../types/order/fill/domain"
 import { GetNftOwnershipByIdResponse } from "./domain"
 
 export type SimpleTezosOrder = {

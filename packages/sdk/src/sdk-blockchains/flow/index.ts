@@ -27,5 +27,8 @@ export function createFlowSdk(wallet: FlowWallet, apis: IApisSdk, auth?: AuthWit
 			bidUpdate: null as any,
 			cancel: new FlowCancel(sdk, wallet).cancel,
 		},
+		balances: {
+			getBalance: null as any,
+		},
 	}
 }

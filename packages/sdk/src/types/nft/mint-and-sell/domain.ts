@@ -1,6 +1,6 @@
 import { OrderId } from "@rarible/api-client"
 import { BigNumberValue } from "@rarible/utils"
-import { AbstractPrepareResponse, RequestCurrency } from "../../common/domain"
+import { AbstractPrepareResponse, RequestCurrency } from "../../../common/domain"
 import { MintRequest } from "../mint/mint-request.type"
 import type { MintResponse } from "../mint/domain"
 import type { UnionPart } from "../../order/common"

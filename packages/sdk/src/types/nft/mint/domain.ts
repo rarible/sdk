@@ -1,6 +1,6 @@
 import { ItemId } from "@rarible/api-client"
 import { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { AbstractPrepareResponse } from "../../common/domain"
+import { AbstractPrepareResponse } from "../../../common/domain"
 import { MintRequest } from "./mint-request.type"
 import { PrepareMintRequest } from "./prepare-mint-request.type"
 

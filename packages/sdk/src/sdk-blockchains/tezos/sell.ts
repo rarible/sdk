@@ -7,8 +7,8 @@ import { Action } from "@rarible/action"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import { RequestCurrency } from "../../common/domain"
-import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../order/common"
-import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
+import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../types/order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { Collection, ItemType, TezosOrder } from "./domain"
 
 

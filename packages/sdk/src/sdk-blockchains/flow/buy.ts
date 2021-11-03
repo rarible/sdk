@@ -10,7 +10,7 @@ import {
 	PayoutsSupport,
 	PrepareFillRequest,
 	PrepareFillResponse,
-} from "../../order/fill/domain"
+} from "../../types/order/fill/domain"
 import { getFlowCollection, getFungibleTokenName, parseFlowMaker, parseOrderId } from "./common/converters"
 import { api } from "./common/api"
 
