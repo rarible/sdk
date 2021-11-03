@@ -1,10 +1,11 @@
 import { OrderId } from "@rarible/api-client"
 import { BigNumberValue } from "@rarible/utils"
-import { AbstractPrepareResponse, RequestCurrency } from "../../common/domain"
+import { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../common/domain"
 import { MintRequest } from "../mint/mint-request.type"
 import type { MintResponse } from "../mint/domain"
 import type { UnionPart } from "../../order/common"
 import { PrepareMintRequest } from "../mint/prepare-mint-request.type"
+import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
 
 export type MintAndSellRequest = MintRequest & {
 	/**
@@ -31,7 +32,11 @@ export type MintAndSellResponse = MintResponse & {
 
 export type PrepareMintAndSellResponse =
 	AbstractPrepareResponse<"mint" | "approve" | "sign" | "send-tx", MintAndSellRequest, MintAndSellResponse> & {
-		multiple: boolean,
+		supportedCurrencies: CurrencyType[]
+		baseFee: number
+		originFeeSupport: OriginFeeSupport
+		payoutsSupport: PayoutsSupport
+		multiple: boolean
 		supportsRoyalties: boolean
 		supportsLazyMint: boolean
 	}
