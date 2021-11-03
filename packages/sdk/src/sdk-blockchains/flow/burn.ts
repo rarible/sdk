@@ -24,7 +24,6 @@ export class FlowBurn {
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
-					const amount = request?.amount !== undefined ? toBigNumber(request.amount.toFixed()) : undefined
 
 					const tx = await this.sdk.nft.burn(collectionId, parseInt(itemId))
 
