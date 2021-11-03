@@ -8,6 +8,7 @@ import { FlowBuy } from "./buy"
 import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
+import { FlowBalance } from "./balance"
 
 export function createFlowSdk(wallet: FlowWallet, apis: IApisSdk, auth?: AuthWithPrivateKey): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
@@ -28,7 +29,7 @@ export function createFlowSdk(wallet: FlowWallet, apis: IApisSdk, auth?: AuthWit
 			cancel: new FlowCancel(sdk, wallet).cancel,
 		},
 		balances: {
-			getBalance: null as any,
+			getBalance: new FlowBalance(sdk).getBalance,
 		},
 	}
 }

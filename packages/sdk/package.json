@@ -26,7 +26,7 @@
     "@rarible/api-client": "0.0.5",
     "@rarible/ethereum-api-client": "^0.1.13",
     "@rarible/ethereum-provider": "^0.9.9",
-    "@rarible/flow-sdk": "0.0.96",
+    "@rarible/flow-sdk": "0.0.101",
     "@rarible/protocol-ethereum-sdk": "^0.9.9",
     "@rarible/sdk-transaction": "^0.2.4",
     "@rarible/sdk-wallet": "^0.2.11",

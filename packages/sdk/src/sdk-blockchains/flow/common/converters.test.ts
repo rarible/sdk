@@ -1,5 +1,11 @@
 import { toItemId, toUnionAddress } from "@rarible/types"
-import { getFlowCollection, getFungibleTokenName, parseFlowMaker, parseOrderId, parseUnionItemId } from "./converters"
+import {
+	getFlowCollection,
+	getFungibleTokenName,
+	parseFlowAddressFromUnionAddress,
+	parseOrderId,
+	parseUnionItemId,
+} from "./converters"
 
 describe("Test FLOW converter functions", () => {
 	test("getFlowCollection: should success get collection if address with prefix", () => {
@@ -79,11 +85,11 @@ describe("Test FLOW converter functions", () => {
 		expect(test1).toThrow(Error)
 	})
 	test("parseFlowMaker function, should parse address with prefix", () => {
-		const test1 = parseFlowMaker(toUnionAddress("FLOW:0xabcdef0123456789"))
+		const test1 = parseFlowAddressFromUnionAddress(toUnionAddress("FLOW:0xabcdef0123456789"))
 		expect(test1?.length).toEqual(18)
 	})
 	test("parseFlowMaker function, should parse address without prefix", () => {
-		const test1 = parseFlowMaker(toUnionAddress("FLOW:abcdef0123456789"))
+		const test1 = parseFlowAddressFromUnionAddress(toUnionAddress("FLOW:abcdef0123456789"))
 		expect(test1?.length).toEqual(18)
 	})
 	test("parseFlowMaker function should throw error, blockchain is not defined", () => {

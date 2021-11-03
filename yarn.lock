@@ -2669,25 +2669,25 @@
   resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.0.90.tgz#9ff519789b6f460825c5b899e0954d808b944588"
   integrity sha512-YawRX+xbYcai9GfhIxSbuAdBvnVBDqfwdZIU6HJRkoCNYJdxivFQ9bDBwfVZoVcBKBeexT6IqVr5qNJcFYEl3A==
 
-"@rarible/fcl-types@^0.0.96":
-  version "0.0.96"
-  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.0.96.tgz#0b728928b574b7d46ed0a4377079c1082278ba70"
-  integrity sha512-84qYZm6svQF4TOJ8RAaGBNuVdZBj4621oX4mCvXG70zmOdv2Ihn94J9jk5xNa1xF7cKbClUBQmzCHZlAGFDs5Q==
+"@rarible/fcl-types@^0.0.101":
+  version "0.0.101"
+  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.0.101.tgz#13aab9ed4f1b3901c65d78114d08e35bd7051f3a"
+  integrity sha512-cNnEcyvY5//mluoB5uv9lhHGDjH8Z5Pa/R+lsce70/gslz9DHf+JF+rxJt5mZExlKSOZESu9OnTOtIajrB0VAQ==
 
-"@rarible/flow-sdk-scripts@^0.0.96":
-  version "0.0.96"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.0.96.tgz#534e65d9a96bf3f4a48314f38206abdd284ecc3e"
-  integrity sha512-X3pnLCFfhYXSQKAbJaNtkG+233fFsqAxsr+t/7scDBbC881OGj5uiutnDgmtsoZtP5wWBJIMdHQTIcMFxZLUjA==
+"@rarible/flow-sdk-scripts@^0.0.101":
+  version "0.0.101"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.0.101.tgz#50b2c8f49eedfdd2013fab437d3901d338d82198"
+  integrity sha512-vouvgOknb7fDSQgzv8hM4+bUMLWmtZtXxYdX+cxRRr+FUq1/Z3SWuAr4h6taXpJMx6zMfBCrz9fydja+FwCxbg==
   dependencies:
     "@onflow/types" "^0.0.5"
 
-"@rarible/flow-sdk@0.0.96":
-  version "0.0.96"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.0.96.tgz#83bcbf8bfa3f6417a199d4f0eaac50c50efaef12"
-  integrity sha512-GzGhONG9vyYGNV0w23FRVlyjVSqkZVknlJ+G1RcYV1yJiizGBTKetYwOHL0NThkra5Wy4mrRfDn/TBBygs1MCw==
+"@rarible/flow-sdk@0.0.101":
+  version "0.0.101"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.0.101.tgz#fa0a57dd2ea062addc6dbc5073a40b3baf9a78db"
+  integrity sha512-Krs4Dzuqm7TmTRzLv0yv61/GV/5dtYTT7NrPaqpJpVnjUFLafRQ6xrlxd1C/yd0Fgl7nGIs8156pmTCnPoUHnw==
   dependencies:
-    "@rarible/fcl-types" "^0.0.96"
-    "@rarible/flow-sdk-scripts" "^0.0.96"
+    "@rarible/fcl-types" "^0.0.101"
+    "@rarible/flow-sdk-scripts" "^0.0.101"
 
 "@rarible/flow-test-common@^0.0.90":
   version "0.0.90"

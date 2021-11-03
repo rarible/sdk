@@ -57,7 +57,7 @@ const FLOW_MAKER_ID_REGEXP = /^FLOW\:0*x*[0-9a-f]{16}/
  * Get maker account address
  * @param maker - "FLOW:0xabcdef0123456789", address can be unprefixed
  */
-export function parseFlowMaker(maker: UnionAddress) {
+export function parseFlowAddressFromUnionAddress(maker: UnionAddress) {
 	if (FLOW_MAKER_ID_REGEXP.test(maker)) {
 		const address = withPrefix(maker.split(":")[1])
 		if (address) {
