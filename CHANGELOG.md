@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.2.23](https://github.com/rarible/sdk/compare/v0.2.22...v0.2.23) (2021-11-03)
+
+
+### Bug Fixes
+
+* minor base order fee ([48bc8e7](https://github.com/rarible/sdk/commit/48bc8e76d884a2c5fdf4ae7b0be55ff23ab332a9))
+* types ([2cb85f2](https://github.com/rarible/sdk/commit/2cb85f23779bc333dffde539cc9bd853cdcc3026))
+
+
+
+
+
 ## [0.2.22](https://github.com/rarible/sdk/compare/v0.2.21...v0.2.22) (2021-11-02)
 
 **Note:** Version bump only for package root
