@@ -93,7 +93,7 @@ export class SellInternal {
 			originFeeSupport: order.type === "RARIBLE_V2" ? OriginFeeSupport.FULL : OriginFeeSupport.AMOUNT_ONLY,
 			payoutsSupport: order.type === "RARIBLE_V2" ? PayoutsSupport.MULTIPLE : PayoutsSupport.SINGLE,
 			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: await this.sdk.order.getBaseOrderFee(),
+			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
 		}
 	}
