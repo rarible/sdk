@@ -1,7 +1,7 @@
 import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { toBigNumber, toOrderId, toUnionAddress } from "@rarible/types"
-import { TEST_ACCOUNT_1 } from "@rarible/flow-test-common"
+import { FLOW_TEST_ACCOUNT_1 } from "@rarible/flow-test-common"
 import { createTestOrder } from "./test/create-test-order"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { parseOrderId } from "./common/converters"
@@ -34,7 +34,7 @@ describe("test flow mint, order creation, and buy", () => {
 
 		//Transfer
 		const transfer = await sdk2.nft.transfer({ itemId })
-		const transferResult = await transfer.submit({ to: toUnionAddress(`FLOW:${TEST_ACCOUNT_1.address}`) })
+		const transferResult = await transfer.submit({ to: toUnionAddress(`FLOW:${FLOW_TEST_ACCOUNT_1.address}`) })
 		expect(transferResult.transaction.status).toEqual(4)
 
 		//Create order
