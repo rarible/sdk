@@ -10,7 +10,7 @@
       "allowBranch": "master",
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
-      "message": "chore(release): bump versions after release",
+      "message": "chore: bump versions after release",
       "yes": true
     }
   }
