@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.3.0](https://github.com/rarible/sdk/compare/v0.2.23...v0.3.0) (2021-11-04)
+
+
+### Features
+
+* add balances (trigger commit) ([f24e5fe](https://github.com/rarible/sdk/commit/f24e5fe26f0f1b76975f9f813ccddaa708000c9e))
+* get balance ([cde533c](https://github.com/rarible/sdk/commit/cde533cde760a123cdf92ffd311b7102a7885c7a))
+
+
+
+
+
 ## [0.2.23](https://github.com/rarible/sdk/compare/v0.2.22...v0.2.23) (2021-11-03)
 
 
