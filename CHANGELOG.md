@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.4.0](https://github.com/rarible/sdk/compare/v0.3.0...v0.4.0) (2021-11-04)
+
+
+### Features
+
+* remove network from flow wallet (consistency support) ([8ef316d](https://github.com/rarible/sdk/commit/8ef316df5fe406a71eb05249a6c9acc39c0c11a9))
+* update rarible's dependencies ([e428ffa](https://github.com/rarible/sdk/commit/e428ffa7332f0363bc2c56a49ccdb61be8a820b2))
+
+
+
+
+
 # [0.3.0](https://github.com/rarible/sdk/compare/v0.2.23...v0.3.0) (2021-11-04)
 
 
