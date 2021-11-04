@@ -10,8 +10,13 @@ import {
 	PayoutsSupport,
 	PrepareFillRequest,
 	PrepareFillResponse,
-} from "../../order/fill/domain"
-import { getFlowCollection, getFungibleTokenName, parseFlowMaker, parseOrderId } from "./common/converters"
+} from "../../types/order/fill/domain"
+import {
+	getFlowCollection,
+	getFungibleTokenName,
+	parseFlowAddressFromUnionAddress,
+	parseOrderId,
+} from "./common/converters"
 import { api } from "./common/api"
 
 export class FlowBuy {
@@ -50,7 +55,7 @@ export class FlowBuy {
 			id: "send-tx" as const,
 			run: async (buyRequest: FillRequest) => {
 				const currency = this.getFlowCurrency(order)
-				const owner = parseFlowMaker(order.maker)
+				const owner = parseFlowAddressFromUnionAddress(order.maker)
 				const collectionId = getFlowCollection(this.getFlowContract(order))
 				const orderId = parseInt(parseOrderId(order.id))//todo leave string when support it on flow-sdk transactions
 				return this.sdk.order.buy(collectionId, currency, orderId, owner)

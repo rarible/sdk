@@ -11,8 +11,8 @@ import {
 	PrepareOrderInternalResponse,
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
-} from "../../order/common"
-import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
+} from "../../types/order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getFungibleTokenName, parseUnionItemId } from "./common/converters"
 import { api } from "./common/api"
 

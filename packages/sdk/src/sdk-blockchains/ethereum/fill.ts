@@ -1,7 +1,11 @@
 import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
 import { AssetType, Order } from "@rarible/api-client"
-import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
+import {
+	AssetType as EthereumAssetType,
+	OrderOpenSeaV1DataV1FeeMethod, OrderOpenSeaV1DataV1HowToCall, OrderOpenSeaV1DataV1SaleKind,
+	OrderOpenSeaV1DataV1Side,
+} from "@rarible/ethereum-api-client"
 import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
@@ -15,7 +19,7 @@ import {
 	PayoutsSupport,
 	PrepareFillRequest,
 	PrepareFillResponse,
-} from "../../order/fill/domain"
+} from "../../types/order/fill/domain"
 import { convertUnionToEthereumAddress } from "./common"
 
 export type SupportFlagsResponse = {
@@ -163,6 +167,10 @@ export class Fill {
 						dataType: "OPEN_SEA_V1_DATA_V1",
 						exchange: convertUnionToEthereumAddress(order.data.exchange),
 						feeRecipient: convertUnionToEthereumAddress(order.data.feeRecipient),
+						feeMethod: OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
+						side: OrderOpenSeaV1DataV1Side[order.data.side],
+						saleKind: OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
+						howToCall: OrderOpenSeaV1DataV1HowToCall[order.data.howToCall],
 						callData: toBinary(order.data.callData),
 						replacementPattern: toBinary(order.data.callData),
 						staticExtraData: toBinary(order.data.staticExtraData),

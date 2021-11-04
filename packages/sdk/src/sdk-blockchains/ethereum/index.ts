@@ -9,6 +9,9 @@ import { Burn } from "./burn"
 import { Transfer } from "./transfer"
 import { Bid } from "./bid"
 import { CancelOrder } from "./cancel"
+import { Balance } from "./balance"
+
+export declare type Maybe<T> = T | undefined
 
 export function createEthereumSdk(
 	wallet: EthereumWallet, apis: IApisSdk, env: keyof typeof CONFIGS,
@@ -30,6 +33,9 @@ export function createEthereumSdk(
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			cancel: new CancelOrder(sdk, wallet).cancel,
+		},
+		balances: {
+			getBalance: new Balance(sdk).getBalance,
 		},
 	}
 }

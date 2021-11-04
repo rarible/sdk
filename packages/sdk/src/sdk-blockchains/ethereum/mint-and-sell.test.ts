@@ -3,7 +3,7 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
-import { MintType } from "../../nft/mint/domain"
+import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 
 describe("mintAndSell", () => {

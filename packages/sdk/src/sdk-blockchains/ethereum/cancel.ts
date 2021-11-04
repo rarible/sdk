@@ -2,7 +2,7 @@ import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { CancelOrderRequest, ICancel } from "../../order/cancel/domain"
+import { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 
 export class CancelOrder {
 	constructor(

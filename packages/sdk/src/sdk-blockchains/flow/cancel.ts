@@ -3,7 +3,7 @@ import { FlowWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
 import { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
-import { CancelOrderRequest, ICancel } from "../../order/cancel/domain"
+import { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import { getFlowCollection } from "./common/converters"
 import { api } from "./common/api"
 

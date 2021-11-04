@@ -2,7 +2,7 @@ import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { BurnRequest, PrepareBurnRequest } from "../../nft/burn/domain"
+import { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 
 export class Burn {
 	constructor(
