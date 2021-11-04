@@ -82,7 +82,7 @@ export class Sell {
 		return json
 	}
 
-	assetTypeToJSON(a: TezosLibAssetType) : any {
+	assetTypeToJSON(a: TezosLibAssetType): any {
 		switch (a.asset_class) {
 			case "FA_2":
 				return {
@@ -93,7 +93,11 @@ export class Sell {
 			case "XTZ":
 				return { assetClass: a.asset_class }
 			case "FA_1_2":
-				return { assetClass: a.asset_class, contract: a.contract }
+				return {
+					assetClass: a.asset_class,
+					contract: a.contract,
+				}
+			default: throw new Error("Unsupported asset class")
 		}
 	}
 
@@ -103,7 +107,7 @@ export class Sell {
 	}
 
 	assetToJSON(a: TezosLibAsset) : any {
-		// todo handle different decimal for FA_1_2
+		// @todo handle different decimal for FA_1_2
 		switch (a.asset_type.asset_class) {
 			case "FA_2":
 				return {
