@@ -1,10 +1,9 @@
-import { ItemId } from "@rarible/api-client"
-import { UnionAddress } from "@rarible/types"
+import type { ItemId } from "@rarible/api-client"
+import type { UnionAddress } from "@rarible/types"
 import { withPrefix } from "@rarible/flow-sdk/build/common/utils"
-import { FlowItemId } from "../../../common/domain"
+import type { FlowItemId } from "../../../common/domain"
 
-
-const FLOW_COLLECTION_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
+const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
 
 /**
  * Get flow collection from union collection
@@ -17,13 +16,7 @@ export function getFlowCollection(collection: string): string {
 	throw Error("Invalid collection")
 }
 
-const FLOW_ITEM_ID_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}\:[0-9]{1,}/
-
-// type FlowItemId = {
-// 	blockchain: Blockchain
-// 	collectionId: string
-// 	itemId: string
-// }
+const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}:[0-9]{1,}/
 
 /**
  * Parse union item id
@@ -51,7 +44,7 @@ export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
 	throw Error("Invalid item ID")
 }
 
-const FLOW_MAKER_ID_REGEXP = /^FLOW\:0*x*[0-9a-f]{16}/
+const FLOW_MAKER_ID_REGEXP = /^FLOW:0*x*[0-9a-f]{16}/
 
 /**
  * Get maker account address
@@ -68,7 +61,7 @@ export function parseFlowAddressFromUnionAddress(maker: UnionAddress) {
 	throw Error("Invalid maker")
 }
 
-const FLOW_ORDER_ID_REGEXP = /^FLOW\:[0-9]{1,}/
+const FLOW_ORDER_ID_REGEXP = /^FLOW:[0-9]{1,}/
 
 /**
  *
@@ -81,7 +74,7 @@ export function parseOrderId(id: string): string {
 	throw Error("Invalid order ID")
 }
 
-const FLOW_FT_CONTRACT_REGEXP = /^FLOW\:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
+const FLOW_FT_CONTRACT_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
 
 /**
  * Get fungible token name
