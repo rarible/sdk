@@ -1,66 +1,64 @@
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import {
-	ActivityControllerApi,
-	CollectionControllerApi,
-	Configuration,
-	ItemControllerApi,
-	OrderControllerApi,
-	OwnershipControllerApi,
-} from "@rarible/api-client"
+import * as ApiClient from "@rarible/api-client"
 import { toUnionAddress, UnionAddress } from "@rarible/types"
 import type { IApisSdk, IRaribleSdk } from "./domain"
 import { getSDKBlockchainInstance } from "./sdk-blockchains"
-import { CONFIGS } from "./config"
-import { ISell, ISellInternal } from "./types/order/sell/domain"
-import { OrderRequest } from "./types/order/common"
-import { IMint, MintResponse } from "./types/nft/mint/domain"
-import { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
-import { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
+import { getSdkConfig } from "./config"
+import type { ISell, ISellInternal } from "./types/order/sell/domain"
+import type { OrderRequest } from "./types/order/common"
+import type { IMint, MintResponse } from "./types/nft/mint/domain"
+import type { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
+import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
+import type { RaribleSdkEnvironment, RaribleSdkConfig } from "./config/domain"
 
-export function createRaribleSdk(wallet: BlockchainWallet, env: keyof typeof CONFIGS): IRaribleSdk {
-	const config = CONFIGS[env]
-	const configuration = new Configuration({ basePath: config.basePath })
-	const apis = {
-		collection: new CollectionControllerApi(configuration),
-		item: new ItemControllerApi(configuration),
-		ownership: new OwnershipControllerApi(configuration),
-		order: new OrderControllerApi(configuration),
-		activity: new ActivityControllerApi(configuration),
-	}
+export function createRaribleSdk(wallet: BlockchainWallet, env: RaribleSdkEnvironment): IRaribleSdk {
+	const config = getSdkConfig(env)
+	const apis = createApisSdk(config)
 	const instance = getSDKBlockchainInstance(wallet, apis, config)
 	const sell = createSell(instance.order.sell, apis)
 	const mintAndSell = createMintAndSell(instance.nft.mint, instance.order.sell)
-	const nft = {
-		...instance.nft,
-		mintAndSell,
-	}
-	const order = {
-		...instance.order,
-		sell,
-	}
+
 	return {
 		...instance,
-		nft,
-		order,
+		nft: {
+			...instance.nft,
+			mintAndSell,
+		},
+		order: {
+			...instance.order,
+			sell,
+		},
 		apis,
+	}
+}
+
+function createApisSdk(config: RaribleSdkConfig): IApisSdk {
+	const configuration = new ApiClient.Configuration({
+		basePath: config.basePath,
+	})
+	return {
+		collection: new ApiClient.CollectionControllerApi(configuration),
+		item: new ApiClient.ItemControllerApi(configuration),
+		ownership: new ApiClient.OwnershipControllerApi(configuration),
+		order: new ApiClient.OrderControllerApi(configuration),
+		activity: new ApiClient.ActivityControllerApi(configuration),
 	}
 }
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async request => {
 		const item = await apis.item.getItemById({ itemId: request.itemId })
-		const internalResponse = await sell({ collectionId: toUnionAddress(item.collection) })
-		const submit = internalResponse.submit
-			.before((input: OrderRequest) => {
-				return {
+		const response = await sell({
+			collectionId: toUnionAddress(item.collection),
+		})
+		return {
+			...response,
+			maxAmount: item.supply,
+			submit: response.submit
+				.before((input: OrderRequest) => ({
 					itemId: request.itemId,
 					...input,
-				}
-			})
-		return {
-			...internalResponse,
-			maxAmount: item.supply,
-			submit,
+				})),
 		}
 	}
 }
@@ -100,9 +98,8 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 function getCollectionId(req: HasCollectionId | HasCollection): UnionAddress {
 	if ("collection" in req) {
 		return req.collection.id
-	} else {
-		return req.collectionId
 	}
+	return req.collectionId
 }
 
 type MiddleMintType = {

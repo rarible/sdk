@@ -4,16 +4,10 @@ import type { Provider } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-// @todo replace with types from ethereum-sdk, flow-sdk etc
-
-export type EthereumNetwork = "mainnet" | "ropsten" | "rinkeby" | "e2e"
-export type FlowNetwork = "mainnet" | "testnet"
-export type TezosNetwork = "mainnet" | "granada" | "local"
-
-export class EthereumWallet implements AbstractWallet {
+export class EthereumWallet<T extends Ethereum> implements AbstractWallet {
 	readonly blockchain = "ETHEREUM"
 
-	constructor(public readonly ethereum: Ethereum, public readonly address: UnionAddress) {}
+	constructor(public readonly ethereum: T, public readonly address: UnionAddress) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		return {
@@ -26,18 +20,14 @@ export class EthereumWallet implements AbstractWallet {
 export class FlowWallet implements AbstractWallet {
 	readonly blockchain = "FLOW"
 
-	constructor(
-		public readonly fcl: Fcl,
-		public readonly address: UnionAddress,
-		public readonly network: FlowNetwork,
-	) {}
+	constructor(public readonly fcl: Fcl, public readonly address: UnionAddress) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		if (!message.length) {
 			throw new Error("Message can't be empty")
 		}
 		const messageHex = Buffer.from(message).toString("hex")
-		const currentUser = await this.fcl.currentUser()
+		const currentUser = this.fcl.currentUser()
 		const account = await this.fcl.account(this.address)
 
 		const signatures = await currentUser.signUserMessage(messageHex)
@@ -51,7 +41,7 @@ export class FlowWallet implements AbstractWallet {
 		if (signature) {
 			const pubKey = account.keys.find(k => k.index === signature.keyId)
 			if (!pubKey) {
-				throw Error(`Key with index "${signature.keyId}" not found on account with address ${this.address}`)
+				throw new Error(`Key with index "${signature.keyId}" not found on account with address ${this.address}`)
 			}
 			return {
 				signature: signature.signature,
@@ -76,4 +66,4 @@ export class TezosWallet implements AbstractWallet {
 	}
 }
 
-export type BlockchainWallet = EthereumWallet | FlowWallet | TezosWallet
+export type BlockchainWallet = EthereumWallet<Ethereum> | FlowWallet | TezosWallet

@@ -1,7 +1,8 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { CONFIGS } from "@rarible/protocol-ethereum-sdk/build/config"
-import { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
+import type { Ethereum } from "@rarible/ethereum-provider"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Mint } from "./mint"
 import { SellInternal } from "./sell"
 import { Fill } from "./fill"
@@ -10,13 +11,15 @@ import { Transfer } from "./transfer"
 import { Bid } from "./bid"
 import { CancelOrder } from "./cancel"
 import { Balance } from "./balance"
+import type { EthereumNetwork } from "./domain"
 
-export declare type Maybe<T> = T | undefined
-
-export function createEthereumSdk(
-	wallet: EthereumWallet, apis: IApisSdk, env: keyof typeof CONFIGS,
+export function createEthereumSdk<T extends Ethereum>(
+	wallet: EthereumWallet<T>,
+	apis: IApisSdk,
+	network: EthereumNetwork,
+	params?: ConfigurationParameters
 ): IRaribleInternalSdk {
-	const sdk = createRaribleSdk(wallet.ethereum, env)
+	const sdk = createRaribleSdk(wallet.ethereum, network, params)
 	const sellService = new SellInternal(sdk)
 	const bidService = new Bid(sdk)
 

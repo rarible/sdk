@@ -13,7 +13,7 @@ export function getFlowCollection(collection: string): string {
 	if (FLOW_COLLECTION_REGEXP.test(collection)) {
 		return collection.split(":")[1]
 	}
-	throw Error("Invalid collection")
+	throw new Error("Invalid collection")
 }
 
 const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}:[0-9]{1,}/
@@ -27,10 +27,10 @@ export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
 	if (FLOW_ITEM_ID_REGEXP.test(unionItemId)) {
 		const [blockchain, collectionId, itemId] = unionItemId.split(":")
 		if (!collectionId) {
-			throw Error("Invalid collection id, identifier is empty")
+			throw new Error("Invalid collection id, identifier is empty")
 		}
 		if (!itemId) {
-			throw Error("Invalid item id, identifier is empty")
+			throw new Error("Invalid item id, identifier is empty")
 		}
 		if (blockchain === "FLOW") {
 			return {
@@ -39,9 +39,9 @@ export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
 				itemId,
 			}
 		}
-		throw Error(`Invalid item id, "${blockchain}" is not FLOW item`)
+		throw new Error(`Invalid item id, "${blockchain}" is not FLOW item`)
 	}
-	throw Error("Invalid item ID")
+	throw new Error("Invalid item ID")
 }
 
 const FLOW_MAKER_ID_REGEXP = /^FLOW:0*x*[0-9a-f]{16}/
@@ -56,9 +56,9 @@ export function parseFlowAddressFromUnionAddress(maker: UnionAddress) {
 		if (address) {
 			return address
 		}
-		throw Error("Invalid maker address")
+		throw new Error("Invalid maker address")
 	}
-	throw Error("Invalid maker")
+	throw new Error("Invalid maker")
 }
 
 const FLOW_ORDER_ID_REGEXP = /^FLOW:[0-9]{1,}/
@@ -71,7 +71,7 @@ export function parseOrderId(id: string): string {
 	if (FLOW_ORDER_ID_REGEXP.test(id)) {
 		return id.split(":")[1]
 	}
-	throw Error("Invalid order ID")
+	throw new Error("Invalid order ID")
 }
 
 const FLOW_FT_CONTRACT_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
@@ -84,16 +84,13 @@ export function getFungibleTokenName(contract: string): "FLOW" | "FUSD" {
 	if (FLOW_FT_CONTRACT_REGEXP.test(contract)) {
 		const [, , name] = contract.split(".")
 		switch (name) {
-			case "FlowToken": {
+			case "FlowToken":
 				return "FLOW"
-			}
-			case "FUSD": {
+			case "FUSD":
 				return "FUSD"
-			}
-			default: {
-				throw Error(`Unsupported contract ID: ${contract}`)
-			}
+			default:
+				throw new Error(`Unsupported contract ID: ${contract}`)
 		}
 	}
-	throw Error(`Unsupported contract ID: ${contract}`)
+	throw new Error(`Unsupported contract ID: ${contract}`)
 }

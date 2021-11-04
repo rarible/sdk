@@ -1,7 +1,8 @@
-import { FlowWallet } from "@rarible/sdk-wallet"
+import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
-import { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { notImplemented } from "../../common/not-implemented"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -9,10 +10,16 @@ import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
+import { FlowNetwork } from "./domain"
 
-export function createFlowSdk(wallet: FlowWallet, apis: IApisSdk, auth?: AuthWithPrivateKey): IRaribleInternalSdk {
-	const sdk = createFlowSdkInstance(wallet.fcl, wallet.network, auth)
-	const sellService = new FlowSell(sdk, wallet)
+export function createFlowSdk(
+	wallet: FlowWallet,
+	apis: IApisSdk,
+	network: FlowNetwork,
+	auth?: AuthWithPrivateKey
+): IRaribleInternalSdk {
+	const sdk = createFlowSdkInstance(wallet.fcl, network, auth)
+	const sellService = new FlowSell(sdk, apis)
 
 	return {
 		nft: {
@@ -23,10 +30,10 @@ export function createFlowSdk(wallet: FlowWallet, apis: IApisSdk, auth?: AuthWit
 		order: {
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			fill: new FlowBuy(sdk, wallet).buy,
-			bid: null as any,
-			bidUpdate: null as any,
-			cancel: new FlowCancel(sdk, wallet).cancel,
+			fill: new FlowBuy(sdk, apis).buy,
+			bid: notImplemented,
+			bidUpdate: notImplemented,
+			cancel: new FlowCancel(sdk, apis).cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,

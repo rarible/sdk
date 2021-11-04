@@ -1,19 +1,13 @@
-import {
-	ActivityControllerApi,
-	CollectionControllerApi,
-	ItemControllerApi,
-	OrderControllerApi,
-	OwnershipControllerApi,
-} from "@rarible/api-client"
-import { IMint } from "./types/nft/mint/domain"
-import { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
-import { IFill } from "./types/order/fill/domain"
-import { IBurn } from "./types/nft/burn/domain"
-import { ITransfer } from "./types/nft/transfer/domain"
-import { IBid, IBidUpdate } from "./types/order/bid/domain"
-import { IMintAndSell } from "./types/nft/mint-and-sell/domain"
-import { ICancel } from "./types/order/cancel/domain"
-import { IGetBalance } from "./types/balances"
+import type * as ApiClient from "@rarible/api-client"
+import type { IMint } from "./types/nft/mint/domain"
+import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
+import type { IFill } from "./types/order/fill/domain"
+import type { IBurn } from "./types/nft/burn/domain"
+import type { ITransfer } from "./types/nft/transfer/domain"
+import type { IBid, IBidUpdate } from "./types/order/bid/domain"
+import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
+import type { ICancel } from "./types/order/cancel/domain"
+import type { IGetBalance } from "./types/balances"
 
 export interface IRaribleSdk {
 	apis: IApisSdk,
@@ -23,11 +17,11 @@ export interface IRaribleSdk {
 }
 
 export interface IApisSdk {
-	order: OrderControllerApi,
-	collection: CollectionControllerApi,
-	activity: ActivityControllerApi,
-	item: ItemControllerApi,
-	ownership: OwnershipControllerApi
+	order: ApiClient.OrderControllerApi,
+	collection: ApiClient.CollectionControllerApi,
+	activity: ApiClient.ActivityControllerApi,
+	item: ApiClient.ItemControllerApi,
+	ownership: ApiClient.OwnershipControllerApi
 }
 
 export interface INftSdk {

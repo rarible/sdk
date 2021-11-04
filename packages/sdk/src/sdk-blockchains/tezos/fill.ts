@@ -103,7 +103,7 @@ export class Fill {
 				}
 			}
 			default: {
-				throw Error("Invalid take asset type")
+				throw new Error("Invalid take asset type")
 			}
 		}
 	}
@@ -129,7 +129,7 @@ export class Fill {
 				}
 			}
 			default: {
-				throw Error("Invalid take asset type")
+				throw new Error("Invalid take asset type")
 			}
 		}
 	}

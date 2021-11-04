@@ -1,9 +1,9 @@
-import type { FlowWallet } from "@rarible/sdk-wallet"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
+import type { IApisSdk } from "../../domain"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -17,32 +17,31 @@ import {
 	parseFlowAddressFromUnionAddress,
 	parseOrderId,
 } from "./common/converters"
-import { api } from "./common/api"
 
 export class FlowBuy {
-	constructor(private sdk: FlowSdk, private wallet: FlowWallet) {
+	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
 		this.buy = this.buy.bind(this)
 	}
 
-	async getPreparedOrder(request: PrepareFillRequest): Promise<Order> {
+	private async getPreparedOrder(request: PrepareFillRequest): Promise<Order> {
 		if ("order" in request) {
 			return request.order
 		}
 		if ("orderId" in request) {
-			// todo replace this api call for call from flow-sdk when it supported
-			return api(this.wallet.network).orderController.getOrderById({ id: request.orderId })
+			// @todo replace this api call for call from flow-sdk when it supported
+			return this.apis.order.getOrderById({ id: request.orderId })
 		}
 		throw new Error("Incorrect request")
 	}
 
-	getFlowContract(order: Order): string {
+	private getFlowContract(order: Order): string {
 		if (order.make.type["@type"] === "FLOW_NFT") {
 			return order.make.type.contract
 		}
 		throw new Error("This is not FLOW order")
 	}
 
-	getFlowCurrency(order: Order) {
+	private getFlowCurrency(order: Order) {
 		if (order.take.type["@type"] === "FLOW_FT") {
 			return getFungibleTokenName(order.take.type.contract)
 		}

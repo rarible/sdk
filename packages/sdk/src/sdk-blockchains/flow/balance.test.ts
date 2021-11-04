@@ -4,14 +4,12 @@ import { toUnionAddress } from "@rarible/types"
 import { createFlowSdk } from "./index"
 
 describe("Test flow balance function", () => {
-
 	beforeAll(() => {
-		fcl.config()
-			.put("accessNode.api", "https://flow-access-mainnet.portto.io") // connect to Flow mainnet
+		fcl.config().put("accessNode.api", "https://flow-access-mainnet.portto.io")
 	})
 
-	const wallet = new FlowWallet(fcl, toUnionAddress("FLOW:0x324c4173e0175672"), "mainnet")
-	const sdk = createFlowSdk(wallet, null as any)
+	const wallet = new FlowWallet(fcl, toUnionAddress("FLOW:0x324c4173e0175672"))
+	const sdk = createFlowSdk(wallet, null as any, "mainnet")
 
 	test("Should get balance for account", async () => {
 		const balance1 = await sdk.balances.getBalance(wallet.address, {

@@ -1,24 +1,21 @@
 import { Address, toAddress, toOrderId, UnionAddress, Word } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
-import { OrderId } from "@rarible/api-client"
-import { CurrencyType, RequestCurrency } from "../../../common/domain"
+import type { OrderId } from "@rarible/api-client"
+import type { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export function getEthTakeAssetType(currency: RequestCurrency) {
 	switch (currency["@type"]) {
-		case "ERC20": {
+		case "ERC20":
 			return {
 				assetClass: currency["@type"],
 				contract: convertUnionToEthereumAddress(currency.contract),
 			}
-		}
-		case "ETH": {
+		case "ETH":
 			return {
 				assetClass: currency["@type"],
 			}
-		}
-		default: {
-			throw Error("Invalid take asset type")
-		}
+		default:
+			throw new Error("Invalid take asset type")
 	}
 }
 
