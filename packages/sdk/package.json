@@ -15,7 +15,7 @@
     "clean": "rimraf ./build",
     "create-validators": "create-validator-ts src/**/*.type.ts",
     "replace-mjs": "find ./build -type f -name \"*.js\" -exec sed -i '' 's#./jsbi.mjs#jsbi#' {} \\;",
-    "test": "jest --runInBad --silent",
+    "test": "jest --runInBand --silent",
     "validators-lint-fix": "eslint --ext type.validator.ts . --fix",
     "verify": "tsc --noEmit"
   },
