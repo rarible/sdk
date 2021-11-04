@@ -5,17 +5,15 @@ import { Provider, get_public_key } from "tezos-sdk-module/dist/common/base"
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import { toBigNumber, toOrderId } from "@rarible/types"
-import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { RequestCurrency } from "../../common/domain"
-import { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../types/order/common"
+import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
+import type { RequestCurrency } from "../../common/domain"
+import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { Collection, ItemType, TezosOrder } from "./domain"
+import type { Collection, ItemType, TezosOrder } from "./domain"
 
 
 export class Sell {
-	constructor(
-		private provider: Provider
-	) {
+	constructor(private provider: Provider) {
 		this.sell = this.sell.bind(this)
 	}
 

@@ -1,14 +1,12 @@
-import { UnionAddress } from "@rarible/types"
-import { AssetType } from "@rarible/api-client"
-import { BigNumberValue } from "@rarible/utils"
-import { FlowSdk } from "@rarible/flow-sdk"
+import type { UnionAddress } from "@rarible/types"
+import type { AssetType } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import type { FlowSdk } from "@rarible/flow-sdk"
 import { toBn } from "@rarible/utils/build/bn"
 import { getFungibleTokenName, parseFlowAddressFromUnionAddress } from "./common/converters"
 
 export class FlowBalance {
-	constructor(
-		private sdk: FlowSdk,
-	) {
+	constructor(private sdk: FlowSdk) {
 		this.getBalance = this.getBalance.bind(this)
 	}
 
@@ -16,7 +14,7 @@ export class FlowBalance {
 		if (assetType["@type"] === "FLOW_FT") {
 			return getFungibleTokenName(assetType.contract)
 		}
-		throw Error("Invalid asset type")
+		throw new Error("Invalid asset type")
 	}
 
 	async getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {

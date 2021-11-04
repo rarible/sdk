@@ -7,7 +7,7 @@ export function prepareFlowRoyalties(royalty: Royalty[] | undefined): FlowRoyalt
 	if (royalty) {
 		return royalty.map(r => {
 			if (toBn(r.value).gt(10000)) {
-				throw Error("Value for royalty too big")
+				throw new Error("Value for royalty too big")
 			}
 			const account = parseFlowAddressFromUnionAddress(r.account)
 			return {

@@ -1,18 +1,19 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
-import { AssetType, Order } from "@rarible/api-client"
+import type { AssetType, Order } from "@rarible/api-client"
 import {
 	AssetType as EthereumAssetType,
 	OrderOpenSeaV1DataV1FeeMethod, OrderOpenSeaV1DataV1HowToCall, OrderOpenSeaV1DataV1SaleKind,
 	OrderOpenSeaV1DataV1Side,
 } from "@rarible/ethereum-api-client"
-import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
-import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
+import type { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
-import { EthereumWallet } from "@rarible/sdk-wallet"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -31,10 +32,7 @@ export type SupportFlagsResponse = {
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
 export class Fill {
-	constructor(
-		private sdk: RaribleSdk,
-		private wallet: EthereumWallet
-	) {
+	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet<Ethereum>) {
 		this.fill = this.fill.bind(this)
 	}
 

@@ -1,10 +1,9 @@
-import { FlowWallet } from "@rarible/sdk-wallet"
 import { toOrderId } from "@rarible/types"
-import { FlowSdk } from "@rarible/flow-sdk"
+import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { toBn } from "@rarible/utils/build/bn"
-import { Order, OrderId } from "@rarible/api-client"
-import {
+import type { Order, OrderId } from "@rarible/api-client"
+import type {
 	OrderInternalRequest,
 	OrderUpdateRequest,
 	PrepareOrderInternalRequest,
@@ -13,17 +12,17 @@ import {
 	PrepareOrderUpdateResponse,
 } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { IApisSdk } from "../../domain"
 import { getFungibleTokenName, parseUnionItemId } from "./common/converters"
-import { api } from "./common/api"
 
 export class FlowSell {
-	constructor(private sdk: FlowSdk, private wallet: FlowWallet) {
+	constructor(private readonly  sdk: FlowSdk, private readonly apis: IApisSdk) {
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
 	}
 
 	async getPreparedOrder(request: OrderId): Promise<Order> {
-		return api(this.wallet.network).orderController.getOrderById({ id: request })
+		return this.apis.order.getOrderById({ id: request })
 	}
 
 	async sell(request: PrepareOrderInternalRequest): Promise<PrepareOrderInternalResponse> {
@@ -44,7 +43,7 @@ export class FlowSell {
 						toBn(sellRequest.price).decimalPlaces(8).toString(),
 					)
 				}
-				throw Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
+				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
 		}).after((tx) => {
 			const orderId = tx.events.find(e => {
@@ -54,7 +53,7 @@ export class FlowSell {
 			if (orderId) {
 				return toOrderId(`FLOW:${orderId.data.orderId}`)
 			}
-			throw Error("Creation order event not fount in transaction result")
+			throw new Error("Creation order event not fount in transaction result")
 		})
 
 
@@ -88,7 +87,7 @@ export class FlowSell {
 						toBn(sellRequest.price).decimalPlaces(8).toString(),
 					)
 				}
-				throw Error(`Unsupported currency: ${order.make.type["@type"]}`)
+				throw new Error(`Unsupported currency: ${order.make.type["@type"]}`)
 			},
 		}).after((tx) => {
 			const orderId = tx.events.find(e => {
@@ -99,9 +98,9 @@ export class FlowSell {
 				if (order.make.type["@type"] === "FLOW_FT") {
 					return toOrderId(`FLOW:${orderId.data.orderId}`)
 				}
-				throw Error(`Unsupported currency: ${order.make.type["@type"]}`)
+				throw new Error(`Unsupported currency: ${order.make.type["@type"]}`)
 			}
-			throw Error("Creation order event not fount in transaction result")
+			throw new Error("Creation order event not fount in transaction result")
 		})
 
 
