@@ -4,7 +4,7 @@ import type { Provider } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-export class EthereumWallet<T extends Ethereum> implements AbstractWallet {
+export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
 	readonly blockchain = "ETHEREUM"
 
 	constructor(public readonly ethereum: T, public readonly address: UnionAddress) {}

@@ -1,20 +1,27 @@
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import * as ApiClient from "@rarible/api-client"
 import { toUnionAddress, UnionAddress } from "@rarible/types"
+import { Maybe } from "@rarible/protocol-ethereum-sdk/build/common/maybe"
 import type { IApisSdk, IRaribleSdk } from "./domain"
-import { getSDKBlockchainInstance } from "./sdk-blockchains"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
 import type { IMint, MintResponse } from "./types/nft/mint/domain"
 import type { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
-import type { RaribleSdkEnvironment, RaribleSdkConfig } from "./config/domain"
+import type { RaribleSdkConfig, RaribleSdkEnvironment } from "./config/domain"
+import { createEthereumSdk } from "./sdk-blockchains/ethereum"
+import { createFlowSdk } from "./sdk-blockchains/flow"
+import { createTezosSdk } from "./sdk-blockchains/tezos"
+import { createUnionSdk } from "./sdk-blockchains/union"
 
-export function createRaribleSdk(wallet: BlockchainWallet, env: RaribleSdkEnvironment): IRaribleSdk {
+export function createRaribleSdk(wallet: Maybe<BlockchainWallet>, env: RaribleSdkEnvironment): IRaribleSdk {
 	const config = getSdkConfig(env)
 	const apis = createApisSdk(config)
-	const instance = getSDKBlockchainInstance(wallet, apis, config)
+	const ethereum = createEthereumSdk(wallet?.blockchain === "ETHEREUM" ? wallet : undefined, apis, config.ethereumEnv)
+	const flow = createFlowSdk(wallet?.blockchain === "FLOW" ? wallet : undefined, apis, config.flowEnv)
+	const tezos = createTezosSdk(wallet?.blockchain === "TEZOS" ? wallet : undefined)
+	const instance = createUnionSdk(ethereum, flow, tezos)
 	const sell = createSell(instance.order.sell, apis)
 	const mintAndSell = createMintAndSell(instance.nft.mint, instance.order.sell)
 
@@ -95,7 +102,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-function getCollectionId(req: HasCollectionId | HasCollection): UnionAddress {
+export function getCollectionId(req: HasCollectionId | HasCollection): UnionAddress {
 	if ("collection" in req) {
 		return req.collection.id
 	}
