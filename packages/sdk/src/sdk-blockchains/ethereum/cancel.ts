@@ -1,12 +1,10 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import type { Ethereum } from "@rarible/ethereum-provider"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 
 export class CancelOrder {
-	constructor(private readonly sdk: RaribleSdk, private readonly wallet: EthereumWallet<Ethereum>) {}
+	constructor(private readonly sdk: RaribleSdk) {}
 
 	cancel: ICancel = Action.create({
 		id: "send-tx" as const,

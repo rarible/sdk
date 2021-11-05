@@ -45,9 +45,13 @@ export interface IBalanceSdk {
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis"> & {
-	nft: Omit<INftSdk, "mintAndSell">
-	order: Omit<IOrderSdk, "sell"> & {
-		sell: ISellInternal,
-	},
+	nft: INftInternalSdk
+	order: IOrderInternalSdk,
 	balances: IBalanceSdk
+}
+
+export type INftInternalSdk = Omit<INftSdk, "mintAndSell">
+
+export type IOrderInternalSdk = Omit<IOrderSdk, "sell"> & {
+	sell: ISellInternal,
 }

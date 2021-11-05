@@ -1,19 +1,21 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
+import { BigNumber, toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { AssetType, Order } from "@rarible/api-client"
 import {
 	AssetType as EthereumAssetType,
-	OrderOpenSeaV1DataV1FeeMethod, OrderOpenSeaV1DataV1HowToCall, OrderOpenSeaV1DataV1SaleKind,
+	OrderOpenSeaV1DataV1FeeMethod,
+	OrderOpenSeaV1DataV1HowToCall,
+	OrderOpenSeaV1DataV1SaleKind,
 	OrderOpenSeaV1DataV1Side,
 } from "@rarible/ethereum-api-client"
 import type { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
-import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
+import { BigNumber as BigNumberClass, toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { Ethereum } from "@rarible/ethereum-provider"
+import { Maybe } from "@rarible/protocol-ethereum-sdk/build/common/maybe"
 import {
 	FillRequest,
 	OriginFeeSupport,
@@ -32,7 +34,7 @@ export type SupportFlagsResponse = {
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
 export class Fill {
-	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet<Ethereum>) {
+	constructor(private sdk: RaribleSdk, private wallet: Maybe<EthereumWallet>) {
 		this.fill = this.fill.bind(this)
 	}
 
@@ -249,18 +251,19 @@ export class Fill {
 		}
 	}
 
-
 	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber> {
 		if (isNft(order.take.assetType)) {
+			if (this.wallet === undefined) {
+				throw new Error("Wallet undefined")
+			}
+
 			const ownershipId = getOwnershipId(
 				order.take.assetType.contract,
 				order.take.assetType.tokenId,
 				toAddress(await this.wallet.ethereum.getFrom())
 			)
 
-			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({
-				ownershipId,
-			})
+			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({ ownershipId })
 
 			return toBigNumber(BigNumberClass.min(ownership.value, order.take.value).toFixed())
 		} else {
