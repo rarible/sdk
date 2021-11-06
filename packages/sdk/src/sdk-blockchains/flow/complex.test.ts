@@ -4,7 +4,7 @@ import { toBigNumber, toUnionAddress } from "@rarible/types"
 import { FLOW_TEST_ACCOUNT_1 } from "@rarible/flow-test-common"
 import { CollectionControllerApi, Configuration, OrderControllerApi } from "@rarible/api-client"
 import { IApisSdk } from "../../domain"
-import { retryBackoff } from "../../common/retry-backoff"
+import { retry } from "../../common/retry"
 import { getSdkConfig } from "../../config"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { createFlowSdk } from "./index"
@@ -54,9 +54,8 @@ describe("test flow mint, order creation, and buy", () => {
 			currency: { "@type": "FLOW_FT", contract: flowToken },
 			itemId,
 		})
-		const order = await retryBackoff(5, 1000, () => {
-			return apis.order.getOrderById({ id: orderId })
-		})
+
+		const order = await retry(5, 1000, () => apis.order.getOrderById({ id: orderId }))
 		expect(order).toBeTruthy()
 
 		//Update order

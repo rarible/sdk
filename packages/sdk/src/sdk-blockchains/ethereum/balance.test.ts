@@ -4,7 +4,7 @@ import { toUnionAddress } from "@rarible/types"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { createRaribleSdk } from "../../index"
-import { retryBackoff } from "../../common/retry-backoff"
+import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
 
 describe("get balance", () => {
@@ -31,7 +31,7 @@ describe("get balance", () => {
 
 		const contract = toUnionAddress(`ETHEREUM:${it.testErc20.options.address}`)
 		const nextBalance = "0.000000000000000001"
-		const balance = await retryBackoff(5, 1000, async () => {
+		const balance = await retry(5, 1000, async () => {
 			const balance = await sdk.balances.getBalance(sender, {
 				"@type": "ERC20",
 				contract,
