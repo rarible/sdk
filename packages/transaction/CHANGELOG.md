@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.5.0](https://github.com/rarible/sdk/compare/v0.4.0...v0.5.0) (2021-11-06)
+
+
+### Bug Fixes
+
+* update ethereum-sdk, flow-sdk, resolve type issues ([20bb2e4](https://github.com/rarible/sdk/commit/20bb2e432afc0ee6e6415423628c323220de9024))
+
+
+
+
+
 # [0.4.0](https://github.com/rarible/sdk/compare/v0.3.0...v0.4.0) (2021-11-04)
 
 
