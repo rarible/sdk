@@ -4,27 +4,24 @@ import { createFlowSdk } from "@rarible/flow-sdk"
 import { createApisSdk } from "../../common/apis"
 import { retry } from "../../common/retry"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
-import { FlowCancel } from "./cancel"
 import { createTestItem } from "./test/create-test-item"
 import { FlowMint } from "./mint"
-import { sellItem } from "./test/sell-item"
-import { FlowSell } from "./sell"
+import { FlowBurn } from "./burn"
 
-describe("Flow cancel", () => {
+describe("Flow burn", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
 	const apis = createApisSdk("staging")
-	const cancel = new FlowCancel(sdk, apis)
 	const mint = new FlowMint(sdk, apis)
-	const sell = new FlowSell(sdk, apis)
+	const burn = new FlowBurn(sdk)
 
-	test("Should cancel flow NFT order", async () => {
+	test("Should burn NFT", async () => {
 		const itemId = await createTestItem(mint)
-		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
-		const orderId = await sellItem(sell, itemId, "0.1")
-		await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
-		const tx = await cancel.cancel({ orderId })
-		expect(tx).toBeTruthy()
+		const nft = await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+		expect(nft.id).toEqual(itemId)
+		const prepare = await burn.burn({ itemId })
+		const tx = await prepare.submit()
+		expect(tx.transaction.status).toEqual(4)
 	})
 })

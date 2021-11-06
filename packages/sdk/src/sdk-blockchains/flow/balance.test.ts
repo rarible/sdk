@@ -1,6 +1,7 @@
 import { FlowWallet } from "@rarible/sdk-wallet"
 import * as fcl from "@onflow/fcl"
 import { toUnionAddress } from "@rarible/types"
+import { createApisSdk } from "../../common/apis"
 import { createFlowSdk } from "./index"
 
 describe("Test flow balance function", () => {
@@ -10,7 +11,7 @@ describe("Test flow balance function", () => {
 
 	const address = toUnionAddress("FLOW:0x324c4173e0175672")
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet, null as any, "mainnet")
+	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
 
 	test("Should get balance for account", async () => {
 		const balance1 = await sdk.balances.getBalance(address, {
