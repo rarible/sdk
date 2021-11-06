@@ -7,24 +7,23 @@ import { awaitItem } from "./test/await-item"
 import { awaitItemSupply } from "./test/await-item-supply"
 
 describe("burn", () => {
-
-	const { web31, wallet1 } = initProviders({})
-
-	const senderEthereum = new Web3Ethereum({ web3: web31 })
-	const sdk = createRaribleSdk(new EthereumWallet(senderEthereum, toUnionAddress(`ETHEREUM:${wallet1.getAddressString()}`)), "e2e")
+	const { web31, wallet1 } = initProviders()
+	const ethereum = new Web3Ethereum({ web3: web31 })
+	const wallet = new EthereumWallet(ethereum)
+	const sdk = createRaribleSdk(wallet, "e2e")
 
 	const contractErc721 = toAddress("0x87ECcc03BaBC550c919Ad61187Ab597E9E7f7C21")
 	const contractErc1155 = toAddress("0x8812cFb55853da0968a02AaaEA84CD93EC4b42A1")
 
 	test("burn erc721", async () => {
-		const sender = await senderEthereum.getFrom()
-
+		const senderRaw = wallet1.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
 		const mintAction = await sdk.nft.mint({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "uri",
 			creators: [{
-				account: toUnionAddress(`ETHEREUM:${sender}`),
+				account: sender,
 				value: toBigNumber("10000"),
 			}],
 			royalties: [],
@@ -43,7 +42,8 @@ describe("burn", () => {
 	})
 
 	test("burn erc1155", async () => {
-		const sender = await senderEthereum.getFrom()
+		const senderRaw = wallet1.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: `ETHEREUM:${contractErc1155}`,
@@ -52,7 +52,7 @@ describe("burn", () => {
 		const mintResult  = await mintAction.submit({
 			uri: "uri",
 			creators: [{
-				account: toUnionAddress(`ETHEREUM:${sender}`),
+				account: sender,
 				value: toBigNumber("10000"),
 			}],
 			royalties: [],
@@ -70,5 +70,4 @@ describe("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	})
-
 })

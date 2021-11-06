@@ -10,16 +10,10 @@ import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 
 describe("transfer", () => {
-
-	const {
-		web31,
-		wallet1,
-		web32,
-	} = initProviders({})
-
+	const { web31, wallet1, wallet2 } = initProviders()
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
-	const receipentEthereum = new Web3Ethereum({ web3: web32 })
-	const sdk = createRaribleSdk(new EthereumWallet(senderEthereum, toUnionAddress(`ETHEREUM:${wallet1.getAddressString()}`)), "e2e")
+	const senderWallet = new EthereumWallet(senderEthereum)
+	const sdk = createRaribleSdk(senderWallet, "e2e")
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -28,45 +22,48 @@ describe("transfer", () => {
 	})
 
 	test("transfer erc721", async () => {
-		const sender = await senderEthereum.getFrom()
-		const receipent = await receipentEthereum.getFrom()
+		const senderRaw = wallet1.getAddressString()
+		const receipentRaw = wallet2.getAddressString()
+		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
 		const tokenId = "1"
 		const itemId = toItemId(`ETHEREUM:${it.testErc721.options.address}:${tokenId}`)
-		await it.testErc721.methods.mint(sender, tokenId, "").send({ from: sender, gas: 500000 })
+		await it.testErc721.methods.mint(senderRaw, tokenId, "").send({
+			from: senderRaw,
+			gas: 500000,
+		})
 
 		await awaitItem(sdk, itemId)
 
 		const transfer = await sdk.nft.transfer({ itemId })
-		const tx = await transfer.submit({
-			to: toUnionAddress(`ETHEREUM:${receipent}`),
-		})
+		const tx = await transfer.submit({ to: receipent })
 
 		await tx.wait()
 
-		const balanceRecipient = await it.testErc721.methods.balanceOf(receipent).call()
+		const balanceRecipient = await it.testErc721.methods.balanceOf(receipentRaw).call()
 		expect(balanceRecipient).toBe("1")
 	})
 
 	test("transfer erc1155", async () => {
-		const sender = await senderEthereum.getFrom()
-		const receipent = await receipentEthereum.getFrom()
+		const senderRaw = wallet1.getAddressString()
+		const receipentRaw = wallet2.getAddressString()
+		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
 		const tokenId = "1"
 		const itemId = toItemId(`ETHEREUM:${it.testErc1155.options.address}:${tokenId}`)
-		await it.testErc1155.methods.mint(sender, tokenId, 100, "123").send({ from: sender, gas: 200000 })
+		await it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123").send({
+			from: senderRaw,
+			gas: 200000,
+		})
 
 		await awaitItem(sdk, itemId)
 
 		const transfer = await sdk.nft.transfer({ itemId })
-		const tx = await transfer.submit({
-			to: toUnionAddress(`ETHEREUM:${receipent}`),
-			amount: 10,
-		})
+		const tx = await transfer.submit({ to: receipent, amount: 10 })
 
 		await tx.wait()
 
-		const balanceRecipient = await it.testErc1155.methods.balanceOf(receipent, tokenId).call()
+		const balanceRecipient = await it.testErc1155.methods.balanceOf(receipentRaw, tokenId).call()
 		expect(balanceRecipient).toBe("10")
 	})
 

@@ -1,12 +1,7 @@
-import { retry } from "@rarible/protocol-ethereum-sdk/build/common/retry"
-import { ItemId } from "@rarible/api-client"
-import { IRaribleSdk } from "../../../domain"
-import { logTime } from "../../../common/log-time"
+import type { ItemId } from "@rarible/api-client"
+import type { IRaribleSdk } from "../../../domain"
+import { retryBackoff } from "../../../common/retry-backoff"
 
 export async function awaitItem(sdk: IRaribleSdk, itemId: ItemId) {
-	await logTime(`awaiting item ${itemId}`, async () => {
-		await retry(5, async () => {
-			await sdk.apis.item.getItemById({ itemId })
-		})
-	})
+	return retryBackoff(5, 2000, () => sdk.apis.item.getItemById({ itemId }))
 }

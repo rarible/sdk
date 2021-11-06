@@ -6,17 +6,15 @@ import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/cont
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
 import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
-import { awaitStockToBe } from "./test/await-stock-to-be"
+import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
 
 describe("sale", () => {
-
-	const { web31, web32, wallet1, wallet2 } = initProviders({})
-
+	const { web31, web32, wallet1, wallet2 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1, toUnionAddress(`ETHEREUM:${wallet1.getAddressString()}`)), "e2e")
-	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2, toUnionAddress(`ETHEREUM:${wallet2.getAddressString()}`)), "e2e")
+	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "e2e")
+	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "e2e")
 
 	const conf = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -36,10 +34,16 @@ describe("sale", () => {
 		const orderId = await sellAction.submit({
 			amount: 1,
 			price: "0.000000000000000002",
-			currency: { "@type": "ERC20", contract: toUnionAddress(`ETHEREUM:${conf.testErc20.options.address}`) },
+			currency: {
+				"@type": "ERC20",
+				contract: toUnionAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+			},
 		})
 
-		await awaitStockToBe(sdk1, orderId, 1)
+		const nextStock = "1"
+		const order = await awaitStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
 		const updateAction = await sdk1.order.sellUpdate({ orderId })
 		await updateAction.submit({ price: "0.000000000000000001" })
 
@@ -50,6 +54,8 @@ describe("sale", () => {
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
 
-		await awaitStockToBe(sdk1, orderId, 0)
+		const nextStock2 = "0"
+		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 })

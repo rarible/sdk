@@ -10,7 +10,7 @@ describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
-	const ethereumWallet = new EthereumWallet(ethereum, toUnionAddress(`ETHEREUM:${wallet.getAddressString()}`))
+	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e")
 	const readSdk = createRaribleSdk(undefined, "e2e")
 
@@ -26,14 +26,19 @@ describe("mint", () => {
 	})
 
 	test("should mint ERC721 token", async () => {
-		const sender = await ethereum.getFrom()
-
-		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${erc721Address}` })
+		const senderRaw = wallet.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: `ETHEREUM:${erc721Address}`,
+		})
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(`ETHEREUM:${sender}`), value: toBigNumber("10000") }],
+			creators: [{
+				account: sender,
+				value: toBigNumber("10000"),
+			}],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
@@ -45,14 +50,19 @@ describe("mint", () => {
 	})
 
 	test("should mint ERC1155 token", async () => {
-		const sender = await ethereum.getFrom()
-
-		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${erc1155Address}` })
+		const senderRaw = wallet.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: `ETHEREUM:${erc1155Address}`,
+		})
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(`ETHEREUM:${sender}`), value: toBigNumber("10000") }],
+			creators: [{
+				account: sender,
+				value: toBigNumber("10000"),
+			}],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,

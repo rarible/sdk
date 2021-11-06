@@ -1,4 +1,4 @@
-import type { Blockchain, UnionAddress } from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 
 export type UserSignature = {
 	signature: string
@@ -7,7 +7,5 @@ export type UserSignature = {
 
 export interface AbstractWallet {
 	blockchain: Blockchain
-	address: UnionAddress
-
 	signPersonalMessage(message: string): Promise<UserSignature>
 }
