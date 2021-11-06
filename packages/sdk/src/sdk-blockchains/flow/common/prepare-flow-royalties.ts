@@ -1,5 +1,5 @@
-import { Royalty } from "@rarible/api-client/build/models/Royalty"
-import { Royalty as FlowRoyalty } from "@rarible/flow-sdk/build/types"
+import type { Royalty } from "@rarible/api-client/build/models/Royalty"
+import type { Royalty as FlowRoyalty } from "@rarible/flow-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
 import { parseFlowAddressFromUnionAddress } from "./converters"
 

@@ -1,12 +1,12 @@
-import {
+import type {
 	Blockchain,
 	EthErc20AssetType,
 	EthEthereumAssetType,
 	FlowAssetTypeFt,
 	FlowAssetTypeNft,
 } from "@rarible/api-client"
-import { Action } from "@rarible/action"
-import { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { Action } from "@rarible/action"
+import type { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
 
 //todo draft. probably will be changed in future
 export type CurrencyType = {

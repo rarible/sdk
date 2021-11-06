@@ -1,7 +1,7 @@
 import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import { Maybe } from "@rarible/protocol-ethereum-sdk/build/common/maybe"
+import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { notImplemented } from "../../common/not-implemented"
 import { FlowMint } from "./mint"
@@ -11,7 +11,7 @@ import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
-import { FlowNetwork } from "./domain"
+import type { FlowNetwork } from "./domain"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,

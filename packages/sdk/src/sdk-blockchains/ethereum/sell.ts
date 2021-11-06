@@ -1,7 +1,7 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toWord } from "@rarible/types"
-import { ItemId } from "@rarible/api-client"
-import {
+import type { ItemId } from "@rarible/api-client"
+import type {
 	OrderInternalRequest,
 	OrderUpdateRequest,
 	PrepareOrderInternalRequest,

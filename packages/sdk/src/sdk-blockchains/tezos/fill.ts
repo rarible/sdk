@@ -1,24 +1,27 @@
+import type { AssetType as TezosAssetType, Provider } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
-import { AssetType as TezosAssetType, get_address, Provider } from "tezos-sdk-module/dist/common/base"
+import { get_address } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
-import { AssetType, Order, OrderId, OrderPayout } from "@rarible/api-client"
-import { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
+import type { AssetType, Order, OrderId, OrderPayout } from "@rarible/api-client"
+import type { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 // eslint-disable-next-line camelcase
 import { fill_order } from "tezos-sdk-module/dist/order"
-import { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
-import { Address, BigNumber, Binary, toBigNumber, toOrderId, UnionAddress, Word } from "@rarible/types"
+import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
+import type { Address, BigNumber, Binary, UnionAddress, Word } from "@rarible/types"
+import { toBigNumber, toOrderId } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import { OrderRaribleV2DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
-import { OrderPriceHistoryRecord } from "@rarible/ethereum-api-client/build/models/OrderPriceHistoryRecord"
-import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import {
+import type { OrderRaribleV2DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
+import type { OrderPriceHistoryRecord } from "@rarible/ethereum-api-client/build/models/OrderPriceHistoryRecord"
+import type { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
+import type {
 	FillRequest,
+	PrepareFillRequest,
+	PrepareFillResponse } from "../../types/order/fill/domain"
+import {
 	OriginFeeSupport,
 	PayoutsSupport,
-	PrepareFillRequest,
-	PrepareFillResponse,
 } from "../../types/order/fill/domain"
-import { GetNftOwnershipByIdResponse } from "./domain"
+import type { GetNftOwnershipByIdResponse } from "./domain"
 
 export type SimpleTezosOrder = {
 	type: "RARIBLE_V2";
@@ -88,7 +91,7 @@ export class Fill {
 				return {
 					asset_class: type.assetClass,
 					contract: type.contract,
-					token_id: BigInt(type.tokenId),
+					"token_id": BigInt(type.tokenId),
 				}
 			}
 			case "FA_1_2": {
@@ -114,7 +117,7 @@ export class Fill {
 				return {
 					asset_class: type["@type"],
 					contract: type.contract,
-					token_id: BigInt(type.tokenId),
+					"token_id": BigInt(type.tokenId),
 				}
 			}
 			case "FA_1_2": {
@@ -172,7 +175,7 @@ export class Fill {
 				return {
 					asset_class: a.assetClass,
 					contract: a.contract,
-					token_id: BigInt(a.tokenId),
+					"token_id": BigInt(a.tokenId),
 				}
 			case "XTZ":
 				return { asset_class: a.assetClass }

@@ -1,9 +1,9 @@
-import { ItemId, OrderId } from "@rarible/api-client"
-import { BigNumberValue } from "@rarible/utils"
-import { BigNumber } from "@rarible/types/build/big-number"
-import { UnionAddress } from "@rarible/types"
-import { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
+import type { ItemId, OrderId } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import type { BigNumber } from "@rarible/types/build/big-number"
+import type { UnionAddress } from "@rarible/types"
+import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
+import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 
 export type PrepareOrderRequest = {
 	/**

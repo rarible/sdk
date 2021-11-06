@@ -1,4 +1,5 @@
-import { Address, toAddress, toOrderId, UnionAddress, Word } from "@rarible/types"
+import type { Address, UnionAddress, Word } from "@rarible/types"
+import { toAddress, toOrderId } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { OrderId } from "@rarible/api-client"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"

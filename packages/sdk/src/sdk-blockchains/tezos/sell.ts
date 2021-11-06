@@ -1,11 +1,12 @@
-import { SellRequest as TezosSellRequest, sell } from "tezos-sdk-module/dist/order/sell"
+import type { SellRequest as TezosSellRequest } from "tezos-sdk-module/dist/order/sell"
+import { sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
-import { Provider, get_public_key } from "tezos-sdk-module/dist/common/base"
+import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import { toBigNumber, toOrderId } from "@rarible/types"
-import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
+import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider } from "tezos-sdk-module/dist/common/base"
 import type { RequestCurrency } from "../../common/domain"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"

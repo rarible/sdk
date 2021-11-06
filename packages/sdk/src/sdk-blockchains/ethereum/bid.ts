@@ -1,15 +1,15 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toBinary, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import {
+import type {
 	Asset as EthereumAsset,
 	Order as EthereumOrder,
 	OrderData as EthereumOrderData,
 } from "@rarible/ethereum-api-client"
-import { Asset, AssetType, Order, OrderData, PendingOrder } from "@rarible/api-client"
-import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
-import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import {
+import type { Asset, AssetType, Order, OrderData, PendingOrder } from "@rarible/api-client"
+import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
+import type {
 	OrderRequest,
 	OrderUpdateRequest,
 	PrepareOrderRequest,

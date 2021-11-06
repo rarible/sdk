@@ -1,4 +1,4 @@
-import {
+import type {
 	PrepareOrderInternalRequest, PrepareOrderInternalResponse,
 	PrepareOrderRequest,
 	PrepareOrderResponse,

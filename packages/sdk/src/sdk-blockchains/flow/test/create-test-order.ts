@@ -1,4 +1,4 @@
-import { Order } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
 import { toBigNumber, toOrderId, toUnionAddress } from "@rarible/types"
 
 export function createTestOrder(orderId: string): Order {
