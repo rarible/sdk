@@ -1,5 +1,4 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
-import * as ApiClient from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
 import type { ConfigurationParameters } from "@rarible/api-client"
@@ -11,11 +10,12 @@ import type { OrderRequest } from "./types/order/common"
 import type { IMint, MintResponse } from "./types/nft/mint/domain"
 import type { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
-import type { RaribleSdkConfig, RaribleSdkEnvironment } from "./config/domain"
+import type { RaribleSdkEnvironment } from "./config/domain"
 import { createEthereumSdk } from "./sdk-blockchains/ethereum"
 import { createFlowSdk } from "./sdk-blockchains/flow"
 import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
+import { createApisSdk } from "./common/apis"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -23,7 +23,7 @@ export function createRaribleSdk(
 	params?: ConfigurationParameters
 ): IRaribleSdk {
 	const config = getSdkConfig(env)
-	const apis = createApisSdk(config, params)
+	const apis = createApisSdk(env, params)
 	const instance = createUnionSdk(
 		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.ethereumEnv, params),
 		createFlowSdk(filterWallet(wallet, "FLOW"), apis, config.flowEnv),
@@ -52,20 +52,6 @@ function filterWallet<T extends "FLOW" | "ETHEREUM" | "TEZOS">(
 		return wallet as WalletByBlockchain[T]
 	}
 	return undefined
-}
-
-function createApisSdk(config: RaribleSdkConfig, params: ConfigurationParameters = {}): IApisSdk {
-	const configuration = new ApiClient.Configuration({
-		basePath: config.basePath,
-		...params,
-	})
-	return {
-		collection: new ApiClient.CollectionControllerApi(configuration),
-		item: new ApiClient.ItemControllerApi(configuration),
-		ownership: new ApiClient.OwnershipControllerApi(configuration),
-		order: new ApiClient.OrderControllerApi(configuration),
-		activity: new ApiClient.ActivityControllerApi(configuration),
-	}
 }
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
