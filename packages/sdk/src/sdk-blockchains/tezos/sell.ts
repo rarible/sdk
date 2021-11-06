@@ -5,6 +5,7 @@ import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
+import type { Maybe } from "@rarible/types/build/maybe"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider } from "tezos-sdk-module/dist/common/base"
 import type { RequestCurrency } from "../../common/domain"
@@ -12,28 +13,31 @@ import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { Collection, ItemType, TezosOrder } from "./domain"
 
-
 export class Sell {
-	constructor(private provider: Provider) {
+	constructor(private provider: Maybe<Provider>) {
 		this.sell = this.sell.bind(this)
+	}
+
+	private getRequiredProvider(): Provider {
+		if (!this.provider) {
+			throw new Error("Tezos provider is required")
+		}
+		return this.provider
 	}
 
 	parseTakeAssetType(type: RequestCurrency) {
 		switch (type["@type"]) {
-			case "XTZ": {
+			case "XTZ":
 				return {
 					asset_class: type["@type"],
 				}
-			}
-			case "FA_1_2": {
+			case "FA_1_2":
 				return {
 					asset_class: type["@type"],
 					contract: type.contract,
 				}
-			}
-			default: {
+			default:
 				throw new Error("Unsupported take asset type")
-			}
 		}
 	}
 
@@ -54,7 +58,8 @@ export class Sell {
 	}
 
 	async getMakerPublicKey(): Promise<string> {
-		const maker = await get_public_key(this.provider)
+		const provider = this.getRequiredProvider()
+		const maker = await get_public_key(provider)
 		if (!maker) {
 			throw new Error("Maker does not exist")
 		}
@@ -62,7 +67,8 @@ export class Sell {
 	}
 
 	private async getItem(itemId: string): Promise<ItemType> {
-		const response = await fetch(`${this.provider.api}/items/${itemId}`)
+		const provider = this.getRequiredProvider()
+		const response = await fetch(`${provider.api}/items/${itemId}`)
 		const json = await response.json()
 
 		if (json.code === "INVALID_ARGUMENT" || json.code === "UNEXPECTED_API_ERROR") {
@@ -72,7 +78,8 @@ export class Sell {
 	}
 
 	private async getCollection(collectionId: string): Promise<Collection> {
-		const response = await fetch(`${this.provider.api}/collections/${collectionId}`)
+		const provider = this.getRequiredProvider()
+		const response = await fetch(`${provider.api}/collections/${collectionId}`)
 		const json = await response.json()
 
 		if (json.code === "INVALID_ARGUMENT" || json.code === "UNEXPECTED_API_ERROR") {
@@ -123,6 +130,7 @@ export class Sell {
 	}
 
 	async sell(prepareSellRequest: PrepareOrderRequest): Promise<PrepareOrderResponse> {
+		const provider = this.getRequiredProvider()
 		if (!prepareSellRequest.itemId) {
 			throw new Error("ItemId is not exists")
 		}
@@ -142,7 +150,7 @@ export class Sell {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
 					make_asset_type: {
-						//todo fix make asset type
+						// @todo fix make asset type
 						asset_class: itemCollection.type as any,
 						contract: item.contract,
 						token_id: BigInt(item.tokenId),
@@ -157,8 +165,7 @@ export class Sell {
 					})) || [],
 				}
 
-				const sellOrder: TezosOrder = await sell(this.provider, tezosRequest)
-
+				const sellOrder: TezosOrder = await sell(provider, tezosRequest)
 				return toOrderId(`TEZOS:${sellOrder.hash}`)
 			},
 		})
@@ -172,7 +179,7 @@ export class Sell {
 				blockchain: "TEZOS",
 				type: "NATIVE",
 			}],
-			baseFee: parseInt(this.provider.config.fees.toString()),
+			baseFee: parseInt(provider.config.fees.toString()),
 			submit,
 		}
 	}

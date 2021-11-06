@@ -1,6 +1,6 @@
 import { toUnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { prepareFlowRoyalties } from "./prepare-flow-royalties"
+import { prepareFlowRoyalties } from "."
 
 describe("Test convert Royalty to FlowRoyalty", () => {
 	test("Should convert basis points to string which contents number between 0 and 1", () => {

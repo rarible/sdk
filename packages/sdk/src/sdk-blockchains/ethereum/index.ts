@@ -1,6 +1,7 @@
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Mint } from "./mint"
@@ -11,7 +12,6 @@ import { Transfer } from "./transfer"
 import { Bid } from "./bid"
 import { CancelOrder } from "./cancel"
 import { Balance } from "./balance"
-import type { EthereumNetwork } from "./domain"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,

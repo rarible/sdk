@@ -1,7 +1,8 @@
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import * as ApiClient from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
+import type { ConfigurationParameters } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleSdk } from "./domain"
 import { getSdkConfig } from "./config"
@@ -16,33 +17,47 @@ import { createFlowSdk } from "./sdk-blockchains/flow"
 import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 
-export function createRaribleSdk(wallet: Maybe<BlockchainWallet>, env: RaribleSdkEnvironment): IRaribleSdk {
+export function createRaribleSdk(
+	wallet: Maybe<BlockchainWallet>,
+	env: RaribleSdkEnvironment,
+	params?: ConfigurationParameters
+): IRaribleSdk {
 	const config = getSdkConfig(env)
-	const apis = createApisSdk(config)
-	const ethereum = createEthereumSdk(wallet?.blockchain === "ETHEREUM" ? wallet : undefined, apis, config.ethereumEnv)
-	const flow = createFlowSdk(wallet?.blockchain === "FLOW" ? wallet : undefined, apis, config.flowEnv)
-	const tezos = createTezosSdk(wallet?.blockchain === "TEZOS" ? wallet : undefined)
-	const instance = createUnionSdk(ethereum, flow, tezos)
-	const sell = createSell(instance.order.sell, apis)
-	const mintAndSell = createMintAndSell(instance.nft.mint, instance.order.sell)
+	const apis = createApisSdk(config, params)
+	const instance = createUnionSdk(
+		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.ethereumEnv, params),
+		createFlowSdk(filterWallet(wallet, "FLOW"), apis, config.flowEnv),
+		createTezosSdk(filterWallet(wallet, "TEZOS"))
+	)
 
 	return {
 		...instance,
 		nft: {
 			...instance.nft,
-			mintAndSell,
+			mintAndSell: createMintAndSell(instance.nft.mint, instance.order.sell),
 		},
 		order: {
 			...instance.order,
-			sell,
+			sell: createSell(instance.order.sell, apis),
 		},
 		apis,
 	}
 }
 
-function createApisSdk(config: RaribleSdkConfig): IApisSdk {
+function filterWallet<T extends "FLOW" | "ETHEREUM" | "TEZOS">(
+	wallet: Maybe<BlockchainWallet>,
+	blockchain: T
+): Maybe<WalletByBlockchain[T]> {
+	if (wallet?.blockchain === blockchain) {
+		return wallet as WalletByBlockchain[T]
+	}
+	return undefined
+}
+
+function createApisSdk(config: RaribleSdkConfig, params: ConfigurationParameters = {}): IApisSdk {
 	const configuration = new ApiClient.Configuration({
 		basePath: config.basePath,
+		...params,
 	})
 	return {
 		collection: new ApiClient.CollectionControllerApi(configuration),
@@ -54,17 +69,16 @@ function createApisSdk(config: RaribleSdkConfig): IApisSdk {
 }
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
-	return async request => {
-		const item = await apis.item.getItemById({ itemId: request.itemId })
-		const response = await sell({
-			collectionId: toUnionAddress(item.collection),
-		})
+	return async ({ itemId }) => {
+		const item = await apis.item.getItemById({ itemId })
+		const collectionId = toUnionAddress(item.collection)
+		const response = await sell({ collectionId })
 		return {
 			...response,
 			maxAmount: item.supply,
 			submit: response.submit
 				.before((input: OrderRequest) => ({
-					itemId: request.itemId,
+					itemId,
 					...input,
 				})),
 		}
@@ -74,7 +88,8 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	return async request => {
 		const mintResponse = await mint(request)
-		const sellResponse = await sell({ collectionId: getCollectionId(request) })
+		const collectionId = getCollectionId(request)
+		const sellResponse = await sell({ collectionId })
 
 		const mintAction = mintResponse.submit
 			.around(

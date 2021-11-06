@@ -1,5 +1,5 @@
-import type { EthereumNetwork } from "../sdk-blockchains/ethereum/domain"
-import type { FlowNetwork } from "../sdk-blockchains/flow/domain"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 
 export type RaribleSdkEnvironment = "dev" | "e2e" | "staging" | "prod"
 

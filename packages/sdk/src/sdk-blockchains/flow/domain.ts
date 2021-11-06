@@ -1,1 +1,0 @@
-export type FlowNetwork = "testnet" | "mainnet"

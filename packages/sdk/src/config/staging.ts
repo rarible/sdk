@@ -1,6 +1,6 @@
 import type { RaribleSdkConfig } from "./domain"
 
-export const STAGING_CONFIG: RaribleSdkConfig = {
+export const stagingConfig: RaribleSdkConfig = {
 	basePath: "https://api-staging.rarible.org",
 	ethereumEnv: "rinkeby",
 	flowEnv: "testnet",

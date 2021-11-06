@@ -6,7 +6,6 @@ import { Sell } from "./sell"
 import { Fill } from "./fill"
 
 export function createTezosSdk(wallet: Maybe<TezosWallet>): IRaribleInternalSdk {
-	//todo allow creating tezos sdk without wallet
 	return {
 		nft: {
 			mint: notImplemented,
@@ -14,9 +13,9 @@ export function createTezosSdk(wallet: Maybe<TezosWallet>): IRaribleInternalSdk 
 			transfer: notImplemented,
 		},
 		order: {
-			fill: new Fill(wallet?.provider!).fill,
-			// @todo fix typings
-			sell: new Sell(wallet?.provider!).sell as any,
+			fill: new Fill(wallet?.provider).fill,
+			// @todo fix any type
+			sell: new Sell(wallet?.provider).sell as any,
 			sellUpdate: notImplemented,
 			bid: notImplemented,
 			bidUpdate: notImplemented,

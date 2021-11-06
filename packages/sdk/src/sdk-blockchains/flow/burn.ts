@@ -14,7 +14,7 @@ export class FlowBurn {
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}
-		const { itemId, collectionId } = parseUnionItemId(prepare.itemId)
+		const { itemId, contract } = parseUnionItemId(prepare.itemId)
 
 		return {
 			multiple: false,
@@ -24,7 +24,7 @@ export class FlowBurn {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				run: async (request: BurnRequest) => {
 					// @todo itemId number must be string
-					const tx = await this.sdk.nft.burn(collectionId, parseInt(itemId))
+					const tx = await this.sdk.nft.burn(contract, parseInt(itemId))
 					return new BlockchainFlowTransaction(tx)
 				},
 			}),

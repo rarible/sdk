@@ -6,15 +6,12 @@ import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/tr
 import { parseFlowAddressFromUnionAddress, parseUnionItemId } from "./common/converters"
 
 export class FlowTransfer {
-	constructor(
-		private sdk: FlowSdk,
-	) {
+	constructor(private sdk: FlowSdk) {
 		this.transfer = this.transfer.bind(this)
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
-
-		const { itemId, collectionId } = parseUnionItemId(prepare.itemId)
+		const { itemId, contract } = parseUnionItemId(prepare.itemId)
 
 		return {
 			multiple: false,
@@ -23,8 +20,8 @@ export class FlowTransfer {
 				id: "transfer" as const,
 				run: async (request: Omit<TransferRequest, "amount">) => {
 					const toAddress = parseFlowAddressFromUnionAddress(request.to)
-					//todo remove parseInt when strings are supports by flow-sdk
-					const tx = await this.sdk.nft.transfer(collectionId, parseInt(itemId), toAddress)
+					// @todo remove parseInt when strings are supports by flow-sdk
+					const tx = await this.sdk.nft.transfer(contract, parseInt(itemId), toAddress)
 					return new BlockchainFlowTransaction(tx)
 				},
 			}),
