@@ -4,12 +4,13 @@ import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
-import {
+import type {
 	FillRequest,
+	PrepareFillRequest,
+	PrepareFillResponse } from "../../types/order/fill/domain"
+import {
 	OriginFeeSupport,
 	PayoutsSupport,
-	PrepareFillRequest,
-	PrepareFillResponse,
 } from "../../types/order/fill/domain"
 import {
 	getFlowCollection,

@@ -1,26 +1,28 @@
 /* eslint-disable camelcase */
 import { Action } from "@rarible/action"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import {
 	isErc1155v1Collection,
 	isErc1155v2Collection,
 	isErc721v1Collection,
 	isErc721v2Collection,
 	isErc721v3Collection,
-	RaribleSdk,
 } from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import { toAddress, toItemId } from "@rarible/types"
-import { NftCollection, NftCollectionFeatures, NftCollectionType, NftTokenId } from "@rarible/ethereum-api-client"
+import type { NftCollection, NftTokenId } from "@rarible/ethereum-api-client"
+import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
-import { Collection, CollectionControllerApi } from "@rarible/api-client"
-import { MintType, PrepareMintResponse } from "../../types/nft/mint/domain"
-import { MintRequest } from "../../types/nft/mint/mint-request.type"
-import { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
+import type { Collection, CollectionControllerApi } from "@rarible/api-client"
+import type { PrepareMintResponse } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/domain"
+import type { MintRequest } from "../../types/nft/mint/mint-request.type"
+import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type.validator"
 import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
-import { IApisSdk } from "../../domain"
+import type { IApisSdk } from "../../domain"
 import { convertUnionToEthereumAddress } from "./common"
 
 export class Mint {

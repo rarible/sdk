@@ -1,8 +1,8 @@
-import { ItemId } from "@rarible/api-client"
-import { UnionAddress } from "@rarible/types"
-import { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { BigNumber } from "@rarible/types/build/big-number"
-import { AbstractPrepareResponse } from "../../../common/domain"
+import type { ItemId } from "@rarible/api-client"
+import type { UnionAddress } from "@rarible/types"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { BigNumber } from "@rarible/types/build/big-number"
+import type { AbstractPrepareResponse } from "../../../common/domain"
 
 export type PrepareTransferRequest = {
 	/**

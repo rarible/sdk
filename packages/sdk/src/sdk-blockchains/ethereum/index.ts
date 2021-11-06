@@ -1,7 +1,7 @@
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
-import { Maybe } from "@rarible/protocol-ethereum-sdk/build/common/maybe"
+import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Mint } from "./mint"
 import { SellInternal } from "./sell"

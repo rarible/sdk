@@ -1,11 +1,11 @@
-import { OrderId } from "@rarible/api-client"
-import { BigNumberValue } from "@rarible/utils"
-import { MintRequest } from "../mint/mint-request.type"
+import type { OrderId } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import type { MintRequest } from "../mint/mint-request.type"
 import type { MintResponse } from "../mint/domain"
 import type { UnionPart } from "../../order/common"
-import { PrepareMintRequest } from "../mint/prepare-mint-request.type"
-import { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
-import { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
+import type { PrepareMintRequest } from "../mint/prepare-mint-request.type"
+import type { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
+import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export type MintAndSellRequest = MintRequest & {
 	/**

@@ -1,8 +1,8 @@
-import { ItemId } from "@rarible/api-client"
-import { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { AbstractPrepareResponse } from "../../../common/domain"
-import { MintRequest } from "./mint-request.type"
-import { PrepareMintRequest } from "./prepare-mint-request.type"
+import type { ItemId } from "@rarible/api-client"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { AbstractPrepareResponse } from "../../../common/domain"
+import type { MintRequest } from "./mint-request.type"
+import type { PrepareMintRequest } from "./prepare-mint-request.type"
 
 type MintResponseCommon = {
 	/**
@@ -11,9 +11,6 @@ type MintResponseCommon = {
 	itemId: ItemId
 }
 
-/**
- * Mint type
- */
 export enum MintType {
 	OFF_CHAIN = "off-chain",
 	ON_CHAIN = "on-chain"

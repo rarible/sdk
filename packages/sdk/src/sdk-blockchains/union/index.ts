@@ -1,21 +1,21 @@
-import { AssetType, Blockchain, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
-import { UnionAddress } from "@rarible/types"
-import { BigNumberValue } from "@rarible/utils"
+import type { AssetType, Blockchain, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { UnionAddress } from "@rarible/types"
+import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
-import { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
-import { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
-import { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import { PrepareMintResponse } from "../../types/nft/mint/domain"
+import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
+import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
+import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
+import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { getCollectionId } from "../../index"
-import { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
-import {
+import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
+import type {
 	PrepareOrderInternalRequest,
 	PrepareOrderInternalResponse, PrepareOrderRequest, PrepareOrderResponse,
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../types/order/common"
-import { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { ICancel } from "../../types/order/cancel/domain"
+import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { ICancel } from "../../types/order/cancel/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,

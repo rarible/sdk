@@ -1,8 +1,9 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toBigNumber, BigNumber, toBinary, toWord, toAddress } from "@rarible/types"
+import type { BigNumber } from "@rarible/types"
+import { toBigNumber, toBinary, toWord, toAddress } from "@rarible/types"
 import type { AssetType, Order } from "@rarible/api-client"
+import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
 import {
-	AssetType as EthereumAssetType,
 	OrderOpenSeaV1DataV1FeeMethod,
 	OrderOpenSeaV1DataV1HowToCall,
 	OrderOpenSeaV1DataV1SaleKind,
@@ -15,13 +16,14 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import { Maybe } from "@rarible/protocol-ethereum-sdk/build/common/maybe"
-import {
+import type { Maybe } from "@rarible/types/build/maybe"
+import type {
 	FillRequest,
+	PrepareFillRequest,
+	PrepareFillResponse } from "../../types/order/fill/domain"
+import {
 	OriginFeeSupport,
 	PayoutsSupport,
-	PrepareFillRequest,
-	PrepareFillResponse,
 } from "../../types/order/fill/domain"
 import { convertUnionToEthereumAddress } from "./common"
 

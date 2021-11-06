@@ -1,5 +1,4 @@
-import { Creator } from "@rarible/api-client/build/models/Creator"
-import { Royalty } from "@rarible/api-client/build/models/Royalty"
+import type { Creator, Royalty } from "@rarible/api-client"
 
 export type MintRequest = {
 	uri: string

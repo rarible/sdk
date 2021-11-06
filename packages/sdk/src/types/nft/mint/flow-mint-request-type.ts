@@ -1,4 +1,4 @@
-import { Royalty } from "@rarible/api-client/build/models/Royalty"
+import type { Royalty } from "@rarible/api-client/build/models/Royalty"
 
 export type FlowMintRequest = {
 	collection: string

@@ -37,12 +37,14 @@
       "yarn run prettify:packages"
     ]
   },
+  "resolutions": {
+    "@rarible/types": "0.5.0"
+  },
   "devDependencies": {
     "@babel/core": "7.15.5",
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
-    "@rarible/eslint-config-ts": "^0.0.5",
-    "@rarible/types": "^0.1.10",
+    "@rarible/eslint-config-ts": "~0.5.0",
     "eslint": "^7.32.0",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",

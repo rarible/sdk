@@ -1,8 +1,8 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { UnionAddress } from "@rarible/types"
-import { AssetType } from "@rarible/api-client"
-import { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
-import { BigNumberValue } from "@rarible/utils"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { UnionAddress } from "@rarible/types"
+import type { AssetType } from "@rarible/api-client"
+import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
+import type { BigNumberValue } from "@rarible/utils"
 import { convertUnionToEthereumAddress } from "./common"
 
 export class Balance {

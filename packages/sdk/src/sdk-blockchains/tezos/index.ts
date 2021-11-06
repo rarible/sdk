@@ -1,5 +1,5 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
-import { Maybe } from "@rarible/protocol-ethereum-sdk/build/common/maybe"
+import type { Maybe } from "@rarible/types/build/maybe"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { IRaribleInternalSdk } from "../../domain"
 import { Sell } from "./sell"
