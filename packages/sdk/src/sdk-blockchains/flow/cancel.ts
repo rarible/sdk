@@ -1,6 +1,6 @@
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import type { Order } from "@rarible/api-client"
+import type { Order, UnionAddress } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
@@ -11,7 +11,7 @@ export class FlowCancel {
 		this.cancel = this.cancel.bind(this)
 	}
 
-	private getFlowContract(order: Order): string {
+	private getFlowContract(order: Order): UnionAddress {
 		if (order.make.type["@type"] === "FLOW_NFT") {
 			return order.make.type.contract
 		}

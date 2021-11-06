@@ -8,12 +8,7 @@ import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-reque
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
-import type {
-	PrepareOrderInternalRequest,
-	PrepareOrderInternalResponse, PrepareOrderRequest, PrepareOrderResponse,
-	PrepareOrderUpdateRequest,
-	PrepareOrderUpdateResponse,
-} from "../../types/order/common"
+import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
 
@@ -45,9 +40,7 @@ export function createUnionSdk(
 }
 
 class UnionOrderSdk implements IOrderInternalSdk {
-	constructor(
-		private readonly instances: Record<Blockchain, IOrderInternalSdk>,
-	) {
+	constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
 		this.bid = this.bid.bind(this)
 		this.bidUpdate = this.bidUpdate.bind(this)
 		this.fill = this.fill.bind(this)
@@ -55,11 +48,11 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		this.sellUpdate = this.sellUpdate.bind(this)
 	}
 
-	bid(request: PrepareOrderRequest): Promise<PrepareOrderResponse> {
+	bid(request: OrderCommon.PrepareOrderRequest): Promise<OrderCommon.PrepareOrderResponse> {
 		return this.instances[extractBlockchain(request.itemId)].bid(request)
 	}
 
-	bidUpdate(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+	bidUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
 		return this.instances[extractBlockchain(request.orderId)].bidUpdate(request)
 	}
 
@@ -67,19 +60,17 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getOrderId(request))].fill(request)
 	}
 
-	sell(request: PrepareOrderInternalRequest): Promise<PrepareOrderInternalResponse> {
+	sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
 		return this.instances[extractBlockchain(request.collectionId)].sell(request)
 	}
 
-	sellUpdate(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+	sellUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
 		return this.instances[extractBlockchain(request.orderId)].sellUpdate(request)
 	}
 
 	cancel: ICancel = Action.create({
 		id: "send-tx",
-		run: value => {
-			return this.instances[extractBlockchain(value.orderId)].cancel(value)
-		},
+		run: value => this.instances[extractBlockchain(value.orderId)].cancel(value),
 	})
 }
 
@@ -92,9 +83,7 @@ function getOrderId(req: PrepareFillRequest) {
 }
 
 class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
-	constructor(
-		private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>,
-	) {
+	constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
 		this.burn = this.burn.bind(this)
 		this.mint = this.mint.bind(this)
 		this.transfer = this.transfer.bind(this)
@@ -115,9 +104,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 }
 
 class UnionBalanceSdk implements IBalanceSdk {
-	constructor(
-		private readonly instances: Record<Blockchain, IBalanceSdk>,
-	) {
+	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
 	}
 
@@ -126,7 +113,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 	}
 }
 
-const blockchains = [
+const blockchains: Blockchain[] = [
 	"ETHEREUM",
 	"FLOW",
 	"TEZOS",
@@ -140,7 +127,7 @@ function extractBlockchain(value: UnionAddress | ItemId | OrderId | OwnershipId)
 	const start = value.substring(0, idx)
 	for (const blockchain of blockchains) {
 		if (blockchain === start) {
-			return blockchain as Blockchain
+			return blockchain
 		}
 	}
 	throw new Error(`Unable to extract blockchain from ${value}`)

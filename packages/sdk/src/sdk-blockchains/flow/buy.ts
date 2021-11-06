@@ -1,23 +1,12 @@
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import type { Order } from "@rarible/api-client"
+import type { Order, UnionAddress } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
-import type {
-	FillRequest,
-	PrepareFillRequest,
-	PrepareFillResponse } from "../../types/order/fill/domain"
-import {
-	OriginFeeSupport,
-	PayoutsSupport,
-} from "../../types/order/fill/domain"
-import {
-	getFlowCollection,
-	getFungibleTokenName,
-	parseFlowAddressFromUnionAddress,
-	parseOrderId,
-} from "./common/converters"
+import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import * as converters from "./common/converters"
 
 export class FlowBuy {
 	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
@@ -35,7 +24,7 @@ export class FlowBuy {
 		throw new Error("Incorrect request")
 	}
 
-	private getFlowContract(order: Order): string {
+	private getFlowContract(order: Order): UnionAddress {
 		if (order.make.type["@type"] === "FLOW_NFT") {
 			return order.make.type.contract
 		}
@@ -44,7 +33,7 @@ export class FlowBuy {
 
 	private getFlowCurrency(order: Order) {
 		if (order.take.type["@type"] === "FLOW_FT") {
-			return getFungibleTokenName(order.take.type.contract)
+			return converters.getFungibleTokenName(order.take.type.contract)
 		}
 		throw new Error("Invalid order take asset")
 	}
@@ -57,10 +46,10 @@ export class FlowBuy {
 				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				run: (buyRequest: FillRequest) => {
 					const currency = this.getFlowCurrency(order)
-					const owner = parseFlowAddressFromUnionAddress(order.maker)
-					const collectionId = getFlowCollection(this.getFlowContract(order))
+					const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
+					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
 					// @todo leave string when support it on flow-sdk transactions
-					const orderId = parseInt(parseOrderId(order.id))
+					const orderId = parseInt(converters.parseOrderId(order.id))
 					return this.sdk.order.buy(collectionId, currency, orderId, owner)
 				},
 			})

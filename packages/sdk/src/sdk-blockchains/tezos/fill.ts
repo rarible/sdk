@@ -1,4 +1,5 @@
 import type { AssetType as TezosAssetType, Provider } from "tezos-sdk-module/dist/common/base"
+import type { Maybe } from "@rarible/types/build/maybe"
 // eslint-disable-next-line camelcase
 import { get_address } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
@@ -13,14 +14,8 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { OrderRaribleV2DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
 import type { OrderPriceHistoryRecord } from "@rarible/ethereum-api-client/build/models/OrderPriceHistoryRecord"
 import type { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import type {
-	FillRequest,
-	PrepareFillRequest,
-	PrepareFillResponse } from "../../types/order/fill/domain"
-import {
-	OriginFeeSupport,
-	PayoutsSupport,
-} from "../../types/order/fill/domain"
+import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { GetNftOwnershipByIdResponse } from "./domain"
 
 export type SimpleTezosOrder = {
@@ -70,14 +65,20 @@ export type TezosAsset = TezosOrderXTZAssetType | TezosOrderFA12AssetType | Tezo
 export type PreparedOrder = OrderForm & { makeStock: BigNumber }
 
 export class Fill {
-	constructor(
-		private provider: Provider
-	) {
+	constructor(private provider: Maybe<Provider>) {
 		this.fill = this.fill.bind(this)
 	}
 
+	private getRequiredProvider(): Provider {
+		if (!this.provider) {
+			throw new Error("Tezos provider is required")
+		}
+		return this.provider
+	}
+
 	async getOrderByHash(orderId: OrderId): Promise<TezosOrder> {
-		const response = await fetch(`${this.provider.api}/orders/${orderId}`)
+		const provider = this.getRequiredProvider()
+		const response = await fetch(`${provider.api}/orders/${orderId}`)
 		const json = await response.json()
 		if ("code" in json && json.code === "INVALID_ARGUMENT") {
 			throw new Error("Order does not exist")
@@ -87,27 +88,23 @@ export class Fill {
 
 	static getTezosAssetTypeFromCommonType(type: TezosAsset): TezosAssetType {
 		switch (type.assetClass) {
-			case "FA_2": {
+			case "FA_2":
 				return {
 					asset_class: type.assetClass,
 					contract: type.contract,
 					"token_id": BigInt(type.tokenId),
 				}
-			}
-			case "FA_1_2": {
+			case "FA_1_2":
 				return {
 					asset_class: type.assetClass,
 					contract: type.contract,
 				}
-			}
-			case "XTZ": {
+			case "XTZ":
 				return {
 					asset_class: type.assetClass,
 				}
-			}
-			default: {
+			default:
 				throw new Error("Invalid take asset type")
-			}
 		}
 	}
 
@@ -202,7 +199,6 @@ export class Fill {
 	}
 
 	async convertTezosOrderToForm(order: TezosOrder): Promise<PreparedOrder> {
-
 		return {
 			type: "RARIBLE_V2",
 			maker: order.maker,
@@ -245,16 +241,18 @@ export class Fill {
 
 	async getOwnershipId(contract: string, tokenId: string, owner: string): Promise<GetNftOwnershipByIdResponse> {
 		const ownershipId = `${contract}:${tokenId}:${owner}`
-		const response = await fetch(`${this.provider.api}/ownerships/${ownershipId}`)
+		const provider = this.getRequiredProvider()
+		const response = await fetch(`${provider.api}/ownerships/${ownershipId}`)
 		return await response.json()
 	}
 
 	async getMaxAmount(order: PreparedOrder): Promise<BigNumber> {
+		const provider = this.getRequiredProvider()
 		if (order.take.asset_type.asset_class === "FA_2") {
 			const response = await this.getOwnershipId(
 				order.take.asset_type.contract,
 				order.take.asset_type.token_id.toString(),
-				await get_address(this.provider)
+				await get_address(provider)
 			)
 			return toBigNumber(response.value)
 		} else {
@@ -263,6 +261,7 @@ export class Fill {
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		const provider = this.getRequiredProvider()
 		let preparedOrder = await this.getPreparedOrder(request)
 
 		const submit = Action.create({
@@ -273,10 +272,10 @@ export class Fill {
 					payouts: this.convertOrderPayout(fillRequest.payouts),
 					origin_fees: this.convertOrderPayout(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
-					edpk: await this.provider.tezos.public_key(),
+					edpk: await provider.tezos.public_key(),
 				}
 				const fillResponse = await fill_order(
-					this.provider,
+					provider,
 					preparedOrder,
 					request,
 				)
@@ -287,7 +286,7 @@ export class Fill {
 		return {
 			multiple: false,
 			maxAmount: await this.getMaxAmount(preparedOrder),
-			baseFee: parseInt(this.provider.config.fees.toString()),
+			baseFee: parseInt(provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportsPartialFill: true,

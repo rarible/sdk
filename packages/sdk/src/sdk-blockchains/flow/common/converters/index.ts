@@ -1,7 +1,10 @@
+import type { FlowAddress, FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import { toFlowAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import { toFlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import type { FlowCurrency } from "@rarible/flow-sdk/build/types"
 import type { ItemId } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import { withPrefix } from "@rarible/flow-sdk/build/common/utils"
-import type { FlowItemId } from "../../../common/domain"
+import type { FlowItemId } from "../../../../common/domain"
 
 const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
 
@@ -9,9 +12,10 @@ const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
  * Get flow collection from union collection
  * @param collection - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFlowCollection(collection: string): string {
+export function getFlowCollection(collection: UnionAddress): FlowContractAddress {
 	if (FLOW_COLLECTION_REGEXP.test(collection)) {
-		return collection.split(":")[1]
+		const raw = collection.split(":")[1]
+		return toFlowContractAddress(raw)
 	}
 	throw new Error("Invalid collection")
 }
@@ -35,7 +39,7 @@ export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
 		if (blockchain === "FLOW") {
 			return {
 				blockchain,
-				collectionId,
+				contract: toFlowContractAddress(collectionId),
 				itemId,
 			}
 		}
@@ -50,13 +54,9 @@ const FLOW_MAKER_ID_REGEXP = /^FLOW:0*x*[0-9a-f]{16}/
  * Get maker account address
  * @param maker - "FLOW:0xabcdef0123456789", address can be unprefixed
  */
-export function parseFlowAddressFromUnionAddress(maker: UnionAddress) {
+export function parseFlowAddressFromUnionAddress(maker: UnionAddress): FlowAddress {
 	if (FLOW_MAKER_ID_REGEXP.test(maker)) {
-		const address = withPrefix(maker.split(":")[1])
-		if (address) {
-			return address
-		}
-		throw new Error("Invalid maker address")
+		return toFlowAddress(maker.split(":")[1])
 	}
 	throw new Error("Invalid maker")
 }
@@ -80,7 +80,7 @@ const FLOW_FT_CONTRACT_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
  * Get fungible token name
  * @param contract - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFungibleTokenName(contract: string): "FLOW" | "FUSD" {
+export function getFungibleTokenName(contract: UnionAddress): FlowCurrency {
 	if (FLOW_FT_CONTRACT_REGEXP.test(contract)) {
 		const [, , name] = contract.split(".")
 		switch (name) {

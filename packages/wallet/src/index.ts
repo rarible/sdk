@@ -75,3 +75,9 @@ export class TezosWallet implements AbstractWallet {
 }
 
 export type BlockchainWallet = EthereumWallet<Ethereum> | FlowWallet | TezosWallet
+
+export type WalletByBlockchain = {
+	"FLOW": FlowWallet
+	"ETHEREUM": EthereumWallet
+	"TEZOS": TezosWallet
+}

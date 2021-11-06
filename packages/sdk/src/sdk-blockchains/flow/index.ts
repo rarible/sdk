@@ -1,6 +1,6 @@
 import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
-import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { notImplemented } from "../../common/not-implemented"
@@ -11,7 +11,6 @@ import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
-import type { FlowNetwork } from "./domain"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
@@ -19,7 +18,7 @@ export function createFlowSdk(
 	network: FlowNetwork,
 	auth?: AuthWithPrivateKey
 ): IRaribleInternalSdk {
-	const sdk = createFlowSdkInstance(wallet?.fcl!, network, auth) //todo allow to create flow sdk instance without fcl
+	const sdk = createFlowSdkInstance(wallet?.fcl, network, auth)
 	const sellService = new FlowSell(sdk, apis)
 
 	return {
