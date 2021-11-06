@@ -7,14 +7,14 @@ import { toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
-import { awaitStockToBe } from "./test/await-stock-to-be"
+import { awaitStock } from "./test/await-stock"
 
 describe("bid", () => {
+	const { web31, wallet1 } = initProviders()
 
-	const { web31, wallet1 } = initProviders({})
-
-	const senderEthereum = new Web3Ethereum({ web3: web31 })
-	const sdk = createRaribleSdk(new EthereumWallet(senderEthereum, toUnionAddress(`ETHEREUM:${wallet1.getAddressString()}`)), "e2e")
+	const ethereum = new Web3Ethereum({ web3: web31 })
+	const wallet = new EthereumWallet(ethereum)
+	const sdk = createRaribleSdk(wallet, "e2e")
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -22,28 +22,40 @@ describe("bid", () => {
 	})
 
 	test("bid on erc721 and update bid", async () => {
-		const sender = await senderEthereum.getFrom()
+		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "1"
-		const itemId = toItemId(`ETHEREUM:${it.testErc721.options.address}:${tokenId}`)
-		await it.testErc721.methods.mint(sender, tokenId, "123").send({ from: sender, gas: 500000 })
-		await it.testErc20.methods.mint(sender, 100).send({ from: sender, gas: 500000 })
+		const itemId = toItemId(
+			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
+		)
+		await it.testErc721.methods.mint(senderRaw, tokenId, "123").send({
+			from: senderRaw,
+			gas: 500000,
+		})
+		await it.testErc20.methods.mint(senderRaw, 100).send({
+			from: senderRaw,
+			gas: 500000,
+		})
 
 		await awaitItem(sdk, itemId)
 
-		console.log(`sdk.bid ${itemId}`)
 		const response = await sdk.order.bid({ itemId })
-		console.log(`sdk.bid submit ${itemId}`)
+		const price = "0.000000000000000002"
 		const orderId = await response.submit({
 			amount: 1,
-			price: "0.000000000000000002",
-			currency: { "@type": "ERC20", contract: toUnionAddress(`ETHEREUM:${it.testErc20.options.address}`) },
+			price,
+			currency: {
+				"@type": "ERC20",
+				contract: toUnionAddress(`ETHEREUM:${it.testErc20.options.address}`),
+			},
 		})
 
-		await awaitStockToBe(sdk, orderId, "0.000000000000000002")
+		const order = await awaitStock(sdk, orderId, price)
+		expect(order.makeStock.toString()).toEqual(price)
 
-		const updateAction = await sdk.order.bidUpdate({ orderId: toOrderId(orderId) })
+		const updateAction = await sdk.order.bidUpdate({
+			orderId: toOrderId(orderId),
+		})
 		await updateAction.submit({ price: "0.000000000000000004" })
 	})
-
 })

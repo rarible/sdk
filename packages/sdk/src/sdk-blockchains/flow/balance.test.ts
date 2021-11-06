@@ -8,17 +8,18 @@ describe("Test flow balance function", () => {
 		fcl.config().put("accessNode.api", "https://flow-access-mainnet.portto.io")
 	})
 
-	const wallet = new FlowWallet(fcl, toUnionAddress("FLOW:0x324c4173e0175672"))
+	const address = toUnionAddress("FLOW:0x324c4173e0175672")
+	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet, null as any, "mainnet")
 
 	test("Should get balance for account", async () => {
-		const balance1 = await sdk.balances.getBalance(wallet.address, {
+		const balance1 = await sdk.balances.getBalance(address, {
 			"@type": "FLOW_FT",
 			contract: toUnionAddress("FLOW:A.0x1654653399040a61.FlowToken"),
 		})
 		expect(balance1.toString()).toEqual("0.001")
 
-		const balance2 = await sdk.balances.getBalance(wallet.address, {
+		const balance2 = await sdk.balances.getBalance(address, {
 			"@type": "FLOW_FT",
 			contract: toUnionAddress("FLOW:A.0x3c5959b568896393.FUSD"),
 		})

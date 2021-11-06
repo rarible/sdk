@@ -78,16 +78,19 @@ export class FlowSell {
 		const sellAction = Action.create({
 			id: "send-tx" as const,
 			run: async (sellRequest: OrderUpdateRequest) => {
-				if (order.make.type["@type"] === "FLOW_FT") {
-					const currency = getFungibleTokenName(order.make.type.contract)
-					return await this.sdk.order.updateOrder(
-						order.make.type.contract,
-						currency,
-						parseInt(orderId), //todo leave string when support it on flow-sdk transactions
-						toBn(sellRequest.price).decimalPlaces(8).toString(),
-					)
+				if (order.take.type["@type"] === "FLOW_FT") {
+					const currency = getFungibleTokenName(order.take.type.contract)
+					if (order.make.type["@type"] === "FLOW_NFT") {
+						return await this.sdk.order.updateOrder(
+							order.make.type.contract,
+							currency,
+							parseInt(orderId), //todo leave string when support it on flow-sdk transactions
+							toBn(sellRequest.price).decimalPlaces(8).toString(),
+						)
+					}
+					throw new Error(`Unsupported make asset: ${order.make.type["@type"]}`)
 				}
-				throw new Error(`Unsupported currency: ${order.make.type["@type"]}`)
+				throw new Error(`Unsupported take asset: ${order.take.type["@type"]}`)
 			},
 		}).after((tx) => {
 			const orderId = tx.events.find(e => {
@@ -95,10 +98,7 @@ export class FlowSell {
 				return eventType === "OrderAvailable"
 			})
 			if (orderId) {
-				if (order.make.type["@type"] === "FLOW_FT") {
-					return toOrderId(`FLOW:${orderId.data.orderId}`)
-				}
-				throw new Error(`Unsupported currency: ${order.make.type["@type"]}`)
+				return toOrderId(`FLOW:${orderId.data.orderId}`)
 			}
 			throw new Error("Creation order event not fount in transaction result")
 		})

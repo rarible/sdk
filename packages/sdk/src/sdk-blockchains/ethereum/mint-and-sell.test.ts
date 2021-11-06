@@ -9,21 +9,24 @@ import { createRaribleSdk } from "../../index"
 describe("mintAndSell", () => {
 	const { provider, wallet } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
-
-	const ethereumWallet = new EthereumWallet(ethereum, toUnionAddress(`ETHEREUM:${wallet.getAddressString()}`))
+	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e")
-
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 
 	test("should mint and put on sale ERC721 token", async () => {
-		const sender = await ethereum.getFrom()
-
-		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${erc721Address}` })
+		const senderRaw = wallet.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: `ETHEREUM:${erc721Address}`,
+		})
 		const action = await sdk.nft.mintAndSell({ collection })
 
 		const result = await action.submit({
 			uri: "uri",
-			creators: [{ account: toUnionAddress(`ETHEREUM:${sender}`), value: toBigNumber("10000") }],
+			creators: [{
+				account: sender,
+				value: toBigNumber("10000"),
+			}],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,

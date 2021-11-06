@@ -1,5 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { BigNumber, toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
+import { toBigNumber, BigNumber, toBinary, toWord, toAddress } from "@rarible/types"
 import type { AssetType, Order } from "@rarible/api-client"
 import {
 	AssetType as EthereumAssetType,
@@ -256,19 +256,18 @@ export class Fill {
 			if (this.wallet === undefined) {
 				throw new Error("Wallet undefined")
 			}
-
+			const address = await this.wallet.ethereum.getFrom()
 			const ownershipId = getOwnershipId(
 				order.take.assetType.contract,
 				order.take.assetType.tokenId,
-				toAddress(await this.wallet.ethereum.getFrom())
+				toAddress(address)
 			)
 
 			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({ ownershipId })
 
 			return toBigNumber(BigNumberClass.min(ownership.value, order.take.value).toFixed())
-		} else {
-			return order.makeStock
 		}
+		return order.makeStock
 	}
 
 	async isMultiple(order: SimplePreparedOrder): Promise<boolean> {

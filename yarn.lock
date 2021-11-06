@@ -2838,10 +2838,10 @@
     elliptic "^6.5.4"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.9.9.tgz#69e6fcb1a2e06329709784e225e54062f1aa4615"
-  integrity sha512-tHSk9Xa2c7557JbcIiei49NUVjvg53Ia2PPchCJXy6HLZPsHMF0gEr/Q6hvkDJdds9KC45XNMcvTta1eK7XH3Q==
+"@rarible/protocol-ethereum-sdk@^0.9.10":
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.9.10.tgz#6f83437cd0beab7485607cfa9301c3b2076812b7"
+  integrity sha512-d3/XlQ0hXGjl0p0iKw3JdyW0GsnTGpWK6GIb2K2Aazn8aU4IMKzPT97ksP7Mv4cnYwo/JH1RPQFZ+FGGHDQePQ==
   dependencies:
     "@rarible/action" "^0.3.5"
     "@rarible/ethereum-api-client" "^0.1.13"
@@ -2866,10 +2866,10 @@
   dependencies:
     bignumber.js "9.0.1"
 
-"@rarible/web3-ethereum@^0.9.9":
-  version "0.9.9"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.9.9.tgz#ed1dc00d0a29ffb3c440c24535d575429422949b"
-  integrity sha512-7JS7tOs2F+khMCfZygSZQWs3LLon/PrdvQqJnexpDcRwMbVFwNCEzD/+UkbHMKstl/G/RAsiVedqXC7bpDsB/A==
+"@rarible/web3-ethereum@^0.9.10":
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.9.10.tgz#8b2b484790303d0b966c5178f13c212960557d12"
+  integrity sha512-42/pOdainTLHFLipQdDKkyEgqdsETMWi0wYhzDLKsRjqLX6e696lT/62Am6o64Nl1yd3alUsEZfodLJ1G/fXaA==
   dependencies:
     "@rarible/ethereum-provider" "^0.9.9"
     exponential-backoff "3.1.0"
