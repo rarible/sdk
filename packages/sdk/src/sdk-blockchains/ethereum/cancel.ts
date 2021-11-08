@@ -3,7 +3,7 @@ import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 
-export class CancelOrder {
+export class EthereumCancel {
 	constructor(private readonly sdk: RaribleSdk) {}
 
 	cancel: ICancel = Action.create({

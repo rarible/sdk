@@ -4,10 +4,8 @@ import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 
-export class Burn {
-	constructor(
-		private sdk: RaribleSdk,
-	) {
+export class EthereumBurn {
+	constructor(private sdk: RaribleSdk) {
 		this.burn = this.burn.bind(this)
 	}
 

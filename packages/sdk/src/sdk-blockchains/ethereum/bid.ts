@@ -9,7 +9,7 @@ import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as common from "./common"
 
-export class Bid {
+export class EthereumBid {
 	constructor(private sdk: RaribleSdk) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
@@ -250,13 +250,13 @@ export class Bid {
 
 		return {
 			originFeeSupport:
-        order.type === "RARIBLE_V2"
-        	? OriginFeeSupport.FULL
-        	: OriginFeeSupport.AMOUNT_ONLY,
+				order.type === "RARIBLE_V2"
+					? OriginFeeSupport.FULL
+					: OriginFeeSupport.AMOUNT_ONLY,
 			payoutsSupport:
-        order.type === "RARIBLE_V2"
-        	? PayoutsSupport.MULTIPLE
-        	: PayoutsSupport.SINGLE,
+				order.type === "RARIBLE_V2"
+					? PayoutsSupport.MULTIPLE
+					: PayoutsSupport.SINGLE,
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
