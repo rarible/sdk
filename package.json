@@ -37,9 +37,6 @@
       "yarn run prettify:packages"
     ]
   },
-  "resolutions": {
-    "@rarible/types": "0.5.0"
-  },
   "devDependencies": {
     "@babel/core": "7.15.5",
     "@commitlint/cli": "^13.1.0",
