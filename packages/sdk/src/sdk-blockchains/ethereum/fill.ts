@@ -3,12 +3,7 @@ import type { BigNumber } from "@rarible/types"
 import { toBigNumber, toBinary, toWord, toAddress } from "@rarible/types"
 import type { AssetType, Order } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
-import {
-	OrderOpenSeaV1DataV1FeeMethod,
-	OrderOpenSeaV1DataV1HowToCall,
-	OrderOpenSeaV1DataV1SaleKind,
-	OrderOpenSeaV1DataV1Side,
-} from "@rarible/ethereum-api-client"
+import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass, toBn } from "@rarible/utils/build/bn"
@@ -17,14 +12,8 @@ import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type {
-	FillRequest,
-	PrepareFillRequest,
-	PrepareFillResponse } from "../../types/order/fill/domain"
-import {
-	OriginFeeSupport,
-	PayoutsSupport,
-} from "../../types/order/fill/domain"
+import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { convertUnionToEthereumAddress } from "./common"
 
 export type SupportFlagsResponse = {
@@ -35,7 +24,7 @@ export type SupportFlagsResponse = {
 
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
-export class Fill {
+export class EthereumFill {
 	constructor(private sdk: RaribleSdk, private wallet: Maybe<EthereumWallet>) {
 		this.fill = this.fill.bind(this)
 	}
@@ -169,10 +158,10 @@ export class Fill {
 						dataType: "OPEN_SEA_V1_DATA_V1",
 						exchange: convertUnionToEthereumAddress(order.data.exchange),
 						feeRecipient: convertUnionToEthereumAddress(order.data.feeRecipient),
-						feeMethod: OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
-						side: OrderOpenSeaV1DataV1Side[order.data.side],
-						saleKind: OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
-						howToCall: OrderOpenSeaV1DataV1HowToCall[order.data.howToCall],
+						feeMethod: EthereumApiClient.OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
+						side: EthereumApiClient.OrderOpenSeaV1DataV1Side[order.data.side],
+						saleKind: EthereumApiClient.OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
+						howToCall: EthereumApiClient.OrderOpenSeaV1DataV1HowToCall[order.data.howToCall],
 						callData: toBinary(order.data.callData),
 						replacementPattern: toBinary(order.data.callData),
 						staticExtraData: toBinary(order.data.staticExtraData),
@@ -298,9 +287,8 @@ export class Fill {
 				throw new Error("Not an ethereum order")
 			}
 			return this.sdk.apis.order.getOrderByHash({ hash })
-		} else {
-			throw new Error("Incorrect request")
 		}
+		throw new Error("Incorrect request")
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {

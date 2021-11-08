@@ -5,7 +5,7 @@ import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { convertUnionToEthereumAddress } from "./common"
 
-export class Balance {
+export class EthereumBalance {
 	constructor(private sdk: RaribleSdk) {
 		this.getBalance = this.getBalance.bind(this)
 	}

@@ -4,14 +4,14 @@ import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { Mint } from "./mint"
-import { SellInternal } from "./sell"
-import { Fill } from "./fill"
-import { Burn } from "./burn"
-import { Transfer } from "./transfer"
-import { Bid } from "./bid"
-import { CancelOrder } from "./cancel"
-import { Balance } from "./balance"
+import { EthereumMint } from "./mint"
+import { EthereumSell } from "./sell"
+import { EthereumFill } from "./fill"
+import { EthereumBurn } from "./burn"
+import { EthereumTransfer } from "./transfer"
+import { EthereumBid } from "./bid"
+import { EthereumCancel } from "./cancel"
+import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 
 export function createEthereumSdk(
@@ -21,26 +21,26 @@ export function createEthereumSdk(
 	params?: ConfigurationParameters
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
-	const sellService = new SellInternal(sdk)
-	const bidService = new Bid(sdk)
+	const sellService = new EthereumSell(sdk)
+	const bidService = new EthereumBid(sdk)
 
 	return {
 		nft: {
-			transfer: new Transfer(sdk).transfer,
-			mint: new Mint(sdk, apis).prepare,
-			burn: new Burn(sdk).burn,
+			transfer: new EthereumTransfer(sdk).transfer,
+			mint: new EthereumMint(sdk, apis).prepare,
+			burn: new EthereumBurn(sdk).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 		},
 		order: {
-			fill: new Fill(sdk, wallet).fill,
+			fill: new EthereumFill(sdk, wallet).fill,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
-			cancel: new CancelOrder(sdk).cancel,
+			cancel: new EthereumCancel(sdk).cancel,
 		},
 		balances: {
-			getBalance: new Balance(sdk).getBalance,
+			getBalance: new EthereumBalance(sdk).getBalance,
 		},
 	}
 }

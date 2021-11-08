@@ -5,7 +5,7 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import { convertUnionToEthereumAddress } from "./common"
 
-export class Transfer {
+export class EthereumTransfer {
 	constructor(private sdk: RaribleSdk) {
 		this.transfer = this.transfer.bind(this)
 	}
