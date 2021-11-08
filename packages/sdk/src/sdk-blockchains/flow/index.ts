@@ -26,6 +26,7 @@ export function createFlowSdk(
 			mint: new FlowMint(sdk, apis).prepare,
 			burn: new FlowBurn(sdk).burn,
 			transfer: new FlowTransfer(sdk).transfer,
+			generateTokenId: () => Promise.resolve(undefined),
 		},
 		order: {
 			sell: sellService.sell,

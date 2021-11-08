@@ -22,19 +22,19 @@ export function createUnionSdk(
 			ETHEREUM: ethereum.balances,
 			FLOW: flow.balances,
 			TEZOS: tezos.balances,
-			POLYGON: null as any, //todo add when POLYGON is implemented
+			POLYGON: {} as any, // @todo add when POLYGON is implemented
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
 			FLOW: flow.nft,
 			TEZOS: tezos.nft,
-			POLYGON: null as any, //todo add when POLYGON is implemented
+			POLYGON: {} as any, // @todo add when POLYGON is implemented
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
 			FLOW: flow.order,
 			TEZOS: tezos.order,
-			POLYGON: null as any,
+			POLYGON: {} as any,
 		}),
 	}
 }
@@ -100,6 +100,10 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 
 	transfer(request: PrepareTransferRequest): Promise<PrepareTransferResponse> {
 		return this.instances[extractBlockchain(request.itemId)].transfer(request)
+	}
+
+	generateTokenId(collection: UnionAddress, minter: UnionAddress): Promise<string | undefined> {
+		return this.instances[extractBlockchain(collection)].generateTokenId(collection, minter)
 	}
 }
 
