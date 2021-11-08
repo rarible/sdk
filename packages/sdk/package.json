@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -28,8 +28,8 @@
     "@rarible/fcl-types": "~0.3.0",
     "@rarible/flow-sdk": "~0.3.1",
     "@rarible/protocol-ethereum-sdk": "~0.10.1",
-    "@rarible/sdk-transaction": "^0.5.0",
-    "@rarible/sdk-wallet": "^0.5.0",
+    "@rarible/sdk-transaction": "^0.5.1",
+    "@rarible/sdk-wallet": "^0.5.1",
     "@rarible/types": "~0.5.0",
     "@rarible/utils": "~0.5.0",
     "@rarible/web3-ethereum": "~0.10.0",
