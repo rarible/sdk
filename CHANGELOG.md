@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/rarible/sdk/compare/v0.5.1...v0.6.0) (2021-11-08)
+
+
+### Bug Fixes
+
+* add generateTokenId in nft sdk ([f8e2f95](https://github.com/rarible/sdk/commit/f8e2f95c9dd9161aa7f21a6075a1335a69d64727))
+
+
+### Features
+
+* support consistency in class naming ([6a1d2fa](https://github.com/rarible/sdk/commit/6a1d2faf28bc62185814ce134e4647b255093a95))
+
+
+
+
+
 ## [0.5.1](https://github.com/rarible/sdk/compare/v0.5.0...v0.5.1) (2021-11-08)
 
 
