@@ -6,9 +6,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import { convertUnionToEthereumAddress } from "./common"
 
 export class Balance {
-	constructor(
-		private sdk: RaribleSdk
-	) {
+	constructor(private sdk: RaribleSdk) {
 		this.getBalance = this.getBalance.bind(this)
 	}
 

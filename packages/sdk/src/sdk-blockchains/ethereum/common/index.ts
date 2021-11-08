@@ -2,6 +2,8 @@ import type { Address, UnionAddress, Word } from "@rarible/types"
 import { toAddress, toOrderId } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { OrderId } from "@rarible/api-client"
+import type { UnionPart } from "packages/sdk/src/types/order/common"
+import type { Part } from "@rarible/ethereum-api-client"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export function getEthTakeAssetType(currency: RequestCurrency) {
@@ -20,6 +22,13 @@ export function getEthTakeAssetType(currency: RequestCurrency) {
 	}
 }
 
+export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
+	return parts?.map((fee) => ({
+		account: convertUnionToEthereumAddress(fee.account),
+		value: fee.value,
+	})) || []
+}
+
 export function getSupportedCurrencies(): CurrencyType[] {
 	return [
 		{ blockchain: "ETHEREUM", type: "NATIVE" },
@@ -27,7 +36,9 @@ export function getSupportedCurrencies(): CurrencyType[] {
 	]
 }
 
-export function convertUnionToEthereumAddress(unionAddress: UnionAddress): Address {
+export function convertUnionToEthereumAddress(
+	unionAddress: UnionAddress
+): Address {
 	if (!isBlockchainSpecified(unionAddress)) {
 		throw new Error("Not a UnionAddress: " + unionAddress)
 	}
