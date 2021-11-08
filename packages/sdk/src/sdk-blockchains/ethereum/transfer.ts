@@ -6,9 +6,7 @@ import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/tr
 import { convertUnionToEthereumAddress } from "./common"
 
 export class Transfer {
-	constructor(
-		private sdk: RaribleSdk,
-	) {
+	constructor(private sdk: RaribleSdk) {
 		this.transfer = this.transfer.bind(this)
 	}
 

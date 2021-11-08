@@ -12,6 +12,7 @@ import { Transfer } from "./transfer"
 import { Bid } from "./bid"
 import { CancelOrder } from "./cancel"
 import { Balance } from "./balance"
+import { EthereumTokenId } from "./token-id"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -28,6 +29,7 @@ export function createEthereumSdk(
 			transfer: new Transfer(sdk).transfer,
 			mint: new Mint(sdk, apis).prepare,
 			burn: new Burn(sdk).burn,
+			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 		},
 		order: {
 			fill: new Fill(sdk, wallet).fill,

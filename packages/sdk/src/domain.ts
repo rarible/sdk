@@ -8,36 +8,38 @@ import type { IBid, IBidUpdate } from "./types/order/bid/domain"
 import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
 import type { IGetBalance } from "./types/balances"
+import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 
 export interface IRaribleSdk {
-	apis: IApisSdk,
-	nft: INftSdk,
-	order: IOrderSdk,
+	apis: IApisSdk
+	nft: INftSdk
+	order: IOrderSdk
 	balances: IBalanceSdk
 }
 
 export interface IApisSdk {
-	order: ApiClient.OrderControllerApi,
-	collection: ApiClient.CollectionControllerApi,
-	activity: ApiClient.ActivityControllerApi,
-	item: ApiClient.ItemControllerApi,
+	order: ApiClient.OrderControllerApi
+	collection: ApiClient.CollectionControllerApi
+	activity: ApiClient.ActivityControllerApi
+	item: ApiClient.ItemControllerApi
 	ownership: ApiClient.OwnershipControllerApi
 }
 
 export interface INftSdk {
-	transfer: ITransfer,
-	mint: IMint,
-	mintAndSell: IMintAndSell,
-	burn: IBurn,
+	transfer: ITransfer
+	mint: IMint
+	mintAndSell: IMintAndSell
+	burn: IBurn
+	generateTokenId: IGenerateTokenId
 }
 
 export interface IOrderSdk {
-	sell: ISell,
-	sellUpdate: ISellUpdate,
-	fill: IFill,
-	bid: IBid,
-	bidUpdate: IBidUpdate,
-	cancel: ICancel,
+	sell: ISell
+	sellUpdate: ISellUpdate
+	fill: IFill
+	bid: IBid
+	bidUpdate: IBidUpdate
+	cancel: ICancel
 }
 
 export interface IBalanceSdk {
@@ -46,12 +48,14 @@ export interface IBalanceSdk {
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis"> & {
 	nft: INftInternalSdk
-	order: IOrderInternalSdk,
+	order: IOrderInternalSdk
 	balances: IBalanceSdk
 }
 
-export type INftInternalSdk = Omit<INftSdk, "mintAndSell">
+export type INftInternalSdk = Omit<INftSdk, "mintAndSell"> & {
+	generateTokenId: IGenerateTokenId
+}
 
 export type IOrderInternalSdk = Omit<IOrderSdk, "sell"> & {
-	sell: ISellInternal,
+	sell: ISellInternal
 }
