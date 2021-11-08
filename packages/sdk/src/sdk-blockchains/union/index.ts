@@ -11,6 +11,7 @@ import type { PrepareTransferRequest, PrepareTransferResponse } from "../../type
 import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
+import type { IDeploy } from "../../types/nft/deploy/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -105,6 +106,11 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 	generateTokenId(collection: UnionAddress, minter: UnionAddress): Promise<string | undefined> {
 		return this.instances[extractBlockchain(collection)].generateTokenId(collection, minter)
 	}
+
+	deploy: IDeploy = Action.create({
+		id: "send-tx",
+		run: request => this.instances[request.blockchain].deploy(request),
+	})
 }
 
 class UnionBalanceSdk implements IBalanceSdk {
