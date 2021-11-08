@@ -45,7 +45,11 @@ describe("mint", () => {
 		})
 
 		if (result.type === MintType.ON_CHAIN) {
-			await result.transaction.wait()
+			const transaction = await result.transaction.wait()
+			expect(transaction.blockchain).toEqual("ETHEREUM")
+			expect(transaction.hash).toBeTruthy()
+		} else {
+			throw new Error("Must be on chain")
 		}
 	})
 
@@ -69,8 +73,11 @@ describe("mint", () => {
 		})
 
 		if (result.type === MintType.ON_CHAIN) {
-			await result.transaction.wait()
+			const transaction = await result.transaction.wait()
+			expect(transaction.blockchain).toEqual("ETHEREUM")
+			expect(transaction.hash).toBeTruthy()
+		} else {
+			throw new Error("Must be on chain")
 		}
 	})
-
 })

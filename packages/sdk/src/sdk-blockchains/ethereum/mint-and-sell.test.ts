@@ -16,10 +16,19 @@ describe("mintAndSell", () => {
 	test("should mint and put on sale ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const contract = toUnionAddress(`ETHEREUM:${erc721Address}`)
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: `ETHEREUM:${erc721Address}`,
+			collection: contract,
 		})
-		const action = await sdk.nft.mintAndSell({ collection })
+
+		const tokenId = await sdk.nft.generateTokenId({
+			collection: contract,
+			minter: sender,
+		})
+		const action = await sdk.nft.mintAndSell({
+			collection,
+			tokenId,
+		})
 
 		const result = await action.submit({
 			uri: "uri",
@@ -37,10 +46,21 @@ describe("mintAndSell", () => {
 		})
 
 		if (result.type === MintType.ON_CHAIN) {
-			await result.transaction.wait()
+			const transaction = await result.transaction.wait()
+			expect(transaction.blockchain).toEqual("ETHEREUM")
+			expect(transaction.hash).toBeTruthy()
+		} else {
+			throw new Error("Minted not on chain")
 		}
 
 		const order = await sdk.apis.order.getOrderById({ id: result.orderId })
-		expect(`${order.makeStock}`).toBe("1")
+		expect(order.makeStock.toString()).toBe("1")
+		const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+		expect(item.supply.toString()).toEqual("1")
+		if (tokenId) {
+			expect(item.tokenId).toEqual(tokenId.tokenId)
+		} else {
+			throw new Error("Token id must be defined")
+		}
 	})
 })
