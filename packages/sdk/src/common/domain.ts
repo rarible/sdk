@@ -1,16 +1,12 @@
-import {
-	Blockchain,
-	EthErc20AssetType,
-	EthEthereumAssetType,
-	FlowAssetTypeFt,
-	FlowAssetTypeNft,
-} from "@rarible/api-client"
-import { Action } from "@rarible/action"
-import { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
+import type * as ApiClient from "@rarible/api-client"
+import type { Action } from "@rarible/action"
+import type { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import type { Address } from "@rarible/types"
 
-//todo draft. probably will be changed in future
+// @todo draft. probably will be changed in future
 export type CurrencyType = {
-	blockchain: Blockchain
+	blockchain: ApiClient.Blockchain
 	type: CurrencySubType
 }
 
@@ -21,17 +17,20 @@ export interface AbstractPrepareResponse<Id, In, Out> {
 }
 
 export type RequestCurrency =
-	EthErc20AssetType | EthEthereumAssetType |
-	FlowAssetTypeNft | FlowAssetTypeFt |
-	TezosXTZAssetType | TezosFA12AssetType
+  | ApiClient.EthErc20AssetType
+  | ApiClient.EthEthereumAssetType
+  | ApiClient.FlowAssetTypeNft
+  | ApiClient.FlowAssetTypeFt
+  | TezosXTZAssetType
+  | TezosFA12AssetType
 
-export type AbstractItemId<T extends Blockchain> = {
+export type AbstractItemId<T extends ApiClient.Blockchain, ContractAddress extends string> = {
 	blockchain: T
-	collectionId: string
+	contract: ContractAddress
 	itemId: string
 }
 
-export type FlowItemId = AbstractItemId<"FLOW">
-export type EthereumItemId = AbstractItemId<"ETHEREUM">
-export type TezosItemId = AbstractItemId<"TEZOS">
-export type PolygonItemId = AbstractItemId<"POLYGON">
+export type FlowItemId = AbstractItemId<"FLOW", FlowContractAddress>
+export type EthereumItemId = AbstractItemId<"ETHEREUM", Address>
+export type TezosItemId = AbstractItemId<"TEZOS", string>
+export type PolygonItemId = AbstractItemId<"POLYGON", string>

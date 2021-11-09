@@ -1,24 +1,21 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { UnionAddress } from "@rarible/api-client"
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-// @todo replace with types from ethereum-sdk, flow-sdk etc
-
-export type EthereumNetwork = "mainnet" | "ropsten" | "rinkeby" | "e2e"
-export type FlowNetwork = "mainnet" | "testnet"
-export type TezosNetwork = "mainnet" | "granada" | "local"
-
-export class EthereumWallet implements AbstractWallet {
+export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
 	readonly blockchain = "ETHEREUM"
 
-	constructor(public readonly ethereum: Ethereum, public readonly address: UnionAddress) {}
+	constructor(public readonly ethereum: T) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
+		const address = await this.ethereum.getFrom()
+		if (!address) {
+			throw new Error("Not connected to Ethereum blockchain")
+		}
 		return {
 			signature: await this.ethereum.personalSign(message),
-			publicKey: this.address,
+			publicKey: address,
 		}
 	}
 }
@@ -26,19 +23,20 @@ export class EthereumWallet implements AbstractWallet {
 export class FlowWallet implements AbstractWallet {
 	readonly blockchain = "FLOW"
 
-	constructor(
-		public readonly fcl: Fcl,
-		public readonly address: UnionAddress,
-		public readonly network: FlowNetwork,
-	) {}
+	constructor(public readonly fcl: Fcl) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		if (!message.length) {
 			throw new Error("Message can't be empty")
 		}
 		const messageHex = Buffer.from(message).toString("hex")
-		const currentUser = await this.fcl.currentUser()
-		const account = await this.fcl.account(this.address)
+		const currentUser = this.fcl.currentUser()
+		const user = await this.fcl.currentUser().snapshot()
+		const address = user.addr
+		if (!address) {
+			throw new Error("Not connected to Flow blockchain")
+		}
+		const account = await this.fcl.account(address)
 
 		const signatures = await currentUser.signUserMessage(messageHex)
 		if (typeof signatures === "string") {
@@ -46,34 +44,40 @@ export class FlowWallet implements AbstractWallet {
 		}
 
 		const signature = signatures.find(s => {
-			return s.addr.toLowerCase() === this.address.toLowerCase()
+			return s.addr.toLowerCase() === address.toLowerCase()
 		})
 		if (signature) {
 			const pubKey = account.keys.find(k => k.index === signature.keyId)
 			if (!pubKey) {
-				throw Error(`Key with index "${signature.keyId}" not found on account with address ${this.address}`)
+				throw new Error(`Key with index "${signature.keyId}" not found on account with address ${address}`)
 			}
 			return {
 				signature: signature.signature,
 				publicKey: pubKey.publicKey,
 			}
 		}
-		throw new Error(`Signature of user address "${this.address}" not found`)
+		throw new Error(`Signature of user address "${address}" not found`)
 	}
 }
 
 export class TezosWallet implements AbstractWallet {
 	readonly blockchain = "TEZOS"
 
-	constructor(public readonly provider: Provider, public readonly address: UnionAddress) {}
+	constructor(public readonly provider: Provider) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		// @todo implement
 		return {
 			signature: message,
-			publicKey: this.address,
+			publicKey: "pubkey",
 		}
 	}
 }
 
-export type BlockchainWallet = EthereumWallet | FlowWallet | TezosWallet
+export type BlockchainWallet = EthereumWallet<Ethereum> | FlowWallet | TezosWallet
+
+export type WalletByBlockchain = {
+	"FLOW": FlowWallet
+	"ETHEREUM": EthereumWallet
+	"TEZOS": TezosWallet
+}

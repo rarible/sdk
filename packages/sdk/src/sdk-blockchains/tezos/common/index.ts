@@ -1,13 +1,15 @@
-import { ItemId } from "@rarible/api-client"
+import type { ItemId } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
-import { get_public_key, Provider } from "tezos-sdk-module/dist/common/base"
+import type { Provider } from "tezos-sdk-module/dist/common/base"
+// eslint-disable-next-line camelcase
+import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
-import { Part } from "tezos-sdk-module/dist/order/utils"
+import type { Part } from "tezos-sdk-module/dist/order/utils"
 import { Configuration, NftCollectionControllerApi, NftItemControllerApi } from "tezos-api-client/build"
-import { UnionPart } from "../../../order/common"
-import { CurrencyType } from "../../../common/domain"
+import type { UnionPart } from "../../../types/order/common"
+import type { CurrencyType } from "../../../common/domain"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,

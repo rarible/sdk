@@ -37,9 +37,9 @@ describe("bid test", () => {
 	const sdkPath = "https://api-dev.rarible.org"
 	// const sdkPath = "https://api-staging.rarible.org"
 	const configuration = new Configuration({ basePath: sdkPath })
-	const itemController = new ItemControllerApi(configuration)
+	// const itemController = new ItemControllerApi(configuration)
 
-	const wallet = new TezosWallet(provider, "" as any)
+	const wallet = new TezosWallet(provider)
 	const sdk = createTezosSdk(wallet)
 	/*
 	beforeAll(async () => {
@@ -51,13 +51,15 @@ describe("bid test", () => {
 		console.log("op", op)
 		if (op.contract) {
 			fa2Contract = op.contract
+			console.log("fa2Contract", fa2Contract)
 		}
 
 		const conf = await op.confirmation()
 
 	}, 1500000)
 
- */
+   */
+
 
 	/*
 	test("as", async () => {
@@ -79,11 +81,14 @@ describe("bid test", () => {
 			new BigNumber(101),
 			{},
 		)
-		console.log("tx", tx)
+		if (tx.token_id) {
+		  console.log("mint token id=", tx.token_id.toString())
+		}
 
 
 		// await sdk.order.bid({ itemId: `TEZOS:${fa2Contract}:101` as any })
 	}, 1500000)
+
 
    */
 })

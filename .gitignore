@@ -1,6 +1,7 @@
 node_modules/
 .idea
 *.iml
+.husky/_
 
 tsconfig.tsbuildinfo
 platforms/

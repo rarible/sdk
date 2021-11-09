@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.2.11",
+  "version": "0.6.0",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -10,16 +10,17 @@
   ],
   "scripts": {
     "build": "yarn run build-old",
-    "build-old": "tsc --project tsconfig-build.json",
     "build-babel": "babel --extensions \".ts,.tsx\" ./src --out-dir build && tsc --project tsconfig-build.json --emitDeclarationOnly && yarn run replace-mjs",
-    "replace-mjs": "find ./build -type f -name \"*.js\" -exec sed -i '' 's#./jsbi.mjs#jsbi#' {} \\;",
+    "build-old": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
+    "replace-mjs": "find ./build -type f -name \"*.js\" -exec sed -i '' 's#./jsbi.mjs#jsbi#' {} \\;",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "0.0.4",
-    "@rarible/ethereum-provider": "0.7.2",
+    "@rarible/api-client": "~0.0.6",
+    "@rarible/ethereum-provider": "~0.10.0",
+    "@rarible/fcl-types": "~0.3.0",
     "jsbi": "^3.2.5",
     "tezos-sdk-module": "^0.0.6"
   },
@@ -33,8 +34,10 @@
     "@babel/plugin-transform-typescript": "^7.15.8",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
-    "@rarible/fcl-types": "0.0.90",
-    "typescript": "4.3.5"
+    "typescript": "^4.4.4"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
   },
   "publishConfig": {
     "access": "public"

@@ -1,14 +1,12 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { PrepareTransferRequest, TransferRequest } from "../../nft/transfer/domain"
+import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import { convertUnionToEthereumAddress } from "./common"
 
-export class Transfer {
-	constructor(
-		private sdk: RaribleSdk,
-	) {
+export class EthereumTransfer {
+	constructor(private sdk: RaribleSdk) {
 		this.transfer = this.transfer.bind(this)
 	}
 

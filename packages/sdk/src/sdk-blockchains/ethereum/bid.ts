@@ -1,35 +1,21 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toAddress, toBinary, toOrderId, toUnionAddress, toWord } from "@rarible/types"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import { toBinary, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { Order as EthereumOrder, Asset as EthereumAsset, OrderData as EthereumOrderData } from "@rarible/ethereum-api-client"
-import { AssetType, Order, Asset, PendingOrder, OrderData } from "@rarible/api-client"
-import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
-import { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
-import {
-	OrderRequest, OrderUpdateRequest,
-	PrepareOrderRequest,
-	PrepareOrderResponse,
-	PrepareOrderUpdateRequest,
-	PrepareOrderUpdateResponse,
-} from "../../order/common"
-import {
-	convertOrderHashToOrderId,
-	convertUnionToEthereumAddress,
-	getEthTakeAssetType,
-	getSupportedCurrencies,
-} from "./common"
+import type * as EthereumApiClient from "@rarible/ethereum-api-client"
+import type * as ApiClient from "@rarible/api-client"
+import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
+import type * as OrderCommon from "../../types/order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import * as common from "./common"
 
-export class Bid {
-	constructor(
-		private sdk: RaribleSdk
-	) {
+export class EthereumBid {
+	constructor(private sdk: RaribleSdk) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
 	}
 
-
-	convertAssetType(assetType: EthereumAssetType): AssetType {
+	convertAssetType(assetType: EthereumAssetType): ApiClient.AssetType {
 		switch (assetType.assetClass) {
 			case "ETH": {
 				return {
@@ -55,15 +41,15 @@ export class Bid {
 					contract: toUnionAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
-					creators: assetType.creators.map(c => ({
+					creators: assetType.creators.map((c) => ({
 						account: toUnionAddress(c.account),
 						value: toBigNumber(c.value.toFixed()),
 					})),
-					royalties: assetType.royalties.map(r => ({
+					royalties: assetType.royalties.map((r) => ({
 						account: toUnionAddress(r.account),
 						value: toBigNumber(r.value.toFixed()),
 					})),
-					signatures: assetType.signatures.map(str => toBinary(str)),
+					signatures: assetType.signatures.map((str) => toBinary(str)),
 				}
 			}
 			case "ERC1155": {
@@ -79,16 +65,18 @@ export class Bid {
 					contract: toUnionAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
-					supply: assetType.supply !== undefined ? toBigNumber(assetType.supply): toBigNumber("1"),
-					creators: assetType.creators.map(c => ({
+					supply: assetType.supply !== undefined
+						? toBigNumber(assetType.supply)
+						: toBigNumber("1"),
+					creators: assetType.creators.map((c) => ({
 						account: toUnionAddress(c.account),
 						value: toBigNumber(c.value.toFixed()),
 					})),
-					royalties: assetType.royalties.map(r => ({
+					royalties: assetType.royalties.map((r) => ({
 						account: toUnionAddress(r.account),
 						value: toBigNumber(r.value.toFixed()),
 					})),
-					signatures: assetType.signatures.map(str => toBinary(str)),
+					signatures: assetType.signatures.map(toBinary),
 				}
 			}
 			case "GEN_ART": {
@@ -103,14 +91,14 @@ export class Bid {
 		}
 	}
 
-	getAsset(asset: EthereumAsset): Asset {
+	getAsset(asset: EthereumApiClient.Asset): ApiClient.Asset {
 		return {
 			type: this.convertAssetType(asset.assetType),
 			value: asset.value,
 		}
 	}
 
-	convertEthHistoryToUnion(history: OrderExchangeHistory): PendingOrder {
+	convertEthHistoryToUnion(history: OrderExchangeHistory): ApiClient.PendingOrder {
 		switch (history.type) {
 			case "CANCEL": {
 				return {
@@ -141,28 +129,26 @@ export class Bid {
 		}
 	}
 
-	convertOrderData(data: EthereumOrderData): OrderData {
+	convertOrderData(data: EthereumApiClient.OrderData): ApiClient.OrderData {
 		switch (data.dataType) {
-			case "LEGACY": {
+			case "LEGACY":
 				return {
 					"@type": "ETH_RARIBLE_V1",
 					fee: toBigNumber(data.fee.toFixed()),
 				}
-			}
-			case "RARIBLE_V2_DATA_V1": {
+			case "RARIBLE_V2_DATA_V1":
 				return {
 					"@type": "ETH_RARIBLE_V2",
-					payouts: data.payouts.map(p => ({
+					payouts: data.payouts.map((p) => ({
 						account: toUnionAddress(p.account),
 						value: toBigNumber(p.value.toFixed()),
 					})),
-					originFees: data.originFees.map(fee => ({
+					originFees: data.originFees.map((fee) => ({
 						account: toUnionAddress(fee.account),
 						value: toBigNumber(fee.value.toFixed()),
 					})),
 				}
-			}
-			case "OPEN_SEA_V1_DATA_V1": {
+			case "OPEN_SEA_V1_DATA_V1":
 				return {
 					...data,
 					"@type": "ETH_OPEN_SEA_V1",
@@ -173,14 +159,13 @@ export class Bid {
 					staticExtraData: toBinary(data.staticExtraData),
 					staticTarget: toUnionAddress(data.staticTarget),
 				}
-			}
 			default: {
 				throw new Error("Unsupported order data type")
 			}
 		}
 	}
 
-	convertOrderEthToUnion(order: EthereumOrder): Order {
+	convertOrderEthToUnion(order: EthereumApiClient.Order): ApiClient.Order {
 		return {
 			...order,
 			id: toOrderId(order.hash),
@@ -196,7 +181,7 @@ export class Bid {
 		}
 	}
 
-	async bid(prepare: PrepareOrderRequest): Promise<PrepareOrderResponse> {
+	async bid(prepare: OrderCommon.PrepareOrderRequest): Promise<OrderCommon.PrepareOrderResponse> {
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}
@@ -206,38 +191,33 @@ export class Bid {
 			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
 		}
 
-		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
+		const item = await this.sdk.apis.nftItem.getNftItemById({
+			itemId: `${contract}:${tokenId}`,
+		})
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
 			collection: item.contract,
 		})
 
 		const submit = this.sdk.order.bid
-			.before(async (request: OrderRequest) => {
+			.before(async (request: OrderCommon.OrderRequest) => {
 				return {
-					makeAssetType: getEthTakeAssetType(request.currency),
+					makeAssetType: common.getEthTakeAssetType(request.currency),
 					takeAssetType: {
 						tokenId: item.tokenId,
 						contract: item.contract,
 					},
 					amount: request.amount,
 					priceDecimal: request.price,
-					payouts: request.payouts?.map(p => ({
-						account: convertUnionToEthereumAddress(p.account),
-						value: p.value,
-					})) || [],
-					originFees: request.originFees?.map(fee => ({
-						account: convertUnionToEthereumAddress(fee.account),
-						value: fee.value,
-					})) || [],
+					payouts: common.toEthereumParts(request.payouts),
+					originFees: common.toEthereumParts(request.originFees),
 				}
 			})
-			.after(order => convertOrderHashToOrderId(order.hash))
+			.after((order) => common.convertOrderHashToOrderId(order.hash))
 
 		return {
-			supportedCurrencies: [
-				{ blockchain: "ETHEREUM", type: "NATIVE" },
-				{ blockchain: "ETHEREUM", type: "ERC20" },
-			],
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			supportedCurrencies: common.getSupportedCurrencies(),
 			multiple: collection.type === "ERC1155",
 			maxAmount: item.supply,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
@@ -245,27 +225,40 @@ export class Bid {
 		}
 	}
 
-	async update(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse>  {
+	async update(
+		prepareRequest: OrderCommon.PrepareOrderUpdateRequest
+	): Promise<OrderCommon.PrepareOrderUpdateResponse> {
 		if (!prepareRequest.orderId) {
 			throw new Error("OrderId has not been specified")
 		}
-		const [blockchain, orderId] = prepareRequest.orderId.split(":")
+		const [blockchain, hash] = prepareRequest.orderId.split(":")
 		if (blockchain !== "ETHEREUM") {
 			throw new Error("Not an ethereum order")
 		}
 
+		const order = await this.sdk.apis.order.getOrderByHash({ hash })
+		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
+			throw new Error(`Unable to update bid ${JSON.stringify(order)}`)
+		}
+
 		const sellUpdateAction = this.sdk.order.bidUpdate
-			.before((request: OrderUpdateRequest) => {
-				return {
-					orderHash: toWord(orderId),
-					priceDecimal: request.price,
-				}
-			})
-			.after(order => convertOrderHashToOrderId(order.hash))
+			.before((request: OrderCommon.OrderUpdateRequest) => ({
+				orderHash: toWord(hash),
+				priceDecimal: request.price,
+			}))
+			.after((order) => common.convertOrderHashToOrderId(order.hash))
 
 		return {
-			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: await this.sdk.order.getBaseOrderFee(),
+			originFeeSupport:
+				order.type === "RARIBLE_V2"
+					? OriginFeeSupport.FULL
+					: OriginFeeSupport.AMOUNT_ONLY,
+			payoutsSupport:
+				order.type === "RARIBLE_V2"
+					? PayoutsSupport.MULTIPLE
+					: PayoutsSupport.SINGLE,
+			supportedCurrencies: common.getSupportedCurrencies(),
+			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
 		}
 	}

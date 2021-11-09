@@ -1,21 +1,19 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toAddress, toBigNumber, BigNumber, toBinary, toWord } from "@rarible/types"
-import { AssetType, Order } from "@rarible/api-client"
-import { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
-import { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
-import { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
-import { toBn, BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { BigNumber } from "@rarible/types"
+import { toBigNumber, toBinary, toWord, toAddress } from "@rarible/types"
+import type { AssetType, Order } from "@rarible/api-client"
+import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
+import * as EthereumApiClient from "@rarible/ethereum-api-client"
+import type { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
+import { BigNumber as BigNumberClass, toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import {
-	FillRequest,
-	OriginFeeSupport,
-	PayoutsSupport,
-	PrepareFillRequest,
-	PrepareFillResponse,
-} from "../../order/fill/domain"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { convertUnionToEthereumAddress } from "./common"
 
 export type SupportFlagsResponse = {
@@ -26,11 +24,8 @@ export type SupportFlagsResponse = {
 
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
-export class Fill {
-	constructor(
-		private sdk: RaribleSdk,
-		private wallet: EthereumWallet
-	) {
+export class EthereumFill {
+	constructor(private sdk: RaribleSdk, private wallet: Maybe<EthereumWallet>) {
 		this.fill = this.fill.bind(this)
 	}
 
@@ -163,6 +158,10 @@ export class Fill {
 						dataType: "OPEN_SEA_V1_DATA_V1",
 						exchange: convertUnionToEthereumAddress(order.data.exchange),
 						feeRecipient: convertUnionToEthereumAddress(order.data.feeRecipient),
+						feeMethod: EthereumApiClient.OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
+						side: EthereumApiClient.OrderOpenSeaV1DataV1Side[order.data.side],
+						saleKind: EthereumApiClient.OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
+						howToCall: EthereumApiClient.OrderOpenSeaV1DataV1HowToCall[order.data.howToCall],
 						callData: toBinary(order.data.callData),
 						replacementPattern: toBinary(order.data.callData),
 						staticExtraData: toBinary(order.data.staticExtraData),
@@ -243,23 +242,23 @@ export class Fill {
 		}
 	}
 
-
 	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber> {
 		if (isNft(order.take.assetType)) {
+			if (this.wallet === undefined) {
+				throw new Error("Wallet undefined")
+			}
+			const address = await this.wallet.ethereum.getFrom()
 			const ownershipId = getOwnershipId(
 				order.take.assetType.contract,
 				order.take.assetType.tokenId,
-				toAddress(await this.wallet.ethereum.getFrom())
+				toAddress(address)
 			)
 
-			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({
-				ownershipId,
-			})
+			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({ ownershipId })
 
 			return toBigNumber(BigNumberClass.min(ownership.value, order.take.value).toFixed())
-		} else {
-			return order.makeStock
 		}
+		return order.makeStock
 	}
 
 	async isMultiple(order: SimplePreparedOrder): Promise<boolean> {
@@ -288,9 +287,8 @@ export class Fill {
 				throw new Error("Not an ethereum order")
 			}
 			return this.sdk.apis.order.getOrderByHash({ hash })
-		} else {
-			throw new Error("Incorrect request")
 		}
+		throw new Error("Incorrect request")
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {

@@ -1,4 +1,4 @@
-import { Order } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
 import { toBigNumber, toOrderId, toUnionAddress } from "@rarible/types"
 
 export function createTestOrder(orderId: string): Order {
@@ -30,6 +30,10 @@ export function createTestOrder(orderId: string): Order {
 		},
 		salt: "",
 		pending: [],
-		data: { "@type": "FLOW_RARIBLE_V1", payouts: [], originFees: [] },
+		data: {
+			"@type": "FLOW_RARIBLE_V1",
+			payouts: [],
+			originFees: [],
+		},
 	}
 }

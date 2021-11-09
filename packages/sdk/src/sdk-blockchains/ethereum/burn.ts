@@ -1,13 +1,11 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { BurnRequest, PrepareBurnRequest } from "../../nft/burn/domain"
+import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 
-export class Burn {
-	constructor(
-		private sdk: RaribleSdk,
-	) {
+export class EthereumBurn {
+	constructor(private sdk: RaribleSdk) {
 		this.burn = this.burn.bind(this)
 	}
 
