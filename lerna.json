@@ -8,7 +8,6 @@
   "command": {
     "publish": {
       "allowBranch": "master",
-      "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
       "message": "chore: bump versions after release",
       "yes": true
