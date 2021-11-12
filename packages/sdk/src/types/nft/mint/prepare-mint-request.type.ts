@@ -1,9 +1,9 @@
 import type { Collection } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { NftTokenId } from "@rarible/ethereum-api-client"
+import type { TokenId } from "../generate-token-id"
 
 export type PrepareMintRequest = {
-	tokenId?: NftTokenId
+	tokenId?: TokenId
 } & (HasCollection | HasCollectionId)
 
 export type HasCollection = {

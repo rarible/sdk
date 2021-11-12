@@ -14,7 +14,7 @@ export type BurnRequest = {
 	amount?: number
 } | void
 
-export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction>{
+export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction | void>{
 	/**
    * Is supports multiple values
    */

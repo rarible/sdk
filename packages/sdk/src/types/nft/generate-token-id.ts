@@ -1,3 +1,17 @@
-import type { UnionAddress } from "@rarible/types"
+import type { Binary, UnionAddress } from "@rarible/types"
 
-export type IGenerateTokenId = (collection: UnionAddress, minter: UnionAddress) => Promise<string | undefined>
+export type GenerateTokenIdRequest = {
+	collection: UnionAddress;
+	minter: UnionAddress;
+}
+
+export type TokenId = {
+	tokenId: string;
+	signature: {
+		v: number;
+		r: Binary;
+		s: Binary;
+	};
+}
+
+export type IGenerateTokenId = (prepare: GenerateTokenIdRequest) => Promise<TokenId | undefined>

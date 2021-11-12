@@ -8,6 +8,7 @@ import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-reque
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
+import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
@@ -87,6 +88,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.burn = this.burn.bind(this)
 		this.mint = this.mint.bind(this)
 		this.transfer = this.transfer.bind(this)
+		this.generateTokenId = this.generateTokenId.bind(this)
 	}
 
 	burn(request: PrepareBurnRequest): Promise<PrepareBurnResponse> {
@@ -102,8 +104,8 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		return this.instances[extractBlockchain(request.itemId)].transfer(request)
 	}
 
-	generateTokenId(collection: UnionAddress, minter: UnionAddress): Promise<string | undefined> {
-		return this.instances[extractBlockchain(collection)].generateTokenId(collection, minter)
+	generateTokenId(prepare: GenerateTokenIdRequest): Promise<TokenId | undefined> {
+		return this.instances[extractBlockchain(prepare.collection)].generateTokenId(prepare)
 	}
 }
 

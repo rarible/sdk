@@ -3783,7 +3783,7 @@
     eslint-plugin-jest "^25.2.3"
     eslint-plugin-unicorn "^38.0.0"
 
-"@rarible/ethereum-api-client@^0.1.14", "@rarible/ethereum-api-client@~0.1.14":
+"@rarible/ethereum-api-client@^0.1.15", "@rarible/ethereum-api-client@~0.1.14":
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.15.tgz#f5314bd992cc70f61fc2e4bda5f54ed0abb32d01"
   integrity sha512-AcmLn6vPb4F4yKevasNOpeIeQOopd2sovGWwWrsPUuKukAt8sqtQMYIJ63c9bL19nbEXTAhxGvSg7Z/38c/GGQ==
@@ -3794,6 +3794,13 @@
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.10.0.tgz#9b9632184e49e8506addf365c3c97721de79e15e"
   integrity sha512-XqlNp6njkvxmS7C3iXzx3C91Q7vhimfgjGp6wW2tkiqHuuAOUjUicatsDxvRc2mR8uLW8e9KzaG7JrtsYHWhfw==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
+"@rarible/ethereum-provider@^0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.11.0.tgz#b4fc9e361a34a40321523fd659447d4c5ea00cc8"
+  integrity sha512-11CBO6LByVQyVpJNyOlRpTWbUzQScT7QH3/t/tVybIiCVWGdmRVDUEjHDT7TgBLpNvFvkcVyF+p59giPjhWbMg==
   dependencies:
     eth-sig-util "^3.0.0"
 
@@ -3840,16 +3847,16 @@
     elliptic "^6.5.4"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@~0.10.1":
-  version "0.10.2"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.10.2.tgz#d331dea7216012bb319c0e26f760dc05623dc90e"
-  integrity sha512-NiGa5XmZ/8pTL94x+rfROXI075yB2X7yS6/3KBib7Jrknms+3jCa9LjSonC0XpEH3RcjG3YlWdn6UwCU/6gQIw==
+"@rarible/protocol-ethereum-sdk@~0.11.0":
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.11.0.tgz#7214d1f91beb3a3b716b40f38a4254307e63ed09"
+  integrity sha512-aiUPzFi97e4zsxNwCfNkuG/GMJ3d/JzVKj4bRuTkbfF2mRjedWC/8pWlvY7Ag95chBzokU9uqhRuzTmT6OHskQ==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.14"
-    "@rarible/ethereum-provider" "^0.10.0"
+    "@rarible/ethereum-api-client" "^0.1.15"
+    "@rarible/ethereum-provider" "^0.11.0"
     "@rarible/utils" "~0.5.0"
     eth-sig-util "^3.0.0"
     ethereumjs-util "^7.1.0"

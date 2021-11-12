@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/rarible/sdk/compare/v0.6.0...v0.6.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* lazy mint for erc721 & generateTokenId function ([30eee41](https://github.com/rarible/sdk/commit/30eee41e2bd0b4d18d24c72f437b990a6e61f8c4))
+
+
+
+
+
 # [0.6.0](https://github.com/rarible/sdk/compare/v0.5.1...v0.6.0) (2021-11-08)
 
 
