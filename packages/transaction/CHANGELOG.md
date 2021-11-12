@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0](https://github.com/rarible/sdk/compare/v0.5.1...v0.6.0) (2021-11-08)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.5.1](https://github.com/rarible/sdk/compare/v0.5.0...v0.5.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* update rarible deps ([ff4d662](https://github.com/rarible/sdk/commit/ff4d66293176a86f5e7e81ce898b2ef958aeefaa))
+
+
+
+
+
+# [0.5.0](https://github.com/rarible/sdk/compare/v0.4.0...v0.5.0) (2021-11-06)
+
+
+### Bug Fixes
+
+* update ethereum-sdk, flow-sdk, resolve type issues ([20bb2e4](https://github.com/rarible/sdk/commit/20bb2e432afc0ee6e6415423628c323220de9024))
+
+
+
+
+
+# [0.4.0](https://github.com/rarible/sdk/compare/v0.3.0...v0.4.0) (2021-11-04)
+
+
+### Features
+
+* update rarible's dependencies ([e428ffa](https://github.com/rarible/sdk/commit/e428ffa7332f0363bc2c56a49ccdb61be8a820b2))
+
+
+
+
+
+# [0.3.0](https://github.com/rarible/sdk/compare/v0.2.23...v0.3.0) (2021-11-04)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.2.4](https://github.com/rarible/sdk/compare/v0.2.3...v0.2.4) (2021-10-28)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.2.3](https://github.com/rarible/sdk/compare/v0.2.2...v0.2.3) (2021-10-28)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
 # [0.2.0](https://github.com/rarible/sdk/compare/v0.1.11...v0.2.0) (2021-10-22)
 
 **Note:** Version bump only for package @rarible/sdk-transaction

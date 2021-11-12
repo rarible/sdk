@@ -8,7 +8,7 @@ interface Transaction<T extends Blockchain> {
 
 export interface TransactionIndexer extends Record<Blockchain, any> {
 	"ETHEREUM": EthereumTransaction
-	"FLOW": any // @todo add typings from flow-sdk
+	"FLOW": FlowTransaction // @todo add typings from flow-sdk
 }
 
 export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
@@ -16,4 +16,10 @@ export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	transaction: TransactionIndexer[T]
 
 	wait(): Promise<Transaction<T>>
+}
+
+export interface FlowTransaction {
+	txId: string
+	status: number
+	events: any[]
 }

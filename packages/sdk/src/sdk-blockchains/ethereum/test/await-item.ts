@@ -1,9 +1,7 @@
-import { retry } from "@rarible/protocol-ethereum-sdk/build/common/retry"
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { ItemId } from "@rarible/api-client"
+import type { ItemId } from "@rarible/api-client"
+import type { IRaribleSdk } from "../../../domain"
+import { retry } from "../../../common/retry"
 
-export async function awaitItem(sdk: RaribleSdk, itemId: ItemId) {
-	await retry(3, async () => {
-		await sdk.apis.nftItem.getNftItemById({ itemId })
-	})
+export async function awaitItem(sdk: IRaribleSdk, itemId: ItemId) {
+	return retry(5, 2000, () => sdk.apis.item.getItemById({ itemId }))
 }

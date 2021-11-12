@@ -1,53 +1,93 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress, toOrderId } from "@rarible/types"
-import { SellRequest } from "../../order/sell/domain"
-import type { PrepareSellRequest, PrepareSellResponse } from "../../order/sell/domain"
-import { getEthTakeAssetType } from "./common"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import { toWord } from "@rarible/types"
+import type { ItemId } from "@rarible/api-client"
+import type * as OrderCommon from "../../types/order/common"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import * as common from "./common"
 
-export class Sell {
-	constructor(private sdk: RaribleSdk, private wallet: EthereumWallet) {
+export class EthereumSell {
+	constructor(private sdk: RaribleSdk) {
 		this.sell = this.sell.bind(this)
+		this.update = this.update.bind(this)
 	}
 
-	async sell(request: PrepareSellRequest): Promise<PrepareSellResponse> {
-		const [domain, contract, tokenId] = request.itemId.split(":")
+	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
+		const [domain, contract] = request.collectionId.split(":")
 		if (domain !== "ETHEREUM") {
 			throw new Error("Not an ethereum item")
 		}
-		const item = await this.sdk.apis.nftItem.getNftItemById({ itemId: `${contract}:${tokenId}` })
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: contract,
+		})
+
 		const sellAction = this.sdk.order.sell
-			.before(async (sellFormRequest: SellRequest) => {
+			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
+				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
+				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
 				return {
-					maker: toAddress(await this.wallet.ethereum.getFrom()),
 					makeAssetType: {
-						tokenId: toBigNumber(item.tokenId),
-						contract: toAddress(item.contract),
+						tokenId: item.tokenId,
+						contract: item.contract,
 					},
-					amount: parseInt(sellFormRequest.amount),
-					takeAssetType: getEthTakeAssetType(sellFormRequest.currency),
-					price: sellFormRequest.price,
-					payouts: sellFormRequest.payouts?.map(p => ({
-						account: toAddress(p.account),
-						value: parseInt(p.value),
-					})) || [],
-					originFees: sellFormRequest.originFees?.map(fee => ({
-						account: toAddress(fee.account),
-						value: parseInt(fee.value),
-					})) || [],
+					amount: sellFormRequest.amount,
+					takeAssetType: common.getEthTakeAssetType(sellFormRequest.currency),
+					priceDecimal: sellFormRequest.price,
+					payouts: common.toEthereumParts(sellFormRequest.payouts),
+					originFees: common.toEthereumParts(sellFormRequest.originFees),
 				}
 			})
-			.after((order) => toOrderId(`ETHEREUM:${order.hash}`))
+			.after(order => common.convertOrderHashToOrderId(order.hash))
 
 		return {
-			supportedCurrencies: [
-				{ blockchain: "ETHEREUM", type: "NATIVE" },
-				{ blockchain: "ETHEREUM", type: "ERC20" },
-			],
-			maxAmount: item.supply,
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			multiple: collection.type === "ERC1155",
+			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			submit: sellAction,
 		}
+	}
+
+	async update(prepareRequest: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
+		if (!prepareRequest.orderId) {
+			throw new Error("OrderId has not been specified")
+		}
+		const [blockchain, hash] = prepareRequest.orderId.split(":")
+		if (blockchain !== "ETHEREUM") {
+			throw new Error("Not an ethereum order")
+		}
+
+		const order = await this.sdk.apis.order.getOrderByHash({ hash })
+		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
+			throw new Error(`Unable to update bid ${JSON.stringify(order)}`)
+		}
+
+		const sellUpdateAction = this.sdk.order.sellUpdate
+			.before((request: OrderCommon.OrderUpdateRequest) => ({
+				orderHash: toWord(hash),
+				priceDecimal: request.price,
+			}))
+			.after(order => common.convertOrderHashToOrderId(order.hash))
+
+		return {
+			originFeeSupport: order.type === "RARIBLE_V2" ? OriginFeeSupport.FULL : OriginFeeSupport.AMOUNT_ONLY,
+			payoutsSupport: order.type === "RARIBLE_V2" ? PayoutsSupport.MULTIPLE : PayoutsSupport.SINGLE,
+			supportedCurrencies: common.getSupportedCurrencies(),
+			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
+			submit: sellUpdateAction,
+		}
+	}
+}
+
+function getEthereumItemId(itemId: ItemId) {
+	const [domain, contract, tokenId] = itemId.split(":")
+	if (domain !== "ETHEREUM") {
+		throw new Error(`Not an ethereum item: ${itemId}`)
+	}
+	return {
+		itemId: `${contract}:${tokenId}`,
+		contract,
+		tokenId,
+		domain,
 	}
 }

@@ -1,5 +1,10 @@
 global.FormData = require("form-data")
 global.window = {
 	fetch: require("node-fetch"),
+	dispatchEvent: () => {
+	},
 }
-jest.setTimeout(20000)
+global.CustomEvent = function CustomEvent() {
+	return
+}
+jest.setTimeout(60000)

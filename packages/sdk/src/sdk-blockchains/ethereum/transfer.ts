@@ -1,27 +1,30 @@
-import { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { PrepareTransferRequest, TransferRequest } from "../../nft/transfer/domain"
+import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
+import { convertUnionToEthereumAddress } from "./common"
 
-export class Transfer {
-	constructor(
-		private sdk: RaribleSdk,
-	) {
+export class EthereumTransfer {
+	constructor(private sdk: RaribleSdk) {
 		this.transfer = this.transfer.bind(this)
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
+		const [domain, contract, tokenId] = prepare.itemId.split(":")
+		if (domain !== "ETHEREUM") {
+			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
+		}
 
 		const item = await this.sdk.apis.nftItem.getNftItemById({
-			itemId: prepare.itemId,
+			itemId: `${contract}:${tokenId}`,
 		})
-		const contract = await this.sdk.apis.nftCollection.getNftCollectionById({
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
 			collection: item.contract,
 		})
 
 		return {
-			multiple: contract.type === "ERC1155",
+			multiple: collection.type === "ERC1155",
 			maxAmount: item.supply,
 			submit: Action.create({
 				id: "transfer" as const,
@@ -33,7 +36,7 @@ export class Transfer {
 						  contract: item.contract,
 						  tokenId: item.tokenId,
 					  },
-						toAddress(request.to),
+						convertUnionToEthereumAddress(request.to),
 						amount
 					)
 

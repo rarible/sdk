@@ -3,6 +3,307 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.6.1](https://github.com/rarible/sdk/compare/v0.6.0...v0.6.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* lazy mint for erc721 & generateTokenId function ([30eee41](https://github.com/rarible/sdk/commit/30eee41e2bd0b4d18d24c72f437b990a6e61f8c4))
+
+
+
+
+
+# [0.6.0](https://github.com/rarible/sdk/compare/v0.5.1...v0.6.0) (2021-11-08)
+
+
+### Bug Fixes
+
+* add generateTokenId in nft sdk ([f8e2f95](https://github.com/rarible/sdk/commit/f8e2f95c9dd9161aa7f21a6075a1335a69d64727))
+
+
+### Features
+
+* support consistency in class naming ([6a1d2fa](https://github.com/rarible/sdk/commit/6a1d2faf28bc62185814ce134e4647b255093a95))
+
+
+
+
+
+## [0.5.1](https://github.com/rarible/sdk/compare/v0.5.0...v0.5.1) (2021-11-08)
+
+
+### Bug Fixes
+
+* update rarible deps ([ff4d662](https://github.com/rarible/sdk/commit/ff4d66293176a86f5e7e81ce898b2ef958aeefaa))
+
+
+
+
+
+# [0.5.0](https://github.com/rarible/sdk/compare/v0.4.0...v0.5.0) (2021-11-06)
+
+
+### Bug Fixes
+
+* support for undefined wallet in createRaribleSdk ([d5c6a57](https://github.com/rarible/sdk/commit/d5c6a57c34e013aca5005d98568356a8bcf71e51))
+* update ethereum-sdk, flow-sdk, resolve type issues ([20bb2e4](https://github.com/rarible/sdk/commit/20bb2e432afc0ee6e6415423628c323220de9024))
+
+
+### Features
+
+* remove address from wallets ([b9b3002](https://github.com/rarible/sdk/commit/b9b30020d84d22d2d24c40d1c4219db47a76d2fa))
+
+
+
+
+
+# [0.4.0](https://github.com/rarible/sdk/compare/v0.3.0...v0.4.0) (2021-11-04)
+
+
+### Features
+
+* remove network from flow wallet (consistency support) ([8ef316d](https://github.com/rarible/sdk/commit/8ef316df5fe406a71eb05249a6c9acc39c0c11a9))
+* update rarible's dependencies ([e428ffa](https://github.com/rarible/sdk/commit/e428ffa7332f0363bc2c56a49ccdb61be8a820b2))
+
+
+
+
+
+# [0.3.0](https://github.com/rarible/sdk/compare/v0.2.23...v0.3.0) (2021-11-04)
+
+
+### Features
+
+* get balance ([cde533c](https://github.com/rarible/sdk/commit/cde533cde760a123cdf92ffd311b7102a7885c7a))
+
+
+
+
+
+## [0.2.23](https://github.com/rarible/sdk/compare/v0.2.22...v0.2.23) (2021-11-03)
+
+
+### Bug Fixes
+
+* minor base order fee ([48bc8e7](https://github.com/rarible/sdk/commit/48bc8e76d884a2c5fdf4ae7b0be55ff23ab332a9))
+* types ([2cb85f2](https://github.com/rarible/sdk/commit/2cb85f23779bc333dffde539cc9bd853cdcc3026))
+
+
+
+
+
+## [0.2.22](https://github.com/rarible/sdk/compare/v0.2.21...v0.2.22) (2021-11-02)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.2.21](https://github.com/rarible/sdk/compare/v0.2.20...v0.2.21) (2021-11-02)
+
+
+### Bug Fixes
+
+* better Error ([95244b5](https://github.com/rarible/sdk/commit/95244b5efcc2c27b0820101c5a043c7cf1239222))
+
+
+
+
+
+## [0.2.20](https://github.com/rarible/sdk/compare/v0.2.19...v0.2.20) (2021-11-02)
+
+
+### Bug Fixes
+
+* Unsupported NFT Collection ([8b487e8](https://github.com/rarible/sdk/commit/8b487e88dd55cae5d0f95a5d2a39555e278fe642))
+
+
+
+
+
+## [0.2.19](https://github.com/rarible/sdk/compare/v0.2.18...v0.2.19) (2021-11-01)
+
+
+### Bug Fixes
+
+* added originFeeSupport to sell/bid, updated baseFee for flow (2.5%) ([301747f](https://github.com/rarible/sdk/commit/301747fa6976fde9e86b7f9c89fdfe68092cdfd6))
+
+
+
+
+
+## [0.2.18](https://github.com/rarible/sdk/compare/v0.2.17...v0.2.18) (2021-11-01)
+
+
+### Bug Fixes
+
+* test skip ([e14703c](https://github.com/rarible/sdk/commit/e14703c7c49b6908bb2993678cd5039b76e16b95))
+
+
+
+
+
+## [0.2.17](https://github.com/rarible/sdk/compare/v0.2.16...v0.2.17) (2021-11-01)
+
+
+### Bug Fixes
+
+* test fix ([8b463fc](https://github.com/rarible/sdk/commit/8b463fcef4d32c2c0a899a04917416c1cdd637b5))
+
+
+
+
+
+## [0.2.16](https://github.com/rarible/sdk/compare/v0.2.15...v0.2.16) (2021-11-01)
+
+
+### Bug Fixes
+
+* collection | collection id in mint request + nftTokenId in Prepare mint request ([2b7344a](https://github.com/rarible/sdk/commit/2b7344a38d504450982813b63894c50ceceab10c))
+
+
+
+
+
+## [0.2.15](https://github.com/rarible/sdk/compare/v0.2.14...v0.2.15) (2021-11-01)
+
+
+### Bug Fixes
+
+* logging improvement ([2856e4b](https://github.com/rarible/sdk/commit/2856e4b65a1cab7dec3db2fe59b926ad67e14203))
+* upgrade ethereum sdk, simplified bid, sell ([879b58e](https://github.com/rarible/sdk/commit/879b58e6916ea4ae5aa73788d28f00aa95a9992e))
+
+
+
+
+
+## [0.2.14](https://github.com/rarible/sdk/compare/v0.2.13...v0.2.14) (2021-11-01)
+
+
+### Bug Fixes
+
+* fill fix (convert union address to eth address) ([f0eb6db](https://github.com/rarible/sdk/commit/f0eb6dbb9e22467fc7e8c8c76900729aec126c95))
+
+
+
+
+
+## [0.2.13](https://github.com/rarible/sdk/compare/v0.2.12...v0.2.13) (2021-11-01)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.2.12](https://github.com/rarible/sdk/compare/v0.2.11...v0.2.12) (2021-10-30)
+
+
+### Bug Fixes
+
+* mintAndSell small fix ([fc2cd1d](https://github.com/rarible/sdk/commit/fc2cd1d798f9ba04802d48a70f4a6a0d9e67b755))
+
+
+
+
+
+## [0.2.11](https://github.com/rarible/sdk/compare/v0.2.10...v0.2.11) (2021-10-30)
+
+
+### Bug Fixes
+
+* initial mintAndSell version ([340231c](https://github.com/rarible/sdk/commit/340231c5750f02b531c4b6c9381c1501e169fd80))
+* internal sell function ([12749a9](https://github.com/rarible/sdk/commit/12749a9114f7b01bc800755ded92468640de9858))
+
+
+
+
+
+## [0.2.10](https://github.com/rarible/sdk/compare/v0.2.9...v0.2.10) (2021-10-29)
+
+
+### Bug Fixes
+
+* skip tests ([fc5f5df](https://github.com/rarible/sdk/commit/fc5f5dfaf498e60e00c014920bb5c84683a113b9))
+
+
+
+
+
+## [0.2.9](https://github.com/rarible/sdk/compare/v0.2.8...v0.2.9) (2021-10-29)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.2.8](https://github.com/rarible/sdk/compare/v0.2.7...v0.2.8) (2021-10-29)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.2.7](https://github.com/rarible/sdk/compare/v0.2.6...v0.2.7) (2021-10-29)
+
+
+### Bug Fixes
+
+* upgrade ethereum-sdk, fix mint ([00b507d](https://github.com/rarible/sdk/commit/00b507d86216e9fed5f0a416fb3f7bc322589b43))
+
+
+
+
+
+## [0.2.6](https://github.com/rarible/sdk/compare/v0.2.5...v0.2.6) (2021-10-29)
+
+
+### Bug Fixes
+
+* incorrect imports ([0f67fb3](https://github.com/rarible/sdk/commit/0f67fb33a673ad59b4b90c6787ddca32b83802cb))
+
+
+
+
+
+## [0.2.5](https://github.com/rarible/sdk/compare/v0.2.4...v0.2.5) (2021-10-28)
+
+
+### Bug Fixes
+
+* tests ([9eb9aae](https://github.com/rarible/sdk/commit/9eb9aae52de323e34a4a756b52b7e0e6b01ec313))
+
+
+
+
+
+## [0.2.4](https://github.com/rarible/sdk/compare/v0.2.3...v0.2.4) (2021-10-28)
+
+
+### Bug Fixes
+
+* collection to eth collection ([0142cdf](https://github.com/rarible/sdk/commit/0142cdf620c173203a6457e82f3b17144d8a552f))
+
+
+
+
+
+## [0.2.3](https://github.com/rarible/sdk/compare/v0.2.2...v0.2.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* add apis + some doc ([be42e33](https://github.com/rarible/sdk/commit/be42e3303b5dcdfef9f7c8ef806129585aec5fb4))
+* more generic version for sell/bid ([311d968](https://github.com/rarible/sdk/commit/311d968150d9ee0d0cda9db445294ab4a8d284da))
+
+
+
+
+
 ## [0.2.2](https://github.com/rarible/sdk/compare/v0.2.1...v0.2.2) (2021-10-26)
 
 

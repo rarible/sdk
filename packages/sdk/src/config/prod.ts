@@ -1,6 +1,7 @@
-import { Config } from "./type"
+import type { RaribleSdkConfig } from "./domain"
 
-export const PROD_CONFIG: Config = {
+export const prodConfig: RaribleSdkConfig = {
 	basePath: "https://api.rarible.org",
 	ethereumEnv: "mainnet",
+	flowEnv: "mainnet",
 }

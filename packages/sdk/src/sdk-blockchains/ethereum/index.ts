@@ -1,26 +1,46 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { CONFIGS } from "@rarible/protocol-ethereum-sdk/build/config"
-import { IRaribleSdk } from "../../domain"
-import { Mint } from "./mint"
-import { Sell } from "./sell"
-import { Fill } from "./fill"
-import { Burn } from "./burn"
-import { Transfer } from "./transfer"
-import { Bid } from "./bid"
+import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { EthereumMint } from "./mint"
+import { EthereumSell } from "./sell"
+import { EthereumFill } from "./fill"
+import { EthereumBurn } from "./burn"
+import { EthereumTransfer } from "./transfer"
+import { EthereumBid } from "./bid"
+import { EthereumCancel } from "./cancel"
+import { EthereumBalance } from "./balance"
+import { EthereumTokenId } from "./token-id"
 
-export function createEthereumSdk(wallet: EthereumWallet, env: keyof typeof CONFIGS): Omit<IRaribleSdk, "apis"> {
-	const sdk = createRaribleSdk(wallet.ethereum, env)
+export function createEthereumSdk(
+	wallet: Maybe<EthereumWallet>,
+	apis: IApisSdk,
+	network: EthereumNetwork,
+	params?: ConfigurationParameters
+): IRaribleInternalSdk {
+	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
+	const sellService = new EthereumSell(sdk)
+	const bidService = new EthereumBid(sdk)
+
 	return {
 		nft: {
-			transfer: new Transfer(sdk).transfer,
-			mint: new Mint(sdk).prepare,
-			burn: new Burn(sdk).burn,
+			transfer: new EthereumTransfer(sdk).transfer,
+			mint: new EthereumMint(sdk, apis).prepare,
+			burn: new EthereumBurn(sdk).burn,
+			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 		},
 		order: {
-			fill: new Fill(sdk, wallet).fill,
-			sell: new Sell(sdk, wallet).sell,
-			bid: new Bid(sdk, wallet).bid,
+			fill: new EthereumFill(sdk, wallet).fill,
+			sell: sellService.sell,
+			sellUpdate: sellService.update,
+			bid: bidService.bid,
+			bidUpdate: bidService.update,
+			cancel: new EthereumCancel(sdk).cancel,
+		},
+		balances: {
+			getBalance: new EthereumBalance(sdk).getBalance,
 		},
 	}
 }

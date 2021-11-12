@@ -1,50 +1,61 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { deployTestErc1155 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc1155"
-import { toBigNumber, toItemId, toUnionAddress } from "@rarible/types"
+import { toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
-import { awaitStockToBe } from "./test/await-stock-to-be"
-import { createEthereumSdk } from "./index"
+import { awaitStock } from "./test/await-stock"
 
-describe("transfer", () => {
+describe("bid", () => {
+	const { web31, wallet1 } = initProviders()
 
-	const { web31, wallet1 } = initProviders({})
-
-	const senderEthereum = new Web3Ethereum({ web3: web31 })
-	const senderSdk = createEthereumSdk(new EthereumWallet(senderEthereum, toUnionAddress(wallet1.getAddressString())), "e2e")
-
-	const raribleSdk = createRaribleSdk(senderEthereum, "e2e")
+	const ethereum = new Web3Ethereum({ web3: web31 })
+	const wallet = new EthereumWallet(ethereum)
+	const sdk = createRaribleSdk(wallet, "e2e")
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 		testErc721: deployTestErc721(web31, "Test2", "TST2"),
-		testErc1155: deployTestErc1155(web31, "Test3"),
 	})
 
-	test("transfer erc721", async () => {
-		const sender = await senderEthereum.getFrom()
+	test("bid on erc721 and update bid", async () => {
+		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "1"
-		const itemId = toItemId(`${it.testErc721.options.address}:${tokenId}`)
-		await it.testErc721.methods.mint(sender, tokenId, "123").send({ from: sender, gas: 500000 })
-		await it.testErc20.methods.mint(sender, 100).send({ from: sender, gas: 500000 })
+		const itemId = toItemId(
+			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
+		)
+		await it.testErc721.methods.mint(senderRaw, tokenId, "123").send({
+			from: senderRaw,
+			gas: 500000,
+		})
+		await it.testErc20.methods.mint(senderRaw, 100).send({
+			from: senderRaw,
+			gas: 500000,
+		})
 
-		await awaitItem(raribleSdk, itemId)
+		await awaitItem(sdk, itemId)
 
-		const transfer = await senderSdk.order.bid({ itemId })
-		const order = await transfer.submit.start({
-			amount: toBigNumber("1"),
-			price: toBigNumber("1"),
-			currency: { "@type": "ERC20", contract: toUnionAddress(it.testErc20.options.address) },
-		}).runAll()
+		const response = await sdk.order.bid({ itemId })
+		const price = "0.000000000000000002"
+		const orderId = await response.submit({
+			amount: 1,
+			price,
+			currency: {
+				"@type": "ERC20",
+				contract: toUnionAddress(`ETHEREUM:${it.testErc20.options.address}`),
+			},
+		})
 
-		await awaitStockToBe(raribleSdk, order.id, 1)
+		const order = await awaitStock(sdk, orderId, price)
+		expect(order.makeStock.toString()).toEqual(price)
 
+		const updateAction = await sdk.order.bidUpdate({
+			orderId: toOrderId(orderId),
+		})
+		await updateAction.submit({ price: "0.000000000000000004" })
 	})
-
 })

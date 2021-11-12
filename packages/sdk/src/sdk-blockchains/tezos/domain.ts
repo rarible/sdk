@@ -1,5 +1,7 @@
-import { Config as TezosConfig } from "tezos-sdk-module/dist/config/type"
-import { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { Config as TezosConfig } from "tezos-sdk-module/dist/config/type"
+import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+
+export type TezosNetwork = "mainnet" | "granada" | "local"
 
 export type ItemType = {
 	id: string,
@@ -41,7 +43,6 @@ export type Collection = {
 	type: string,
 	name: string,
 	features: [],
-	// eslint-disable-next-line camelcase
-	supports_lazy_mint: boolean,
+	"supports_lazy_mint": boolean,
 	minters: string[]
 }
