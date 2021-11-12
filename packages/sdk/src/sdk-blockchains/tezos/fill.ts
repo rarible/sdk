@@ -34,7 +34,7 @@ import type { GetNftOwnershipByIdResponse } from "./domain"
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
-export class Fill {
+export class TezosFill {
 	constructor(private provider: Maybe<Provider>) {
 		this.fill = this.fill.bind(this)
 	}
@@ -116,11 +116,11 @@ export class Fill {
 			taker: order.taker,
 			taker_edpk: order.data.takerEdpk,
 			make: {
-				asset_type: Fill.getTezosAssetType(order.make.type),
+				asset_type: TezosFill.getTezosAssetType(order.make.type),
 				value: new BigNumber(order.make.value),
 			},
 			take: {
-				asset_type: Fill.getTezosAssetType(order.make.type),
+				asset_type: TezosFill.getTezosAssetType(order.make.type),
 				value: new BigNumber(order.make.value),
 			},
 			salt: new BigNumber(order.salt),

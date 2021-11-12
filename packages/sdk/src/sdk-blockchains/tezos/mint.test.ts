@@ -2,18 +2,16 @@
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
 // eslint-disable-next-line camelcase
-import { deploy_fa2, mint } from "tezos-sdk-module"
-import { EthereumWallet, TezosWallet } from "@rarible/sdk-wallet"
-import { Configuration, ItemControllerApi } from "@rarible/api-client"
+import { deploy_fa2 } from "tezos-sdk-module"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toItemId, toUnionAddress } from "@rarible/types"
+import { toUnionAddress } from "@rarible/types"
 import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
-import { createTezosSdk } from "./index"
 
 describe("mint test", () => {
-	const { web31, wallet1 } = initProviders()
+	const { web31 } = initProviders()
 
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
@@ -36,22 +34,10 @@ describe("mint test", () => {
 		config,
 	}
 
-	// let fa2Contract: string = "KT1ALMMH2iiz6iSEPySjDYMjJJF24yqFHVyi"
 	const sender = "tz1dGYcxgScHNkVWdpDKAwuP2xc5afnutjL3"
-	// let fa2Contract: string = "KT1ChRn258Xwy1wnFMYrU9kFQrDxfJnFm68M"
-	// let fa2Contract: string = "KT1AEQ9ZzQuhXKfkzDXrWEq4hHS4Ff72CEQU"
 	let fa2Contract: string = "KT1ChRn258Xwy1wnFMYrU9kFQrDxfJnFm68M"
 	const royaltiesContract: string = "KT1KrzCSQs6XMMRsQ7dqCVcYQeGs7d512zzb"
-	// const royaltiesContract: string = "KT1Ufrrbhq15UmQ5Yr11kJ4ZwSH5VuZ6xz71"
 
-	// const sdkPath = "https://api-e2e.rarible.org"
-	const sdkPath = "https://api-dev.rarible.org"
-	// const sdkPath = "https://api-staging.rarible.org"
-	const configuration = new Configuration({ basePath: sdkPath })
-	// const itemController = new ItemControllerApi(configuration)
-
-	// const wallet = new TezosWallet(provider)
-	// const sdk = createTezosSdk(wallet)
 	beforeAll(async () => {
 		const op = await deploy_fa2(
 			provider,

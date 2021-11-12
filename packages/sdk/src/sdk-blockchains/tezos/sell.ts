@@ -17,7 +17,7 @@ import type { ITezosAPI } from "./common"
 import { getMakerPublicKey, getPayouts, getSupportedCurrencies } from "./common"
 
 
-export class Sell {
+export class TezosSell {
 	constructor(
 		private provider: Maybe<Provider>,
 		private apis: ITezosAPI,

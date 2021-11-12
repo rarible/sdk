@@ -13,7 +13,7 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { ITezosAPI } from "./common"
 import { getMakerPublicKey, getPayouts, getSupportedCurrencies, getTezosItemData } from "./common"
 
-export class Bid {
+export class TezosBid {
 	constructor(
 		private provider: Maybe<Provider>,
 		private apis: ITezosAPI,

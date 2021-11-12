@@ -2,17 +2,17 @@
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
 // eslint-disable-next-line camelcase
-import { deploy_fa2, mint } from "tezos-sdk-module"
-import { EthereumWallet, TezosWallet } from "@rarible/sdk-wallet"
-import { Configuration, ItemControllerApi } from "@rarible/api-client"
+import { deploy_fa2 } from "tezos-sdk-module"
+import { EthereumWallet } from "@rarible/sdk-wallet"
+import type { ItemId } from "@rarible/api-client"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toItemId } from "@rarible/types"
+import { toUnionAddress } from "@rarible/types"
 import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
-import { createTezosSdk } from "./index"
+import { MintType } from "../../types/nft/mint/domain"
 
-describe("bid test", () => {
-	const { web31, wallet1 } = initProviders()
+describe("transfer test", () => {
+	const { web31 } = initProviders()
 
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
@@ -36,12 +36,12 @@ describe("bid test", () => {
 	}
 
 	const sender = "tz1dGYcxgScHNkVWdpDKAwuP2xc5afnutjL3"
+	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
 	let fa2Contract: string = "KT1ChRn258Xwy1wnFMYrU9kFQrDxfJnFm68M"
 	const royaltiesContract: string = "KT1KrzCSQs6XMMRsQ7dqCVcYQeGs7d512zzb"
+	let itemId: ItemId
 
-	const sdkPath = "https://api-dev.rarible.org"
 	beforeAll(async () => {
-		/*
 		const op = await deploy_fa2(
 			provider,
 			sender,
@@ -53,49 +53,35 @@ describe("bid test", () => {
 			console.log("fa2Contract", fa2Contract)
 		}
 
-		const conf = await op.confirmation()
+		await op.confirmation()
 
+		const mintResponse = await sdk.nft.mint({
+			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
+		})
 
-     */
+		const mintResult = await mintResponse.submit({
+			uri: "",
+			supply: 10,
+			lazyMint: false,
+		})
+
+		itemId = mintResult.itemId
+
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 	}, 1500000)
 
+	test("transfer test", async () => {
 
-	/*
-	test("as", async () => {
-		const item = await itemController.getItemById({
-			itemId: `TEZOS:${fa2Contract}:102`,
+		const transfer = await sdk.nft.transfer({ itemId })
+
+		const result = await transfer.submit({
+			to: toUnionAddress(`TEZOS:${receipent}`),
+			amount: 1,
 		})
-		console.log("item", item)
-	})
 
-   */
-
-	test("bid test", async () => {
-		/*
-		const tx = await mint(
-			provider,
-			fa2Contract,
-			{},
-			new BigNumber(100),
-			new BigNumber(101),
-			{},
-		)
-		if (tx.token_id) {
-		  console.log("mint token id=", tx.token_id.toString())
-			// const item = await sdk.apis.item.getItemById({
-			// 	itemId: toItemId(`TEZOS:${fa2Contract}:${tx.token_id.toString()}`),
-			// })
-			// console.log("item", item)
-		}
-
-
-		// await sdk.order.bid({ itemId: `TEZOS:${fa2Contract}:101` as any })
-
-     */
-		const item = await sdk.apis.item.getItemById({
-    	itemId: toItemId("TEZOS:KT1Hfuf2zwM2kjyYt1nCLPnfFdrofdNp8Xyh:1"),
-		})
-		console.log("item", item)
+		await result.wait()
 
 	}, 1500000)
 
