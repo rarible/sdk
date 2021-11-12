@@ -13,11 +13,15 @@ import type { RequestCurrency } from "../../common/domain"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { Collection, ItemType, TezosOrder } from "./domain"
+import type { ITezosAPI } from "./common"
 import { getMakerPublicKey, getPayouts, getSupportedCurrencies } from "./common"
 
 
 export class Sell {
-	constructor(private provider: Maybe<Provider>) {
+	constructor(
+		private provider: Maybe<Provider>,
+		private apis: ITezosAPI,
+	) {
 		this.sell = this.sell.bind(this)
 	}
 

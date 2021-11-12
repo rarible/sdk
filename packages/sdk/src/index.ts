@@ -27,7 +27,7 @@ export function createRaribleSdk(
 	const instance = createUnionSdk(
 		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.ethereumEnv, params),
 		createFlowSdk(filterWallet(wallet, "FLOW"), apis, config.flowEnv),
-		createTezosSdk(filterWallet(wallet, "TEZOS"))
+		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, config.tezosNetwork)
 	)
 
 	return {

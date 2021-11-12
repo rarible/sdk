@@ -6,12 +6,13 @@ import { deploy_fa2, mint } from "tezos-sdk-module"
 import { EthereumWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { Configuration, ItemControllerApi } from "@rarible/api-client"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toItemId } from "@rarible/types"
+import { toItemId, toUnionAddress } from "@rarible/types"
 import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
+import { MintType } from "../../types/nft/mint/domain"
 import { createTezosSdk } from "./index"
 
-describe("bid test", () => {
+describe("mint test", () => {
 	const { web31, wallet1 } = initProviders()
 
 	const ethereum = new Web3Ethereum({ web3: web31 })
@@ -52,7 +53,6 @@ describe("bid test", () => {
 	// const wallet = new TezosWallet(provider)
 	// const sdk = createTezosSdk(wallet)
 	beforeAll(async () => {
-		/*
 		const op = await deploy_fa2(
 			provider,
 			sender,
@@ -64,47 +64,27 @@ describe("bid test", () => {
 			console.log("fa2Contract", fa2Contract)
 		}
 
-		const conf = await op.confirmation()
+		await op.confirmation()
 
-
-     */
 	}, 1500000)
 
-
-	/*
-	test("as", async () => {
-		const item = await itemController.getItemById({
-			itemId: `TEZOS:${fa2Contract}:102`,
+	test("mint test", async () => {
+		const mintResponse = await sdk.nft.mint({
+			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
 		})
-		console.log("item", item)
-	})
 
-   */
+		const mintResult = await mintResponse.submit({
+			uri: "",
+			supply: 10,
+			lazyMint: false,
+		})
 
-	test("bid test", async () => {
-		/*
-		const tx = await mint(
-			provider,
-			fa2Contract,
-			{},
-			new BigNumber(100),
-			new BigNumber(101),
-			{},
-		)
-		if (tx.token_id) {
-		  console.log("mint token id=", tx.token_id.toString())
-			// const item = await sdk.apis.item.getItemById({
-			// 	itemId: toItemId(`TEZOS:${fa2Contract}:${tx.token_id.toString()}`),
-			// })
-			// console.log("item", item)
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
 		}
 
-
-		// await sdk.order.bid({ itemId: `TEZOS:${fa2Contract}:101` as any })
-
-     */
 		const item = await sdk.apis.item.getItemById({
-    	itemId: toItemId("TEZOS:KT1Hfuf2zwM2kjyYt1nCLPnfFdrofdNp8Xyh:1"),
+			itemId: mintResult.itemId,
 		})
 		console.log("item", item)
 
