@@ -3,7 +3,7 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import * as EthereumSdk from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import { toAddress, toBigNumber, toItemId } from "@rarible/types"
-import type { NftCollection, NftTokenId, Part } from "@rarible/ethereum-api-client"
+import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
@@ -25,7 +25,7 @@ export class EthereumMint {
 		this.prepare = this.prepare.bind(this)
 	}
 
-	handleSubmit(request: MintRequest, nftCollection: NftCollection, nftTokenId?: NftTokenId) {
+	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
 		if (EthereumSdk.isErc721v3Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
