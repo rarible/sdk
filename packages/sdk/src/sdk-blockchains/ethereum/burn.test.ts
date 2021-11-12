@@ -36,7 +36,9 @@ describe("burn", () => {
 		const burn = await sdk.nft.burn({ itemId: mintResult.itemId })
 		const tx = await burn.submit()
 
-		await tx.wait()
+		if (tx) {
+		  await tx.wait()
+		}
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
 	})
@@ -66,7 +68,9 @@ describe("burn", () => {
 			itemId: mintResult.itemId,
 		})
 		const tx = await burn.submit({ amount: 5 })
-		await tx.wait()
+		if (tx) {
+			await tx.wait()
+		}
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	})

@@ -7,8 +7,9 @@ import type { NftCollection, NftTokenId, Part } from "@rarible/ethereum-api-clie
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
+import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
+import { isErc1155v2Collection, isErc721v2Collection, isErc721v3Collection } from "@rarible/protocol-ethereum-sdk"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -80,6 +81,20 @@ export class EthereumMint {
 		}))
 	}
 
+	isSupportsRoyalties(collection: CommonNftCollection): boolean {
+		if (collection.type === "ERC721") {
+			return isErc721v3Collection(collection) || isErc721v2Collection(collection)
+		} else if (collection.type === "ERC1155") {
+			return true
+		} else {
+			throw new Error("Unrecognized collection type")
+		}
+	}
+
+	isSupportsLazyMint(collection: CommonNftCollection): boolean {
+		return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
+	}
+
 	async prepare(requestRaw: PrepareMintRequest): Promise<PrepareMintResponse> {
 		const collection = await getCollection(this.apis.collection, requestRaw)
 		if (!isSupportedCollection(collection.type)) {
@@ -87,11 +102,12 @@ export class EthereumMint {
 		}
 
 		const request = validatePrepareMintRequest(requestRaw)
-		const nftCollection: NftCollection = toNftCollection(collection)
-		const prepareData = prepareMintRequest(nftCollection)
+		const nftCollection = toNftCollection(collection)
 
 		return {
-			...prepareData,
+			multiple: collection.type === "ERC1155",
+			supportsRoyalties: this.isSupportsRoyalties(nftCollection),
+			supportsLazyMint: this.isSupportsLazyMint(nftCollection),
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (data: MintRequest) => {
@@ -132,7 +148,7 @@ export async function getCollection(
 	return api.getCollectionById({ collection: req.collectionId })
 }
 
-function toNftCollection(collection: Collection): NftCollection {
+function toNftCollection(collection: Collection): CommonNftCollection {
 	const contract = convertUnionToEthereumAddress(collection.id)
 	if (!isSupportedCollection(collection.type)) {
 		throw new Error(`Collection with type "${collection}" not supported`)

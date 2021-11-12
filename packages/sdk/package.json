@@ -27,7 +27,7 @@
     "@rarible/ethereum-provider": "~0.10.0",
     "@rarible/fcl-types": "~0.3.0",
     "@rarible/flow-sdk": "~0.3.1",
-    "@rarible/protocol-ethereum-sdk": "~0.10.1",
+    "@rarible/protocol-ethereum-sdk": "~0.11.0",
     "@rarible/sdk-transaction": "^0.6.0",
     "@rarible/sdk-wallet": "^0.6.0",
     "@rarible/types": "~0.5.0",
