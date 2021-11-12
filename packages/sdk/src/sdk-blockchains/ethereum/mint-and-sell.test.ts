@@ -31,7 +31,7 @@ describe("mintAndSell", () => {
 		})
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),

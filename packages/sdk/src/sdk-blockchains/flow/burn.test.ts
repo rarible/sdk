@@ -22,6 +22,8 @@ describe("Flow burn", () => {
 		expect(nft.id).toEqual(itemId)
 		const prepare = await burn.burn({ itemId })
 		const tx = await prepare.submit()
-		expect(tx.transaction.status).toEqual(4)
+		if (tx) {
+		  expect(tx.transaction.status).toEqual(4)
+		}
 	})
 })
