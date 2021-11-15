@@ -34,7 +34,7 @@ describe("mint", () => {
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),
@@ -62,7 +62,7 @@ describe("mint", () => {
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),

@@ -21,7 +21,7 @@ describe("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
 		const mintAction = await sdk.nft.mint({ collection })
 		const mintResult  = await mintAction.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),
@@ -36,7 +36,9 @@ describe("burn", () => {
 		const burn = await sdk.nft.burn({ itemId: mintResult.itemId })
 		const tx = await burn.submit()
 
-		await tx.wait()
+		if (tx) {
+		  await tx.wait()
+		}
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
 	})
@@ -50,7 +52,7 @@ describe("burn", () => {
 		})
 		const mintAction = await sdk.nft.mint({ collection })
 		const mintResult  = await mintAction.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),
@@ -66,7 +68,9 @@ describe("burn", () => {
 			itemId: mintResult.itemId,
 		})
 		const tx = await burn.submit({ amount: 5 })
-		await tx.wait()
+		if (tx) {
+			await tx.wait()
+		}
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	})
