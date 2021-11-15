@@ -2,13 +2,12 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.6.0",
+  "version": "0.6.3",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
     "publish": {
       "allowBranch": "master",
-      "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
       "message": "chore: bump versions after release",
       "yes": true

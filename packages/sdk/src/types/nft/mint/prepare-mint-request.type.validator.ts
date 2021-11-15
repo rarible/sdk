@@ -17,7 +17,7 @@ export const SCHEMA = {
                             "$ref": "#/definitions/Collection"
                         },
                         "tokenId": {
-                            "$ref": "#/definitions/NftTokenId"
+                            "$ref": "#/definitions/TokenId"
                         }
                     },
                     "required": [
@@ -32,7 +32,7 @@ export const SCHEMA = {
                             "$ref": "#/definitions/UnionAddress"
                         },
                         "tokenId": {
-                            "$ref": "#/definitions/NftTokenId"
+                            "$ref": "#/definitions/TokenId"
                         }
                     },
                     "required": [
@@ -41,42 +41,36 @@ export const SCHEMA = {
                 }
             ]
         },
-        "NftTokenId": {
+        "TokenId": {
             "type": "object",
             "properties": {
                 "tokenId": {
-                    "$ref": "#/definitions/BigNumber"
+                    "type": "string"
                 },
                 "signature": {
-                    "$ref": "#/definitions/NftSignature"
+                    "type": "object",
+                    "properties": {
+                        "v": {
+                            "type": "number"
+                        },
+                        "r": {
+                            "$ref": "#/definitions/Binary"
+                        },
+                        "s": {
+                            "$ref": "#/definitions/Binary"
+                        }
+                    },
+                    "required": [
+                        "v",
+                        "r",
+                        "s"
+                    ],
+                    "additionalProperties": false
                 }
             },
             "required": [
                 "tokenId",
                 "signature"
-            ],
-            "additionalProperties": false
-        },
-        "BigNumber": {
-            "type": "string"
-        },
-        "NftSignature": {
-            "type": "object",
-            "properties": {
-                "v": {
-                    "type": "number"
-                },
-                "r": {
-                    "$ref": "#/definitions/Binary"
-                },
-                "s": {
-                    "$ref": "#/definitions/Binary"
-                }
-            },
-            "required": [
-                "v",
-                "r",
-                "s"
             ],
             "additionalProperties": false
         },

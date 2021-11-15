@@ -43,7 +43,10 @@ export function convertUnionToEthereumAddress(
 		throw new Error("Not a UnionAddress: " + unionAddress)
 	}
 
-	const [, address] = unionAddress.split(":")
+	const [blockchain, address] = unionAddress.split(":")
+	if (blockchain !== "ETHEREUM") {
+		throw new Error("Not an Ethereum address")
+	}
 	return toAddress(address)
 }
 

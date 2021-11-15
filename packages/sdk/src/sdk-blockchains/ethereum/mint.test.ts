@@ -34,7 +34,7 @@ describe("mint", () => {
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),
@@ -45,7 +45,11 @@ describe("mint", () => {
 		})
 
 		if (result.type === MintType.ON_CHAIN) {
-			await result.transaction.wait()
+			const transaction = await result.transaction.wait()
+			expect(transaction.blockchain).toEqual("ETHEREUM")
+			expect(transaction.hash).toBeTruthy()
+		} else {
+			throw new Error("Must be on chain")
 		}
 	})
 
@@ -58,7 +62,7 @@ describe("mint", () => {
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
 				value: toBigNumber("10000"),
@@ -69,8 +73,11 @@ describe("mint", () => {
 		})
 
 		if (result.type === MintType.ON_CHAIN) {
-			await result.transaction.wait()
+			const transaction = await result.transaction.wait()
+			expect(transaction.blockchain).toEqual("ETHEREUM")
+			expect(transaction.hash).toBeTruthy()
+		} else {
+			throw new Error("Must be on chain")
 		}
 	})
-
 })
