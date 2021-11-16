@@ -2976,10 +2976,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@~0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.6.tgz#4b0a478e851158cd85a5eeb16cff4f2060552f26"
-  integrity sha512-cRylm1X8of7cWqsWdNrb5ibIeIQLmUgPLvrfpbF1TmvYuSmLZWLXpqdxc0WPmL19AANfD41X3WVn7Rfl2Q5MVQ==
+"@rarible/api-client@~0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.7.tgz#21cfe5d385f698ef3452d411e7d415b162c5f552"
+  integrity sha512-pyQH1d9bOgSUKiNWxGPFDVycjKdPgQKy4wgWgfduafaZHZttb2RKQx3Eq9V4v6GSjDs/3fEsq3KOMXWdHWwWuw==
   dependencies:
     "@rarible/types" "~0.5.0"
 
@@ -2996,14 +2996,14 @@
     eslint-plugin-jest "^25.2.3"
     eslint-plugin-unicorn "^38.0.0"
 
-"@rarible/ethereum-api-client@^0.1.15", "@rarible/ethereum-api-client@~0.1.15":
-  version "0.1.15"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.15.tgz#f5314bd992cc70f61fc2e4bda5f54ed0abb32d01"
-  integrity sha512-AcmLn6vPb4F4yKevasNOpeIeQOopd2sovGWwWrsPUuKukAt8sqtQMYIJ63c9bL19nbEXTAhxGvSg7Z/38c/GGQ==
+"@rarible/ethereum-api-client@^0.1.16":
+  version "0.1.16"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.16.tgz#da473dff9e4cdb319914783e258801a7eab8fd98"
+  integrity sha512-mWyPlAPrlJmVANGrzSJV+grI4Mf15vW6QmHW1jTufVKiA12g5YP9SlPfQ18MnfCIic+rl98c3h3ZG5YMQab5yg==
   dependencies:
     "@rarible/types" "~0.5.0"
 
-"@rarible/ethereum-provider@^0.12.1", "@rarible/ethereum-provider@~0.12.1":
+"@rarible/ethereum-provider@^0.12.1", "@rarible/ethereum-provider@~0.12.1", "@rarible/ethereum-provider@~0.12.3":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.1.tgz#356053a3bb3d83a192b7673907abfc9810e4351a"
   integrity sha512-VLP9AqTVO/0rOTIa7OhjKbnK4UAtbRY8FpsbWnKv74gfR6R/91Plc/kZGkGD/Thm0Oneo4BUAnVlCSFBhJUqFA==
@@ -3053,15 +3053,15 @@
     elliptic "^6.5.4"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@~0.12.2":
-  version "0.12.2"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.2.tgz#0d8074fe91cb98f19a7912773988c4a67523bb66"
-  integrity sha512-5TrFdkeG0HNP8HAlJ/itaLLvVfKIvfyRGz6DxL8sM+tLr/6jqKLyzTsAXMn0PNPNykfKhuPU3aJbzUls0p4seA==
+"@rarible/protocol-ethereum-sdk@~0.12.3":
+  version "0.12.3"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.3.tgz#05687aa04d4163f240285913865ef6eb25143578"
+  integrity sha512-XzDcQPTZUSuDUZ/NCT3/v7FdLW4Pq2d9WDGdVohcezkI1Gm50fZJJCdBdlCm3DbG188zNqp7FBJ6FdbS9RNPPg==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.15"
+    "@rarible/ethereum-api-client" "^0.1.16"
     "@rarible/ethereum-provider" "^0.12.1"
     "@rarible/utils" "~0.5.0"
     eth-sig-util "^3.0.0"

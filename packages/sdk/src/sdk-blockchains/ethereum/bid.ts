@@ -43,11 +43,11 @@ export class EthereumBid {
 					uri: assetType.uri,
 					creators: assetType.creators.map((c) => ({
 						account: toUnionAddress(c.account),
-						value: toBigNumber(c.value.toFixed()),
+						value: c.value,
 					})),
 					royalties: assetType.royalties.map((r) => ({
 						account: toUnionAddress(r.account),
-						value: toBigNumber(r.value.toFixed()),
+						value: r.value,
 					})),
 					signatures: assetType.signatures.map((str) => toBinary(str)),
 				}
@@ -70,11 +70,11 @@ export class EthereumBid {
 						: toBigNumber("1"),
 					creators: assetType.creators.map((c) => ({
 						account: toUnionAddress(c.account),
-						value: toBigNumber(c.value.toFixed()),
+						value: c.value,
 					})),
 					royalties: assetType.royalties.map((r) => ({
 						account: toUnionAddress(r.account),
-						value: toBigNumber(r.value.toFixed()),
+						value: r.value,
 					})),
 					signatures: assetType.signatures.map(toBinary),
 				}
@@ -141,11 +141,11 @@ export class EthereumBid {
 					"@type": "ETH_RARIBLE_V2",
 					payouts: data.payouts.map((p) => ({
 						account: toUnionAddress(p.account),
-						value: toBigNumber(p.value.toFixed()),
+						value: p.value,
 					})),
 					originFees: data.originFees.map((fee) => ({
 						account: toUnionAddress(fee.account),
-						value: toBigNumber(fee.value.toFixed()),
+						value: fee.value,
 					})),
 				}
 			case "OPEN_SEA_V1_DATA_V1":
@@ -162,22 +162,6 @@ export class EthereumBid {
 			default: {
 				throw new Error("Unsupported order data type")
 			}
-		}
-	}
-
-	convertOrderEthToUnion(order: EthereumApiClient.Order): ApiClient.Order {
-		return {
-			...order,
-			id: toOrderId(order.hash),
-			platform: "RARIBLE",
-			maker: toUnionAddress(order.maker),
-			taker: order.taker && toUnionAddress(order.taker),
-			lastUpdatedAt: order.lastUpdateAt,
-			priceHistory: order.priceHistory || [],
-			make: this.getAsset(order.make),
-			take: this.getAsset(order.take),
-			pending: order?.pending?.map(this.convertEthHistoryToUnion) || [],
-			data: this.convertOrderData(order.data),
 		}
 	}
 
