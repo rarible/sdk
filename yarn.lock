@@ -3003,7 +3003,7 @@
   dependencies:
     "@rarible/types" "~0.5.0"
 
-"@rarible/ethereum-provider@^0.12.1", "@rarible/ethereum-provider@~0.12.1", "@rarible/ethereum-provider@~0.12.3":
+"@rarible/ethereum-provider@^0.12.1", "@rarible/ethereum-provider@~0.12.1":
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.1.tgz#356053a3bb3d83a192b7673907abfc9810e4351a"
   integrity sha512-VLP9AqTVO/0rOTIa7OhjKbnK4UAtbRY8FpsbWnKv74gfR6R/91Plc/kZGkGD/Thm0Oneo4BUAnVlCSFBhJUqFA==
