@@ -12,6 +12,7 @@ export function createTezosSdk(wallet: Maybe<TezosWallet>): IRaribleInternalSdk 
 			burn: notImplemented,
 			transfer: notImplemented,
 			generateTokenId: notImplemented,
+			deploy: nonImplementedAction,
 		},
 		order: {
 			fill: new Fill(wallet?.provider).fill,

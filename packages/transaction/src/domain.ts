@@ -14,7 +14,7 @@ export interface TransactionIndexer extends Record<Blockchain, any> {
 export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
-
+	hash(): string
 	wait(): Promise<Transaction<T>>
 }
 

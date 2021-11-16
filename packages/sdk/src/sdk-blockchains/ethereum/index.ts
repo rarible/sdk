@@ -13,6 +13,7 @@ import { EthereumBid } from "./bid"
 import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
+import { EthereumDeploy } from "./deploy"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -30,6 +31,7 @@ export function createEthereumSdk(
 			mint: new EthereumMint(sdk, apis).prepare,
 			burn: new EthereumBurn(sdk).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
+			deploy: new EthereumDeploy(sdk).deployToken,
 		},
 		order: {
 			fill: new EthereumFill(sdk, wallet).fill,
