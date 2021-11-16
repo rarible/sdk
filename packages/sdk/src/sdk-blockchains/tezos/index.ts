@@ -26,7 +26,7 @@ export function createTezosSdk(
 			generateTokenId: notImplemented,
 		},
 		order: {
-			fill: new TezosFill(wallet?.provider).fill,
+			fill: new TezosFill(wallet?.provider, apis).fill,
 			// @todo fix any type
 			sell: new TezosSell(wallet?.provider, apis).sell as any,
 			sellUpdate: notImplemented,

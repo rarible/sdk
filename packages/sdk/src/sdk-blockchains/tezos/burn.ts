@@ -23,11 +23,15 @@ export class TezosBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
-		const { itemId } = getTezosItemData(prepare.itemId)
+		const { itemId, contract } = getTezosItemData(prepare.itemId)
 		const item = await this.apis.item.getNftItemById({ itemId })
 
+		const collection = await this.apis.collection.getNftCollectionById({
+			collection: contract,
+		})
+
 		return {
-			multiple: true,
+			multiple: collection.type === "MT",
 			maxAmount: toBigNumber(item.supply),
 			submit: Action.create({
 				id: "burn" as const,

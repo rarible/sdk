@@ -1,6 +1,6 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Action } from "@rarible/action"
-import type { TezosFA12AssetType, TezosXTZAssetType } from "@rarible/api-client/build/models/AssetType"
+import type * as TezosAPI from "@rarible/api-client/build/models/AssetType"
 import type { FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
 import type { Address } from "@rarible/types"
 
@@ -21,8 +21,8 @@ export type RequestCurrency =
   | ApiClient.EthEthereumAssetType
   | ApiClient.FlowAssetTypeNft
   | ApiClient.FlowAssetTypeFt
-  | TezosXTZAssetType
-  | TezosFA12AssetType
+  | TezosAPI.TezosXTZAssetType
+  | TezosAPI.TezosFA12AssetType
 
 export type AbstractItemId<T extends ApiClient.Blockchain, ContractAddress extends string> = {
 	blockchain: T

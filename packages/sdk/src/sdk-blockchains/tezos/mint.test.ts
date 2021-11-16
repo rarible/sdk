@@ -1,49 +1,52 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
-// eslint-disable-next-line camelcase
-import { deploy_fa2 } from "tezos-sdk-module"
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { TezosWallet } from "@rarible/sdk-wallet"
 import { toUnionAddress } from "@rarible/types"
-import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 
 describe("mint test", () => {
-	const { web31 } = initProviders()
-
-	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(wallet, "e2e")
-
 	const tezos = in_memory_provider(
-		"edskRzKnQB3jFrx8qYRedDguFNnrmePpvmAyBt6zTz1RzDm3vVnqtrqhhuM8SupK2gTYgq2jdMGJUgvMXJiG5Vz7Wd6Ub2hFTR",
-		// "edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
+		// "edskRzKnQB3jFrx8qYRedDguFNnrmePpvmAyBt6zTz1RzDm3vVnqtrqhhuM8SupK2gTYgq2jdMGJUgvMXJiG5Vz7Wd6Ub2hFTR",
+		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
 		"https://granada.tz.functori.com"
 	)
 
 	const config = {
-		exchange: "KT1XgQ52NeNdjo3jLpbsPBRfg8YhWoQ5LB7g",
+		exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
 		fees: new BigNumber(0),
+		nft_public: "",
+		mt_public: "",
 	}
 
 	const provider = {
 		tezos,
-		api: "https://rarible-api.functori.com/v0.1/",
+		api: "https://rarible-api.functori.com/v0.1",
 		config,
 	}
 
-	const sender = "tz1dGYcxgScHNkVWdpDKAwuP2xc5afnutjL3"
-	let fa2Contract: string = "KT1ChRn258Xwy1wnFMYrU9kFQrDxfJnFm68M"
-	const royaltiesContract: string = "KT1KrzCSQs6XMMRsQ7dqCVcYQeGs7d512zzb"
+	// const ethereum = new Web3Ethereum({ web3: web31 })
+	const wallet = new TezosWallet(provider)
+	const sdk = createRaribleSdk(wallet, "dev")
 
-	beforeAll(async () => {
-		const op = await deploy_fa2(
+	//public nft contract
+	// let fa2Contract: string = "KT1GTSXWyrBeNSxKqiHgkymFVujyu9JfHuKd"
+	//private nft
+	// let fa2Contract: string = "KT1W9tukr36yDyZjPk6CtpNW2uvnwpZeQSyF"
+	let fa2Contract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
+	/*
+  beforeAll(async () => {
+		sender = await get_address(provider)
+		// const op = await deploy_nft_public(
+		// 	provider,
+		// 	sender,
+		// )
+		const op = await deploy_nft_private(
 			provider,
-			sender,
-			royaltiesContract
+			sender
 		)
+		console.log("sender", sender)
 		console.log("op", op)
 		if (op.contract) {
 			fa2Contract = op.contract
@@ -53,15 +56,18 @@ describe("mint test", () => {
 		await op.confirmation()
 
 	}, 1500000)
+	 */
 
 	test("mint test", async () => {
+
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
 		})
 
+		// console.log("mintResponse", mintResponse)
 		const mintResult = await mintResponse.submit({
 			uri: "",
-			supply: 10,
+			supply: 1,
 			lazyMint: false,
 		})
 
@@ -72,7 +78,6 @@ describe("mint test", () => {
 		const item = await sdk.apis.item.getItemById({
 			itemId: mintResult.itemId,
 		})
-		console.log("item", item)
 
 	}, 1500000)
 

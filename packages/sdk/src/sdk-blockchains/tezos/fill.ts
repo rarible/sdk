@@ -31,11 +31,15 @@ import {
 	PayoutsSupport,
 } from "../../types/order/fill/domain"
 import type { GetNftOwnershipByIdResponse } from "./domain"
+import type { ITezosAPI } from "./common"
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
 export class TezosFill {
-	constructor(private provider: Maybe<Provider>) {
+	constructor(
+		private provider: Maybe<Provider>,
+		private apis: ITezosAPI,
+	) {
 		this.fill = this.fill.bind(this)
 	}
 
@@ -58,13 +62,14 @@ export class TezosFill {
 
 	static getTezosAssetTypeFromCommonType(type: TezosClientAssetType): TezosAssetType {
 		switch (type.assetClass) {
-			case "FA_2":
+			case "MT":
+			case "NFT":
 				return {
 					asset_class: type.assetClass,
 					contract: type.contract,
-					"token_id": new BigNumber(type.tokenId),
+					token_id: new BigNumber(type.tokenId),
 				}
-			case "FA_1_2":
+			case "FT":
 				return {
 					asset_class: type.assetClass,
 					contract: type.contract,
@@ -82,14 +87,16 @@ export class TezosFill {
 		switch (type["@type"]) {
 			case "FA_2": {
 				return {
-					asset_class: type["@type"],
+					//todo fix types
+					asset_class: type["@type"] as any,
 					contract: type.contract,
 					"token_id": new BigNumber(type.tokenId),
 				}
 			}
 			case "FA_1_2": {
 				return {
-					asset_class: type["@type"],
+					//todo fix types
+					asset_class: type["@type"] as any,
 					contract: type.contract,
 				}
 			}
@@ -209,21 +216,15 @@ export class TezosFill {
 		}
 	}
 
-	async getOwnershipId(contract: string, tokenId: string, owner: string): Promise<GetNftOwnershipByIdResponse> {
-		const ownershipId = `${contract}:${tokenId}:${owner}`
-		const provider = this.getRequiredProvider()
-		const response = await fetch(`${provider.api}/ownerships/${ownershipId}`)
-		return await response.json()
-	}
-
 	async getMaxAmount(order: PreparedOrder): Promise<RaribleBigNumber> {
 		const provider = this.getRequiredProvider()
-		if (order.take.asset_type.asset_class === "FA_2") {
-			const response = await this.getOwnershipId(
-				order.take.asset_type.contract,
-				order.take.asset_type.token_id.toString(),
-				await get_address(provider)
-			)
+		if (order.take.asset_type.asset_class === "MT" || order.take.asset_type.asset_class === "NFT") {
+			// eslint-disable-next-line camelcase
+			const { contract, token_id } = order.take.asset_type
+			const ownershipId = `${contract}:${token_id.toString()}:${await get_address(provider)}`
+			const response = await this.apis.ownership.getNftOwnershipById({
+				ownershipId,
+			})
 			return toRaribleBigNumber(response.value)
 		} else {
 			return toRaribleBigNumber(order.makeStock)

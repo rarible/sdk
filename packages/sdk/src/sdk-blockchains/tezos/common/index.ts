@@ -7,7 +7,12 @@ import { get_public_key } from "tezos-sdk-module/dist/common/base"
 import { pk_to_pkh } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
 import type { Part } from "tezos-sdk-module/dist/order/utils"
-import { Configuration, NftCollectionControllerApi, NftItemControllerApi } from "tezos-api-client/build"
+import {
+	Configuration,
+	NftCollectionControllerApi,
+	NftItemControllerApi,
+	NftOwnershipControllerApi,
+} from "tezos-api-client/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { TezosNetwork } from "../domain"
@@ -15,6 +20,7 @@ import type { TezosNetwork } from "../domain"
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
 	item: NftItemControllerApi,
+	ownership: NftOwnershipControllerApi,
 }
 
 export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
@@ -25,6 +31,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 	return {
 		collection: new NftCollectionControllerApi(config),
 		item: new NftItemControllerApi(config),
+		ownership: new NftOwnershipControllerApi(config),
 	}
 }
 

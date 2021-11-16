@@ -14,7 +14,9 @@ export class TezosTransfer {
 	constructor(
 		private provider: Maybe<Provider>,
 		private apis: ITezosAPI,
-	) {}
+	) {
+		this.transfer = this.transfer.bind(this)
+	}
 
 	private getRequiredProvider(): Provider {
 		if (!this.provider) {
@@ -24,11 +26,17 @@ export class TezosTransfer {
 	}
 
 	async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
-		const { itemId } = getTezosItemData(prepare.itemId)
+		const { itemId, contract } = getTezosItemData(prepare.itemId)
+		console.log("getTezosItemData", itemId)
 		const item = await this.apis.item.getNftItemById({ itemId })
 
+		const collection = await this.apis.collection.getNftCollectionById({
+			collection: contract,
+		})
+
+		console.log("transfer item", item)
 		return {
-			multiple: true,
+			multiple: collection.type === "MT",
 			maxAmount: toBigNumber(item.supply),
 			submit: Action.create({
 				id: "transfer" as const,

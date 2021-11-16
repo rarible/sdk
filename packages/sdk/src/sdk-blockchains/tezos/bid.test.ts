@@ -1,23 +1,11 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
-// eslint-disable-next-line camelcase
-import { deploy_fa2, mint } from "tezos-sdk-module"
-import { EthereumWallet, TezosWallet } from "@rarible/sdk-wallet"
-import { Configuration, ItemControllerApi } from "@rarible/api-client"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toItemId } from "@rarible/types"
-import { initProviders } from "../ethereum/test/init-providers"
+import { TezosWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../../index"
-import { createTezosSdk } from "./index"
 
 describe("bid test", () => {
-	const { web31, wallet1 } = initProviders()
-
-	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(wallet, "e2e")
-
 	const tezos = in_memory_provider(
 		"edskRzKnQB3jFrx8qYRedDguFNnrmePpvmAyBt6zTz1RzDm3vVnqtrqhhuM8SupK2gTYgq2jdMGJUgvMXJiG5Vz7Wd6Ub2hFTR",
 		// "edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
@@ -25,8 +13,10 @@ describe("bid test", () => {
 	)
 
 	const config = {
-		exchange: "KT1XgQ52NeNdjo3jLpbsPBRfg8YhWoQ5LB7g",
+		exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
 		fees: new BigNumber(0),
+		nft_public: "",
+		mt_public: "",
 	}
 
 	const provider = {
@@ -35,11 +25,11 @@ describe("bid test", () => {
 		config,
 	}
 
-	const sender = "tz1dGYcxgScHNkVWdpDKAwuP2xc5afnutjL3"
-	let fa2Contract: string = "KT1ChRn258Xwy1wnFMYrU9kFQrDxfJnFm68M"
-	const royaltiesContract: string = "KT1KrzCSQs6XMMRsQ7dqCVcYQeGs7d512zzb"
+	const wallet = new TezosWallet(provider)
+	const sdk = createRaribleSdk(wallet, "e2e")
 
-	const sdkPath = "https://api-dev.rarible.org"
+	let fa2Contract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
+
 	beforeAll(async () => {
 		/*
 		const op = await deploy_fa2(

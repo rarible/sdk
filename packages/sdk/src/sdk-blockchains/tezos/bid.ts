@@ -35,12 +35,15 @@ export class TezosBid {
 					asset_class: type["@type"],
 				}
 			}
-			case "FA_1_2": {
+			/*
+			case "FT": {
 				return {
 					asset_class: type["@type"],
 					contract: type.contract,
 				}
 			}
+
+       */
 			default: {
 				throw new Error("Unsupported take asset type")
 			}

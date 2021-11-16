@@ -9,6 +9,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import { toBigNumber, toOrderId } from "@rarible/types"
 import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider } from "tezos-sdk-module/dist/common/base"
 import BigNumber from "bignumber.js"
+import type { FTAssetType, XTZAssetType } from "tezos-sdk-module/common/base"
 import type { RequestCurrency } from "../../common/domain"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -32,7 +33,9 @@ export class TezosSell {
 		return this.provider
 	}
 
-	parseTakeAssetType(type: RequestCurrency) {
+	// parseTakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
+	//todo fix return type
+	parseTakeAssetType(type: RequestCurrency): any {
 		switch (type["@type"]) {
 			case "XTZ":
 				return {
@@ -73,7 +76,8 @@ export class TezosSell {
 
 	assetTypeToJSON(a: TezosLibAssetType): any {
 		switch (a.asset_class) {
-			case "FA_2":
+			case "MT":
+			case "NFT":
 				return {
 					assetClass: a.asset_class,
 					contract: a.contract,
@@ -81,7 +85,7 @@ export class TezosSell {
 				}
 			case "XTZ":
 				return { assetClass: a.asset_class }
-			case "FA_1_2":
+			case "FT":
 				return {
 					assetClass: a.asset_class,
 					contract: a.contract,
@@ -95,7 +99,8 @@ export class TezosSell {
 	assetToJSON(a: TezosLibAsset) : any {
 		// @todo handle different decimal for FA_1_2
 		switch (a.asset_type.asset_class) {
-			case "FA_2":
+			case "MT":
+			case "NFT":
 				return {
 					assetType: this.assetTypeToJSON(a.asset_type),
 					value: a.value.toString(),
