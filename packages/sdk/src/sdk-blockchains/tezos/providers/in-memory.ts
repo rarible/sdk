@@ -11,6 +11,8 @@ export function createInMemoryProvider(node: string) {
 		config: {
 			exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
 			fees: new BigNumber(0),
+			nft_public: "",
+			mt_public: "",
 		},
 	}
 }

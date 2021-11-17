@@ -41,7 +41,7 @@ export class TezosTransfer {
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: TransferRequest) => {
-					const amount = request.amount !== undefined ? toBn(request.amount.toFixed()) : undefined
+					const amount = collection.type === "NFT" ? undefined : toBn((request.amount || 1).toFixed())
 
 					const result = await transfer(
 						this.getRequiredProvider(),

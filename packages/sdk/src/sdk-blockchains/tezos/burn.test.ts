@@ -2,14 +2,11 @@
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
 // eslint-disable-next-line camelcase
-import { deploy_fa2 } from "tezos-sdk-module"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import type { ItemId } from "@rarible/api-client"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toUnionAddress } from "@rarible/types"
 import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
-import { MintType } from "../../types/nft/mint/domain"
 
 describe("burn test", () => {
 	const { web31 } = initProviders()
@@ -41,6 +38,7 @@ describe("burn test", () => {
 	const royaltiesContract: string = "KT1KrzCSQs6XMMRsQ7dqCVcYQeGs7d512zzb"
 	let itemId: ItemId
 
+	/*
 	beforeAll(async () => {
 		const op = await deploy_fa2(
 			provider,
@@ -71,6 +69,8 @@ describe("burn test", () => {
 			await mintResult.transaction.wait()
 		}
 	}, 1500000)
+
+   */
 
 	test("burn test", async () => {
 

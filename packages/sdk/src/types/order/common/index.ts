@@ -1,7 +1,7 @@
 import type { ItemId, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { UnionAddress } from "@rarible/types"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
 import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 
@@ -16,7 +16,7 @@ export type PrepareOrderInternalRequest = {
 	/**
 	 * Collection id, where Item is from
 	 */
-	collectionId: UnionAddress
+	collectionId: ContractAddress
 }
 
 export type UnionPart = {

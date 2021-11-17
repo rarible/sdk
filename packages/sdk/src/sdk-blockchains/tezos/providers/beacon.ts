@@ -7,6 +7,8 @@ export async function createBeaconProvider(node: string): Promise<TezosProviderR
 	const config = {
 		exchange: "KT1XgQ52NeNdjo3jLpbsPBRfg8YhWoQ5LB7g",
 		fees: new BigNumber(0),
+		nft_public: "",
+		mt_public: "",
 	}
 
 	return {

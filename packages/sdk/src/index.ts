@@ -1,5 +1,5 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
-import type { UnionAddress } from "@rarible/types"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
 import type { ConfigurationParameters } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -57,7 +57,7 @@ function filterWallet<T extends "FLOW" | "ETHEREUM" | "TEZOS">(
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		const collectionId = toUnionAddress(item.collection)
+		const collectionId = item.contract
 		const response = await sell({ collectionId })
 		return {
 			...response,
@@ -104,7 +104,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-export function getCollectionId(req: HasCollectionId | HasCollection): UnionAddress {
+export function getCollectionId(req: HasCollectionId | HasCollection): ContractAddress {
 	if ("collection" in req) {
 		return req.collection.id
 	}

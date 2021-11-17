@@ -2959,19 +2959,12 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@~0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.7.tgz#21cfe5d385f698ef3452d411e7d415b162c5f552"
-  integrity sha512-pyQH1d9bOgSUKiNWxGPFDVycjKdPgQKy4wgWgfduafaZHZttb2RKQx3Eq9V4v6GSjDs/3fEsq3KOMXWdHWwWuw==
+"@rarible/api-client@~0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.8.tgz#1bb7caa2a3e760cda11f8d3aa597ad3e45454b9c"
+  integrity sha512-I3tBvpL2J9y2XZAtYja2U/RLdISwRHDkLZxGkQQnhm7AOjrMAIx5u7r9YhPbUhV4BoGml7Y2P6n7pprs00Tdng==
   dependencies:
-    "@rarible/types" "~0.5.0"
-
-"@rarible/api-client@~0.0.7":
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.7.tgz#21cfe5d385f698ef3452d411e7d415b162c5f552"
-  integrity sha512-pyQH1d9bOgSUKiNWxGPFDVycjKdPgQKy4wgWgfduafaZHZttb2RKQx3Eq9V4v6GSjDs/3fEsq3KOMXWdHWwWuw==
-  dependencies:
-    "@rarible/types" "~0.5.0"
+    "@rarible/types" "~0.5.3"
 
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
@@ -3068,6 +3061,11 @@
     eth-sig-util "^3.0.1"
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
+
+"@rarible/types@^0.5.3", "@rarible/types@~0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
+  integrity sha512-ZjrJvg4iVIxatBRnUPcwWzaQRf7XN4hgjrRHqmjXv2Q+8/2vYyPL1TBFlfGunPPDMUB3hwBELaL5ZQaJsSE6oQ==
 
 "@rarible/types@~0.5.0":
   version "0.5.0"
@@ -11308,6 +11306,13 @@ node-fetch@^2.6.0, node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
+node-fetch@^2.6.6:
+  version "2.6.6"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.6.tgz#1751a7c01834e8e1697758732e9efb6eeadfaf89"
+  integrity sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA==
+  dependencies:
+    whatwg-url "^5.0.0"
+
 node-fetch@~1.7.1:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
@@ -14155,15 +14160,15 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-api-client@~0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.2.tgz#d0e8533180c0fb384d2892765e089732b4d2eb70"
-  integrity sha512-CcIk+B2jdk5Q5fK6xmKL8G+ODLRriGTPcA6Y1D4KcbIcamfLRXoNwPSmNamt/ipjdQV/c4V4dqZbrI+B706QBw==
+tezos-api-client@~0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.3.tgz#cc5b3e439ddf40d06ecfa7cb55c261d77ef71f8c"
+  integrity sha512-i/GU3dz3Gt1KKsIZ2i42jS3+C3FxwQ7rgN0ForanfMqjBi7fgGHd+ogG59kszs+WOZ4JokAOGWr3iSONm1ydew==
 
-tezos-sdk-module@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.7.tgz#3401b13e612c11c4a121c895108ee302a48f012d"
-  integrity sha512-HWyzwbuVlnuvJ9n5ieOekFLVpdIkFVhJ4DXokKeHrzLhc85lzlE/uzZk2LQmOIrg76gED7ImU2UWobL/YazVmQ==
+tezos-sdk-module@~0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.13.tgz#b44962ba0b8ba1b70974ceb588ecc714912ea18f"
+  integrity sha512-5mddsfo0kDlJCVbYBr7kjdBaYgE7WUfL4kBraPMRbABizszwffigmpnMqfIRcJzqqt6fFQulxP7T9OhcWkPzMA==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.2"
     "@taquito/beacon-wallet" "^10.1.2"
@@ -14176,25 +14181,7 @@ tezos-sdk-module@^0.0.7:
     bs58check "^2.1.2"
     json-formatter-js "^2.3.4"
     keccak "^3.0.2"
-    vue "^2.6.14"
-    yargs "^17.2.1"
-
-tezos-sdk-module@~0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.12.tgz#e03d26d48c020e3139c1e4198bcea264c19dea77"
-  integrity sha512-hXrP1m6i0NHv/ZKDqI8DzhInGuwigkkurPsNjI0ySM3fGZcm9+O76UJNca1HFYP/Sq7kVd4/GR/rWBKCcYxP5g==
-  dependencies:
-    "@airgap/beacon-sdk" "^2.3.2"
-    "@taquito/beacon-wallet" "^10.1.2"
-    "@taquito/signer" "^10.1.2"
-    "@temple-wallet/dapp" "^5.0.2"
-    "@types/bs58check" "^2.1.0"
-    "@types/elliptic" "^6.4.13"
-    "@types/keccak" "^3.0.1"
-    bignumber.js "^9.0.1"
-    bs58check "^2.1.2"
-    json-formatter-js "^2.3.4"
-    keccak "^3.0.2"
+    node-fetch "^2.6.6"
     vue "^2.6.14"
     yargs "^17.2.1"
 

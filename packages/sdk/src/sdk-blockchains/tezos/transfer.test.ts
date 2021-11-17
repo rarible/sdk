@@ -4,10 +4,11 @@ import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in
 import { get_address } from "tezos-sdk-module/dist/common/base"
 import BigNumber from "bignumber.js"
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { toUnionAddress } from "@rarible/types"
+import { toItemId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
-import { getTezosAPIs } from "./common"
+import { retry } from "../../common/retry"
+import { getTezosAPIs, getTezosItemData } from "./common"
 
 describe("transfer test", () => {
 	const tezos = in_memory_provider(
@@ -38,6 +39,7 @@ describe("transfer test", () => {
 		const sender = await get_address(provider)
 		console.log("sender", sender)
 
+		/*
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
 		})
@@ -53,8 +55,13 @@ describe("transfer test", () => {
 		}
 
 		console.log("minted item", mintResult)
+		// const transferedId = mintResult.itemId
+
+     */
+		const transferedId = toItemId("TEZOS:KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF:7")
 		const transfer = await sdk.nft.transfer({
-			itemId: mintResult.itemId,
+			// itemId: mintResult.itemId,
+			itemId: toItemId(transferedId),
 		})
 
 		const result = await transfer.submit({
@@ -64,11 +71,16 @@ describe("transfer test", () => {
 
 		await result.wait()
 
-		const ownership = await tezosAPI.ownership.getNftOwnershipById({
-			ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
-		})
+		const { itemId } = getTezosItemData(transferedId)
+		await retry(5, 500, async () => {
+			const ownership = await tezosAPI.ownership.getNftOwnershipById({
+				// ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
+				ownershipId: `${itemId}:${sender}`,
+			})
 
-		console.log("ownership", ownership)
+			console.log("ownership", ownership)
+
+		})
 	}, 1500000)
 
 })
