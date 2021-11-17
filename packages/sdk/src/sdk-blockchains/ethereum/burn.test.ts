@@ -24,7 +24,7 @@ describe("burn", () => {
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
-				value: toBigNumber("10000"),
+				value: 10000,
 			}],
 			royalties: [],
 			lazyMint: false,
@@ -55,7 +55,7 @@ describe("burn", () => {
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
-				value: toBigNumber("10000"),
+				value: 10000,
 			}],
 			royalties: [],
 			lazyMint: false,

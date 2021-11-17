@@ -30,6 +30,7 @@ export function createTestOrder(orderId: string): Order {
 		},
 		salt: "",
 		pending: [],
+		status: "ACTIVE",
 		data: {
 			"@type": "FLOW_RARIBLE_V1",
 			payouts: [],
