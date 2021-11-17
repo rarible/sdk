@@ -1,7 +1,7 @@
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toItemId, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
 import { createRaribleSdk } from "../../index"
@@ -36,7 +36,7 @@ describe("sale", () => {
 			price: "0.000000000000000002",
 			currency: {
 				"@type": "ERC20",
-				contract: toUnionAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
 			},
 		})
 

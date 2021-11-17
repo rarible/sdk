@@ -110,6 +110,7 @@ export class Fill {
 
  	static getTezosAssetType(type: AssetType): TezosAssetType {
 		switch (type["@type"]) {
+			/*
 			case "FA_2": {
 				return {
 					asset_class: type["@type"],
@@ -128,6 +129,7 @@ export class Fill {
 					asset_class: type["@type"],
 				}
 			}
+       */
 			default: {
 				throw new Error("Invalid take asset type")
 			}

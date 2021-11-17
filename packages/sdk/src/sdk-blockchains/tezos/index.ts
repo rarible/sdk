@@ -15,9 +15,9 @@ export function createTezosSdk(wallet: Maybe<TezosWallet>): IRaribleInternalSdk 
 			deploy: nonImplementedAction,
 		},
 		order: {
-			fill: new Fill(wallet?.provider).fill,
+			fill: new Fill(wallet?.provider as any).fill as any,
 			// @todo fix any type
-			sell: new Sell(wallet?.provider).sell as any,
+			sell: new Sell(wallet?.provider as any).sell as any,
 			sellUpdate: notImplemented,
 			bid: notImplemented,
 			bidUpdate: notImplemented,

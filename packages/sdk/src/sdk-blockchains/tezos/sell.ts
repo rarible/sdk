@@ -1,5 +1,10 @@
 import type { SellRequest as TezosSellRequest } from "tezos-sdk-module/dist/order/sell"
 import { sell } from "tezos-sdk-module/dist/order/sell"
+import type {
+	Asset as TezosLibAsset,
+	AssetType as TezosLibAssetType,
+	Provider,
+} from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
@@ -7,7 +12,7 @@ import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { toBigNumber, toOrderId } from "@rarible/types"
-import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider } from "tezos-sdk-module/dist/common/base"
+import { Blockchain } from "@rarible/api-client"
 import type { RequestCurrency } from "../../common/domain"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse, UnionPart } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -31,11 +36,13 @@ export class Sell {
 				return {
 					asset_class: type["@type"],
 				}
+				/*
 			case "FA_1_2":
 				return {
 					asset_class: type["@type"],
 					contract: type.contract,
 				}
+         */
 			default:
 				throw new Error("Unsupported take asset type")
 		}
@@ -176,7 +183,7 @@ export class Sell {
 			originFeeSupport: OriginFeeSupport.FULL, //todo check
 			payoutsSupport: PayoutsSupport.MULTIPLE, //todo check
 			supportedCurrencies: [{
-				blockchain: "TEZOS",
+				blockchain: Blockchain.TEZOS,
 				type: "NATIVE",
 			}],
 			baseFee: parseInt(provider.config.fees.toString()),

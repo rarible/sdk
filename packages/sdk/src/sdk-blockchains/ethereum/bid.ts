@@ -3,11 +3,13 @@ import { toBinary, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
+import { PendingOrderMatchSide } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { OrderExchangeHistory } from "@rarible/ethereum-api-client/build/models/OrderExchangeHistory"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as common from "./common"
+import { convertToEthereumContractAddress } from "./common"
 
 export class EthereumBid {
 	constructor(private sdk: RaribleSdk) {
@@ -25,20 +27,20 @@ export class EthereumBid {
 			case "ERC20": {
 				return {
 					"@type": "ERC20",
-					contract: toUnionAddress(assetType.contract),
+					contract: convertToEthereumContractAddress(assetType.contract),
 				}
 			}
 			case "ERC721": {
 				return {
 					"@type": "ERC721",
-					contract: toUnionAddress(assetType.contract),
+					contract: convertToEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC721_LAZY": {
 				return {
 					"@type": "ERC721_Lazy",
-					contract: toUnionAddress(assetType.contract),
+					contract: convertToEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					creators: assetType.creators.map((c) => ({
@@ -55,14 +57,14 @@ export class EthereumBid {
 			case "ERC1155": {
 				return {
 					"@type": "ERC1155",
-					contract: toUnionAddress(assetType.contract),
+					contract: convertToEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC1155_LAZY": {
 				return {
 					"@type": "ERC1155_Lazy",
-					contract: toUnionAddress(assetType.contract),
+					contract: convertToEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					supply: assetType.supply !== undefined
@@ -82,7 +84,7 @@ export class EthereumBid {
 			case "GEN_ART": {
 				return {
 					"@type": "GEN_ART",
-					contract: toUnionAddress(assetType.contract),
+					contract: convertToEthereumContractAddress(assetType.contract),
 				}
 			}
 			default: {
@@ -95,73 +97,6 @@ export class EthereumBid {
 		return {
 			type: this.convertAssetType(asset.assetType),
 			value: asset.value,
-		}
-	}
-
-	convertEthHistoryToUnion(history: OrderExchangeHistory): ApiClient.PendingOrder {
-		switch (history.type) {
-			case "CANCEL": {
-				return {
-					"@type": history.type,
-					id: toOrderId(history.hash),
-					make: history.make && this.getAsset(history.make),
-					date: history.date,
-					take: history.take && this.getAsset(history.take),
-					maker: history.maker && toUnionAddress(history.maker),
-					owner: history.owner && toUnionAddress(history.owner),
-				}
-			}
-			case "ORDER_SIDE_MATCH": {
-				return {
-					...history,
-					"@type": "ORDER_SIDE_MATCH",
-					id: toOrderId(history.hash),
-					make: history.make && this.getAsset(history.make),
-					take: history.take && this.getAsset(history.take),
-					maker: history.maker && toUnionAddress(history.maker),
-					fill: history.fill,
-					taker: history.taker && toUnionAddress(history.taker),
-				}
-			}
-			default: {
-				throw new Error("Unsupported order exchange history object")
-			}
-		}
-	}
-
-	convertOrderData(data: EthereumApiClient.OrderData): ApiClient.OrderData {
-		switch (data.dataType) {
-			case "LEGACY":
-				return {
-					"@type": "ETH_RARIBLE_V1",
-					fee: toBigNumber(data.fee.toFixed()),
-				}
-			case "RARIBLE_V2_DATA_V1":
-				return {
-					"@type": "ETH_RARIBLE_V2",
-					payouts: data.payouts.map((p) => ({
-						account: toUnionAddress(p.account),
-						value: p.value,
-					})),
-					originFees: data.originFees.map((fee) => ({
-						account: toUnionAddress(fee.account),
-						value: fee.value,
-					})),
-				}
-			case "OPEN_SEA_V1_DATA_V1":
-				return {
-					...data,
-					"@type": "ETH_OPEN_SEA_V1",
-					exchange: toUnionAddress(data.exchange),
-					feeRecipient: toUnionAddress(data.feeRecipient),
-					callData: toBinary(data.callData),
-					replacementPattern: toBinary(data.callData),
-					staticExtraData: toBinary(data.staticExtraData),
-					staticTarget: toUnionAddress(data.staticTarget),
-				}
-			default: {
-				throw new Error("Unsupported order data type")
-			}
 		}
 	}
 

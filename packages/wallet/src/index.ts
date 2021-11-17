@@ -1,10 +1,11 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
+import { Blockchain } from "@rarible/api-client"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
-	readonly blockchain = "ETHEREUM"
+	readonly blockchain = Blockchain.ETHEREUM
 
 	constructor(public readonly ethereum: T) {}
 
@@ -21,7 +22,7 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 }
 
 export class FlowWallet implements AbstractWallet {
-	readonly blockchain = "FLOW"
+	readonly blockchain = Blockchain.FLOW
 
 	constructor(public readonly fcl: Fcl) {}
 
@@ -61,7 +62,7 @@ export class FlowWallet implements AbstractWallet {
 }
 
 export class TezosWallet implements AbstractWallet {
-	readonly blockchain = "TEZOS"
+	readonly blockchain = Blockchain.TEZOS
 
 	constructor(public readonly provider: Provider) {}
 
