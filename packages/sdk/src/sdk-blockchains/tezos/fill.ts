@@ -3,7 +3,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 // eslint-disable-next-line camelcase
 import { get_address } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
-import type { AssetType, Order, OrderId, OrderPayout } from "@rarible/api-client"
+import type { AssetType, Order, OrderId } from "@rarible/api-client"
 import type { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 // eslint-disable-next-line camelcase
 import { fill_order } from "tezos-sdk-module/dist/order"
@@ -220,7 +220,7 @@ export class Fill {
 		}
 	}
 
-	convertOrderPayout(payout?: OrderPayout[] | Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
+	convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
 		return payout?.map(p => ({
 			account: p.account,
 			value: BigInt(p.value),
@@ -281,7 +281,7 @@ export class Fill {
 					preparedOrder,
 					request,
 				)
-				return new BlockchainTezosTransaction(fillResponse)
+				return new BlockchainTezosTransaction(fillResponse as any)
 			},
 		})
 

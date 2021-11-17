@@ -1,8 +1,9 @@
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import type { Order, UnionAddress } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
+import type { ContractAddress } from "@rarible/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -24,7 +25,7 @@ export class FlowBuy {
 		throw new Error("Incorrect request")
 	}
 
-	private getFlowContract(order: Order): UnionAddress {
+	private getFlowContract(order: Order): ContractAddress {
 		if (order.make.type["@type"] === "FLOW_NFT") {
 			return order.make.type.contract
 		}

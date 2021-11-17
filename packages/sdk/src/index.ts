@@ -1,6 +1,5 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
-import { toUnionAddress } from "@rarible/types"
+import type { ContractAddress } from "@rarible/types"
 import type { ConfigurationParameters } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleSdk } from "./domain"
