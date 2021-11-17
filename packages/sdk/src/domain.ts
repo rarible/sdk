@@ -9,6 +9,7 @@ import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
 import type { IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
+import type { IDeploy } from "./types/nft/deploy/domain"
 
 export interface IRaribleSdk {
 	apis: IApisSdk
@@ -31,6 +32,7 @@ export interface INftSdk {
 	mintAndSell: IMintAndSell
 	burn: IBurn
 	generateTokenId: IGenerateTokenId
+	deploy: IDeploy
 }
 
 export interface IOrderSdk {

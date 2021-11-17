@@ -3,7 +3,7 @@ import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { notImplemented } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -27,6 +27,7 @@ export function createFlowSdk(
 			burn: new FlowBurn(sdk).burn,
 			transfer: new FlowTransfer(sdk).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
+			deploy: nonImplementedAction,
 		},
 		order: {
 			sell: sellService.sell,

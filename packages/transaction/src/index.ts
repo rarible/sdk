@@ -7,15 +7,18 @@ import type { IBlockchainTransaction } from "./domain"
 export class BlockchainEthereumTransaction implements IBlockchainTransaction {
 	blockchain: Blockchain = "ETHEREUM"
 
-	constructor(public transaction: EthereumTransaction) {
+	constructor(public transaction: EthereumTransaction) {}
+
+	hash() {
+		return this.transaction.hash
 	}
 
 	async wait() {
-		const waitResponse = await this.transaction.wait()
+		await this.transaction.wait()
 
 		return {
 			blockchain: this.blockchain,
-			hash: waitResponse.transactionHash,
+			hash: this.transaction.hash,
 		}
 	}
 }
@@ -24,6 +27,10 @@ export class BlockchainTezosTransaction implements IBlockchainTransaction {
 	blockchain: Blockchain = "TEZOS"
 
 	constructor(public transaction: OperationResult) {}
+
+	hash() {
+		return this.transaction.hash
+	}
 
 	async wait() {
 		await this.transaction.confirmation()
@@ -39,6 +46,10 @@ export class BlockchainFlowTransaction implements IBlockchainTransaction {
 	blockchain: Blockchain = "FLOW"
 
 	constructor(public transaction: FlowTransaction) {
+	}
+
+	hash() {
+		return this.transaction.txId
 	}
 
 	async wait() {

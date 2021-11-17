@@ -24,6 +24,7 @@ export function createTezosSdk(
 			burn: notImplemented,
 			transfer: new TezosTransfer(wallet?.provider, apis).transfer,
 			generateTokenId: notImplemented,
+			deploy: nonImplementedAction,
 		},
 		order: {
 			fill: new TezosFill(wallet?.provider, apis).fill,
