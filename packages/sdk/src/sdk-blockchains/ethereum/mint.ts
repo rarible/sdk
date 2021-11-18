@@ -102,7 +102,8 @@ export class EthereumMint {
 			throw new Error(`Collection with type "${collection}" not supported`)
 		}
 
-		const request = validatePrepareMintRequest(requestRaw)
+		// const request = validatePrepareMintRequest(requestRaw)
+		const request = requestRaw
 		const nftCollection = toNftCollection(collection)
 
 		return {
