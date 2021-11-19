@@ -91,6 +91,13 @@ export class EthereumFill {
 					signatures: assetType.signatures.map(str => toBinary(str)),
 				}
 			}
+			case "CRYPTO_PUNKS": {
+				return {
+					assetClass: "CRYPTO_PUNKS",
+					contract: convertUnionToEthereumAddress(assetType.contract),
+					tokenId: assetType.punkId,
+				}
+			}
 			case "GEN_ART": {
 				return {
 					assetClass: "GEN_ART",
@@ -140,12 +147,21 @@ export class EthereumFill {
 						dataType: "RARIBLE_V2_DATA_V1",
 						payouts: order.data.payouts.map(p => ({
 							account: convertUnionToEthereumAddress(p.account),
-							value: parseInt(p.value),
+							value: p.value,
 						})),
 						originFees: order.data.originFees.map(fee => ({
 							account: convertUnionToEthereumAddress(fee.account),
-							value: parseInt(fee.value),
+							value: fee.value,
 						})),
+					},
+				}
+			}
+			case "ETH_CRYPTO_PUNKS": {
+				return {
+					...common,
+					type: "CRYPTO_PUNK",
+					data: {
+						dataType: "CRYPTO_PUNKS_DATA",
 					},
 				}
 			}

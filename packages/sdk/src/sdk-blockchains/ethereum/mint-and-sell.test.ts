@@ -2,7 +2,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
+import { toAddress, toUnionAddress } from "@rarible/types"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 
@@ -31,10 +31,10 @@ describe("mintAndSell", () => {
 		})
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
-				value: toBigNumber("10000"),
+				value: 10000,
 			}],
 			royalties: [],
 			lazyMint: false,
