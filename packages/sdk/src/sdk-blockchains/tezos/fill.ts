@@ -27,7 +27,8 @@ import type {
 } from "tezos-api-client"
 import BigNumber from "bignumber.js"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
-import { get_public_key } from "tezos-sdk-module/common/base"
+// eslint-disable-next-line camelcase
+import { get_public_key } from "tezos-sdk-module/dist/common/base"
 import type {
 	FillRequest,
 	PrepareFillRequest,

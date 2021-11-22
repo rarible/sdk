@@ -85,15 +85,19 @@ describe("mint test", () => {
 			itemId: toItemId("TEZOS:KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53:8"),
 		})
 
-		const orderId = await sellAction.submit({
-			amount: 1,
-			price: "0.000000000000000002",
-			currency: {
-				"@type": "XTZ",
-			},
-		})
+		try {
+			const orderId = await sellAction.submit({
+				amount: 1,
+				price: "2",
+				currency: {
+					"@type": "XTZ",
+				},
+			})
+		  console.log("orderId", orderId)
+		} catch (e) {
+			console.error(await (e as any).json())
+		}
 
-		console.log("orderId", orderId)
 	}, 1500000)
 
 })

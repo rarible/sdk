@@ -8075,6 +8075,13 @@ get-port@^5.1.1:
   resolved "https://registry.yarnpkg.com/get-port/-/get-port-5.1.1.tgz#0469ed07563479de6efb986baf053dcd7d4e3193"
   integrity sha512-g/Q1aTSDOxFpchXC4i8ZWvxA1lnPqx/JHqcpIw0/LX9T8x/GBbi6YnlN5nhaKIFkT8oFsscUKgDJYxfwfS6QsQ==
 
+get-random-values@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/get-random-values/-/get-random-values-1.2.2.tgz#f1d944d0025433d53a2bd9941b9e975d98a2f7ff"
+  integrity sha512-lMyPjQyl0cNNdDf2oR+IQ/fM3itDvpoHy45Ymo2r0L1EjazeSl13SfbKZs7KtZ/3MDCeueiaJiuOEfKqRTsSgA==
+  dependencies:
+    global "^4.4.0"
+
 get-stdin@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-8.0.0.tgz#cbad6a73feb75f6eeb22ba9e01f89aa28aa97a53"
@@ -8249,7 +8256,7 @@ global-dirs@^3.0.0:
   dependencies:
     ini "2.0.0"
 
-global@~4.4.0:
+global@^4.4.0, global@~4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/global/-/global-4.4.0.tgz#3e7b105179006a323ed71aafca3e9c57a5cc6406"
   integrity sha512-wv/LAoHdRE3BeTGz53FAamhGlPLhlssK45usmGFThIi4XqnBmjKQ16u+RNbP7WvigRZDxUsM0J3gcQ5yicaL0w==
@@ -14184,6 +14191,27 @@ tezos-sdk-module@~0.0.14:
     "@types/keccak" "^3.0.1"
     bignumber.js "^9.0.1"
     bs58check "^2.1.2"
+    json-formatter-js "^2.3.4"
+    keccak "^3.0.2"
+    node-fetch "^2.6.6"
+    vue "^2.6.14"
+    yargs "^17.2.1"
+
+tezos-sdk-module@~0.0.15:
+  version "0.0.15"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.15.tgz#cde680fbada87e7176318b326ae85e05330f3ec6"
+  integrity sha512-FV4gApb/x64q923zAn2hAoZSwzmKREjwIhaPfTWp67EeA5BZe6nAjxceyrPm0U55z4kyURIhit7jllmYOpnJsw==
+  dependencies:
+    "@airgap/beacon-sdk" "^2.3.2"
+    "@taquito/beacon-wallet" "^10.1.2"
+    "@taquito/signer" "^10.1.2"
+    "@temple-wallet/dapp" "^5.0.2"
+    "@types/bs58check" "^2.1.0"
+    "@types/elliptic" "^6.4.13"
+    "@types/keccak" "^3.0.1"
+    bignumber.js "^9.0.1"
+    bs58check "^2.1.2"
+    get-random-values "^1.2.2"
     json-formatter-js "^2.3.4"
     keccak "^3.0.2"
     node-fetch "^2.6.6"
