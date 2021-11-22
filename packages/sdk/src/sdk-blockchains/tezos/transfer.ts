@@ -8,7 +8,7 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { ITezosAPI } from "./common"
-import { getTezosItemData } from "./common"
+import { getTezosAddress, getTezosItemData } from "./common"
 
 export class TezosTransfer {
 	constructor(
@@ -49,7 +49,7 @@ export class TezosTransfer {
 							contract: item.contract,
 							token_id: toBn(item.tokenId),
 						},
-						request.to,
+						getTezosAddress(request.to),
 						amount,
 					)
 

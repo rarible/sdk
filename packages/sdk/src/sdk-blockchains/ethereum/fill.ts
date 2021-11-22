@@ -14,7 +14,7 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertUnionToEthereumAddress } from "./common"
+import { convertToEthereumAddress } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -39,28 +39,28 @@ export class EthereumFill {
 			case "ERC20": {
 				return {
 					assetClass: "ERC20",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 				}
 			}
 			case "ERC721": {
 				return {
 					assetClass: "ERC721",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC721_Lazy": {
 				return {
 					assetClass: "ERC721_LAZY",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					creators: assetType.creators.map(c => ({
-						account: convertUnionToEthereumAddress(c.account),
+						account: convertToEthereumAddress(c.account),
 						value: toBn(c.value).toNumber(),
 					})),
 					royalties: assetType.royalties.map(r => ({
-						account: convertUnionToEthereumAddress(r.account),
+						account: convertToEthereumAddress(r.account),
 						value: toBn(r.value).toNumber(),
 					})),
 					signatures: assetType.signatures.map(str => toBinary(str)),
@@ -69,23 +69,23 @@ export class EthereumFill {
 			case "ERC1155": {
 				return {
 					assetClass: "ERC1155",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC1155_Lazy": {
 				return {
 					assetClass: "ERC1155_LAZY",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					supply: assetType.supply !== undefined ? toBigNumber(assetType.supply): toBigNumber("1"),
 					creators: assetType.creators.map(c => ({
-						account: convertUnionToEthereumAddress(c.account),
+						account: convertToEthereumAddress(c.account),
 						value: toBn(c.value).toNumber(),
 					})),
 					royalties: assetType.royalties.map(r => ({
-						account: convertUnionToEthereumAddress(r.account),
+						account: convertToEthereumAddress(r.account),
 						value: toBn(r.value).toNumber(),
 					})),
 					signatures: assetType.signatures.map(str => toBinary(str)),
@@ -94,14 +94,14 @@ export class EthereumFill {
 			case "CRYPTO_PUNKS": {
 				return {
 					assetClass: "CRYPTO_PUNKS",
-					contract: convertUnionToEthereumAddress(assetType.contract),
-					tokenId: assetType.punkId,
+					contract: convertToEthereumAddress(assetType.contract),
+					tokenId: assetType.tokenId,
 				}
 			}
 			case "GEN_ART": {
 				return {
 					assetClass: "GEN_ART",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 				}
 			}
 			default: {
@@ -112,8 +112,8 @@ export class EthereumFill {
 
 	convertToSimpleOrder(order: Order): SimplePreparedOrder {
 		const common = {
-			maker: convertUnionToEthereumAddress(order.maker),
-			taker: order.taker && convertUnionToEthereumAddress(order.taker),
+			maker: convertToEthereumAddress(order.maker),
+			taker: order.taker && convertToEthereumAddress(order.taker),
 			make: {
 				assetType: this.convertAssetType(order.make.type),
 				value: order.make.value,
@@ -146,11 +146,11 @@ export class EthereumFill {
 					data: {
 						dataType: "RARIBLE_V2_DATA_V1",
 						payouts: order.data.payouts.map(p => ({
-							account: convertUnionToEthereumAddress(p.account),
+							account: convertToEthereumAddress(p.account),
 							value: p.value,
 						})),
 						originFees: order.data.originFees.map(fee => ({
-							account: convertUnionToEthereumAddress(fee.account),
+							account: convertToEthereumAddress(fee.account),
 							value: fee.value,
 						})),
 					},
@@ -172,8 +172,8 @@ export class EthereumFill {
 					data: {
 						...order.data,
 						dataType: "OPEN_SEA_V1_DATA_V1",
-						exchange: convertUnionToEthereumAddress(order.data.exchange),
-						feeRecipient: convertUnionToEthereumAddress(order.data.feeRecipient),
+						exchange: convertToEthereumAddress(order.data.exchange),
+						feeRecipient: convertToEthereumAddress(order.data.feeRecipient),
 						feeMethod: EthereumApiClient.OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
 						side: EthereumApiClient.OrderOpenSeaV1DataV1Side[order.data.side],
 						saleKind: EthereumApiClient.OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
@@ -181,7 +181,7 @@ export class EthereumFill {
 						callData: toBinary(order.data.callData),
 						replacementPattern: toBinary(order.data.callData),
 						staticExtraData: toBinary(order.data.staticExtraData),
-						staticTarget: convertUnionToEthereumAddress(order.data.staticTarget),
+						staticTarget: convertToEthereumAddress(order.data.staticTarget),
 					},
 				}
 			}
@@ -200,7 +200,7 @@ export class EthereumFill {
 					infinite: fillRequest.infiniteApproval,
 					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value: 0,
 					payout: fillRequest.payouts?.[0]?.account
-						? convertUnionToEthereumAddress(fillRequest.payouts[0].account)
+						? convertToEthereumAddress(fillRequest.payouts[0].account)
 						: undefined,
 				}
 			}
@@ -210,11 +210,11 @@ export class EthereumFill {
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
 					payouts: fillRequest.payouts?.map(payout => ({
-						account: convertUnionToEthereumAddress(payout.account),
+						account: convertToEthereumAddress(payout.account),
 						value: payout.value,
 					})),
 					originFees: fillRequest.originFees?.map(fee => ({
-						account: convertUnionToEthereumAddress(fee.account),
+						account: convertToEthereumAddress(fee.account),
 						value: fee.value,
 					})),
 				}

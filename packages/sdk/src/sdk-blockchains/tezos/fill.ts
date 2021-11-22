@@ -1,15 +1,18 @@
-import type { AssetType as TezosAssetType, Provider } from "tezos-sdk-module/dist/common/base"
-import type { Maybe } from "@rarible/types/build/maybe"
-// eslint-disable-next-line camelcase
-import { get_address } from "tezos-sdk-module/dist/common/base"
-import { Action } from "@rarible/action"
-import type { AssetType, Order, OrderId, OrderPayout } from "@rarible/api-client"
-import type { OrderForm, Part, Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
-// eslint-disable-next-line camelcase
-import { fill_order } from "tezos-sdk-module/dist/order"
-import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 import type {
-	BigNumber as RaribleBigNumber } from "@rarible/types"
+	AssetType as TezosAssetType, Provider,
+	AssetType as TezosLibAssetType,
+	Asset as TezosLibAsset,
+} from "tezos-sdk-module/dist/common/base"
+import { Action } from "@rarible/action"
+import type { AssetType, Order, OrderId } from "@rarible/api-client"
+import type {
+	OrderForm, Part, Part as TezosPart,
+} from "tezos-sdk-module/dist/order"
+import TezosSDK from "tezos-sdk-module"
+import type {
+	BigNumber as RaribleBigNumber,
+	Maybe,
+} from "@rarible/types"
 import {
 	toBigNumber as toRaribleBigNumber,
 	toOrderId,
@@ -19,18 +22,19 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type {
 	Order as TezosOrder,
 	// AssetType as TezosAssetType
+	Asset as TezosClientAsset,
 	AssetType as TezosClientAssetType,
 } from "tezos-api-client"
 import BigNumber from "bignumber.js"
 import type {
 	FillRequest,
 	PrepareFillRequest,
-	PrepareFillResponse } from "../../types/order/fill/domain"
+	PrepareFillResponse,
+} from "../../types/order/fill/domain"
 import {
 	OriginFeeSupport,
 	PayoutsSupport,
 } from "../../types/order/fill/domain"
-import type { GetNftOwnershipByIdResponse } from "./domain"
 import type { ITezosAPI } from "./common"
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
@@ -48,16 +52,6 @@ export class TezosFill {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider
-	}
-
-	async getOrderByHash(orderId: OrderId): Promise<TezosOrder> {
-		const provider = this.getRequiredProvider()
-		const response = await fetch(`${provider.api}/orders/${orderId}`)
-		const json = await response.json()
-		if ("code" in json && json.code === "INVALID_ARGUMENT") {
-			throw new Error("Order does not exist")
-		}
-		return json
 	}
 
 	static getTezosAssetTypeFromCommonType(type: TezosClientAssetType): TezosAssetType {
@@ -85,19 +79,13 @@ export class TezosFill {
 
  	static getTezosAssetType(type: AssetType): TezosAssetType {
 		switch (type["@type"]) {
-			case "FA_2": {
+			case "TEZOS_NFT":
+			case "TEZOS_MT": {
 				return {
 					//todo fix types
 					asset_class: type["@type"] as any,
 					contract: type.contract,
 					"token_id": new BigNumber(type.tokenId),
-				}
-			}
-			case "FA_1_2": {
-				return {
-					//todo fix types
-					asset_class: type["@type"] as any,
-					contract: type.contract,
 				}
 			}
 			case "XTZ": {
@@ -143,35 +131,44 @@ export class TezosFill {
 		}
 	}
 
-	assetTypeOfJson(a: any) : TezosLibAssetType {
-		switch (a.assetClass) {
-			case "FA_2":
-				return {
-					asset_class: a.assetClass,
-					contract: a.contract,
-					token_id: new BigNumber(a.tokenId),
-				}
-			case "XTZ":
-				return { asset_class: a.assetClass }
-			case "FA_1_2":
-				return { asset_class: a.assetClass, contract: a.contract }
-			default: throw new Error("Unknown Asset Class")
-		}
-	}
-
-	assetOfJson(a: any): TezosLibAsset {
+	convertToLibAsset(a: TezosClientAsset): TezosLibAsset {
 		const factor = 1000000
 		switch (a.assetType.assetClass) {
-			case "FA_2":
+			case "XTZ": {
 				return {
-					asset_type: this.assetTypeOfJson(a.assetType),
-					value: new BigNumber(a.value),
-				}
-			default:
-				return {
-					asset_type: this.assetTypeOfJson(a.assetType),
+					asset_type: { asset_class: a.assetType.assetClass },
 					value: new BigNumber(a.value).multipliedBy(factor),
 				}
+			}
+			case "FT": {
+				return {
+					asset_type: {
+						asset_class: a.assetType.assetClass,
+						contract: a.assetType.contract,
+					},
+					value: new BigNumber(a.value).multipliedBy(factor),
+				}
+			}
+			case "NFT": {
+				return {
+					asset_type: {
+						asset_class: a.assetType.assetClass,
+						contract: a.assetType.contract,
+						token_id: new BigNumber(a.assetType.tokenId),
+					},
+					value: new BigNumber(1),
+				}
+			}
+			case "MT":
+				return {
+					asset_type: {
+						asset_class: a.assetType.assetClass,
+						contract: a.assetType.contract,
+						token_id: new BigNumber(a.assetType.tokenId),
+					},
+					value: new BigNumber(a.value),
+				}
+			default: throw new Error("Unknown Asset Class")
 		}
 	}
 
@@ -180,8 +177,8 @@ export class TezosFill {
 			type: "RARIBLE_V2",
 			maker: order.maker,
 			maker_edpk: order.makerEdpk,
-			make: this.assetOfJson(order.make),
-			take: this.assetOfJson(order.take),
+			make: this.convertToLibAsset(order.make),
+			take: this.convertToLibAsset(order.take),
 			salt: new BigNumber(order.salt),
 			start: order.start,
 			end: order.end,
@@ -195,7 +192,7 @@ export class TezosFill {
 		}
 	}
 
-	convertOrderPayout(payout?: OrderPayout[] | Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
+	convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
 		return payout?.map(p => ({
 			account: p.account,
 			value: new BigNumber(p.value),
@@ -209,7 +206,9 @@ export class TezosFill {
 			if (!request.orderId.startsWith("TEZOS")) {
 				throw new Error("Wrong tezos orderId")
 			}
-			const order = await this.getOrderByHash(toOrderId(request.orderId.substring(6)))
+			const order = await this.apis.order.getOrderByHash({
+				hash: toOrderId(request.orderId.substring(6)),
+			})
 			return this.convertTezosOrderToForm(order)
 		} else {
 			throw new Error("Request error")
@@ -221,7 +220,7 @@ export class TezosFill {
 		if (order.take.asset_type.asset_class === "MT" || order.take.asset_type.asset_class === "NFT") {
 			// eslint-disable-next-line camelcase
 			const { contract, token_id } = order.take.asset_type
-			const ownershipId = `${contract}:${token_id.toString()}:${await get_address(provider)}`
+			const ownershipId = `${contract}:${token_id.toString()}:${await TezosSDK.get_address(provider)}`
 			const response = await this.apis.ownership.getNftOwnershipById({
 				ownershipId,
 			})
@@ -245,12 +244,12 @@ export class TezosFill {
 					infinite: fillRequest.infiniteApproval,
 					edpk: await provider.tezos.public_key(),
 				}
-				const fillResponse = await fill_order(
+				const fillResponse = await TezosSDK.fill_order(
 					provider,
 					preparedOrder,
 					request,
 				)
-				return new BlockchainTezosTransaction(fillResponse)
+				return new BlockchainTezosTransaction(fillResponse as any)
 			},
 		})
 

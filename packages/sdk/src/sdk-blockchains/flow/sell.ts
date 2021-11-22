@@ -3,6 +3,7 @@ import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { toBn } from "@rarible/utils/build/bn"
 import type { Order, OrderId } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -11,7 +12,7 @@ import { getFlowCollection, getFungibleTokenName, parseUnionItemId } from "./com
 
 export class FlowSell {
 	static supportedCurrencies: CurrencyType[] = [{
-		blockchain: "FLOW",
+		blockchain: Blockchain.FLOW,
 		type: "NATIVE",
 	}]
 

@@ -53,13 +53,19 @@ export class TezosMint {
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
+					console.log("before mint", contract,
+						royalties,
+						supply,
+						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
+						undefined,
+						owner)
 					const result = await mint(
 						this.getRequiredProvider(),
 						contract,
 						royalties,
 						supply,
 						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
-						undefined,
+						{  },
 						owner,
 					)
 

@@ -4,7 +4,7 @@ import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in
 import { get_address } from "tezos-sdk-module/dist/common/base"
 import BigNumber from "bignumber.js"
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { toItemId, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
@@ -29,11 +29,11 @@ describe("transfer test", () => {
 		config,
 	}
 	const wallet = new TezosWallet(provider)
-	const sdk = createRaribleSdk(wallet, "e2e")
+	const sdk = createRaribleSdk(wallet, "dev")
 	const tezosAPI = getTezosAPIs("granada")
 
 	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	const fa2Contract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
+	const nftContract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
 
 	test("transfer test", async () => {
 		const sender = await get_address(provider)
@@ -41,7 +41,7 @@ describe("transfer test", () => {
 
 		/*
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
+			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 
 		// console.log("mintResponse", mintResponse)
@@ -57,8 +57,18 @@ describe("transfer test", () => {
 		console.log("minted item", mintResult)
 		// const transferedId = mintResult.itemId
 
+		await retry(5, 500, async () => {
+			const item = await tezosAPI.item.getNftItemById({
+				// ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
+				itemId,
+			})
+
+			console.log("item", item)
+		})
+
      */
 		const transferedId = toItemId("TEZOS:KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF:7")
+		// const transferedId = mintResult.itemId
 		const transfer = await sdk.nft.transfer({
 			// itemId: mintResult.itemId,
 			itemId: toItemId(transferedId),

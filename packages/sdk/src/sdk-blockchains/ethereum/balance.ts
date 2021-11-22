@@ -3,7 +3,7 @@ import type { UnionAddress } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import { convertUnionToEthereumAddress } from "./common"
+import { convertToEthereumAddress } from "./common"
 
 export class EthereumBalance {
 	constructor(private sdk: RaribleSdk) {
@@ -18,7 +18,7 @@ export class EthereumBalance {
 			case "ERC20": {
 				return {
 					assetClass: "ERC20",
-					contract: convertUnionToEthereumAddress(assetType.contract),
+					contract: convertToEthereumAddress(assetType.contract),
 				}
 			}
 			default: {
@@ -28,7 +28,7 @@ export class EthereumBalance {
 	}
 
 	async getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
-		const ethAddress = convertUnionToEthereumAddress(address)
+		const ethAddress = convertToEthereumAddress(address)
 		const convertedAssetType = this.convertAssetType(assetType)
 		return this.sdk.balances.getBalance(ethAddress, convertedAssetType)
 	}

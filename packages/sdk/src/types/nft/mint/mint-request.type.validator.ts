@@ -47,7 +47,7 @@ export const SCHEMA = {
                     "$ref": "#/definitions/UnionAddress"
                 },
                 "value": {
-                    "$ref": "#/definitions/BigNumber"
+                    "type": "number"
                 }
             },
             "required": [
@@ -59,9 +59,6 @@ export const SCHEMA = {
         "UnionAddress": {
             "type": "string"
         },
-        "BigNumber": {
-            "type": "string"
-        },
         "Royalty": {
             "type": "object",
             "properties": {
@@ -69,7 +66,7 @@ export const SCHEMA = {
                     "$ref": "#/definitions/UnionAddress"
                 },
                 "value": {
-                    "$ref": "#/definitions/BigNumber"
+                    "type": "number"
                 }
             },
             "required": [

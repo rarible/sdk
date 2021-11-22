@@ -3,7 +3,7 @@ import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
-import { convertUnionToEthereumAddress } from "./common"
+import { convertToEthereumAddress } from "./common"
 
 export class EthereumTransfer {
 	constructor(private sdk: RaribleSdk) {
@@ -36,7 +36,7 @@ export class EthereumTransfer {
 						  contract: item.contract,
 						  tokenId: item.tokenId,
 					  },
-						convertUnionToEthereumAddress(request.to),
+						convertToEthereumAddress(request.to),
 						amount
 					)
 

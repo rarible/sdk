@@ -2,9 +2,11 @@
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
+import { getTezosAPIs } from "./common"
+import { createTezosSdk } from "./index"
 
 describe("mint test", () => {
 	const tezos = in_memory_provider(
@@ -29,6 +31,7 @@ describe("mint test", () => {
 	// const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new TezosWallet(provider)
 	const sdk = createRaribleSdk(wallet, "dev")
+	const apis = getTezosAPIs("granada")
 
 	//public nft contract
 	// let fa2Contract: string = "KT1GTSXWyrBeNSxKqiHgkymFVujyu9JfHuKd"
@@ -60,13 +63,14 @@ describe("mint test", () => {
 
 	test("mint test", async () => {
 
+		// /*
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
+			collectionId: toContractAddress(`TEZOS:${fa2Contract}`),
 		})
 
 		// console.log("mintResponse", mintResponse)
 		const mintResult = await mintResponse.submit({
-			uri: "",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			supply: 1,
 			lazyMint: false,
 		})
@@ -74,10 +78,20 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log("minted", mintResult)
 
+
+		// */
+		// /*
 		const item = await sdk.apis.item.getItemById({
-			itemId: mintResult.itemId,
+			// itemId: mintResult.itemId,
+			itemId: "TEZOS:KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF:10",
 		})
+
+		console.log("item", item)
+
+		// */
+
 
 	}, 1500000)
 

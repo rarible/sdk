@@ -1,6 +1,6 @@
 import { FlowWallet } from "@rarible/sdk-wallet"
 import * as fcl from "@onflow/fcl"
-import { toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createApisSdk } from "../../common/apis"
 import { createFlowSdk } from "./index"
 
@@ -16,13 +16,13 @@ describe("Test flow balance function", () => {
 	test("Should get balance for account", async () => {
 		const balance1 = await sdk.balances.getBalance(address, {
 			"@type": "FLOW_FT",
-			contract: toUnionAddress("FLOW:A.0x1654653399040a61.FlowToken"),
+			contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
 		})
 		expect(balance1.toString()).toEqual("0.001")
 
 		const balance2 = await sdk.balances.getBalance(address, {
 			"@type": "FLOW_FT",
-			contract: toUnionAddress("FLOW:A.0x3c5959b568896393.FUSD"),
+			contract: toContractAddress("FLOW:A.0x3c5959b568896393.FUSD"),
 		})
 		expect(balance2.toString()).toEqual("0")
 	})

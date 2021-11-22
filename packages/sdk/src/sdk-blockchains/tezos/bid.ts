@@ -7,6 +7,7 @@ import { toBigNumber, toOrderId } from "@rarible/types"
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { FTAssetType, XTZAssetType } from "tezos-sdk-module/common/base"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -28,22 +29,19 @@ export class TezosBid {
 		return this.provider
 	}
 
-	getMakeAssetType(type: RequestCurrency) {
+	getMakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
 		switch (type["@type"]) {
 			case "XTZ": {
 				return {
 					asset_class: type["@type"],
 				}
 			}
-			/*
-			case "FT": {
+			case "TEZOS_FT": {
 				return {
-					asset_class: type["@type"],
+					asset_class: "FT",
 					contract: type.contract,
 				}
 			}
-
-       */
 			default: {
 				throw new Error("Unsupported take asset type")
 			}

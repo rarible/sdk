@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
-import { convertUnionToEthereumAddress } from "./common"
+import { convertToEthereumAddress } from "./common"
 
 export class EthereumTokenId {
 	constructor(private readonly sdk: RaribleSdk) {
@@ -9,8 +9,8 @@ export class EthereumTokenId {
 
 	async generateTokenId({ collection, minter }: GenerateTokenIdRequest): Promise<TokenId> {
 		const nftTokenId = await this.sdk.apis.nftCollection.generateNftTokenId({
-			collection: convertUnionToEthereumAddress(collection),
-			minter: convertUnionToEthereumAddress(minter),
+			collection: convertToEthereumAddress(collection),
+			minter: convertToEthereumAddress(minter),
 		})
 		return {
 			tokenId: nftTokenId.tokenId.toString(),

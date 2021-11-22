@@ -1,8 +1,8 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
-import { toUnionAddress } from "@rarible/types"
+import type { ContractAddress } from "@rarible/types"
 import type { ConfigurationParameters } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
+import { toContractAddress } from "@rarible/types"
 import type { IApisSdk, IRaribleSdk } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
@@ -57,7 +57,8 @@ function filterWallet<T extends "FLOW" | "ETHEREUM" | "TEZOS">(
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		const collectionId = item.contract
+		//todo replace with item.contract
+		const collectionId = toContractAddress(item.collection || item.contract )
 		const response = await sell({ collectionId })
 		return {
 			...response,

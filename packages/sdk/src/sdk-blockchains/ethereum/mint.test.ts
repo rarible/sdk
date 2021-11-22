@@ -2,7 +2,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toUnionAddress } from "@rarible/types"
+import { toAddress, toContractAddress, toUnionAddress } from "@rarible/types"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 

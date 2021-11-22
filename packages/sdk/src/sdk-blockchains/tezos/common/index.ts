@@ -1,4 +1,5 @@
 import type { ItemId, UnionAddress } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
@@ -12,6 +13,7 @@ import {
 	NftCollectionControllerApi,
 	NftItemControllerApi,
 	NftOwnershipControllerApi,
+	OrderControllerApi,
 } from "tezos-api-client/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
@@ -21,6 +23,7 @@ export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
 	item: NftItemControllerApi,
 	ownership: NftOwnershipControllerApi,
+	order: OrderControllerApi,
 }
 
 export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
@@ -32,6 +35,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 		collection: new NftCollectionControllerApi(config),
 		item: new NftItemControllerApi(config),
 		ownership: new NftOwnershipControllerApi(config),
+		order: new OrderControllerApi(config),
 	}
 }
 
@@ -49,7 +53,7 @@ export function getTezosBasePath(network: TezosNetwork): string {
 export function getTezosItemData(itemId: ItemId) {
 	const [domain, contract, tokenId] = itemId.split(":")
 	if (domain !== "TEZOS") {
-		throw new Error(`Not an ethereum item: ${itemId}`)
+		throw new Error(`Not an tezos item: ${itemId}`)
 	}
 	return {
 		itemId: `${contract}:${tokenId}`,
@@ -93,7 +97,7 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 
 export function getSupportedCurrencies(): CurrencyType[] {
 	return [{
-		blockchain: "TEZOS",
+		blockchain: Blockchain.TEZOS,
 		type: "NATIVE",
 	}]
 }

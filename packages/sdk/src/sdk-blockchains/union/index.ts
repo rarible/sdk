@@ -1,5 +1,6 @@
-import type { AssetType, Blockchain, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
-import type { UnionAddress } from "@rarible/types"
+import type { AssetType, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
@@ -126,12 +127,12 @@ class UnionBalanceSdk implements IBalanceSdk {
 }
 
 const blockchains: Blockchain[] = [
-	"ETHEREUM",
-	"FLOW",
-	"TEZOS",
+	Blockchain.ETHEREUM,
+	Blockchain.FLOW,
+	Blockchain.TEZOS,
 ]
 
-function extractBlockchain(value: UnionAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)

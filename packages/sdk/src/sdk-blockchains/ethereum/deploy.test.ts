@@ -1,5 +1,6 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { initProviders } from "./test/init-providers"
 
@@ -11,7 +12,7 @@ describe("deploy", () => {
 
 	test("deploy erc-721 collection", async () => {
 		await sdk1.nft.deploy({
-			blockchain: "ETHEREUM",
+			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",
 				arguments: {
@@ -27,7 +28,7 @@ describe("deploy", () => {
 
 	test("deploy erc-721 user collection", async () => {
 		await sdk1.nft.deploy({
-			blockchain: "ETHEREUM",
+			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",
 				arguments: {
@@ -44,7 +45,7 @@ describe("deploy", () => {
 
 	test("deploy erc-1155 collection", async () => {
 		await sdk1.nft.deploy({
-			blockchain: "ETHEREUM",
+			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC1155",
 				arguments: {
@@ -60,7 +61,7 @@ describe("deploy", () => {
 
 	test("deploy erc-1155 user collection", async () => {
 		await sdk1.nft.deploy({
-			blockchain: "ETHEREUM",
+			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC1155",
 				arguments: {
