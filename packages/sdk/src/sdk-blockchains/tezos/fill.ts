@@ -26,6 +26,8 @@ import type {
 	AssetType as TezosClientAssetType,
 } from "tezos-api-client"
 import BigNumber from "bignumber.js"
+import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import { get_public_key } from "tezos-sdk-module/common/base"
 import type {
 	FillRequest,
 	PrepareFillRequest,
@@ -35,20 +37,21 @@ import {
 	OriginFeeSupport,
 	PayoutsSupport,
 } from "../../types/order/fill/domain"
-import type { ITezosAPI } from "./common"
+import type { ITezosAPI, MaybeProvider } from "./common"
+import { isExistedTezosProvider } from "./common"
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
 export class TezosFill {
 	constructor(
-		private provider: Maybe<Provider>,
+		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
 	) {
 		this.fill = this.fill.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
-		if (!this.provider) {
+		if (!isExistedTezosProvider(this.provider)) {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider
@@ -242,7 +245,7 @@ export class TezosFill {
 					payouts: this.convertOrderPayout(fillRequest.payouts),
 					origin_fees: this.convertOrderPayout(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
-					edpk: await provider.tezos.public_key(),
+					edpk: await get_public_key(provider),
 				}
 				const fillResponse = await TezosSDK.fill_order(
 					provider,

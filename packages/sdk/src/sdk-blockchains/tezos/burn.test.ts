@@ -2,41 +2,29 @@
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
 // eslint-disable-next-line camelcase
-import { EthereumWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, TezosWallet } from "@rarible/sdk-wallet"
 import type { ItemId } from "@rarible/api-client"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { get_address } from "tezos-sdk-module/dist/common/base"
+import { toItemId } from "@rarible/types"
 import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
+import { retry } from "../../common/retry"
+import { getTezosAPIs } from "./common"
 
 describe("burn test", () => {
-	const { web31 } = initProviders()
-
-	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(wallet, "e2e")
-
 	const tezos = in_memory_provider(
-		"edskRzKnQB3jFrx8qYRedDguFNnrmePpvmAyBt6zTz1RzDm3vVnqtrqhhuM8SupK2gTYgq2jdMGJUgvMXJiG5Vz7Wd6Ub2hFTR",
-		// "edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
+		// "edskRzKnQB3jFrx8qYRedDguFNnrmePpvmAyBt6zTz1RzDm3vVnqtrqhhuM8SupK2gTYgq2jdMGJUgvMXJiG5Vz7Wd6Ub2hFTR",
+		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
 		"https://granada.tz.functori.com"
 	)
 
-	const config = {
-		exchange: "KT1XgQ52NeNdjo3jLpbsPBRfg8YhWoQ5LB7g",
-		fees: new BigNumber(0),
-	}
+	const wallet = new TezosWallet(tezos)
+	const sdk = createRaribleSdk(wallet, "dev")
+	const tezosAPI = getTezosAPIs("granada")
 
-	const provider = {
-		tezos,
-		api: "https://rarible-api.functori.com/v0.1/",
-		config,
-	}
-
-	const sender = "tz1dGYcxgScHNkVWdpDKAwuP2xc5afnutjL3"
-	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	let fa2Contract: string = "KT1ChRn258Xwy1wnFMYrU9kFQrDxfJnFm68M"
-	const royaltiesContract: string = "KT1KrzCSQs6XMMRsQ7dqCVcYQeGs7d512zzb"
-	let itemId: ItemId
+	let fa2Contract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
+	let itemId: ItemId = toItemId("TEZOS:KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53:1")
 
 	/*
 	beforeAll(async () => {
@@ -73,6 +61,7 @@ describe("burn test", () => {
    */
 
 	test("burn test", async () => {
+		const sender = await tezos.address
 
 		const transfer = await sdk.nft.burn({ itemId })
 
@@ -82,6 +71,15 @@ describe("burn test", () => {
 		  await result.wait()
 		}
 
+		await retry(5, 500, async () => {
+			const item = await tezosAPI.item.getNftItemById({
+				// ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
+				itemId,
+			})
+
+			console.log("item", item)
+
+		})
 	}, 1500000)
 
 })

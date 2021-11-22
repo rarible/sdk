@@ -1,7 +1,7 @@
 import type { ItemId, UnionAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
-import type { Provider } from "tezos-sdk-module/dist/common/base"
+import type { Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
@@ -15,6 +15,8 @@ import {
 	NftOwnershipControllerApi,
 	OrderControllerApi,
 } from "tezos-api-client/build"
+import type { Config } from "tezos-sdk-module/config/type"
+import type { Maybe } from "@rarible/types/build/maybe"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { TezosNetwork } from "../domain"
@@ -24,6 +26,12 @@ export interface ITezosAPI {
 	item: NftItemControllerApi,
 	ownership: NftOwnershipControllerApi,
 	order: OrderControllerApi,
+}
+
+export type MaybeProvider<P extends TezosProvider> = {
+	tezos: Maybe<P>
+	api: string
+	config: Config
 }
 
 export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
@@ -45,7 +53,33 @@ export function getTezosBasePath(network: TezosNetwork): string {
 			return "https://rarible-api.functori.com"
 		}
 		default: {
-			throw new Error("Unsupported tezos network ")
+			throw new Error("Unsupported tezos network")
+		}
+	}
+}
+
+export function isExistedTezosProvider(provider: MaybeProvider<TezosProvider>): provider is Provider {
+	return provider.tezos !== undefined
+}
+
+export function getMaybeTezosProvider(
+	provider: Maybe<TezosProvider>, network: TezosNetwork
+): MaybeProvider<TezosProvider> {
+	switch (network) {
+		case "granada": {
+			return {
+				tezos: provider,
+				api: `${getTezosBasePath(network)}/v0.1`,
+				config: {
+					exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
+					fees: new BigNumber(0),
+					nft_public: "",
+					mt_public: "",
+				},
+			}
+		}
+		default: {
+			throw new Error("Unsupported tezos network for config")
 		}
 	}
 }

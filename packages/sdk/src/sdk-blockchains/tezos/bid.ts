@@ -8,22 +8,29 @@ import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { FTAssetType, XTZAssetType } from "tezos-sdk-module/common/base"
+import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import type { ITezosAPI } from "./common"
-import { getMakerPublicKey, getPayouts, getSupportedCurrencies, getTezosItemData } from "./common"
+import type { ITezosAPI, MaybeProvider } from "./common"
+import {
+	getMakerPublicKey,
+	getPayouts,
+	getSupportedCurrencies,
+	getTezosItemData,
+	isExistedTezosProvider,
+} from "./common"
 
 export class TezosBid {
 	constructor(
-		private provider: Maybe<Provider>,
+		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
 	) {
 		this.bid = this.bid.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
-		if (!this.provider) {
+		if (!isExistedTezosProvider(this.provider)) {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider

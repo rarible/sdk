@@ -5,18 +5,21 @@ import { Action } from "@rarible/action"
 import { burn } from "tezos-sdk-module"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import BigNumber from "bignumber.js"
+import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
-import type { ITezosAPI } from "./common"
-import { getTezosItemData } from "./common"
+import type { ITezosAPI, MaybeProvider } from "./common"
+import { getTezosItemData, isExistedTezosProvider } from "./common"
 
 export class TezosBurn {
 	constructor(
-		private provider: Maybe<Provider>,
+		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
-	) {}
+	) {
+		this.burn = this.burn.bind(this)
+	}
 
 	private getRequiredProvider(): Provider {
-		if (!this.provider) {
+		if (!isExistedTezosProvider(this.provider)) {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider

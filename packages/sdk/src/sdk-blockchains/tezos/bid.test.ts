@@ -12,20 +12,7 @@ describe("bid test", () => {
 		"https://granada.tz.functori.com"
 	)
 
-	const config = {
-		exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
-		fees: new BigNumber(0),
-		nft_public: "",
-		mt_public: "",
-	}
-
-	const provider = {
-		tezos,
-		api: "https://rarible-api.functori.com/v0.1/",
-		config,
-	}
-
-	const wallet = new TezosWallet(provider)
+	const wallet = new TezosWallet(tezos)
 	const sdk = createRaribleSdk(wallet, "e2e")
 
 	let fa2Contract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
@@ -61,25 +48,26 @@ describe("bid test", () => {
    */
 
 	test("bid test", async () => {
+		const sender = await tezos.address
 		/*
-		const tx = await mint(
-			provider,
-			fa2Contract,
-			{},
-			new BigNumber(100),
-			new BigNumber(101),
-			{},
-		)
-		if (tx.token_id) {
-		  console.log("mint token id=", tx.token_id.toString())
-			// const item = await sdk.apis.item.getItemById({
-			// 	itemId: toItemId(`TEZOS:${fa2Contract}:${tx.token_id.toString()}`),
-			// })
-			// console.log("item", item)
-		}
+    const tx = await mint(
+      provider,
+      fa2Contract,
+      {},
+      new BigNumber(100),
+      new BigNumber(101),
+      {},
+    )
+    if (tx.token_id) {
+      console.log("mint token id=", tx.token_id.toString())
+      // const item = await sdk.apis.item.getItemById({
+      // 	itemId: toItemId(`TEZOS:${fa2Contract}:${tx.token_id.toString()}`),
+      // })
+      // console.log("item", item)
+    }
 
 
-		// await sdk.order.bid({ itemId: `TEZOS:${fa2Contract}:101` as any })
+    // await sdk.order.bid({ itemId: `TEZOS:${fa2Contract}:101` as any })
 
      */
 		const item = await sdk.apis.item.getItemById({

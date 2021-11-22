@@ -2,7 +2,7 @@
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import BigNumber from "bignumber.js"
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import { get_address } from "tezos-sdk-module/dist/common/base"
 import { deploy_nft_public } from "tezos-sdk-module"
 import { createRaribleSdk } from "../../index"
@@ -30,28 +30,28 @@ describe("mint test", () => {
 	// let fa2Contract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
 	let fa2Contract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
 	/*
-	beforeAll(async () => {
-		const sender = await get_address(provider)
-		const op = await deploy_nft_public(
-			provider,
-			sender,
-		)
+  beforeAll(async () => {
+    const sender = await get_address(provider)
+    const op = await deploy_nft_public(
+      provider,
+      sender,
+    )
 
-		console.log("sender", sender)
-		console.log("op", op)
-		if (op.contract) {
-			fa2Contract = op.contract
-			console.log("fa2Contract", fa2Contract)
-		}
+    console.log("sender", sender)
+    console.log("op", op)
+    if (op.contract) {
+      fa2Contract = op.contract
+      console.log("fa2Contract", fa2Contract)
+    }
 
-		await op.confirmation()
+    await op.confirmation()
 
-	}, 1500000)
-	 */
+  }, 1500000)
+   */
 
 	test("mint test", async () => {
 
-		// /*
+		/*
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${fa2Contract}`),
 		})
@@ -70,7 +70,6 @@ describe("mint test", () => {
 		}
 		console.log("minted", mintResult)
 
-		// */
 		await retry(5, 500, async () => {
 			const item = await sdk.apis.item.getItemById({
 				itemId: mintResult.itemId,
@@ -80,6 +79,21 @@ describe("mint test", () => {
 			console.log("item", item)
 		})
 
+		*/
+
+		const sellAction = await sdk.order.sell({
+			itemId: toItemId("TEZOS:KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53:8"),
+		})
+
+		const orderId = await sellAction.submit({
+			amount: 1,
+			price: "0.000000000000000002",
+			currency: {
+				"@type": "XTZ",
+			},
+		})
+
+		console.log("orderId", orderId)
 	}, 1500000)
 
 })

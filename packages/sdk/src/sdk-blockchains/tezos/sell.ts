@@ -7,27 +7,35 @@ import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { toBigNumber, toOrderId } from "@rarible/types"
-import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider } from "tezos-sdk-module/dist/common/base"
+import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
 import BigNumber from "bignumber.js"
 import type { FTAssetType, XTZAssetType } from "tezos-sdk-module/common/base"
+import type { Config } from "tezos-sdk-module/config/type"
 import type { RequestCurrency } from "../../common/domain"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type * as OrderCommon from "../../types/order/common"
 import type { Collection, ItemType, TezosOrder } from "./domain"
-import type { ITezosAPI } from "./common"
-import { getMakerPublicKey, getPayouts, getSupportedCurrencies, getTezosItemData } from "./common"
+import type { ITezosAPI, MaybeProvider } from "./common"
+import {
+	getMakerPublicKey,
+	getPayouts,
+	getSupportedCurrencies,
+	getTezosItemData,
+	isExistedTezosProvider,
+} from "./common"
 
 
 export class TezosSell {
 	constructor(
-		private provider: Maybe<Provider>,
+		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
 	) {
 		this.sell = this.sell.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
-		if (!this.provider) {
+		if (!isExistedTezosProvider(this.provider)) {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider
@@ -50,23 +58,24 @@ export class TezosSell {
 		}
 	}
 
-	async sell(prepareSellRequest: PrepareOrderRequest): Promise<PrepareOrderResponse> {
-		const provider = this.getRequiredProvider()
-		if (!prepareSellRequest.itemId) {
-			throw new Error("ItemId is not exists")
+	async sell(prepareRequest: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
+		const [domain, contract] = prepareRequest.collectionId.split(":")
+		if (domain !== "TEZOS") {
+			throw new Error("Not an tezos item")
 		}
-		const { itemId, contract } = getTezosItemData(prepareSellRequest.itemId)
-		const item = await this.apis.item.getNftItemById({
-			itemId,
-		})
 		const itemCollection = await this.apis.collection.getNftCollectionById({
 			collection: contract,
 		})
-		const makerPublicKey = await getMakerPublicKey(provider)
 
 		const submit = Action.create({
 			id: "send-tx" as const,
-			run: async (request: OrderRequest) => {
+			run: async (request: OrderCommon.OrderInternalRequest) => {
+				const provider = this.getRequiredProvider()
+				const makerPublicKey = await getMakerPublicKey(provider)
+				const { itemId } = getTezosItemData(request.itemId)
+
+				const item = await this.apis.item.getNftItemById({ itemId })
+
 				const tezosRequest: TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -92,12 +101,11 @@ export class TezosSell {
 		})
 
 		return {
-			multiple: true,
-			maxAmount: toBigNumber(item.supply),
+			multiple: itemCollection.type === "MT",
 			originFeeSupport: OriginFeeSupport.FULL, //todo check
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: parseInt(provider.config.fees.toString()),
+			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit,
 		}
 	}

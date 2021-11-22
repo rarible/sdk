@@ -6073,6 +6073,11 @@ crypto-random-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
 
+crypto@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/crypto/-/crypto-1.0.1.tgz#2af1b7cad8175d24c8a1b0778255794a21803037"
+  integrity sha512-VxBKmeNcqQdiUQUW2Tzq0t377b54N2bMtXO/qiLa+6eRRmmC4qT3D4OnTGoT/U6O9aklQ/jTwbOtRMTTY8G0Ig==
+
 cssom@^0.4.4:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/cssom/-/cssom-0.4.4.tgz#5a66cf93d2d0b661d80bf6a44fb65f5c2e4e0a10"
@@ -14160,15 +14165,15 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-api-client@~0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.3.tgz#cc5b3e439ddf40d06ecfa7cb55c261d77ef71f8c"
-  integrity sha512-i/GU3dz3Gt1KKsIZ2i42jS3+C3FxwQ7rgN0ForanfMqjBi7fgGHd+ogG59kszs+WOZ4JokAOGWr3iSONm1ydew==
+tezos-api-client@~0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.4.tgz#f84383a6419887d4e6735ed83722eff5ff89f087"
+  integrity sha512-7rYsOHtsqLB6qn/AsryFdjWOuLHlPOH0pZcUOugO6kftXTSSzdiSWQwx4URs32k3uuLar7Ohat4Rkht8Q4LKOw==
 
-tezos-sdk-module@~0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.13.tgz#b44962ba0b8ba1b70974ceb588ecc714912ea18f"
-  integrity sha512-5mddsfo0kDlJCVbYBr7kjdBaYgE7WUfL4kBraPMRbABizszwffigmpnMqfIRcJzqqt6fFQulxP7T9OhcWkPzMA==
+tezos-sdk-module@~0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.14.tgz#fbba9482655c53ff4ec05b0169b532f12c5653ef"
+  integrity sha512-PG8kAtaAdLiu6fzsmILdxro4ZZyKIGk2Gq1VpHsG0rQ7iGHEesf4GLRKQfWeoewUCJU92kQrdsqSJn1AtUOlMQ==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.2"
     "@taquito/beacon-wallet" "^10.1.2"

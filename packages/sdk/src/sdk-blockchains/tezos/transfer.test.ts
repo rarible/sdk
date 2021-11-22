@@ -16,27 +16,15 @@ describe("transfer test", () => {
 		"https://granada.tz.functori.com"
 	)
 
-	const config = {
-		exchange: "KT1XgQ52NeNdjo3jLpbsPBRfg8YhWoQ5LB7g",
-		fees: new BigNumber(0),
-		nft_public: "",
-		mt_public: "",
-	}
-
-	const provider = {
-		tezos,
-		api: "https://rarible-api.functori.com/v0.1/",
-		config,
-	}
-	const wallet = new TezosWallet(provider)
+	const wallet = new TezosWallet(tezos)
 	const sdk = createRaribleSdk(wallet, "dev")
 	const tezosAPI = getTezosAPIs("granada")
 
 	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	const nftContract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
+	const nftContract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
 
 	test("transfer test", async () => {
-		const sender = await get_address(provider)
+		const sender = await tezos.address
 		console.log("sender", sender)
 
 		/*
@@ -67,7 +55,7 @@ describe("transfer test", () => {
 		})
 
      */
-		const transferedId = toItemId("TEZOS:KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF:7")
+		const transferedId = toItemId("TEZOS:KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53:7")
 		// const transferedId = mintResult.itemId
 		const transfer = await sdk.nft.transfer({
 			// itemId: mintResult.itemId,
@@ -85,7 +73,7 @@ describe("transfer test", () => {
 		await retry(5, 500, async () => {
 			const ownership = await tezosAPI.ownership.getNftOwnershipById({
 				// ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
-				ownershipId: `${itemId}:${sender}`,
+				ownershipId: `${itemId}:${receipent}`,
 			})
 
 			console.log("ownership", ownership)

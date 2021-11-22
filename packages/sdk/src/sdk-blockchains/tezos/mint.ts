@@ -7,24 +7,25 @@ import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction/src"
 import { toItemId } from "@rarible/types"
+import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
-import type { ITezosAPI } from "./common"
-import { getTezosAddress } from "./common"
+import type { ITezosAPI, MaybeProvider } from "./common"
+import { getTezosAddress, isExistedTezosProvider } from "./common"
 
 export class TezosMint {
 	constructor(
-		private provider: Maybe<Provider>,
+		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
 	) {
 		this.mint = this.mint.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
-		if (!this.provider) {
+		if (!isExistedTezosProvider(this.provider)) {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider
@@ -53,19 +54,16 @@ export class TezosMint {
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
-					console.log("before mint", contract,
-						royalties,
-						supply,
-						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
-						undefined,
-						owner)
+					console.log("metadata", { "": request.uri })
 					const result = await mint(
 						this.getRequiredProvider(),
 						contract,
 						royalties,
 						supply,
 						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
-						{  },
+						{
+							"": request.uri,
+						},
 						owner,
 					)
 

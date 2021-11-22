@@ -1,7 +1,7 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Provider } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
 import { Blockchain } from "@rarible/api-client"
+import type { TezosProvider } from "tezos-sdk-module/common/base"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
@@ -64,7 +64,7 @@ export class FlowWallet implements AbstractWallet {
 export class TezosWallet implements AbstractWallet {
 	readonly blockchain = Blockchain.TEZOS
 
-	constructor(public readonly provider: Provider) {}
+	constructor(public readonly provider: TezosProvider) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		// @todo implement

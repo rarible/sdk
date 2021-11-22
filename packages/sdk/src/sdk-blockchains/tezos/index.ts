@@ -6,10 +6,11 @@ import type { IApisSdk } from "../../domain"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { TezosBid } from "./bid"
-import { getTezosAPIs } from "./common"
+import { getMaybeTezosProvider, getTezosAPIs } from "./common"
 import type { TezosNetwork } from "./domain"
 import { TezosMint } from "./mint"
 import { TezosTransfer } from "./transfer"
+import { TezosBurn } from "./burn"
 
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
@@ -17,21 +18,21 @@ export function createTezosSdk(
 	network: TezosNetwork,
 ): IRaribleInternalSdk {
 	const apis = getTezosAPIs(network)
+	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
 
 	return {
 		nft: {
-			mint: new TezosMint(wallet?.provider, apis).mint,
-			burn: notImplemented,
-			transfer: new TezosTransfer(wallet?.provider, apis).transfer,
+			mint: new TezosMint(maybeProvider, apis).mint,
+			burn: new TezosBurn(maybeProvider, apis).burn,
+			transfer: new TezosTransfer(maybeProvider, apis).transfer,
 			generateTokenId: notImplemented,
 			deploy: nonImplementedAction,
 		},
 		order: {
-			fill: new TezosFill(wallet?.provider, apis).fill,
-			// @todo fix any type
-			sell: new TezosSell(wallet?.provider, apis).sell as any,
+			fill: new TezosFill(maybeProvider, apis).fill,
+			sell: new TezosSell(maybeProvider, apis).sell,
 			sellUpdate: notImplemented,
-			bid: new TezosBid(wallet?.provider, apis).bid,
+			bid: new TezosBid(maybeProvider, apis).bid,
 			bidUpdate: notImplemented,
 			cancel: nonImplementedAction,
 		},
