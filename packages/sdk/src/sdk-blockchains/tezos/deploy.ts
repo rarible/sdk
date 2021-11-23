@@ -6,8 +6,7 @@ export class TezosDeploy {
 	constructor(
 		private provider: Maybe<Provider>,
 		private apis: ITezosAPI,
-	) {
-	}
+	) {}
 
 
 }

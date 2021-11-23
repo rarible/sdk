@@ -1,4 +1,3 @@
-import type { Maybe } from "@rarible/types/build/maybe"
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
 import { mint } from "tezos-sdk-module"
@@ -6,6 +5,7 @@ import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction/src"
+import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -54,15 +54,6 @@ export class TezosMint {
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
-					console.log("req", request, "supply", supply)
-					console.log("metadata", contract,
-						royalties,
-						supply,
-						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
-						{
-							"": request.uri,
-						},
-						owner)
 					const result = await mint(
 						this.getRequiredProvider(),
 						contract,
@@ -90,33 +81,29 @@ export async function getCollectionData(
 	api: NftCollectionControllerApi,
 	prepareRequest: HasCollection | HasCollectionId,
 ): Promise<{contract: string, owner?: string, type: "NFT" | "MT" }> {
-	if ("collection" in prepareRequest) {
-		const [blockchain, contract] = prepareRequest.collection.id.split(":")
-		if (blockchain !== "TEZOS") {
-			throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
-		}
-		const owner = prepareRequest.collection.owner?.split(":")[1] || undefined
+	const contractAddress = getContractFromRequest(prepareRequest)
+	const [blockchain, contract] = contractAddress.split(":")
+	if (blockchain !== "TEZOS") {
+		throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
+	}
+	const collection = await api.getNftCollectionById({
+		collection: contract,
+	})
+	if (!collection) {
+		throw new Error(`Tezos collection with address=${contract} has not been found`)
+	}
+	return {
+		contract,
+		owner: collection.owner,
+		type: collection.type,
+	}
+}
 
-		return {
-			contract,
-			owner,
-			//todo fix after api-client supporting new types
-			type: prepareRequest.collection.type as any,
-		}
-	} else if ("collectionId" in prepareRequest) {
-		const [blockchain, contract] = prepareRequest.collectionId.split(":")
-		if (blockchain !== "TEZOS") {
-			throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
-		}
-		const collection = await api.getNftCollectionById({
-			collection: contract,
-		})
-		console.log("collection", collection)
-		return {
-			contract,
-			owner: collection.owner,
-			type: collection.type,
-		}
+export function getContractFromRequest(request: HasCollection | HasCollectionId): ContractAddress {
+	if ("collection" in request) {
+		return request.collection.id
+	} else if ("collectionId" in request) {
+		return request.collectionId
 	} else {
 		throw new Error("Wrong request: collection or collectionId has not been found")
 	}

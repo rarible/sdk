@@ -1,4 +1,3 @@
-import type { Maybe } from "@rarible/types/build/maybe"
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { transfer } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
@@ -28,14 +27,11 @@ export class TezosTransfer {
 
 	async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
-		console.log("getTezosItemData", itemId)
 		const item = await this.apis.item.getNftItemById({ itemId })
-
 		const collection = await this.apis.collection.getNftCollectionById({
 			collection: contract,
 		})
 
-		console.log("transfer item", item)
 		return {
 			multiple: collection.type === "MT",
 			maxAmount: toBigNumber(item.supply),

@@ -1,17 +1,15 @@
 import type {
 	AssetType as TezosAssetType, Provider,
-	AssetType as TezosLibAssetType,
 	Asset as TezosLibAsset,
 } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
-import type { AssetType, Order, OrderId } from "@rarible/api-client"
+import type { AssetType, Order } from "@rarible/api-client"
 import type {
 	OrderForm, Part, Part as TezosPart,
 } from "tezos-sdk-module/dist/order"
 import TezosSDK from "tezos-sdk-module"
 import type {
 	BigNumber as RaribleBigNumber,
-	Maybe,
 } from "@rarible/types"
 import {
 	toBigNumber as toRaribleBigNumber,
@@ -21,7 +19,6 @@ import {
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type {
 	Order as TezosOrder,
-	// AssetType as TezosAssetType
 	Asset as TezosClientAsset,
 	AssetType as TezosClientAssetType,
 } from "tezos-api-client"

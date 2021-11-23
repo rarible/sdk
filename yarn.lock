@@ -2959,10 +2959,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@~0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.8.tgz#1bb7caa2a3e760cda11f8d3aa597ad3e45454b9c"
-  integrity sha512-I3tBvpL2J9y2XZAtYja2U/RLdISwRHDkLZxGkQQnhm7AOjrMAIx5u7r9YhPbUhV4BoGml7Y2P6n7pprs00Tdng==
+"@rarible/api-client@~0.0.9":
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.9.tgz#e57ca45624ca832317a13d840628e64f271b5dc0"
+  integrity sha512-NjHJL8lyme5xMdiHdYOn+iSxz+MdbWucH/8IBFQh+q8su+OJLkBhqHtrhsnIFLbpbo4q15O9TTrx0jXzXehMuw==
   dependencies:
     "@rarible/types" "~0.5.3"
 
@@ -14197,10 +14197,10 @@ tezos-sdk-module@~0.0.14:
     vue "^2.6.14"
     yargs "^17.2.1"
 
-tezos-sdk-module@~0.0.15:
-  version "0.0.15"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.15.tgz#cde680fbada87e7176318b326ae85e05330f3ec6"
-  integrity sha512-FV4gApb/x64q923zAn2hAoZSwzmKREjwIhaPfTWp67EeA5BZe6nAjxceyrPm0U55z4kyURIhit7jllmYOpnJsw==
+tezos-sdk-module@~0.0.17:
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.17.tgz#7b9ce613d2da1ff36d87550b57bfe22b9608c059"
+  integrity sha512-HXq74ueKhgZ1NcjXYx3kNQ6zKz1PqSDJcy2S+Gvve+Xj7w3lIZejjKz09G5mPyymgLXNW391yqFyYhviMun/Ig==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.2"
     "@taquito/beacon-wallet" "^10.1.2"

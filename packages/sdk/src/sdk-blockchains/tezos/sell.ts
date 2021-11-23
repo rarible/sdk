@@ -1,21 +1,16 @@
 import type { SellRequest as TezosSellRequest } from "tezos-sdk-module/dist/order/sell"
 import { sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
-import { mutez_to_tez } from "tezos-sdk-module/dist/common/base"
-// eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import { Action } from "@rarible/action"
-import type { Maybe } from "@rarible/types/build/maybe"
-import { toBigNumber, toOrderId } from "@rarible/types"
-import type { AssetType as TezosLibAssetType, Asset as TezosLibAsset, Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
+import { toOrderId } from "@rarible/types"
+import type { Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
 import BigNumber from "bignumber.js"
 import type { FTAssetType, XTZAssetType } from "tezos-sdk-module/common/base"
-import type { Config } from "tezos-sdk-module/config/type"
 import type { RequestCurrency } from "../../common/domain"
-import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
-import type { Collection, ItemType, TezosOrder } from "./domain"
+import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	getMakerPublicKey,
@@ -58,7 +53,9 @@ export class TezosSell {
 		}
 	}
 
-	async sell(prepareRequest: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
+	async sell(
+		prepareRequest: OrderCommon.PrepareOrderInternalRequest
+	): Promise<OrderCommon.PrepareOrderInternalResponse> {
 		const [domain, contract] = prepareRequest.collectionId.split(":")
 		if (domain !== "TEZOS") {
 			throw new Error("Not an tezos item")

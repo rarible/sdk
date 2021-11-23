@@ -1,4 +1,3 @@
-import type { Maybe } from "@rarible/types/build/maybe"
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { toBigNumber } from "@rarible/types"
 import { Action } from "@rarible/action"

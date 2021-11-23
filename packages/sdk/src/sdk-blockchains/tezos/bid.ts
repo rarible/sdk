@@ -6,7 +6,6 @@ import { toBigNumber, toOrderId } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
-import type { Maybe } from "@rarible/types/build/maybe"
 import type { FTAssetType, XTZAssetType } from "tezos-sdk-module/common/base"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
