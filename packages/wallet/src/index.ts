@@ -1,4 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
+import { sign } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
 import { Blockchain } from "@rarible/api-client"
 import type { TezosProvider } from "tezos-sdk-module/common/base"
@@ -67,10 +68,13 @@ export class TezosWallet implements AbstractWallet {
 	constructor(public readonly provider: TezosProvider) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
-		// @todo implement
+		const publicKey = await this.provider.public_key()
+		if (publicKey === undefined) {
+			throw new Error("Public key undefined")
+		}
 		return {
-			signature: message,
-			publicKey: "pubkey",
+			signature: await this.provider.sign(message),
+			publicKey,
 		}
 	}
 }
