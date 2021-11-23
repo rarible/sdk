@@ -68,13 +68,11 @@ export class TezosSell {
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
 				const provider = this.getRequiredProvider()
-				console.log("provider", provider)
 				const makerPublicKey = await getMakerPublicKey(provider)
 				const { itemId } = getTezosItemData(request.itemId)
 
 				const item = await this.apis.item.getNftItemById({ itemId })
 
-				console.log("item", item)
 				const tezosRequest: TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -94,7 +92,6 @@ export class TezosSell {
 					})) || [],
 				}
 
-				console.log("req", JSON.stringify(tezosRequest, null, "   "))
 				const sellOrder: TezosOrder = await sell(provider, tezosRequest)
 				return toOrderId(`TEZOS:${sellOrder.hash}`)
 			},

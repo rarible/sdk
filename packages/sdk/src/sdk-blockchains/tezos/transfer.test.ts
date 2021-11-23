@@ -19,7 +19,7 @@ describe("transfer test", () => {
 	const nftContract: string = "KT1Q59huSmAo8a3veKjAvCiSYPw1XZwKKf8X"
 	const mtContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
 
-	test.skip("transfer NFT test", async () => {
+	test("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -58,7 +58,7 @@ describe("transfer test", () => {
 		})
 	}, 1500000)
 
-	test.skip("transfer MT test", async () => {
+	test("transfer MT test", async () => {
 
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),

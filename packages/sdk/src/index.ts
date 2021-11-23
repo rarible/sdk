@@ -57,7 +57,6 @@ function filterWallet<T extends "FLOW" | "ETHEREUM" | "TEZOS">(
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		//todo replace with item.contract
 		const collectionId = toContractAddress(item.contract)
 		const response = await sell({ collectionId })
 		return {
