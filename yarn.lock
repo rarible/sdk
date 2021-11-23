@@ -14167,10 +14167,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-api-client@~0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.4.tgz#f84383a6419887d4e6735ed83722eff5ff89f087"
-  integrity sha512-7rYsOHtsqLB6qn/AsryFdjWOuLHlPOH0pZcUOugO6kftXTSSzdiSWQwx4URs32k3uuLar7Ohat4Rkht8Q4LKOw==
+tezos-api-client@~0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.5.tgz#9bc4914771cd2dc707015ca969771b08e05aa317"
+  integrity sha512-SNSQvLJbk1pVKSnSL8dfQR6MB1U59L/yU+tT8Wjl6tKryDuKhtMaW2cnTMgFdmlqPhfCX5f41Og+Bp1bg8Ra0Q==
 
 tezos-sdk-module@~0.0.18:
   version "0.0.18"
