@@ -14177,30 +14177,10 @@ tezos-api-client@~0.0.4:
   resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.4.tgz#f84383a6419887d4e6735ed83722eff5ff89f087"
   integrity sha512-7rYsOHtsqLB6qn/AsryFdjWOuLHlPOH0pZcUOugO6kftXTSSzdiSWQwx4URs32k3uuLar7Ohat4Rkht8Q4LKOw==
 
-tezos-sdk-module@~0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.14.tgz#fbba9482655c53ff4ec05b0169b532f12c5653ef"
-  integrity sha512-PG8kAtaAdLiu6fzsmILdxro4ZZyKIGk2Gq1VpHsG0rQ7iGHEesf4GLRKQfWeoewUCJU92kQrdsqSJn1AtUOlMQ==
-  dependencies:
-    "@airgap/beacon-sdk" "^2.3.2"
-    "@taquito/beacon-wallet" "^10.1.2"
-    "@taquito/signer" "^10.1.2"
-    "@temple-wallet/dapp" "^5.0.2"
-    "@types/bs58check" "^2.1.0"
-    "@types/elliptic" "^6.4.13"
-    "@types/keccak" "^3.0.1"
-    bignumber.js "^9.0.1"
-    bs58check "^2.1.2"
-    json-formatter-js "^2.3.4"
-    keccak "^3.0.2"
-    node-fetch "^2.6.6"
-    vue "^2.6.14"
-    yargs "^17.2.1"
-
-tezos-sdk-module@~0.0.17:
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.17.tgz#7b9ce613d2da1ff36d87550b57bfe22b9608c059"
-  integrity sha512-HXq74ueKhgZ1NcjXYx3kNQ6zKz1PqSDJcy2S+Gvve+Xj7w3lIZejjKz09G5mPyymgLXNW391yqFyYhviMun/Ig==
+tezos-sdk-module@~0.0.18:
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.18.tgz#2fc76fbf94785a351aa9245a04d34dee000b6c4a"
+  integrity sha512-TQieNckR7BuZXWVr6FnXagaf5D2KiC3poBKCNb5bP+dJhtTOjYgZKykq7EBi5pXdXvv7ZINhQOgYd2KWdkfFLA==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.2"
     "@taquito/beacon-wallet" "^10.1.2"
