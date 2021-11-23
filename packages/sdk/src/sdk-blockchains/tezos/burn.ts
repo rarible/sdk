@@ -39,7 +39,7 @@ export class TezosBurn {
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
-					const amount = request?.amount !== undefined ? new BigNumber(request.amount.toFixed()) : undefined
+					const amount = collection.type === "MT" ? new BigNumber((request?.amount ?? 1).toFixed()) : undefined
 
 					const result = await burn(
 						this.getRequiredProvider(),

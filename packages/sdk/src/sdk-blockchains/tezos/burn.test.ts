@@ -6,10 +6,12 @@ import { EthereumWallet, TezosWallet } from "@rarible/sdk-wallet"
 import type { ItemId } from "@rarible/api-client"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { get_address } from "tezos-sdk-module/dist/common/base"
-import { toItemId } from "@rarible/types"
+import { toContractAddress, toItemId } from "@rarible/types"
+import { deploy_mt_private, deploy_mt_public } from "tezos-sdk-module"
 import { initProviders } from "../ethereum/test/init-providers"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
+import { MintType } from "../../types/nft/mint/domain"
 import { getTezosAPIs } from "./common"
 
 describe("burn test", () => {
@@ -23,45 +25,62 @@ describe("burn test", () => {
 	const sdk = createRaribleSdk(wallet, "dev")
 	const tezosAPI = getTezosAPIs("granada")
 
-	let fa2Contract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
-	let itemId: ItemId = toItemId("TEZOS:KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53:1")
+	let nftContract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
+	let mtContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
 
 	/*
 	beforeAll(async () => {
-		const op = await deploy_fa2(
-			provider,
+		const sender = await tezos.address()
+		const op = await deploy_mt_public(
+			{
+				tezos,
+				api: "https://rarible-api.functori.com/v0.1",
+				config: {
+					exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
+					fees: new BigNumber(0),
+					nft_public: "",
+					mt_public: "",
+				},
+			},
 			sender,
-			royaltiesContract
 		)
+
+		console.log("sender", sender)
 		console.log("op", op)
 		if (op.contract) {
-			fa2Contract = op.contract
-			console.log("fa2Contract", fa2Contract)
+			ftContract = op.contract
+			console.log("ft contract", ftContract)
 		}
 
 		await op.confirmation()
 
+	}, 1500000)
+
+	*/
+
+	/*
+	test("burn NFT token test", async () => {
+		const sender = await tezos.address
+
+		// /*
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toUnionAddress(`TEZOS:${fa2Contract}`),
+			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 
+		// console.log("mintResponse", mintResponse)
 		const mintResult = await mintResponse.submit({
-			uri: "",
-			supply: 10,
+			// uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			// uri: "ipfs://ipfs/QmWLsBu6nS4ovaHbGAXprD1qEssJu4r5taQfB74sCG51tp",
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
 			lazyMint: false,
 		})
-
-		itemId = mintResult.itemId
 
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-	}, 1500000)
+		console.log("minted", mintResult)
 
-   */
-
-	test("burn test", async () => {
-		const sender = await tezos.address
 
 		const transfer = await sdk.nft.burn({ itemId })
 
@@ -75,6 +94,52 @@ describe("burn test", () => {
 			const item = await tezosAPI.item.getNftItemById({
 				// ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
 				itemId,
+			})
+
+			console.log("item", item)
+
+		})
+	}, 1500000)
+
+
+   */
+	test("burn FT token test", async () => {
+		const sender = await tezos.address
+
+		// /*
+		const mintResponse = await sdk.nft.mint({
+			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+		})
+
+		// console.log("mintResponse", mintResponse)
+		const mintResult = await mintResponse.submit({
+			// uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			// uri: "ipfs://ipfs/QmWLsBu6nS4ovaHbGAXprD1qEssJu4r5taQfB74sCG51tp",
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 10,
+			lazyMint: false,
+		})
+
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+		console.log("minted", mintResult)
+
+
+		const transfer = await sdk.nft.burn({
+			itemId: mintResult.itemId,
+		})
+
+		const result = await transfer.submit({ amount: 5 })
+
+		if (result) {
+		  await result.wait()
+		}
+
+		await retry(5, 500, async () => {
+			const item = await tezosAPI.item.getNftItemById({
+				// ownershipId: `${fa2Contract}:${mintResult.itemId}:${sender}`,
+				itemId: mintResult.itemId,
 			})
 
 			console.log("item", item)

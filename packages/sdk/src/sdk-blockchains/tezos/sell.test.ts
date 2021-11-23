@@ -28,7 +28,8 @@ describe("mint test", () => {
 	//private nft
 	// let fa2Contract: string = "KT1W9tukr36yDyZjPk6CtpNW2uvnwpZeQSyF"
 	// let fa2Contract: string = "KT18ewjrhWB9ZZFYZkBACHxVEPuTtCg2eXPF"
-	let fa2Contract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
+	// let fa2Contract: string = "KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53"
+	let ftContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
 	/*
   beforeAll(async () => {
     const sender = await get_address(provider)
@@ -82,7 +83,7 @@ describe("mint test", () => {
 		*/
 
 		const sellAction = await sdk.order.sell({
-			itemId: toItemId("TEZOS:KT1CmToUtdR59uxNaoWRJcxfH8rH7cjgEr53:8"),
+			itemId: toItemId(`TEZOS:${ftContract}:0`),
 		})
 
 		try {

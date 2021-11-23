@@ -83,11 +83,16 @@ export class TezosFill {
 
  	static getTezosAssetType(type: AssetType): TezosAssetType {
 		switch (type["@type"]) {
-			case "TEZOS_NFT":
+			case "TEZOS_NFT": {
+				return {
+					asset_class: "NFT",
+					contract: type.contract,
+					token_id: new BigNumber(type.tokenId),
+				}
+			}
 			case "TEZOS_MT": {
 				return {
-					//todo fix types
-					asset_class: type["@type"] as any,
+					asset_class: "MT",
 					contract: type.contract,
 					"token_id": new BigNumber(type.tokenId),
 				}
