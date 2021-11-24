@@ -12,18 +12,9 @@ describe("mint", () => {
 
 	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e")
-	const readSdk = createRaribleSdk(undefined, "e2e")
 
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 	const erc1155Address = toAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d")
-
-	test("prepare should work even if wallet is undefined", async () => {
-		const collection = await readSdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${erc721Address}` })
-		const action = await readSdk.nft.mintAndSell({ collection })
-		expect(action.multiple).toBeFalsy()
-		expect(action.supportsRoyalties).toBeTruthy()
-		expect(action.originFeeSupport).toBe("FULL")
-	})
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()

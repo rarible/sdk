@@ -4,4 +4,5 @@ export const prodConfig: RaribleSdkConfig = {
 	basePath: "https://api.rarible.org",
 	ethereumEnv: "mainnet",
 	flowEnv: "mainnet",
+	tezosNetwork: "mainnet",
 }

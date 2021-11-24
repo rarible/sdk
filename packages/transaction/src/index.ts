@@ -1,11 +1,11 @@
-import type { Blockchain } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { OperationResult } from "tezos-sdk-module/dist/common/base"
 import type { FlowTransaction } from "@rarible/flow-sdk/build/types"
 import type { IBlockchainTransaction } from "./domain"
 
 export class BlockchainEthereumTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = "ETHEREUM"
+	blockchain: Blockchain = Blockchain.ETHEREUM
 
 	constructor(public transaction: EthereumTransaction) {}
 
@@ -24,7 +24,7 @@ export class BlockchainEthereumTransaction implements IBlockchainTransaction {
 }
 
 export class BlockchainTezosTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = "TEZOS"
+	blockchain: Blockchain = Blockchain.TEZOS
 
 	constructor(public transaction: OperationResult) {}
 
@@ -43,7 +43,7 @@ export class BlockchainTezosTransaction implements IBlockchainTransaction {
 }
 
 export class BlockchainFlowTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = "FLOW"
+	blockchain: Blockchain = Blockchain.FLOW
 
 	constructor(public transaction: FlowTransaction) {
 	}

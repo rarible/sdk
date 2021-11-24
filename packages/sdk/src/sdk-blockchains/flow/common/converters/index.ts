@@ -1,9 +1,9 @@
 import type { FlowAddress, FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
-import { toFlowAddress } from "@rarible/flow-sdk/build/common/flow-address"
-import { toFlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import { toFlowAddress, toFlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
 import type { FlowCurrency } from "@rarible/flow-sdk/build/types"
 import type { ItemId } from "@rarible/api-client"
-import type { UnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { FlowItemId } from "../../../../common/domain"
 
 const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
@@ -12,7 +12,7 @@ const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
  * Get flow collection from union collection
  * @param collection - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFlowCollection(collection: UnionAddress): FlowContractAddress {
+export function getFlowCollection(collection: ContractAddress): FlowContractAddress {
 	if (FLOW_COLLECTION_REGEXP.test(collection)) {
 		const raw = collection.split(":")[1]
 		return toFlowContractAddress(raw)
@@ -38,7 +38,7 @@ export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
 		}
 		if (blockchain === "FLOW") {
 			return {
-				blockchain,
+				blockchain: Blockchain.FLOW,
 				contract: toFlowContractAddress(collectionId),
 				itemId,
 			}
@@ -80,7 +80,7 @@ const FLOW_FT_CONTRACT_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
  * Get fungible token name
  * @param contract - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFungibleTokenName(contract: UnionAddress): FlowCurrency {
+export function getFungibleTokenName(contract: ContractAddress): FlowCurrency {
 	if (FLOW_FT_CONTRACT_REGEXP.test(contract)) {
 		const [, , name] = contract.split(".")
 		switch (name) {

@@ -1,5 +1,6 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
+import BigNumber from "bignumber.js"
 
 export function createInMemoryProvider(node: string) {
 	return {
@@ -9,7 +10,9 @@ export function createInMemoryProvider(node: string) {
 		),
 		config: {
 			exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
-			fees: BigInt(0),
+			fees: new BigNumber(0),
+			nft_public: "",
+			mt_public: "",
 		},
 	}
 }

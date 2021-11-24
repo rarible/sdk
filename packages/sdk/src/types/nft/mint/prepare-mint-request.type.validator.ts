@@ -29,7 +29,7 @@ export const SCHEMA = {
                     "additionalProperties": false,
                     "properties": {
                         "collectionId": {
-                            "$ref": "#/definitions/UnionAddress"
+                            "$ref": "#/definitions/ContractAddress"
                         },
                         "tokenId": {
                             "$ref": "#/definitions/TokenId"
@@ -81,10 +81,13 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "id": {
-                    "$ref": "#/definitions/UnionAddress"
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "blockchain": {
+                    "$ref": "#/definitions/Blockchain"
                 },
                 "type": {
-                    "$ref": "#/definitions/Collection_Type"
+                    "$ref": "#/definitions/CollectionType"
                 },
                 "name": {
                     "type": "string"
@@ -98,22 +101,32 @@ export const SCHEMA = {
                 "features": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Collection_Features"
+                        "$ref": "#/definitions/CollectionFeatures"
                     }
                 }
             },
             "required": [
                 "id",
+                "blockchain",
                 "type",
                 "name",
                 "features"
             ],
             "additionalProperties": false
         },
-        "UnionAddress": {
+        "ContractAddress": {
             "type": "string"
         },
-        "Collection_Type": {
+        "Blockchain": {
+            "type": "string",
+            "enum": [
+                "ETHEREUM",
+                "POLYGON",
+                "FLOW",
+                "TEZOS"
+            ]
+        },
+        "CollectionType": {
             "type": "string",
             "enum": [
                 "CRYPTO_PUNKS",
@@ -123,7 +136,10 @@ export const SCHEMA = {
                 "TEZOS"
             ]
         },
-        "Collection_Features": {
+        "UnionAddress": {
+            "type": "string"
+        },
+        "CollectionFeatures": {
             "type": "string",
             "enum": [
                 "APPROVE_FOR_ALL",
@@ -150,7 +166,7 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "collectionId": {
-                    "$ref": "#/definitions/UnionAddress"
+                    "$ref": "#/definitions/ContractAddress"
                 }
             },
             "required": [

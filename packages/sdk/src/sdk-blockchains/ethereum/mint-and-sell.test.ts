@@ -13,6 +13,16 @@ describe("mintAndSell", () => {
 	const sdk = createRaribleSdk(ethereumWallet, "e2e")
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 
+	test("prepare should work even if wallet is undefined", async () => {
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: `ETHEREUM:${erc721Address}`,
+		})
+		const action = await sdk.nft.mintAndSell({ collection })
+		expect(action.multiple).toBeFalsy()
+		expect(action.supportsRoyalties).toBeTruthy()
+		expect(action.originFeeSupport).toBe("FULL")
+	})
+
 	test("should mint and put on sale ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
