@@ -1,5 +1,4 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { sign } from "tezos-sdk-module/dist/common/base"
 import type { Fcl } from "@rarible/fcl-types"
 import { Blockchain } from "@rarible/api-client"
 import type { TezosProvider } from "tezos-sdk-module/common/base"

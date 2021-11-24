@@ -17,7 +17,7 @@ describe("sell test", () => {
 	let nftContract: string = "KT1FJN62onDwGkWCyUdCw82kE7PoRm7xxJEX"
 	let mtContract: string = "KT1CVupWRCmVMPPJpUxLWaM6g1V6meKU5EeG"
 
-	test("sell NFT test", async () => {
+	test.skip("sell NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -51,7 +51,7 @@ describe("sell test", () => {
 
 	}, 1500000)
 
-	test("sell MT test", async () => {
+	test.skip("sell MT test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
