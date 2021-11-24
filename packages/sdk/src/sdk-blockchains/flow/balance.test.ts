@@ -13,7 +13,7 @@ describe("Test flow balance function", () => {
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
 
-	test("Should get balance for account", async () => {
+	test.skip("Should get balance for account", async () => {
 		const balance1 = await sdk.balances.getBalance(address, {
 			"@type": "FLOW_FT",
 			contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),

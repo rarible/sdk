@@ -77,7 +77,6 @@ export class TezosSell {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
 					make_asset_type: {
-						// @todo fix make asset type
 						asset_class: itemCollection.type,
 						contract: item.contract,
 						token_id: new BigNumber(item.tokenId),

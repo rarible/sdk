@@ -7,7 +7,8 @@ import type { AssetType, Order } from "@rarible/api-client"
 import type {
 	OrderForm, Part, Part as TezosPart,
 } from "tezos-sdk-module/dist/order"
-import TezosSDK from "tezos-sdk-module"
+// eslint-disable-next-line camelcase
+import { fill_order, get_address } from "tezos-sdk-module"
 import type {
 	BigNumber as RaribleBigNumber,
 } from "@rarible/types"
@@ -143,7 +144,8 @@ export class TezosFill {
 			case "XTZ": {
 				return {
 					asset_type: { asset_class: a.assetType.assetClass },
-					value: new BigNumber(a.value).multipliedBy(factor),
+					// value: new BigNumber(a.value).multipliedBy(factor),
+					value: new BigNumber(a.value),
 				}
 			}
 			case "FT": {
@@ -209,11 +211,12 @@ export class TezosFill {
 		if ("order" in request) {
 			return this.convertToFillOrder(request.order)
 		} else if ("orderId" in request) {
-			if (!request.orderId.startsWith("TEZOS")) {
-				throw new Error("Wrong tezos orderId")
+			const [domain, hash] = request.orderId.split(":")
+			if (domain !== "TEZOS") {
+				throw new Error("Not an tezos order")
 			}
 			const order = await this.apis.order.getOrderByHash({
-				hash: toOrderId(request.orderId.substring(6)),
+				hash,
 			})
 			return this.convertTezosOrderToForm(order)
 		} else {
@@ -226,7 +229,7 @@ export class TezosFill {
 		if (order.take.asset_type.asset_class === "MT" || order.take.asset_type.asset_class === "NFT") {
 			// eslint-disable-next-line camelcase
 			const { contract, token_id } = order.take.asset_type
-			const ownershipId = `${contract}:${token_id.toString()}:${await TezosSDK.get_address(provider)}`
+			const ownershipId = `${contract}:${token_id.toString()}:${await get_address(provider)}`
 			const response = await this.apis.ownership.getNftOwnershipById({
 				ownershipId,
 			})
@@ -234,6 +237,10 @@ export class TezosFill {
 		} else {
 			return toRaribleBigNumber(order.makeStock)
 		}
+	}
+
+	isMultiple(order: PreparedOrder): boolean {
+		return order.take.asset_type.asset_class === "MT" || order.make.asset_type.asset_class === "MT"
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
@@ -250,17 +257,18 @@ export class TezosFill {
 					infinite: fillRequest.infiniteApproval,
 					edpk: await get_public_key(provider),
 				}
-				const fillResponse = await TezosSDK.fill_order(
+				console.log("req", preparedOrder, request)
+				const fillResponse = await fill_order(
 					provider,
 					preparedOrder,
 					request,
 				)
-				return new BlockchainTezosTransaction(fillResponse as any)
+				return new BlockchainTezosTransaction(fillResponse)
 			},
 		})
 
 		return {
-			multiple: false,
+			multiple: this.isMultiple(preparedOrder),
 			maxAmount: await this.getMaxAmount(preparedOrder),
 			baseFee: parseInt(provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,
