@@ -14,14 +14,12 @@ import type {
 } from "@rarible/types"
 import {
 	toBigNumber as toRaribleBigNumber,
-	toOrderId,
 	toBigNumber,
 } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type {
 	Order as TezosOrder,
 	Asset as TezosClientAsset,
-	AssetType as TezosClientAssetType,
 } from "tezos-api-client"
 import BigNumber from "bignumber.js"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
@@ -36,10 +34,9 @@ import {
 	OriginFeeSupport,
 	PayoutsSupport,
 } from "../../types/order/fill/domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
-import { isExistedTezosProvider } from "./common"
+import type { ITezosAPI, MaybeProvider, PreparedOrder } from "./common"
+import { convertOrderToFillOrder, isExistedTezosProvider } from "./common"
 
-export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
 export class TezosFill {
 	constructor(
@@ -54,88 +51,6 @@ export class TezosFill {
 			throw new Error("Tezos provider is required")
 		}
 		return this.provider
-	}
-
-	static getTezosAssetTypeFromCommonType(type: TezosClientAssetType): TezosAssetType {
-		switch (type.assetClass) {
-			case "MT":
-			case "NFT":
-				return {
-					asset_class: type.assetClass,
-					contract: type.contract,
-					token_id: new BigNumber(type.tokenId),
-				}
-			case "FT":
-				return {
-					asset_class: type.assetClass,
-					contract: type.contract,
-				}
-			case "XTZ":
-				return {
-					asset_class: type.assetClass,
-				}
-			default:
-				throw new Error("Invalid take asset type")
-		}
-	}
-
- 	static getTezosAssetType(type: AssetType): TezosAssetType {
-		switch (type["@type"]) {
-			case "TEZOS_NFT": {
-				return {
-					asset_class: "NFT",
-					contract: type.contract,
-					token_id: new BigNumber(type.tokenId),
-				}
-			}
-			case "TEZOS_MT": {
-				return {
-					asset_class: "MT",
-					contract: type.contract,
-					"token_id": new BigNumber(type.tokenId),
-				}
-			}
-			case "XTZ": {
-				return {
-					asset_class: type["@type"],
-				}
-			}
-			default: {
-				throw new Error("Invalid take asset type")
-			}
-		}
-	}
-
-	convertToFillOrder(order: Order): PreparedOrder {
-		if (order.data["@type"] !== "TEZOS_RARIBLE_V2") {
-			throw new Error("Unsupported order data type")
-		}
-
-		return {
-			type: "RARIBLE_V2",
-			maker: order.maker,
-			maker_edpk: order.data.makerEdpk!,
-			taker: order.taker,
-			taker_edpk: order.data.takerEdpk,
-			make: {
-				asset_type: TezosFill.getTezosAssetType(order.make.type),
-				value: new BigNumber(order.make.value),
-			},
-			take: {
-				asset_type: TezosFill.getTezosAssetType(order.make.type),
-				value: new BigNumber(order.make.value),
-			},
-			salt: order.salt,
-			start: order.startedAt ? parseInt(order.startedAt) : undefined,
-			end: order.endedAt ? parseInt(order.endedAt) : undefined,
-			signature: order.signature,
-			data: {
-				data_type: "V1",
-				payouts: this.convertOrderPayout(order.data.payouts),
-				origin_fees: this.convertOrderPayout(order.data.originFees),
-			},
-			makeStock: toRaribleBigNumber(order.makeStock),
-		}
 	}
 
 	convertToLibAsset(a: TezosClientAsset): TezosLibAsset {
@@ -209,7 +124,7 @@ export class TezosFill {
 
 	async getPreparedOrder(request: PrepareFillRequest): Promise<PreparedOrder> {
 		if ("order" in request) {
-			return this.convertToFillOrder(request.order)
+			return convertOrderToFillOrder(request.order)
 		} else if ("orderId" in request) {
 			const [domain, hash] = request.orderId.split(":")
 			if (domain !== "TEZOS") {

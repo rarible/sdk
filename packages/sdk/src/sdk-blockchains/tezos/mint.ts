@@ -4,7 +4,7 @@ import { mint } from "tezos-sdk-module"
 import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
-import { BlockchainTezosTransaction } from "@rarible/sdk-transaction/src"
+import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
@@ -14,7 +14,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getTezosAddress, isExistedTezosProvider } from "./common"
+import { getRequiredProvider, getTezosAddress, isExistedTezosProvider } from "./common"
 
 export class TezosMint {
 	constructor(
@@ -22,13 +22,6 @@ export class TezosMint {
 		private apis: ITezosAPI,
 	) {
 		this.mint = this.mint.bind(this)
-	}
-
-	private getRequiredProvider(): Provider {
-		if (!isExistedTezosProvider(this.provider)) {
-			throw new Error("Tezos provider is required")
-		}
-		return this.provider
 	}
 
 	getCreators(request: MintRequest): string | undefined {
@@ -55,7 +48,7 @@ export class TezosMint {
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
 					const result = await mint(
-						this.getRequiredProvider(),
+						getRequiredProvider(this.provider),
 						contract,
 						royalties,
 						supply,

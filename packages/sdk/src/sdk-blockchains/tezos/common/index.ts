@@ -1,7 +1,7 @@
-import type { ItemId, UnionAddress } from "@rarible/api-client"
+import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
-import type { Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { Provider, TezosProvider, AssetType as TezosAssetType } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
@@ -17,6 +17,11 @@ import {
 } from "tezos-api-client/build"
 import type { Config } from "tezos-sdk-module/config/type"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { OrderId } from "@rarible/types"
+import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
+import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
+import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
+import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { TezosNetwork } from "../domain"
@@ -33,6 +38,8 @@ export type MaybeProvider<P extends TezosProvider> = {
 	api: string
 	config: Config
 }
+
+export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
 export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 	const config = new Configuration({
@@ -82,6 +89,24 @@ export function getMaybeTezosProvider(
 			throw new Error("Unsupported tezos network for config")
 		}
 	}
+}
+
+export function getRequiredProvider(provider: MaybeProvider<TezosProvider>): Provider {
+	if (!isExistedTezosProvider(provider)) {
+		throw new Error("Tezos provider is required")
+	}
+	return provider
+}
+
+export function getTezosOrderId(orderId: OrderId): string {
+	if (!orderId) {
+		throw new Error("OrderId has not been specified")
+	}
+	const [blockchain, id] = orderId.split(":")
+	if (blockchain !== "TEZOS") {
+		throw new Error("Not an TEZOS order")
+	}
+	return id
 }
 
 export function getTezosItemData(itemId: ItemId) {
@@ -134,4 +159,81 @@ export function getSupportedCurrencies(): CurrencyType[] {
 		blockchain: Blockchain.TEZOS,
 		type: "NATIVE",
 	}]
+}
+
+export function convertOrderToFillOrder(order: Order): PreparedOrder {
+	return {
+		...convertOrderToOrderForm(order),
+		makeStock: toRaribleBigNumber(order.makeStock),
+	}
+}
+
+export function convertOrderToOrderForm(order: Order): OrderForm {
+	if (order.data["@type"] !== "TEZOS_RARIBLE_V2") {
+		throw new Error("Unsupported order data type")
+	}
+	return {
+		type: "RARIBLE_V2",
+		maker: order.maker,
+		maker_edpk: order.data.makerEdpk!,
+		taker: order.taker,
+		taker_edpk: order.data.takerEdpk,
+		make: {
+			asset_type: getTezosAssetType(order.make.type),
+			value: new BigNumber(order.make.value),
+		},
+		take: {
+			asset_type: getTezosAssetType(order.make.type),
+			value: new BigNumber(order.make.value),
+		},
+		salt: order.salt,
+		start: order.startedAt ? parseInt(order.startedAt) : undefined,
+		end: order.endedAt ? parseInt(order.endedAt) : undefined,
+		signature: order.signature,
+		data: {
+			data_type: "V1",
+			payouts: convertOrderPayout(order.data.payouts),
+			origin_fees: convertOrderPayout(order.data.originFees),
+		},
+	}
+}
+
+export function getTezosAssetType(type: AssetType): TezosAssetType {
+	switch (type["@type"]) {
+		case "TEZOS_FT": {
+			return {
+				asset_class: "FT",
+				contract: type.contract,
+			}
+		}
+		case "TEZOS_NFT": {
+			return {
+				asset_class: "NFT",
+				contract: type.contract,
+				token_id: new BigNumber(type.tokenId),
+			}
+		}
+		case "TEZOS_MT": {
+			return {
+				asset_class: "MT",
+				contract: type.contract,
+				"token_id": new BigNumber(type.tokenId),
+			}
+		}
+		case "XTZ": {
+			return {
+				asset_class: type["@type"],
+			}
+		}
+		default: {
+			throw new Error("Invalid take asset type")
+		}
+	}
+}
+
+export function convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
+	return payout?.map(p => ({
+		account: p.account,
+		value: new BigNumber(p.value),
+	})) || []
 }
