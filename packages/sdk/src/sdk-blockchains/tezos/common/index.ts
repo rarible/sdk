@@ -15,7 +15,7 @@ import {
 	NftOwnershipControllerApi,
 	OrderControllerApi,
 } from "tezos-api-client/build"
-import type { Config } from "tezos-sdk-module/config/type"
+import type { Config } from "tezos-sdk-module"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"

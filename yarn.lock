@@ -11313,13 +11313,6 @@ node-fetch@^2.6.0, node-fetch@^2.6.1:
   dependencies:
     whatwg-url "^5.0.0"
 
-node-fetch@^2.6.6:
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.6.tgz#1751a7c01834e8e1697758732e9efb6eeadfaf89"
-  integrity sha512-Z8/6vRlTUChSdIgMa51jxQ4lrw/Jy5SOW10ObaA47/RElsAN2c5Pn8bTgFGWn/ibwzXTE8qwr1Yzx28vsecXEA==
-  dependencies:
-    whatwg-url "^5.0.0"
-
 node-fetch@~1.7.1:
   version "1.7.3"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
@@ -14157,6 +14150,11 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
+text-encoder@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/text-encoder/-/text-encoder-0.0.4.tgz#fbee4c6fb251dd02e2f40f9983ddd68c5c166e2c"
+  integrity sha512-12gllbNnC0Zdh9r+LCpEwpUdvncaE9hfUmCVm2ryCH1LEVUZbS6NdRq8omEgJI0zKgaGFTjwQVHbglGDCIbmNA==
+
 text-extensions@^1.0.0:
   version "1.9.0"
   resolved "https://registry.yarnpkg.com/text-extensions/-/text-extensions-1.9.0.tgz#1853e45fee39c945ce6f6c36b2d659b5aabc2a26"
@@ -14167,15 +14165,15 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-api-client@~0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.5.tgz#9bc4914771cd2dc707015ca969771b08e05aa317"
-  integrity sha512-SNSQvLJbk1pVKSnSL8dfQR6MB1U59L/yU+tT8Wjl6tKryDuKhtMaW2cnTMgFdmlqPhfCX5f41Og+Bp1bg8Ra0Q==
+tezos-api-client@~0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.8.tgz#d823010239cae811366b51550079a5b89d68d3ec"
+  integrity sha512-ofWGfQoALnNtQJ7uxv4u0MLfd2hreLQ4JfMpGRgXDZqllaEahEsh8Tby5menLssJCWM6DnNer5/b9vNGRna/gg==
 
-tezos-sdk-module@~0.0.18:
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.18.tgz#2fc76fbf94785a351aa9245a04d34dee000b6c4a"
-  integrity sha512-TQieNckR7BuZXWVr6FnXagaf5D2KiC3poBKCNb5bP+dJhtTOjYgZKykq7EBi5pXdXvv7ZINhQOgYd2KWdkfFLA==
+tezos-sdk-module@~0.0.21:
+  version "0.0.21"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.21.tgz#8022e46b2b5bd229569b37dca17899814a745b73"
+  integrity sha512-VFB2ESZ45X77xUswuWIaASUxdn/7MPgNeXPZFQq4aHcC4wp2LNFp42bvVd4Cj/SZ2/MNvg5fxj3Ur8b0J7F39g==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.2"
     "@taquito/beacon-wallet" "^10.1.2"
@@ -14189,7 +14187,8 @@ tezos-sdk-module@~0.0.18:
     get-random-values "^1.2.2"
     json-formatter-js "^2.3.4"
     keccak "^3.0.2"
-    node-fetch "^2.6.6"
+    node-fetch "2.6.1"
+    text-encoder "^0.0.4"
     vue "^2.6.14"
     yargs "^17.2.1"
 
