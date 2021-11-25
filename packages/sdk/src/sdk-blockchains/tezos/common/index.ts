@@ -1,13 +1,15 @@
 import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
-import type { Provider, TezosProvider, AssetType as TezosAssetType } from "tezos-sdk-module/dist/common/base"
+import type { Provider, TezosProvider, AssetType as TezosAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
 import type { Part } from "tezos-sdk-module/dist/order/utils"
+import type {
+	Asset as TezosClientAsset } from "tezos-api-client/build"
 import {
 	Configuration,
 	NftCollectionControllerApi,
@@ -15,7 +17,7 @@ import {
 	NftOwnershipControllerApi,
 	OrderControllerApi,
 } from "tezos-api-client/build"
-import type { Config } from "tezos-sdk-module/config/type"
+import type { Config } from "tezos-sdk-module"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { OrderId } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
@@ -217,7 +219,7 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 			return {
 				asset_class: "MT",
 				contract: type.contract,
-				"token_id": new BigNumber(type.tokenId),
+				token_id: new BigNumber(type.tokenId),
 			}
 		}
 		case "XTZ": {
@@ -228,6 +230,48 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 		default: {
 			throw new Error("Invalid take asset type")
 		}
+	}
+}
+
+export function covertToLibAsset(a: TezosClientAsset): TezosLibAsset {
+	const factor = 1000000
+	switch (a.assetType.assetClass) {
+		case "XTZ": {
+			return {
+				asset_type: { asset_class: a.assetType.assetClass },
+				// value: new BigNumber(a.value).multipliedBy(factor),
+				value: new BigNumber(a.value),
+			}
+		}
+		case "FT": {
+			return {
+				asset_type: {
+					asset_class: a.assetType.assetClass,
+					contract: a.assetType.contract,
+				},
+				value: new BigNumber(a.value).multipliedBy(factor),
+			}
+		}
+		case "NFT": {
+			return {
+				asset_type: {
+					asset_class: a.assetType.assetClass,
+					contract: a.assetType.contract,
+					token_id: new BigNumber(a.assetType.tokenId),
+				},
+				value: new BigNumber(1),
+			}
+		}
+		case "MT":
+			return {
+				asset_type: {
+					asset_class: a.assetType.assetClass,
+					contract: a.assetType.contract,
+					token_id: new BigNumber(a.assetType.tokenId),
+				},
+				value: new BigNumber(a.value),
+			}
+		default: throw new Error("Unknown Asset Class")
 	}
 }
 

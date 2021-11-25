@@ -35,7 +35,7 @@ import {
 	PayoutsSupport,
 } from "../../types/order/fill/domain"
 import type { ITezosAPI, MaybeProvider, PreparedOrder } from "./common"
-import { convertOrderToFillOrder, isExistedTezosProvider } from "./common"
+import { convertOrderToFillOrder, covertToLibAsset, isExistedTezosProvider } from "./common"
 
 
 export class TezosFill {
@@ -53,55 +53,13 @@ export class TezosFill {
 		return this.provider
 	}
 
-	convertToLibAsset(a: TezosClientAsset): TezosLibAsset {
-		const factor = 1000000
-		switch (a.assetType.assetClass) {
-			case "XTZ": {
-				return {
-					asset_type: { asset_class: a.assetType.assetClass },
-					// value: new BigNumber(a.value).multipliedBy(factor),
-					value: new BigNumber(a.value),
-				}
-			}
-			case "FT": {
-				return {
-					asset_type: {
-						asset_class: a.assetType.assetClass,
-						contract: a.assetType.contract,
-					},
-					value: new BigNumber(a.value).multipliedBy(factor),
-				}
-			}
-			case "NFT": {
-				return {
-					asset_type: {
-						asset_class: a.assetType.assetClass,
-						contract: a.assetType.contract,
-						token_id: new BigNumber(a.assetType.tokenId),
-					},
-					value: new BigNumber(1),
-				}
-			}
-			case "MT":
-				return {
-					asset_type: {
-						asset_class: a.assetType.assetClass,
-						contract: a.assetType.contract,
-						token_id: new BigNumber(a.assetType.tokenId),
-					},
-					value: new BigNumber(a.value),
-				}
-			default: throw new Error("Unknown Asset Class")
-		}
-	}
-
 	async convertTezosOrderToForm(order: TezosOrder): Promise<PreparedOrder> {
 		return {
 			type: "RARIBLE_V2",
 			maker: order.maker,
 			maker_edpk: order.makerEdpk,
-			make: this.convertToLibAsset(order.make),
-			take: this.convertToLibAsset(order.take),
+			make: covertToLibAsset(order.make),
+			take: covertToLibAsset(order.take),
 			salt: order.salt,
 			start: order.start,
 			end: order.end,
