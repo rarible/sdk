@@ -9,14 +9,14 @@ import { retry } from "../../common/retry"
 describe("mint test", () => {
 	const tezos = in_memory_provider(
 		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://granada.tz.functori.com"
+		"https://hangzhou.tz.functori.com"
 	)
 
 	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "e2e")
+	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1Q59huSmAo8a3veKjAvCiSYPw1XZwKKf8X"
-	let mtContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
+	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
+	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
 
 	test.skip("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
