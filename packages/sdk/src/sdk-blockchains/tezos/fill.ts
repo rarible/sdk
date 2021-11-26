@@ -25,6 +25,7 @@ import BigNumber from "bignumber.js"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
+import { order_of_json } from "tezos-sdk-module/dist/order"
 import type {
 	FillRequest,
 	PrepareFillRequest,
@@ -80,7 +81,8 @@ export class TezosFill {
 		})) || []
 	}
 
-	async getPreparedOrder(request: PrepareFillRequest): Promise<PreparedOrder> {
+	// async getPreparedOrder(request: PrepareFillRequest): Promise<PreparedOrder> {
+	async getPreparedOrder(request: PrepareFillRequest): Promise<OrderForm> {
 		if ("order" in request) {
 			return convertOrderToFillOrder(request.order)
 		} else if ("orderId" in request) {
@@ -91,7 +93,8 @@ export class TezosFill {
 			const order = await this.apis.order.getOrderByHash({
 				hash,
 			})
-			return this.convertTezosOrderToForm(order)
+			// return this.convertTezosOrderToForm(order)
+			return order_of_json(order)
 		} else {
 			throw new Error("Request error")
 		}
@@ -128,9 +131,9 @@ export class TezosFill {
 					payouts: this.convertOrderPayout(fillRequest.payouts),
 					origin_fees: this.convertOrderPayout(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
-					edpk: await get_public_key(provider),
+					// edpk: await get_public_key(provider),
 				}
-				console.log("req", preparedOrder, request)
+				console.log("req", JSON.stringify(preparedOrder, null, "  "), JSON.stringify(request, null, " "))
 				const fillResponse = await fill_order(
 					provider,
 					preparedOrder,
@@ -141,8 +144,10 @@ export class TezosFill {
 		})
 
 		return {
-			multiple: this.isMultiple(preparedOrder),
-			maxAmount: await this.getMaxAmount(preparedOrder),
+			// multiple: this.isMultiple(preparedOrder),
+			multiple: true,
+			// maxAmount: await this.getMaxAmount(preparedOrder),
+			maxAmount: toBigNumber("1"),
 			baseFee: parseInt(provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,

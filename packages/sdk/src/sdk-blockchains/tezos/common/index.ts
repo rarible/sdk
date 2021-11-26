@@ -80,8 +80,9 @@ export function getMaybeTezosProvider(
 				tezos: provider,
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
-					exchange: "KT1C5kWbfzASApxCMHXFLbHuPtnRaJXE4WMu",
-					fees: new BigNumber(0),
+					// exchange: "KT1KkUufmRPjK6SBNZVvAYniAY5F9czYmgwu",
+					exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
+					fees: new BigNumber(300),
 					nft_public: "",
 					mt_public: "",
 				},

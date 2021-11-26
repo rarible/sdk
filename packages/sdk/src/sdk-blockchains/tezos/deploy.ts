@@ -18,6 +18,13 @@ export class TezosDeploy {
 				throw new Error("Wrong blockchain")
 			}
 
+			if (request.asset.assetType === "NFT") {
+
+			} else if (request.asset.assetType === "MT") {
+
+			} else {
+				throw new Error("err")
+			}
 
 			return null as any
 		},

@@ -30,6 +30,7 @@ export function createRaribleSdk(
 		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, config.tezosNetwork)
 	)
 
+
 	return {
 		...instance,
 		nft: {

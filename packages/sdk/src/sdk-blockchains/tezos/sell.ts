@@ -13,7 +13,7 @@ import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	getMakerPublicKey,
-	getPayouts,
+	getPayouts, getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosItemData,
 	isExistedTezosProvider,
@@ -26,13 +26,6 @@ export class TezosSell {
 		private apis: ITezosAPI,
 	) {
 		this.sell = this.sell.bind(this)
-	}
-
-	private getRequiredProvider(): Provider {
-		if (!isExistedTezosProvider(this.provider)) {
-			throw new Error("Tezos provider is required")
-		}
-		return this.provider
 	}
 
 	parseTakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
@@ -66,7 +59,7 @@ export class TezosSell {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
-				const provider = this.getRequiredProvider()
+				const provider = getRequiredProvider(this.provider)
 				const makerPublicKey = await getMakerPublicKey(provider)
 				const { itemId } = getTezosItemData(request.itemId)
 
@@ -87,10 +80,14 @@ export class TezosSell {
 					origin_fees: request.originFees?.map(p => ({
 						account: p.account,
 						value: new BigNumber(p.value),
-					})) || [],
+					  })) || [],
 				}
 
-				const sellOrder: TezosOrder = await sell(provider, tezosRequest)
+				console.log("tezosRequest", tezosRequest, "provider", provider)
+				const sellOrder: TezosOrder = await sell(
+					provider,
+					tezosRequest
+				)
 				return toOrderId(`TEZOS:${sellOrder.hash}`)
 			},
 		})

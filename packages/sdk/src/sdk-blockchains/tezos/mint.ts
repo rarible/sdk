@@ -1,6 +1,6 @@
 import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
-import { mint } from "tezos-sdk-module"
+import { get_address, mint } from "tezos-sdk-module"
 import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
@@ -47,6 +47,8 @@ export class TezosMint {
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
+					const provider = getRequiredProvider(this.provider)
+
 					const result = await mint(
 						getRequiredProvider(this.provider),
 						contract,
@@ -56,7 +58,7 @@ export class TezosMint {
 						{
 							"": request.uri,
 						},
-						owner,
+						await get_address(provider),
 					)
 
 					return {

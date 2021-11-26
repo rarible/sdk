@@ -1,23 +1,45 @@
 // eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
+import BigNumber from "bignumber.js"
+import { deploy_mt_public, deploy_nft_public } from "tezos-sdk-module"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { MintType } from "../../types/nft/mint/domain"
+import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { createTestInMemoryProvider } from "./test/create-in-memory-provider"
 
 describe("burn test", () => {
-	const tezos = in_memory_provider(
-		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://granada.tz.functori.com"
-	)
+	const tezos = createTestInMemoryProvider("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "e2e")
+	const sdk = createRaribleSdk(wallet, "dev")
 
-	const nftContract: string = "KT1Q59huSmAo8a3veKjAvCiSYPw1XZwKKf8X"
-	const mtContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
+	let nftContract: string = "KT1HfLByoDk22vZp3GtgMM1oNUjeYQEgeEYS"
+	let mtContract: string = "KT1A4wrudnhHSgayCi9U9DB3MyaSTd3wpFYy"
 
-	test.skip("burn NFT token test", async () => {
+	/*
+	beforeAll(async () => {
+		const provider = {
+			tezos,
+			api: "https://rarible-api.functori.com/v0.1",
+			config: {
+				exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
+				fees: new BigNumber(0),
+				nft_public: "",
+				mt_public: "",
+			},
+		}
+		const sender = await tezos.address()
+		console.log("sender", sender)
+		const mt = await deploy_nft_public(provider, sender)
+		console.log("nft", mt.contract)
+		nftContract = mt.contract as any
+		await mt.confirmation()
+	})
+
+   */
+
+	test("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -29,11 +51,7 @@ describe("burn test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 
 		const transfer = await sdk.nft.burn({ itemId: mintResult.itemId })
 
@@ -43,11 +61,7 @@ describe("burn test", () => {
 		  await result.wait()
 		}
 
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sdk, mintResult.itemId, "0")
 	}, 1500000)
 
 	test.skip("burn MT token test", async () => {
@@ -62,6 +76,9 @@ describe("burn test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+
+		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+
 		const transfer = await sdk.nft.burn({
 			itemId: mintResult.itemId,
 		})
@@ -70,11 +87,7 @@ describe("burn test", () => {
 		  await result.wait()
 		}
 
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sdk, mintResult.itemId, "5")
 	}, 1500000)
 
 })
