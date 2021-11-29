@@ -1,6 +1,6 @@
-import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
-import { mint } from "tezos-sdk-module"
+// eslint-disable-next-line camelcase
+import { get_address, mint } from "tezos-sdk-module"
 import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
@@ -14,7 +14,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getTezosAddress, isExistedTezosProvider } from "./common"
+import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
 	constructor(
@@ -24,20 +24,13 @@ export class TezosMint {
 		this.mint = this.mint.bind(this)
 	}
 
-	private getRequiredProvider(): Provider {
-		if (!isExistedTezosProvider(this.provider)) {
-			throw new Error("Tezos provider is required")
-		}
-		return this.provider
-	}
-
 	getCreators(request: MintRequest): string | undefined {
 		const [owner] = request.creators || []
 		return owner?.account ? getTezosAddress(owner?.account) : undefined
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const { contract, owner, type } = await getCollectionData(this.apis.collection, prepareRequest)
+		const { contract, type } = await getCollectionData(this.apis.collection, prepareRequest)
 
 		return {
 			multiple: type === "MT",
@@ -54,8 +47,10 @@ export class TezosMint {
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
+					const provider = getRequiredProvider(this.provider)
+
 					const result = await mint(
-						this.getRequiredProvider(),
+						getRequiredProvider(this.provider),
 						contract,
 						royalties,
 						supply,
@@ -63,7 +58,7 @@ export class TezosMint {
 						{
 							"": request.uri,
 						},
-						owner,
+						await get_address(provider),
 					)
 
 					return {

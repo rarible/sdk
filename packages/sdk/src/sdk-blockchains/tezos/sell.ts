@@ -4,9 +4,8 @@ import { sell } from "tezos-sdk-module/dist/order/sell"
 import { pk_to_pkh } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
 import { toOrderId } from "@rarible/types"
-import type { Provider, TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { TezosProvider, FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
-import type { FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
@@ -15,9 +14,9 @@ import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	getMakerPublicKey,
 	getPayouts,
+	getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosItemData,
-	isExistedTezosProvider,
 } from "./common"
 
 
@@ -27,13 +26,6 @@ export class TezosSell {
 		private apis: ITezosAPI,
 	) {
 		this.sell = this.sell.bind(this)
-	}
-
-	private getRequiredProvider(): Provider {
-		if (!isExistedTezosProvider(this.provider)) {
-			throw new Error("Tezos provider is required")
-		}
-		return this.provider
 	}
 
 	parseTakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
@@ -67,7 +59,7 @@ export class TezosSell {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
-				const provider = this.getRequiredProvider()
+				const provider = getRequiredProvider(this.provider)
 				const makerPublicKey = await getMakerPublicKey(provider)
 				const { itemId } = getTezosItemData(request.itemId)
 
@@ -88,17 +80,20 @@ export class TezosSell {
 					origin_fees: request.originFees?.map(p => ({
 						account: p.account,
 						value: new BigNumber(p.value),
-					})) || [],
+					  })) || [],
 				}
 
-				const sellOrder: TezosOrder = await sell(provider, tezosRequest)
+				const sellOrder: TezosOrder = await sell(
+					provider,
+					tezosRequest
+				)
 				return toOrderId(`TEZOS:${sellOrder.hash}`)
 			},
 		})
 
 		return {
 			multiple: itemCollection.type === "MT",
-			originFeeSupport: OriginFeeSupport.FULL, //todo check
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),

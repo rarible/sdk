@@ -4,21 +4,23 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
-import { retry } from "../../common/retry"
+import { awaitForOrder } from "./test/await-for-order"
+import { awaitForItemSupply } from "./test/await-for-item-supply"
 
 describe("sell test", () => {
-	const tezos = in_memory_provider(
-		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://granada.tz.functori.com",
+	const sellerTezos = in_memory_provider(
+		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		"https://hangzhou.tz.functori.com",
 	)
-	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sellerWallet = new TezosWallet(sellerTezos)
+	const sellerSdk = createRaribleSdk(sellerWallet, "dev")
 
-	let nftContract: string = "KT1FJN62onDwGkWCyUdCw82kE7PoRm7xxJEX"
-	let mtContract: string = "KT1CVupWRCmVMPPJpUxLWaM6g1V6meKU5EeG"
+	let nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
+	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
+
 
 	test.skip("sell NFT test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 		const mintResult = await mintResponse.submit({
@@ -30,58 +32,52 @@ describe("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sellerSdk, mintResult.itemId, "1")
 
-		const sellAction = await sdk.order.sell({
+		const sellAction = await sellerSdk.order.sell({
 			itemId: mintResult.itemId,
 		})
 
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000001",
+			price: "0.02",
 			currency: {
 				"@type": "XTZ",
 			},
 		})
-		console.log("orderId", orderId)
 
+		await awaitForOrder(sellerSdk, orderId)
 	}, 1500000)
 
+
 	test.skip("sell MT test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
+			supply: 10,
 			lazyMint: false,
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
 
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sellerSdk, mintResult.itemId, "10")
 
-		const sellAction = await sdk.order.sell({
+		const sellAction = await sellerSdk.order.sell({
 			itemId: mintResult.itemId,
 		})
 
 		const orderId = await sellAction.submit({
-			amount: 10,
-			price: "0.000002",
+			amount: 5,
+			price: "0.02",
 			currency: {
 				"@type": "XTZ",
 			},
 		})
 
-	}, 1500000)
+		await awaitForOrder(sellerSdk, orderId)
+	}, 2900000)
 
 })

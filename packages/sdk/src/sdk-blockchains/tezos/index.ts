@@ -12,6 +12,7 @@ import { TezosMint } from "./mint"
 import { TezosTransfer } from "./transfer"
 import { TezosBurn } from "./burn"
 import { TezosTokenId } from "./token-id"
+import { TezosCancel } from "./cancel"
 
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
@@ -35,7 +36,7 @@ export function createTezosSdk(
 			sellUpdate: notImplemented,
 			bid: new TezosBid(maybeProvider, apis).bid,
 			bidUpdate: notImplemented,
-			cancel: nonImplementedAction,
+			cancel: new TezosCancel(maybeProvider, apis).cancel,
 		},
 		balances: {
 			getBalance: notImplemented,

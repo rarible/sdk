@@ -16,7 +16,6 @@ describe("bid test", () => {
 	const sdk = createRaribleSdk(wallet, "e2e")
 
 	const nftContract: string = "KT1Q59huSmAo8a3veKjAvCiSYPw1XZwKKf8X"
-	const mtContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
 
 	test.skip("bid test", async () => {
 		const mintResponse = await sdk.nft.mint({

@@ -4,22 +4,19 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
-import { retry } from "../../common/retry"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { delay, retry } from "../../common/retry"
 
-describe("mint test", () => {
+describe("cancel test", () => {
 	const tezos = in_memory_provider(
 		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
 		"https://hangzhou.tz.functori.com"
 	)
-
 	const wallet = new TezosWallet(tezos)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
-	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
+	let nftContract: string = "KT1CHLDcbogVfVtRbg2TZKvL5p5w9WvhYe2G"
 
-	test.skip("mint NFT token test", async () => {
+	test.skip("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -31,28 +28,47 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await retry(5, 500, async () => {
+
+		await retry(10, 1000, async () => {
 			await sdk.apis.item.getItemById({
 				itemId: mintResult.itemId,
 			})
 		})
-	}, 1500000)
 
-
-	test.skip("mint MT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+		const sellAction = await sdk.order.sell({
+			itemId: mintResult.itemId,
 		})
-		const mintResult = await mintResponse.submit({
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 12,
-			lazyMint: false,
+
+		const orderId = await sellAction.submit({
+			amount: 1,
+			price: "0.000001",
+			currency: {
+				"@type": "XTZ",
+			},
 		})
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await retry(10, 1000, async () => {
+			const order = await sdk.apis.order.getOrderById({
+				id: orderId,
+			})
+			if (order.status !== "ACTIVE") {
+				throw new Error("Order status is not active")
+			}
+		})
+
+		await delay(10000)
+		const cancelTx = await sdk.order.cancel({
+			orderId,
+		})
+		await cancelTx.wait()
+		await retry(10, 1000, async () => {
+			const canceledOrder = await sdk.apis.order.getOrderById({
+				id: orderId,
+			})
+			if (canceledOrder.status !== "CANCELLED") {
+				throw new Error("Order has not been cancelled")
+			}
+		})
+
 
 	}, 1500000)
-
 })
