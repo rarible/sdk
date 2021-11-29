@@ -4,7 +4,7 @@ import { sell } from "tezos-sdk-module/dist/order/sell"
 import { pk_to_pkh } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
 import { toOrderId } from "@rarible/types"
-import type { Provider, TezosProvider, FTAssetType, XTZAssetType } from "tezos-sdk-module"
+import type { TezosProvider, FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -13,10 +13,10 @@ import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	getMakerPublicKey,
-	getPayouts, getRequiredProvider,
+	getPayouts,
+	getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosItemData,
-	isExistedTezosProvider,
 } from "./common"
 
 
@@ -83,7 +83,6 @@ export class TezosSell {
 					  })) || [],
 				}
 
-				console.log("tezosRequest", tezosRequest, "provider", provider)
 				const sellOrder: TezosOrder = await sell(
 					provider,
 					tezosRequest
@@ -94,7 +93,7 @@ export class TezosSell {
 
 		return {
 			multiple: itemCollection.type === "MT",
-			originFeeSupport: OriginFeeSupport.FULL, //todo check
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),

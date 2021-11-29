@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0](https://github.com/rarible/sdk/compare/v0.6.7...v0.7.0) (2021-11-26)
+
+
+### Features
+
+* tezos gen token id ([44268ff](https://github.com/rarible/sdk/commit/44268ffb070de080d56fbf782ddf130f931a798d))
+
+
+
+
+
+## [0.6.7](https://github.com/rarible/sdk/compare/v0.6.6...v0.6.7) (2021-11-26)
+
+
+### Bug Fixes
+
+* upgrade tezos-sdk, fix TezosWallet.sign ([b786e94](https://github.com/rarible/sdk/commit/b786e94322f3a0fae73d42d7d2513144cb745ecf))
+
+
+
+
+
 # [0.6.0](https://github.com/rarible/sdk/compare/v0.5.1...v0.6.0) (2021-11-08)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

@@ -1,24 +1,22 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { toOrderId } from "@rarible/types"
+import { toItemId, toOrderId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
-import { createTestInMemoryProvider } from "./test/create-in-memory-provider"
+import { awaitForOwnership } from "./test/await-for-ownership"
 
 describe("fill test", () => {
-	const tezos = createTestInMemoryProvider("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const buyerTezos = in_memory_provider(
+		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
+		"https://hangzhou.tz.functori.com",
+	)
+	const buyerWallet = new TezosWallet(buyerTezos)
+	const buyerSdk = createRaribleSdk(buyerWallet, "dev")
 
-	let nftContract: string = "KT1LsNPSjhoBC4gzgLGA8HpHYMN9tZmCiS8F"
-	let mtContract: string = "KT1CVupWRCmVMPPJpUxLWaM6g1V6meKU5EeG"
-
-	test("fill NFT test", async () => {
-		console.log(await tezos.address())
-		// return
-		const fillAction = await sdk.order.fill({
-			// itemId: mintResult.itemId,
-			orderId: toOrderId("TEZOS:e0a0b8ad0c96c8262d639f315fd52576e90121b2abbf46d805dda3b5adaa938d"),
+	test.skip("fill NFT test", async () => {
+		const buyerAddress = await buyerTezos.address()
+		const fillAction = await buyerSdk.order.fill({
+			orderId: toOrderId("TEZOS:5f3465e176339b6932669c87cd137caad6658e555c5a108318b4f0453045b777"),
 		})
 
 		const tx = await fillAction.submit({
@@ -27,20 +25,32 @@ describe("fill test", () => {
 		})
 		await tx.wait()
 
+		const ownership = await awaitForOwnership(
+			buyerSdk,
+			toItemId("TEZOS:KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb:13"),
+			buyerAddress
+		)
+		expect(ownership.value).toBe("1")
 	}, 1500000)
 
 	test.skip("fill MT test", async () => {
-		const fillAction = await sdk.order.fill({
-			// itemId: mintResult.itemId,
-			orderId: toOrderId("TEZOS:2c6980581414bc595efa1baa8cd5c1b0725238f90f1acbe43f9a439c08a94e8b"),
+		const buyerAddress = await buyerTezos.address()
+		const fillAction = await buyerSdk.order.fill({
+			orderId: toOrderId("TEZOS:c25b2f149f19241e158703c5f75254bd53e7039a4363382db0c312ef857a6ea6"),
 		})
 
 		const tx = await fillAction.submit({
-			amount: 1,
+			amount: 2,
 			infiniteApproval: true,
 		})
 		await tx.wait()
 
+		const ownership = await awaitForOwnership(
+			buyerSdk,
+			toItemId("TEZOS:KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i:5"),
+			buyerAddress
+		)
+		expect(ownership.value).toBe("2")
 	}, 1500000)
 
 })

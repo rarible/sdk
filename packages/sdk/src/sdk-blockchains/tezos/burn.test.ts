@@ -1,10 +1,7 @@
 // eslint-disable-next-line camelcase
 import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
-import BigNumber from "bignumber.js"
-import { deploy_mt_public, deploy_nft_public } from "tezos-sdk-module"
 import { createRaribleSdk } from "../../index"
-import { retry } from "../../common/retry"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestInMemoryProvider } from "./test/create-in-memory-provider"
@@ -16,28 +13,6 @@ describe("burn test", () => {
 
 	let nftContract: string = "KT1HfLByoDk22vZp3GtgMM1oNUjeYQEgeEYS"
 	let mtContract: string = "KT1A4wrudnhHSgayCi9U9DB3MyaSTd3wpFYy"
-
-	/*
-	beforeAll(async () => {
-		const provider = {
-			tezos,
-			api: "https://rarible-api.functori.com/v0.1",
-			config: {
-				exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
-				fees: new BigNumber(0),
-				nft_public: "",
-				mt_public: "",
-			},
-		}
-		const sender = await tezos.address()
-		console.log("sender", sender)
-		const mt = await deploy_nft_public(provider, sender)
-		console.log("nft", mt.contract)
-		nftContract = mt.contract as any
-		await mt.confirmation()
-	})
-
-   */
 
 	test("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({

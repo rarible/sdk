@@ -11,6 +11,7 @@ import type { TezosNetwork } from "./domain"
 import { TezosMint } from "./mint"
 import { TezosTransfer } from "./transfer"
 import { TezosBurn } from "./burn"
+import { TezosTokenId } from "./token-id"
 import { TezosCancel } from "./cancel"
 
 export function createTezosSdk(
@@ -26,7 +27,7 @@ export function createTezosSdk(
 			mint: new TezosMint(maybeProvider, apis).mint,
 			burn: new TezosBurn(maybeProvider, apis).burn,
 			transfer: new TezosTransfer(maybeProvider, apis).transfer,
-			generateTokenId: notImplemented,
+			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: nonImplementedAction,
 		},
 		order: {

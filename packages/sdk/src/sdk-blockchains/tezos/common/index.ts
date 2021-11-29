@@ -186,8 +186,8 @@ export function convertOrderToOrderForm(order: Order): OrderForm {
 			value: new BigNumber(order.make.value),
 		},
 		take: {
-			asset_type: getTezosAssetType(order.make.type),
-			value: new BigNumber(order.make.value),
+			asset_type: getTezosAssetType(order.take.type),
+			value: new BigNumber(order.take.value),
 		},
 		salt: order.salt,
 		start: order.startedAt ? parseInt(order.startedAt) : undefined,
@@ -225,7 +225,7 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 		}
 		case "XTZ": {
 			return {
-				asset_class: type["@type"],
+				asset_class: "XTZ",
 			}
 		}
 		default: {
@@ -235,12 +235,10 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 }
 
 export function covertToLibAsset(a: TezosClientAsset): TezosLibAsset {
-	const factor = 1000000
 	switch (a.assetType.assetClass) {
 		case "XTZ": {
 			return {
 				asset_type: { asset_class: a.assetType.assetClass },
-				// value: new BigNumber(a.value).multipliedBy(factor),
 				value: new BigNumber(a.value),
 			}
 		}
@@ -249,20 +247,12 @@ export function covertToLibAsset(a: TezosClientAsset): TezosLibAsset {
 				asset_type: {
 					asset_class: a.assetType.assetClass,
 					contract: a.assetType.contract,
+					token_id: (a.assetType.tokenId === undefined) ? undefined : new BigNumber(a.assetType.tokenId),
 				},
-				value: new BigNumber(a.value).multipliedBy(factor),
+				value: new BigNumber(a.value),
 			}
 		}
-		case "NFT": {
-			return {
-				asset_type: {
-					asset_class: a.assetType.assetClass,
-					contract: a.assetType.contract,
-					token_id: new BigNumber(a.assetType.tokenId),
-				},
-				value: new BigNumber(1),
-			}
-		}
+		case "NFT":
 		case "MT":
 			return {
 				asset_type: {

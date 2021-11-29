@@ -2,7 +2,6 @@ import type * as ApiClient from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
-import { AssetType } from "@rarible/api-client"
 
 export type DeployTokenRequest =
   | DeployTezosTokenRequest

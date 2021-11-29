@@ -1,5 +1,5 @@
-import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
+// eslint-disable-next-line camelcase
 import { get_address, mint } from "tezos-sdk-module"
 import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
@@ -14,7 +14,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getRequiredProvider, getTezosAddress, isExistedTezosProvider } from "./common"
+import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
 	constructor(
@@ -30,7 +30,7 @@ export class TezosMint {
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const { contract, owner, type } = await getCollectionData(this.apis.collection, prepareRequest)
+		const { contract, type } = await getCollectionData(this.apis.collection, prepareRequest)
 
 		return {
 			multiple: type === "MT",
