@@ -29,15 +29,10 @@ describe("test signPersonalMessage", () => {
 	test("tezos signPersonalMessage", async () => {
 		const provider = in_memory_provider(
 			"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-			"https://granada.tz.functori.com",
+			"https://hangzhou.tz.functori.com",
 		)
 		const wallet = new TezosWallet(provider)
 
-		const msg = await wallet.signPersonalMessage("Dude, Where Is My Beer?")
-		expect(msg.signature)
-			.toBe(
-				"edsigtrvpULCFBCEiA48ZiLSmjpYNcNmGpGW1JqsfKx9s6mwTSybUuur13nuvkrDW2dAiTAySyyUwmQh1ubgP6CW1rZLjY5NpJG"
-			)
-		expect(msg.publicKey).toBe("edpkuaNBQd9rgqeDHUuCVpwRLFBK8DzneLVLLrFTKmam8A7BAyYir9")
+		await wallet.signPersonalMessage("Dude, Where Is My Beer?")
 	})
 })

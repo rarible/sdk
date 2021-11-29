@@ -76,7 +76,6 @@ export class TezosFill {
 	}
 
 	async getPreparedOrder(request: PrepareFillRequest): Promise<PreparedOrder> {
-	// async getPreparedOrder(request: PrepareFillRequest): Promise<OrderForm> {
 		if ("order" in request) {
 			return convertOrderToFillOrder(request.order)
 		} else if ("orderId" in request) {
