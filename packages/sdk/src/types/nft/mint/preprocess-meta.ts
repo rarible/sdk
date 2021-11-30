@@ -1,14 +1,14 @@
-import type { MetaAttribute } from "@rarible/api-client/build/models/MetaAttribute"
-import type { MetaContent } from "@rarible/api-client/build/models/MetaContent"
-
 export type PreprocessMeta = {
-	name: string;
+	name: string
+	decimals: number
 	description?: string
 	attributes: Array<PreprocessMetaAttribute>
 	content: Array<PreprocessMetaContent>
 	raw?: string
 	minter?: string
-	creators?: string
+	creators?: Array<string>
+	contributors?: Array<string>
+	publishers?: Array<string>
 	date?: string
 	type?: string
 	tags?: Array<string>

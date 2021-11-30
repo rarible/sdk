@@ -15,6 +15,8 @@ import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
+import type { PreprocessMetaContent } from "../../types/nft/mint/preprocess-meta"
+import type { PreprocessMeta } from "../../types/nft/mint/preprocess-meta"
 import type { ITezosAPI, MaybeProvider, TezosMetaFormat } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
@@ -26,7 +28,7 @@ export class TezosMint {
 		this.mint = this.mint.bind(this)
 	}
 
-	getMetaFormat(content: MetaContent): TezosMetaFormat {
+	getMetaFormat(content: PreprocessMetaContent): TezosMetaFormat {
 		const data: TezosMetaFormat = {
 			uri: content.url,
 			hash: "",
@@ -34,7 +36,7 @@ export class TezosMint {
 			fileSize: content.size,
 		}
 
-		if (content.width && content.height) {
+		if (content.width !== undefined && content.height !== undefined) {
 			data.dimensions = {
 				value: `${content.width}x${content.height}`,
 				unit: "px",
@@ -44,21 +46,24 @@ export class TezosMint {
 		return data
 	}
 
-	prepareMeta(meta: Meta) {
+	prepareMeta(meta: PreprocessMeta) {
+		const contentUrl = meta.content[0]?.url
+
 		return {
 			asset: {
 			  description: meta.description,
-				minter: "",
-				creators: [],
-				contributors: [],
-				publishers: [],
+				decimals: meta.decimals,
+				minter: meta.minter,
+				creators: meta.creators,
+				contributors: meta.contributors,
+				publishers: meta.publishers,
 				date: new Date().toJSON(),
-				tags: [],
-				language: "en",
-				artifactUri: "https://ta.co/1832674.gltf",
-				displayUri: "https://ta.co/1832674.svg",
-				thumbnailUri: "https://ta.co/1832674.svg",
-				externalUri: "https://ta.co/",
+				tags: meta.tags,
+				language: meta.language,
+				artifactUri: meta.content[0],
+				displayUri: contentUrl,
+				thumbnailUri: contentUrl,
+				externalUri: contentUrl,
 				formats: meta.content.map(content => this.getMetaFormat(content)),
 				attributes: meta.attributes,
 			},
