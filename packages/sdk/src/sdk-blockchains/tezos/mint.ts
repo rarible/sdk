@@ -1,15 +1,14 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
 import { get_address, mint } from "tezos-sdk-module"
-import type { NftCollectionControllerApi, NftItemMeta } from "tezos-api-client/build"
+import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
-import type { Meta } from "@rarible/api-client"
-import type { MetaContent } from "@rarible/api-client/build/models/MetaContent"
+import { MetaContentRepresentation } from "@rarible/api-client/build/models/MetaContent"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -31,7 +30,7 @@ export class TezosMint {
 	getMetaFormat(content: PreprocessMetaContent): TezosMetaFormat {
 		const data: TezosMetaFormat = {
 			uri: content.url,
-			hash: "",
+			hash: content.hash || "",
 			mimeType: content.mimeType,
 			fileSize: content.size,
 		}
@@ -48,7 +47,8 @@ export class TezosMint {
 
 	prepareMeta(meta: PreprocessMeta) {
 		const contentUrl = meta.content[0]?.url
-
+		const thumbnail = meta.content
+			.find(content => content.representation === MetaContentRepresentation.PREVIEW)
 		return {
 			asset: {
 			  description: meta.description,
@@ -60,9 +60,9 @@ export class TezosMint {
 				date: new Date().toJSON(),
 				tags: meta.tags,
 				language: meta.language,
-				artifactUri: meta.content[0],
+				artifactUri: contentUrl,
 				displayUri: contentUrl,
-				thumbnailUri: contentUrl,
+				thumbnailUri: thumbnail ?? contentUrl,
 				externalUri: contentUrl,
 				formats: meta.content.map(content => this.getMetaFormat(content)),
 				attributes: meta.attributes,

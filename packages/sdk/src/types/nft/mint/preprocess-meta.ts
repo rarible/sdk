@@ -1,3 +1,5 @@
+import type { MetaContentRepresentation } from "@rarible/api-client/build/models/MetaContent"
+
 export type PreprocessMeta = {
 	name: string
 	decimals: number
@@ -19,8 +21,9 @@ export type PreprocessMeta = {
 
 export type PreprocessMetaContent = {
 	url: string
-	hash?: string
 	mimeType: string
+	representation: MetaContentRepresentation
+	hash?: string
 	size?: number
 	width?: number
 	height?: number
