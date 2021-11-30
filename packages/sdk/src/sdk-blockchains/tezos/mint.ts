@@ -1,19 +1,21 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
 import { get_address, mint } from "tezos-sdk-module"
-import type { NftCollectionControllerApi } from "tezos-api-client/build"
+import type { NftCollectionControllerApi, NftItemMeta } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { Meta } from "@rarible/api-client"
+import type { MetaContent } from "@rarible/api-client/build/models/MetaContent"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { ITezosAPI, MaybeProvider, TezosMetaFormat } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -24,9 +26,53 @@ export class TezosMint {
 		this.mint = this.mint.bind(this)
 	}
 
-	getCreators(request: MintRequest): string | undefined {
-		const [owner] = request.creators || []
-		return owner?.account ? getTezosAddress(owner?.account) : undefined
+	getMetaFormat(content: MetaContent): TezosMetaFormat {
+		const data: TezosMetaFormat = {
+			uri: content.url,
+			hash: "",
+			mimeType: content.mimeType,
+			fileSize: content.size,
+		}
+
+		if (content.width && content.height) {
+			data.dimensions = {
+				value: `${content.width}x${content.height}`,
+				unit: "px",
+			}
+		}
+
+		return data
+	}
+
+	prepareMeta(meta: Meta) {
+		return {
+			asset: {
+			  description: meta.description,
+				minter: "",
+				creators: [],
+				contributors: [],
+				publishers: [],
+				date: new Date().toJSON(),
+				tags: [],
+				language: "en",
+				artifactUri: "https://ta.co/1832674.gltf",
+				displayUri: "https://ta.co/1832674.svg",
+				thumbnailUri: "https://ta.co/1832674.svg",
+				externalUri: "https://ta.co/",
+				formats: meta.content.map(content => this.getMetaFormat(content)),
+				attributes: meta.attributes,
+			},
+
+		}
+	}
+
+	async getOwner(request: MintRequest): Promise<string> {
+		if (request.creators?.length) {
+			return getTezosAddress(request.creators[0].account)
+		}
+		return get_address(
+			getRequiredProvider(this.provider)
+		)
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
@@ -50,7 +96,7 @@ export class TezosMint {
 					const provider = getRequiredProvider(this.provider)
 
 					const result = await mint(
-						getRequiredProvider(this.provider),
+						provider,
 						contract,
 						royalties,
 						supply,
@@ -58,7 +104,7 @@ export class TezosMint {
 						{
 							"": request.uri,
 						},
-						await get_address(provider),
+						await this.getOwner(request),
 					)
 
 					return {

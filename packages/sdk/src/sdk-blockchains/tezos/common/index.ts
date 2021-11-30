@@ -44,6 +44,23 @@ export type MaybeProvider<P extends TezosProvider> = {
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
+export type TezosMetaFormat = {
+	uri: string
+	hash: string
+	mimeType?: string
+	fileSize?: number
+	fileName?: string
+	duration?: string
+	dimensions?: {
+		value: string
+		unit: string
+	}
+	dataRate?: {
+		value: string
+		unit: string
+	}
+}
+
 export const XTZ_DECIMALS = 6
 
 export function getTezosAPIs(network: TezosNetwork): ITezosAPI {

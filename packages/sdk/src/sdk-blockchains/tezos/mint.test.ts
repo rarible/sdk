@@ -11,7 +11,7 @@ describe("mint test", () => {
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
+	let nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
 	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
 
 	test.skip("mint NFT token test", async () => {
@@ -27,10 +27,15 @@ describe("mint test", () => {
 				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
 				value: 10000,
 			}],
+			creators: [{
+				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
+				value: 10000,
+			}],
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log(mintResult)
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
@@ -45,6 +50,10 @@ describe("mint test", () => {
 			lazyMint: false,
 			royalties: [{
 				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
+				value: 10000,
+			}],
+			creators: [{
+				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
 				value: 10000,
 			}],
 		})
