@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.3](https://github.com/rarible/sdk/compare/v0.7.2...v0.7.3) (2021-11-30)
+
+
+### Bug Fixes
+
+* format xtz balances ([#42](https://github.com/rarible/sdk/issues/42)) ([6c32d8c](https://github.com/rarible/sdk/commit/6c32d8c853d4f436d65ae495207f852020928d1e))
+
+
+
+
+
 ## [0.7.2](https://github.com/rarible/sdk/compare/v0.7.1...v0.7.2) (2021-11-30)
 
 **Note:** Version bump only for package @rarible/sdk
