@@ -44,6 +44,8 @@ export type MaybeProvider<P extends TezosProvider> = {
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
+export const XTZ_DECIMALS = 6
+
 export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 	const config = new Configuration({
 		basePath: getTezosBasePath(network),
