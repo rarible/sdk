@@ -6,7 +6,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import { get_balance } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getRequiredProvider, getTezosAddress, getTezosAssetType } from "./common"
+import { getRequiredProvider, getTezosAddress, getTezosAssetType, XTZ_DECIMALS } from "./common"
 
 export class TezosBalance {
 	constructor(
@@ -22,12 +22,18 @@ export class TezosBalance {
 			throw new Error("Unsupported asset type")
 		}
 
-		return new BigNumber(
+		let balance = new BigNumber(
 			await get_balance(
 				getRequiredProvider(this.provider),
 				getTezosAddress(address),
 				tezosAssetType
 			)
 		)
+
+		if (tezosAssetType.asset_class === "XTZ") {
+			balance = balance.div(new BigNumber(10).pow(XTZ_DECIMALS))
+		}
+
+		return balance
 	}
 }
