@@ -1,4 +1,3 @@
-import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
 import { bid } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"

@@ -1,6 +1,6 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
+import { notImplemented } from "../../common/not-implemented"
 import type { IRaribleInternalSdk } from "../../domain"
 import type { IApisSdk } from "../../domain"
 import { TezosSell } from "./sell"

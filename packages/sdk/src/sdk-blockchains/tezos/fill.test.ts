@@ -1,6 +1,3 @@
-// eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
-import { TezosWallet } from "@rarible/sdk-wallet"
 import { toItemId, toOrderId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { awaitForOwnership } from "./test/await-for-ownership"

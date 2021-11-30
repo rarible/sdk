@@ -17,19 +17,30 @@ describe("test tezos mint and sell", () => {
 	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
 
 	test.skip("mint and sell nft", async () => {
-
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 
-		const result = await mintAndSellAction.submit({
+		await mintAndSellAction.submit({
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
 			lazyMint: false,
 		})
+	})
 
-		console.log("result", result)
+	test.skip("mint and sell mt", async () => {
+		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+		})
+
+		await mintAndSellAction.submit({
+			price: new BigNumber("0.0001"),
+			currency: { "@type": "XTZ" },
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
 	})
 })
