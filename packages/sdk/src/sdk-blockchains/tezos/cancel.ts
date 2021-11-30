@@ -3,10 +3,10 @@ import { cancel } from "tezos-sdk-module/dist/main"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
+import BigNumber from "bignumber.js"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
-	convertOrderPayout,
 	covertToLibAsset,
 	getRequiredProvider,
 	getTezosOrderId,
@@ -39,8 +39,14 @@ export class TezosCancel {
 				signature: order.signature,
 				data: {
 					data_type: "V1",
-					payouts: convertOrderPayout(order.data.payouts),
-					origin_fees: convertOrderPayout(order.data.originFees),
+					payouts: order.data.payouts?.map(payout => ({
+						account: payout.account,
+						value: new BigNumber(payout.value),
+					})),
+					origin_fees: order.data.originFees?.map(fee => ({
+						account: fee.account,
+						value: new BigNumber(fee.value),
+					})),
 				},
 			}
 

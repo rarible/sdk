@@ -1,6 +1,3 @@
-import type {
-	Provider,
-} from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
 import type {
 	Part, Part as TezosPart,
@@ -30,7 +27,7 @@ import {
 	PayoutsSupport,
 } from "../../types/order/fill/domain"
 import type { ITezosAPI, MaybeProvider, PreparedOrder } from "./common"
-import { convertOrderToFillOrder, covertToLibAsset, isExistedTezosProvider } from "./common"
+import { convertOrderToFillOrder, covertToLibAsset, getRequiredProvider } from "./common"
 
 export class TezosFill {
 	constructor(
@@ -38,13 +35,6 @@ export class TezosFill {
 		private apis: ITezosAPI,
 	) {
 		this.fill = this.fill.bind(this)
-	}
-
-	private getRequiredProvider(): Provider {
-		if (!isExistedTezosProvider(this.provider)) {
-			throw new Error("Tezos provider is required")
-		}
-		return this.provider
 	}
 
 	async convertTezosOrderToForm(order: TezosOrder): Promise<PreparedOrder> {
@@ -93,7 +83,7 @@ export class TezosFill {
 	}
 
 	async getMaxAmount(order: PreparedOrder): Promise<RaribleBigNumber> {
-		const provider = this.getRequiredProvider()
+		const provider = getRequiredProvider(this.provider)
 		if (order.take.asset_type.asset_class === "MT" || order.take.asset_type.asset_class === "NFT") {
 			// eslint-disable-next-line camelcase
 			const { contract, token_id } = order.take.asset_type
@@ -112,12 +102,12 @@ export class TezosFill {
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		const provider = this.getRequiredProvider()
 		let preparedOrder = await this.getPreparedOrder(request)
 
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
+				const provider = getRequiredProvider(this.provider)
 				const request = {
 					amount: new BigNumber(fillRequest.amount),
 					payouts: this.convertOrderPayout(fillRequest.payouts),
@@ -136,7 +126,7 @@ export class TezosFill {
 		return {
 			multiple: this.isMultiple(preparedOrder),
 			maxAmount: await this.getMaxAmount(preparedOrder),
-			baseFee: parseInt(provider.config.fees.toString()),
+			baseFee: parseInt(this.provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportsPartialFill: true,

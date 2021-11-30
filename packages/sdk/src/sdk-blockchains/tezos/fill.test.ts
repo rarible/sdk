@@ -4,17 +4,16 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 import { toItemId, toOrderId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { awaitForOwnership } from "./test/await-for-ownership"
+import { createTestWallet } from "./test/test-wallet"
 
 describe("fill test", () => {
-	const buyerTezos = in_memory_provider(
-		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
-		"https://hangzhou.tz.functori.com",
+	const wallet = createTestWallet(
+		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const buyerWallet = new TezosWallet(buyerTezos)
-	const buyerSdk = createRaribleSdk(buyerWallet, "dev")
+	const buyerSdk = createRaribleSdk(wallet, "dev")
 
 	test.skip("fill NFT test", async () => {
-		const buyerAddress = await buyerTezos.address()
+		const buyerAddress = await wallet.provider.address()
 		const fillAction = await buyerSdk.order.fill({
 			orderId: toOrderId("TEZOS:5f3465e176339b6932669c87cd137caad6658e555c5a108318b4f0453045b777"),
 		})
@@ -34,7 +33,8 @@ describe("fill test", () => {
 	}, 1500000)
 
 	test.skip("fill MT test", async () => {
-		const buyerAddress = await buyerTezos.address()
+		const buyerAddress = await wallet.provider.address()
+
 		const fillAction = await buyerSdk.order.fill({
 			orderId: toOrderId("TEZOS:c25b2f149f19241e158703c5f75254bd53e7039a4363382db0c312ef857a6ea6"),
 		})

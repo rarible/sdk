@@ -13,6 +13,8 @@ import { TezosTransfer } from "./transfer"
 import { TezosBurn } from "./burn"
 import { TezosTokenId } from "./token-id"
 import { TezosCancel } from "./cancel"
+import { TezosBalance } from "./balance"
+import { TezosDeploy } from "./deploy"
 
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
@@ -28,7 +30,7 @@ export function createTezosSdk(
 			burn: new TezosBurn(maybeProvider, apis).burn,
 			transfer: new TezosTransfer(maybeProvider, apis).transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
-			deploy: nonImplementedAction,
+			deploy: new TezosDeploy(maybeProvider, apis).deployToken,
 		},
 		order: {
 			fill: new TezosFill(maybeProvider, apis).fill,
@@ -39,7 +41,7 @@ export function createTezosSdk(
 			cancel: new TezosCancel(maybeProvider, apis).cancel,
 		},
 		balances: {
-			getBalance: notImplemented,
+			getBalance: new TezosBalance(maybeProvider, apis).getBalance,
 		},
 	}
 }

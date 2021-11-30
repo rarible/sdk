@@ -9,9 +9,12 @@ import BigNumber from "bignumber.js"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
+import { retry } from "../../common/retry"
 import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
+	convertContractAddress,
+	convertOrderPayout,
 	getMakerPublicKey,
 	getPayouts,
 	getRequiredProvider,
@@ -37,7 +40,7 @@ export class TezosSell {
 			case "TEZOS_FT":
 				return {
 					asset_class: "FT",
-					contract: type.contract,
+					contract: convertContractAddress(type.contract),
 				}
 			default: {
 				throw new Error("Unsupported take asset type")
@@ -63,7 +66,9 @@ export class TezosSell {
 				const makerPublicKey = await getMakerPublicKey(provider)
 				const { itemId } = getTezosItemData(request.itemId)
 
-				const item = await this.apis.item.getNftItemById({ itemId })
+				const item = await retry(30, 1000, async () => {
+				   return this.apis.item.getNftItemById({ itemId })
+				})
 
 				const tezosRequest: TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
@@ -77,10 +82,7 @@ export class TezosSell {
 					amount: new BigNumber(request.amount),
 					price: new BigNumber(request.price),
 					payouts: await getPayouts(provider, request.payouts),
-					origin_fees: request.originFees?.map(p => ({
-						account: p.account,
-						value: new BigNumber(p.value),
-					  })) || [],
+					origin_fees: convertOrderPayout(request.originFees),
 				}
 
 				const sellOrder: TezosOrder = await sell(

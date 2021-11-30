@@ -1,23 +1,25 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
-import { toContractAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { TezosWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
+import { createTestWallet } from "./test/test-wallet"
+import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { awaitForOrder } from "./test/await-for-order"
 
 describe("bid test", () => {
-	const tezos = in_memory_provider(
-		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://granada.tz.functori.com"
-	)
+	const wallet = createTestWallet(
+		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 
-	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "e2e")
+	const sdk = createRaribleSdk(wallet, "dev")
 
-	const nftContract: string = "KT1Q59huSmAo8a3veKjAvCiSYPw1XZwKKf8X"
+	const nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
 
 	test.skip("bid test", async () => {
+		const sellerAddress = await wallet.provider.address()
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -29,13 +31,23 @@ describe("bid test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
+
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+
+		const bidResponse = await sdk.order.bid({ itemId: mintResult.itemId })
+		const orderId = await bidResponse.submit({
+			amount: 1,
+			price: "0.000002",
+			currency: {
+				"@type": "XTZ",
+			},
+			payouts: [{
+				account: toUnionAddress(`TEZOS:${sellerAddress}`),
+				value: 10000,
+			}],
 		})
 
-
+		await awaitForOrder(sdk, orderId)
 	}, 1500000)
 
 })

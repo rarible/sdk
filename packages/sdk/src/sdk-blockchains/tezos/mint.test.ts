@@ -1,19 +1,14 @@
-// eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
-import { TezosWallet } from "@rarible/sdk-wallet"
-import { toContractAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
-import { retry } from "../../common/retry"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { createTestWallet } from "./test/test-wallet"
 
 describe("mint test", () => {
-	const tezos = in_memory_provider(
-		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://hangzhou.tz.functori.com"
+	const wallet = createTestWallet(
+		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-
-	const wallet = new TezosWallet(tezos)
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
@@ -23,19 +18,20 @@ describe("mint test", () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
+
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
 			lazyMint: false,
+			royalties: [{
+				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
+				value: 10000,
+			}],
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
 
@@ -47,6 +43,10 @@ describe("mint test", () => {
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 12,
 			lazyMint: false,
+			royalties: [{
+				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
+				value: 10000,
+			}],
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()

@@ -9,7 +9,7 @@ import { retry } from "../../common/retry"
 describe("transfer test", () => {
 	const tezos = in_memory_provider(
 		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://granada.tz.functori.com"
+		"https://hangzhou.tz.functori.com"
 	)
 
 	const wallet = new TezosWallet(tezos)
