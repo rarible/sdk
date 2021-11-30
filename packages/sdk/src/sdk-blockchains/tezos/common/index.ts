@@ -19,11 +19,12 @@ import {
 } from "tezos-api-client/build"
 import type { Config } from "tezos-sdk-module"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { OrderId } from "@rarible/types"
+import type { ContractAddress, OrderId } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
 import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
+import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { TezosNetwork } from "../domain"
@@ -58,7 +59,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
-		case "granada": {
+		case "hangzhou": {
 			return "https://rarible-api.functori.com"
 		}
 		default: {
@@ -75,12 +76,11 @@ export function getMaybeTezosProvider(
 	provider: Maybe<TezosProvider>, network: TezosNetwork
 ): MaybeProvider<TezosProvider> {
 	switch (network) {
-		case "granada": {
+		case "hangzhou": {
 			return {
 				tezos: provider,
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
-					// exchange: "KT1KkUufmRPjK6SBNZVvAYniAY5F9czYmgwu",
 					exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
 					fees: new BigNumber(300),
 					nft_public: "",
@@ -151,10 +151,7 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 		}]
 	}
 
-	return payouts.map(p => ({
-		account: pk_to_pkh(p.account),
-		value: new BigNumber(p.value),
-	})) || []
+	return convertOrderPayout(payouts)
 }
 
 export function getSupportedCurrencies(): CurrencyType[] {
@@ -203,29 +200,29 @@ export function convertOrderToOrderForm(order: Order): OrderForm {
 
 export function getTezosAssetType(type: AssetType): TezosAssetType {
 	switch (type["@type"]) {
+		case "XTZ": {
+			return {
+				asset_class: "XTZ",
+			}
+		}
 		case "TEZOS_FT": {
 			return {
 				asset_class: "FT",
-				contract: type.contract,
+				contract: convertContractAddress(type.contract),
 			}
 		}
 		case "TEZOS_NFT": {
 			return {
 				asset_class: "NFT",
-				contract: type.contract,
+				contract: convertContractAddress(type.contract),
 				token_id: new BigNumber(type.tokenId),
 			}
 		}
 		case "TEZOS_MT": {
 			return {
 				asset_class: "MT",
-				contract: type.contract,
+				contract: convertContractAddress(type.contract),
 				token_id: new BigNumber(type.tokenId),
-			}
-		}
-		case "XTZ": {
-			return {
-				asset_class: "XTZ",
 			}
 		}
 		default: {
@@ -266,9 +263,17 @@ export function covertToLibAsset(a: TezosClientAsset): TezosLibAsset {
 	}
 }
 
-export function convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
+export function convertOrderPayout(payout?: Array<Payout>): Array<TezosPart> {
 	return payout?.map(p => ({
-		account: p.account,
+		account: getTezosAddress(p.account),
 		value: new BigNumber(p.value),
 	})) || []
+}
+
+export function convertContractAddress(contract: ContractAddress): string {
+	const [blockchain, tezosAddress] = contract.split(":")
+	if (blockchain !== "TEZOS") {
+		throw new Error(`Not an tezos contract: ${contract}`)
+	}
+	return tezosAddress
 }

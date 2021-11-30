@@ -1,18 +1,14 @@
-// eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
-import { TezosWallet } from "@rarible/sdk-wallet"
-import { toContractAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { createTestWallet } from "./test/test-wallet"
 
 describe("sell test", () => {
-	const sellerTezos = in_memory_provider(
-		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-		"https://hangzhou.tz.functori.com",
-	)
-	const sellerWallet = new TezosWallet(sellerTezos)
+	const sellerWallet = createTestWallet(
+		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 	const sellerSdk = createRaribleSdk(sellerWallet, "dev")
 
 	let nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
@@ -20,6 +16,7 @@ describe("sell test", () => {
 
 
 	test.skip("sell NFT test", async () => {
+		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -44,13 +41,17 @@ describe("sell test", () => {
 			currency: {
 				"@type": "XTZ",
 			},
+			payouts: [{
+				account: toUnionAddress(`TEZOS:${sellerAddress}`),
+				value: 10000,
+			}],
 		})
 
 		await awaitForOrder(sellerSdk, orderId)
 	}, 1500000)
 
-
 	test.skip("sell MT test", async () => {
+		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
@@ -75,6 +76,10 @@ describe("sell test", () => {
 			currency: {
 				"@type": "XTZ",
 			},
+			payouts: [{
+				account: toUnionAddress(`TEZOS:${sellerAddress}`),
+				value: 10000,
+			}],
 		})
 
 		await awaitForOrder(sellerSdk, orderId)

@@ -1,4 +1,3 @@
-import type { Provider } from "tezos-sdk-module/dist/common/base"
 import { Action } from "@rarible/action"
 import { bid } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
@@ -11,13 +10,15 @@ import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { OrderRequest, PrepareOrderRequest, PrepareOrderResponse } from "../../types/order/common"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { retry } from "../../common/retry"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
+	convertContractAddress,
+	convertOrderPayout,
 	getMakerPublicKey,
-	getPayouts,
+	getPayouts, getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosItemData,
-	isExistedTezosProvider,
 } from "./common"
 
 export class TezosBid {
@@ -26,13 +27,6 @@ export class TezosBid {
 		private apis: ITezosAPI,
 	) {
 		this.bid = this.bid.bind(this)
-	}
-
-	private getRequiredProvider(): Provider {
-		if (!isExistedTezosProvider(this.provider)) {
-			throw new Error("Tezos provider is required")
-		}
-		return this.provider
 	}
 
 	getMakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
@@ -45,7 +39,7 @@ export class TezosBid {
 			case "TEZOS_FT": {
 				return {
 					asset_class: "FT",
-					contract: type.contract,
+					contract: convertContractAddress(type.contract),
 				}
 			}
 			default: {
@@ -55,23 +49,26 @@ export class TezosBid {
 	}
 
 	async bid(prepare: PrepareOrderRequest): Promise<PrepareOrderResponse> {
-		const provider = this.getRequiredProvider()
-		const { itemId } = getTezosItemData(prepare.itemId)
+		const { itemId, contract } = getTezosItemData(prepare.itemId)
 
-		const item = await this.apis.item.getNftItemById({ itemId })
+		const item = await retry(30, 1000, async () => {
+			return this.apis.item.getNftItemById({ itemId })
+		})
+		const itemCollection = await this.apis.collection.getNftCollectionById({
+			collection: contract,
+		})
 
-		console.log("item", item)
 		return {
-			multiple: true,
+			multiple: itemCollection.type === "MT",
 			maxAmount: toBigNumber(item.supply),
-			//todo FIX
 			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.SINGLE,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: parseInt(provider.config.fees.toString()),
+			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit: Action.create({
 				id: "send-tx" as const,
 				run: async (request: OrderRequest) => {
+					const provider = getRequiredProvider(this.provider)
 					const makerPublicKey = await getMakerPublicKey(provider)
 
 					const order: TezosOrder = await bid(
@@ -80,17 +77,15 @@ export class TezosBid {
 							maker: pk_to_pkh(makerPublicKey),
 							maker_edpk: makerPublicKey,
 							make_asset_type: this.getMakeAssetType(request.currency),
-							amount: new BigNumber(request.amount.toFixed()),
+							amount: new BigNumber(request.amount),
 							take_asset_type: {
+								asset_class: itemCollection.type,
 								contract: item.contract,
 								token_id: new BigNumber(item.tokenId),
 							},
 							price: new BigNumber(request.price),
 							payouts: await getPayouts(provider, request.payouts),
-							origin_fees: request.originFees?.map(p => ({
-								account: p.account,
-								value: new BigNumber(p.value),
-							})) || [],
+							origin_fees: convertOrderPayout(request.originFees),
 						}
 					)
 

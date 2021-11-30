@@ -1,10 +1,11 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import type { Address, UnionAddress } from "@rarible/types"
-import { toAddress, toUnionAddress } from "@rarible/types"
+import type { Address, ContractAddress, UnionAddress } from "@rarible/types"
+import { toAddress, toContractAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { DeployTokenRequest } from "../../types/nft/deploy/domain"
+import type { DeployEthereumTokenRequest } from "../../types/nft/deploy/domain"
 
 export class EthereumDeploy {
 	constructor(private sdk: RaribleSdk) {
@@ -23,14 +24,14 @@ export class EthereumDeploy {
 
 	convertDeployResponse(
 		response: { tx: EthereumTransaction, address: Address },
-	): { tx: BlockchainEthereumTransaction, address: UnionAddress } {
+	): { tx: BlockchainEthereumTransaction, address: ContractAddress } {
 		return {
 			tx: new BlockchainEthereumTransaction(response.tx),
-			address: toUnionAddress(`ETHEREUM:${response.address}`),
+			address: toContractAddress(`ETHEREUM:${response.address}`),
 		}
 	}
 
-	async startDeployToken(request: DeployTokenRequest): Promise<{ tx: EthereumTransaction, address: Address }> {
+	async startDeployToken(request: DeployEthereumTokenRequest): Promise<{ tx: EthereumTransaction, address: Address }> {
 		const deployCommonArguments = [
 			request.asset.arguments.name,
 			request.asset.arguments.symbol,

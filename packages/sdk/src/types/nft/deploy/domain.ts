@@ -1,6 +1,6 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { UnionAddress } from "@rarible/types"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
 
 export type DeployTokenRequest =
@@ -12,17 +12,19 @@ export type DeployTezosTokenRequest = {
 	asset: TezosDeployTokenAsset
 }
 
-export type TezosDeployTokenAsset = {
-	assetType: "NFT" | "MT"
-	arguments: any
-}
-
-export type TezosDeployDokenArguments = {}
-
 export type DeployEthereumTokenRequest = {
 	blockchain: ApiClient.Blockchain.ETHEREUM
 	asset: EthereumDeployTokenAsset
 }
+
+export type TezosDeployTokenAsset = {
+	assetType: "NFT" | "MT"
+	arguments: {
+		owner: UnionAddress,
+		isPublicCollection: boolean,
+	}
+}
+
 export type EthereumDeployTokenAsset = {
 	assetType: "ERC721" | "ERC1155"
 	arguments: DeployUserTokenArguments | DeployNonUserTokenArguments
@@ -44,7 +46,7 @@ export type DeployUserTokenArguments =
 
 export type DeployResponse = {
 	tx: IBlockchainTransaction,
-	address: UnionAddress
+	address: ContractAddress
 }
 
 export type IDeploy = Action<"send-tx", DeployTokenRequest, DeployResponse>

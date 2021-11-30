@@ -5,6 +5,7 @@ import { toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { delay, retry } from "../../common/retry"
+import { awaitForItemSupply } from "./test/await-for-item-supply"
 
 describe("cancel test", () => {
 	const tezos = in_memory_provider(
@@ -29,11 +30,7 @@ describe("cancel test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await retry(10, 1000, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 
 		const sellAction = await sdk.order.sell({
 			itemId: mintResult.itemId,
