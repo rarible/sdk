@@ -2,7 +2,6 @@ import { Action } from "@rarible/action"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import { toItemId } from "@rarible/types"
-import type { Meta } from "@rarible/api-client"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -11,6 +10,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { IApisSdk } from "../../domain"
 import { getCollection } from "../ethereum/mint"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { CommonTokenMetadata } from "../../types/nft/mint/preprocess-meta"
 import { getFlowCollection } from "./common/converters"
 import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
@@ -48,7 +48,7 @@ export class FlowMint {
 		throw new Error("Unsupported collection type")
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): Meta {
+	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadata {
 		return meta
 	}
 }

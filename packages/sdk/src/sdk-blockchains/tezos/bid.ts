@@ -51,7 +51,7 @@ export class TezosBid {
 	async bid(prepare: PrepareOrderRequest): Promise<PrepareOrderResponse> {
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 
-		const item = await retry(30, 1000, async () => {
+		const item = await retry(90, 1000, async () => {
 			return this.apis.item.getNftItemById({ itemId })
 		})
 		const itemCollection = await this.apis.collection.getNftCollectionById({

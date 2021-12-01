@@ -1,6 +1,4 @@
 import { toContractAddress, toUnionAddress } from "@rarible/types"
-import { MetaContentRepresentation } from "@rarible/api-client/build/models/MetaContent"
-import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
@@ -47,7 +45,7 @@ describe("mint test", () => {
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
 		const mintResult = await mintResponse.submit({
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,
 			lazyMint: false,
 			royalties: [{
@@ -62,29 +60,8 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await awaitForItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 
-	test("prepare mint", () => {
-		sdk.nft.preprocessMeta({
-			blockchain: Blockchain.TEZOS,
-			name: "MultiFaucet Test NFT",
-			description: "A test NFT dispensed from faucet.paradigm.xyz.",
-			attributes: [{
-				key: "attr1",
-				value: "1",
-			}],
-			content: [
-				{
-					"@type": "IMAGE",
-					url: "ipfs://ipfs/bafybeifvwitulq6elvka2hoqhwixfhgb42l4aiukmtrw335osetikviuuu",
-					representation: MetaContentRepresentation.ORIGINAL,
-					mimeType: "image/png",
-					width: 1007,
-					height: 1007,
-				},
-			],
-		})
-	})
 })

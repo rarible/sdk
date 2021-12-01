@@ -8,15 +8,13 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
-import type { MetaContent } from "@rarible/api-client/build/models/MetaContent"
-import { MetaContentRepresentation } from "@rarible/api-client/build/models/MetaContent"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { ITezosAPI, MaybeProvider, TezosMeta, TezosMetaContent } from "./common"
+import type { ITezosAPI, MaybeProvider, TezosMeta } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -28,36 +26,15 @@ export class TezosMint {
 		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
-	static getMetaContent(content: MetaContent): TezosMetaContent {
-		const data: TezosMetaContent = {
-			uri: content.url,
-			mimeType: content.mimeType,
-			fileSize: content.size,
-		}
-
-		if (content.width !== undefined && content.height !== undefined) {
-			data.dimensions = {
-				value: `${content.width}x${content.height}`,
-				unit: "px",
-			}
-		}
-
-		return data
-	}
-
 	preprocessMeta(meta: PreprocessMetaRequest): TezosMeta {
-		const contentUrl = meta.content[0]?.url
-		const thumbnail = meta.content
-			.find(content => content.representation === MetaContentRepresentation.PREVIEW)
 		return {
 			name: meta.name,
 			description: meta.description,
 			date: new Date().toJSON(),
-			artifactUri: contentUrl,
-			displayUri: contentUrl,
-			thumbnailUri: thumbnail?.url ?? contentUrl,
-			externalUri: contentUrl,
-			formats: meta.content?.map(content => TezosMint.getMetaContent(content)),
+			artifactUri: meta.image,
+			displayUri: meta.image,
+			thumbnailUri: meta.animationUrl || meta.image,
+			externalUri: meta.externalUrl || meta.image,
 			attributes: meta.attributes?.map(attr => ({
 				name: attr.key,
 				value: attr.value,

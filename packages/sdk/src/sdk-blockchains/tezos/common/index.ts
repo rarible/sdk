@@ -52,7 +52,7 @@ export type TezosMeta = {
 	displayUri?: string
 	thumbnailUri?: string
 	externalUri?: string
-	formats: Array<TezosMetaContent>
+	formats?: Array<TezosMetaContent>
 	attributes: Array<TezosMetaAttribute>
 }
 
