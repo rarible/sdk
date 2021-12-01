@@ -1,4 +1,6 @@
 import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { MetaContentRepresentation } from "@rarible/api-client/build/models/MetaContent"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
@@ -64,4 +66,25 @@ describe("mint test", () => {
 
 	}, 1500000)
 
+	test("prepare mint", () => {
+		sdk.nft.preprocessMeta({
+			blockchain: Blockchain.TEZOS,
+			name: "MultiFaucet Test NFT",
+			description: "A test NFT dispensed from faucet.paradigm.xyz.",
+			attributes: [{
+				key: "attr1",
+				value: "1",
+			}],
+			content: [
+				{
+					"@type": "IMAGE",
+					url: "ipfs://ipfs/bafybeifvwitulq6elvka2hoqhwixfhgb42l4aiukmtrw335osetikviuuu",
+					representation: MetaContentRepresentation.ORIGINAL,
+					mimeType: "image/png",
+					width: 1007,
+					height: 1007,
+				},
+			],
+		})
+	})
 })

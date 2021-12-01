@@ -23,14 +23,16 @@ export function createTezosSdk(
 ): IRaribleInternalSdk {
 	const apis = getTezosAPIs(network)
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
+	const mintService = new TezosMint(maybeProvider, apis)
 
 	return {
 		nft: {
-			mint: new TezosMint(maybeProvider, apis).mint,
+			mint: mintService.mint,
 			burn: new TezosBurn(maybeProvider, apis).burn,
 			transfer: new TezosTransfer(maybeProvider, apis).transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: new TezosDeploy(maybeProvider, apis).deployToken,
+			preprocessMeta: mintService.preprocessMeta,
 		},
 		order: {
 			fill: new TezosFill(maybeProvider, apis).fill,

@@ -10,6 +10,7 @@ import type { ICancel } from "./types/order/cancel/domain"
 import type { IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { IDeploy } from "./types/nft/deploy/domain"
+import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 
 export interface IRaribleSdk {
 	apis: IApisSdk
@@ -28,6 +29,7 @@ export interface IApisSdk {
 
 export interface INftSdk {
 	transfer: ITransfer
+	preprocessMeta: IPreprocessMeta
 	mint: IMint
 	mintAndSell: IMintAndSell
 	burn: IBurn

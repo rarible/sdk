@@ -24,14 +24,16 @@ export function createEthereumSdk(
 	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
 	const sellService = new EthereumSell(sdk)
 	const bidService = new EthereumBid(sdk)
+	const mintService = new EthereumMint(sdk, apis)
 
 	return {
 		nft: {
 			transfer: new EthereumTransfer(sdk).transfer,
-			mint: new EthereumMint(sdk, apis).prepare,
+			mint: mintService.prepare,
 			burn: new EthereumBurn(sdk).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: new EthereumDeploy(sdk).deployToken,
+			preprocessMeta: mintService.preprocessMeta,
 		},
 		order: {
 			fill: new EthereumFill(sdk, wallet).fill,

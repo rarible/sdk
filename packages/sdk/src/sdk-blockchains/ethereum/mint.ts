@@ -8,7 +8,7 @@ import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
+import type { Collection, CollectionControllerApi, Creator, Royalty, Meta } from "@rarible/api-client"
 import { CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -19,6 +19,7 @@ import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-re
 import type { TokenId } from "../../types/nft/generate-token-id"
 import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import type { IApisSdk } from "../../domain"
+import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import { convertToEthereumAddress } from "./common"
 
 export class EthereumMint {
@@ -137,6 +138,10 @@ export class EthereumMint {
 				},
 			}),
 		}
+	}
+
+	preprocessMeta(meta: PreprocessMetaRequest): Meta {
+		return meta
 	}
 }
 

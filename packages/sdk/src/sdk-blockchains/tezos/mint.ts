@@ -8,15 +8,15 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { MetaContent } from "@rarible/api-client/build/models/MetaContent"
 import { MetaContentRepresentation } from "@rarible/api-client/build/models/MetaContent"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
-import type { PreprocessMetaContent } from "../../types/nft/mint/preprocess-meta"
-import type { PreprocessMeta } from "../../types/nft/mint/preprocess-meta"
-import type { ITezosAPI, MaybeProvider, TezosMetaFormat } from "./common"
+import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { ITezosAPI, MaybeProvider, TezosMeta, TezosMetaContent } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -25,12 +25,12 @@ export class TezosMint {
 		private apis: ITezosAPI,
 	) {
 		this.mint = this.mint.bind(this)
+		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
-	getMetaFormat(content: PreprocessMetaContent): TezosMetaFormat {
-		const data: TezosMetaFormat = {
+	static getMetaContent(content: MetaContent): TezosMetaContent {
+		const data: TezosMetaContent = {
 			uri: content.url,
-			hash: content.hash || "",
 			mimeType: content.mimeType,
 			fileSize: content.size,
 		}
@@ -45,29 +45,24 @@ export class TezosMint {
 		return data
 	}
 
-	prepareMeta(meta: PreprocessMeta) {
+	preprocessMeta(meta: PreprocessMetaRequest): TezosMeta {
 		const contentUrl = meta.content[0]?.url
 		const thumbnail = meta.content
 			.find(content => content.representation === MetaContentRepresentation.PREVIEW)
 		return {
-			asset: {
-			  description: meta.description,
-				decimals: meta.decimals,
-				minter: meta.minter,
-				creators: meta.creators,
-				contributors: meta.contributors,
-				publishers: meta.publishers,
-				date: new Date().toJSON(),
-				tags: meta.tags,
-				language: meta.language,
-				artifactUri: contentUrl,
-				displayUri: contentUrl,
-				thumbnailUri: thumbnail ?? contentUrl,
-				externalUri: contentUrl,
-				formats: meta.content.map(content => this.getMetaFormat(content)),
-				attributes: meta.attributes,
-			},
-
+			name: meta.name,
+			description: meta.description,
+			date: new Date().toJSON(),
+			artifactUri: contentUrl,
+			displayUri: contentUrl,
+			thumbnailUri: thumbnail?.url ?? contentUrl,
+			externalUri: contentUrl,
+			formats: meta.content?.map(content => TezosMint.getMetaContent(content)),
+			attributes: meta.attributes?.map(attr => ({
+				name: attr.key,
+				value: attr.value,
+				type: attr.type,
+			})),
 		}
 	}
 
@@ -76,12 +71,15 @@ export class TezosMint {
 			return getTezosAddress(request.creators[0].account)
 		}
 		return get_address(
-			getRequiredProvider(this.provider)
+			getRequiredProvider(this.provider),
 		)
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const { contract, type } = await getCollectionData(this.apis.collection, prepareRequest)
+		const {
+			contract,
+			type,
+		} = await getCollectionData(this.apis.collection, prepareRequest)
 
 		return {
 			multiple: type === "MT",
@@ -94,7 +92,7 @@ export class TezosMint {
 						const account = getTezosAddress(royalty.account)
 						acc[account] = new BigNumber(royalty.value)
 						return acc
-					}, {} as {[key: string]: BigNumber}) || {}
+					}, {} as { [key: string]: BigNumber }) || {}
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
@@ -126,7 +124,7 @@ export class TezosMint {
 export async function getCollectionData(
 	api: NftCollectionControllerApi,
 	prepareRequest: HasCollection | HasCollectionId,
-): Promise<{contract: string, owner?: string, type: "NFT" | "MT" }> {
+): Promise<{ contract: string, owner?: string, type: "NFT" | "MT" }> {
 	const contractAddress = getContractFromRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
 	if (blockchain !== "TEZOS") {
