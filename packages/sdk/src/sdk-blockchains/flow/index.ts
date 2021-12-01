@@ -4,6 +4,7 @@ import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/ty
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
+import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -39,6 +40,11 @@ export function createFlowSdk(
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,
+		},
+		restriction: {
+			canTransfer(): Promise<CanTransferResult> {
+				return Promise.resolve({ success: true })
+			},
 		},
 	}
 }
