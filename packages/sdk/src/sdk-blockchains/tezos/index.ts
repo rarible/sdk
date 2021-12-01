@@ -1,10 +1,8 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ItemId, UnionAddress } from "@rarible/types"
-import { parseItemId } from "@rarible/protocol-ethereum-sdk"
 import { notImplemented } from "../../common/not-implemented"
-import type { IRaribleInternalSdk } from "../../domain"
-import type { IApisSdk } from "../../domain"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
@@ -52,23 +50,14 @@ export function createTezosSdk(
 
 const url = "https://hangzhounet.smartpy.io/chains/main/blocks/head/helpers/scripts/run_view"
 
-const tokenMapping = {
-	"KT1GXE3DGqyxTsrh6mHkfPtd9TFoGnK8vDv8": "KT1JfpeUECSWCNgCxdwof2nntxq8ua9swiR2",
-}
-
 export async function canTransfer(
 	itemId: ItemId, from: UnionAddress, to: UnionAddress,
 ): Promise<CanTransferResult> {
 	const parsed = itemId.split(":")
-	const contract = parsed[1]
 	const tokenId = parsed[2]
-	const whitelistContract = (tokenMapping as any)[contract]
-	if (whitelistContract === undefined) {
-		return { success: true }
-	}
 	const body = {
 		"chain_id": "NetXZSsxBpMQeAT",
-		"contract": whitelistContract,
+		"contract": "KT1JfpeUECSWCNgCxdwof2nntxq8ua9swiR2",
 		"entrypoint": "can_transfer",
 		"gas": "100000",
 		"input": {
@@ -100,8 +89,11 @@ export async function canTransfer(
 	if (result.data.string === "") {
 		return { success: true }
 	}
-	return { success: false, reason: "You are not authorized to purchase this Item" }
+	return { success: false, reason }
 }
+
+const reason = "Ubisoft Quartz NFTs are only available to Ubisoft players.\n" +
+	"Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/) for more information."
 
 type ERROR_CODE = "FROM_RESTRICTED" | "TO_RESTRICTED" | "TO_NOT_ALLOWED" | "BAD_TOKEN_ID" | "ARCHETYPE_QUOTA_REACHED"
 | "ARCHOWNER_NOT_SET" | "ARCHLEDGER_NOT_SET" | "WHITELIST_ERROR"
