@@ -14,6 +14,7 @@ import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
 import type { IDeploy } from "../../types/nft/deploy/domain"
+import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 
 export function createUnionSdk(
@@ -40,7 +41,12 @@ export function createUnionSdk(
 			TEZOS: tezos.order,
 			POLYGON: {} as any,
 		}),
-	}
+		restriction: new UnionRestrictionSdk({
+			ETHEREUM: ethereum.restriction,
+			FLOW: flow.restriction,
+			TEZOS: tezos.restriction,
+			POLYGON: {} as any,
+		})	}
 }
 
 class UnionOrderSdk implements IOrderInternalSdk {
@@ -129,6 +135,17 @@ class UnionBalanceSdk implements IBalanceSdk {
 
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
 		return this.instances[extractBlockchain(address)].getBalance(address, assetType)
+	}
+}
+
+class UnionRestrictionSdk implements IRestrictionSdk {
+	constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {
+	}
+
+	canTransfer(
+		itemId: ItemId, from: UnionAddress, to: UnionAddress
+	): Promise<CanTransferResult> {
+		return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
 	}
 }
 

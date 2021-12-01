@@ -10,6 +10,7 @@ import type { ICancel } from "./types/order/cancel/domain"
 import type { IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { IDeploy } from "./types/nft/deploy/domain"
+import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 
 export interface IRaribleSdk {
@@ -17,6 +18,7 @@ export interface IRaribleSdk {
 	nft: INftSdk
 	order: IOrderSdk
 	balances: IBalanceSdk
+	restriction: IRestrictionSdk
 }
 
 export interface IApisSdk {

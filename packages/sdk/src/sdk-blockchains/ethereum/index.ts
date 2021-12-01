@@ -4,6 +4,7 @@ import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -19,7 +20,7 @@ export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
 	network: EthereumNetwork,
-	params?: ConfigurationParameters
+	params?: ConfigurationParameters,
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
 	const sellService = new EthereumSell(sdk)
@@ -45,6 +46,11 @@ export function createEthereumSdk(
 		},
 		balances: {
 			getBalance: new EthereumBalance(sdk).getBalance,
+		},
+		restriction: {
+			canTransfer(): Promise<CanTransferResult> {
+				return Promise.resolve({ success: true })
+			},
 		},
 	}
 }
