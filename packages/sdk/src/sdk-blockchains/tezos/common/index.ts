@@ -275,7 +275,15 @@ export function convertOrderPayout(payout?: Array<Payout>): Array<TezosPart> {
 export function convertContractAddress(contract: ContractAddress): string {
 	const [blockchain, tezosAddress] = contract.split(":")
 	if (blockchain !== "TEZOS") {
-		throw new Error(`Not an tezos contract: ${contract}`)
+		throw new Error(`Not a tezos contract address: ${contract}`)
+	}
+	return tezosAddress
+}
+
+export function convertUnionAddress(address: UnionAddress): string {
+	const [blockchain, tezosAddress] = address.split(":")
+	if (blockchain !== "TEZOS") {
+		throw new Error(`Not a tezos address: ${address}`)
 	}
 	return tezosAddress
 }

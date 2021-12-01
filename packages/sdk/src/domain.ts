@@ -10,12 +10,14 @@ import type { ICancel } from "./types/order/cancel/domain"
 import type { IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { IDeploy } from "./types/nft/deploy/domain"
+import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 
 export interface IRaribleSdk {
 	apis: IApisSdk
 	nft: INftSdk
 	order: IOrderSdk
 	balances: IBalanceSdk
+	restriction: IRestrictionSdk
 }
 
 export interface IApisSdk {
