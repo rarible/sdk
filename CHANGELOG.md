@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.4](https://github.com/rarible/sdk/compare/v0.7.3...v0.7.4) (2021-12-01)
+
+
+### Bug Fixes
+
+* canTransfer ([#44](https://github.com/rarible/sdk/issues/44)) ([7c8756c](https://github.com/rarible/sdk/commit/7c8756c4c7ab6353a69d5f1c9fcab7667f534f57))
+* upgrade tezos-sdk ([5ad5d1e](https://github.com/rarible/sdk/commit/5ad5d1e62712870eaa6de2fd8a9a36ef9cdf902a))
+
+
+
+
+
 ## [0.7.3](https://github.com/rarible/sdk/compare/v0.7.2...v0.7.3) (2021-11-30)
 
 
