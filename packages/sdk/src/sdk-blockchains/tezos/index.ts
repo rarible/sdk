@@ -95,7 +95,7 @@ export async function canTransfer(
 }
 
 const reason = "Ubisoft Quartz NFTs are only available to Ubisoft players.\n" +
-	"Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/) for more information."
+	"Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/){:target=\"_blank\"} for more information."
 
 type ERROR_CODE = "FROM_RESTRICTED" | "TO_RESTRICTED" | "TO_NOT_ALLOWED" | "BAD_TOKEN_ID" | "ARCHETYPE_QUOTA_REACHED"
 | "ARCHOWNER_NOT_SET" | "ARCHLEDGER_NOT_SET" | "WHITELIST_ERROR"
