@@ -10,7 +10,7 @@ describe("canTransfer", () => {
 		expect(result).toStrictEqual({
 			success: false,
 			reason: "Ubisoft Quartz NFTs are only available to Ubisoft players.\n" +
-				"Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/) for more information.",
+				"Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/){:target=\"_blank\"} for more information.",
 		})
 	})
 
