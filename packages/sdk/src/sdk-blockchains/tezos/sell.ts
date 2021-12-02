@@ -66,7 +66,7 @@ export class TezosSell {
 				const makerPublicKey = await getMakerPublicKey(provider)
 				const { itemId } = getTezosItemData(request.itemId)
 
-				const item = await retry(30, 1000, async () => {
+				const item = await retry(90, 1000, async () => {
 				   return this.apis.item.getNftItemById({ itemId })
 				})
 
@@ -102,4 +102,5 @@ export class TezosSell {
 			submit,
 		}
 	}
+
 }

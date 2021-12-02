@@ -15,6 +15,7 @@ import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/
 import type { ICancel } from "../../types/order/cancel/domain"
 import type { IDeploy } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
+import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -96,6 +97,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.burn = this.burn.bind(this)
 		this.mint = this.mint.bind(this)
 		this.transfer = this.transfer.bind(this)
+		this.preprocessMeta = this.preprocessMeta.bind(this)
 		this.generateTokenId = this.generateTokenId.bind(this)
 	}
 
@@ -114,6 +116,10 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 
 	generateTokenId(prepare: GenerateTokenIdRequest): Promise<TokenId | undefined> {
 		return this.instances[extractBlockchain(prepare.collection)].generateTokenId(prepare)
+	}
+
+	preprocessMeta(request: PreprocessMetaRequest): PreprocessMetaResponse {
+		return this.instances[request.blockchain].preprocessMeta(request)
 	}
 
 	deploy: IDeploy = Action.create({

@@ -1,8 +1,10 @@
 import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
+import type { TezosMetadataResponse } from "./common"
 
 describe("mint test", () => {
 	const wallet = createTestWallet(
@@ -11,7 +13,7 @@ describe("mint test", () => {
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
+	let nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
 	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
 
 	test.skip("mint NFT token test", async () => {
@@ -27,10 +29,15 @@ describe("mint test", () => {
 				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
 				value: 10000,
 			}],
+			creators: [{
+				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
+				value: 10000,
+			}],
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log(mintResult)
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
@@ -40,19 +47,46 @@ describe("mint test", () => {
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
 		const mintResult = await mintResponse.submit({
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,
 			lazyMint: false,
 			royalties: [{
 				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
 				value: 10000,
 			}],
+			creators: [{
+				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
+				value: 10000,
+			}],
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await awaitForItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 
+	test("tezos preprocess metadata", () => {
+		const response = sdk.nft.preprocessMeta({
+			blockchain: Blockchain.TEZOS,
+			name: "1",
+			description: "2",
+			image: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			animationUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
+			externalUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
+			attributes: [{
+				key: "eyes",
+				value: "1",
+			}],
+		}) as TezosMetadataResponse
+
+		expect(response.name).toBe("1")
+		expect(response.description).toBe("2")
+		expect(response.artifactUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.displayUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.thumbnailUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
+		expect(response.externalUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.attributes[0].name).toBe("eyes")
+		expect(response.attributes[0].value).toBe("1")
+	})
 })
