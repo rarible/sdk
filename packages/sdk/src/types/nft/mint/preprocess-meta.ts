@@ -1,7 +1,11 @@
 import type * as ApiClient from "@rarible/api-client"
-import type { TezosMeta } from "../../../sdk-blockchains/tezos/common"
+import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
 
-export type PreprocessMetaResponse = CommonTokenMetadata | TezosMeta
+export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
+
+export type PreprocessMetaRequest =
+  { blockchain: ApiClient.Blockchain } & CommonTokenMetadata
+export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse
 
 export type TokenMetadataAttribute = {
 	key: string
@@ -18,7 +22,13 @@ export type CommonTokenMetadata = {
 	attributes: TokenMetadataAttribute[]
 }
 
-export type PreprocessMetaRequest =
-  { blockchain: ApiClient.Blockchain } & CommonTokenMetadata
-
-export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
+export type CommonTokenMetadataResponse = {
+	name: string
+	description: string | undefined
+	image: string | undefined
+	// eslint-disable-next-line camelcase
+	animation_url: string | undefined
+	// eslint-disable-next-line camelcase
+	external_url: string | undefined
+	attributes: TokenMetadataAttribute[]
+}

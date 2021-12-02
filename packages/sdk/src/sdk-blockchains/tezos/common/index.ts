@@ -44,10 +44,9 @@ export type MaybeProvider<P extends TezosProvider> = {
 
 export type PreparedOrder = OrderForm & { makeStock: RaribleBigNumber }
 
-export type TezosMeta = {
+export type TezosMetadataResponse = {
 	name: string
 	description?: string
-	date: string
 	artifactUri?: string
 	displayUri?: string
 	thumbnailUri?: string

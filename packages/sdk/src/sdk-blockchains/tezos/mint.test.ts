@@ -1,8 +1,10 @@
 import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
+import type { TezosMetadataResponse } from "./common"
 
 describe("mint test", () => {
 	const wallet = createTestWallet(
@@ -64,4 +66,27 @@ describe("mint test", () => {
 
 	}, 1500000)
 
+	test("tezos preprocess metadata", () => {
+		const response = sdk.nft.preprocessMeta({
+			blockchain: Blockchain.TEZOS,
+			name: "1",
+			description: "2",
+			image: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			animationUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
+			externalUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
+			attributes: [{
+				key: "eyes",
+				value: "1",
+			}],
+		}) as TezosMetadataResponse
+
+		expect(response.name).toBe("1")
+		expect(response.description).toBe("2")
+		expect(response.artifactUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.displayUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.thumbnailUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
+		expect(response.externalUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.attributes[0].name).toBe("eyes")
+		expect(response.attributes[0].value).toBe("1")
+	})
 })

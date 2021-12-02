@@ -3,8 +3,10 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
+import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
@@ -70,5 +72,28 @@ describe("mint", () => {
 		} else {
 			throw new Error("Must be on chain")
 		}
+	})
+
+	test("test preprocess metadata", () => {
+		const response = sdk.nft.preprocessMeta({
+			blockchain: Blockchain.ETHEREUM,
+			name: "1",
+			description: "2",
+			image: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			animationUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
+			externalUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
+			attributes: [{
+				key: "eyes",
+				value: "1",
+			}],
+		}) as CommonTokenMetadataResponse
+
+		expect(response.name).toBe("1")
+		expect(response.description).toBe("2")
+		expect(response.image).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.animation_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
+		expect(response.external_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.attributes[0].key).toBe("eyes")
+		expect(response.attributes[0].value).toBe("1")
 	})
 })

@@ -1,7 +1,6 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ItemId, UnionAddress } from "@rarible/types"
-import { parseItemId } from "@rarible/protocol-ethereum-sdk"
 import { notImplemented } from "../../common/not-implemented"
 import type { IRaribleInternalSdk } from "../../domain"
 import type { IApisSdk } from "../../domain"

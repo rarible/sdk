@@ -20,7 +20,7 @@ import type { TokenId } from "../../types/nft/generate-token-id"
 import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import type { IApisSdk } from "../../domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { CommonTokenMetadata } from "../../types/nft/mint/preprocess-meta"
+import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { convertToEthereumAddress } from "./common"
 
 export class EthereumMint {
@@ -141,8 +141,13 @@ export class EthereumMint {
 		}
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadata {
-		return meta
+	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+		const { animationUrl, externalUrl, ...rest } = meta
+		return {
+			...rest,
+			animation_url: animationUrl,
+			external_url: externalUrl,
+		}
 	}
 }
 

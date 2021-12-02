@@ -10,7 +10,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { IApisSdk } from "../../domain"
 import { getCollection } from "../ethereum/mint"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { CommonTokenMetadata } from "../../types/nft/mint/preprocess-meta"
+import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { getFlowCollection } from "./common/converters"
 import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
@@ -48,7 +48,12 @@ export class FlowMint {
 		throw new Error("Unsupported collection type")
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadata {
-		return meta
+	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+		const { animationUrl, externalUrl, ...rest } = meta
+		return {
+			...rest,
+			animation_url: animationUrl,
+			external_url: externalUrl,
+		}
 	}
 }

@@ -14,7 +14,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { ITezosAPI, MaybeProvider, TezosMeta } from "./common"
+import type { ITezosAPI, MaybeProvider, TezosMetadataResponse } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -26,11 +26,10 @@ export class TezosMint {
 		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): TezosMeta {
+	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
 		return {
 			name: meta.name,
 			description: meta.description,
-			date: new Date().toJSON(),
 			artifactUri: meta.image,
 			displayUri: meta.image,
 			thumbnailUri: meta.animationUrl || meta.image,
