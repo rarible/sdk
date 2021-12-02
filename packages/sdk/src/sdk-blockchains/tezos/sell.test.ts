@@ -1,4 +1,5 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForOrder } from "./test/await-for-order"
@@ -50,7 +51,8 @@ describe("sell test", () => {
 		await awaitForOrder(sellerSdk, orderId)
 	}, 1500000)
 
-	test.skip("sell MT test", async () => {
+	test("sell MT test", async () => {
+		/*
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
@@ -82,7 +84,20 @@ describe("sell test", () => {
 			}],
 		})
 
-		await awaitForOrder(sellerSdk, orderId)
+		const oldOrder = await awaitForOrder(sellerSdk, orderId)
+
+		// console.log("oldOrder", JSON.stringify(oldOrder, null, "  "))
+
+     */
+		const updateAction = await sellerSdk.order.sellUpdate({
+			// orderId
+			orderId: toOrderId("TEZOS:d2963dc6bcea55b406ec27a3cea5523288d31755d97f80765b1846625395f954"),
+		})
+		const createdOrderId = await updateAction.submit({ price: "0.01" })
+
+		const updatedOrder = await awaitForOrder(sellerSdk, createdOrderId)
+		console.log("updatedOrder", JSON.stringify(updatedOrder, null, "  "))
+		console.log("orderid", createdOrderId)
 	}, 2900000)
 
 })

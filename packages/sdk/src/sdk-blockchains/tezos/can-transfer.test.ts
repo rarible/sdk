@@ -1,5 +1,5 @@
 import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
-import { canTransfer } from "./index"
+import { canTransfer } from "./restriction/can-transfer"
 
 describe("canTransfer", () => {
 	test("returns false and reason for whitelisted collection", async () => {
