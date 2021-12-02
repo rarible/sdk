@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.9](https://github.com/rarible/sdk/compare/v0.7.8...v0.7.9) (2021-12-02)
+
+
+### Bug Fixes
+
+* remove _blank from the message md ([4467739](https://github.com/rarible/sdk/commit/4467739f0268db853c45b11c608e2189fbef54df))
+
+
+
+
+
 ## [0.7.8](https://github.com/rarible/sdk/compare/v0.7.7...v0.7.8) (2021-12-02)
 
 
