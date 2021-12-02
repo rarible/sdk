@@ -59,7 +59,7 @@ export async function canTransfer(
 	const tokenId = parsed[2]
 	const body = {
 		"chain_id": "NetXZSsxBpMQeAT",
-		"contract": "KT1JfpeUECSWCNgCxdwof2nntxq8ua9swiR2",
+		"contract": "KT1J3Zzsz3cGYbeLrfvZBTQyuMepSuTspgon",
 		"entrypoint": "can_transfer",
 		"gas": "100000",
 		"input": {
@@ -75,10 +75,11 @@ export async function canTransfer(
 				},
 			],
 		},
-		"payer": "tz1hyc1CRQpjskJUUaGrh85UZXPi6kU4JuGd",
-		"source": "tz1hyc1CRQpjskJUUaGrh85UZXPi6kU4JuGd",
+		"payer": "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
+		"source": "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
 		"unparsing_mode": "Readable",
 	}
+	console.log("body is", JSON.stringify(body))
 	const response = await window.fetch(url, {
 		method: "POST",
 		headers: {
@@ -88,6 +89,7 @@ export async function canTransfer(
 		body: JSON.stringify(body),
 	})
 	const result: CheckResponse = await response.json()
+	console.log("result is", JSON.stringify(result))
 	if (result.data.string === "") {
 		return { success: true }
 	}
