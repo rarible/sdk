@@ -23,8 +23,7 @@ describe("get balance", () => {
 			toUnionAddress(`TEZOS:${address}`),
 			{
 				"@type": "TEZOS_FT",
-				//todo insert fa12 address
-				contract: toContractAddress(`TEZOS:${""}`),
+				contract: toContractAddress("TEZOS:KT1LP8Zx12yw3nDCmRBPv3HrWZXH1JCQViWu"),
 			}
 		)
 	})

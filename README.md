@@ -131,3 +131,9 @@ TODO
 ### Burn
 
 TODO
+
+### Note
+
+*This is a pre-release version. Backward compatibility is not fully supported before 1.0 release. Backward compatibility is only guaranteed in minor releases.*
+
+*For example, 0.2.x version may not be compatible with 0.1.x. So, it's advised to include dependencies using package versions (ex. rarible/sdk@0.2.x).*

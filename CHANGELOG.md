@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.10](https://github.com/rarible/sdk/compare/v0.7.9...v0.7.10) (2021-12-03)
+
+
+### Bug Fixes
+
+* correct addresses for canTransfer ([e0dfc02](https://github.com/rarible/sdk/commit/e0dfc02d50d62a779277d971463cf02ccbdac50f))
+* support new tezos signature with prefix ([1e3f62f](https://github.com/rarible/sdk/commit/1e3f62fb74044810bc3bf223294573733b0d2c71))
+
+
+
+
+
+## [0.7.9](https://github.com/rarible/sdk/compare/v0.7.8...v0.7.9) (2021-12-02)
+
+
+### Bug Fixes
+
+* remove _blank from the message md ([4467739](https://github.com/rarible/sdk/commit/4467739f0268db853c45b11c608e2189fbef54df))
+
+
+
+
+
+## [0.7.8](https://github.com/rarible/sdk/compare/v0.7.7...v0.7.8) (2021-12-02)
+
+
+### Bug Fixes
+
+* test ([4d6eb40](https://github.com/rarible/sdk/commit/4d6eb401f83e79471beaf8ddaa5bdbc767d7d915))
+
+
+
+
+
+## [0.7.7](https://github.com/rarible/sdk/compare/v0.7.6...v0.7.7) (2021-12-02)
+
+
+### Bug Fixes
+
+* open message in new tab ([b59e023](https://github.com/rarible/sdk/commit/b59e02370f0b071d183bd7e400f59cfafc1ad75c))
+
+
+
+
+
+## [0.7.6](https://github.com/rarible/sdk/compare/v0.7.5...v0.7.6) (2021-12-02)
+
+
+### Bug Fixes
+
+* preprocess metadata ([#43](https://github.com/rarible/sdk/issues/43)) ([485e8fb](https://github.com/rarible/sdk/commit/485e8fbdbd782410dcd8bc6b707fd84fd12c505e))
+
+
+
+
+
+## [0.7.5](https://github.com/rarible/sdk/compare/v0.7.4...v0.7.5) (2021-12-01)
+
+
+### Bug Fixes
+
+* correct message ([bfc0648](https://github.com/rarible/sdk/commit/bfc06484a35c310da5cb58d06cbe108a8becef13))
+
+
+
+
+
 ## [0.7.4](https://github.com/rarible/sdk/compare/v0.7.3...v0.7.4) (2021-12-01)
 
 

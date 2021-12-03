@@ -13,7 +13,8 @@ import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { ITezosAPI, MaybeProvider, TezosMetadataResponse } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -22,15 +23,39 @@ export class TezosMint {
 		private apis: ITezosAPI,
 	) {
 		this.mint = this.mint.bind(this)
+		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
-	getCreators(request: MintRequest): string | undefined {
-		const [owner] = request.creators || []
-		return owner?.account ? getTezosAddress(owner?.account) : undefined
+	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+		return {
+			name: meta.name,
+			description: meta.description,
+			artifactUri: meta.image,
+			displayUri: meta.image,
+			thumbnailUri: meta.animationUrl || meta.image,
+			externalUri: meta.externalUrl || meta.image,
+			attributes: meta.attributes?.map(attr => ({
+				name: attr.key,
+				value: attr.value,
+				type: attr.type,
+			})),
+		}
+	}
+
+	async getOwner(request: MintRequest): Promise<string> {
+		if (request.creators?.length) {
+			return getTezosAddress(request.creators[0].account)
+		}
+		return get_address(
+			getRequiredProvider(this.provider),
+		)
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const { contract, type } = await getCollectionData(this.apis.collection, prepareRequest)
+		const {
+			contract,
+			type,
+		} = await getCollectionData(this.apis.collection, prepareRequest)
 
 		return {
 			multiple: type === "MT",
@@ -43,14 +68,14 @@ export class TezosMint {
 						const account = getTezosAddress(royalty.account)
 						acc[account] = new BigNumber(royalty.value)
 						return acc
-					}, {} as {[key: string]: BigNumber}) || {}
+					}, {} as { [key: string]: BigNumber }) || {}
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
 
 					const provider = getRequiredProvider(this.provider)
 
 					const result = await mint(
-						getRequiredProvider(this.provider),
+						provider,
 						contract,
 						royalties,
 						supply,
@@ -58,7 +83,7 @@ export class TezosMint {
 						{
 							"": request.uri,
 						},
-						await get_address(provider),
+						await this.getOwner(request),
 					)
 
 					return {
@@ -75,7 +100,7 @@ export class TezosMint {
 export async function getCollectionData(
 	api: NftCollectionControllerApi,
 	prepareRequest: HasCollection | HasCollectionId,
-): Promise<{contract: string, owner?: string, type: "NFT" | "MT" }> {
+): Promise<{ contract: string, owner?: string, type: "NFT" | "MT" }> {
 	const contractAddress = getContractFromRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
 	if (blockchain !== "TEZOS") {

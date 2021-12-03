@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.10](https://github.com/rarible/sdk/compare/v0.7.9...v0.7.10) (2021-12-03)
+
+
+### Bug Fixes
+
+* support new tezos signature with prefix ([1e3f62f](https://github.com/rarible/sdk/commit/1e3f62fb74044810bc3bf223294573733b0d2c71))
+
+
+
+
+
 ## [0.7.4](https://github.com/rarible/sdk/compare/v0.7.3...v0.7.4) (2021-12-01)
 
 
