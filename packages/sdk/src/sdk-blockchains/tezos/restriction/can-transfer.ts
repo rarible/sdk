@@ -8,10 +8,11 @@ export async function canTransfer(
 	itemId: ItemId, from: UnionAddress, to: UnionAddress,
 ): Promise<CanTransferResult> {
 	const parsed = itemId.split(":")
+	const contract = parsed[1]
 	const tokenId = parsed[2]
 	const body = {
 		"chain_id": "NetXZSsxBpMQeAT",
-		"contract": "KT1J3Zzsz3cGYbeLrfvZBTQyuMepSuTspgon",
+		"contract": contract,
 		"entrypoint": "can_transfer",
 		"gas": "100000",
 		"input": {
@@ -21,6 +22,7 @@ export async function canTransfer(
 				{
 					"prim": "Pair",
 					"args": [
+						{ "string": "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8" },
 						{ "string": convertUnionAddress(from) },
 						{ "string": convertUnionAddress(to) },
 					],

@@ -2,7 +2,7 @@ import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import { canTransfer } from "./restriction"
 
 describe("canTransfer", () => {
-	test("returns false and reason for whitelisted collection", async () => {
+	test.skip("returns false and reason for whitelisted collection", async () => {
 		const me = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")
 		const otherMe = toUnionAddress("TEZOS:tz1V11fB4EX5VzPKMNQ1CsBKMSFS6fL3Br9W")
 		const result = await canTransfer(toItemId("TEZOS:KT1SS9hdyQPxkaCzMmzm1Z37gmpgy81cSsXS:360001"), me, otherMe)
@@ -13,7 +13,7 @@ describe("canTransfer", () => {
 		})
 	})
 
-	test("returns true for whitelisted addresses", async () => {
+	test.skip("returns true for whitelisted addresses", async () => {
 		const from = toUnionAddress("TEZOS:tz1hHTdiDezgWNRWyY7RYSyZE11EobKQw583")
 		const to = toUnionAddress("TEZOS:tz1dKxdpV1hgErMTTKBorb8R5tSz8hFzPhKh")
 		const result = await canTransfer(toItemId("TEZOS:KT1SS9hdyQPxkaCzMmzm1Z37gmpgy81cSsXS:3600005"), from, to)
