@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.14](https://github.com/rarible/sdk/compare/v0.7.12...v0.7.14) (2021-12-03)
+
+
+### Bug Fixes
+
+* canTransfer fixes ([4d5e2b0](https://github.com/rarible/sdk/commit/4d5e2b08f4375a42841c740ccf34839c8861944c))
+
+
+
+
+
 ## [0.7.12](https://github.com/rarible/sdk/compare/v0.7.11...v0.7.12) (2021-12-03)
 
 
