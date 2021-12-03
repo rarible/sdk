@@ -1,4 +1,4 @@
-import { toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
