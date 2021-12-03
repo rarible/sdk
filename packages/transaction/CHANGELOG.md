@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.11](https://github.com/rarible/sdk/compare/v0.7.10...v0.7.11) (2021-12-03)
+
+
+### Bug Fixes
+
+* upgrade tezos-sdk ([0547558](https://github.com/rarible/sdk/commit/0547558a5255f4a1a597b3b7fa929643d3d43ec6))
+
+
+
+
+
 ## [0.7.10](https://github.com/rarible/sdk/compare/v0.7.9...v0.7.10) (2021-12-03)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
