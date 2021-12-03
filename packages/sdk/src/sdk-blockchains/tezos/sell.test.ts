@@ -94,9 +94,7 @@ describe("sell test", () => {
 
 		await awaitForOrder(sellerSdk, orderId)
 
-		const updateAction = await sellerSdk.order.sellUpdate({
-			orderId: toOrderId("TEZOS:f4d3fc354e8aa252a7cab8dcb620273d41ab782a0040516e391e500bf56d10ca"),
-		})
+		const updateAction = await sellerSdk.order.sellUpdate({ orderId })
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
 
 		const updatedOrder = await sellerSdk.apis.order.getOrderById({
