@@ -2,7 +2,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
+import { toAddress, toUnionAddress } from "@rarible/types"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 
@@ -12,6 +12,16 @@ describe("mintAndSell", () => {
 	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e")
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
+
+	test("prepare should work even if wallet is undefined", async () => {
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: `ETHEREUM:${erc721Address}`,
+		})
+		const action = await sdk.nft.mintAndSell({ collection })
+		expect(action.multiple).toBeFalsy()
+		expect(action.supportsRoyalties).toBeTruthy()
+		expect(action.originFeeSupport).toBe("FULL")
+	})
 
 	test("should mint and put on sale ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
@@ -31,10 +41,10 @@ describe("mintAndSell", () => {
 		})
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
-				value: toBigNumber("10000"),
+				value: 10000,
 			}],
 			royalties: [],
 			lazyMint: false,

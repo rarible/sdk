@@ -42,7 +42,7 @@ export class EthereumBurn {
 						amount
 					)
 
-					return new BlockchainEthereumTransaction(tx)
+					return tx && new BlockchainEthereumTransaction(tx)
 				},
 			}),
 		}

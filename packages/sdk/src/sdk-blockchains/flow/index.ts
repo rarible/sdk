@@ -3,7 +3,8 @@ import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { notImplemented } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
+import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -20,13 +21,16 @@ export function createFlowSdk(
 ): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, auth)
 	const sellService = new FlowSell(sdk, apis)
+	const mintService = new FlowMint(sdk, apis)
 
 	return {
 		nft: {
-			mint: new FlowMint(sdk, apis).prepare,
+			mint: mintService.prepare,
 			burn: new FlowBurn(sdk).burn,
 			transfer: new FlowTransfer(sdk).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
+			deploy: nonImplementedAction,
+			preprocessMeta: mintService.preprocessMeta,
 		},
 		order: {
 			sell: sellService.sell,
@@ -38,6 +42,11 @@ export function createFlowSdk(
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,
+		},
+		restriction: {
+			canTransfer(): Promise<CanTransferResult> {
+				return Promise.resolve({ success: true })
+			},
 		},
 	}
 }

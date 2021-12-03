@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.6.0",
+  "version": "0.7.10",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -9,19 +9,16 @@
     "build"
   ],
   "scripts": {
-    "build": "yarn run build-old",
-    "build-babel": "babel --extensions \".ts,.tsx,.mjs\" ./src --out-dir build && yarn run build-old && yarn run replace-mjs",
-    "build-old": "tsc --project tsconfig-build.json",
+    "build": "yarn run build-ts",
+    "build-ts": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "replace-mjs": "find ./build -type f -name \"*.js\" -exec sed -i '' 's#./jsbi.mjs#jsbi#' {} \\;",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "~0.0.6",
-    "@rarible/ethereum-provider": "~0.10.0",
-    "jsbi": "^3.2.5",
-    "tezos-sdk-module": "0.0.5"
+    "@rarible/api-client": "~0.0.9",
+    "@rarible/ethereum-provider": "~0.12.1",
+    "tezos-sdk-module": "~0.0.29"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

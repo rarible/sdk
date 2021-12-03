@@ -1,14 +1,16 @@
 import { Action } from "@rarible/action"
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import * as EthereumSdk from "@rarible/protocol-ethereum-sdk"
+import { isErc1155v2Collection, isErc721v2Collection, isErc721v3Collection } from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import { toAddress, toBigNumber, toItemId } from "@rarible/types"
-import type { NftCollection, NftTokenId, Part } from "@rarible/ethereum-api-client"
+import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { prepareMintRequest } from "@rarible/protocol-ethereum-sdk/build/nft/prepare-mint-request"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
+import { CollectionType } from "@rarible/api-client"
+import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -17,14 +19,16 @@ import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-re
 import type { TokenId } from "../../types/nft/generate-token-id"
 import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import type { IApisSdk } from "../../domain"
-import { convertUnionToEthereumAddress } from "./common"
+import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
+import { convertToEthereumAddress } from "./common"
 
 export class EthereumMint {
 	constructor(private readonly sdk: RaribleSdk, private readonly apis: IApisSdk) {
 		this.prepare = this.prepare.bind(this)
 	}
 
-	handleSubmit(request: MintRequest, nftCollection: NftCollection, nftTokenId?: NftTokenId) {
+	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
 		if (EthereumSdk.isErc721v3Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
@@ -75,9 +79,23 @@ export class EthereumMint {
 
 	private toPart(royalties: Royalty[] | Creator[] = []): Part[] {
 		return royalties.map(r => ({
-			account: convertUnionToEthereumAddress(r.account),
+			account: convertToEthereumAddress(r.account),
 			value: toBn(r.value).toNumber(),
 		}))
+	}
+
+	isSupportsRoyalties(collection: CommonNftCollection): boolean {
+		if (collection.type === "ERC721") {
+			return isErc721v3Collection(collection) || isErc721v2Collection(collection)
+		} else if (collection.type === "ERC1155") {
+			return true
+		} else {
+			throw new Error("Unrecognized collection type")
+		}
+	}
+
+	isSupportsLazyMint(collection: CommonNftCollection): boolean {
+		return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
 	}
 
 	async prepare(requestRaw: PrepareMintRequest): Promise<PrepareMintResponse> {
@@ -87,11 +105,12 @@ export class EthereumMint {
 		}
 
 		const request = validatePrepareMintRequest(requestRaw)
-		const nftCollection: NftCollection = toNftCollection(collection)
-		const prepareData = prepareMintRequest(nftCollection)
+		const nftCollection = toNftCollection(collection)
 
 		return {
-			...prepareData,
+			multiple: collection.type === "ERC1155",
+			supportsRoyalties: this.isSupportsRoyalties(nftCollection),
+			supportsLazyMint: this.isSupportsLazyMint(nftCollection),
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (data: MintRequest) => {
@@ -121,6 +140,15 @@ export class EthereumMint {
 			}),
 		}
 	}
+
+	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+		const { animationUrl, externalUrl, ...rest } = meta
+		return {
+			...rest,
+			animation_url: animationUrl,
+			external_url: externalUrl,
+		}
+	}
 }
 
 export async function getCollection(
@@ -132,8 +160,8 @@ export async function getCollection(
 	return api.getCollectionById({ collection: req.collectionId })
 }
 
-function toNftCollection(collection: Collection): NftCollection {
-	const contract = convertUnionToEthereumAddress(collection.id)
+function toNftCollection(collection: Collection): CommonNftCollection {
+	const contract = convertToEthereumAddress(collection.id)
 	if (!isSupportedCollection(collection.type)) {
 		throw new Error(`Collection with type "${collection}" not supported`)
 	}
@@ -141,13 +169,13 @@ function toNftCollection(collection: Collection): NftCollection {
 		...collection,
 		id: toAddress(contract),
 		type: NftCollectionType[collection.type],
-		owner: collection.owner ? convertUnionToEthereumAddress(collection.owner) : undefined,
+		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
 		features: collection.features?.map(x => NftCollectionFeatures[x]),
 	}
 }
 
-function isSupportedCollection(type: Collection["type"]): type is "ERC721" | "ERC1155" {
-	return ["ERC721", "ERC1155"].indexOf(type) !== -1
+function isSupportedCollection(type: Collection["type"]): type is  CollectionType.ERC721 | CollectionType.ERC1155 {
+	return type === CollectionType.ERC721 || type === CollectionType.ERC1155
 }
 
 function toNftTokenId(tokenId: TokenId | undefined): NftTokenId | undefined {

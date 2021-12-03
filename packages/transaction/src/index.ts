@@ -1,29 +1,36 @@
-import type { Blockchain } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { OperationResult } from "tezos-sdk-module/dist/common/base"
 import type { FlowTransaction } from "@rarible/flow-sdk/build/types"
 import type { IBlockchainTransaction } from "./domain"
 
 export class BlockchainEthereumTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = "ETHEREUM"
+	blockchain: Blockchain = Blockchain.ETHEREUM
 
-	constructor(public transaction: EthereumTransaction) {
+	constructor(public transaction: EthereumTransaction) {}
+
+	hash() {
+		return this.transaction.hash
 	}
 
 	async wait() {
-		const waitResponse = await this.transaction.wait()
+		await this.transaction.wait()
 
 		return {
 			blockchain: this.blockchain,
-			hash: waitResponse.transactionHash,
+			hash: this.transaction.hash,
 		}
 	}
 }
 
 export class BlockchainTezosTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = "TEZOS"
+	blockchain: Blockchain = Blockchain.TEZOS
 
 	constructor(public transaction: OperationResult) {}
+
+	hash() {
+		return this.transaction.hash
+	}
 
 	async wait() {
 		await this.transaction.confirmation()
@@ -36,9 +43,13 @@ export class BlockchainTezosTransaction implements IBlockchainTransaction {
 }
 
 export class BlockchainFlowTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = "FLOW"
+	blockchain: Blockchain = Blockchain.FLOW
 
 	constructor(public transaction: FlowTransaction) {
+	}
+
+	hash() {
+		return this.transaction.txId
 	}
 
 	async wait() {

@@ -1,29 +1,51 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
-import type { IRaribleInternalSdk } from "../../domain"
-import { Sell } from "./sell"
-import { Fill } from "./fill"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { TezosSell } from "./sell"
+import { TezosFill } from "./fill"
+import { TezosBid } from "./bid"
+import { getMaybeTezosProvider, getTezosAPIs } from "./common"
+import type { TezosNetwork } from "./domain"
+import { TezosMint } from "./mint"
+import { TezosTransfer } from "./transfer"
+import { TezosBurn } from "./burn"
+import { TezosTokenId } from "./token-id"
+import { TezosCancel } from "./cancel"
+import { TezosBalance } from "./balance"
+import { TezosDeploy } from "./deploy"
+import { canTransfer } from "./restriction"
 
-export function createTezosSdk(wallet: Maybe<TezosWallet>): IRaribleInternalSdk {
+export function createTezosSdk(
+	wallet: Maybe<TezosWallet>,
+	_apis: IApisSdk,
+	network: TezosNetwork,
+): IRaribleInternalSdk {
+	const apis = getTezosAPIs(network)
+	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
+	const sellService = new TezosSell(maybeProvider, apis)
+	const mintService = new TezosMint(maybeProvider, apis)
+	const bidService = new TezosBid(maybeProvider, apis)
+
 	return {
 		nft: {
-			mint: notImplemented,
-			burn: notImplemented,
-			transfer: notImplemented,
-			generateTokenId: notImplemented,
+			mint: mintService.mint,
+			burn: new TezosBurn(maybeProvider, apis).burn,
+			transfer: new TezosTransfer(maybeProvider, apis).transfer,
+			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
+			deploy: new TezosDeploy(maybeProvider, apis).deployToken,
+			preprocessMeta: mintService.preprocessMeta,
 		},
 		order: {
-			fill: new Fill(wallet?.provider).fill,
-			// @todo fix any type
-			sell: new Sell(wallet?.provider).sell as any,
-			sellUpdate: notImplemented,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: nonImplementedAction,
+			fill: new TezosFill(maybeProvider, apis).fill,
+			sell: sellService.sell,
+			sellUpdate: sellService.update,
+			bid: bidService.bid,
+			bidUpdate: bidService.update,
+			cancel: new TezosCancel(maybeProvider, apis).cancel,
 		},
 		balances: {
-			getBalance: notImplemented,
+			getBalance: new TezosBalance(maybeProvider, apis).getBalance,
 		},
+		restriction: { canTransfer },
 	}
 }

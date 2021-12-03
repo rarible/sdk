@@ -2,9 +2,11 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
+import { toAddress, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
+import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
@@ -12,18 +14,9 @@ describe("mint", () => {
 
 	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e")
-	const readSdk = createRaribleSdk(undefined, "e2e")
 
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 	const erc1155Address = toAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d")
-
-	test("prepare should work even if wallet is undefined", async () => {
-		const collection = await readSdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${erc721Address}` })
-		const action = await readSdk.nft.mintAndSell({ collection })
-		expect(action.multiple).toBeFalsy()
-		expect(action.supportsRoyalties).toBeTruthy()
-		expect(action.originFeeSupport).toBe("FULL")
-	})
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
@@ -34,10 +27,10 @@ describe("mint", () => {
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
-				value: toBigNumber("10000"),
+				value: 10000,
 			}],
 			royalties: [],
 			lazyMint: false,
@@ -62,10 +55,10 @@ describe("mint", () => {
 		const action = await sdk.nft.mint({ collection })
 
 		const result = await action.submit({
-			uri: "uri",
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: sender,
-				value: toBigNumber("10000"),
+				value: 10000,
 			}],
 			royalties: [],
 			lazyMint: false,
@@ -79,5 +72,28 @@ describe("mint", () => {
 		} else {
 			throw new Error("Must be on chain")
 		}
+	})
+
+	test("test preprocess metadata", () => {
+		const response = sdk.nft.preprocessMeta({
+			blockchain: Blockchain.ETHEREUM,
+			name: "1",
+			description: "2",
+			image: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			animationUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
+			externalUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
+			attributes: [{
+				key: "eyes",
+				value: "1",
+			}],
+		}) as CommonTokenMetadataResponse
+
+		expect(response.name).toBe("1")
+		expect(response.description).toBe("2")
+		expect(response.image).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.animation_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
+		expect(response.external_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.attributes[0].key).toBe("eyes")
+		expect(response.attributes[0].value).toBe("1")
 	})
 })

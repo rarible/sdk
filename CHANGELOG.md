@@ -3,6 +3,134 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.10](https://github.com/rarible/sdk/compare/v0.7.9...v0.7.10) (2021-12-03)
+
+
+### Bug Fixes
+
+* correct addresses for canTransfer ([e0dfc02](https://github.com/rarible/sdk/commit/e0dfc02d50d62a779277d971463cf02ccbdac50f))
+* support new tezos signature with prefix ([1e3f62f](https://github.com/rarible/sdk/commit/1e3f62fb74044810bc3bf223294573733b0d2c71))
+
+
+
+
+
+## [0.7.9](https://github.com/rarible/sdk/compare/v0.7.8...v0.7.9) (2021-12-02)
+
+
+### Bug Fixes
+
+* remove _blank from the message md ([4467739](https://github.com/rarible/sdk/commit/4467739f0268db853c45b11c608e2189fbef54df))
+
+
+
+
+
+## [0.7.8](https://github.com/rarible/sdk/compare/v0.7.7...v0.7.8) (2021-12-02)
+
+
+### Bug Fixes
+
+* test ([4d6eb40](https://github.com/rarible/sdk/commit/4d6eb401f83e79471beaf8ddaa5bdbc767d7d915))
+
+
+
+
+
+## [0.7.7](https://github.com/rarible/sdk/compare/v0.7.6...v0.7.7) (2021-12-02)
+
+
+### Bug Fixes
+
+* open message in new tab ([b59e023](https://github.com/rarible/sdk/commit/b59e02370f0b071d183bd7e400f59cfafc1ad75c))
+
+
+
+
+
+## [0.7.6](https://github.com/rarible/sdk/compare/v0.7.5...v0.7.6) (2021-12-02)
+
+
+### Bug Fixes
+
+* preprocess metadata ([#43](https://github.com/rarible/sdk/issues/43)) ([485e8fb](https://github.com/rarible/sdk/commit/485e8fbdbd782410dcd8bc6b707fd84fd12c505e))
+
+
+
+
+
+## [0.7.5](https://github.com/rarible/sdk/compare/v0.7.4...v0.7.5) (2021-12-01)
+
+
+### Bug Fixes
+
+* correct message ([bfc0648](https://github.com/rarible/sdk/commit/bfc06484a35c310da5cb58d06cbe108a8becef13))
+
+
+
+
+
+## [0.7.4](https://github.com/rarible/sdk/compare/v0.7.3...v0.7.4) (2021-12-01)
+
+
+### Bug Fixes
+
+* canTransfer ([#44](https://github.com/rarible/sdk/issues/44)) ([7c8756c](https://github.com/rarible/sdk/commit/7c8756c4c7ab6353a69d5f1c9fcab7667f534f57))
+* upgrade tezos-sdk ([5ad5d1e](https://github.com/rarible/sdk/commit/5ad5d1e62712870eaa6de2fd8a9a36ef9cdf902a))
+
+
+
+
+
+## [0.7.3](https://github.com/rarible/sdk/compare/v0.7.2...v0.7.3) (2021-11-30)
+
+
+### Bug Fixes
+
+* format xtz balances ([#42](https://github.com/rarible/sdk/issues/42)) ([6c32d8c](https://github.com/rarible/sdk/commit/6c32d8c853d4f436d65ae495207f852020928d1e))
+
+
+
+
+
+## [0.7.2](https://github.com/rarible/sdk/compare/v0.7.1...v0.7.2) (2021-11-30)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.7.1](https://github.com/rarible/sdk/compare/v0.7.0...v0.7.1) (2021-11-29)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+# [0.7.0](https://github.com/rarible/sdk/compare/v0.6.7...v0.7.0) (2021-11-26)
+
+
+### Features
+
+* tezos gen token id ([44268ff](https://github.com/rarible/sdk/commit/44268ffb070de080d56fbf782ddf130f931a798d))
+
+
+
+
+
+## [0.6.7](https://github.com/rarible/sdk/compare/v0.6.6...v0.6.7) (2021-11-26)
+
+
+### Bug Fixes
+
+* upgrade tezos-sdk, fix TezosWallet.sign ([b786e94](https://github.com/rarible/sdk/commit/b786e94322f3a0fae73d42d7d2513144cb745ecf))
+
+
+
+
+
 ## [0.6.1](https://github.com/rarible/sdk/compare/v0.6.0...v0.6.1) (2021-11-08)
 
 

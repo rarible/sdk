@@ -1,11 +1,12 @@
 import type { Order } from "@rarible/api-client"
-import { toBigNumber, toOrderId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { OrderStatus, Platform } from "@rarible/api-client"
 
 export function createTestOrder(orderId: string): Order {
 	return {
 		id: toOrderId(`FLOW:${orderId}`),
 		fill: toBigNumber("0"),
-		platform: "RARIBLE",
+		platform: Platform.RARIBLE,
 		makeStock: toBigNumber("1"),
 		cancelled: true,
 		createdAt: "2021-10-26T18:21:01.612Z",
@@ -16,7 +17,7 @@ export function createTestOrder(orderId: string): Order {
 		make: {
 			type: {
 				"@type": "FLOW_NFT",
-				contract: toUnionAddress("FLOW:A.ebf4ae01d1284af8.RaribleNFT"),
+				contract: toContractAddress("FLOW:A.ebf4ae01d1284af8.RaribleNFT"),
 				tokenId: toBigNumber("617"),
 			},
 			value: toBigNumber("1"),
@@ -24,12 +25,13 @@ export function createTestOrder(orderId: string): Order {
 		take: {
 			type: {
 				"@type": "FLOW_FT",
-				contract: toUnionAddress("FLOW:A.7e60df042a9c0868.FlowToken"),
+				contract: toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken"),
 			},
 			value: toBigNumber("1.025"),
 		},
 		salt: "",
 		pending: [],
+		status: OrderStatus.ACTIVE,
 		data: {
 			"@type": "FLOW_RARIBLE_V1",
 			payouts: [],

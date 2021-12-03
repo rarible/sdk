@@ -18,7 +18,7 @@ describe("Flow transfer", () => {
 	const mint = new FlowMint(sdk, apis)
 	const transfer = new FlowTransfer(sdk)
 
-	test("Should transfer flow NFT item", async () => {
+	test.skip("Should transfer flow NFT item", async () => {
 		const itemId = await createTestItem(mint)
 		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		const prepare = await transfer.transfer({ itemId })

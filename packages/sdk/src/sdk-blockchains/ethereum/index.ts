@@ -4,6 +4,7 @@ import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -13,23 +14,27 @@ import { EthereumBid } from "./bid"
 import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
+import { EthereumDeploy } from "./deploy"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
 	network: EthereumNetwork,
-	params?: ConfigurationParameters
+	params?: ConfigurationParameters,
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
 	const sellService = new EthereumSell(sdk)
 	const bidService = new EthereumBid(sdk)
+	const mintService = new EthereumMint(sdk, apis)
 
 	return {
 		nft: {
 			transfer: new EthereumTransfer(sdk).transfer,
-			mint: new EthereumMint(sdk, apis).prepare,
+			mint: mintService.prepare,
 			burn: new EthereumBurn(sdk).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
+			deploy: new EthereumDeploy(sdk).deployToken,
+			preprocessMeta: mintService.preprocessMeta,
 		},
 		order: {
 			fill: new EthereumFill(sdk, wallet).fill,
@@ -41,6 +46,11 @@ export function createEthereumSdk(
 		},
 		balances: {
 			getBalance: new EthereumBalance(sdk).getBalance,
+		},
+		restriction: {
+			canTransfer(): Promise<CanTransferResult> {
+				return Promise.resolve({ success: true })
+			},
 		},
 	}
 }
