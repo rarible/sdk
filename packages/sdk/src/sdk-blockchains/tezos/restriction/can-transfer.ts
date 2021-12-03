@@ -1,6 +1,6 @@
 import type { ItemId, UnionAddress } from "@rarible/types"
-import { toUnionAddress } from "@rarible/types"
 import type { CanTransferResult } from "../../../types/nft/restriction/domain"
+import { convertUnionAddress } from "../common"
 
 const url = "https://hangzhounet.smartpy.io/chains/main/blocks/head/helpers/scripts/run_view"
 
@@ -22,8 +22,8 @@ export async function canTransfer(
 				{
 					"prim": "Pair",
 					"args": [
-						{ "string": toUnionAddress(from) },
-						{ "string": toUnionAddress(to) },
+						{ "string": convertUnionAddress(from) },
+						{ "string": convertUnionAddress(to) },
 					],
 				},
 			],
