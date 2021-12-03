@@ -10380,6 +10380,11 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
+kukai-embed@^0.7.0-beta.0:
+  version "0.7.0-beta.0"
+  resolved "https://registry.yarnpkg.com/kukai-embed/-/kukai-embed-0.7.0-beta.0.tgz#37fb28025c43a6eecf4974d5a88079d5b23ebf0c"
+  integrity sha512-OyGarxnRMNlLDB0q4qe4OpeCFd6M2M0rvcY4Ovn5efnBwKC2zhNKo+vwP9tAoyJPq6c0QpDNRpS85cR+I3jjAw==
+
 latest-version@^5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/latest-version/-/latest-version-5.1.0.tgz#119dfe908fe38d15dfa43ecd13fa12ec8832face"
@@ -14328,10 +14333,10 @@ tezos-api-client@~0.0.10:
   resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.10.tgz#456e47a81494e633a6d3cc54bf229aa146fac51e"
   integrity sha512-bf2pZLCAZPirsqWJYv0i0GTdQuas5SADZKuPFw4/TOzO4Hf78IEY5P/1DjR1SNLb5sx5WFFTP1Op6TdxN5ywmg==
 
-tezos-sdk-module@~0.0.28:
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.28.tgz#ee0b0491468f52855ef9a56c317ef64f099f2cf4"
-  integrity sha512-wLcMOtF/f5llXa/mqjH4+PcjdOQyvCphKqr8PR8Wykk6X77qDhj/1KcUy0U+S61zOEKLYsm6Papv8yn0BqSwlA==
+tezos-sdk-module@~0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.29.tgz#ee1cd78e621a919ae7c46fa56343421d9e580f87"
+  integrity sha512-LK9TVr2qDZ6G9CZldqMfU1LAqt4YxEmkXsR3WHinKQUGp8cmU49FTPyFuv3YVrxjopbog/XnbT5JMoI7uWRFDA==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
@@ -14346,6 +14351,7 @@ tezos-sdk-module@~0.0.28:
     get-random-values "^1.2.2"
     json-formatter-js "^2.3.4"
     keccak "^3.0.2"
+    kukai-embed "^0.7.0-beta.0"
     node-fetch "2.6.1"
     text-encoder "^0.0.4"
     vue "^2.6.14"

@@ -49,10 +49,18 @@ describe("sell test", () => {
 		})
 
 		await awaitForOrder(sellerSdk, orderId)
+		const updateAction = await sellerSdk.order.sellUpdate({
+			orderId,
+		})
+		const createdOrderId = await updateAction.submit({ price: "0.01" })
+
+		const updatedOrder = await sellerSdk.apis.order.getOrderById({
+			id: createdOrderId,
+		})
+		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 1500000)
 
-	test("sell MT test", async () => {
-		/*
+	test.skip("sell MT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
@@ -84,20 +92,17 @@ describe("sell test", () => {
 			}],
 		})
 
-		const oldOrder = await awaitForOrder(sellerSdk, orderId)
+		await awaitForOrder(sellerSdk, orderId)
 
-		// console.log("oldOrder", JSON.stringify(oldOrder, null, "  "))
-
-     */
 		const updateAction = await sellerSdk.order.sellUpdate({
-			// orderId
-			orderId: toOrderId("TEZOS:d2963dc6bcea55b406ec27a3cea5523288d31755d97f80765b1846625395f954"),
+			orderId: toOrderId("TEZOS:f4d3fc354e8aa252a7cab8dcb620273d41ab782a0040516e391e500bf56d10ca"),
 		})
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
 
-		const updatedOrder = await awaitForOrder(sellerSdk, createdOrderId)
-		console.log("updatedOrder", JSON.stringify(updatedOrder, null, "  "))
-		console.log("orderid", createdOrderId)
+		const updatedOrder = await sellerSdk.apis.order.getOrderById({
+			id: createdOrderId,
+		})
+		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 2900000)
 
 })

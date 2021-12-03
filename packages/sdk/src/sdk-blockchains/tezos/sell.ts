@@ -3,10 +3,9 @@ import { sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh, upsert_order } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
-import { toBigNumber, toOrderId } from "@rarible/types"
+import { toOrderId } from "@rarible/types"
 import type { TezosProvider, FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
-import * as TezosApiClient from "tezos-api-client"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -21,7 +20,7 @@ import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertContractAddress,
-	convertOrderPayout, convertOrderToOrderForm, covertToLibAsset,
+	convertOrderPayout, covertToLibAsset,
 	getMakerPublicKey,
 	getPayouts,
 	getRequiredProvider,
@@ -117,7 +116,6 @@ export class TezosSell {
 		if (!order) {
 			throw new Error("Order has not been found")
 		}
-		console.log("update order", JSON.stringify(order, null, "  "))
 		const updateAction = Action.create({
 			id: "send-tx" as const,
 			run: async (updateRequest: OrderUpdateRequest) => {
@@ -139,7 +137,6 @@ export class TezosSell {
 					signature: order.signature,
 					data: {
 						data_type: "V1",
-						// data_type: "RARIBLE_V2_DATA_V1" as any,
 						payouts: order.data.payouts?.map(p => ({
 							account: p.account,
 							value: new BigNumber(p.value),
@@ -150,8 +147,8 @@ export class TezosSell {
 						})) || [],
 					},
 				}
-				const orderId = upsert_order(provider, orderForm, true)
-				return toOrderId(`TEZOS:${orderId}`)
+				const updatedOrder = await upsert_order(provider, orderForm, true)
+				return toOrderId(`TEZOS:${updatedOrder.hash}`)
 			},
 		})
 		return {
