@@ -14,9 +14,9 @@ describe("canTransfer", () => {
 	})
 
 	test("returns true for whitelisted addresses", async () => {
-		const from = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")
+		const from = toUnionAddress("TEZOS:tz1NRh1vTn3b38m7Gg2qP81dqb5Kr2BAjwJV")
 		const to = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")
-		const result = await canTransfer(toItemId("TEZOS:KT1S3goQNhyuZgznN952Vwfqeo96YV3U4pwf:100005"), from, to)
+		const result = await canTransfer(toItemId("TEZOS:KT1S3goQNhyuZgznN952Vwfqeo96YV3U4pwf:100002"), from, to)
 		expect(result).toStrictEqual({
 			success: true,
 		})
