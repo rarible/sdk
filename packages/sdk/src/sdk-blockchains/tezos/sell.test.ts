@@ -1,4 +1,5 @@
 import { toContractAddress, toUnionAddress } from "@rarible/types"
+import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitForOrder } from "./test/await-for-order"
@@ -48,6 +49,15 @@ describe("sell test", () => {
 		})
 
 		await awaitForOrder(sellerSdk, orderId)
+		const updateAction = await sellerSdk.order.sellUpdate({
+			orderId,
+		})
+		const createdOrderId = await updateAction.submit({ price: "0.01" })
+
+		const updatedOrder = await sellerSdk.apis.order.getOrderById({
+			id: createdOrderId,
+		})
+		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 1500000)
 
 	test.skip("sell MT test", async () => {
@@ -83,6 +93,14 @@ describe("sell test", () => {
 		})
 
 		await awaitForOrder(sellerSdk, orderId)
+
+		const updateAction = await sellerSdk.order.sellUpdate({ orderId })
+		const createdOrderId = await updateAction.submit({ price: "0.01" })
+
+		const updatedOrder = await sellerSdk.apis.order.getOrderById({
+			id: createdOrderId,
+		})
+		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 2900000)
 
 })

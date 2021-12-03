@@ -1,27 +1,32 @@
 import type { SellRequest as TezosSellRequest } from "tezos-sdk-module/dist/order/sell"
 import { sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
-import { pk_to_pkh } from "tezos-sdk-module"
+import { pk_to_pkh, upsert_order } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
 import { toOrderId } from "@rarible/types"
 import type { TezosProvider, FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
+import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import { retry } from "../../common/retry"
+import type {
+	OrderUpdateRequest,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
+} from "../../types/order/common"
 import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertContractAddress,
-	convertOrderPayout,
+	convertOrderPayout, covertToLibAsset,
 	getMakerPublicKey,
 	getPayouts,
 	getRequiredProvider,
 	getSupportedCurrencies,
-	getTezosItemData,
+	getTezosItemData, getTezosOrderId,
 } from "./common"
-
 
 export class TezosSell {
 	constructor(
@@ -29,6 +34,7 @@ export class TezosSell {
 		private apis: ITezosAPI,
 	) {
 		this.sell = this.sell.bind(this)
+		this.update = this.update.bind(this)
 	}
 
 	parseTakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
@@ -103,4 +109,54 @@ export class TezosSell {
 		}
 	}
 
+	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+		const orderId = getTezosOrderId(request.orderId)
+
+		const order = await this.apis.order.getOrderByHash({ hash: orderId })
+		if (!order) {
+			throw new Error("Order has not been found")
+		}
+		const updateAction = Action.create({
+			id: "send-tx" as const,
+			run: async (updateRequest: OrderUpdateRequest) => {
+				const provider = getRequiredProvider(this.provider)
+
+				const orderForm: OrderForm = {
+					type: "RARIBLE_V2",
+					maker: order.maker,
+					maker_edpk: order.makerEdpk,
+					taker_edpk: order.takerEdpk,
+					make: covertToLibAsset(order.make),
+					take: {
+						...covertToLibAsset(order.take),
+						value: new BigNumber(updateRequest.price).multipliedBy(order.make.value),
+					},
+					salt: order.salt,
+					start: order.start,
+					end: order.end,
+					signature: order.signature,
+					data: {
+						data_type: "V1",
+						payouts: order.data.payouts?.map(p => ({
+							account: p.account,
+							value: new BigNumber(p.value),
+						})) || [],
+						origin_fees: order.data.originFees?.map(p => ({
+							account: p.account,
+							value: new BigNumber(p.value),
+						})) || [],
+					},
+				}
+				const updatedOrder = await upsert_order(provider, orderForm, true)
+				return toOrderId(`TEZOS:${updatedOrder.hash}`)
+			},
+		})
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: parseInt(this.provider.config.fees.toString()),
+			submit: updateAction,
+		}
+	}
 }

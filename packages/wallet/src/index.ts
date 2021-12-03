@@ -72,7 +72,7 @@ export class TezosWallet implements AbstractWallet {
 		if (publicKey === undefined) {
 			throw new Error("Public key undefined")
 		}
-		const result = await sign(this.provider, message)
+		const result = await sign(this.provider, message, "message")
 		return {
 			signature: result.signature,
 			publicKey: result.edpk,

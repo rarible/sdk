@@ -19,6 +19,7 @@ export interface IRaribleSdk {
 	order: IOrderSdk
 	balances: IBalanceSdk
 	restriction: IRestrictionSdk
+
 }
 
 export interface IApisSdk {

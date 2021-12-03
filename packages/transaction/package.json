@@ -18,7 +18,7 @@
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "~0.0.9",
     "@rarible/ethereum-provider": "~0.12.1",
-    "tezos-sdk-module": "~0.0.28"
+    "tezos-sdk-module": "~0.0.29"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
