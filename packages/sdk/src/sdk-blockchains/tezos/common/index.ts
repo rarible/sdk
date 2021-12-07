@@ -118,7 +118,7 @@ export function getMaybeTezosProvider(
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
 					exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
-					fees: new BigNumber(300),
+					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
 				},

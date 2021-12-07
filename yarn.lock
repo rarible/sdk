@@ -3049,10 +3049,10 @@
     elliptic "^6.5.4"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@~0.12.4":
-  version "0.12.4"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.4.tgz#46c2e6b56507c3ca25d6c74a0029de34572f7f5e"
-  integrity sha512-HIKCT5BFKJF7lD1fBRBD0N+sV6qFXg4AckAjSe/cKo84WWaeLzWyeLNPpNlgYXzvEtnS+u9risLHsQozCyiq4g==
+"@rarible/protocol-ethereum-sdk@~0.12.15":
+  version "0.12.15"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.15.tgz#bf5e74d4b894bc74b3af7094e2f3644192dcf3c2"
+  integrity sha512-04sg2bjO2kn0srjAuwtwzw7G4BHsgd4y2I7TaftkXTKwSiEPEaSIWtxWawPmLJr9+ZwK9YIqUEe6oxe4XFSqCA==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
