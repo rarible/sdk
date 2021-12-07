@@ -17,7 +17,6 @@ import {
 	NftOwnershipControllerApi,
 	OrderControllerApi,
 } from "tezos-api-client/build"
-import type { Config } from "tezos-sdk-module"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ContractAddress, OrderId } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
@@ -25,6 +24,7 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
+import type { Config } from "tezos-sdk-module/dist/config"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { TezosNetwork } from "../domain"
@@ -118,6 +118,7 @@ export function getMaybeTezosProvider(
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
 					exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
+					exchange_proxy: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
