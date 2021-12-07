@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.17](https://github.com/rarible/sdk/compare/v0.7.16...v0.7.17) (2021-12-07)
+
+
+### Bug Fixes
+
+* upgrade libs (ethereum sdk, tezos sdk) ([2a676aa](https://github.com/rarible/sdk/commit/2a676aa50cb35a0d48066e5638d806a5506e9c86))
+
+
+
+
+
 ## [0.7.11](https://github.com/rarible/sdk/compare/v0.7.10...v0.7.11) (2021-12-03)
 
 
