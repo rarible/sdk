@@ -47,6 +47,7 @@ export class TezosSell {
 				return {
 					asset_class: "FT",
 					contract: convertContractAddress(type.contract),
+					token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
 				}
 			default: {
 				throw new Error("Unsupported take asset type")

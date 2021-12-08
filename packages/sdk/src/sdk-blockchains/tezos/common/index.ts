@@ -246,6 +246,7 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 			return {
 				asset_class: "FT",
 				contract: convertContractAddress(type.contract),
+				token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
 			}
 		}
 		case "TEZOS_NFT": {
