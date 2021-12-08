@@ -30,7 +30,7 @@ describe("test tezos mint and sell", () => {
 		})
 	})
 
-	test("mint and sell mt", async () => {
+	test.skip("mint and sell mt", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
