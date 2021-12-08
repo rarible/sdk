@@ -16,7 +16,7 @@ describe("sell test", () => {
 	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
 
 
-	test("sell NFT test", async () => {
+	test.skip("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
@@ -60,7 +60,7 @@ describe("sell test", () => {
 		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 1500000)
 
-	test("sell MT test", async () => {
+	test.skip("sell MT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
