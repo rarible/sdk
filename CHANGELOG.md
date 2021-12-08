@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.19](https://github.com/rarible/sdk/compare/v0.7.18...v0.7.19) (2021-12-08)
+
+
+### Bug Fixes
+
+* tezos canTransfer fix (change url node) ([bbcf563](https://github.com/rarible/sdk/commit/bbcf56314f0e02b51732af8f0a45754bac9d3994))
+
+
+
+
+
 ## [0.7.18](https://github.com/rarible/sdk/compare/v0.7.17...v0.7.18) (2021-12-08)
 
 
