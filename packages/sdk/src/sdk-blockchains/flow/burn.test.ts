@@ -11,7 +11,7 @@ import { FlowBurn } from "./burn"
 describe("Flow burn", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
+	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
 	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis)
 	const burn = new FlowBurn(sdk)
@@ -23,7 +23,7 @@ describe("Flow burn", () => {
 		const prepare = await burn.burn({ itemId })
 		const tx = await prepare.submit()
 		if (tx) {
-		  expect(tx.transaction.status).toEqual(4)
+			expect(tx.transaction.status).toEqual(4)
 		}
 	})
 })

@@ -17,9 +17,9 @@ export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
 	apis: IApisSdk,
 	network: FlowNetwork,
-	auth?: AuthWithPrivateKey
+	auth?: AuthWithPrivateKey,
 ): IRaribleInternalSdk {
-	const sdk = createFlowSdkInstance(wallet?.fcl, network, auth)
+	const sdk = createFlowSdkInstance(wallet?.fcl, network, {}, auth)
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis)
 

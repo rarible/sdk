@@ -8,6 +8,7 @@ import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
+import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
 export class FlowBuy {
 	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
@@ -44,14 +45,14 @@ export class FlowBuy {
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
-				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				run: (buyRequest: FillRequest) => {
 					const currency = this.getFlowCurrency(order)
 					const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
 					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
-					// @todo leave string when support it on flow-sdk transactions
-					const orderId = parseInt(converters.parseOrderId(order.id))
-					return this.sdk.order.buy(collectionId, currency, orderId, owner)
+					const orderId = converters.parseOrderId(order.id)
+					return this.sdk.order.fill(
+						collectionId, currency, orderId, owner, prepareFlowRoyalties(buyRequest.originFees),
+					)
 				},
 			})
 			.after(tx => new BlockchainFlowTransaction(tx))

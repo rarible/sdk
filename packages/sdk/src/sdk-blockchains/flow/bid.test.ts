@@ -1,34 +1,45 @@
 import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk } from "@rarible/flow-sdk"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toOrderId } from "@rarible/types"
 import { retry } from "../../common/retry"
 import { createApisSdk } from "../../common/apis"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { createTestItem } from "./test/create-test-item"
 import { FlowMint } from "./mint"
-import { sellItem } from "./test/sell-item"
-import { FlowSell } from "./sell"
+import { testFlowToken } from "./test/common"
+import { FlowBid } from "./bid"
 
-describe("Flow sell", () => {
+describe("Flow bid", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
 	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis)
-	const sell = new FlowSell(sdk, apis)
+	const bid = new FlowBid(sdk)
 
-	test.skip("Should sell flow NFT item and update order", async () => {
+	test.skip("Should place a bid on flow NFT item and update bid", async () => {
 		const itemId = await createTestItem(mint)
-		const orderId = await sellItem(sell, itemId, "0.1")
-		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
+
+		const bidResponse = await bid.bid({ itemId })
+		const orderId = await bidResponse.submit({
+			amount: 1,
+			price: toBigNumber("0.1"),
+			currency: {
+				"@type": "FLOW_FT",
+				contract: testFlowToken,
+			},
+		})
+
+		const order = await retry(10, 4000, () => sdk.apis.order.getOrderByOrderId({ orderId: toOrderId(orderId.split(":")[1]) }))
 		expect(order.take.value.toString()).toEqual("0.1")
-		const prepare = await sell.update({ orderId })
-		const updatedOrderId = await prepare.submit({
+
+		const prepare = await bid.update({ orderId })
+		const updatedBidId = await prepare.submit({
 			price: toBigNumber("0.2"),
 		})
 		const updatedOrder = await retry(10, 4000, async () => {
-			const order = await apis.order.getOrderById({ id: updatedOrderId })
+			const order = await sdk.apis.order.getOrderByOrderId({ orderId: updatedBidId.split(":")[1] })
 			if (order.take.value.toString() !== "0.2") {
 				throw new Error("Order is not updated yet")
 			}

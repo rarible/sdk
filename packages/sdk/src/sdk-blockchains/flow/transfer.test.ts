@@ -2,7 +2,7 @@ import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk } from "@rarible/flow-sdk"
 import { toUnionAddress } from "@rarible/types"
-import { FLOW_TEST_ACCOUNT_1 } from "@rarible/flow-test-common"
+import { FLOW_TESTNET_ACCOUNT_1 } from "@rarible/flow-test-common"
 import { createApisSdk } from "../../common/apis"
 import { retry } from "../../common/retry"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
@@ -13,7 +13,7 @@ import { FlowTransfer } from "./transfer"
 describe("Flow transfer", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
+	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
 	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis)
 	const transfer = new FlowTransfer(sdk)
@@ -22,7 +22,7 @@ describe("Flow transfer", () => {
 		const itemId = await createTestItem(mint)
 		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		const prepare = await transfer.transfer({ itemId })
-		const to = toUnionAddress(`FLOW:${FLOW_TEST_ACCOUNT_1.address}`)
+		const to = toUnionAddress(`FLOW:${FLOW_TESTNET_ACCOUNT_1.address}`)
 		const tx = await prepare.submit({ to })
 		expect(tx.transaction.status).toEqual(4)
 	})

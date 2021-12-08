@@ -30,7 +30,7 @@ export class FlowCancel {
 				id: request.orderId,
 			})
 			const collectionId = getFlowCollection(this.getFlowContract(order))
-			const tx = await this.sdk.order.cancelOrder(collectionId, parseInt(parsed))
+			const tx = await this.sdk.order.cancelOrder(collectionId, parsed)
 			return new BlockchainFlowTransaction(tx)
 		},
 	})

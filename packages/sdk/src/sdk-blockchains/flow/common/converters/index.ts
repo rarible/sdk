@@ -1,9 +1,8 @@
-import type { FlowAddress, FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
-import { toFlowAddress, toFlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
 import type { FlowCurrency } from "@rarible/flow-sdk/build/types"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
+import type { ContractAddress, FlowAddress, FlowContractAddress, UnionAddress } from "@rarible/types"
+import { toFlowAddress, toFlowContractAddress } from "@rarible/types"
 import type { FlowItemId } from "../../../../common/domain"
 
 const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
@@ -67,9 +66,9 @@ const FLOW_ORDER_ID_REGEXP = /^FLOW:[0-9]{1,}/
  *
  * @param id - "FLOW:{any count of digits}"
  */
-export function parseOrderId(id: string): string {
+export function parseOrderId(id: string): number {
 	if (FLOW_ORDER_ID_REGEXP.test(id)) {
-		return id.split(":")[1]
+		return parseInt(id.split(":")[1])
 	}
 	throw new Error("Invalid order ID")
 }

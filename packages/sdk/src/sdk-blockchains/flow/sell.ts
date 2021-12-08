@@ -1,9 +1,10 @@
 import { toOrderId } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import { toBn } from "@rarible/utils/build/bn"
 import type { Order, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
+import { toBigNumber } from "@rarible/types/build/big-number"
+import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -16,7 +17,7 @@ export class FlowSell {
 		type: "NATIVE",
 	}]
 
-	constructor(private readonly  sdk: FlowSdk, private readonly apis: IApisSdk) {
+	constructor(private readonly sdk: FlowSdk, private readonly apis: IApisSdk) {
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
 	}
@@ -33,26 +34,17 @@ export class FlowSell {
 				if (sellRequest.currency["@type"] === "FLOW_FT") {
 					const currency = getFungibleTokenName(sellRequest.currency.contract)
 					const { itemId } = parseUnionItemId(sellRequest.itemId)
-					return this.sdk.order.sell(
-						contract,
+					return this.sdk.order.sell({
+						collection: contract,
 						currency,
 						// @todo leave string when support it on flow-sdk transactions
-						parseInt(itemId),
-						toBn(sellRequest.price).decimalPlaces(8).toString(),
-					)
+						itemId: toFlowItemId(itemId),
+						sellItemPrice: toBigNumber(sellRequest.price.toString()),
+					})
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
-		}).after((tx) => {
-			const orderId = tx.events.find(e => {
-				const eventType = e.type.split(".")[3]
-				return eventType === "OrderAvailable"
-			})
-			if (orderId) {
-				return toOrderId(`FLOW:${orderId.data.orderId}`)
-			}
-			throw new Error("Creation order event not fount in transaction result")
-		})
+		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
 
 
 		return {
@@ -77,28 +69,19 @@ export class FlowSell {
 				if (order.take.type["@type"] === "FLOW_FT") {
 					const currency = getFungibleTokenName(order.take.type.contract)
 					if (order.make.type["@type"] === "FLOW_NFT") {
-						return await this.sdk.order.updateOrder(
-							getFlowCollection(order.make.type.contract),
+						return await this.sdk.order.updateOrder({
+							collection: getFlowCollection(order.make.type.contract),
 							currency,
 							// @todo leave string when support it on flow-sdk transactions
-							parseInt(orderId),
-							toBn(sellRequest.price).decimalPlaces(8).toString(),
-						)
+							order: parseInt(orderId),
+							sellItemPrice: toBigNumber(sellRequest.price.toString()),
+						})
 					}
 					throw new Error(`Unsupported make asset: ${order.make.type["@type"]}`)
 				}
 				throw new Error(`Unsupported take asset: ${order.take.type["@type"]}`)
 			},
-		}).after((tx) => {
-			const orderId = tx.events.find(e => {
-				const eventType = e.type.split(".")[3]
-				return eventType === "OrderAvailable"
-			})
-			if (orderId) {
-				return toOrderId(`FLOW:${orderId.data.orderId}`)
-			}
-			throw new Error("Creation order event not fount in transaction result")
-		})
+		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
 
 
 		return {
