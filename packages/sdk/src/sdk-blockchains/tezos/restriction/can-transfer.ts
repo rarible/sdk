@@ -2,7 +2,7 @@ import type { ItemId, UnionAddress } from "@rarible/types"
 import type { CanTransferResult } from "../../../types/nft/restriction/domain"
 import { convertUnionAddress } from "../common"
 
-const url = "https://hangzhounet.smartpy.io/chains/main/blocks/head/helpers/scripts/run_view"
+const url = "https://hangzhounet.api.tez.ie/chains/main/blocks/head/helpers/scripts/run_view"
 
 export async function canTransfer(
 	itemId: ItemId, from: UnionAddress, to: UnionAddress,
