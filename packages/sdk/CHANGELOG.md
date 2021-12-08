@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.20](https://github.com/rarible/sdk/compare/v0.7.19...v0.7.20) (2021-12-08)
+
+
+### Bug Fixes
+
+* downgrade tezos-sdk ([fa55de3](https://github.com/rarible/sdk/commit/fa55de3402c95649b49c5ecd9c5bdf076d74eedb))
+
+
+### Features
+
+* tezos FT update ([7908ef9](https://github.com/rarible/sdk/commit/7908ef9d74442d32e78a21527810b4c07f567cbf))
+
+
+
+
+
 ## [0.7.19](https://github.com/rarible/sdk/compare/v0.7.18...v0.7.19) (2021-12-08)
 
 
