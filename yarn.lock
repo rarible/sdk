@@ -3359,6 +3359,13 @@
   dependencies:
     nanoid "^3.1.25"
 
+"@temple-wallet/dapp@^6.0.1":
+  version "6.0.1"
+  resolved "https://registry.yarnpkg.com/@temple-wallet/dapp/-/dapp-6.0.1.tgz#a9e1119e953cb03e46ef9a6eda4ef4662f6e6e2d"
+  integrity sha512-8eGsutHv2HMyRGCGtMmU61fDehwVniOZo7RbrK909jCOMxo1aEVuUAS0xRk8HJX0SrMyRAeSftYK0YM6pHu19Q==
+  dependencies:
+    nanoid "^3.1.30"
+
 "@tootallnate/once@1":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@tootallnate/once/-/once-1.1.2.tgz#ccb91445360179a04e7fe6aff78c00ffc1eeaf82"
@@ -9371,7 +9378,7 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-kukai-embed@^0.7.0-beta.0:
+kukai-embed@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/kukai-embed/-/kukai-embed-0.7.0.tgz#f279838686d6bb411456eabcee3de87d1e39f203"
   integrity sha512-h4Ir81/fAwT/e9ej09pJ3mMlaVC4KGmZYIiRWs3Fdx/PjCMdTSVFHJYl8VTDheyIGcB9/4+GT1qmtag1xCxKLA==
@@ -10254,7 +10261,7 @@ nano-json-stream-parser@^0.1.2:
   resolved "https://registry.yarnpkg.com/nano-json-stream-parser/-/nano-json-stream-parser-0.1.2.tgz#0cc8f6d0e2b622b479c40d499c46d64b755c6f5f"
   integrity sha1-DMj20OK2IrR5xA1JnEbWS3Vcb18=
 
-nanoid@^3.1.25:
+nanoid@^3.1.25, nanoid@^3.1.30:
   version "3.1.30"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.30.tgz#63f93cc548d2a113dc5dfbc63bfa09e2b9b64362"
   integrity sha512-zJpuPDwOv8D2zq2WRoMe1HsfZthVewpel9CAvTfc/2mBD1uUT/agc5f7GHGWXlYkFvi1mVxe4IjvP2HNrop7nQ==
@@ -12954,20 +12961,21 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-api-client@~0.0.12:
-  version "0.0.12"
-  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.12.tgz#3336d7b8e0394c0bf54534a52a9fdda0b99e94a4"
-  integrity sha512-VTYig2J7IYgl9MgKzezMEllHvALmta3O6TgpPMDBQZbMNb0qWVG+mwnptTT9xm1nAmlC7B89qw3wWOVG71AoAA==
+tezos-api-client@~0.0.13:
+  version "0.0.13"
+  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.13.tgz#7f4011a4e7657010d6e11b7b62d6373899cec22a"
+  integrity sha512-+iYRVWSyoqDclYQufGx1rKiAdGRvXYKX1IB/sMBi5LbgBS0QfX+KYinqCXR7hmqhvzFuouxPob8jYQfGHekLOw==
 
-tezos-sdk-module@0.0.30:
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.30.tgz#beda1b737de15c93791d72f387c4d7093de9e853"
-  integrity sha512-YGeAiwoXkQrAXzzsFwhNPFhI2oGQBj5wdN9aeK8sDBBaHIo6UGYr8sVV8KnpoUysz0mei/rzsdFt5orVBrPTrA==
+tezos-sdk-module@0.0.33, tezos-sdk-module@~0.0.33:
+  version "0.0.33"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.33.tgz#efc8925278407244f3dc68dc7bac6d94561fb473"
+  integrity sha512-2zD39YkoIKP6NoMi+e7isvHKQQ5TJp2hm/DZ5IlCr5fzMKMCupsMZliEAUvkkXY/FOf3dF+mNy6j28/gCG3zHQ==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
     "@taquito/signer" "^11.0.1"
     "@taquito/taquito" "^11.0.1"
+    "@temple-wallet/dapp" "^6.0.1"
     "@types/bs58check" "^2.1.0"
     "@types/elliptic" "^6.4.13"
     "@types/keccak" "^3.0.1"
@@ -12977,7 +12985,7 @@ tezos-sdk-module@0.0.30:
     get-random-values "^1.2.2"
     json-formatter-js "^2.3.4"
     keccak "^3.0.2"
-    kukai-embed "^0.7.0-beta.0"
+    kukai-embed "^0.7.0"
     node-fetch "2.6.1"
     text-encoder "^0.0.4"
     vue "^2.6.14"
