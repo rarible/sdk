@@ -24,7 +24,7 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import type { Config } from "tezos-sdk-module/dist/config"
+import type { Config } from "tezos-sdk-module"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { TezosNetwork } from "../domain"
@@ -117,9 +117,9 @@ export function getMaybeTezosProvider(
 				tezos: provider,
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
-					exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
-					exchange_proxy: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
-					fees: new BigNumber(0),
+					exchange: "KT1DiqMxwkRhtcbAqJeajYcy75VBzxcnsSn8",
+					transfer_proxy: "KT1Qc2Y55SqpQ7WtRAN9q6A82WYEpzYZjdzW",
+					fees: new BigNumber(300),
 					nft_public: "",
 					mt_public: "",
 				},
@@ -246,6 +246,7 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 			return {
 				asset_class: "FT",
 				contract: convertContractAddress(type.contract),
+				token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
 			}
 		}
 		case "TEZOS_NFT": {

@@ -31,13 +31,14 @@ describe("fill test", () => {
 
 	test.skip("fill MT test", async () => {
 		const buyerAddress = await wallet.provider.address()
+		console.log(buyerAddress)
 
 		const fillAction = await buyerSdk.order.fill({
-			orderId: toOrderId("TEZOS:c25b2f149f19241e158703c5f75254bd53e7039a4363382db0c312ef857a6ea6"),
+			orderId: toOrderId("TEZOS:1466064e295a6644ec348f5eea7da3b40f7785f2dd53c18e8e967a83d886f2e1"),
 		})
 
 		const tx = await fillAction.submit({
-			amount: 2,
+			amount: 1,
 			infiniteApproval: true,
 		})
 		await tx.wait()
