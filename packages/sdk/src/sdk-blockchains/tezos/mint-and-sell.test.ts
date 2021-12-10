@@ -1,6 +1,5 @@
 import { toContractAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import { deploy_nft_public } from "tezos-sdk-module"
 import { createRaribleSdk } from "../../index"
 import { createTestWallet } from "./test/test-wallet"
 
