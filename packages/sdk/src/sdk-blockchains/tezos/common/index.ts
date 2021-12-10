@@ -117,8 +117,8 @@ export function getMaybeTezosProvider(
 				tezos: provider,
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
-					exchange: "KT1DiqMxwkRhtcbAqJeajYcy75VBzxcnsSn8",
-					transfer_proxy: "KT1Qc2Y55SqpQ7WtRAN9q6A82WYEpzYZjdzW",
+					exchange: "KT1ULGjK8FtaJ9QqCgJVN14B6tY76Ykaz6M8",
+					transfer_proxy: "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
 					fees: new BigNumber(300),
 					nft_public: "",
 					mt_public: "",
