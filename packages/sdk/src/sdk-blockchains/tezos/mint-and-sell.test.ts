@@ -28,7 +28,6 @@ describe("test tezos mint and sell", () => {
 			supply: 1,
 			lazyMint: false,
 		})
-		console.log("orderId", orderId)
 	})
 
 	test.skip("mint and sell mt", async () => {
