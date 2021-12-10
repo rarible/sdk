@@ -28,8 +28,8 @@ export async function canTransfer(
 				},
 			],
 		},
-		"payer": "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
-		"source": "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
+		"payer": "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
+		"source": "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
 		"unparsing_mode": "Readable",
 	}
 	const response = await window.fetch(url, {
