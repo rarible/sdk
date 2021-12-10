@@ -9,10 +9,10 @@ describe("fill test", () => {
 	)
 	const buyerSdk = createRaribleSdk(wallet, "dev")
 
-	test.skip("fill NFT test", async () => {
+	test("fill NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 		const fillAction = await buyerSdk.order.fill({
-			orderId: toOrderId("TEZOS:5f3465e176339b6932669c87cd137caad6658e555c5a108318b4f0453045b777"),
+			orderId: toOrderId("TEZOS:031a378342384a8c79b83e540c2ff90628239d303bdb5afee980a24c1406ded3"),
 		})
 
 		const tx = await fillAction.submit({
@@ -23,7 +23,7 @@ describe("fill test", () => {
 
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb:13"),
+			toItemId("TEZOS:KT1EWB3JaMmZ5BmNqHVBjB4re62FLihp4G6C:7"),
 			buyerAddress
 		)
 		expect(ownership.value).toBe("1")
