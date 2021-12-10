@@ -21,14 +21,13 @@ describe("test tezos mint and sell", () => {
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 
-		const orderId = await mintAndSellAction.submit({
+		await mintAndSellAction.submit({
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
 			lazyMint: false,
 		})
-		console.log("orderId", orderId)
 	})
 
 	test.skip("mint and sell mt", async () => {
