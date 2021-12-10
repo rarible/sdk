@@ -36,6 +36,8 @@ export function createFlowSdk(
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
 			fill: new FlowBuy(sdk, apis).buy,
+			buy: new FlowBuy(sdk, apis).buy,
+			acceptBid: notImplemented,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
 			cancel: new FlowCancel(sdk, apis).cancel,

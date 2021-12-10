@@ -38,6 +38,8 @@ export function createEthereumSdk(
 		},
 		order: {
 			fill: new EthereumFill(sdk, wallet).fill,
+			buy: new EthereumFill(sdk, wallet).buy,
+			acceptBid: new EthereumFill(sdk, wallet).acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
 			bid: bidService.bid,

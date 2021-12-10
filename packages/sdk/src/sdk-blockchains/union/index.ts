@@ -66,8 +66,20 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(request.orderId)].bidUpdate(request)
 	}
 
+	/**
+	 * @deprecated
+	 * @param request
+	 */
 	fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.instances[extractBlockchain(getOrderId(request))].fill(request)
+	}
+
+	buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.instances[extractBlockchain(getOrderId(request))].buy(request)
+	}
+
+	acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.instances[extractBlockchain(getOrderId(request))].acceptBid(request)
 	}
 
 	sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
