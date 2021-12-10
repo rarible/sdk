@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.24](https://github.com/rarible/sdk/compare/v0.7.23...v0.7.24) (2021-12-10)
+
+
+### Features
+
+* tezos FT balance + tests ([3dff67d](https://github.com/rarible/sdk/commit/3dff67d77c18f541b472e6f4f022085aa3a22a2d))
+
+
+
+
+
 ## [0.7.23](https://github.com/rarible/sdk/compare/v0.7.22...v0.7.23) (2021-12-10)
 
 

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.24](https://github.com/rarible/sdk/compare/v0.7.23...v0.7.24) (2021-12-10)
+
+
+### Bug Fixes
+
+* test ([1433571](https://github.com/rarible/sdk/commit/143357132fca66a6279458add22aa550fd03a98c))
+* tezos exchange + proxy address ([d3279aa](https://github.com/rarible/sdk/commit/d3279aaa5c7c9dfa7bb176fea43da685b80b74ec))
+
+
+### Features
+
+* tezos FT balance + tests ([3dff67d](https://github.com/rarible/sdk/commit/3dff67d77c18f541b472e6f4f022085aa3a22a2d))
+* tezos sale test ([1c01884](https://github.com/rarible/sdk/commit/1c018840c9239a64a10166ae4509f3247116b342))
+* tezos sale test ([32f2492](https://github.com/rarible/sdk/commit/32f24928954c08e75f94801015497a0060b49e76))
+
+
+
+
+
 ## [0.7.23](https://github.com/rarible/sdk/compare/v0.7.22...v0.7.23) (2021-12-10)
 
 
