@@ -1,23 +1,17 @@
-// eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
-import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
-import { retry } from "../../common/retry"
+import { createTestWallet } from "./test/test-wallet"
+import { awaitForOwnership } from "./test/await-for-ownership"
+import { awaitForItemSupply } from "./test/await-for-item-supply"
 
 describe("transfer test", () => {
-	const tezos = in_memory_provider(
-		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://hangzhou.tz.functori.com"
-	)
-
-	const wallet = new TezosWallet(tezos)
+	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	const nftContract: string = "KT1Q59huSmAo8a3veKjAvCiSYPw1XZwKKf8X"
-	const mtContract: string = "KT1Gr347mFv4zfQUUgaGPb9SXjaU3MCRdrvr"
+	const nftContract: string = "KT1EWB3JaMmZ5BmNqHVBjB4re62FLihp4G6C"
+	const mtContract: string = "KT1XnWcuF4rzKa7WrBC8BozhLBY55fkHBs4s"
 
 	test.skip("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -31,11 +25,8 @@ describe("transfer test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
@@ -48,14 +39,7 @@ describe("transfer test", () => {
 
 		await result.wait()
 
-		await retry(5, 500, async () => {
-			const ownership = await sdk.apis.ownership.getOwnershipById({
-				ownershipId: `${mintResult.itemId}:${receipent}`,
-			})
-			if (ownership.value !== "1") {
-				throw new Error("Ownership value is not correct")
-			}
-		})
+		await awaitForOwnership(sdk, mintResult.itemId, receipent)
 	}, 1500000)
 
 	test.skip("transfer MT test", async () => {
@@ -71,11 +55,7 @@ describe("transfer test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await retry(5, 500, async () => {
-			await sdk.apis.item.getItemById({
-				itemId: mintResult.itemId,
-			})
-		})
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
@@ -86,14 +66,7 @@ describe("transfer test", () => {
 		})
 		await result.wait()
 
-		await retry(5, 500, async () => {
-			const ownership = await sdk.apis.ownership.getOwnershipById({
-				ownershipId: `${mintResult.itemId}:${receipent}`,
-			})
-			if (ownership.value !== "5") {
-				throw new Error("Ownership value is not correct")
-			}
-		})
+		await awaitForOwnership(sdk, mintResult.itemId, receipent)
 
 	}, 1500000)
 
