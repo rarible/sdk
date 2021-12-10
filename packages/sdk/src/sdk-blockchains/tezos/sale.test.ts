@@ -51,7 +51,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("1")
 	})
 
-	test("sale MT with XTZ", async () => {
+	test.skip("sale MT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
@@ -80,7 +80,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("10")
 	})
 
-	test("sale MT with eurTZ", async () => {
+	test.skip("sale MT with eurTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})

@@ -17,7 +17,7 @@ describe("get balance", () => {
 		)
 	})
 
-	test("get balance FT", async () => {
+	test.skip("get balance FT", async () => {
 		const address = await sellerWallet.provider.address()
 		await sellerSdk.balances.getBalance(
 			toUnionAddress(`TEZOS:${address}`),
