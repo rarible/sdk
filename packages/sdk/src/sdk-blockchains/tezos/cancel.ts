@@ -4,6 +4,7 @@ import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
 import BigNumber from "bignumber.js"
+import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
@@ -16,6 +17,7 @@ export class TezosCancel {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {}
 
 	cancel: ICancel = Action.create({
@@ -55,7 +57,7 @@ export class TezosCancel {
 				orderForm,
 			)
 
-			return new BlockchainTezosTransaction(tx)
+			return new BlockchainTezosTransaction(tx, this.network)
 		},
 	})
 }

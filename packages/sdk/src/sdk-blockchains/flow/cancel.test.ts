@@ -15,8 +15,8 @@ describe("Flow cancel", () => {
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
 	const apis = createApisSdk("staging")
-	const cancel = new FlowCancel(sdk, apis)
-	const mint = new FlowMint(sdk, apis)
+	const cancel = new FlowCancel(sdk, apis, "testnet")
+	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
 
 	test.skip("Should cancel flow NFT order", async () => {

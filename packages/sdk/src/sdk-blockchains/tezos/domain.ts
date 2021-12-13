@@ -1,5 +1,3 @@
-export type TezosNetwork = "mainnet" | "hangzhou" | "local"
-
 export type ItemType = {
 	id: string,
 	contract: string,

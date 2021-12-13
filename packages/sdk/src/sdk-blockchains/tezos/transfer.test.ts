@@ -10,8 +10,8 @@ describe("transfer test", () => {
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	const nftContract: string = "KT1EWB3JaMmZ5BmNqHVBjB4re62FLihp4G6C"
-	const mtContract: string = "KT1XnWcuF4rzKa7WrBC8BozhLBY55fkHBs4s"
+	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
+	let mtContract: string = "KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD"
 
 	test.skip("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({

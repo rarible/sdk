@@ -5,16 +5,17 @@ import type { TezosProvider } from "tezos-sdk-module"
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "tezos-sdk-module"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { toContractAddress } from "@rarible/types"
+import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import type { DeployTokenRequest } from "../../types/nft/deploy/domain"
 import type { IDeploy } from "../../types/nft/deploy/domain"
 import type { TezosDeployTokenAsset } from "../../types/nft/deploy/domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { MaybeProvider } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosDeploy {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {}
 
 	private async getDeployOperation(asset: TezosDeployTokenAsset): Promise<OperationResult> {
@@ -49,7 +50,7 @@ export class TezosDeploy {
 				throw new Error("Contract address has not been returned")
 			}
 			return {
-				tx: new BlockchainTezosTransaction(operationResult),
+				tx: new BlockchainTezosTransaction(operationResult, this.network),
 				address: toContractAddress(`TEZOS:${operationResult.contract}`),
 			}
 		},

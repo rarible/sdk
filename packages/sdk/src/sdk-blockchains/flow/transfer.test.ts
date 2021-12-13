@@ -15,8 +15,8 @@ describe("Flow transfer", () => {
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
 	const apis = createApisSdk("staging")
-	const mint = new FlowMint(sdk, apis)
-	const transfer = new FlowTransfer(sdk)
+	const mint = new FlowMint(sdk, apis, "testnet")
+	const transfer = new FlowTransfer(sdk, "testnet")
 
 	test.skip("Should transfer flow NFT item", async () => {
 		const itemId = await createTestItem(mint)

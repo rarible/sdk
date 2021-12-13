@@ -1,10 +1,14 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 
 export class EthereumCancel {
-	constructor(private readonly sdk: RaribleSdk) {}
+	constructor(
+		private readonly sdk: RaribleSdk,
+		private network: EthereumNetwork,
+	) {}
 
 	cancel: ICancel = Action.create({
 		id: "send-tx" as const,
@@ -22,7 +26,7 @@ export class EthereumCancel {
 			})
 
 			const cancelTx = await this.sdk.order.cancel(order)
-			return new BlockchainEthereumTransaction(cancelTx)
+			return new BlockchainEthereumTransaction(cancelTx, this.network)
 		},
 	})
 }

@@ -13,8 +13,8 @@ describe("Flow burn", () => {
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
 	const apis = createApisSdk("staging")
-	const mint = new FlowMint(sdk, apis)
-	const burn = new FlowBurn(sdk)
+	const mint = new FlowMint(sdk, apis, "testnet")
+	const burn = new FlowBurn(sdk, "testnet")
 
 	test.skip("Should burn NFT", async () => {
 		const itemId = await createTestItem(mint)

@@ -4,13 +4,18 @@ import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
 
 export class FlowBuy {
-	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
+	constructor(
+		private sdk: FlowSdk,
+		private readonly apis: IApisSdk,
+		private network: FlowNetwork,
+	) {
 		this.buy = this.buy.bind(this)
 	}
 
@@ -54,7 +59,7 @@ export class FlowBuy {
 					return this.sdk.order.buy(collectionId, currency, orderId, owner)
 				},
 			})
-			.after(tx => new BlockchainFlowTransaction(tx))
+			.after(tx => new BlockchainFlowTransaction(tx, this.network))
 
 		return {
 			multiple: false,

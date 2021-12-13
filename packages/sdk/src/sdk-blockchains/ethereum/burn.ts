@@ -2,10 +2,14 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 
 export class EthereumBurn {
-	constructor(private sdk: RaribleSdk) {
+	constructor(
+		private sdk: RaribleSdk,
+		private network: EthereumNetwork,
+	) {
 		this.burn = this.burn.bind(this)
 	}
 
@@ -42,7 +46,7 @@ export class EthereumBurn {
 						amount
 					)
 
-					return tx && new BlockchainEthereumTransaction(tx)
+					return tx && new BlockchainEthereumTransaction(tx, this.network)
 				},
 			}),
 		}

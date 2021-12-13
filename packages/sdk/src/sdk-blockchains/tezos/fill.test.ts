@@ -11,7 +11,7 @@ describe("fill test", () => {
 
 	test.skip("fill NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()
-		const fillAction = await buyerSdk.order.fill({
+		const fillAction = await buyerSdk.order.buy({
 			orderId: toOrderId("TEZOS:031a378342384a8c79b83e540c2ff90628239d303bdb5afee980a24c1406ded3"),
 		})
 
@@ -29,26 +29,26 @@ describe("fill test", () => {
 		expect(ownership.value).toBe("1")
 	}, 1500000)
 
-	test.skip("fill MT test", async () => {
+	test("fill MT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 		console.log(buyerAddress)
 
-		const fillAction = await buyerSdk.order.fill({
-			orderId: toOrderId("TEZOS:0260bfd3dc1ee97fd1384f077bba96685e6c2a7e4a439c119497b61dabe6b95f"),
+		const fillAction = await buyerSdk.order.buy({
+			orderId: toOrderId("TEZOS:ce314586ee57e7bae423502503dcd28a76499ba0a1539a365550047801a81bfa"),
 		})
 
 		const tx = await fillAction.submit({
-			amount: 1,
+			amount: 8,
 			infiniteApproval: true,
 		})
 		await tx.wait()
 
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i:5"),
+			toItemId("TEZOS:KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD:3"),
 			buyerAddress
 		)
-		expect(ownership.value).toBe("2")
+		expect(ownership.value).toBe("1")
 	}, 1500000)
 
 })

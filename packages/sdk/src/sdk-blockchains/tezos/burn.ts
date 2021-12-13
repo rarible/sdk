@@ -5,6 +5,7 @@ import { burn } from "tezos-sdk-module"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import BigNumber from "bignumber.js"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import { getTezosItemData, isExistedTezosProvider } from "./common"
@@ -13,6 +14,7 @@ export class TezosBurn {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {
 		this.burn = this.burn.bind(this)
 	}
@@ -49,7 +51,7 @@ export class TezosBurn {
 						amount
 					)
 
-					return new BlockchainTezosTransaction(result)
+					return new BlockchainTezosTransaction(result, this.network)
 				},
 			}),
 		}
