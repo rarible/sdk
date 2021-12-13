@@ -1,5 +1,6 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
+import type { UnionPart } from "../../order/common"
 
 export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
 
@@ -20,6 +21,7 @@ export type CommonTokenMetadata = {
 	animationUrl: string | undefined
 	externalUrl: string | undefined
 	attributes: TokenMetadataAttribute[]
+	royalties?: UnionPart[]
 }
 
 export type CommonTokenMetadataResponse = {
