@@ -19,6 +19,7 @@ To use SDK, first you have to create a Wallet - abstraction to communicate with 
 
 ```ts
 //initialize ethereum wallet
+import { Web3Ethereum } from "@rarible/web3-ethereum" // should also be installed
 import { EthereumWallet } from "@rarible/sdk-wallet"
 
 const ethereum = new Web3Ethereum({ web3, from })
