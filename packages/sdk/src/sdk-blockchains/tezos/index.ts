@@ -13,7 +13,7 @@ import { TezosTokenId } from "./token-id"
 import { TezosCancel } from "./cancel"
 import { TezosBalance } from "./balance"
 import { TezosDeploy } from "./deploy"
-import { canTransfer } from "./restriction"
+import { TezosCanTransfer } from "./restriction"
 
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
@@ -46,6 +46,8 @@ export function createTezosSdk(
 		balances: {
 			getBalance: new TezosBalance(maybeProvider, apis).getBalance,
 		},
-		restriction: { canTransfer },
+		restriction: {
+			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,
+		},
 	}
 }
