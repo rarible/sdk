@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.28](https://github.com/rarible/sdk/compare/v0.7.27...v0.7.28) (2021-12-10)
+
+
+### Bug Fixes
+
+* upgrade tezos-sdk-module (fixed FA2 purchases) ([fa4063a](https://github.com/rarible/sdk/commit/fa4063a3cc8fb5eb10b2a77af41d5c23b25224a6))
+
+
+
+
+
+## [0.7.27](https://github.com/rarible/sdk/compare/v0.7.26...v0.7.27) (2021-12-10)
+
+
+### Bug Fixes
+
+* correct fees on tezos ([dd542e7](https://github.com/rarible/sdk/commit/dd542e7996dfbb24d89f884f7e75b8c4da025019))
+
+
+
+
+
 ## [0.7.26](https://github.com/rarible/sdk/compare/v0.7.25...v0.7.26) (2021-12-10)
 
 **Note:** Version bump only for package @rarible/sdk

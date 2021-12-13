@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.7.24",
+  "version": "0.7.28",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -18,7 +18,7 @@
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "~0.0.10",
     "@rarible/ethereum-provider": "~0.12.1",
-    "tezos-sdk-module": "~0.0.34"
+    "tezos-sdk-module": "~0.0.35"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

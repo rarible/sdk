@@ -119,7 +119,7 @@ export function getMaybeTezosProvider(
 				config: {
 					exchange: "KT1ULGjK8FtaJ9QqCgJVN14B6tY76Ykaz6M8",
 					transfer_proxy: "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
-					fees: new BigNumber(300),
+					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
 				},
