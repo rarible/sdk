@@ -37,6 +37,8 @@ export function createTezosSdk(
 		},
 		order: {
 			fill: new TezosFill(maybeProvider, apis).fill,
+			buy: new TezosFill(maybeProvider, apis).fill,
+			acceptBid: new TezosFill(maybeProvider, apis).fill,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
 			bid: bidService.bid,

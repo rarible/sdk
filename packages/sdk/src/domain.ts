@@ -19,7 +19,6 @@ export interface IRaribleSdk {
 	order: IOrderSdk
 	balances: IBalanceSdk
 	restriction: IRestrictionSdk
-
 }
 
 export interface IApisSdk {
@@ -43,7 +42,12 @@ export interface INftSdk {
 export interface IOrderSdk {
 	sell: ISell
 	sellUpdate: ISellUpdate
+	/**
+	 * @deprecated Use {@link buy} or {@link acceptBid} instead
+	 */
 	fill: IFill
+	buy: IFill
+	acceptBid: IFill
 	bid: IBid
 	bidUpdate: IBidUpdate
 	cancel: ICancel

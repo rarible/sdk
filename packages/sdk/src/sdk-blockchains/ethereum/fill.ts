@@ -12,6 +12,7 @@ import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { FillOrderAction } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { convertToEthereumAddress } from "./common"
@@ -27,6 +28,8 @@ export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 export class EthereumFill {
 	constructor(private sdk: RaribleSdk, private wallet: Maybe<EthereumWallet>) {
 		this.fill = this.fill.bind(this)
+		this.buy = this.buy.bind(this)
+		this.acceptBid = this.acceptBid.bind(this)
 	}
 
 	convertAssetType(assetType: AssetType): EthereumAssetType {
@@ -307,10 +310,10 @@ export class EthereumFill {
 		throw new Error("Incorrect request")
 	}
 
-	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+	private async commonFill(action: FillOrderAction, request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
 
-		const submit = this.sdk.order.fill
+		const submit = action
 			.before((fillRequest: FillRequest) => this.getFillOrderRequest(order, fillRequest))
 			.after((tx => new BlockchainEthereumTransaction(tx)))
 
@@ -321,5 +324,21 @@ export class EthereumFill {
 			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
 			submit,
 		}
+	}
+
+	/**
+	 * @deprecated
+	 * @param request
+	 */
+	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.commonFill(this.sdk.order.fill, request)
+	}
+
+	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.commonFill(this.sdk.order.buy, request)
+	}
+
+	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.commonFill(this.sdk.order.acceptBid, request)
 	}
 }
