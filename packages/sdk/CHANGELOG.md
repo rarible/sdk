@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.29](https://github.com/rarible/sdk/compare/v0.7.28...v0.7.29) (2021-12-13)
+
+
+### Bug Fixes
+
+* can transfer function rpc url ([#53](https://github.com/rarible/sdk/issues/53)) ([a71a9e0](https://github.com/rarible/sdk/commit/a71a9e08a051532e593088a11faef94af2816c1c))
+
+
+### Features
+
+* update tezos sdk ([#54](https://github.com/rarible/sdk/issues/54)) ([4a9a36f](https://github.com/rarible/sdk/commit/4a9a36f43842f8f562b3af01d315f245e3af1ae7))
+
+
+
+
+
 ## [0.7.28](https://github.com/rarible/sdk/compare/v0.7.27...v0.7.28) (2021-12-10)
 
 
