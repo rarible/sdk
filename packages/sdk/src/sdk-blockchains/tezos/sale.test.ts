@@ -1,4 +1,4 @@
-import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
+import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { createTestWallet } from "./test/test-wallet"
@@ -18,9 +18,14 @@ describe("test tezos mint and sell", () => {
 	)
 	const buyerSdk = createRaribleSdk(buyerWallet, "dev")
 
+	const nextBuyerWallet = createTestWallet(
+		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
+	)
+	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev")
+
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	let mtContract: string = "KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD"
+	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
 
 	test.skip("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
@@ -115,6 +120,80 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("10")
 	})
 
+	test.skip("item creator should receive royalty from resale MT with XTZ", async () => {
+		const itemCreatorAddress = await sellerWallet.provider.address()
+
+		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+		})
+
+		const mintResult = await mintAndSellAction.submit({
+			price: new BigNumber("1"),
+			currency: { "@type": "XTZ" },
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+			royalties: [{
+				account: toUnionAddress(`TEZOS:${await sellerWallet.provider.address()}`),
+				value: 1000,
+			}],
+		})
+
+		const xtzAssetType = { "@type": "XTZ" as const }
+
+		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
+
+		const fillResult = await fillResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+		})
+		await fillResult.wait()
+		// sell from item creator to the buyer is finished
+
+		const sellAction = await buyerSdk.order.sell({
+			itemId: mintResult.itemId,
+		})
+		const sellOrderId = await sellAction.submit({
+			price: new BigNumber("1"),
+			currency: { "@type": "XTZ" },
+			amount: 1,
+		})
+
+		const itemCreatorBalance = await sellerSdk.balances.getBalance(
+			toUnionAddress(`TEZOS:${itemCreatorAddress}`),
+			xtzAssetType
+		)
+
+		const buyerBalance = await buyerSdk.balances.getBalance(
+			toUnionAddress(`TEZOS:${await buyerWallet.provider.address()}`),
+			xtzAssetType
+		)
+
+		const nextBuyerFillResponse = await nextBuyerSdk.order.fill({ orderId: sellOrderId })
+		const nextBuyerFillResult = await nextBuyerFillResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+		})
+		await nextBuyerFillResult.wait()
+		// sell from buyer to the next buyer is finished
+
+		const buyerFinishBalance = await buyerSdk.balances.getBalance(
+			toUnionAddress(`TEZOS:${await buyerWallet.provider.address()}`),
+			xtzAssetType
+		)
+
+		const buyerBalanceDiff = new BigNumber(buyerFinishBalance).minus(new BigNumber(buyerBalance))
+		expect(buyerBalanceDiff.eq("0.9")).toBeTruthy()
+
+		const sellerInitBalanceEnd = await sellerSdk.balances.getBalance(
+			toUnionAddress(`TEZOS:${itemCreatorAddress}`),
+			xtzAssetType
+		)
+
+		const creatorRoyalty = new BigNumber(sellerInitBalanceEnd).minus(new BigNumber(itemCreatorBalance))
+		expect(creatorRoyalty.eq(new BigNumber("0.1"))).toBeTruthy()
+	})
+
 	test.skip("sale MT with eurTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
@@ -134,19 +213,21 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
+		console.log("order", mintResult)
 		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
-			amount: 10,
+			amount: 1,
 			infiniteApproval: true,
 		})
 		await fillResult.wait()
 
+		console.log("fillresult", fillResult)
 		const ownership = await awaitForOwnership(
 			buyerSdk,
 			toItemId(mintResult.itemId),
 			await buyerWallet.provider.address()
 		)
-		expect(ownership.value).toBe("10")
+		expect(ownership.value).toBe("1")
 	})
 })

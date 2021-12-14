@@ -35,7 +35,7 @@
     "ethereumjs-util": "^7.1.3",
     "ethereumjs-wallet": "^1.0.2",
     "tezos-api-client": "~0.0.14",
-    "tezos-sdk-module": "0.0.40"
+    "tezos-sdk-module": "0.0.41"
   },
   "devDependencies": {
     "@airgap/beacon-sdk": "^2.3.2",

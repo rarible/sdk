@@ -21,7 +21,7 @@
     "@rarible/flow-sdk": "~0.3.2",
     "@rarible/protocol-ethereum-sdk": "~0.12.18",
     "@rarible/types": "~0.5.3",
-    "tezos-sdk-module": "~0.0.40"
+    "tezos-sdk-module": "~0.0.41"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

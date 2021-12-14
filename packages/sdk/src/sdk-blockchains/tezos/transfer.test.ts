@@ -11,7 +11,7 @@ describe("transfer test", () => {
 
 	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
 	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	let mtContract: string = "KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD"
+	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
 
 	test.skip("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -55,7 +55,7 @@ describe("transfer test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitForItemSupply(sdk, mintResult.itemId, "10")
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
@@ -66,6 +66,7 @@ describe("transfer test", () => {
 		})
 		await result.wait()
 
+		console.log("mintResult.itemId", mintResult.itemId, receipent)
 		await awaitForOwnership(sdk, mintResult.itemId, receipent)
 
 	}, 1500000)

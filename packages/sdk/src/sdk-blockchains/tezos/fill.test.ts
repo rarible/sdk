@@ -5,7 +5,7 @@ import { createTestWallet } from "./test/test-wallet"
 
 describe("fill test", () => {
 	const wallet = createTestWallet(
-		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
+		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
 	const buyerSdk = createRaribleSdk(wallet, "dev")
 
@@ -29,23 +29,25 @@ describe("fill test", () => {
 		expect(ownership.value).toBe("1")
 	}, 1500000)
 
-	test("fill MT test", async () => {
+	test.skip("fill MT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 		console.log(buyerAddress)
 
-		const fillAction = await buyerSdk.order.buy({
-			orderId: toOrderId("TEZOS:ce314586ee57e7bae423502503dcd28a76499ba0a1539a365550047801a81bfa"),
+		//b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c
+		const fillAction = await buyerSdk.order.fill({
+			orderId: toOrderId("TEZOS:b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c"),
 		})
 
 		const tx = await fillAction.submit({
-			amount: 8,
+			amount: 1,
 			infiniteApproval: true,
 		})
 		await tx.wait()
 
+		console.log("tx", tx)
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD:3"),
+			toItemId("TEZOS:KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD:17"),
 			buyerAddress
 		)
 		expect(ownership.value).toBe("1")
