@@ -3048,7 +3048,7 @@
     elliptic "^6.5.4"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@~0.12.20":
+"@rarible/protocol-ethereum-sdk@~0.12.18", "@rarible/protocol-ethereum-sdk@~0.12.20":
   version "0.12.20"
   resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.20.tgz#984340511f00e66ab9a541df1906bb7ef975418a"
   integrity sha512-o/2e8wbY26uTSQlvxmW1O5cfe/4u9UveGmQfSbeeT0XwlEbYv7/ra5Gd6WwFAoYaV63YYQODFaccrGifgiAQew==
