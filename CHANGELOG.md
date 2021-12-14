@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.32](https://github.com/rarible/sdk/compare/v0.7.31...v0.7.32) (2021-12-14)
+
+
+### Bug Fixes
+
+* tezos up version ([ab37acb](https://github.com/rarible/sdk/commit/ab37acb87bda19d4e9a7b4022aaf53d94cd78503))
+* up yarn.lock file ([6800aad](https://github.com/rarible/sdk/commit/6800aadc71981e4d08369fed45a70758710b945a))
+
+
+
+
+
 ## [0.7.31](https://github.com/rarible/sdk/compare/v0.7.30...v0.7.31) (2021-12-14)
 
 **Note:** Version bump only for package root
