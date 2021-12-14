@@ -213,7 +213,6 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
-		console.log("order", mintResult)
 		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
@@ -222,7 +221,6 @@ describe("test tezos mint and sell", () => {
 		})
 		await fillResult.wait()
 
-		console.log("fillresult", fillResult)
 		const ownership = await awaitForOwnership(
 			buyerSdk,
 			toItemId(mintResult.itemId),
