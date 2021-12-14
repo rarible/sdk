@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.30](https://github.com/rarible/sdk/compare/v0.7.29...v0.7.30) (2021-12-13)
+
+
+### Bug Fixes
+
+* added royalties to preprocess metadata request ([327d546](https://github.com/rarible/sdk/commit/327d546c8234950999d678b2a34a1a7404491bc0))
+
+
+
+
+
 ## [0.7.29](https://github.com/rarible/sdk/compare/v0.7.28...v0.7.29) (2021-12-13)
 
 
