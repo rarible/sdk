@@ -10,8 +10,8 @@ describe("transfer test", () => {
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	const nftContract: string = "KT1EWB3JaMmZ5BmNqHVBjB4re62FLihp4G6C"
-	const mtContract: string = "KT1XnWcuF4rzKa7WrBC8BozhLBY55fkHBs4s"
+	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
+	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
 
 	test.skip("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -55,7 +55,7 @@ describe("transfer test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitForItemSupply(sdk, mintResult.itemId, "10")
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
@@ -66,6 +66,7 @@ describe("transfer test", () => {
 		})
 		await result.wait()
 
+		console.log("mintResult.itemId", mintResult.itemId, receipent)
 		await awaitForOwnership(sdk, mintResult.itemId, receipent)
 
 	}, 1500000)

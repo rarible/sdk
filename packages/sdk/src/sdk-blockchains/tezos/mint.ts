@@ -8,6 +8,7 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -21,6 +22,7 @@ export class TezosMint {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {
 		this.mint = this.mint.bind(this)
 		this.preprocessMeta = this.preprocessMeta.bind(this)
@@ -88,7 +90,7 @@ export class TezosMint {
 
 					return {
 						type: MintType.ON_CHAIN,
-						transaction: new BlockchainTezosTransaction(result),
+						transaction: new BlockchainTezosTransaction(result, this.network),
 						itemId: toItemId(`TEZOS:${contract}:${result.token_id}`),
 					}
 				},

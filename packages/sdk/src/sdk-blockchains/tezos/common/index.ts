@@ -1,7 +1,13 @@
 import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
-import type { Provider, TezosProvider, AssetType as TezosAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
+import type {
+	Provider,
+	TezosProvider,
+	AssetType as TezosAssetType,
+	Asset as TezosLibAsset,
+	TezosNetwork,
+} from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
@@ -27,7 +33,6 @@ import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { Config } from "tezos-sdk-module"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
-import type { TezosNetwork } from "../domain"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,

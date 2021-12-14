@@ -12,7 +12,7 @@ describe("Flow mint", () => {
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
 	const apis = createApisSdk("staging")
-	const mint = new FlowMint(sdk, apis)
+	const mint = new FlowMint(sdk, apis, "testnet")
 
 	test.skip("Should mint new NFT", async () => {
 		const itemId = await createTestItem(mint)

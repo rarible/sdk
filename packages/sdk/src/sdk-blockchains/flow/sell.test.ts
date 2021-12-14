@@ -15,7 +15,7 @@ describe("Flow sell", () => {
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
 	const apis = createApisSdk("staging")
-	const mint = new FlowMint(sdk, apis)
+	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
 
 	test.skip("Should sell flow NFT item and update order", async () => {

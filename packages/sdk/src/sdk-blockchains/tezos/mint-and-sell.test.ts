@@ -35,13 +35,12 @@ describe("test tezos mint and sell", () => {
 			collectionId: toContractAddress(`TEZOS:${mtContract}`),
 		})
 
-		const r = await mintAndSellAction.submit({
+		await mintAndSellAction.submit({
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
 			lazyMint: false,
 		})
-		console.log(r)
 	})
 })

@@ -17,6 +17,7 @@ import type {
 } from "tezos-api-client"
 import BigNumber from "bignumber.js"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import type {
 	FillRequest,
 	PrepareFillRequest,
@@ -33,6 +34,7 @@ export class TezosFill {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {
 		this.fill = this.fill.bind(this)
 	}
@@ -119,7 +121,7 @@ export class TezosFill {
 					preparedOrder,
 					request,
 				)
-				return new BlockchainTezosTransaction(fillResponse)
+				return new BlockchainTezosTransaction(fillResponse, this.network)
 			},
 		})
 
