@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.35](https://github.com/rarible/sdk/compare/v0.7.34...v0.7.35) (2021-12-15)
+
+
+### Bug Fixes
+
+* tezos mainnet api url ([#63](https://github.com/rarible/sdk/issues/63)) ([abdb2ca](https://github.com/rarible/sdk/commit/abdb2caaf64482f51593387912f3585ee157d9aa))
+
+
+
+
+
 ## [0.7.34](https://github.com/rarible/sdk/compare/v0.7.33...v0.7.34) (2021-12-15)
 
 
