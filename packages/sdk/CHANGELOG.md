@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.34](https://github.com/rarible/sdk/compare/v0.7.33...v0.7.34) (2021-12-15)
+
+
+### Features
+
+* up tezos contracts + eth sdk update ([#61](https://github.com/rarible/sdk/issues/61)) ([21c09c2](https://github.com/rarible/sdk/commit/21c09c2c65bfb5b56fdb4129afec79f1178dc079))
+
+
+
+
+
 ## [0.7.33](https://github.com/rarible/sdk/compare/v0.7.32...v0.7.33) (2021-12-15)
 
 
