@@ -104,7 +104,7 @@ export function getTezosBasePath(network: TezosNetwork): string {
 			return "https://rarible-api.functori.com"
 		}
 		case "mainnet": {
-			return "https://rarible-api-mainnet.functori.com"
+			return "https://tezos-api.rarible.org"
 		}
 		default: {
 			throw new Error("Unsupported tezos network")
