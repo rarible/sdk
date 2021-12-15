@@ -62,6 +62,7 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log(mintResult)
 		await awaitForItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
@@ -82,9 +83,9 @@ describe("mint test", () => {
 
 		expect(response.name).toBe("1")
 		expect(response.description).toBe("2")
-		expect(response.displayUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
-		expect(response.artifactUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
-		expect(response.externalUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.displayUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.artifactUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
+		expect(response.externalUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
 		expect(response.attributes[0].name).toBe("eyes")
 		expect(response.attributes[0].value).toBe("1")
 	})
