@@ -1,9 +1,13 @@
-import type { FlowCurrency } from "@rarible/flow-sdk/build/types"
+import type { FlowContractAddress, FlowCurrency, FlowSdk } from "@rarible/flow-sdk"
+import { toFlowContractAddress } from "@rarible/flow-sdk"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { ContractAddress, FlowAddress, FlowContractAddress, UnionAddress } from "@rarible/types"
-import { toFlowAddress, toFlowContractAddress } from "@rarible/types"
+import type { ContractAddress, FlowAddress, UnionAddress } from "@rarible/types"
+import { toBigNumber, toFlowAddress } from "@rarible/types"
+import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
+import type { FlowFee } from "@rarible/flow-sdk/build/types"
 import type { FlowItemId } from "../../../../common/domain"
+import type { UnionPart } from "../../../../types/order/common"
 
 const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
 
@@ -92,4 +96,31 @@ export function getFungibleTokenName(contract: ContractAddress): FlowCurrency {
 		}
 	}
 	throw new Error(`Unsupported contract ID: ${contract}`)
+}
+
+export function convertToFlowAddress(
+	contractAddress: UnionAddress | ContractAddress,
+): FlowAddress {
+	if (!isBlockchainSpecified(contractAddress)) {
+		throw new Error("Not a union or contract address: " + contractAddress)
+	}
+
+	const [blockchain, address] = contractAddress.split(":")
+	if (blockchain !== "FLOW") {
+		throw new Error("Not an Flow address")
+	}
+	return toFlowAddress(address)
+}
+
+export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
+	return parts?.map(p => {
+		return {
+			account: convertToFlowAddress(p.account),
+			value: toBigNumber(p.value.toString()),
+		}
+	}) || []
+}
+
+export function getFlowBaseFee(sdk: FlowSdk): number {
+	return parseInt(sdk.order.getProtocolFee().sellerFee.value)
 }

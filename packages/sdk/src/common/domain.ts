@@ -1,6 +1,7 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Action } from "@rarible/action"
-import type { Address, FlowContractAddress } from "@rarible/types"
+import type { Address } from "@rarible/types"
+import type { FlowContractAddress } from "@rarible/flow-sdk"
 
 // @todo draft. probably will be changed in future
 export type CurrencyType = {

@@ -1,15 +1,21 @@
 import { toOrderId } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
+import { toFlowItemId } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import type { Order, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import { getFlowCollection, getFungibleTokenName, parseUnionItemId } from "./common/converters"
+import {
+	getFlowBaseFee,
+	getFlowCollection,
+	getFungibleTokenName,
+	parseUnionItemId,
+	toFlowParts,
+} from "./common/converters"
 
 export class FlowSell {
 	static supportedCurrencies: CurrencyType[] = [{
@@ -37,9 +43,9 @@ export class FlowSell {
 					return this.sdk.order.sell({
 						collection: contract,
 						currency,
-						// @todo leave string when support it on flow-sdk transactions
 						itemId: toFlowItemId(itemId),
 						sellItemPrice: toBigNumber(sellRequest.price.toString()),
+						originFees: toFlowParts(sellRequest.originFees),
 					})
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
@@ -50,8 +56,8 @@ export class FlowSell {
 		return {
 			multiple: false,
 			supportedCurrencies: FlowSell.supportedCurrencies,
-			baseFee: 250,
-			originFeeSupport: OriginFeeSupport.NONE,
+			baseFee: getFlowBaseFee(this.sdk),
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit: sellAction,
 		}
@@ -72,7 +78,6 @@ export class FlowSell {
 						return await this.sdk.order.updateOrder({
 							collection: getFlowCollection(order.make.type.contract),
 							currency,
-							// @todo leave string when support it on flow-sdk transactions
 							order: parseInt(orderId),
 							sellItemPrice: toBigNumber(sellRequest.price.toString()),
 						})
@@ -86,9 +91,9 @@ export class FlowSell {
 
 		return {
 			supportedCurrencies: FlowSell.supportedCurrencies,
-			originFeeSupport: OriginFeeSupport.NONE,
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
-			baseFee: 250,
+			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
 		}
 	}

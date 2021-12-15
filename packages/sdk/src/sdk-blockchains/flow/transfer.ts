@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowSdk } from "@rarible/flow-sdk"
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toBigNumber } from "@rarible/types"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import { parseFlowAddressFromUnionAddress, parseUnionItemId } from "./common/converters"
 

@@ -1,5 +1,6 @@
-import { toContractAddress, toFlowContractAddress, toOrderId } from "@rarible/types"
+import { toContractAddress, toOrderId } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
+import { toFlowContractAddress } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import { toBigNumber } from "@rarible/types/build/big-number"
@@ -7,7 +8,7 @@ import { Blockchain } from "@rarible/api-client"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
-import { getFungibleTokenName } from "./common/converters"
+import { getFlowBaseFee, getFungibleTokenName, toFlowParts } from "./common/converters"
 
 export class FlowBid {
 	static supportedCurrencies: CurrencyType[] = [{
@@ -41,6 +42,7 @@ export class FlowBid {
 						currency,
 						itemId,
 						toBigNumber(bidRequest.price.toString()),
+						toFlowParts(bidRequest.originFees),
 					)
 				}
 				throw new Error(`Unsupported currency type: ${bidRequest.currency["@type"]}`)
@@ -48,12 +50,12 @@ export class FlowBid {
 		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
 
 		return {
-			originFeeSupport: OriginFeeSupport.NONE,
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			multiple: false,
 			maxAmount: toBigNumber("1"),
-			baseFee: 250, //todo get from flow-sdk
+			baseFee: getFlowBaseFee(this.sdk),
 			submit: bidAction,
 		}
 	}
@@ -76,7 +78,7 @@ export class FlowBid {
 				if (order.make["@type"] === "fungible") {
 					const currency = getFungibleTokenName(toContractAddress(`FLOW:${order.make.contract}`))
 					return this.sdk.order.bidUpdate(
-						order.take.contract,
+						toFlowContractAddress(order.take.contract),
 						currency,
 						order,
 						toBigNumber(bidRequest.price.toString()),
@@ -87,10 +89,10 @@ export class FlowBid {
 		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
 
 		return {
-			originFeeSupport: OriginFeeSupport.NONE,
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: FlowBid.supportedCurrencies,
-			baseFee: 250,
+			baseFee: getFlowBaseFee(this.sdk),
 			submit: bidUpdateAction,
 		}
 	}

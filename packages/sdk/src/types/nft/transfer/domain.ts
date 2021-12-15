@@ -1,13 +1,12 @@
 import type { ItemId } from "@rarible/api-client"
-import type { UnionAddress } from "@rarible/types"
+import type { BigNumber, UnionAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { BigNumber } from "@rarible/types/build/big-number"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 export type PrepareTransferRequest = {
 	/**
-   * Identifier of the minted item
-   */
+	 * Identifier of the minted item
+	 */
 	itemId: ItemId
 }
 
@@ -18,20 +17,20 @@ export interface TransferRequest {
 	to: UnionAddress
 
 	/**
-   * Number of NFTs to transfer
-   */
+	 * Number of NFTs to transfer
+	 */
 	amount?: number
 }
 
-export interface PrepareTransferResponse extends AbstractPrepareResponse<"transfer", TransferRequest, IBlockchainTransaction>{
+export interface PrepareTransferResponse extends AbstractPrepareResponse<"transfer", TransferRequest, IBlockchainTransaction> {
 	/**
-   * Is supports multiple values
-   */
+	 * Is supports multiple values
+	 */
 	multiple: boolean
 
 	/**
-   * Maximum amount to transfer NFT
-   */
+	 * Maximum amount to transfer NFT
+	 */
 	maxAmount: BigNumber
 }
 

@@ -1,5 +1,7 @@
-import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { FLOW_ZERO_ADDRESS, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { isFlowAddress } from "@rarible/flow-sdk/build/common/flow-address"
 import * as converters from "."
+import { toFlowParts } from "."
 
 describe("Test FLOW converter functions", () => {
 	test("getFlowCollection: should success get collection if address with prefix", () => {
@@ -169,4 +171,12 @@ describe("Test FLOW converter functions", () => {
 			const test1 = () => converters.getFungibleTokenName(toContractAddress(":A.0xzbcdef0123456789.C3"))
 			expect(test1).toThrow(Error)
 		})
+	test("toFlowParts function, should convert union address to flow address", () => {
+		const test1 = toFlowParts([{ account: toUnionAddress(`FLOW:${FLOW_ZERO_ADDRESS}`), value: 500 }])
+		expect(isFlowAddress(test1[0].account)).toBeTruthy()
+	})
+	test("toFlowParts function, should throw error, invalid union address", () => {
+		const test1 = () => toFlowParts([{ account: toUnionAddress("FLOW_ZERO_ADDRESS"), value: 500 }])
+		expect(test1).toThrow(Error)
+	})
 })

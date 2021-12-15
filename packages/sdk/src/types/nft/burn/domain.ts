@@ -1,6 +1,6 @@
 import type { ItemId } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { BigNumber } from "@rarible/types/build/big-number"
+import type { BigNumber } from "@rarible/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 export type PrepareBurnRequest = {
@@ -9,20 +9,20 @@ export type PrepareBurnRequest = {
 
 export type BurnRequest = {
 	/**
-   * Number of NFTs to transfer
-   */
+	 * Number of NFTs to transfer
+	 */
 	amount?: number
 } | void
 
-export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction | void>{
+export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction | void> {
 	/**
-   * Is supports multiple values
-   */
+	 * Is supports multiple values
+	 */
 	multiple: boolean
 
 	/**
-   * Maximum amount to burn
-   */
+	 * Maximum amount to burn
+	 */
 	maxAmount: BigNumber
 }
 

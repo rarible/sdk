@@ -1,14 +1,14 @@
-import { toBigNumber } from "@rarible/types/build/big-number"
+import type { ContractAddress } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
-import type { ContractAddress } from "@rarible/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
-import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
+import { getFlowBaseFee, toFlowParts } from "./common/converters"
 
 export class FlowBuy {
 	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
@@ -51,7 +51,7 @@ export class FlowBuy {
 					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
 					const orderId = converters.parseOrderId(order.id)
 					return this.sdk.order.fill(
-						collectionId, currency, orderId, owner, prepareFlowRoyalties(buyRequest.originFees),
+						collectionId, currency, orderId, owner, toFlowParts(buyRequest.originFees),
 					)
 				},
 			})
@@ -60,10 +60,9 @@ export class FlowBuy {
 		return {
 			multiple: false,
 			maxAmount: toBigNumber("1"),
-			baseFee: 250,
+			baseFee: getFlowBaseFee(this.sdk),
 			supportsPartialFill: false,
-			// @todo not supported on flow yet
-			originFeeSupport: OriginFeeSupport.NONE,
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,
 		}
