@@ -1,8 +1,9 @@
 import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
-import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
+import type { AuthWithPrivateKey, FlowEnv } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
+import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -17,19 +18,20 @@ import { FlowBalance } from "./balance"
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
 	apis: IApisSdk,
-	network: FlowNetwork,
+	network: FlowEnv,
 	params?: ConfigurationParameters,
 	auth?: AuthWithPrivateKey,
 ): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, params, auth)
+	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
-	const mintService = new FlowMint(sdk, apis, network)
+	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
 
 	return {
 		nft: {
 			mint: mintService.prepare,
-			burn: new FlowBurn(sdk, network).burn,
-			transfer: new FlowTransfer(sdk, network).transfer,
+			burn: new FlowBurn(sdk, blockchainNetwork).burn,
+			transfer: new FlowTransfer(sdk, blockchainNetwork).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
 			preprocessMeta: mintService.preprocessMeta,
@@ -37,12 +39,12 @@ export function createFlowSdk(
 		order: {
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			fill: new FlowBuy(sdk, apis, network).buy,
-			buy: new FlowBuy(sdk, apis, network).buy,
+			fill: new FlowBuy(sdk, apis, blockchainNetwork).buy,
+			buy: new FlowBuy(sdk, apis, blockchainNetwork).buy,
 			acceptBid: notImplemented,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: new FlowCancel(sdk, apis, network).cancel,
+			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,
