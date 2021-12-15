@@ -4,13 +4,18 @@ import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
 
 export class FlowBuy {
-	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
+	constructor(
+		private sdk: FlowSdk,
+		private readonly apis: IApisSdk,
+		private network: FlowNetwork,
+	) {
 		this.buy = this.buy.bind(this)
 	}
 
@@ -41,6 +46,7 @@ export class FlowBuy {
 
 	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
+		const protocolFee = parseInt(this.sdk.order.getProtocolFee().buyerFee.value)
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
@@ -51,15 +57,20 @@ export class FlowBuy {
 					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
 					// @todo leave string when support it on flow-sdk transactions
 					const orderId = parseInt(converters.parseOrderId(order.id))
-					return this.sdk.order.buy(collectionId, currency, orderId, owner)
+					return this.sdk.order.fill(
+						collectionId,
+						currency,
+						orderId,
+						owner,
+						[])
 				},
 			})
-			.after(tx => new BlockchainFlowTransaction(tx))
+			.after(tx => new BlockchainFlowTransaction(tx, this.network))
 
 		return {
 			multiple: false,
 			maxAmount: toBigNumber("1"),
-			baseFee: 250,
+			baseFee: protocolFee,
 			supportsPartialFill: false,
 			// @todo not supported on flow yet
 			originFeeSupport: OriginFeeSupport.NONE,

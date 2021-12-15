@@ -11,8 +11,8 @@ describe("burn test", () => {
 	const wallet = new TezosWallet(tezos)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1HfLByoDk22vZp3GtgMM1oNUjeYQEgeEYS"
-	let mtContract: string = "KT1A4wrudnhHSgayCi9U9DB3MyaSTd3wpFYy"
+	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
+	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
 
 	test.skip("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({

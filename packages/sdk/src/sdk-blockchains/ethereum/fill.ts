@@ -13,6 +13,7 @@ import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { FillOrderAction } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { convertToEthereumAddress } from "./common"
@@ -26,7 +27,11 @@ export type SupportFlagsResponse = {
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
 export class EthereumFill {
-	constructor(private sdk: RaribleSdk, private wallet: Maybe<EthereumWallet>) {
+	constructor(
+		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
+		private network: EthereumNetwork,
+	) {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
@@ -315,7 +320,7 @@ export class EthereumFill {
 
 		const submit = action
 			.before((fillRequest: FillRequest) => this.getFillOrderRequest(order, fillRequest))
-			.after((tx => new BlockchainEthereumTransaction(tx)))
+			.after((tx => new BlockchainEthereumTransaction(tx, this.network)))
 
 		return {
 			...this.getSupportFlags(order),

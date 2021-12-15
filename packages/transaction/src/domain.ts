@@ -16,6 +16,7 @@ export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	transaction: TransactionIndexer[T]
 	hash(): string
 	wait(): Promise<Transaction<T>>
+	getTxLink(): string
 }
 
 export interface FlowTransaction {

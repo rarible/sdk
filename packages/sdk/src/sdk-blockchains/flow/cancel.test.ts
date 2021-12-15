@@ -13,10 +13,12 @@ import { FlowSell } from "./sell"
 describe("Flow cancel", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
+	const sdk = createFlowSdk(
+		wallet.fcl, "testnet", { basePath: "https://flow-api-staging.rarible.com" }, authUser1,
+	)
 	const apis = createApisSdk("staging")
-	const cancel = new FlowCancel(sdk, apis)
-	const mint = new FlowMint(sdk, apis)
+	const cancel = new FlowCancel(sdk, apis, "testnet")
+	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
 
 	test.skip("Should cancel flow NFT order", async () => {

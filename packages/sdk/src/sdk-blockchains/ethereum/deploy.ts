@@ -4,11 +4,15 @@ import type { Address, ContractAddress, UnionAddress } from "@rarible/types"
 import { toAddress, toContractAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { DeployTokenRequest } from "../../types/nft/deploy/domain"
 import type { DeployEthereumTokenRequest } from "../../types/nft/deploy/domain"
 
 export class EthereumDeploy {
-	constructor(private sdk: RaribleSdk) {
+	constructor(
+		private sdk: RaribleSdk,
+		private network: EthereumNetwork,
+	) {
 		this.startDeployToken = this.startDeployToken.bind(this)
 	}
 
@@ -26,7 +30,7 @@ export class EthereumDeploy {
 		response: { tx: EthereumTransaction, address: Address },
 	): { tx: BlockchainEthereumTransaction, address: ContractAddress } {
 		return {
-			tx: new BlockchainEthereumTransaction(response.tx),
+			tx: new BlockchainEthereumTransaction(response.tx, this.network),
 			address: toContractAddress(`ETHEREUM:${response.address}`),
 		}
 	}

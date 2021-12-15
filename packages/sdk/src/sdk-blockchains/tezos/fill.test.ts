@@ -5,13 +5,13 @@ import { createTestWallet } from "./test/test-wallet"
 
 describe("fill test", () => {
 	const wallet = createTestWallet(
-		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
+		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
 	const buyerSdk = createRaribleSdk(wallet, "dev")
 
 	test.skip("fill NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()
-		const fillAction = await buyerSdk.order.fill({
+		const fillAction = await buyerSdk.order.buy({
 			orderId: toOrderId("TEZOS:031a378342384a8c79b83e540c2ff90628239d303bdb5afee980a24c1406ded3"),
 		})
 
@@ -33,8 +33,9 @@ describe("fill test", () => {
 		const buyerAddress = await wallet.provider.address()
 		console.log(buyerAddress)
 
+		//b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c
 		const fillAction = await buyerSdk.order.fill({
-			orderId: toOrderId("TEZOS:0260bfd3dc1ee97fd1384f077bba96685e6c2a7e4a439c119497b61dabe6b95f"),
+			orderId: toOrderId("TEZOS:b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c"),
 		})
 
 		const tx = await fillAction.submit({
@@ -43,12 +44,13 @@ describe("fill test", () => {
 		})
 		await tx.wait()
 
+		console.log("tx", tx)
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i:5"),
+			toItemId("TEZOS:KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD:17"),
 			buyerAddress
 		)
-		expect(ownership.value).toBe("2")
+		expect(ownership.value).toBe("1")
 	}, 1500000)
 
 })

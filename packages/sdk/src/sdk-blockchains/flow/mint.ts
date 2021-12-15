@@ -2,6 +2,7 @@ import { Action } from "@rarible/action"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import { toItemId } from "@rarible/types"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -9,13 +10,16 @@ import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-re
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { IApisSdk } from "../../domain"
 import { getCollection } from "../ethereum/mint"
-import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
+import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import { getFlowCollection } from "./common/converters"
 import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
 export class FlowMint {
-	constructor(private readonly sdk: FlowSdk, private readonly apis: IApisSdk) {
+	constructor(
+		private readonly sdk: FlowSdk,
+		private readonly apis: IApisSdk,
+		private network: FlowNetwork,
+	) {
 		this.prepare = this.prepare.bind(this)
 	}
 
@@ -38,8 +42,8 @@ export class FlowMint {
 						)
 						return {
 							type: MintType.ON_CHAIN,
-							itemId: toItemId(`FLOW:${flowCollection}:${mintResponse.tokenId}`),
-							transaction: new BlockchainFlowTransaction(mintResponse),
+							itemId: toItemId(`FLOW:${mintResponse.tokenId}`),
+							transaction: new BlockchainFlowTransaction(mintResponse, this.network),
 						}
 					},
 				}),

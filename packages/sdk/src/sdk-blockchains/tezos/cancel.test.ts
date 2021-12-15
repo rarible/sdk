@@ -10,7 +10,7 @@ describe("cancel test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1CHLDcbogVfVtRbg2TZKvL5p5w9WvhYe2G"
+	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 
 	test.skip("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint({

@@ -2,6 +2,7 @@ import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -17,17 +18,18 @@ export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
 	apis: IApisSdk,
 	network: FlowNetwork,
-	auth?: AuthWithPrivateKey
+	params?: ConfigurationParameters,
+	auth?: AuthWithPrivateKey,
 ): IRaribleInternalSdk {
-	const sdk = createFlowSdkInstance(wallet?.fcl, network, auth)
+	const sdk = createFlowSdkInstance(wallet?.fcl, network, params, auth)
 	const sellService = new FlowSell(sdk, apis)
-	const mintService = new FlowMint(sdk, apis)
+	const mintService = new FlowMint(sdk, apis, network)
 
 	return {
 		nft: {
 			mint: mintService.prepare,
-			burn: new FlowBurn(sdk).burn,
-			transfer: new FlowTransfer(sdk).transfer,
+			burn: new FlowBurn(sdk, network).burn,
+			transfer: new FlowTransfer(sdk, network).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
 			preprocessMeta: mintService.preprocessMeta,
@@ -35,12 +37,12 @@ export function createFlowSdk(
 		order: {
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			fill: new FlowBuy(sdk, apis).buy,
-			buy: new FlowBuy(sdk, apis).buy,
+			fill: new FlowBuy(sdk, apis, network).buy,
+			buy: new FlowBuy(sdk, apis, network).buy,
 			acceptBid: notImplemented,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: new FlowCancel(sdk, apis).cancel,
+			cancel: new FlowCancel(sdk, apis, network).cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,

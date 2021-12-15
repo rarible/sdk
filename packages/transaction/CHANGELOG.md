@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.33](https://github.com/rarible/sdk/compare/v0.7.32...v0.7.33) (2021-12-15)
+
+
+### Bug Fixes
+
+* update flow-sdk ([#60](https://github.com/rarible/sdk/issues/60)) ([31ed68e](https://github.com/rarible/sdk/commit/31ed68e7f964a8098fc912bf7c4a1caa61039390))
+
+
+
+
+
+## [0.7.31](https://github.com/rarible/sdk/compare/v0.7.30...v0.7.31) (2021-12-14)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
 ## [0.7.29](https://github.com/rarible/sdk/compare/v0.7.28...v0.7.29) (2021-12-13)
 
 
