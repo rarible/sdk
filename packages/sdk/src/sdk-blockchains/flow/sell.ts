@@ -47,16 +47,7 @@ export class FlowSell {
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
-		}).after((tx) => {
-			const orderId = tx.events.find(e => {
-				const eventType = e.type.split(".")[3]
-				return eventType === "OrderAvailable"
-			})
-			if (orderId) {
-				return toOrderId(`FLOW:${orderId.data.orderId}`)
-			}
-			throw new Error("Creation order event not fount in transaction result")
-		})
+		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
 
 
 		return {
@@ -92,16 +83,7 @@ export class FlowSell {
 				}
 				throw new Error(`Unsupported take asset: ${order.take.type["@type"]}`)
 			},
-		}).after((tx) => {
-			const orderId = tx.events.find(e => {
-				const eventType = e.type.split(".")[3]
-				return eventType === "OrderAvailable"
-			})
-			if (orderId) {
-				return toOrderId(`FLOW:${orderId.data.orderId}`)
-			}
-			throw new Error("Creation order event not fount in transaction result")
-		})
+		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
 
 
 		return {

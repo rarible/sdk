@@ -14,9 +14,9 @@ describe("Flow sell", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(
-		wallet.fcl, "testnet", { basePath: "https://flow-api-staging.rarible.com" }, authUser1,
+		wallet.fcl, "dev", {}, authUser1,
 	)
-	const apis = createApisSdk("staging")
+	const apis = createApisSdk("dev")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
 
@@ -24,7 +24,7 @@ describe("Flow sell", () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItem(sell, itemId, "0.1")
 		const order = await retry(
-			10, 4000, () => sdk.apis.order.getOrderByOrderId({ orderId: orderId }),
+			10, 4000, () => apis.order.getOrderById({ id: orderId }),
 		)
 		expect(order.take.value.toString()).toEqual("0.1")
 		const prepare = await sell.update({ orderId })

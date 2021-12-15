@@ -18,7 +18,7 @@
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "~0.0.10",
     "@rarible/ethereum-provider": "~0.12.1",
-    "@rarible/flow-sdk": "~0.5.11",
+    "@rarible/flow-sdk": "~0.5.13",
     "@rarible/protocol-ethereum-sdk": "~0.12.18",
     "@rarible/types": "~0.5.3",
     "tezos-sdk-module": "~0.0.41"
