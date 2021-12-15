@@ -88,7 +88,7 @@ describe("deploy-mint", () => {
 				expect(address).toBeTruthy()
 				expect(typeof address).toBe("string")
 
-				const collection = await retry(10, 1000, async () => {
+				const collection = await retry(15, 1000, async () => {
 					return await sdk.apis.collection.getCollectionById({
 						collection: address,
 					})
