@@ -2,6 +2,7 @@ import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -17,9 +18,10 @@ export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
 	apis: IApisSdk,
 	network: FlowNetwork,
-	auth?: AuthWithPrivateKey
+	params?: ConfigurationParameters,
+	auth?: AuthWithPrivateKey,
 ): IRaribleInternalSdk {
-	const sdk = createFlowSdkInstance(wallet?.fcl, network, auth)
+	const sdk = createFlowSdkInstance(wallet?.fcl, network, params, auth)
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, network)
 

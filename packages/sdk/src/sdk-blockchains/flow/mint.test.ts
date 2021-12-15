@@ -10,7 +10,9 @@ import { FlowMint } from "./mint"
 describe("Flow mint", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
+	const sdk = createFlowSdk(
+		wallet.fcl, "testnet", {}, authUser1,
+	)
 	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis, "testnet")
 

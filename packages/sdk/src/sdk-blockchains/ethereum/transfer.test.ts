@@ -6,6 +6,7 @@ import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/con
 import { deployTestErc1155 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc1155"
 import { toItemId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
+import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 
@@ -40,8 +41,10 @@ describe("transfer", () => {
 
 		await tx.wait()
 
-		const balanceRecipient = await it.testErc721.methods.balanceOf(receipentRaw).call()
-		expect(balanceRecipient).toBe("1")
+		await retry(10, 1000, async () => {
+			const balanceRecipient = await it.testErc721.methods.balanceOf(receipentRaw).call()
+			expect(balanceRecipient).toBe("1")
+		})
 	})
 
 	test("transfer erc1155", async () => {
@@ -63,8 +66,10 @@ describe("transfer", () => {
 
 		await tx.wait()
 
-		const balanceRecipient = await it.testErc1155.methods.balanceOf(receipentRaw, tokenId).call()
-		expect(balanceRecipient).toBe("10")
+		await retry(10, 1000, async () => {
+			const balanceRecipient = await it.testErc1155.methods.balanceOf(receipentRaw, tokenId).call()
+			expect(balanceRecipient).toBe("10")
+		})
 	})
 
 })

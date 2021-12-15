@@ -1,5 +1,6 @@
-import { toOrderId } from "@rarible/types"
+import { toBigNumber, toOrderId } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
+import { toFlowItemId } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { toBn } from "@rarible/utils/build/bn"
 import type { Order, OrderId } from "@rarible/api-client"
@@ -16,13 +17,17 @@ export class FlowSell {
 		type: "NATIVE",
 	}]
 
-	constructor(private readonly  sdk: FlowSdk, private readonly apis: IApisSdk) {
+	constructor(private readonly sdk: FlowSdk, private readonly apis: IApisSdk) {
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
 	}
 
 	async getPreparedOrder(request: OrderId): Promise<Order> {
 		return this.apis.order.getOrderById({ id: request })
+	}
+
+	getFlowProtocolFee() {
+		return parseInt(this.sdk.order.getProtocolFee().sellerFee.value)
 	}
 
 	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
@@ -33,13 +38,12 @@ export class FlowSell {
 				if (sellRequest.currency["@type"] === "FLOW_FT") {
 					const currency = getFungibleTokenName(sellRequest.currency.contract)
 					const { itemId } = parseUnionItemId(sellRequest.itemId)
-					return this.sdk.order.sell(
-						contract,
+					return this.sdk.order.sell({
+						collection: contract,
 						currency,
-						// @todo leave string when support it on flow-sdk transactions
-						parseInt(itemId),
-						toBn(sellRequest.price).decimalPlaces(8).toString(),
-					)
+						itemId: toFlowItemId(`${contract}:${itemId}`),
+						sellItemPrice: toBn(sellRequest.price).decimalPlaces(8).toString(),
+					})
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
@@ -58,7 +62,7 @@ export class FlowSell {
 		return {
 			multiple: false,
 			supportedCurrencies: FlowSell.supportedCurrencies,
-			baseFee: 250,
+			baseFee: this.getFlowProtocolFee(),
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit: sellAction,
@@ -77,13 +81,12 @@ export class FlowSell {
 				if (order.take.type["@type"] === "FLOW_FT") {
 					const currency = getFungibleTokenName(order.take.type.contract)
 					if (order.make.type["@type"] === "FLOW_NFT") {
-						return await this.sdk.order.updateOrder(
-							getFlowCollection(order.make.type.contract),
+						return await this.sdk.order.updateOrder({
+							collection: getFlowCollection(order.make.type.contract),
 							currency,
-							// @todo leave string when support it on flow-sdk transactions
-							parseInt(orderId),
-							toBn(sellRequest.price).decimalPlaces(8).toString(),
-						)
+							order: parseInt(orderId),
+							sellItemPrice: toBigNumber(toBn(sellRequest.price).decimalPlaces(8).toString()),
+						})
 					}
 					throw new Error(`Unsupported make asset: ${order.make.type["@type"]}`)
 				}
@@ -105,7 +108,7 @@ export class FlowSell {
 			supportedCurrencies: FlowSell.supportedCurrencies,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
-			baseFee: 250,
+			baseFee: this.getFlowProtocolFee(),
 			submit: sellAction,
 		}
 	}

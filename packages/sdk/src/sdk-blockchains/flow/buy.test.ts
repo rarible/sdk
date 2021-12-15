@@ -13,7 +13,9 @@ import { FlowBuy } from "./buy"
 describe("Flow buy", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", authUser1)
+	const sdk = createFlowSdk(
+		wallet.fcl, "testnet", { basePath: "https://flow-api-staging.rarible.com" }, authUser1,
+	)
 	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
