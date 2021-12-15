@@ -46,6 +46,7 @@ export class FlowBuy {
 
 	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
+		const protocolFee = parseInt(this.sdk.order.getProtocolFee().buyerFee.value)
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
@@ -56,7 +57,12 @@ export class FlowBuy {
 					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
 					// @todo leave string when support it on flow-sdk transactions
 					const orderId = parseInt(converters.parseOrderId(order.id))
-					return this.sdk.order.buy(collectionId, currency, orderId, owner)
+					return this.sdk.order.fill(
+						collectionId,
+						currency,
+						orderId,
+						owner,
+						[])
 				},
 			})
 			.after(tx => new BlockchainFlowTransaction(tx, this.network))
@@ -64,7 +70,7 @@ export class FlowBuy {
 		return {
 			multiple: false,
 			maxAmount: toBigNumber("1"),
-			baseFee: 250,
+			baseFee: protocolFee,
 			supportsPartialFill: false,
 			// @todo not supported on flow yet
 			originFeeSupport: OriginFeeSupport.NONE,
