@@ -13,9 +13,7 @@ import { FlowSell } from "./sell"
 describe("Flow sell", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(
-		wallet.fcl, "dev", {}, authUser1,
-	)
+	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
 	const apis = createApisSdk("dev")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
@@ -23,9 +21,7 @@ describe("Flow sell", () => {
 	test.skip("Should sell flow NFT item and update order", async () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItem(sell, itemId, "0.1")
-		const order = await retry(
-			10, 4000, () => apis.order.getOrderById({ id: orderId }),
-		)
+		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
 		expect(order.take.value.toString()).toEqual("0.1")
 		const prepare = await sell.update({ orderId })
 		const updatedOrderId = await prepare.submit({

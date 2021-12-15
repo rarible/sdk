@@ -3064,10 +3064,10 @@
     flow-js-testing "~0.1.13"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@~0.12.18", "@rarible/protocol-ethereum-sdk@~0.12.20":
-  version "0.12.20"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.20.tgz#984340511f00e66ab9a541df1906bb7ef975418a"
-  integrity sha512-o/2e8wbY26uTSQlvxmW1O5cfe/4u9UveGmQfSbeeT0XwlEbYv7/ra5Gd6WwFAoYaV63YYQODFaccrGifgiAQew==
+"@rarible/protocol-ethereum-sdk@~0.12.21":
+  version "0.12.21"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.21.tgz#9c1b2579acfc00a47815b6480c7542b6da66be23"
+  integrity sha512-9KWyRpUGFKLWWM1CHRBfeoDcqppraqf3TaNDpkxPv5nPaJtYqhd6VavlMCFUsXoXkAIEkYK9MYvDQf5mFSh2SA==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
@@ -13016,10 +13016,10 @@ tezos-api-client@~0.0.14:
   resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.14.tgz#111a289319ac1a4ccf9788b13fdf72470dc4670f"
   integrity sha512-D7H3l10HHptpE/FNsNHtL9DltbRVpi41rekNUKCe9GOR3PZvBalFGfVRQ5sQ3DsTqvJW5ahTUXf3adBzLL8v5A==
 
-tezos-sdk-module@0.0.41, tezos-sdk-module@~0.0.41:
-  version "0.0.41"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.41.tgz#b7d8ac52c8ac689ed293a37ad64ee1d1f5065c9b"
-  integrity sha512-3PU4yKSvle2C7HnXVKzBQcHuHVT4qLrpRyQyC+aGcNNRqHZAqn0uMknQfauIUDcVkYISHa2C5gXEcdNI9SL6Ng==
+tezos-sdk-module@0.0.42, tezos-sdk-module@~0.0.42:
+  version "0.0.42"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.42.tgz#11648567493f9628cdc51601b9bf19209a4a26bd"
+  integrity sha512-+tuocFzGcBLRbGIEYamyBlGcy8ivhYyy0jbVxAE2FMMChwEOud9wNYjdJ5KE0Qr1qFHJ24JwmBpIPlqAYO9dUQ==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
