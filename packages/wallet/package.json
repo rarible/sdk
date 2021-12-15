@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.7.34",
+  "version": "0.7.36",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
