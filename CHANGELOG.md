@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.37](https://github.com/rarible/sdk/compare/v0.7.36...v0.7.37) (2021-12-15)
+
+
+### Bug Fixes
+
+* better tezos metadata ([c30b205](https://github.com/rarible/sdk/commit/c30b2051fdaf7d518c51220077717a35a9aed8a6))
+
+
+
+
+
 ## [0.7.36](https://github.com/rarible/sdk/compare/v0.7.35...v0.7.36) (2021-12-15)
 
 **Note:** Version bump only for package root
