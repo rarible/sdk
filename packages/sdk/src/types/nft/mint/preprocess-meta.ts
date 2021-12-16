@@ -19,7 +19,7 @@ export type CommonTokenMetadata = {
 	description: string | undefined
 	image: CommonTokenContent | undefined
 	animation: CommonTokenContent | undefined
-	external: CommonTokenContent | undefined
+	external: string | undefined
 	attributes: TokenMetadataAttribute[]
 	royalties?: UnionPart[]
 }
@@ -45,9 +45,7 @@ export type CommonTokenMetadataResponse = {
 	name: string
 	description: string | undefined
 	image: string | undefined
-	// eslint-disable-next-line camelcase
-	animation_url: string | undefined
-	// eslint-disable-next-line camelcase
-	external_url: string | undefined
+	"animation_url": string | undefined
+	"external_url": string | undefined
 	attributes: TokenMetadataAttribute[]
 }

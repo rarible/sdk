@@ -29,24 +29,23 @@ export class TezosMint {
 	}
 
 	getFormatsMeta(meta: PreprocessMetaRequest) {
-		return [meta.image, meta.animation, meta.external]
+		return [meta.image, meta.animation]
 			.reduce((acc, item) => {
 				if (item) {
 					const { url, ...rest } = item
-					return acc.concat({ ...rest, uri: url })
+					return acc.concat({ ...rest, uri: fixIpfs(url) })
 				}
 				return acc
 			}, [] as TezosMetaContent[])
 	}
-	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
 
+	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+		const artifact = meta.animation || meta.image
 		return {
 			name: meta.name,
 			description: meta.description,
-			artifactUri: fixIpfs(meta.animation?.url || meta.image?.url),
-			displayUri: fixIpfs(meta.image?.url || meta.image?.url),
-			thumbnailUri: fixIpfs(meta.image?.url || meta.image?.url),
-			externalUri: fixIpfs(meta.external?.url || meta.image?.url),
+			artifactUri: artifact ? fixIpfs(artifact.url) : undefined,
+			displayUri: meta.image ? fixIpfs(meta.image.url) : undefined,
 			attributes: meta.attributes?.map(attr => ({
 				name: attr.key,
 				value: attr.value,
@@ -85,7 +84,6 @@ export class TezosMint {
 					}, {} as { [key: string]: BigNumber }) || {}
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
-
 					const provider = getRequiredProvider(this.provider)
 
 					const result = await mint(
@@ -95,7 +93,7 @@ export class TezosMint {
 						supply,
 						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
 						{
-							"": fixIpfs(request.uri)!,
+							"": fixIpfs(request.uri),
 						},
 						await this.getOwner(request),
 					)
@@ -134,19 +132,11 @@ export async function getCollectionData(
 }
 
 export function getContractFromRequest(request: HasCollection | HasCollectionId): ContractAddress {
-	if ("collection" in request) {
-		return request.collection.id
-	} else if ("collectionId" in request) {
-		return request.collectionId
-	} else {
-		throw new Error("Wrong request: collection or collectionId has not been found")
-	}
+	if ("collection" in request) return request.collection.id
+	if ("collectionId" in request) return request.collectionId
+	throw new Error("Wrong request: collection or collectionId has not been found")
 }
 
-function fixIpfs(link: string | undefined): string | undefined {
-	if (link) {
-		return link.replace("ipfs://ipfs/", "ipfs://")
-	} else {
-		return link
-	}
+function fixIpfs(link: string): string {
+	return link.replace("ipfs://ipfs/", "ipfs://")
 }

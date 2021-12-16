@@ -72,17 +72,16 @@ describe("mint test", () => {
 			name: "1",
 			description: "2",
 			image: {
-				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
 				mimeType: "image/jpeg",
+				fileName: "image",
 			},
 			animation: {
-				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-				mimeType: "image/jpeg",
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG2",
+				mimeType: "image/mp4",
+				fileName: "video",
 			},
-			external: {
-				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-				mimeType: "image/jpeg",
-			},
+			external: "https://rarible.com",
 			attributes: [{
 				key: "eyes",
 				value: "1",
@@ -91,6 +90,20 @@ describe("mint test", () => {
 
 		expect(response.name).toBe("1")
 		expect(response.description).toBe("2")
+		expect(response.artifactUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG2")
+		expect(response.displayUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1")
+		expect(response.formats).toStrictEqual([
+			{
+				uri: "ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
+				mimeType: "image/jpeg",
+				fileName: "image",
+			},
+			{
+				uri: "ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG2",
+				mimeType: "image/mp4",
+				fileName: "video",
+			},
+		])
 		expect(response.attributes[0].name).toBe("eyes")
 		expect(response.attributes[0].value).toBe("1")
 	})

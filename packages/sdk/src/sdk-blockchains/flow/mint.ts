@@ -58,7 +58,7 @@ export class FlowMint {
 			description: meta.description,
 			image: meta.image?.url,
 			animation_url: meta.animation?.url,
-			external_url: meta.external?.url,
+			external_url: meta.external,
 			attributes: meta.attributes,
 		}
 	}
