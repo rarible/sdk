@@ -21,7 +21,7 @@
     "@ethereumjs/common": "^2.5.0",
     "@ethereumjs/tx": "^3.3.0",
     "@rarible/api-client": "~0.0.10",
-    "@rarible/flow-sdk": "~0.5.17",
+    "@rarible/flow-sdk": "~0.5.18",
     "@rarible/protocol-ethereum-sdk": "~0.12.21",
     "@rarible/sdk-transaction": "^0.7.39",
     "@rarible/sdk-wallet": "^0.7.36",
