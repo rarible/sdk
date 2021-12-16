@@ -43,10 +43,10 @@ export class TezosMint {
 		return {
 			name: meta.name,
 			description: meta.description,
-			artifactUri: meta.animation?.url,
-			displayUri: meta.image?.url,
-			thumbnailUri: meta.image?.url,
-			externalUri: meta.external?.url || meta.image?.url,
+			artifactUri: fixIpfs(meta.animation?.url || meta.image?.url),
+			displayUri: fixIpfs(meta.image?.url || meta.image?.url),
+			thumbnailUri: fixIpfs(meta.image?.url || meta.image?.url),
+			externalUri: fixIpfs(meta.external?.url || meta.image?.url),
 			attributes: meta.attributes?.map(attr => ({
 				name: attr.key,
 				value: attr.value,
@@ -95,7 +95,7 @@ export class TezosMint {
 						supply,
 						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
 						{
-							"": request.uri,
+							"": fixIpfs(request.uri)!,
 						},
 						await this.getOwner(request),
 					)
@@ -140,5 +140,13 @@ export function getContractFromRequest(request: HasCollection | HasCollectionId)
 		return request.collectionId
 	} else {
 		throw new Error("Wrong request: collection or collectionId has not been found")
+	}
+}
+
+function fixIpfs(link: string | undefined): string | undefined {
+	if (link) {
+		return link.replace("ipfs://ipfs/", "ipfs://")
+	} else {
+		return link
 	}
 }

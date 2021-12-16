@@ -3,6 +3,41 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.39](https://github.com/rarible/sdk/compare/v0.7.38...v0.7.39) (2021-12-16)
+
+
+### Bug Fixes
+
+* update flow-sdk ([93d4c1f](https://github.com/rarible/sdk/commit/93d4c1f9df1625b95606ebeed435edd2f3f851e1))
+* update flow-sdk version (return legacy order trasactions) ([09e7e01](https://github.com/rarible/sdk/commit/09e7e012273c98d9152fc3463b6057ec6f6b5b60))
+
+
+
+
+
+## [0.7.38](https://github.com/rarible/sdk/compare/v0.7.37...v0.7.38) (2021-12-15)
+
+
+### Bug Fixes
+
+* better tezos metadata (tests) ([b75f89d](https://github.com/rarible/sdk/commit/b75f89d933de2584553c993051a710fa2155cfd3))
+* better tezos metadata + tests ([621f82c](https://github.com/rarible/sdk/commit/621f82cdf158414e7ab1bd2e40bd88bc25205c1d))
+
+
+
+
+
+## [0.7.37](https://github.com/rarible/sdk/compare/v0.7.36...v0.7.37) (2021-12-15)
+
+
+### Bug Fixes
+
+* better tezos metadata ([c30b205](https://github.com/rarible/sdk/commit/c30b2051fdaf7d518c51220077717a35a9aed8a6))
+
+
+
+
+
 ## [0.7.36](https://github.com/rarible/sdk/compare/v0.7.35...v0.7.36) (2021-12-15)
 
 **Note:** Version bump only for package @rarible/sdk
