@@ -15,7 +15,6 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { CommonTokenContent } from "../../types/nft/mint/preprocess-meta"
 import type { ITezosAPI, MaybeProvider, TezosMetadataResponse, TezosMetaContent } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
