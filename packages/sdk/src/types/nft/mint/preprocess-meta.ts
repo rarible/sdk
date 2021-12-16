@@ -17,11 +17,28 @@ export type TokenMetadataAttribute = {
 export type CommonTokenMetadata = {
 	name: string
 	description: string | undefined
-	image: string | undefined
-	animationUrl: string | undefined
-	externalUrl: string | undefined
+	image: CommonTokenContent | undefined
+	animation: CommonTokenContent | undefined
+	external: CommonTokenContent | undefined
 	attributes: TokenMetadataAttribute[]
 	royalties?: UnionPart[]
+}
+
+export type CommonTokenContent = {
+	url: string
+	mimeType: string
+	hash?: string
+	fileSize?: number
+	fileName?: string
+	duration?: string
+	dataRate?: {
+		value: number
+		unit: string
+	}
+	dimensions?: {
+		value: string
+		unit: string
+	}
 }
 
 export type CommonTokenMetadataResponse = {
