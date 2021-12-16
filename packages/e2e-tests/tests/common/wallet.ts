@@ -5,7 +5,6 @@ import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { createTestFlowAuth } from "@rarible/sdk/src/sdk-blockchains/flow/test/create-test-flow-auth"
 import fcl from "@onflow/fcl"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
