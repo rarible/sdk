@@ -87,10 +87,7 @@ describe("mint", () => {
 				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
 				mimeType: "image/gif",
 			},
-			external: {
-				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
-				mimeType: "image/jpeg",
-			},
+			external: "https://rarible.com",
 			attributes: [{
 				key: "eyes",
 				value: "1",
@@ -101,7 +98,7 @@ describe("mint", () => {
 		expect(response.description).toBe("2")
 		expect(response.image).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
 		expect(response.animation_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
-		expect(response.external_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.external_url).toBe("https://rarible.com")
 		expect(response.attributes[0].key).toBe("eyes")
 		expect(response.attributes[0].value).toBe("1")
 	})
