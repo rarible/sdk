@@ -2,20 +2,23 @@ import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
 import type { DeployTokenRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
-import { MintType } from "@rarible/sdk/src/types/nft/mint/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { DeployTezosTokenRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
-import { retry } from "@rarible/sdk/src/common/retry"
-import { getWalletAddress } from "./common/wallet"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { getEthereumWallet, getTezosWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
+import { mint } from "./common/atoms-tests/mint"
+import { getCollection } from "./common/helpers"
 
 const suites: {
 	blockchain: Blockchain,
+	wallet: BlockchainWallet,
 	deployRequest: (address: UnionAddress) => DeployTokenRequest
 	mintRequest: (address: UnionAddress) => MintRequest
 }[] = [
 	{
 		blockchain: Blockchain.ETHEREUM,
+		wallet: getEthereumWallet(),
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		deployRequest: (walletAddress: UnionAddress) => {
 			return {
@@ -47,6 +50,7 @@ const suites: {
 	},
 	{
 		blockchain: Blockchain.TEZOS,
+		wallet: getTezosWallet(),
 		deployRequest: (walletAddress: UnionAddress): DeployTezosTokenRequest => {
 			return {
 				blockchain: Blockchain.TEZOS,
@@ -78,7 +82,8 @@ const suites: {
 describe("deploy-mint", () => {
 	for (const suite of suites) {
 		describe(suite.blockchain, () => {
-			const { sdk, wallet } = createSdk(suite.blockchain)
+			const wallet = suite.wallet
+			const sdk = createSdk(suite.blockchain, wallet)
 
 			test("should deploy and mint nft", async () => {
 				const walletAddress = toUnionAddress(await getWalletAddress(wallet))
@@ -88,25 +93,8 @@ describe("deploy-mint", () => {
 				expect(address).toBeTruthy()
 				expect(typeof address).toBe("string")
 
-				const collection = await retry(15, 1000, async () => {
-					return await sdk.apis.collection.getCollectionById({
-						collection: address,
-					})
-				})
-
-				expect(collection).not.toBe(null)
-
-				const mintPrepare = await sdk.nft.mint({ collection })
-
-				const mintResult = await mintPrepare.submit(suite.mintRequest(walletAddress))
-
-				if (mintResult.type === MintType.ON_CHAIN) {
-					const transaction = await mintResult.transaction.wait()
-					expect(transaction.blockchain).toEqual(suite.blockchain)
-					expect(transaction.hash).toBeTruthy()
-				} else {
-					throw new Error("Must be on chain")
-				}
+				const collection = await getCollection(sdk, address)
+				await mint(sdk, wallet, { collection }, suite.mintRequest(walletAddress))
 			})
 		})
 	}
