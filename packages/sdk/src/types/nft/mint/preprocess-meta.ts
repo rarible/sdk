@@ -24,29 +24,21 @@ export type CommonTokenMetadata = {
 	royalties?: UnionPart[]
 }
 
-export type CommonTokenContent = CommonTokenStreamContent | CommonTokenImageContent
-
-export type CommonTokenStreamContent = CommonTokenContentGeneral & {
-	duration?: string
-	dataRate?: {
-		value: number
-		unit: string
-	}
-}
-
-export type CommonTokenImageContent = CommonTokenContentGeneral & {
-	dimensions?: {
-		value: string
-		unit: string
-	}
-}
-
-export type CommonTokenContentGeneral = {
+export type CommonTokenContent = {
 	url: string
 	mimeType: string
 	hash?: string
 	fileSize?: number
 	fileName?: string
+	duration?: string
+	dataRate?: {
+		value: number
+		unit: string
+	}
+	dimensions?: {
+		value: string
+		unit: string
+	}
 }
 
 export type CommonTokenMetadataResponse = {

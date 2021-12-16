@@ -72,7 +72,7 @@ export type TezosMetaContent = {
 		unit: string
 	}
 	dataRate?: {
-		value: string
+		value: number
 		unit: string
 	}
 }
