@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.40](https://github.com/rarible/sdk/compare/v0.7.39...v0.7.40) (2021-12-16)
+
+
+### Features
+
+* update preprocess meta ([#67](https://github.com/rarible/sdk/issues/67)) ([2c96dca](https://github.com/rarible/sdk/commit/2c96dca8b1deb7d42b3fa6d0660b31fa3c77f0e0))
+
+
+
+
+
 ## [0.7.39](https://github.com/rarible/sdk/compare/v0.7.38...v0.7.39) (2021-12-16)
 
 
