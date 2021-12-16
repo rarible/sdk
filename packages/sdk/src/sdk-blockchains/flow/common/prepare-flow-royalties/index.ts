@@ -1,7 +1,7 @@
 import type { Royalty } from "@rarible/api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import type { FlowRoyalty } from "@rarible/flow-sdk"
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toBigNumber } from "@rarible/types"
 import { parseFlowAddressFromUnionAddress } from "../converters"
 
 export function prepareFlowRoyalties(royalty: Royalty[] | undefined): FlowRoyalty[] {

@@ -25,24 +25,27 @@ export function createEthereumSdk(
 	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
 	const sellService = new EthereumSell(sdk)
 	const bidService = new EthereumBid(sdk)
-	const mintService = new EthereumMint(sdk, apis)
+	const mintService = new EthereumMint(sdk, apis, network)
+	const fillerService = new EthereumFill(sdk, wallet, network)
 
 	return {
 		nft: {
-			transfer: new EthereumTransfer(sdk).transfer,
+			transfer: new EthereumTransfer(sdk, network).transfer,
 			mint: mintService.prepare,
-			burn: new EthereumBurn(sdk).burn,
+			burn: new EthereumBurn(sdk, network).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
-			deploy: new EthereumDeploy(sdk).deployToken,
+			deploy: new EthereumDeploy(sdk, network).deployToken,
 			preprocessMeta: mintService.preprocessMeta,
 		},
 		order: {
-			fill: new EthereumFill(sdk, wallet).fill,
+			fill: fillerService.fill,
+			buy: fillerService.buy,
+			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
-			cancel: new EthereumCancel(sdk).cancel,
+			cancel: new EthereumCancel(sdk, network).cancel,
 		},
 		balances: {
 			getBalance: new EthereumBalance(sdk).getBalance,

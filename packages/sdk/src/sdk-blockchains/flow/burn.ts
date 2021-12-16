@@ -2,11 +2,15 @@ import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowSdk } from "@rarible/flow-sdk"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import { parseUnionItemId } from "./common/converters"
 
 export class FlowBurn {
-	constructor(private sdk: FlowSdk) {
+	constructor(
+		private sdk: FlowSdk,
+		private network: FlowNetwork,
+	) {
 		this.burn = this.burn.bind(this)
 	}
 
@@ -25,7 +29,7 @@ export class FlowBurn {
 				run: async (request: BurnRequest) => {
 					// @todo itemId number must be string
 					const tx = await this.sdk.nft.burn(contract, parseInt(itemId))
-					return new BlockchainFlowTransaction(tx)
+					return new BlockchainFlowTransaction(tx, this.network)
 				},
 			}),
 		}

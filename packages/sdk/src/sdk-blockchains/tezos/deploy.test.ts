@@ -26,7 +26,7 @@ describe("deploy tezos tests", () => {
 		})
 
 		await result.tx.wait()
-
+		console.log(result)
 		await awaitForCollection(sdk, result.address)
 	})
 
@@ -64,6 +64,7 @@ describe("deploy tezos tests", () => {
 		})
 
 		await result.tx.wait()
+		console.log(result)
 
 		await awaitForCollection(sdk, result.address)
 	})

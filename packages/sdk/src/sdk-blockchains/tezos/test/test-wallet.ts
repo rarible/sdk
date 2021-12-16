@@ -6,7 +6,7 @@ export function createTestWallet(edsk: string) {
 	return new TezosWallet(
 		in_memory_provider(
 			edsk,
-			"https://hangzhou.tz.functori.com"
+			"http://a0e521d4ae6544ae0845868a990a0449-1808125768.eu-west-1.elb.amazonaws.com:8732"
 		)
 	)
 }

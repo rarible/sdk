@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.7.11",
+  "version": "0.7.36",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -9,18 +9,17 @@
     "build"
   ],
   "scripts": {
-    "build": "yarn run build-ts",
-    "build-ts": "tsc --project tsconfig-build.json",
+    "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "~0.0.9",
+    "@rarible/api-client": "~0.0.10",
     "@rarible/ethereum-provider": "~0.12.1",
-    "@rarible/fcl-types": "~0.3.0",
-    "tezos-sdk-module": "~0.0.30"
+    "@rarible/fcl-types": "~0.5.0",
+    "tezos-sdk-module": "~0.0.42"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -33,10 +32,12 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
+    "@rarible/web3-ethereum": "~0.12.16",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.4",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.4.4"
+    "typescript": "^4.4.4",
+    "web3": "~1.2.11"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

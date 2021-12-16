@@ -13,8 +13,8 @@ describe("mint test", () => {
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
-	let mtContract: string = "KT18vSGouhJcJZDDgrbBKkdCBjSXJWSbui3i"
+	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
+	let mtContract: string = "KT1NtruXoo4NSLNTyy9tcHraMAdQTHzXbLoH"
 
 	test.skip("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -62,6 +62,7 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log(mintResult)
 		await awaitForItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
@@ -82,10 +83,9 @@ describe("mint test", () => {
 
 		expect(response.name).toBe("1")
 		expect(response.description).toBe("2")
-		expect(response.artifactUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
-		expect(response.displayUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
-		expect(response.thumbnailUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
-		expect(response.externalUri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.displayUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
+		expect(response.artifactUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
+		expect(response.externalUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
 		expect(response.attributes[0].name).toBe("eyes")
 		expect(response.attributes[0].value).toBe("1")
 	})

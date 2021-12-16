@@ -19,6 +19,7 @@ To use SDK, first you have to create a Wallet - abstraction to communicate with 
 
 ```ts
 //initialize ethereum wallet
+import { Web3Ethereum } from "@rarible/web3-ethereum" // should also be installed
 import { EthereumWallet } from "@rarible/sdk-wallet"
 
 const ethereum = new Web3Ethereum({ web3, from })
@@ -164,8 +165,12 @@ const orderId = await submit({
 })
 ```
 
+### Fill orders (buy or accept bid)
+
 When order is created, it's propagated to all users of the Protocol.
 Any app can initiate process to fill the order.
+
+Use `sdk.order.buy()` or `sdk.order.acceptBid()` methods to fill sell or bid orders. 
 
 ```ts
 const {
@@ -174,7 +179,7 @@ const {
   originFeeSupport, // if smart contract supports custom origin fees
   payoutsSupport, // if smart contract supports payouts
   supportsPartialFill, // if smart contract supports partial fills 
-} = await sdk.order.fill({ order }) //you can also use orderId if you don't have order
+} = await sdk.order.buy({ order }) //you can also use orderId if you don't have order
 
 //collect information from the user 
 //then submit

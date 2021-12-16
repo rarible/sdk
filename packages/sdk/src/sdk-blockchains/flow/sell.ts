@@ -1,21 +1,16 @@
-import { toOrderId } from "@rarible/types"
+import { toBigNumber, toOrderId } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { toFlowItemId } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
+import { toBn } from "@rarible/utils/build/bn"
 import type { Order, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import {
-	getFlowBaseFee,
-	getFlowCollection,
-	getFungibleTokenName,
-	parseUnionItemId,
-	toFlowParts,
-} from "./common/converters"
+import { getFlowCollection, getFungibleTokenName, parseUnionItemId, toFlowParts } from "./common/converters"
+import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowSell {
 	static supportedCurrencies: CurrencyType[] = [{
@@ -43,10 +38,11 @@ export class FlowSell {
 					return this.sdk.order.sell({
 						collection: contract,
 						currency,
-						itemId: toFlowItemId(itemId),
-						sellItemPrice: toBigNumber(sellRequest.price.toString()),
+						itemId: toFlowItemId(`${contract}:${itemId}`),
+						sellItemPrice: toBn(sellRequest.price).decimalPlaces(8).toString(),
 						originFees: toFlowParts(sellRequest.originFees),
 					})
+
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
@@ -79,7 +75,7 @@ export class FlowSell {
 							collection: getFlowCollection(order.make.type.contract),
 							currency,
 							order: parseInt(orderId),
-							sellItemPrice: toBigNumber(sellRequest.price.toString()),
+							sellItemPrice: toBigNumber(toBn(sellRequest.price).decimalPlaces(8).toString()),
 						})
 					}
 					throw new Error(`Unsupported make asset: ${order.make.type["@type"]}`)

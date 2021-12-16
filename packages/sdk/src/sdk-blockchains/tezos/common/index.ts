@@ -1,7 +1,13 @@
 import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 // eslint-disable-next-line camelcase
-import type { Provider, TezosProvider, AssetType as TezosAssetType, Asset as TezosLibAsset } from "tezos-sdk-module/dist/common/base"
+import type {
+	Provider,
+	TezosProvider,
+	AssetType as TezosAssetType,
+	Asset as TezosLibAsset,
+	TezosNetwork,
+} from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
 import { get_public_key } from "tezos-sdk-module/dist/common/base"
 // eslint-disable-next-line camelcase
@@ -17,7 +23,6 @@ import {
 	NftOwnershipControllerApi,
 	OrderControllerApi,
 } from "tezos-api-client/build"
-import type { Config } from "tezos-sdk-module"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ContractAddress, OrderId } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
@@ -25,9 +30,9 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
+import type { Config } from "tezos-sdk-module"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
-import type { TezosNetwork } from "../domain"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
@@ -98,6 +103,9 @@ export function getTezosBasePath(network: TezosNetwork): string {
 		case "hangzhou": {
 			return "https://rarible-api.functori.com"
 		}
+		case "mainnet": {
+			return "https://tezos-api.rarible.org"
+		}
 		default: {
 			throw new Error("Unsupported tezos network")
 		}
@@ -117,8 +125,22 @@ export function getMaybeTezosProvider(
 				tezos: provider,
 				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
-					exchange: "KT1AguExF32Z9UEKzD5nuixNmqrNs1jBKPT8",
-					fees: new BigNumber(300),
+					exchange: "KT1ULGjK8FtaJ9QqCgJVN14B6tY76Ykaz6M8",
+					transfer_proxy: "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
+					fees: new BigNumber(0),
+					nft_public: "",
+					mt_public: "",
+				},
+			}
+		}
+		case "mainnet": {
+			return {
+				tezos: provider,
+				api: `${getTezosBasePath(network)}/v0.1`,
+				config: {
+					exchange: "KT198mqFKkiWerXLmMCw69YB1i6yzYtmGVrC",
+					transfer_proxy: "KT1N2oby9tYmv5tjkGD1KyVzkDRCmgDkXgSD",
+					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
 				},
@@ -245,6 +267,7 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 			return {
 				asset_class: "FT",
 				contract: convertContractAddress(type.contract),
+				token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
 			}
 		}
 		case "TEZOS_NFT": {

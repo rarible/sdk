@@ -12,6 +12,10 @@ describe("Test FLOW converter functions", () => {
 		const test1 = () => converters.getFlowCollection(toContractAddress("FLOW:A.abcdef0123456789.ContractName"))
 		expect(typeof test1()).toEqual("string")
 	})
+	test("getFlowCollection: should success get collection with underscore", () => {
+		const test1 = () => converters.getFlowCollection(toContractAddress("FLOW:A.abcdef0123456789.C_Name"))
+		expect(typeof test1()).toEqual("string")
+	})
 	test("getFlowCollection should throw error, blockchain not defined", () => {
 		const test2 = () => converters.getFlowCollection(toContractAddress("A.0xabcdef0123456789.ContractName"))
 		expect(test2).toThrow(Error)

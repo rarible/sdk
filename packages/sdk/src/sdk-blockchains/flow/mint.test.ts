@@ -10,9 +10,9 @@ import { FlowMint } from "./mint"
 describe("Flow mint", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
-	const apis = createApisSdk("staging")
-	const mint = new FlowMint(sdk, apis)
+	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
+	const apis = createApisSdk("dev")
+	const mint = new FlowMint(sdk, apis, "testnet")
 
 	test.skip("Should mint new NFT", async () => {
 		const itemId = await createTestItem(mint)

@@ -3,12 +3,17 @@ import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import { getFlowCollection, parseOrderId } from "./common/converters"
 
 export class FlowCancel {
-	constructor(private sdk: FlowSdk, private apis: IApisSdk) {
+	constructor(
+		private sdk: FlowSdk,
+		private apis: IApisSdk,
+		private network: FlowNetwork,
+	) {
 		this.cancel = this.cancel.bind(this)
 	}
 
@@ -31,7 +36,7 @@ export class FlowCancel {
 			})
 			const collectionId = getFlowCollection(this.getFlowContract(order))
 			const tx = await this.sdk.order.cancelOrder(collectionId, parsed)
-			return new BlockchainFlowTransaction(tx)
+			return new BlockchainFlowTransaction(tx, this.network)
 		},
 	})
 }

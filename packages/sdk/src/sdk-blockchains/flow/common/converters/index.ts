@@ -1,4 +1,4 @@
-import type { FlowContractAddress, FlowCurrency, FlowSdk } from "@rarible/flow-sdk"
+import type { FlowContractAddress, FlowCurrency } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
@@ -9,7 +9,7 @@ import type { FlowFee } from "@rarible/flow-sdk/build/types"
 import type { FlowItemId } from "../../../../common/domain"
 import type { UnionPart } from "../../../../types/order/common"
 
-const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
+const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
 
 /**
  * Get flow collection from union collection
@@ -119,8 +119,4 @@ export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
 			value: toBigNumber(p.value.toString()),
 		}
 	}) || []
-}
-
-export function getFlowBaseFee(sdk: FlowSdk): number {
-	return parseInt(sdk.order.getProtocolFee().sellerFee.value)
 }

@@ -1,4 +1,4 @@
-import type { Provider } from "tezos-sdk-module/dist/common/base"
+import type { Provider, TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import { transfer } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
@@ -14,6 +14,7 @@ export class TezosTransfer {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {
 		this.transfer = this.transfer.bind(this)
 	}
@@ -50,7 +51,7 @@ export class TezosTransfer {
 						amount,
 					)
 
-					return new BlockchainTezosTransaction(result)
+					return new BlockchainTezosTransaction(result, this.network)
 				},
 			}),
 		}

@@ -1,21 +1,16 @@
 // eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
-import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { delay, retry } from "../../common/retry"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { createTestWallet } from "./test/test-wallet"
 
 describe("cancel test", () => {
-	const tezos = in_memory_provider(
-		"edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8",
-		"https://hangzhou.tz.functori.com"
-	)
-	const wallet = new TezosWallet(tezos)
+	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1CHLDcbogVfVtRbg2TZKvL5p5w9WvhYe2G"
+	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 
 	test.skip("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -43,6 +38,7 @@ describe("cancel test", () => {
 				"@type": "XTZ",
 			},
 		})
+
 		await retry(10, 1000, async () => {
 			const order = await sdk.apis.order.getOrderById({
 				id: orderId,

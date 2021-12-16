@@ -13,11 +13,11 @@ import { FlowBuy } from "./buy"
 describe("Flow buy", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
-	const apis = createApisSdk("staging")
-	const mint = new FlowMint(sdk, apis)
+	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
+	const apis = createApisSdk("dev")
+	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
-	const fill = new FlowBuy(sdk, apis)
+	const fill = new FlowBuy(sdk, apis, "testnet")
 
 	test.skip("Should buy flow NFT item", async () => {
 		const itemId = await createTestItem(mint)

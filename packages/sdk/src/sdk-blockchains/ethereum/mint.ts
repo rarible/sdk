@@ -11,6 +11,7 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
 import { CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -24,7 +25,11 @@ import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preproces
 import { convertToEthereumAddress } from "./common"
 
 export class EthereumMint {
-	constructor(private readonly sdk: RaribleSdk, private readonly apis: IApisSdk) {
+	constructor(
+		private readonly sdk: RaribleSdk,
+		private readonly apis: IApisSdk,
+		private network: EthereumNetwork,
+	) {
 		this.prepare = this.prepare.bind(this)
 	}
 
@@ -126,7 +131,7 @@ export class EthereumMint {
 							return {
 								type: MintType.ON_CHAIN,
 								itemId: toItemId(`ETHEREUM:${mintResponse.itemId}`),
-								transaction: new BlockchainEthereumTransaction(mintResponse.transaction),
+								transaction: new BlockchainEthereumTransaction(mintResponse.transaction, this.network),
 							}
 						case MintResponseTypeEnum.OFF_CHAIN:
 							return {

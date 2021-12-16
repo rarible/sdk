@@ -8,7 +8,8 @@ import { Blockchain } from "@rarible/api-client"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
-import { getFlowBaseFee, getFungibleTokenName, toFlowParts } from "./common/converters"
+import { getFungibleTokenName, toFlowParts } from "./common/converters"
+import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowBid {
 	static supportedCurrencies: CurrencyType[] = [{

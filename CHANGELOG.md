@@ -3,6 +3,269 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.38](https://github.com/rarible/sdk/compare/v0.7.37...v0.7.38) (2021-12-15)
+
+
+### Bug Fixes
+
+* better tezos metadata (tests) ([b75f89d](https://github.com/rarible/sdk/commit/b75f89d933de2584553c993051a710fa2155cfd3))
+* better tezos metadata + tests ([621f82c](https://github.com/rarible/sdk/commit/621f82cdf158414e7ab1bd2e40bd88bc25205c1d))
+
+
+
+
+
+## [0.7.37](https://github.com/rarible/sdk/compare/v0.7.36...v0.7.37) (2021-12-15)
+
+
+### Bug Fixes
+
+* better tezos metadata ([c30b205](https://github.com/rarible/sdk/commit/c30b2051fdaf7d518c51220077717a35a9aed8a6))
+
+
+
+
+
+## [0.7.36](https://github.com/rarible/sdk/compare/v0.7.35...v0.7.36) (2021-12-15)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.7.35](https://github.com/rarible/sdk/compare/v0.7.34...v0.7.35) (2021-12-15)
+
+
+### Bug Fixes
+
+* tezos mainnet api url ([#63](https://github.com/rarible/sdk/issues/63)) ([abdb2ca](https://github.com/rarible/sdk/commit/abdb2caaf64482f51593387912f3585ee157d9aa))
+
+
+
+
+
+## [0.7.34](https://github.com/rarible/sdk/compare/v0.7.33...v0.7.34) (2021-12-15)
+
+
+### Features
+
+* up tezos contracts + eth sdk update ([#61](https://github.com/rarible/sdk/issues/61)) ([21c09c2](https://github.com/rarible/sdk/commit/21c09c2c65bfb5b56fdb4129afec79f1178dc079))
+
+
+
+
+
+## [0.7.33](https://github.com/rarible/sdk/compare/v0.7.32...v0.7.33) (2021-12-15)
+
+
+### Bug Fixes
+
+* update flow-sdk ([#60](https://github.com/rarible/sdk/issues/60)) ([31ed68e](https://github.com/rarible/sdk/commit/31ed68e7f964a8098fc912bf7c4a1caa61039390))
+
+
+
+
+
+## [0.7.32](https://github.com/rarible/sdk/compare/v0.7.31...v0.7.32) (2021-12-14)
+
+
+### Bug Fixes
+
+* tezos up version ([ab37acb](https://github.com/rarible/sdk/commit/ab37acb87bda19d4e9a7b4022aaf53d94cd78503))
+* up yarn.lock file ([6800aad](https://github.com/rarible/sdk/commit/6800aadc71981e4d08369fed45a70758710b945a))
+
+
+
+
+
+## [0.7.31](https://github.com/rarible/sdk/compare/v0.7.30...v0.7.31) (2021-12-14)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.7.30](https://github.com/rarible/sdk/compare/v0.7.29...v0.7.30) (2021-12-13)
+
+
+### Bug Fixes
+
+* added royalties to preprocess metadata request ([327d546](https://github.com/rarible/sdk/commit/327d546c8234950999d678b2a34a1a7404491bc0))
+
+
+
+
+
+## [0.7.29](https://github.com/rarible/sdk/compare/v0.7.28...v0.7.29) (2021-12-13)
+
+
+### Bug Fixes
+
+* can transfer function rpc url ([#53](https://github.com/rarible/sdk/issues/53)) ([a71a9e0](https://github.com/rarible/sdk/commit/a71a9e08a051532e593088a11faef94af2816c1c))
+
+
+### Features
+
+* update tezos sdk ([#54](https://github.com/rarible/sdk/issues/54)) ([4a9a36f](https://github.com/rarible/sdk/commit/4a9a36f43842f8f562b3af01d315f245e3af1ae7))
+
+
+
+
+
+## [0.7.28](https://github.com/rarible/sdk/compare/v0.7.27...v0.7.28) (2021-12-10)
+
+
+### Bug Fixes
+
+* upgrade tezos-sdk-module (fixed FA2 purchases) ([fa4063a](https://github.com/rarible/sdk/commit/fa4063a3cc8fb5eb10b2a77af41d5c23b25224a6))
+
+
+
+
+
+## [0.7.27](https://github.com/rarible/sdk/compare/v0.7.26...v0.7.27) (2021-12-10)
+
+
+### Bug Fixes
+
+* correct fees on tezos ([dd542e7](https://github.com/rarible/sdk/commit/dd542e7996dfbb24d89f884f7e75b8c4da025019))
+
+
+
+
+
+## [0.7.26](https://github.com/rarible/sdk/compare/v0.7.25...v0.7.26) (2021-12-10)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.7.25](https://github.com/rarible/sdk/compare/v0.7.24...v0.7.25) (2021-12-10)
+
+
+### Bug Fixes
+
+* canTransfer fix ([d0864ee](https://github.com/rarible/sdk/commit/d0864eeee5c5f69aa88e3058ead39498a0336cf1))
+
+
+
+
+
+## [0.7.24](https://github.com/rarible/sdk/compare/v0.7.23...v0.7.24) (2021-12-10)
+
+
+### Bug Fixes
+
+* test ([1433571](https://github.com/rarible/sdk/commit/143357132fca66a6279458add22aa550fd03a98c))
+* tezos exchange + proxy address ([d3279aa](https://github.com/rarible/sdk/commit/d3279aaa5c7c9dfa7bb176fea43da685b80b74ec))
+
+
+### Features
+
+* tezos FT balance + tests ([3dff67d](https://github.com/rarible/sdk/commit/3dff67d77c18f541b472e6f4f022085aa3a22a2d))
+* tezos sale test ([1c01884](https://github.com/rarible/sdk/commit/1c018840c9239a64a10166ae4509f3247116b342))
+* tezos sale test ([32f2492](https://github.com/rarible/sdk/commit/32f24928954c08e75f94801015497a0060b49e76))
+
+
+
+
+
+## [0.7.23](https://github.com/rarible/sdk/compare/v0.7.22...v0.7.23) (2021-12-10)
+
+
+### Bug Fixes
+
+* update ([8e41dcd](https://github.com/rarible/sdk/commit/8e41dcd7f1937ccb083512c57200bef299c2f2df))
+
+
+### Features
+
+* tezos sdk update ([#49](https://github.com/rarible/sdk/issues/49)) ([ca6fc71](https://github.com/rarible/sdk/commit/ca6fc71d14de1d124fe7b2af307f1709759a45d9))
+
+
+
+
+
+## [0.7.22](https://github.com/rarible/sdk/compare/v0.7.21...v0.7.22) (2021-12-08)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.7.21](https://github.com/rarible/sdk/compare/v0.7.20...v0.7.21) (2021-12-08)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.7.20](https://github.com/rarible/sdk/compare/v0.7.19...v0.7.20) (2021-12-08)
+
+
+### Bug Fixes
+
+* downgrade tezos-sdk ([fa55de3](https://github.com/rarible/sdk/commit/fa55de3402c95649b49c5ecd9c5bdf076d74eedb))
+
+
+### Features
+
+* tezos FT update ([7908ef9](https://github.com/rarible/sdk/commit/7908ef9d74442d32e78a21527810b4c07f567cbf))
+
+
+
+
+
+## [0.7.19](https://github.com/rarible/sdk/compare/v0.7.18...v0.7.19) (2021-12-08)
+
+
+### Bug Fixes
+
+* tezos canTransfer fix (change url node) ([bbcf563](https://github.com/rarible/sdk/commit/bbcf56314f0e02b51732af8f0a45754bac9d3994))
+
+
+
+
+
+## [0.7.18](https://github.com/rarible/sdk/compare/v0.7.17...v0.7.18) (2021-12-08)
+
+
+### Bug Fixes
+
+* upgrade libs (ethereum sdk) ([df94e2a](https://github.com/rarible/sdk/commit/df94e2afa042db8ed0599572adc9298946c4aa21))
+
+
+
+
+
+## [0.7.17](https://github.com/rarible/sdk/compare/v0.7.16...v0.7.17) (2021-12-07)
+
+
+### Bug Fixes
+
+* upgrade libs (ethereum sdk, tezos sdk) ([2a676aa](https://github.com/rarible/sdk/commit/2a676aa50cb35a0d48066e5638d806a5506e9c86))
+
+
+
+
+
+## [0.7.16](https://github.com/rarible/sdk/compare/v0.7.15...v0.7.16) (2021-12-07)
+
+
+### Features
+
+* tezos fee and eth sdk update ([2172de7](https://github.com/rarible/sdk/commit/2172de7546c4412dacf1e1fe7dd74f1b134a65ab))
+
+
+
+
+
 ## [0.7.15](https://github.com/rarible/sdk/compare/v0.7.14...v0.7.15) (2021-12-03)
 
 **Note:** Version bump only for package root

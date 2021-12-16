@@ -1,17 +1,23 @@
-import type { ContractAddress } from "@rarible/types"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
+import type { ContractAddress } from "@rarible/types"
+import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
-import { getFlowBaseFee, toFlowParts } from "./common/converters"
+import { toFlowParts } from "./common/converters"
+import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowBuy {
-	constructor(private sdk: FlowSdk, private readonly apis: IApisSdk) {
+	constructor(
+		private sdk: FlowSdk,
+		private readonly apis: IApisSdk,
+		private network: FlowNetwork,
+	) {
 		this.buy = this.buy.bind(this)
 	}
 
@@ -51,11 +57,14 @@ export class FlowBuy {
 					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
 					const orderId = converters.parseOrderId(order.id)
 					return this.sdk.order.fill(
-						collectionId, currency, orderId, owner, toFlowParts(buyRequest.originFees),
-					)
+						collectionId,
+						currency,
+						orderId,
+						owner,
+						toFlowParts(buyRequest.originFees))
 				},
 			})
-			.after(tx => new BlockchainFlowTransaction(tx))
+			.after(tx => new BlockchainFlowTransaction(tx, this.network))
 
 		return {
 			multiple: false,

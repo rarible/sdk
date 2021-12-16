@@ -8,6 +8,7 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
+import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -21,6 +22,7 @@ export class TezosMint {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private network: TezosNetwork,
 	) {
 		this.mint = this.mint.bind(this)
 		this.preprocessMeta = this.preprocessMeta.bind(this)
@@ -30,10 +32,9 @@ export class TezosMint {
 		return {
 			name: meta.name,
 			description: meta.description,
-			artifactUri: meta.image,
-			displayUri: meta.image,
-			thumbnailUri: meta.animationUrl || meta.image,
-			externalUri: meta.externalUrl || meta.image,
+			artifactUri: fixIpfs(meta.animationUrl || meta.image),
+			displayUri: fixIpfs(meta.image || meta.animationUrl),
+			externalUri: fixIpfs(meta.externalUrl || meta.image),
 			attributes: meta.attributes?.map(attr => ({
 				name: attr.key,
 				value: attr.value,
@@ -81,14 +82,14 @@ export class TezosMint {
 						supply,
 						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
 						{
-							"": request.uri,
+							"": fixIpfs(request.uri)!,
 						},
 						await this.getOwner(request),
 					)
 
 					return {
 						type: MintType.ON_CHAIN,
-						transaction: new BlockchainTezosTransaction(result),
+						transaction: new BlockchainTezosTransaction(result, this.network),
 						itemId: toItemId(`TEZOS:${contract}:${result.token_id}`),
 					}
 				},
@@ -126,5 +127,13 @@ export function getContractFromRequest(request: HasCollection | HasCollectionId)
 		return request.collectionId
 	} else {
 		throw new Error("Wrong request: collection or collectionId has not been found")
+	}
+}
+
+function fixIpfs(link: string | undefined): string | undefined {
+	if (link) {
+		return link.replace("ipfs://ipfs/", "ipfs://")
+	} else {
+		return link
 	}
 }
