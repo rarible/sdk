@@ -1,4 +1,3 @@
-//import * as fcl from "@onflow/fcl"
 import type { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
@@ -15,5 +14,5 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 		default:
 	}
 
-	return createRaribleSdk(wallet, env)
+	return createRaribleSdk(wallet, env, {})
 }

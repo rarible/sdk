@@ -28,8 +28,13 @@ export async function mint(sdk: IRaribleSdk,
 
 		// Wait until item appear
 		const nft = await retry(15, 3000, async () => {
-			return await sdk.apis.item.getItemById({ itemId: mintResponse.itemId })
+			const item = await sdk.apis.item.getItemById({ itemId: mintResponse.itemId })
+			if (item.supply.toString() < mintRequest.supply.toString()) {
+				throw new Error(`Expected supply ${mintRequest.supply.toString()}, but current supply ${item.supply.toString()}`)
+			}
+			return item
 		})
+
 		expect(nft.id).toEqual(mintResponse.itemId)
 
 		return { mintResponse, nft }

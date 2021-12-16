@@ -4,8 +4,12 @@ import { retry } from "@rarible/sdk/src/common/retry"
 import type { BigNumber } from "@rarible/types"
 import type { Order } from "@rarible/api-client/build/models"
 import type { Collection } from "@rarible/api-client/build/models"
+import type { ItemId } from "@rarible/types"
+import type { Ownership } from "@rarible/api-client/build/models"
 
-export async function awaitStock(sdk: IRaribleSdk, id: OrderId, awaitingValue: BigNumber): Promise<Order> {
+export async function awaitOrderStock(
+	sdk: IRaribleSdk, id: OrderId, awaitingValue: BigNumber | string
+): Promise<Order> {
 	return retry(10, 2000, async () => {
 		const order = await sdk.apis.order.getOrderById({ id })
 		if (awaitingValue.toString() !== order.makeStock.toString()) {
@@ -16,6 +20,43 @@ export async function awaitStock(sdk: IRaribleSdk, id: OrderId, awaitingValue: B
 		return order
 	})
 }
+
+export async function awaitOrderCancel(sdk: IRaribleSdk, id: OrderId): Promise<Order> {
+	return retry(10, 2000, async () => {
+		const order = await sdk.apis.order.getOrderById({ id })
+
+		if (order.cancelled === false) {
+			throw new Error("Stock is not canceled")
+		}
+		expect(order.cancelled).toEqual(true)
+		return order
+	})
+}
+
+export async function awaitForItemSupply(
+	sdk: IRaribleSdk, itemId: ItemId, supply: string | number | BigNumber
+): Promise<string> {
+	return retry(10, 2000, async () => {
+		const item = await sdk.apis.item.getItemById({
+			itemId,
+		})
+		const itemSupply = item.supply.toString()
+		const requireSupply = supply.toString()
+		if (itemSupply !== requireSupply) {
+			throw new Error(`Expected supply ${requireSupply}, but current supply ${itemSupply}`)
+		}
+		return itemSupply
+	})
+}
+
+export async function awaitForOwnership(sdk: IRaribleSdk, itemId: ItemId, receipent: string): Promise<Ownership> {
+	return retry(10, 2000, async () => {
+		return sdk.apis.ownership.getOwnershipById({
+			ownershipId: `${itemId}:${receipent}`,
+		})
+	})
+}
+
 
 /**
  * Get Collection by Id

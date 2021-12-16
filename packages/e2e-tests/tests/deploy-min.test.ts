@@ -9,6 +9,7 @@ import { getEthereumWallet, getTezosWallet, getWalletAddress } from "./common/wa
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
 import { getCollection } from "./common/helpers"
+import { deployCollection } from "./common/atoms-tests/deploy-collection"
 
 const suites: {
 	blockchain: Blockchain,
@@ -87,13 +88,13 @@ describe("deploy-mint", () => {
 
 			test("should deploy and mint nft", async () => {
 				const walletAddress = toUnionAddress(await getWalletAddress(wallet))
-				const { tx, address } = await sdk.nft.deploy(suite.deployRequest(walletAddress))
-				await tx.wait()
+				// Deploy new collection
+				const { address } = await deployCollection(sdk, wallet, suite.deployRequest(walletAddress))
 
-				expect(address).toBeTruthy()
-				expect(typeof address).toBe("string")
-
+				// Get collection
 				const collection = await getCollection(sdk, address)
+
+				// Mint token
 				await mint(sdk, wallet, { collection }, suite.mintRequest(walletAddress))
 			})
 		})

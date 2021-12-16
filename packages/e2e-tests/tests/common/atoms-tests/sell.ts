@@ -3,7 +3,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { Order } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types"
 import type { OrderRequest, PrepareOrderRequest } from "@rarible/sdk/src/types/order/common"
-import { awaitStock } from "../helpers"
+import { awaitOrderStock } from "../helpers"
 
 /**
  * Make new sell order and check stocks
@@ -21,5 +21,5 @@ export async function sell(sdk: IRaribleSdk,
 
 	// Check order stock to be equal sell amount
 	const nextStock = toBigNumber(orderRequest.amount.toString())
-	return await awaitStock(sdk, orderId, nextStock)
+	return await awaitOrderStock(sdk, orderId, nextStock)
 }
