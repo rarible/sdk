@@ -32,10 +32,10 @@ export class TezosMint {
 		return {
 			name: meta.name,
 			description: meta.description,
-			artifactUri: meta.image,
-			displayUri: meta.image,
-			thumbnailUri: meta.animationUrl || meta.image,
-			externalUri: meta.externalUrl || meta.image,
+			artifactUri: meta.animation?.url,
+			displayUri: meta.image?.url,
+			thumbnailUri: meta.image?.url,
+			externalUri: meta.external?.url || meta.image?.url,
 			attributes: meta.attributes?.map(attr => ({
 				name: attr.key,
 				value: attr.value,

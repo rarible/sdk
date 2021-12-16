@@ -53,11 +53,13 @@ export class FlowMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
-		const { animationUrl, externalUrl, ...rest } = meta
 		return {
-			...rest,
-			animation_url: animationUrl,
-			external_url: externalUrl,
+			name: meta.name,
+			description: meta.description,
+			image: meta.image?.url,
+			animation_url: meta.animation?.url,
+			external_url: meta.external?.url,
+			attributes: meta.attributes,
 		}
 	}
 }

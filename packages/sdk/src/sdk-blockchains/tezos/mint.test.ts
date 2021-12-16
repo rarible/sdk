@@ -71,9 +71,18 @@ describe("mint test", () => {
 			blockchain: Blockchain.TEZOS,
 			name: "1",
 			description: "2",
-			image: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			animationUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
-			externalUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
+			image: {
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+				mimeType: "image/jpeg",
+			},
+			animation: {
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+				mimeType: "image/jpeg",
+			},
+			external: {
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+				mimeType: "image/jpeg",
+			},
 			attributes: [{
 				key: "eyes",
 				value: "1",
