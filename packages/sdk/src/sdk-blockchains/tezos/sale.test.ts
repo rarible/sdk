@@ -40,7 +40,7 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
-		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
 			amount: 1,
@@ -75,7 +75,7 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
-		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
 			amount: 1,
@@ -104,7 +104,7 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
-		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
 			amount: 10,
@@ -141,7 +141,7 @@ describe("test tezos mint and sell", () => {
 
 		const xtzAssetType = { "@type": "XTZ" as const }
 
-		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
 			amount: 1,
@@ -169,7 +169,7 @@ describe("test tezos mint and sell", () => {
 			xtzAssetType
 		)
 
-		const nextBuyerFillResponse = await nextBuyerSdk.order.fill({ orderId: sellOrderId })
+		const nextBuyerFillResponse = await nextBuyerSdk.order.buy({ orderId: sellOrderId })
 		const nextBuyerFillResult = await nextBuyerFillResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
@@ -213,7 +213,7 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
-		const fillResponse = await buyerSdk.order.fill({ orderId: mintResult.orderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
 			amount: 1,

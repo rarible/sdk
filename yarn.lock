@@ -9486,6 +9486,19 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
+koekiemonster@1.0.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/koekiemonster/-/koekiemonster-1.0.0.tgz#ae8145428d98e4a0b344a83153936ed7cf4d93ef"
+  integrity sha1-roFFQo2Y5KCzRKgxU5Nu189Nk+8=
+
+koekje@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/koekje/-/koekje-0.1.0.tgz#0481947c72c556b18169c0a5975d70d8fda8e3b7"
+  integrity sha1-BIGUfHLFVrGBacCll11w2P2o47c=
+  dependencies:
+    koekiemonster "1.0.x"
+    querystringify "1.0.x"
+
 kukai-embed@^0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/kukai-embed/-/kukai-embed-0.7.0.tgz#f279838686d6bb411456eabcee3de87d1e39f203"
@@ -10850,6 +10863,11 @@ object.values@^1.1.5:
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
 
+objstorage@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/objstorage/-/objstorage-1.0.0.tgz#9bd69b6068343db694f109dd9802e8b456407618"
+  integrity sha512-wBnDLmz20/Xv3USZbpiKxV3A1wAq1Ezl87yAZ9INSjqB/0+efNjSG9m6gq0dYPNB4yzobGdA/vkYQuxUJRjYVQ==
+
 oboe@2.1.4:
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/oboe/-/oboe-2.1.4.tgz#20c88cdb0c15371bb04119257d4fdd34b0aa49f6"
@@ -11572,6 +11590,16 @@ querystring@0.2.0:
   resolved "https://registry.yarnpkg.com/querystring/-/querystring-0.2.0.tgz#b209849203bb25df820da756e747005878521620"
   integrity sha1-sgmEkgO7Jd+CDadW50cAWHhSFiA=
 
+querystringify@0.0.x:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-0.0.4.tgz#0cf7f84f9463ff0ae51c4c4b142d95be37724d9c"
+  integrity sha1-DPf4T5Rj/wrlHExLFC2VvjdyTZw=
+
+querystringify@1.0.x:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-1.0.0.tgz#6286242112c5b712fa654e526652bf6a13ff05cb"
+  integrity sha1-YoYkIRLFtxL6ZU5SZlK/ahP/Bcs=
+
 queue-microtask@1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/queue-microtask/-/queue-microtask-1.1.2.tgz#139bf8186db0c545017ec66c2664ac646d5c571e"
@@ -12292,6 +12320,15 @@ servify@^0.1.12:
     express "^4.14.0"
     request "^2.79.0"
     xhr "^2.3.3"
+
+sessionstorage@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/sessionstorage/-/sessionstorage-0.1.0.tgz#ac1a8204e6c65d944c4a3a1f9c0f444b9da1cadb"
+  integrity sha512-z0PrRunU4LRiP73qfXyynz9AZwBDVDmwEFDyA4GAETONnFewp5ZY0BY/1T31bR8XsVOXEtSPIS7BU+ecZhFmcQ==
+  dependencies:
+    koekje "^0.1.0"
+    objstorage "^1.0.0"
+    window.name "^0.0.3"
 
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
@@ -14208,6 +14245,13 @@ widest-line@^3.1.0:
   integrity sha512-NsmoXalsWVDMGupxZ5R08ka9flZjjiLvHVAWYOKtiKM8ujtZWr9cRffak+uSE48+Ob8ObalXpwyeUiyDD6QFgg==
   dependencies:
     string-width "^4.0.0"
+
+window.name@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/window.name/-/window.name-0.0.3.tgz#454a3da706d42418709a2753efb36098b6536f59"
+  integrity sha1-RUo9pwbUJBhwmidT77NgmLZTb1k=
+  dependencies:
+    querystringify "0.0.x"
 
 word-wrap@^1.2.3, word-wrap@~1.2.3:
   version "1.2.3"
