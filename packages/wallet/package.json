@@ -19,7 +19,7 @@
     "@rarible/api-client": "~0.0.10",
     "@rarible/ethereum-provider": "~0.12.1",
     "@rarible/fcl-types": "~0.5.0",
-    "tezos-sdk-module": "~0.0.42"
+    "tezos-sdk-module": "~0.0.44"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",

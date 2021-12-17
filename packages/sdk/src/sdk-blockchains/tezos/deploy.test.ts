@@ -1,5 +1,4 @@
 import { Blockchain } from "@rarible/api-client"
-import { toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { awaitForCollection } from "./test/await-for-collection"
 import { createTestWallet } from "./test/test-wallet"
@@ -11,35 +10,34 @@ describe("deploy tezos tests", () => {
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	test.skip("deploy public nft", async () => {
-		const owner = await wallet.provider.address()
-
+	test("deploy public nft", async () => {
 		const result = await sdk.nft.deploy({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
 				arguments: {
-					owner: toUnionAddress(`TEZOS:${owner}`),
-					isPublicCollection: true,
+					name: "My NFT collection",
+					symbol: "MYNFT",
+					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					isUserToken: true,
 				},
 			},
 		})
 
 		await result.tx.wait()
 		console.log(result)
-		await awaitForCollection(sdk, result.address)
 	})
 
 	test.skip("deploy private nft", async () => {
-		const owner = await wallet.provider.address()
-
 		const result = await sdk.nft.deploy({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
 				arguments: {
-					owner: toUnionAddress(`TEZOS:${owner}`),
-					isPublicCollection: false,
+					name: "My NFT collection",
+					symbol: "MYNFT",
+					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					isUserToken: false,
 				},
 			},
 		})
@@ -50,15 +48,15 @@ describe("deploy tezos tests", () => {
 	})
 
 	test.skip("deploy public mt", async () => {
-		const owner = await wallet.provider.address()
-
 		const result = await sdk.nft.deploy({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",
 				arguments: {
-					owner: toUnionAddress(`TEZOS:${owner}`),
-					isPublicCollection: true,
+					name: "My NFT collection",
+					symbol: "MYNFT",
+					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					isUserToken: true,
 				},
 			},
 		})
@@ -70,15 +68,15 @@ describe("deploy tezos tests", () => {
 	})
 
 	test.skip("deploy private mt", async () => {
-		const owner = await wallet.provider.address()
-
 		const result = await sdk.nft.deploy({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",
 				arguments: {
-					owner: toUnionAddress(`TEZOS:${owner}`),
-					isPublicCollection: false,
+					name: "My NFT collection",
+					symbol: "MYNFT",
+					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					isUserToken: false,
 				},
 			},
 		})

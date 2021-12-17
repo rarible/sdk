@@ -1,4 +1,4 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { createTestWallet } from "./test/test-wallet"
@@ -12,9 +12,10 @@ describe("bid test", () => {
 
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	const nftContract: string = "KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb"
+	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
+	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 
-	test.skip("bid test", async () => {
+	test("bid test", async () => {
 		const sellerAddress = await wallet.provider.address()
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
@@ -35,11 +36,15 @@ describe("bid test", () => {
 			amount: 1,
 			price: "0.000002",
 			currency: {
-				"@type": "XTZ",
+				"@type": "TEZOS_FT",
+				contract: toContractAddress(
+					`TEZOS:${eurTzContract}`
+				),
+				tokenId: toBigNumber("0"),
 			},
 			payouts: [{
 				account: toUnionAddress(`TEZOS:${sellerAddress}`),
-				value: 10000,
+				value: 100,
 			}],
 		})
 
