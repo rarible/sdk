@@ -54,12 +54,23 @@ export class TezosCanTransfer {
 		if (result.data.string === "") {
 			return { success: true }
 		}
-		return { success: false, reason }
+		return { success: false, reason: getReasonMessage(result.data.string) }
 	}
 }
 
-const reason = "Ubisoft Quartz NFTs are only available to Ubisoft players.\n" +
-  "Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/) for more information."
+const REASONS_MESSAGES: Record<string, string> = {
+	"ARCHETYPE_QUOTA_REACHED": "You have reached the maximum amount of Digits you can own of this Edition, " +
+    "please visit [quartz.ubisoft.com](https://quartz.ubisoft.com) for more information.",
+	"TO_RESTRICTED": "You can't trade this Digit at the moment, please visit " +
+    "[quartz.ubisoft.com](https://quartz.ubisoft.com) for more information.",
+}
+
+function getReasonMessage(code: ERROR_CODE | string): string {
+	if (!(code in REASONS_MESSAGES)) {
+		return REASONS_MESSAGES["TO_RESTRICTED"]
+	}
+	return REASONS_MESSAGES[code]
+}
 
 type ERROR_CODE = "FROM_RESTRICTED" | "TO_RESTRICTED" | "TO_NOT_ALLOWED" | "BAD_TOKEN_ID" | "ARCHETYPE_QUOTA_REACHED"
 | "ARCHOWNER_NOT_SET" | "ARCHLEDGER_NOT_SET" | "WHITELIST_ERROR"
