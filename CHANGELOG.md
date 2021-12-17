@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.43](https://github.com/rarible/sdk/compare/v0.7.42...v0.7.43) (2021-12-17)
+
+
+### Bug Fixes
+
+* restriction msg ([#71](https://github.com/rarible/sdk/issues/71)) ([6247f0f](https://github.com/rarible/sdk/commit/6247f0fe443bf304cce33cafde06cbb4daa0e08f))
+
+
+### Features
+
+* deploy method update ([#72](https://github.com/rarible/sdk/issues/72)) ([5f7a413](https://github.com/rarible/sdk/commit/5f7a41357c1163e7cac47d3339a66a3dba828e0e))
+
+
+
+
+
 ## [0.7.42](https://github.com/rarible/sdk/compare/v0.7.41...v0.7.42) (2021-12-16)
 
 
