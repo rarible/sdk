@@ -29,7 +29,7 @@ describe("fill test", () => {
 		expect(ownership.value).toBe("1")
 	}, 1500000)
 
-	test("fill MT test", async () => {
+	test.skip("fill MT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 		console.log(buyerAddress)
 

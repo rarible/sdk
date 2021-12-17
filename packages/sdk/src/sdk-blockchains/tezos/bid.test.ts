@@ -15,7 +15,7 @@ describe("bid test", () => {
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 
-	test("bid test", async () => {
+	test.skip("bid test", async () => {
 		const sellerAddress = await wallet.provider.address()
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),

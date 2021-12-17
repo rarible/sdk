@@ -8,7 +8,6 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import { Blockchain } from "@rarible/api-client"
 import type { DeployTokenRequest } from "../../types/nft/deploy/domain"
 import type { EthereumDeployTokenAsset } from "../../types/nft/deploy/domain"
-import { DeployTokenAsset } from "../../types/nft/deploy/domain"
 
 export class EthereumDeploy {
 	constructor(
