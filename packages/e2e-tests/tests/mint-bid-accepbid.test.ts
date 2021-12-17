@@ -60,7 +60,7 @@ const suites: {
 			throw new Error("Wrong blockchain")
 		},
 	},
-	{
+	/*{
 		blockchain: Blockchain.TEZOS,
 		wallets: { seller: getTezosWallet(2), buyer: getTezosWallet(1) },
 		collectionId: "TEZOS:KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb",
@@ -95,7 +95,7 @@ const suites: {
 			}
 			throw new Error("Wrong blockchain")
 		},
-	},
+	},*/
 ]
 
 describe("mint-bid-acceptBid", () => {
