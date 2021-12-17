@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.42](https://github.com/rarible/sdk/compare/v0.7.41...v0.7.42) (2021-12-16)
+
+
+### Bug Fixes
+
+* update flow-sdk, fix evolution transaction ([d3535d3](https://github.com/rarible/sdk/commit/d3535d3ec567a31988739da62cb742430e931f78))
+
+
+
+
+
 ## [0.7.39](https://github.com/rarible/sdk/compare/v0.7.38...v0.7.39) (2021-12-16)
 
 
