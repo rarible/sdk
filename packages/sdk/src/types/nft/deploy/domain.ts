@@ -3,25 +3,26 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
 
-export type DeployTokenRequest =
-  | DeployTezosTokenRequest
-  | DeployEthereumTokenRequest
-
-export type DeployTezosTokenRequest = {
-	blockchain: ApiClient.Blockchain.TEZOS
-	asset: TezosDeployTokenAsset
+export type DeployTokenRequest<T extends DeploySupportedBlockchains = DeploySupportedBlockchains> = {
+	blockchain: T;
+	asset: DeployTokenAssetIndexer[T]
 }
 
-export type DeployEthereumTokenRequest = {
-	blockchain: ApiClient.Blockchain.ETHEREUM
-	asset: EthereumDeployTokenAsset
+export interface DeployTokenAssetIndexer extends Record<DeploySupportedBlockchains, DeployTokenAsset> {
+	[ApiClient.Blockchain.ETHEREUM]: EthereumDeployTokenAsset;
+	[ApiClient.Blockchain.TEZOS]: TezosDeployTokenAsset;
 }
+
+export type DeploySupportedBlockchains = ApiClient.Blockchain.ETHEREUM | ApiClient.Blockchain.TEZOS
+export type DeployTokenAsset = EthereumDeployTokenAsset | TezosDeployTokenAsset
 
 export type TezosDeployTokenAsset = {
 	assetType: "NFT" | "MT"
 	arguments: {
-		owner: UnionAddress,
-		isPublicCollection: boolean,
+		name: string
+		symbol: string
+		contractURI: string
+		isUserToken: boolean,
 	}
 }
 
