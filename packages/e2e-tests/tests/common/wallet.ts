@@ -1,4 +1,4 @@
-import type{ BlockchainWallet } from "@rarible/sdk-wallet"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
 import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"

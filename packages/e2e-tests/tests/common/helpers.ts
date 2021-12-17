@@ -51,12 +51,15 @@ export async function awaitForItemSupply(
 
 export async function awaitForOwnership(sdk: IRaribleSdk, itemId: ItemId, receipent: string): Promise<Ownership> {
 	return retry(10, 2000, async () => {
-		return sdk.apis.ownership.getOwnershipById({
+		const ownership = await sdk.apis.ownership.getOwnershipById({
 			ownershipId: `${itemId}:${receipent}`,
 		})
+
+		expect(ownership.owner.slice(ownership.owner.indexOf(":")+1)).toEqual(receipent)
+
+		return ownership
 	})
 }
-
 
 /**
  * Get Collection by Id

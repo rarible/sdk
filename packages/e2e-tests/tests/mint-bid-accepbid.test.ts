@@ -9,7 +9,7 @@ import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { getEthereumWallet, getTezosWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
-import { getCollection } from "./common/helpers"
+import { awaitForOwnership, getCollection } from "./common/helpers"
 import { bid } from "./common/atoms-tests/bid"
 import { acceptBid } from "./common/atoms-tests/accept-bid"
 
@@ -17,19 +17,19 @@ const suites: {
 	blockchain: Blockchain,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	collectionId: string,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	bidRequest: (buyerWallet: BlockchainWallet, currency: RequestCurrency) => Promise<OrderRequest>,
+	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
+	bidRequest: (currency: RequestCurrency, payoutAddress: UnionAddress) => Promise<OrderRequest>,
 	getCurrency: (wallet: { seller: BlockchainWallet, buyer: BlockchainWallet }) => Promise<RequestCurrency>
 }[] = [
 	{
 		blockchain: Blockchain.ETHEREUM,
 		wallets: { seller: getEthereumWallet(), buyer: getEthereumWallet() },
 		collectionId: "ETHEREUM:0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7",
-		mintRequest: (walletAddress: UnionAddress): MintRequest => {
+		mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 			return {
 				uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 				creators: [{
-					account: walletAddress,
+					account: creatorAddress,
 					value: 10000,
 				}],
 				royalties: [],
@@ -37,17 +37,17 @@ const suites: {
 				supply: 1,
 			}
 		},
-		bidRequest: async (buyerWallet: BlockchainWallet, currency: RequestCurrency): Promise<OrderRequest> => {
+		bidRequest: async (currency: RequestCurrency, payoutAddress): Promise<OrderRequest> => {
 			return {
 				amount: 1,
-				price: "0.0000000000000001",
+				price: "0.1",
 				currency: currency,
 			}
 		},
 		getCurrency: async (wallets: { seller: BlockchainWallet, buyer: BlockchainWallet }): Promise<RequestCurrency> => {
 			if (wallets.seller.blockchain === "ETHEREUM" && wallets.buyer.blockchain === "ETHEREUM") {
 				const testErc20 = await deployTestErc20((wallets.seller.ethereum as any).config.web3, "test erc20", "TST20")
-				await testErc20.methods.mint(await getWalletAddress(wallets.buyer, false), 1000).send({
+				await testErc20.methods.mint(await getWalletAddress(wallets.buyer, false), "1000000000000000000000000").send({
 					from: await getWalletAddress(wallets.seller, false),
 					gas: 200000,
 				})
@@ -62,13 +62,13 @@ const suites: {
 	},
 	{
 		blockchain: Blockchain.TEZOS,
-		wallets: { seller: getTezosWallet(0), buyer: getTezosWallet(1) },
+		wallets: { seller: getTezosWallet(2), buyer: getTezosWallet(1) },
 		collectionId: "TEZOS:KT1DK9ArYc2QVgqr4jz46WnWt5g9zsE3Cifb",
-		mintRequest: (walletAddress: UnionAddress): MintRequest => {
+		mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 			return {
 				uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 				creators: [{
-					account: walletAddress,
+					account: creatorAddress,
 					value: 10000,
 				}],
 				royalties: [],
@@ -76,15 +76,15 @@ const suites: {
 				supply: 1,
 			}
 		},
-		bidRequest: async (buyerWallet: BlockchainWallet, currency: RequestCurrency): Promise<OrderRequest> => {
+		bidRequest: async (currency: RequestCurrency, payoutAddress: UnionAddress): Promise<OrderRequest> => {
 			return {
 				amount: 1,
-				price: "0.02",
+				price: "0.000001",
 				currency: currency,
-				/*payouts: [{
-					account: toUnionAddress(await getWalletAddress(buyerWallet)),
+				payouts: [{
+					account: payoutAddress,
 					value: 10000,
-				}],*/
+				}],
 			}
 		},
 		getCurrency: async (wallets: { seller: BlockchainWallet, buyer: BlockchainWallet }): Promise<RequestCurrency> => {
@@ -115,7 +115,7 @@ describe("mint-bid-acceptBid", () => {
 				const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(sellerWalletAddress))
 
 				// Create bid order
-				const bidRequest = await suite.bidRequest(buyerWallet, await suite.getCurrency(suite.wallets))
+				const bidRequest = await suite.bidRequest(await suite.getCurrency(suite.wallets), sellerWalletAddress)
 				const bidOrder = await bid(
 					buyerSdk,
 					buyerWallet,
@@ -126,8 +126,8 @@ describe("mint-bid-acceptBid", () => {
 				// Fill bid order
 				await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })
 
-				//const nextStock = toBigNumber("0")
-				//await awaitOrderStock(sellerSdk, sellOrder.id, nextStock)*/
+				// Check token transfer
+				await awaitForOwnership(buyerSdk, nft.id, await getWalletAddress(buyerWallet, false))
 			})
 		})
 	}
