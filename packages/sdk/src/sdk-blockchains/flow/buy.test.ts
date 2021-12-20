@@ -13,8 +13,8 @@ import { FlowBuy } from "./buy"
 describe("Flow buy", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
-	const apis = createApisSdk("dev")
+	const sdk = createFlowSdk(wallet.fcl, "staging", {}, authUser1)
+	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
 	const fill = new FlowBuy(sdk, apis, "testnet")

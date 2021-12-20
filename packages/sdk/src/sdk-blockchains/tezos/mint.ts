@@ -15,7 +15,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { ITezosAPI, MaybeProvider, TezosMetadataResponse } from "./common"
+import type { ITezosAPI, MaybeProvider, TezosMetadataResponse, TezosMetaContent } from "./common"
 import { getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -28,19 +28,30 @@ export class TezosMint {
 		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
+	getFormatsMeta(meta: PreprocessMetaRequest) {
+		return [meta.image, meta.animation]
+			.reduce((acc, item) => {
+				if (item) {
+					const { url, ...rest } = item
+					return acc.concat({ ...rest, uri: fixIpfs(url) })
+				}
+				return acc
+			}, [] as TezosMetaContent[])
+	}
+
 	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+		const artifact = meta.animation || meta.image
 		return {
 			name: meta.name,
 			description: meta.description,
-			artifactUri: meta.image,
-			displayUri: meta.image,
-			thumbnailUri: meta.animationUrl || meta.image,
-			externalUri: meta.externalUrl || meta.image,
+			artifactUri: artifact ? fixIpfs(artifact.url) : undefined,
+			displayUri: meta.image ? fixIpfs(meta.image.url) : undefined,
 			attributes: meta.attributes?.map(attr => ({
 				name: attr.key,
 				value: attr.value,
 				type: attr.type,
 			})),
+			formats: this.getFormatsMeta(meta),
 		}
 	}
 
@@ -73,7 +84,6 @@ export class TezosMint {
 					}, {} as { [key: string]: BigNumber }) || {}
 
 					const supply = type === "NFT" ? undefined : toBn(request.supply)
-
 					const provider = getRequiredProvider(this.provider)
 
 					const result = await mint(
@@ -83,7 +93,7 @@ export class TezosMint {
 						supply,
 						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
 						{
-							"": request.uri,
+							"": fixIpfs(request.uri),
 						},
 						await this.getOwner(request),
 					)
@@ -122,11 +132,11 @@ export async function getCollectionData(
 }
 
 export function getContractFromRequest(request: HasCollection | HasCollectionId): ContractAddress {
-	if ("collection" in request) {
-		return request.collection.id
-	} else if ("collectionId" in request) {
-		return request.collectionId
-	} else {
-		throw new Error("Wrong request: collection or collectionId has not been found")
-	}
+	if ("collection" in request) return request.collection.id
+	if ("collectionId" in request) return request.collectionId
+	throw new Error("Wrong request: collection or collectionId has not been found")
+}
+
+function fixIpfs(link: string): string {
+	return link.replace("ipfs://ipfs/", "ipfs://")
 }

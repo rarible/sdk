@@ -54,7 +54,6 @@ export type TezosMetadataResponse = {
 	description?: string
 	artifactUri?: string
 	displayUri?: string
-	thumbnailUri?: string
 	externalUri?: string
 	formats?: Array<TezosMetaContent>
 	attributes: Array<TezosMetaAttribute>
@@ -72,7 +71,7 @@ export type TezosMetaContent = {
 		unit: string
 	}
 	dataRate?: {
-		value: string
+		value: number
 		unit: string
 	}
 }

@@ -5,8 +5,9 @@ import { toAddress, toContractAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import { Blockchain } from "@rarible/api-client"
 import type { DeployTokenRequest } from "../../types/nft/deploy/domain"
-import type { DeployEthereumTokenRequest } from "../../types/nft/deploy/domain"
+import type { EthereumDeployTokenAsset } from "../../types/nft/deploy/domain"
 
 export class EthereumDeploy {
 	constructor(
@@ -35,24 +36,24 @@ export class EthereumDeploy {
 		}
 	}
 
-	async startDeployToken(request: DeployEthereumTokenRequest): Promise<{ tx: EthereumTransaction, address: Address }> {
+	async startDeployToken(asset: EthereumDeployTokenAsset): Promise<{ tx: EthereumTransaction, address: Address }> {
 		const deployCommonArguments = [
-			request.asset.arguments.name,
-			request.asset.arguments.symbol,
-			request.asset.arguments.baseURI,
-			request.asset.arguments.contractURI,
+			asset.arguments.name,
+			asset.arguments.symbol,
+			asset.arguments.baseURI,
+			asset.arguments.contractURI,
 		] as const
 
-		if (request.asset.arguments.isUserToken) {
+		if (asset.arguments.isUserToken) {
 
-			const operators = this.convertOperatorsAddresses(request.asset.arguments.operators)
+			const operators = this.convertOperatorsAddresses(asset.arguments.operators)
 
-			if (request.asset.assetType === "ERC721") {
+			if (asset.assetType === "ERC721") {
 				return this.sdk.nft.deploy.erc721.deployUserToken(
 					...deployCommonArguments,
 					operators,
 				)
-			} else if (request.asset.assetType === "ERC1155") {
+			} else if (asset.assetType === "ERC1155") {
 				return this.sdk.nft.deploy.erc1155.deployUserToken(
 					...deployCommonArguments,
 					operators,
@@ -62,9 +63,9 @@ export class EthereumDeploy {
 			}
 
 		} else {
-			if (request.asset.assetType === "ERC721") {
+			if (asset.assetType === "ERC721") {
 				return this.sdk.nft.deploy.erc721.deployToken(...deployCommonArguments)
-			} else if (request.asset.assetType === "ERC1155") {
+			} else if (asset.assetType === "ERC1155") {
 				return this.sdk.nft.deploy.erc1155.deployToken(...deployCommonArguments)
 			} else {
 				throw new Error("Unsupported asset type")
@@ -75,11 +76,11 @@ export class EthereumDeploy {
 	deployToken = Action.create({
 		id: "send-tx" as const,
 		run: async (request: DeployTokenRequest) => {
-			if (request.blockchain !== "ETHEREUM") {
+			if (request.blockchain !== Blockchain.ETHEREUM) {
 				throw new Error("Wrong blockchain")
 			}
 			return this.convertDeployResponse(
-				await this.startDeployToken(request)
+				await this.startDeployToken(request.asset as EthereumDeployTokenAsset)
 			)
 		},
 	})

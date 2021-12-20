@@ -15,8 +15,7 @@ describe("canTransfer", () => {
 		const result = await sdk.restriction.canTransfer(toItemId("TEZOS:KT1S3goQNhyuZgznN952Vwfqeo96YV3U4pwf:100005"), me, otherMe)
 		expect(result).toStrictEqual({
 			success: false,
-			reason: "Ubisoft Quartz NFTs are only available to Ubisoft players.\n" +
-				"Please read [Ubisoft Quartz’s FAQ](https://quartz.ubisoft.com/faq/) for more information.",
+			reason: "You can't trade this Digit at the moment, please visit [quartz.ubisoft.com](https://quartz.ubisoft.com) for more information.",
 		})
 	})
 

@@ -35,7 +35,7 @@ describe("fill test", () => {
 
 		//b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c
 		const fillAction = await buyerSdk.order.buy({
-			orderId: toOrderId("TEZOS:b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c"),
+			orderId: toOrderId("TEZOS:f1a87424bc67e47a9a3f850b9f5a5ba13af5259f6d139d7b3710b4862a3aaac9"),
 		})
 
 		const tx = await fillAction.submit({
@@ -47,7 +47,7 @@ describe("fill test", () => {
 		console.log("tx", tx)
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD:17"),
+			toItemId("TEZOS:KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu:50"),
 			buyerAddress
 		)
 		expect(ownership.value).toBe("1")

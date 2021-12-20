@@ -3024,7 +3024,7 @@
     ethereumjs-wallet "^1.0.1"
     web3-provider-engine "^16.0.1"
 
-"@rarible/fcl-types@^0.5.0", "@rarible/fcl-types@~0.5.0":
+"@rarible/fcl-types@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.0.tgz#d0697f30ed77ef80e43ef59497f1492c5b7dcf91"
   integrity sha512-9NGq2vZ/nI8LFnHkxULR8OYeE/xhFqiBM3BHH8eFLAAJ02zwNqHyXfzJWvQlDztJ8u5OnOdHevt2n22zCtSpJQ==
@@ -3036,28 +3036,28 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.10":
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.10.tgz#8fef336d97bd3e313dae8f6543fb9da27f13a26e"
-  integrity sha512-KyNqVsbJ2UZ3jgjPO6AZ3gMS/SZSw89tntDoKn9iAVEV3K+D2WRtMhOhfxzYxO7kf0O/evSbr1KPgAedtVAsDw==
+"@rarible/flow-sdk-scripts@^0.5.18":
+  version "0.5.18"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.18.tgz#074ea4f1f0486191d5200d795cdee3491402ca7e"
+  integrity sha512-JHNWNm8OXPhCOoyl+XHr9sAqydHLYQUlx15D1L3/U9H593UvqGs/5aD6UAO55MI9g9wPd6GNTTHbwd5uvTSo/Q==
 
-"@rarible/flow-sdk@~0.5.13":
-  version "0.5.13"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.13.tgz#835f276528350c350d7790cae957d97125eb3d5a"
-  integrity sha512-/5wIn4F+uVzrgMWkC0VhbNKzhTEV+w63SdNlBVO1goOulPwb2jQ6FA6x6h5EoYBGij6LY5uetA3lhSUfI6FKuA==
+"@rarible/flow-sdk@~0.5.18":
+  version "0.5.18"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.18.tgz#05e8fa9c5e6cfa733490b7d0325f0387222ceda5"
+  integrity sha512-uqaAQhMU41wQh08PgsnfgSQTSegk3sIChMJKzBENAISrzcUBRKyi46f2AhFSPUuYAc5YPdpPgm3ED8jFRLZHJw==
   dependencies:
     "@onflow/fcl" "~0.0.76"
     "@onflow/types" "~0.0.5"
-    "@rarible/fcl-types" "^0.5.0"
+    "@rarible/fcl-types" "~0.5.0"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.10"
+    "@rarible/flow-sdk-scripts" "^0.5.18"
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.10":
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.10.tgz#eb5272c1c4f0185a1e5577aef5f1a222ff91a9b1"
-  integrity sha512-j7g+6RaR8JUauD/PYBnJff9rcXS3zart5dqtHgfrleiV/vu0gTPZ3hDUzWgapINh61ZldOyOpBAl/PF16bQNJA==
+"@rarible/flow-test-common@~0.5.14":
+  version "0.5.14"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.14.tgz#103b0d0c23a17b42ce43c499368f6887f689e3f3"
+  integrity sha512-nBKkpn4CBwSYK4gemiuqHlA/OmdtGYo5TTBICdHKNY4nvqpZTlL0LtKPC/v3XIKiJUSET5I457XGOQ8ZVo1UGw==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
@@ -13111,10 +13111,10 @@ tezos-api-client@~0.0.14:
   resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.14.tgz#111a289319ac1a4ccf9788b13fdf72470dc4670f"
   integrity sha512-D7H3l10HHptpE/FNsNHtL9DltbRVpi41rekNUKCe9GOR3PZvBalFGfVRQ5sQ3DsTqvJW5ahTUXf3adBzLL8v5A==
 
-tezos-sdk-module@0.0.42, tezos-sdk-module@~0.0.42:
-  version "0.0.42"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.42.tgz#11648567493f9628cdc51601b9bf19209a4a26bd"
-  integrity sha512-+tuocFzGcBLRbGIEYamyBlGcy8ivhYyy0jbVxAE2FMMChwEOud9wNYjdJ5KE0Qr1qFHJ24JwmBpIPlqAYO9dUQ==
+tezos-sdk-module@0.0.45, tezos-sdk-module@~0.0.45:
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.45.tgz#a81b745acb8f737266d2d25de4379a9e8e669f7a"
+  integrity sha512-EEjaYm0c6LVrjEOS6TNXubRNpvTqReN+90y2Ko1FSn8udIKt5V2j/OnJpdZ+moz43CjUSokyt0UaVh/gpXeN4Q==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
