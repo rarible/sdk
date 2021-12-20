@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.44](https://github.com/rarible/sdk/compare/v0.7.43...v0.7.44) (2021-12-20)
+
+
+### Bug Fixes
+
+* add decimals field to tezos metadata ([7e6cd92](https://github.com/rarible/sdk/commit/7e6cd92a79152fd68877dac9b88666c409036635))
+
+
+
+
+
 ## [0.7.43](https://github.com/rarible/sdk/compare/v0.7.42...v0.7.43) (2021-12-17)
 
 
