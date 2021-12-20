@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.45](https://github.com/rarible/sdk/compare/v0.7.44...v0.7.45) (2021-12-20)
+
+
+### Bug Fixes
+
+* skip tezos test ([#73](https://github.com/rarible/sdk/issues/73)) ([a429e9a](https://github.com/rarible/sdk/commit/a429e9adda8a07f767183d42bd404b496e3b5057))
+
+
+
+
+
 ## [0.7.44](https://github.com/rarible/sdk/compare/v0.7.43...v0.7.44) (2021-12-20)
 
 
