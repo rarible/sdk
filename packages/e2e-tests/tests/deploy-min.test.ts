@@ -3,7 +3,6 @@ import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
 import type { DeployTokenRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
-import type { DeployTezosTokenRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { getEthereumWallet, getTezosWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
@@ -52,14 +51,16 @@ const suites: {
 	{
 		blockchain: Blockchain.TEZOS,
 		wallet: getTezosWallet(),
-		deployRequest: (walletAddress: UnionAddress): DeployTezosTokenRequest => {
+		deployRequest: (): DeployTokenRequest => {
 			return {
 				blockchain: Blockchain.TEZOS,
 				asset: {
 					assetType: "NFT",
 					arguments: {
-						owner: walletAddress,
-						isPublicCollection: false,
+						name: "MY NFT",
+						symbol: "MYNFT",
+						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+						isUserToken: false,
 					},
 				},
 			}
