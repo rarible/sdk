@@ -53,6 +53,7 @@ export type TezosMetadataResponse = {
 	name: string
 	description?: string
 	artifactUri?: string
+	decimals: number
 	displayUri?: string
 	externalUri?: string
 	formats?: Array<TezosMetaContent>

@@ -43,6 +43,7 @@ export class TezosMint {
 		const artifact = meta.animation || meta.image
 		return {
 			name: meta.name,
+			decimals: 0,
 			description: meta.description,
 			artifactUri: artifact ? fixIpfs(artifact.url) : undefined,
 			displayUri: meta.image ? fixIpfs(meta.image.url) : undefined,
