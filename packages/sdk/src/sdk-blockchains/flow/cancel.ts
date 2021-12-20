@@ -1,8 +1,6 @@
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import type { Order } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
-import type { ContractAddress } from "@rarible/types"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
@@ -17,13 +15,6 @@ export class FlowCancel {
 		this.cancel = this.cancel.bind(this)
 	}
 
-	private getFlowContract(order: Order): ContractAddress {
-		if (order.make.type["@type"] === "FLOW_NFT") {
-			return order.make.type.contract
-		}
-		throw new Error("This is not FLOW order")
-	}
-
 	readonly cancel: ICancel = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
@@ -34,9 +25,24 @@ export class FlowCancel {
 			const order = await this.apis.order.getOrderById({
 				id: request.orderId,
 			})
-			const collectionId = getFlowCollection(this.getFlowContract(order))
-			const tx = await this.sdk.order.cancelOrder(collectionId, parsed)
-			return new BlockchainFlowTransaction(tx, this.network)
+			switch (order.make.type["@type"]) {
+				case "FLOW_NFT": {
+					if (order.take.type["@type"] !== "FLOW_FT") {
+						throw new Error("Invalid Flow order, make asset is not a Flow asset")
+					}
+					const tx = await this.sdk.order.cancelOrder(getFlowCollection(order.make.type.contract), parsed)
+					return new BlockchainFlowTransaction(tx, this.network)
+				}
+				case "FLOW_FT": {
+					if (order.take.type["@type"] !== "FLOW_NFT") {
+						throw new Error("Invalid Flow bid order, take asset is not a Flow asset")
+					}
+					const tx = await this.sdk.order.cancelBid(getFlowCollection(order.take.type.contract), parsed)
+					return new BlockchainFlowTransaction(tx, this.network)
+				}
+				default:
+					throw new Error("Not an Flow order")
+			}
 		},
 	})
 }

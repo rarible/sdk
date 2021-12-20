@@ -9,6 +9,7 @@ import { createTestItem } from "./test/create-test-item"
 import { FlowMint } from "./mint"
 import { testFlowToken } from "./test/common"
 import { FlowBid } from "./bid"
+import { FlowCancel } from "./cancel"
 
 describe("Flow bid", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
@@ -17,6 +18,7 @@ describe("Flow bid", () => {
 	const apis = createApisSdk("dev")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const bid = new FlowBid(sdk)
+	const cancel = new FlowCancel(sdk, apis, "testnet")
 
 	test("Should place a bid on flow NFT item and update bid", async () => {
 		const itemId = await createTestItem(mint)
@@ -49,5 +51,6 @@ describe("Flow bid", () => {
 		})
 		console.log("updatedOrder", updatedOrder)
 		expect(updatedOrder.take.value.toString()).toEqual("0.2")
+		const cancelBid = await sdk
 	}, 10000000)
 })
