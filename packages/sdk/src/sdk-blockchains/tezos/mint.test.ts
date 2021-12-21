@@ -90,6 +90,7 @@ describe("mint test", () => {
 
 		expect(response.name).toBe("1")
 		expect(response.description).toBe("2")
+		expect(response.decimals).toBe(0)
 		expect(response.artifactUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG2")
 		expect(response.displayUri).toBe("ipfs://QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1")
 		expect(response.formats).toStrictEqual([
