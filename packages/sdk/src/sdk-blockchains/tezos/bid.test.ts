@@ -9,23 +9,23 @@ import { awaitForOrderStatus } from "./test/await-for-order-status"
 
 describe("bid test", () => {
 	const itemOwner = createTestWallet(
-		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
+		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
 	)
 	const itemOwnerSdk = createRaribleSdk(
 		itemOwner,
-		"dev"
+		"dev",
 	)
 
 	const bidderWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
+		"D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 
 	const bidderSdk = createRaribleSdk(bidderWallet, "dev")
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 
-	test("bid NFT test", async () => {
+	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -48,7 +48,7 @@ describe("bid test", () => {
 			currency: {
 				"@type": "TEZOS_FT",
 				contract: toContractAddress(
-					`TEZOS:${eurTzContract}`
+					`TEZOS:${eurTzContract}`,
 				),
 				tokenId: toBigNumber("0"),
 			},
