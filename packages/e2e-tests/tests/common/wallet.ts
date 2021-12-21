@@ -16,7 +16,7 @@ export function getEthereumWallet(pk?: string): EthereumWallet {
 	return new EthereumWallet(ethereum)
 }
 
-export function getTezosWallet(walletNumber: number = 0): TezosWallet {
+export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
 	const edsks = [
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",

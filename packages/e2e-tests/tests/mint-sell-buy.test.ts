@@ -7,7 +7,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { sell } from "./common/atoms-tests/sell"
-import { getEthereumWallet, getTezosWallet, getWalletAddress } from "./common/wallet"
+import { getEthereumWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
 import { awaitOrderStock, getCollection } from "./common/helpers"
@@ -62,7 +62,7 @@ const suites: {
 	},
 	{
 		blockchain: Blockchain.TEZOS,
-		wallets: { seller: getTezosWallet(0), buyer: getTezosWallet(1) },
+		wallets: { seller: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
 		collectionId: "TEZOS:KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu",
 		mintRequest: (walletAddress: UnionAddress): MintRequest => {
 			return {

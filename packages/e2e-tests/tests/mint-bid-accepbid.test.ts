@@ -6,7 +6,7 @@ import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/cont
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
-import { getEthereumWallet, getTezosWallet, getWalletAddress } from "./common/wallet"
+import { getEthereumWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
 import { awaitForOwnership, getCollection } from "./common/helpers"
