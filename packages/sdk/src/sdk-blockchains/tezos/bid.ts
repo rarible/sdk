@@ -49,7 +49,7 @@ export class TezosBid {
 				return {
 					asset_class: "FT",
 					contract: convertContractAddress(type.contract),
-					token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
+					token_id: type.tokenId !== undefined ?  new BigNumber(type.tokenId) : undefined,
 				}
 			}
 			default: {

@@ -32,18 +32,25 @@ export class FlowBuy {
 		throw new Error("Incorrect request")
 	}
 
-	private getFlowContract(order: Order): ContractAddress {
+	private getFlowNftContract(order: Order): ContractAddress {
 		if (order.make.type["@type"] === "FLOW_NFT") {
 			return order.make.type.contract
+		} else if (order.take.type["@type"] === "FLOW_NFT") {
+			return order.take.type.contract
+		} else {
+			throw new Error("This is not FLOW order")
 		}
-		throw new Error("This is not FLOW order")
 	}
 
 	private getFlowCurrency(order: Order) {
 		if (order.take.type["@type"] === "FLOW_FT") {
 			return converters.getFungibleTokenName(order.take.type.contract)
+		} else if (order.make.type["@type"] === "FLOW_FT") {
+			return converters.getFungibleTokenName(order.make.type.contract)
+		} else {
+			throw new Error("No Flow fungible token found in order take and make values")
 		}
-		throw new Error("Invalid order take asset")
+
 	}
 
 	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
@@ -54,7 +61,7 @@ export class FlowBuy {
 				run: (buyRequest: FillRequest) => {
 					const currency = this.getFlowCurrency(order)
 					const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
-					const collectionId = converters.getFlowCollection(this.getFlowContract(order))
+					const collectionId = converters.getFlowCollection(this.getFlowNftContract(order))
 					const orderId = converters.parseOrderId(order.id)
 					return this.sdk.order.fill(
 						collectionId,

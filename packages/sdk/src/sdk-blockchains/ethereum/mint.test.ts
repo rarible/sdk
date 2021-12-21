@@ -79,9 +79,15 @@ describe("mint", () => {
 			blockchain: Blockchain.ETHEREUM,
 			name: "1",
 			description: "2",
-			image: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			animationUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
-			externalUrl: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7",
+			image: {
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+				mimeType: "image/jpeg",
+			},
+			animation: {
+				url: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6",
+				mimeType: "image/gif",
+			},
+			external: "https://rarible.com",
 			attributes: [{
 				key: "eyes",
 				value: "1",
@@ -92,7 +98,7 @@ describe("mint", () => {
 		expect(response.description).toBe("2")
 		expect(response.image).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
 		expect(response.animation_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG6")
-		expect(response.external_url).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG7")
+		expect(response.external_url).toBe("https://rarible.com")
 		expect(response.attributes[0].key).toBe("eyes")
 		expect(response.attributes[0].value).toBe("1")
 	})

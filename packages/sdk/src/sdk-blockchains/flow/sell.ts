@@ -54,7 +54,7 @@ export class FlowSell {
 			supportedCurrencies: FlowSell.supportedCurrencies,
 			baseFee: getFlowBaseFee(this.sdk),
 			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
+			payoutsSupport: PayoutsSupport.NONE,
 			submit: sellAction,
 		}
 	}
@@ -88,7 +88,7 @@ export class FlowSell {
 		return {
 			supportedCurrencies: FlowSell.supportedCurrencies,
 			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
+			payoutsSupport: PayoutsSupport.NONE,
 			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
 		}

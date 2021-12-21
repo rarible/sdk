@@ -3054,10 +3054,10 @@
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.10":
-  version "0.5.10"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.10.tgz#eb5272c1c4f0185a1e5577aef5f1a222ff91a9b1"
-  integrity sha512-j7g+6RaR8JUauD/PYBnJff9rcXS3zart5dqtHgfrleiV/vu0gTPZ3hDUzWgapINh61ZldOyOpBAl/PF16bQNJA==
+"@rarible/flow-test-common@~0.5.14":
+  version "0.5.14"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.14.tgz#103b0d0c23a17b42ce43c499368f6887f689e3f3"
+  integrity sha512-nBKkpn4CBwSYK4gemiuqHlA/OmdtGYo5TTBICdHKNY4nvqpZTlL0LtKPC/v3XIKiJUSET5I457XGOQ8ZVo1UGw==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
@@ -3101,7 +3101,7 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/types@0.5.3":
+"@rarible/types@0.5.3", "@rarible/types@~0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
   integrity sha512-ZjrJvg4iVIxatBRnUPcwWzaQRf7XN4hgjrRHqmjXv2Q+8/2vYyPL1TBFlfGunPPDMUB3hwBELaL5ZQaJsSE6oQ==
@@ -13079,10 +13079,10 @@ tezos-api-client@~0.0.14:
   resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.14.tgz#111a289319ac1a4ccf9788b13fdf72470dc4670f"
   integrity sha512-D7H3l10HHptpE/FNsNHtL9DltbRVpi41rekNUKCe9GOR3PZvBalFGfVRQ5sQ3DsTqvJW5ahTUXf3adBzLL8v5A==
 
-tezos-sdk-module@0.0.42, tezos-sdk-module@~0.0.42:
-  version "0.0.42"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.42.tgz#11648567493f9628cdc51601b9bf19209a4a26bd"
-  integrity sha512-+tuocFzGcBLRbGIEYamyBlGcy8ivhYyy0jbVxAE2FMMChwEOud9wNYjdJ5KE0Qr1qFHJ24JwmBpIPlqAYO9dUQ==
+tezos-sdk-module@0.0.45, tezos-sdk-module@~0.0.45:
+  version "0.0.45"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.45.tgz#a81b745acb8f737266d2d25de4379a9e8e669f7a"
+  integrity sha512-EEjaYm0c6LVrjEOS6TNXubRNpvTqReN+90y2Ko1FSn8udIKt5V2j/OnJpdZ+moz43CjUSokyt0UaVh/gpXeN4Q==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"

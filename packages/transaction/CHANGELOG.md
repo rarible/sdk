@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.43](https://github.com/rarible/sdk/compare/v0.7.42...v0.7.43) (2021-12-17)
+
+
+### Features
+
+* deploy method update ([#72](https://github.com/rarible/sdk/issues/72)) ([5f7a413](https://github.com/rarible/sdk/commit/5f7a41357c1163e7cac47d3339a66a3dba828e0e))
+
+
+
+
+
+## [0.7.42](https://github.com/rarible/sdk/compare/v0.7.41...v0.7.42) (2021-12-16)
+
+
+### Bug Fixes
+
+* update flow-sdk, fix evolution transaction ([d3535d3](https://github.com/rarible/sdk/commit/d3535d3ec567a31988739da62cb742430e931f78))
+
+
+
+
+
+## [0.7.39](https://github.com/rarible/sdk/compare/v0.7.38...v0.7.39) (2021-12-16)
+
+
+### Bug Fixes
+
+* update flow-sdk ([93d4c1f](https://github.com/rarible/sdk/commit/93d4c1f9df1625b95606ebeed435edd2f3f851e1))
+* update flow-sdk version (return legacy order trasactions) ([09e7e01](https://github.com/rarible/sdk/commit/09e7e012273c98d9152fc3463b6057ec6f6b5b60))
+
+
+
+
+
 ## [0.7.36](https://github.com/rarible/sdk/compare/v0.7.35...v0.7.36) (2021-12-15)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
