@@ -6,17 +6,17 @@ import { createApisSdk } from "../../common/apis"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { createTestItem } from "./test/create-test-item"
 import { FlowMint } from "./mint"
-import { testFlowToken } from "./test/common"
 import { FlowBid } from "./bid"
 import { FlowCancel } from "./cancel"
 import { awaitFlowOrder } from "./test/await-order"
 import { FlowBuy } from "./buy"
+import { createTestBid } from "./test/create-test-bid"
 
 describe("Flow bid", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
-	const apis = createApisSdk("dev")
+	const sdk = createFlowSdk(wallet.fcl, "staging", {}, authUser1)
+	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const bid = new FlowBid(sdk)
 	const cancel = new FlowCancel(sdk, apis, "testnet")
@@ -25,15 +25,7 @@ describe("Flow bid", () => {
 	test.skip("Should place a bid on flow NFT item, update bid and cancel bid ", async () => {
 		const itemId = await createTestItem(mint)
 
-		const bidPrepare = await bid.bid({ itemId })
-		const orderId = await bidPrepare.submit({
-			amount: 1,
-			price: toBigNumber("0.1"),
-			currency: {
-				"@type": "FLOW_FT",
-				contract: testFlowToken,
-			},
-		})
+		const orderId = await createTestBid(bid, itemId)
 
 		const order = await awaitFlowOrder(sdk, orderId.split(":")[1])
 		expect(order.take.value.toString()).toEqual("1")
@@ -55,15 +47,7 @@ describe("Flow bid", () => {
 	test.skip("Should place a bid on flow NFT item and accept bid", async () => {
 		const itemId = await createTestItem(mint)
 
-		const bidPrepare = await bid.bid({ itemId })
-		const orderId = await bidPrepare.submit({
-			amount: 1,
-			price: toBigNumber("0.1"),
-			currency: {
-				"@type": "FLOW_FT",
-				contract: testFlowToken,
-			},
-		})
+		const orderId = await createTestBid(bid, itemId)
 
 		const prepare = await acceptBid.buy({ orderId })
 		const acceptedOrderTx = await prepare.submit({ amount: 1 })
