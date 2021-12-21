@@ -99,24 +99,6 @@ describe("bid", () => {
 
 	})
 
-	test("getConvertableValue returns convertable type", async () => {
-		const itemId = toItemId("ETHEREUM:0xF04881F205644925596Fee9D66DACd98A9b99F05:1")
-
-		const bidResponse = await sdk2.order.bid({ itemId })
-
-		const value = await bidResponse.getConvertableValue({
-			"@type": "ERC20", contract: wethContract,
-		}, "0.00001")
-
-		expect(value).not.toBe(undefined)
-
-		if (value) {
-			expect(value.type).toBe("convertable")
-			expect(value.value).toBe("0.00001")
-			expect(value.currency).toMatchObject({ "@type": "ETH" })
-		}
-	})
-
 	test("convertCurrency ETH to WETH", async () => {
 		const senderRaw = wallet2.getAddressString()
 		const senderUnionAddress = toUnionAddress(`ETHEREUM:${senderRaw}`)

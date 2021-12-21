@@ -15,6 +15,7 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
+import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import * as common from "./common"
 import {
 	convertToEthereumAssetType,
@@ -164,39 +165,51 @@ export class EthereumBid {
 		}
 	}
 
-	async getConvertableValue(
-		assetType: AssetType, value: BigNumberValue
-	): Promise<{ type: "insufficient" | "convertable", currency: AssetType; value: BigNumberValue } | undefined > {
-		if (!this.wallet) {
-			throw new Error("Wallet is undefined")
-		}
-		if (assetType["@type"] === "ETH") return undefined
-
-		const walletAddress = await this.wallet.getAddress()
-		const wrappedTokenBalance = await this.balanceService.getBalance(walletAddress, assetType)
-
-		if (new BigNumber(wrappedTokenBalance).gte(value)) {
-			return undefined
-		}
-
-		const ethBalance = await this.balanceService.getBalance(walletAddress, { "@type": "ETH" })
-
-		if (new BigNumber(ethBalance).gte(value)) {
-			return {
-				type: "convertable",
-				currency: { "@type": "ETH" },
-				value,
-			}
-		}
-
+	getConvertMap() {
 		return {
-			type: "insufficient",
-			currency: { "@type": "ETH" },
-			value: new BigNumber(value).minus(ethBalance),
+			[`ETHEREUM:${this.sdk.balances.getWethContractAddress()}`]: "ETH",
 		}
 	}
 
-	async convertCurrency(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction> {
+	private async getConvertableValue(
+		assetType: AssetType, value: BigNumberValue
+	): Promise<GetConvertableValueResult> {
+		if (!this.wallet) {
+			throw new Error("Wallet is undefined")
+		}
+		const convertMap = this.getConvertMap()
+
+		if (assetType["@type"] === "ERC20" && assetType["contract"] in convertMap) {
+			const walletAddress = await this.wallet.getAddress()
+			const wrappedTokenBalance = await this.balanceService.getBalance(walletAddress, assetType)
+
+			if (new BigNumber(wrappedTokenBalance).gte(value)) {
+				return undefined
+			}
+
+			const ethBalance = await this.balanceService.getBalance(walletAddress, { "@type": "ETH" })
+
+			if (new BigNumber(ethBalance).plus(wrappedTokenBalance).gte(value)) {
+				return {
+					type: "convertable",
+					currency: { "@type": "ETH" },
+					value: new BigNumber(value).minus(wrappedTokenBalance),
+				}
+			}
+
+			return {
+				type: "insufficient",
+				currency: { "@type": "ETH" },
+				value: new BigNumber(value).minus(ethBalance),
+			}
+		} else {
+			return undefined
+		}
+	}
+
+	private async convertCurrency(
+		from: AssetType, to: AssetType, value: BigNumberValue
+	): Promise<IBlockchainTransaction> {
 		const tx = await this.sdk.balances.convert(
 			convertToEthereumAssetType(from),
 			convertToEthereumAssetType(to),

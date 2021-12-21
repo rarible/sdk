@@ -50,6 +50,7 @@ export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
 
 export function getSupportedCurrencies(): CurrencyType[] {
 	return [
+		{ blockchain: Blockchain.ETHEREUM, type: "NATIVE" },
 		{ blockchain: Blockchain.ETHEREUM, type: "ERC20" },
 	]
 }

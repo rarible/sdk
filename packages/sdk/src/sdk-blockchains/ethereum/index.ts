@@ -43,7 +43,7 @@ export function createEthereumSdk(
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			bid: bidService.bid as any,
+			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			cancel: new EthereumCancel(sdk, network).cancel,
 		},

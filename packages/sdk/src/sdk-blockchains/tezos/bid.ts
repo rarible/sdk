@@ -9,6 +9,7 @@ import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	OrderRequest,
 	OrderUpdateRequest,
@@ -19,6 +20,7 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
 import type { PrepareOrderUpdateRequest, PrepareOrderUpdateResponse } from "../../types/order/common"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
+import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertContractAddress,
@@ -58,6 +60,14 @@ export class TezosBid {
 		}
 	}
 
+	private async getConvertableValue(): Promise<GetConvertableValueResult> {
+		return undefined
+	}
+
+	private async convert(): Promise<IBlockchainTransaction> {
+		throw new Error("Convert operation is not supported")
+	}
+
 	async bid(prepare: PrepareOrderRequest): Promise<PrepareBidResponse> {
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 
@@ -75,8 +85,8 @@ export class TezosBid {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
-			getConvertableValue: null as any,
-			convert: null as any,
+			getConvertableValue: this.getConvertableValue,
+			convert: this.convert,
 			submit: Action.create({
 				id: "send-tx" as const,
 				run: async (request: OrderRequest) => {

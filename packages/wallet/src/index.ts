@@ -69,6 +69,9 @@ export class FlowWallet implements AbstractWallet {
 
 	async getAddress(): Promise<UnionAddress> {
 		const user = await this.fcl.currentUser().snapshot()
+		if (!user.addr) {
+			throw new Error("Not connected to Flow blockchain")
+		}
 		return toUnionAddress(`FLOW:${user.addr}`)
 	}
 }

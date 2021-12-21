@@ -9,10 +9,12 @@ import type {
 } from "../common"
 
 export type PrepareBidResponse = PrepareOrderResponse & {
-	getConvertableValue(assetType: AssetType, value: BigNumberValue):
-	Promise<{ type: "insufficient" | "convertable", currency: AssetType, value: BigNumberValue } | undefined>
+	getConvertableValue(assetType: AssetType, value: BigNumberValue): Promise<GetConvertableValueResult>
 	convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction>
 }
 
 export type IBid = (request: PrepareOrderRequest) => Promise<PrepareBidResponse>
 export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareOrderUpdateResponse>
+
+export type GetConvertableValueResult =
+  { type: "insufficient" | "convertable", currency: AssetType; value: BigNumberValue } | undefined
