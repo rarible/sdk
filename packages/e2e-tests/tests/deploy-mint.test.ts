@@ -51,17 +51,16 @@ const suites: {
 	{
 		blockchain: Blockchain.TEZOS,
 		wallet: getTezosWallet(),
-		deployRequest: (walletAddress: UnionAddress) => {
+		deployRequest: (): DeployTokenRequest => {
 			return {
 				blockchain: Blockchain.TEZOS,
 				asset: {
 					assetType: "NFT",
 					arguments: {
-						owner: walletAddress,
-						name: "My NFT collection",
+						name: "MY NFT",
 						symbol: "MYNFT",
 						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-						isUserToken: true,
+						isUserToken: false,
 					},
 				},
 			}
