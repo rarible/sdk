@@ -4,15 +4,35 @@ import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { AssetType } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import BigNumber from "bignumber.js"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { PrepareBidResponse } from "../../types/order/bid/domain"
 import * as common from "./common"
-import { convertToEthereumContractAddress } from "./common"
+import {
+	convertToEthereumAssetType,
+	convertToEthereumContractAddress,
+} from "./common"
+import type { EthereumBalance } from "./balance"
 
 export class EthereumBid {
-	constructor(private sdk: RaribleSdk) {
+	constructor(
+		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
+		private balanceService: EthereumBalance,
+		private network: EthereumNetwork,
+	) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
+		this.getConvertableValue = this.getConvertableValue.bind(this)
+		this.convertCurrency = this.convertCurrency.bind(this)
 	}
 
 	convertAssetType(assetType: EthereumAssetType): ApiClient.AssetType {
@@ -98,7 +118,7 @@ export class EthereumBid {
 		}
 	}
 
-	async bid(prepare: OrderCommon.PrepareOrderRequest): Promise<OrderCommon.PrepareOrderResponse> {
+	async bid(prepare: OrderCommon.PrepareOrderRequest): Promise<PrepareBidResponse> {
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}
@@ -138,12 +158,56 @@ export class EthereumBid {
 			multiple: collection.type === "ERC1155",
 			maxAmount: item.supply,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
+			getConvertableValue: this.getConvertableValue,
+			convert: this.convertCurrency,
 			submit,
 		}
 	}
 
+	async getConvertableValue(
+		assetType: AssetType, value: BigNumberValue
+	): Promise<{ type: "insufficient" | "convertable", currency: AssetType; value: BigNumberValue } | undefined > {
+		if (!this.wallet) {
+			throw new Error("Wallet is undefined")
+		}
+		if (assetType["@type"] === "ETH") return undefined
+
+		const walletAddress = await this.wallet.getAddress()
+		const wrappedTokenBalance = await this.balanceService.getBalance(walletAddress, assetType)
+
+		if (new BigNumber(wrappedTokenBalance).gte(value)) {
+			return undefined
+		}
+
+		const ethBalance = await this.balanceService.getBalance(walletAddress, { "@type": "ETH" })
+
+		if (new BigNumber(ethBalance).gte(value)) {
+			return {
+				type: "convertable",
+				currency: { "@type": "ETH" },
+				value,
+			}
+		}
+
+		return {
+			type: "insufficient",
+			currency: { "@type": "ETH" },
+			value: new BigNumber(value).minus(ethBalance),
+		}
+	}
+
+	async convertCurrency(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction> {
+		const tx = await this.sdk.balances.convert(
+			convertToEthereumAssetType(from),
+			convertToEthereumAssetType(to),
+			value
+		)
+
+		return new BlockchainEthereumTransaction(tx, this.network)
+	}
+
 	async update(
-		prepareRequest: OrderCommon.PrepareOrderUpdateRequest
+		prepareRequest: OrderCommon.PrepareOrderUpdateRequest,
 	): Promise<OrderCommon.PrepareOrderUpdateResponse> {
 		if (!prepareRequest.orderId) {
 			throw new Error("OrderId has not been specified")

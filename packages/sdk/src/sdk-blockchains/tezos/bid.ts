@@ -13,12 +13,12 @@ import type {
 	OrderRequest,
 	OrderUpdateRequest,
 	PrepareOrderRequest,
-	PrepareOrderResponse,
 } from "../../types/order/common"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
 import type { PrepareOrderUpdateRequest, PrepareOrderUpdateResponse } from "../../types/order/common"
+import type { PrepareBidResponse } from "../../types/order/bid/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertContractAddress,
@@ -58,7 +58,7 @@ export class TezosBid {
 		}
 	}
 
-	async bid(prepare: PrepareOrderRequest): Promise<PrepareOrderResponse> {
+	async bid(prepare: PrepareOrderRequest): Promise<PrepareBidResponse> {
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 
 		const item = await retry(90, 1000, async () => {
@@ -75,6 +75,8 @@ export class TezosBid {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
+			getConvertableValue: null as any,
+			convert: null as any,
 			submit: Action.create({
 				id: "send-tx" as const,
 				run: async (request: OrderRequest) => {

@@ -1,8 +1,10 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
+import type { UnionAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { TezosProvider } from "tezos-sdk-module"
 import { sign } from "tezos-sdk-module"
+import { toUnionAddress } from "@rarible/types"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
@@ -19,6 +21,10 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 			signature: await this.ethereum.personalSign(message),
 			publicKey: address,
 		}
+	}
+
+	async getAddress(): Promise<UnionAddress> {
+		return toUnionAddress(`ETHEREUM:${await this.ethereum.getFrom()}`)
 	}
 }
 
@@ -60,6 +66,11 @@ export class FlowWallet implements AbstractWallet {
 		}
 		throw new Error(`Signature of user address "${address}" not found`)
 	}
+
+	async getAddress(): Promise<UnionAddress> {
+		const user = await this.fcl.currentUser().snapshot()
+		return toUnionAddress(`FLOW:${user.addr}`)
+	}
 }
 
 export class TezosWallet implements AbstractWallet {
@@ -77,6 +88,10 @@ export class TezosWallet implements AbstractWallet {
 			signature: result.signature,
 			publicKey: `${result.edpk}_${result.prefix}`,
 		}
+	}
+
+	async getAddress(): Promise<UnionAddress> {
+		return toUnionAddress(`TEZOS:${await this.provider.address()}`)
 	}
 }
 

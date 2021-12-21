@@ -3064,10 +3064,10 @@
     flow-js-testing "~0.1.13"
     sha3 "^2.1.4"
 
-"@rarible/protocol-ethereum-sdk@~0.12.21":
-  version "0.12.21"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.21.tgz#9c1b2579acfc00a47815b6480c7542b6da66be23"
-  integrity sha512-9KWyRpUGFKLWWM1CHRBfeoDcqppraqf3TaNDpkxPv5nPaJtYqhd6VavlMCFUsXoXkAIEkYK9MYvDQf5mFSh2SA==
+"@rarible/protocol-ethereum-sdk@~0.12.24":
+  version "0.12.24"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.24.tgz#fb6e6567679ee6ef1312e125fb779a6fdd7ded00"
+  integrity sha512-lt7sYUOshRz2B8O2SKhQfO7QFYme1HA02OV41RksMLbyrbEpQSZePWOEuka4PbfaSQXkenXJozryNWBfjYL14Q==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"

@@ -1,3 +1,6 @@
+import type { AssetType } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	PrepareOrderRequest,
 	PrepareOrderResponse,
@@ -5,5 +8,11 @@ import type {
 	PrepareOrderUpdateResponse,
 } from "../common"
 
-export type IBid = (request: PrepareOrderRequest) => Promise<PrepareOrderResponse>
+export type PrepareBidResponse = PrepareOrderResponse & {
+	getConvertableValue(assetType: AssetType, value: BigNumberValue):
+	Promise<{ type: "insufficient" | "convertable", currency: AssetType, value: BigNumberValue } | undefined>
+	convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction>
+}
+
+export type IBid = (request: PrepareOrderRequest) => Promise<PrepareBidResponse>
 export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareOrderUpdateResponse>
