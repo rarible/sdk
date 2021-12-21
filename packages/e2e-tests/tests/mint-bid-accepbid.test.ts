@@ -98,37 +98,33 @@ const suites: {
 	},*/
 ]
 
-describe("mint-bid-acceptBid", () => {
-	for (const suite of suites) {
-		describe(suite.blockchain, () => {
-			const { seller: sellerWallet, buyer: buyerWallet } = suite.wallets
-			const sellerSdk = createSdk(suite.blockchain, sellerWallet)
-			const buyerSdk = createSdk(suite.blockchain, buyerWallet)
+describe.each(suites)("$blockchain deploy-mint", (suite) => {
+	const { seller: sellerWallet, buyer: buyerWallet } = suite.wallets
+	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
+	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
-			test("should mint, then make bid, then acceptBid", async () => {
-				const sellerWalletAddress = toUnionAddress(await getWalletAddress(sellerWallet))
+	test("should mint, then make bid, then acceptBid", async () => {
+		const sellerWalletAddress = toUnionAddress(await getWalletAddress(sellerWallet))
 
-				// Get collection
-				const collection = await getCollection(sellerSdk, suite.collectionId)
+		// Get collection
+		const collection = await getCollection(sellerSdk, suite.collectionId)
 
-				// Mint token
-				const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(sellerWalletAddress))
+		// Mint token
+		const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(sellerWalletAddress))
 
-				// Create bid order
-				const bidRequest = await suite.bidRequest(await suite.getCurrency(suite.wallets), sellerWalletAddress)
-				const bidOrder = await bid(
-					buyerSdk,
-					buyerWallet,
-					{ itemId: nft.id },
-					bidRequest
-				)
+		// Create bid order
+		const bidRequest = await suite.bidRequest(await suite.getCurrency(suite.wallets), sellerWalletAddress)
+		const bidOrder = await bid(
+			buyerSdk,
+			buyerWallet,
+			{ itemId: nft.id },
+			bidRequest
+		)
 
-				// Fill bid order
-				await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })
+		// Fill bid order
+		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })
 
-				// Check token transfer
-				await awaitForOwnership(buyerSdk, nft.id, await getWalletAddress(buyerWallet, false))
-			})
-		})
-	}
+		// Check token transfer
+		await awaitForOwnership(buyerSdk, nft.id, await getWalletAddress(buyerWallet, false))
+	})
 })

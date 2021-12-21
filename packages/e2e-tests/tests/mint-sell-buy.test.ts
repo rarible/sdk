@@ -123,38 +123,34 @@ const suites: {
 	},*/
 ]
 
-describe("mint-sell-buy", () => {
-	for (const suite of suites) {
-		describe(suite.blockchain, () => {
-			const { seller: sellerWallet, buyer: buyerWallet } = suite.wallets
-			const sellerSdk = createSdk(suite.blockchain, sellerWallet)
-			const buyerSdk = createSdk(suite.blockchain, buyerWallet)
+describe.each(suites)("$blockchain deploy-mint", (suite) => {
+	const { seller: sellerWallet, buyer: buyerWallet } = suite.wallets
+	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
+	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
-			test("should mint, then sell, then buy", async () => {
-				const sellerWalletAddress = toUnionAddress(await getWalletAddress(sellerWallet))
+	test("should mint, then sell, then buy", async () => {
+		const sellerWalletAddress = toUnionAddress(await getWalletAddress(sellerWallet))
 
-				// Get collection
-				const collection = await getCollection(sellerSdk, suite.collectionId)
+		// Get collection
+		const collection = await getCollection(sellerSdk, suite.collectionId)
 
-				// Mint token
-				const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(sellerWalletAddress))
+		// Mint token
+		const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(sellerWalletAddress))
 
-				// Create sell order
-				const sellAmount = 1
-				const sellOrder = await sell(
-					sellerSdk,
-					sellerWallet,
-					{ itemId: nft.id },
-					await suite.sellRequest(sellAmount, await suite.getCurrency(suite.wallets))
-				)
+		// Create sell order
+		const sellAmount = 1
+		const sellOrder = await sell(
+			sellerSdk,
+			sellerWallet,
+			{ itemId: nft.id },
+			await suite.sellRequest(sellAmount, await suite.getCurrency(suite.wallets))
+		)
 
-				// Fill sell order
-				const buyAmount = sellAmount
-				await buy(buyerSdk, buyerWallet, nft.id, { orderId: sellOrder.id }, { amount: buyAmount })
+		// Fill sell order
+		const buyAmount = sellAmount
+		await buy(buyerSdk, buyerWallet, nft.id, { orderId: sellOrder.id }, { amount: buyAmount })
 
-				const nextStock = toBigNumber("0")
-				await awaitOrderStock(sellerSdk, sellOrder.id, nextStock)
-			})
-		})
-	}
+		const nextStock = toBigNumber("0")
+		await awaitOrderStock(sellerSdk, sellOrder.id, nextStock)
+	})
 })

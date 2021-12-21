@@ -93,32 +93,28 @@ const suites: {
 	},*/
 ]
 
-describe("mint-sell-cancel", () => {
-	for (const suite of suites) {
-		describe(suite.blockchain, () => {
-			const wallet = suite.wallet
-			const sdk = createSdk(suite.blockchain, wallet)
+describe.each(suites)("$blockchain deploy-mint", (suite) => {
+	const wallet = suite.wallet
+	const sdk = createSdk(suite.blockchain, wallet)
 
-			test("should mint, then sell, then cancel order", async () => {
-				const sellerWalletAddress = toUnionAddress(await getWalletAddress(wallet))
+	test("should mint, then sell, then cancel order", async () => {
+		const sellerWalletAddress = toUnionAddress(await getWalletAddress(wallet))
 
-				// Get collection
-				const collection = await getCollection(sdk, suite.collectionId)
+		// Get collection
+		const collection = await getCollection(sdk, suite.collectionId)
 
-				// Mint token
-				const { nft } = await mint(sdk, wallet, { collection }, suite.mintRequest(sellerWalletAddress))
+		// Mint token
+		const { nft } = await mint(sdk, wallet, { collection }, suite.mintRequest(sellerWalletAddress))
 
-				// Create sell order
-				const sellAmount = 1
-				const sellOrder = await sell(sdk, wallet, { itemId: nft.id }, {
-					amount: sellAmount,
-					price: "1",
-					currency: await suite.getCurrency(wallet),
-				})
-
-				// Cancel order
-				await cancel(sdk, wallet, { orderId: sellOrder.id })
-			})
+		// Create sell order
+		const sellAmount = 1
+		const sellOrder = await sell(sdk, wallet, { itemId: nft.id }, {
+			amount: sellAmount,
+			price: "1",
+			currency: await suite.getCurrency(wallet),
 		})
-	}
+
+		// Cancel order
+		await cancel(sdk, wallet, { orderId: sellOrder.id })
+	})
 })

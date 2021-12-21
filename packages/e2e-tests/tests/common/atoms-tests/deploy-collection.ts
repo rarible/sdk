@@ -3,7 +3,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { DeployResponse, DeployTokenRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 
 /**
- * Buying an nft
+ * Deploy new collection, await transaction, check address
  */
 export async function deployCollection(sdk: IRaribleSdk,
 									   wallet: BlockchainWallet,
