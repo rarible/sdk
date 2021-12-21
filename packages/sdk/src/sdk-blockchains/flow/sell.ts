@@ -9,7 +9,8 @@ import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import { getFlowCollection, getFungibleTokenName, parseUnionItemId } from "./common/converters"
+import { getFlowCollection, getFungibleTokenName, parseUnionItemId, toFlowParts } from "./common/converters"
+import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowSell {
 	static supportedCurrencies: CurrencyType[] = [{
@@ -26,10 +27,6 @@ export class FlowSell {
 		return this.apis.order.getOrderById({ id: request })
 	}
 
-	getFlowProtocolFee() {
-		return parseInt(this.sdk.order.getProtocolFee().sellerFee.value)
-	}
-
 	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
 		const contract = getFlowCollection(request.collectionId)
 		const sellAction = Action.create({
@@ -43,7 +40,9 @@ export class FlowSell {
 						currency,
 						itemId: toFlowItemId(`${contract}:${itemId}`),
 						sellItemPrice: toBn(sellRequest.price).decimalPlaces(8).toString(),
+						originFees: toFlowParts(sellRequest.originFees),
 					})
+
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
@@ -53,8 +52,8 @@ export class FlowSell {
 		return {
 			multiple: false,
 			supportedCurrencies: FlowSell.supportedCurrencies,
-			baseFee: this.getFlowProtocolFee(),
-			originFeeSupport: OriginFeeSupport.NONE,
+			baseFee: getFlowBaseFee(this.sdk),
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit: sellAction,
 		}
@@ -88,9 +87,9 @@ export class FlowSell {
 
 		return {
 			supportedCurrencies: FlowSell.supportedCurrencies,
-			originFeeSupport: OriginFeeSupport.NONE,
+			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
-			baseFee: this.getFlowProtocolFee(),
+			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
 		}
 	}
