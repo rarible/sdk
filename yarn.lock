@@ -3041,10 +3041,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.21.tgz#e822fbc13695129765a6221c18c034177e54610f"
   integrity sha512-K8FKAGTu7sVxAv8HU2RXXakmypCGLBcP4J3/3iiHYY2tcHl8zn0ih6hTJetRBye+hlVv/Yy1cPHjIMfJth9smw==
 
-"@rarible/flow-sdk@~0.5.25":
-  version "0.5.25"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.25.tgz#20c33e731b3dd49d3eff41f842c03864e4876d3b"
-  integrity sha512-TYyptndq32pUyONRuEll6X+v27uYCkOAdinsTEsla8IEEjTybM+OzhbmYJqQEsHLzsu2VPtctyHIT7p5j8krhA==
+"@rarible/flow-sdk@~0.5.27":
+  version "0.5.27"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.27.tgz#fc459818e5fff94a33595a029aeea28c89a1bda8"
+  integrity sha512-4+JUrEZDQwxfTKlzd3sckp6HAZE1MDrrYL/kD7femJwDzOlwFQWNyXgu3E+ce13mQTRVJgvHKAWBHnPuh2GacQ==
   dependencies:
     "@onflow/fcl" "~0.0.76"
     "@onflow/types" "~0.0.5"
@@ -3101,7 +3101,7 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/types@0.5.3", "@rarible/types@~0.5.3":
+"@rarible/types@0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
   integrity sha512-ZjrJvg4iVIxatBRnUPcwWzaQRf7XN4hgjrRHqmjXv2Q+8/2vYyPL1TBFlfGunPPDMUB3hwBELaL5ZQaJsSE6oQ==
