@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.7.46](https://github.com/rarible/sdk/compare/v0.7.45...v0.7.46) (2021-12-22)
+
+
+### Features
+
+* update flow-sdk, add flow bid ([ad25158](https://github.com/rarible/sdk/commit/ad251580ee6e61091418bd25a77f581cc413d015))
+
+
+
+
+
 ## [0.7.45](https://github.com/rarible/sdk/compare/v0.7.44...v0.7.45) (2021-12-20)
 
 
