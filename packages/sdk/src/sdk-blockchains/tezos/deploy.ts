@@ -4,7 +4,6 @@ import type { TezosProvider } from "tezos-sdk-module"
 // eslint-disable-next-line camelcase
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "tezos-sdk-module"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import { toContractAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { DeployTokenRequest, IDeploy } from "../../types/nft/deploy/domain"
 import type { TezosDeployTokenAsset } from "../../types/nft/deploy/domain"
