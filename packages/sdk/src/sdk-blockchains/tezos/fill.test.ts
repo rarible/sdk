@@ -34,7 +34,7 @@ describe("fill test", () => {
 		console.log(buyerAddress)
 
 		//b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c
-		const fillAction = await buyerSdk.order.fill({
+		const fillAction = await buyerSdk.order.buy({
 			orderId: toOrderId("TEZOS:f1a87424bc67e47a9a3f850b9f5a5ba13af5259f6d139d7b3710b4862a3aaac9"),
 		})
 
