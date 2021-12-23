@@ -1,13 +1,15 @@
-import type { FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
-import { toFlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
-import type { FlowCurrency } from "@rarible/flow-sdk/build/types"
+import type { FlowContractAddress, FlowCurrency } from "@rarible/flow-sdk"
+import { toFlowContractAddress } from "@rarible/flow-sdk"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, FlowAddress, UnionAddress } from "@rarible/types"
-import { toFlowAddress } from "@rarible/types"
+import { toBigNumber, toFlowAddress } from "@rarible/types"
+import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
+import type { FlowFee } from "@rarible/flow-sdk/build/types"
 import type { FlowItemId } from "../../../../common/domain"
+import type { UnionPart } from "../../../../types/order/common"
 
-const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
+const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
 
 /**
  * Get flow collection from union collection
@@ -68,9 +70,9 @@ const FLOW_ORDER_ID_REGEXP = /^FLOW:[0-9]{1,}/
  *
  * @param id - "FLOW:{any count of digits}"
  */
-export function parseOrderId(id: string): string {
+export function parseOrderId(id: string): number {
 	if (FLOW_ORDER_ID_REGEXP.test(id)) {
-		return id.split(":")[1]
+		return parseInt(id.split(":")[1])
 	}
 	throw new Error("Invalid order ID")
 }
@@ -94,4 +96,27 @@ export function getFungibleTokenName(contract: ContractAddress): FlowCurrency {
 		}
 	}
 	throw new Error(`Unsupported contract ID: ${contract}`)
+}
+
+export function convertToFlowAddress(
+	contractAddress: UnionAddress | ContractAddress,
+): FlowAddress {
+	if (!isBlockchainSpecified(contractAddress)) {
+		throw new Error("Not a union or contract address: " + contractAddress)
+	}
+
+	const [blockchain, address] = contractAddress.split(":")
+	if (blockchain !== "FLOW") {
+		throw new Error("Not an Flow address")
+	}
+	return toFlowAddress(address)
+}
+
+export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
+	return parts?.map(p => {
+		return {
+			account: convertToFlowAddress(p.account),
+			value: toBigNumber(p.value.toString()),
+		}
+	}) || []
 }
