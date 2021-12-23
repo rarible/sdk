@@ -49,7 +49,7 @@ describe("sale", () => {
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
-		const fillAction = await sdk2.order.fill({ orderId })
+		const fillAction = await sdk2.order.buy({ orderId })
 
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
