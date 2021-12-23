@@ -1,7 +1,7 @@
 import type { Address, UnionAddress, Word } from "@rarible/types"
-import { toAddress, toContractAddress, toOrderId } from "@rarible/types"
+import { toAddress, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { OrderId, AssetType } from "@rarible/api-client"
+import type { OrderId, AssetType, ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { Part } from "@rarible/ethereum-api-client"
@@ -63,16 +63,24 @@ export function convertToEthereumAddress(
 	}
 
 	const [blockchain, address] = contractAddress.split(":")
-	if (blockchain !== "ETHEREUM") {
+	if (blockchain !== Blockchain.ETHEREUM) {
 		throw new Error("Not an Ethereum address")
 	}
 	return toAddress(address)
 }
 
-export function convertOrderHashToOrderId(hash: Word): OrderId {
-	return toOrderId(`ETHEREUM:${hash}`)
+export function convertEthereumOrderHash(hash: Word): OrderId {
+	return toOrderId(`${Blockchain.ETHEREUM}:${hash}`)
 }
 
-export function convertToEthereumContractAddress(address: string): ContractAddress {
-	return toContractAddress(`ETHEREUM:${address}`)
+export function convertEthereumContractAddress(address: string): ContractAddress {
+	return toContractAddress(`${Blockchain.ETHEREUM}:${address}`)
+}
+
+export function convertEthereumUnionAddress(address: string): UnionAddress {
+	return toUnionAddress(`${Blockchain.ETHEREUM}:${address}`)
+}
+
+export function convertEthereumItemId(itemId: string): ItemId {
+	return toItemId(`${Blockchain.ETHEREUM}:${itemId}`)
 }

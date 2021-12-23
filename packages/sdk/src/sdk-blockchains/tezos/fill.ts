@@ -18,6 +18,7 @@ import type {
 import BigNumber from "bignumber.js"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
+import { Blockchain } from "@rarible/api-client"
 import type {
 	FillRequest,
 	PrepareFillRequest,
@@ -72,7 +73,7 @@ export class TezosFill {
 			return convertOrderToFillOrder(request.order)
 		} else if ("orderId" in request) {
 			const [domain, hash] = request.orderId.split(":")
-			if (domain !== "TEZOS") {
+			if (domain !== Blockchain.TEZOS) {
 				throw new Error("Not an tezos order")
 			}
 			const order = await this.apis.order.getOrderByHash({

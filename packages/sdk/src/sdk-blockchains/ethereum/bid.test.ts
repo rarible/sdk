@@ -5,11 +5,13 @@ import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/cont
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
 import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
+import { convertEthereumUnionAddress } from "./common"
 
 describe("bid", () => {
 	const { web31, wallet1, web32, wallet2 } = initProviders({
@@ -25,7 +27,7 @@ describe("bid", () => {
 	const ethwallet2 = new EthereumWallet(ethereum2)
 	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
 
-	const wethContract = toContractAddress("ETHEREUM:0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
+	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2`)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -85,9 +87,11 @@ describe("bid", () => {
 
 		const bidResponse = await sdk1.order.bid({ itemId })
 
-		const value = await bidResponse.getConvertableValue({
-			"@type": "ERC20", contract: wethContract,
-		}, "0.00001")
+		const value = await bidResponse.getConvertableValue(
+			{ "@type": "ERC20", contract: wethContract },
+			"0.00001",
+			convertEthereumUnionAddress(wallet1.getAddressString()),
+		)
 
 
 		expect(value).not.toBe(undefined)
@@ -102,7 +106,7 @@ describe("bid", () => {
 	test("convertCurrency ETH to WETH", async () => {
 		const senderRaw = wallet2.getAddressString()
 		const senderUnionAddress = toUnionAddress(`ETHEREUM:${senderRaw}`)
-		const itemId = toItemId("ETHEREUM:0xF04881F205644925596Fee9D66DACd98A9b99F05:1")
+		const itemId = toItemId(`${Blockchain.ETHEREUM}:0xF04881F205644925596Fee9D66DACd98A9b99F05:1`)
 
 		const bidResponse = await sdk2.order.bid({ itemId })
 
@@ -132,7 +136,7 @@ describe("bid", () => {
 	})
 
 	test("getConvertableValue returns undefined", async () => {
-		const itemId = toItemId("ETHEREUM:0xF04881F205644925596Fee9D66DACd98A9b99F05:1")
+		const itemId = toItemId(`${Blockchain.ETHEREUM}:0xF04881F205644925596Fee9D66DACd98A9b99F05:1`)
 
 		const bidResponse = await sdk2.order.bid({ itemId })
 		const convertTx = await bidResponse.convert(
@@ -142,9 +146,11 @@ describe("bid", () => {
 		)
 		await convertTx.wait()
 
-		const value = await bidResponse.getConvertableValue({
-			"@type": "ERC20", contract: wethContract,
-		}, "0.000000000000001")
+		const value = await bidResponse.getConvertableValue(
+			{ "@type": "ERC20", contract: wethContract },
+			"0.000000000000001",
+			convertEthereumUnionAddress(wallet2.getAddressString())
+		)
 
 		expect(value).toBe(undefined)
 	})

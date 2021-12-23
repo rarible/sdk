@@ -1,4 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
+import type { UnionAddress } from "@rarible/types"
 import { toBinary, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
@@ -12,6 +13,7 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import { Blockchain } from "@rarible/api-client"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
@@ -19,7 +21,7 @@ import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import * as common from "./common"
 import {
 	convertToEthereumAssetType,
-	convertToEthereumContractAddress,
+	convertEthereumContractAddress, convertEthereumUnionAddress,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 
@@ -46,20 +48,20 @@ export class EthereumBid {
 			case "ERC20": {
 				return {
 					"@type": "ERC20",
-					contract: convertToEthereumContractAddress(assetType.contract),
+					contract: convertEthereumContractAddress(assetType.contract),
 				}
 			}
 			case "ERC721": {
 				return {
 					"@type": "ERC721",
-					contract: convertToEthereumContractAddress(assetType.contract),
+					contract: convertEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC721_LAZY": {
 				return {
 					"@type": "ERC721_Lazy",
-					contract: convertToEthereumContractAddress(assetType.contract),
+					contract: convertEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					creators: assetType.creators.map((c) => ({
@@ -76,14 +78,14 @@ export class EthereumBid {
 			case "ERC1155": {
 				return {
 					"@type": "ERC1155",
-					contract: convertToEthereumContractAddress(assetType.contract),
+					contract: convertEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC1155_LAZY": {
 				return {
 					"@type": "ERC1155_Lazy",
-					contract: convertToEthereumContractAddress(assetType.contract),
+					contract: convertEthereumContractAddress(assetType.contract),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					supply: assetType.supply !== undefined
@@ -103,7 +105,7 @@ export class EthereumBid {
 			case "GEN_ART": {
 				return {
 					"@type": "GEN_ART",
-					contract: convertToEthereumContractAddress(assetType.contract),
+					contract: convertEthereumContractAddress(assetType.contract),
 				}
 			}
 			default: {
@@ -150,7 +152,7 @@ export class EthereumBid {
 					originFees: common.toEthereumParts(request.originFees),
 				}
 			})
-			.after((order) => common.convertOrderHashToOrderId(order.hash))
+			.after((order) => common.convertEthereumOrderHash(order.hash))
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
@@ -167,20 +169,16 @@ export class EthereumBid {
 
 	getConvertMap() {
 		return {
-			[`ETHEREUM:${this.sdk.balances.getWethContractAddress()}`]: "ETH",
+			[convertEthereumUnionAddress(this.sdk.balances.getWethContractAddress())]: "ETH",
 		}
 	}
 
 	private async getConvertableValue(
-		assetType: AssetType, value: BigNumberValue
+		assetType: AssetType, value: BigNumberValue, walletAddress: UnionAddress
 	): Promise<GetConvertableValueResult> {
-		if (!this.wallet) {
-			throw new Error("Wallet is undefined")
-		}
 		const convertMap = this.getConvertMap()
 
 		if (assetType["@type"] === "ERC20" && assetType["contract"] in convertMap) {
-			const walletAddress = await this.wallet.getAddress()
 			const wrappedTokenBalance = await this.balanceService.getBalance(walletAddress, assetType)
 
 			if (new BigNumber(wrappedTokenBalance).gte(value)) {
@@ -226,7 +224,7 @@ export class EthereumBid {
 			throw new Error("OrderId has not been specified")
 		}
 		const [blockchain, hash] = prepareRequest.orderId.split(":")
-		if (blockchain !== "ETHEREUM") {
+		if (blockchain !== Blockchain.ETHEREUM) {
 			throw new Error("Not an ethereum order")
 		}
 
@@ -240,7 +238,7 @@ export class EthereumBid {
 				orderHash: toWord(hash),
 				priceDecimal: request.price,
 			}))
-			.after((order) => common.convertOrderHashToOrderId(order.hash))
+			.after((order) => common.convertEthereumOrderHash(order.hash))
 
 		return {
 			originFeeSupport:

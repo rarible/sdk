@@ -1,4 +1,3 @@
-import { toContractAddress, toOrderId } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
@@ -11,7 +10,7 @@ import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
-import { getFungibleTokenName, toFlowParts } from "./common/converters"
+import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName, toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowBid {
@@ -39,7 +38,7 @@ export class FlowBid {
 		}
 
 		const [domain, contract, tokenId] = prepare.itemId.split(":")
-		if (domain !== "FLOW") {
+		if (domain !== Blockchain.FLOW) {
 			throw new Error(`Not an flow item: ${prepare.itemId}`)
 		}
 		const itemId = toFlowItemId(`${contract}:${tokenId}`)
@@ -59,7 +58,7 @@ export class FlowBid {
 				}
 				throw new Error(`Unsupported currency type: ${bidRequest.currency["@type"]}`)
 			},
-		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
+		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
@@ -81,7 +80,7 @@ export class FlowBid {
 			throw new Error("OrderId has not been specified")
 		}
 		const [blockchain, orderId] = prepareRequest.orderId.split(":")
-		if (blockchain !== "FLOW") {
+		if (blockchain !== Blockchain.FLOW) {
 			throw new Error("Not an flow order")
 		}
 		const order = await this.sdk.apis.order.getOrderByOrderId({ orderId })
@@ -90,7 +89,7 @@ export class FlowBid {
 			id: "send-tx" as const,
 			run: async (bidRequest: OrderCommon.OrderUpdateRequest) => {
 				if (order.make["@type"] === "fungible") {
-					const currency = getFungibleTokenName(toContractAddress(`FLOW:${order.make.contract}`))
+					const currency = getFungibleTokenName(convertFlowContractAddress(order.make.contract))
 					return this.sdk.order.bidUpdate(
 						toFlowContractAddress(order.take.contract),
 						currency,
@@ -100,7 +99,7 @@ export class FlowBid {
 				}
 				throw new Error(`Unsupported currency type: ${order.make["@type"]}`)
 			},
-		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
+		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,

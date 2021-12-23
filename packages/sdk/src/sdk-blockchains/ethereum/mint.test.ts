@@ -2,11 +2,12 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toUnionAddress } from "@rarible/types"
+import { toAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
+import { convertEthereumUnionAddress, convertEthereumContractAddress } from "./common"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
@@ -20,9 +21,9 @@ describe("mint", () => {
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
-		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const sender = convertEthereumUnionAddress(senderRaw)
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: `ETHEREUM:${erc721Address}`,
+			collection: convertEthereumContractAddress(erc721Address),
 		})
 		const action = await sdk.nft.mint({ collection })
 
@@ -48,9 +49,9 @@ describe("mint", () => {
 
 	test("should mint ERC1155 token", async () => {
 		const senderRaw = wallet.getAddressString()
-		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const sender = convertEthereumUnionAddress(senderRaw)
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: `ETHEREUM:${erc1155Address}`,
+			collection: convertEthereumContractAddress(erc1155Address),
 		})
 		const action = await sdk.nft.mint({ collection })
 
