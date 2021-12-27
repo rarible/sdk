@@ -43,6 +43,7 @@ const suites: {
 			throw new Error("Wrong blockchain")
 		},
 	},
+	/*
 	{
 		blockchain: Blockchain.TEZOS,
 		wallet: getTezosTestWallet(),
@@ -69,6 +70,7 @@ const suites: {
 			throw new Error("Wrong blockchain")
 		},
 	},
+   */
 	/*{
 		blockchain: Blockchain.FLOW,
 		wallets: { seller: getFlowWallet(), buyer: getFlowWallet() },
