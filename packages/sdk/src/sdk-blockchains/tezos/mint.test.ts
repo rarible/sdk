@@ -16,7 +16,7 @@ describe("mint test", () => {
 	let nftContract: string = "KT1M9zUt7PYjGksY8te83CUHsgkzDKBKmStu"
 	let mtContract: string = "KT1NtruXoo4NSLNTyy9tcHraMAdQTHzXbLoH"
 
-	test("mint NFT token test", async () => {
+	test.skip("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})

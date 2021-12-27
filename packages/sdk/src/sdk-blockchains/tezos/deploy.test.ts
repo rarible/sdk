@@ -10,7 +10,7 @@ describe("deploy tezos tests", () => {
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	test("deploy public nft", async () => {
+	test.skip("deploy public nft", async () => {
 		const result = await sdk.nft.deploy({
 			blockchain: Blockchain.TEZOS,
 			asset: {
@@ -47,7 +47,7 @@ describe("deploy tezos tests", () => {
 		await awaitForCollection(sdk, result.address)
 	})
 
-	test("deploy public mt", async () => {
+	test.skip("deploy public mt", async () => {
 		const result = await sdk.nft.deploy({
 			blockchain: Blockchain.TEZOS,
 			asset: {
