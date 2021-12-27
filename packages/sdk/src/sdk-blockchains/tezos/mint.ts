@@ -6,9 +6,9 @@ import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
-import { toItemId } from "@rarible/types"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
+import { Blockchain } from "@rarible/api-client"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -16,7 +16,7 @@ import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepar
 import { MintType } from "../../types/nft/mint/domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { ITezosAPI, MaybeProvider, TezosMetadataResponse, TezosMetaContent } from "./common"
-import { getRequiredProvider, getTezosAddress } from "./common"
+import { convertTezosItemId, getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
 	constructor(
@@ -102,7 +102,7 @@ export class TezosMint {
 					return {
 						type: MintType.ON_CHAIN,
 						transaction: new BlockchainTezosTransaction(result, this.network),
-						itemId: toItemId(`TEZOS:${contract}:${result.token_id}`),
+						itemId: convertTezosItemId(`${contract}:${result.token_id}`),
 					}
 				},
 			}),
@@ -116,7 +116,7 @@ export async function getCollectionData(
 ): Promise<{ contract: string, owner?: string, type: "NFT" | "MT" }> {
 	const contractAddress = getContractFromRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
-	if (blockchain !== "TEZOS") {
+	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
 	}
 	const collection = await api.getNftCollectionById({

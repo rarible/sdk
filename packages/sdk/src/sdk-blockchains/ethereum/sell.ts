@@ -36,7 +36,7 @@ export class EthereumSell {
 					originFees: common.toEthereumParts(sellFormRequest.originFees),
 				}
 			})
-			.after(order => common.convertOrderHashToOrderId(order.hash))
+			.after(order => common.convertEthereumOrderHash(order.hash))
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
@@ -67,7 +67,7 @@ export class EthereumSell {
 				orderHash: toWord(hash),
 				priceDecimal: request.price,
 			}))
-			.after(order => common.convertOrderHashToOrderId(order.hash))
+			.after(order => common.convertEthereumOrderHash(order.hash))
 
 		return {
 			originFeeSupport: order.type === "RARIBLE_V2" ? OriginFeeSupport.FULL : OriginFeeSupport.AMOUNT_ONLY,

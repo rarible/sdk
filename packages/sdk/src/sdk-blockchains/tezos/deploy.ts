@@ -4,12 +4,11 @@ import type { TezosProvider } from "tezos-sdk-module"
 // eslint-disable-next-line camelcase
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "tezos-sdk-module"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import { toContractAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { DeployTokenRequest, IDeploy } from "../../types/nft/deploy/domain"
 import type { TezosDeployTokenAsset } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
-import { getRequiredProvider } from "./common"
+import { convertTezosContractAddress, getRequiredProvider } from "./common"
 
 export class TezosDeploy {
 	constructor(
@@ -52,7 +51,7 @@ export class TezosDeploy {
 			const operationResult = await this.getDeployOperation(request.asset as TezosDeployTokenAsset)
 			return {
 				tx: new BlockchainTezosTransaction(operationResult, this.network),
-				address: toContractAddress(`TEZOS:${operationResult.contract}`),
+				address: convertTezosContractAddress(operationResult.contract),
 			}
 		},
 	})

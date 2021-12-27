@@ -3,7 +3,7 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import * as EthereumSdk from "@rarible/protocol-ethereum-sdk"
 import { isErc1155v2Collection, isErc721v2Collection, isErc721v3Collection } from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
-import { toAddress, toBigNumber, toItemId } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
@@ -22,7 +22,7 @@ import { validateMintRequest } from "../../types/nft/mint/mint-request.type.vali
 import type { IApisSdk } from "../../domain"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
-import { convertToEthereumAddress } from "./common"
+import { convertToEthereumAddress, convertEthereumItemId } from "./common"
 
 export class EthereumMint {
 	constructor(
@@ -130,13 +130,13 @@ export class EthereumMint {
 						case MintResponseTypeEnum.ON_CHAIN:
 							return {
 								type: MintType.ON_CHAIN,
-								itemId: toItemId(`ETHEREUM:${mintResponse.itemId}`),
+								itemId: convertEthereumItemId(mintResponse.itemId),
 								transaction: new BlockchainEthereumTransaction(mintResponse.transaction, this.network),
 							}
 						case MintResponseTypeEnum.OFF_CHAIN:
 							return {
 								type: MintType.OFF_CHAIN,
-								itemId: toItemId(`ETHEREUM:${mintResponse.itemId}`),
+								itemId: convertEthereumItemId(mintResponse.itemId),
 							}
 						default:
 							throw new Error("Unrecognized mint response type")

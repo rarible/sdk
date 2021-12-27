@@ -16,6 +16,7 @@ import type { ICancel } from "../../types/order/cancel/domain"
 import type { IDeploy } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
+import type { PrepareBidResponse } from "../../types/order/bid/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -60,7 +61,7 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		this.sellUpdate = this.sellUpdate.bind(this)
 	}
 
-	bid(request: OrderCommon.PrepareOrderRequest): Promise<OrderCommon.PrepareOrderResponse> {
+	bid(request: OrderCommon.PrepareOrderRequest): Promise<PrepareBidResponse> {
 		return this.instances[extractBlockchain(request.itemId)].bid(request)
 	}
 

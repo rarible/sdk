@@ -37,7 +37,7 @@ const suites: {
 				supply: 1,
 			}
 		},
-		bidRequest: async (currency: RequestCurrency, payoutAddress): Promise<OrderRequest> => {
+		bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 			return {
 				amount: 1,
 				price: "0.1",
