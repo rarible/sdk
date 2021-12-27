@@ -1,3 +1,4 @@
 **/build
 **/node_modules
 **/*type.validator.ts
+**/umd

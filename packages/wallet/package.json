@@ -9,7 +9,9 @@
     "build"
   ],
   "scripts": {
-    "build": "tsc --project tsconfig-build.json",
+    "build": "run-s build:*",
+    "build:ts": "tsc --project tsconfig-build.json",
+    "build:umd": "webpack",
     "clean": "rimraf ./build",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit"
@@ -18,7 +20,7 @@
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "~0.0.10",
     "@rarible/types": "~0.5.3",
-    "@rarible/ethereum-provider": "~0.12.1",
+    "@rarible/ethereum-provider": "~0.12.26",
     "@rarible/fcl-types": "~0.5.0",
     "tezos-sdk-module": "~0.0.45"
   },
@@ -33,7 +35,12 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
-    "@rarible/web3-ethereum": "~0.12.16",
+    "@rarible/web3-ethereum": "~0.12.26",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "npm-run-all": "^4.1.5",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.4",
     "ts-jest": "^27.0.3",

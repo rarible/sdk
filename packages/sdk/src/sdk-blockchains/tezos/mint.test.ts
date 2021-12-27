@@ -13,7 +13,7 @@ describe("mint test", () => {
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
+	let nftContract: string = "KT1M9zUt7PYjGksY8te83CUHsgkzDKBKmStu"
 	let mtContract: string = "KT1NtruXoo4NSLNTyy9tcHraMAdQTHzXbLoH"
 
 	test.skip("mint NFT token test", async () => {
