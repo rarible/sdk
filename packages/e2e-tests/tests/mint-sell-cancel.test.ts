@@ -5,7 +5,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import { sell } from "./common/atoms-tests/sell"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
+import { getEthereumWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
 import { getCollection } from "./common/helpers"
