@@ -41,5 +41,6 @@ export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boo
 			const user = await wallet.fcl.currentUser().snapshot()
 			const address = user.addr
 			return (withPrefix ? "FLOW:" : "") + address
+		default: throw new Error("Unrecognized wallet")
 	}
 }

@@ -31,6 +31,7 @@ import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { Config } from "tezos-sdk-module"
+import { toContractAddress, toItemId, toOrderId } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 
@@ -164,7 +165,7 @@ export function getTezosOrderId(orderId: OrderId): string {
 		throw new Error("OrderId has not been specified")
 	}
 	const [blockchain, id] = orderId.split(":")
-	if (blockchain !== "TEZOS") {
+	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error("Not an TEZOS order")
 	}
 	return id
@@ -172,7 +173,7 @@ export function getTezosOrderId(orderId: OrderId): string {
 
 export function getTezosItemData(itemId: ItemId) {
 	const [domain, contract, tokenId] = itemId.split(":")
-	if (domain !== "TEZOS") {
+	if (domain !== Blockchain.TEZOS) {
 		throw new Error(`Not an tezos item: ${itemId}`)
 	}
 	return {
@@ -185,7 +186,7 @@ export function getTezosItemData(itemId: ItemId) {
 
 export function getTezosAddress(address: UnionAddress): string {
 	const [blockchain, tezosAddress] = address.split(":")
-	if (blockchain !== "TEZOS") {
+	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Not an tezos item: ${address}`)
 	}
 	return tezosAddress
@@ -266,21 +267,21 @@ export function getTezosAssetType(type: AssetType): TezosAssetType {
 		case "TEZOS_FT": {
 			return {
 				asset_class: "FT",
-				contract: convertContractAddress(type.contract),
+				contract: convertFromContractAddress(type.contract),
 				token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
 			}
 		}
 		case "TEZOS_NFT": {
 			return {
 				asset_class: "NFT",
-				contract: convertContractAddress(type.contract),
+				contract: convertFromContractAddress(type.contract),
 				token_id: new BigNumber(type.tokenId),
 			}
 		}
 		case "TEZOS_MT": {
 			return {
 				asset_class: "MT",
-				contract: convertContractAddress(type.contract),
+				contract: convertFromContractAddress(type.contract),
 				token_id: new BigNumber(type.tokenId),
 			}
 		}
@@ -329,9 +330,9 @@ export function convertOrderPayout(payout?: Array<Payout>): Array<TezosPart> {
 	})) || []
 }
 
-export function convertContractAddress(contract: ContractAddress): string {
+export function convertFromContractAddress(contract: ContractAddress): string {
 	const [blockchain, tezosAddress] = contract.split(":")
-	if (blockchain !== "TEZOS") {
+	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Not a tezos contract address: ${contract}`)
 	}
 	return tezosAddress
@@ -339,8 +340,20 @@ export function convertContractAddress(contract: ContractAddress): string {
 
 export function convertUnionAddress(address: UnionAddress): string {
 	const [blockchain, tezosAddress] = address.split(":")
-	if (blockchain !== "TEZOS") {
+	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Not a tezos address: ${address}`)
 	}
 	return tezosAddress
+}
+
+export function convertTezosOrderId(hash: string): OrderId {
+	return toOrderId(`${Blockchain.TEZOS}:${hash}`)
+}
+
+export function convertTezosItemId(itemId: string): ItemId {
+	return toItemId(`${Blockchain.TEZOS}:${itemId}`)
+}
+
+export function convertTezosContractAddress(address: string): ContractAddress {
+	return toContractAddress(`${Blockchain.TEZOS}:${address}`)
 }

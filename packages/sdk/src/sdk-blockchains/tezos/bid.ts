@@ -2,31 +2,33 @@ import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
 import { bid, upsert_order } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
-import { toBigNumber, toOrderId } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "tezos-sdk-module/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	OrderRequest,
 	OrderUpdateRequest,
 	PrepareOrderRequest,
-	PrepareOrderResponse,
 } from "../../types/order/common"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
 import type { PrepareOrderUpdateRequest, PrepareOrderUpdateResponse } from "../../types/order/common"
+import type { PrepareBidResponse } from "../../types/order/bid/domain"
+import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
-	convertContractAddress,
+	convertFromContractAddress,
 	convertOrderPayout, covertToLibAsset,
 	getMakerPublicKey,
 	getPayouts, getRequiredProvider,
 	getSupportedCurrencies,
-	getTezosItemData, getTezosOrderId,
+	getTezosItemData, getTezosOrderId, convertTezosOrderId,
 } from "./common"
 
 export class TezosBid {
@@ -48,7 +50,7 @@ export class TezosBid {
 			case "TEZOS_FT": {
 				return {
 					asset_class: "FT",
-					contract: convertContractAddress(type.contract),
+					contract: convertFromContractAddress(type.contract),
 					token_id: type.tokenId !== undefined ?  new BigNumber(type.tokenId) : undefined,
 				}
 			}
@@ -58,7 +60,15 @@ export class TezosBid {
 		}
 	}
 
-	async bid(prepare: PrepareOrderRequest): Promise<PrepareOrderResponse> {
+	private async getConvertableValue(): Promise<GetConvertableValueResult> {
+		return undefined
+	}
+
+	private async convert(): Promise<IBlockchainTransaction> {
+		throw new Error("Convert operation is not supported")
+	}
+
+	async bid(prepare: PrepareOrderRequest): Promise<PrepareBidResponse> {
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 
 		const item = await retry(90, 1000, async () => {
@@ -75,6 +85,8 @@ export class TezosBid {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
+			getConvertableValue: this.getConvertableValue,
+			convert: this.convert,
 			submit: Action.create({
 				id: "send-tx" as const,
 				run: async (request: OrderRequest) => {
@@ -99,7 +111,7 @@ export class TezosBid {
 						}
 					)
 
-					return toOrderId(`TEZOS:${order.hash}`)
+					return convertTezosOrderId(order.hash)
 				},
 			}),
 		}
@@ -145,7 +157,7 @@ export class TezosBid {
 					},
 				}
 				const updatedOrder = await upsert_order(provider, orderForm, false)
-				return toOrderId(`TEZOS:${updatedOrder.hash}`)
+				return convertTezosOrderId(updatedOrder.hash)
 			},
 		})
 

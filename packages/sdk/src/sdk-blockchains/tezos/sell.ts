@@ -3,10 +3,10 @@ import { sell } from "tezos-sdk-module/dist/order/sell"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh, upsert_order } from "tezos-sdk-module"
 import { Action } from "@rarible/action"
-import { toOrderId } from "@rarible/types"
 import type { TezosProvider, FTAssetType, XTZAssetType } from "tezos-sdk-module"
 import BigNumber from "bignumber.js"
 import type { OrderForm } from "tezos-sdk-module/dist/order"
+import { Blockchain } from "@rarible/api-client"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
@@ -19,13 +19,13 @@ import type {
 import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
-	convertContractAddress,
+	convertFromContractAddress,
 	convertOrderPayout, covertToLibAsset,
 	getMakerPublicKey,
 	getPayouts,
 	getRequiredProvider,
 	getSupportedCurrencies,
-	getTezosItemData, getTezosOrderId,
+	getTezosItemData, getTezosOrderId, convertTezosOrderId,
 } from "./common"
 
 export class TezosSell {
@@ -46,7 +46,7 @@ export class TezosSell {
 			case "TEZOS_FT":
 				return {
 					asset_class: "FT",
-					contract: convertContractAddress(type.contract),
+					contract: convertFromContractAddress(type.contract),
 					token_id: type.tokenId ?  new BigNumber(type.tokenId) : undefined,
 				}
 			default: {
@@ -59,7 +59,7 @@ export class TezosSell {
 		prepareRequest: OrderCommon.PrepareOrderInternalRequest
 	): Promise<OrderCommon.PrepareOrderInternalResponse> {
 		const [domain, contract] = prepareRequest.collectionId.split(":")
-		if (domain !== "TEZOS") {
+		if (domain !== Blockchain.TEZOS) {
 			throw new Error("Not an tezos item")
 		}
 		const itemCollection = await this.apis.collection.getNftCollectionById({
@@ -96,7 +96,7 @@ export class TezosSell {
 					provider,
 					tezosRequest
 				)
-				return toOrderId(`TEZOS:${sellOrder.hash}`)
+				return convertTezosOrderId(sellOrder.hash)
 			},
 		})
 
@@ -149,7 +149,7 @@ export class TezosSell {
 					},
 				}
 				const updatedOrder = await upsert_order(provider, orderForm, true)
-				return toOrderId(`TEZOS:${updatedOrder.hash}`)
+				return convertTezosOrderId(updatedOrder.hash)
 			},
 		})
 		return {

@@ -1,4 +1,4 @@
-import { toBigNumber, toOrderId } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { toFlowItemId } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
@@ -9,7 +9,13 @@ import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import { getFlowCollection, getFungibleTokenName, parseUnionItemId, toFlowParts } from "./common/converters"
+import {
+	convertFlowOrderId,
+	getFlowCollection,
+	getFungibleTokenName,
+	parseUnionItemId,
+	toFlowParts,
+} from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowSell {
@@ -46,7 +52,7 @@ export class FlowSell {
 				}
 				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
 			},
-		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
+		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 
 		return {
@@ -61,7 +67,7 @@ export class FlowSell {
 
 	async update(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
 		const [blockchain, orderId] = request.orderId.split(":")
-		if (blockchain !== "FLOW") {
+		if (blockchain !== Blockchain.FLOW) {
 			throw new Error("Not an flow order")
 		}
 		const order = await this.getPreparedOrder(request.orderId)
@@ -82,7 +88,7 @@ export class FlowSell {
 				}
 				throw new Error(`Unsupported take asset: ${order.take.type["@type"]}`)
 			},
-		}).after((tx) => toOrderId(`FLOW:${tx.orderId}`))
+		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 
 		return {
