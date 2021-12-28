@@ -10,6 +10,7 @@
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
+    "build-sdk-wallet-connector": "yarn workspace @rarible/sdk-wallet-connector run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
