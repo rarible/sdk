@@ -3,6 +3,7 @@
   "version": "0.8.1",
   "homepage": "",
   "license": "ISC",
+  "private": true,
   "scripts": {
     "test": "jest --runInBand"
   },
