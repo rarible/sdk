@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.3](https://github.com/rarible/sdk/compare/v0.8.2...v0.8.3) (2021-12-29)
+
+
+### Features
+
+* bid entire collection ([#80](https://github.com/rarible/sdk/issues/80)) ([11fc34a](https://github.com/rarible/sdk/commit/11fc34a9a19160aef54b4358d835bfdf87f1cc08))
+
+
+
+
+
 ## [0.8.1](https://github.com/rarible/sdk/compare/v0.8.0...v0.8.1) (2021-12-27)
 
 
