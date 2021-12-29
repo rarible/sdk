@@ -4,8 +4,9 @@ import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { promiseToObservable } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting, STATE_DISCONNECTED, getStateConnected } from "../../connection-state"
-import type { EthereumWallet } from "./domain"
+import { getStateConnecting, getStateDisconnected, getStateConnected } from "../../connection-state"
+import { Blockchain } from "../../common/provider-wallet"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 export enum DappType {
 	Metamask = "Metamask",
@@ -25,8 +26,9 @@ export enum DappType {
 
 const PROVIDER_ID = "injected" as const
 
-export class InjectedWeb3ConnectionProvider extends AbstractConnectionProvider<DappType, EthereumWallet> {
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+export class InjectedWeb3ConnectionProvider extends
+	AbstractConnectionProvider<DappType, EthereumProviderConnectionResult> {
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor() {
 		super()
@@ -45,7 +47,7 @@ export class InjectedWeb3ConnectionProvider extends AbstractConnectionProvider<D
 					}
 					return getStateConnected({ connection: wallet, disconnect })
 				} else {
-					return STATE_DISCONNECTED
+					return getStateDisconnected()
 				}
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
@@ -56,7 +58,7 @@ export class InjectedWeb3ConnectionProvider extends AbstractConnectionProvider<D
 		return PROVIDER_ID
 	}
 
-	getConnection(): Observable<ConnectionState<EthereumWallet>> {
+	getConnection(): Observable<ConnectionState<EthereumProviderConnectionResult>> {
 		return this.connection
 	}
 
@@ -93,12 +95,17 @@ async function connect(): Promise<void> {
 	}
 }
 
-async function getWalletAsync(): Promise<Observable<EthereumWallet | undefined>> {
+async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionResult | undefined>> {
 	const provider = getInjectedProvider()
 	return combineLatest([getAddress(provider), getChainId(provider)]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
-				return { chainId, address, provider }
+				return {
+					blockchain: Blockchain.ETHEREUM,
+					chainId,
+					address,
+					provider,
+				}
 			} else {
 				return undefined
 			}

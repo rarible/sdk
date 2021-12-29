@@ -1,3 +1,7 @@
 export * from "./provider"
 export * from "./connector"
 export * from "./connectors/connectors"
+export * from "./common/provider-wallet"
+export * from "./connectors/ethereum/domain"
+export * from "./connectors/tezos/domain"
+export * from "./connectors/flow/domain"

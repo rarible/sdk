@@ -8,7 +8,7 @@ import type { Maybe } from "../../common/utils"
 import { cache, noop } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
-import type { EthereumWallet } from "./domain"
+import type { EthereumProviderConnectionResult } from "./domain"
 import { connectToWeb3 } from "./common/web3connection"
 
 type FM = WidgetMode
@@ -19,9 +19,10 @@ export type FortmaticConfig = {
 
 const PROVIDER_ID = "fortmatic" as const
 
-export class FortmaticConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class FortmaticConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<FM>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor(
 		private readonly config: FortmaticConfig,

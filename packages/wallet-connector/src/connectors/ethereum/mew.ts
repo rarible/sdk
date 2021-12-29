@@ -8,7 +8,7 @@ import { cache } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
 import { connectToWeb3 } from "./common/web3connection"
-import type { EthereumWallet } from "./domain"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 export type MEWConfig = {
 	rpcUrl: string
@@ -19,9 +19,10 @@ type MewInstance = any
 
 const PROVIDER_ID = "mew" as const
 
-export class MEWConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class MEWConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<MewInstance>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor(
 		private readonly config: MEWConfig

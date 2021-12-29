@@ -3,7 +3,7 @@ import { BehaviorSubject, of } from "rxjs"
 import { filter, first, map } from "rxjs/operators"
 import type { ConnectionProvider } from "../provider"
 import { Connector } from "../connector"
-import { getStateConnected, STATE_DISCONNECTED } from "../connection-state"
+import { getStateConnected, getStateDisconnected } from "../connection-state"
 
 describe("Connector", () => {
 	test("should return options", async () => {
@@ -70,7 +70,9 @@ const test2: ConnectionProvider<"test2-op1", number> = {
 function createTestProvider(connection: Observable<string | undefined>): ConnectionProvider<"option", string > {
 	return {
 		getOption: () => Promise.resolve("option"),
-		getConnection: () => connection.pipe(map(it => it ? getStateConnected({ connection: it }) : STATE_DISCONNECTED)),
+		getConnection: () => connection.pipe(map(
+			it => it ? getStateConnected({ connection: it }) : getStateDisconnected())
+		),
 		isAutoConnected: () => Promise.resolve(false),
 		getId: () => "option",
 		isConnected: () => Promise.resolve(false),

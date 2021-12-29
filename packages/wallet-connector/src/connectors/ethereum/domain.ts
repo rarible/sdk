@@ -1,6 +1,8 @@
-export type EthereumWallet = {
+import type { ProviderConnectionResult, Blockchain } from "../../common/provider-wallet"
+
+export interface EthereumProviderConnectionResult extends ProviderConnectionResult {
+	blockchain: Blockchain.ETHEREUM
 	provider: any
-	address: string
 	chainId: number
 	disconnect?: () => void
 }

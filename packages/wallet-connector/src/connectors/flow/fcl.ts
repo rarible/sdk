@@ -6,8 +6,9 @@ import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
-import { getStateConnected, getStateConnecting, STATE_DISCONNECTED } from "../../connection-state"
-import type { FlowWallet } from "./domain"
+import { getStateConnected, getStateConnecting, getStateDisconnected } from "../../connection-state"
+import { Blockchain } from "../../common/provider-wallet"
+import type { FlowProviderConnectionResult } from "./domain"
 
 export type FclConfig = {
 	accessNode: string,
@@ -19,9 +20,10 @@ export type FclConfig = {
 
 const PROVIDER_ID = "fcl" as const
 
-export class FclConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, FlowWallet> {
+export class FclConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, FlowProviderConnectionResult> {
 	private readonly instance: Observable<Fcl>
-	private readonly connection: Observable<ConnectionState<FlowWallet>>
+	private readonly connection: Observable<ConnectionState<FlowProviderConnectionResult>>
 
 	constructor(
 		private readonly config: FclConfig
@@ -34,17 +36,18 @@ export class FclConnectionProvider extends AbstractConnectionProvider<typeof PRO
 		))
 	}
 
-	private toConnectState(fcl: Fcl):  Observable<ConnectionState<FlowWallet>>{
-		return new Observable<ConnectionState<FlowWallet>>((subscriber) => {
+	private toConnectState(fcl: Fcl):  Observable<ConnectionState<FlowProviderConnectionResult>>{
+		return new Observable<ConnectionState<FlowProviderConnectionResult>>((subscriber) => {
 
 			const disconnect = () => fcl.unauthenticate()
 
 			const user = fcl.currentUser()
 			Promise.all([user.authenticate()]).then(([auth]) => {
 				if (!auth.addr) {
-					subscriber.next(STATE_DISCONNECTED)
+					subscriber.next(getStateDisconnected())
 				} else {
-					const wallet: FlowWallet = {
+					const wallet: FlowProviderConnectionResult = {
+						blockchain: Blockchain.FLOW,
 						fcl,
 						address: auth.addr,
 					}
@@ -54,8 +57,8 @@ export class FclConnectionProvider extends AbstractConnectionProvider<typeof PRO
 						disconnect,
 					}))
 				}
-			}).catch(() => {
-				subscriber.next(STATE_DISCONNECTED)
+			}).catch((err) => {
+				subscriber.next(getStateDisconnected({ error: err }))
 			})
 		})
 	}
@@ -64,7 +67,7 @@ export class FclConnectionProvider extends AbstractConnectionProvider<typeof PRO
 		return PROVIDER_ID
 	}
 
-	getConnection(): Observable<ConnectionState<FlowWallet>> {
+	getConnection(): Observable<ConnectionState<FlowProviderConnectionResult>> {
 		return this.connection
 	}
 

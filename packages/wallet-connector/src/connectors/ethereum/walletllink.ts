@@ -10,7 +10,7 @@ import { AbstractConnectionProvider } from "../../provider"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
 import { connectToWeb3 } from "./common/web3connection"
-import type { EthereumWallet } from "./domain"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 export type WalletLinkConfig = {
 	url: string
@@ -20,9 +20,10 @@ export type WalletLinkConfig = {
 
 const PROVIDER_ID = "walletlink" as const
 
-export class WalletLinkConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class WalletLinkConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<{walletLink: WalletLink, walletLinkWeb3Provider: WalletLinkProvider}>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor(
 		private readonly config: WalletLinkConfig,
