@@ -259,7 +259,6 @@ export class EthereumFill {
 			request.assetType = this.getFillAssetType(fillRequest.assetType)
 		}
 
-		console.log("getFillOrderRequest", JSON.stringify(request, null, "  "))
 		return request
 	}
 
@@ -349,7 +348,6 @@ export class EthereumFill {
 	private async commonFill(action: FillOrderAction, request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
 
-		console.log("order for fill", JSON.stringify(order, null, " "))
 		const submit = action
 			.before((fillRequest: FillRequest) => {
 				if (this.hasCollectionAssetType(order) && !fillRequest.assetType) {
