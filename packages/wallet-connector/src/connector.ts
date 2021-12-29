@@ -3,7 +3,7 @@ import { BehaviorSubject, concat, defer, of } from "rxjs"
 import { catchError, distinctUntilChanged, first, map, mergeMap, shareReplay, tap } from "rxjs/operators"
 import type { ConnectionProvider } from "./provider"
 import type { ConnectionState } from "./connection-state"
-import { getStateConnecting, STATE_DISCONNECTED, STATE_INITIALIZING } from "./connection-state"
+import { getStateConnecting, getStateDisconnected, STATE_INITIALIZING } from "./connection-state"
 
 export type ProviderOption<Option, Connection> = {
 	provider: ConnectionProvider<Option, Connection>
@@ -54,12 +54,11 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 					if (provider) {
 						return provider.getConnection().pipe(
 							catchError((err) => {
-								console.log("Connecting error: " + err)
-								return of(STATE_DISCONNECTED)
+								return of(getStateDisconnected({ error: err.toString() }))
 							})
 						)
 					} else {
-						return of(STATE_DISCONNECTED)
+						return of(getStateDisconnected())
 					}
 				}),
 			),
@@ -98,7 +97,6 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 					this.provider.next(undefined)
 					const current = await this.stateProvider?.getValue()
 					if (current !== undefined) {
-						console.log("setting undefined")
 						this.stateProvider?.setValue(undefined)
 					}
 				}
@@ -127,13 +125,11 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	}
 
 	private async checkAutoConnect(): Promise<ConnectionState<Connection>> {
-		console.log("Connector initialized. Checking auto-(re)connect")
 		try {
 			const promises = this.providers.map(it => ({ provider: it, autoConnected: it.isAutoConnected() }))
 			for (const { provider, autoConnected } of promises) {
 				const value = await autoConnected
 				if (value) {
-					console.log(`Provider ${provider.getId()} is auto-connected`)
 					this.provider.next(provider)
 					this.stateProvider?.setValue(provider.getId())
 					return getStateConnecting({ providerId: provider.getId() })
@@ -143,23 +139,20 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 			if (selected !== undefined) {
 				for (const provider of this.providers) {
 					if (selected === provider.getId()) {
-						console.log(`Previously connected provider found: ${selected}. checking if is connected`)
 						if (await provider.isConnected()) {
-							console.log(`Provider ${selected} is connected`)
 							this.provider.next(provider)
 							return getStateConnecting({ providerId: provider.getId() })
 						} else {
-							console.log(`Provider ${selected} is not connected`)
 							this.stateProvider?.setValue(undefined)
-							return STATE_DISCONNECTED
+							return getStateDisconnected()
 						}
 					}
 				}
 			}
-		} catch (e) {
-			console.log("Autoconnect failed: " + e)
+		} catch (err: any) {
+			return getStateDisconnected({ error: err.toString() })
 		}
-		return STATE_DISCONNECTED
+		return getStateDisconnected()
 	}
 
 	public async getOptions(): Promise<ProviderOption<Option, Connection>[]> {
@@ -180,8 +173,6 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 		if (connected !== undefined && connectionState.status === "connected") {
 			throw new Error(`Provider ${JSON.stringify(connected)} already connected`)
 		}
-
-		console.log(`Selected ${option.provider.getId()} provider`)
 		this.provider.next(option.provider)
 		this.stateProvider?.setValue(option.provider.getId())
 	}

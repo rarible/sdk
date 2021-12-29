@@ -10,15 +10,16 @@ import { cache, noop } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
 import { connectToWeb3 } from "./common/web3connection"
-import type { EthereumWallet } from "./domain"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 export type TorusConfig = TorusParams
 
 const PROVIDER_ID = "torus" as const
 
-export class TorusConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class TorusConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<Torus>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor(
 		private readonly config: TorusConfig

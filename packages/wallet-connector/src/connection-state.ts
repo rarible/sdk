@@ -1,4 +1,3 @@
-
 export type StateConnected<T> = {
 	status: "connected"
 	connection: T
@@ -16,9 +15,10 @@ export type StateInitializing = {
 
 export type StateDisconnected = {
 	status: "disconnected"
+	error?: string
 }
 
-export const STATE_DISCONNECTED: StateDisconnected = { status: "disconnected" }
+const STATE_DISCONNECTED: StateDisconnected = { status: "disconnected" }
 export const STATE_INITIALIZING: StateInitializing = { status: "initializing" }
 
 export function getStateConnected<T>(params: Omit<StateConnected<T>, "status"> ): StateConnected<T> {
@@ -27,6 +27,13 @@ export function getStateConnected<T>(params: Omit<StateConnected<T>, "status"> )
 
 export function getStateConnecting(params: Omit<StateConnecting, "status">): StateConnecting {
 	return { status: "connecting", ...params }
+}
+
+export function getStateDisconnected(params: Omit<StateDisconnected, "status"> = {}): StateDisconnected {
+	if (params.error === undefined) {
+		return STATE_DISCONNECTED
+	}
+	return { status: "disconnected", ...params }
 }
 
 export type ConnectionState<T> = StateConnected<T> | StateConnecting | StateInitializing | StateDisconnected

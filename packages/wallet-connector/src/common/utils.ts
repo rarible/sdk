@@ -24,7 +24,6 @@ export function promiseToObservable<T>(promise: Promise<Observable<T>>): Observa
 	)
 }
 
-
 export type Listenable<T extends string = string> = {
 	on(event: T, listener: () => void): void
 }

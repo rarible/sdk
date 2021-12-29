@@ -9,7 +9,7 @@ import { cache, noop } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
 import { connectToWeb3 } from "./common/web3connection"
-import type { EthereumWallet } from "./domain"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 type PortisInstance = Portis
 type PortisNetwork = string | INetwork
@@ -21,9 +21,10 @@ export type PortisConfig = {
 
 const PROVIDER_ID = "portis" as const
 
-export class PortisConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class PortisConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<PortisInstance>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor(
 		private readonly config: PortisConfig,

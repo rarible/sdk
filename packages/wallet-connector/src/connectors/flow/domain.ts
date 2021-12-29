@@ -1,6 +1,7 @@
 import type { Fcl } from "@rarible/fcl-types"
+import type { ProviderConnectionResult, Blockchain } from "../../common/provider-wallet"
 
-export type FlowWallet = {
+export interface FlowProviderConnectionResult extends ProviderConnectionResult {
+	blockchain: Blockchain.FLOW
 	fcl: Fcl
-	address: string
 }

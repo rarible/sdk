@@ -5,16 +5,18 @@ import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache, promiseToObservable } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting, STATE_DISCONNECTED, getStateConnected } from "../../connection-state"
-import type { EthereumWallet } from "./domain"
+import { getStateConnected, getStateConnecting, getStateDisconnected } from "../../connection-state"
+import { Blockchain } from "../../common/provider-wallet"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 type IframeInstance = any
 
 const PROVIDER_ID = "iframe" as const
 
-export class IframeConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class IframeConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<IframeInstance>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor() {
 		super()
@@ -53,7 +55,7 @@ export class IframeConnectionProvider extends AbstractConnectionProvider<typeof 
 	}
 }
 
-function getConnect(instance: IframeInstance): Observable<ConnectionState<EthereumWallet>> {
+function getConnect(instance: IframeInstance): Observable<ConnectionState<EthereumProviderConnectionResult>> {
 	const web3 = new Web3(instance)
 
 	return combineLatest([
@@ -62,10 +64,15 @@ function getConnect(instance: IframeInstance): Observable<ConnectionState<Ethere
 	]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
-				const wallet: EthereumWallet = { chainId, address, provider: web3 }
+				const wallet: EthereumProviderConnectionResult = {
+					blockchain: Blockchain.ETHEREUM,
+					chainId,
+					address,
+					provider: web3,
+				}
 				return getStateConnected({ connection: wallet })
 			} else {
-				return STATE_DISCONNECTED
+				return getStateDisconnected()
 			}
 		}),
 	)

@@ -6,8 +6,9 @@ import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache, noop, promiseToObservable } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting, STATE_DISCONNECTED, getStateConnected } from "../../connection-state"
-import type { EthereumWallet } from "./domain"
+import { getStateConnecting, getStateDisconnected, getStateConnected } from "../../connection-state"
+import { Blockchain } from "../../common/provider-wallet"
+import type { EthereumProviderConnectionResult } from "./domain"
 
 export type WalletConnectConfig = {
 	infuraId: string
@@ -19,9 +20,10 @@ type ConnectStatus = "connected" | "disconnected"
 
 const PROVIDER_ID = "walletconnect" as const
 
-export class WalletConnectConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, EthereumWallet> {
+export class WalletConnectConnectionProvider extends
+	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<WalletConnectProvider>
-	private readonly connection: Observable<ConnectionState<EthereumWallet>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
 	constructor(
 		private readonly config: WalletConnectConfig
@@ -63,7 +65,7 @@ export class WalletConnectConnectionProvider extends AbstractConnectionProvider<
 	}
 }
 
-function getConnect(instance: WalletConnectProvider): Observable<ConnectionState<EthereumWallet>> {
+function getConnect(instance: WalletConnectProvider): Observable<ConnectionState<EthereumProviderConnectionResult>> {
 	const web3 = new Web3(instance as any)
 
 	let disconnectResolve: () => void
@@ -81,10 +83,16 @@ function getConnect(instance: WalletConnectProvider): Observable<ConnectionState
 	]).pipe(
 		map(([address, chainId, status]) => {
 			if (status === "connected" && address) {
-				const wallet: EthereumWallet = { chainId, address, provider: web3, disconnect }
+				const wallet: EthereumProviderConnectionResult = {
+					blockchain: Blockchain.ETHEREUM,
+					chainId,
+					address,
+					provider: web3,
+					disconnect,
+				}
 				return getStateConnected({ connection: wallet })
 			} else {
-				return STATE_DISCONNECTED
+				return getStateDisconnected()
 			}
 		}),
 	)
