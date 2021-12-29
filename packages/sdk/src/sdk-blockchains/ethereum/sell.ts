@@ -1,6 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toWord } from "@rarible/types"
-import type { ItemId } from "@rarible/api-client"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as common from "./common"
