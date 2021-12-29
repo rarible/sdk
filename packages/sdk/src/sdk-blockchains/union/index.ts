@@ -16,7 +16,7 @@ import type { ICancel } from "../../types/order/cancel/domain"
 import type { IDeploy } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
-import type { PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -61,8 +61,8 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		this.sellUpdate = this.sellUpdate.bind(this)
 	}
 
-	bid(request: OrderCommon.PrepareOrderRequest): Promise<PrepareBidResponse> {
-		return this.instances[extractBlockchain(request.itemId)].bid(request)
+	bid(request: PrepareBidRequest): Promise<PrepareBidResponse> {
+		return this.instances[extractBlockchain(getBidEntity(request))].bid(request)
 	}
 
 	bidUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
@@ -182,4 +182,14 @@ function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | Orde
 		}
 	}
 	throw new Error(`Unable to extract blockchain from ${value}`)
+}
+
+function getBidEntity(request: PrepareBidRequest) {
+	if ("itemId" in request) {
+		return request.itemId
+	} else if ("collectionId" in request) {
+		return request.collectionId
+	} else {
+		throw new Error("Bit request should contains itemId or collectionId")
+	}
 }

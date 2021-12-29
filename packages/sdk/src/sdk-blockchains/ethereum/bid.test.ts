@@ -3,7 +3,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
@@ -153,5 +153,55 @@ describe("bid", () => {
 		)
 
 		expect(value).toBe(undefined)
+	})
+
+
+	test("bid for collection", async () => {
+		const ownerCollectionAddress = await ethereum1.getFrom()
+		const bidderAddress = await ethereum2.getFrom()
+
+		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+      	from: ownerCollectionAddress,
+      	gas: 500000,
+		})
+		const erc721TokenId = "3"
+		const itemId = toItemId(
+			`ETHEREUM:${it.testErc721.options.address}:${erc721TokenId}`
+		)
+
+		await it.testErc721.methods.mint(ownerCollectionAddress, erc721TokenId, "0").send({
+			from: ownerCollectionAddress,
+			gas: 500000,
+		})
+		await awaitItem(sdk1, itemId)
+
+		const erc721Contract = toContractAddress(`ETHEREUM:${it.testErc721.options.address}`)
+		const bidResponse = await sdk2.order.bid({
+			collectionId: erc721Contract,
+		})
+
+		const erc20Contract = toContractAddress(`ETHEREUM:${it.testErc20.options.address}`)
+		const bidOrderId = await bidResponse.submit({
+			amount: 1,
+			price: "0.00000000000000001",
+			currency: {
+				"@type": "ERC20",
+				contract: erc20Contract,
+			},
+		})
+
+		const acceptBidResponse = await sdk1.order.acceptBid({
+			orderId: bidOrderId,
+		})
+		const fillBidResult = await acceptBidResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+			assetType: {
+			  "@type": "ERC721",
+				contract: erc721Contract,
+				tokenId: toBigNumber(erc721TokenId),
+			},
+		})
+		await fillBidResult.wait()
 	})
 })

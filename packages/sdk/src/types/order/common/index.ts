@@ -51,7 +51,7 @@ export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequ
 	/**
 	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
 	 */
-	maxAmount: BigNumber
+	maxAmount: BigNumber | null
 }
 
 export type PrepareOrderInternalResponse = BasePrepareOrderResponse<OrderInternalRequest>
