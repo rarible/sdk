@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { UnionAddress } from "@rarible/types"
-import { toBinary, toUnionAddress, toWord } from "@rarible/types"
+import type { UnionAddress, ContractAddress } from "@rarible/types"
+import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
@@ -14,14 +14,17 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
+import type { NftItem } from "@rarible/ethereum-api-client/build/models"
+import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
 import type { GetConvertableValueResult } from "../../types/order/bid/domain"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import * as common from "./common"
 import {
 	convertToEthereumAssetType,
-	convertEthereumContractAddress, convertEthereumUnionAddress,
+	convertEthereumContractAddress, convertEthereumUnionAddress, convertToEthereumAddress,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 
@@ -121,31 +124,44 @@ export class EthereumBid {
 		}
 	}
 
-	async bid(prepare: OrderCommon.PrepareOrderRequest): Promise<PrepareBidResponse> {
-		if (!prepare.itemId) {
-			throw new Error("ItemId has not been specified")
+	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		let contractAddress: ContractAddress | undefined
+		let item: NftItem | undefined
+		let takeAssetType: AssetTypeRequest
+
+		if ("itemId" in prepare) {
+			const [domain, contract, tokenId] = prepare.itemId.split(":")
+			if (domain !== "ETHEREUM") {
+				throw new Error(`Not an ethereum item: ${prepare.itemId}`)
+			}
+			item = await this.sdk.apis.nftItem.getNftItemById({
+				itemId: `${contract}:${tokenId}`,
+			})
+			contractAddress = toContractAddress(item.contract)
+
+			takeAssetType = {
+				tokenId: item.tokenId,
+				contract: item.contract,
+			}
+		} else if ("collectionId" in prepare) {
+			contractAddress = prepare.collectionId
+			takeAssetType = {
+				assetClass: "COLLECTION",
+				contract: convertToEthereumAddress(prepare.collectionId),
+			}
+		} else {
+			throw new Error("ItemId or CollectionId must be assigned")
 		}
 
-		const [domain, contract, tokenId] = prepare.itemId.split(":")
-		if (domain !== "ETHEREUM") {
-			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
-		}
-
-		const item = await this.sdk.apis.nftItem.getNftItemById({
-			itemId: `${contract}:${tokenId}`,
-		})
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: item.contract,
+			collection: convertToEthereumAddress(contractAddress),
 		})
 
 		const submit = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
 				return {
 					makeAssetType: common.getEthTakeAssetType(request.currency),
-					takeAssetType: {
-						tokenId: item.tokenId,
-						contract: item.contract,
-					},
+					takeAssetType: takeAssetType,
 					amount: request.amount,
 					priceDecimal: request.price,
 					payouts: common.toEthereumParts(request.payouts),
@@ -159,7 +175,7 @@ export class EthereumBid {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: common.getSupportedCurrencies(),
 			multiple: collection.type === "ERC1155",
-			maxAmount: item.supply,
+			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			getConvertableValue: this.getConvertableValue,
 			convert: this.convertCurrency,

@@ -14,6 +14,7 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { FillOrderAction } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { convertToEthereumAddress } from "./common"
@@ -199,10 +200,23 @@ export class EthereumFill {
 		}
 	}
 
+	getFillAssetType(assetType: AssetType): CommonFillRequestAssetType {
+		switch (assetType["@type"]) {
+			case "ERC721":
+			case "ERC721_Lazy":
+			case "ERC1155":
+			case "ERC1155_Lazy":
+			case "CRYPTO_PUNKS":
+				return this.convertAssetType(assetType) as CommonFillRequestAssetType
+			default: throw new Error("Wrong asset type for fill action")
+		}
+	}
+
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
+		let request: FillOrderRequest
 		switch (order.type) {
 			case "RARIBLE_V1": {
-				return {
+				request = {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
@@ -211,9 +225,10 @@ export class EthereumFill {
 						? convertToEthereumAddress(fillRequest.payouts[0].account)
 						: undefined,
 				}
+				break
 			}
 			case "RARIBLE_V2": {
-				return {
+				request = {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
@@ -226,17 +241,26 @@ export class EthereumFill {
 						value: fee.value,
 					})),
 				}
+				break
 			}
 			case "OPEN_SEA_V1": {
-				return {
+				request = {
 					order,
 					infinite: fillRequest.infiniteApproval,
 				}
+				break
 			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
 		}
+
+		if (fillRequest.assetType) {
+			request.assetType = this.getFillAssetType(fillRequest.assetType)
+		}
+
+		console.log("getFillOrderRequest", JSON.stringify(request, null, "  "))
+		return request
 	}
 
 	getSupportFlags(order: SimpleOrder): SupportFlagsResponse {
@@ -266,7 +290,10 @@ export class EthereumFill {
 		}
 	}
 
-	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber> {
+	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber | null> {
+		if (order.take.assetType.assetClass === "COLLECTION") {
+			return null
+		}
 		if (isNft(order.take.assetType)) {
 			if (this.wallet === undefined) {
 				throw new Error("Wallet undefined")
@@ -288,9 +315,9 @@ export class EthereumFill {
 	async isMultiple(order: SimplePreparedOrder): Promise<boolean> {
 		let contract: string
 
-		if (isNft(order.take.assetType)) {
+		if (isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION") {
 			contract = order.take.assetType.contract
-		} else if (isNft(order.make.assetType)) {
+		} else if (isNft(order.make.assetType) || order.make.assetType.assetClass === "COLLECTION") {
 			contract = order.make.assetType.contract
 		} else {
 			throw new Error("Nft has not been found")
@@ -315,11 +342,21 @@ export class EthereumFill {
 		throw new Error("Incorrect request")
 	}
 
+	hasCollectionAssetType(order: SimplePreparedOrder) {
+		return order.take.assetType.assetClass === "COLLECTION" || order.make.assetType.assetClass === "COLLECTION"
+	}
+
 	private async commonFill(action: FillOrderAction, request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
 
+		console.log("order for fill", JSON.stringify(order, null, " "))
 		const submit = action
-			.before((fillRequest: FillRequest) => this.getFillOrderRequest(order, fillRequest))
+			.before((fillRequest: FillRequest) => {
+				if (this.hasCollectionAssetType(order) && !fillRequest.assetType) {
+					throw new Error("For collection order you should pass asset type")
+				}
+				return this.getFillOrderRequest(order, fillRequest)
+			})
 			.after((tx => new BlockchainEthereumTransaction(tx, this.network)))
 
 		return {

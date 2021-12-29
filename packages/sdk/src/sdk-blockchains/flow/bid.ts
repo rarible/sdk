@@ -10,6 +10,7 @@ import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName, toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
@@ -32,7 +33,10 @@ export class FlowBid {
 		throw new Error("Convert operation is not supported")
 	}
 
-	async bid(prepare: OrderCommon.PrepareOrderRequest): Promise<PrepareBidResponse> {
+	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		if ("collectionId" in prepare) {
+			throw new Error("Bid collection is not supported")
+		}
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}

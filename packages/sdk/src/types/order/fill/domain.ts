@@ -1,4 +1,4 @@
-import type { Order, OrderId } from "@rarible/api-client"
+import type { AssetType, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AbstractPrepareResponse } from "../../../common/domain"
@@ -45,6 +45,10 @@ export interface FillRequest {
 	 * Use infinite approvals (for ERC-20)
 	 */
 	infiniteApproval?: boolean
+	/**
+	 * Use infinite approvals (for ERC-20)
+	 */
+	assetType?: AssetType
 }
 
 export type FillActionTypes = "approve" | "send-tx"
@@ -57,8 +61,9 @@ export interface PrepareFillResponse
 	multiple: boolean
 	/**
 	 * Maximum amount to fill (of NFTs)
+   * null is actual for orders with COLLECTION asset type
 	 */
-	maxAmount: BigNumber
+	maxAmount: BigNumber | null
 	/**
 	 * Base fee of the underlying exchange contract (this can not be changed)
 	 */

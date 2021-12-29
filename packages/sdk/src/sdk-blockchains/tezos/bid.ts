@@ -13,7 +13,6 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	OrderRequest,
 	OrderUpdateRequest,
-	PrepareOrderRequest,
 } from "../../types/order/common"
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -21,6 +20,7 @@ import { retry } from "../../common/retry"
 import type { PrepareOrderUpdateRequest, PrepareOrderUpdateResponse } from "../../types/order/common"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
 import type { GetConvertableValueResult } from "../../types/order/bid/domain"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -68,7 +68,10 @@ export class TezosBid {
 		throw new Error("Convert operation is not supported")
 	}
 
-	async bid(prepare: PrepareOrderRequest): Promise<PrepareBidResponse> {
+	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		if ("collectionId" in prepare) {
+			throw new Error("Bid collection is not supported")
+		}
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 
 		const item = await retry(90, 1000, async () => {
