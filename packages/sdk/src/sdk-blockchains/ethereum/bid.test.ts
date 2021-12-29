@@ -164,7 +164,7 @@ describe("bid", () => {
       	from: ownerCollectionAddress,
       	gas: 500000,
 		})
-		const erc721TokenId = "2"
+		const erc721TokenId = "3"
 		const itemId = toItemId(
 			`ETHEREUM:${it.testErc721.options.address}:${erc721TokenId}`
 		)

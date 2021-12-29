@@ -84,3 +84,16 @@ export function convertEthereumUnionAddress(address: string): UnionAddress {
 export function convertEthereumItemId(itemId: string): ItemId {
 	return toItemId(`${Blockchain.ETHEREUM}:${itemId}`)
 }
+
+export function getEthereumItemId(itemId: ItemId) {
+	const [domain, contract, tokenId] = itemId.split(":")
+	if (domain !== "ETHEREUM") {
+		throw new Error(`Not an ethereum item: ${itemId}`)
+	}
+	return {
+		itemId: `${contract}:${tokenId}`,
+		contract,
+		tokenId,
+		domain,
+	}
+}

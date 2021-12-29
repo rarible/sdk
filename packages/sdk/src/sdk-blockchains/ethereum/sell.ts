@@ -4,6 +4,7 @@ import type { ItemId } from "@rarible/api-client"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as common from "./common"
+import { getEthereumItemId } from "./common"
 
 export class EthereumSell {
 	constructor(private sdk: RaribleSdk) {
@@ -76,18 +77,5 @@ export class EthereumSell {
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
 		}
-	}
-}
-
-function getEthereumItemId(itemId: ItemId) {
-	const [domain, contract, tokenId] = itemId.split(":")
-	if (domain !== "ETHEREUM") {
-		throw new Error(`Not an ethereum item: ${itemId}`)
-	}
-	return {
-		itemId: `${contract}:${tokenId}`,
-		contract,
-		tokenId,
-		domain,
 	}
 }

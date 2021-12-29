@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { UnionAddress, ContractAddress } from "@rarible/types"
-import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
+import type { UnionAddress, Address } from "@rarible/types"
+import { toBinary, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
@@ -24,7 +24,7 @@ import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import * as common from "./common"
 import {
 	convertToEthereumAssetType,
-	convertEthereumContractAddress, convertEthereumUnionAddress, convertToEthereumAddress,
+	convertEthereumContractAddress, convertEthereumUnionAddress, convertToEthereumAddress, getEthereumItemId,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 
@@ -125,36 +125,31 @@ export class EthereumBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		let contractAddress: ContractAddress | undefined
+		let contractAddress: Address | undefined
 		let item: NftItem | undefined
 		let takeAssetType: AssetTypeRequest
 
 		if ("itemId" in prepare) {
-			const [domain, contract, tokenId] = prepare.itemId.split(":")
-			if (domain !== "ETHEREUM") {
-				throw new Error(`Not an ethereum item: ${prepare.itemId}`)
-			}
-			item = await this.sdk.apis.nftItem.getNftItemById({
-				itemId: `${contract}:${tokenId}`,
-			})
-			contractAddress = toContractAddress(item.contract)
+			const { itemId } = getEthereumItemId(prepare.itemId)
+			item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
+			contractAddress = item.contract
 
 			takeAssetType = {
 				tokenId: item.tokenId,
 				contract: item.contract,
 			}
 		} else if ("collectionId" in prepare) {
-			contractAddress = prepare.collectionId
+			contractAddress = convertToEthereumAddress(prepare.collectionId)
 			takeAssetType = {
 				assetClass: "COLLECTION",
-				contract: convertToEthereumAddress(prepare.collectionId),
+				contract: contractAddress,
 			}
 		} else {
 			throw new Error("ItemId or CollectionId must be assigned")
 		}
 
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: convertToEthereumAddress(contractAddress),
+			collection: contractAddress,
 		})
 
 		const submit = this.sdk.order.bid
