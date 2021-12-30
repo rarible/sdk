@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6](https://github.com/rarible/sdk/compare/v0.8.5...v0.8.6) (2021-12-30)
+
+
+### Bug Fixes
+
+* remove unneded dependencies ([6af2fd0](https://github.com/rarible/sdk/commit/6af2fd065fc40580e2ef1d15f3ae278a61ca1c99))
+* update flow-sdk to use old transactions ([#83](https://github.com/rarible/sdk/issues/83)) ([0ddf50d](https://github.com/rarible/sdk/commit/0ddf50df26472a032de7cdf9274d0a194a8ec33c))
+
+
+### Features
+
+* dependencies care work, remove web3 dep ([#82](https://github.com/rarible/sdk/issues/82)) ([b42dac7](https://github.com/rarible/sdk/commit/b42dac729afe08d83187c8d482ad64258d71c3b4))
+
+
+
+
+
 ## [0.8.5](https://github.com/rarible/sdk/compare/v0.8.4...v0.8.5) (2021-12-30)
 
 
