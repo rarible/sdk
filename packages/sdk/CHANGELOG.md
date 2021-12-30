@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.7](https://github.com/rarible/sdk/compare/v0.8.6...v0.8.7) (2021-12-30)
+
+
+### Features
+
+* support for polygon ([4bef6aa](https://github.com/rarible/sdk/commit/4bef6aa53c477a4c6634d9eeea5511dd3f33f763))
+
+
+
+
+
 ## [0.8.6](https://github.com/rarible/sdk/compare/v0.8.5...v0.8.6) (2021-12-30)
 
 
