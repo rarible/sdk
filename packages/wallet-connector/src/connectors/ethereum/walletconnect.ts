@@ -1,6 +1,5 @@
 import { combineLatest, defer, Observable } from "rxjs"
 import { distinctUntilChanged, first, map, mergeMap, shareReplay, startWith } from "rxjs/operators"
-import Web3 from "web3"
 import type WalletConnectProvider from "@walletconnect/web3-provider"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
@@ -65,21 +64,19 @@ export class WalletConnectConnectionProvider extends
 	}
 }
 
-function getConnect(instance: WalletConnectProvider): Observable<ConnectionState<EthereumProviderConnectionResult>> {
-	const web3 = new Web3(instance as any)
-
+function getConnect(provider: WalletConnectProvider): Observable<ConnectionState<EthereumProviderConnectionResult>> {
 	let disconnectResolve: () => void
 	const disconnectPromise = new Promise<void>((resolve) => disconnectResolve = resolve)
 
 	const disconnect = () => {
 		disconnectResolve()
-		instance.disconnect().then().catch(noop)
+		provider.disconnect().then().catch(noop)
 	}
 
 	return combineLatest([
-		promiseToObservable(getAddress(instance, web3, disconnectPromise)),
-		promiseToObservable(getChainId(instance, web3, disconnectPromise)),
-		promiseToObservable(getConnectedStatus(instance)),
+		promiseToObservable(getAddress(provider, disconnectPromise)),
+		promiseToObservable(getChainId(provider, disconnectPromise)),
+		promiseToObservable(getConnectedStatus(provider)),
 	]).pipe(
 		map(([address, chainId, status]) => {
 			if (status === "connected" && address) {
@@ -87,7 +84,7 @@ function getConnect(instance: WalletConnectProvider): Observable<ConnectionState
 					blockchain: Blockchain.ETHEREUM,
 					chainId,
 					address,
-					provider: web3,
+					provider,
 					disconnect,
 				}
 				return getStateConnected({ connection: wallet })
@@ -99,45 +96,44 @@ function getConnect(instance: WalletConnectProvider): Observable<ConnectionState
 }
 
 async function getAddress(
-	instance: WalletConnectProvider,
-	web3: Web3, disconnectPromise: Promise<void>
+	provider: WalletConnectProvider,
+	disconnectPromise: Promise<void>
 ): Promise<Observable<string | undefined>> {
-	const initialAddress = (await web3.eth.getAccounts())?.[0]
+	const initialAddress = provider.accounts[0]
 	return new Observable<string | undefined>(subscriber => {
 		function handler(addresses: string[]) {
 			const [address] = addresses
 			subscriber.next(address)
 		}
-		instance.on("accountsChanged", handler)
+		provider.on("accountsChanged", handler)
 		disconnectPromise.then(() => {
-			instance.removeListener("accountsChanged", handler)
+			provider.removeListener("accountsChanged", handler)
 		})
 	}).pipe(startWith(initialAddress), distinctUntilChanged(), shareReplay(1))
 }
 
 async function getChainId(
-	instance: WalletConnectProvider,
-	web3: Web3,
+	provider: WalletConnectProvider,
 	disconnectPromise: Promise<void>
 ): Promise<Observable<number>> {
-	const networkId = await web3.eth.getChainId()
+	const networkId = provider.chainId
 	return new Observable<number>(subscriber => {
 		function handler(networkId: number) {
 			subscriber.next(networkId)
 		}
-		instance.on("chainChanged", handler)
+		provider.on("chainChanged", handler)
 		disconnectPromise.then(() => {
-			instance.removeListener("chainChanged", handler)
+			provider.removeListener("chainChanged", handler)
 		})
 	}).pipe(startWith(networkId), distinctUntilChanged(), shareReplay(1))
 }
 
-async function getConnectedStatus(instance: WalletConnectProvider): Promise<Observable<ConnectStatus>> {
+async function getConnectedStatus(provider: WalletConnectProvider): Promise<Observable<ConnectStatus>> {
 	return new Observable<ConnectStatus>(subscriber => {
 		function handler() {
 			subscriber.next("disconnected")
-			instance.removeListener("disconnected", handler)
+			provider.removeListener("disconnected", handler)
 		}
-		instance.on("disconnected", handler)
+		provider.on("disconnected", handler)
 	}).pipe(startWith("connected" as ConnectStatus), distinctUntilChanged())
 }

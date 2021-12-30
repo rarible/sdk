@@ -1,15 +1,14 @@
 import type { Observable } from "rxjs"
 import { defer } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
-import Web3 from "web3"
 import type { WalletLink, WalletLinkOptions } from "walletlink/dist/WalletLink"
 import type { WalletLinkProvider } from "walletlink/dist/provider/WalletLinkProvider"
 import type { Maybe } from "../../common/utils"
-import { cache, promiseToObservable } from "../../common/utils"
+import { cache } from "../../common/utils"
 import { AbstractConnectionProvider } from "../../provider"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
-import { connectToWeb3 } from "./common/web3connection"
+import { connectToWeb3, getJsonRpcWalletInfoProvider } from "./common/web3connection"
 import type { EthereumProviderConnectionResult } from "./domain"
 
 export type WalletLinkConfig = {
@@ -33,12 +32,15 @@ export class WalletLinkConnectionProvider extends
 		this.instance = cache(() => this._connect())
 		this.connection = defer(() => this.instance.pipe(
 			mergeMap(instance => {
-				return promiseToObservable((async () => {
-					const web3 = new Web3(instance.walletLinkWeb3Provider)
-					return connectToWeb3(web3, instance, {
+				const web3like = instance.walletLinkWeb3Provider
+				return connectToWeb3(
+					getJsonRpcWalletInfoProvider(web3like),
+					instance,
+					web3like,
+					{
 						disconnect: async () => await instance.walletLink.disconnect(),
-					})
-				})())
+					}
+				)
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
 		))
@@ -69,8 +71,6 @@ export class WalletLinkConnectionProvider extends
 	}
 
 	async isConnected(): Promise<boolean> {
-		const web3 = new Web3((await this.instance.pipe(first()).toPromise()).walletLinkWeb3Provider)
-		const accounts = await web3.eth.getAccounts()
-		return accounts.length > 0
+		return (await this.instance.pipe(first()).toPromise()).walletLinkWeb3Provider.isConnected()
 	}
 }

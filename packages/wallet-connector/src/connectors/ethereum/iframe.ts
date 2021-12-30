@@ -1,6 +1,5 @@
 import { combineLatest, defer, Observable } from "rxjs"
 import { distinctUntilChanged, first, map, mergeMap, shareReplay, startWith } from "rxjs/operators"
-import Web3 from "web3"
 import type { IFrameEthereumProvider } from "@ledgerhq/iframe-provider"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
@@ -9,6 +8,7 @@ import type { ConnectionState } from "../../connection-state"
 import { getStateConnected, getStateConnecting, getStateDisconnected } from "../../connection-state"
 import { Blockchain } from "../../common/provider-wallet"
 import type { EthereumProviderConnectionResult } from "./domain"
+import { getWeb3Accounts, getWeb3ChainId } from "./common/web3helpers"
 
 type IframeInstance = IFrameEthereumProvider
 
@@ -50,26 +50,20 @@ export class IframeConnectionProvider extends
 	}
 
 	async isConnected(): Promise<boolean> {
-		const web3 = new Web3((await this.instance.pipe(first()).toPromise()) as any)
-		const accounts = await web3.eth.getAccounts()
+		const accounts = await getWeb3Accounts(await this.instance.pipe(first()).toPromise())
 		return accounts.length > 0
 	}
 }
 
-function getConnect(instance: IframeInstance): Observable<ConnectionState<EthereumProviderConnectionResult>> {
-	const web3 = new Web3(instance as any)
-
-	return combineLatest([
-		promiseToObservable(getAddress(instance, web3)),
-		promiseToObservable(getChainId(instance, web3)),
-	]).pipe(
+function getConnect(provider: IframeInstance): Observable<ConnectionState<EthereumProviderConnectionResult>> {
+	return combineLatest([promiseToObservable(getAddress(provider)), promiseToObservable(getChainId(provider))]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
 				const wallet: EthereumProviderConnectionResult = {
 					blockchain: Blockchain.ETHEREUM,
 					chainId,
 					address,
-					provider: web3,
+					provider,
 				}
 				return getStateConnected({ connection: wallet })
 			} else {
@@ -79,22 +73,22 @@ function getConnect(instance: IframeInstance): Observable<ConnectionState<Ethere
 	)
 }
 
-async function getAddress(instance: any, web3: Web3): Promise<Observable<string | undefined>> {
-	const initialAddress = (await web3.eth.getAccounts())?.[0]
+async function getAddress(provider: any): Promise<Observable<string | undefined>> {
+	const initialAddress = (await getWeb3Accounts(provider))?.[0]
 	return new Observable<string | undefined>(subscriber => {
 		function handler(accounts: string[]) {
 			subscriber.next(accounts[0])
 		}
-		instance.on("accountsChanged", handler)
+		provider.on("accountsChanged", handler)
 	}).pipe(startWith(initialAddress), distinctUntilChanged(), shareReplay(1))
 }
 
-async function getChainId(instance: any, web3: Web3): Promise<Observable<number>> {
-	const networkId = await web3.eth.getChainId()
+async function getChainId(provider: any): Promise<Observable<number>> {
+	const networkId = await getWeb3ChainId(provider)
 	return new Observable<number>(subscriber => {
 		function handler(networkId: string) {
 			subscriber.next(parseInt(networkId))
 		}
-		instance.on("chainChanged", handler)
+		provider.on("chainChanged", handler)
 	}).pipe(startWith(networkId), distinctUntilChanged(), shareReplay(1))
 }
