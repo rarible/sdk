@@ -1,36 +1,53 @@
 import { Observable } from "rxjs"
-import type Web3 from "web3"
 import type { EthereumProviderConnectionResult } from "../domain"
 import { isListenable, isWithRemoveSubscriber } from "../../../common/utils"
 import type { ConnectionState } from "../../../connection-state"
 import { getStateConnected, getStateDisconnected } from "../../../connection-state"
 import { Blockchain } from "../../../common/provider-wallet"
+import { getWeb3Accounts, getWeb3ChainId } from "./web3helpers"
 
-export function connectToWeb3(web3: Web3, provider: any, options: {
-	disconnect?: () => Promise<void>
-} = {}): Observable<ConnectionState<EthereumProviderConnectionResult>> {
+export function getJsonRpcWalletInfoProvider(provider: any): IWalletInfoProvider {
+	return {
+		getAccounts: () => getWeb3Accounts(provider),
+		getChainId: () => getWeb3ChainId(provider),
+	}
+}
+
+interface IWalletInfoProvider {
+	getAccounts: () => Promise<string[]>
+	getChainId: () => Promise<number>
+}
+
+export function connectToWeb3(
+	networkInfoProvider: IWalletInfoProvider,
+	walletProvider: any,
+	web3SourceProvider: any,
+	options: {
+		disconnect?: () => Promise<void>
+	} = {}
+): Observable<ConnectionState<EthereumProviderConnectionResult>> {
 	return new Observable<ConnectionState<EthereumProviderConnectionResult>>(subscriber => {
-		if (isListenable(provider)) {
+		if (isListenable(walletProvider)) {
 			const externalDisconnectHandler = () => {
 				subscriber.next(getStateDisconnected())
 			}
 
-			provider.on("disconnected", externalDisconnectHandler)
-			if (isWithRemoveSubscriber(provider)) {
+			walletProvider.on("disconnected", externalDisconnectHandler)
+			if (isWithRemoveSubscriber(walletProvider)) {
 				subscriber.add(() => {
-					provider.removeListener("disconnected", externalDisconnectHandler)
+					walletProvider.removeListener("disconnected", externalDisconnectHandler)
 				})
 			}
 		}
 
-		Promise.all([web3.eth.getAccounts(), web3.eth.getChainId()]).then(([accounts, chainId]) => {
+		Promise.all([networkInfoProvider.getAccounts(), networkInfoProvider.getChainId()]).then(([accounts, chainId]) => {
 			const address = accounts[0]
 			if (address) {
 				const wallet: EthereumProviderConnectionResult = {
 					blockchain: Blockchain.ETHEREUM,
 					chainId,
 					address,
-					provider: web3,
+					provider: web3SourceProvider,
 				}
 				subscriber.next(getStateConnected({ connection: wallet, disconnect: options.disconnect }))
 			} else {

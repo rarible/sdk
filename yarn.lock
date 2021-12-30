@@ -3391,7 +3391,7 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@^0.12.26", "@rarible/web3-ethereum@~0.12.26":
+"@rarible/web3-ethereum@~0.12.26":
   version "0.12.26"
   resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.26.tgz#f8931e217bfcbeb18924a2fcb179c645477e2dc1"
   integrity sha512-CBc/NZ+QwKiKy0WVWMEL0LZETh7qXuaY2onLDXUJPjwuPD9RMZLpWXIIt6uWhQi5NLj1u3LG27ujO6d3hEQNWA==
@@ -3411,19 +3411,6 @@
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rixio/lens/-/lens-0.5.0.tgz#fa3ff29880a4c1af4de65d27678f24ef6faba833"
   integrity sha512-chVt4+LsC8RQzu2NGux9VeshT302LCnvawC033otZMUuhia9lsbY080dmM8W0WjWTbkx/cShX8TDIXfrRE4WtA==
-
-"@rixio/react@~0.9.6":
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/@rixio/react/-/react-0.9.6.tgz#74faf8062aa494b05a99571a8ac86fcaf01ba695"
-  integrity sha512-zBsPmCHUjpemdP65+J8fVjrV3+8SxlYo+FacrBShpJ7M02MN4oRfEHBxAGA/yGjGBBRIXNWTjWzt8DEt/+WGZQ==
-  dependencies:
-    "@rixio/lens" "^0.5.0"
-    "@rixio/wrapped" "^0.2.8"
-
-"@rixio/wrapped@^0.2.8":
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/@rixio/wrapped/-/wrapped-0.2.8.tgz#ebf4342f590921d0442795f63c8dac584f485d96"
-  integrity sha512-lZ2n8V+X59hoTh/PEAEenIHs/Z5LNSBk4PoI9eQLEcszwl4k0aJyhDSjkKsuIaDTMttbb4//pzfDBhfwQIF4TQ==
 
 "@rollup/plugin-babel@^5.3.0":
   version "5.3.0"
@@ -3828,7 +3815,7 @@
     elliptic "^6.5.4"
     typedarray-to-buffer "^4.0.0"
 
-"@temple-wallet/dapp@5.0.2", "@temple-wallet/dapp@^5.0.2":
+"@temple-wallet/dapp@^5.0.2":
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@temple-wallet/dapp/-/dapp-5.0.2.tgz#6a7759b1527b3e0dd0079642e3b052a027bb2953"
   integrity sha512-IIeHTowHXOp7/JnttfzMyCJjFWwhqOauDN7S2vU0GzHkpT5gH6FBXqB3kvZUyPfoxY0PXuXg+HKh++qABx+g9A==
@@ -3896,10 +3883,10 @@
     keccak "^3.0.2"
     randombytes "^2.1.0"
 
-"@toruslabs/torus-embed@^1.18.6":
-  version "1.18.7"
-  resolved "https://registry.yarnpkg.com/@toruslabs/torus-embed/-/torus-embed-1.18.7.tgz#0b094a6244135605ece5e7a60d59d94850fd93be"
-  integrity sha512-LFfbvln+Ms2XCOmM/h1cj9OgkyYkjMkYohfeqAXQ3iT40wpVK43Pi9LMjmCvOOeQ95+eqYjAlBrhapzA6OcYXQ==
+"@toruslabs/torus-embed@^1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@toruslabs/torus-embed/-/torus-embed-1.19.0.tgz#4cb382d9f2ffc670e0c1b89cdcbf6f9863ba09eb"
+  integrity sha512-wHCEfVMtkCkscN3bKvmxdMLyWR0HSYOLPInaVg3xPhyHgy4wk08HM3/abUlNBrvM5izXiZ1sp+VvwANlbG+yIA==
   dependencies:
     "@metamask/obs-store" "^7.0.0"
     "@toruslabs/fetch-node-details" "^4.0.2"
@@ -14710,15 +14697,15 @@ tsconfig-paths@^3.11.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tslib@2.3.1, tslib@^2, tslib@^2.0.0, tslib@^2.3.1:
-  version "2.3.1"
-  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
-  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
-
 tslib@^1.8.1, tslib@^1.9.0:
   version "1.14.1"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.14.1.tgz#cf2d38bdc34a134bcaf1091c41f6619e2f672d00"
   integrity sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==
+
+tslib@^2, tslib@^2.0.0, tslib@^2.3.1:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.3.1.tgz#e8a335add5ceae51aa261d32a490158ef042ef01"
+  integrity sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw==
 
 tslib@~2.1.0:
   version "2.1.0"
@@ -15212,7 +15199,7 @@ walker@~1.0.5:
   dependencies:
     makeerror "1.0.12"
 
-walletlink@^2.3.0:
+walletlink@^2.4.0:
   version "2.4.0"
   resolved "https://registry.yarnpkg.com/walletlink/-/walletlink-2.4.0.tgz#9cfc3d038b2c40b87433fb1719dec8551aef81c1"
   integrity sha512-JAYRdbmqEqh+kTFlhEezyGwcn3e8WiDyORXWB8odnvP9+leKIsjO3RW8VoZKR86+m4TY9OsUMcx4w+B7mYxg6g==
@@ -15869,19 +15856,6 @@ web3-utils@1.6.1, web3-utils@^1.6.1:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-web3@1.2.11, web3@~1.2.11:
-  version "1.2.11"
-  resolved "https://registry.yarnpkg.com/web3/-/web3-1.2.11.tgz#50f458b2e8b11aa37302071c170ed61cff332975"
-  integrity sha512-mjQ8HeU41G6hgOYm1pmeH0mRAeNKJGnJEUzDMoerkpw7QUQT4exVREgF1MYPvL/z6vAshOXei25LE/t/Bxl8yQ==
-  dependencies:
-    web3-bzz "1.2.11"
-    web3-core "1.2.11"
-    web3-eth "1.2.11"
-    web3-eth-personal "1.2.11"
-    web3-net "1.2.11"
-    web3-shh "1.2.11"
-    web3-utils "1.2.11"
-
 web3@1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.5.0.tgz#2c1d8c910ce9c8c33ca4e5a130c02eda9c0f82bf"
@@ -15894,6 +15868,19 @@ web3@1.5.0:
     web3-net "1.5.0"
     web3-shh "1.5.0"
     web3-utils "1.5.0"
+
+web3@~1.2.11:
+  version "1.2.11"
+  resolved "https://registry.yarnpkg.com/web3/-/web3-1.2.11.tgz#50f458b2e8b11aa37302071c170ed61cff332975"
+  integrity sha512-mjQ8HeU41G6hgOYm1pmeH0mRAeNKJGnJEUzDMoerkpw7QUQT4exVREgF1MYPvL/z6vAshOXei25LE/t/Bxl8yQ==
+  dependencies:
+    web3-bzz "1.2.11"
+    web3-core "1.2.11"
+    web3-eth "1.2.11"
+    web3-eth-personal "1.2.11"
+    web3-net "1.2.11"
+    web3-shh "1.2.11"
+    web3-utils "1.2.11"
 
 webidl-conversions@^3.0.0:
   version "3.0.1"

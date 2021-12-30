@@ -1,13 +1,12 @@
 import type { Observable } from "rxjs"
 import { defer } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
-import Web3 from "web3"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
-import { connectToWeb3 } from "./common/web3connection"
+import { connectToWeb3, getJsonRpcWalletInfoProvider } from "./common/web3connection"
 import type { EthereumProviderConnectionResult } from "./domain"
 
 export type MEWConfig = {
@@ -31,10 +30,15 @@ export class MEWConnectionProvider extends
 		this.instance = cache(() => this._connect())
 		this.connection = defer(() => this.instance.pipe(
 			mergeMap(instance => {
-				const web3 = new Web3(instance.makeWeb3Provider())
-				return connectToWeb3(web3, instance, {
-					disconnect: () => instance.disconnect(),
-				})
+				const web3like = instance.makeWeb3Provider()
+				return connectToWeb3(
+					getJsonRpcWalletInfoProvider(web3like),
+					instance,
+					web3like,
+					{
+						disconnect: () => instance.disconnect(),
+					}
+				)
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
 		))

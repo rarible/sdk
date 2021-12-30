@@ -2,14 +2,13 @@ import type { Observable } from "rxjs"
 import { defer } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
 import type { default as Torus } from "@toruslabs/torus-embed"
-import Web3 from "web3"
 import type { TorusParams } from "@toruslabs/torus-embed/dist/types/interfaces"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache, noop } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
-import { connectToWeb3 } from "./common/web3connection"
+import { connectToWeb3, getJsonRpcWalletInfoProvider } from "./common/web3connection"
 import type { EthereumProviderConnectionResult } from "./domain"
 
 export type TorusConfig = TorusParams
@@ -28,10 +27,15 @@ export class TorusConnectionProvider extends
 		this.instance = cache(() => this._connect())
 		this.connection = defer(() => this.instance.pipe(
 			mergeMap(instance => {
-				const web3 = new Web3(instance.provider as any)
-				return connectToWeb3(web3, instance, {
-					disconnect: () => instance.cleanUp().catch(noop),
-				})
+				const web3like = instance.provider
+				return connectToWeb3(
+					getJsonRpcWalletInfoProvider(web3like),
+					instance,
+					web3like,
+					{
+						disconnect: () => instance.cleanUp().catch(noop),
+					}
+				)
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
 		))
