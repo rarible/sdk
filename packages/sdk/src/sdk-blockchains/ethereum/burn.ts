@@ -4,6 +4,7 @@ import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
+import { isEVMBlockchain } from "./common"
 
 export class EthereumBurn {
 	constructor(
@@ -19,7 +20,7 @@ export class EthereumBurn {
 		}
 
 		const [domain, contract, tokenId] = prepare.itemId.split(":")
-		if (domain !== "ETHEREUM") {
+		if (!isEVMBlockchain(domain)) {
 			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
 		}
 

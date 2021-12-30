@@ -1,13 +1,19 @@
 import type { Address, UnionAddress, Word } from "@rarible/types"
 import { toAddress, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
-import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { OrderId, AssetType, ItemId } from "@rarible/api-client"
+import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
+import type { AssetType, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
-import type { Part } from "@rarible/ethereum-api-client"
+import type { Erc20AssetType, EthAssetType, Part } from "@rarible/ethereum-api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
-import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
+
+export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
+export const EVMBlockchains: EVMBlockchain[] = [
+	Blockchain.ETHEREUM,
+	Blockchain.POLYGON,
+]
 
 export function getEthTakeAssetType(currency: RequestCurrency) {
 	switch (currency["@type"]) {
@@ -48,46 +54,74 @@ export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
 	})) || []
 }
 
-export function getSupportedCurrencies(): CurrencyType[] {
+export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
+	switch (network) {
+		case "e2e":
+			return Blockchain.ETHEREUM
+		case "ropsten":
+			return Blockchain.ETHEREUM
+		case "rinkeby":
+			return Blockchain.ETHEREUM
+		case "mainnet":
+			return Blockchain.ETHEREUM
+		case "mumbai":
+			return Blockchain.POLYGON
+		case "polygon":
+			return Blockchain.POLYGON
+		default:
+			throw new Error(`Unsupported network: ${network}`)
+	}
+}
+
+export function getSupportedCurrencies(blockchain: EVMBlockchain = Blockchain.ETHEREUM): CurrencyType[] {
 	return [
-		{ blockchain: Blockchain.ETHEREUM, type: "NATIVE" },
-		{ blockchain: Blockchain.ETHEREUM, type: "ERC20" },
+		{ blockchain, type: "NATIVE" },
+		{ blockchain, type: "ERC20" },
 	]
+}
+
+export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
+	for (const b of EVMBlockchains) {
+		if (b === blockchain) {
+			return true
+		}
+	}
+	return false
 }
 
 export function convertToEthereumAddress(
 	contractAddress: UnionAddress | ContractAddress
 ): Address {
-	if (!isBlockchainSpecified(contractAddress)) {
+	if (!isRealBlockchainSpecified(contractAddress)) {
 		throw new Error("Not a union or contract address: " + contractAddress)
 	}
 
 	const [blockchain, address] = contractAddress.split(":")
-	if (blockchain !== Blockchain.ETHEREUM) {
+	if (!isEVMBlockchain(blockchain)) {
 		throw new Error("Not an Ethereum address")
 	}
 	return toAddress(address)
 }
 
-export function convertEthereumOrderHash(hash: Word): OrderId {
-	return toOrderId(`${Blockchain.ETHEREUM}:${hash}`)
+export function convertEthereumOrderHash(hash: Word, blockchain: EVMBlockchain): OrderId {
+	return toOrderId(`${blockchain}:${hash}`)
 }
 
-export function convertEthereumContractAddress(address: string): ContractAddress {
-	return toContractAddress(`${Blockchain.ETHEREUM}:${address}`)
+export function convertEthereumContractAddress(address: string, blockchain: EVMBlockchain): ContractAddress {
+	return toContractAddress(`${blockchain}:${address}`)
 }
 
-export function convertEthereumUnionAddress(address: string): UnionAddress {
-	return toUnionAddress(`${Blockchain.ETHEREUM}:${address}`)
+export function convertEthereumUnionAddress(address: string, blockchain: EVMBlockchain): UnionAddress {
+	return toUnionAddress(`${blockchain}:${address}`)
 }
 
-export function convertEthereumItemId(itemId: string): ItemId {
-	return toItemId(`${Blockchain.ETHEREUM}:${itemId}`)
+export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain): ItemId {
+	return toItemId(`${blockchain}:${itemId}`)
 }
 
 export function getEthereumItemId(itemId: ItemId) {
 	const [domain, contract, tokenId] = itemId.split(":")
-	if (domain !== "ETHEREUM") {
+	if (!isEVMBlockchain(domain)) {
 		throw new Error(`Not an ethereum item: ${itemId}`)
 	}
 	return {

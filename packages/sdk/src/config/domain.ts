@@ -8,5 +8,6 @@ export type RaribleSdkConfig = {
 	basePath: string
 	ethereumEnv: EthereumNetwork
 	flowEnv: FlowEnv
-	tezosNetwork: TezosNetwork
+	tezosNetwork: TezosNetwork,
+	polygonNetwork: EthereumNetwork,
 }

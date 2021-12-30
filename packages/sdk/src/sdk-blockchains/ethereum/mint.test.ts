@@ -7,7 +7,7 @@ import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
-import { convertEthereumUnionAddress, convertEthereumContractAddress } from "./common"
+import { convertEthereumContractAddress, convertEthereumUnionAddress } from "./common"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
@@ -21,9 +21,9 @@ describe("mint", () => {
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
-		const sender = convertEthereumUnionAddress(senderRaw)
+		const sender = convertEthereumUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: convertEthereumContractAddress(erc721Address),
+			collection: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
 		})
 		const action = await sdk.nft.mint({ collection })
 
@@ -49,9 +49,9 @@ describe("mint", () => {
 
 	test("should mint ERC1155 token", async () => {
 		const senderRaw = wallet.getAddressString()
-		const sender = convertEthereumUnionAddress(senderRaw)
+		const sender = convertEthereumUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: convertEthereumContractAddress(erc1155Address),
+			collection: convertEthereumContractAddress(erc1155Address, Blockchain.ETHEREUM),
 		})
 		const action = await sdk.nft.mint({ collection })
 

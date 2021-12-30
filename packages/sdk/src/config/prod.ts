@@ -5,4 +5,5 @@ export const prodConfig: RaribleSdkConfig = {
 	ethereumEnv: "mainnet",
 	flowEnv: "mainnet",
 	tezosNetwork: "mainnet",
+	polygonNetwork: "polygon",
 }

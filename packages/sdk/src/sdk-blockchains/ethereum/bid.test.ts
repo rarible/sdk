@@ -90,7 +90,7 @@ describe("bid", () => {
 		const value = await bidResponse.getConvertableValue(
 			{ "@type": "ERC20", contract: wethContract },
 			"0.00001",
-			convertEthereumUnionAddress(wallet1.getAddressString()),
+			convertEthereumUnionAddress(wallet1.getAddressString(), Blockchain.ETHEREUM),
 		)
 
 
@@ -149,7 +149,7 @@ describe("bid", () => {
 		const value = await bidResponse.getConvertableValue(
 			{ "@type": "ERC20", contract: wethContract },
 			"0.000000000000001",
-			convertEthereumUnionAddress(wallet2.getAddressString())
+			convertEthereumUnionAddress(wallet2.getAddressString(), Blockchain.ETHEREUM)
 		)
 
 		expect(value).toBe(undefined)

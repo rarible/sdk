@@ -5,4 +5,5 @@ export const e2eConfig: RaribleSdkConfig = {
 	ethereumEnv: "e2e",
 	flowEnv: "dev",
 	tezosNetwork: "hangzhou",
+	polygonNetwork: "e2e",
 }

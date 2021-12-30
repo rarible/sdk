@@ -22,32 +22,34 @@ export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
+	polygon: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
 			ETHEREUM: ethereum.balances,
 			FLOW: flow.balances,
 			TEZOS: tezos.balances,
-			POLYGON: {} as any, // @todo add when POLYGON is implemented
+			POLYGON: polygon.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
 			FLOW: flow.nft,
 			TEZOS: tezos.nft,
-			POLYGON: {} as any, // @todo add when POLYGON is implemented
+			POLYGON: polygon.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
 			FLOW: flow.order,
 			TEZOS: tezos.order,
-			POLYGON: {} as any,
+			POLYGON: polygon.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
 			FLOW: flow.restriction,
 			TEZOS: tezos.restriction,
-			POLYGON: {} as any,
-		})	}
+			POLYGON: polygon.restriction,
+		}),
+	}
 }
 
 class UnionOrderSdk implements IOrderInternalSdk {
@@ -168,6 +170,7 @@ const blockchains: Blockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
+	Blockchain.POLYGON,
 ]
 
 function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
