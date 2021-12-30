@@ -1,6 +1,7 @@
 import { combineLatest, defer, Observable } from "rxjs"
 import { distinctUntilChanged, first, map, mergeMap, shareReplay, startWith } from "rxjs/operators"
 import Web3 from "web3"
+import type { IFrameEthereumProvider } from "@ledgerhq/iframe-provider"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache, promiseToObservable } from "../../common/utils"
@@ -9,7 +10,7 @@ import { getStateConnected, getStateConnecting, getStateDisconnected } from "../
 import { Blockchain } from "../../common/provider-wallet"
 import type { EthereumProviderConnectionResult } from "./domain"
 
-type IframeInstance = any
+type IframeInstance = IFrameEthereumProvider
 
 const PROVIDER_ID = "iframe" as const
 
@@ -49,14 +50,14 @@ export class IframeConnectionProvider extends
 	}
 
 	async isConnected(): Promise<boolean> {
-		const web3 = new Web3(await this.instance.pipe(first()).toPromise())
+		const web3 = new Web3((await this.instance.pipe(first()).toPromise()) as any)
 		const accounts = await web3.eth.getAccounts()
 		return accounts.length > 0
 	}
 }
 
 function getConnect(instance: IframeInstance): Observable<ConnectionState<EthereumProviderConnectionResult>> {
-	const web3 = new Web3(instance)
+	const web3 = new Web3(instance as any)
 
 	return combineLatest([
 		promiseToObservable(getAddress(instance, web3)),
