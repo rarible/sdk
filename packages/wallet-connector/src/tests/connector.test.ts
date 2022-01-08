@@ -2,6 +2,7 @@ import type { Observable } from "rxjs"
 import { BehaviorSubject, of } from "rxjs"
 import { filter, first, map } from "rxjs/operators"
 import type { ConnectionProvider } from "../provider"
+import { MappedConnectionProvider } from "../provider"
 import { Connector } from "../connector"
 import { getStateConnected, getStateDisconnected } from "../connection-state"
 
@@ -12,6 +13,14 @@ describe("Connector", () => {
 			{ provider: test1, option: "test1-op1" },
 			{ provider: test2, option: "test2-op1" },
 		])
+	})
+
+	test("Connector can be created with some connectors", async () => {
+		const cp1 = test1
+		const cp2 = new MappedConnectionProvider(test2, n => `${n}`)
+		const connector = new Connector([cp1, cp2])
+		const options = await connector.getOptions()
+		expect(options).toHaveLength(2)
 	})
 
 	test.skip("should not allow to connect if other connected", async () => {

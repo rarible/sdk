@@ -1,5 +1,5 @@
 import type { Observable } from "rxjs"
-import { map } from "rxjs/operators"
+import { switchMap } from "rxjs/operators"
 import type { Maybe } from "./common/utils"
 import type { ConnectionState } from "./connection-state"
 import { getStateConnected } from "./connection-state"
@@ -43,7 +43,9 @@ export abstract class AbstractConnectionProvider<O, C> implements ConnectionProv
 
 	abstract isConnected(): Promise<boolean>
 
-	map<NewConnection>(mapper: (c: C) => NewConnection): ConnectionProvider<O, NewConnection> {
+	map<NewConnection>(
+		mapper: (c: C) => NewConnection | PromiseLike<NewConnection>,
+	): ConnectionProvider<O, NewConnection> {
 		return new MappedConnectionProvider(this, mapper)
 	}
 
@@ -52,7 +54,7 @@ export abstract class AbstractConnectionProvider<O, C> implements ConnectionProv
 	}
 }
 
-class MappedOptionConnectionProvider<O, C, NewO> extends AbstractConnectionProvider<NewO, C> {
+export class MappedOptionConnectionProvider<O, C, NewO> extends AbstractConnectionProvider<NewO, C> {
 	constructor(
 		private readonly source: ConnectionProvider<O, C>,
 		private readonly mapper: (from: O) => NewO,
@@ -82,10 +84,12 @@ class MappedOptionConnectionProvider<O, C, NewO> extends AbstractConnectionProvi
 	}
 }
 
-class MappedConnectionProvider<O, Connection, NewConnection> extends AbstractConnectionProvider<O, NewConnection> {
+export class MappedConnectionProvider<O, Connection, NewConnection>
+	extends AbstractConnectionProvider<O, NewConnection> {
+
 	constructor(
 		private readonly source: ConnectionProvider<O, Connection>,
-		private readonly mapper: (from: Connection) => NewConnection
+		private readonly mapper: (from: Connection) => NewConnection | PromiseLike<NewConnection>
 	) {
 		super()
 	}
@@ -95,16 +99,18 @@ class MappedConnectionProvider<O, Connection, NewConnection> extends AbstractCon
 	}
 
 	getConnection(): Observable<ConnectionState<NewConnection>> {
-		return this.source.getConnection().pipe(map(state => {
-			if (state.status === "connected") {
-				return getStateConnected({
-					connection: this.mapper(state.connection),
-					disconnect: state.disconnect,
-				})
-			} else {
-				return state
-			}
-		}))
+		return this.source.getConnection().pipe(
+			switchMap(async state => {
+				if (state.status === "connected") {
+					const connection = await this.mapper(state.connection)
+					return getStateConnected({
+						connection,
+						disconnect: state.disconnect,
+					})
+				} else {
+					return state
+				}
+			}))
 	}
 
 	isAutoConnected(): Promise<boolean>	{

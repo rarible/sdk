@@ -8,7 +8,7 @@ import { cache } from "../../common/utils"
 import { AbstractConnectionProvider } from "../../provider"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting } from "../../connection-state"
-import { connectToWeb3, getJsonRpcWalletInfoProvider } from "./common/web3connection"
+import { connectToWeb3 } from "./common/web3connection"
 import type { EthereumProviderConnectionResult } from "./domain"
 
 export type WalletLinkConfig = {
@@ -32,15 +32,8 @@ export class WalletLinkConnectionProvider extends
 		this.instance = cache(() => this._connect())
 		this.connection = defer(() => this.instance.pipe(
 			mergeMap(instance => {
-				const web3like = instance.walletLinkWeb3Provider
-				return connectToWeb3(
-					getJsonRpcWalletInfoProvider(web3like),
-					instance,
-					web3like,
-					{
-						disconnect: async () => await instance.walletLink.disconnect(),
-					}
-				)
+				const disconnect = async () => instance.walletLink.disconnect()
+				return connectToWeb3(instance.walletLinkWeb3Provider, { disconnect })
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
 		))

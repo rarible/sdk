@@ -1,6 +1,6 @@
 import type { Observable } from "rxjs"
-import { BehaviorSubject, concat, defer, of } from "rxjs"
-import { catchError, distinctUntilChanged, first, map, mergeMap, shareReplay, tap } from "rxjs/operators"
+import { BehaviorSubject, concat, defer, NEVER, of } from "rxjs"
+import { catchError, distinctUntilChanged, first, map, shareReplay, switchMap, tap } from "rxjs/operators"
 import type { ConnectionProvider } from "./provider"
 import type { ConnectionState } from "./connection-state"
 import { getStateConnecting, getStateDisconnected, STATE_INITIALIZING } from "./connection-state"
@@ -34,6 +34,24 @@ export interface IConnectorStateProvider {
 	setValue(value: string | undefined): Promise<void>
 }
 
+export class DefaultConnectionStateProvider implements IConnectorStateProvider {
+	constructor(private readonly key: string) {
+	}
+
+	async getValue(): Promise<string | undefined> {
+		const value = localStorage.getItem(this.key)
+		return value !== null ? value : undefined
+	}
+
+	async setValue(value: string | undefined): Promise<void> {
+		if (value === undefined) {
+			localStorage.removeItem(this.key)
+		} else {
+			localStorage.setItem(this.key, value)
+		}
+	}
+}
+
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
 	private readonly provider = new BehaviorSubject<ConnectionProvider<Option, Connection> | undefined>(undefined)
 	public connection!: Observable<ConnectionState<Connection>>
@@ -50,15 +68,13 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 			defer(() => this.checkAutoConnect()),
 			this.provider.pipe(
 				distinctUntilChanged(),
-				mergeMap(provider => {
+				switchMap(provider => {
 					if (provider) {
-						return provider.getConnection().pipe(
-							catchError((err) => {
-								return of(getStateDisconnected({ error: err.toString() }))
-							})
+						return concat(provider.getConnection(), NEVER).pipe(
+							catchError(error => concat(of(getStateDisconnected({ error })), NEVER)),
 						)
 					} else {
-						return of(getStateDisconnected())
+						return concat(of(getStateDisconnected()), NEVER)
 					}
 				}),
 			),
@@ -118,9 +134,12 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	 * @param stateProvider provider used to save/load last connected provider
 	 */
 	static create<Option, Connection>(
-		provider: ConnectionProvider<Option, Connection>,
+		provider: ConnectionProvider<Option, Connection> | ConnectionProvider<Option, Connection>[],
 		stateProvider?: IConnectorStateProvider,
 	): Connector<Option, Connection> {
+		if (Array.isArray(provider)) {
+			return new Connector<Option, Connection>(provider, stateProvider)
+		}
 		return new Connector([provider], stateProvider)
 	}
 

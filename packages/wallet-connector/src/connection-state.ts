@@ -15,7 +15,7 @@ export type StateInitializing = {
 
 export type StateDisconnected = {
 	status: "disconnected"
-	error?: string
+	error?: any
 }
 
 const STATE_DISCONNECTED: StateDisconnected = { status: "disconnected" }

@@ -1,7 +1,7 @@
 import type { Fcl } from "@rarible/fcl-types"
-import { Observable } from "rxjs"
-import { defer } from "rxjs"
-import { first, mergeMap, startWith } from "rxjs/operators"
+import type { Observable } from "rxjs"
+import { defer, of } from "rxjs"
+import { catchError, first, map, mergeMap, startWith } from "rxjs/operators"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { cache } from "../../common/utils"
@@ -22,6 +22,7 @@ const PROVIDER_ID = "fcl" as const
 
 export class FclConnectionProvider extends
 	AbstractConnectionProvider<typeof PROVIDER_ID, FlowProviderConnectionResult> {
+
 	private readonly instance: Observable<Fcl>
 	private readonly connection: Observable<ConnectionState<FlowProviderConnectionResult>>
 
@@ -30,37 +31,30 @@ export class FclConnectionProvider extends
 	) {
 		super()
 		this.instance = cache(() => this._connect())
-		this.connection = defer(() => this.instance.pipe(
+		this.connection = this.instance.pipe(
 			mergeMap((instance) => this.toConnectState(instance)),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
-		))
+		)
 	}
 
-	private toConnectState(fcl: Fcl):  Observable<ConnectionState<FlowProviderConnectionResult>>{
-		return new Observable<ConnectionState<FlowProviderConnectionResult>>((subscriber) => {
-
-			const disconnect = () => fcl.unauthenticate()
-
-			const user = fcl.currentUser()
-			Promise.all([user.authenticate()]).then(([auth]) => {
-				if (!auth.addr) {
-					subscriber.next(getStateDisconnected())
-				} else {
-					const wallet: FlowProviderConnectionResult = {
+	private toConnectState(fcl: Fcl): Observable<ConnectionState<FlowProviderConnectionResult>> {
+		const disconnect = () => fcl.unauthenticate()
+		return defer(() => fcl.currentUser().authenticate()).pipe(
+			map(auth => {
+				const address = auth.addr
+				if (!address) {
+					return getStateDisconnected()
+				}
+				return getStateConnected<FlowProviderConnectionResult>({
+					connection: {
 						blockchain: Blockchain.FLOW,
 						fcl,
-						address: auth.addr,
-					}
-
-					subscriber.next(getStateConnected({
-						connection: wallet,
-						disconnect,
-					}))
-				}
-			}).catch((err) => {
-				subscriber.next(getStateDisconnected({ error: err }))
-			})
-		})
+						address,
+					},
+					disconnect,
+				})
+			}),
+		)
 	}
 
 	getId(): string {

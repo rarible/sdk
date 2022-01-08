@@ -1,4 +1,5 @@
-import { combineLatest, defer, from, Observable } from "rxjs"
+import type { Observable } from "rxjs"
+import { combineLatest, defer } from "rxjs"
 import { map, mergeMap, startWith } from "rxjs/operators"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
@@ -6,6 +7,8 @@ import { promiseToObservable } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting, getStateDisconnected, getStateConnected } from "../../connection-state"
 import { Blockchain } from "../../common/provider-wallet"
+import { ethAccounts, getAddress } from "./common/get-address"
+import { getChainId } from "./common/get-chain-id"
 import type { EthereumProviderConnectionResult } from "./domain"
 
 export enum DappType {
@@ -32,7 +35,7 @@ export class InjectedWeb3ConnectionProvider extends
 
 	constructor() {
 		super()
-		this.connection = defer(() => from(connect())).pipe(
+		this.connection = defer(() => connect()).pipe(
 			mergeMap(() => promiseToObservable(getWalletAsync())),
 			map((wallet) => {
 				if (wallet) {
@@ -70,13 +73,13 @@ export class InjectedWeb3ConnectionProvider extends
 	isAutoConnected(): Promise<boolean> {
 		const provider = getInjectedProvider()
 		const dapp = getDappType(provider)
-		return Promise.resolve(isDappSupportAutoconnect(dapp))
+		return Promise.resolve(isDappSupportAutoConnect(dapp))
 	}
 
 	async isConnected(): Promise<boolean> {
 		const provider = getInjectedProvider()
 		if (provider !== undefined) {
-			return getAccounts(provider)
+			return ethAccounts(provider)
 				.then(([account]) => account !== undefined)
 		} else {
 			return Promise.resolve(false)
@@ -89,7 +92,7 @@ async function connect(): Promise<void> {
 	if (!provider) {
 		throw new Error("Injected provider not available")
 	}
-	const accounts = await getAccounts(provider)
+	const accounts = await ethAccounts(provider)
 	if (!accounts || accounts.length === 0) {
 		await enableProvider(provider)
 	}
@@ -132,42 +135,6 @@ async function enableProvider(provider: any) {
 	return provider
 }
 
-function getAddress(provider: any): Observable<string | undefined> {
-	return getObservable<string[], string | undefined>(
-		provider,
-		getAccounts,
-		([account]) => account,
-		"accountsChanged",
-	)
-}
-
-function getChainId(provider: any): Observable<number> {
-	return getObservable<string, number>(
-		provider,
-		ethChainId,
-		raw => parseInt(raw),
-		"chainChanged",
-	)
-}
-
-function getObservable<Raw, T>(
-	provider: any,
-	getRaw: (provider: any) => Promise<Raw>,
-	mapRaw: (raw: Raw) => T,
-	eventName: string,
-): Observable<T> {
-	return new Observable<T>(subscriber => {
-		const handler = (raw: Raw) => {
-			subscriber.next(mapRaw(raw))
-		}
-		getRaw(provider).then(handler)
-		provider.on(eventName, handler) //todo if on not supported poll
-		subscriber.add(() => {
-			provider.removeListener(eventName, handler)  //todo if removeListener not supported
-		})
-	})
-}
-
 function getInjectedProvider(): any | undefined {
 	let provider: any = undefined
 	const global: any = typeof window !== "undefined" ? window : undefined
@@ -180,22 +147,6 @@ function getInjectedProvider(): any | undefined {
 		provider = global.web3.currentProvider
 	}
 	return provider
-}
-
-async function getAccounts(provider: any): Promise<string[]> {
-	if ("request" in provider) {
-		return provider.request({ method: "eth_accounts" })
-	} else {
-		return []
-	}
-}
-
-async function ethChainId(provider: any): Promise<string> {
-	if ("request" in provider) {
-		return provider.request({ method: "eth_chainId" })
-	} else {
-		throw new Error("Not supported: eth_chainId")
-	}
 }
 
 function getDappType(provider: any): Maybe<DappType> {
@@ -220,7 +171,7 @@ function getDappType(provider: any): Maybe<DappType> {
 	return undefined
 }
 
-function isDappSupportAutoconnect(dapp: Maybe<DappType>): boolean {
+function isDappSupportAutoConnect(dapp: Maybe<DappType>): boolean {
 	if (!dapp) {
 		return false
 	}
