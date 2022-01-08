@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.8](https://github.com/rarible/sdk/compare/v0.8.7...v0.8.8) (2022-01-08)
+
+
+### Bug Fixes
+
+* generic implementation for ethereum providers, remove code duplicates ([c101f6c](https://github.com/rarible/sdk/commit/c101f6c87912ca1a250468d9b049e1f7571cbadc))
+
+
+
+
+
 ## [0.8.7](https://github.com/rarible/sdk/compare/v0.8.6...v0.8.7) (2021-12-30)
 
 
