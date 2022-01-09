@@ -1,5 +1,5 @@
 {
-  "name": "@rarible/connector",
+  "name": "@rarible/connector-beacon",
   "version": "0.8.8",
   "homepage": "",
   "license": "ISC",
@@ -18,13 +18,8 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@myetherwallet/mewconnect-web-client": "^2.2.0-beta.14",
-    "@portis/web3": "^4.0.6",
-    "@toruslabs/torus-embed": "^1.19.0",
-    "@walletconnect/web3-provider": "^1.7.0",
-    "fortmatic": "^2.2.1",
-    "rxjs": "^6.6.7",
-    "walletlink": "^2.4.0"
+    "@taquito/beacon-wallet": "^11.1.0",
+    "@rarible/connector": "~0.8.8"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

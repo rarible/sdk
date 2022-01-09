@@ -13,6 +13,7 @@
     "build-connector": "yarn workspace @rarible/connector run build",
     "build-connector-iframe": "yarn workspace @rarible/connector-iframe run build",
     "build-connector-fcl": "yarn workspace @rarible/connector-fcl run build",
+    "build-connector-beacon": "yarn workspace @rarible/connector-beacon run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",

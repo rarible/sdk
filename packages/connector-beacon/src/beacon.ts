@@ -4,12 +4,15 @@ import type { TezosToolkit } from "@taquito/taquito"
 import type { BeaconWallet } from "@taquito/beacon-wallet"
 import { first, map, mergeMap, startWith } from "rxjs/operators"
 import type { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
-import { AbstractConnectionProvider } from "../../provider"
-import type { Maybe } from "../../common/utils"
-import { cache } from "../../common/utils"
-import type { ConnectionState } from "../../connection-state"
-import { getStateConnected, getStateConnecting } from "../../connection-state"
-import { Blockchain } from "../../common/provider-wallet"
+import type {
+	ConnectionState, Maybe,
+} from "@rarible/connector"
+import {
+	AbstractConnectionProvider, Blockchain,
+	cache,
+	getStateConnected,
+	getStateConnecting,
+} from "@rarible/connector"
 import type { TezosProviderConnectionResult } from "./domain"
 
 export type BeaconConfig = {
