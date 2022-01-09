@@ -6,3 +6,4 @@ yarn run build-connector
 yarn run build-connector-iframe
 yarn run build-connector-fcl
 yarn run build-connector-beacon
+yarn run build-connector-mew
