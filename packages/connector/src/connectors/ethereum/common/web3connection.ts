@@ -1,6 +1,6 @@
 import type { Observable } from "rxjs"
-import { combineLatest, of, throwError } from "rxjs"
-import { catchError, map } from "rxjs/operators"
+import { combineLatest } from "rxjs"
+import { map } from "rxjs/operators"
 import type { EthereumProviderConnectionResult } from "../domain"
 import type { ConnectionState } from "../../../connection-state"
 import { getStateConnected, getStateDisconnected } from "../../../connection-state"
