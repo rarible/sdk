@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletconnect",
-  "version": "0.8.8",
+  "version": "0.8.9",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,8 +18,8 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@walletconnect/web3-provider": "^1.7.0",
-    "@rarible/connector": "~0.8.8"
+    "@rarible/connector": "^0.8.9",
+    "@walletconnect/web3-provider": "^1.7.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
