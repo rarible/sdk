@@ -1,9 +1,10 @@
 import type { TezosToolkit } from "@taquito/taquito"
 import type { WalletProvider } from "@taquito/taquito/dist/types/wallet/interface"
-import type { ProviderConnectionResult, Blockchain } from "@rarible/connector/src/common/provider-wallet"
+import type { ProviderConnectionResult } from "@rarible/connector/src/common/provider-wallet"
 
-export interface TezosProviderConnectionResult extends ProviderConnectionResult {
-	blockchain: Blockchain.TEZOS
+export interface TezosProviderConnectionResult<W extends WalletProvider = WalletProvider>
+	extends ProviderConnectionResult {
+
 	toolkit: TezosToolkit
-	wallet: WalletProvider
+	wallet: W
 }

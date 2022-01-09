@@ -4,7 +4,6 @@ import { map } from "rxjs/operators"
 import type { EthereumProviderConnectionResult } from "../domain"
 import type { ConnectionState } from "../../../connection-state"
 import { getStateConnected, getStateDisconnected } from "../../../connection-state"
-import { Blockchain } from "../../../common/provider-wallet"
 import { getAddress } from "./get-address"
 import { getChainId } from "./get-chain-id"
 import { getConnectedStatus } from "./get-connected-status"
@@ -23,7 +22,6 @@ export function connectToWeb3(
 		map(([address, chainId, status]) => {
 			if (status === "connected" && address) {
 				const wallet: EthereumProviderConnectionResult = {
-					blockchain: Blockchain.ETHEREUM,
 					chainId,
 					address,
 					provider,

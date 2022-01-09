@@ -54,7 +54,7 @@ export class DefaultConnectionStateProvider implements IConnectorStateProvider {
 
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
 	private readonly provider = new BehaviorSubject<ConnectionProvider<Option, Connection> | undefined>(undefined)
-	public connection!: Observable<ConnectionState<Connection>>
+	public connection: Observable<ConnectionState<Connection>>
 
 	constructor(
 		private readonly providers: ConnectionProvider<Option, Connection>[],

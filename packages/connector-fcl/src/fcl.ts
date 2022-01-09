@@ -6,7 +6,7 @@ import type {
 	ConnectionState, Maybe,
 } from "@rarible/connector"
 import {
-	AbstractConnectionProvider, Blockchain,
+	AbstractConnectionProvider,
 	cache, getStateConnected,
 	getStateConnecting,
 	getStateDisconnected,
@@ -49,11 +49,7 @@ export class FclConnectionProvider extends
 					return getStateDisconnected()
 				}
 				return getStateConnected<FlowProviderConnectionResult>({
-					connection: {
-						blockchain: Blockchain.FLOW,
-						fcl,
-						address,
-					},
+					connection: { fcl, address },
 					disconnect,
 				})
 			}),

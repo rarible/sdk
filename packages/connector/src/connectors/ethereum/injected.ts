@@ -6,7 +6,6 @@ import type { Maybe } from "../../common/utils"
 import { promiseToObservable } from "../../common/utils"
 import type { ConnectionState } from "../../connection-state"
 import { getStateConnecting, getStateDisconnected, getStateConnected } from "../../connection-state"
-import { Blockchain } from "../../common/provider-wallet"
 import { ethAccounts, getAddress } from "./common/get-address"
 import { getChainId } from "./common/get-chain-id"
 import type { EthereumProviderConnectionResult } from "./domain"
@@ -104,7 +103,6 @@ async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionRe
 		map(([address, chainId]) => {
 			if (address) {
 				return {
-					blockchain: Blockchain.ETHEREUM,
 					chainId,
 					address,
 					provider,

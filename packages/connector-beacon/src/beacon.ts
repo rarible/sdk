@@ -8,7 +8,7 @@ import type {
 	ConnectionState, Maybe,
 } from "@rarible/connector"
 import {
-	AbstractConnectionProvider, Blockchain,
+	AbstractConnectionProvider,
 	cache,
 	getStateConnected,
 	getStateConnecting,
@@ -23,10 +23,10 @@ export type BeaconConfig = {
 const PROVIDER_ID = "beacon" as const
 
 export class BeaconConnectionProvider extends
-	AbstractConnectionProvider<typeof PROVIDER_ID, TezosProviderConnectionResult> {
+	AbstractConnectionProvider<typeof PROVIDER_ID, TezosProviderConnectionResult<BeaconWallet>> {
 
 	private readonly instance: Observable<{ beaconWallet: BeaconWallet, tezosToolkit: TezosToolkit }>
-	private readonly connection: Observable<ConnectionState<TezosProviderConnectionResult>>
+	private readonly connection: Observable<ConnectionState<TezosProviderConnectionResult<BeaconWallet>>>
 
 	constructor(
 		private readonly config: BeaconConfig
@@ -42,7 +42,7 @@ export class BeaconConnectionProvider extends
 	private toConnectState(
 		beaconWallet: BeaconWallet,
 		tezosToolkit: TezosToolkit
-	): Observable<ConnectionState<TezosProviderConnectionResult>> {
+	): Observable<ConnectionState<TezosProviderConnectionResult<BeaconWallet>>> {
 		const disconnect = async () => {
 			await beaconWallet.disconnect()
 			await beaconWallet.client.removeAllPeers()
@@ -50,9 +50,8 @@ export class BeaconConnectionProvider extends
 			await beaconWallet.client.destroy()
 		}
 		return defer(() => this.getAddress(beaconWallet)).pipe(
-			map(address => getStateConnected<TezosProviderConnectionResult>({
+			map(address => getStateConnected<TezosProviderConnectionResult<BeaconWallet>>({
 				connection: {
-					blockchain: Blockchain.TEZOS,
 					address,
 					toolkit: tezosToolkit,
 					wallet: beaconWallet,
@@ -84,7 +83,7 @@ export class BeaconConnectionProvider extends
 		return PROVIDER_ID
 	}
 
-	getConnection(): Observable<ConnectionState<TezosProviderConnectionResult>> {
+	getConnection(): Observable<ConnectionState<TezosProviderConnectionResult<BeaconWallet>>> {
 		return this.connection
 	}
 
