@@ -5,30 +5,36 @@
 Yarn
 ```shell
     yarn add @rarible/connector
+    # optional: add additional connectors
+    yarn add @rarible/connector-walletconnect
+    yarn add @rarible/connector-fortmatic
+    # check other @rarible/connector-* packages to see what's supported 
 ```
 
 NPM
 ```shell
     npm i @rarible/connector
+    # optional: add additional connectors
+    npm i @rarible/connector-walletconnect
+    npm i @rarible/connector-fortmatic
+    # check other @rarible/connector-* packages to see what's supported 
 ```
 
 ## Usage
 
-### Simple get ethereum provider & wallet info
+#### Create `Connector`, add all needed `ConnectionProvider's`
 
 ```ts
-import {Connector, InjectedWeb3ConnectionProvider, DappType, FortmaticConnectionProvider} from "";
+import { Connector, InjectedWeb3ConnectionProvider, DappType } from "@rarible/connector"
+import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
 
 // create providers with the required options
-const injected: ConnectionProvider<DappType, Wallet> = new InjectedWeb3ConnectionProvider();
-const fortmatic: ConnectionProvider<"fortmatic", Wallet> = new FortmaticConnectionProvider({ 
-    apiKey: "YOUR_FORTMATIC_APIKEY" 
-});
+const injected = new InjectedWeb3ConnectionProvider()
+const walletConnect = new WalletConnectConnectionProvider()
 	
 // create connector and push providers to it 
 const connector = Connector
-    .create(injected)
-    .add(fortmatic);
+    .create([injected, walletConnect])
 		
 // subscribe to connection status
 connector.connection.subscribe((con) =>
@@ -36,7 +42,7 @@ connector.connection.subscribe((con) =>
 )
 
 const options = await connector.getOptions(); // get list of available option
-await connector.connect(options[0]); // connect to one
+await connector.connect(options[0]); // connect to selected provider
 ```
 
 ### Usage with Rarible SDK
