@@ -2,13 +2,14 @@ import type { Observable } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
 import type { default as Torus } from "@toruslabs/torus-embed"
 import type { TorusParams } from "@toruslabs/torus-embed/dist/types/interfaces"
-import { AbstractConnectionProvider } from "../../provider"
-import type { Maybe } from "../../common/utils"
-import { cache } from "../../common/utils"
-import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting } from "../../connection-state"
-import { connectToWeb3 } from "./common/web3connection"
-import type { EthereumProviderConnectionResult } from "./domain"
+import type {
+	ConnectionState,
+	EthereumProviderConnectionResult, Maybe,
+} from "@rarible/connector"
+import {
+	AbstractConnectionProvider,
+	cache, connectToWeb3, getStateConnecting,
+} from "@rarible/connector"
 
 export type TorusConfig = TorusParams
 

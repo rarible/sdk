@@ -2,13 +2,15 @@ import type { Observable } from "rxjs"
 import type { WidgetMode } from "fortmatic/dist/cjs/src/core/sdk"
 import { first, mergeMap, startWith } from "rxjs/operators"
 import type { QueryParameters } from "fortmatic/dist/cjs/src/util/query-params"
-import { AbstractConnectionProvider } from "../../provider"
-import type { Maybe } from "../../common/utils"
-import { cache, noop } from "../../common/utils"
-import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting } from "../../connection-state"
-import type { EthereumProviderConnectionResult } from "./domain"
-import { connectToWeb3 } from "./common/web3connection"
+import type {
+	ConnectionState,
+	EthereumProviderConnectionResult,
+	Maybe,
+} from "@rarible/connector"
+import {
+	AbstractConnectionProvider,
+	cache, connectToWeb3, getStateConnecting,
+	noop } from "@rarible/connector"
 
 type FM = WidgetMode
 
@@ -31,7 +33,7 @@ export class FortmaticConnectionProvider extends
 		this.instance = cache(() => this._connect())
 		this.connection = this.instance.pipe(
 			mergeMap(instance => {
-				const disconnect = () => instance.user.logout().then(noop).catch(noop)
+				const disconnect = () => instance.user.logout().then(noop)
 				return connectToWeb3(instance.getProvider(), { disconnect })
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),

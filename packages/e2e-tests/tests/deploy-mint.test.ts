@@ -48,7 +48,7 @@ const suites: {
 			}
 		},
 	},
-	{
+/*	{
 		blockchain: Blockchain.TEZOS,
 		wallet: getTezosTestWallet(),
 		deployRequest: (): DeployTokenRequest => {
@@ -77,7 +77,7 @@ const suites: {
 				supply: 1,
 			}
 		},
-	},
+	},*/
 ]
 
 describe.each(suites)("$blockchain deploy-mint", (suite) => {

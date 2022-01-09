@@ -1,13 +1,14 @@
 import type { Observable } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
 import type { default as Portis, INetwork, IOptions } from "@portis/web3"
-import { AbstractConnectionProvider } from "../../provider"
-import type { Maybe } from "../../common/utils"
-import { cache, noop } from "../../common/utils"
-import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting } from "../../connection-state"
-import { connectToWeb3 } from "./common/web3connection"
-import type { EthereumProviderConnectionResult } from "./domain"
+import type {
+	ConnectionState,
+	EthereumProviderConnectionResult, Maybe,
+} from "@rarible/connector"
+import {
+	AbstractConnectionProvider,
+	cache, connectToWeb3, getStateConnecting, noop,
+} from "@rarible/connector"
 
 type PortisInstance = Portis
 type PortisNetwork = string | INetwork
