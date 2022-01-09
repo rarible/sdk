@@ -1,13 +1,16 @@
 import type { Observable } from "rxjs"
 import { mergeMap, startWith } from "rxjs/operators"
 import type { IFrameEthereumProvider } from "@ledgerhq/iframe-provider"
-import { AbstractConnectionProvider } from "../../provider"
-import type { Maybe } from "../../common/utils"
-import { cache } from "../../common/utils"
-import type { ConnectionState } from "../../connection-state"
-import { getStateConnecting } from "../../connection-state"
-import type { EthereumProviderConnectionResult } from "./domain"
-import { connectToWeb3 } from "./common/web3connection"
+import type {
+	Maybe,
+	ConnectionState,
+	EthereumProviderConnectionResult } from "@rarible/connector"
+import {
+	cache,
+	connectToWeb3,
+	AbstractConnectionProvider,
+	getStateConnecting,
+} from "@rarible/connector"
 
 type IframeInstance = IFrameEthereumProvider
 

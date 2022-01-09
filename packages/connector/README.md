@@ -4,12 +4,12 @@
 
 Yarn
 ```shell
-    yarn add @rarible/sdk-wallet-connector
+    yarn add @rarible/connector
 ```
 
 NPM
 ```shell
-    npm i @rarible/sdk-wallet-connector
+    npm i @rarible/connector
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ NPM
 ### Simple get ethereum provider & wallet info
 
 ```ts
-import {Connector, InjectedWeb3ConnectionProvider, DappType, FortmaticConnectionProvider} from "@rarible/sdk-wallet-connector";
+import {Connector, InjectedWeb3ConnectionProvider, DappType, FortmaticConnectionProvider} from "";
 
 // create providers with the required options
 const injected: ConnectionProvider<DappType, Wallet> = new InjectedWeb3ConnectionProvider();
@@ -59,7 +59,7 @@ import {
 	EthereumProviderConnectionResult,
 	FlowProviderConnectionResult,
 	TezosProviderConnectionResult
-} from "@rarible/sdk-wallet-connector";
+} from "@rarible/connector";
 
 type ProviderResult = EthereumProviderConnectionResult | FlowProviderConnectionResult | TezosProviderConnectionResult;
 

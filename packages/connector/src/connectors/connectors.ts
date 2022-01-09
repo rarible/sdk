@@ -5,7 +5,6 @@ export { PortisConnectionProvider } from "./ethereum/portis"
 export { TorusConnectionProvider } from "./ethereum/torus"
 export { WalletLinkConnectionProvider } from "./ethereum/walletllink"
 export { MEWConnectionProvider } from "./ethereum/mew"
-export { IframeConnectionProvider } from "./ethereum/iframe"
 export { WalletConnectConnectionProvider } from "./ethereum/walletconnect"
 
 // Tezos
