@@ -5,7 +5,8 @@
   "license": "ISC",
   "private": true,
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "echo run e2e-test to run e2e-tests",
+    "e2e-test": "jest --runInBand"
   },
   "dependencies": {
     "@rarible/api-client": "~0.0.10"
