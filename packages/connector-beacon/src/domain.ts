@@ -1,6 +1,6 @@
 import type { TezosToolkit } from "@taquito/taquito"
 import type { WalletProvider } from "@taquito/taquito/dist/types/wallet/interface"
-import type { ProviderConnectionResult } from "@rarible/connector/src/common/provider-wallet"
+import type { ProviderConnectionResult } from "@rarible/connector"
 
 export interface TezosProviderConnectionResult<W extends WalletProvider = WalletProvider>
 	extends ProviderConnectionResult {
