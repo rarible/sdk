@@ -2,12 +2,15 @@ import type { Fcl } from "@rarible/fcl-types"
 import type { Observable } from "rxjs"
 import { defer } from "rxjs"
 import { first, map, mergeMap, startWith } from "rxjs/operators"
-import { AbstractConnectionProvider } from "../../provider"
-import type { Maybe } from "../../common/utils"
-import { cache } from "../../common/utils"
-import type { ConnectionState } from "../../connection-state"
-import { getStateConnected, getStateConnecting, getStateDisconnected } from "../../connection-state"
-import { Blockchain } from "../../common/provider-wallet"
+import type {
+	ConnectionState, Maybe,
+} from "@rarible/connector"
+import {
+	AbstractConnectionProvider, Blockchain,
+	cache, getStateConnected,
+	getStateConnecting,
+	getStateDisconnected,
+} from "@rarible/connector"
 import type { FlowProviderConnectionResult } from "./domain"
 
 export type FclConfig = {

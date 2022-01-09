@@ -9,6 +9,3 @@ export { WalletConnectConnectionProvider } from "./ethereum/walletconnect"
 
 // Tezos
 export { BeaconConnectionProvider } from "./tezos/beacon"
-
-// Flow
-export { FclConnectionProvider } from "./flow/fcl"
