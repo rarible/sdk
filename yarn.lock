@@ -3121,7 +3121,7 @@
     "@onflow/util-template" "0.0.1"
     "@onflow/util-uid" "0.0.1"
 
-"@onflow/fcl@^0.0.77", "@onflow/fcl@~0.0.76", "@onflow/fcl@~0.0.77":
+"@onflow/fcl@^0.0.77", "@onflow/fcl@~0.0.77":
   version "0.0.77"
   resolved "https://registry.yarnpkg.com/@onflow/fcl/-/fcl-0.0.77.tgz#2a2da9ec8f90e0cf012d9a459a3472b57e416549"
   integrity sha512-hgFW51Va29KwlzhDy6Fm15UesfXluRTR5RJn+zrm5d5HFfkquaxKOnMGT5waKVFn5u4THQIE6v+OnaDDchGNpg==
@@ -3309,21 +3309,21 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.21":
-  version "0.5.21"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.21.tgz#e822fbc13695129765a6221c18c034177e54610f"
-  integrity sha512-K8FKAGTu7sVxAv8HU2RXXakmypCGLBcP4J3/3iiHYY2tcHl8zn0ih6hTJetRBye+hlVv/Yy1cPHjIMfJth9smw==
+"@rarible/flow-sdk-scripts@^0.5.30-alpha.2":
+  version "0.5.30-alpha.2"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30-alpha.2.tgz#e2e79b05d95b08981cfe41182cd6413686c15171"
+  integrity sha512-DmrFiRc9ABGminH3AUDnt2UrZEBJ6U7Ubzld9Si/gKyc5+BT2uKUs8j4n5XUpmLwzhb/f+Xp8OtZiis4p0S0tA==
 
-"@rarible/flow-sdk@~0.5.28":
-  version "0.5.28"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.28.tgz#2e19e0a56cf8e2cbbe9feaef8dae0737f0b737e2"
-  integrity sha512-705f6lsvqeG/+0UgQXSiewOQzdX4KlG4M1q6Fkiv7FyfP9yrfjoVgSWw/0suz4DS47OB9/xj1qgnpX+wXq0xrQ==
+"@rarible/flow-sdk@~0.5.30-alpha.2":
+  version "0.5.30-alpha.2"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.30-alpha.2.tgz#cc042df13742da17d8c13c9f5e3af065d97d6700"
+  integrity sha512-HwhuktIkot28v8GCdYrAe6q5a8P/wK79ngAHWPPOhLPtda4yxMaeqhN2b4RBY/wpirlgFH3x+9bylpTtj/JZMw==
   dependencies:
-    "@onflow/fcl" "~0.0.76"
+    "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "~0.5.0"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.21"
+    "@rarible/flow-sdk-scripts" "^0.5.30-alpha.2"
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 
