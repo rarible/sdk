@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.12](https://github.com/rarible/sdk/compare/v0.8.11...v0.8.12) (2022-01-12)
+
+
+### Bug Fixes
+
+* update tezos hangzhou api ([2bd823e](https://github.com/rarible/sdk/commit/2bd823e042caed7ebc5f2229f21f160af6f2470b))
+
+
+
+
+
 ## [0.8.7](https://github.com/rarible/sdk/compare/v0.8.6...v0.8.7) (2021-12-30)
 
 
