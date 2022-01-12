@@ -102,7 +102,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
 		case "hangzhou": {
-			return "https://rarible-api.functori.com"
+			return "https://tezos-hangzhou-api.rarible.org"
 		}
 		case "mainnet": {
 			return "https://tezos-api.rarible.org"
