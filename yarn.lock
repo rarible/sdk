@@ -14466,15 +14466,15 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-tezos-api-client@~0.0.14:
-  version "0.0.14"
-  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.14.tgz#111a289319ac1a4ccf9788b13fdf72470dc4670f"
-  integrity sha512-D7H3l10HHptpE/FNsNHtL9DltbRVpi41rekNUKCe9GOR3PZvBalFGfVRQ5sQ3DsTqvJW5ahTUXf3adBzLL8v5A==
+tezos-api-client@~0.0.16:
+  version "0.0.16"
+  resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.16.tgz#3132ea7969e43533380ee46d90a3c46bfeb676d4"
+  integrity sha512-QjSeDgFHgbfKi2S6eF004j+i4Fk9eqnHzBk5dxWoq80pvQRDAPy5nXG+wMvTWq9SuWxzYr84P3dMoPuufIRh7w==
 
-tezos-sdk-module@0.0.45, tezos-sdk-module@~0.0.45:
-  version "0.0.45"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.45.tgz#a81b745acb8f737266d2d25de4379a9e8e669f7a"
-  integrity sha512-EEjaYm0c6LVrjEOS6TNXubRNpvTqReN+90y2Ko1FSn8udIKt5V2j/OnJpdZ+moz43CjUSokyt0UaVh/gpXeN4Q==
+tezos-sdk-module@0.0.47, tezos-sdk-module@~0.0.47:
+  version "0.0.47"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.47.tgz#09cf9888a5449a7e1d0ebc13bdf27095b01310b3"
+  integrity sha512-d9etiCr38y4CAN+7Tdh6E8rSaHyemBj1GVvnspP9k8W7m1YQgAm2LIUzTIJmr1sMoPvi9AmyF3POv7LK4esK7Q==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
