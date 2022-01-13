@@ -76,7 +76,7 @@ function setupMiddleware(apis: IApisSdk, internalSdk: IRaribleInternalSdk, confi
 
 	for (const prop in internalSdk) {
 		//@ts-ignore
-		middlewarer.wrapObjectMethods(internalSdk[prop], { namespace: "apis." + prop })
+		middlewarer.wrapObjectMethods(internalSdk[prop], { namespace: prop })
 	}
 }
 
