@@ -11,6 +11,9 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 		case "TEZOS":
 			env = "dev" // @todo: tezos not working in e2e, need to fix (?)
 			break
+		case "FLOW":
+			env = "dev"
+			break
 		default:
 	}
 

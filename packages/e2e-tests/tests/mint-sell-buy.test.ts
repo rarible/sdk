@@ -7,7 +7,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { sell } from "./common/atoms-tests/sell"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
+import { getEthereumWallet, getFlowWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
 import { awaitOrderStock, getCollection } from "./common/helpers"
@@ -92,7 +92,7 @@ const suites: {
 			throw new Error("Wrong blockchain")
 		},
 	},
-	/*{
+	{
 		blockchain: Blockchain.FLOW,
 		wallets: { seller: getFlowWallet(), buyer: getFlowWallet() },
 		collectionId: "FLOW:A.ebf4ae01d1284af8.RaribleNFT",
@@ -120,7 +120,7 @@ const suites: {
 			}
 			throw new Error("Wrong blockchain")
 		},
-	},*/
+	},
 ]
 
 describe.each(suites)("$blockchain deploy-mint", (suite) => {

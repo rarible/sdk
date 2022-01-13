@@ -6,6 +6,8 @@ import type { TezosWallet } from "@rarible/sdk-wallet"
 import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
+import { withPrefix as flowWithPrefix } from "@rarible/flow-test-common/build/common/create-emulator"
+import { FLOW_TESTNET_ACCOUNT_1 } from "@rarible/flow-test-common"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const { web3, wallet } = initProvider(pk)
@@ -27,8 +29,7 @@ export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
 }
 
 export function getFlowWallet(): FlowWallet {
-	//const { authUser1 } = createTestFlowAuth(fcl)
-	return new FlowWallet(fcl)
+	return new FlowWallet(fcl, { address: FLOW_TESTNET_ACCOUNT_1.address, pk: FLOW_TESTNET_ACCOUNT_1.privKey })
 }
 
 export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boolean = true): Promise<string> {
@@ -38,8 +39,12 @@ export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boo
 		case Blockchain.TEZOS:
 			return (withPrefix ? "TEZOS:" : "") + (await wallet.provider.address())
 		case Blockchain.FLOW:
-			const user = await wallet.fcl.currentUser().snapshot()
-			const address = user.addr
-			return (withPrefix ? "FLOW:" : "") + address
+			if (wallet.auth) {
+				const user = await wallet.auth()
+				const address = user.addr
+				return (withPrefix ? "FLOW:" : "") + flowWithPrefix(address)
+			} else {
+				throw new Error("Invalid FLOW Wallet configuration, getWalletAddress isn't returns an address")
+			}
 	}
 }

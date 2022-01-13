@@ -3,6 +3,7 @@ import type { Fcl } from "@rarible/fcl-types"
 import { Blockchain } from "@rarible/api-client"
 import type { TezosProvider } from "tezos-sdk-module"
 import { sign } from "tezos-sdk-module"
+import { createTestAuth } from "@rarible/flow-test-common"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
@@ -24,8 +25,13 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 
 export class FlowWallet implements AbstractWallet {
 	readonly blockchain = Blockchain.FLOW
-
-	constructor(public readonly fcl: Fcl) {}
+	readonly auth = this.account ?
+		createTestAuth(this.fcl, "testnet", this.account.address, this.account.pk) :
+		undefined
+	constructor(
+		public readonly fcl: Fcl,
+		public readonly account?: {address: string, pk: string}
+	) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		if (!message.length) {

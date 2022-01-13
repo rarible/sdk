@@ -1,11 +1,11 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import { toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import { sell } from "./common/atoms-tests/sell"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
+import { getEthereumWallet, getFlowWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
 import { getCollection } from "./common/helpers"
@@ -69,10 +69,11 @@ const suites: {
 			throw new Error("Wrong blockchain")
 		},
 	},
-	/*{
+	{
 		blockchain: Blockchain.FLOW,
-		wallets: { seller: getFlowWallet(), buyer: getFlowWallet() },
+		wallet: getFlowWallet(),
 		collectionId: "FLOW:A.ebf4ae01d1284af8.RaribleNFT",
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		mintRequest: (walletAddress: UnionAddress) => {
 			return {
 				uri: "ipfs://ipfs/QmNe7Hd9xiqm1MXPtQQjVtksvWX6ieq9Wr6kgtqFo9D4CU",
@@ -90,7 +91,7 @@ const suites: {
 			}
 			throw new Error("Wrong blockchain")
 		},
-	},*/
+	},
 ]
 
 describe.each(suites)("$blockchain deploy-mint", (suite) => {
