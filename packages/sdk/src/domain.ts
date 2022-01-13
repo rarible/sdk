@@ -13,6 +13,13 @@ import type { IDeploy } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 
+export interface IRaribleSdkConfig {
+	apiClientParams?: ApiClient.ConfigurationParameters
+	logs?: {
+		level: "errors" | "debug" | "disabled"
+	}
+}
+
 export interface IRaribleSdk {
 	apis: IApisSdk
 	nft: INftSdk
