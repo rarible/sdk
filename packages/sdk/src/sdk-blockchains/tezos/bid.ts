@@ -159,7 +159,7 @@ export class TezosBid {
 						})) || [],
 					},
 				}
-				const updatedOrder = await upsert_order(provider, orderForm, false)
+				const updatedOrder = await upsert_order(provider, orderForm, true, true)
 				return convertTezosOrderId(updatedOrder.hash)
 			},
 		})
