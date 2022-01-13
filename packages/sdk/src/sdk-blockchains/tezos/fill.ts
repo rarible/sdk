@@ -116,6 +116,7 @@ export class TezosFill {
 					payouts: this.convertOrderPayout(fillRequest.payouts),
 					origin_fees: this.convertOrderPayout(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
+					use_all: true,
 				}
 				const fillResponse = await fill_order(
 					provider,
