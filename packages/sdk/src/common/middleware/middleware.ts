@@ -66,10 +66,11 @@ export class Middlewarer {
 	 * @param callable
 	 * @param meta metadata for new method
 	 */
-	wrap<Fun extends (...args: any[]) => Promise<any>>(callable: Fun, meta: {
-		methodName?: string
-	} = {}): (...args: Parameters<Fun>) => ReturnType<Fun> {
-		const fnName =meta?.methodName || callable.name || "anonymous"
+	wrap<Fun extends (...args: any[]) => Promise<any>>(
+		callable: Fun,
+		meta: { methodName?: string } = {}
+	): (...args: Parameters<Fun>) => ReturnType<Fun> {
+		const fnName = meta?.methodName || callable.name || "anonymous"
 		Object.defineProperty(callable, "name", { value: fnName, writable: false })
 		const wrapped = (...args: Parameters<Fun>) => this.call(callable, ...args)
 		//@ts-ignore
@@ -82,11 +83,7 @@ export class Middlewarer {
 	 * @param object
 	 * @param meta metadata for new method
 	 */
-	wrapObjectMethods(object: any, meta: {
-		namespace: string,
-	} = {
-		namespace: "",
-	}) {
+	wrapObjectMethods(object: any, meta: { namespace: string }) {
 		for (const prop in object) {
 			if (object.hasOwnProperty(prop) && typeof object[prop] === "function") {
 				object[prop] = this.wrap(object[prop], {

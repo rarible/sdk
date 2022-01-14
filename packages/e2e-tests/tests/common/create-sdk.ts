@@ -14,5 +14,5 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 		default:
 	}
 
-	return createRaribleSdk(wallet, env, { logs: { level: "debug" } })
+	return createRaribleSdk(wallet, env)
 }
