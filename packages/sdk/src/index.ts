@@ -16,8 +16,9 @@ import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
-import { logError, logRequest } from "./common/logger/logger-middleware"
+import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import type { IRaribleInternalSdk, IRaribleSdkConfig } from "./domain"
+import type { ISdkContext } from "./domain"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -33,7 +34,7 @@ export function createRaribleSdk(
 		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.polygonNetwork, config?.apiClientParams),
 	)
 
-	setupMiddleware(apis, instance, config)
+	setupMiddleware(apis, instance, { wallet, env, config })
 
 	return {
 		...instance,
@@ -52,25 +53,25 @@ export function createRaribleSdk(
 /**
  * Create middleware controller & wrap methods
  */
-function setupMiddleware(apis: IApisSdk, internalSdk: IRaribleInternalSdk, config?: IRaribleSdkConfig) {
-	if (config?.logs?.level === undefined || config?.logs?.level === "disabled") {
-		return
-	}
-
+function setupMiddleware(
+	apis: IApisSdk,
+	internalSdk: IRaribleInternalSdk,
+	sdkContext: ISdkContext
+) {
 	const middlewarer = new Middlewarer()
 
-	switch (config?.logs?.level) {
-		case "debug":
-			middlewarer.use(logRequest)
-			break
-		case "errors":
-			middlewarer.use(logRequest)
-			middlewarer.use(logError)
-			break
+	middlewarer.use(getInternalLoggerMiddleware(
+		"trace",
+		sdkContext
+	))
+
+	for (const middleware of (sdkContext.config?.middlewares ?? [])) {
+		middlewarer.use(middleware)
 	}
 
 	for (const prop in apis) {
 		//@ts-ignore
+		//todo: better wrap for apis methods
 		middlewarer.wrapObjectMethods(apis[prop], { namespace: "apis." + prop })
 	}
 
