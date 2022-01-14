@@ -14471,10 +14471,10 @@ tezos-api-client@~0.0.18:
   resolved "https://registry.yarnpkg.com/tezos-api-client/-/tezos-api-client-0.0.18.tgz#6a763df86513c56bc6f200d8d2ffb8e93dc13e67"
   integrity sha512-+23mcj/qlJXxplZwmq0RHLqmT//BuUX9LVUOyC25eYQQjV1p+KHwcmETZVR0Uedyq/Hh6HcaacNoVPK/3SStXg==
 
-tezos-sdk-module@0.0.51, tezos-sdk-module@~0.0.51:
-  version "0.0.51"
-  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.51.tgz#a545aebad9b5cbd9db0c330842c00c61e5cf1beb"
-  integrity sha512-OmpIjE2HCSsUG5a+S5IfX+WyGp9iA654uMKYcTVJtMHK68q5JYCyqRMz/FNZ6FJR6z0zUcvtOw6UpinpcFj6Nw==
+tezos-sdk-module@0.0.52, tezos-sdk-module@~0.0.52:
+  version "0.0.52"
+  resolved "https://registry.yarnpkg.com/tezos-sdk-module/-/tezos-sdk-module-0.0.52.tgz#3755fe3b5d7d553c61424c41773e007262152e38"
+  integrity sha512-J5rMdBs196DbK/oXCknRo7yueTDveBhJnucxYI3oxLt20SWP9vzogd2TV1GayUjyCR/K7M+qqBLzim3pSDztfQ==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
