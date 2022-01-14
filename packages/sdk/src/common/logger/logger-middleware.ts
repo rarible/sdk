@@ -14,7 +14,7 @@ const loggerConfig = {
 
 async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, string>> {
 	const info: Record<string, any> = {
-		["wallet.blockchain"]: wallet.blockchain,
+		"wallet.blockchain": wallet.blockchain,
 	}
 
 	switch (wallet.blockchain) {
@@ -49,6 +49,8 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 					info["wallet.address"] = `unknown (${err && err.toString()})`
 				})
 			break
+		default:
+			info["wallet.address"] = "unknown"
 	}
 
 	return info
