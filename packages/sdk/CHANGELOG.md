@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.15](https://github.com/rarible/sdk/compare/v0.8.14...v0.8.15) (2022-01-14)
+
+
+### Bug Fixes
+
+* convert UnionAddress to tezos address ([3bf452a](https://github.com/rarible/sdk/commit/3bf452abdf96f0d0cb17c555dddb549148654d8a))
+
+
+### Features
+
+* tezos payouts update ([2d3951c](https://github.com/rarible/sdk/commit/2d3951c64a226bce378d9f2034c90ddbebfb1297))
+
+
+
+
+
 ## [0.8.14](https://github.com/rarible/sdk/compare/v0.8.13...v0.8.14) (2022-01-13)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.15](https://github.com/rarible/sdk/compare/v0.8.14...v0.8.15) (2022-01-14)
+
+
+### Features
+
+* tezos payouts update ([2d3951c](https://github.com/rarible/sdk/commit/2d3951c64a226bce378d9f2034c90ddbebfb1297))
+
+
+
+
+
 ## [0.8.14](https://github.com/rarible/sdk/compare/v0.8.13...v0.8.14) (2022-01-13)
 
 
