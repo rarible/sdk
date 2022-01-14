@@ -44,7 +44,6 @@ export interface ITezosAPI {
 
 export type MaybeProvider<P extends TezosProvider> = {
 	tezos: Maybe<P>
-	api: string
 	config: Config
 }
 
@@ -124,26 +123,33 @@ export function getMaybeTezosProvider(
 		case "hangzhou": {
 			return {
 				tezos: provider,
-				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
 					exchange: "KT1ULGjK8FtaJ9QqCgJVN14B6tY76Ykaz6M8",
 					transfer_proxy: "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
+					api: `${getTezosBasePath(network)}/v0.1`,
+					api_permit: `${getTezosBasePath(network)}/v0.1`,
+					permit_whitelist: ["KT1VY7fDqc2FxhfCPM1DrELKFz6EHwudAXQb"],
+					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
 				},
 			}
 		}
 		case "mainnet": {
 			return {
 				tezos: provider,
-				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
 					exchange: "KT198mqFKkiWerXLmMCw69YB1i6yzYtmGVrC",
 					transfer_proxy: "KT1N2oby9tYmv5tjkGD1KyVzkDRCmgDkXgSD",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
+					api: `${getTezosBasePath(network)}/v0.1`,
+					api_permit: `${getTezosBasePath(network)}/v0.1`,
+					permit_whitelist: [],
+					//todo replace mainnet wrapped xtz address with real
+					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
 				},
 			}
 		}

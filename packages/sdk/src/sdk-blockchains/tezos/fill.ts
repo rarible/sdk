@@ -1,35 +1,19 @@
 import { Action } from "@rarible/action"
-import type {
-	Part, Part as TezosPart,
-} from "tezos-sdk-module/dist/order"
+import type { Part, Part as TezosPart } from "tezos-sdk-module/dist/order"
 // eslint-disable-next-line camelcase
 import { fill_order, get_address } from "tezos-sdk-module"
-import type {
-	BigNumber as RaribleBigNumber,
-} from "@rarible/types"
-import {
-	toBigNumber as toRaribleBigNumber,
-	toBigNumber,
-} from "@rarible/types"
+import type { BigNumber as RaribleBigNumber } from "@rarible/types"
+import { toBigNumber as toRaribleBigNumber, toBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import type {
-	Order as TezosOrder,
-} from "tezos-api-client"
+import type { Order as TezosOrder } from "tezos-api-client"
 import BigNumber from "bignumber.js"
-import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
-import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
+import type { TezosNetwork, TezosProvider } from "tezos-sdk-module/dist/common/base"
 import { Blockchain } from "@rarible/api-client"
-import type {
-	FillRequest,
-	PrepareFillRequest,
-	PrepareFillResponse,
-} from "../../types/order/fill/domain"
-import {
-	OriginFeeSupport,
-	PayoutsSupport,
-} from "../../types/order/fill/domain"
+import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { UnionPart } from "../../types/order/common"
 import type { ITezosAPI, MaybeProvider, PreparedOrder } from "./common"
-import { convertOrderToFillOrder, covertToLibAsset, getRequiredProvider } from "./common"
+import { convertOrderToFillOrder, covertToLibAsset, getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosFill {
 	constructor(
@@ -113,9 +97,10 @@ export class TezosFill {
 				const provider = getRequiredProvider(this.provider)
 				const request = {
 					amount: new BigNumber(fillRequest.amount),
-					payouts: this.convertOrderPayout(fillRequest.payouts),
-					origin_fees: this.convertOrderPayout(fillRequest.originFees),
+					payouts: convertUnionParts(fillRequest.payouts),
+					origin_fees: convertUnionParts(fillRequest.originFees),
 					infinite: fillRequest.infiniteApproval,
+					use_all: true,
 				}
 				const fillResponse = await fill_order(
 					provider,
@@ -136,5 +121,11 @@ export class TezosFill {
 			submit,
 		}
 	}
+}
 
+function convertUnionParts(parts?: UnionPart[]): Part[] {
+	return parts?.map(p => ({
+		account: getTezosAddress(p.account),
+		value: new BigNumber(p.value),
+	})) || []
 }
