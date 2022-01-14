@@ -22,7 +22,7 @@
     "@rarible/ethereum-provider": "~0.12.26",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/types": "~0.5.3",
-    "tezos-sdk-module": "~0.0.50"
+    "tezos-sdk-module": "~0.0.51"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
