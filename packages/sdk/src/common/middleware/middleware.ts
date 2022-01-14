@@ -42,12 +42,12 @@ export class Middlewarer {
 
 		for (const mid of this.middlewares) {
 			let cb = undefined;
-			([wrappedCallable, cb] = await mid(callable, args))
+			([wrappedCallable, cb] = await mid(wrappedCallable, args))
 			if (cb) {
 				callbacks.push(cb)
 			}
 		}
-		let res = toPromise(callable(...args))
+		let res = toPromise(wrappedCallable(...args))
 
 		for (const mid of callbacks) {
 			res = toPromise(mid(res))
