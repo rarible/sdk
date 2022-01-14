@@ -23,7 +23,7 @@
     "@ethereumjs/tx": "^3.3.0",
     "@rarible/api-client": "~0.0.10",
     "@rarible/flow-sdk": "~0.5.29",
-    "@rarible/logger": "^0.6.2",
+    "@rarible/logger": "~0.6.2",
     "@rarible/protocol-ethereum-sdk": "~0.12.28",
     "@rarible/sdk-transaction": "^0.8.16",
     "@rarible/sdk-wallet": "^0.8.16",

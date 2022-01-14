@@ -2,7 +2,7 @@ import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { IApisSdk, IRaribleSdk } from "./domain"
+import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
@@ -16,9 +16,7 @@ import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
-import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
-import type { IRaribleInternalSdk, IRaribleSdkConfig } from "./domain"
-import type { ISdkContext } from "./domain"
+import { getInternalLoggerMiddleware, LogsLevel } from "./common/logger/logger-middleware"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -61,7 +59,7 @@ function setupMiddleware(
 	const middlewarer = new Middlewarer()
 
 	middlewarer.use(getInternalLoggerMiddleware(
-		"trace",
+		LogsLevel.TRACE,
 		sdkContext
 	))
 

@@ -72,9 +72,7 @@ export class Middlewarer {
 	): (...args: Parameters<Fun>) => ReturnType<Fun> {
 		const fnName = meta?.methodName || callable.name || "anonymous"
 		Object.defineProperty(callable, "name", { value: fnName, writable: false })
-		const wrapped = (...args: Parameters<Fun>) => this.call(callable, ...args)
-		//@ts-ignore
-		return wrapped
+		return (...args: Parameters<Fun>) => this.call(callable, ...args) as ReturnType<Fun>
 	}
 
 	/**

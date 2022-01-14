@@ -1,15 +1,20 @@
-import { Blockchain } from "@rarible/api-client"
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { RemoteLogger } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
+import { Blockchain } from "@rarible/api-client"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 
-type LogsLevel = "trace" | "error" | "disabled"
+export enum LogsLevel {
+	DISABLED = 0,
+	ERROR = 1,
+	TRACE = 2,
+}
 
 const loggerConfig = {
-	ELK_URL: "https://logging.rarible.com/",
+	service: "union-sdk",
+	elkUrl: "https://logging.rarible.com/",
 }
 
 async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, string>> {
@@ -57,31 +62,40 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 }
 
 export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {
-
 	const getContext = async () => {
 		return {
-			service: "union-sdk",
+			service: loggerConfig.service,
 			environment: sdkContext.env,
 			...(sdkContext.wallet ? await getWalletInfo(sdkContext.wallet) : { }),
 		}
 	}
 
-	const remoteLogger = new RemoteLogger((msg: LoggableValue) => axios.post(loggerConfig.ELK_URL, msg), {
+	const remoteLogger = new RemoteLogger((msg: LoggableValue) => axios.post(loggerConfig.elkUrl, msg), {
 		initialContext: getContext(),
 	})
 
-	return (callable, args) => {
-		if (logsLevel === "trace") {
-			remoteLogger.trace(callable.name, { args })
-		}
+	return async (callable, args) => {
+		const time = Date.now()
 
-		return Promise.resolve([callable, async (res) => {
-			if (logsLevel === "error" || logsLevel === "trace") {
-				res.catch((err) => {
-					remoteLogger.error(callable.name,  { error: err.toString() }, { args })
+		return [callable, async (responsePromise) => {
+			try {
+				const res = await responsePromise
+				remoteLogger.trace(callable.name, {
+					time: (Date.now() - time) / 1000,
+					args,
+					response: res,
 				})
+			} catch (err: any) {
+				if (logsLevel >= LogsLevel.ERROR) {
+					remoteLogger.error(callable.name, {
+						time: (Date.now() - time) / 1000,
+						error: err.toString(),
+						args,
+					})
+				}
 			}
-			return res
-		}])
+
+			return responsePromise
+		}]
 	}
 }
