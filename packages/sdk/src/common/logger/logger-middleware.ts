@@ -5,12 +5,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
-
-export enum LogsLevel {
-	DISABLED = 0,
-	ERROR = 1,
-	TRACE = 2,
-}
+import { LogsLevel } from "../../domain"
 
 const loggerConfig = {
 	service: "union-sdk",
@@ -80,11 +75,14 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 		return [callable, async (responsePromise) => {
 			try {
 				const res = await responsePromise
-				remoteLogger.trace(callable.name, {
-					time: (Date.now() - time) / 1000,
-					args,
-					response: res,
-				})
+
+				if (logsLevel >= LogsLevel.TRACE) {
+					remoteLogger.trace(callable.name, {
+						time: (Date.now() - time) / 1000,
+						args,
+						response: res,
+					})
+				}
 			} catch (err: any) {
 				if (logsLevel >= LogsLevel.ERROR) {
 					remoteLogger.error(callable.name, {

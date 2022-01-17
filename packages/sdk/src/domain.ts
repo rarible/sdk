@@ -16,6 +16,12 @@ import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 
+export enum LogsLevel {
+	DISABLED = 0,
+	ERROR = 1,
+	TRACE = 2,
+}
+
 export interface ISdkContext {
 	wallet?: BlockchainWallet,
 	env: RaribleSdkEnvironment,
@@ -24,6 +30,7 @@ export interface ISdkContext {
 
 export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
+	logs?: LogsLevel
 	middlewares?: Middleware[]
 }
 
