@@ -2,12 +2,14 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.8.12",
+  "version": "0.8.12-hotfix",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
     "publish": {
-      "allowBranch": ["fix/flowOriginFeesNone"],
+      "allowBranch": [
+        "fix/flowOriginFeesNone"
+      ],
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
       "message": "chore: bump versions after release",

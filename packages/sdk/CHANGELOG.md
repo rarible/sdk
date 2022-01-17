@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.12-hotfix](https://github.com/rarible/sdk/compare/v0.8.12...v0.8.12-hotfix) (2022-01-17)
+
+
+### Bug Fixes
+
+* turn to none flow originFees support ([371805b](https://github.com/rarible/sdk/commit/371805bd865ee4428d8fe77d2fe49c8c237b6da8))
+
+
+
+
+
 ## [0.8.12](https://github.com/rarible/sdk/compare/v0.8.11...v0.8.12) (2022-01-12)
 
 
