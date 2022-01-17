@@ -1,14 +1,14 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
-import { bid, upsert_order } from "tezos-sdk-module"
+import { bid, upsert_order } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import { toBigNumber } from "@rarible/types"
 // eslint-disable-next-line camelcase
-import { pk_to_pkh } from "tezos-sdk-module/dist/main"
+import { pk_to_pkh } from "@rarible/tezos-sdk/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
-import type { FTAssetType, XTZAssetType } from "tezos-sdk-module"
-import type { TezosProvider } from "tezos-sdk-module/dist/common/base"
-import type { OrderForm } from "tezos-sdk-module/dist/order"
+import type { FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
+import type { TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
+import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	OrderRequest,
