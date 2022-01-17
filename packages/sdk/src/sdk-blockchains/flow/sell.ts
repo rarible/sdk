@@ -14,7 +14,6 @@ import {
 	getFlowCollection,
 	getFungibleTokenName,
 	parseUnionItemId,
-	toFlowParts,
 } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
@@ -46,7 +45,6 @@ export class FlowSell {
 						currency,
 						itemId: toFlowItemId(`${contract}:${itemId}`),
 						sellItemPrice: toBn(sellRequest.price).decimalPlaces(8).toString(),
-						originFees: toFlowParts(sellRequest.originFees),
 					})
 
 				}
@@ -59,7 +57,7 @@ export class FlowSell {
 			multiple: false,
 			supportedCurrencies: FlowSell.supportedCurrencies,
 			baseFee: getFlowBaseFee(this.sdk),
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit: sellAction,
 		}
@@ -93,7 +91,7 @@ export class FlowSell {
 
 		return {
 			supportedCurrencies: FlowSell.supportedCurrencies,
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
