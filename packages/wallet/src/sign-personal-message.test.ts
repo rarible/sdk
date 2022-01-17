@@ -1,5 +1,5 @@
 // eslint-disable-next-line camelcase
-import { in_memory_provider } from "tezos-sdk-module/dist/providers/in_memory/in_memory_provider"
+import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import * as fcl from "@onflow/fcl"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
