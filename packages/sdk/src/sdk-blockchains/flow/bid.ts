@@ -65,7 +65,7 @@ export class FlowBid {
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 		return {
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			multiple: false,
@@ -106,7 +106,7 @@ export class FlowBid {
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 		return {
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			baseFee: getFlowBaseFee(this.sdk),

@@ -78,7 +78,7 @@ export class FlowBuy {
 			maxAmount: toBigNumber("1"),
 			baseFee: getFlowBaseFee(this.sdk),
 			supportsPartialFill: false,
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,
 		}
