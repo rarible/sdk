@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.18](https://github.com/rarible/sdk/compare/v0.8.17...v0.8.18) (2022-01-18)
+
+
+### Bug Fixes
+
+* remove originFee support for flow orders ([01d944a](https://github.com/rarible/sdk/commit/01d944af8592b56f141e5e8731259a236469e41f))
+
+
+
+
+
 ## [0.8.17](https://github.com/rarible/sdk/compare/v0.8.16...v0.8.17) (2022-01-17)
 
 
