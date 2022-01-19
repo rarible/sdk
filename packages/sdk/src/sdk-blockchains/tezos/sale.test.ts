@@ -1,6 +1,7 @@
 import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
+import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 
@@ -8,20 +9,17 @@ describe("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const sellerSdk = createRaribleSdk(
-		sellerWallet,
-		"dev"
-	)
+	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const buyerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const buyerSdk = createRaribleSdk(buyerWallet, "dev")
+	const buyerSdk = createRaribleSdk(buyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const nextBuyerWallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
-	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev")
+	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"

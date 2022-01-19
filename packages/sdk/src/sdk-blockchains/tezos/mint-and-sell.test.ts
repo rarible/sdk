@@ -1,6 +1,7 @@
 import { toContractAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
+import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
 
 describe("test tezos mint and sell", () => {
@@ -8,10 +9,7 @@ describe("test tezos mint and sell", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sellerSdk = createRaribleSdk(
-		sellerWallet,
-		"dev"
-	)
+	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EWB3JaMmZ5BmNqHVBjB4re62FLihp4G6C"
 	let mtContract: string = "KT1XnWcuF4rzKa7WrBC8BozhLBY55fkHBs4s"
