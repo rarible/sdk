@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.8.16",
+  "version": "0.8.17",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -21,8 +21,8 @@
     "@rarible/api-client": "~0.0.10",
     "@rarible/ethereum-provider": "~0.12.26",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/types": "~0.5.3",
-    "tezos-sdk-module": "~0.0.52"
+    "@rarible/tezos-sdk": "~0.0.5",
+    "@rarible/types": "~0.5.3"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",

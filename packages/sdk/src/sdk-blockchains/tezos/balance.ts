@@ -1,9 +1,9 @@
-import type { TezosProvider } from "tezos-sdk-module"
+import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { UnionAddress } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 // eslint-disable-next-line camelcase
-import { get_balance } from "tezos-sdk-module"
+import { get_balance } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import { getRequiredProvider, getTezosAddress, getTezosAssetType, XTZ_DECIMALS } from "./common"
