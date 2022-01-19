@@ -5,6 +5,7 @@ import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
+import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 
 describe("get balance", () => {
@@ -14,7 +15,7 @@ describe("get balance", () => {
 		web3: web31,
 		from: wallet1.getAddressString(),
 	})
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "e2e")
+	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "e2e", { logs: LogsLevel.DISABLED })
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),

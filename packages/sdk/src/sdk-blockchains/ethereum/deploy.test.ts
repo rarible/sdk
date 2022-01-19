@@ -2,13 +2,14 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
+import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 
 describe("deploy", () => {
 	const { web31 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)
-	const sdk1 = createRaribleSdk(ethereumWallet, "e2e")
+	const sdk1 = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	test("deploy erc-721 collection", async () => {
 		await sdk1.nft.deploy({
