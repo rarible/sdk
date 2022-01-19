@@ -12,6 +12,7 @@ import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { IDeploy } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
+import type { IAuctionSdk } from "./types/auction/domain"
 
 export interface IRaribleSdk {
 	apis: IApisSdk
@@ -60,6 +61,7 @@ export interface IBalanceSdk {
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis"> & {
 	nft: INftInternalSdk
 	order: IOrderInternalSdk
+	auction: IAuctionSdk
 	balances: IBalanceSdk
 }
 
