@@ -1,11 +1,12 @@
 import { toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
+import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
 
 describe("test getting token id", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
 

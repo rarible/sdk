@@ -2,6 +2,7 @@ import { toBigNumber, toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
+import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { awaitForOrder } from "./test/await-for-order"
@@ -11,16 +12,13 @@ describe("bid test", () => {
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const itemOwnerSdk = createRaribleSdk(
-		itemOwner,
-		"dev"
-	)
+	const itemOwnerSdk = createRaribleSdk(itemOwner, "dev", { logs: LogsLevel.DISABLED })
 
 	const bidderWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 
-	const bidderSdk = createRaribleSdk(bidderWallet, "dev")
+	const bidderSdk = createRaribleSdk(bidderWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
