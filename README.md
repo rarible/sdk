@@ -23,7 +23,7 @@ import { Web3Ethereum } from "@rarible/web3-ethereum" // should also be installe
 import { EthereumWallet } from "@rarible/sdk-wallet"
 
 const ethereum = new Web3Ethereum({ web3, from })
-const ethereumWallet = new EthereumWallet(ethereum, from) 
+const wallet = new EthereumWallet(ethereum, from) 
 ```
 
 ```ts
