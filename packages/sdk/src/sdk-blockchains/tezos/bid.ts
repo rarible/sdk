@@ -1,7 +1,8 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
-import { bid, upsert_order } from "@rarible/tezos-sdk"
+import { bid, unwrap, upsert_order, wrap } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
+import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "@rarible/tezos-sdk/dist/main"
@@ -10,6 +11,10 @@ import type { FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
 import type { TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { AssetType } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
+import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type {
 	OrderRequest,
 	OrderUpdateRequest,
@@ -28,16 +33,21 @@ import {
 	getMakerPublicKey,
 	getPayouts, getRequiredProvider,
 	getSupportedCurrencies,
-	getTezosItemData, getTezosOrderId, convertTezosOrderId,
+	getTezosItemData, getTezosOrderId, convertTezosOrderId, convertTezosToUnionAddress,
 } from "./common"
+import type { TezosBalance } from "./balance"
 
 export class TezosBid {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private balanceService: TezosBalance,
+		private network: TezosNetwork,
 	) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
+		this.getConvertableValue = this.getConvertableValue.bind(this)
+		this.convertCurrency = this.convertCurrency.bind(this)
 	}
 
 	getMakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
@@ -60,12 +70,60 @@ export class TezosBid {
 		}
 	}
 
-	private async getConvertableValue(): Promise<GetConvertableValueResult> {
+	private getConvertMap() {
+		return {
+			[convertTezosToUnionAddress(this.provider.config.wrapper)]: "XTZ",
+		}
+	}
+
+	private async getConvertableValue(
+		assetType: AssetType, value: BigNumberValue, walletAddress: UnionAddress
+	): Promise<GetConvertableValueResult> {
+		const convertMap = this.getConvertMap()
+
+		if (assetType["@type"] === "TEZOS_FT" && assetType["contract"] in convertMap) {
+			const wrappedTokenBalance = await this.balanceService.getBalance(walletAddress, assetType)
+
+			if (new BigNumber(wrappedTokenBalance).gte(value)) {
+				return undefined
+			}
+
+			const xtzBalance = await this.balanceService.getBalance(walletAddress, { "@type": "XTZ" })
+
+			if (new BigNumber(xtzBalance).plus(wrappedTokenBalance).gte(value)) {
+				return {
+					type: "convertable",
+					currency: { "@type": "XTZ" },
+					value: new BigNumber(value).minus(wrappedTokenBalance),
+				}
+			}
+
+			return {
+				type: "insufficient",
+				currency: { "@type": "XTZ" },
+				value: new BigNumber(value).minus(xtzBalance),
+			}
+		}
+
 		return undefined
 	}
 
-	private async convert(): Promise<IBlockchainTransaction> {
-		throw new Error("Convert operation is not supported")
+	private async convertCurrency(
+		from: AssetType, to: AssetType, value: BigNumberValue
+	): Promise<IBlockchainTransaction> {
+		const provider = getRequiredProvider(this.provider)
+		const convertMap = this.getConvertMap()
+
+		if (from["@type"] === "XTZ" && to["@type"] === "TEZOS_FT" && to.contract in convertMap) {
+			console.log("wrap", value.toString())
+			const op = await wrap(provider, new BigNumber(value))
+			return new BlockchainTezosTransaction(op, this.network)
+		}
+		if (from["@type"] === "TEZOS_FT" && to["@type"] === "XTZ" && from.contract in convertMap) {
+			const op = await unwrap(provider, new BigNumber(value))
+			return new BlockchainTezosTransaction(op, this.network)
+		}
+		throw new Error("Unsupported convert asset types")
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
@@ -89,7 +147,7 @@ export class TezosBid {
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			getConvertableValue: this.getConvertableValue,
-			convert: this.convert,
+			convert: this.convertCurrency,
 			submit: Action.create({
 				id: "send-tx" as const,
 				run: async (request: OrderRequest) => {

@@ -31,7 +31,7 @@ import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { Config } from "@rarible/tezos-sdk"
-import { toContractAddress, toItemId, toOrderId } from "@rarible/types"
+import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 
@@ -220,10 +220,10 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 }
 
 export function getSupportedCurrencies(): CurrencyType[] {
-	return [{
-		blockchain: Blockchain.TEZOS,
-		type: "NATIVE",
-	}]
+	return [
+		{ blockchain: Blockchain.TEZOS, type: "NATIVE" },
+		{ blockchain: Blockchain.TEZOS, type: "TEZOS_FT" },
+	]
 }
 
 export function convertOrderToFillOrder(order: Order): PreparedOrder {
@@ -362,4 +362,7 @@ export function convertTezosItemId(itemId: string): ItemId {
 
 export function convertTezosContractAddress(address: string): ContractAddress {
 	return toContractAddress(`${Blockchain.TEZOS}:${address}`)
+}
+export function convertTezosToUnionAddress(address: string): UnionAddress {
+	return toUnionAddress(`${Blockchain.TEZOS}:${address}`)
 }
