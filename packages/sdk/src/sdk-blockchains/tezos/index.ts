@@ -1,6 +1,6 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { TezosNetwork } from "tezos-sdk-module/dist/common/base"
+import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
