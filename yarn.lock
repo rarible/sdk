@@ -3309,28 +3309,28 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.30-alpha.2":
-  version "0.5.30-alpha.2"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30-alpha.2.tgz#e2e79b05d95b08981cfe41182cd6413686c15171"
-  integrity sha512-DmrFiRc9ABGminH3AUDnt2UrZEBJ6U7Ubzld9Si/gKyc5+BT2uKUs8j4n5XUpmLwzhb/f+Xp8OtZiis4p0S0tA==
+"@rarible/flow-sdk-scripts@^0.5.30-alpha.5":
+  version "0.5.30-alpha.5"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30-alpha.5.tgz#53c6ac8d1a14603526ebbfeb39e3fd20674ebedc"
+  integrity sha512-i67xKrd78p3zjQMb4vtCug8O0XULgIYNU4YfNpa0agfSdZdZw3IO1ASXxYYxPkepJzUiN5uPYN9RmAUQajgjtQ==
 
-"@rarible/flow-sdk@~0.5.30-alpha.3":
-  version "0.5.30-alpha.3"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.30-alpha.3.tgz#dce4bbdf5e8f815329c1d7eb63fde98c9c8652fc"
-  integrity sha512-8w8IzhIVw7LeoH5+Ap6javLKN82IFjWPCyHNPpaB+QpYa8tDxky6Cwv6RJN5BdgZ84kCC3W0FycX+jkVd/h5hA==
+"@rarible/flow-sdk@~0.5.30-alpha.5":
+  version "0.5.30-alpha.5"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.30-alpha.5.tgz#b6462bb4a090496dd9f4cf888453480a00055cc8"
+  integrity sha512-IJ00SEjGEcr3FcIa0loBInC1zVodt9yo55PQ+V8mAx8yUuMcp5094KNCoBLHvxs6lRhHzX9wG/mZep9P5Rw8oQ==
   dependencies:
     "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "~0.5.0"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.30-alpha.2"
+    "@rarible/flow-sdk-scripts" "^0.5.30-alpha.5"
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.30-alpha.3":
-  version "0.5.30-alpha.3"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.30-alpha.3.tgz#976c217f0162c2ba7a5bd0a40987f2f44b2b0a38"
-  integrity sha512-McH9BuQr4RFyzjmmlMbKrkouln6Sv9CIXLLPtSZyMGkLb39ntE4Vg4WrI41AULc+Su2JpgKXyvvmATza+P8s0g==
+"@rarible/flow-test-common@~0.5.30-alpha.5":
+  version "0.5.30-alpha.5"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.30-alpha.5.tgz#76146b0c8259b73391dd96a7b42def9f4355e4ee"
+  integrity sha512-FdwdMLmeolw9BroJ9fmW7MFFYZaiJMx8mrg8D4ANtPlMWj9hUspG0jDj8Pnom7OaxmMNIZ/6Yfi3oj2eRUxS0w==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
