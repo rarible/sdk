@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { Address, UnionAddress } from "@rarible/types"
-import { toBinary, toUnionAddress, toWord } from "@rarible/types"
+import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
@@ -10,14 +10,14 @@ import type { BigNumberValue } from "@rarible/utils"
 import BigNumber from "bignumber.js"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { NftItem } from "@rarible/ethereum-api-client/build/models"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
+import { Action } from "@rarible/action"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { GetConvertableValueResult, PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
+import type { OrderRequest, OrderUpdateRequest } from "../../types/order/common"
 import * as common from "./common"
 import type {
 	EVMBlockchain } from "./common"
@@ -159,7 +159,7 @@ export class EthereumBid {
 			collection: contractAddress,
 		})
 
-		const submit = this.sdk.order.bid
+		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
 				return {
 					makeAssetType: common.getEthTakeAssetType(request.currency),
@@ -172,6 +172,18 @@ export class EthereumBid {
 			})
 			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
 
+		const submit = Action.create({
+			id: "convert" as const,
+			run: async (request: OrderCommon.OrderRequest) => {
+				const convertMap = this.getConvertMap()
+				const wethContractAddress = toContractAddress(Object.keys(convertMap)[0])
+				if (request.currency["@type"] === "ERC20" && request.currency.contract === wethContractAddress) {
+					await this.convertCurrency(request)
+				}
+				return request
+			},
+		}).thenAction(bidAction)
+
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
@@ -180,7 +192,6 @@ export class EthereumBid {
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			getConvertableValue: this.getConvertableValue,
-			convert: this.convertCurrency,
 			submit,
 		}
 	}
@@ -223,16 +234,35 @@ export class EthereumBid {
 		}
 	}
 
-	private async convertCurrency(
-		from: AssetType, to: AssetType, value: BigNumberValue
-	): Promise<IBlockchainTransaction> {
-		const tx = await this.sdk.balances.convert(
-			convertToEthereumAssetType(from),
-			convertToEthereumAssetType(to),
-			value
+	async convertCurrency(request: OrderRequest | OrderUpdateRequest): Promise<void> {
+		const convertMap = this.getConvertMap()
+		const wethContract = toContractAddress(Object.keys(convertMap)[0])
+
+		if (!this.wallet) {
+			throw new Error("Wallet is undefined")
+		}
+
+		const convertableValue = await this.getConvertableValue(
+			{ "@type": "ERC20", contract: wethContract },
+			request.price,
+			toUnionAddress(`ETHEREUM:${await this.wallet.ethereum.getFrom()}`)
 		)
 
-		return new BlockchainEthereumTransaction(tx, this.network)
+		if (convertableValue === undefined) {
+			return
+		}
+		if (convertableValue.type === "insufficient") {
+			throw new Error("Insufficient ETH funds")
+		}
+
+		if (convertableValue.type === "convertable") {
+			const tx = await this.sdk.balances.convert(
+				convertToEthereumAssetType({ "@type": "ETH" }),
+				convertToEthereumAssetType({ "@type": "ERC20", contract: wethContract }),
+				convertableValue.value
+			)
+			await tx.wait()
+		}
 	}
 
 	async update(
@@ -251,12 +281,20 @@ export class EthereumBid {
 			throw new Error(`Unable to update bid ${JSON.stringify(order)}`)
 		}
 
-		const sellUpdateAction = this.sdk.order.bidUpdate
+		const bidUpdateAction = this.sdk.order.bidUpdate
 			.before((request: OrderCommon.OrderUpdateRequest) => ({
 				orderHash: toWord(hash),
 				priceDecimal: request.price,
 			}))
 			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
+
+		const sellUpdateAction = Action.create({
+			id: "convert" as const,
+			run: async (request: OrderCommon.OrderUpdateRequest) => {
+				await this.convertCurrency(request)
+				return request
+			},
+		}).thenAction(bidUpdateAction)
 
 		return {
 			originFeeSupport:

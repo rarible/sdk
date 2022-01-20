@@ -1,19 +1,17 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
-import { bid, unwrap, upsert_order, wrap } from "@rarible/tezos-sdk"
+import { bid, upsert_order, wrap } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { UnionAddress } from "@rarible/types"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toContractAddress, toUnionAddress } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "@rarible/tezos-sdk/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
 import type { TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type {
 	OrderRequest,
@@ -29,11 +27,16 @@ import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
-	convertOrderPayout, covertToLibAsset,
+	convertOrderPayout,
+	covertToLibAsset,
 	getMakerPublicKey,
-	getPayouts, getRequiredProvider,
+	getPayouts,
+	getRequiredProvider,
 	getSupportedCurrencies,
-	getTezosItemData, getTezosOrderId, convertTezosOrderId, convertTezosToUnionAddress,
+	getTezosItemData,
+	getTezosOrderId,
+	convertTezosOrderId,
+	convertTezosToUnionAddress,
 } from "./common"
 import type { TezosBalance } from "./balance"
 
@@ -108,22 +111,28 @@ export class TezosBid {
 		return undefined
 	}
 
-	private async convertCurrency(
-		from: AssetType, to: AssetType, value: BigNumberValue
-	): Promise<IBlockchainTransaction> {
-		const provider = getRequiredProvider(this.provider)
+	async convertCurrency(request: OrderRequest | OrderUpdateRequest): Promise<void> {
 		const convertMap = this.getConvertMap()
+		const wXTZUnionAddress = toContractAddress(Object.keys(convertMap)[0])
+		const provider = getRequiredProvider(this.provider)
 
-		if (from["@type"] === "XTZ" && to["@type"] === "TEZOS_FT" && to.contract in convertMap) {
-			console.log("wrap", value.toString())
-			const op = await wrap(provider, new BigNumber(value))
-			return new BlockchainTezosTransaction(op, this.network)
+		const convertableValue = await this.getConvertableValue(
+			{ "@type": "TEZOS_FT", contract: wXTZUnionAddress },
+			request.price,
+			toUnionAddress(`TEZOS:${await provider.tezos.address()}`)
+		)
+
+		if (convertableValue === undefined) {
+			return
 		}
-		if (from["@type"] === "TEZOS_FT" && to["@type"] === "XTZ" && from.contract in convertMap) {
-			const op = await unwrap(provider, new BigNumber(value))
-			return new BlockchainTezosTransaction(op, this.network)
+		if (convertableValue.type === "insufficient") {
+			throw new Error("Insufficient XTZ funds")
 		}
-		throw new Error("Unsupported convert asset types")
+
+		if (convertableValue.type === "convertable") {
+			const tx = await wrap(provider, new BigNumber(convertableValue.value))
+			await tx.confirmation()
+		}
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
@@ -139,16 +148,18 @@ export class TezosBid {
 			collection: contract,
 		})
 
-		return {
-			multiple: itemCollection.type === "MT",
-			maxAmount: toBigNumber(item.supply),
-			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
-			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: parseInt(this.provider.config.fees.toString()),
-			getConvertableValue: this.getConvertableValue,
-			convert: this.convertCurrency,
-			submit: Action.create({
+		const submit = Action.create({
+			id: "convert" as const,
+			run: async (request: OrderRequest) => {
+				const convertMap = this.getConvertMap()
+				const wXTZUnionAddress = toContractAddress(Object.keys(convertMap)[0])
+				if (request.currency["@type"] === "TEZOS_FT" && request.currency.contract === wXTZUnionAddress) {
+				  await this.convertCurrency(request)
+				}
+				return request
+			},
+		})
+			.thenStep({
 				id: "send-tx" as const,
 				run: async (request: OrderRequest) => {
 					const provider = getRequiredProvider(this.provider)
@@ -174,7 +185,17 @@ export class TezosBid {
 
 					return convertTezosOrderId(order.hash)
 				},
-			}),
+			})
+
+		return {
+			multiple: itemCollection.type === "MT",
+			maxAmount: toBigNumber(item.supply),
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: parseInt(this.provider.config.fees.toString()),
+			getConvertableValue: this.getConvertableValue,
+			submit,
 		}
 	}
 
@@ -187,40 +208,47 @@ export class TezosBid {
 		}
 
 		const updateAction = Action.create({
-			id: "send-tx" as const,
-			run: async (updateRequest: OrderUpdateRequest) => {
-				const provider = getRequiredProvider(this.provider)
-
-				const orderForm: OrderForm = {
-					type: "RARIBLE_V2",
-					maker: order.maker,
-					maker_edpk: order.makerEdpk,
-					taker_edpk: order.takerEdpk,
-					make: {
-						...covertToLibAsset(order.make),
-						value: new BigNumber(updateRequest.price).multipliedBy(order.take.value),
-					},
-					take: covertToLibAsset(order.take),
-					salt: order.salt,
-					start: order.start,
-					end: order.end,
-					signature: order.signature,
-					data: {
-						data_type: "V1",
-						payouts: order.data.payouts?.map(p => ({
-							account: p.account,
-							value: new BigNumber(p.value),
-						})) || [],
-						origin_fees: order.data.originFees?.map(p => ({
-							account: p.account,
-							value: new BigNumber(p.value),
-						})) || [],
-					},
-				}
-				const updatedOrder = await upsert_order(provider, orderForm, true, true)
-				return convertTezosOrderId(updatedOrder.hash)
+			id: "convert" as const,
+			run: async (request: OrderUpdateRequest) => {
+				await this.convertCurrency(request)
+				return request
 			},
 		})
+			.thenStep({
+				id: "send-tx" as const,
+				run: async (updateRequest: OrderUpdateRequest) => {
+					const provider = getRequiredProvider(this.provider)
+
+					const orderForm: OrderForm = {
+						type: "RARIBLE_V2",
+						maker: order.maker,
+						maker_edpk: order.makerEdpk,
+						taker_edpk: order.takerEdpk,
+						make: {
+							...covertToLibAsset(order.make),
+							value: new BigNumber(updateRequest.price).multipliedBy(order.take.value),
+						},
+						take: covertToLibAsset(order.take),
+						salt: order.salt,
+						start: order.start,
+						end: order.end,
+						signature: order.signature,
+						data: {
+							data_type: "V1",
+							payouts: order.data.payouts?.map(p => ({
+								account: p.account,
+								value: new BigNumber(p.value),
+							})) || [],
+							origin_fees: order.data.originFees?.map(p => ({
+								account: p.account,
+								value: new BigNumber(p.value),
+							})) || [],
+						},
+					}
+					const updatedOrder = await upsert_order(provider, orderForm, true, true)
+					return convertTezosOrderId(updatedOrder.hash)
+				},
+			})
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,

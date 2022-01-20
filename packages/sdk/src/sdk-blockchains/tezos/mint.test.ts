@@ -37,7 +37,6 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		console.log(mintResult)
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 

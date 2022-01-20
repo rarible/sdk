@@ -46,7 +46,7 @@ export interface FillRequest {
 	 */
 	infiniteApproval?: boolean
 	/**
-	 * Use infinite approvals (for ERC-20)
+	 * Set asset type for bid on collection
 	 */
 	assetType?: AssetType
 }

@@ -31,7 +31,7 @@ export type MintAndSellResponse = MintResponse & {
 }
 
 export type PrepareMintAndSellResponse =
-	AbstractPrepareResponse<"mint" | "approve" | "sign" | "send-tx", MintAndSellRequest, MintAndSellResponse> & {
+	AbstractPrepareResponse<"mint" | "convert" | "approve" | "sign" | "send-tx", MintAndSellRequest, MintAndSellResponse> & {
 		supportedCurrencies: CurrencyType[]
 		baseFee: number
 		originFeeSupport: OriginFeeSupport
