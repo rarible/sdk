@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6-alpha.2](https://github.com/rarible/sdk/compare/v0.8.6-alpha.1...v0.8.6-alpha.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* fb-533 update flow-sdk - updated bid transactions and contract ([d9ecc21](https://github.com/rarible/sdk/commit/d9ecc21a9f85fa874b9460c98140a52d518076c0))
+
+
+
+
+
 ## [0.8.6-alpha.1](https://github.com/rarible/sdk/compare/v0.8.6-alpha.0...v0.8.6-alpha.1) (2022-01-17)
 
 **Note:** Version bump only for package root
