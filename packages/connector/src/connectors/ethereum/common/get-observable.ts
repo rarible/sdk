@@ -1,12 +1,11 @@
-import { interval, Observable } from "rxjs"
-import { concatMap } from "rxjs/operators"
+import { Observable } from "rxjs"
+import { fromPromise } from "rxjs/internal-compatibility"
 
 export function getObservable<Raw, T>(
 	provider: any,
 	getRaw: (provider: any) => Promise<Raw>,
 	mapRaw: (raw: Raw) => T,
-	eventName: string,
-	period: number = 1000,
+	eventName: string
 ): Observable<T> {
 	if ("on" in provider) {
 		return new Observable<T>(subscriber => {
@@ -24,11 +23,9 @@ export function getObservable<Raw, T>(
 			}
 		})
 	} else {
-		return interval(period).pipe(
-			concatMap(async () => {
-				const raw = await getRaw(provider)
-				return mapRaw(raw)
-			})
-		)
+		return fromPromise((async () => {
+			const raw = await getRaw(provider)
+			return mapRaw(raw)
+		})())
 	}
 }
