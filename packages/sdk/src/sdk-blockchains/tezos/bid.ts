@@ -2,7 +2,7 @@ import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
 import { bid, upsert_order, wrap } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
-import type { UnionAddress } from "@rarible/types"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
 import { toBigNumber, toContractAddress, toUnionAddress } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "@rarible/tezos-sdk/dist/main"
@@ -112,8 +112,7 @@ export class TezosBid {
 	}
 
 	async convertCurrency(request: OrderRequest | OrderUpdateRequest): Promise<void> {
-		const convertMap = this.getConvertMap()
-		const wXTZUnionAddress = toContractAddress(Object.keys(convertMap)[0])
+		const wXTZUnionAddress = this.getWXTZContractAddress()
 		const provider = getRequiredProvider(this.provider)
 
 		const convertableValue = await this.getConvertableValue(
@@ -135,6 +134,18 @@ export class TezosBid {
 		}
 	}
 
+	getWXTZContractAddress(): ContractAddress {
+		const convertMap = this.getConvertMap()
+		const wXTZAddressEntry = Object.entries(convertMap)
+			.find(([contractAddr, currency]) => contractAddr && currency === "XTZ")
+
+		if (!wXTZAddressEntry) {
+			throw new Error("wXTZ address has not been found")
+		}
+		const [wXTZUnionContract] = wXTZAddressEntry
+		return toContractAddress(wXTZUnionContract)
+	}
+
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
 		if ("collectionId" in prepare) {
 			throw new Error("Bid collection is not supported")
@@ -151,8 +162,7 @@ export class TezosBid {
 		const submit = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderRequest) => {
-				const convertMap = this.getConvertMap()
-				const wXTZUnionAddress = toContractAddress(Object.keys(convertMap)[0])
+				const wXTZUnionAddress = this.getWXTZContractAddress()
 				if (request.currency["@type"] === "TEZOS_FT" && request.currency.contract === wXTZUnionAddress) {
 				  await this.convertCurrency(request)
 				}

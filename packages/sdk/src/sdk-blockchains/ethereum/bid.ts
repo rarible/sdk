@@ -1,5 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { Address, UnionAddress } from "@rarible/types"
+import type { Address, UnionAddress, ContractAddress } from "@rarible/types"
 import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as EthereumApiClient from "@rarible/ethereum-api-client"
@@ -131,6 +131,18 @@ export class EthereumBid {
 		}
 	}
 
+	getWethContractAddress(): ContractAddress {
+		const convertMap = this.getConvertMap()
+		const wethAddressEntry = Object.entries(convertMap)
+			.find(([contractAddr, currency]) => contractAddr && currency === "ETH")
+
+		if (!wethAddressEntry) {
+			throw new Error("Weth contract address has not been found")
+		}
+		const [wethUnionContract] = wethAddressEntry
+		return toContractAddress(wethUnionContract)
+	}
+
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
 		let contractAddress: Address | undefined
 		let item: NftItem | undefined
@@ -175,8 +187,7 @@ export class EthereumBid {
 		const submit = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderRequest) => {
-				const convertMap = this.getConvertMap()
-				const wethContractAddress = toContractAddress(Object.keys(convertMap)[0])
+				const wethContractAddress = this.getWethContractAddress()
 				if (request.currency["@type"] === "ERC20" && request.currency.contract === wethContractAddress) {
 					await this.convertCurrency(request)
 				}
@@ -235,8 +246,7 @@ export class EthereumBid {
 	}
 
 	async convertCurrency(request: OrderRequest | OrderUpdateRequest): Promise<void> {
-		const convertMap = this.getConvertMap()
-		const wethContract = toContractAddress(Object.keys(convertMap)[0])
+		const wethContract = this.getWethContractAddress()
 
 		if (!this.wallet) {
 			throw new Error("Wallet is undefined")

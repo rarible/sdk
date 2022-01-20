@@ -138,7 +138,6 @@ describe("bid test", () => {
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
 
-		const walletUnionAddress = convertTezosToUnionAddress(bidderAddress)
 		const wXTZAsset = { "@type": "TEZOS_FT" as const, contract: wXTZContract, tokenId: toBigNumber("0") }
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
@@ -146,10 +145,6 @@ describe("bid test", () => {
 			amount: 1,
 			price: "0.000002",
 			currency: wXTZAsset,
-		})
-		await retry(10, 1000, async () => {
-			const wXTZBalanceAfterConvert = await bidderSdk.balances.getBalance(walletUnionAddress, wXTZAsset)
-			expect(wXTZBalanceAfterConvert.toString()).toEqual("0.000002")
 		})
 
 		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId: bidOrderId })

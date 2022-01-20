@@ -3,7 +3,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { toAddress, toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
@@ -90,10 +90,6 @@ describe("bid", () => {
 		await acceptBidTx.wait()
 
 		await retry(10, 1000, async () => {
-			const wethBidderFinishBalance = new BigNumber(await sdk1.balances.getBalance(bidderUnionAddress, wethAsset))
-			expect(wethBidderFinishBalance.toString()).toEqual("0")
-		})
-		await retry(10, 1000, async () => {
 			return sdk1.apis.ownership.getOwnershipById({
 				ownershipId: `ETHEREUM:${it.testErc721.options.address}:${tokenId}:${bidderAddress}`,
 			})
@@ -135,6 +131,19 @@ describe("bid", () => {
 		const itemId = toItemId(`${Blockchain.ETHEREUM}:0xF04881F205644925596Fee9D66DACd98A9b99F05:1`)
 
 		const bidResponse = await sdk2.order.bid({ itemId })
+
+		const bidderUnionAddress = toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`)
+		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
+		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
+
+		if (wethBidderBalance.lt("0.000000000000001")) {
+			const tx = await ethSdk2.balances.convert(
+				{ assetClass: "ETH" },
+				{ assetClass: "ERC20", contract: toAddress(wethContractEthereum) },
+				"0.000000000000001"
+			)
+			await tx.wait()
+		}
 
 		const value = await bidResponse.getConvertableValue(
 			{ "@type": "ERC20", contract: wethContract },
