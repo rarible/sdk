@@ -28,10 +28,10 @@ export function createRaribleSdk(
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
 	const instance = createUnionSdk(
-		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.ethereumEnv, config?.apiClientParams),
+		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.ethereumEnv, config?.apiClientParams, config?.logs),
 		createFlowSdk(filterWallet(wallet, "FLOW"), apis, blockchainConfig.flowEnv),
 		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, blockchainConfig.tezosNetwork),
-		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.polygonNetwork, config?.apiClientParams),
+		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.polygonNetwork, config?.apiClientParams, config?.logs),
 	)
 
 	setupMiddleware(apis, instance, { wallet, env, config })
