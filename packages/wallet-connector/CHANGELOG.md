@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6-alpha.3](https://github.com/rarible/sdk/compare/v0.8.6-alpha.2...v0.8.6-alpha.3) (2022-01-21)
+
+**Note:** Version bump only for package @rarible/sdk-wallet-connector
+
+
+
+
+
 ## [0.8.6-alpha.2](https://github.com/rarible/sdk/compare/v0.8.6-alpha.1...v0.8.6-alpha.2) (2022-01-20)
 
 **Note:** Version bump only for package @rarible/sdk-wallet-connector

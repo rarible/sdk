@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6-alpha.3](https://github.com/rarible/sdk/compare/v0.8.6-alpha.2...v0.8.6-alpha.3) (2022-01-21)
+
+
+### Bug Fixes
+
+* update flow-sdk - turn protocol commission to 0 ([a0e4db3](https://github.com/rarible/sdk/commit/a0e4db3f91f48b23575b45a0e0bba4d66c431a87))
+
+
+
+
+
 ## [0.8.6-alpha.2](https://github.com/rarible/sdk/compare/v0.8.6-alpha.1...v0.8.6-alpha.2) (2022-01-20)
 
 
