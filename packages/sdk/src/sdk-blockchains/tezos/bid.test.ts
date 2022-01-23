@@ -35,7 +35,7 @@ describe("bid test", () => {
 	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 	const wXTZContract = toContractAddress(`${Blockchain.TEZOS}:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9`)
 
-	test.skip("bid NFT test", async () => {
+	test("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -90,7 +90,7 @@ describe("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test.skip("getConvertValue returns insufficient type", async () => {
+	test("getConvertValue returns insufficient type", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -105,17 +105,23 @@ describe("bid test", () => {
 
 		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
+		// resetWXTZFunds
 		const bidResponse = await nullFundsWalletSdk.order.bid({ itemId: mintResult.itemId })
 
-		const value = await bidResponse.getConvertableValue(
-			{ "@type": "TEZOS_FT", contract: wXTZContract },
-			"0.0000001",
-			convertTezosToUnionAddress(await nullFundsWallet.provider.address())
-		)
+		const value = await bidResponse.getConvertableValue({
+			assetType: { "@type": "TEZOS_FT", contract: wXTZContract },
+			value: "0.00001",
+			walletAddress: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
+			originFees: [{
+				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
+				value: 1000,
+			}],
+		})
 
 		if (!value) throw new Error("Convertable value must be non-undefined")
+		console.log(value.value.toString())
 		expect(value.type).toBe("insufficient")
-		expect(new BigNumber(value.value).isEqualTo("0.0000001")).toBeTruthy()
+		expect(new BigNumber(value.value).isEqualTo("0.000011")).toBeTruthy()
 	})
 
 	test.skip("convert currency on bid", async () => {

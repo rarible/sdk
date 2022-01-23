@@ -23,7 +23,7 @@
     "@ethereumjs/tx": "^3.3.0",
     "@rarible/api-client": "~0.0.10",
     "@rarible/flow-sdk": "~0.5.29",
-    "@rarible/protocol-ethereum-sdk": "~0.12.28",
+    "@rarible/protocol-ethereum-sdk": "~0.12.30",
     "@rarible/sdk-transaction": "^0.8.16",
     "@rarible/sdk-wallet": "^0.8.16",
     "@rarible/types": "~0.5.3",
@@ -36,7 +36,7 @@
     "ethereumjs-util": "^7.1.3",
     "ethereumjs-wallet": "^1.0.2",
     "tezos-api-client": "~0.0.19",
-    "@rarible/tezos-sdk": "~0.0.5"
+    "@rarible/tezos-sdk": "~0.0.6"
   },
   "devDependencies": {
     "@airgap/beacon-sdk": "^2.3.2",

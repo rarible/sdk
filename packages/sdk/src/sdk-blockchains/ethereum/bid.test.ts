@@ -111,13 +111,17 @@ describe("bid", () => {
 
 		const bidResponse = await sdk1.order.bid({ itemId })
 
-		const value = await bidResponse.getConvertableValue(
-			{ "@type": "ERC20", contract: wethContract },
-			"0.00001",
-			convertEthereumUnionAddress(wallet1.getAddressString(), Blockchain.ETHEREUM),
-		)
+		const value = await bidResponse.getConvertableValue({
+			assetType: { "@type": "ERC20", contract: wethContract },
+			value: "0.00001",
+			walletAddress: convertEthereumUnionAddress(wallet1.getAddressString(), Blockchain.ETHEREUM),
+			originFees: [{
+				account: convertEthereumUnionAddress(`ETHEREUM:${await ethereum1.getFrom()}`, Blockchain.ETHEREUM),
+				value: 1000,
+			}],
+		})
 
-
+		console.log("getConvertableValue", value?.value.toString())
 		expect(value).not.toBe(undefined)
 
 		if (value) {
@@ -145,12 +149,50 @@ describe("bid", () => {
 			await tx.wait()
 		}
 
-		const value = await bidResponse.getConvertableValue(
-			{ "@type": "ERC20", contract: wethContract },
-			"0.000000000000001",
-			convertEthereumUnionAddress(wallet2.getAddressString(), Blockchain.ETHEREUM)
-		)
+		const value = await bidResponse.getConvertableValue({
+			assetType: { "@type": "ERC20", contract: wethContract },
+			value: "0.000000000000001",
+			walletAddress: convertEthereumUnionAddress(wallet2.getAddressString(), Blockchain.ETHEREUM),
+			originFees: [{
+				account: convertEthereumUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
+				value: 1000,
+			}],
+		})
 
+		expect(value).toBe(undefined)
+	})
+
+	test("getConvertableValue returns value", async () => {
+		const itemId = toItemId(`${Blockchain.ETHEREUM}:0xF04881F205644925596Fee9D66DACd98A9b99F05:1`)
+
+		const bidResponse = await sdk2.order.bid({ itemId })
+
+		const bidderUnionAddress = toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`)
+		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
+		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
+
+		console.log("wethBidderBalance", wethBidderBalance.toString())
+		if (wethBidderBalance.gte("0")) {
+			console.log("converting...")
+			const tx = await ethSdk2.balances.convert(
+				{ assetClass: "ERC20", contract: toAddress(wethContractEthereum) },
+				{ assetClass: "ETH" },
+				wethBidderBalance.toString()
+			)
+			await tx.wait()
+		}
+
+		const value = await bidResponse.getConvertableValue({
+			assetType: { "@type": "ERC20", contract: wethContract },
+			value: "0.000000000000001",
+			walletAddress: convertEthereumUnionAddress(wallet2.getAddressString(), Blockchain.ETHEREUM),
+			originFees: [{
+				account: convertEthereumUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
+				value: 1000,
+			}],
+		})
+
+		console.log("value", value)
 		expect(value).toBe(undefined)
 	})
 
