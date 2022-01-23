@@ -105,21 +105,16 @@ describe("bid test", () => {
 
 		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
-		// resetWXTZFunds
 		const bidResponse = await nullFundsWalletSdk.order.bid({ itemId: mintResult.itemId })
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "TEZOS_FT", contract: wXTZContract },
 			value: "0.00001",
 			walletAddress: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
-			originFees: [{
-				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
-				value: 1000,
-			}],
+			fee: 1000,
 		})
 
 		if (!value) throw new Error("Convertable value must be non-undefined")
-		console.log(value.value.toString())
 		expect(value.type).toBe("insufficient")
 		expect(new BigNumber(value.value).isEqualTo("0.000011")).toBeTruthy()
 	})

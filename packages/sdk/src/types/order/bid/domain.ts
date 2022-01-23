@@ -7,7 +7,6 @@ import type {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../common"
-import type { UnionPart } from "../common"
 
 export type PrepareBidResponse = PrepareOrderResponse & {
 	getConvertableValue(request: GetConvertableValueRequest): Promise<GetConvertableValueResult>
@@ -17,7 +16,7 @@ export type GetConvertableValueRequest = {
 	assetType: AssetType
 	value: BigNumberValue
 	walletAddress: UnionAddress
-	originFees: UnionPart[]
+	fee: number
 }
 export type GetConvertableValueResult =
   { type: "insufficient" | "convertable", currency: AssetType; value: BigNumberValue } | undefined
@@ -29,5 +28,5 @@ export type PrepareBidRequest = PrepareOrderRequest | { collectionId: ContractAd
 
 export type ConvertCurrencyRequest = {
 	price: BigNumberValue
-	originFees: UnionPart[]
+	fee: number
 }

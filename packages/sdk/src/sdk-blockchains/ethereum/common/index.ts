@@ -12,11 +12,12 @@ import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { AssetType, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
-import type { Erc20AssetType, EthAssetType, Part } from "@rarible/ethereum-api-client"
+import type { Part } from "@rarible/ethereum-api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
@@ -124,6 +125,19 @@ export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
 		account: convertToEthereumAddress(fee.account),
 		value: fee.value,
 	})) || []
+}
+
+export function getOriginFeesSum(originFees: Array<Part>): number {
+	return originFees.reduce((acc, fee) => fee.value, 0)
+}
+
+export function getOrderFeesSum(order: Order): number {
+	switch (order.data.dataType) {
+		case "LEGACY": return order.data.fee
+		case "RARIBLE_V2_DATA_V1": return getOriginFeesSum(order.data.originFees)
+		case "RARIBLE_V2_DATA_V2": return getOriginFeesSum(order.data.originFees)
+		default: throw new Error("Unexpected order dataType")
+	}
 }
 
 export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {

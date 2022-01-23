@@ -3277,14 +3277,7 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
-"@rarible/ethereum-provider@^0.12.26", "@rarible/ethereum-provider@~0.12.26":
-  version "0.12.26"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.26.tgz#586b1860cff6506afc1fc8ece60bb3c3f14cd19b"
-  integrity sha512-afqSvI2eZXlsBaSVd1JgP3jiah/ZENfAdyvHqR3REUenrkfb1QwTbMk0qYhL6VaLzFNdvOJ6O3Pryzu59DRExA==
-  dependencies:
-    eth-sig-util "^3.0.0"
-
-"@rarible/ethereum-provider@^0.12.30", "@rarible/ethereum-provider@~0.12.29":
+"@rarible/ethereum-provider@^0.12.30", "@rarible/ethereum-provider@~0.12.30":
   version "0.12.30"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.30.tgz#579170daa7cb0de568057a60d45a38d3d37f2f43"
   integrity sha512-9aYEe0+mbPfla0zcYErv51SUiciDwPgKITvmWy4QcaZ1He/wy6LtPVE2WyAVx0k0ASBZ/GnChrp6jWNya1yKGg==
@@ -3316,21 +3309,21 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.29":
-  version "0.5.29"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.29.tgz#eae32397d597c7eb9fe4779845018ffcef75a4f3"
-  integrity sha512-epYWEHKnEF/r9+kz2apuMYU0oQRwVXJV3E/9Nta3cBRbHE1DYjmpNObzJAv4W6NJeM0tN++3Pv9alk0OBnkQbA==
+"@rarible/flow-sdk-scripts@^0.5.29-hotfix.0":
+  version "0.5.29-hotfix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.29-hotfix.0.tgz#12090ed3398fe77bd6f73e3780c0790feeeed850"
+  integrity sha512-4KwU+dLsu//sX6V69DfSjZbQin0BwOg/iDoig+pirRStbwR2UtB8cge4bpwGyeA0HOSeERHSqRRY43wXxx0D4g==
 
-"@rarible/flow-sdk@~0.5.29":
-  version "0.5.29"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.29.tgz#3a24ee8f5efc423f129f83ade2c6fa443d80b93c"
-  integrity sha512-QD1VxqFPz6lpnPNJfMV8Zyiso4Kbe0WsFSCgLqYZHdmEpfEShw4dzh3/qRQLdIYdAm/wDunHk22Jb9FgJKj85w==
+"@rarible/flow-sdk@0.5.29-hotfix.0":
+  version "0.5.29-hotfix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.29-hotfix.0.tgz#2f2390f1a87cb19ac787936ace7458ecd7b15e05"
+  integrity sha512-CYM1j6YbG0FwsqalRDn0kS8bkU+caZsGbaP3X6HAKr6k6o0smyqreanwmUK+uZLLUC1HMWgeABhVb8UsZ4XXQA==
   dependencies:
     "@onflow/fcl" "~0.0.76"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "~0.5.0"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.29"
+    "@rarible/flow-sdk-scripts" "^0.5.29-hotfix.0"
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 
@@ -3351,10 +3344,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.29":
-  version "0.12.30"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.30.tgz#d435adf46caaaabfdd3aa6fd4d191d0a989ea6eb"
-  integrity sha512-ZlGieLmLhSqRhwCOWRA2b1BC+dHRn9n0Wh6Xb9Ya7vdH1n2fa+bBWgx9y3t6Jkq3bctWpIB6XJ7SugwCc5BfIg==
+"@rarible/protocol-ethereum-sdk@~0.12.31":
+  version "0.12.31"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.31.tgz#0be5607be85a57dcd3a4a25149d727448e611529"
+  integrity sha512-737VGMhtwa13+IoDYvsDP8wZDa4pwPvd36ZD8pdaNGKcYzb5x/U/wNUs+V65o7ESxRYnT3Tx6sMEv0VsN/oSCA==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
@@ -3430,12 +3423,12 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@~0.12.26":
-  version "0.12.26"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.26.tgz#f8931e217bfcbeb18924a2fcb179c645477e2dc1"
-  integrity sha512-CBc/NZ+QwKiKy0WVWMEL0LZETh7qXuaY2onLDXUJPjwuPD9RMZLpWXIIt6uWhQi5NLj1u3LG27ujO6d3hEQNWA==
+"@rarible/web3-ethereum@~0.12.31":
+  version "0.12.31"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.31.tgz#a63758ddb33016238d732c736805b66a68c15405"
+  integrity sha512-e5WADlNPZuM+KhWF1vCfb6gXYz6jXZB9aYnxKuxc4B9e2fcgwB4z+cVRz8e8GufL5UNwqwYb4DQ3WXe3llCWRQ==
   dependencies:
-    "@rarible/ethereum-provider" "^0.12.26"
+    "@rarible/ethereum-provider" "^0.12.30"
     eth-rpc-errors "^4.0.3"
     exponential-backoff "^3.1.0"
 

@@ -10,7 +10,7 @@ import type { CurrencyType } from "../../common/domain"
 import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
-import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName, toFlowParts } from "./common/converters"
+import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowBid {
@@ -52,7 +52,6 @@ export class FlowBid {
 						currency,
 						itemId,
 						toBigNumber(bidRequest.price.toString()),
-						toFlowParts(bidRequest.originFees),
 					)
 				}
 				throw new Error(`Unsupported currency type: ${bidRequest.currency["@type"]}`)
@@ -60,7 +59,7 @@ export class FlowBid {
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 		return {
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			multiple: false,
@@ -100,7 +99,7 @@ export class FlowBid {
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 
 		return {
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			baseFee: getFlowBaseFee(this.sdk),
