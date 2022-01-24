@@ -20,7 +20,7 @@ export function connectToWeb3(
 		getConnectedStatus(provider),
 	]).pipe(
 		distinctUntilChanged((c1, c2) => {
-			return c1[0] === c1[0] && c1[1] === c2[1] && c1[2] === c2[2]
+			return c1[0] === c2[0] && c1[1] === c2[1] && c1[2] === c2[2]
 		}),
 		map(([address, chainId, status]) => {
 			if (status === "connected" && address) {
