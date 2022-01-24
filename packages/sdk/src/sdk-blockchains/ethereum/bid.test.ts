@@ -8,6 +8,7 @@ import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
+import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
@@ -21,11 +22,11 @@ describe("bid", () => {
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethwallet1 = new EthereumWallet(ethereum1)
-	const sdk1 = createRaribleSdk(ethwallet1, "e2e")
+	const sdk1 = createRaribleSdk(ethwallet1, "e2e", { logs: LogsLevel.DISABLED })
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethwallet2 = new EthereumWallet(ethereum2)
-	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
+	const sdk2 = createRaribleSdk(ethwallet2, "e2e", { logs: LogsLevel.DISABLED })
 
 	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2`)
 
