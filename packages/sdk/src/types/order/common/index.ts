@@ -24,7 +24,7 @@ export type UnionPart = {
 	value: number
 }
 
-type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, OrderId> & {
+export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, OrderId> & {
 	/**
 	 * is multiple nft
 	 */
