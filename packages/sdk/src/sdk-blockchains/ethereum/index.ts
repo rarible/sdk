@@ -5,6 +5,8 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
+import type { LogsLevel } from "../../domain"
+import { Middlewarer } from "../../common/middleware/middleware"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -21,8 +23,9 @@ export function createEthereumSdk(
 	apis: IApisSdk,
 	network: EthereumNetwork,
 	params?: ConfigurationParameters,
+	logs?: LogsLevel
 ): IRaribleInternalSdk {
-	const sdk = createRaribleSdk(wallet?.ethereum, network, { apiClientParams: params })
+	const sdk = createRaribleSdk(wallet?.ethereum, network, { apiClientParams: params, logs: logs })
 	const sellService = new EthereumSell(sdk, network)
 	const balanceService = new EthereumBalance(sdk)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
@@ -35,7 +38,7 @@ export function createEthereumSdk(
 			burn: new EthereumBurn(sdk, network).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: new EthereumDeploy(sdk, network).deployToken,
-			preprocessMeta: mintService.preprocessMeta,
+			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
 			fill: fillerService.fill,

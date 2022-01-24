@@ -2,6 +2,7 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
+import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitItemSupply } from "./test/await-item-supply"
@@ -10,7 +11,7 @@ describe("burn", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(wallet, "e2e")
+	const sdk = createRaribleSdk(wallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const contractErc721 = toAddress("0x87ECcc03BaBC550c919Ad61187Ab597E9E7f7C21")
 	const contractErc1155 = toAddress("0x8812cFb55853da0968a02AaaEA84CD93EC4b42A1")

@@ -1,9 +1,9 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
-import type { ConfigurationParameters } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { IApisSdk, IRaribleSdk } from "./domain"
+import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
+import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
@@ -16,20 +16,24 @@ import { createFlowSdk } from "./sdk-blockchains/flow"
 import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
+import { Middlewarer } from "./common/middleware/middleware"
+import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
 	env: RaribleSdkEnvironment,
-	params?: ConfigurationParameters
+	config?: IRaribleSdkConfig
 ): IRaribleSdk {
-	const config = getSdkConfig(env)
-	const apis = createApisSdk(env, params)
+	const blockchainConfig = getSdkConfig(env)
+	const apis = createApisSdk(env, config?.apiClientParams)
 	const instance = createUnionSdk(
-		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.ethereumEnv, params),
-		createFlowSdk(filterWallet(wallet, "FLOW"), apis, config.flowEnv),
-		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, config.tezosNetwork),
-		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.polygonNetwork, params),
+		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.ethereumEnv, config?.apiClientParams, config?.logs),
+		createFlowSdk(filterWallet(wallet, "FLOW"), apis, blockchainConfig.flowEnv),
+		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, blockchainConfig.tezosNetwork),
+		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, blockchainConfig.polygonNetwork, config?.apiClientParams, config?.logs),
 	)
+
+	setupMiddleware(apis, instance, { wallet, env, config })
 
 	return {
 		...instance,
@@ -42,6 +46,39 @@ export function createRaribleSdk(
 			sell: createSell(instance.order.sell, apis),
 		},
 		apis,
+	}
+}
+
+/**
+ * Create middleware controller & wrap methods
+ */
+function setupMiddleware(
+	apis: IApisSdk,
+	internalSdk: IRaribleInternalSdk,
+	sdkContext: ISdkContext
+) {
+	const middlewarer = new Middlewarer()
+
+	if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
+		middlewarer.use(getInternalLoggerMiddleware(
+			sdkContext.config?.logs ?? LogsLevel.TRACE,
+			sdkContext
+		))
+	}
+
+	for (const middleware of (sdkContext.config?.middlewares ?? [])) {
+		middlewarer.use(middleware)
+	}
+
+	for (const prop in apis) {
+		//@ts-ignore
+		//todo: better wrap for apis methods
+		middlewarer.wrapObjectMethods(apis[prop], { namespace: "apis." + prop })
+	}
+
+	for (const prop in internalSdk) {
+		//@ts-ignore
+		middlewarer.wrapObjectMethods(internalSdk[prop], { namespace: prop })
 	}
 }
 

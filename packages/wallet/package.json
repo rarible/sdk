@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.8.17",
+  "version": "0.8.20",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -35,7 +35,7 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
-    "@rarible/web3-ethereum": "~0.12.31",
+    "@rarible/web3-ethereum": "~0.12.30",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",

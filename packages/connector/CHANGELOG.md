@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.20](https://github.com/rarible/sdk/compare/v0.8.19...v0.8.20) (2022-01-24)
+
+
+### Bug Fixes
+
+* fixed creating new connection without actually data change ([f273b82](https://github.com/rarible/sdk/commit/f273b828d9cd6fa1cdb1d977b82644aae877105d))
+* remove interval polling ([de012d3](https://github.com/rarible/sdk/commit/de012d316c66d5d681a49d681e48e309059866d0))
+
+
+
+
+
 ## [0.8.10](https://github.com/rarible/sdk/compare/v0.8.9...v0.8.10) (2022-01-09)
 
 

@@ -187,14 +187,12 @@ export class EthereumBid {
 				const wethContractAddress = this.getWethContractAddress()
 				if (request.currency["@type"] === "ERC20" && request.currency.contract === wethContractAddress) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
-					console.log("on convert")
 					const value = await this.getConvertableValueCommon(
 						request.currency,
 						request.price,
 						originFeesSum
 					)
 					await this.convertCurrency(value)
-					console.log("after convert")
 				}
 				return request
 			},

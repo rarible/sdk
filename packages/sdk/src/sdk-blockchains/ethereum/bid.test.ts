@@ -9,11 +9,13 @@ import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
+import { LogsLevel } from "../../domain"
 import { initProvider, initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
 import { convertEthereumToUnionAddress } from "./common"
 import { resetWethFunds } from "./test/reset-weth-funds"
+import { awaitBalance } from "./test/await-balance"
 
 describe("bid", () => {
 	const { web31, wallet1, web32 } = initProviders({
@@ -23,20 +25,21 @@ describe("bid", () => {
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethwallet1 = new EthereumWallet(ethereum1)
-	const sdk1 = createRaribleSdk(ethwallet1, "e2e")
+	const sdk1 = createRaribleSdk(ethwallet1, "e2e", { logs: LogsLevel.DISABLED })
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethwallet2 = new EthereumWallet(ethereum2)
 	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
-	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e")
+	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
 	const nullFundsWallet = new EthereumWallet(nullFundsEthereum)
-	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "e2e")
+	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
 	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:${wethContractEthereum}`)
+	const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -105,11 +108,11 @@ describe("bid", () => {
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
 		const bidderUnionAddress = toUnionAddress(`ETHEREUM:${bidderAddress}`)
 
-		const tokenId = "1"
+		const tokenId = "2"
 		const itemId = toItemId(
 			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
 		)
-		await it.testErc721.methods.mint(itemOwner, tokenId, "123").send({
+		await it.testErc721.methods.mint(itemOwner, tokenId, "124").send({
 			from: itemOwner,
 			gas: 500000,
 		})
@@ -155,7 +158,7 @@ describe("bid", () => {
 	test("getConvertValue returns undefined when passed non-weth contract", async () => {
 		const senderRaw = wallet1.getAddressString()
 
-		const tokenId = "2"
+		const tokenId = "3"
 		const itemId = toItemId(
 			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
 		)
@@ -172,12 +175,8 @@ describe("bid", () => {
 		await awaitItem(sdk2, itemId)
 
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
+		await awaitBalance(sdk2, wethAsset, ethwallet2, "0")
 
-		await retry(5, 2000, async () => {
-			const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
-			const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
-			expect(wethBidderBalance.toString()).toBe("0")
-		})
 		const bidResponse = await sdk2.order.bid({ itemId })
 
 		const value = await bidResponse.getConvertableValue({
@@ -195,7 +194,7 @@ describe("bid", () => {
 	test("getConvertValue returns insufficient type", async () => {
 		const senderRaw = wallet1.getAddressString()
 
-		const tokenId = "2"
+		const tokenId = "4"
 		const itemId = toItemId(
 			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
 		)
@@ -257,9 +256,10 @@ describe("bid", () => {
 		const bidResponse = await sdk2.order.bid({ itemId })
 
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
+		await awaitBalance(sdk2, wethAsset, ethwallet2, "0")
 
 		const value = await bidResponse.getConvertableValue({
-			assetType: { "@type": "ERC20", contract: wethContract },
+			assetType: wethAsset,
 			value: "0.000000000000001",
 			originFees: [{
 				account: convertEthereumToUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
@@ -281,7 +281,7 @@ describe("bid", () => {
       	from: ownerCollectionAddress,
       	gas: 500000,
 		})
-		const erc721TokenId = "3"
+		const erc721TokenId = "5"
 		const itemId = toItemId(
 			`ETHEREUM:${it.testErc721.options.address}:${erc721TokenId}`
 		)

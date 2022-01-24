@@ -3270,13 +3270,6 @@
   dependencies:
     "@rarible/types" "~0.5.0"
 
-"@rarible/ethereum-provider@^0.12.1":
-  version "0.12.1"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.1.tgz#356053a3bb3d83a192b7673907abfc9810e4351a"
-  integrity sha512-VLP9AqTVO/0rOTIa7OhjKbnK4UAtbRY8FpsbWnKv74gfR6R/91Plc/kZGkGD/Thm0Oneo4BUAnVlCSFBhJUqFA==
-  dependencies:
-    eth-sig-util "^3.0.0"
-
 "@rarible/ethereum-provider@^0.12.30", "@rarible/ethereum-provider@~0.12.30":
   version "0.12.30"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.30.tgz#579170daa7cb0de568057a60d45a38d3d37f2f43"
@@ -3284,12 +3277,12 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
-"@rarible/ethereum-sdk-test-common@~0.12.16":
-  version "0.12.16"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.16.tgz#2e34580052e5486af6dd8fc3196f33415a8851e2"
-  integrity sha512-MO8Rk7ndQjKZBL1qYv8AK9jbDtjeyLClP4R2XcGbN++BzfoYqQ8BQUOc4L8hGRXf1/ALIisWb3+TTH69U5pw3Q==
+"@rarible/ethereum-sdk-test-common@0.12.30":
+  version "0.12.30"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.30.tgz#6179323d1632b5ef69f148ee466141104325c900"
+  integrity sha512-PowtZTsiRwpAKeY9JpUIoecgmLm7Phg8jaz7a24TGjERNrgSVBto/50E9buKgZ6tiIl9DfGl9FvJAFaROnPokg==
   dependencies:
-    "@rarible/ethereum-provider" "^0.12.1"
+    "@rarible/ethereum-provider" "^0.12.30"
     "@rarible/test-provider" "~0.5.0"
     "@rarible/types" "~0.5.0"
     "@types/web3-provider-engine" "^14.0.1"
@@ -3345,9 +3338,9 @@
     json-stringify-safe "^5.0.1"
 
 "@rarible/protocol-ethereum-sdk@~0.12.31":
-  version "0.12.31"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.31.tgz#0be5607be85a57dcd3a4a25149d727448e611529"
-  integrity sha512-737VGMhtwa13+IoDYvsDP8wZDa4pwPvd36ZD8pdaNGKcYzb5x/U/wNUs+V65o7ESxRYnT3Tx6sMEv0VsN/oSCA==
+  version "0.12.32"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.32.tgz#2ff9f38bdbc2422620cc15c2da4a248889329606"
+  integrity sha512-QHtk0x2a5G6hSGDd1KFCdATm1PCnwZN4p4u13U32FYkpRW6wh/pXBOYWi6U+jRPC5MNvlQG2TgL1oTLP/HiPnw==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
@@ -3361,18 +3354,7 @@
     ethereumjs-util "^7.1.0"
     exponential-backoff "^3.1.0"
 
-"@rarible/test-provider@~0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.0.tgz#c0abda6fd6f92d0eac37a37f307830f88c113264"
-  integrity sha512-d8chlYztOVsd19PUD0TUlJywh1497DtSdbq079Sbkm6nNtjzUuuNZDtAUiH/TMZsYG1yFwN+i/aC+AeWMZLuTw==
-  dependencies:
-    "@ethereumjs/common" "^2.4.0"
-    "@ethereumjs/tx" "^3.3.0"
-    eth-sig-util "^3.0.1"
-    ethereumjs-util "^7.1.0"
-    ethereumjs-wallet "^1.0.1"
-
-"@rarible/test-provider@~0.5.4":
+"@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.4.tgz#39122851d11e8092ce85a3ea88d64bd4df416c35"
   integrity sha512-bp5J0jSHBwz+aOPW8ycM9rIO42f+0MnnUlNxMsl/8LfBvWmDqWp/4XXDf8hLowFw1JurSH7M4kzP9B+vqVlanA==
@@ -3423,7 +3405,7 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@~0.12.31":
+"@rarible/web3-ethereum@~0.12.30":
   version "0.12.31"
   resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.31.tgz#a63758ddb33016238d732c736805b66a68c15405"
   integrity sha512-e5WADlNPZuM+KhWF1vCfb6gXYz6jXZB9aYnxKuxc4B9e2fcgwB4z+cVRz8e8GufL5UNwqwYb4DQ3WXe3llCWRQ==
@@ -5049,6 +5031,13 @@ axios@^0.18.0:
   dependencies:
     follow-redirects "1.5.10"
     is-buffer "^2.0.2"
+
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
+  dependencies:
+    follow-redirects "^1.14.4"
 
 axios@^0.25.0:
   version "0.25.0"
@@ -8159,7 +8148,7 @@ follow-redirects@^1.10.0:
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.4.tgz#838fdf48a8bbdd79e52ee51fb1c94e3ed98b9379"
   integrity sha512-zwGkiSXC1MUJG/qmeIFH2HBJx9u0V46QGUe3YR1fXG8bXQxq7fLj0RjLZQ5nubr9qNJUZrH+xUcwXEoXNpfS+g==
 
-follow-redirects@^1.14.7:
+follow-redirects@^1.14.4, follow-redirects@^1.14.7:
   version "1.14.7"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.14.7.tgz#2004c02eb9436eee9a21446a6477debf17e81685"
   integrity sha512-+hbxoLbFMbRKDwohX8GkTataGqO6Jb7jGwpAlwgy2bIz25XtRm7KEzJM76R1WiNT5SwZkX4Y75SwBolkpmE7iQ==
