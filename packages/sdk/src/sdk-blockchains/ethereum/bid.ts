@@ -15,12 +15,15 @@ import { Action } from "@rarible/action"
 import { addFee } from "@rarible/protocol-ethereum-sdk/build/order/add-fee"
 import { getDecimals } from "@rarible/protocol-ethereum-sdk/build/common/get-decimals"
 import { getPrice } from "@rarible/protocol-ethereum-sdk/build/common/get-price"
+import type { AssetType } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { GetConvertableValueResult, PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import type { GetConvertableValueRequest } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import type { ConvertCurrencyRequest } from "../../types/order/bid/domain"
+import { UnionPart } from "../../types/order/common"
 import * as common from "./common"
 import type {
 	EVMBlockchain } from "./common"
@@ -192,12 +195,13 @@ export class EthereumBid {
 			run: async (request: OrderCommon.OrderRequest) => {
 				const wethContractAddress = this.getWethContractAddress()
 				if (request.currency["@type"] === "ERC20" && request.currency.contract === wethContractAddress) {
-					await this.convertCurrency({
-						price: request.price,
-						fee: getOriginFeesSum(
-							toEthereumParts(request.originFees)
-						),
-					})
+					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
+					const value = await this.getConvertableValueCommon(
+						request.currency,
+						request.price,
+						originFeesSum
+					)
+					await this.convertCurrency(value)
 				}
 				return request
 			},
@@ -225,44 +229,46 @@ export class EthereumBid {
 		const convertMap = this.getConvertMap()
 
 		if (request.assetType["@type"] === "ERC20" && request.assetType.contract in convertMap) {
-			if (!this.wallet) {
-				throw new Error("Wallet is undefined")
-			}
-
-			const convertedAssetType = convertToEthereumAssetType(request.assetType)
-			const convertedPrice = await getPrice(this.wallet.ethereum, convertedAssetType, request.value)
-			const valueWithFee = addFee(
-				{ assetType: convertedAssetType, value: toBigNumber(convertedPrice.toString()) },
-				request.fee
-			)
-			const assetDecimals = await getDecimals(this.wallet.ethereum, convertedAssetType)
-			const finishValue = new BigNumber(valueWithFee.value)
-				.integerValue()
-				.div(new BigNumber(10).pow(assetDecimals))
-			return getCommonConvertableValue(
-				this.balanceService.getBalance,
-				request.walletAddress,
-				new BigNumber(finishValue),
-				{ "@type": "ETH" },
-				request.assetType,
-			)
+			const originFeesSum = request.originFees.reduce((acc, fee) => fee.value, 0)
+			return this.getConvertableValueCommon(request.assetType, request.value, originFeesSum)
 		}
 
 		return undefined
 	}
 
-	async convertCurrency(request: ConvertCurrencyRequest): Promise<void> {
+	async getConvertableValueCommon(assetType: AssetType, value: BigNumberValue, originFeesSum: number) {
+		if (!this.wallet) {
+			throw new Error("Wallet is undefined")
+		}
+		const convertedAssetType = convertToEthereumAssetType(assetType)
+		const convertedPrice = await getPrice(this.wallet.ethereum, convertedAssetType, value)
+
+		const baseFee = await this.sdk.order.getBaseOrderFee()
+		const completeFee = originFeesSum + baseFee
+		const valueWithFee = addFee(
+			{ assetType: convertedAssetType, value: toBigNumber(convertedPrice.toString()) },
+			new BigNumber(completeFee)
+		)
+		const assetDecimals = await getDecimals(this.wallet.ethereum, convertedAssetType)
+		const finishValue = new BigNumber(valueWithFee.value)
+			.integerValue()
+			.div(new BigNumber(10).pow(assetDecimals))
+		const walletAddress = await this.wallet.ethereum.getFrom()
+
+		return getCommonConvertableValue(
+			this.balanceService.getBalance,
+			convertEthereumUnionAddress(walletAddress, this.blockchain),
+			new BigNumber(finishValue),
+			{ "@type": "ETH" },
+			assetType,
+		)
+	}
+
+	async convertCurrency(convertableValue: GetConvertableValueResult): Promise<void> {
 		const wethContract = this.getWethContractAddress()
 		if (!this.wallet) {
 			throw new Error("Wallet is undefined")
 		}
-
-		const convertableValue = await this.getConvertableValue({
-			assetType: { "@type": "ERC20", contract: wethContract },
-			value: request.price,
-			walletAddress: toUnionAddress(`ETHEREUM:${await this.wallet.ethereum.getFrom()}`),
-			fee: request.fee,
-		})
 
 		if (convertableValue === undefined) {
 			return
@@ -281,7 +287,6 @@ export class EthereumBid {
 		}
 	}
 
-	getOrderFee() {}
 	async update(
 		prepareRequest: OrderCommon.PrepareOrderUpdateRequest,
 	): Promise<OrderCommon.PrepareOrderUpdateResponse> {
@@ -308,10 +313,17 @@ export class EthereumBid {
 		const sellUpdateAction = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderUpdateRequest) => {
-				await this.convertCurrency({
-					price: request.price,
-					fee: getOrderFeesSum(order),
-				})
+				const wethContractAddress = convertToEthereumAddress(this.getWethContractAddress())
+
+				if (order.make.assetType.assetClass === "ERC20" && order.make.assetType.contract === wethContractAddress) {
+					const value = await this.getConvertableValueCommon(
+						this.convertAssetType(order.make.assetType),
+						request.price,
+						getOrderFeesSum(order)
+					)
+					await this.convertCurrency(value)
+				}
+
 				return request
 			},
 		}).thenAction(bidUpdateAction)

@@ -114,7 +114,6 @@ describe("bid", () => {
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "ERC20", contract: wethContract },
 			value: "0.00000000000000001",
-			walletAddress: convertEthereumUnionAddress(wallet1.getAddressString(), Blockchain.ETHEREUM),
 			fee: 1000,
 		})
 
@@ -148,7 +147,6 @@ describe("bid", () => {
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "ERC20", contract: wethContract },
 			value: "0.000000000000001",
-			walletAddress: convertEthereumUnionAddress(wallet2.getAddressString(), Blockchain.ETHEREUM),
 			fee: 1000,
 		})
 
@@ -176,8 +174,10 @@ describe("bid", () => {
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "ERC20", contract: wethContract },
 			value: "0.000000000000001",
-			walletAddress: convertEthereumUnionAddress(wallet2.getAddressString(), Blockchain.ETHEREUM),
-			fee: 1000,
+			originFees: [{
+				account: convertEthereumUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
+				value: 1000,
+			}],
 		})
 
 		if (!value) throw new Error("Convertable value must be non-undefined")
