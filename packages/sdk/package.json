@@ -23,7 +23,7 @@
     "@ethereumjs/tx": "^3.3.0",
     "@rarible/api-client": "~0.0.10",
     "@rarible/flow-sdk": "0.5.29-hotfix.0",
-    "@rarible/protocol-ethereum-sdk": "~0.12.29",
+    "@rarible/protocol-ethereum-sdk": "~0.12.31",
     "@rarible/sdk-transaction": "^0.8.19",
     "@rarible/sdk-wallet": "^0.8.17",
     "@rarible/tezos-sdk": "~0.0.5",
