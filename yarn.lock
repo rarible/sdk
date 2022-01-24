@@ -3337,7 +3337,7 @@
     flow-js-testing "~0.1.13"
     sha3 "^2.1.4"
 
-"@rarible/logger@^0.6.2":
+"@rarible/logger@~0.6.2":
   version "0.6.2"
   resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.6.2.tgz#46a0742053cb4ecde944a85af481aaa1d70eb742"
   integrity sha512-e7o7+IAPlknynF+JWH8MRMucx0puZ/eVADkVxae20alombj4aiwSkj//qiA28k1kExXjyf6tC2v1Vz4/4dhI8w==

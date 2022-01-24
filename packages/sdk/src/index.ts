@@ -2,7 +2,8 @@ import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { IApisSdk, IRaribleSdk } from "./domain"
+import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
+import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
@@ -17,8 +18,6 @@ import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
-import type { IRaribleInternalSdk, IRaribleSdkConfig } from "./domain"
-import type { ISdkContext } from "./domain"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -60,10 +59,12 @@ function setupMiddleware(
 ) {
 	const middlewarer = new Middlewarer()
 
-	middlewarer.use(getInternalLoggerMiddleware(
-		"trace",
-		sdkContext
-	))
+	if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
+		middlewarer.use(getInternalLoggerMiddleware(
+			sdkContext.config?.logs ?? LogsLevel.TRACE,
+			sdkContext
+		))
+	}
 
 	for (const middleware of (sdkContext.config?.middlewares ?? [])) {
 		middlewarer.use(middleware)
