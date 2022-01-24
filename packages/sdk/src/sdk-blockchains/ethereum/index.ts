@@ -6,6 +6,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import type { LogsLevel } from "../../domain"
+import { Middlewarer } from "../../common/middleware/middleware"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -37,7 +38,7 @@ export function createEthereumSdk(
 			burn: new EthereumBurn(sdk, network).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: new EthereumDeploy(sdk, network).deployToken,
-			preprocessMeta: mintService.preprocessMeta,
+			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
 			fill: fillerService.fill,

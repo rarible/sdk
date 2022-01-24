@@ -1,3 +1,8 @@
+import type { Action } from "@rarible/action"
+import { toPromise } from "./utils"
+
+const SKIP_MIDDLEWARE = Symbol("SKIP_MIDDLEWARE")
+
 /**
  * Middleware function type
  * Middleware function gets `callable` method and arguments with which it will be called.
@@ -7,8 +12,6 @@
  * 		callback - function which will be called with "promisified" result of execution `callable`,
  * 			should return received promise, new promise, or new result value
  */
-import { toPromise } from "./utils"
-
 export type Middleware<Callable extends (...args: any[]) => any = (...args: any[]) => any> =
 	(callable: Callable, args: Parameters<Callable>) => Promise<[
 		(...args: Parameters<Callable>) => ReturnType<Callable>,
@@ -69,10 +72,25 @@ export class Middlewarer {
 	wrap<Fun extends (...args: any[]) => Promise<any>>(
 		callable: Fun,
 		meta: { methodName?: string } = {}
-	): (...args: Parameters<Fun>) => ReturnType<Fun> {
+	): ((...args: Parameters<Fun>) => ReturnType<Fun>) | Fun {
+		if (callable.hasOwnProperty(SKIP_MIDDLEWARE)) {
+			return callable
+		}
+
 		const fnName = meta?.methodName || callable.name || "anonymous"
-		Object.defineProperty(callable, "name", { value: fnName, writable: false })
-		return (...args: Parameters<Fun>) => this.call(callable, ...args) as ReturnType<Fun>
+
+		if (isAction(callable)) {
+			// @ts-ignore
+			for (let step of callable.steps) {
+				const originRun = step.run
+				step.run = (...args: Parameters<Fun>) => this.call(originRun, ...args)
+				Object.defineProperty(originRun, "name", { value: fnName + "." + step.id, writable: false })
+			}
+			return callable as Fun
+		} else {
+			Object.defineProperty(callable, "name", { value: fnName, writable: false })
+			return (...args: Parameters<Fun>) => this.call(callable, ...args) as ReturnType<Fun>
+		}
 	}
 
 	/**
@@ -90,4 +108,16 @@ export class Middlewarer {
 			}
 		}
 	}
+
+	static skipMiddleware<T extends Function>(something: T): T & {skipMiddleware: true} {
+		return Object.defineProperty(
+			something,
+			SKIP_MIDDLEWARE,
+			{ value: true, writable: false }
+		) as T & {skipMiddleware: true}
+	}
+}
+
+function isAction(fun: any): fun is Action<any, any, any> {
+	return !!fun.steps
 }
