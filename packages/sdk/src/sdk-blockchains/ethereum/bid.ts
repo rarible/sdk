@@ -2,7 +2,6 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { Address, ContractAddress } from "@rarible/types"
 import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import type * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import BigNumber from "bignumber.js"
@@ -22,19 +21,18 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { GetConvertableValueResult, PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import type { GetConvertableValueRequest } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
-import type { ConvertCurrencyRequest } from "../../types/order/bid/domain"
-import { UnionPart } from "../../types/order/common"
 import * as common from "./common"
 import type {
 	EVMBlockchain } from "./common"
 import {
 	convertEthereumContractAddress,
-	convertEthereumUnionAddress,
+	convertEthereumToUnionAddress,
 	convertToEthereumAddress,
 	convertToEthereumAssetType,
 	getEthereumItemId,
-	getEVMBlockchain, getOrderFeesSum, getOriginFeesSum,
-	isEVMBlockchain, toEthereumParts,
+	getEVMBlockchain,
+	getOrderFeesSum,
+	isEVMBlockchain,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 
@@ -130,13 +128,6 @@ export class EthereumBid {
 		}
 	}
 
-	getAsset(asset: EthereumApiClient.Asset): ApiClient.Asset {
-		return {
-			type: this.convertAssetType(asset.assetType),
-			value: asset.value,
-		}
-	}
-
 	getWethContractAddress(): ContractAddress {
 		const convertMap = this.getConvertMap()
 		const wethAddressEntry = Object.entries(convertMap)
@@ -196,12 +187,14 @@ export class EthereumBid {
 				const wethContractAddress = this.getWethContractAddress()
 				if (request.currency["@type"] === "ERC20" && request.currency.contract === wethContractAddress) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
+					console.log("on convert")
 					const value = await this.getConvertableValueCommon(
 						request.currency,
 						request.price,
 						originFeesSum
 					)
 					await this.convertCurrency(value)
+					console.log("after convert")
 				}
 				return request
 			},
@@ -221,7 +214,7 @@ export class EthereumBid {
 
 	getConvertMap() {
 		return {
-			[convertEthereumUnionAddress(this.sdk.balances.getWethContractAddress(), this.blockchain)]: "ETH",
+			[convertEthereumToUnionAddress(this.sdk.balances.getWethContractAddress(), this.blockchain)]: "ETH",
 		}
 	}
 
@@ -257,7 +250,7 @@ export class EthereumBid {
 
 		return getCommonConvertableValue(
 			this.balanceService.getBalance,
-			convertEthereumUnionAddress(walletAddress, this.blockchain),
+			convertEthereumToUnionAddress(walletAddress, this.blockchain),
 			new BigNumber(finishValue),
 			{ "@type": "ETH" },
 			assetType,

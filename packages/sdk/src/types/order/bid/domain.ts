@@ -1,6 +1,6 @@
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
+import type { ContractAddress } from "@rarible/types"
 import type {
 	PrepareOrderRequest,
 	PrepareOrderResponse,

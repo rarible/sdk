@@ -35,7 +35,7 @@ describe("bid test", () => {
 	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 	const wXTZContract = toContractAddress(`${Blockchain.TEZOS}:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9`)
 
-	test("bid NFT test", async () => {
+	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -90,7 +90,7 @@ describe("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test("getConvertValue returns insufficient type", async () => {
+	test.skip("getConvertValue returns insufficient type", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
@@ -110,13 +110,79 @@ describe("bid test", () => {
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "TEZOS_FT", contract: wXTZContract },
 			value: "0.00001",
-			walletAddress: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
-			fee: 1000,
+			originFees: [{
+				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
+				value: 1000,
+			}],
 		})
 
 		if (!value) throw new Error("Convertable value must be non-undefined")
 		expect(value.type).toBe("insufficient")
 		expect(new BigNumber(value.value).isEqualTo("0.000011")).toBeTruthy()
+	})
+
+	test.skip("getConvertValue returns convertable value", async () => {
+		const mintResponse = await itemOwnerSdk.nft.mint({
+			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+		})
+		const mintResult = await mintResponse.submit({
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+
+		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+
+		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
+
+		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+
+		const value = await bidResponse.getConvertableValue({
+			assetType: { "@type": "TEZOS_FT", contract: wXTZContract },
+			value: "0.00001",
+			originFees: [{
+				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
+				value: 1000,
+			}],
+		})
+
+		if (!value) throw new Error("Convertable value must be non-undefined")
+		expect(value.type).toBe("convertable")
+		expect(new BigNumber(value.value).isEqualTo("0.000011")).toBeTruthy()
+	})
+
+	test.skip("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
+		const mintResponse = await itemOwnerSdk.nft.mint({
+			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+		})
+		const mintResult = await mintResponse.submit({
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+
+		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+
+		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
+
+		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+
+		const value = await bidResponse.getConvertableValue({
+			assetType: { "@type": "TEZOS_FT", contract: toContractAddress(`TEZOS:${eurTzContract}`) },
+			value: "0.00001",
+			originFees: [{
+				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
+				value: 1000,
+			}],
+		})
+
+		expect(value).toBe(undefined)
 	})
 
 	test.skip("convert currency on bid", async () => {
@@ -136,17 +202,20 @@ describe("bid test", () => {
 
 		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
+		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
 
 		const wXTZAsset = { "@type": "TEZOS_FT" as const, contract: wXTZContract, tokenId: toBigNumber("0") }
 
-		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 		const bidOrderId = await bidResponse.submit({
 			amount: 1,
 			price: "0.000002",
 			currency: wXTZAsset,
 		})
+
+		const updateAction = await bidderSdk.order.bidUpdate({ orderId: bidOrderId })
+		await updateAction.submit({ price: "0.000004" })
 
 		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId: bidOrderId })
 		const acceptBidTx = await acceptBidResponse.submit({

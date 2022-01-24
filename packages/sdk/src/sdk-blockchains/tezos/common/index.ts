@@ -15,7 +15,9 @@ import { pk_to_pkh } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { Part } from "@rarible/tezos-sdk/dist/order/utils"
 import type {
-	Asset as TezosClientAsset } from "tezos-api-client/build"
+	Asset as TezosClientAsset,
+	AssetType as TezosClientAssetType,
+} from "tezos-api-client/build"
 import {
 	Configuration,
 	NftCollectionControllerApi,
@@ -329,6 +331,38 @@ export function covertToLibAsset(a: TezosClientAsset): TezosLibAsset {
 	}
 }
 
+export function convertTezosToUnionAsset(assetType: TezosClientAssetType): AssetType {
+	switch (assetType.assetClass) {
+		case "XTZ": {
+			return { "@type": "XTZ" }
+		}
+		case "FT": {
+			return {
+				"@type": "TEZOS_FT",
+				contract: convertTezosToContractAddress(assetType.contract),
+				tokenId: assetType.tokenId ? toRaribleBigNumber(assetType.tokenId) : undefined,
+			}
+		}
+		case "NFT": {
+			return {
+				"@type": "TEZOS_NFT",
+				contract: convertTezosToContractAddress(assetType.contract),
+				tokenId: toRaribleBigNumber(assetType.tokenId),
+			}
+		}
+		case "MT": {
+			return {
+				"@type": "TEZOS_MT",
+				contract: convertTezosToContractAddress(assetType.contract),
+				tokenId: toRaribleBigNumber(assetType.tokenId),
+			}
+		}
+		default: {
+			throw new Error("Invalid asset type")
+		}
+	}
+}
+
 export function convertOrderPayout(payout?: Array<Payout>): Array<TezosPart> {
 	return payout?.map(p => ({
 		account: getTezosAddress(p.account),
@@ -360,7 +394,7 @@ export function convertTezosItemId(itemId: string): ItemId {
 	return toItemId(`${Blockchain.TEZOS}:${itemId}`)
 }
 
-export function convertTezosContractAddress(address: string): ContractAddress {
+export function convertTezosToContractAddress(address: string): ContractAddress {
 	return toContractAddress(`${Blockchain.TEZOS}:${address}`)
 }
 export function convertTezosToUnionAddress(address: string): UnionAddress {

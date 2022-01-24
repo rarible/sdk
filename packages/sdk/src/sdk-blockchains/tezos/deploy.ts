@@ -8,7 +8,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { DeployTokenRequest, IDeploy } from "../../types/nft/deploy/domain"
 import type { TezosDeployTokenAsset } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
-import { convertTezosContractAddress, getRequiredProvider } from "./common"
+import { convertTezosToContractAddress, getRequiredProvider } from "./common"
 
 export class TezosDeploy {
 	constructor(
@@ -51,7 +51,7 @@ export class TezosDeploy {
 			const operationResult = await this.getDeployOperation(request.asset as TezosDeployTokenAsset)
 			return {
 				tx: new BlockchainTezosTransaction(operationResult, this.network),
-				address: convertTezosContractAddress(operationResult.contract),
+				address: convertTezosToContractAddress(operationResult.contract),
 			}
 		},
 	})

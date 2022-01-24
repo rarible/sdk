@@ -197,7 +197,7 @@ export function convertEthereumContractAddress(address: string, blockchain: EVMB
 	return toContractAddress(`${blockchain}:${address}`)
 }
 
-export function convertEthereumUnionAddress(address: string, blockchain: EVMBlockchain): UnionAddress {
+export function convertEthereumToUnionAddress(address: string, blockchain: EVMBlockchain): UnionAddress {
 	return toUnionAddress(`${blockchain}:${address}`)
 }
 
