@@ -13,11 +13,11 @@ describe("start auction", () => {
 		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
 	})
 
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
+	const ethereum1 = new Web3Ethereum({ web3: web31, gas: 1000000 })
 	const ethwallet1 = new EthereumWallet(ethereum1)
 	const sdk1 = createRaribleSdk(ethwallet1, "e2e")
 
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
+	const ethereum2 = new Web3Ethereum({ web3: web32, gas: 1000000 })
 	const ethwallet2 = new EthereumWallet(ethereum2)
 	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
 
@@ -49,7 +49,7 @@ describe("start auction", () => {
 			minimalPrice: "0.00000000000000005",
 			duration: 1000,
 			startTime: 0,
-			buyOutPrice: "0.0000000000000001",
+			buyOutPrice: "0.00000000000000010",
 			originFees: [],
 			payouts: [],
 		})

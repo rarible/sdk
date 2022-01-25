@@ -6,9 +6,11 @@ import { toBigNumber } from "@rarible/types"
 import { toAuctionId } from "@rarible/types/build/auction-id"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import * as common from "../common"
+import type { EVMBlockchain } from "../common"
 import {
+	convertEthereumToAuctionId,
 	getEthereumItemId,
-	getEthTakeAssetType,
+	getEthTakeAssetType, getEVMBlockchain,
 	isEVMBlockchain,
 	toEthereumParts,
 } from "../common"
@@ -16,11 +18,14 @@ import type { PrepareOrderInternalRequest } from "../../../types/order/common"
 import type { IStartAuctionRequest, PrepareStartAuctionResponse } from "../../../types/auction/start"
 
 export class EthereumAuctionStart {
+	private readonly blockchain: EVMBlockchain
+
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
 	) {
+		this.blockchain = getEVMBlockchain(network)
 		this.start = this.start.bind(this)
 	}
 
@@ -53,8 +58,9 @@ export class EthereumAuctionStart {
 			.after(async tx => {
 				const receipt = await tx.wait()
 				console.log("receipt", JSON.stringify(receipt, null, "  "))
-
-				return toAuctionId("0")
+				const createdEvent = receipt.events.find(e => e.event === "AuctionCreated")
+				if (!createdEvent) throw new Error("AuctionCreated event has not been found")
+				return convertEthereumToAuctionId(createdEvent.args.auctionId, this.blockchain)
 			})
 
 		return {

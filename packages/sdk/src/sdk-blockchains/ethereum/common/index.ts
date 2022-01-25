@@ -9,7 +9,7 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { AssetType, ItemId, OrderId } from "@rarible/api-client"
+import type { AssetType, AuctionId, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { Part } from "@rarible/ethereum-api-client"
@@ -17,6 +17,7 @@ import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import { toAuctionId } from "@rarible/types/build/auction-id"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
@@ -189,6 +190,10 @@ export function convertEthereumUnionAddress(address: string, blockchain: EVMBloc
 
 export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain): ItemId {
 	return toItemId(`${blockchain}:${itemId}`)
+}
+
+export function convertEthereumToAuctionId(auctionId: string, blockchain: EVMBlockchain): AuctionId {
+	return toAuctionId(`${blockchain}:${auctionId}`)
 }
 
 export function getEthereumItemId(itemId: ItemId) {

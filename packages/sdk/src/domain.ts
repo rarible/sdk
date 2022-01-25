@@ -54,6 +54,7 @@ export interface IApisSdk {
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi
 	ownership: ApiClient.OwnershipControllerApi
+	auction: ApiClient.AuctionControllerApi
 }
 
 export interface INftSdk {
