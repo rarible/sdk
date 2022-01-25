@@ -15,7 +15,11 @@ import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
-import type { IAuctionSdk } from "./types/auction/domain"
+import type { IAuctionStart } from "./types/auction/start"
+import type { IAuctionCancel } from "./types/auction/cancel"
+import type { IAuctionFinish } from "./types/auction/finish"
+import type { IAuctionPutBid } from "./types/auction/put-bid"
+import type { IAuctionBuyOut } from "./types/auction/buy-out"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -93,4 +97,12 @@ export type INftInternalSdk = Omit<INftSdk, "mintAndSell"> & {
 
 export type IOrderInternalSdk = Omit<IOrderSdk, "sell"> & {
 	sell: ISellInternal
+}
+
+export interface IAuctionSdk {
+	start: IAuctionStart
+	cancel: IAuctionCancel
+	finish: IAuctionFinish
+	putBid: IAuctionPutBid
+	buyOut: IAuctionBuyOut
 }

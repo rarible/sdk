@@ -1,11 +1,9 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
-import { toBigNumber } from "@rarible/types"
-import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../../index"
 import { initProviders } from "../test/init-providers"
-import { convertEthereumContractAddress, convertEthereumItemId } from "../common"
+import { convertEthereumContractAddress } from "../common"
 import { convertEthereumToUnionAddress } from "../../../../build/sdk-blockchains/ethereum/common"
 import { MintType } from "../../../types/nft/mint/domain"
 
@@ -26,7 +24,7 @@ describe("start auction", () => {
 	const testErc721Contract = convertEthereumContractAddress("0x4092e1a67FBE94F1e806Fb9f93F956Fee0093A31", Blockchain.ETHEREUM)
 	const testErc1155Contract = convertEthereumContractAddress("0x3D614ceC0d5E25adB35114b7dC2107D6F054581f", Blockchain.ETHEREUM)
 
-	test("deploy", async () => {
+	test("start auction", async () => {
 
 		const mintAction = await sdk1.nft.mint({ collectionId: testErc1155Contract })
 		const mintResponse = await mintAction.submit({

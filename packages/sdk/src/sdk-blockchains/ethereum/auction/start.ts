@@ -2,25 +2,20 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { toAuctionId } from "@rarible/types/build/auction-id"
-import type { IStartAuctionRequest } from "../../../types/auction/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import * as common from "../common"
 import {
-	convertToEthereumAssetType,
 	getEthereumItemId,
 	getEthTakeAssetType,
 	isEVMBlockchain,
 	toEthereumParts,
 } from "../common"
 import type { PrepareOrderInternalRequest } from "../../../types/order/common"
-import { PrepareOrderRequest } from "../../../types/order/common"
-import type { PrepareAuctionResponse } from "../../../types/auction/domain"
+import type { IStartAuctionRequest, PrepareStartAuctionResponse } from "../../../types/auction/start"
 
-export class StartAuction {
+export class EthereumAuctionStart {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
@@ -29,7 +24,7 @@ export class StartAuction {
 		this.start = this.start.bind(this)
 	}
 
-	async start(prepareRequest: PrepareOrderInternalRequest): Promise<PrepareAuctionResponse> {
+	async start(prepareRequest: PrepareOrderInternalRequest): Promise<PrepareStartAuctionResponse> {
 		const [domain, contract] = prepareRequest.collectionId.split(":")
 		if (!isEVMBlockchain(domain)) {
 			throw new Error("Not an ethereum item")

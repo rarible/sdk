@@ -3,14 +3,10 @@ import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import { AuctionId } from "@rarible/api-client"
-import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import { PrepareOrderRequest } from "../../types/order/common"
-import { IBuyoutRequest, IPutBidRequest, PrepareAuctionResponse } from "../../types/auction/domain"
 import { notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
@@ -22,7 +18,7 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumDeploy } from "./deploy"
-import { StartAuction } from "./auction/start"
+import { EthereumAuctionStart } from "./auction/start"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -57,7 +53,7 @@ export function createEthereumSdk(
 			cancel: new EthereumCancel(sdk, network).cancel,
 		},
 		auction: {
-			start: new StartAuction(sdk, wallet, network).start,
+			start: new EthereumAuctionStart(sdk, wallet, network).start,
 			cancel: notImplemented,
 			finish: notImplemented,
 			putBid: notImplemented,

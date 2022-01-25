@@ -4,7 +4,7 @@ import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
+import type { IAuctionSdk, IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -19,11 +19,10 @@ import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restric
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { IAuctionSdk } from "../../types/auction/domain"
 import type { PrepareOrderInternalRequest } from "../../types/order/common"
-import type { PrepareAuctionResponse } from "../../types/auction/domain"
-import type { IPutBidRequest } from "../../types/auction/domain"
-import type { IBuyoutRequest } from "../../types/auction/domain"
+import type { PrepareStartAuctionResponse } from "../../types/auction/start"
+import type { IPutBidRequest } from "../../types/auction/put-bid"
+import type { IBuyoutRequest } from "../../types/auction/buy-out"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -222,7 +221,7 @@ class UnionAuctionSdk implements IAuctionSdk {
 		this.buyOut = this.buyOut.bind(this)
 	}
 
-	start(request: PrepareOrderInternalRequest): Promise<PrepareAuctionResponse> {
+	start(request: PrepareOrderInternalRequest): Promise<PrepareStartAuctionResponse> {
 		return this.instances[extractBlockchain(request.collectionId)].start(request)
 	}
 
