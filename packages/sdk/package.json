@@ -6,7 +6,8 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
-    "build"
+    "build",
+    "umd"
   ],
   "scripts": {
     "build": "run-s create-validators build:*",
