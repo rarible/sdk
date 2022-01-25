@@ -3,7 +3,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { toAddress, toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { toAddress, toBigNumber, toContractAddress, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
@@ -13,7 +13,7 @@ import { LogsLevel } from "../../domain"
 import { initProvider, initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
-import { convertEthereumToUnionAddress } from "./common"
+import { convertEthereumContractAddress, convertEthereumItemId, convertEthereumToUnionAddress } from "./common"
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
@@ -50,12 +50,10 @@ describe("bid", () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
-		const bidderUnionAddress = toUnionAddress(`ETHEREUM:${bidderAddress}`)
+		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
 
 		const tokenId = "1"
-		const itemId = toItemId(
-			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
-		)
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 		await it.testErc721.methods.mint(itemOwner, tokenId, "123").send({
 			from: itemOwner,
 			gas: 500000,
@@ -75,7 +73,7 @@ describe("bid", () => {
 			price,
 			currency: {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${it.testErc20.options.address}`),
+				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
 			},
 			originFees: [{
 				account: bidderUnionAddress,
@@ -106,12 +104,10 @@ describe("bid", () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
-		const bidderUnionAddress = toUnionAddress(`ETHEREUM:${bidderAddress}`)
+		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
 
 		const tokenId = "2"
-		const itemId = toItemId(
-			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
-		)
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 		await it.testErc721.methods.mint(itemOwner, tokenId, "124").send({
 			from: itemOwner,
 			gas: 500000,
@@ -159,9 +155,7 @@ describe("bid", () => {
 		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "3"
-		const itemId = toItemId(
-			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
-		)
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 		await it.testErc721.methods.mint(senderRaw, tokenId, "123").send({
 			from: senderRaw,
 			gas: 500000,
@@ -180,7 +174,10 @@ describe("bid", () => {
 		const bidResponse = await sdk2.order.bid({ itemId })
 
 		const value = await bidResponse.getConvertableValue({
-			assetType: { "@type": "ERC20", contract: toContractAddress(`ETHEREUM:${it.testErc20.options.address}`) },
+			assetType: {
+				"@type": "ERC20",
+				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+			},
 			value: "0.00000000000000001",
 			originFees: [{
 				account: bidderUnionAddress,
@@ -195,9 +192,7 @@ describe("bid", () => {
 		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "4"
-		const itemId = toItemId(
-			`ETHEREUM:${it.testErc721.options.address}:${tokenId}`
-		)
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 		await it.testErc721.methods.mint(senderRaw, tokenId, "123").send({
 			from: senderRaw,
 			gas: 500000,
@@ -210,7 +205,7 @@ describe("bid", () => {
 			assetType: { "@type": "ERC20", contract: wethContract },
 			value: "0.00000000000000001",
 			originFees: [{
-				account: convertEthereumToUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
+				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
 				value: 1000,
 			}],
 		})
@@ -225,7 +220,7 @@ describe("bid", () => {
 
 		const bidResponse = await sdk2.order.bid({ itemId })
 
-		const bidderUnionAddress = toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`)
+		const bidderUnionAddress = convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM)
 		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
 
@@ -242,7 +237,7 @@ describe("bid", () => {
 			assetType: { "@type": "ERC20", contract: wethContract },
 			value: "0.000000000000001",
 			originFees: [{
-				account: convertEthereumToUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
+				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
 				value: 1000,
 			}],
 		})
@@ -262,7 +257,7 @@ describe("bid", () => {
 			assetType: wethAsset,
 			value: "0.000000000000001",
 			originFees: [{
-				account: convertEthereumToUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`, Blockchain.ETHEREUM),
+				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
 				value: 1000,
 			}],
 		})
@@ -281,23 +276,21 @@ describe("bid", () => {
       	from: ownerCollectionAddress,
       	gas: 500000,
 		})
-		const erc721TokenId = "5"
-		const itemId = toItemId(
-			`ETHEREUM:${it.testErc721.options.address}:${erc721TokenId}`
-		)
+		const tokenId = "5"
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 
-		await it.testErc721.methods.mint(ownerCollectionAddress, erc721TokenId, "0").send({
+		await it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "0").send({
 			from: ownerCollectionAddress,
 			gas: 500000,
 		})
 		await awaitItem(sdk1, itemId)
 
-		const erc721Contract = toContractAddress(`ETHEREUM:${it.testErc721.options.address}`)
+		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
 		const bidResponse = await sdk2.order.bid({
 			collectionId: erc721Contract,
 		})
 
-		const erc20Contract = toContractAddress(`ETHEREUM:${it.testErc20.options.address}`)
+		const erc20Contract = convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM)
 		const bidOrderId = await bidResponse.submit({
 			amount: 1,
 			price: "0.00000000000000001",
@@ -316,7 +309,7 @@ describe("bid", () => {
 			assetType: {
 			  "@type": "ERC721",
 				contract: erc721Contract,
-				tokenId: toBigNumber(erc721TokenId),
+				tokenId: toBigNumber(tokenId),
 			},
 		})
 		await fillBidResult.wait()

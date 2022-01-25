@@ -1,5 +1,4 @@
-import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
-import { Blockchain } from "@rarible/api-client"
+import { toBigNumber, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
@@ -9,7 +8,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForOrderStatus } from "./test/await-for-order-status"
-import { convertTezosToUnionAddress } from "./common"
+import { convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
 
@@ -33,11 +32,11 @@ describe("bid test", () => {
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	const wXTZContract = toContractAddress(`${Blockchain.TEZOS}:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9`)
+	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
 	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: convertTezosToContractAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -57,9 +56,7 @@ describe("bid test", () => {
 			price: "0.000002",
 			currency: {
 				"@type": "TEZOS_FT",
-				contract: toContractAddress(
-					`TEZOS:${eurTzContract}`
-				),
+				contract: convertTezosToContractAddress(eurTzContract),
 				tokenId: toBigNumber("0"),
 			},
 		})
@@ -92,7 +89,7 @@ describe("bid test", () => {
 
 	test.skip("getConvertValue returns insufficient type", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: convertTezosToContractAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -116,6 +113,7 @@ describe("bid test", () => {
 			}],
 		})
 
+		console.log("value", value)
 		if (!value) throw new Error("Convertable value must be non-undefined")
 		expect(value.type).toBe("insufficient")
 		expect(new BigNumber(value.value).isEqualTo("0.000011")).toBeTruthy()
@@ -123,7 +121,7 @@ describe("bid test", () => {
 
 	test.skip("getConvertValue returns convertable value", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: convertTezosToContractAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -156,7 +154,7 @@ describe("bid test", () => {
 
 	test.skip("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: convertTezosToContractAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -174,7 +172,7 @@ describe("bid test", () => {
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
 
 		const value = await bidResponse.getConvertableValue({
-			assetType: { "@type": "TEZOS_FT", contract: toContractAddress(`TEZOS:${eurTzContract}`) },
+			assetType: { "@type": "TEZOS_FT", contract: convertTezosToContractAddress(eurTzContract) },
 			value: "0.00001",
 			originFees: [{
 				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
@@ -189,7 +187,7 @@ describe("bid test", () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: convertTezosToContractAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -203,7 +201,6 @@ describe("bid test", () => {
 		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
-		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
 
 		const wXTZAsset = { "@type": "TEZOS_FT" as const, contract: wXTZContract, tokenId: toBigNumber("0") }
