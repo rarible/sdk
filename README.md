@@ -151,8 +151,20 @@ const {
   maxAmount, // max amount of the NFT that can be put on sale
   baseFee, // present it to a user, it's a base protocol fee that is taken on the trade
   submit, // use this Action to submit information after user input
-  getConvertableValue // get value of native token that will be converted during bid perfoming or insufficient for operation
+  getConvertableValue // get value of native token that will be converted if you use wrapped token for place a bid
 } = await sdk.order.bid({ itemId })
+
+// Returns "undefined" if you have sufficient funds
+// type: "convertable" - if needed to convert funds to wrapped token (ex. Wrapped Ether) that will be converted automatically after "submit" function calling. Convertable value also includes origin fees
+// type: "insufficient" - needed to convert funds, but native token amount is insufficient 
+getConvertableValue({
+  assetType: { "@type": "ERC20", contract: wethContract },
+  value: "0.00000001",
+  originFees: [{
+    account: feeAccount,
+    value: 250,
+  }],
+})
 
 //collect information from the user (show the form etc)
 //then use submit Action to execute this action
