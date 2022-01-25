@@ -151,19 +151,35 @@ const {
   maxAmount, // max amount of the NFT that can be put on sale
   baseFee, // present it to a user, it's a base protocol fee that is taken on the trade
   submit, // use this Action to submit information after user input
-  getConvertableValue // get value of native token that will be converted if you use wrapped token for place a bid
+  getConvertableValue // see description below
 } = await sdk.order.bid({ itemId })
 
-// Returns "undefined" if you have sufficient funds
-// type: "convertable" - if needed to convert funds to wrapped token (ex. Wrapped Ether) that will be converted automatically after "submit" function calling. Convertable value also includes origin fees
-// type: "insufficient" - needed to convert funds, but native token amount is insufficient 
+/*
+  Get value of native token that will be converted if you use wrapped token (Wrapped Ether for Ethereum, wXTZ for Tezos and etc.) for place a bid
+  Example of returned values when passed wrapped token contract:
+  1. Returns "undefined" if you have sufficient funds for make a bid
+  2. Returns if needed to convert funds to wrapped token (ex. Wrapped Ether).
+  Value will be converted automatically after invoke "submit" function. Convertable value also includes origin fees
+  {
+    type: "convertable",
+    currency: { '@type': 'ETH' },
+    value: BigNumber {...}
+  }
+  3. Returns if native token funds is insufficient for convert operation
+  {
+    type: "insufficient",
+    currency: { '@type': 'ETH' },
+    value: BigNumber {...}
+  }
+  Result of invoke getConvertableValue function is always undefined if you pass non-wrapped token contract because converting of non-wrapped tokens is not supported
+ */
 getConvertableValue({
-  assetType: { "@type": "ERC20", contract: wethContract },
-  value: "0.00000001",
+  assetType: { "@type": "ERC20", contract: wethContract }, // payment asset
+  value: "0.00000001", // funds for place a bid
   originFees: [{
     account: feeAccount,
-    value: 250,
-  }],
+    value: 250, // fee percent in range 0-10000, where 0 - 0%, 250 - 2,5%, 5000 - 50%, 10000 - 100% 
+  }], // origin fees, by default []
 })
 
 //collect information from the user (show the form etc)
