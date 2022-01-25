@@ -6,6 +6,7 @@ import { initProviders } from "../test/init-providers"
 import { convertEthereumContractAddress } from "../common"
 import { convertEthereumToUnionAddress } from "../../../../build/sdk-blockchains/ethereum/common"
 import { MintType } from "../../../types/nft/mint/domain"
+import { awaitAuction } from "../test/await-auction"
 
 describe("start auction", () => {
 	const { web31, wallet1, web32, wallet2 } = initProviders({
@@ -24,7 +25,40 @@ describe("start auction", () => {
 	const testErc721Contract = convertEthereumContractAddress("0x4092e1a67FBE94F1e806Fb9f93F956Fee0093A31", Blockchain.ETHEREUM)
 	const testErc1155Contract = convertEthereumContractAddress("0x3D614ceC0d5E25adB35114b7dC2107D6F054581f", Blockchain.ETHEREUM)
 
-	test("start auction", async () => {
+	test("start auction erc-721 <-> eth", async () => {
+
+		const mintAction = await sdk1.nft.mint({ collectionId: testErc721Contract })
+		const mintResponse = await mintAction.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			lazyMint: false,
+			supply: 1,
+		})
+		if (mintResponse.type === MintType.ON_CHAIN) {
+			await mintResponse.transaction.wait()
+		}
+
+		const auctionPrepareResponse = await sdk1.auction.start({ collectionId: testErc1155Contract })
+		const auctionId = await auctionPrepareResponse.submit({
+			itemId: mintResponse.itemId,
+			amount: 1,
+			currency: { "@type": "ETH" },
+			minimalStep: "0.00000000000000001",
+			minimalPrice: "0.00000000000000005",
+			duration: 1000,
+			startTime: 0,
+			buyOutPrice: "0.00000000000000010",
+			originFees: [],
+			payouts: [],
+		})
+
+		await awaitAuction(sdk1, auctionId)
+	})
+
+	test("start auction erc-1155 <-> eth", async () => {
 
 		const mintAction = await sdk1.nft.mint({ collectionId: testErc1155Contract })
 		const mintResponse = await mintAction.submit({
@@ -54,5 +88,6 @@ describe("start auction", () => {
 			payouts: [],
 		})
 
+		await awaitAuction(sdk1, auctionId)
 	})
 })

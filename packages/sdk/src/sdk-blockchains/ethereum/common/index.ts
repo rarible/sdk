@@ -1,4 +1,4 @@
-import type { Address, UnionAddress, Word } from "@rarible/types"
+import type { Address, BigNumber as RaribleBigNumber, UnionAddress, Word } from "@rarible/types"
 import {
 	toAddress,
 	toBigNumber,
@@ -192,10 +192,6 @@ export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain)
 	return toItemId(`${blockchain}:${itemId}`)
 }
 
-export function convertEthereumToAuctionId(auctionId: string, blockchain: EVMBlockchain): AuctionId {
-	return toAuctionId(`${blockchain}:${auctionId}`)
-}
-
 export function getEthereumItemId(itemId: ItemId) {
 	const [domain, contract, tokenId] = itemId.split(":")
 	if (!isEVMBlockchain(domain)) {
@@ -207,4 +203,16 @@ export function getEthereumItemId(itemId: ItemId) {
 		tokenId,
 		domain,
 	}
+}
+
+export function convertEthereumToAuctionId(auctionId: string, blockchain: EVMBlockchain): AuctionId {
+	return toAuctionId(`${blockchain}:${auctionId}`)
+}
+
+export function convertAuctionIdToEthereum(unionAuctionId: AuctionId): RaribleBigNumber {
+	const [blockchain, auctionId] = unionAuctionId.split(":")
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error(`Not an ethereum auctionId: ${blockchain}`)
+	}
+	return toBigNumber(auctionId)
 }

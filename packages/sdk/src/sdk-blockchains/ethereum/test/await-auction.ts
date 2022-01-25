@@ -1,7 +1,7 @@
-import { IRaribleSdk } from "../../../domain";
-import { ItemId } from "@rarible/api-client";
-import { retry } from "../../../common/retry";
+import type { AuctionId } from "@rarible/api-client"
+import type { IRaribleSdk } from "../../../domain"
+import { retry } from "../../../common/retry"
 
-export async function awaitAuction(sdk: IRaribleSdk, itemId: ItemId) {
-  return retry(5, 2000, () => sdk.apis.auction.({ itemId }))
+export async function awaitAuction(sdk: IRaribleSdk, auctionId: AuctionId) {
+	return retry(5, 2000, () => sdk.apis.auction.getAuctionById({ id: auctionId }))
 }

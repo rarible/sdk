@@ -52,10 +52,10 @@ export function createFlowSdk(
 		},
 		auction: {
 			start: notImplemented,
-			cancel: notImplemented,
-			finish: notImplemented,
-			putBid: notImplemented,
-			buyOut: notImplemented,
+			cancel: nonImplementedAction,
+			finish: nonImplementedAction,
+			putBid: nonImplementedAction,
+			buyOut: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

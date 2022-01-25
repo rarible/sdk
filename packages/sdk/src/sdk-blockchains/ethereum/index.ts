@@ -7,7 +7,7 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import { notImplemented } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -54,10 +54,10 @@ export function createEthereumSdk(
 		},
 		auction: {
 			start: new EthereumAuctionStart(sdk, wallet, network).start,
-			cancel: notImplemented,
-			finish: notImplemented,
-			putBid: notImplemented,
-			buyOut: notImplemented,
+			cancel: nonImplementedAction,
+			finish: nonImplementedAction,
+			putBid: nonImplementedAction,
+			buyOut: nonImplementedAction,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

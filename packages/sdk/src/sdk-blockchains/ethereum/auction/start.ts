@@ -4,6 +4,7 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBigNumber } from "@rarible/types"
 import { toAuctionId } from "@rarible/types/build/auction-id"
+import BigNumber from "bignumber.js"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import * as common from "../common"
 import type { EVMBlockchain } from "../common"
@@ -60,7 +61,8 @@ export class EthereumAuctionStart {
 				console.log("receipt", JSON.stringify(receipt, null, "  "))
 				const createdEvent = receipt.events.find(e => e.event === "AuctionCreated")
 				if (!createdEvent) throw new Error("AuctionCreated event has not been found")
-				return convertEthereumToAuctionId(createdEvent.args.auctionId, this.blockchain)
+				const auctionHash = this.sdk.auction.getHash(toBigNumber(createdEvent.args.auctionId))
+				return convertEthereumToAuctionId(auctionHash, this.blockchain)
 			})
 
 		return {

@@ -2,7 +2,7 @@ import type { AssetType, ItemId, OrderId, OwnershipId, AuctionId } from "@raribl
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
-import { Action } from "@rarible/action"
+import { Action, ActionBuilder } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { IAuctionSdk, IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
@@ -233,13 +233,11 @@ class UnionAuctionSdk implements IAuctionSdk {
 		return this.instances[extractBlockchain(auctionId)].finish(auctionId)
 	}
 
-	putBid(auctionId: AuctionId, request: IPutBidRequest): Promise<IBlockchainTransaction> {
-		return this.instances[extractBlockchain(auctionId)].putBid(auctionId, request)
+	putBid(request: IPutBidRequest): Promise<IBlockchainTransaction> {
+		return this.instances[extractBlockchain(request.auctionId)].putBid(request)
 	}
 
-	buyOut(auctionId: AuctionId, request: IBuyoutRequest): Promise<IBlockchainTransaction> {
-		return this.instances[extractBlockchain(auctionId)].buyOut(auctionId, request)
+	buyOut(request: IBuyoutRequest): Promise<IBlockchainTransaction> {
+		return this.instances[extractBlockchain(request.auctionId)].buyOut(request)
 	}
-
-
 }
