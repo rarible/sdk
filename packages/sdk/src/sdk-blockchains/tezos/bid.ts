@@ -20,12 +20,13 @@ import type {
 import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
-import type { PrepareOrderUpdateRequest, PrepareOrderUpdateResponse } from "../../types/order/common"
+import type { PrepareOrderUpdateRequest } from "../../types/order/common"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
 import type { GetConvertableValueResult } from "../../types/order/bid/domain"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import type { GetConvertableValueRequest } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
+import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -207,7 +208,7 @@ export class TezosBid {
 		}
 	}
 
-	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+	async update(request: PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {
 		const orderId = getTezosOrderId(request.orderId)
 
 		const order = await this.apis.order.getOrderByHash({ hash: orderId })
@@ -273,6 +274,7 @@ export class TezosBid {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
+			getConvertableValue: this.getConvertableValue,
 			submit: updateAction,
 		}
 	}

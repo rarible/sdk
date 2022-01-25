@@ -8,7 +8,11 @@ import type {
 	PrepareOrderUpdateResponse, UnionPart,
 } from "../common"
 
-export type PrepareBidResponse = PrepareOrderResponse & {
+export type PrepareBidResponse = PrepareOrderResponse & GetConvertableValueFunction
+
+export type PrepareBidUpdateResponse = PrepareOrderUpdateResponse & GetConvertableValueFunction
+
+export type GetConvertableValueFunction = {
 	getConvertableValue(request: GetConvertableValueRequest): Promise<GetConvertableValueResult>
 }
 
@@ -22,7 +26,7 @@ export type GetConvertableValueResult =
 
 
 export type IBid = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
-export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareOrderUpdateResponse>
+export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareBidUpdateResponse>
 export type PrepareBidRequest = PrepareOrderRequest | { collectionId: ContractAddress }
 
 export type ConvertCurrencyRequest = {

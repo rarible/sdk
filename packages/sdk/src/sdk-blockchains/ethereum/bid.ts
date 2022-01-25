@@ -21,6 +21,7 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { GetConvertableValueResult, PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import type { GetConvertableValueRequest } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
+import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import * as common from "./common"
 import type {
 	EVMBlockchain } from "./common"
@@ -280,7 +281,7 @@ export class EthereumBid {
 
 	async update(
 		prepareRequest: OrderCommon.PrepareOrderUpdateRequest,
-	): Promise<OrderCommon.PrepareOrderUpdateResponse> {
+	): Promise<PrepareBidUpdateResponse> {
 		if (!prepareRequest.orderId) {
 			throw new Error("OrderId has not been specified")
 		}
@@ -330,6 +331,7 @@ export class EthereumBid {
 					: PayoutsSupport.SINGLE,
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
+			getConvertableValue: this.getConvertableValue,
 			submit: sellUpdateAction,
 		}
 	}

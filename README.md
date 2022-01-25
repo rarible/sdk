@@ -151,6 +151,7 @@ const {
   maxAmount, // max amount of the NFT that can be put on sale
   baseFee, // present it to a user, it's a base protocol fee that is taken on the trade
   submit, // use this Action to submit information after user input
+  getConvertableValue // get value of native token that will be converted during bid perfoming or insufficient for operation
 } = await sdk.order.bid({ itemId })
 
 //collect information from the user (show the form etc)
