@@ -3,6 +3,7 @@ import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
 import { createRaribleSdk } from "@rarible/sdk"
+import { LogsLevel } from "@rarible/sdk/build/domain"
 
 export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRaribleSdk {
 	let env: RaribleSdkEnvironment = "e2e"
@@ -14,5 +15,5 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 		default:
 	}
 
-	return createRaribleSdk(wallet, env, {})
+	return createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 }

@@ -1,5 +1,6 @@
 import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../../index"
+import { LogsLevel } from "../../../domain"
 import { createTestWallet } from "../test/test-wallet"
 
 describe("canTransfer", () => {
@@ -7,7 +8,7 @@ describe("canTransfer", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
 	test("returns false and reason for whitelisted collection", async () => {
 		const me = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")

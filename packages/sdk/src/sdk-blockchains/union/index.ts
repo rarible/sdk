@@ -1,8 +1,9 @@
-import type { AssetType, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { AssetType, ItemId, OrderId, OwnershipId, AuctionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -17,6 +18,12 @@ import type { IDeploy } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
+import { Middlewarer } from "../../common/middleware/middleware"
+import type { IAuctionSdk } from "../../types/auction/domain"
+import type { PrepareOrderInternalRequest } from "../../types/order/common"
+import type { PrepareAuctionResponse } from "../../types/auction/domain"
+import type { IPutBidRequest } from "../../types/auction/domain"
+import type { IBuyoutRequest } from "../../types/auction/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -42,6 +49,12 @@ export function createUnionSdk(
 			FLOW: flow.order,
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
+		}),
+		auction: new UnionAuctionSdk({
+			ETHEREUM: ethereum.auction,
+			FLOW: flow.auction,
+			TEZOS: tezos.auction,
+			POLYGON: polygon.auction,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
@@ -114,7 +127,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.burn = this.burn.bind(this)
 		this.mint = this.mint.bind(this)
 		this.transfer = this.transfer.bind(this)
-		this.preprocessMeta = this.preprocessMeta.bind(this)
+		this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
 		this.generateTokenId = this.generateTokenId.bind(this)
 	}
 
@@ -173,7 +186,9 @@ const blockchains: Blockchain[] = [
 	Blockchain.POLYGON,
 ]
 
-function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | AuctionId
+): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)
@@ -195,4 +210,37 @@ function getBidEntity(request: PrepareBidRequest) {
 	} else {
 		throw new Error("Bit request should contains itemId or collectionId")
 	}
+}
+
+
+class UnionAuctionSdk implements IAuctionSdk {
+	constructor(private readonly instances: Record<Blockchain, IAuctionSdk>) {
+		this.start = this.start.bind(this)
+		this.cancel = this.cancel.bind(this)
+		this.finish = this.finish.bind(this)
+		this.putBid = this.putBid.bind(this)
+		this.buyOut = this.buyOut.bind(this)
+	}
+
+	start(request: PrepareOrderInternalRequest): Promise<PrepareAuctionResponse> {
+		return this.instances[extractBlockchain(request.collectionId)].start(request)
+	}
+
+	cancel(auctionId: AuctionId): Promise<IBlockchainTransaction> {
+		return this.instances[extractBlockchain(auctionId)].cancel(auctionId)
+	}
+
+	finish(auctionId: AuctionId): Promise<IBlockchainTransaction> {
+		return this.instances[extractBlockchain(auctionId)].finish(auctionId)
+	}
+
+	putBid(auctionId: AuctionId, request: IPutBidRequest): Promise<IBlockchainTransaction> {
+		return this.instances[extractBlockchain(auctionId)].putBid(auctionId, request)
+	}
+
+	buyOut(auctionId: AuctionId, request: IBuyoutRequest): Promise<IBlockchainTransaction> {
+		return this.instances[extractBlockchain(auctionId)].buyOut(auctionId, request)
+	}
+
+
 }

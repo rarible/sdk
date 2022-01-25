@@ -3,8 +3,15 @@ import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import { AuctionId } from "@rarible/api-client"
+import { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
+import type { LogsLevel } from "../../domain"
+import { Middlewarer } from "../../common/middleware/middleware"
+import { PrepareOrderRequest } from "../../types/order/common"
+import { IBuyoutRequest, IPutBidRequest, PrepareAuctionResponse } from "../../types/auction/domain"
+import { notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -15,14 +22,16 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumDeploy } from "./deploy"
+import { StartAuction } from "./auction/start"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
 	network: EthereumNetwork,
 	params?: ConfigurationParameters,
+	logs?: LogsLevel
 ): IRaribleInternalSdk {
-	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
+	const sdk = createRaribleSdk(wallet?.ethereum, network, { apiClientParams: params, logs: logs })
 	const sellService = new EthereumSell(sdk, network)
 	const balanceService = new EthereumBalance(sdk)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
@@ -35,7 +44,7 @@ export function createEthereumSdk(
 			burn: new EthereumBurn(sdk, network).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: new EthereumDeploy(sdk, network).deployToken,
-			preprocessMeta: mintService.preprocessMeta,
+			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
 			fill: fillerService.fill,
@@ -46,6 +55,13 @@ export function createEthereumSdk(
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			cancel: new EthereumCancel(sdk, network).cancel,
+		},
+		auction: {
+			start: new StartAuction(sdk, wallet, network).start,
+			cancel: notImplemented,
+			finish: notImplemented,
+			putBid: notImplemented,
+			buyOut: notImplemented,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

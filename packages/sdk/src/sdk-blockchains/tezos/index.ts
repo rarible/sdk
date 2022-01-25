@@ -2,6 +2,8 @@ import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { Middlewarer } from "../../common/middleware/middleware"
+import { notImplemented } from "../../common/not-implemented"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { TezosBid } from "./bid"
@@ -34,7 +36,7 @@ export function createTezosSdk(
 			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: new TezosDeploy(maybeProvider, network).deployToken,
-			preprocessMeta: mintService.preprocessMeta,
+			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
 			fill: fillService.fill,
@@ -45,6 +47,13 @@ export function createTezosSdk(
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
+		},
+		auction: {
+			start: notImplemented,
+			cancel: notImplemented,
+			finish: notImplemented,
+			putBid: notImplemented,
+			buyOut: notImplemented,
 		},
 		balances: {
 			getBalance: new TezosBalance(maybeProvider, apis).getBalance,

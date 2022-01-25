@@ -5,6 +5,7 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
+import { toAuctionId } from "@rarible/types/build/auction-id"
 import type { IStartAuctionRequest } from "../../../types/auction/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import * as common from "../common"
@@ -25,6 +26,7 @@ export class StartAuction {
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
 	) {
+		this.start = this.start.bind(this)
 	}
 
 	async start(prepareRequest: PrepareOrderInternalRequest): Promise<PrepareAuctionResponse> {
@@ -53,7 +55,12 @@ export class StartAuction {
 					originFees: toEthereumParts(request.originFees),
 				}
 			})
-      .after()
+			.after(async tx => {
+				const receipt = await tx.wait()
+				console.log("receipt", JSON.stringify(receipt, null, "  "))
+
+				return toAuctionId("0")
+			})
 
 		return {
 			multiple: collection.type === "ERC1155",

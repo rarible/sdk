@@ -1,4 +1,5 @@
 import type * as ApiClient from "@rarible/api-client"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
 import type { IFill } from "./types/order/fill/domain"
@@ -12,13 +13,34 @@ import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { IDeploy } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
+import type { Middleware } from "./common/middleware/middleware"
+import type { RaribleSdkEnvironment } from "./config/domain"
 import type { IAuctionSdk } from "./types/auction/domain"
+
+export enum LogsLevel {
+	DISABLED = 0,
+	ERROR = 1,
+	TRACE = 2,
+}
+
+export interface ISdkContext {
+	wallet?: BlockchainWallet,
+	env: RaribleSdkEnvironment,
+	config?: IRaribleSdkConfig
+}
+
+export interface IRaribleSdkConfig {
+	apiClientParams?: ApiClient.ConfigurationParameters
+	logs?: LogsLevel
+	middlewares?: Middleware[]
+}
 
 export interface IRaribleSdk {
 	apis: IApisSdk
 	nft: INftSdk
 	order: IOrderSdk
 	balances: IBalanceSdk
+	auction: IAuctionSdk
 	restriction: IRestrictionSdk
 }
 

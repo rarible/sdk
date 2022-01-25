@@ -1,5 +1,6 @@
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
+import { LogsLevel } from "../../domain"
 import { awaitForCollection } from "./test/await-for-collection"
 import { createTestWallet } from "./test/test-wallet"
 
@@ -8,7 +9,7 @@ describe("deploy tezos tests", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
 	test.skip("deploy public nft", async () => {
 		const result = await sdk.nft.deploy({

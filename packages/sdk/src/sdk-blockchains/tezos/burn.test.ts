@@ -3,13 +3,14 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
+import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestInMemoryProvider } from "./test/create-in-memory-provider"
 
 describe("burn test", () => {
 	const tezos = createTestInMemoryProvider("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"

@@ -5,8 +5,9 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { nonImplementedAction } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
+import { Middlewarer } from "../../common/middleware/middleware"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -34,7 +35,7 @@ export function createFlowSdk(
 			transfer: new FlowTransfer(sdk, blockchainNetwork).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
-			preprocessMeta: mintService.preprocessMeta,
+			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
 			sell: sellService.sell,
@@ -48,6 +49,13 @@ export function createFlowSdk(
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,
+		},
+		auction: {
+			start: notImplemented,
+			cancel: notImplemented,
+			finish: notImplemented,
+			putBid: notImplemented,
+			buyOut: notImplemented,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

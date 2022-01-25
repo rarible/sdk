@@ -2,17 +2,15 @@ import type { AssetType, AuctionId } from "@rarible/api-client"
 import type BigNumber from "bignumber.js"
 import type { BigNumberValue } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { OrderId } from "@rarible/api-client"
 import type { ItemId } from "@rarible/api-client"
-import type { BasePrepareOrderResponse, UnionPart } from "../order/common"
-import type { OrderRequest } from "../order/common"
+import type { UnionPart } from "../order/common"
 import type { PrepareOrderRequest } from "../order/common"
 import type { AbstractPrepareResponse, CurrencyType } from "../../common/domain"
 import type { OriginFeeSupport, PayoutsSupport } from "../order/fill/domain"
 import type { RequestCurrency } from "../../common/domain"
+import type { PrepareOrderInternalRequest } from "../order/common"
 
 export type IStartAuctionRequest = {
-	makeAssetType: AssetType,
 	amount: number,
 	currency: RequestCurrency,
 	itemId: ItemId
@@ -37,19 +35,14 @@ export type IBuyoutRequest = {
 }
 
 export interface IAuctionSdk {
-	start(request: PrepareOrderRequest): Promise<PrepareAuctionResponse>
+	start(request: PrepareOrderInternalRequest): Promise<PrepareAuctionResponse>
 	cancel(auctionId: AuctionId): Promise<IBlockchainTransaction>
 	finish(auctionId: AuctionId): Promise<IBlockchainTransaction>
 	putBid(auctionId: AuctionId, request: IPutBidRequest): Promise<IBlockchainTransaction>
 	buyOut(auctionId: AuctionId, request: IBuyoutRequest): Promise<IBlockchainTransaction>
 }
 
-export interface PrepareAuctionResponse extends BasePrepareAuctionResponse<IStartAuctionRequest> {
-	/**
-   * Max amount to sell (how many user owns and can sell). If 1, then input not needed
-   */
-	maxAmount: BigNumber | null
-}
+export type PrepareAuctionResponse = BasePrepareAuctionResponse<IStartAuctionRequest>
 
 export type BasePrepareAuctionResponse<T> = AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, AuctionId> & {
 	/**
