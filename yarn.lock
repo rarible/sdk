@@ -3365,10 +3365,10 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-sdk@~0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.0.6.tgz#66691548cb33869973c0fde351c856fddf3e181d"
-  integrity sha512-thkBojLML7I5b4r8Up2oazeY6HNfNVqHXLKnIqA1ulT5/oegbq3wcnrzC5vKEMtW8W674A4wB8zSfCz9n0/cGg==
+"@rarible/tezos-sdk@~0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.0.7.tgz#da71aed56b3657b2045530d70277544df5fb2cc6"
+  integrity sha512-xaFJPDwA6U0K/tgycT4lhTErKVig2qe/wAAj1nmNcoX2YK1wF77UhWg6TQiNNdAjHQ7xem4Jfz7PYMo7AHhKtw==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
