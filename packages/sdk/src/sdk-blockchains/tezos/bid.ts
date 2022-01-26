@@ -87,16 +87,18 @@ export class TezosBid {
 
 		if (request.assetType["@type"] === "TEZOS_FT" && request.assetType.contract in convertMap) {
 			const originFeesSum = request.originFees.reduce((acc, fee) => fee.value, 0)
-			return this.getConvertableValueCommon(request.assetType, request.value, originFeesSum)
+			return this.getConvertableValueCommon(request.assetType, request.price, request.amount, originFeesSum)
 		}
 
 		return undefined
 	}
 
-	async getConvertableValueCommon(assetType: AssetType, value: BigNumberValue, originFeesSum: number) {
+	async getConvertableValueCommon(assetType: AssetType, price: BigNumberValue, amount: number, originFeesSum: number) {
 		const provider = getRequiredProvider(this.provider)
 		const baseFee = parseInt(this.provider.config.fees.toString())
 		const completeFee = originFeesSum + baseFee
+
+		const value = new BigNumber(price).multipliedBy(amount)
 
 		const valueWithFee = await add_fee(
 			provider,
@@ -161,6 +163,7 @@ export class TezosBid {
 					const value = await this.getConvertableValueCommon(
 						request.currency,
 						request.price,
+						request.amount,
 						originFeesSum
 					)
 					await this.convertCurrency(value)
@@ -221,11 +224,13 @@ export class TezosBid {
 			run: async (request: OrderUpdateRequest) => {
 				const wXTZUnionAddress = convertFromContractAddress(this.getWXTZContractAddress())
 
+				console.log("order", JSON.stringify(order, null, "  "))
 				if (order.make.assetType.assetClass === "FT" && order.make.assetType.contract === wXTZUnionAddress) {
 					const originFeesSum = order.data.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
 						convertTezosToUnionAsset(order.make.assetType),
 						request.price,
+						parseInt(order.take.value),
 						originFeesSum
 					)
 					await this.convertCurrency(value)

@@ -7,6 +7,7 @@ import { toAddress, toBigNumber, toContractAddress, toItemId } from "@rarible/ty
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
+import { deployTestErc1155 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc1155"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -44,6 +45,7 @@ describe("bid", () => {
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 		testErc721: deployTestErc721(web31, "Test2", "TST2"),
+		testErc1155: deployTestErc1155(web31, "Test2"),
 	})
 
 	test("bid on erc721 <-> erc20 and update bid", async () => {
@@ -100,15 +102,15 @@ describe("bid", () => {
 		})
 	})
 
-	test("bid on erc721, convert to weth and update bid", async () => {
+	test("bid on erc-1155, convert to weth and update bid", async () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
 		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
 
 		const tokenId = "2"
-		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc721.methods.mint(itemOwner, tokenId, "124").send({
+		const itemId = convertEthereumItemId(`${it.testErc1155.options.address}:${tokenId}`, Blockchain.ETHEREUM)
+		await it.testErc1155.methods.mint(itemOwner, tokenId, 100, "124").send({
 			from: itemOwner,
 			gas: 500000,
 		})
@@ -120,7 +122,7 @@ describe("bid", () => {
 		const response = await sdk2.order.bid({ itemId })
 		const price = "0.00000000000000002"
 		const orderId = await response.submit({
-			amount: 1,
+			amount: 3,
 			price,
 			currency: {
 				"@type": "ERC20",
@@ -146,7 +148,7 @@ describe("bid", () => {
 
 		await retry(10, 1000, async () => {
 			return sdk1.apis.ownership.getOwnershipById({
-				ownershipId: `ETHEREUM:${it.testErc721.options.address}:${tokenId}:${bidderAddress}`,
+				ownershipId: `ETHEREUM:${it.testErc1155.options.address}:${tokenId}:${bidderAddress}`,
 			})
 		})
 	})
@@ -155,8 +157,8 @@ describe("bid", () => {
 		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "3"
-		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc721.methods.mint(senderRaw, tokenId, "123").send({
+		const itemId = convertEthereumItemId(`${it.testErc1155.options.address}:${tokenId}`, Blockchain.ETHEREUM)
+		await it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123").send({
 			from: senderRaw,
 			gas: 500000,
 		})
@@ -178,7 +180,8 @@ describe("bid", () => {
 				"@type": "ERC20",
 				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
 			},
-			value: "0.00000000000000001",
+			price: "0.00000000000000001",
+			amount: 5,
 			originFees: [{
 				account: bidderUnionAddress,
 				value: 1000,
@@ -192,8 +195,8 @@ describe("bid", () => {
 		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "4"
-		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc721.methods.mint(senderRaw, tokenId, "123").send({
+		const itemId = convertEthereumItemId(`${it.testErc1155.options.address}:${tokenId}`, Blockchain.ETHEREUM)
+		await it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123").send({
 			from: senderRaw,
 			gas: 500000,
 		})
@@ -203,7 +206,8 @@ describe("bid", () => {
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "ERC20", contract: wethContract },
-			value: "0.00000000000000001",
+			price: "0.00000000000000001",
+			amount: 5,
 			originFees: [{
 				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
 				value: 1000,
@@ -211,7 +215,7 @@ describe("bid", () => {
 		})
 
 		if (!value) throw new Error("Convertable value must be non-undefined")
-		expect(value.value.toString()).toBe("0.000000000000000011")
+		expect(value.value.toString()).toBe("0.000000000000000055")
 		expect(value.type).toBe("insufficient")
 	})
 
@@ -228,14 +232,15 @@ describe("bid", () => {
 			const tx = await ethSdk2.balances.convert(
 				{ assetClass: "ETH" },
 				{ assetClass: "ERC20", contract: toAddress(wethContractEthereum) },
-				"0.0000000000000011"
+				"0.0000000000000055"
 			)
 			await tx.wait()
 		}
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "ERC20", contract: wethContract },
-			value: "0.000000000000001",
+			price: "0.000000000000001",
+			amount: 5,
 			originFees: [{
 				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
 				value: 1000,
@@ -255,7 +260,8 @@ describe("bid", () => {
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: wethAsset,
-			value: "0.000000000000001",
+			price: "0.000000000000001",
+			amount: 5,
 			originFees: [{
 				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
 				value: 1000,
@@ -264,7 +270,7 @@ describe("bid", () => {
 
 		if (!value) throw new Error("Convertable value must be non-undefined")
 		expect(value.type).toBe("convertable")
-		expect(new BigNumber(value.value).isEqualTo("0.0000000000000011")).toBeTruthy()
+		expect(new BigNumber(value.value).isEqualTo("0.0000000000000055")).toBeTruthy()
 	})
 
 

@@ -191,6 +191,7 @@ export class EthereumBid {
 					const value = await this.getConvertableValueCommon(
 						request.currency,
 						request.price,
+						request.amount,
 						originFeesSum
 					)
 					await this.convertCurrency(value)
@@ -222,17 +223,18 @@ export class EthereumBid {
 
 		if (request.assetType["@type"] === "ERC20" && request.assetType.contract in convertMap) {
 			const originFeesSum = request.originFees.reduce((acc, fee) => fee.value, 0)
-			return this.getConvertableValueCommon(request.assetType, request.value, originFeesSum)
+			return this.getConvertableValueCommon(request.assetType, request.price, request.amount, originFeesSum)
 		}
 
 		return undefined
 	}
 
-	async getConvertableValueCommon(assetType: AssetType, value: BigNumberValue, originFeesSum: number) {
+	async getConvertableValueCommon(assetType: AssetType, price: BigNumberValue, amount: number, originFeesSum: number) {
 		if (!this.wallet) {
 			throw new Error("Wallet is undefined")
 		}
 		const convertedAssetType = convertToEthereumAssetType(assetType)
+		const value = new BigNumber(price).multipliedBy(amount)
 		const convertedPrice = await getPrice(this.wallet.ethereum, convertedAssetType, value)
 
 		const baseFee = await this.sdk.order.getBaseOrderFee()
@@ -311,6 +313,7 @@ export class EthereumBid {
 					const value = await this.getConvertableValueCommon(
 						this.convertAssetType(order.make.assetType),
 						request.price,
+						parseInt(order.take.value),
 						getOrderFeesSum(order)
 					)
 					await this.convertCurrency(value)

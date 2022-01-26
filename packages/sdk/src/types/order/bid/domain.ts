@@ -18,7 +18,8 @@ export type GetConvertableValueFunction = {
 
 export type GetConvertableValueRequest = {
 	assetType: AssetType
-	value: BigNumberValue
+	price: BigNumberValue
+	amount: number
 	originFees: UnionPart[]
 }
 export type GetConvertableValueResult =

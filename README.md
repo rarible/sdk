@@ -155,8 +155,8 @@ const {
 } = await sdk.order.bid({ itemId })
 
 /*
-  Get value of native token that will be converted if you use wrapped token (Wrapped Ether for Ethereum, wXTZ for Tezos and etc.) for place a bid
-  Example of returned values when passed wrapped token contract:
+  Get value of native token that will be converted if you use wrapped token (Wrapped Ether for Ethereum, wXTZ for Tezos and etc.) to place a bid
+  Example of returned values, when passed wrapped token contract:
   1. Returns "undefined" if you have sufficient funds for make a bid
   2. Returns if needed to convert funds to wrapped token (ex. Wrapped Ether).
   Value will be converted automatically after invoke "submit" function. Convertable value also includes origin fees
@@ -175,7 +175,8 @@ const {
  */
 getConvertableValue({
   assetType: { "@type": "ERC20", contract: wethContract }, // payment asset
-  value: "0.00000001", // funds for place a bid
+  price: "0.00000001", // price per 1 NFT
+  amount: 4, // amount of NFTs to bid (total needed value for bid calculated as price * amount)
   originFees: [{
     account: feeAccount,
     value: 250, // fee percent in range 0-10000, where 0 - 0%, 250 - 2,5%, 5000 - 50%, 10000 - 100% 
