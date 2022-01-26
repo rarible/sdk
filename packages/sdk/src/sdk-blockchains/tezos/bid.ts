@@ -224,7 +224,6 @@ export class TezosBid {
 			run: async (request: OrderUpdateRequest) => {
 				const wXTZUnionAddress = convertFromContractAddress(this.getWXTZContractAddress())
 
-				console.log("order", JSON.stringify(order, null, "  "))
 				if (order.make.assetType.assetClass === "FT" && order.make.assetType.contract === wXTZUnionAddress) {
 					const originFeesSum = order.data.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
