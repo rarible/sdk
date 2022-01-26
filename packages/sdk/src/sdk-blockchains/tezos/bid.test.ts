@@ -35,7 +35,7 @@ describe("bid test", () => {
 	const mtContract = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
-	test("bid NFT test", async () => {
+	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(nftContract),
 		})
@@ -88,7 +88,7 @@ describe("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test("bid MT test", async () => {
+	test.skip("bid MT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(mtContract),
 		})
@@ -145,7 +145,7 @@ describe("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test("getConvertValue returns insufficient type", async () => {
+	test.skip("getConvertValue returns insufficient type", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(nftContract),
 		})
@@ -177,7 +177,7 @@ describe("bid test", () => {
 		expect(new BigNumber(value.value).isEqualTo("0.000011")).toBeTruthy()
 	})
 
-	test("getConvertValue returns convertable value", async () => {
+	test.skip("getConvertValue returns convertable value", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(nftContract),
 		})
@@ -211,7 +211,7 @@ describe("bid test", () => {
 		expect(new BigNumber(value.value).isEqualTo("0.000044")).toBeTruthy()
 	})
 
-	test("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
+	test.skip("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(mtContract),
 		})
@@ -243,7 +243,7 @@ describe("bid test", () => {
 		expect(value).toBe(undefined)
 	})
 
-	test("convert currency on bid", async () => {
+	test.skip("convert currency on bid", async () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
 		const mintResponse = await itemOwnerSdk.nft.mint({
