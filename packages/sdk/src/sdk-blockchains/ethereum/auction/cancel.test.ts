@@ -4,7 +4,7 @@ import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../../index"
 import { initProviders } from "../test/init-providers"
 import { convertEthereumContractAddress } from "../common"
-import { convertEthereumToUnionAddress } from "../../../../build/sdk-blockchains/ethereum/common"
+import { convertEthereumUnionAddress } from "../../../../build/sdk-blockchains/ethereum/common"
 import { MintType } from "../../../types/nft/mint/domain"
 
 describe("start auction", () => {
@@ -30,7 +30,7 @@ describe("start auction", () => {
 		const mintResponse = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
-				account: convertEthereumToUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
+				account: convertEthereumUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
 				value: 10000,
 			}],
 			lazyMint: false,

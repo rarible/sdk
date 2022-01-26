@@ -3121,7 +3121,7 @@
     "@onflow/util-template" "0.0.1"
     "@onflow/util-uid" "0.0.1"
 
-"@onflow/fcl@^0.0.77", "@onflow/fcl@~0.0.76", "@onflow/fcl@~0.0.77":
+"@onflow/fcl@^0.0.77", "@onflow/fcl@~0.0.77":
   version "0.0.77"
   resolved "https://registry.yarnpkg.com/@onflow/fcl/-/fcl-0.0.77.tgz#2a2da9ec8f90e0cf012d9a459a3472b57e416549"
   integrity sha512-hgFW51Va29KwlzhDy6Fm15UesfXluRTR5RJn+zrm5d5HFfkquaxKOnMGT5waKVFn5u4THQIE6v+OnaDDchGNpg==
@@ -3290,10 +3290,10 @@
     ethereumjs-wallet "^1.0.1"
     web3-provider-engine "^16.0.1"
 
-"@rarible/fcl-types@~0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.0.tgz#d0697f30ed77ef80e43ef59497f1492c5b7dcf91"
-  integrity sha512-9NGq2vZ/nI8LFnHkxULR8OYeE/xhFqiBM3BHH8eFLAAJ02zwNqHyXfzJWvQlDztJ8u5OnOdHevt2n22zCtSpJQ==
+"@rarible/fcl-types@^0.5.30-ac.0", "@rarible/fcl-types@~0.5.30-ac.0":
+  version "0.5.30-ac.0"
+  resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.30-ac.0.tgz#a09a79dfd0f69e3561fa96b2b54ea37439b134c6"
+  integrity sha512-ri2GIAix4lH0J3oBiUykZYhMCl8Br8Q2L4FJzIA9lKcfNAWTimvA22ZJRuf+kDUgvlOWVPRkL12QNL0QR4fuxw==
 
 "@rarible/flow-api-client@~0.0.3":
   version "0.0.3"
@@ -3302,21 +3302,21 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.29-hotfix.0":
-  version "0.5.29-hotfix.0"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.29-hotfix.0.tgz#12090ed3398fe77bd6f73e3780c0790feeeed850"
-  integrity sha512-4KwU+dLsu//sX6V69DfSjZbQin0BwOg/iDoig+pirRStbwR2UtB8cge4bpwGyeA0HOSeERHSqRRY43wXxx0D4g==
+"@rarible/flow-sdk-scripts@^0.5.30-ac.0":
+  version "0.5.30-alpha.5"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30-alpha.5.tgz#53c6ac8d1a14603526ebbfeb39e3fd20674ebedc"
+  integrity sha512-i67xKrd78p3zjQMb4vtCug8O0XULgIYNU4YfNpa0agfSdZdZw3IO1ASXxYYxPkepJzUiN5uPYN9RmAUQajgjtQ==
 
-"@rarible/flow-sdk@0.5.29-hotfix.0":
-  version "0.5.29-hotfix.0"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.29-hotfix.0.tgz#2f2390f1a87cb19ac787936ace7458ecd7b15e05"
-  integrity sha512-CYM1j6YbG0FwsqalRDn0kS8bkU+caZsGbaP3X6HAKr6k6o0smyqreanwmUK+uZLLUC1HMWgeABhVb8UsZ4XXQA==
+"@rarible/flow-sdk@0.5.30-ac.0":
+  version "0.5.30-ac.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.30-ac.0.tgz#c9ae126239b338c62abf2964c128a6ada4c78fb1"
+  integrity sha512-ITJ3YXC1kjijX8A+wPvr5Qs8Mb5Ri2XHS+PAjJuM1RxOaHT54jjyVMp7Vdl+82ww6e10DrBGS8E3Q4TkmMUxNQ==
   dependencies:
-    "@onflow/fcl" "~0.0.76"
+    "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
-    "@rarible/fcl-types" "~0.5.0"
+    "@rarible/fcl-types" "^0.5.30-ac.0"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.29-hotfix.0"
+    "@rarible/flow-sdk-scripts" "^0.5.30-ac.0"
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 

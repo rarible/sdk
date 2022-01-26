@@ -4,7 +4,7 @@ import type BigNumber from "bignumber.js"
 import type { Action } from "@rarible/action"
 import type { UnionPart } from "../order/common"
 
-export type IAuctionPutBid = Action<"approve" | "sign", IPutBidRequest, IBlockchainTransaction>
+export type IAuctionPutBid = Action<"send-tx" | "approve" | "sign", IPutBidRequest, IBlockchainTransaction>
 
 export type IPutBidRequest = {
 	auctionId: AuctionId

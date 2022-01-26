@@ -19,7 +19,7 @@ export type IStartAuctionRequest = {
 	minimalPrice: BigNumberValue,
 	duration: number,
 	startTime?: number,
-	buyOutPrice: BigNumberValue,
+	buyOutPrice?: BigNumberValue,
 	payouts: UnionPart[],
 	originFees: UnionPart[],
 }

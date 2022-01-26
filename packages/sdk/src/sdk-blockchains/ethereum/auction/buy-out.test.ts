@@ -7,7 +7,7 @@ import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transac
 import { createRaribleSdk } from "../../../index"
 import { initProviders } from "../test/init-providers"
 import { convertEthereumContractAddress } from "../common"
-import { convertEthereumToUnionAddress } from "../../../../build/sdk-blockchains/ethereum/common"
+import { convertEthereumUnionAddress } from "../../../../build/sdk-blockchains/ethereum/common"
 import { MintType } from "../../../types/nft/mint/domain"
 import { awaitAuction } from "../test/await-auction"
 
@@ -36,13 +36,18 @@ describe("buy out auction", () => {
 	test("buy out auction erc-721 <-> eth", async () => {
 
 		console.log("mint", it.testErc20.options.address)
-		await sentTx(it.testErc20.methods.mint(await ethwallet2.ethereum.getFrom(), 10000000000), { from: await ethwallet1.ethereum.getFrom() })
+		await sentTx(
+			it.testErc20.methods.mint(
+				await ethwallet2.ethereum.getFrom(), 10000000000
+			),
+			{ from: await ethwallet1.ethereum.getFrom() }
+		)
 
 		const mintAction = await sdk1.nft.mint({ collectionId: testErc721Contract })
 		const mintResponse = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
-				account: convertEthereumToUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
+				account: convertEthereumUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
 				value: 10000,
 			}],
 			lazyMint: false,
@@ -75,7 +80,7 @@ describe("buy out auction", () => {
 		const mintResponse = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
-				account: convertEthereumToUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
+				account: convertEthereumUnionAddress(await ethwallet1.ethereum.getFrom(), Blockchain.ETHEREUM),
 				value: 10000,
 			}],
 			lazyMint: false,
