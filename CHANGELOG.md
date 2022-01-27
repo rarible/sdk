@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.6-alpha.4](https://github.com/rarible/sdk/compare/v0.8.6-alpha.3...v0.8.6-alpha.4) (2022-01-27)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixed bug with commissions and added support for legacyOrders ([5c10587](https://github.com/rarible/sdk/commit/5c10587edf3d40190ceecdcaff375cbc5a1896f1))
+
+
+
+
+
 ## [0.8.6-alpha.3](https://github.com/rarible/sdk/compare/v0.8.6-alpha.2...v0.8.6-alpha.3) (2022-01-21)
 
 
