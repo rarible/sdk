@@ -152,6 +152,8 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 			return Blockchain.ETHEREUM
 		case "mumbai":
 			return Blockchain.POLYGON
+		case "mumbai-dev":
+			return Blockchain.POLYGON
 		case "polygon":
 			return Blockchain.POLYGON
 		default:
