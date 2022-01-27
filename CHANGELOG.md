@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.22](https://github.com/rarible/sdk/compare/v0.8.21...v0.8.22) (2022-01-27)
+
+
+### Bug Fixes
+
+* mumbai dev api path ([#101](https://github.com/rarible/sdk/issues/101)) ([851b21c](https://github.com/rarible/sdk/commit/851b21cc904eab94758f257e17484dc1c8f5d461))
+
+
+
+
+
 ## [0.8.21](https://github.com/rarible/sdk/compare/v0.8.20...v0.8.21) (2022-01-27)
 
 
