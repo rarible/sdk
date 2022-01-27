@@ -134,8 +134,7 @@ describe("bid", () => {
 			}],
 		})
 
-		const order = await awaitStock(sdk1, orderId, price)
-		expect(order.makeStock.toString()).toEqual(price)
+		await awaitStock(sdk1, orderId, "0.00000000000000006")
 
 		const updateAction = await sdk2.order.bidUpdate({
 			orderId,
