@@ -3337,10 +3337,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.31":
-  version "0.12.32"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.32.tgz#2ff9f38bdbc2422620cc15c2da4a248889329606"
-  integrity sha512-QHtk0x2a5G6hSGDd1KFCdATm1PCnwZN4p4u13U32FYkpRW6wh/pXBOYWi6U+jRPC5MNvlQG2TgL1oTLP/HiPnw==
+"@rarible/protocol-ethereum-sdk@~0.12.36":
+  version "0.12.36"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.36.tgz#c5cccdb95da4516d8479832e5488f8924e1488cb"
+  integrity sha512-4i+FQ8OXjtlkQ7o8//LGsB7HrqNty4SJ2IaZDCGslxF6zUZJhTIs9svowrz/7XL/U7FRSogBCqYPeKLCwrqg7Q==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
