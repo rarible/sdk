@@ -5,5 +5,5 @@ export const devConfig: RaribleSdkConfig = {
 	ethereumEnv: "ropsten",
 	flowEnv: "dev",
 	tezosNetwork: "hangzhou",
-	polygonNetwork: "mumbai",
+	polygonNetwork: "mumbai-dev",
 }
