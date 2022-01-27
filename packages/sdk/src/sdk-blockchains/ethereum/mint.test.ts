@@ -8,7 +8,7 @@ import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { LogsLevel } from "../../domain"
-import { convertEthereumContractAddress, convertEthereumUnionAddress } from "./common"
+import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
@@ -22,7 +22,7 @@ describe("mint", () => {
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
-		const sender = convertEthereumUnionAddress(senderRaw, Blockchain.ETHEREUM)
+		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
 		})
@@ -50,7 +50,7 @@ describe("mint", () => {
 
 	test("should mint ERC1155 token", async () => {
 		const senderRaw = wallet.getAddressString()
-		const sender = convertEthereumUnionAddress(senderRaw, Blockchain.ETHEREUM)
+		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(erc1155Address, Blockchain.ETHEREUM),
 		})

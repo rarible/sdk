@@ -3270,13 +3270,6 @@
   dependencies:
     "@rarible/types" "~0.5.0"
 
-"@rarible/ethereum-provider@^0.12.26", "@rarible/ethereum-provider@~0.12.26":
-  version "0.12.26"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.26.tgz#586b1860cff6506afc1fc8ece60bb3c3f14cd19b"
-  integrity sha512-afqSvI2eZXlsBaSVd1JgP3jiah/ZENfAdyvHqR3REUenrkfb1QwTbMk0qYhL6VaLzFNdvOJ6O3Pryzu59DRExA==
-  dependencies:
-    eth-sig-util "^3.0.0"
-
 "@rarible/ethereum-provider@^0.12.30", "@rarible/ethereum-provider@~0.12.30":
   version "0.12.30"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.30.tgz#579170daa7cb0de568057a60d45a38d3d37f2f43"
@@ -3284,7 +3277,7 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
-"@rarible/ethereum-sdk-test-common@~0.12.30":
+"@rarible/ethereum-sdk-test-common@0.12.30":
   version "0.12.30"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.30.tgz#6179323d1632b5ef69f148ee466141104325c900"
   integrity sha512-PowtZTsiRwpAKeY9JpUIoecgmLm7Phg8jaz7a24TGjERNrgSVBto/50E9buKgZ6tiIl9DfGl9FvJAFaROnPokg==
@@ -3344,25 +3337,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.28":
-  version "0.12.28"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.28.tgz#0685b4a86a8b60bf5db9031f327430c39081ad94"
-  integrity sha512-Eg+L7LBh6JGKEUAD0naLfEO53gl67aGw58fMpGuBElPgHm2hUIr6SffuQ0MCgDPZ0qAdEZ/XgWhoJzlRv3nPow==
-  dependencies:
-    "@ethereumjs/common" "^2.4.0"
-    "@ethereumjs/tx" "^3.3.0"
-    "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.18"
-    "@rarible/ethereum-provider" "^0.12.26"
-    "@rarible/utils" "~0.5.0"
-    eth-sig-util "^3.0.0"
-    ethereumjs-util "^7.1.0"
-    exponential-backoff "^3.1.0"
-
-"@rarible/protocol-ethereum-sdk@~0.12.30":
-  version "0.12.30"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.30.tgz#d435adf46caaaabfdd3aa6fd4d191d0a989ea6eb"
-  integrity sha512-ZlGieLmLhSqRhwCOWRA2b1BC+dHRn9n0Wh6Xb9Ya7vdH1n2fa+bBWgx9y3t6Jkq3bctWpIB6XJ7SugwCc5BfIg==
+"@rarible/protocol-ethereum-sdk@~0.12.31":
+  version "0.12.32"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.32.tgz#2ff9f38bdbc2422620cc15c2da4a248889329606"
+  integrity sha512-QHtk0x2a5G6hSGDd1KFCdATm1PCnwZN4p4u13U32FYkpRW6wh/pXBOYWi6U+jRPC5MNvlQG2TgL1oTLP/HiPnw==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
@@ -3376,18 +3354,7 @@
     ethereumjs-util "^7.1.0"
     exponential-backoff "^3.1.0"
 
-"@rarible/test-provider@~0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.0.tgz#c0abda6fd6f92d0eac37a37f307830f88c113264"
-  integrity sha512-d8chlYztOVsd19PUD0TUlJywh1497DtSdbq079Sbkm6nNtjzUuuNZDtAUiH/TMZsYG1yFwN+i/aC+AeWMZLuTw==
-  dependencies:
-    "@ethereumjs/common" "^2.4.0"
-    "@ethereumjs/tx" "^3.3.0"
-    eth-sig-util "^3.0.1"
-    ethereumjs-util "^7.1.0"
-    ethereumjs-wallet "^1.0.1"
-
-"@rarible/test-provider@~0.5.4":
+"@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.4.tgz#39122851d11e8092ce85a3ea88d64bd4df416c35"
   integrity sha512-bp5J0jSHBwz+aOPW8ycM9rIO42f+0MnnUlNxMsl/8LfBvWmDqWp/4XXDf8hLowFw1JurSH7M4kzP9B+vqVlanA==
@@ -3398,10 +3365,10 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-sdk@~0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.0.5.tgz#33f14b0cd80bd1def9bf8813f55c82c9967b272b"
-  integrity sha512-frkuK66P66cYh6OL+EITpGV9dh1G8IvGEuulwe5AEMQKn3Tqq9nPzspDbT9hk8FRFds02dMhI/kX1n9hN6alnQ==
+"@rarible/tezos-sdk@~0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.0.7.tgz#da71aed56b3657b2045530d70277544df5fb2cc6"
+  integrity sha512-xaFJPDwA6U0K/tgycT4lhTErKVig2qe/wAAj1nmNcoX2YK1wF77UhWg6TQiNNdAjHQ7xem4Jfz7PYMo7AHhKtw==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.8"
     "@taquito/beacon-wallet" "^11.0.1"
@@ -3439,9 +3406,9 @@
     bignumber.js "^9.0.0"
 
 "@rarible/web3-ethereum@~0.12.30":
-  version "0.12.30"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.30.tgz#26b26894c4b678b336eff6213688172ae86c6f58"
-  integrity sha512-39KFOLyyLJaQ1ZsGanv9+/avQ9sCWiGaLvKgdR3L2FzorAgoDDamKKtN/OgBy0ls4zi+e3XncbOMGuVRWkyrtA==
+  version "0.12.31"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.31.tgz#a63758ddb33016238d732c736805b66a68c15405"
+  integrity sha512-e5WADlNPZuM+KhWF1vCfb6gXYz6jXZB9aYnxKuxc4B9e2fcgwB4z+cVRz8e8GufL5UNwqwYb4DQ3WXe3llCWRQ==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.30"
     eth-rpc-errors "^4.0.3"

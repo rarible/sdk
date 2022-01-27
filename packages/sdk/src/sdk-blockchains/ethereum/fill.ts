@@ -2,7 +2,6 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { AssetType, Order } from "@rarible/api-client"
-import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type {
 	CommonFillRequestAssetType,
@@ -10,7 +9,7 @@ import type {
 	FillOrderRequest,
 } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
-import { BigNumber as BigNumberClass, toBn } from "@rarible/utils/build/bn"
+import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
@@ -19,7 +18,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertToEthereumAddress, isEVMBlockchain } from "./common"
+import { convertToEthereumAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -40,97 +39,16 @@ export class EthereumFill {
 		this.acceptBid = this.acceptBid.bind(this)
 	}
 
-	convertAssetType(assetType: AssetType): EthereumAssetType {
-		switch (assetType["@type"]) {
-			case "ETH": {
-				return {
-					assetClass: "ETH",
-				}
-			}
-			case "ERC20": {
-				return {
-					assetClass: "ERC20",
-					contract: convertToEthereumAddress(assetType.contract),
-				}
-			}
-			case "ERC721": {
-				return {
-					assetClass: "ERC721",
-					contract: convertToEthereumAddress(assetType.contract),
-					tokenId: assetType.tokenId,
-				}
-			}
-			case "ERC721_Lazy": {
-				return {
-					assetClass: "ERC721_LAZY",
-					contract: convertToEthereumAddress(assetType.contract),
-					tokenId: assetType.tokenId,
-					uri: assetType.uri,
-					creators: assetType.creators.map(c => ({
-						account: convertToEthereumAddress(c.account),
-						value: toBn(c.value).toNumber(),
-					})),
-					royalties: assetType.royalties.map(r => ({
-						account: convertToEthereumAddress(r.account),
-						value: toBn(r.value).toNumber(),
-					})),
-					signatures: assetType.signatures.map(str => toBinary(str)),
-				}
-			}
-			case "ERC1155": {
-				return {
-					assetClass: "ERC1155",
-					contract: convertToEthereumAddress(assetType.contract),
-					tokenId: assetType.tokenId,
-				}
-			}
-			case "ERC1155_Lazy": {
-				return {
-					assetClass: "ERC1155_LAZY",
-					contract: convertToEthereumAddress(assetType.contract),
-					tokenId: assetType.tokenId,
-					uri: assetType.uri,
-					supply: assetType.supply !== undefined ? toBigNumber(assetType.supply): toBigNumber("1"),
-					creators: assetType.creators.map(c => ({
-						account: convertToEthereumAddress(c.account),
-						value: toBn(c.value).toNumber(),
-					})),
-					royalties: assetType.royalties.map(r => ({
-						account: convertToEthereumAddress(r.account),
-						value: toBn(r.value).toNumber(),
-					})),
-					signatures: assetType.signatures.map(str => toBinary(str)),
-				}
-			}
-			case "CRYPTO_PUNKS": {
-				return {
-					assetClass: "CRYPTO_PUNKS",
-					contract: convertToEthereumAddress(assetType.contract),
-					tokenId: assetType.tokenId,
-				}
-			}
-			case "GEN_ART": {
-				return {
-					assetClass: "GEN_ART",
-					contract: convertToEthereumAddress(assetType.contract),
-				}
-			}
-			default: {
-				throw new Error(`Unsupported asset type ${assetType["@type"]}`)
-			}
-		}
-	}
-
 	convertToSimpleOrder(order: Order): SimplePreparedOrder {
 		const common = {
 			maker: convertToEthereumAddress(order.maker),
 			taker: order.taker && convertToEthereumAddress(order.taker),
 			make: {
-				assetType: this.convertAssetType(order.make.type),
+				assetType: convertToEthereumAssetType(order.make.type),
 				value: order.make.value,
 			},
 			take: {
-				assetType: this.convertAssetType(order.take.type),
+				assetType: convertToEthereumAssetType(order.take.type),
 				value: order.take.value,
 			},
 			salt: toWord(order.salt),
@@ -209,7 +127,7 @@ export class EthereumFill {
 			case "ERC1155":
 			case "ERC1155_Lazy":
 			case "CRYPTO_PUNKS":
-				return this.convertAssetType(assetType) as CommonFillRequestAssetType
+				return convertToEthereumAssetType(assetType) as CommonFillRequestAssetType
 			default: throw new Error("Wrong asset type for fill action")
 		}
 	}

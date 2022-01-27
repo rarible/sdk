@@ -4,7 +4,6 @@ import { Action } from "@rarible/action"
 import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { Blockchain } from "@rarible/api-client"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
@@ -27,10 +26,6 @@ export class FlowBid {
 
 	private async getConvertableValue(): Promise<GetConvertableValueResult> {
 		return undefined
-	}
-
-	private async convert(): Promise<IBlockchainTransaction> {
-		throw new Error("Convert operation is not supported")
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
@@ -71,7 +66,6 @@ export class FlowBid {
 			maxAmount: toBigNumber("1"),
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,
-			convert: this.convert,
 			submit: bidAction,
 		}
 	}

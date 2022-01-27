@@ -25,7 +25,8 @@ export function createTezosSdk(
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
 	const sellService = new TezosSell(maybeProvider, apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
-	const bidService = new TezosBid(maybeProvider, apis)
+	const balanceService = new TezosBalance(maybeProvider, apis)
+	const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, network)
 
 	return {
@@ -48,7 +49,7 @@ export function createTezosSdk(
 			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
 		},
 		balances: {
-			getBalance: new TezosBalance(maybeProvider, apis).getBalance,
+			getBalance: balanceService.getBalance,
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,

@@ -26,7 +26,6 @@ describe("deploy tezos tests", () => {
 		})
 
 		await result.tx.wait()
-		console.log(result)
 	})
 
 	test.skip("deploy private nft", async () => {
@@ -63,7 +62,6 @@ describe("deploy tezos tests", () => {
 		})
 
 		await result.tx.wait()
-		console.log(result)
 
 		await awaitForCollection(sdk, result.address)
 	})

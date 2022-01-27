@@ -18,6 +18,7 @@ import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restric
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -68,7 +69,7 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getBidEntity(request))].bid(request)
 	}
 
-	bidUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
+	bidUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {
 		return this.instances[extractBlockchain(request.orderId)].bidUpdate(request)
 	}
 
