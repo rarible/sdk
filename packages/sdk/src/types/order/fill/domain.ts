@@ -1,8 +1,7 @@
-import type { AssetType, Order, OrderId } from "@rarible/api-client"
+import type { Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
-import type { BigNumberValue } from "@rarible/utils"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
