@@ -14,7 +14,12 @@ import { LogsLevel } from "../../domain"
 import { initProvider, initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
-import { convertEthereumContractAddress, convertEthereumItemId, convertEthereumToUnionAddress } from "./common"
+import {
+	convertEthereumContractAddress,
+	convertEthereumItemId,
+	convertEthereumToUnionAddress,
+	getEthereumItemId,
+} from "./common"
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
@@ -41,6 +46,8 @@ describe("bid", () => {
 	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
 	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:${wethContractEthereum}`)
 	const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
+
+	const e2eErc1155V2ContractAddress = convertEthereumContractAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d", Blockchain.ETHEREUM)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -174,20 +181,22 @@ describe("bid", () => {
 
 		const bidResponse = await sdk2.order.bid({ itemId })
 
-		const value = await bidResponse.getConvertableValue({
-			assetType: {
-				"@type": "ERC20",
-				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
-			},
-			price: "0.00000000000000001",
-			amount: 5,
-			originFees: [{
-				account: bidderUnionAddress,
-				value: 1000,
-			}],
-		})
+		await retry(5, 2000, async () => {
+			const value = await bidResponse.getConvertableValue({
+				assetType: {
+					"@type": "ERC20",
+					contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+				},
+				price: "0.00000000000000001",
+				amount: 5,
+				originFees: [{
+					account: bidderUnionAddress,
+					value: 1000,
+				}],
+			})
 
-		expect(value).toBe(undefined)
+			expect(value).toBe(undefined)
+		})
 	})
 
 	test("getConvertValue returns insufficient type", async () => {
@@ -203,19 +212,21 @@ describe("bid", () => {
 
 		const bidResponse = await nullFundsSdk.order.bid({ itemId })
 
-		const value = await bidResponse.getConvertableValue({
-			assetType: { "@type": "ERC20", contract: wethContract },
-			price: "0.00000000000000001",
-			amount: 5,
-			originFees: [{
-				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
-				value: 1000,
-			}],
-		})
+		await retry(5, 2000, async () => {
+			const value = await bidResponse.getConvertableValue({
+				assetType: { "@type": "ERC20", contract: wethContract },
+				price: "0.00000000000000001",
+				amount: 5,
+				originFees: [{
+					account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
+					value: 1000,
+				}],
+			})
 
-		if (!value) throw new Error("Convertable value must be non-undefined")
-		expect(value.value.toString()).toBe("0.000000000000000055")
-		expect(value.type).toBe("insufficient")
+			if (!value) throw new Error("Convertable value must be non-undefined")
+			expect(value.value.toString()).toBe("0.000000000000000055")
+			expect(value.type).toBe("insufficient")
+		})
 	})
 
 	test("getConvertableValue returns undefined", async () => {
@@ -227,6 +238,7 @@ describe("bid", () => {
 		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
 
+		console.log("wethBidderBalance", wethBidderBalance.toString())
 		if (wethBidderBalance.lt("0.000000000000001")) {
 			const tx = await ethSdk2.balances.convert(
 				{ assetClass: "ETH" },
@@ -236,17 +248,19 @@ describe("bid", () => {
 			await tx.wait()
 		}
 
-		const value = await bidResponse.getConvertableValue({
-			assetType: { "@type": "ERC20", contract: wethContract },
-			price: "0.000000000000001",
-			amount: 5,
-			originFees: [{
-				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
-				value: 1000,
-			}],
-		})
+		await retry(5, 2000, async () => {
+			const value = await bidResponse.getConvertableValue({
+				assetType: { "@type": "ERC20", contract: wethContract },
+				price: "0.000000000000001",
+				amount: 5,
+				originFees: [{
+					account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
+					value: 1000,
+				}],
+			})
 
-		expect(value).toBe(undefined)
+			expect(value).toBe(undefined)
+		})
 	})
 
 	test("getConvertableValue returns convertable value", async () => {
@@ -257,21 +271,22 @@ describe("bid", () => {
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 		await awaitBalance(sdk2, wethAsset, ethwallet2, "0")
 
-		const value = await bidResponse.getConvertableValue({
-			assetType: wethAsset,
-			price: "0.000000000000001",
-			amount: 5,
-			originFees: [{
-				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
-				value: 1000,
-			}],
+		await retry(5, 2000, async () => {
+			const value = await bidResponse.getConvertableValue({
+				assetType: wethAsset,
+				price: "0.000000000000001",
+				amount: 5,
+				originFees: [{
+					account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
+					value: 1000,
+				}],
+			})
+
+			if (!value) throw new Error("Convertable value must be non-undefined")
+			expect(value.type).toBe("convertable")
+			expect(new BigNumber(value.value).isEqualTo("0.0000000000000055")).toBeTruthy()
 		})
-
-		if (!value) throw new Error("Convertable value must be non-undefined")
-		expect(value.type).toBe("convertable")
-		expect(new BigNumber(value.value).isEqualTo("0.0000000000000055")).toBeTruthy()
 	})
-
 
 	test("bid for collection", async () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
@@ -312,11 +327,71 @@ describe("bid", () => {
 			amount: 1,
 			infiniteApproval: true,
 			assetType: {
-			  "@type": "ERC721",
 				contract: erc721Contract,
 				tokenId: toBigNumber(tokenId),
 			},
 		})
 		await fillBidResult.wait()
+	})
+
+	test("bid for collection and accept bid on lazy item", async () => {
+		const ownerCollectionAddress = await ethereum1.getFrom()
+		const bidderAddress = await ethereum2.getFrom()
+
+		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+      	from: ownerCollectionAddress,
+      	gas: 500000,
+		})
+
+		const action = await sdk1.nft.mint({ collectionId: e2eErc1155V2ContractAddress })
+
+		const mintResult = await action.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(ownerCollectionAddress, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: true,
+			supply: 10,
+		})
+
+		await awaitItem(sdk1, mintResult.itemId)
+
+		const bidResponse = await sdk2.order.bid({
+			collectionId: e2eErc1155V2ContractAddress,
+		})
+
+		const erc20Contract = convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM)
+		const bidOrderId = await bidResponse.submit({
+			amount: 10,
+			price: "0.00000000000000001",
+			currency: {
+				"@type": "ERC20",
+				contract: erc20Contract,
+			},
+		})
+
+		const acceptBidResponse = await sdk1.order.acceptBid({
+			orderId: bidOrderId,
+		})
+
+		const { tokenId } = getEthereumItemId(mintResult.itemId)
+		const fillBidResult = await acceptBidResponse.submit({
+			amount: 10,
+			infiniteApproval: true,
+			assetType: {
+				contract: e2eErc1155V2ContractAddress,
+				tokenId: toBigNumber(tokenId),
+			},
+		})
+		await fillBidResult.wait()
+
+		await retry(10, 1000, async () => {
+			 const ownership = await sdk1.apis.ownership.getOwnershipById({
+				ownershipId: `${mintResult.itemId}:${bidderAddress}`,
+			})
+			expect(ownership.value).toBe("10")
+		})
 	})
 })
