@@ -1,10 +1,9 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
-import type { AssetType, Order } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import type {
-	CommonFillRequestAssetType,
 	FillOrderAction,
 	FillOrderRequest,
 } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
@@ -120,18 +119,6 @@ export class EthereumFill {
 		}
 	}
 
-	getFillAssetType(assetType: AssetType): CommonFillRequestAssetType {
-		switch (assetType["@type"]) {
-			case "ERC721":
-			case "ERC721_Lazy":
-			case "ERC1155":
-			case "ERC1155_Lazy":
-			case "CRYPTO_PUNKS":
-				return convertToEthereumAssetType(assetType) as CommonFillRequestAssetType
-			default: throw new Error("Wrong asset type for fill action")
-		}
-	}
-
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
 		let request: FillOrderRequest
 		switch (order.type) {
@@ -176,7 +163,10 @@ export class EthereumFill {
 		}
 
 		if (fillRequest.assetType) {
-			request.assetType = this.getFillAssetType(fillRequest.assetType)
+			request.assetType = {
+				contract: convertToEthereumAddress(fillRequest.assetType.contract),
+				tokenId: fillRequest.assetType.tokenId,
+			}
 		}
 
 		return request

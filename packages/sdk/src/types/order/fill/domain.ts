@@ -1,6 +1,8 @@
 import type { AssetType, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { ContractAddress } from "@rarible/types"
+import type { BigNumberValue } from "@rarible/utils"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -46,9 +48,12 @@ export interface FillRequest {
 	 */
 	infiniteApproval?: boolean
 	/**
-	 * Set asset type for bid on collection
+	 * Set asset type for fill collection order
 	 */
-	assetType?: AssetType
+	assetType?: {
+		contract: ContractAddress
+		tokenId: string | number
+	}
 }
 
 export type FillActionTypes = "approve" | "send-tx"
