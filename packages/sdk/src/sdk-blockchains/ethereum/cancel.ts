@@ -3,6 +3,7 @@ import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
+import { isEVMBlockchain } from "./common"
 
 export class EthereumCancel {
 	constructor(
@@ -17,7 +18,7 @@ export class EthereumCancel {
 				throw new Error("OrderId has not been specified")
 			}
 			const [blockchain, orderId] = request.orderId.split(":")
-			if (blockchain !== "ETHEREUM") {
+			if (!isEVMBlockchain(blockchain)) {
 				throw new Error("Not an ethereum order")
 			}
 

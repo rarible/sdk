@@ -4,7 +4,7 @@ import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
-import { convertToEthereumAddress } from "./common"
+import { convertToEthereumAddress, isEVMBlockchain } from "./common"
 
 export class EthereumTransfer {
 	constructor(
@@ -16,7 +16,7 @@ export class EthereumTransfer {
 
 	async transfer(prepare: PrepareTransferRequest) {
 		const [domain, contract, tokenId] = prepare.itemId.split(":")
-		if (domain !== "ETHEREUM") {
+		if (!isEVMBlockchain(domain)) {
 			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
 		}
 

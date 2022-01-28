@@ -5,4 +5,5 @@ export const stagingConfig: RaribleSdkConfig = {
 	ethereumEnv: "rinkeby",
 	flowEnv: "staging",
 	tezosNetwork: "hangzhou",
+	polygonNetwork: "mumbai",
 }

@@ -1,19 +1,27 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toWord } from "@rarible/types"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as common from "./common"
-import { getEthereumItemId } from "./common"
+import type { EVMBlockchain } from "./common"
+import { getEthereumItemId, getEVMBlockchain, isEVMBlockchain } from "./common"
 
 export class EthereumSell {
-	constructor(private sdk: RaribleSdk) {
+	private readonly blockchain: EVMBlockchain
+
+	constructor(
+		private sdk: RaribleSdk,
+		network: EthereumNetwork,
+	) {
+		this.blockchain = getEVMBlockchain(network)
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
 	}
 
 	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
 		const [domain, contract] = request.collectionId.split(":")
-		if (domain !== "ETHEREUM") {
+		if (!isEVMBlockchain(domain)) {
 			throw new Error("Not an ethereum item")
 		}
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
@@ -36,7 +44,7 @@ export class EthereumSell {
 					originFees: common.toEthereumParts(sellFormRequest.originFees),
 				}
 			})
-			.after(order => common.convertEthereumOrderHash(order.hash))
+			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
@@ -53,7 +61,7 @@ export class EthereumSell {
 			throw new Error("OrderId has not been specified")
 		}
 		const [blockchain, hash] = prepareRequest.orderId.split(":")
-		if (blockchain !== "ETHEREUM") {
+		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an ethereum order")
 		}
 
@@ -67,7 +75,7 @@ export class EthereumSell {
 				orderHash: toWord(hash),
 				priceDecimal: request.price,
 			}))
-			.after(order => common.convertEthereumOrderHash(order.hash))
+			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
 
 		return {
 			originFeeSupport: order.type === "RARIBLE_V2" ? OriginFeeSupport.FULL : OriginFeeSupport.AMOUNT_ONLY,

@@ -3,6 +3,165 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.18](https://github.com/rarible/sdk/compare/v0.8.17...v0.8.18) (2022-01-18)
+
+
+### Bug Fixes
+
+* remove originFee support for flow orders ([01d944a](https://github.com/rarible/sdk/commit/01d944af8592b56f141e5e8731259a236469e41f))
+
+
+
+
+
+## [0.8.17](https://github.com/rarible/sdk/compare/v0.8.16...v0.8.17) (2022-01-17)
+
+
+### Features
+
+* new tezos sdk ([5c93c2f](https://github.com/rarible/sdk/commit/5c93c2fb5ff3b35a05f1ef3b993e2923c0f387d7))
+
+
+
+
+
+## [0.8.16](https://github.com/rarible/sdk/compare/v0.8.15...v0.8.16) (2022-01-14)
+
+
+### Features
+
+* tezos deps lock ([fd13609](https://github.com/rarible/sdk/commit/fd13609859c2c23100102bfd82d235734c5dc0c2))
+* tezos up version ([7cc83ab](https://github.com/rarible/sdk/commit/7cc83abf1ff054810a86c7d02598d84e2122f240))
+
+
+
+
+
+## [0.8.15](https://github.com/rarible/sdk/compare/v0.8.14...v0.8.15) (2022-01-14)
+
+
+### Bug Fixes
+
+* convert UnionAddress to tezos address ([3bf452a](https://github.com/rarible/sdk/commit/3bf452abdf96f0d0cb17c555dddb549148654d8a))
+
+
+### Features
+
+* tezos payouts update ([2d3951c](https://github.com/rarible/sdk/commit/2d3951c64a226bce378d9f2034c90ddbebfb1297))
+
+
+
+
+
+## [0.8.14](https://github.com/rarible/sdk/compare/v0.8.13...v0.8.14) (2022-01-13)
+
+
+### Features
+
+* tezos update approve operations ([137d5cb](https://github.com/rarible/sdk/commit/137d5cbbe9c9e46aee044166748e584ee574a95e))
+
+
+
+
+
+## [0.8.13](https://github.com/rarible/sdk/compare/v0.8.12...v0.8.13) (2022-01-12)
+
+
+### Features
+
+* tezos royalties ([06d8b13](https://github.com/rarible/sdk/commit/06d8b1337b3332edde6b907ad4828f93d6b3fcd7))
+
+
+
+
+
+## [0.8.12](https://github.com/rarible/sdk/compare/v0.8.11...v0.8.12) (2022-01-12)
+
+
+### Bug Fixes
+
+* update tezos hangzhou api ([2bd823e](https://github.com/rarible/sdk/commit/2bd823e042caed7ebc5f2229f21f160af6f2470b))
+
+
+
+
+
+## [0.8.11](https://github.com/rarible/sdk/compare/v0.8.10...v0.8.11) (2022-01-09)
+
+
+### Bug Fixes
+
+* incorrect imports ([f300cbd](https://github.com/rarible/sdk/commit/f300cbd8ad1730ccb18249a0c74c80453fa56755))
+
+
+
+
+
+## [0.8.10](https://github.com/rarible/sdk/compare/v0.8.9...v0.8.10) (2022-01-09)
+
+
+### Bug Fixes
+
+* removed unneeded Blockchain enum ([ebec0dd](https://github.com/rarible/sdk/commit/ebec0ddf8a88377a85dc11043b883b0f70249c48))
+
+
+
+
+
+## [0.8.9](https://github.com/rarible/sdk/compare/v0.8.8...v0.8.9) (2022-01-09)
+
+
+### Features
+
+* extracted beacon provider to separate package ([a89bb7f](https://github.com/rarible/sdk/commit/a89bb7fe6f861c89c49e53d234e1314f2b0beb77))
+* extracted fcl provider to separate package ([3f701ca](https://github.com/rarible/sdk/commit/3f701cad0f2e1ea970d0cad65e749158b59f6c4d))
+* extracted fortmatic, torus, portis, walletlink, walletconnect to separate packages ([f3af06a](https://github.com/rarible/sdk/commit/f3af06ab5eaf1c5cf6c9768b13617091783751f0))
+* extracted ledger iframe provider to separate package ([c0e3c4d](https://github.com/rarible/sdk/commit/c0e3c4da1e40da1f96de5475835d843561cae538))
+* extracted mew provider to separate package ([c142e9a](https://github.com/rarible/sdk/commit/c142e9a96613154ea6fcd8a647b6125807ca5e81))
+
+
+
+
+
+## [0.8.8](https://github.com/rarible/sdk/compare/v0.8.7...v0.8.8) (2022-01-08)
+
+
+### Bug Fixes
+
+* generic implementation for ethereum providers, remove code duplicates ([c101f6c](https://github.com/rarible/sdk/commit/c101f6c87912ca1a250468d9b049e1f7571cbadc))
+
+
+
+
+
+## [0.8.7](https://github.com/rarible/sdk/compare/v0.8.6...v0.8.7) (2021-12-30)
+
+
+### Features
+
+* support for polygon ([4bef6aa](https://github.com/rarible/sdk/commit/4bef6aa53c477a4c6634d9eeea5511dd3f33f763))
+
+
+
+
+
+## [0.8.6](https://github.com/rarible/sdk/compare/v0.8.5...v0.8.6) (2021-12-30)
+
+
+### Bug Fixes
+
+* remove unneded dependencies ([6af2fd0](https://github.com/rarible/sdk/commit/6af2fd065fc40580e2ef1d15f3ae278a61ca1c99))
+* update flow-sdk to use old transactions ([#83](https://github.com/rarible/sdk/issues/83)) ([0ddf50d](https://github.com/rarible/sdk/commit/0ddf50df26472a032de7cdf9274d0a194a8ec33c))
+
+
+### Features
+
+* dependencies care work, remove web3 dep ([#82](https://github.com/rarible/sdk/issues/82)) ([b42dac7](https://github.com/rarible/sdk/commit/b42dac729afe08d83187c8d482ad64258d71c3b4))
+
+
+
+
+
 ## [0.8.6-alpha.4](https://github.com/rarible/sdk/compare/v0.8.6-alpha.3...v0.8.6-alpha.4) (2022-01-27)
 
 

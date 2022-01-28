@@ -14,7 +14,6 @@ import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
-import { FlowBid } from "./bid"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
@@ -27,7 +26,6 @@ export function createFlowSdk(
 	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
-	const bidService = new FlowBid(sdk)
 
 	return {
 		nft: {
@@ -43,9 +41,9 @@ export function createFlowSdk(
 			sellUpdate: sellService.update,
 			fill: new FlowBuy(sdk, apis, blockchainNetwork).buy,
 			buy: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			acceptBid: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
+			acceptBid: nonImplementedAction,
+			bid: nonImplementedAction,
+			bidUpdate: nonImplementedAction,
 			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
 		},
 		balances: {

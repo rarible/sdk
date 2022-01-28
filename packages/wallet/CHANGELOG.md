@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.17](https://github.com/rarible/sdk/compare/v0.8.16...v0.8.17) (2022-01-17)
+
+
+### Features
+
+* new tezos sdk ([5c93c2f](https://github.com/rarible/sdk/commit/5c93c2fb5ff3b35a05f1ef3b993e2923c0f387d7))
+
+
+
+
+
+## [0.8.16](https://github.com/rarible/sdk/compare/v0.8.15...v0.8.16) (2022-01-14)
+
+
+### Features
+
+* tezos up version ([7cc83ab](https://github.com/rarible/sdk/commit/7cc83abf1ff054810a86c7d02598d84e2122f240))
+
+
+
+
+
+## [0.8.15](https://github.com/rarible/sdk/compare/v0.8.14...v0.8.15) (2022-01-14)
+
+
+### Features
+
+* tezos payouts update ([2d3951c](https://github.com/rarible/sdk/commit/2d3951c64a226bce378d9f2034c90ddbebfb1297))
+
+
+
+
+
+## [0.8.14](https://github.com/rarible/sdk/compare/v0.8.13...v0.8.14) (2022-01-13)
+
+
+### Features
+
+* tezos update approve operations ([137d5cb](https://github.com/rarible/sdk/commit/137d5cbbe9c9e46aee044166748e584ee574a95e))
+
+
+
+
+
+## [0.8.13](https://github.com/rarible/sdk/compare/v0.8.12...v0.8.13) (2022-01-12)
+
+
+### Features
+
+* tezos royalties ([06d8b13](https://github.com/rarible/sdk/commit/06d8b1337b3332edde6b907ad4828f93d6b3fcd7))
+
+
+
+
+
 ## [0.8.4](https://github.com/rarible/sdk/compare/v0.8.3...v0.8.4) (2021-12-30)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

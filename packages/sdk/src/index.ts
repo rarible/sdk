@@ -1,8 +1,8 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
 import type { ConfigurationParameters } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
-import { toContractAddress } from "@rarible/types"
 import type { IApisSdk, IRaribleSdk } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
@@ -27,7 +27,8 @@ export function createRaribleSdk(
 	const instance = createUnionSdk(
 		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.ethereumEnv, params),
 		createFlowSdk(filterWallet(wallet, "FLOW"), apis, config.flowEnv),
-		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, config.tezosNetwork)
+		createTezosSdk(filterWallet(wallet, "TEZOS"), apis, config.tezosNetwork),
+		createEthereumSdk(filterWallet(wallet, "ETHEREUM"), apis, config.polygonNetwork, params),
 	)
 
 	return {

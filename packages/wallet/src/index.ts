@@ -1,8 +1,8 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
 import { Blockchain } from "@rarible/api-client"
-import type { TezosProvider } from "tezos-sdk-module"
-import { sign } from "tezos-sdk-module"
+import type { TezosProvider } from "@rarible/tezos-sdk"
+import { sign } from "@rarible/tezos-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {

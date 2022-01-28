@@ -6,15 +6,18 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
-import type { DeployTokenRequest } from "../../types/nft/deploy/domain"
-import type { EthereumDeployTokenAsset } from "../../types/nft/deploy/domain"
-import { convertEthereumContractAddress } from "./common"
+import type { DeployTokenRequest, EthereumDeployTokenAsset } from "../../types/nft/deploy/domain"
+import type { EVMBlockchain } from "./common"
+import { convertEthereumContractAddress, getEVMBlockchain } from "./common"
 
 export class EthereumDeploy {
+	private readonly blockchain: EVMBlockchain
+
 	constructor(
 		private sdk: RaribleSdk,
 		private network: EthereumNetwork,
 	) {
+		this.blockchain = getEVMBlockchain(network)
 		this.startDeployToken = this.startDeployToken.bind(this)
 	}
 
@@ -33,7 +36,7 @@ export class EthereumDeploy {
 	): { tx: BlockchainEthereumTransaction, address: ContractAddress } {
 		return {
 			tx: new BlockchainEthereumTransaction(response.tx, this.network),
-			address: convertEthereumContractAddress(response.address),
+			address: convertEthereumContractAddress(response.address, this.blockchain),
 		}
 	}
 

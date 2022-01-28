@@ -9,7 +9,6 @@ import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
-import { toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
 export class FlowBuy {
@@ -58,6 +57,7 @@ export class FlowBuy {
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				run: (buyRequest: FillRequest) => {
 					const currency = this.getFlowCurrency(order)
 					const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
@@ -68,7 +68,8 @@ export class FlowBuy {
 						currency,
 						orderId,
 						owner,
-						toFlowParts(buyRequest.originFees))
+						[]
+					)
 				},
 			})
 			.after(tx => new BlockchainFlowTransaction(tx, this.network))
@@ -78,7 +79,7 @@ export class FlowBuy {
 			maxAmount: toBigNumber("1"),
 			baseFee: getFlowBaseFee(this.sdk),
 			supportsPartialFill: false,
-			originFeeSupport: OriginFeeSupport.FULL,
+			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,
 		}

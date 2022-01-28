@@ -20,16 +20,19 @@ import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-re
 import type { TokenId } from "../../types/nft/generate-token-id"
 import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import type { IApisSdk } from "../../domain"
-import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
-import { convertToEthereumAddress, convertEthereumItemId } from "./common"
+import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { EVMBlockchain } from "./common"
+import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
 
 export class EthereumMint {
+	private readonly blockchain: EVMBlockchain
+
 	constructor(
 		private readonly sdk: RaribleSdk,
 		private readonly apis: IApisSdk,
 		private network: EthereumNetwork,
 	) {
+		this.blockchain = getEVMBlockchain(network)
 		this.prepare = this.prepare.bind(this)
 	}
 
@@ -130,13 +133,13 @@ export class EthereumMint {
 						case MintResponseTypeEnum.ON_CHAIN:
 							return {
 								type: MintType.ON_CHAIN,
-								itemId: convertEthereumItemId(mintResponse.itemId),
+								itemId: convertEthereumItemId(mintResponse.itemId, this.blockchain),
 								transaction: new BlockchainEthereumTransaction(mintResponse.transaction, this.network),
 							}
 						case MintResponseTypeEnum.OFF_CHAIN:
 							return {
 								type: MintType.OFF_CHAIN,
-								itemId: convertEthereumItemId(mintResponse.itemId),
+								itemId: convertEthereumItemId(mintResponse.itemId, this.blockchain),
 							}
 						default:
 							throw new Error("Unrecognized mint response type")

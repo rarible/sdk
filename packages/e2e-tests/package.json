@@ -1,11 +1,12 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.8.4",
+  "version": "0.8.9",
   "homepage": "",
   "license": "ISC",
   "private": true,
   "scripts": {
-    "test": "jest --runInBand"
+    "test": "echo run e2e-test to run e2e-tests",
+    "e2e-test": "jest --runInBand"
   },
   "dependencies": {
     "@rarible/api-client": "~0.0.10"

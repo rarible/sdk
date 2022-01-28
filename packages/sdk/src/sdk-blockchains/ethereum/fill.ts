@@ -1,10 +1,14 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import { toBigNumber, toBinary, toWord, toAddress } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { AssetType, Order } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
-import type { FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type {
+	CommonFillRequestAssetType,
+	FillOrderAction,
+	FillOrderRequest,
+} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass, toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
@@ -12,12 +16,10 @@ import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { FillOrderAction } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertToEthereumAddress } from "./common"
+import { convertToEthereumAddress, isEVMBlockchain } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -333,7 +335,7 @@ export class EthereumFill {
 			return this.convertToSimpleOrder(request.order)
 		} else if ("orderId" in request) {
 			const [domain, hash] = request.orderId.split(":")
-			if (domain !== "ETHEREUM") {
+			if (!isEVMBlockchain(domain)) {
 				throw new Error("Not an ethereum order")
 			}
 			return this.sdk.apis.order.getOrderByHash({ hash })

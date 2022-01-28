@@ -7,13 +7,13 @@ import type {
 	AssetType as TezosAssetType,
 	Asset as TezosLibAsset,
 	TezosNetwork,
-} from "tezos-sdk-module/dist/common/base"
+} from "@rarible/tezos-sdk/dist/common/base"
 // eslint-disable-next-line camelcase
-import { get_public_key } from "tezos-sdk-module/dist/common/base"
+import { get_public_key } from "@rarible/tezos-sdk/dist/common/base"
 // eslint-disable-next-line camelcase
-import { pk_to_pkh } from "tezos-sdk-module"
+import { pk_to_pkh } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
-import type { Part } from "tezos-sdk-module/dist/order/utils"
+import type { Part } from "@rarible/tezos-sdk/dist/order/utils"
 import type {
 	Asset as TezosClientAsset } from "tezos-api-client/build"
 import {
@@ -27,10 +27,10 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { ContractAddress, OrderId } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
-import type { Part as TezosPart } from "tezos-sdk-module/dist/order/utils"
-import type { OrderForm } from "tezos-sdk-module/dist/order"
+import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
+import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import type { Config } from "tezos-sdk-module"
+import type { Config } from "@rarible/tezos-sdk"
 import { toContractAddress, toItemId, toOrderId } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
@@ -44,7 +44,6 @@ export interface ITezosAPI {
 
 export type MaybeProvider<P extends TezosProvider> = {
 	tezos: Maybe<P>
-	api: string
 	config: Config
 }
 
@@ -102,7 +101,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
 		case "hangzhou": {
-			return "https://rarible-api.functori.com"
+			return "https://tezos-hangzhou-api.rarible.org"
 		}
 		case "mainnet": {
 			return "https://tezos-api.rarible.org"
@@ -124,26 +123,33 @@ export function getMaybeTezosProvider(
 		case "hangzhou": {
 			return {
 				tezos: provider,
-				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
 					exchange: "KT1ULGjK8FtaJ9QqCgJVN14B6tY76Ykaz6M8",
 					transfer_proxy: "KT1Qypf9A7DHoAeesu5hj8v6iKwHsJb1RUR2",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
+					api: `${getTezosBasePath(network)}/v0.1`,
+					api_permit: `${getTezosBasePath(network)}/v0.1`,
+					permit_whitelist: ["KT1VY7fDqc2FxhfCPM1DrELKFz6EHwudAXQb"],
+					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
 				},
 			}
 		}
 		case "mainnet": {
 			return {
 				tezos: provider,
-				api: `${getTezosBasePath(network)}/v0.1`,
 				config: {
 					exchange: "KT198mqFKkiWerXLmMCw69YB1i6yzYtmGVrC",
 					transfer_proxy: "KT1N2oby9tYmv5tjkGD1KyVzkDRCmgDkXgSD",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
+					api: `${getTezosBasePath(network)}/v0.1`,
+					api_permit: `${getTezosBasePath(network)}/v0.1`,
+					permit_whitelist: [],
+					//todo replace mainnet wrapped xtz address with real
+					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
 				},
 			}
 		}

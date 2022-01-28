@@ -3,6 +3,110 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.18](https://github.com/rarible/sdk/compare/v0.8.17...v0.8.18) (2022-01-18)
+
+
+### Bug Fixes
+
+* remove originFee support for flow orders ([01d944a](https://github.com/rarible/sdk/commit/01d944af8592b56f141e5e8731259a236469e41f))
+
+
+
+
+
+## [0.8.17](https://github.com/rarible/sdk/compare/v0.8.16...v0.8.17) (2022-01-17)
+
+
+### Features
+
+* new tezos sdk ([5c93c2f](https://github.com/rarible/sdk/commit/5c93c2fb5ff3b35a05f1ef3b993e2923c0f387d7))
+
+
+
+
+
+## [0.8.16](https://github.com/rarible/sdk/compare/v0.8.15...v0.8.16) (2022-01-14)
+
+
+### Features
+
+* tezos up version ([7cc83ab](https://github.com/rarible/sdk/commit/7cc83abf1ff054810a86c7d02598d84e2122f240))
+
+
+
+
+
+## [0.8.15](https://github.com/rarible/sdk/compare/v0.8.14...v0.8.15) (2022-01-14)
+
+
+### Bug Fixes
+
+* convert UnionAddress to tezos address ([3bf452a](https://github.com/rarible/sdk/commit/3bf452abdf96f0d0cb17c555dddb549148654d8a))
+
+
+### Features
+
+* tezos payouts update ([2d3951c](https://github.com/rarible/sdk/commit/2d3951c64a226bce378d9f2034c90ddbebfb1297))
+
+
+
+
+
+## [0.8.14](https://github.com/rarible/sdk/compare/v0.8.13...v0.8.14) (2022-01-13)
+
+
+### Features
+
+* tezos update approve operations ([137d5cb](https://github.com/rarible/sdk/commit/137d5cbbe9c9e46aee044166748e584ee574a95e))
+
+
+
+
+
+## [0.8.13](https://github.com/rarible/sdk/compare/v0.8.12...v0.8.13) (2022-01-12)
+
+
+### Features
+
+* tezos royalties ([06d8b13](https://github.com/rarible/sdk/commit/06d8b1337b3332edde6b907ad4828f93d6b3fcd7))
+
+
+
+
+
+## [0.8.12](https://github.com/rarible/sdk/compare/v0.8.11...v0.8.12) (2022-01-12)
+
+
+### Bug Fixes
+
+* update tezos hangzhou api ([2bd823e](https://github.com/rarible/sdk/commit/2bd823e042caed7ebc5f2229f21f160af6f2470b))
+
+
+
+
+
+## [0.8.7](https://github.com/rarible/sdk/compare/v0.8.6...v0.8.7) (2021-12-30)
+
+
+### Features
+
+* support for polygon ([4bef6aa](https://github.com/rarible/sdk/commit/4bef6aa53c477a4c6634d9eeea5511dd3f33f763))
+
+
+
+
+
+## [0.8.6](https://github.com/rarible/sdk/compare/v0.8.5...v0.8.6) (2021-12-30)
+
+
+### Bug Fixes
+
+* update flow-sdk to use old transactions ([#83](https://github.com/rarible/sdk/issues/83)) ([0ddf50d](https://github.com/rarible/sdk/commit/0ddf50df26472a032de7cdf9274d0a194a8ec33c))
+
+
+
+
+
 ## [0.8.6-alpha.4](https://github.com/rarible/sdk/compare/v0.8.6-alpha.3...v0.8.6-alpha.4) (2022-01-27)
 
 

@@ -1,5 +1,5 @@
 import type { ItemId, UnionAddress } from "@rarible/types"
-import type { TezosProvider } from "tezos-sdk-module"
+import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { CanTransferResult } from "../../../types/nft/restriction/domain"
 import type { MaybeProvider } from "../common"
 import { convertUnionAddress, getRequiredProvider } from "../common"

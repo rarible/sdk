@@ -23,7 +23,7 @@ export function createEthereumSdk(
 	params?: ConfigurationParameters,
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, params)
-	const sellService = new EthereumSell(sdk)
+	const sellService = new EthereumSell(sdk, network)
 	const balanceService = new EthereumBalance(sdk)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
