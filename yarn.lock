@@ -3302,23 +3302,10 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@0.5.29-hotfix.0", "@rarible/flow-sdk-scripts@^0.5.29-hotfix.0":
+"@rarible/flow-sdk-scripts@0.5.29-hotfix.0":
   version "0.5.29-hotfix.0"
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.29-hotfix.0.tgz#12090ed3398fe77bd6f73e3780c0790feeeed850"
   integrity sha512-4KwU+dLsu//sX6V69DfSjZbQin0BwOg/iDoig+pirRStbwR2UtB8cge4bpwGyeA0HOSeERHSqRRY43wXxx0D4g==
-
-"@rarible/flow-sdk@0.5.29-hotfix.0":
-  version "0.5.29-hotfix.0"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.29-hotfix.0.tgz#2f2390f1a87cb19ac787936ace7458ecd7b15e05"
-  integrity sha512-CYM1j6YbG0FwsqalRDn0kS8bkU+caZsGbaP3X6HAKr6k6o0smyqreanwmUK+uZLLUC1HMWgeABhVb8UsZ4XXQA==
-  dependencies:
-    "@onflow/fcl" "~0.0.76"
-    "@onflow/types" "~0.0.5"
-    "@rarible/fcl-types" "~0.5.0"
-    "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.29-hotfix.0"
-    "@rarible/types" "0.5.3"
-    "@rarible/utils" "~0.5.0"
 
 "@rarible/flow-sdk@0.5.29-hotfix.1":
   version "0.5.29-hotfix.1"
