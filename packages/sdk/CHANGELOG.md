@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.25](https://github.com/rarible/sdk/compare/v0.8.24...v0.8.25) (2022-01-31)
+
+
+### Bug Fixes
+
+* error in fill method when passing order in request ([4c659e9](https://github.com/rarible/sdk/commit/4c659e9bdd22fb3ea51fd073443ce260ee98327c))
+
+
+
+
+
 ## [0.8.24](https://github.com/rarible/sdk/compare/v0.8.23...v0.8.24) (2022-01-28)
 
 
