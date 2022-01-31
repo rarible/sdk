@@ -113,6 +113,58 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.8.6-alpha.4](https://github.com/rarible/sdk/compare/v0.8.6-alpha.3...v0.8.6-alpha.4) (2022-01-27)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixed bug with commissions and added support for legacyOrders ([5c10587](https://github.com/rarible/sdk/commit/5c10587edf3d40190ceecdcaff375cbc5a1896f1))
+
+
+
+
+
+## [0.8.6-alpha.3](https://github.com/rarible/sdk/compare/v0.8.6-alpha.2...v0.8.6-alpha.3) (2022-01-21)
+
+
+### Bug Fixes
+
+* update flow-sdk - turn protocol commission to 0 ([a0e4db3](https://github.com/rarible/sdk/commit/a0e4db3f91f48b23575b45a0e0bba4d66c431a87))
+
+
+
+
+
+## [0.8.6-alpha.2](https://github.com/rarible/sdk/compare/v0.8.6-alpha.1...v0.8.6-alpha.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* fb-533 update flow-sdk - updated bid transactions and contract ([d9ecc21](https://github.com/rarible/sdk/commit/d9ecc21a9f85fa874b9460c98140a52d518076c0))
+
+
+
+
+
+## [0.8.6-alpha.1](https://github.com/rarible/sdk/compare/v0.8.6-alpha.0...v0.8.6-alpha.1) (2022-01-17)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.8.6-alpha.0](https://github.com/rarible/sdk/compare/v0.8.5...v0.8.6-alpha.0) (2022-01-10)
+
+
+### Features
+
+* flow bid support ([8e79371](https://github.com/rarible/sdk/commit/8e79371b02a0e1bf267c7b2ec151fc0dcc918d7e))
+
+
+
+
+
 ## [0.8.4](https://github.com/rarible/sdk/compare/v0.8.3...v0.8.4) (2021-12-30)
 
 **Note:** Version bump only for package @rarible/sdk-transaction

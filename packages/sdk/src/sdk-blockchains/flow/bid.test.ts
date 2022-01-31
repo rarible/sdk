@@ -49,6 +49,9 @@ describe("Flow bid", () => {
 
 		const orderId = await createTestBid(bid, itemId)
 
+		const order = await awaitFlowOrder(sdk, orderId.split(":")[1])
+		expect(order.take.value.toString()).toEqual("1")
+
 		const prepare = await acceptBid.buy({ orderId })
 		const acceptedOrderTx = await prepare.submit({ amount: 1 })
 		expect(acceptedOrderTx).toBeTruthy()
