@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.24](https://github.com/rarible/sdk/compare/v0.8.23...v0.8.24) (2022-01-28)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixes flow scripts error ([#104](https://github.com/rarible/sdk/issues/104)) ([e54352b](https://github.com/rarible/sdk/commit/e54352b094d2c01189a721448c68a213464fc014))
+
+
+
+
+
+## [0.8.22](https://github.com/rarible/sdk/compare/v0.8.21...v0.8.22) (2022-01-27)
+
+
+### Bug Fixes
+
+* mumbai dev api path ([#101](https://github.com/rarible/sdk/issues/101)) ([851b21c](https://github.com/rarible/sdk/commit/851b21cc904eab94758f257e17484dc1c8f5d461))
+
+
+
+
+
+## [0.8.21](https://github.com/rarible/sdk/compare/v0.8.20...v0.8.21) (2022-01-27)
+
+
+### Features
+
+* convert on bid ([#100](https://github.com/rarible/sdk/issues/100)) ([07eed8d](https://github.com/rarible/sdk/commit/07eed8d244be1c39173c920e3eeb7cb80b969516))
+
+
+
+
+
+## [0.8.19](https://github.com/rarible/sdk/compare/v0.8.18...v0.8.19) (2022-01-19)
+
+
+### Bug Fixes
+
+* fb-532 update flow-sdk, fixes flow create/update order error on specific cases ([810b4b0](https://github.com/rarible/sdk/commit/810b4b048fc689dcf4d5088f85697c0f92b38658))
+
+
+
+
+
 ## [0.8.17](https://github.com/rarible/sdk/compare/v0.8.16...v0.8.17) (2022-01-17)
 
 

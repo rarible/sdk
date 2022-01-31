@@ -98,7 +98,7 @@ const suites: {
 	},*/
 ]
 
-describe.each(suites)("$blockchain deploy-mint", (suite) => {
+describe.each(suites)("$blockchain mint-bid-acceptBid", (suite) => {
 	const { seller: sellerWallet, buyer: buyerWallet } = suite.wallets
 	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
 	const buyerSdk = createSdk(suite.blockchain, buyerWallet)

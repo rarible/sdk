@@ -2,6 +2,7 @@ import { toContractAddress, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
+import { LogsLevel } from "../../domain"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
@@ -10,7 +11,7 @@ describe("sell test", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
-	const sellerSdk = createRaribleSdk(sellerWallet, "dev")
+	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
 	let mtContract: string = "KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD"

@@ -2,6 +2,7 @@ import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { Middlewarer } from "../../common/middleware/middleware"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { TezosBid } from "./bid"
@@ -24,7 +25,8 @@ export function createTezosSdk(
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
 	const sellService = new TezosSell(maybeProvider, apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
-	const bidService = new TezosBid(maybeProvider, apis)
+	const balanceService = new TezosBalance(maybeProvider, apis)
+	const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, network)
 
 	return {
@@ -34,7 +36,7 @@ export function createTezosSdk(
 			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: new TezosDeploy(maybeProvider, network).deployToken,
-			preprocessMeta: mintService.preprocessMeta,
+			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
 			fill: fillService.fill,
@@ -47,7 +49,7 @@ export function createTezosSdk(
 			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
 		},
 		balances: {
-			getBalance: new TezosBalance(maybeProvider, apis).getBalance,
+			getBalance: balanceService.getBalance,
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,

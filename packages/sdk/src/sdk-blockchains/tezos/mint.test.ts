@@ -2,6 +2,7 @@ import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
+import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
@@ -11,7 +12,7 @@ describe("mint test", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1M9zUt7PYjGksY8te83CUHsgkzDKBKmStu"
 	let mtContract: string = "KT1NtruXoo4NSLNTyy9tcHraMAdQTHzXbLoH"
@@ -37,7 +38,6 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		console.log(mintResult)
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 

@@ -7,8 +7,8 @@ export function createTestWallet(edsk: string) {
 		in_memory_provider(
 			edsk,
 			// "https://hangzhou.tz.functori.com"
-			"https://hangzhounet.smartpy.io"
-			// "https://tezos-hangzhou-node.rarible.org/"
+			// "https://hangzhounet.smartpy.io"
+			"https://tezos-hangzhou-node.rarible.org/"
 		)
 	)
 }
