@@ -1,7 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk } from "@rarible/flow-sdk"
-import { toUnionAddress } from "@rarible/types"
 import { FLOW_TESTNET_ACCOUNT_2 } from "@rarible/flow-test-common"
 import { createApisSdk } from "../../common/apis"
 import { retry } from "../../common/retry"
@@ -11,6 +10,7 @@ import { FlowMint } from "./mint"
 import { sellItem } from "./test/sell-item"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
+import { convertFlowUnionAddress } from "./common/converters"
 
 describe("Flow buy", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
@@ -27,7 +27,7 @@ describe("Flow buy", () => {
 		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
 		expect(order.take.value.toString()).toEqual("0.1")
 
-		const originFees = [{ account: toUnionAddress(`FLOW:${FLOW_TESTNET_ACCOUNT_2.address}`), value: 200 }]
+		const originFees = [{ account: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_2.address), value: 200 }]
 		const prepareBuy = await fill.buy({ order })
 		const tx = await prepareBuy.submit({ amount: 1, originFees })
 		expect(tx.transaction.status).toEqual(4)

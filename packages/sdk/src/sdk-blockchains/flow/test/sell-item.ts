@@ -1,7 +1,8 @@
 import type { ItemId, OrderId } from "@rarible/types"
-import { toBigNumber, toUnionAddress } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import { FLOW_TESTNET_ACCOUNT_2 } from "@rarible/flow-test-common"
 import type { FlowSell } from "../sell"
+import { convertFlowUnionAddress } from "../common/converters"
 import { testFlowCollection, testFlowToken } from "./common"
 
 export async function sellItem(sell: FlowSell, itemId: ItemId, priceDecimals: string): Promise<OrderId> {
@@ -16,7 +17,7 @@ export async function sellItem(sell: FlowSell, itemId: ItemId, priceDecimals: st
 			contract: testFlowToken,
 		},
 		itemId,
-		originFees: [{ account: toUnionAddress(`FLOW:${FLOW_TESTNET_ACCOUNT_2.address}`), value: 200 }],
+		originFees: [{ account: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_2.address), value: 200 }],
 	})
 	expect(orderId).toBeTruthy()
 	return orderId
