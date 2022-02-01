@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@onflow/fcl": "^0.0.77",
+    "@onflow/fcl": "~0.0.77",
     "@rarible/connector": "^0.8.20"
   },
   "devDependencies": {
