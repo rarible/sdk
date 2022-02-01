@@ -8,41 +8,74 @@ Currently, these blockchains are supported:
 - Tezos (on granada testnet)
 
 ## Installation
-```angular2html
-npm install -D @rarible/sdk
+
+```shell
+yarn add @rarible/sdk -D
+yarn add web3
 ```
+
 ## Usage
 
-SDK is written in typescript, you can use typings to explore SDK possibilties.
+SDK is written in TypeScript. You can use typings to explore SDK possibilities.
 
-To use SDK, first you have to create a Wallet - abstraction to communicate with real blockchain wallets:
+**Initialize SDK**
 
 ```ts
-//initialize ethereum wallet
-import { Web3Ethereum } from "@rarible/web3-ethereum" // should also be installed
+import { createRaribleSdk } from "@rarible/sdk"
+import { Blockchain } from "@rarible/api-client"
+```
+
+To use SDK, you have to create a Wallet — abstraction to communicate with real blockchain wallets.
+
+**Initialize Ethereum wallet**
+
+```ts
+import Web3 from "web3"
+import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 
-const ethereum = new Web3Ethereum({ web3, from })
-const ethereumWallet = new EthereumWallet(ethereum, from) 
+const web3 = new Web3(provider)
+const web3Ethereum = new Web3Ethereum({ web3 })
+const ethWallet = new EthereumWallet(web3Ethereum)
+
+// Second parameter — is environment: "prod" | "staging" | "e2e" | "dev"
+const raribleSdk = createRaribleSdk(ethWallet, "staging")
 ```
 
+**Initialize Tezos wallet**
+
 ```ts
-//WIP: how to initialize Tezos and Flow wallets
+// WIP 
+
 ```
 
+**Initialize Flow wallet**
+
 ```ts
-//initialize sdk
+// WIP 
 
-import { createRaribleSdk } from "@rarible/sdk"
 
-//wallet - created before
-//second parameter - is environment: "prod" | "staging" | "e2e" | "dev"
-const sdk = createRaribleSdk(wallet, "prod")
+```
+
+### Usage SDK on the server (backend)
+
+For working with SDK on the server, add the next dependencies in the beginning:
+
+```typescript
+global.FormData = require("form-data")
+global.window = {
+  fetch: require("node-fetch"),
+  dispatchEvent: () => {
+  },
+}
+global.CustomEvent = function CustomEvent() {
+  return
+}
 ```
 
 ### Querying
 
-Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: http://api-dev.rarible.org/v0.1/doc or right in the typescript typings. 
+Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: http://api-dev.rarible.org/v0.1/doc or right in the typescript typings.
 
 ```ts
 
@@ -52,19 +85,19 @@ sdk.apis.item.getItemsByCreator({ creator: someAddress })
 //Fetch activity (events) by the Item
 sdk.apis.activity.getActivitiesByItem({ type: ["TRANSFER"], contract, tokenId })
 
-//etc... pls explore SDK apis and openapi docs
+//etc. Please explore SDK APIs and openAPI docs
 ```
 
 ### Executing actions
 
 You can use SDK to create(mint), trade, transfer, burn NFTs. All actions are handled in the same manner:
 - you invoke function from SDK (e.g.: [mint](#mint))
-- async function returns so-called PrepareResponse (it's different for different actions)
-- this PrepareResponse contains all needed information to show user a form (for example, response for sell contains all supported currency types)
-- collect input from the user (show form and let user enter the data)
+- async function returns the so-called PrepareResponse (it's different for different actions)
+- this PrepareResponse contains all needed information to show the user a form (for example, response for sell contains all supported currency types)
+- collect input from the user (show form and let the user enter the data)
 - pass this data to submit [Action](https://github.com/rarible/ts-common/tree/master/packages/action)
 
-You can find more information about Action abstraction in dedicated github readme. Or you can use it as a regular async function and work with regular Promises.
+You can find more information about Action abstraction in the dedicated GitHub readme. Or you can use it as a regular async function and work with regular Promises.
 
 ### Mint
 
@@ -114,8 +147,8 @@ const orderId = await submit({
 })
 ```
 
-When order is created, it's propagated to all users of the Protocol.
-Any app can initiate process to fill the order.
+When the order is created, it's propagated to all Protocol users.
+Any app can initiate the process to fill the order.
 
 ```ts
 const {
@@ -137,7 +170,7 @@ const tx = await submit({
 })
 ```
 
-After call submit action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
+After the call submits action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
 
 ### Bid
 
@@ -155,11 +188,11 @@ const {
 } = await sdk.order.bid({ itemId })
 
 /*
-  Get value of native token that will be converted if you use wrapped token (Wrapped Ether for Ethereum, wXTZ for Tezos and etc.) to place a bid
+  Get the value of the native token that will be converted if you use a wrapped token (Wrapped Ether for Ethereum, wXTZ for Tezos, etc.) to place a bid
   Example of returned values, when passed wrapped token contract:
-  1. Returns "undefined" if you have sufficient funds for make a bid
+  1. Returns "undefined" if you have sufficient funds to make a bid
   2. Returns if needed to convert funds to wrapped token (ex. Wrapped Ether).
-  Value will be converted automatically after invoke "submit" function. Convertable value also includes origin fees
+  The value will be converted automatically after invoking the "submit" function. Convertable value also includes origin fees
   {
     type: "convertable",
     currency: { '@type': 'ETH' },
@@ -171,7 +204,7 @@ const {
     currency: { '@type': 'ETH' },
     value: BigNumber {...}
   }
-  Result of invoke getConvertableValue function is always undefined if you pass non-wrapped token contract because converting of non-wrapped tokens is not supported
+  The Result of invoking getConvertableValue function is always undefined if you pass a non-wrapped token contract because converting of non-wrapped tokens is not supported.
  */
 getConvertableValue({
   assetType: { "@type": "ERC20", contract: wethContract }, // payment asset
@@ -183,7 +216,7 @@ getConvertableValue({
   }], // origin fees, by default []
 })
 
-//collect information from the user (show the form etc)
+//collect information from the user (show the form etc.)
 //then use submit Action to execute this action
 
 const orderId = await submit({
@@ -197,10 +230,10 @@ const orderId = await submit({
 
 ### Fill orders (buy or accept bid)
 
-When order is created, it's propagated to all users of the Protocol.
-Any app can initiate process to fill the order.
+When the order is created, it's propagated to all Protocol users.
+Any app can initiate the process to fill the order.
 
-Use `sdk.order.buy()` or `sdk.order.acceptBid()` methods to fill sell or bid orders. 
+Use `sdk.order.buy()` or `sdk.order.acceptBid()` methods to fill sell or bid orders.
 
 ```ts
 const {
@@ -222,7 +255,7 @@ const tx = await submit({
 })
 ```
 
-After call submit action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
+After the call submits action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
 
 ### Transfer
 
@@ -233,7 +266,7 @@ const {
   maxAmount, // Max amount of NFTs available for transfer
 } = await sdk.order.transfer({ itemId })
 
-//collect information from the user (show the form etc)
+//collect information from the user (show the form etc.)
 //then use submit Action to execute this action
 
 const orderId = await submit({
@@ -251,7 +284,7 @@ const {
   maxAmount, // Max amount of NFTs available for burn
 } = await sdk.order.burn({ itemId })
 
-//collect information from the user (show the form etc)
+//collect information from the user (show the form etc.)
 //then use submit Action to execute this action
 
 const orderId = await submit({
