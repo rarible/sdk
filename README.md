@@ -52,10 +52,13 @@ const raribleSdk = createRaribleSdk(ethWallet, "staging")
 **Initialize Flow wallet**
 
 ```ts
-// WIP 
+import * as fcl from "@onflow/fcl"
+import { FlowWallet } from "@rarible/sdk-wallet"
 
-
+const wallet =  new FlowWallet(fcl)
 ```
+
+You also need to configure Flow Client Library (FCL) for using Flow. See more information on [Configure fcl](https://docs.rarible.org/flow/flow-sdk/#configure-fcl).
 
 ### Usage SDK on the server (backend)
 
