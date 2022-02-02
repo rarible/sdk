@@ -177,6 +177,9 @@ export class EthereumFill {
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {
+				if (fillRequest.unwrap) {
+					throw new Error("Unwrap is not supported yet")
+				}
 				if (this.hasCollectionAssetType(order) && !fillRequest.assetType) {
 					throw new Error("For collection order you should pass asset type")
 				}

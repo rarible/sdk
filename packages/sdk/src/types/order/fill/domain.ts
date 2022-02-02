@@ -53,6 +53,10 @@ export interface FillRequest {
 		contract: ContractAddress
 		tokenId: string | number
 	}
+	/*
+  * Unwrap tokens on accept bid
+   */
+	unwrap?: boolean
 }
 
 export type FillActionTypes = "approve" | "send-tx"

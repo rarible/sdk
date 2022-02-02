@@ -106,6 +106,7 @@ export class TezosFill {
 					provider,
 					preparedOrder,
 					request,
+					fillRequest.unwrap
 				)
 				return new BlockchainTezosTransaction(fillResponse, this.network)
 			},
