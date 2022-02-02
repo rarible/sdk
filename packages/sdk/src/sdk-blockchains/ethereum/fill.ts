@@ -17,7 +17,7 @@ import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../..
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import {
 	convertOrderIdToEthereumHash,
-	convertToEthereumAddress,
+	convertToEthereumAddress, getEthereumItemId,
 } from "./common"
 
 export type SupportFlagsResponse = {
@@ -82,10 +82,11 @@ export class EthereumFill {
 			}
 		}
 
-		if (fillRequest.assetType) {
+		if (fillRequest.itemId) {
+			const { contract, tokenId } = getEthereumItemId(fillRequest.itemId)
 			request.assetType = {
-				contract: convertToEthereumAddress(fillRequest.assetType.contract),
-				tokenId: fillRequest.assetType.tokenId,
+				contract: toAddress(contract),
+				tokenId,
 			}
 		}
 
@@ -177,8 +178,8 @@ export class EthereumFill {
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {
-				if (this.hasCollectionAssetType(order) && !fillRequest.assetType) {
-					throw new Error("For collection order you should pass asset type")
+				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
+					throw new Error("For collection order you should pass itemId")
 				}
 				return this.getFillOrderRequest(order, fillRequest)
 			})
