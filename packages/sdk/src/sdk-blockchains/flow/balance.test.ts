@@ -1,7 +1,8 @@
 import { FlowWallet } from "@rarible/sdk-wallet"
 import * as fcl from "@onflow/fcl"
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
 import { createApisSdk } from "../../common/apis"
+import { convertFlowUnionAddress } from "./common/converters"
 import { createFlowSdk } from "./index"
 
 describe("Test flow balance function", () => {
@@ -9,7 +10,7 @@ describe("Test flow balance function", () => {
 		fcl.config().put("accessNode.api", "https://flow-access-mainnet.portto.io")
 	})
 
-	const address = toUnionAddress("FLOW:0x324c4173e0175672")
+	const address = convertFlowUnionAddress("0x324c4173e0175672")
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
 
