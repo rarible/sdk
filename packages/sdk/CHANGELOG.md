@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.27](https://github.com/rarible/sdk/compare/v0.8.26...v0.8.27) (2022-02-02)
+
+
+### Bug Fixes
+
+* burn creators ([#109](https://github.com/rarible/sdk/issues/109)) ([95d0ced](https://github.com/rarible/sdk/commit/95d0ced06733ccaff1b155d37166bae0a2e135ef))
+
+
+
+
+
 ## [0.8.26](https://github.com/rarible/sdk/compare/v0.8.25...v0.8.26) (2022-02-01)
 
 
