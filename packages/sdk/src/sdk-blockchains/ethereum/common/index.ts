@@ -9,7 +9,7 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { AssetType, ItemId, OrderId } from "@rarible/api-client"
+import type { AssetType, Creator, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
@@ -122,10 +122,10 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		}
 	}
 }
-export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
-	return parts?.map((fee) => ({
-		account: convertToEthereumAddress(fee.account),
-		value: fee.value,
+export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
+	return parts?.map((part) => ({
+		account: convertToEthereumAddress(part.account),
+		value: part.value,
 	})) || []
 }
 
