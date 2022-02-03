@@ -1,4 +1,5 @@
 import { Action } from "@rarible/action"
+import type { TezosNetwork, TezosProvider, FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { add_fee, bid, upsert_order, wrap } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
@@ -7,10 +8,7 @@ import { toBigNumber, toContractAddress } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { pk_to_pkh } from "@rarible/tezos-sdk/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
-import type { FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
-import type { TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
-import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type {

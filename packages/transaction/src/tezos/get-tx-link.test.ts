@@ -1,5 +1,5 @@
 import type { TezosNetwork } from "@rarible/tezos-sdk"
-import type { OperationResult } from "@rarible/tezos-sdk/dist/common/base"
+import type { OperationResult } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "./index"
 
 const networks: TezosNetwork[] = ["mainnet", "hangzhou"]

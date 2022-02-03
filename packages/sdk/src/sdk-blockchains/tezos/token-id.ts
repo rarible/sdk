@@ -1,4 +1,4 @@
-import type { TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
+import type { TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { get_next_token_id } from "@rarible/tezos-sdk"
 import { toBinary } from "@rarible/types"
