@@ -1,6 +1,5 @@
-import type { DeployResult, TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
+import type { DeployResult, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
-import type { TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
