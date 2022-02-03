@@ -1,10 +1,9 @@
 import { Action } from "@rarible/action"
 import { cancel } from "@rarible/tezos-sdk/dist/main"
-import type { TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
+import type { TezosProvider, TezosNetwork } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import BigNumber from "bignumber.js"
-import type { TezosNetwork } from "@rarible/tezos-sdk/dist/common/base"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {

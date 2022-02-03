@@ -1,17 +1,15 @@
 import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-// eslint-disable-next-line camelcase
 import type {
 	Provider,
 	TezosProvider,
 	AssetType as TezosAssetType,
 	Asset as TezosLibAsset,
 	TezosNetwork,
-} from "@rarible/tezos-sdk/dist/common/base"
+	Config,
+} from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { get_public_key } from "@rarible/tezos-sdk/dist/common/base"
-// eslint-disable-next-line camelcase
-import { pk_to_pkh } from "@rarible/tezos-sdk"
+import { get_public_key,  pk_to_pkh  } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { Part } from "@rarible/tezos-sdk/dist/order/utils"
 import type {
@@ -32,7 +30,6 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import type { Config } from "@rarible/tezos-sdk"
 import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
