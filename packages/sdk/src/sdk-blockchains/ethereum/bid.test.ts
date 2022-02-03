@@ -326,7 +326,7 @@ describe("bid", () => {
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
-			itemId: convertEthereumItemId(`${erc721Contract}:${tokenId}`, Blockchain.ETHEREUM),
+			itemId: toItemId(`${erc721Contract}:${tokenId}`),
 		})
 		await fillBidResult.wait()
 	})
@@ -377,7 +377,7 @@ describe("bid", () => {
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 10,
 			infiniteApproval: true,
-			itemId: convertEthereumItemId(`${e2eErc1155V2ContractAddress}:${tokenId}`, Blockchain.ETHEREUM),
+			itemId: toItemId(`${e2eErc1155V2ContractAddress}:${tokenId}`),
 		})
 		await fillBidResult.wait()
 
