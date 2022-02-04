@@ -17,7 +17,8 @@ import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../..
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import {
 	convertOrderIdToEthereumHash,
-	convertToEthereumAddress, getEthereumItemId,
+	convertToEthereumAddress,
+	getEthereumItemId,
 } from "./common"
 
 export type SupportFlagsResponse = {
@@ -178,6 +179,9 @@ export class EthereumFill {
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {
+				if (fillRequest.unwrap) {
+					throw new Error("Unwrap is not supported yet")
+				}
 				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
 					throw new Error("For collection order you should pass itemId")
 				}

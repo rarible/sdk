@@ -292,4 +292,52 @@ describe("bid test", () => {
 		)
 	})
 
+	test.skip("unwrap wXTZ on accept bid", async () => {
+		const bidderAddress = await bidderWallet.provider.address()
+
+		const mintResponse = await itemOwnerSdk.nft.mint({
+			collectionId: convertTezosToContractAddress(nftContract),
+		})
+		const mintResult = await mintResponse.submit({
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+
+		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+
+		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
+		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+
+		const wXTZAsset = { "@type": "TEZOS_FT" as const, contract: wXTZContract, tokenId: toBigNumber("0") }
+
+		const bidOrderId = await bidResponse.submit({
+			amount: 1,
+			price: "0.00002",
+			currency: wXTZAsset,
+			originFees: [{
+				account: convertTezosToUnionAddress(await nullFundsWallet.provider.address()),
+				value: 1000,
+			}],
+		})
+
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId: bidOrderId })
+		const acceptBidTx = await acceptBidResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+			unwrap: true,
+		})
+		await acceptBidTx.wait()
+
+		await awaitForOwnership(
+			bidderSdk,
+			toItemId(mintResult.itemId),
+			bidderAddress
+		)
+
+	})
+
 })

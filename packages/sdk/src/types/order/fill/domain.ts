@@ -49,6 +49,10 @@ export interface FillRequest {
 	 * ItemId for fill collection order
 	 */
 	itemId?: ItemId
+	/*
+  * Unwrap tokens on accept bid
+   */
+	unwrap?: boolean
 }
 
 export type FillActionTypes = "approve" | "send-tx"
