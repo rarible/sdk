@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.29](https://github.com/rarible/sdk/compare/v0.8.28...v0.8.29) (2022-02-04)
+
+
+### Features
+
+* unwrap on accept bid on tezos ([#111](https://github.com/rarible/sdk/issues/111)) ([336d291](https://github.com/rarible/sdk/commit/336d291babf24faba975a6602b8f2093a2bcea4d))
+
+
+
+
+
+
 ## [0.8.28](https://github.com/rarible/sdk/compare/v0.8.27...v0.8.28) (2022-02-03)
 
 
