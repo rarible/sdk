@@ -13,7 +13,11 @@ export interface DeployTokenAssetIndexer extends Record<DeploySupportedBlockchai
 	[ApiClient.Blockchain.TEZOS]: TezosDeployTokenAsset;
 }
 
-export type DeploySupportedBlockchains = ApiClient.Blockchain.ETHEREUM | ApiClient.Blockchain.TEZOS
+export type DeploySupportedBlockchains =
+	ApiClient.Blockchain.ETHEREUM |
+	ApiClient.Blockchain.POLYGON |
+	ApiClient.Blockchain.TEZOS
+
 export type DeployTokenAsset = EthereumDeployTokenAsset | TezosDeployTokenAsset
 
 export type TezosDeployTokenAsset = {
