@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.30](https://github.com/rarible/sdk/compare/v0.8.29...v0.8.30) (2022-02-07)
+
+
+### Features
+
+* polygon contract deployment support ([10f315f](https://github.com/rarible/sdk/commit/10f315f283e873cde403f7a81f636d45dfca912e))
+
+
+
+
+
 ## [0.8.29](https://github.com/rarible/sdk/compare/v0.8.28...v0.8.29) (2022-02-04)
 
 
