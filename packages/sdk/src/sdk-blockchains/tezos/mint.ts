@@ -91,7 +91,7 @@ export class TezosMint {
 						contract,
 						royalties,
 						supply,
-						prepareRequest.tokenId ? toBn(prepareRequest.tokenId.tokenId) : undefined,
+						undefined,
 						{
 							"": fixIpfs(request.uri),
 						},

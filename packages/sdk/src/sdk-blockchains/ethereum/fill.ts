@@ -18,6 +18,7 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
+	getEthereumItemId,
 } from "./common"
 
 export type SupportFlagsResponse = {
@@ -82,10 +83,11 @@ export class EthereumFill {
 			}
 		}
 
-		if (fillRequest.assetType) {
+		if (fillRequest.itemId) {
+			const { contract, tokenId } = getEthereumItemId(fillRequest.itemId)
 			request.assetType = {
-				contract: convertToEthereumAddress(fillRequest.assetType.contract),
-				tokenId: fillRequest.assetType.tokenId,
+				contract: toAddress(contract),
+				tokenId,
 			}
 		}
 
@@ -180,8 +182,8 @@ export class EthereumFill {
 				if (fillRequest.unwrap) {
 					throw new Error("Unwrap is not supported yet")
 				}
-				if (this.hasCollectionAssetType(order) && !fillRequest.assetType) {
-					throw new Error("For collection order you should pass asset type")
+				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
+					throw new Error("For collection order you should pass itemId")
 				}
 				return this.getFillOrderRequest(order, fillRequest)
 			})

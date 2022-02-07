@@ -3,7 +3,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
 import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { toAddress, toBigNumber, toContractAddress, toItemId } from "@rarible/types"
+import { toAddress, toContractAddress, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
@@ -326,10 +326,7 @@ describe("bid", () => {
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
-			assetType: {
-				contract: erc721Contract,
-				tokenId: toBigNumber(tokenId),
-			},
+			itemId: toItemId(`${erc721Contract}:${tokenId}`),
 		})
 		await fillBidResult.wait()
 	})
@@ -380,10 +377,7 @@ describe("bid", () => {
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 10,
 			infiniteApproval: true,
-			assetType: {
-				contract: e2eErc1155V2ContractAddress,
-				tokenId: toBigNumber(tokenId),
-			},
+			itemId: toItemId(`${e2eErc1155V2ContractAddress}:${tokenId}`),
 		})
 		await fillBidResult.wait()
 
