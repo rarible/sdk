@@ -1,4 +1,4 @@
-import { toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
@@ -13,7 +13,7 @@ describe("test getting token id", () => {
 	test.skip("get tezos token id", async () => {
 
 		const tokenId = await sdk.nft.generateTokenId({
-			collection: toUnionAddress(`TEZOS:${nftContract}`),
+			collection: toContractAddress(`TEZOS:${nftContract}`),
 			minter: toUnionAddress("TEZOS:"),
 		})
 
