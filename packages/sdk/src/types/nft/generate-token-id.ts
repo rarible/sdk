@@ -1,7 +1,7 @@
-import type { Binary, UnionAddress } from "@rarible/types"
+import type { Binary, ContractAddress, UnionAddress } from "@rarible/types"
 
 export type GenerateTokenIdRequest = {
-	collection: UnionAddress;
+	collection: ContractAddress;
 	minter: UnionAddress;
 }
 
