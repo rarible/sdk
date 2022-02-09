@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.31](https://github.com/rarible/sdk/compare/v0.8.30...v0.8.31) (2022-02-09)
+
+
+### Bug Fixes
+
+* generate token id contract type ([9f3f470](https://github.com/rarible/sdk/commit/9f3f470f3200f9f5f10f46e44154b0954c59afc0))
+* set up correct blockchain in polygon transaction ([1dc5902](https://github.com/rarible/sdk/commit/1dc5902881decd619fd08820124fede6a12e6ffd))
+* types ([50c2eec](https://github.com/rarible/sdk/commit/50c2eec54786db66e997b09831f9c44d31e2e2ef))
+
+
+### Features
+
+* remove tokenid from interfaces ([#110](https://github.com/rarible/sdk/issues/110)) ([b8da318](https://github.com/rarible/sdk/commit/b8da3189a98e0be0786b3b091625380b619ffc64))
+
+
+
+
+
 ## [0.8.30](https://github.com/rarible/sdk/compare/v0.8.29...v0.8.30) (2022-02-07)
 
 

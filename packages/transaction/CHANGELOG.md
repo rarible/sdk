@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.31](https://github.com/rarible/sdk/compare/v0.8.30...v0.8.31) (2022-02-09)
+
+
+### Bug Fixes
+
+* set up correct blockchain in polygon transaction ([1dc5902](https://github.com/rarible/sdk/commit/1dc5902881decd619fd08820124fede6a12e6ffd))
+
+
+
+
+
 ## [0.8.29](https://github.com/rarible/sdk/compare/v0.8.28...v0.8.29) (2022-02-04)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
