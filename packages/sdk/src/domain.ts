@@ -1,4 +1,5 @@
 import type * as ApiClient from "@rarible/api-client"
+import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
@@ -40,6 +41,7 @@ export interface IRaribleSdk {
 	order: IOrderSdk
 	balances: IBalanceSdk
 	restriction: IRestrictionSdk
+	wallet: Maybe<BlockchainWallet>
 }
 
 export interface IApisSdk {
@@ -78,7 +80,7 @@ export interface IBalanceSdk {
 	getBalance: IGetBalance
 }
 
-export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis"> & {
+export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {
 	nft: INftInternalSdk
 	order: IOrderInternalSdk
 	balances: IBalanceSdk
