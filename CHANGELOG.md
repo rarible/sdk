@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.33](https://github.com/rarible/sdk/compare/v0.8.32...v0.8.33) (2022-02-11)
+
+
+### Bug Fixes
+
+* build mint request validator ([#120](https://github.com/rarible/sdk/issues/120)) ([58e9c0e](https://github.com/rarible/sdk/commit/58e9c0ef9530882b0855f2bea75c7b6faaa1746b))
+
+
+
+
+
 ## [0.8.32](https://github.com/rarible/sdk/compare/v0.8.31...v0.8.32) (2022-02-11)
 
 
