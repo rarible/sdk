@@ -103,6 +103,12 @@ export const SCHEMA = {
                     "items": {
                         "$ref": "#/definitions/CollectionFeatures"
                     }
+                },
+                "minters": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/UnionAddress"
+                    }
                 }
             },
             "required": [
