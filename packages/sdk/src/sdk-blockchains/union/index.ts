@@ -203,7 +203,7 @@ function getBalanceBlockchain(address: UnionAddress, assetType: AssetType): Bloc
 	if ("blockchain" in assetType && assetType.blockchain) {
 		return assetType.blockchain
 	}
-	if ("contract" in assetType) {
+	if ("contract" in assetType && assetType.contract) {
 		return extractBlockchain(assetType.contract)
 	}
 	return extractBlockchain(address)
