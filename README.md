@@ -1,33 +1,77 @@
-## Rarible Protocol Software Development Kit
+# Rarible Protocol Software Development Kit
 
-Rarible Protocol SDK enables applications to easily interact with Rarible protocol: [query](#querying), [issue](#mint), [trade](#sell) NFTs on any blockchain supported.
+Rarible Protocol SDK enables applications to easily interact with Rarible Protocol: [query](#querying), [issue](#mint), [trade](#sell) NFTs on any blockchain supported.
 
 Currently, these blockchains are supported:
-- Ethereum (rinkeby, mainnet)
-- Flow (currently on devnet only)
-- Tezos (on granada testnet)
+
+* Ethereum
+* Flow
+* Tezos
 
 ## Installation
+
+Install Protocol SDK:
 
 ```shell
 yarn add @rarible/sdk -D
 yarn add web3
 ```
 
+Install SDK Wallet Connector:
+
+```shell
+yarn add @rarible/connector
+# optional: add additional connectors
+yarn add @rarible/connector-walletconnect
+yarn add @rarible/connector-fortmatic
+# check other @rarible/connector-* packages to see what's supported 
+```
+
 ## Usage
 
 SDK is written in TypeScript. You can use typings to explore SDK possibilities.
 
-**Initialize SDK**
+### Initialize SDK
 
 ```ts
 import { createRaribleSdk } from "@rarible/sdk"
 import { Blockchain } from "@rarible/api-client"
 ```
 
+### Initialize wallets
+
 To use SDK, you have to create a Wallet — abstraction to communicate with real blockchain wallets.
 
-**Initialize Ethereum wallet**
+1. Use Rarible SDK Wallet Connector
+
+Create `Connector`, add all needed `ConnectionProvider's`
+
+```ts
+import { Connector, InjectedWeb3ConnectionProvider, DappType } from "@rarible/connector"
+import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
+
+// create providers with the required options
+const injected = new InjectedWeb3ConnectionProvider()
+const walletConnect = new WalletConnectConnectionProvider()
+	
+// create connector and push providers to it 
+const connector = Connector
+    .create([injected, walletConnect])
+		
+// subscribe to connection status
+connector.connection.subscribe((con) =>
+    console.log("connection: " + JSON.stringify(con))
+)
+
+const options = await connector.getOptions(); // get list of available option
+await connector.connect(options[0]); // connect to selected provider
+```
+
+2. Initialize wallets
+
+See [code example](https://github.com/rarible/sdk/tree/master/packages/connector#usage-with-rarible-sdk) in the repository for initialize wallets with Wallet Connector.
+
+**Ethereum**
 
 ```ts
 import Web3 from "web3"
@@ -42,14 +86,7 @@ const ethWallet = new EthereumWallet(web3Ethereum)
 const raribleSdk = createRaribleSdk(ethWallet, "staging")
 ```
 
-**Initialize Tezos wallet**
-
-```ts
-// WIP 
-
-```
-
-**Initialize Flow wallet**
+**Flow**
 
 ```ts
 import * as fcl from "@onflow/fcl"
@@ -60,21 +97,35 @@ const wallet =  new FlowWallet(fcl)
 
 You also need to configure Flow Client Library (FCL) for using Flow. See more information on [Configure fcl](https://docs.rarible.org/flow/flow-sdk/#configure-fcl).
 
+**Tezos**
+
+Use [Wallet Connector](https://github.com/rarible/sdk/tree/master/packages/connector#usage-with-rarible-sdk) to initialize wallet for Tezos.
+
 ### Usage SDK on the server (backend)
 
-For working with SDK on the server, add the next dependencies in the beginning:
+The SDK was designed for use on the frontend side. To use the SDK on the server side (backend):
 
-```typescript
-global.FormData = require("form-data")
-global.window = {
-  fetch: require("node-fetch"),
-  dispatchEvent: () => {
-  },
-}
-global.CustomEvent = function CustomEvent() {
-  return
-}
-```
+1. Install packages:
+
+    ```shell
+    yarn add tslib@2.3.1
+    yarn add form-data
+    yarn add node-fetch
+    ```
+
+2. Add dependencies:
+
+    ```typescript
+    global.FormData = require("form-data")
+    global.window = {
+      fetch: require("node-fetch"),
+      dispatchEvent: () => {
+      },
+    }
+    global.CustomEvent = function CustomEvent() {
+      return
+    }
+    ```
 
 ### Querying
 
