@@ -3607,6 +3607,13 @@
   dependencies:
     "@rarible/types" "~0.5.3"
 
+"@rarible/api-client@~0.0.11":
+  version "0.0.11"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.11.tgz#434345e5eb51c48a8b3f88beebb6234618e88346"
+  integrity sha512-GZ59w8JlfOoA2W30Vxka+inf3GeMGANyR9HX/9FkC1a/B4n8EtCvDmItUqzbzdmbwIdWghsp4NV/k574pYI04w==
+  dependencies:
+    "@rarible/types" "~0.5.3"
+
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/eslint-config-ts/-/eslint-config-ts-0.5.0.tgz#ba6fe1761edd1bf2bfdc8070592d9dc344655c8a"

@@ -153,7 +153,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 	}
 
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
-		return this.instances[extractBlockchain(address)].getBalance(address, assetType)
+		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
 	}
 }
 
@@ -197,4 +197,14 @@ function getBidEntity(request: PrepareBidRequest) {
 	} else {
 		throw new Error("Bit request should contains itemId or collectionId")
 	}
+}
+
+function getBalanceBlockchain(address: UnionAddress, assetType: AssetType): Blockchain {
+	if ("blockchain" in assetType && assetType.blockchain) {
+		return assetType.blockchain
+	}
+	if ("contract" in assetType && assetType.contract) {
+		return extractBlockchain(assetType.contract)
+	}
+	return extractBlockchain(address)
 }
