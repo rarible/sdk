@@ -5,6 +5,7 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import { toBigNumber } from "@rarible/types"
 import { toAuctionId } from "@rarible/types/build/auction-id"
 import BigNumber from "bignumber.js"
+import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import * as common from "../common"
 import type { EVMBlockchain } from "../common"
@@ -52,17 +53,14 @@ export class EthereumAuctionStart {
 					duration: request.duration,
 					startTime: request.startTime,
 					buyOutPriceDecimal: request.buyOutPrice,
-					payouts: toEthereumParts(request.payouts),
 					originFees: toEthereumParts(request.originFees),
 				}
 			})
-			.after(async tx => {
-				const receipt = await tx.wait()
-				console.log("receipt", JSON.stringify(receipt, null, "  "))
-				const createdEvent = receipt.events.find(e => e.event === "AuctionCreated")
-				if (!createdEvent) throw new Error("AuctionCreated event has not been found")
-				const auctionHash = this.sdk.auction.getHash(toBigNumber(createdEvent.args.auctionId))
-				return convertEthereumToAuctionId(auctionHash, this.blockchain)
+			.after(async response => {
+				return {
+					auctionId: convertEthereumToAuctionId(await response.hash, this.blockchain),
+					tx: new BlockchainEthereumTransaction(response.tx, this.network),
+				}
 			})
 
 		return {

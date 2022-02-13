@@ -21,9 +21,8 @@ export class EthereumAuctionBuyOut {
 	buyOut: IAuctionBuyOut = this.sdk.auction.buyOut
 		.before((request: IBuyoutRequest) => {
 			return {
-				auctionId: convertAuctionIdToEthereum(request.auctionId),
+				hash: convertAuctionIdToEthereum(request.auctionId),
 				originFees: toEthereumParts(request.originFees),
-				payouts: toEthereumParts(request.payouts),
 			}
 		})
 		.after(tx => new BlockchainEthereumTransaction(tx, this.network))

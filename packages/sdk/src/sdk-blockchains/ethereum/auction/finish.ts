@@ -21,9 +21,9 @@ export class EthereumAuctionFinish {
 
 	finish: IAuctionFinish = Action.create({
 		id: "send-tx" as const,
-		run: async (request: FinishAuctionRequest) => {
-			const auctionId = convertAuctionIdToEthereum(request.auctionId)
-			const tx = await this.sdk.auction.finish(auctionId)
+		run: async (request: FinishAuctionRequest): Promise<BlockchainEthereumTransaction> => {
+			const hash = convertAuctionIdToEthereum(request.auctionId)
+			const tx = await this.sdk.auction.finish(hash)
 			return new BlockchainEthereumTransaction(tx, this.network)
 		},
 	})

@@ -42,7 +42,7 @@ describe("start auction", () => {
 		}
 
 		const auctionPrepareResponse = await sdk1.auction.start({ collectionId: testErc1155Contract })
-		const auctionId = await auctionPrepareResponse.submit({
+		const response = await auctionPrepareResponse.submit({
 			itemId: mintResponse.itemId,
 			amount: 1,
 			currency: { "@type": "ETH" },
@@ -54,8 +54,7 @@ describe("start auction", () => {
 			originFees: [],
 			payouts: [],
 		})
-
-		await awaitAuction(sdk1, auctionId)
+		await awaitAuction(sdk1, response.auctionId)
 	})
 
 	test("start auction erc-1155 <-> eth", async () => {
@@ -75,7 +74,7 @@ describe("start auction", () => {
 		}
 
 		const auctionPrepareResponse = await sdk1.auction.start({ collectionId: testErc1155Contract })
-		const auctionId = await auctionPrepareResponse.submit({
+		const response = await auctionPrepareResponse.submit({
 			itemId: mintResponse.itemId,
 			amount: 1,
 			currency: { "@type": "ETH" },
@@ -88,6 +87,6 @@ describe("start auction", () => {
 			payouts: [],
 		})
 
-		await awaitAuction(sdk1, auctionId)
+		await awaitAuction(sdk1, response.auctionId)
 	})
 })

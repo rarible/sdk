@@ -3,6 +3,153 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.33](https://github.com/rarible/sdk/compare/v0.8.32...v0.8.33) (2022-02-11)
+
+
+### Bug Fixes
+
+* build mint request validator ([#120](https://github.com/rarible/sdk/issues/120)) ([58e9c0e](https://github.com/rarible/sdk/commit/58e9c0ef9530882b0855f2bea75c7b6faaa1746b))
+
+
+
+
+
+## [0.8.32](https://github.com/rarible/sdk/compare/v0.8.31...v0.8.32) (2022-02-11)
+
+
+### Bug Fixes
+
+* getBalances for polygon ([#119](https://github.com/rarible/sdk/issues/119)) ([7ac1d48](https://github.com/rarible/sdk/commit/7ac1d489731cec3ca99cddbe071c3629e4daf9d3))
+
+
+
+
+
+## [0.8.31](https://github.com/rarible/sdk/compare/v0.8.30...v0.8.31) (2022-02-09)
+
+
+### Bug Fixes
+
+* generate token id contract type ([9f3f470](https://github.com/rarible/sdk/commit/9f3f470f3200f9f5f10f46e44154b0954c59afc0))
+* types ([50c2eec](https://github.com/rarible/sdk/commit/50c2eec54786db66e997b09831f9c44d31e2e2ef))
+
+
+### Features
+
+* remove tokenid from interfaces ([#110](https://github.com/rarible/sdk/issues/110)) ([b8da318](https://github.com/rarible/sdk/commit/b8da3189a98e0be0786b3b091625380b619ffc64))
+
+
+
+
+
+## [0.8.30](https://github.com/rarible/sdk/compare/v0.8.29...v0.8.30) (2022-02-07)
+
+
+### Features
+
+* polygon contract deployment support ([10f315f](https://github.com/rarible/sdk/commit/10f315f283e873cde403f7a81f636d45dfca912e))
+
+
+
+
+
+## [0.8.29](https://github.com/rarible/sdk/compare/v0.8.28...v0.8.29) (2022-02-04)
+
+
+### Features
+
+* unwrap on accept bid on tezos ([#111](https://github.com/rarible/sdk/issues/111)) ([336d291](https://github.com/rarible/sdk/commit/336d291babf24faba975a6602b8f2093a2bcea4d))
+
+
+
+
+
+
+## [0.8.28](https://github.com/rarible/sdk/compare/v0.8.27...v0.8.28) (2022-02-03)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixes order actions for new secondary collections ([f03f7ec](https://github.com/rarible/sdk/commit/f03f7ec4e137cf2abcdf40a48bcf5e2133539b5a))
+
+
+
+
+
+## [0.8.27](https://github.com/rarible/sdk/compare/v0.8.26...v0.8.27) (2022-02-02)
+
+
+### Bug Fixes
+
+* burn creators ([#109](https://github.com/rarible/sdk/issues/109)) ([95d0ced](https://github.com/rarible/sdk/commit/95d0ced06733ccaff1b155d37166bae0a2e135ef))
+
+
+
+
+
+## [0.8.26](https://github.com/rarible/sdk/compare/v0.8.25...v0.8.26) (2022-02-01)
+
+
+### Bug Fixes
+
+* flow-sdk deps ([7beb2bf](https://github.com/rarible/sdk/commit/7beb2bfb3f3eb2b62b6bf3429395d853b6c3e70d))
+
+
+
+
+
+## [0.8.25](https://github.com/rarible/sdk/compare/v0.8.24...v0.8.25) (2022-01-31)
+
+
+### Bug Fixes
+
+* error in fill method when passing order in request ([4c659e9](https://github.com/rarible/sdk/commit/4c659e9bdd22fb3ea51fd073443ce260ee98327c))
+
+
+
+
+
+## [0.8.24](https://github.com/rarible/sdk/compare/v0.8.23...v0.8.24) (2022-01-28)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixes flow scripts error ([#104](https://github.com/rarible/sdk/issues/104)) ([e54352b](https://github.com/rarible/sdk/commit/e54352b094d2c01189a721448c68a213464fc014))
+
+
+
+
+
+## [0.8.23](https://github.com/rarible/sdk/compare/v0.8.22...v0.8.23) (2022-01-28)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.22](https://github.com/rarible/sdk/compare/v0.8.21...v0.8.22) (2022-01-27)
+
+
+### Bug Fixes
+
+* mumbai dev api path ([#101](https://github.com/rarible/sdk/issues/101)) ([851b21c](https://github.com/rarible/sdk/commit/851b21cc904eab94758f257e17484dc1c8f5d461))
+
+
+
+
+
+## [0.8.21](https://github.com/rarible/sdk/compare/v0.8.20...v0.8.21) (2022-01-27)
+
+
+### Features
+
+* convert on bid ([#100](https://github.com/rarible/sdk/issues/100)) ([07eed8d](https://github.com/rarible/sdk/commit/07eed8d244be1c39173c920e3eeb7cb80b969516))
+
+
+
+
+
 ## [0.8.20](https://github.com/rarible/sdk/compare/v0.8.19...v0.8.20) (2022-01-24)
 
 **Note:** Version bump only for package @rarible/sdk
@@ -121,6 +268,58 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Bug Fixes
 
 * update flow-sdk to use old transactions ([#83](https://github.com/rarible/sdk/issues/83)) ([0ddf50d](https://github.com/rarible/sdk/commit/0ddf50df26472a032de7cdf9274d0a194a8ec33c))
+
+
+
+
+
+## [0.8.6-alpha.4](https://github.com/rarible/sdk/compare/v0.8.6-alpha.3...v0.8.6-alpha.4) (2022-01-27)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixed bug with commissions and added support for legacyOrders ([5c10587](https://github.com/rarible/sdk/commit/5c10587edf3d40190ceecdcaff375cbc5a1896f1))
+
+
+
+
+
+## [0.8.6-alpha.3](https://github.com/rarible/sdk/compare/v0.8.6-alpha.2...v0.8.6-alpha.3) (2022-01-21)
+
+
+### Bug Fixes
+
+* update flow-sdk - turn protocol commission to 0 ([a0e4db3](https://github.com/rarible/sdk/commit/a0e4db3f91f48b23575b45a0e0bba4d66c431a87))
+
+
+
+
+
+## [0.8.6-alpha.2](https://github.com/rarible/sdk/compare/v0.8.6-alpha.1...v0.8.6-alpha.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* fb-533 update flow-sdk - updated bid transactions and contract ([d9ecc21](https://github.com/rarible/sdk/commit/d9ecc21a9f85fa874b9460c98140a52d518076c0))
+
+
+
+
+
+## [0.8.6-alpha.1](https://github.com/rarible/sdk/compare/v0.8.6-alpha.0...v0.8.6-alpha.1) (2022-01-17)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.6-alpha.0](https://github.com/rarible/sdk/compare/v0.8.5...v0.8.6-alpha.0) (2022-01-10)
+
+
+### Features
+
+* flow bid support ([8e79371](https://github.com/rarible/sdk/commit/8e79371b02a0e1bf267c7b2ec151fc0dcc918d7e))
 
 
 

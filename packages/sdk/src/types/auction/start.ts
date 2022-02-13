@@ -1,6 +1,7 @@
 import type { AuctionId } from "@rarible/api-client"
 import type { ItemId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { PrepareOrderInternalRequest } from "../order/common"
 import type { AbstractPrepareResponse, CurrencyType } from "../../common/domain"
 import type { OriginFeeSupport, PayoutsSupport } from "../order/fill/domain"
@@ -24,25 +25,32 @@ export type IStartAuctionRequest = {
 	originFees: UnionPart[],
 }
 
-export type BasePrepareAuctionResponse<T> = AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, AuctionId> & {
-	/**
+export type BasePrepareAuctionResponse<T> =
+  AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, StartAuctionResponse> &
+  {
+  	/**
    * is multiple nft
    */
-	multiple: boolean
-	/**
+  	multiple: boolean
+  	/**
    * currencies supported by the blockchain
    */
-	supportedCurrencies: CurrencyType[]
-	/**
+  	supportedCurrencies: CurrencyType[]
+  	/**
    * protocol base fee in basis points
    */
-	baseFee: number
-	/**
+  	baseFee: number
+  	/**
    * Whether the underlying exchange contract supports origin fees
    */
-	originFeeSupport: OriginFeeSupport
-	/**
+  	originFeeSupport: OriginFeeSupport
+  	/**
    * Whether the underlying exchange contract supports specifying payouts
    */
-	payoutsSupport: PayoutsSupport
+  	payoutsSupport: PayoutsSupport
+  }
+
+export type StartAuctionResponse = {
+	tx: IBlockchainTransaction
+	auctionId: AuctionId
 }

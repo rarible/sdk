@@ -33,9 +33,7 @@ describe("fill test", () => {
 
 	test.skip("buy MT test", async () => {
 		const buyerAddress = await wallet.provider.address()
-		console.log(buyerAddress)
 
-		//b0e7e874ddcbf5a2704a299794f57c2886798005ff86b3c7ed12c89c1d6b8b6c
 		const fillAction = await buyerSdk.order.buy({
 			orderId: convertTezosOrderId("f1a87424bc67e47a9a3f850b9f5a5ba13af5259f6d139d7b3710b4862a3aaac9"),
 		})
@@ -46,7 +44,6 @@ describe("fill test", () => {
 		})
 		await tx.wait()
 
-		console.log("tx", tx)
 		const ownership = await awaitForOwnership(
 			buyerSdk,
 			convertTezosItemId("KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu:50"),

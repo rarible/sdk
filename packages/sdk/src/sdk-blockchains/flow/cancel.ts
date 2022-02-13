@@ -37,7 +37,7 @@ export class FlowCancel {
 					if (order.take.type["@type"] !== "FLOW_NFT") {
 						throw new Error("Invalid Flow bid order, take asset is not a Flow asset")
 					}
-					const tx = await this.sdk.order.cancelOrder(getFlowCollection(order.take.type.contract), parsed)
+					const tx = await this.sdk.order.cancelBid(getFlowCollection(order.take.type.contract), parsed)
 					return new BlockchainFlowTransaction(tx, this.network)
 				}
 				default:

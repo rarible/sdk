@@ -181,6 +181,7 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 		type: NftCollectionType[collection.type],
 		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
 		features: collection.features?.map(x => NftCollectionFeatures[x]),
+		minters: collection.minters?.map(minter => convertToEthereumAddress(minter)),
 	}
 }
 

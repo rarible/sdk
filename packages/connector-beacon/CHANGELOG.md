@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.30](https://github.com/rarible/sdk/compare/v0.8.29...v0.8.30) (2022-02-07)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.29](https://github.com/rarible/sdk/compare/v0.8.28...v0.8.29) (2022-02-04)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+
 ## [0.8.20](https://github.com/rarible/sdk/compare/v0.8.19...v0.8.20) (2022-01-24)
 
 **Note:** Version bump only for package @rarible/connector-beacon

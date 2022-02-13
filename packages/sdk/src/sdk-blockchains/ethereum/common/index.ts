@@ -9,15 +9,18 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { AssetType, AuctionId, ItemId, OrderId } from "@rarible/api-client"
+import type { AssetType, AuctionId, Creator, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
-import type { Part } from "@rarible/ethereum-api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { toAuctionId } from "@rarible/types/build/auction-id"
+import type {
+	AssetType as EthereumAssetType,
+	Part,
+} from "@rarible/ethereum-api-client"
+import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
@@ -120,11 +123,24 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		}
 	}
 }
-export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
-	return parts?.map((fee) => ({
-		account: convertToEthereumAddress(fee.account),
-		value: fee.value,
+export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
+	return parts?.map((part) => ({
+		account: convertToEthereumAddress(part.account),
+		value: part.value,
 	})) || []
+}
+
+export function getOriginFeesSum(originFees: Array<Part>): number {
+	return originFees.reduce((acc, fee) => fee.value, 0)
+}
+
+export function getOrderFeesSum(order: Order): number {
+	switch (order.data.dataType) {
+		case "LEGACY": return order.data.fee
+		case "RARIBLE_V2_DATA_V1": return getOriginFeesSum(order.data.originFees)
+		case "RARIBLE_V2_DATA_V2": return getOriginFeesSum(order.data.originFees)
+		default: throw new Error("Unexpected order dataType")
+	}
 }
 
 export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
@@ -138,6 +154,8 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 		case "mainnet":
 			return Blockchain.ETHEREUM
 		case "mumbai":
+			return Blockchain.POLYGON
+		case "mumbai-dev":
 			return Blockchain.POLYGON
 		case "polygon":
 			return Blockchain.POLYGON
@@ -180,11 +198,23 @@ export function convertEthereumOrderHash(hash: Word, blockchain: EVMBlockchain):
 	return toOrderId(`${blockchain}:${hash}`)
 }
 
+export function convertOrderIdToEthereumHash(orderId: OrderId): string {
+	if (!isRealBlockchainSpecified(orderId)) {
+		throw new Error(`Blockchain is not correct=${orderId}`)
+	}
+
+	const [blockchain, orderHash] = orderId.split(":")
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error("Not an Ethereum address")
+	}
+	return orderHash
+}
+
 export function convertEthereumContractAddress(address: string, blockchain: EVMBlockchain): ContractAddress {
 	return toContractAddress(`${blockchain}:${address}`)
 }
 
-export function convertEthereumUnionAddress(address: string, blockchain: EVMBlockchain): UnionAddress {
+export function convertEthereumToUnionAddress(address: string, blockchain: EVMBlockchain): UnionAddress {
 	return toUnionAddress(`${blockchain}:${address}`)
 }
 
@@ -209,10 +239,10 @@ export function convertEthereumToAuctionId(auctionId: string, blockchain: EVMBlo
 	return toAuctionId(`${blockchain}:${auctionId}`)
 }
 
-export function convertAuctionIdToEthereum(unionAuctionId: AuctionId): RaribleBigNumber {
+export function convertAuctionIdToEthereum(unionAuctionId: AuctionId): string {
 	const [blockchain, auctionId] = unionAuctionId.split(":")
 	if (!isEVMBlockchain(blockchain)) {
 		throw new Error(`Not an ethereum auctionId: ${blockchain}`)
 	}
-	return toBigNumber(auctionId)
+	return auctionId
 }

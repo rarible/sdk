@@ -80,7 +80,7 @@ export class EthereumDeploy {
 	deployToken = Action.create({
 		id: "send-tx" as const,
 		run: async (request: DeployTokenRequest) => {
-			if (request.blockchain !== Blockchain.ETHEREUM) {
+			if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
 				throw new Error("Wrong blockchain")
 			}
 			return this.convertDeployResponse(

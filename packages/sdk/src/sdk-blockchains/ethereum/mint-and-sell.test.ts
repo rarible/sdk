@@ -2,7 +2,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toUnionAddress } from "@rarible/types"
+import { toAddress, toContractAddress, toUnionAddress } from "@rarible/types"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
@@ -27,7 +27,7 @@ describe("mintAndSell", () => {
 	test("should mint and put on sale ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
-		const contract = toUnionAddress(`ETHEREUM:${erc721Address}`)
+		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: contract,
 		})

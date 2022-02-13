@@ -67,7 +67,6 @@ describe("transfer test", () => {
 		})
 		await result.wait()
 
-		console.log("mintResult.itemId", mintResult.itemId, receipent)
 		await awaitForOwnership(sdk, mintResult.itemId, receipent)
 
 	}, 1500000)

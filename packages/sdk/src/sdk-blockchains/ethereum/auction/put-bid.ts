@@ -22,10 +22,9 @@ export class EthereumAuctionPutBid {
 	putBid: IAuctionPutBid = this.sdk.auction.putBid
 		.before((request: IPutBidRequest) => {
 			return {
-				auctionId: convertAuctionIdToEthereum(request.auctionId),
+				hash: convertAuctionIdToEthereum(request.auctionId),
 				priceDecimal: toBigNumber(request.price.toString()),
 				originFees: toEthereumParts(request.originFees),
-				payouts: toEthereumParts(request.payouts),
 			}
 		})
 		.after(tx => new BlockchainEthereumTransaction(tx, this.network))

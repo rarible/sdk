@@ -1,4 +1,4 @@
-import type { AssetType, Order, OrderId } from "@rarible/api-client"
+import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AbstractPrepareResponse } from "../../../common/domain"
@@ -46,9 +46,13 @@ export interface FillRequest {
 	 */
 	infiniteApproval?: boolean
 	/**
-	 * Use infinite approvals (for ERC-20)
+	 * ItemId for fill collection order
 	 */
-	assetType?: AssetType
+	itemId?: ItemId
+	/*
+  * Unwrap tokens on accept bid
+   */
+	unwrap?: boolean
 }
 
 export type FillActionTypes = "approve" | "send-tx"
