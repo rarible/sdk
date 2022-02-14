@@ -132,6 +132,8 @@ export function getMaybeTezosProvider(
 					api_permit: `${getTezosBasePath(network)}/v0.1`,
 					permit_whitelist: ["KT1VY7fDqc2FxhfCPM1DrELKFz6EHwudAXQb"],
 					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
+					auction: "",
+					auction_storage: "",
 				},
 			}
 		}
@@ -149,6 +151,8 @@ export function getMaybeTezosProvider(
 					permit_whitelist: [],
 					//todo replace mainnet wrapped xtz address with real
 					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
+					auction: "",
+					auction_storage: "",
 				},
 			}
 		}

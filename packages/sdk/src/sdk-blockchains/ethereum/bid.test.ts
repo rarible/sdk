@@ -331,7 +331,7 @@ describe("bid", () => {
 		await fillBidResult.wait()
 	})
 
-	test("bid for collection and accept bid on lazy item", async () => {
+	test.skip("bid for collection and accept bid on lazy item", async () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
@@ -368,6 +368,8 @@ describe("bid", () => {
 				contract: erc20Contract,
 			},
 		})
+
+		console.log("after bid")
 
 		const acceptBidResponse = await sdk1.order.acceptBid({
 			orderId: bidOrderId,
