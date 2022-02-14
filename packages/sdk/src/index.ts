@@ -46,6 +46,7 @@ export function createRaribleSdk(
 			sell: createSell(instance.order.sell, apis),
 		},
 		apis,
+		wallet,
 	}
 }
 
