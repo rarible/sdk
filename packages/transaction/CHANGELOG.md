@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.34](https://github.com/rarible/sdk/compare/v0.8.33...v0.8.34) (2022-02-14)
+
+
+### Bug Fixes
+
+* unwrapping procedure on cancel order was removed ([#123](https://github.com/rarible/sdk/issues/123)) ([387dfc2](https://github.com/rarible/sdk/commit/387dfc21ee052aae9948f4391285876f368c287b))
+
+
+
+
+
 ## [0.8.32](https://github.com/rarible/sdk/compare/v0.8.31...v0.8.32) (2022-02-11)
 
 
