@@ -11,7 +11,7 @@ import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
 import type { IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
-import type { IDeploy } from "./types/nft/deploy/domain"
+import type { ICreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
@@ -59,7 +59,11 @@ export interface INftSdk {
 	mintAndSell: IMintAndSell
 	burn: IBurn
 	generateTokenId: IGenerateTokenId
-	deploy: IDeploy
+	/**
+   * @deprecated Use {@link createCollection} instead
+   */
+	deploy: ICreateCollection
+	createCollection: ICreateCollection
 }
 
 export interface IOrderSdk {

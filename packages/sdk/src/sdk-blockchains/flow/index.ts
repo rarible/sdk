@@ -37,6 +37,7 @@ export function createFlowSdk(
 			transfer: new FlowTransfer(sdk, blockchainNetwork).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
+			createCollection: nonImplementedAction,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

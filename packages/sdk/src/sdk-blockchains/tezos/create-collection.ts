@@ -4,18 +4,18 @@ import { Action } from "@rarible/action"
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { Blockchain } from "@rarible/api-client"
-import type { DeployTokenRequest, IDeploy } from "../../types/nft/deploy/domain"
-import type { TezosDeployTokenAsset } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequest, ICreateCollection } from "../../types/nft/deploy/domain"
+import type { TezosCreateCollectionTokenAsset } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
 import { convertTezosToContractAddress, getRequiredProvider } from "./common"
 
-export class TezosDeploy {
+export class TezosCreateCollection {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private network: TezosNetwork,
 	) {}
 
-	private async getDeployOperation(asset: TezosDeployTokenAsset): Promise<DeployResult> {
+	private async getDeployOperation(asset: TezosCreateCollectionTokenAsset): Promise<DeployResult> {
 		const provider = getRequiredProvider(this.provider)
 		const owner = await provider.tezos.address()
 		const meta = {
@@ -41,13 +41,13 @@ export class TezosDeploy {
 		}
 	}
 
-	deployToken: IDeploy = Action.create({
+	createCollection: ICreateCollection = Action.create({
 		id: "send-tx" as const,
-		run: async (request: DeployTokenRequest) => {
+		run: async (request: CreateCollectionRequest) => {
 			if (request.blockchain !== Blockchain.TEZOS) {
 				throw new Error("Wrong blockchain")
 			}
-			const operationResult = await this.getDeployOperation(request.asset as TezosDeployTokenAsset)
+			const operationResult = await this.getDeployOperation(request.asset as TezosCreateCollectionTokenAsset)
 			return {
 				tx: new BlockchainTezosTransaction(operationResult, this.network),
 				address: convertTezosToContractAddress(operationResult.contract),
