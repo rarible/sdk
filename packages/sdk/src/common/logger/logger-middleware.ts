@@ -32,7 +32,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 			await wallet.fcl.currentUser().snapshot()
 				.then((userData) => {
 					info["wallet.address"] = userData.addr
-					info["wallet.chainId"] = userData.cid
+					info["wallet.flow.chainId"] = userData.cid
 				})
 				.catch((err) => {
 					info["wallet.address"] = `unknown (${err && err.toString()})`
@@ -43,7 +43,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
 				.then(([chainId, address]) => {
 					info["wallet.address"] = address
-					info["wallet.chainId"] = chainId
+					info["wallet.tezos.chainId"] = chainId
 				})
 				.catch((err) => {
 					info["wallet.address"] = `unknown (${err && err.toString()})`
@@ -54,6 +54,20 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 	}
 
 	return info
+}
+
+export function getErrorMessageString(err: any): string {
+	if (!err) {
+		return "not defined"
+	} else if (typeof err === "string") {
+		return err
+	} else if (err instanceof Error) {
+		return err.message
+	} else if (err.message) {
+		return typeof err.message === "string" ? err.message : JSON.stringify(err.message)
+	} else {
+		return JSON.stringify(err)
+	}
 }
 
 export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {
@@ -67,6 +81,8 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 
 	const remoteLogger = new RemoteLogger((msg: LoggableValue) => axios.post(loggerConfig.elkUrl, msg), {
 		initialContext: getContext(),
+		dropBatchInterval: 1000,
+		maxByteSize: 3 * 10240,
 	})
 
 	return async (callable, args) => {
@@ -87,7 +103,7 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 				if (logsLevel >= LogsLevel.ERROR) {
 					remoteLogger.error(callable.name, {
 						time: (Date.now() - time) / 1000,
-						error: err.toString(),
+						error: getErrorMessageString(err),
 						args,
 					})
 				}
