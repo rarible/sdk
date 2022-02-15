@@ -8,7 +8,7 @@ import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/doma
 import * as common from "../common"
 import type { EVMBlockchain } from "../common"
 import {
-	convertEthereumToAuctionId,
+	convertEthereumToAuctionId, convertToEthereumAddress,
 	getEthereumItemId,
 	getEthTakeAssetType, getEVMBlockchain,
 	isEVMBlockchain,
@@ -30,12 +30,9 @@ export class EthereumAuctionStart {
 	}
 
 	async start(prepareRequest: PrepareOrderInternalRequest): Promise<PrepareStartAuctionResponse> {
-		const [domain, contract] = prepareRequest.collectionId.split(":")
-		if (!isEVMBlockchain(domain)) {
-			throw new Error("Not an ethereum item")
-		}
+		const contractAddress = convertToEthereumAddress(prepareRequest.collectionId)
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: contract,
+			collection: contractAddress,
 		})
 
 		const submit = this.sdk.auction.start

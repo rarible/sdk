@@ -1,4 +1,4 @@
-import type { Address, UnionAddress, Word } from "@rarible/types"
+import type { Address, Binary, UnionAddress, Word } from "@rarible/types"
 import {
 	toAddress,
 	toBigNumber,
@@ -9,7 +9,7 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { AssetType, AuctionId, Creator, ItemId, OrderId } from "@rarible/api-client"
+import type { AssetType, AuctionId, Creator, ItemId, OrderId, Royalty } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
@@ -69,15 +69,9 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 				contract: convertToEthereumAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 				uri: assetType.uri,
-				creators: assetType.creators.map(c => ({
-					account: convertToEthereumAddress(c.account),
-					value: toBn(c.value).toNumber(),
-				})),
-				royalties: assetType.royalties.map(r => ({
-					account: convertToEthereumAddress(r.account),
-					value: toBn(r.value).toNumber(),
-				})),
-				signatures: assetType.signatures.map(str => toBinary(str)),
+				creators: toEthereumParts(assetType.creators),
+				royalties: toEthereumParts(assetType.royalties),
+				signatures: toEthereumSignatures(assetType.signatures),
 			}
 		}
 		case "ERC1155": {
@@ -94,15 +88,9 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 				tokenId: assetType.tokenId,
 				uri: assetType.uri,
 				supply: assetType.supply !== undefined ? toBigNumber(assetType.supply): toBigNumber("1"),
-				creators: assetType.creators.map(c => ({
-					account: convertToEthereumAddress(c.account),
-					value: toBn(c.value).toNumber(),
-				})),
-				royalties: assetType.royalties.map(r => ({
-					account: convertToEthereumAddress(r.account),
-					value: toBn(r.value).toNumber(),
-				})),
-				signatures: assetType.signatures.map(str => toBinary(str)),
+				creators: toEthereumParts(assetType.creators),
+				royalties: toEthereumParts(assetType.royalties),
+				signatures: toEthereumSignatures(assetType.signatures),
 			}
 		}
 		case "CRYPTO_PUNKS": {
@@ -123,11 +111,22 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		}
 	}
 }
-export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
+export function toEthereumParts(parts: UnionPart[] | Creator[] | Royalty[] | undefined): Part[] {
 	return parts?.map((part) => ({
 		account: convertToEthereumAddress(part.account),
 		value: part.value,
 	})) || []
+}
+
+export function toUnionParts(parts?: Part[]): Royalty[] | Creator[] {
+	return parts?.map((part) => ({
+		account: toUnionAddress(part.account),
+		value: part.value,
+	})) || []
+}
+
+export function toEthereumSignatures(signatures?: string[]): Binary[] {
+	return signatures?.map(str => toBinary(str)) || []
 }
 
 export function getOriginFeesSum(originFees: Array<Part>): number {

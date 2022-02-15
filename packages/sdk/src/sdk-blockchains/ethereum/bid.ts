@@ -34,6 +34,8 @@ import {
 	getEVMBlockchain,
 	getOrderFeesSum,
 	isEVMBlockchain,
+	toEthereumSignatures,
+	toUnionParts,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 
@@ -79,15 +81,9 @@ export class EthereumBid {
 					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
-					creators: assetType.creators.map((c) => ({
-						account: toUnionAddress(c.account),
-						value: c.value,
-					})),
-					royalties: assetType.royalties.map((r) => ({
-						account: toUnionAddress(r.account),
-						value: r.value,
-					})),
-					signatures: assetType.signatures.map((str) => toBinary(str)),
+					creators: toUnionParts(assetType.creators),
+					royalties: toUnionParts(assetType.royalties),
+					signatures: assetType.signatures,
 				}
 			}
 			case "ERC1155": {
@@ -106,15 +102,9 @@ export class EthereumBid {
 					supply: assetType.supply !== undefined
 						? toBigNumber(assetType.supply)
 						: toBigNumber("1"),
-					creators: assetType.creators.map((c) => ({
-						account: toUnionAddress(c.account),
-						value: c.value,
-					})),
-					royalties: assetType.royalties.map((r) => ({
-						account: toUnionAddress(r.account),
-						value: r.value,
-					})),
-					signatures: assetType.signatures.map(toBinary),
+					creators: toUnionParts(assetType.creators),
+					royalties: toUnionParts(assetType.royalties),
+					signatures: assetType.signatures,
 				}
 			}
 			case "GEN_ART": {

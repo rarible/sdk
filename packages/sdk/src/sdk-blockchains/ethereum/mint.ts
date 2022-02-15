@@ -22,7 +22,7 @@ import { validateMintRequest } from "../../types/nft/mint/mint-request.type.vali
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { EVMBlockchain } from "./common"
-import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
+import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain, toEthereumParts } from "./common"
 
 export class EthereumMint {
 	private readonly blockchain: EVMBlockchain
@@ -42,8 +42,8 @@ export class EthereumMint {
 				collection: nftCollection,
 				uri: request.uri,
 				lazy: request.lazyMint,
-				royalties: this.toPart(request.royalties),
-				creators: this.toPart(request.creators),
+				royalties: toEthereumParts(request.royalties),
+				creators: toEthereumParts(request.creators),
 				nftTokenId,
 			})
 		}
@@ -51,7 +51,7 @@ export class EthereumMint {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
-				royalties: this.toPart(request.royalties),
+				royalties: toEthereumParts(request.royalties),
 				nftTokenId,
 			})
 		}
@@ -68,8 +68,8 @@ export class EthereumMint {
 				uri: request.uri,
 				supply: request.supply,
 				lazy: request.lazyMint,
-				royalties: this.toPart(request.royalties),
-				creators: this.toPart(request.creators),
+				royalties: toEthereumParts(request.royalties),
+				creators: toEthereumParts(request.creators),
 				nftTokenId,
 			})
 		}
@@ -78,18 +78,11 @@ export class EthereumMint {
 				collection: nftCollection,
 				uri: request.uri,
 				supply: request.supply,
-				royalties: this.toPart(request.royalties),
+				royalties: toEthereumParts(request.royalties),
 				nftTokenId,
 			})
 		}
 		throw new Error("Unsupported NFT Collection")
-	}
-
-	private toPart(royalties: Royalty[] | Creator[] = []): Part[] {
-		return royalties.map(r => ({
-			account: convertToEthereumAddress(r.account),
-			value: toBn(r.value).toNumber(),
-		}))
 	}
 
 	isSupportsRoyalties(collection: CommonNftCollection): boolean {
