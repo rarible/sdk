@@ -21,8 +21,7 @@ export type IStartAuctionRequest = {
 	duration: number,
 	startTime?: number,
 	buyOutPrice: BigNumberValue,
-	payouts: UnionPart[],
-	originFees: UnionPart[],
+	originFees?: UnionPart[],
 }
 
 export type BasePrepareAuctionResponse<T> =

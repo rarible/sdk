@@ -7,6 +7,5 @@ export type IAuctionBuyOut = Action<"approve" | "sign", IBuyoutRequest, IBlockch
 
 export type IBuyoutRequest = {
 	auctionId: AuctionId
-	payouts: UnionPart[],
-	originFees: UnionPart[],
+	originFees?: UnionPart[],
 }

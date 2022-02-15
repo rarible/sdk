@@ -1,4 +1,4 @@
-import type { Address, BigNumber as RaribleBigNumber, UnionAddress, Word } from "@rarible/types"
+import type { Address, UnionAddress, Word } from "@rarible/types"
 import {
 	toAddress,
 	toBigNumber,
