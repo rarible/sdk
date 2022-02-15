@@ -11,7 +11,6 @@ import {
 	convertEthereumToAuctionId, convertToEthereumAddress,
 	getEthereumItemId,
 	getEthTakeAssetType, getEVMBlockchain,
-	isEVMBlockchain,
 	toEthereumParts,
 } from "../common"
 import type { PrepareOrderInternalRequest } from "../../../types/order/common"

@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { Address, ContractAddress } from "@rarible/types"
-import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
+import { toContractAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
@@ -34,7 +34,6 @@ import {
 	getEVMBlockchain,
 	getOrderFeesSum,
 	isEVMBlockchain,
-	toEthereumSignatures,
 	toUnionParts,
 } from "./common"
 import type { EthereumBalance } from "./balance"
