@@ -65,6 +65,12 @@ export function getErrorMessageString(err: any): string {
 		return err.message
 	} else if (err.message) {
 		return typeof err.message === "string" ? err.message : JSON.stringify(err.message)
+	} else if (err.status !== undefined && err.statusText !== undefined) {
+		return JSON.stringify({
+			url: err.url,
+			status: err.status,
+			statusText: err.statusText,
+		})
 	} else {
 		return JSON.stringify(err)
 	}
