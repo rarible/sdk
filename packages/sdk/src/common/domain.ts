@@ -9,7 +9,7 @@ export type CurrencyType = {
 	type: CurrencySubType
 }
 
-export type CurrencySubType = "NATIVE" | "ERC20"
+export type CurrencySubType = "NATIVE" | "ERC20" | "TEZOS_FT"
 
 export interface AbstractPrepareResponse<Id, In, Out> {
 	submit: Action<Id, In, Out>

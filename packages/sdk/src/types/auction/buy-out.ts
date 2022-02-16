@@ -7,6 +7,5 @@ export type IAuctionBuyOut = Action<"send-tx" | "approve" | "sign", IBuyoutReque
 
 export type IBuyoutRequest = {
 	auctionId: AuctionId
-	payouts: UnionPart[],
-	originFees: UnionPart[],
+	originFees?: UnionPart[],
 }

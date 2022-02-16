@@ -24,7 +24,7 @@ export type UnionPart = {
 	value: number
 }
 
-export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"approve" | "sign" | "send-tx", T, OrderId> & {
+type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", T, OrderId> & {
 	/**
 	 * is multiple nft
 	 */
@@ -89,7 +89,7 @@ export type OrderInternalRequest = OrderRequest & {
 	itemId: ItemId
 }
 
-export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"approve" | "sign" | "send-tx", OrderUpdateRequest, OrderId> {
+export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", OrderUpdateRequest, OrderId> {
 	/**
    * currencies supported by the blockchain
    */

@@ -4,7 +4,7 @@ import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
-import { isEVMBlockchain } from "./common"
+import { isEVMBlockchain, toEthereumParts } from "./common"
 
 export class EthereumBurn {
 	constructor(
@@ -41,10 +41,13 @@ export class EthereumBurn {
 
 					const tx = await this.sdk.nft.burn(
 						{
-							contract: item.contract,
-							tokenId: item.tokenId,
+							assetType: {
+								contract: item.contract,
+								tokenId: item.tokenId,
+							},
+						  amount,
+							creators: toEthereumParts(request?.creators),
 						},
-						amount
 					)
 
 					return tx && new BlockchainEthereumTransaction(tx, this.network)

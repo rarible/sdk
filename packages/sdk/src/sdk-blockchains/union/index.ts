@@ -2,8 +2,7 @@ import type { AssetType, ItemId, OrderId, OwnershipId, AuctionId } from "@raribl
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
-import { Action, ActionBuilder } from "@rarible/action"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import { Action } from "@rarible/action"
 import type { IAuctionSdk, IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -21,8 +20,12 @@ import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bi
 import { Middlewarer } from "../../common/middleware/middleware"
 import type { PrepareOrderInternalRequest } from "../../types/order/common"
 import type { PrepareStartAuctionResponse } from "../../types/auction/start"
-import type { IPutBidRequest } from "../../types/auction/put-bid"
+import type { IAuctionPutBid, IPutBidRequest } from "../../types/auction/put-bid"
 import type { IBuyoutRequest } from "../../types/auction/buy-out"
+import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
+import type { IAuctionFinish } from "../../types/auction/finish"
+import type { IAuctionCancel } from "../../types/auction/cancel"
+import type { IAuctionBuyOut } from "../../types/auction/buy-out"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -79,7 +82,7 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getBidEntity(request))].bid(request)
 	}
 
-	bidUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
+	bidUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {
 		return this.instances[extractBlockchain(request.orderId)].bidUpdate(request)
 	}
 
@@ -163,7 +166,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 	}
 
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
-		return this.instances[extractBlockchain(address)].getBalance(address, assetType)
+		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
 	}
 }
 
@@ -211,13 +214,23 @@ function getBidEntity(request: PrepareBidRequest) {
 	}
 }
 
+function getBalanceBlockchain(address: UnionAddress, assetType: AssetType): Blockchain {
+	if ("blockchain" in assetType && assetType.blockchain) {
+		return assetType.blockchain
+	}
+	if ("contract" in assetType && assetType.contract) {
+		return extractBlockchain(assetType.contract)
+	}
+	return extractBlockchain(address)
+}
+
 
 class UnionAuctionSdk implements IAuctionSdk {
 	constructor(private readonly instances: Record<Blockchain, IAuctionSdk>) {
 		this.start = this.start.bind(this)
 		this.cancel = this.cancel.bind(this)
 		this.finish = this.finish.bind(this)
-		this.putBid = this.putBid.bind(this)
+		// this.putBid = this.putBid.bind(this)
 		this.buyOut = this.buyOut.bind(this)
 	}
 
@@ -225,19 +238,43 @@ class UnionAuctionSdk implements IAuctionSdk {
 		return this.instances[extractBlockchain(request.collectionId)].start(request)
 	}
 
-	cancel(auctionId: AuctionId): Promise<IBlockchainTransaction> {
-		return this.instances[extractBlockchain(auctionId)].cancel(auctionId)
-	}
+	cancel: IAuctionCancel = Action.create({
+		id: "send-tx",
+		run: request => this.instances[extractBlockchain(request.auctionId)].cancel(request),
+	})
 
-	finish(auctionId: AuctionId): Promise<IBlockchainTransaction> {
-		return this.instances[extractBlockchain(auctionId)].finish(auctionId)
-	}
+	finish: IAuctionFinish = Action.create({
+		id: "send-tx",
+		run: request => this.instances[extractBlockchain(request.auctionId)].finish(request),
+	})
 
-	putBid(request: IPutBidRequest): Promise<IBlockchainTransaction> {
-		return this.instances[extractBlockchain(request.auctionId)].putBid(request)
-	}
+	putBid: IAuctionPutBid = Action.create({
+		id: "approve" as const,
+		run: async (request: IPutBidRequest) => {
+			const exec = this.instances[extractBlockchain(request.auctionId)].putBid.start(request)
+			await exec.run(0)
+			return exec
+		},
+	}).thenStep({
+		id: "sign" as const,
+		run: async (execution) => {
+			await execution.run(1)
+			return execution.result
+		},
+	})
 
-	buyOut(request: IBuyoutRequest): Promise<IBlockchainTransaction> {
-		return this.instances[extractBlockchain(request.auctionId)].buyOut(request)
-	}
+	buyOut: IAuctionBuyOut = Action.create({
+		id: "approve" as const,
+		run: async (request: IBuyoutRequest) => {
+			const exec = this.instances[extractBlockchain(request.auctionId)].buyOut.start(request)
+			await exec.run(0)
+			return exec
+		},
+	}).thenStep({
+		id: "sign" as const,
+		run: async (execution) => {
+			await execution.run(1)
+			return execution.result
+		},
+	})
 }

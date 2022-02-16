@@ -3,9 +3,9 @@ import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
 import type { AuthWithPrivateKey, FlowEnv } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
-import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
+import { FLOW_ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { nonImplementedAction } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { FlowMint } from "./mint"
@@ -15,7 +15,7 @@ import { FlowTransfer } from "./transfer"
 import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
-import { FlowAuction } from "./auction"
+import { FlowBid } from "./bid"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
@@ -25,10 +25,10 @@ export function createFlowSdk(
 	auth?: AuthWithPrivateKey,
 ): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, params, auth)
-	const blockchainNetwork = ENV_CONFIG[network].network
+	const blockchainNetwork = FLOW_ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
-	const auctionService = new FlowAuction(sdk, blockchainNetwork)
+	const bidService = new FlowBid(sdk)
 
 	return {
 		nft: {
@@ -44,20 +44,20 @@ export function createFlowSdk(
 			sellUpdate: sellService.update,
 			fill: new FlowBuy(sdk, apis, blockchainNetwork).buy,
 			buy: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			acceptBid: nonImplementedAction,
-			bid: nonImplementedAction,
-			bidUpdate: nonImplementedAction,
+			acceptBid: new FlowBuy(sdk, apis, blockchainNetwork).buy,
+			bid: bidService.bid,
+			bidUpdate: bidService.update,
 			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk).getBalance,
 		},
 		auction: {
-			start: auctionService.start,
-			cancel: auctionService.cancel,
-			finish: auctionService.finish,
-			putBid: auctionService.createBid,
-			buyOut: auctionService.buyOut,
+			start: notImplemented,
+			cancel: nonImplementedAction,
+			finish: nonImplementedAction,
+			putBid: nonImplementedAction,
+			buyOut: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

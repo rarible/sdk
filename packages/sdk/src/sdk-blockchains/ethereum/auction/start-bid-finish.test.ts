@@ -6,9 +6,10 @@ import { createRaribleSdk } from "../../../index"
 import { initProvider, initProviders } from "../test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "../common"
 import { awaitAuction } from "../test/await-auction"
-import { retry } from "../../../common/retry"
+import { delay, retry } from "../../../common/retry"
+import { awaitForAuctionBid } from "../test/await-auction-bid"
 
-describe("buy out auction", () => {
+describe("start, put bid and finish auction", () => {
 	const {
 		web31,
 		wallet1,
@@ -43,7 +44,7 @@ describe("buy out auction", () => {
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 	})
 
-	test("buy out auction erc-721 <-> erc-20", async () => {
+	test("finish auction erc-721 <-> erc-20", async () => {
 		const mintAction = await sdkSeller.nft.mint({ collectionId: testErc721Contract })
 		const mintResponse = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -81,23 +82,22 @@ describe("buy out auction", () => {
 		const auctionId = await startResponse.auctionId
 		await awaitAuction(sdkSeller, auctionId)
 
-		const buyoutTx = await sdkBuyer.auction.buyOut({
+		const bidPriceDecimal = "0.00000000000000006"
+
+		const putBidTx = await sdkBuyer.auction.putBid({
 			auctionId: await auctionId,
+			price: bidPriceDecimal,
 			originFees: [{
 				account: feeUnionAddress,
 				value: 1000,
 			}],
 		})
-		await buyoutTx.wait()
+		await putBidTx.wait()
 
-		await retry(5, 2000, async () => {
-			return sdkSeller.apis.ownership.getOwnershipById({
-				ownershipId: `${mintResponse.itemId}:${await ethereum2.getFrom()}`,
-			})
-		})
+		await awaitForAuctionBid(sdkBuyer, auctionId)
 	})
 
-	test("buy out auction erc-1155 <-> eth", async () => {
+	test("finish auction erc-1155 <-> eth", async () => {
 		const mintAction = await sdkSeller.nft.mint({ collectionId: testErc1155Contract })
 		const mintResponse = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -130,14 +130,22 @@ describe("buy out auction", () => {
 		const auctionId = await startResponse.auctionId
 		await awaitAuction(sdkSeller, auctionId)
 
-		const buyoutTx = await sdkBuyer.auction.buyOut({
+		const bidPriceDecimal = "0.00000000000000006"
+
+		const putBidTx = await sdkBuyer.auction.putBid({
 			auctionId: await auctionId,
+			price: bidPriceDecimal,
 			originFees: [{
 				account: feeUnionAddress,
 				value: 1000,
 			}],
 		})
-		await buyoutTx.wait()
+		await putBidTx.wait()
+
+		await awaitForAuctionBid(sdkBuyer, auctionId)
+		await delay(1000)
+		const finishAuctionTx = await sdkSeller.auction.finish({ auctionId })
+		await finishAuctionTx.wait()
 
 		await retry(5, 2000, async () => {
 			const ownership = await sdkSeller.apis.ownership.getOwnershipById({
@@ -147,6 +155,7 @@ describe("buy out auction", () => {
 				throw new Error("Ownership value should be equal to 2")
 			}
 		})
+
 	})
 
 

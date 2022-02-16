@@ -7,7 +7,6 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -19,6 +18,10 @@ import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumDeploy } from "./deploy"
 import { EthereumAuctionStart } from "./auction/start"
+import { EthereumAuctionPutBid } from "./auction/put-bid"
+import { EthereumAuctionBuyOut } from "./auction/buy-out"
+import { EthereumAuctionFinish } from "./auction/finish"
+import { EthereumAuctionCancel } from "./auction/cancel"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -54,10 +57,10 @@ export function createEthereumSdk(
 		},
 		auction: {
 			start: new EthereumAuctionStart(sdk, wallet, network).start,
-			cancel: nonImplementedAction,
-			finish: nonImplementedAction,
-			putBid: nonImplementedAction,
-			buyOut: nonImplementedAction,
+			cancel: new EthereumAuctionCancel(sdk, wallet, network).cancel,
+			finish: new EthereumAuctionFinish(sdk, wallet, network).finish,
+			putBid: new EthereumAuctionPutBid(sdk, wallet, network).putBid,
+			buyOut: new EthereumAuctionBuyOut(sdk, wallet, network).buyOut,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

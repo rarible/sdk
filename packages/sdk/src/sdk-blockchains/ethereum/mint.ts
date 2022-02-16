@@ -4,11 +4,10 @@ import * as EthereumSdk from "@rarible/protocol-ethereum-sdk"
 import { isErc1155v2Collection, isErc721v2Collection, isErc721v3Collection } from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import { toAddress, toBigNumber } from "@rarible/types"
-import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
+import type { NftTokenId } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
-import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
+import type { Collection, CollectionControllerApi } from "@rarible/api-client"
 import { CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
@@ -22,7 +21,7 @@ import { validateMintRequest } from "../../types/nft/mint/mint-request.type.vali
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { EVMBlockchain } from "./common"
-import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
+import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain, toEthereumParts } from "./common"
 
 export class EthereumMint {
 	private readonly blockchain: EVMBlockchain
@@ -42,8 +41,8 @@ export class EthereumMint {
 				collection: nftCollection,
 				uri: request.uri,
 				lazy: request.lazyMint,
-				royalties: this.toPart(request.royalties),
-				creators: this.toPart(request.creators),
+				royalties: toEthereumParts(request.royalties),
+				creators: toEthereumParts(request.creators),
 				nftTokenId,
 			})
 		}
@@ -51,7 +50,7 @@ export class EthereumMint {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
-				royalties: this.toPart(request.royalties),
+				royalties: toEthereumParts(request.royalties),
 				nftTokenId,
 			})
 		}
@@ -68,8 +67,8 @@ export class EthereumMint {
 				uri: request.uri,
 				supply: request.supply,
 				lazy: request.lazyMint,
-				royalties: this.toPart(request.royalties),
-				creators: this.toPart(request.creators),
+				royalties: toEthereumParts(request.royalties),
+				creators: toEthereumParts(request.creators),
 				nftTokenId,
 			})
 		}
@@ -78,18 +77,11 @@ export class EthereumMint {
 				collection: nftCollection,
 				uri: request.uri,
 				supply: request.supply,
-				royalties: this.toPart(request.royalties),
+				royalties: toEthereumParts(request.royalties),
 				nftTokenId,
 			})
 		}
 		throw new Error("Unsupported NFT Collection")
-	}
-
-	private toPart(royalties: Royalty[] | Creator[] = []): Part[] {
-		return royalties.map(r => ({
-			account: convertToEthereumAddress(r.account),
-			value: toBn(r.value).toNumber(),
-		}))
 	}
 
 	isSupportsRoyalties(collection: CommonNftCollection): boolean {
@@ -181,6 +173,7 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 		type: NftCollectionType[collection.type],
 		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
 		features: collection.features?.map(x => NftCollectionFeatures[x]),
+		minters: collection.minters?.map(minter => convertToEthereumAddress(minter)),
 	}
 }
 

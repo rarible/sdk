@@ -57,13 +57,15 @@ export class FlowAuction {
 						currency,
 						startAt: request.startTime?.toString(),
 						buyoutPrice: request.buyOutPrice?.toString(),
-						payouts: toFlowParts(request.payouts),
 						originFees: toFlowParts(request.originFees),
 					})
 				}
 				throw new Error(`Unsupported currency type: ${request.currency["@type"]}`)
 			},
-		}).after((tx) => toAuctionId(`${Blockchain.FLOW}:${tx.orderId}`))
+		}).after((tx) => ({
+			tx: new BlockchainFlowTransaction(tx, this.network),
+			auctionId: toAuctionId(`${Blockchain.FLOW}:${tx.orderId}`),
+		}))
 
 		return {
 			multiple: false,

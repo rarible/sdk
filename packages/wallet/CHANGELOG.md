@@ -3,6 +3,48 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.34](https://github.com/rarible/sdk/compare/v0.8.33...v0.8.34) (2022-02-14)
+
+
+### Bug Fixes
+
+* unwrapping procedure on cancel order was removed ([#123](https://github.com/rarible/sdk/issues/123)) ([387dfc2](https://github.com/rarible/sdk/commit/387dfc21ee052aae9948f4391285876f368c287b))
+
+
+
+
+
+## [0.8.32](https://github.com/rarible/sdk/compare/v0.8.31...v0.8.32) (2022-02-11)
+
+
+### Bug Fixes
+
+* getBalances for polygon ([#119](https://github.com/rarible/sdk/issues/119)) ([7ac1d48](https://github.com/rarible/sdk/commit/7ac1d489731cec3ca99cddbe071c3629e4daf9d3))
+
+
+
+
+
+## [0.8.29](https://github.com/rarible/sdk/compare/v0.8.28...v0.8.29) (2022-02-04)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+
+## [0.8.21](https://github.com/rarible/sdk/compare/v0.8.20...v0.8.21) (2022-01-27)
+
+
+### Features
+
+* convert on bid ([#100](https://github.com/rarible/sdk/issues/100)) ([07eed8d](https://github.com/rarible/sdk/commit/07eed8d244be1c39173c920e3eeb7cb80b969516))
+
+
+
+
+
 ## [0.8.20](https://github.com/rarible/sdk/compare/v0.8.19...v0.8.20) (2022-01-24)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

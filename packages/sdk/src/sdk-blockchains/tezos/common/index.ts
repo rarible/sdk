@@ -1,21 +1,21 @@
 import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-// eslint-disable-next-line camelcase
 import type {
 	Provider,
 	TezosProvider,
 	AssetType as TezosAssetType,
 	Asset as TezosLibAsset,
 	TezosNetwork,
-} from "@rarible/tezos-sdk/dist/common/base"
+	Config,
+} from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { get_public_key } from "@rarible/tezos-sdk/dist/common/base"
-// eslint-disable-next-line camelcase
-import { pk_to_pkh } from "@rarible/tezos-sdk"
+import { get_public_key,  pk_to_pkh  } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { Part } from "@rarible/tezos-sdk/dist/order/utils"
 import type {
-	Asset as TezosClientAsset } from "tezos-api-client/build"
+	Asset as TezosClientAsset,
+	AssetType as TezosClientAssetType,
+} from "tezos-api-client/build"
 import {
 	Configuration,
 	NftCollectionControllerApi,
@@ -30,8 +30,7 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import type { Config } from "@rarible/tezos-sdk"
-import { toContractAddress, toItemId, toOrderId } from "@rarible/types"
+import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 
@@ -133,6 +132,8 @@ export function getMaybeTezosProvider(
 					api_permit: `${getTezosBasePath(network)}/v0.1`,
 					permit_whitelist: ["KT1VY7fDqc2FxhfCPM1DrELKFz6EHwudAXQb"],
 					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
+					auction: "",
+					auction_storage: "",
 				},
 			}
 		}
@@ -150,6 +151,8 @@ export function getMaybeTezosProvider(
 					permit_whitelist: [],
 					//todo replace mainnet wrapped xtz address with real
 					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
+					auction: "",
+					auction_storage: "",
 				},
 			}
 		}
@@ -220,10 +223,10 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 }
 
 export function getSupportedCurrencies(): CurrencyType[] {
-	return [{
-		blockchain: Blockchain.TEZOS,
-		type: "NATIVE",
-	}]
+	return [
+		{ blockchain: Blockchain.TEZOS, type: "NATIVE" },
+		{ blockchain: Blockchain.TEZOS, type: "TEZOS_FT" },
+	]
 }
 
 export function convertOrderToFillOrder(order: Order): PreparedOrder {
@@ -329,6 +332,38 @@ export function covertToLibAsset(a: TezosClientAsset): TezosLibAsset {
 	}
 }
 
+export function convertTezosToUnionAsset(assetType: TezosClientAssetType): AssetType {
+	switch (assetType.assetClass) {
+		case "XTZ": {
+			return { "@type": "XTZ" }
+		}
+		case "FT": {
+			return {
+				"@type": "TEZOS_FT",
+				contract: convertTezosToContractAddress(assetType.contract),
+				tokenId: assetType.tokenId ? toRaribleBigNumber(assetType.tokenId) : undefined,
+			}
+		}
+		case "NFT": {
+			return {
+				"@type": "TEZOS_NFT",
+				contract: convertTezosToContractAddress(assetType.contract),
+				tokenId: toRaribleBigNumber(assetType.tokenId),
+			}
+		}
+		case "MT": {
+			return {
+				"@type": "TEZOS_MT",
+				contract: convertTezosToContractAddress(assetType.contract),
+				tokenId: toRaribleBigNumber(assetType.tokenId),
+			}
+		}
+		default: {
+			throw new Error("Invalid asset type")
+		}
+	}
+}
+
 export function convertOrderPayout(payout?: Array<Payout>): Array<TezosPart> {
 	return payout?.map(p => ({
 		account: getTezosAddress(p.account),
@@ -360,6 +395,9 @@ export function convertTezosItemId(itemId: string): ItemId {
 	return toItemId(`${Blockchain.TEZOS}:${itemId}`)
 }
 
-export function convertTezosContractAddress(address: string): ContractAddress {
+export function convertTezosToContractAddress(address: string): ContractAddress {
 	return toContractAddress(`${Blockchain.TEZOS}:${address}`)
+}
+export function convertTezosToUnionAddress(address: string): UnionAddress {
+	return toUnionAddress(`${Blockchain.TEZOS}:${address}`)
 }

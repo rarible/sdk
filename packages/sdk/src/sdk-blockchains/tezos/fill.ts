@@ -7,7 +7,7 @@ import { toBigNumber as toRaribleBigNumber, toBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { Order as TezosOrder } from "tezos-api-client"
 import BigNumber from "bignumber.js"
-import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk/dist/common/base"
+import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -106,6 +106,7 @@ export class TezosFill {
 					provider,
 					preparedOrder,
 					request,
+					fillRequest.unwrap
 				)
 				return new BlockchainTezosTransaction(fillResponse, this.network)
 			},
