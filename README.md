@@ -7,6 +7,7 @@ Currently, these blockchains are supported:
 * Ethereum
 * Flow
 * Tezos
+* Polygon
 
 ## Installation
 
@@ -71,7 +72,7 @@ await connector.connect(options[0]); // connect to selected provider
 
 See [code example](https://github.com/rarible/sdk/tree/master/packages/connector#usage-with-rarible-sdk) in the repository for initialize wallets with Wallet Connector.
 
-**Ethereum**
+**Ethereum / Polygon**
 
 ```ts
 import Web3 from "web3"
