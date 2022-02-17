@@ -3634,10 +3634,24 @@
   dependencies:
     "@rarible/types" "~0.5.0"
 
+"@rarible/ethereum-api-client@^0.1.20":
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.20.tgz#75ad10c3a60b4f7bf944e3f19143099b97111019"
+  integrity sha512-xHAt3XfqpDKEblNFdqNPNdStFMxXx03aYgYgvg1FVqkAZivsCZ4gO4xCA0dEBmKf4N5nJVO7RIHLiqwweLJa/g==
+  dependencies:
+    "@rarible/types" "~0.5.0"
+
 "@rarible/ethereum-provider@^0.12.30", "@rarible/ethereum-provider@~0.12.30":
   version "0.12.30"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.30.tgz#579170daa7cb0de568057a60d45a38d3d37f2f43"
   integrity sha512-9aYEe0+mbPfla0zcYErv51SUiciDwPgKITvmWy4QcaZ1He/wy6LtPVE2WyAVx0k0ASBZ/GnChrp6jWNya1yKGg==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
+"@rarible/ethereum-provider@^0.12.42":
+  version "0.12.42"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.42.tgz#76ef392a10f434bec4c12f1632b19b3262c18ce9"
+  integrity sha512-I/3N5JalMkEDcaLXstou02AuMIqheET+jDKPkZpiF7yi5P9L8L4paQ006kSmApHL5VMkmcr0Z807z18dsKyvTg==
   dependencies:
     eth-sig-util "^3.0.0"
 
@@ -3724,6 +3738,21 @@
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.18"
     "@rarible/ethereum-provider" "^0.12.30"
+    "@rarible/logger" "~0.6.2"
+    "@rarible/utils" "~0.5.0"
+    axios "^0.25.0"
+    eth-sig-util "^3.0.0"
+    ethereumjs-util "^7.1.0"
+    exponential-backoff "^3.1.0"
+
+"@rarible/protocol-ethereum-sdk@~0.12.50":
+  version "0.12.50"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.50.tgz#0d0799727b9a91c16dd256ac8956064416d19c37"
+  integrity sha512-5WZFPHXLaTJHE8DVv/Ompfbz7D8XDbsWym1MqfOXNxCF95J1IqjB/EDCbY5j89CFoH605v4KQZhJ1Ceq5f8Ivg==
+  dependencies:
+    "@rarible/action" "~0.5.0"
+    "@rarible/ethereum-api-client" "^0.1.20"
+    "@rarible/ethereum-provider" "^0.12.42"
     "@rarible/logger" "~0.6.2"
     "@rarible/utils" "~0.5.0"
     axios "^0.25.0"
