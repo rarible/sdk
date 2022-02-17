@@ -3684,6 +3684,19 @@
     "@rarible/types" "0.5.3"
     "@rarible/utils" "~0.5.0"
 
+"@rarible/flow-sdk@~0.5.35":
+  version "0.5.35"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.35.tgz#94ac7d36ca49637c16e3d998b8f4398785b7085f"
+  integrity sha512-TD26/rc9TH0aDF5XutWqWpDdfp8GRtsn86Ak/Net0c9TGjFdltd1/Uo6xlVeDpin1PFicfEU3xYImHeneqfR0g==
+  dependencies:
+    "@onflow/fcl" "~0.0.77"
+    "@onflow/types" "~0.0.5"
+    "@rarible/fcl-types" "~0.5.0"
+    "@rarible/flow-api-client" "~0.0.3"
+    "@rarible/flow-sdk-scripts" "^0.5.30"
+    "@rarible/types" "0.5.3"
+    "@rarible/utils" "~0.5.0"
+
 "@rarible/flow-test-common@~0.5.31":
   version "0.5.31"
   resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.31.tgz#8dbd7eee5caa1f680cb3f71978308aae8276f9b1"
