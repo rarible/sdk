@@ -134,6 +134,7 @@ export function getMaybeTezosProvider(
 					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
 					auction: "",
 					auction_storage: "",
+					node_url: "https://tezos-hangzhou-node.rarible.org",
 				},
 			}
 		}
@@ -153,6 +154,7 @@ export function getMaybeTezosProvider(
 					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
 					auction: "",
 					auction_storage: "",
+					node_url: "https://mainnet.api.tez.ie",
 				},
 			}
 		}
