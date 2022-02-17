@@ -13,7 +13,7 @@ import { TezosBurn } from "./burn"
 import { TezosTokenId } from "./token-id"
 import { TezosCancel } from "./cancel"
 import { TezosBalance } from "./balance"
-import { TezosDeploy } from "./deploy"
+import { TezosCreateCollection } from "./create-collection"
 import { TezosCanTransfer } from "./restriction"
 
 export function createTezosSdk(
@@ -28,6 +28,7 @@ export function createTezosSdk(
 	const balanceService = new TezosBalance(maybeProvider, apis)
 	const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, network)
+	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 
 	return {
 		nft: {
@@ -35,7 +36,8 @@ export function createTezosSdk(
 			burn: new TezosBurn(maybeProvider, apis, network).burn,
 			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
-			deploy: new TezosDeploy(maybeProvider, network).deployToken,
+			deploy: createCollectionService.createCollection,
+			createCollection: createCollectionService.createCollection,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
