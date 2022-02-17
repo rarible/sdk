@@ -1,9 +1,9 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
-import type { DeployTokenRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import { getEthereumWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
 import { createSdk } from "./common/create-sdk"
 import { mint } from "./common/atoms-tests/mint"
@@ -13,7 +13,7 @@ import { deployCollection } from "./common/atoms-tests/deploy-collection"
 const suites: {
 	blockchain: Blockchain,
 	wallet: BlockchainWallet,
-	deployRequest: (address: UnionAddress) => DeployTokenRequest
+	deployRequest: (address: UnionAddress) => CreateCollectionRequest
 	mintRequest: (address: UnionAddress) => MintRequest
 }[] = [
 	{
@@ -51,7 +51,7 @@ const suites: {
 	{
 		blockchain: Blockchain.TEZOS,
 		wallet: getTezosTestWallet(),
-		deployRequest: (): DeployTokenRequest => {
+		deployRequest: (): CreateCollectionRequest => {
 			return {
 				blockchain: Blockchain.TEZOS,
 				asset: {

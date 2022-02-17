@@ -1,4 +1,4 @@
-import type { Action } from "@rarible/action"
+import { Action } from "@rarible/action"
 import { toPromise } from "./utils"
 
 const SKIP_MIDDLEWARE = Symbol("SKIP_MIDDLEWARE")
@@ -125,5 +125,5 @@ export class Middlewarer {
 }
 
 function isAction(fn: any): fn is Action<any, any, any> {
-	return !!fn.steps
+	return fn instanceof Action
 }
