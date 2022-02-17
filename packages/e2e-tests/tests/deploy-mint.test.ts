@@ -1,7 +1,7 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
-import type { DeployTokenRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
+import type { DeployTokenRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { getEthereumWallet, getTezosTestWallet, getWalletAddress } from "./common/wallet"
