@@ -5,7 +5,7 @@ import type { BigNumberValue } from "@rarible/utils"
 // eslint-disable-next-line camelcase
 import { get_balance } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { MaybeProvider } from "./common"
 import { getTezosAddress, getTezosAssetType, XTZ_DECIMALS } from "./common"
 
 export class TezosBalance {
