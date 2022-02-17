@@ -51,7 +51,7 @@ export function createFlowSdk(
 			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
 		},
 		balances: {
-			getBalance: new FlowBalance(sdk).getBalance,
+			getBalance: new FlowBalance(blockchainNetwork).getBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

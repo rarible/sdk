@@ -154,5 +154,3 @@ type MiddleMintType = {
 	initial: MintAndSellRequest
 	mintResponse: MintResponse
 }
-
-export { getFlowFungibleBalance } from "@rarible/flow-sdk"
