@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.35](https://github.com/rarible/sdk/compare/v0.8.34...v0.8.35) (2022-02-18)
+
+
+### Bug Fixes
+
+* update usage SDK info ([#108](https://github.com/rarible/sdk/issues/108)) ([e84eee4](https://github.com/rarible/sdk/commit/e84eee430eec3a6fcc13eabf45b68ca5f7977f9e))
+
+
+### Features
+
+* deploy method renamed to createCollection ([df19208](https://github.com/rarible/sdk/commit/df19208409264855e37593fd4060c0a5e915f75e))
+* provide blockchain to EthereumWallet ([fbf53dd](https://github.com/rarible/sdk/commit/fbf53ddce5db45771bc11be278fda132442b2e73))
+
+
+
+
+
+
 ## [0.8.34](https://github.com/rarible/sdk/compare/v0.8.33...v0.8.34) (2022-02-14)
 
 
