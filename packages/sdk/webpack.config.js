@@ -3,12 +3,19 @@ const webpack = require("webpack")
 
 module.exports = {
 	entry: "./build/index.js",
+	experiments: {
+		outputModule: true,
+	},
 	output: {
 		path: path.resolve(__dirname, "umd"),
 		filename: "rarible-sdk.js",
 		library: {
-			name: "raribleSdk",
 			type: "umd",
+		},
+		path: path.resolve(__dirname, "esm"),
+		filename: "rarible-sdk.js",
+		library: {
+			type: "module",
 		},
 	},
 	resolve: {
