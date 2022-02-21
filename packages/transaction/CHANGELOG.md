@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.27](https://github.com/rarible/sdk/compare/v0.8.26...v0.8.27) (2022-02-02)
+
+
+### Bug Fixes
+
+* burn creators ([#109](https://github.com/rarible/sdk/issues/109)) ([95d0ced](https://github.com/rarible/sdk/commit/95d0ced06733ccaff1b155d37166bae0a2e135ef))
+
+
+
+
+
+## [0.8.26](https://github.com/rarible/sdk/compare/v0.8.25...v0.8.26) (2022-02-01)
+
+
+### Bug Fixes
+
+* flow-sdk deps ([7beb2bf](https://github.com/rarible/sdk/commit/7beb2bfb3f3eb2b62b6bf3429395d853b6c3e70d))
+
+
+
+
+
+## [0.8.25](https://github.com/rarible/sdk/compare/v0.8.24...v0.8.25) (2022-01-31)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
 ## [0.8.24](https://github.com/rarible/sdk/compare/v0.8.23...v0.8.24) (2022-01-28)
 
 

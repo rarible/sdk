@@ -3307,10 +3307,23 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30.tgz#28ed15acce758ecfb2188c35eaa8f62978363c80"
   integrity sha512-D9AdlmXC5fNnq/eO9dLakvY1IDJeUiwbXrEPmwmCdswt4jJp4y7pR/w3Rri7RUmEM42E3AYNXIMS0EV+O+V1QA==
 
-"@rarible/flow-sdk@0.5.31":
-  version "0.5.31"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.31.tgz#10572f6f05c60bb3cb332bf9f4d8296770fdb1e3"
-  integrity sha512-SxGdKiv6HsG3sTp4OuQRm5FBU6JERzJklI+wCpouHEB092YOaY2GcXahZuBEzIsrdbkzEnQKb3j4yRQ5auXikA==
+"@rarible/flow-sdk@0.5.36":
+  version "0.5.36"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.36.tgz#f8212aae56c0c634084fe94c7af25759e7df1542"
+  integrity sha512-FFAbvuzR89usLBP6tpYCtFtqte0vy8xgaHH3Qj/2cZkmkidHlcDZIVrEkQazp0CdxAfR8O/os99WGrcXQL7vng==
+  dependencies:
+    "@onflow/fcl" "~0.0.77"
+    "@onflow/types" "~0.0.5"
+    "@rarible/fcl-types" "~0.5.0"
+    "@rarible/flow-api-client" "~0.0.3"
+    "@rarible/flow-sdk-scripts" "^0.5.30"
+    "@rarible/types" "0.5.3"
+    "@rarible/utils" "~0.5.0"
+
+"@rarible/flow-sdk@~0.5.36":
+  version "0.5.37"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.37.tgz#0f8d2e4c7d0cb183a94946020ba94bb6808af2f5"
+  integrity sha512-1tlZTzJiiObNwBFePvXGMxKUcTDm6/q48pJc5BGGXLuj2YKgiAcJrkq0vUbVEuye3M9Z10nZ07rP791ouzoz6Q==
   dependencies:
     "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
@@ -3337,27 +3350,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.36":
-  version "0.12.36"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.36.tgz#c5cccdb95da4516d8479832e5488f8924e1488cb"
-  integrity sha512-4i+FQ8OXjtlkQ7o8//LGsB7HrqNty4SJ2IaZDCGslxF6zUZJhTIs9svowrz/7XL/U7FRSogBCqYPeKLCwrqg7Q==
-  dependencies:
-    "@ethereumjs/common" "^2.4.0"
-    "@ethereumjs/tx" "^3.3.0"
-    "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.18"
-    "@rarible/ethereum-provider" "^0.12.30"
-    "@rarible/logger" "~0.6.2"
-    "@rarible/utils" "~0.5.0"
-    axios "^0.25.0"
-    eth-sig-util "^3.0.0"
-    ethereumjs-util "^7.1.0"
-    exponential-backoff "^3.1.0"
-
-"@rarible/protocol-ethereum-sdk@~0.12.38":
-  version "0.12.38"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.38.tgz#945d81da6886a41cde04350fbd0b5e6d14464406"
-  integrity sha512-PvACV3cqQMvAkM/i4oVkEQ+C3gPLycRMeClwdrb6xVNMu3eiYWQ5LtnQqKwZ/LZD5Nu6VJ2WYp3tcsMDWYJhcg==
+"@rarible/protocol-ethereum-sdk@~0.12.40":
+  version "0.12.40"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.40.tgz#5b8d42e00f553e87e232bab56736aec6e22005c9"
+  integrity sha512-Ejj3RqXjOu+gcNNCAQtW3wdxoccXPMuaxw2I0XVJbP2ykzNpxd0ghKnwZleTyXQPepgOhOXZyjK9Bi0kMtSqAg==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"

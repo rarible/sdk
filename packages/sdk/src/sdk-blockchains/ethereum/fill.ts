@@ -1,8 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
-import type { Order } from "@rarible/api-client"
-import * as EthereumApiClient from "@rarible/ethereum-api-client"
+import { toAddress, toBigNumber } from "@rarible/types"
 import type {
 	FillOrderAction,
 	FillOrderRequest,
@@ -17,7 +15,10 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertToEthereumAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
+import {
+	convertOrderIdToEthereumHash,
+	convertToEthereumAddress,
+} from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -36,87 +37,6 @@ export class EthereumFill {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
-	}
-
-	convertToSimpleOrder(order: Order): SimplePreparedOrder {
-		const common = {
-			maker: convertToEthereumAddress(order.maker),
-			taker: order.taker && convertToEthereumAddress(order.taker),
-			make: {
-				assetType: convertToEthereumAssetType(order.make.type),
-				value: order.make.value,
-			},
-			take: {
-				assetType: convertToEthereumAssetType(order.take.type),
-				value: order.take.value,
-			},
-			salt: toWord(order.salt),
-			start: order.startedAt !== undefined ? parseInt(order.startedAt) : undefined,
-			end: order.endedAt !== undefined ? parseInt(order.endedAt): undefined,
-			signature: order.signature !== undefined ? toBinary(order.signature) : undefined,
-			makeStock: order.makeStock,
-		}
-		switch (order.data["@type"]) {
-			case "ETH_RARIBLE_V1": {
-				return {
-					...common,
-					type: "RARIBLE_V1",
-					data: {
-						dataType: "LEGACY",
-						fee: parseInt(order.data.fee),
-					},
-				}
-			}
-			case "ETH_RARIBLE_V2": {
-				return {
-					...common,
-					type: "RARIBLE_V2",
-					data: {
-						dataType: "RARIBLE_V2_DATA_V1",
-						payouts: order.data.payouts.map(p => ({
-							account: convertToEthereumAddress(p.account),
-							value: p.value,
-						})),
-						originFees: order.data.originFees.map(fee => ({
-							account: convertToEthereumAddress(fee.account),
-							value: fee.value,
-						})),
-					},
-				}
-			}
-			case "ETH_CRYPTO_PUNKS": {
-				return {
-					...common,
-					type: "CRYPTO_PUNK",
-					data: {
-						dataType: "CRYPTO_PUNKS_DATA",
-					},
-				}
-			}
-			case "ETH_OPEN_SEA_V1": {
-				return {
-					...common,
-					type: "OPEN_SEA_V1",
-					data: {
-						...order.data,
-						dataType: "OPEN_SEA_V1_DATA_V1",
-						exchange: convertToEthereumAddress(order.data.exchange),
-						feeRecipient: convertToEthereumAddress(order.data.feeRecipient),
-						feeMethod: EthereumApiClient.OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
-						side: EthereumApiClient.OrderOpenSeaV1DataV1Side[order.data.side],
-						saleKind: EthereumApiClient.OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
-						howToCall: EthereumApiClient.OrderOpenSeaV1DataV1HowToCall[order.data.howToCall],
-						callData: toBinary(order.data.callData),
-						replacementPattern: toBinary(order.data.callData),
-						staticExtraData: toBinary(order.data.staticExtraData),
-						staticTarget: convertToEthereumAddress(order.data.staticTarget),
-					},
-				}
-			}
-			default: {
-				throw new Error(`Unsupported order data type ${order.data["@type"]}`)
-			}
-		}
 	}
 
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
@@ -238,17 +158,13 @@ export class EthereumFill {
 		return collection.type === "ERC1155"
 	}
 
-	async getPreparedOrder(request: PrepareFillRequest): Promise<SimplePreparedOrder> {
+	getOrderHashFromRequest(request: PrepareFillRequest): string {
 		if ("order" in request) {
-			return this.convertToSimpleOrder(request.order)
+			return convertOrderIdToEthereumHash(request.order.id)
 		} else if ("orderId" in request) {
-			const [domain, hash] = request.orderId.split(":")
-			if (!isEVMBlockchain(domain)) {
-				throw new Error("Not an ethereum order")
-			}
-			return this.sdk.apis.order.getOrderByHash({ hash })
+			return convertOrderIdToEthereumHash(request.orderId)
 		}
-		throw new Error("Incorrect request")
+		throw new Error("OrderId has not been found in request")
 	}
 
 	hasCollectionAssetType(order: SimplePreparedOrder) {
@@ -256,7 +172,8 @@ export class EthereumFill {
 	}
 
 	private async commonFill(action: FillOrderAction, request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		const order = await this.getPreparedOrder(request)
+		const orderHash = this.getOrderHashFromRequest(request)
+		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {

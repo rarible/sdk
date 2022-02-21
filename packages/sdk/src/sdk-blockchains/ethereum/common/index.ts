@@ -9,14 +9,16 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { AssetType, ItemId, OrderId } from "@rarible/api-client"
+import type { AssetType, Creator, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
-import type { Part } from "@rarible/ethereum-api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type {
+	AssetType as EthereumAssetType,
+	Part,
+} from "@rarible/ethereum-api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
 
@@ -120,10 +122,10 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		}
 	}
 }
-export function toEthereumParts(parts: UnionPart[] | undefined): Part[] {
-	return parts?.map((fee) => ({
-		account: convertToEthereumAddress(fee.account),
-		value: fee.value,
+export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
+	return parts?.map((part) => ({
+		account: convertToEthereumAddress(part.account),
+		value: part.value,
 	})) || []
 }
 
@@ -193,6 +195,18 @@ export function convertToEthereumAddress(
 
 export function convertEthereumOrderHash(hash: Word, blockchain: EVMBlockchain): OrderId {
 	return toOrderId(`${blockchain}:${hash}`)
+}
+
+export function convertOrderIdToEthereumHash(orderId: OrderId): string {
+	if (!isRealBlockchainSpecified(orderId)) {
+		throw new Error(`Blockchain is not correct=${orderId}`)
+	}
+
+	const [blockchain, orderHash] = orderId.split(":")
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error("Not an Ethereum address")
+	}
+	return orderHash
 }
 
 export function convertEthereumContractAddress(address: string, blockchain: EVMBlockchain): ContractAddress {
