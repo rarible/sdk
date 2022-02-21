@@ -155,4 +155,4 @@ type MiddleMintType = {
 	mintResponse: MintResponse
 }
 
-export { getFlowFungibleBalance } from "@rarible/flow-sdk"
+export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
