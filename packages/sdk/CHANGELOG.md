@@ -3,6 +3,37 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.37](https://github.com/rarible/sdk/compare/v0.8.36...v0.8.37) (2022-02-18)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.36](https://github.com/rarible/sdk/compare/v0.8.35...v0.8.36) (2022-02-18)
+
+
+### Features
+
+* fb-599 added support for new flow collections ([22825bf](https://github.com/rarible/sdk/commit/22825bfc83f8e2e91e5e1e8bcf750965ff479801))
+
+
+
+
+
+## [0.8.35](https://github.com/rarible/sdk/compare/v0.8.34...v0.8.35) (2022-02-18)
+
+
+### Features
+
+* deploy method renamed to createCollection ([df19208](https://github.com/rarible/sdk/commit/df19208409264855e37593fd4060c0a5e915f75e))
+
+
+
+
+
+
 ## [0.8.34](https://github.com/rarible/sdk/compare/v0.8.33...v0.8.34) (2022-02-14)
 
 

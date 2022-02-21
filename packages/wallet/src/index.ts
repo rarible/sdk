@@ -6,9 +6,10 @@ import { sign } from "@rarible/tezos-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
-	readonly blockchain = Blockchain.ETHEREUM
-
-	constructor(public readonly ethereum: T) {}
+	constructor(
+		public readonly ethereum: T,
+		public readonly blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON = Blockchain.ETHEREUM
+	) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const address = await this.ethereum.getFrom()
@@ -25,7 +26,8 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 export class FlowWallet implements AbstractWallet {
 	readonly blockchain = Blockchain.FLOW
 
-	constructor(public readonly fcl: Fcl) {}
+	constructor(public readonly fcl: Fcl) {
+	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		if (!message.length) {
@@ -65,7 +67,8 @@ export class FlowWallet implements AbstractWallet {
 export class TezosWallet implements AbstractWallet {
 	readonly blockchain = Blockchain.TEZOS
 
-	constructor(public readonly provider: TezosProvider) {}
+	constructor(public readonly provider: TezosProvider) {
+	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const publicKey = await this.provider.public_key()
@@ -84,6 +87,7 @@ export type BlockchainWallet = EthereumWallet<Ethereum> | FlowWallet | TezosWall
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
-	"ETHEREUM": EthereumWallet
+	"ETHEREUM": EthereumWallet,
+	"POLYGON": EthereumWallet,
 	"TEZOS": TezosWallet
 }
