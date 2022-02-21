@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.28-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.27...v0.8.28-hotfix.0) (2022-02-21)
+
+
+### Bug Fixes
+
+* fix flow union address convertation ([8c46afe](https://github.com/rarible/sdk/commit/8c46afe0eb2e9dcac909eaf0becab80f5b1322fe))
+* turn back to v0.8.6-alpha.4 flow order and bid methods after merge ([ebd3ea4](https://github.com/rarible/sdk/commit/ebd3ea475e2e52153c0277467b455b8e767178cf))
+* update flow-sdk - fixes order actions for new secondary collections ([f03f7ec](https://github.com/rarible/sdk/commit/f03f7ec4e137cf2abcdf40a48bcf5e2133539b5a))
+* update flow-sdk with support new collections ([1c5de83](https://github.com/rarible/sdk/commit/1c5de83146bcad65b87910737146e4b61717c30d))
+
+
+
+## [0.8.6-alpha.4](https://github.com/rarible/sdk/compare/v0.8.21...v0.8.6-alpha.4) (2022-01-27)
+
+
+### Bug Fixes
+
+* update flow-sdk - fixed bug with commissions and added support for legacyOrders ([5c10587](https://github.com/rarible/sdk/commit/5c10587edf3d40190ceecdcaff375cbc5a1896f1))
+
+
+
+## [0.8.6-alpha.3](https://github.com/rarible/sdk/compare/v0.8.6-alpha.2...v0.8.6-alpha.3) (2022-01-21)
+
+
+### Bug Fixes
+
+* update flow-sdk - turn protocol commission to 0 ([a0e4db3](https://github.com/rarible/sdk/commit/a0e4db3f91f48b23575b45a0e0bba4d66c431a87))
+
+
+
+## [0.8.6-alpha.2](https://github.com/rarible/sdk/compare/v0.8.19...v0.8.6-alpha.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* fb-533 update flow-sdk - updated bid transactions and contract ([d9ecc21](https://github.com/rarible/sdk/commit/d9ecc21a9f85fa874b9460c98140a52d518076c0))
+
+
+
+## [0.8.6-alpha.1](https://github.com/rarible/sdk/compare/v0.8.16...v0.8.6-alpha.1) (2022-01-17)
+
+
+
+## [0.8.6-alpha.0](https://github.com/rarible/sdk/compare/v0.8.11...v0.8.6-alpha.0) (2022-01-10)
+
+
+### Features
+
+* flow bid support ([8e79371](https://github.com/rarible/sdk/commit/8e79371b02a0e1bf267c7b2ec151fc0dcc918d7e))
+
+
+
+
+
 ## [0.8.27](https://github.com/rarible/sdk/compare/v0.8.26...v0.8.27) (2022-02-02)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-beacon",
-  "version": "0.8.20",
+  "version": "0.8.28-hotfix.0",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.8.20",
+    "@rarible/connector": "^0.8.28-hotfix.0",
     "@taquito/beacon-wallet": "^11.1.0"
   },
   "devDependencies": {
