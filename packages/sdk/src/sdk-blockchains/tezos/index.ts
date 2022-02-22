@@ -25,7 +25,7 @@ export function createTezosSdk(
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
 	const sellService = new TezosSell(maybeProvider, apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
-	const balanceService = new TezosBalance(maybeProvider, apis)
+	const balanceService = new TezosBalance(maybeProvider)
 	const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
