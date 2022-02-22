@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.39](https://github.com/rarible/sdk/compare/v0.8.38...v0.8.39) (2022-02-22)
+
+
+### Bug Fixes
+
+* upgrade to newer ethereum sdk version (support for new Exchange contract on mainnet polygon) ([0f14d27](https://github.com/rarible/sdk/commit/0f14d27f5f3ac4261f1d95a5d227cfe9c93cffcf))
+
+
+
+
+
 ## [0.8.38](https://github.com/rarible/sdk/compare/v0.8.37...v0.8.38) (2022-02-21)
 
 **Note:** Version bump only for package @rarible/sdk
