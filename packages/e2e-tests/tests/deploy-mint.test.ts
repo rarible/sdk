@@ -48,6 +48,38 @@ const suites: {
 			}
 		},
 	},
+	/*{
+		blockchain: Blockchain.POLYGON,
+		wallet: getPolygonWallet(<PK>),
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		deployRequest: (walletAddress: UnionAddress) => {
+			return {
+				blockchain: Blockchain.POLYGON,
+				asset: {
+					assetType: "ERC721",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: false,
+					},
+				},
+			}
+		},
+		mintRequest: (walletAddress: UnionAddress) => {
+			return {
+				uri: "ipfs:/test",
+				creators: [{
+					account: walletAddress,
+					value: 10000,
+				}],
+				royalties: [],
+				lazyMint: false,
+				supply: 1,
+			}
+		},
+	},*/
 	{
 		blockchain: Blockchain.TEZOS,
 		wallet: getTezosTestWallet(),

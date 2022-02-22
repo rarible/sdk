@@ -1,8 +1,7 @@
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { BlockchainWallet, TezosWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
-import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
-import type { TezosWallet } from "@rarible/sdk-wallet"
 import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
@@ -13,7 +12,19 @@ export function getEthereumWallet(pk?: string): EthereumWallet {
 		web3: web3,
 		from: wallet.getAddressString(),
 	})
-	return new EthereumWallet(ethereum)
+	return new EthereumWallet(ethereum, Blockchain.ETHEREUM)
+}
+
+export function getPolygonWallet(pk?: string): EthereumWallet {
+	const { web3, wallet } = initProvider(pk, {
+		networkId: 80001,
+		rpcUl: "https://rpc-mumbai.maticvigil.com",
+	})
+	const ethereum = new Web3Ethereum({
+		web3: web3,
+		from: wallet.getAddressString(),
+	})
+	return new EthereumWallet(ethereum, Blockchain.POLYGON)
 }
 
 export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
@@ -34,6 +45,8 @@ export function getFlowWallet(): FlowWallet {
 export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boolean = true): Promise<string> {
 	switch (wallet.blockchain) {
 		case Blockchain.ETHEREUM:
+			return (withPrefix ? "ETHEREUM:" : "") + (await wallet.ethereum.getFrom())
+		case Blockchain.POLYGON:
 			return (withPrefix ? "ETHEREUM:" : "") + (await wallet.ethereum.getFrom())
 		case Blockchain.TEZOS:
 			return (withPrefix ? "TEZOS:" : "") + (await wallet.provider.address())

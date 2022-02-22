@@ -3,6 +3,7 @@ import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/
 import * as fcl from "@onflow/fcl"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { Blockchain } from "@rarible/api-client"
 import Web3 from "web3"
 import { EthereumWallet, FlowWallet, TezosWallet } from "./index"
 
@@ -12,7 +13,7 @@ describe("test signPersonalMessage", () => {
 	test("ethereum signPersonalMessage", async () => {
 		const web3 = new Web3(provider)
 		const ethereum = new Web3Ethereum({ web3 })
-		const wallet = new EthereumWallet(ethereum)
+		const wallet = new EthereumWallet(ethereum, Blockchain.ETHEREUM)
 		const msg = await wallet.signPersonalMessage("Dude, Where Is My Beer?")
 		expect(msg.signature).toBe(
 			"0x9fa1bffacceceb1cfb8123fd997f121c939a377e73ed2c64bdf0af4a03b" +
