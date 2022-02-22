@@ -19,7 +19,7 @@
     "@rarible/api-client": "~0.0.11",
     "@rarible/ethereum-provider": "~0.12.42",
     "@rarible/flow-sdk": "~0.5.37",
-    "@rarible/protocol-ethereum-sdk": "~0.12.52",
+    "@rarible/protocol-ethereum-sdk": "~0.12.53",
     "@rarible/tezos-sdk": "~0.1.3",
     "@rarible/types": "~0.5.3"
   },
