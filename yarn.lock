@@ -3263,10 +3263,10 @@
     eslint-plugin-jest "^25.2.3"
     eslint-plugin-unicorn "^38.0.0"
 
-"@rarible/ethereum-api-client@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.18.tgz#6e0633f1bdad3bfe24d6591fa88a85f2ecd2604b"
-  integrity sha512-A732Wo0sq7A07xyZeznVOAHGkVL2ihY73tmQXSDwtyckqrQX1La2I5i/YVP5N1TrppRm1zjAgmZoR+AiMVkNRw==
+"@rarible/ethereum-api-client@^0.1.20":
+  version "0.1.20"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.20.tgz#75ad10c3a60b4f7bf944e3f19143099b97111019"
+  integrity sha512-xHAt3XfqpDKEblNFdqNPNdStFMxXx03aYgYgvg1FVqkAZivsCZ4gO4xCA0dEBmKf4N5nJVO7RIHLiqwweLJa/g==
   dependencies:
     "@rarible/types" "~0.5.0"
 
@@ -3350,15 +3350,15 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.40":
-  version "0.12.40"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.40.tgz#5b8d42e00f553e87e232bab56736aec6e22005c9"
-  integrity sha512-Ejj3RqXjOu+gcNNCAQtW3wdxoccXPMuaxw2I0XVJbP2ykzNpxd0ghKnwZleTyXQPepgOhOXZyjK9Bi0kMtSqAg==
+"@rarible/protocol-ethereum-sdk@~0.12.40-hotfix.0":
+  version "0.12.40-hotfix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.40-hotfix.0.tgz#6de55b62a82e6f0e4c87cc41bf7f0bb8b659cad1"
+  integrity sha512-ZVQKn9sWINUMhuYJHMQNO6SA4NuWIjE8YSV69NxugHjJSdVtgyHGfGPirJje8WasOY3tYdobzF6LycaG6d8P2w==
   dependencies:
     "@ethereumjs/common" "^2.4.0"
     "@ethereumjs/tx" "^3.3.0"
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.18"
+    "@rarible/ethereum-api-client" "^0.1.20"
     "@rarible/ethereum-provider" "^0.12.30"
     "@rarible/logger" "~0.6.2"
     "@rarible/utils" "~0.5.0"
