@@ -3620,13 +3620,6 @@
     eslint-plugin-jest "^25.2.3"
     eslint-plugin-unicorn "^38.0.0"
 
-"@rarible/ethereum-api-client@^0.1.18":
-  version "0.1.18"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.18.tgz#6e0633f1bdad3bfe24d6591fa88a85f2ecd2604b"
-  integrity sha512-A732Wo0sq7A07xyZeznVOAHGkVL2ihY73tmQXSDwtyckqrQX1La2I5i/YVP5N1TrppRm1zjAgmZoR+AiMVkNRw==
-  dependencies:
-    "@rarible/types" "~0.5.0"
-
 "@rarible/ethereum-api-client@^0.1.20":
   version "0.1.20"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.20.tgz#75ad10c3a60b4f7bf944e3f19143099b97111019"
@@ -3709,25 +3702,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.49":
-  version "0.12.49"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.49.tgz#0e1297588e6551e49a17bc84b59f3e57c75d5101"
-  integrity sha512-bYNUc72WtAtEexOIHYzVdrW8lIpMnNRfP15qlUxQqk27jZaX1q7bqgJJOmDowoE+O0cSsRRV7xD376dLC49oLQ==
-  dependencies:
-    "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.18"
-    "@rarible/ethereum-provider" "^0.12.42"
-    "@rarible/logger" "~0.6.2"
-    "@rarible/utils" "~0.5.0"
-    axios "^0.25.0"
-    eth-sig-util "^3.0.0"
-    ethereumjs-util "^7.1.0"
-    exponential-backoff "^3.1.0"
-
-"@rarible/protocol-ethereum-sdk@~0.12.52":
-  version "0.12.52"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.52.tgz#e55249e4929818fd99c9dfc69c03c3a578791855"
-  integrity sha512-xDz93ccyfOCCD5+GeeWh70X7RgPN9YZ8ZAxWSxJDixETkOTw5gzTqoTNfBZPv3/oRCMYhs9jBIrqf/KmQWd54Q==
+"@rarible/protocol-ethereum-sdk@~0.12.53":
+  version "0.12.53"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.53.tgz#8dc110d148e1226a57b4f8ed19af0c3454ef05f0"
+  integrity sha512-9HCuqfOMlpWgQhbT4ims19m5/tToMX2OB66n6iNS3Vl20zB1CxgP1/UOaIdDzM8WV871A9BY2xChyRcStN/QXw==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.20"
