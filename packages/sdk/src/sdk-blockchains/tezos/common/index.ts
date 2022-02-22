@@ -131,9 +131,10 @@ export function getMaybeTezosProvider(
 					api: `${getTezosBasePath(network)}/v0.1`,
 					api_permit: `${getTezosBasePath(network)}/v0.1`,
 					permit_whitelist: ["KT1VY7fDqc2FxhfCPM1DrELKFz6EHwudAXQb"],
-					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
+					wrapper: "KT1RggVJ1mMaLJezpdsJ6YtBfL7sBfcaGD1H",
 					auction: "",
 					auction_storage: "",
+					node_url: "https://tezos-hangzhou-node.rarible.org",
 				},
 			}
 		}
@@ -149,10 +150,10 @@ export function getMaybeTezosProvider(
 					api: `${getTezosBasePath(network)}/v0.1`,
 					api_permit: `${getTezosBasePath(network)}/v0.1`,
 					permit_whitelist: [],
-					//todo replace mainnet wrapped xtz address with real
-					wrapper: "KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9",
+					wrapper: "KT1EJkjatSNWD2NiPx8hivKnawxuyaVTwP6n",
 					auction: "",
 					auction_storage: "",
+					node_url: "https://mainnet.api.tez.ie",
 				},
 			}
 		}
