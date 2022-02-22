@@ -1,7 +1,7 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toUnionAddress } from "@rarible/types"
-import { awaitAll, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
