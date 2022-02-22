@@ -5,10 +5,13 @@ import type { TezosProvider } from "@rarible/tezos-sdk"
 import { sign } from "@rarible/tezos-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
+export class EthereumWallet<
+	K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
+	T extends Ethereum = Ethereum
+> implements AbstractWallet {
 	constructor(
 		public readonly ethereum: T,
-		public readonly blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON = Blockchain.ETHEREUM
+		public readonly blockchain: K
 	) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
@@ -83,11 +86,15 @@ export class TezosWallet implements AbstractWallet {
 	}
 }
 
-export type BlockchainWallet = EthereumWallet<Ethereum> | FlowWallet | TezosWallet
+export type BlockchainWallet =
+	EthereumWallet<Blockchain.ETHEREUM> |
+	EthereumWallet<Blockchain.POLYGON> |
+	FlowWallet |
+	TezosWallet
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
-	"ETHEREUM": EthereumWallet,
-	"POLYGON": EthereumWallet,
+	"ETHEREUM": EthereumWallet<Blockchain.ETHEREUM>,
+	"POLYGON": EthereumWallet<Blockchain.POLYGON>,
 	"TEZOS": TezosWallet
 }
