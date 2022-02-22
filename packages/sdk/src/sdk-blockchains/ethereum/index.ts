@@ -17,9 +17,10 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
+import type { EVMBlockchain } from "./common"
 
 export function createEthereumSdk(
-	wallet: Maybe<EthereumWallet>,
+	wallet: Maybe<EthereumWallet<EVMBlockchain>>,
 	apis: IApisSdk,
 	network: EthereumNetwork,
 	params?: ConfigurationParameters,

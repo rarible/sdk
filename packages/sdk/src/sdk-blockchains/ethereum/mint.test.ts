@@ -14,7 +14,7 @@ describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
-	const ethereumWallet = new EthereumWallet(ethereum)
+	const ethereumWallet = new EthereumWallet(ethereum, Blockchain.ETHEREUM)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")

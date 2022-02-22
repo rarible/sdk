@@ -175,3 +175,5 @@ type MiddleMintType = {
 	initial: MintAndSellRequest
 	mintResponse: MintResponse
 }
+
+export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
