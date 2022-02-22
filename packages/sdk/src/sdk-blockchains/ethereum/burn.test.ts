@@ -81,7 +81,7 @@ describe("burn", () => {
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	})
 
-	test("burn erc-721 lazy item", async () => {
+	test.skip("burn erc-721 lazy item", async () => {
 		const senderRaw = wallet1.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
@@ -113,7 +113,7 @@ describe("burn", () => {
 		await awaitDeletedItem(sdk,  mintResult.itemId)
 	})
 
-	test("burn erc1155 lazy item", async () => {
+	test.skip("burn erc1155 lazy item", async () => {
 		const senderRaw = wallet1.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
