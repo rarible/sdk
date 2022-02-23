@@ -151,6 +151,10 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 			return Blockchain.ETHEREUM
 		case "ropsten":
 			return Blockchain.ETHEREUM
+		case "dev-ethereum":
+			return Blockchain.ETHEREUM
+		case "dev-polygon":
+			return Blockchain.POLYGON
 		case "rinkeby":
 			return Blockchain.ETHEREUM
 		case "mainnet":
