@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.41](https://github.com/rarible/sdk/compare/v0.8.40...v0.8.41) (2022-02-23)
+
+
+### Features
+
+* support for new development k8s env ([7920851](https://github.com/rarible/sdk/commit/79208512ff8d5150d1a74f332affcda5f3fbc8a7))
+
+
+
+
+
 ## [0.8.40](https://github.com/rarible/sdk/compare/v0.8.39...v0.8.40) (2022-02-22)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
