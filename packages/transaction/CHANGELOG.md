@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.28-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.1...v0.8.28-hotfix.2) (2022-02-24)
+
+
+### Bug Fixes
+
+* eth balance ([926f473](https://github.com/rarible/sdk/commit/926f473aa83a141fa7d208118671fe760d353e0d))
+
+
+
+
+
 ## [0.8.28-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.0...v0.8.28-hotfix.1) (2022-02-22)
 
 
