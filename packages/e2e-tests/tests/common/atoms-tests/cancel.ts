@@ -10,14 +10,15 @@ import { awaitOrderCancel } from "../helpers"
 export async function cancel(sdk: IRaribleSdk,
 							 wallet: BlockchainWallet,
 							 cancelRequest: CancelOrderRequest): Promise<IBlockchainTransaction> {
-	try {
+	// try {
+		console.log("cancel order/bid, cancel_request=", cancelRequest)
 		const tx = await sdk.order.cancel(cancelRequest)
 		await tx.wait()
 
 		await awaitOrderCancel(sdk, cancelRequest.orderId)
 
 		return tx
-	} catch (e: any) {
-		throw new Error(`Exception during order canceling: ${e.toString()}`)
-	}
+	// } catch (e: any) {
+	// 	throw new Error(`Exception during order canceling: ${e.toString()}`)
+	// }
 }
