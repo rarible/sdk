@@ -37,6 +37,7 @@ export function createFlowSdk(
 			transfer: new FlowTransfer(sdk, blockchainNetwork).transfer,
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
+			createCollection: nonImplementedAction,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
@@ -50,7 +51,7 @@ export function createFlowSdk(
 			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
 		},
 		balances: {
-			getBalance: new FlowBalance(sdk).getBalance,
+			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

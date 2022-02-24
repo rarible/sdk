@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.41](https://github.com/rarible/sdk/compare/v0.8.40...v0.8.41) (2022-02-23)
+
+
+### Features
+
+* support for new development k8s env ([7920851](https://github.com/rarible/sdk/commit/79208512ff8d5150d1a74f332affcda5f3fbc8a7))
+
+
+
+
+
+## [0.8.40](https://github.com/rarible/sdk/compare/v0.8.39...v0.8.40) (2022-02-22)
+
+
+### Bug Fixes
+
+* correct filter wallet for polygon ([#139](https://github.com/rarible/sdk/issues/139)) ([44df24f](https://github.com/rarible/sdk/commit/44df24f951991922f3248a0b55fe36629f07ea63))
+
+
+
+
+
+## [0.8.39](https://github.com/rarible/sdk/compare/v0.8.38...v0.8.39) (2022-02-22)
+
+
+### Bug Fixes
+
+* upgrade to newer ethereum sdk version (support for new Exchange contract on mainnet polygon) ([0f14d27](https://github.com/rarible/sdk/commit/0f14d27f5f3ac4261f1d95a5d227cfe9c93cffcf))
+
+
+
+
+
+## [0.8.38](https://github.com/rarible/sdk/compare/v0.8.37...v0.8.38) (2022-02-21)
+
+
+### Bug Fixes
+
+* upgrade to newer ethereum sdk version (support for new Exchange contract on mainnet polygon) ([c5dafb3](https://github.com/rarible/sdk/commit/c5dafb3d21e381ef7452bce030a02634cbbb4cb2))
+
+
+
+
+
+## [0.8.37](https://github.com/rarible/sdk/compare/v0.8.36...v0.8.37) (2022-02-18)
+
+
+### Bug Fixes
+
+* upgrade to newer ethereum sdk version (support for new Exchange contract on mumbai polygon testnet) ([12c00f2](https://github.com/rarible/sdk/commit/12c00f202951d5ad79acfc9386872dbd1965957a))
+
+
+
+
+
+## [0.8.36](https://github.com/rarible/sdk/compare/v0.8.35...v0.8.36) (2022-02-18)
+
+
+### Features
+
+* fb-599 added support for new flow collections ([22825bf](https://github.com/rarible/sdk/commit/22825bfc83f8e2e91e5e1e8bcf750965ff479801))
+
+
+
+
+
+## [0.8.35](https://github.com/rarible/sdk/compare/v0.8.34...v0.8.35) (2022-02-18)
+
+
+### Bug Fixes
+
+* update usage SDK info ([#108](https://github.com/rarible/sdk/issues/108)) ([e84eee4](https://github.com/rarible/sdk/commit/e84eee430eec3a6fcc13eabf45b68ca5f7977f9e))
+
+
+### Features
+
+* deploy method renamed to createCollection ([df19208](https://github.com/rarible/sdk/commit/df19208409264855e37593fd4060c0a5e915f75e))
+* provide blockchain to EthereumWallet ([fbf53dd](https://github.com/rarible/sdk/commit/fbf53ddce5db45771bc11be278fda132442b2e73))
+
+
+
+
+
+
 ## [0.8.34](https://github.com/rarible/sdk/compare/v0.8.33...v0.8.34) (2022-02-14)
 
 

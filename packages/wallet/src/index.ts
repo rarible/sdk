@@ -5,10 +5,14 @@ import type { TezosProvider } from "@rarible/tezos-sdk"
 import { sign } from "@rarible/tezos-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
-	readonly blockchain = Blockchain.ETHEREUM
-
-	constructor(public readonly ethereum: T) {}
+export class EthereumWallet<
+	K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
+	T extends Ethereum = Ethereum
+> implements AbstractWallet {
+	constructor(
+		public readonly ethereum: T,
+		public readonly blockchain: K
+	) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const address = await this.ethereum.getFrom()
@@ -25,7 +29,8 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 export class FlowWallet implements AbstractWallet {
 	readonly blockchain = Blockchain.FLOW
 
-	constructor(public readonly fcl: Fcl) {}
+	constructor(public readonly fcl: Fcl) {
+	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		if (!message.length) {
@@ -65,7 +70,8 @@ export class FlowWallet implements AbstractWallet {
 export class TezosWallet implements AbstractWallet {
 	readonly blockchain = Blockchain.TEZOS
 
-	constructor(public readonly provider: TezosProvider) {}
+	constructor(public readonly provider: TezosProvider) {
+	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const publicKey = await this.provider.public_key()
@@ -80,10 +86,15 @@ export class TezosWallet implements AbstractWallet {
 	}
 }
 
-export type BlockchainWallet = EthereumWallet<Ethereum> | FlowWallet | TezosWallet
+export type BlockchainWallet =
+	EthereumWallet<Blockchain.ETHEREUM> |
+	EthereumWallet<Blockchain.POLYGON> |
+	FlowWallet |
+	TezosWallet
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
-	"ETHEREUM": EthereumWallet
+	"ETHEREUM": EthereumWallet<Blockchain.ETHEREUM>,
+	"POLYGON": EthereumWallet<Blockchain.POLYGON>,
 	"TEZOS": TezosWallet
 }

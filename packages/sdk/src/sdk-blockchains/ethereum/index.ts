@@ -16,10 +16,11 @@ import { EthereumBid } from "./bid"
 import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
-import { EthereumDeploy } from "./deploy"
+import { EthereumCreateCollection } from "./create-collection"
+import type { EVMBlockchain } from "./common"
 
 export function createEthereumSdk(
-	wallet: Maybe<EthereumWallet>,
+	wallet: Maybe<EthereumWallet<EVMBlockchain>>,
 	apis: IApisSdk,
 	network: EthereumNetwork,
 	params?: ConfigurationParameters,
@@ -31,13 +32,16 @@ export function createEthereumSdk(
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
+	const createCollectionService = new EthereumCreateCollection(sdk, network)
+
 	return {
 		nft: {
 			transfer: new EthereumTransfer(sdk, network).transfer,
 			mint: mintService.prepare,
 			burn: new EthereumBurn(sdk, network).burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
-			deploy: new EthereumDeploy(sdk, network).deployToken,
+			deploy: createCollectionService.createCollection,
+			createCollection: createCollectionService.createCollection,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

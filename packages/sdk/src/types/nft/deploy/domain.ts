@@ -3,24 +3,24 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
 
-export type DeployTokenRequest<T extends DeploySupportedBlockchains = DeploySupportedBlockchains> = {
+export type CreateCollectionRequest<T extends CreateCollectionBlockchains = CreateCollectionBlockchains> = {
 	blockchain: T;
-	asset: DeployTokenAssetIndexer[T]
+	asset: CreateCollectionAsset[T]
 }
 
-export interface DeployTokenAssetIndexer extends Record<DeploySupportedBlockchains, DeployTokenAsset> {
-	[ApiClient.Blockchain.ETHEREUM]: EthereumDeployTokenAsset;
-	[ApiClient.Blockchain.TEZOS]: TezosDeployTokenAsset;
+export interface CreateCollectionAsset extends Record<CreateCollectionBlockchains, DeployTokenAsset> {
+	[ApiClient.Blockchain.ETHEREUM]: EthereumCreateCollectionAsset;
+	[ApiClient.Blockchain.TEZOS]: TezosCreateCollectionTokenAsset;
 }
 
-export type DeploySupportedBlockchains =
+export type CreateCollectionBlockchains =
 	ApiClient.Blockchain.ETHEREUM |
 	ApiClient.Blockchain.POLYGON |
 	ApiClient.Blockchain.TEZOS
 
-export type DeployTokenAsset = EthereumDeployTokenAsset | TezosDeployTokenAsset
+export type DeployTokenAsset = EthereumCreateCollectionAsset | TezosCreateCollectionTokenAsset
 
-export type TezosDeployTokenAsset = {
+export type TezosCreateCollectionTokenAsset = {
 	assetType: "NFT" | "MT"
 	arguments: {
 		name: string
@@ -30,12 +30,12 @@ export type TezosDeployTokenAsset = {
 	}
 }
 
-export type EthereumDeployTokenAsset = {
+export type EthereumCreateCollectionAsset = {
 	assetType: "ERC721" | "ERC1155"
-	arguments: DeployUserTokenArguments | DeployNonUserTokenArguments
+	arguments: CreatePrivateCollectionArguments | CreatePublicCollectionArguments
 }
 
-export type DeployNonUserTokenArguments = {
+export type CreatePublicCollectionArguments = {
 	name: string
 	symbol: string
 	baseURI: string
@@ -43,15 +43,15 @@ export type DeployNonUserTokenArguments = {
 	isUserToken: false
 }
 
-export type DeployUserTokenArguments =
-  Omit<DeployNonUserTokenArguments, "isUserToken"> & {
+export type CreatePrivateCollectionArguments =
+  Omit<CreatePublicCollectionArguments, "isUserToken"> & {
   	isUserToken: true
   	operators: UnionAddress[]
   }
 
-export type DeployResponse = {
+export type CreateCollectionResponse = {
 	tx: IBlockchainTransaction,
 	address: ContractAddress
 }
 
-export type IDeploy = Action<"send-tx", DeployTokenRequest, DeployResponse>
+export type ICreateCollection = Action<"send-tx", CreateCollectionRequest, CreateCollectionResponse>

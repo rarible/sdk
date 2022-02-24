@@ -18,6 +18,8 @@ module.exports = {
 			"process": require.resolve("process/browser"),
 			"path": require.resolve("path-browserify"),
 			"crypto": require.resolve("crypto-browserify"),
+			"http": false,
+			"https": false,
 		},
 	},
 	plugins: [

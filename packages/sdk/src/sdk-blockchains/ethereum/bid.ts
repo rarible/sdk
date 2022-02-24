@@ -42,7 +42,7 @@ export class EthereumBid {
 
 	constructor(
 		private sdk: RaribleSdk,
-		private wallet: Maybe<EthereumWallet>,
+		private wallet: Maybe<EthereumWallet<EVMBlockchain>>,
 		private balanceService: EthereumBalance,
 		private network: EthereumNetwork,
 	) {

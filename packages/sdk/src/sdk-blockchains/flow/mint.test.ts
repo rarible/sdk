@@ -16,7 +16,7 @@ describe("Flow mint", () => {
 	const apis = createApisSdk("staging")
 	const mint = new FlowMint(sdk, apis, "testnet")
 
-	test("Should mint new NFT", async () => {
+	test.skip("Should mint new NFT", async () => {
 		const itemId = await createTestItem(mint)
 		const nft = await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		expect(nft.id).toEqual(itemId)

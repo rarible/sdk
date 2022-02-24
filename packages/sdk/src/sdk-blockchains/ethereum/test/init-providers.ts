@@ -18,8 +18,8 @@ export function initProviders({ pk1, pk2 }: ProvidersConfig = {}) {
 	}
 }
 
-export function initProvider(pk?: string) {
-	const { provider, wallet } = createE2eProvider(pk)
+export function initProvider(...args: Parameters<typeof createE2eProvider>) {
+	const { provider, wallet } = createE2eProvider(...args)
 	return {
 		provider,
 		wallet,

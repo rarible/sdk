@@ -2,7 +2,7 @@ import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
-import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
+import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { getWalletAddress } from "./wallet"
 
 

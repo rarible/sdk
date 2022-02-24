@@ -1,4 +1,4 @@
-import type { Action } from "@rarible/action"
+import { Action } from "@rarible/action"
 import { toPromise } from "./utils"
 
 const SKIP_MIDDLEWARE = Symbol("SKIP_MIDDLEWARE")
@@ -56,7 +56,13 @@ export class Middlewarer {
 			res = toPromise(mid(res))
 		}
 
-		return await res
+		const result = await res
+		// wrapping submit methods
+		if (typeof result?.submit === "function") {
+			result.submit = this.wrap(result.submit, { methodName: callable.name + ".submit" })
+		}
+
+		return result
 	}
 
 	/**
@@ -118,6 +124,6 @@ export class Middlewarer {
 	}
 }
 
-function isAction(fun: any): fun is Action<any, any, any> {
-	return !!fun.steps
+function isAction(fn: any): fn is Action<any, any, any> {
+	return fn instanceof Action
 }

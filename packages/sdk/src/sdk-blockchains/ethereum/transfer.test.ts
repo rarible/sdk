@@ -1,10 +1,8 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { awaitAll } from "@rarible/ethereum-sdk-test-common"
-import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
-import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
-import { deployTestErc1155 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc1155"
+import { awaitAll, deployTestErc1155, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toItemId, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -14,7 +12,7 @@ import { awaitItem } from "./test/await-item"
 describe("transfer", () => {
 	const { web31, wallet1, wallet2 } = initProviders()
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
-	const senderWallet = new EthereumWallet(senderEthereum)
+	const senderWallet = new EthereumWallet(senderEthereum, Blockchain.ETHEREUM)
 	const sdk = createRaribleSdk(senderWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const it = awaitAll({

@@ -13,7 +13,7 @@ import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-t
 import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
-import type { IDeploy } from "../../types/nft/deploy/domain"
+import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
@@ -141,10 +141,12 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		return this.instances[request.blockchain].preprocessMeta(request)
 	}
 
-	deploy: IDeploy = Action.create({
+	createCollection: ICreateCollection = Action.create({
 		id: "send-tx",
-		run: request => this.instances[request.blockchain].deploy(request),
+		run: request => this.instances[request.blockchain].createCollection(request),
 	})
+
+	deploy = this.createCollection
 }
 
 class UnionBalanceSdk implements IBalanceSdk {

@@ -1,9 +1,8 @@
-import { awaitAll } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toItemId } from "@rarible/types"
-import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
-import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
@@ -14,7 +13,7 @@ import { awaitOrderCancel } from "./test/await-order-cancel"
 describe("cancel", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethereumWallet = new EthereumWallet(ethereum1)
+	const ethereumWallet = new EthereumWallet(ethereum1, Blockchain.ETHEREUM)
 	const sdk1 = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const conf = awaitAll({

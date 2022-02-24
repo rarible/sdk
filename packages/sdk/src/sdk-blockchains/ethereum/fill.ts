@@ -15,6 +15,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { EVMBlockchain } from "./common"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
@@ -32,7 +33,7 @@ export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 export class EthereumFill {
 	constructor(
 		private sdk: RaribleSdk,
-		private wallet: Maybe<EthereumWallet>,
+		private wallet: Maybe<EthereumWallet<EVMBlockchain>>,
 		private network: EthereumNetwork,
 	) {
 		this.fill = this.fill.bind(this)

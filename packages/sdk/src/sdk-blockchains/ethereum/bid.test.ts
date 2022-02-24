@@ -1,13 +1,10 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { awaitAll } from "@rarible/ethereum-sdk-test-common"
-import { deployTestErc20 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc20"
-import { deployTestErc721 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc721"
+import { awaitAll, deployTestErc1155, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toContractAddress, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
-import { deployTestErc1155 } from "@rarible/protocol-ethereum-sdk/build/order/contracts/test/test-erc1155"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -30,17 +27,17 @@ describe("bid", () => {
 	})
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethwallet1 = new EthereumWallet(ethereum1)
+	const ethwallet1 = new EthereumWallet(ethereum1, Blockchain.ETHEREUM)
 	const sdk1 = createRaribleSdk(ethwallet1, "e2e", { logs: LogsLevel.DISABLED })
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const ethwallet2 = new EthereumWallet(ethereum2)
+	const ethwallet2 = new EthereumWallet(ethereum2, Blockchain.ETHEREUM)
 	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
 	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
-	const nullFundsWallet = new EthereumWallet(nullFundsEthereum)
+	const nullFundsWallet = new EthereumWallet(nullFundsEthereum, Blockchain.ETHEREUM)
 	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")

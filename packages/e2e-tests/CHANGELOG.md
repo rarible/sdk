@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.40](https://github.com/rarible/sdk/compare/v0.8.39...v0.8.40) (2022-02-22)
+
+
+### Bug Fixes
+
+* correct filter wallet for polygon ([#139](https://github.com/rarible/sdk/issues/139)) ([44df24f](https://github.com/rarible/sdk/commit/44df24f951991922f3248a0b55fe36629f07ea63))
+
+
+
+
+
+## [0.8.35](https://github.com/rarible/sdk/compare/v0.8.34...v0.8.35) (2022-02-18)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+
 ## [0.8.20](https://github.com/rarible/sdk/compare/v0.8.19...v0.8.20) (2022-01-24)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

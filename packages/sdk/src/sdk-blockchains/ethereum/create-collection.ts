@@ -6,11 +6,11 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
-import type { DeployTokenRequest, EthereumDeployTokenAsset } from "../../types/nft/deploy/domain"
-import type { EVMBlockchain } from "./common"
+import type { CreateCollectionRequest, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
+import type { EVMBlockchain, CreateEthereumCollectionResponse } from "./common"
 import { convertEthereumContractAddress, getEVMBlockchain } from "./common"
 
-export class EthereumDeploy {
+export class EthereumCreateCollection {
 	private readonly blockchain: EVMBlockchain
 
 	constructor(
@@ -18,7 +18,7 @@ export class EthereumDeploy {
 		private network: EthereumNetwork,
 	) {
 		this.blockchain = getEVMBlockchain(network)
-		this.startDeployToken = this.startDeployToken.bind(this)
+		this.startCreateCollection = this.startCreateCollection.bind(this)
 	}
 
 	convertOperatorsAddresses(operators: UnionAddress[]): Address[] {
@@ -31,7 +31,7 @@ export class EthereumDeploy {
 		})
 	}
 
-	convertDeployResponse(
+	private convertResponse(
 		response: { tx: EthereumTransaction, address: Address },
 	): { tx: BlockchainEthereumTransaction, address: ContractAddress } {
 		return {
@@ -40,7 +40,7 @@ export class EthereumDeploy {
 		}
 	}
 
-	async startDeployToken(asset: EthereumDeployTokenAsset): Promise<{ tx: EthereumTransaction, address: Address }> {
+	async startCreateCollection(asset: EthereumCreateCollectionAsset): Promise<CreateEthereumCollectionResponse> {
 		const deployCommonArguments = [
 			asset.arguments.name,
 			asset.arguments.symbol,
@@ -77,14 +77,14 @@ export class EthereumDeploy {
 		}
 	}
 
-	deployToken = Action.create({
+	createCollection = Action.create({
 		id: "send-tx" as const,
-		run: async (request: DeployTokenRequest) => {
+		run: async (request: CreateCollectionRequest) => {
 			if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
 				throw new Error("Wrong blockchain")
 			}
-			return this.convertDeployResponse(
-				await this.startDeployToken(request.asset as EthereumDeployTokenAsset)
+			return this.convertResponse(
+				await this.startCreateCollection(request.asset as EthereumCreateCollectionAsset)
 			)
 		},
 	})

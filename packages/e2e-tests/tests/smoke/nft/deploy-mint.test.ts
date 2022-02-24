@@ -1,6 +1,6 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { DeployTokenRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
+import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
@@ -14,7 +14,7 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallet: BlockchainWallet,
-	deployRequest: DeployTokenRequest
+	deployRequest: CreateCollectionRequest
 	mintRequest: (address: UnionAddress) => MintRequest
 }[] {
 	let allBlockchains = [
@@ -34,7 +34,7 @@ function suites(): {
 						isUserToken: false,
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -65,7 +65,7 @@ function suites(): {
 						operators: [],
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -95,7 +95,7 @@ function suites(): {
 						isUserToken: false,
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -126,7 +126,7 @@ function suites(): {
 						operators: [],
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -155,7 +155,7 @@ function suites(): {
 						isUserToken: false,
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -185,7 +185,7 @@ function suites(): {
 						operators: [],
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -215,7 +215,7 @@ function suites(): {
 						operators: [],
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -245,7 +245,7 @@ function suites(): {
 						operators: [],
 					},
 				},
-			} as DeployTokenRequest,
+			} as CreateCollectionRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
