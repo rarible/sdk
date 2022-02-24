@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.28-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.2...v0.8.28-hotfix.3) (2022-02-24)
+
+
+### Bug Fixes
+
+* opensea erc721-v3 asset ([2aee79f](https://github.com/rarible/sdk/commit/2aee79f43c4e0af4d9ec5e3b5640d86a50120960))
+
+
+
+
+
 ## [0.8.28-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.1...v0.8.28-hotfix.2) (2022-02-24)
 
 
