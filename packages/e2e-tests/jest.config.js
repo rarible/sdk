@@ -2,7 +2,7 @@ module.exports = {
 	roots: ["<rootDir>/tests"],
 	setupFiles: [
 		"<rootDir>/jest.setup.js",
-		"dotenv/config"
+		"dotenv/config",
 	],
 	transform: {
 		"^.+\\.ts?$": "ts-jest",

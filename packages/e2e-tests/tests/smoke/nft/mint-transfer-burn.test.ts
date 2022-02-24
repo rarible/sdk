@@ -1,18 +1,18 @@
-import { Blockchain} from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddressNew } from "../../common/wallet"
+import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
+import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
+import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { testsConfig } from "../../common/config"
-import { burn } from "../../common/atoms-tests/burn";
-import { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain";
-import { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain";
-import { transfer } from "../../common/atoms-tests/transfer";
-import { getCollectionById } from "../../common/api-helpers/collection-helper";
-import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper";
+import { burn } from "../../common/atoms-tests/burn"
+import { transfer } from "../../common/atoms-tests/transfer"
+import { getCollectionById } from "../../common/api-helpers/collection-helper"
+import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -44,19 +44,19 @@ function suites(): {
 					supply: 1,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 1
+					amount: 1,
 				}
 			},
 			creatorBalanceAfterTransfer: "0",
 			recipientBalanceAfterTransfer: "1",
 			burnRequest: {
-					amount: 1,
-					creators: []
-				},
-			totalBalanceAfterBurn: 0
+				amount: 1,
+				creators: [],
+			},
+			totalBalanceAfterBurn: 0,
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -75,19 +75,19 @@ function suites(): {
 					supply: 1,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 1
+					amount: 1,
 				}
 			},
 			creatorBalanceAfterTransfer: "0",
 			recipientBalanceAfterTransfer: "1",
 			burnRequest: {
-					amount: 1,
-					creators: []
-				},
-			totalBalanceAfterBurn: 0
+				amount: 1,
+				creators: [],
+			},
+			totalBalanceAfterBurn: 0,
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -106,17 +106,17 @@ function suites(): {
 					supply: 20,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 9
+					amount: 9,
 				}
 			},
 			creatorBalanceAfterTransfer: "11",
 			recipientBalanceAfterTransfer: "9",
 			burnRequest: {
 				amount: 4,
-				creators: []
+				creators: [],
 			},
 			totalBalanceAfterBurn: 16,
 		},
@@ -137,17 +137,17 @@ function suites(): {
 					supply: 20,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 9
+					amount: 9,
 				}
 			},
 			creatorBalanceAfterTransfer: "11",
 			recipientBalanceAfterTransfer: "9",
 			burnRequest: {
 				amount: 4,
-				creators: []
+				creators: [],
 			},
 			totalBalanceAfterBurn: 16,
 		},
@@ -168,19 +168,19 @@ function suites(): {
 					supply: 1,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 1
+					amount: 1,
 				}
 			},
 			creatorBalanceAfterTransfer: "0",
 			recipientBalanceAfterTransfer: "1",
 			burnRequest: {
 				amount: 1,
-				creators: []
+				creators: [],
 			},
-			totalBalanceAfterBurn: 0
+			totalBalanceAfterBurn: 0,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -199,19 +199,19 @@ function suites(): {
 					supply: 1,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 1
+					amount: 1,
 				}
 			},
 			creatorBalanceAfterTransfer: "0",
 			recipientBalanceAfterTransfer: "1",
 			burnRequest: {
 				amount: 1,
-				creators: []
+				creators: [],
 			},
-			totalBalanceAfterBurn: 0
+			totalBalanceAfterBurn: 0,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -230,19 +230,19 @@ function suites(): {
 					supply: 20,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 9
+					amount: 9,
 				}
 			},
 			creatorBalanceAfterTransfer: "11",
 			recipientBalanceAfterTransfer: "9",
 			burnRequest: {
 				amount: 4,
-				creators: []
+				creators: [],
 			},
-			totalBalanceAfterBurn: 16
+			totalBalanceAfterBurn: 16,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -261,20 +261,20 @@ function suites(): {
 					supply: 20,
 				}
 			},
-			transferRequest:(walletAddress: UnionAddress): TransferRequest => {
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
 				return {
 					to: walletAddress,
-					amount: 9
+					amount: 9,
 				}
 			},
 			creatorBalanceAfterTransfer: "11",
 			recipientBalanceAfterTransfer: "9",
 			burnRequest: {
 				amount: 4,
-				creators: []
+				creators: [],
 			},
-			totalBalanceAfterBurn: 16
-		}
+			totalBalanceAfterBurn: 16,
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -285,25 +285,23 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 	const recipientSdk = createSdk(suite.blockchain, recipientWallet)
 
 	test(suite.description, async () => {
-		const creatorWalletAddress = await getWalletAddressNew(creatorWallet)
-		const recipientWalletAddress = await getWalletAddressNew(recipientWallet)
+		const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
+		const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
 
 		// Get collection
 		const collection = await getCollectionById(creatorSdk, suite.collectionId)
 
 		// Mint token
-		const { nft } = await mint(creatorSdk, creatorWallet, { collection }, suite.mintRequest(creatorWalletAddress.unionAddress))
+		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
+			suite.mintRequest(creatorWalletAddress.unionAddress))
 
 		// Transfer token
-		await transfer(creatorSdk, {itemId: nft.id}, suite.transferRequest(recipientWalletAddress.unionAddress))
-
-		// Verify seller balance
-		// await awaitForOwnership(creatorSdk, nft.id, creatorWalletAddress.address, toBigNumber(suite.creatorBalanceAfterTransfer))
-		// await verifyBalance(creatorSdk, creatorWalletAddress, getErc1155AssetType(collection.id, toBigNumber(nft.id)), suite.creatorBalanceAfterTransfer)
+		await transfer(creatorSdk, { itemId: nft.id },
+			suite.transferRequest(recipientWalletAddress.unionAddress))
 
 		// Verify recipient balance
-		await awaitForOwnershipValue(recipientSdk, nft.id, recipientWalletAddress.address, toBigNumber(suite.recipientBalanceAfterTransfer))
-		// await verifyBalance(recipientSdk, recipientWalletAddress, getErc1155AssetType(collection.id, toBigNumber(nft.id)), suite.recipientBalanceAfterTransfer)
+		await awaitForOwnershipValue(recipientSdk, nft.id, recipientWalletAddress.address,
+			toBigNumber(suite.recipientBalanceAfterTransfer))
 
 		// Burn token
 		await burn(recipientSdk, { itemId: nft.id }, suite.burnRequest, suite.totalBalanceAfterBurn)

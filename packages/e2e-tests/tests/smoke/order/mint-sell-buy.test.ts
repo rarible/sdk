@@ -10,16 +10,15 @@ import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
 	getTezosTestWallet,
-	getWalletAddress,
-	getWalletAddressNew,
+	getWalletAddressFull,
 } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { awaitOrderStock, getCollection } from "../../common/helpers"
 import { buy } from "../../common/atoms-tests/buy"
 import { testsConfig } from "../../common/config"
-import { getCurrency } from "../../common/currency";
-import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper";
+import { getCurrency } from "../../common/currency"
+import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -55,7 +54,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -81,7 +80,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -107,7 +106,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -133,7 +132,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -237,7 +236,7 @@ function suites(): {
 					price: "0.02",
 					currency: currency,
 				}
-			}
+			},
 		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
@@ -249,14 +248,15 @@ describe.each(suites())("$blockchain mint => sell => buy", (suite) => {
 	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
-		const walletAddressSeller = await getWalletAddressNew(sellerWallet)
-		const walletAddressBuyer = await getWalletAddressNew(buyerWallet)
+		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
+		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
 		// Get collection
 		const collection = await getCollection(sellerSdk, suite.collectionId)
 
 		// Mint token
-		const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(walletAddressSeller.unionAddress))
+		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
+			suite.mintRequest(walletAddressSeller.unionAddress))
 
 		// Get currency
 		const requestCurrency = await getCurrency(suite.wallets, suite.currency)

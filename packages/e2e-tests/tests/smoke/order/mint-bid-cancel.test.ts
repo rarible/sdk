@@ -7,15 +7,15 @@ import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
-	getWalletAddressNew,
+	getWalletAddressFull,
 } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { getCollection } from "../../common/helpers"
 import { bid } from "../../common/atoms-tests/bid"
-import { testsConfig } from "../../common/config";
-import { getCurrency } from "../../common/currency";
-import { cancel } from "../../common/atoms-tests/cancel";
+import { testsConfig } from "../../common/config"
+import { getCurrency } from "../../common/currency"
+import { cancel } from "../../common/atoms-tests/cancel"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -51,7 +51,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -77,7 +77,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -103,7 +103,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -129,7 +129,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		/*{
       blockchain: Blockchain.TEZOS,
@@ -177,13 +177,14 @@ describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
-		const walletAddressSeller = await getWalletAddressNew(sellerWallet)
+		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
 		// Get collection
 		const collection = await getCollection(sellerSdk, suite.collectionId)
 
 		// Mint token
-		const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(walletAddressSeller.unionAddress))
+		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
+			suite.mintRequest(walletAddressSeller.unionAddress))
 
 		// Get currency
 		const requestCurrency = await getCurrency(suite.wallets, suite.currency)

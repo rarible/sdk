@@ -1,7 +1,7 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import { BurnRequest, PrepareBurnRequest } from "@rarible/sdk/build/types/nft/burn/domain";
+import type { BurnRequest, PrepareBurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
+import type { BigNumber } from "@rarible/types"
 import { awaitForItemSupply } from "../helpers"
-import type { BigNumber } from "@rarible/types";
 
 /**
  * Burn NFT and check result

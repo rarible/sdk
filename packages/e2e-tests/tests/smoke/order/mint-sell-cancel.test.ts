@@ -3,15 +3,15 @@ import type { UnionAddress } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
+import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { sell } from "../../common/atoms-tests/sell"
-import { getEthereumWallet, getEthereumWalletBuyer, getTezosTestWallet, getWalletAddressNew } from "../../common/wallet"
+import { getEthereumWallet, getEthereumWalletBuyer, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { getCollection } from "../../common/helpers"
 import { cancel } from "../../common/atoms-tests/cancel"
-import { OrderRequest } from "@rarible/sdk/src/types/order/common";
-import { testsConfig } from "../../common/config";
-import { getCurrency } from "../../common/currency";
+import { testsConfig } from "../../common/config"
+import { getCurrency } from "../../common/currency"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -47,7 +47,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -73,7 +73,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -99,7 +99,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -125,7 +125,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -151,7 +151,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -177,7 +177,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -203,7 +203,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -229,7 +229,7 @@ function suites(): {
 					price: "0.0000000000000001",
 					currency: currency,
 				}
-			}
+			},
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -255,7 +255,7 @@ function suites(): {
 					price: "0.02",
 					currency: currency,
 				}
-			}
+			},
 		},
 		/*
     {
@@ -316,13 +316,14 @@ describe.each(suites())("$blockchain mint => sell => cancel", (suite) => {
 	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
 
 	test(suite.description, async () => {
-		const sellerWalletAddress = await getWalletAddressNew(sellerWallet)
+		const sellerWalletAddress = await getWalletAddressFull(sellerWallet)
 
 		// Get collection
 		const collection = await getCollection(sellerSdk, suite.collectionId)
 
 		// Mint token
-		const { nft } = await mint(sellerSdk, sellerWallet, { collection }, suite.mintRequest(sellerWalletAddress.unionAddress))
+		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
+			suite.mintRequest(sellerWalletAddress.unionAddress))
 
 		// Get currency
 		const requestCurrency = await getCurrency(suite.wallets, suite.currency)

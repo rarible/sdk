@@ -6,10 +6,9 @@ import type { TezosWallet } from "@rarible/sdk-wallet"
 import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
-import { IGetBalance } from "@rarible/sdk/src/types/balances";
-import type { ContractAddress, UnionAddress } from "@rarible/types";
-import { toUnionAddress } from "@rarible/types";
-import { testsConfig } from "./config";
+import type { UnionAddress } from "@rarible/types"
+import { toUnionAddress } from "@rarible/types"
+import { testsConfig } from "./config"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const { web3, wallet } = initProvider(pk)
@@ -53,10 +52,10 @@ export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boo
 	}
 }
 
-export async function getWalletAddressNew(wallet: BlockchainWallet): Promise<WalletAddress> {
+export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<WalletAddress> {
 	console.log("Getting wallet_address for wallet=", wallet)
-	let address="";
-	let addressWithPrefix="";
+	let address=""
+	let addressWithPrefix=""
 	switch (wallet.blockchain) {
 		case Blockchain.ETHEREUM:
 			address = await wallet.ethereum.getFrom()
@@ -80,7 +79,7 @@ export async function getWalletAddressNew(wallet: BlockchainWallet): Promise<Wal
 	const response = {
 		address: address,
 		addressWithPrefix: addressWithPrefix,
-		unionAddress: toUnionAddress(addressWithPrefix)
+		unionAddress: toUnionAddress(addressWithPrefix),
 	}
 	console.log("wallet_address=", response)
 	return response

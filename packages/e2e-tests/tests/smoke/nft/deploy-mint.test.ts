@@ -3,12 +3,12 @@ import type { UnionAddress } from "@rarible/types"
 import type { DeployTokenRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddressNew } from "../../common/wallet"
+import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { getCollection } from "../../common/helpers"
 import { deployCollection } from "../../common/atoms-tests/deploy-collection"
-import { testsConfig } from "../../common/config";
+import { testsConfig } from "../../common/config"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -62,7 +62,7 @@ function suites(): {
 						baseURI: "https://ipfs.rarible.com",
 						contractURI: "https://ipfs.rarible.com",
 						isUserToken: true,
-						operators: []
+						operators: [],
 					},
 				},
 			} as DeployTokenRequest,
@@ -123,7 +123,7 @@ function suites(): {
 						baseURI: "https://ipfs.rarible.com",
 						contractURI: "https://ipfs.rarible.com",
 						isUserToken: true,
-						operators: []
+						operators: [],
 					},
 				},
 			} as DeployTokenRequest,
@@ -182,7 +182,7 @@ function suites(): {
 						symbol: "AUTO_NFT",
 						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: true,
-						operators: []
+						operators: [],
 					},
 				},
 			} as DeployTokenRequest,
@@ -212,7 +212,7 @@ function suites(): {
 						symbol: "AUTO_MT",
 						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: false,
-						operators: []
+						operators: [],
 					},
 				},
 			} as DeployTokenRequest,
@@ -242,7 +242,7 @@ function suites(): {
 						symbol: "AUTO_MT",
 						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: true,
-						operators: []
+						operators: [],
 					},
 				},
 			} as DeployTokenRequest,
@@ -268,7 +268,7 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 	const sdk = createSdk(suite.blockchain, wallet)
 
 	test(suite.description, async () => {
-		const walletAddress = await getWalletAddressNew(wallet)
+		const walletAddress = await getWalletAddressFull(wallet)
 		// Deploy new collection
 		const { address } = await deployCollection(sdk, wallet, suite.deployRequest)
 

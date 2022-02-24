@@ -1,16 +1,10 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { Order } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types"
-import type { OrderRequest, PrepareOrderRequest } from "@rarible/sdk/src/types/order/common"
+import type { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare-mint-request.type"
+import { MintType } from "@rarible/sdk/src/types/nft/mint/domain"
+import type { MintAndSellRequest, MintAndSellResponse } from "@rarible/sdk/build/types/nft/mint-and-sell/domain"
 import { awaitOrderStock } from "../helpers"
-import { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare-mint-request.type";
-import { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type";
-import { MintResponse } from "@rarible/sdk/build/types/nft/mint/domain";
-import { Item } from "@rarible/api-client";
-import { MintType } from "@rarible/sdk/src/types/nft/mint/domain";
-import { retry } from "@rarible/sdk/src/common/retry";
-import { MintAndSellRequest, MintAndSellResponse } from "@rarible/sdk/build/types/nft/mint-and-sell/domain";
 
 /**
  * Mint and sell NFT and check stock

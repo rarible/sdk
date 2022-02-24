@@ -1,7 +1,5 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import { TransferRequest, PrepareTransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain";
-import { awaitForItemSupply } from "../helpers"
-import type { BigNumber } from "@rarible/types";
+import type { TransferRequest, PrepareTransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
 
 /**
  * Transfer NFT

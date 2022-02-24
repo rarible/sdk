@@ -1,10 +1,6 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { Order } from "@rarible/api-client"
-import { toBigNumber } from "@rarible/types"
-import type { OrderRequest, PrepareOrderRequest } from "@rarible/sdk/src/types/order/common"
-import { awaitOrderStock } from "../helpers"
-import { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common";
+import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 
 /**
  * Update sell order and check stocks

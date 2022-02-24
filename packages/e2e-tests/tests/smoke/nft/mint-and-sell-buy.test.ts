@@ -1,15 +1,15 @@
-import { Blockchain} from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddressNew } from "../../common/wallet"
+import type { MintAndSellRequest } from "@rarible/sdk/build/types/nft/mint-and-sell/domain"
+import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { testsConfig } from "../../common/config"
-import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper";
-import { MintAndSellRequest } from "@rarible/sdk/build/types/nft/mint-and-sell/domain";
-import { getCollection } from "../../common/helpers";
-import { mintAndSell } from "../../common/atoms-tests/mint-and-sell";
-import { buy } from "../../common/atoms-tests/buy";
+import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
+import { getCollection } from "../../common/helpers"
+import { mintAndSell } from "../../common/atoms-tests/mint-and-sell"
+import { buy } from "../../common/atoms-tests/buy"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -43,7 +43,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 1,
-			creatorBalance: 0
+			creatorBalance: 0,
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -67,7 +67,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 1,
-			creatorBalance: 0
+			creatorBalance: 0,
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -91,7 +91,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 11,
-			creatorBalance: 9
+			creatorBalance: 9,
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -115,7 +115,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 11,
-			creatorBalance: 9
+			creatorBalance: 9,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -139,7 +139,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 1,
-			creatorBalance: 0
+			creatorBalance: 0,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -163,7 +163,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 1,
-			creatorBalance: 0
+			creatorBalance: 0,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -187,7 +187,7 @@ function suites(): {
 				}
 			},
 			buyAmount: 5,
-			creatorBalance: 0
+			creatorBalance: 0,
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -211,8 +211,8 @@ function suites(): {
 				}
 			},
 			buyAmount: 5,
-			creatorBalance: 0
-		}
+			creatorBalance: 0,
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -223,21 +223,21 @@ describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
 	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
-		const walletAddressCreator = await getWalletAddressNew(creatorWallet)
-		const walletAddressBuyer = await getWalletAddressNew(buyerWallet)
+		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
+		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
 		// Get collection
 		const collection = await getCollection(creatorSdk, suite.collectionId)
 
 		// Mint and sell token
-		const mintAndSellResponse = await mintAndSell(creatorSdk, creatorWallet, { collection }, suite.mintAndSellRequest(walletAddressCreator.unionAddress))
+		const mintAndSellResponse = await mintAndSell(creatorSdk, creatorWallet, { collection },
+			suite.mintAndSellRequest(walletAddressCreator.unionAddress))
 
-		await buy(buyerSdk, buyerWallet, mintAndSellResponse.itemId, { orderId: mintAndSellResponse.orderId }, { amount: suite.buyAmount })
-
-		// // Verify seller balance
-		// await awaitForOwnership(creatorSdk, mintAndSellResponse.itemId, creatorWalletAddress, toBigNumber(String(suite.creatorBalance)))
+		await buy(buyerSdk, buyerWallet, mintAndSellResponse.itemId,
+			{ orderId: mintAndSellResponse.orderId }, { amount: suite.buyAmount })
 
 		// Verify buyer balance
-		await awaitForOwnershipValue(buyerSdk, mintAndSellResponse.itemId, walletAddressBuyer.address, toBigNumber(String(suite.buyAmount)))
+		await awaitForOwnershipValue(buyerSdk, mintAndSellResponse.itemId,
+			walletAddressBuyer.address, toBigNumber(String(suite.buyAmount)))
 	})
 })
