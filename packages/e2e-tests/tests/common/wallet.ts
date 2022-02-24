@@ -6,9 +6,9 @@ import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-bloc
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
+import type { EVMBlockchain } from "@rarible/sdk/src/sdk-blockchains/ethereum/common"
 import { toUnionAddress } from "@rarible/types"
 import { testsConfig } from "./config"
-import { EVMBlockchain } from "@rarible/sdk/src/sdk-blockchains/ethereum/common";
 
 export function getEthereumWallet(pk?: string): EthereumWallet<EVMBlockchain> {
 	const { web3, wallet } = initProvider(pk)
