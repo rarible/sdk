@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.44](https://github.com/rarible/sdk/compare/v0.8.43...v0.8.44) (2022-02-25)
+
+
+### Bug Fixes
+
+* tezos balance, eth/polygon/tezos balance tests ([57c9fb7](https://github.com/rarible/sdk/commit/57c9fb70f0048bd8e22784615b30cd36a206792c))
+
+
+
+
+
 ## [0.8.43](https://github.com/rarible/sdk/compare/v0.8.42...v0.8.43) (2022-02-25)
 
 
