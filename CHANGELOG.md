@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.28-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.3...v0.8.28-hotfix.4) (2022-02-25)
+
+
+### Bug Fixes
+
+* opensea v3 calldata ([037af7b](https://github.com/rarible/sdk/commit/037af7bae091fa81e8c2287b315007d1c064c6ca))
+
+
+
+
+
 ## [0.8.28-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.2...v0.8.28-hotfix.3) (2022-02-24)
 
 
