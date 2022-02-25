@@ -6,7 +6,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import { get_balance } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { MaybeProvider } from "./common"
-import { getTezosAddress, getTezosAssetType, XTZ_DECIMALS } from "./common"
+import { getTezosAddress, getTezosAssetType } from "./common"
 
 export class TezosBalance {
 	constructor(
@@ -23,18 +23,12 @@ export class TezosBalance {
 		if (!this.provider.config.node_url) {
 			throw new Error("Node url for tezos has not been specified")
 		}
-		let balance = new BigNumber(
+		return new BigNumber(
 			await get_balance(
 				this.provider.config,
 				getTezosAddress(address),
 				tezosAssetType
 			)
 		)
-
-		if (tezosAssetType.asset_class === "XTZ") {
-			balance = balance.div(new BigNumber(10).pow(XTZ_DECIMALS))
-		}
-
-		return balance
 	}
 }
