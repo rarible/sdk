@@ -183,7 +183,7 @@ const connector = Connector
 connector.connection.subscribe((con) => {
 	console.log("connection: " + JSON.stringify(con))
 	if (con.status === "connected") {
-		const sdk = createRaribleSdk(con.connection, "staging")
+		const sdk = createRaribleSdk(con.connection.wallet, "staging")
 		// use sdk here
 	}
 })
