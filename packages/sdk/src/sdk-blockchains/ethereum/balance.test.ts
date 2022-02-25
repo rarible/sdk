@@ -21,6 +21,23 @@ describe("get balance", () => {
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 	})
 
+	test("get ETH balance with wallet", async () => {
+		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
+		const balance = await sdk.balances.getBalance(walletAddress, {
+			"@type": "ETH",
+		})
+		expect(balance.toString()).toEqual("1.9355")
+	})
+
+	test("get ETH balance without wallet", async () => {
+		const sdk = createRaribleSdk(undefined, "e2e", { logs: LogsLevel.DISABLED })
+		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
+		const balance = await sdk.balances.getBalance(walletAddress, {
+			"@type": "ETH",
+		})
+		expect(balance.toString()).toEqual("1.9355")
+	})
+
 	test("get balance erc-20", async () => {
 		expect.assertions(1)
 		const senderRaw = wallet1.getAddressString()
@@ -45,4 +62,18 @@ describe("get balance", () => {
 
 		expect(balance.toString()).toEqual(nextBalance)
 	})
+})
+
+describe("get polygon balance", () => {
+	const sdk = createRaribleSdk(undefined, "staging", { logs: LogsLevel.DISABLED })
+
+	test("get Matic balance", async () => {
+		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
+		const balance = await sdk.balances.getBalance(walletAddress, {
+			"@type": "ETH",
+			blockchain: Blockchain.POLYGON,
+		})
+		expect(balance.toString()).toEqual("0.009145")
+	})
+
 })
