@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.43](https://github.com/rarible/sdk/compare/v0.8.42...v0.8.43) (2022-02-25)
+
+
+### Bug Fixes
+
+* opensea ([8317ee6](https://github.com/rarible/sdk/commit/8317ee609c88e30d858bebaf6d214fce5b9b528c))
+
+
+
+
+
 ## [0.8.41](https://github.com/rarible/sdk/compare/v0.8.40...v0.8.41) (2022-02-23)
 
 
