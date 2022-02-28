@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.28-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.4...v0.8.28-hotfix.5) (2022-02-28)
+
+
+### Bug Fixes
+
+* fb-623 update flow-sdk, fixes matrixWorldVaucher initialization ([0a933f8](https://github.com/rarible/sdk/commit/0a933f8c40b00a7b15b86f2b4524a14bcb8897ea))
+
+
+
+
+
 ## [0.8.28-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.28-hotfix.3...v0.8.28-hotfix.4) (2022-02-25)
 
 
