@@ -12,7 +12,7 @@ export class EthereumSell {
 
 	constructor(
 		private sdk: RaribleSdk,
-		network: EthereumNetwork,
+		private network: EthereumNetwork,
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.sell = this.sell.bind(this)

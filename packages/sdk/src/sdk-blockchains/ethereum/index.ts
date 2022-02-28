@@ -28,7 +28,7 @@ export function createEthereumSdk(
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, { apiClientParams: params, logs: logs })
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk)
+	const balanceService = new EthereumBalance(sdk, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
@@ -56,6 +56,7 @@ export function createEthereumSdk(
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
+			convert: balanceService.convert,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

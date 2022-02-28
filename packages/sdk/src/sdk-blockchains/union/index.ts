@@ -3,6 +3,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
 import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -152,10 +153,14 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 class UnionBalanceSdk implements IBalanceSdk {
 	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
+		this.convert = this.convert.bind(this)
 	}
 
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
+	}
+	convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction> {
+		return this.instances[getConvertBlockchain(from)].convert(from, to, value)
 	}
 }
 
@@ -209,4 +214,18 @@ function getBalanceBlockchain(address: UnionAddress, assetType: AssetType): Bloc
 		return extractBlockchain(assetType.contract)
 	}
 	return extractBlockchain(address)
+}
+
+function getConvertBlockchain(assetType: AssetType): Blockchain {
+	if ("blockchain" in assetType && assetType.blockchain) {
+		return assetType.blockchain
+	}
+	if ("contract" in assetType && assetType.contract) {
+		return extractBlockchain(assetType.contract)
+	}
+	switch(assetType["@type"]) {
+		case "ETH": return Blockchain.ETHEREUM
+		case "XTZ": return Blockchain.TEZOS
+		default: throw new Error(`Unsupported blockchain of convert method: ${JSON.stringify(assetType)}`)
+	}
 }
