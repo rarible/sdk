@@ -7,6 +7,7 @@ import { get_balance, unwrap, wrap } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
+import type { Blockchain } from "@rarible/api-client"
 import type { MaybeProvider } from "./common"
 import { getRequiredProvider, getTezosAddress, getTezosAssetType } from "./common"
 
@@ -36,21 +37,14 @@ export class TezosBalance {
 		)
 	}
 
-	async convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction> {
+	async convert(blockchain: Blockchain, isWrap: boolean, value: BigNumberValue): Promise<IBlockchainTransaction> {
 		const provider = getRequiredProvider(this.provider)
-		if (from["@type"] === "XTZ") {
-			if (to["@type"] === "TEZOS_FT" && to.contract === this.provider.config.wrapper) {
-				const tx = await wrap(provider, new BigNumber(value))
-				return new BlockchainTezosTransaction(tx, this.network)
-			}
+		if (isWrap) {
+			const tx = await wrap(provider, new BigNumber(value))
+			return new BlockchainTezosTransaction(tx, this.network)
+		} else {
+			const tx = await unwrap(provider, new BigNumber(value))
+			return new BlockchainTezosTransaction(tx, this.network)
 		}
-
-		if (from["@type"] === "TEZOS_FT" && from.contract === this.provider.config.wrapper) {
-			if (to["@type"] === "XTZ") {
-				const tx = await unwrap(provider, new BigNumber(value))
-				return new BlockchainTezosTransaction(tx, this.network)
-			}
-		}
-		throw new Error("Unsupported types for convert")
 	}
 }

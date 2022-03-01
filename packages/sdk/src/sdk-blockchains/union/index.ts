@@ -159,8 +159,8 @@ class UnionBalanceSdk implements IBalanceSdk {
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
 	}
-	convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction> {
-		return this.instances[getConvertBlockchain(from)].convert(from, to, value)
+	convert(blockchain: Blockchain, isWrap: boolean, value: BigNumberValue): Promise<IBlockchainTransaction> {
+		return this.instances[blockchain].convert(blockchain, isWrap, value)
 	}
 }
 
@@ -214,18 +214,4 @@ function getBalanceBlockchain(address: UnionAddress, assetType: AssetType): Bloc
 		return extractBlockchain(assetType.contract)
 	}
 	return extractBlockchain(address)
-}
-
-function getConvertBlockchain(assetType: AssetType): Blockchain {
-	if ("blockchain" in assetType && assetType.blockchain) {
-		return assetType.blockchain
-	}
-	if ("contract" in assetType && assetType.contract) {
-		return extractBlockchain(assetType.contract)
-	}
-	switch(assetType["@type"]) {
-		case "ETH": return Blockchain.ETHEREUM
-		case "XTZ": return Blockchain.TEZOS
-		default: throw new Error(`Unsupported blockchain of convert method: ${JSON.stringify(assetType)}`)
-	}
 }

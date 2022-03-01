@@ -2,9 +2,13 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { UnionAddress } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
-import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction/src"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type {
+	AssetType as EthereumAssetType,
+} from "@rarible/ethereum-api-client"
+import type { Blockchain } from "@rarible/api-client"
 import { convertToEthereumAddress, convertToEthereumAssetType } from "./common"
 
 export class EthereumBalance {
@@ -25,12 +29,26 @@ export class EthereumBalance {
 		return this.sdk.balances.getBalance(ethAddress, convertedAssetType)
 	}
 
-	async convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<IBlockchainTransaction> {
-		const tx = await this.sdk.balances.convert(
-			convertToEthereumAssetType(from),
-			convertToEthereumAssetType(to),
-			value
-		)
+	async convert(blockchain: Blockchain, isWrap: boolean, value: BigNumberValue): Promise<IBlockchainTransaction> {
+		const wethContract = this.sdk.balances.getWethContractAddress()
+		console.log("weth", wethContract)
+		let from: EthereumAssetType
+		let to: EthereumAssetType
+
+		if (isWrap) {
+			from = { assetClass: "ETH" }
+			to = {
+				assetClass: "ERC20",
+				contract: wethContract,
+			}
+		} else {
+			from = {
+				assetClass: "ERC20",
+				contract: wethContract,
+			}
+			to = { assetClass: "ETH" }
+		}
+		const tx = await this.sdk.balances.convert(from, to, value)
 		return new BlockchainEthereumTransaction(tx, this.network)
 	}
 }
