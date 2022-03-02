@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.44-alpha.0](https://github.com/rarible/sdk/compare/v0.8.44...v0.8.44-alpha.0) (2022-03-02)
+
+
+### Features
+
+* support collections creation for flow blockchain ([c4066b8](https://github.com/rarible/sdk/commit/c4066b8ff22a6414cd85d009010d3df66a0ab3c0))
+
+
+
+
+
 ## [0.8.44](https://github.com/rarible/sdk/compare/v0.8.43...v0.8.44) (2022-02-25)
 
 
