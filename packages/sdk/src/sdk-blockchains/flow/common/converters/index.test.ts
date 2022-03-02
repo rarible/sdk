@@ -1,5 +1,5 @@
 import { FLOW_ZERO_ADDRESS, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
-import { isFlowAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import { isFlowAddress } from "@rarible/flow-sdk/build/types/flow-address"
 import * as converters from "."
 import { toFlowParts } from "."
 
@@ -41,7 +41,11 @@ describe("Test FLOW converter functions", () => {
 		expect(test7).toThrow(Error)
 	})
 	test("parseUnionItemId function, should parse if address with prefix", () => {
-		const { blockchain, contract, itemId } = converters.parseUnionItemId(
+		const {
+			blockchain,
+			contract,
+			itemId,
+		} = converters.parseUnionItemId(
 			toItemId("FLOW:A.0xabcdef0123456789.ContractName:12345"),
 		)
 		expect(blockchain).toEqual("FLOW")
@@ -49,7 +53,11 @@ describe("Test FLOW converter functions", () => {
 		expect(itemId.length).toEqual(5)
 	})
 	test("parseUnionItemId function, should parse if address without prefix", () => {
-		const { blockchain, contract, itemId } = converters.parseUnionItemId(
+		const {
+			blockchain,
+			contract,
+			itemId,
+		} = converters.parseUnionItemId(
 			toItemId("FLOW:A.abcdef0123456789.ContractName:123"),
 		)
 		expect(blockchain).toEqual("FLOW")
@@ -176,11 +184,17 @@ describe("Test FLOW converter functions", () => {
 			expect(test1).toThrow(Error)
 		})
 	test("toFlowParts function, should convert union address to flow address", () => {
-		const test1 = toFlowParts([{ account: toUnionAddress(`FLOW:${FLOW_ZERO_ADDRESS}`), value: 500 }])
+		const test1 = toFlowParts([{
+			account: toUnionAddress(`FLOW:${FLOW_ZERO_ADDRESS}`),
+			value: 500,
+		}])
 		expect(isFlowAddress(test1[0].account)).toBeTruthy()
 	})
 	test("toFlowParts function, should throw error, invalid union address", () => {
-		const test1 = () => toFlowParts([{ account: toUnionAddress("FLOW_ZERO_ADDRESS"), value: 500 }])
+		const test1 = () => toFlowParts([{
+			account: toUnionAddress("FLOW_ZERO_ADDRESS"),
+			value: 500,
+		}])
 		expect(test1).toThrow(Error)
 	})
 })
