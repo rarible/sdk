@@ -171,6 +171,9 @@ export class EthereumBid {
 
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
+				const expirationDate = request.expirationDate instanceof Date
+					? Math.round(request.expirationDate.getTime() / 1000)
+					: undefined
 				return {
 					makeAssetType: common.getEthTakeAssetType(request.currency),
 					takeAssetType: takeAssetType,
@@ -178,6 +181,7 @@ export class EthereumBid {
 					priceDecimal: request.price,
 					payouts: common.toEthereumParts(request.payouts),
 					originFees: common.toEthereumParts(request.originFees),
+					end: expirationDate,
 				}
 			})
 			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
@@ -208,6 +212,7 @@ export class EthereumBid {
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			getConvertableValue: this.getConvertableValue,
+			supportsExpirationDate: true,
 			submit,
 		}
 	}
