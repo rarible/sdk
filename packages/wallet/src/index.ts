@@ -5,14 +5,13 @@ import type { TezosProvider } from "@rarible/tezos-sdk"
 import { sign } from "@rarible/tezos-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-export class EthereumWallet<
-	K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
-	T extends Ethereum = Ethereum
-> implements AbstractWallet {
+export class EthereumWallet<K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
+	T extends Ethereum = Ethereum> implements AbstractWallet {
 	constructor(
 		public readonly ethereum: T,
 		public readonly blockchain: K
-	) {}
+	) {
+	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const address = await this.ethereum.getFrom()
@@ -82,6 +81,26 @@ export class TezosWallet implements AbstractWallet {
 		return {
 			signature: result.signature,
 			publicKey: `${result.edpk}_${result.prefix}`,
+		}
+	}
+}
+
+// workaround before solana sdk deployd
+const BlockchainSOLANA = Blockchain.FLOW
+type SolanaWalletProvider = any
+
+export class SolanaWallet implements AbstractWallet {
+	readonly blockchain = BlockchainSOLANA
+
+	constructor(public readonly provider: SolanaWalletProvider) {
+	}
+
+	async signPersonalMessage(message: string): Promise<UserSignature> {
+		const data = new TextEncoder().encode(message)
+		const res = await this.provider.signMessage(data)
+		return {
+			signature: new TextDecoder().decode(res.signature),
+			publicKey: this.provider.publicKey.toString(),
 		}
 	}
 }
