@@ -1,6 +1,6 @@
 ### Initialising wallet for SDK
 
-#### Ethereum/Polygon
+#### Ethereum
 
 ```typescript
 import Web3ProviderEngine from "web3-provider-engine"
@@ -21,7 +21,7 @@ const privateKey = "YOUR_ETHEREUM_PRIVATE_KEY"
 const raribleEthers = new ethers.providers.JsonRpcProvider(process.env["ETHEREUM_RPC_URL"])
 const raribleProvider = new EthersEthereum(new ethers.Wallet(privateKey, raribleEthers))
 const raribleWallet = new EthereumWallet(raribleProvider)
-const raribleSdk = createRaribleSdk(raribleWallet, "staging")
+const raribleSdkWithEthers = createRaribleSdk(raribleWallet, "staging")
 
 // init with web3
 const provider = new Web3ProviderEngine({ pollingInterval: 100 })
@@ -33,7 +33,38 @@ provider.start()
 const web3 = new Web3(provider)
 const web3Ethereum = new Web3Ethereum({ web3 })
 const raribleSdkWallet = new EthereumWallet(web3Ethereum)
-const raribleSdk = createRaribleSdk(raribleSdkWallet, "dev")
+const raribleSdkWithWeb3 = createRaribleSdk(raribleSdkWallet, "dev")
+```
+
+#### Polygon
+
+For Polygon you should use "ethers", same as for regular ethereum setup. 
+Or "web3js" with "estimate" from [@rarible/estimate-middleware](https://www.npmjs.com/package/@rarible/estimate-middleware)
+```typescript
+import { EthereumWallet } from "@rarible/sdk-wallet"
+import HDWalletProvider from "@truffle/hdwallet-provider"
+import Web3 from "web3"
+import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { estimate } from "@rarible/estimate-middleware"
+
+// Setup with web3js //
+//configure rpc provider
+const provider = new HDWalletProvider(privateKey, process.env["ETHEREUM_RPC_URL"])
+
+// create web3 object with estimate middleware for EIP1559 transactions
+const providerWithEstimateMiddleware = estimate(provider, {force: true, threshold: 1.1})
+const web3 = new Web3(providerWithEstimateMiddleware)
+
+const web3Ethereum = new Web3Ethereum({ web3 })
+const raribleSdkWallet = new EthereumWallet(web3Ethereum)
+const raribleSdkWithWeb3 = createRaribleSdk(raribleSdkWallet, "staging")
+
+// Setup with ethers (same as for ethereum)
+const raribleEthers = new ethers.providers.JsonRpcProvider(process.env["ETHEREUM_RPC_URL"])
+const raribleProvider = new EthersEthereum(new ethers.Wallet(privateKey, raribleEthers))
+const raribleWallet = new EthereumWallet(raribleProvider)
+const raribleSdkWithEthers = createRaribleSdk(raribleWallet, "staging")
+
 ```
 
 #### Solana
