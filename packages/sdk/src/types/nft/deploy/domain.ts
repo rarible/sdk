@@ -1,4 +1,5 @@
 import type * as ApiClient from "@rarible/api-client"
+import type { Royalty } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
@@ -11,14 +12,19 @@ export type CreateCollectionRequest<T extends CreateCollectionBlockchains = Crea
 export interface CreateCollectionAsset extends Record<CreateCollectionBlockchains, DeployTokenAsset> {
 	[ApiClient.Blockchain.ETHEREUM]: EthereumCreateCollectionAsset;
 	[ApiClient.Blockchain.TEZOS]: TezosCreateCollectionTokenAsset;
+	[ApiClient.Blockchain.FLOW]: FlowCreateCollectionAsset;
 }
 
 export type CreateCollectionBlockchains =
 	ApiClient.Blockchain.ETHEREUM |
 	ApiClient.Blockchain.POLYGON |
-	ApiClient.Blockchain.TEZOS
+	ApiClient.Blockchain.TEZOS |
+	ApiClient.Blockchain.FLOW
 
-export type DeployTokenAsset = EthereumCreateCollectionAsset | TezosCreateCollectionTokenAsset
+export type DeployTokenAsset =
+	EthereumCreateCollectionAsset
+	| TezosCreateCollectionTokenAsset
+	| FlowCreateCollectionAsset
 
 export type TezosCreateCollectionTokenAsset = {
 	assetType: "NFT" | "MT"
@@ -35,6 +41,19 @@ export type EthereumCreateCollectionAsset = {
 	arguments: CreatePrivateCollectionArguments | CreatePublicCollectionArguments
 }
 
+export type FlowCreateCollectionAsset = {
+	assetType: "FLOW_NFT"
+	arguments: {
+		name: string
+		symbol: string
+		royalties: Royalty[]
+		icon?: string
+		description?: string
+		url?: string
+		supply?: number
+	}
+}
+
 export type CreatePublicCollectionArguments = {
 	name: string
 	symbol: string
@@ -44,10 +63,10 @@ export type CreatePublicCollectionArguments = {
 }
 
 export type CreatePrivateCollectionArguments =
-  Omit<CreatePublicCollectionArguments, "isUserToken"> & {
-  	isUserToken: true
-  	operators: UnionAddress[]
-  }
+	Omit<CreatePublicCollectionArguments, "isUserToken"> & {
+		isUserToken: true
+		operators: UnionAddress[]
+	}
 
 export type CreateCollectionResponse = {
 	tx: IBlockchainTransaction,
