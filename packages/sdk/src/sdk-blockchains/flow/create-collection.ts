@@ -29,19 +29,13 @@ export class FlowCreateCollection {
 				name,
 				symbol,
 				royalties,
-				description,
-				url,
-				icon,
-				supply,
+				contractURI,
 			} = request.asset.arguments
 			const tx = await this.sdk.collection.createCollection({
 				name,
 				symbol,
 				royalties: prepareFlowRoyalties(royalties),
-				description,
-				url,
-				icon,
-				supply,
+				url: contractURI,
 			})
 			return {
 				tx: new BlockchainFlowTransaction(tx, this.network),

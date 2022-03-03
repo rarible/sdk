@@ -47,10 +47,9 @@ export type FlowCreateCollectionAsset = {
 		name: string
 		symbol: string
 		royalties: Royalty[]
-		icon?: string
-		description?: string
-		url?: string
-		supply?: number
+		baseURI: string
+		contractURI: string
+		isUserToken: true
 	}
 }
 
