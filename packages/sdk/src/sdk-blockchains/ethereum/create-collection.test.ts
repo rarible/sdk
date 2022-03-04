@@ -12,7 +12,7 @@ describe("create collection", () => {
 	const sdk1 = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	test("create erc-721 collection legacy", async () => {
-		await sdk1.nft.deploy({
+		await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",

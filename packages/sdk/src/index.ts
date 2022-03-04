@@ -109,6 +109,7 @@ function filterWallet<T extends Blockchain>(
 	blockchain: T
 ): Maybe<WalletByBlockchain[T]> {
 	if (wallet?.blockchain === blockchain) {
+		console.log("filterWallet", wallet, blockchain)
 		return wallet as WalletByBlockchain[T]
 	}
 	return undefined

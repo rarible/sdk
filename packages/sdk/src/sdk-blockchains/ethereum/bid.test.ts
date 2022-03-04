@@ -1,6 +1,11 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { awaitAll, deployTestErc1155, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import {
+	awaitAll,
+	deployTestErc1155,
+	deployTestErc20,
+	deployTestErc721,
+} from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toContractAddress, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"

@@ -15,10 +15,7 @@ import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type {
-	AssetType as EthereumAssetType,
-	Part,
-} from "@rarible/ethereum-api-client"
+import type { AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CurrencyType, RequestCurrency } from "../../../common/domain"
