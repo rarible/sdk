@@ -19,6 +19,7 @@ import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
+import { createSolanaSdk } from "./sdk-blockchains/solana"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -51,6 +52,13 @@ export function createRaribleSdk(
 			blockchainConfig.polygonNetwork,
 			config?.apiClientParams,
 			config?.logs ?? LogsLevel.TRACE
+		),
+		createSolanaSdk(
+			filterWallet(wallet, Blockchain.SOLANA),
+			apis,
+			"devnet",
+			/*config?.apiClientParams,
+			config?.logs ?? LogsLevel.TRACE*/
 		),
 	)
 
@@ -117,7 +125,7 @@ function filterWallet<T extends Blockchain>(
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		const collectionId = toContractAddress(item.contract)
+		const collectionId = toContractAddress(item.contract as any) //todo remove then fixed
 		const response = await sell({ collectionId })
 		return {
 			...response,
@@ -166,7 +174,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 
 export function getCollectionId(req: HasCollectionId | HasCollection): ContractAddress {
 	if ("collection" in req) {
-		return req.collection.id
+		return req.collection.id  as any //todo remove then fixed
 	}
 	return req.collectionId
 }

@@ -81,7 +81,10 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "id": {
-                    "$ref": "#/definitions/ContractAddress"
+                    "$ref": "#/definitions/CollectionId"
+                },
+                "parent": {
+                    "$ref": "#/definitions/CollectionId"
                 },
                 "blockchain": {
                     "$ref": "#/definitions/Blockchain"
@@ -120,7 +123,7 @@ export const SCHEMA = {
             ],
             "additionalProperties": false
         },
-        "ContractAddress": {
+        "CollectionId": {
             "type": "string"
         },
         "Blockchain": {
@@ -129,7 +132,8 @@ export const SCHEMA = {
                 "ETHEREUM",
                 "POLYGON",
                 "FLOW",
-                "TEZOS"
+                "TEZOS",
+                "SOLANA"
             ]
         },
         "CollectionType": {
@@ -156,6 +160,9 @@ export const SCHEMA = {
                 "SECONDARY_SALE_FEES",
                 "MINT_AND_TRANSFER"
             ]
+        },
+        "ContractAddress": {
+            "type": "string"
         },
         "HasCollection": {
             "type": "object",

@@ -3,6 +3,7 @@ import type { Fcl } from "@rarible/fcl-types"
 import { Blockchain } from "@rarible/api-client"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import { sign } from "@rarible/tezos-sdk"
+import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
@@ -85,12 +86,8 @@ export class TezosWallet implements AbstractWallet {
 	}
 }
 
-// workaround before solana sdk deployd
-const BlockchainSOLANA = Blockchain.FLOW
-type SolanaWalletProvider = any
-
 export class SolanaWallet implements AbstractWallet {
-	readonly blockchain = BlockchainSOLANA
+	readonly blockchain = Blockchain.SOLANA
 
 	constructor(public readonly provider: SolanaWalletProvider) {
 	}
@@ -100,7 +97,7 @@ export class SolanaWallet implements AbstractWallet {
 		const res = await this.provider.signMessage(data)
 		return {
 			signature: new TextDecoder().decode(res.signature),
-			publicKey: this.provider.publicKey.toString(),
+			publicKey: this.provider.publicKey!.toString(), //todo remove '!'
 		}
 	}
 }
@@ -109,11 +106,13 @@ export type BlockchainWallet =
 	EthereumWallet<Blockchain.ETHEREUM> |
 	EthereumWallet<Blockchain.POLYGON> |
 	FlowWallet |
-	TezosWallet
+	TezosWallet |
+	SolanaWallet
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
 	"ETHEREUM": EthereumWallet<Blockchain.ETHEREUM>,
 	"POLYGON": EthereumWallet<Blockchain.POLYGON>,
 	"TEZOS": TezosWallet
+	"SOLANA": SolanaWallet
 }

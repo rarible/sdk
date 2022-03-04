@@ -132,7 +132,7 @@ export async function getCollectionData(
 }
 
 export function getContractFromRequest(request: HasCollection | HasCollectionId): ContractAddress {
-	if ("collection" in request) return request.collection.id
+	if ("collection" in request) return request.collection.id as any //todo remove then fixed
 	if ("collectionId" in request) return request.collectionId
 	throw new Error("Wrong request: collection or collectionId has not been found")
 }

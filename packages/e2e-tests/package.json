@@ -9,7 +9,7 @@
     "e2e-test": "jest --runInBand"
   },
   "dependencies": {
-    "@rarible/api-client": "~0.0.11",
+    "@rarible/api-client": "~0.0.11-sol2",
     "@rarible/ethereum-sdk-test-common": "^0.12.47",
     "@rarible/types": "~0.8.0"
   },
