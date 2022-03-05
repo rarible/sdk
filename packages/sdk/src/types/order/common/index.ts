@@ -45,6 +45,10 @@ type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "approve"
 	 * Whether the underlying exchange contract supports specifying payouts
 	 */
 	payoutsSupport: PayoutsSupport
+	/**
+   * Whether the expiration date
+   */
+	supportsExpirationDate: boolean
 }
 
 export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequest> {
@@ -80,6 +84,10 @@ export type OrderRequest = {
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
 	payouts?: UnionPart[]
+	/**
+	 * Order expiration date
+	 */
+	expirationDate?: Date
 }
 
 export type OrderInternalRequest = OrderRequest & {
