@@ -70,6 +70,7 @@ export class FlowBid {
 			maxAmount: toBigNumber("1"),
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,
+			supportsExpirationDate: false,
 			submit: bidAction,
 		}
 	}

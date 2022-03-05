@@ -61,6 +61,7 @@ export class FlowSell {
 			baseFee: getFlowBaseFee(this.sdk),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			supportsExpirationDate: false,
 			submit: sellAction,
 		}
 	}

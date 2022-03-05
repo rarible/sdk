@@ -205,6 +205,7 @@ export class TezosBid {
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			getConvertableValue: this.getConvertableValue,
+			supportsExpirationDate: false,
 			submit,
 		}
 	}

@@ -314,6 +314,7 @@ describe("bid", () => {
 				"@type": "ERC20",
 				contract: erc20Contract,
 			},
+			expirationDate: new Date(Date.now() + 20000),
 		})
 
 		const acceptBidResponse = await sdk1.order.acceptBid({
@@ -325,6 +326,56 @@ describe("bid", () => {
 			itemId: toItemId(`${erc721Contract}:${tokenId}`),
 		})
 		await fillBidResult.wait()
+	})
+
+	test("bid for collection with outdated expiration date", async () => {
+		const ownerCollectionAddress = await ethereum1.getFrom()
+		const bidderAddress = await ethereum2.getFrom()
+
+		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+      	from: ownerCollectionAddress,
+      	gas: 500000,
+		})
+		const tokenId = "6"
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
+
+		await it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "1").send({
+			from: ownerCollectionAddress,
+			gas: 500000,
+		})
+		await awaitItem(sdk1, itemId)
+
+		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
+		const bidResponse = await sdk2.order.bid({
+			collectionId: erc721Contract,
+		})
+
+		const erc20Contract = convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM)
+		const bidOrderId = await bidResponse.submit({
+			amount: 1,
+			price: "0.00000000000000001",
+			currency: {
+				"@type": "ERC20",
+				contract: erc20Contract,
+			},
+			expirationDate: new Date(),
+		})
+
+		const acceptBidResponse = await sdk1.order.acceptBid({
+			orderId: bidOrderId,
+		})
+		let errorMessage
+		try {
+			const fillBidResult = await acceptBidResponse.submit({
+				amount: 1,
+				infiniteApproval: true,
+				itemId: toItemId(`${erc721Contract}:${tokenId}`),
+			})
+			await fillBidResult.wait()
+		} catch (e: any) {
+			errorMessage = e.message
+		}
+		expect(errorMessage).toEqual("The execution failed due to an exception.\nReverted")
 	})
 
 	test.skip("bid for collection and accept bid on lazy item", async () => {
