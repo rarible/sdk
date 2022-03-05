@@ -7,7 +7,7 @@ import { get_balance, unwrap, wrap } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import type { Blockchain } from "@rarible/api-client"
+import type { ConvertRequest } from "../../types/balances"
 import type { MaybeProvider } from "./common"
 import { getRequiredProvider, getTezosAddress, getTezosAssetType } from "./common"
 
@@ -37,13 +37,13 @@ export class TezosBalance {
 		)
 	}
 
-	async convert(blockchain: Blockchain, isWrap: boolean, value: BigNumberValue): Promise<IBlockchainTransaction> {
+	async convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		const provider = getRequiredProvider(this.provider)
-		if (isWrap) {
-			const tx = await wrap(provider, new BigNumber(value))
+		if (request.isWrap) {
+			const tx = await wrap(provider, new BigNumber(request.value))
 			return new BlockchainTezosTransaction(tx, this.network)
 		} else {
-			const tx = await unwrap(provider, new BigNumber(value))
+			const tx = await unwrap(provider, new BigNumber(request.value))
 			return new BlockchainTezosTransaction(tx, this.network)
 		}
 	}

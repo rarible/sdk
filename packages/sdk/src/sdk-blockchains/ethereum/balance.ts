@@ -8,7 +8,7 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type {
 	AssetType as EthereumAssetType,
 } from "@rarible/ethereum-api-client"
-import type { Blockchain } from "@rarible/api-client"
+import type { ConvertRequest } from "../../types/balances"
 import { convertToEthereumAddress, convertToEthereumAssetType } from "./common"
 
 export class EthereumBalance {
@@ -29,13 +29,12 @@ export class EthereumBalance {
 		return this.sdk.balances.getBalance(ethAddress, convertedAssetType)
 	}
 
-	async convert(blockchain: Blockchain, isWrap: boolean, value: BigNumberValue): Promise<IBlockchainTransaction> {
+	async convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		const wethContract = this.sdk.balances.getWethContractAddress()
-		console.log("weth", wethContract)
 		let from: EthereumAssetType
 		let to: EthereumAssetType
 
-		if (isWrap) {
+		if (request.isWrap) {
 			from = { assetClass: "ETH" }
 			to = {
 				assetClass: "ERC20",
@@ -48,7 +47,7 @@ export class EthereumBalance {
 			}
 			to = { assetClass: "ETH" }
 		}
-		const tx = await this.sdk.balances.convert(from, to, value)
+		const tx = await this.sdk.balances.convert(from, to, request.value)
 		return new BlockchainEthereumTransaction(tx, this.network)
 	}
 }

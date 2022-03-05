@@ -55,7 +55,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("0.03")
 	})
 
-	test("convert from XTZ to wTez", async () => {
+	test.skip("convert from XTZ to wTez", async () => {
 		const senderRaw = await sellerWallet.provider.address()
 		const wethE2eAssetType: AssetType = {
 			"@type": "TEZOS_FT",
@@ -63,11 +63,11 @@ describe("get balance", () => {
 		}
 		const sender = convertTezosToUnionAddress(senderRaw)
 		const initWethBalance = await sellerSdk.balances.getBalance(sender, wethE2eAssetType)
-		const convertTx = await sellerSdk.balances.convert(
-			Blockchain.TEZOS,
-			true,
-			"0.000035"
-		)
+		const convertTx = await sellerSdk.balances.convert({
+			blockchain: Blockchain.TEZOS,
+			isWrap: true,
+			value: "0.000035",
+		})
 		await convertTx.wait()
 
 		await delay(2000)
@@ -85,20 +85,20 @@ describe("get balance", () => {
 			contract: convertTezosToContractAddress("KT1RggVJ1mMaLJezpdsJ6YtBfL7sBfcaGD1H"),
 		}
 		const sender = convertTezosToUnionAddress(senderRaw)
-		const prepareConvertTx = await sellerSdk.balances.convert(
-			Blockchain.TEZOS,
-			true,
-			"0.000071"
-		)
+		const prepareConvertTx = await sellerSdk.balances.convert({
+			blockchain: Blockchain.TEZOS,
+			isWrap: true,
+			value: "0.000071",
+		})
 		await prepareConvertTx.wait()
 
 		await delay(2000)
 		const initWethBalance = await sellerSdk.balances.getBalance(sender, wethE2eAssetType)
-		const convertTx = await sellerSdk.balances.convert(
-			Blockchain.TEZOS,
-			false,
-			"0.000039"
-		)
+		const convertTx = await sellerSdk.balances.convert({
+			blockchain: Blockchain.TEZOS,
+			isWrap: false,
+			value: "0.000039",
+		})
 		await convertTx.wait()
 
 		await delay(2000)

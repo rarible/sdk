@@ -76,11 +76,11 @@ describe("get balance", () => {
 		}
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
-		const convertTx = await sdk.balances.convert(
-			Blockchain.ETHEREUM,
-			true,
-			"0.00000000000035"
-		)
+		const convertTx = await sdk.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: true,
+			value: "0.00000000000035",
+		})
 		await convertTx.wait()
 
 		const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
@@ -97,19 +97,19 @@ describe("get balance", () => {
 			contract: convertEthereumContractAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2", Blockchain.ETHEREUM),
 		}
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
-		const prepareConvertTx = await sdk.balances.convert(
-			Blockchain.ETHEREUM,
-			true,
-			"0.00000000000071"
-		)
+		const prepareConvertTx = await sdk.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: true,
+			value: "0.00000000000071",
+		})
 		await prepareConvertTx.wait()
 
 		const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
-		const convertTx = await sdk.balances.convert(
-			Blockchain.ETHEREUM,
-			false,
-			"0.00000000000039"
-		)
+		const convertTx = await sdk.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: false,
+			value: "0.00000000000039",
+		})
 		await convertTx.wait()
 
 		const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)

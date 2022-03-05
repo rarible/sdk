@@ -20,6 +20,7 @@ import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
+import type { ConvertRequest } from "../../types/balances"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -159,8 +160,8 @@ class UnionBalanceSdk implements IBalanceSdk {
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
 	}
-	convert(blockchain: Blockchain, isWrap: boolean, value: BigNumberValue): Promise<IBlockchainTransaction> {
-		return this.instances[blockchain].convert(blockchain, isWrap, value)
+	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
+		return this.instances[request.blockchain].convert(request)
 	}
 }
 

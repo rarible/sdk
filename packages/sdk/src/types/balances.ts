@@ -12,6 +12,10 @@ export type IGetBalance = (address: UnionAddress, assetType: AssetType) => Promi
  * @param isWrap Is wrap or unwrap operation
  * @param value amount of funds to convert
  */
-export type IConvert = (
-	blockchain: Blockchain, isWrap: boolean, value: BigNumberValue
-) => Promise<IBlockchainTransaction>
+export type IConvert = (request: ConvertRequest) => Promise<IBlockchainTransaction>
+
+export type ConvertRequest = {
+	blockchain: Blockchain
+	isWrap: boolean
+	value: BigNumberValue
+}

@@ -235,7 +235,6 @@ describe("bid", () => {
 		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
 
-		console.log("wethBidderBalance", wethBidderBalance.toString())
 		if (wethBidderBalance.lt("0.000000000000001")) {
 			const tx = await ethSdk2.balances.convert(
 				{ assetClass: "ETH" },
@@ -365,8 +364,6 @@ describe("bid", () => {
 				contract: erc20Contract,
 			},
 		})
-
-		console.log("after bid")
 
 		const acceptBidResponse = await sdk1.order.acceptBid({
 			orderId: bidOrderId,
