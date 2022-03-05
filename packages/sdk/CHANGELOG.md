@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.45](https://github.com/rarible/sdk/compare/v0.8.44...v0.8.45) (2022-03-04)
+
+
+### Bug Fixes
+
+* polygon bid ([#155](https://github.com/rarible/sdk/issues/155)) ([1350930](https://github.com/rarible/sdk/commit/1350930f18b581401e033ad9db0db38eae317945))
+
+
+
+
+
 ## [0.8.44](https://github.com/rarible/sdk/compare/v0.8.43...v0.8.44) (2022-02-25)
 
 
