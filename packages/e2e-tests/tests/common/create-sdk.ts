@@ -4,9 +4,10 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
 import { createRaribleSdk } from "@rarible/sdk"
 import { LogsLevel } from "@rarible/sdk/build/domain"
+import { testsConfig } from "./config"
 
 export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRaribleSdk {
-	let env: RaribleSdkEnvironment = "e2e"
+	let env: RaribleSdkEnvironment = testsConfig.env as RaribleSdkEnvironment
 
 	switch (blockchain) {
 		case Blockchain.TEZOS:

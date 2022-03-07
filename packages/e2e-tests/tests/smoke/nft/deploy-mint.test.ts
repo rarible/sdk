@@ -7,7 +7,7 @@ import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { getCollection } from "../../common/helpers"
-import { deployCollection } from "../../common/atoms-tests/deploy-collection"
+import { createCollection } from "../../common/atoms-tests/create-collection"
 import { testsConfig } from "../../common/config"
 
 function suites(): {
@@ -270,7 +270,7 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 	test(suite.description, async () => {
 		const walletAddress = await getWalletAddressFull(wallet)
 		// Deploy new collection
-		const { address } = await deployCollection(sdk, wallet, suite.deployRequest)
+		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 
 		// Get collection
 		const collection = await getCollection(sdk, address)

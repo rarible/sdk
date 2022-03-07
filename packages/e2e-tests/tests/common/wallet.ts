@@ -11,7 +11,11 @@ import { toUnionAddress } from "@rarible/types"
 import { testsConfig } from "./config"
 
 export function getEthereumWallet(pk?: string): EthereumWallet<EVMBlockchain> {
-	const { web3, wallet } = initProvider(pk)
+	const config = {
+		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
+		rpcUl: testsConfig.variables.ETHEREUM_RPC_URL,
+	}
+	const { web3, wallet } = initProvider(pk, config)
 	const ethereum = new Web3Ethereum({
 		web3: web3,
 		from: wallet.getAddressString(),

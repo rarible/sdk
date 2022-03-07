@@ -186,32 +186,32 @@ function suites(): {
 				}
 			},
 		},
-		// {
-		// 	blockchain: Blockchain.TEZOS,
-		// 	description: "NFT <=> XTZ",
-		// 	wallets: { seller: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
-		// 	collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_NFT,
-		// 	mintRequest: (walletAddress: UnionAddress): MintRequest => {
-		// 		return {
-		// 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-		// 			creators: [{
-		// 				account: walletAddress,
-		// 				value: 10000,
-		// 			}],
-		// 			royalties: [],
-		// 			lazyMint: false,
-		// 			supply: 1,
-		// 		}
-		// 	},
-		// 	currency: "XTZ",
-		// 	sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
-		// 		return {
-		// 			amount: 1,
-		// 			price: "0.02",
-		// 			currency: currency,
-		// 		}
-		// 	}
-		// },
+		{
+			blockchain: Blockchain.TEZOS,
+			description: "NFT <=> XTZ",
+			wallets: { seller: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
+			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_NFT,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "XTZ",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.02",
+					currency: currency,
+				}
+			},
+		},
 		{
 			blockchain: Blockchain.TEZOS,
 			description: "NFT <=> XTZ",
