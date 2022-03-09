@@ -314,7 +314,7 @@ describe("bid", () => {
 				"@type": "ERC20",
 				contract: erc20Contract,
 			},
-			expirationDate: new Date(Date.now() + 20000),
+			expirationDate: new Date(Date.now() + 60000),
 		})
 
 		const acceptBidResponse = await sdk1.order.acceptBid({
@@ -364,18 +364,13 @@ describe("bid", () => {
 		const acceptBidResponse = await sdk1.order.acceptBid({
 			orderId: bidOrderId,
 		})
-		let errorMessage
-		try {
-			const fillBidResult = await acceptBidResponse.submit({
+		await expect(
+			acceptBidResponse.submit({
 				amount: 1,
 				infiniteApproval: true,
 				itemId: toItemId(`${erc721Contract}:${tokenId}`),
 			})
-			await fillBidResult.wait()
-		} catch (e: any) {
-			errorMessage = e.message
-		}
-		expect(errorMessage).toEqual("The execution failed due to an exception.\nReverted")
+		).rejects.toThrow(Error)
 	})
 
 	test.skip("bid for collection and accept bid on lazy item", async () => {
