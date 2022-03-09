@@ -39,6 +39,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
 			},
+			expirationDate: new Date(Date.now() + 10000),
 		})
 
 		const nextStock = "1"
@@ -93,4 +94,43 @@ describe("sale", () => {
 		const order2 = await awaitStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
+
+
+	test("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
+		const wallet1Address = wallet1.getAddressString()
+		const wallet2Address = wallet2.getAddressString()
+		const tokenId = 3
+		await conf.testErc721.methods.mint(wallet1Address, tokenId, "").send({ from: wallet1Address, gas: 200000 })
+		await conf.testErc20.methods.mint(wallet2Address, 100).send({ from: wallet1Address, gas: 200000 })
+		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
+
+		await awaitItem(sdk1, itemId)
+
+		const sellAction = await sdk1.order.sell({ itemId })
+		const orderId = await sellAction.submit({
+			amount: 1,
+			price: "0.000000000000000002",
+			currency: {
+				"@type": "ERC20",
+				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+			},
+			expirationDate: new Date(),
+		})
+
+		const nextStock = "1"
+		const order = await awaitStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const fillAction = await sdk2.order.buy({ orderId })
+
+		let errorMessage
+		try {
+			const tx = await fillAction.submit({ amount: 1 })
+			await tx.wait()
+		} catch (e: any) {
+			errorMessage = e.message
+		}
+		expect(errorMessage).toEqual("The execution failed due to an exception.\nReverted")
+	})
+
 })
