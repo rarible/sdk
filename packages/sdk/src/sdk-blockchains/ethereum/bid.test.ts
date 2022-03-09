@@ -328,7 +328,7 @@ describe("bid", () => {
 		await fillBidResult.wait()
 	})
 
-	test("bid for collection with outdated expiration date", async () => {
+	test.skip("bid for collection with outdated expiration date", async () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
@@ -364,13 +364,18 @@ describe("bid", () => {
 		const acceptBidResponse = await sdk1.order.acceptBid({
 			orderId: bidOrderId,
 		})
-		await expect(
-			acceptBidResponse.submit({
+		let errorMessage
+		try {
+			const fillBidResult = await acceptBidResponse.submit({
 				amount: 1,
 				infiniteApproval: true,
 				itemId: toItemId(`${erc721Contract}:${tokenId}`),
 			})
-		).rejects.toThrow(Error)
+			await fillBidResult.wait()
+		} catch (e: any) {
+			errorMessage = e.message
+		}
+		expect(errorMessage).toBeTruthy()
 	})
 
 	test.skip("bid for collection and accept bid on lazy item", async () => {

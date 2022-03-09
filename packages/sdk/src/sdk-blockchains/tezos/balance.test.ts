@@ -78,7 +78,7 @@ describe("get balance", () => {
 		)
 	})
 
-	test("convert from wTez to XTZ", async () => {
+	test.skip("convert from wTez to XTZ", async () => {
 		const senderRaw = await sellerWallet.provider.address()
 		const wethE2eAssetType: AssetType = {
 			"@type": "TEZOS_FT",
