@@ -9,6 +9,7 @@ import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { LogsLevel } from "../../domain"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { awaitItem } from "./test/await-item"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider()
@@ -23,10 +24,18 @@ describe("mint", () => {
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
+		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+			collection: contract,
 		})
-		const action = await sdk.nft.mint({ collection })
+		const tokenId = await sdk.nft.generateTokenId({
+			collection: contract,
+			minter: sender,
+		})
+		const action = await sdk.nft.mint({
+			collection,
+			tokenId: tokenId,
+		})
 
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -43,6 +52,9 @@ describe("mint", () => {
 			const transaction = await result.transaction.wait()
 			expect(transaction.blockchain).toEqual("ETHEREUM")
 			expect(transaction.hash).toBeTruthy()
+
+			const item = await awaitItem(sdk, result.itemId)
+			expect(item.tokenId).toEqual(tokenId?.tokenId)
 		} else {
 			throw new Error("Must be on chain")
 		}
