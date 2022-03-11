@@ -1,0 +1,1 @@
+export type SolanaNetwork = "mainnet-beta" | "testet" | "devnet"
