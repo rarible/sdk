@@ -11,10 +11,10 @@ import { MintForm } from "./mint-form"
 import { MintComment } from "./comments/mint-comment"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
-function validateConditions(blockchain: Blockchain | undefined): boolean {
+function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 	return !!blockchain
 }
 
@@ -25,9 +25,11 @@ export function MintPage() {
 	return (
 		<Page header="Mint Token">
 			{
-				!validateConditions(blockchain) && <CommentedBlock sx={{ my: 2 }}>
-                    <UnsupportedBlockchainWarning blockchain={blockchain}/>
-                </CommentedBlock>
+				!validateConditions(blockchain) && (
+					<CommentedBlock sx={{ my: 2 }}>
+						<UnsupportedBlockchainWarning blockchain={blockchain}/>
+					</CommentedBlock>
+				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<MintComment/>}>
 				<FormStepper
@@ -72,9 +74,9 @@ export function MintPage() {
 											</Box>
 											{
 												data.type === "on-chain" &&
-													<Box sx={{ my: 2 }}>
-														<TransactionInfo transaction={data.transaction}/>
-													</Box>
+                          <Box sx={{ my: 2 }}>
+                              <TransactionInfo transaction={data.transaction}/>
+                          </Box>
 											}
 										</>
 									}

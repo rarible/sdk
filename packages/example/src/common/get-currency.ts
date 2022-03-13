@@ -6,6 +6,8 @@ import {
 } from "@rarible/api-client"
 import { toContractAddress } from "@rarible/types"
 import { RequestCurrency } from "@rarible/sdk/build/common/domain"
+import { ConnectionState } from "@rarible/connector"
+import { IWalletAndAddress } from "../components/connector/wallet-connetion"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -29,7 +31,11 @@ const tezosNative: TezosXTZAssetType = {
 	tokenId:
 }*/
 
-export function getCurrency(blockchain: Blockchain | undefined, type: "NATIVE" | "FT"): RequestCurrency {
+export function getCurrency(connectionState: ConnectionState<IWalletAndAddress>, type: "NATIVE" | "FT"): RequestCurrency {
+	if (connectionState.status !== "connected") {
+		throw new Error("not connected")
+	}
+	const blockchain = connectionState.connection.blockchain
 	switch (blockchain) {
 		case Blockchain.ETHEREUM:
 			return type === "NATIVE" ? getEthNative(blockchain) : ethFt

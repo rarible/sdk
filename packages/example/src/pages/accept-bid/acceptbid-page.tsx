@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { Box } from "@mui/material"
-import { Blockchain } from "@rarible/api-client"
+import type { BlockchainGroup } from "@rarible/api-client"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
@@ -12,7 +12,7 @@ import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
-function validateConditions(blockchain: Blockchain | undefined): boolean {
+function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 	return !!blockchain
 }
 
@@ -23,9 +23,11 @@ export function AcceptBidPage() {
 	return (
 		<Page header="Accept Bid">
 			{
-				!validateConditions(blockchain) && <CommentedBlock sx={{ my: 2 }}>
-                    <UnsupportedBlockchainWarning blockchain={blockchain}/>
-                </CommentedBlock>
+				!validateConditions(blockchain) && (
+					<CommentedBlock sx={{ my: 2 }}>
+						<UnsupportedBlockchainWarning blockchain={blockchain}/>
+					</CommentedBlock>
+				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<AcceptBidComment/>}>
 				<FormStepper

@@ -33,7 +33,7 @@ export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 					onComplete(await prepare.submit({
 						price: toBigNumber(formData.price),
 						amount: parseInt(formData.amount),
-						currency: getCurrency(connection.sdk.wallet?.blockchain, "NATIVE")
+						currency: getCurrency(connection.state, "NATIVE")
 					}))
 				} catch (e) {
 					setError(e)

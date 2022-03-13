@@ -34,7 +34,7 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 					onComplete(await prepare.submit({
 						price: toBigNumber(formData.price),
 						amount: parseInt(formData.amount),
-						currency: getCurrency(connection.sdk.wallet?.blockchain, "FT")
+						currency: getCurrency(connection.state, "FT")
 					}))
 				} catch (e) {
 					setError(e)

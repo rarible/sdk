@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Box, MenuItem, Stack, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { Blockchain } from "@rarible/api-client"
+import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { CreateCollectionBlockchains, CreateCollectionRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
@@ -54,10 +54,9 @@ function getDeployRequest(data: Record<string, any>) {
 	}
 }
 
-function validateConditions(blockchain: Blockchain | undefined): boolean {
-	return blockchain === Blockchain.ETHEREUM ||
-		blockchain === Blockchain.POLYGON ||
-		blockchain === Blockchain.TEZOS
+function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
+	return blockchain === BlockchainGroup.ETHEREUM ||
+		blockchain === BlockchainGroup.TEZOS
 }
 
 export function DeployPage() {
@@ -70,9 +69,11 @@ export function DeployPage() {
 	return (
 		<Page header="Deploy Collection">
 			{
-				!validateConditions(blockchain) && <CommentedBlock sx={{ my: 2 }}>
-                    <UnsupportedBlockchainWarning blockchain={blockchain}/>
-                </CommentedBlock>
+				!validateConditions(blockchain) && (
+					<CommentedBlock sx={{ my: 2 }}>
+						<UnsupportedBlockchainWarning blockchain={blockchain}/>
+					</CommentedBlock>
+				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<CollectionDeployComment/>}>
 				<form onSubmit={handleSubmit(async (formData) => {

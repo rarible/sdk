@@ -10,10 +10,10 @@ import { BidPrepareForm } from "./bid-prepare-form"
 import { BidForm } from "./bid-form"
 import { BidComment } from "./comments/bid-comment"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
-function validateConditions(blockchain: Blockchain | undefined): boolean {
+function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 	return !!blockchain
 }
 
@@ -24,9 +24,11 @@ export function BidPage() {
 	return (
 		<Page header="Make Bid">
 			{
-				!validateConditions(blockchain) && <CommentedBlock sx={{ my: 2 }}>
-                    <UnsupportedBlockchainWarning blockchain={blockchain}/>
-                </CommentedBlock>
+				!validateConditions(blockchain) && (
+					<CommentedBlock sx={{ my: 2 }}>
+						<UnsupportedBlockchainWarning blockchain={blockchain}/>
+					</CommentedBlock>
+				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<BidComment/>}>
 				<FormStepper

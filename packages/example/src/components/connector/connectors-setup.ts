@@ -95,11 +95,9 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 
 function mapEthereumWallet<O>(provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
 	return provider.map(state => ({
-		wallet: new EthereumWallet(
-			new Web3Ethereum({ web3: new Web3(state.provider), from: state.address }),
-			getEvmBlockchain(state.chainId)
-		),
-		address: state.address
+		wallet: new EthereumWallet(new Web3Ethereum({ web3: new Web3(state.provider), from: state.address })),
+		address: state.address,
+		blockchain: getEvmBlockchain(state.chainId)
 	}))
 }
 
@@ -117,6 +115,7 @@ function mapFlowWallet<O>(provider: AbstractConnectionProvider<O, FlowProviderCo
 	return provider.map(state => ({
 		wallet: new FlowWallet(state.fcl),
 		address: state.address,
+		blockchain: Blockchain.FLOW,
 	}))
 }
 
@@ -130,6 +129,7 @@ function mapTezosWallet<O>(provider: AbstractConnectionProvider<O, TezosProvider
 		return {
 			wallet: new TezosWallet(provider),
 			address: state.address,
+			blockchain: Blockchain.TEZOS
 		}
 	})
 }
@@ -207,8 +207,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(beacon)
 		.add(fcl)
 		.add(walletConnect)
-		// .add(portis)
-		// .add(fortmatic)
+	// .add(portis)
+	// .add(fortmatic)
 
 	if (torus) {
 		return connector.add(torus)

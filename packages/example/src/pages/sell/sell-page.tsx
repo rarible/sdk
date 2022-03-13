@@ -10,10 +10,10 @@ import { SellPrepareForm } from "./sell-prepare-form"
 import { SellForm } from "./sell-form"
 import { SellComment } from "./comments/sell-comment"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
-function validateConditions(blockchain: Blockchain | undefined): boolean {
+function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 	return !!blockchain
 }
 
@@ -24,9 +24,11 @@ export function SellPage() {
 	return (
 		<Page header="Sell Token">
 			{
-				!validateConditions(blockchain) && <CommentedBlock sx={{ my: 2 }}>
-                    <UnsupportedBlockchainWarning blockchain={blockchain}/>
-                </CommentedBlock>
+				!validateConditions(blockchain) && (
+					<CommentedBlock sx={{ my: 2 }}>
+						<UnsupportedBlockchainWarning blockchain={blockchain}/>
+					</CommentedBlock>
+				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<SellComment/>}>
 				<FormStepper
