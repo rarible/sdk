@@ -13,7 +13,7 @@ import { awaitDeletedItem } from "./test/await-deleted-item"
 describe("burn", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum, Blockchain.ETHEREUM)
+	const wallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(wallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const contractErc721 = toAddress("0x87ECcc03BaBC550c919Ad61187Ab597E9E7f7C21")

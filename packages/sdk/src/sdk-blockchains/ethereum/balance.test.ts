@@ -20,7 +20,7 @@ describe("get balance", () => {
 		web3: web31,
 		from: wallet1.getAddressString(),
 	})
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum, Blockchain.ETHEREUM), "e2e", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "e2e", { logs: LogsLevel.DISABLED })
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),

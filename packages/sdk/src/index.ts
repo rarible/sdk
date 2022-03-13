@@ -1,8 +1,9 @@
-import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
+import { BlockchainGroup } from "@rarible/api-client"
+import type { WalletByBlockchain } from "@rarible/sdk-wallet/src"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -29,24 +30,24 @@ export function createRaribleSdk(
 	const apis = createApisSdk(env, config?.apiClientParams)
 	const instance = createUnionSdk(
 		createEthereumSdk(
-			filterWallet(wallet, Blockchain.ETHEREUM),
+			filterWallet(wallet, BlockchainGroup.ETHEREUM),
 			apis,
 			blockchainConfig.ethereumEnv,
 			config?.apiClientParams,
 			config?.logs ?? LogsLevel.TRACE
 		),
 		createFlowSdk(
-			filterWallet(wallet, Blockchain.FLOW),
+			filterWallet(wallet, BlockchainGroup.FLOW),
 			apis,
 			blockchainConfig.flowEnv
 		),
 		createTezosSdk(
-			filterWallet(wallet, Blockchain.TEZOS),
+			filterWallet(wallet, BlockchainGroup.TEZOS),
 			apis,
 			blockchainConfig.tezosNetwork
 		),
 		createEthereumSdk(
-			filterWallet(wallet, Blockchain.POLYGON),
+			filterWallet(wallet, BlockchainGroup.ETHEREUM),
 			apis,
 			blockchainConfig.polygonNetwork,
 			config?.apiClientParams,
@@ -104,7 +105,7 @@ function setupMiddleware(
 	}
 }
 
-function filterWallet<T extends Blockchain>(
+function filterWallet<T extends BlockchainGroup>(
 	wallet: Maybe<BlockchainWallet>,
 	blockchain: T
 ): Maybe<WalletByBlockchain[T]> {
