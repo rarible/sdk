@@ -143,30 +143,6 @@ function suites(): {
 		},
 		{
 			blockchain: Blockchain.TEZOS,
-			description: "NFT_lazy <=> XTZ",
-			wallets: { creator: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
-			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_NFT,
-			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
-				return {
-					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: true,
-					supply: 1,
-					price: "0.02",
-					currency: {
-						"@type": "XTZ",
-					},
-				}
-			},
-			buyAmount: 1,
-			creatorBalance: 0,
-		},
-		{
-			blockchain: Blockchain.TEZOS,
 			description: "MT <=> XTZ",
 			wallets: { creator: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
 			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
@@ -179,30 +155,6 @@ function suites(): {
 					}],
 					royalties: [],
 					lazyMint: false,
-					supply: 12,
-					price: "0.02",
-					currency: {
-						"@type": "XTZ",
-					},
-				}
-			},
-			buyAmount: 5,
-			creatorBalance: 0,
-		},
-		{
-			blockchain: Blockchain.TEZOS,
-			description: "MT_lazy <=> XTZ",
-			wallets: { creator: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
-			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
-			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
-				return {
-					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: true,
 					supply: 12,
 					price: "0.02",
 					currency: {

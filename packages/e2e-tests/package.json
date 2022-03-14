@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "test": "echo run e2e-test to run e2e-tests",
-    "e2e-test": "jest --runInBand",
+    "e2e-tests": "jest --runInBand",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "verify": "tsc --noEmit"
   },

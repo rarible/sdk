@@ -184,37 +184,6 @@ function suites(): {
 		},
 		{
 			blockchain: Blockchain.TEZOS,
-			description: "NFT_lazy",
-			wallets: { creator: getTezosTestWallet(0), recipient: getTezosTestWallet(1) },
-			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_NFT,
-			mintRequest: (walletAddress: UnionAddress): MintRequest => {
-				return {
-					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: true,
-					supply: 1,
-				}
-			},
-			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
-				return {
-					to: walletAddress,
-					amount: 1,
-				}
-			},
-			creatorBalanceAfterTransfer: "0",
-			recipientBalanceAfterTransfer: "1",
-			burnRequest: {
-				amount: 1,
-				creators: [],
-			},
-			totalBalanceAfterBurn: 0,
-		},
-		{
-			blockchain: Blockchain.TEZOS,
 			description: "MT",
 			wallets: { creator: getTezosTestWallet(0), recipient: getTezosTestWallet(1) },
 			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
@@ -227,37 +196,6 @@ function suites(): {
 					}],
 					royalties: [],
 					lazyMint: false,
-					supply: 20,
-				}
-			},
-			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
-				return {
-					to: walletAddress,
-					amount: 9,
-				}
-			},
-			creatorBalanceAfterTransfer: "11",
-			recipientBalanceAfterTransfer: "9",
-			burnRequest: {
-				amount: 4,
-				creators: [],
-			},
-			totalBalanceAfterBurn: 16,
-		},
-		{
-			blockchain: Blockchain.TEZOS,
-			description: "MT_lazy",
-			wallets: { creator: getTezosTestWallet(0), recipient: getTezosTestWallet(1) },
-			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
-			mintRequest: (walletAddress: UnionAddress): MintRequest => {
-				return {
-					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: true,
 					supply: 20,
 				}
 			},
