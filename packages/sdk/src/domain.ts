@@ -9,7 +9,7 @@ import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
 import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
-import type { IGetBalance } from "./types/balances"
+import type { IConvert, IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { ICreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
@@ -82,6 +82,7 @@ export interface IOrderSdk {
 
 export interface IBalanceSdk {
 	getBalance: IGetBalance
+	convert: IConvert
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {

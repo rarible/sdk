@@ -214,7 +214,7 @@ function suites(): {
 		},
 		{
 			blockchain: Blockchain.TEZOS,
-			description: "NFT <=> XTZ",
+			description: "MT <=> XTZ",
 			wallets: { seller: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
 			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {

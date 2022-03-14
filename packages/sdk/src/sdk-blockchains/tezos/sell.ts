@@ -106,6 +106,7 @@ export class TezosSell {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
+			supportsExpirationDate: false,
 			submit,
 		}
 	}

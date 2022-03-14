@@ -3,6 +3,8 @@ import type { Address, ContractAddress } from "@rarible/types"
 import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
+import type { AssetType } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import BigNumber from "bignumber.js"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -14,17 +16,19 @@ import { Action } from "@rarible/action"
 import { addFee } from "@rarible/protocol-ethereum-sdk/build/order/add-fee"
 import { getDecimals } from "@rarible/protocol-ethereum-sdk/build/common/get-decimals"
 import { getPrice } from "@rarible/protocol-ethereum-sdk/build/common/get-price"
-import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import type { GetConvertableValueResult, PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
-import type { GetConvertableValueRequest } from "../../types/order/bid/domain"
-import { getCommonConvertableValue } from "../../common/get-convertable-value"
-import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
-import * as common from "./common"
 import type {
-	EVMBlockchain } from "./common"
+	GetConvertableValueRequest,
+	GetConvertableValueResult,
+	PrepareBidRequest,
+	PrepareBidResponse,
+	PrepareBidUpdateResponse,
+} from "../../types/order/bid/domain"
+import { getCommonConvertableValue } from "../../common/get-convertable-value"
+import type { EVMBlockchain } from "./common"
+import * as common from "./common"
 import {
 	convertEthereumContractAddress,
 	convertEthereumToUnionAddress,
@@ -171,6 +175,9 @@ export class EthereumBid {
 
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
+				const expirationDate = request.expirationDate instanceof Date
+					? Math.round(request.expirationDate.getTime() / 1000)
+					: undefined
 				return {
 					makeAssetType: common.getEthTakeAssetType(request.currency),
 					takeAssetType: takeAssetType,
@@ -178,6 +185,7 @@ export class EthereumBid {
 					priceDecimal: request.price,
 					payouts: common.toEthereumParts(request.payouts),
 					originFees: common.toEthereumParts(request.originFees),
+					end: expirationDate,
 				}
 			})
 			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
@@ -208,13 +216,14 @@ export class EthereumBid {
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			getConvertableValue: this.getConvertableValue,
+			supportsExpirationDate: true,
 			submit,
 		}
 	}
 
 	getConvertMap() {
 		return {
-			[convertEthereumToUnionAddress(this.sdk.balances.getWethContractAddress(), this.blockchain)]: "ETH",
+			[convertEthereumContractAddress(this.sdk.balances.getWethContractAddress(), this.blockchain)]: "ETH",
 		}
 	}
 
@@ -251,9 +260,9 @@ export class EthereumBid {
 
 		return getCommonConvertableValue(
 			this.balanceService.getBalance,
-			convertEthereumToUnionAddress(walletAddress, this.blockchain),
+			convertEthereumToUnionAddress(walletAddress, Blockchain.ETHEREUM),
 			new BigNumber(finishValue),
-			{ "@type": "ETH" },
+			{ "@type": "ETH", blockchain: this.blockchain },
 			assetType,
 		)
 	}

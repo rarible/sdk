@@ -12,7 +12,7 @@ export class EthereumSell {
 
 	constructor(
 		private sdk: RaribleSdk,
-		network: EthereumNetwork,
+		private network: EthereumNetwork,
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.sell = this.sell.bind(this)
@@ -32,6 +32,10 @@ export class EthereumSell {
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
 				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
 				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
+				const expirationDate = sellFormRequest.expirationDate instanceof Date
+					? Math.round(sellFormRequest.expirationDate.getTime() / 1000)
+					: undefined
+
 				return {
 					makeAssetType: {
 						tokenId: item.tokenId,
@@ -42,6 +46,7 @@ export class EthereumSell {
 					priceDecimal: sellFormRequest.price,
 					payouts: common.toEthereumParts(sellFormRequest.payouts),
 					originFees: common.toEthereumParts(sellFormRequest.originFees),
+					end: expirationDate,
 				}
 			})
 			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
@@ -52,6 +57,7 @@ export class EthereumSell {
 			multiple: collection.type === "ERC1155",
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
+			supportsExpirationDate: true,
 			submit: sellAction,
 		}
 	}
