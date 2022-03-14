@@ -3,6 +3,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
 import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -19,6 +20,7 @@ import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/
 import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
+import type { ConvertRequest } from "../../types/balances"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -157,10 +159,14 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 class UnionBalanceSdk implements IBalanceSdk {
 	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
+		this.convert = this.convert.bind(this)
 	}
 
 	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
+	}
+	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
+		return this.instances[request.blockchain].convert(request)
 	}
 }
 

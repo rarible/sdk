@@ -347,6 +347,44 @@ const orderId = await submit({
 })
 ```
 
+### Convert to/from wrapped fungible tokens (ex. eth<->weth, xtz<->wTez)
+```ts
+import { Blockchain } from "@rarible/api-client"
+//Convert 0.1 ETH to 0.1 wETH (Wrapped Ether)
+const tx = await sdk.balances.convert(Blockchain.ETHEREUM, true, "0.1")
+await tx.wait()
+
+//Or unwrap 0.1 wETH to 0.1 ETH
+const tx = await sdk.balances.convert(Blockchain.ETHEREUM, false, "0.1")
+await tx.wait()
+```
+
+### Get balance of fungible tokens
+
+```ts
+import { toContractAddress, toUnionAddress } from "@rarible/types";
+import { Blockchain } from "@rarible/api-client";
+
+const walletAddress = toUnionAddress("ETHEREUM:0x...")
+//Get balance of ethereum wallet
+const ethBalance = await sdk.balances.getBalance(walletAddress, {
+  "@type": "ETH"
+})
+
+//Get balance of polygon wallet
+const polygonBalance = await sdk.balances.getBalance(walletAddress, {
+  "@type": "ETH",
+  blockchain: Blockchain.POLYGON,
+})
+
+//Get wallet balance of erc20 contract
+const erc20Balance = await sdk.balances.getBalance(walletAddress, {
+  "@type": "ERC20",
+  contract: toContractAddress("ETHEREUM:0x...")
+})
+```
+"getBalance" method is not supports balance of NFT-tokens
+
 ### Note
 
 *This is a pre-release version. Backward compatibility is not fully supported before 1.0 release. Backward compatibility is only guaranteed in minor releases.*
