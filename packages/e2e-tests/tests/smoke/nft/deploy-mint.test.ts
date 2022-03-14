@@ -48,37 +48,37 @@ function suites(): {
 				}
 			},
 		},
-		// {
-		// 	blockchain: Blockchain.ETHEREUM,
-		// 	description: "ERC721_lazy",
-		// 	wallet: getEthereumWallet(),
-		// 	deployRequest: {
-		// 		blockchain: Blockchain.ETHEREUM,
-		// 		asset: {
-		// 			assetType: "ERC721",
-		// 			arguments: {
-		// 				name: "name",
-		// 				symbol: "RARI",
-		// 				baseURI: "https://ipfs.rarible.com",
-		// 				contractURI: "https://ipfs.rarible.com",
-		// 				isUserToken: false,
-		// 				operators: [],
-		// 			},
-		// 		},
-		// 	} as CreateCollectionRequest,
-		// 	mintRequest: (walletAddress: UnionAddress) => {
-		// 		return {
-		// 			uri: "ipfs:/test",
-		// 			creators: [{
-		// 				account: walletAddress,
-		// 				value: 10000,
-		// 			}],
-		// 			royalties: [],
-		// 			lazyMint: true,
-		// 			supply: 1,
-		// 		}
-		// 	},
-		// },
+		{
+			blockchain: Blockchain.ETHEREUM,
+			description: "ERC721_lazy",
+			wallet: getEthereumWallet(),
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				asset: {
+					assetType: "ERC721",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: false,
+						operators: [],
+					},
+				},
+			} as CreateCollectionRequest,
+			mintRequest: (walletAddress: UnionAddress) => {
+				return {
+					uri: "ipfs:/test",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: true,
+					supply: 1,
+				}
+			},
+		},
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155",
@@ -109,37 +109,37 @@ function suites(): {
 				}
 			},
 		},
-		// {
-		// 	blockchain: Blockchain.ETHEREUM,
-		// 	description: "ERC1155_lazy",
-		// 	wallet: getEthereumWallet(),
-		// 	deployRequest: {
-		// 		blockchain: Blockchain.ETHEREUM,
-		// 		asset: {
-		// 			assetType: "ERC1155",
-		// 			arguments: {
-		// 				name: "name",
-		// 				symbol: "RARI",
-		// 				baseURI: "https://ipfs.rarible.com",
-		// 				contractURI: "https://ipfs.rarible.com",
-		// 				isUserToken: true,
-		// 				operators: [],
-		// 			},
-		// 		},
-		// 	} as CreateCollectionRequest,
-		// 	mintRequest: (walletAddress: UnionAddress) => {
-		// 		return {
-		// 			uri: "ipfs:/test",
-		// 			creators: [{
-		// 				account: walletAddress,
-		// 				value: 10000,
-		// 			}],
-		// 			royalties: [],
-		// 			lazyMint: true,
-		// 			supply: 14,
-		// 		}
-		// 	},
-		// },
+		{
+			blockchain: Blockchain.ETHEREUM,
+			description: "ERC1155_lazy",
+			wallet: getEthereumWallet(),
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				asset: {
+					assetType: "ERC1155",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: true,
+						operators: [],
+					},
+				},
+			} as CreateCollectionRequest,
+			mintRequest: (walletAddress: UnionAddress) => {
+				return {
+					uri: "ipfs:/test",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: true,
+					supply: 14,
+				}
+			},
+		},
 		{
 			blockchain: Blockchain.TEZOS,
 			description: "NFT",
