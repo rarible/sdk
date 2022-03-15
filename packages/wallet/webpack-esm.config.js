@@ -5,7 +5,7 @@ module.exports = {
 	entry: "./build/index.js",
 	output: {
 		path: path.resolve(__dirname, "esm"),
-		filename: "rarible-wallet-sdk.js",
+		filename: "index.js",
 		library: {
 			type: "umd",
 		},
