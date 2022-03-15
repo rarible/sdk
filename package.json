@@ -33,7 +33,8 @@
     "prepare": "husky install",
     "release": "lerna publish from-package",
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
-    "publish-all": "lerna publish from-package"
+    "publish-all": "lerna publish from-package",
+    "e2e-tests": "sh ./scripts/e2e.sh"
   },
   "commitlint": {
     "extends": [
