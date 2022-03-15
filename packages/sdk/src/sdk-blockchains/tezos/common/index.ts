@@ -102,6 +102,9 @@ export function getTezosBasePath(network: TezosNetwork): string {
 		case "hangzhou": {
 			return "https://tezos-hangzhou-api.rarible.org"
 		}
+		case "dev": {
+			return "https://dev-tezos-api.rarible.org"
+		}
 		case "mainnet": {
 			return "https://tezos-api.rarible.org"
 		}
@@ -135,6 +138,25 @@ export function getMaybeTezosProvider(
 					auction: "",
 					auction_storage: "",
 					node_url: "https://tezos-hangzhou-node.rarible.org",
+				},
+			}
+		}
+		case "dev": {
+			return {
+				tezos: provider,
+				config: {
+					exchange: "KT1JwjYHgiM5YDGju6g3PhSoSSmpeSMwyTMF",
+					transfer_proxy: "KT1KDAErX2DE1n8Xs6KQU6A3trxsFCh44X4a",
+					fees: new BigNumber(0),
+					nft_public: "",
+					mt_public: "",
+					api: `${getTezosBasePath(network)}/v0.1`,
+					api_permit: `${getTezosBasePath(network)}/v0.1`,
+					permit_whitelist: [],
+					wrapper: "",
+					auction: "",
+					auction_storage: "",
+					node_url: "https://dev-tezos-node.rarible.org",
 				},
 			}
 		}
