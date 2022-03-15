@@ -28,7 +28,6 @@
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.4",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.4.1",
     "@types/lodash": "^4.14.179",
     "@types/node": "^17.0.21",
     "@types/react": "^17.0.40",
@@ -37,6 +36,7 @@
     "lodash": "^4.17.21",
     "node-sass": "^7.0.1",
     "normalize.css": "^8.0.1",
+    "jest": "26.6.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.28.0",
@@ -50,15 +50,16 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
+    "eject": "SKIP_PREFLIGHT_CHECK=true react-scripts eject",
     "verify": "tsc --noEmit"
   },
   "eslintConfig": {
     "extends": [
-      "react-app"
+      "react-app",
+      "react-app/jest"
     ]
   },
   "browserslist": {
