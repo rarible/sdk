@@ -1,17 +1,15 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import { sign } from "@rarible/tezos-sdk"
 import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-export class EthereumWallet<K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
-	T extends Ethereum = Ethereum> implements AbstractWallet {
-	constructor(
-		public readonly ethereum: T,
-		public readonly blockchain: K
-	) {
+export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
+	readonly blockchain = BlockchainGroup.ETHEREUM
+
+	constructor(public readonly ethereum: T) {
 	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
@@ -27,7 +25,7 @@ export class EthereumWallet<K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
 }
 
 export class FlowWallet implements AbstractWallet {
-	readonly blockchain = Blockchain.FLOW
+	readonly blockchain = BlockchainGroup.FLOW
 
 	constructor(public readonly fcl: Fcl) {
 	}
@@ -68,7 +66,7 @@ export class FlowWallet implements AbstractWallet {
 }
 
 export class TezosWallet implements AbstractWallet {
-	readonly blockchain = Blockchain.TEZOS
+	readonly blockchain = BlockchainGroup.TEZOS
 
 	constructor(public readonly provider: TezosProvider) {
 	}
@@ -87,7 +85,7 @@ export class TezosWallet implements AbstractWallet {
 }
 
 export class SolanaWallet implements AbstractWallet {
-	readonly blockchain = Blockchain.SOLANA
+	readonly blockchain = BlockchainGroup.SOLANA
 
 	constructor(public readonly provider: SolanaWalletProvider) {
 	}
@@ -103,16 +101,14 @@ export class SolanaWallet implements AbstractWallet {
 }
 
 export type BlockchainWallet =
-	EthereumWallet<Blockchain.ETHEREUM> |
-	EthereumWallet<Blockchain.POLYGON> |
+	EthereumWallet |
 	FlowWallet |
 	TezosWallet |
 	SolanaWallet
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
-	"ETHEREUM": EthereumWallet<Blockchain.ETHEREUM>,
-	"POLYGON": EthereumWallet<Blockchain.POLYGON>,
+	"ETHEREUM": EthereumWallet,
 	"TEZOS": TezosWallet
 	"SOLANA": SolanaWallet
 }

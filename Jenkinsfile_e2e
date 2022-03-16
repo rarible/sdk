@@ -1,0 +1,34 @@
+pipeline {
+  agent none
+
+  options {
+    disableConcurrentBuilds()
+  }
+
+  parameters {
+    choice(name: 'TEST_ENV', choices: ['e2e', 'development'], description: 'Environment')
+    choice(name: 'BLOCKCHAIN', choices: ['ALL', 'ETHEREUM', 'TEZOS', 'FLOW'], description: 'Blockchain')
+  }
+
+  stages {
+
+
+    stage("Run e2e tests") {
+      steps {
+        sh 'yarn'
+        sh 'yarn bootstrap'
+        sh 'yarn clean'
+        sh 'yarn build-all'
+        sh 'yarn e2e-tests'
+      }
+    }
+  }
+
+  post {
+    always {
+      node("") {
+        cleanWs()
+      }
+    }
+  }
+}

@@ -27,17 +27,17 @@ describe("bid", () => {
 	})
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethwallet1 = new EthereumWallet(ethereum1, Blockchain.ETHEREUM)
+	const ethwallet1 = new EthereumWallet(ethereum1)
 	const sdk1 = createRaribleSdk(ethwallet1, "e2e", { logs: LogsLevel.DISABLED })
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const ethwallet2 = new EthereumWallet(ethereum2, Blockchain.ETHEREUM)
+	const ethwallet2 = new EthereumWallet(ethereum2)
 	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
 	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
-	const nullFundsWallet = new EthereumWallet(nullFundsEthereum, Blockchain.ETHEREUM)
+	const nullFundsWallet = new EthereumWallet(nullFundsEthereum)
 	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
