@@ -13,6 +13,7 @@ import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getAuctionHouse } from "./common/auction-house"
+import { extractPublicKey } from "./common/address-converters"
 
 async function getMockedOrder(itemId: string, maker: string, taker: string): Promise<Order> {
 	return {
@@ -65,7 +66,7 @@ export class SolanaFill {
 
 	private getMintId(order: Order): PublicKey {
 		if (order.make.type["@type"] === "SOLANA_NFT") {
-			return toPublicKey(order.make.type.itemId.split(":")[1])
+			return extractPublicKey(order.make.type.itemId)
 		}
 		throw new Error("Unsupported type")
 	}
@@ -102,8 +103,8 @@ export class SolanaFill {
 					const res = await this.sdk.order.executeSell({
 						auctionHouse: getAuctionHouse("SOL"),
 						signer: this.wallet!.provider,
-						buyerWallet: toPublicKey(order.taker!.split(":")[1]),
-						sellerWallet: toPublicKey(order.maker!.split(":")[1]),
+						buyerWallet: extractPublicKey(order.taker!),
+						sellerWallet: extractPublicKey(order.maker!),
 						mint: this.getMintId(order),
 						price: this.getPrice(order),
 						tokensAmount: buyRequest.amount,

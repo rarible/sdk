@@ -7,6 +7,7 @@ import { nonImplementedAction } from "../../common/not-implemented"
 import { SolanaMint } from "./mint"
 import { SolanaFill } from "./fill"
 import { SolanaSell } from "./sell"
+import { SolanaBalance } from "./balance"
 
 
 export function createSolanaSdk(
@@ -16,6 +17,7 @@ export function createSolanaSdk(
 ): IRaribleInternalSdk {
 	const sdk = SolanaSdk.create({ connection: { cluster } })
 	//const mintService = new SolanaMint(sdk, wallet)
+	const balanceService = new SolanaBalance(sdk, wallet)
 	const sellService = new SolanaSell(sdk, wallet)
 	const fillService = new SolanaFill(sdk, wallet, apis)
 
@@ -40,7 +42,7 @@ export function createSolanaSdk(
 			cancel: nonImplementedAction, // new TezosCancel(maybeProvider, apis, network).cancel,
 		},
 		balances: {
-			getBalance: nonImplementedAction, // balanceService.getBalance,
+			getBalance: balanceService.getBalance, // balanceService.getBalance,
 		},
 		restriction: {
 			canTransfer: nonImplementedAction, //new TezosCanTransfer(maybeProvider).canTransfer,

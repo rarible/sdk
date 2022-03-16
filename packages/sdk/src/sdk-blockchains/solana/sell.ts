@@ -9,14 +9,11 @@ import { toOrderId } from "@rarible/types"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getAuctionHouse } from "./common/auction-house"
+import { extractPublicKey } from "./common/address-converters"
 
 export class SolanaSell {
 	constructor(readonly sdk: SolanaSdk, readonly wallet: Maybe<SolanaWallet>) {
 		this.sell = this.sell.bind(this)
-	}
-
-	private getMintId(itemId: ItemId): string {
-		return itemId.split(":")[1]
 	}
 
 	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
@@ -30,7 +27,7 @@ export class SolanaSell {
 				const res = await this.sdk.order.sell({
 					auctionHouse: getAuctionHouse("SOL"),
 					signer: this.wallet!.provider,
-					mint: toPublicKey(this.getMintId(request.itemId)),
+					mint: extractPublicKey(request.itemId),
 					price: parseFloat(request.price.toString()),
 					tokensAmount: request.amount,
 				})
