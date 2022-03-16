@@ -17,9 +17,8 @@ import type { ICancel } from "../../types/order/cancel/domain"
 import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
-import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { ConvertRequest } from "../../types/balances"
 
 export function createUnionSdk(
@@ -186,6 +185,7 @@ const blockchains: Blockchain[] = [
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.POLYGON,
+	Blockchain.SOLANA,
 ]
 
 function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {

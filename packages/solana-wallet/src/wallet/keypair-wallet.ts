@@ -2,6 +2,7 @@ import * as web3 from "@solana/web3.js"
 import base58 from "bs58"
 import { isPrivateKey } from "@rarible/solana-common"
 import type { IWalletSigner } from "../domain"
+import type { DisplayEncoding } from "../domain"
 
 /**
  * Abstraction over solana web3.Keypair
@@ -31,6 +32,10 @@ export class SolanaKeypairWallet implements IWalletSigner {
 			t.partialSign(this.keyPair)
 			return t
 		})
+	}
+
+	async signMessage(message: Uint8Array | string, display?: DisplayEncoding) {
+		throw new Error("Unimplemented")
 	}
 
 	/**

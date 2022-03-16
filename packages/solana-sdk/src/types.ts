@@ -1,3 +1,5 @@
+import type { Cluster } from "@solana/web3.js"
+
 export interface SolAssetType {
 	assetClass: "SOL"
 }
@@ -11,3 +13,5 @@ export interface TransactionResult {
 	txId: string,
 	slot: number
 }
+
+export type SolanaCluster = Cluster

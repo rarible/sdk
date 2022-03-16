@@ -1,6 +1,6 @@
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
-import { toContractAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
@@ -56,9 +56,7 @@ export function createRaribleSdk(
 		createSolanaSdk(
 			filterWallet(wallet, Blockchain.SOLANA),
 			apis,
-			"devnet",
-			/*config?.apiClientParams,
-			config?.logs ?? LogsLevel.TRACE*/
+			blockchainConfig.solanaNetwork
 		),
 	)
 
@@ -72,7 +70,8 @@ export function createRaribleSdk(
 		},
 		order: {
 			...instance.order,
-			sell: createSell(instance.order.sell, apis),
+			//sell: createSell(instance.order.sell, apis),
+			sell: mockCreateSell(instance.order.sell, apis),
 		},
 		apis,
 		wallet,
@@ -121,6 +120,25 @@ function filterWallet<T extends Blockchain>(
 	}
 	return undefined
 }
+
+//todo remove when getItemById will work
+function mockCreateSell(sell: ISellInternal, apis: IApisSdk): ISell {
+	return async ({ itemId }) => {
+		//const item = await apis.item.getItemById({ itemId })
+		//const collectionId = toContractAddress(item.contract as any) //todo remove then fixed
+		const response = await sell({ collectionId: toContractAddress("SOLANA:11111") })
+		return {
+			...response,
+			maxAmount: toBigNumber("1"),
+			submit: response.submit
+				.before((input: OrderRequest) => ({
+					itemId,
+					...input,
+				})),
+		}
+	}
+}
+
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {

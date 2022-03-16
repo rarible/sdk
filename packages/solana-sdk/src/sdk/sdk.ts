@@ -11,6 +11,9 @@ export interface IRaribleSolanaSdk {
 	nft: ISolanaNftSdk
 	balances: ISolanaBalancesSdk
 	order: ISolanaOrderSdk
+	confirmTransaction(
+		...args: Parameters<typeof Connection.prototype.confirmTransaction>
+	): ReturnType<typeof Connection.prototype.confirmTransaction>
 }
 
 export interface ISolanaSdkConfig {
@@ -29,6 +32,10 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 		this.balances = new SolanaBalancesSdk(connection)
 		this.nft = new SolanaNftSdk(connection)
 		this.order = new SolanaOrderSdk(connection)
+	}
+
+	confirmTransaction(...args: Parameters<typeof Connection.prototype.confirmTransaction>) {
+		return this.connection.confirmTransaction(...args)
 	}
 
 	static create(config: ISolanaSdkConfig): SolanaSdk {

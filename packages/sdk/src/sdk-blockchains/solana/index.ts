@@ -3,40 +3,47 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import { SolanaSdk } from "@rarible/solana-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { nonImplementedAction } from "../../common/not-implemented"
+import { SolanaMint } from "./mint"
+import { SolanaFill } from "./fill"
+import { SolanaSell } from "./sell"
 
 
 export function createSolanaSdk(
 	wallet: Maybe<SolanaWallet>,
-	_apis: IApisSdk,
+	apis: IApisSdk,
 	cluster: Cluster,
 ): IRaribleInternalSdk {
-	//const sdk = SolanaSdk.create({ connection: { cluster } })
+	const sdk = SolanaSdk.create({ connection: { cluster } })
+	//const mintService = new SolanaMint(sdk, wallet)
+	const sellService = new SolanaSell(sdk, wallet)
+	const fillService = new SolanaFill(sdk, wallet, apis)
 
 	return {
 		nft: {
-			/*mint: mintService.mint,
-			burn: new TezosBurn(maybeProvider, apis, network).burn,
-			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,*/
-			/*generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
-			deploy: createCollectionService.createCollection,
-			createCollection: createCollectionService.createCollection,
-			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),*/
+			mint: nonImplementedAction, //mintService.mint,
+			burn: nonImplementedAction, //new TezosBurn(maybeProvider, apis, network).burn,
+			transfer: nonImplementedAction, //new TezosTransfer(maybeProvider, apis, network).transfer,*/
+			generateTokenId: nonImplementedAction, //new TezosTokenId(maybeProvider, apis).generateTokenId,
+			deploy: nonImplementedAction, //createCollectionService.createCollection,
+			createCollection: nonImplementedAction, // createCollectionService.createCollection,
+			preprocessMeta: nonImplementedAction, // Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
-			/*fill: fillService.fill,
-			buy: fillService.fill,
-			acceptBid: fillService.fill,
-			sell: sellService.sell,
-			sellUpdate: sellService.update,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
-			cancel: new TezosCancel(maybeProvider, apis, network).cancel,*/
+			fill: fillService.fill, //fillService.fill,
+			buy: fillService.fill, //fillService.fill,
+			acceptBid: fillService.fill, // fillService.fill,
+			sell: sellService.sell, // sellService.sell,
+			sellUpdate: nonImplementedAction, // sellService.update,
+			bid: nonImplementedAction, // bidService.bid,
+			bidUpdate: nonImplementedAction, // bidService.update,
+			cancel: nonImplementedAction, // new TezosCancel(maybeProvider, apis, network).cancel,
 		},
 		balances: {
-			/*getBalance: balanceService.getBalance,*/
+			getBalance: nonImplementedAction, // balanceService.getBalance,
 		},
 		restriction: {
-			/*canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,*/
+			canTransfer: nonImplementedAction, //new TezosCanTransfer(maybeProvider).canTransfer,
 		},
 	} as any
 }

@@ -22,6 +22,8 @@ export type RequestCurrency =
   | ApiClient.FlowAssetTypeFt
   | ApiClient.TezosXTZAssetType
   | ApiClient.TezosFTAssetType
+  | ApiClient.SolanaNftAssetType
+  | ApiClient.SolanaSolAssetType
 
 export type AbstractItemId<T extends ApiClient.Blockchain, ContractAddress extends string> = {
 	blockchain: T
@@ -33,3 +35,4 @@ export type FlowItemId = AbstractItemId<ApiClient.Blockchain.FLOW, FlowContractA
 export type EthereumItemId = AbstractItemId<ApiClient.Blockchain.ETHEREUM, Address>
 export type TezosItemId = AbstractItemId<ApiClient.Blockchain.TEZOS, string>
 export type PolygonItemId = AbstractItemId<ApiClient.Blockchain.POLYGON, string>
+export type SolanaItemId = AbstractItemId<ApiClient.Blockchain.SOLANA, string>
