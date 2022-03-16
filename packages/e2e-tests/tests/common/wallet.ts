@@ -1,16 +1,15 @@
 import type { BlockchainWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
 import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
-import type { EVMBlockchain } from "@rarible/sdk/src/sdk-blockchains/ethereum/common"
 import { toUnionAddress } from "@rarible/types"
 import { testsConfig } from "./config"
 
-export function getEthereumWallet(pk?: string): EthereumWallet<EVMBlockchain> {
+export function getEthereumWallet(pk?: string): EthereumWallet {
 	const config = {
 		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
 		rpcUl: testsConfig.variables.ETHEREUM_RPC_URL,
@@ -20,10 +19,10 @@ export function getEthereumWallet(pk?: string): EthereumWallet<EVMBlockchain> {
 		web3: web3,
 		from: wallet.getAddressString(),
 	})
-	return new EthereumWallet(ethereum, Blockchain.ETHEREUM)
+	return new EthereumWallet(ethereum)
 }
 
-export function getPolygonWallet(pk?: string): EthereumWallet<EVMBlockchain> {
+export function getPolygonWallet(pk?: string): EthereumWallet {
 	const { web3, wallet } = initProvider(pk, {
 		networkId: 80001,
 		rpcUl: "https://rpc-mumbai.maticvigil.com",
@@ -32,10 +31,10 @@ export function getPolygonWallet(pk?: string): EthereumWallet<EVMBlockchain> {
 		web3: web3,
 		from: wallet.getAddressString(),
 	})
-	return new EthereumWallet(ethereum, Blockchain.POLYGON)
+	return new EthereumWallet(ethereum)
 }
 
-export function getEthereumWalletBuyer(): EthereumWallet<EVMBlockchain> {
+export function getEthereumWalletBuyer(): EthereumWallet {
 	return getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER)
 }
 
@@ -56,13 +55,11 @@ export function getFlowWallet(): FlowWallet {
 
 export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boolean = true): Promise<string> {
 	switch (wallet.blockchain) {
-		case Blockchain.ETHEREUM:
+		case BlockchainGroup.ETHEREUM:
 			return (withPrefix ? "ETHEREUM:" : "") + (await wallet.ethereum.getFrom())
-		case Blockchain.POLYGON:
-			return (withPrefix ? "ETHEREUM:" : "") + (await wallet.ethereum.getFrom())
-		case Blockchain.TEZOS:
+		case BlockchainGroup.TEZOS:
 			return (withPrefix ? "TEZOS:" : "") + (await wallet.provider.address())
-		case Blockchain.FLOW:
+		case BlockchainGroup.FLOW:
 			const user = await wallet.fcl.currentUser().snapshot()
 			const address = user.addr
 			return (withPrefix ? "FLOW:" : "") + address
@@ -75,15 +72,15 @@ export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<Wa
 	let address=""
 	let addressWithPrefix=""
 	switch (wallet.blockchain) {
-		case Blockchain.ETHEREUM:
+		case BlockchainGroup.ETHEREUM:
 			address = await wallet.ethereum.getFrom()
 			addressWithPrefix = "ETHEREUM:" + address
 			break
-		case Blockchain.TEZOS:
+		case BlockchainGroup.TEZOS:
 			address = await wallet.provider.address()
 			addressWithPrefix = "TEZOS:" + address
 			break
-		case Blockchain.FLOW:
+		case BlockchainGroup.FLOW:
 			const user = await wallet.fcl.currentUser().snapshot()
 			if (user.addr) {
 				address = user.addr

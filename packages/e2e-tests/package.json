@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@rarible/api-client": "~0.0.11",
-    "@rarible/ethereum-sdk-test-common": "^0.12.47",
+    "@rarible/ethereum-sdk-test-common": "~0.12.54",
     "@rarible/types": "~0.8.0"
   },
   "devDependencies": {

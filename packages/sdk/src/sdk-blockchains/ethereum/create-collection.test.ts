@@ -8,11 +8,11 @@ import { initProviders } from "./test/init-providers"
 describe("create collection", () => {
 	const { web31 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethereumWallet = new EthereumWallet(ethereum1, Blockchain.ETHEREUM)
+	const ethereumWallet = new EthereumWallet(ethereum1)
 	const sdk1 = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	test("create erc-721 collection legacy", async () => {
-		await sdk1.nft.deploy({
+		await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",

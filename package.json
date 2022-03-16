@@ -50,7 +50,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.15.5",
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@rarible/eslint-config-ts": "~0.5.0",
