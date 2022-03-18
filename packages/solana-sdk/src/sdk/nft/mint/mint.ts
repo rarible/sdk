@@ -1,7 +1,7 @@
 import type { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js"
 import { SystemProgram } from "@solana/web3.js"
 import { MintLayout, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
-import * as anchor from "@project-serum/anchor"
+import { BN } from "@project-serum/anchor"
 import {
 	CreateMetadataV2Args,
 	CreateMasterEditionV3Args,
@@ -53,7 +53,6 @@ function validateMetadata(metadata: any) {
 		throw new Error("Invalid creators")
 	}
 }
-
 
 export async function createMetadata(
 	metadataLink: string,
@@ -199,7 +198,7 @@ export async function getMintNftInstructions(
 				...Array.from(METADATA_SCHEMA),
 				...CreateMasterEditionV3Args.SCHEMA,
 			]),
-			new CreateMasterEditionV3Args({ maxSupply: new anchor.BN(maxSupply) }),
+			new CreateMasterEditionV3Args({ maxSupply: new BN(maxSupply) }),
 		),
 	)
 

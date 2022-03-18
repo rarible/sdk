@@ -53,7 +53,7 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 			this.connection,
 			request.signer,
 			request.metadataUrl,
-			true, // ?
+			true, // mutable metadata ?
 			request.collection, // verify strategy ?
 			request.maxSupply
 		)
@@ -66,7 +66,7 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 		)
 
 		console.log(`NFT created ${res.txId}`)
-		console.log(`NFT: Mint Address is ${mint.toBase58()}`)
+		console.log(`NFT: Mint Address is ${mint.toString()}`)
 
 		return {
 			...res,

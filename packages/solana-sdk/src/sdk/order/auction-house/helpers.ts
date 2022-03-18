@@ -1,31 +1,32 @@
-import * as anchor from "@project-serum/anchor"
-import type { Connection, PublicKey } from "@solana/web3.js"
+import type { Connection } from "@solana/web3.js"
+import { PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { web3 } from "@project-serum/anchor"
-import type { Program } from "@project-serum/anchor"
+import type { BN } from "@project-serum/anchor"
+import { Program, Provider } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID, SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID } from "../../contracts"
+import { bnToBuffer } from "../../../common/utils"
 
 export async function loadAuctionHouseProgram(
 	connection: Connection,
 	signer: IWalletSigner
 ) {
-	const provider = new anchor.Provider(connection, signer, {
+	const provider = new Provider(connection, signer, {
 		preflightCommitment: "recent",
 	})
-	const idl = await anchor.Program.fetchIdl(AUCTION_HOUSE_PROGRAM_ID, provider)
-	return new anchor.Program(idl!, AUCTION_HOUSE_PROGRAM_ID, provider)
+	const idl = await Program.fetchIdl(AUCTION_HOUSE_PROGRAM_ID, provider)
+	return new Program(idl!, AUCTION_HOUSE_PROGRAM_ID, provider)
 }
 
 export async function getPriceWithMantissa(
 	price: number,
-	mint: web3.PublicKey,
+	mint: PublicKey,
 	walletKeyPair: any,
 	anchorProgram: Program,
 ): Promise<number> {
 	const token = new Token(
 		anchorProgram.provider.connection,
-		new web3.PublicKey(mint),
+		new PublicKey(mint),
 		TOKEN_PROGRAM_ID,
 		walletKeyPair,
 	)
@@ -38,10 +39,10 @@ export async function getPriceWithMantissa(
 }
 
 export async function getAssociatedTokenAccountForMint(
-	mint: web3.PublicKey,
-	buyer: web3.PublicKey,
-): Promise<[anchor.web3.PublicKey, number]> {
-	return await web3.PublicKey.findProgramAddress(
+	mint: PublicKey,
+	buyer: PublicKey,
+): Promise<[PublicKey, number]> {
+	return await PublicKey.findProgramAddress(
 		[
 			buyer.toBuffer(),
 			TOKEN_PROGRAM_ID.toBuffer(),
@@ -52,21 +53,21 @@ export async function getAssociatedTokenAccountForMint(
 }
 
 export async function getAuctionHouseProgramAsSigner (): Promise<[PublicKey, number]> {
-	return await web3.PublicKey.findProgramAddress(
+	return await PublicKey.findProgramAddress(
 		[Buffer.from(AUCTION_HOUSE), Buffer.from("signer")], AUCTION_HOUSE_PROGRAM_ID,
 	)
 }
 
 export async function getAuctionHouseTradeState (
-	auctionHouse: web3.PublicKey,
-	wallet: web3.PublicKey,
-	tokenAccount: web3.PublicKey,
-	treasuryMint: web3.PublicKey,
-	tokenMint: web3.PublicKey,
-	tokenSize: anchor.BN,
-	buyPrice: anchor.BN,
+	auctionHouse: PublicKey,
+	wallet: PublicKey,
+	tokenAccount: PublicKey,
+	treasuryMint: PublicKey,
+	tokenMint: PublicKey,
+	tokenSize: BN,
+	buyPrice: BN,
 ): Promise<[PublicKey, number]> {
-	return await web3.PublicKey.findProgramAddress(
+	return await PublicKey.findProgramAddress(
 		[
 			Buffer.from(AUCTION_HOUSE),
 			wallet.toBuffer(),
@@ -74,18 +75,18 @@ export async function getAuctionHouseTradeState (
 			tokenAccount.toBuffer(),
 			treasuryMint.toBuffer(),
 			tokenMint.toBuffer(),
-			buyPrice.toBuffer("le", 8),
-			tokenSize.toBuffer("le", 8),
+			bnToBuffer(buyPrice, "le", 8),
+			bnToBuffer(tokenSize, "le", 8),
 		],
 		AUCTION_HOUSE_PROGRAM_ID,
 	)
 }
 
 export async function getAuctionHouseBuyerEscrow(
-	auctionHouse: web3.PublicKey,
-	wallet: web3.PublicKey,
+	auctionHouse: PublicKey,
+	wallet: PublicKey,
 ): Promise<[PublicKey, number]> {
-	return await web3.PublicKey.findProgramAddress(
+	return await PublicKey.findProgramAddress(
 		[Buffer.from(AUCTION_HOUSE), auctionHouse.toBuffer(), wallet.toBuffer()],
 		AUCTION_HOUSE_PROGRAM_ID,
 	)

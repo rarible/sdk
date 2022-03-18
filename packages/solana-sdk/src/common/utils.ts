@@ -1,5 +1,6 @@
 import { PublicKey } from "@solana/web3.js"
 import * as web3 from "@solana/web3.js"
+import type { BN } from "@project-serum/anchor"
 
 export function isPublicKey(x: any): x is PublicKey {
 	return x instanceof PublicKey
@@ -20,4 +21,8 @@ export function sleep(ms: number): Promise<void> {
 
 export function getUnixTs() {
 	return new Date().getTime() / 1000
+}
+
+export function bnToBuffer(value: BN, endian: BN.Endianness, length: number) {
+	return value.toArrayLike(Buffer, endian, length)
 }

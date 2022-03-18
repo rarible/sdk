@@ -1,5 +1,5 @@
 import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
-import { EthereumWallet, FlowWallet, TezosWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
@@ -17,8 +17,10 @@ import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@raribl
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
+import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import type { IWalletAndAddress } from "./wallet-connetion"
 import { Blockchain } from "@rarible/api-client"
+import { SolanaProviderConnectionResult } from "@rarible/connector-phantom/build/domain"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
@@ -119,6 +121,19 @@ function mapFlowWallet<O>(provider: AbstractConnectionProvider<O, FlowProviderCo
 	}))
 }
 
+function mapSolanaWallet<O>(provider: AbstractConnectionProvider<O, SolanaProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
+	return provider.map(state => ({
+		wallet: new SolanaWallet({
+			publicKey: state.publicKey,
+			signTransaction: state.signTransaction,
+			signAllTransactions: state.signAllTransactions,
+			signMessage: state.signMessage,
+		}),
+		address: state.address,
+		blockchain: Blockchain.SOLANA,
+	}))
+}
+
 function mapTezosWallet<O>(provider: AbstractConnectionProvider<O, TezosProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
 	return provider.map(async state => {
 		const {
@@ -196,6 +211,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		chainId: ethChainId,
 	}))
 
+	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
+
 	// Providers required secrets
 	// const fortmatic = mapEthereumWallet(new FortmaticConnectionProvider({ apiKey: "ENTER", ethNetwork: { chainId: 4, rpcUrl: "https://node-rinkeby.rarible.com" } }))
 	// const portis = mapEthereumWallet(new PortisConnectionProvider({ appId: "ENTER", network: "rinkeby" }))
@@ -207,6 +224,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(beacon)
 		.add(fcl)
 		.add(walletConnect)
+		.add(phantomConnect)
 	// .add(portis)
 	// .add(fortmatic)
 

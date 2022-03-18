@@ -8,6 +8,7 @@ import { toContractAddress } from "@rarible/types"
 import { RequestCurrency } from "@rarible/sdk/build/common/domain"
 import { ConnectionState } from "@rarible/connector"
 import { IWalletAndAddress } from "../components/connector/wallet-connetion"
+import { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -23,6 +24,10 @@ const ethFt: EthErc20AssetType = {
 
 const tezosNative: TezosXTZAssetType = {
 	"@type": "XTZ"
+}
+
+const solanaNative: SolanaSolAssetType = {
+	"@type": "SOLANA_SOL"
 }
 
 /*const tezosFt: TezosFTAssetType = {
@@ -41,6 +46,11 @@ export function getCurrency(connectionState: ConnectionState<IWalletAndAddress>,
 			return type === "NATIVE" ? getEthNative(blockchain) : ethFt
 		case Blockchain.POLYGON:
 			return type === "NATIVE" ? getEthNative(blockchain) : ethFt
+		case Blockchain.SOLANA:
+			if (type === "FT") {
+				throw new Error("Unsupported blockchain or asset type")
+			}
+			return solanaNative
 		case Blockchain.TEZOS:
 			if (type === "FT") {
 				throw new Error("Unsupported blockchain or asset type")

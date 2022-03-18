@@ -4,13 +4,6 @@
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
-  "module": "esm/index.js",
-  "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./build/index.js"
-    }
-  },
   "types": "build/index.d.ts",
   "files": [
     "build",

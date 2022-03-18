@@ -16,7 +16,6 @@ export class SolanaBalancesSdk implements ISolanaBalancesSdk {
 
 	async getTokenBalance(owner: PublicKey, mint: PublicKey): Promise<number> {
 		const balance = await this.connection.getTokenAccountsByOwner(owner, { mint })
-		return balance.value?.length //).toBeGreaterThanOrEqual(expectedValue)
-		//return balance
+		return balance.value?.length
 	}
 }

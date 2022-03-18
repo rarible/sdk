@@ -31,29 +31,6 @@ export class SolanaMint {
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (request: MintRequest) => {
-					// const royalties = request.royalties?.reduce((acc, royalty) => {
-					// 	const account = getTezosAddress(royalty.account)
-					// 	acc[account] = new BigNumber(royalty.value)
-					// 	return acc
-					// }, {} as { [key: string]: BigNumber }) || {}
-					//
-					// const supply = type === "NFT" ? undefined : toBn(request.supply)
-					// const provider = getRequiredProvider(this.provider)
-					//
-					// const result = await mint(
-					// 	provider,
-					// 	contract,
-					// 	royalties,
-					// 	supply,
-					// 	undefined,
-					// 	{
-					// 		"": fixIpfs(request.uri),
-					// 	},
-					// 	await this.getOwner(request),
-					// )
-					//
-
-
 					const result = await this.sdk.nft.mint({
 						metadataUrl: request.uri,
 						signer: this.wallet!.provider,
@@ -64,7 +41,7 @@ export class SolanaMint {
 					return {
 						type: MintType.ON_CHAIN,
 						transaction: new BlockchainSolanaTransaction(result, this.sdk),
-						itemId: toItemId(`SOLANA:${result.mint.toString()}`), //convertTezosItemId(`${result.mint.toString()}`),
+						itemId: toItemId(`SOLANA:${result.mint.toString()}`),
 					}
 				},
 			}),

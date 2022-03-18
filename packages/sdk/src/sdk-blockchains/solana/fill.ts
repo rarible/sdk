@@ -15,36 +15,6 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getAuctionHouse } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 
-async function getMockedOrder(itemId: string, maker: string, taker: string): Promise<Order> {
-	return {
-		id: toOrderId("SOLANA:1111111"),
-		fill: toBigNumber("1"),
-		platform: Platform.RARIBLE,
-		status: OrderStatus.ACTIVE,
-		makeStock: toBigNumber("1"),
-		cancelled: false,
-		createdAt: "2022-03-15:10:00:00",
-		lastUpdatedAt: "2022-03-15:10:00:00",
-		makePrice: toBigNumber("0.001"),
-		takePrice: toBigNumber("0.001"),
-		maker: toUnionAddress("SOLANA:" + maker),
-		taker: toUnionAddress("SOLANA:" + taker),
-		make: {
-			type: { "@type": "SOLANA_NFT", itemId: toItemId(itemId) },
-			value: toBigNumber("1"),
-		},
-		take: {
-			type: { "@type": "SOLANA_SOL" },
-			value: toBigNumber("0.001"),
-		},
-		salt: "salt",
-		data: {
-			"@type": "SOLANA_AUCTION_HOUSE_V1",
-			auctionHouse: toContractAddress("SOLANA:" + getAuctionHouse("SOL").toString()),
-		},
-	}
-}
-
 export class SolanaFill {
 	constructor(
 		readonly sdk: SolanaSdk,
@@ -83,8 +53,8 @@ export class SolanaFill {
 			throw new Error("Solana wallet not provided")
 		}
 
-		const order = await getMockedOrder((request as any).mint, (request as any).maker, (request as any).taker)
-		//const order =this.getPreparedOrder(request)
+		//const order = await getMockedOrder((request as any).mint, (request as any).maker, (request as any).taker)
+		const order = await this.getPreparedOrder(request)
 		const submit = Action
 			.create({
 				id: "send-tx" as const,

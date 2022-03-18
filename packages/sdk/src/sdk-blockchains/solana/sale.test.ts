@@ -1,10 +1,11 @@
-import { SolanaKeypairWallet } from "@rarible/solana-wallet/src"
 import { SolanaWallet } from "@rarible/sdk-wallet"
 import { SolanaSdk } from "@rarible/solana-sdk"
-import { toBigNumber, toItemId } from "@rarible/types"
+import { toBigNumber, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { OrderStatus, Platform } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { getWallet } from "./common/test/test-wallets"
+import { getAuctionHouse } from "./common/auction-house"
 
 describe("Solana sell", () => {
 	const wallet = getWallet(0)
@@ -34,11 +35,34 @@ describe("Solana sell", () => {
 		})
 
 		const buy = await buyerSdk.order.buy({
-			orderId,
-			mint: itemId,
-			maker: wallet.publicKey,
-			taker: buyerWallet.publicKey,
-		} as any)
+			order: {
+				id: toOrderId("SOLANA:1111111"),
+				fill: toBigNumber("1"),
+				platform: Platform.RARIBLE,
+				status: OrderStatus.ACTIVE,
+				makeStock: toBigNumber("1"),
+				cancelled: false,
+				createdAt: "2022-03-15:10:00:00",
+				lastUpdatedAt: "2022-03-15:10:00:00",
+				makePrice: toBigNumber("0.001"),
+				takePrice: toBigNumber("0.001"),
+				maker: toUnionAddress("SOLANA:" + wallet.publicKey.toString()),
+				taker: toUnionAddress("SOLANA:" + buyerWallet.publicKey.toString()),
+				make: {
+					type: { "@type": "SOLANA_NFT", itemId: itemId },
+					value: toBigNumber("1"),
+				},
+				take: {
+					type: { "@type": "SOLANA_SOL" },
+					value: toBigNumber("0.001"),
+				},
+				salt: "salt",
+				data: {
+					"@type": "SOLANA_AUCTION_HOUSE_V1",
+					auctionHouse: toContractAddress("SOLANA:" + getAuctionHouse("SOL").toString()),
+				},
+			},
+		})
 
 		const tx = await buy.submit({
 			amount: 1,

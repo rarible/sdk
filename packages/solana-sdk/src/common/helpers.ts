@@ -1,7 +1,5 @@
 import { PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction } from "@solana/web3.js"
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token"
-import * as anchor from "@project-serum/anchor"
-import { web3 } from "@project-serum/anchor"
 import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID, TOKEN_METADATA_PROGRAM_ID } from "../sdk/contracts"
 
 export async function getTokenWallet(
@@ -66,10 +64,10 @@ export function createAssociatedTokenAccountInstruction(
 	})
 }
 export async function getMetadata(
-	mint: web3.PublicKey,
-): Promise<web3.PublicKey> {
+	mint: PublicKey,
+): Promise<PublicKey> {
 	return (
-		await web3.PublicKey.findProgramAddress(
+		await PublicKey.findProgramAddress(
 			[
 				Buffer.from("metadata"),
 				TOKEN_METADATA_PROGRAM_ID.toBuffer(),
@@ -196,10 +194,10 @@ export function createMasterEditionInstruction(
 }
 
 export async function getMasterEdition(
-	mint: anchor.web3.PublicKey,
-): Promise<anchor.web3.PublicKey> {
+	mint: PublicKey,
+): Promise<PublicKey> {
 	return (
-		await anchor.web3.PublicKey.findProgramAddress(
+		await PublicKey.findProgramAddress(
 			[
 				Buffer.from("metadata"),
 				TOKEN_METADATA_PROGRAM_ID.toBuffer(),

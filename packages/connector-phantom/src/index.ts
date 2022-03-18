@@ -93,7 +93,16 @@ export class PhantomConnectionProvider extends
 				if (status === "connected" && address) {
 					const wallet: SolanaProviderConnectionResult = {
 						address: address,
-						...provider,
+						publicKey: provider.publicKey,
+						isConnected: provider.isConnected,
+						signTransaction: provider.signTransaction,
+						signAllTransactions: provider.signAllTransactions,
+						signMessage: provider.signMessage,
+						connect: provider.connect,
+						disconnect: provider.disconnect,
+						on: provider.on,
+						removeListener: provider.removeListener,
+						request: provider.request,
 					}
 					return getStateConnected({ connection: wallet })
 				} else {
@@ -116,7 +125,7 @@ export class PhantomConnectionProvider extends
 	}
 
 	async isAutoConnected(): Promise<boolean> {
-		return Promise.resolve(false)
+		return false
 	}
 
 	async isConnected(): Promise<boolean> {

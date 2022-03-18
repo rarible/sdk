@@ -1,7 +1,6 @@
-import type { Connection, PublicKey } from "@solana/web3.js"
+import type { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { BN } from "@project-serum/anchor"
-import type * as web3 from "@solana/web3.js"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
 import { getMetadata } from "../../../common/helpers"
 import {
@@ -23,7 +22,7 @@ export interface IActionHouseSellRequest {
 }
 
 export interface IActionHouseSellResponse {
-	instructions: web3.TransactionInstruction[]
+	instructions: TransactionInstruction[]
 	signers: IWalletSigner[]
 }
 
