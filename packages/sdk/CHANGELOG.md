@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* added missing apis to sdk: currency + auctions ([b7c2640](https://github.com/rarible/sdk/commit/b7c264022c838b916e5c6d1976c0e066df47a350))
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+### Features
+
+* convert method ([#149](https://github.com/rarible/sdk/issues/149)) ([d61e2f5](https://github.com/rarible/sdk/commit/d61e2f5fa86754f689ab3656564227cc80d1ac0b))
+* dev env for tezos ([#163](https://github.com/rarible/sdk/issues/163)) ([d5fb00d](https://github.com/rarible/sdk/commit/d5fb00dc654cf331d480d732d9a1066730461cf7))
+* expiration date ([3a0eafd](https://github.com/rarible/sdk/commit/3a0eafd27015cf10f177c27ef5269bf11bf0be2d))
+* polygon example ([552df3f](https://github.com/rarible/sdk/commit/552df3fcb64398ebc1931cac7c7aaa3485e4d421))
+* test mint with token id ([de2a37e](https://github.com/rarible/sdk/commit/de2a37ec066ac7ba8df1c3eea5848d528addd1a3))
+
+
+
+
+
 ## [0.8.45](https://github.com/rarible/sdk/compare/v0.8.44...v0.8.45) (2022-03-04)
 
 

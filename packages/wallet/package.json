@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.8.40",
+  "version": "0.8.46",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -36,7 +36,6 @@
   "devDependencies": {
     "@babel/cli": "7.14.8",
     "@babel/core": "7.14.8",
-    "@rarible/ethereum-sdk-test-common": "~0.12.54",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
     "@babel/plugin-syntax-bigint": "^7.8.3",
@@ -45,6 +44,7 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
+    "@rarible/ethereum-sdk-test-common": "~0.12.54",
     "@rarible/web3-ethereum": "~0.12.54",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
