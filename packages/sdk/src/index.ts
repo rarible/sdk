@@ -183,3 +183,8 @@ type MiddleMintType = {
 }
 
 export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
+
+export { IRaribleSdk } from "./domain"
+export { RequestCurrency } from "./common/domain"
+export { UnionPart } from "./types/order/common/index"
+export { isEVMBlockchain } from "./sdk-blockchains/ethereum/common"
