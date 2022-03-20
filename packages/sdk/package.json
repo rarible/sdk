@@ -4,23 +4,14 @@
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
-  "module": "esm/index.js",
-  "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./build/index.js"
-    }
-  },
   "types": "build/index.d.ts",
   "files": [
     "build",
-    "umd",
-    "esm"
+    "umd"
   ],
   "scripts": {
     "build": "run-s create-validators build:*",
     "build:ts": "tsc --project tsconfig-build.json",
-    "build:esm": "webpack --config webpack-esm.config.js",
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
