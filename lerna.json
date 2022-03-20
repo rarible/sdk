@@ -9,7 +9,8 @@
     "publish": {
       "allowBranch": [
         "master",
-        "develop"
+        "fix/*",
+        "beta/*"
       ],
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
