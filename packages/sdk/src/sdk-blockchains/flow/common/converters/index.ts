@@ -1,6 +1,6 @@
 import type { FlowContractAddress, FlowCurrency, FlowItemId as FlowItemIdSdk } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
-import type { ItemId, OrderId } from "@rarible/api-client"
+import type { CollectionId, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, FlowAddress, UnionAddress } from "@rarible/types"
 import { toBigNumber, toContractAddress, toFlowAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
@@ -16,7 +16,7 @@ const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
  * Get flow collection from union collection
  * @param collection - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFlowCollection(collection: ContractAddress): FlowContractAddress {
+export function getFlowCollection(collection: CollectionId | ContractAddress): FlowContractAddress {
 	if (FLOW_COLLECTION_REGEXP.test(collection)) {
 		const raw = collection.split(":")[1]
 		return toFlowContractAddress(raw)

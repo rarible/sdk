@@ -1,5 +1,6 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
+import { toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
+import { createRaribleSdk, toCollectionId } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
@@ -16,7 +17,7 @@ describe("transfer test", () => {
 
 	test.skip("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -46,7 +47,7 @@ describe("transfer test", () => {
 	test.skip("transfer MT test", async () => {
 
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

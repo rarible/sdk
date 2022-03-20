@@ -1,7 +1,7 @@
 // eslint-disable-next-line camelcase
 import { TezosWallet } from "@rarible/sdk-wallet"
-import { toContractAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
+import { Blockchain } from "@rarible/api-client"
+import { createRaribleSdk, toCollectionId } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
@@ -17,7 +17,7 @@ describe("burn test", () => {
 
 	test.skip("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -42,7 +42,7 @@ describe("burn test", () => {
 
 	test.skip("burn MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

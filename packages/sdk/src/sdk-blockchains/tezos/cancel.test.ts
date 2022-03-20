@@ -1,6 +1,6 @@
 // eslint-disable-next-line camelcase
-import { toContractAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
+import { Blockchain } from "@rarible/api-client"
+import { createRaribleSdk, toCollectionId } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { delay, retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -15,7 +15,7 @@ describe("cancel test", () => {
 
 	test.skip("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

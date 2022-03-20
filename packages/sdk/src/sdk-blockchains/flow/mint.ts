@@ -2,6 +2,7 @@ import { Action } from "@rarible/action"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
+import { toContractAddress } from "@rarible/types"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -26,7 +27,7 @@ export class FlowMint {
 		const collection = await getCollection(this.apis.collection, prepareRequest)
 		if (collection.type === "FLOW") {
 			validatePrepareMintRequest(prepareRequest)
-			const flowCollection = getFlowCollection(collection.id)
+			const flowCollection = getFlowCollection(toContractAddress(collection.id))
 			return {
 				multiple: false,
 				supportsRoyalties: true,

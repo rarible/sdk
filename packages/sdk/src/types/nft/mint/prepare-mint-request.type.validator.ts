@@ -29,7 +29,7 @@ export const SCHEMA = {
                     "additionalProperties": false,
                     "properties": {
                         "collectionId": {
-                            "$ref": "#/definitions/ContractAddress"
+                            "$ref": "#/definitions/CollectionId"
                         },
                         "tokenId": {
                             "$ref": "#/definitions/TokenId"
@@ -81,7 +81,10 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "id": {
-                    "$ref": "#/definitions/ContractAddress"
+                    "$ref": "#/definitions/CollectionId"
+                },
+                "parent": {
+                    "$ref": "#/definitions/CollectionId"
                 },
                 "blockchain": {
                     "$ref": "#/definitions/Blockchain"
@@ -120,7 +123,7 @@ export const SCHEMA = {
             ],
             "additionalProperties": false
         },
-        "ContractAddress": {
+        "CollectionId": {
             "type": "string"
         },
         "Blockchain": {
@@ -129,7 +132,8 @@ export const SCHEMA = {
                 "ETHEREUM",
                 "POLYGON",
                 "FLOW",
-                "TEZOS"
+                "TEZOS",
+                "SOLANA"
             ]
         },
         "CollectionType": {
@@ -173,7 +177,7 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "collectionId": {
-                    "$ref": "#/definitions/ContractAddress"
+                    "$ref": "#/definitions/CollectionId"
                 }
             },
             "required": [

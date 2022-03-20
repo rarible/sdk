@@ -1,7 +1,6 @@
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { ContractAddress } from "@rarible/types"
-import { toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { CollectionId, Blockchain } from "@rarible/api-client"
 import { BlockchainGroup } from "@rarible/api-client"
 import type { WalletByBlockchain } from "@rarible/sdk-wallet/src"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
@@ -118,8 +117,10 @@ function filterWallet<T extends BlockchainGroup>(
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		const collectionId = toContractAddress(item.contract)
-		const response = await sell({ collectionId })
+		if (!item.collection) {
+			throw new Error("Item without collection")
+		}
+		const response = await sell({ collectionId: item.collection })
 		return {
 			...response,
 			maxAmount: item.supply,
@@ -165,11 +166,15 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-export function getCollectionId(req: HasCollectionId | HasCollection): ContractAddress {
+export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
 	if ("collection" in req) {
 		return req.collection.id
 	}
 	return req.collectionId
+}
+
+export function toCollectionId(address: string, blockchain: Blockchain): CollectionId {
+	return `${blockchain}:${address}` as CollectionId
 }
 
 type MiddleMintType = {

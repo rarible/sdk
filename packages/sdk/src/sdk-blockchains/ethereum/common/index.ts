@@ -9,7 +9,7 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { AssetType, Creator, ItemId, OrderId } from "@rarible/api-client"
+import type { AssetType, CollectionId, Creator, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
@@ -187,7 +187,7 @@ export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain
 }
 
 export function convertToEthereumAddress(
-	contractAddress: UnionAddress | ContractAddress
+	contractAddress: UnionAddress | ContractAddress | CollectionId
 ): Address {
 	if (!isRealBlockchainSpecified(contractAddress)) {
 		throw new Error("Not a union or contract address: " + contractAddress)

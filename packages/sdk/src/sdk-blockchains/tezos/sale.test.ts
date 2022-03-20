@@ -1,6 +1,7 @@
 import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import { createRaribleSdk } from "../../index"
+import { Blockchain } from "@rarible/api-client"
+import { createRaribleSdk, toCollectionId } from "../../index"
 import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
@@ -27,7 +28,7 @@ describe("test tezos mint and sell", () => {
 
 	test.skip("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 
 		const mintResult = await mintAndSellAction.submit({
@@ -56,7 +57,7 @@ describe("test tezos mint and sell", () => {
 
 	test.skip("sale NFT with eurTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 
 		const mintResult = await mintAndSellAction.submit({
@@ -91,7 +92,7 @@ describe("test tezos mint and sell", () => {
 
 	test.skip("sale MT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 
 		const mintResult = await mintAndSellAction.submit({
@@ -122,7 +123,7 @@ describe("test tezos mint and sell", () => {
 		const itemCreatorAddress = await sellerWallet.provider.address()
 
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 
 		const mintResult = await mintAndSellAction.submit({
@@ -194,7 +195,7 @@ describe("test tezos mint and sell", () => {
 
 	test.skip("sale MT with eurTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 
 		const mintResult = await mintAndSellAction.submit({

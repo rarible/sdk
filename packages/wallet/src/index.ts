@@ -92,4 +92,5 @@ export type WalletByBlockchain = {
 	"FLOW": FlowWallet
 	"ETHEREUM": EthereumWallet,
 	"TEZOS": TezosWallet
+	"SOLANA": undefined
 }

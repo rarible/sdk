@@ -5,7 +5,7 @@ import { toAddress, toContractAddress, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
-import { createRaribleSdk } from "../../index"
+import { createRaribleSdk, toCollectionId } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { initProvider, initProviders } from "./test/init-providers"
@@ -44,7 +44,7 @@ describe("bid", () => {
 	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:${wethContractEthereum}`)
 	const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 
-	const e2eErc1155V2ContractAddress = convertEthereumContractAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d", Blockchain.ETHEREUM)
+	const e2eErc1155V2ContractAddress = toCollectionId("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d", Blockchain.ETHEREUM)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -301,7 +301,7 @@ describe("bid", () => {
 		})
 		await awaitItem(sdk1, itemId)
 
-		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
+		const erc721Contract = toCollectionId(it.testErc721.options.address, Blockchain.ETHEREUM)
 		const bidResponse = await sdk2.order.bid({
 			collectionId: erc721Contract,
 		})
@@ -345,7 +345,7 @@ describe("bid", () => {
 		})
 		await awaitItem(sdk1, itemId)
 
-		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
+		const erc721Contract = toCollectionId(it.testErc721.options.address, Blockchain.ETHEREUM)
 		const bidResponse = await sdk2.order.bid({
 			collectionId: erc721Contract,
 		})

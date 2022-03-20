@@ -1,6 +1,7 @@
 import { toBigNumber, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import { createRaribleSdk } from "../../index"
+import { Blockchain } from "@rarible/api-client"
+import { createRaribleSdk, toCollectionId } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -37,7 +38,7 @@ describe("bid test", () => {
 
 	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(nftContract),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -90,7 +91,7 @@ describe("bid test", () => {
 
 	test.skip("bid MT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(mtContract),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -147,7 +148,7 @@ describe("bid test", () => {
 
 	test.skip("getConvertValue returns insufficient type", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(nftContract),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -179,7 +180,7 @@ describe("bid test", () => {
 
 	test.skip("getConvertValue returns convertable value", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(nftContract),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -213,7 +214,7 @@ describe("bid test", () => {
 
 	test.skip("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(mtContract),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -247,7 +248,7 @@ describe("bid test", () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(mtContract),
+			collectionId: toCollectionId(mtContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -296,7 +297,7 @@ describe("bid test", () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToContractAddress(nftContract),
+			collectionId: toCollectionId(nftContract, Blockchain.TEZOS),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

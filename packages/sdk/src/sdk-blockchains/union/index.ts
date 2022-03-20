@@ -1,4 +1,4 @@
-import type { AssetType, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { AssetType, CollectionId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -34,24 +34,28 @@ export function createUnionSdk(
 			FLOW: flow.balances,
 			TEZOS: tezos.balances,
 			POLYGON: polygon.balances,
+			SOLANA: undefined as any,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
 			FLOW: flow.nft,
 			TEZOS: tezos.nft,
 			POLYGON: polygon.nft,
+			SOLANA: undefined as any,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
 			FLOW: flow.order,
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
+			SOLANA: undefined as any,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
 			FLOW: flow.restriction,
 			TEZOS: tezos.restriction,
 			POLYGON: polygon.restriction,
+			SOLANA: undefined as any,
 		}),
 	}
 }
@@ -183,7 +187,9 @@ const blockchains: Blockchain[] = [
 	Blockchain.POLYGON,
 ]
 
-function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId
+): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)
