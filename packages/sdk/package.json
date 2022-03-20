@@ -14,7 +14,8 @@
   "types": "build/index.d.ts",
   "files": [
     "build",
-    "umd"
+    "umd",
+    "esm"
   ],
   "scripts": {
     "build": "run-s create-validators build:*",

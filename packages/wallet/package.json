@@ -14,7 +14,8 @@
   },
   "files": [
     "build",
-    "umd"
+    "umd",
+    "esm"
   ],
   "scripts": {
     "build": "run-s build:*",
