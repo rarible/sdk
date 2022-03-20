@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.47-beta1](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47-beta1) (2022-03-20)
+
+
+### Bug Fixes
+
+* use newer api-client with more type-safety for CollectionId ([94c8b42](https://github.com/rarible/sdk/commit/94c8b425fc0757ffc79f559b296d5a296825e560))
+
+
+
+
+
 ## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
 
 
