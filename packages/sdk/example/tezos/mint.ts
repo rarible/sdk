@@ -1,7 +1,6 @@
 import { TezosWallet } from "@rarible/sdk-wallet"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "@rarible/sdk"
 import { toContractAddress } from "@rarible/types"
 import { MintType } from "../../src/types/nft/mint/domain"
