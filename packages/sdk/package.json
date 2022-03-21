@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.8.46-hotfix.0",
+  "version": "0.8.46-hotfix.1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -27,7 +27,7 @@
     "@rarible/logger": "~0.6.2",
     "@rarible/protocol-ethereum-sdk": "~0.12.57",
     "@rarible/sdk-transaction": "^0.8.46",
-    "@rarible/sdk-wallet": "^0.8.46",
+    "@rarible/sdk-wallet": "^0.8.46-hotfix.1",
     "@rarible/tezos-sdk": "~0.1.4",
     "@rarible/types": "~0.5.3",
     "@rarible/utils": "~0.5.0",
