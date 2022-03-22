@@ -1,16 +1,9 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.8.46",
+  "version": "0.8.46-hotfix.1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
-  "module": "esm/index.js",
-  "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./build/index.js"
-    }
-  },
   "types": "build/index.d.ts",
   "files": [
     "build",
@@ -19,7 +12,6 @@
   "scripts": {
     "build": "run-s create-validators build:*",
     "build:ts": "tsc --project tsconfig-build.json",
-    "build:esm": "webpack --config webpack-esm.config.js",
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
@@ -35,7 +27,7 @@
     "@rarible/logger": "~0.6.2",
     "@rarible/protocol-ethereum-sdk": "~0.12.57",
     "@rarible/sdk-transaction": "^0.8.46",
-    "@rarible/sdk-wallet": "^0.8.46",
+    "@rarible/sdk-wallet": "^0.8.46-hotfix.1",
     "@rarible/tezos-sdk": "~0.1.4",
     "@rarible/types": "~0.5.3",
     "@rarible/utils": "~0.5.0",

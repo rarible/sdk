@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.46-hotfix.0...v0.8.46-hotfix.1) (2022-03-21)
+
+
+### Bug Fixes
+
+* rm esm build ([37a20d2](https://github.com/rarible/sdk/commit/37a20d202d15fb18d9d1aff9b7907251f7ad0caf))
+
+
+
+
+
+## [0.8.46-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.46-hotfix.0) (2022-03-21)
+
+
+### Bug Fixes
+
+* add npm token ([387865d](https://github.com/rarible/sdk/commit/387865d413855e55a37aa6768fb87c521a2462f6))
+* remove lazy mint on polygon ([52a43d3](https://github.com/rarible/sdk/commit/52a43d31a191993daf7ca4084da51ea79a929830))
+* update jenkins file ([56d7641](https://github.com/rarible/sdk/commit/56d76416b99ea5a9f5d4e920e70ce1ab95ae426b))
+
+
+### Features
+
+* fix lint ([c2fd61a](https://github.com/rarible/sdk/commit/c2fd61a2d550202f1fed2c3c58bc3d7eb99bf6cc))
+
+
+
+
+
 ## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
 
 

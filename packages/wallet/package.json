@@ -1,17 +1,10 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.8.46",
+  "version": "0.8.46-hotfix.1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "module": "esm/index.js",
-  "exports": {
-    ".": {
-      "import": "./esm/index.js",
-      "require": "./build/index.js"
-    }
-  },
   "files": [
     "build",
     "umd"
@@ -19,7 +12,6 @@
   "scripts": {
     "build": "run-s build:*",
     "build:ts": "tsc --project tsconfig-build.json",
-    "build:esm": "webpack --config webpack-esm.config.js",
     "build:umd": "webpack",
     "clean": "rimraf ./build",
     "test": "jest --runInBand",

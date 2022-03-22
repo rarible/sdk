@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.46-hotfix.0...v0.8.46-hotfix.1) (2022-03-21)
+
+
+### Bug Fixes
+
+* rm esm build ([37a20d2](https://github.com/rarible/sdk/commit/37a20d202d15fb18d9d1aff9b7907251f7ad0caf))
+
+
+
+
+
 ## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
 
 
