@@ -5,7 +5,7 @@ import { genTestWallet, getTestWallet, mint, requestSol } from "./common"
 describe("solana order sdk", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
 
-	test("Should sell & buy nft", async () => { //skip until airdrops work
+	test("Should sell & buy nft", async () => {
 		const sellerWallet = getTestWallet()
 		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
 		const { mintTx } = await mint({ sdk, wallet: sellerWallet })
@@ -63,7 +63,7 @@ describe("solana order sdk", () => {
 		expect(finalTxId).toBeTruthy()
 	})
 
-	test("Should make bid & sell nft", async () => { //skip until airdrops work
+	test("Should make bid & sell nft", async () => {
 		const sellerWallet = getTestWallet()
 		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
 		const { mintTx } = await mint({ sdk, wallet: sellerWallet })
@@ -109,5 +109,59 @@ describe("solana order sdk", () => {
 			price: price,
 		})
 		expect(finalTxId).toBeTruthy()
+	})
+
+	test("Should sell & cancel", async () => {
+		const sellerWallet = getTestWallet()
+		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+		const mint = toPublicKey("6APnUDJXkTAbT5tpKr3WeMGQ74p1QcXZjLR6erpnLM8P")
+
+		const price = 0.01
+		const tokenAmount = 1
+
+		const { txId: sellTxId } = await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: sellerWallet,
+			price: price,
+			tokensAmount: tokenAmount,
+			mint: mint,
+		})
+		expect(sellTxId).toBeTruthy()
+
+		const { txId } = await sdk.order.cancel({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: sellerWallet,
+			price: price,
+			tokensAmount: tokenAmount,
+			mint: mint,
+		})
+		expect(txId).toBeTruthy()
+	})
+
+	test("Should buy & cancel", async () => {
+		const sellerWallet = getTestWallet()
+		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+		const mint = toPublicKey("6APnUDJXkTAbT5tpKr3WeMGQ74p1QcXZjLR6erpnLM8P")
+
+		const price = 0.01
+		const tokenAmount = 1
+
+		const { txId: sellTxId } = await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: sellerWallet,
+			price: price,
+			tokensAmount: tokenAmount,
+			mint: mint,
+		})
+		expect(sellTxId).toBeTruthy()
+
+		const { txId } = await sdk.order.cancel({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: sellerWallet,
+			price: price,
+			tokensAmount: tokenAmount,
+			mint: mint,
+		})
+		expect(txId).toBeTruthy()
 	})
 })

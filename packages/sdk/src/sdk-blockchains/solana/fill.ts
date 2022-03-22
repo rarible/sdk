@@ -1,19 +1,16 @@
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
-import { OrderStatus, Platform } from "@rarible/api-client"
-import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet/src"
-import type { PublicKey } from "@solana/web3.js"
-import { toPublicKey } from "@rarible/solana-common"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction/build/solana"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getAuctionHouse } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
+import { getMintId, getPrice } from "./common/order"
 
 export class SolanaFill {
 	constructor(
@@ -34,20 +31,6 @@ export class SolanaFill {
 		throw new Error("Incorrect request")
 	}
 
-	private getMintId(order: Order): PublicKey {
-		if (order.make.type["@type"] === "SOLANA_NFT") {
-			return extractPublicKey(order.make.type.itemId)
-		}
-		throw new Error("Unsupported type")
-	}
-
-	private getPrice(order: Order): number {
-		if (order.take.type["@type"] === "SOLANA_SOL") {
-			return parseFloat(order.take.value.toString())
-		}
-		throw new Error("Unsupported currency type")
-	}
-
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
@@ -63,8 +46,8 @@ export class SolanaFill {
 					const buyResult = await this.sdk.order.buy({
 						auctionHouse: getAuctionHouse("SOL"),
 						signer: this.wallet!.provider,
-						mint: this.getMintId(order),
-						price: this.getPrice(order),
+						mint: getMintId(order),
+						price: getPrice(order),
 						tokensAmount: buyRequest.amount,
 					})
 
@@ -75,8 +58,8 @@ export class SolanaFill {
 						signer: this.wallet!.provider,
 						buyerWallet: extractPublicKey(order.taker!),
 						sellerWallet: extractPublicKey(order.maker!),
-						mint: this.getMintId(order),
-						price: this.getPrice(order),
+						mint: getMintId(order),
+						price: getPrice(order),
 						tokensAmount: buyRequest.amount,
 					})
 

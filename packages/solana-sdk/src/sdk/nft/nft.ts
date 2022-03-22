@@ -2,7 +2,9 @@ import type { Connection, PublicKey } from "@solana/web3.js"
 import { actions } from "@metaplex/js"
 import type { u64 } from "@solana/spl-token"
 import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { DebugLogger } from "../../logger/debug-logger"
 import { sendTransactionWithRetry } from "../../common/transactions"
+import type { TransactionResult } from "../../types"
 import { getMintNftInstructions } from "./mint/mint"
 
 export interface IMintRequest {
@@ -12,8 +14,7 @@ export interface IMintRequest {
 	collection: PublicKey | null
 }
 
-// eslint-disable-next-line no-undef
-export type IMintResponse = Awaited<ReturnType<typeof sendTransactionWithRetry>> & {mint: PublicKey}
+export type IMintResponse = TransactionResult & {mint: PublicKey}
 
 export interface ITransferRequest {
 	signer: IWalletSigner
@@ -45,7 +46,7 @@ export interface ISolanaNftSdk {
 }
 
 export class SolanaNftSdk implements ISolanaNftSdk {
-	constructor(private readonly connection: Connection) {
+	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
 	}
 
 	async mint(request: IMintRequest): Promise<IMintResponse> {
@@ -63,10 +64,12 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 			request.signer,
 			instructions,
 			signers,
+			"singleGossip",
+			this.logger
 		)
 
-		console.log(`NFT created ${res.txId}`)
-		console.log(`NFT: Mint Address is ${mint.toString()}`)
+		this.logger.log(`NFT created ${res.txId}`)
+		this.logger.log(`NFT: Mint Address is ${mint.toString()}`)
 
 		return {
 			...res,

@@ -11,6 +11,7 @@ import {
 	Transaction,
 } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
 import { getUnixTs, sleep } from "./utils"
 
@@ -21,7 +22,8 @@ export async function sendTransactionWithRetry(
 	wallet: IWalletSigner,
 	instructions: TransactionInstruction[],
 	signers: IWalletSigner[],
-	commitment: Commitment = "singleGossip",
+	commitment: Commitment,
+	logger?: DebugLogger,
 ): Promise<TransactionResult> {
 	const transaction = new Transaction({ feePayer: wallet.publicKey })
 	instructions.forEach(instruction => transaction.add(instruction))
@@ -36,10 +38,13 @@ export async function sendTransactionWithRetry(
 		await wallet.signTransaction(transaction)
 	}
 
-	return await sendSignedTransaction({
-		connection,
-		signedTransaction: transaction,
-	})
+	return await sendSignedTransaction(
+		{
+			connection,
+			signedTransaction: transaction,
+		},
+		logger,
+	)
 }
 
 export async function sendSignedTransaction(
@@ -54,7 +59,9 @@ export async function sendSignedTransaction(
 		sentMessage?: string
 		successMessage?: string
 		timeout?: number
-	}): Promise<TransactionResult> {
+	},
+	logger?: DebugLogger,
+): Promise<TransactionResult> {
 	const rawTransaction = signedTransaction.serialize()
 	const startTime = getUnixTs()
 	let slot = 0
@@ -65,7 +72,7 @@ export async function sendSignedTransaction(
 		},
 	)
 
-	console.log("Started awaiting confirmation for", txId)
+	logger?.log("Started awaiting confirmation for", txId)
 
 	let done = false;
 	(async () => {
@@ -83,36 +90,37 @@ export async function sendSignedTransaction(
 			connection,
 			"confirmed",
 			true,
+			logger,
 		)
 
 		if (!confirmation) {
 			throw new Error("Timed out awaiting confirmation on transaction")
 		}
 		if (confirmation.err) {
-			console.error(confirmation.err)
+			logger?.error(confirmation.err)
 			throw new Error("Transaction failed: Custom instruction error")
 		}
 
 		slot = confirmation?.slot || 0
 	} catch (err: any) {
-		console.error("Timeout Error caught", err)
+		logger?.error("Timeout Error caught", err)
 		if (err.timeout) {
 			throw new Error("Timed out awaiting confirmation on transaction")
 		}
 		let simulateResult: SimulatedTransactionResponse | null = null
 		try {
 			simulateResult = (
-				await simulateTransaction(connection, signedTransaction, "single")
+				await simulateTransaction(connection, signedTransaction, "single", logger)
 			).value
 		} catch (e) {
-			console.error("Simulate Transaction error", e)
+			logger?.error("Simulate Transaction error", e)
 		}
 		if (simulateResult && simulateResult.err) {
 			if (simulateResult.logs) {
 				for (let i = simulateResult.logs.length - 1; i >= 0; --i) {
 					const line = simulateResult.logs[i]
 					if (line.startsWith("Program log: ")) {
-						console.log(simulateResult.logs)
+						logger?.log(simulateResult.logs)
 						throw new Error(
 							"Transaction failed: " + line.slice("Program log: ".length),
 						)
@@ -121,13 +129,13 @@ export async function sendSignedTransaction(
 			}
 			throw new Error(JSON.stringify(simulateResult.err))
 		}
-		console.error("Got this far.")
+		logger?.error("Got this far.")
 		// throw new Error("Transaction failed")
 	} finally {
 		done = true
 	}
 
-	console.debug("Latency (ms)", txId, getUnixTs() - startTime)
+	logger?.log("Latency (ms)", txId, getUnixTs() - startTime)
 	return { txId, slot }
 }
 
@@ -135,6 +143,7 @@ async function simulateTransaction(
 	connection: Connection,
 	transaction: Transaction,
 	commitment: Commitment,
+	logger?: DebugLogger,
 ): Promise<RpcResponseAndContext<SimulatedTransactionResponse>> {
 	// @ts-ignore
 	transaction.recentBlockhash = await connection._recentBlockhash(
@@ -150,7 +159,7 @@ async function simulateTransaction(
 	const args = [encodedTransaction, config]
 
 	// @ts-ignore
-	const res = await connection._rpcRequest("simulateTransaction", args)
+	const res = await connection._rpcRequest("simulateTransaction", args, logger)
 	if (res.error) {
 		throw new Error("failed to simulate transaction: " + res.error.message)
 	}
@@ -163,6 +172,7 @@ async function awaitTransactionSignatureConfirmation(
 	connection: Connection,
 	commitment: Commitment = "recent",
 	queryStatus = false,
+	logger?: DebugLogger,
 ): Promise<SignatureStatus | null | void> {
 	let done = false
 	let status: SignatureStatus | null | void = {
@@ -178,7 +188,7 @@ async function awaitTransactionSignatureConfirmation(
 				return
 			}
 			done = true
-			console.warn("Rejecting for timeout...")
+			logger?.log("Rejecting for timeout...")
 			reject({ timeout: true })
 		}, timeout)
 		try {
@@ -192,10 +202,10 @@ async function awaitTransactionSignatureConfirmation(
 						confirmations: 0,
 					}
 					if (result.err) {
-						console.warn("Rejected via websocket", result.err)
+						logger?.log("Rejected via websocket", result.err)
 						reject(status)
 					} else {
-						console.debug("Resolved via websocket", result)
+						logger?.log("Resolved via websocket", result)
 						resolve(status)
 					}
 				},
@@ -203,7 +213,7 @@ async function awaitTransactionSignatureConfirmation(
 			)
 		} catch (e) {
 			done = true
-			console.error("WS error in setup", txid, e)
+			logger?.error("WS error in setup", txid, e)
 		}
 		while (!done && queryStatus) {
 			// eslint-disable-next-line no-loop-func
@@ -215,22 +225,22 @@ async function awaitTransactionSignatureConfirmation(
 					status = signatureStatuses && signatureStatuses.value[0]
 					if (!done) {
 						if (!status) {
-							console.debug("REST null result for", txid, status)
+							logger?.log("REST null result for", txid, status)
 						} else if (status.err) {
-							console.error("REST error for", txid, status)
+							logger?.error("REST error for", txid, status)
 							done = true
 							reject(status.err)
 						} else if (!status.confirmations) {
-							console.debug("REST no confirmations for", txid, status)
+							logger?.log("REST no confirmations for", txid, status)
 						} else {
-							console.debug("REST confirmation for", txid, status)
+							logger?.log("REST confirmation for", txid, status)
 							done = true
 							resolve(status)
 						}
 					}
 				} catch (e) {
 					if (!done) {
-						console.error("REST connection error: txid", txid, e)
+						logger?.error("REST connection error: txid", txid, e)
 					}
 				}
 			})()
@@ -243,6 +253,6 @@ async function awaitTransactionSignatureConfirmation(
 		connection.removeSignatureListener(subId)
 	}
 	done = true
-	console.debug("Returning status", status)
+	logger?.log("Returning status", status)
 	return status
 }

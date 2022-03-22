@@ -94,8 +94,8 @@ export class SolanaWallet implements AbstractWallet {
 		const data = new TextEncoder().encode(message)
 		const res = await this.provider.signMessage(data)
 		return {
-			signature: new TextDecoder().decode(res.signature),
-			publicKey: this.provider.publicKey!.toString(), //todo remove '!'
+			signature: Buffer.from(res.signature).toString("hex"),
+			publicKey: res.publicKey.toString(),
 		}
 	}
 }

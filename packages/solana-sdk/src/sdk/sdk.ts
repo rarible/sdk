@@ -1,5 +1,6 @@
 import type { Cluster, Commitment, ConnectionConfig } from "@solana/web3.js"
 import { clusterApiUrl, Connection } from "@solana/web3.js"
+import { DebugLogger } from "../logger/debug-logger"
 import type { ISolanaBalancesSdk } from "./balance/balance"
 import type { ISolanaNftSdk } from "./nft/nft"
 import type { ISolanaOrderSdk } from "./order/order"
@@ -20,7 +21,12 @@ export interface ISolanaSdkConfig {
 	connection: {
 		cluster: Cluster
 		commitmentOrConfig?: Commitment | ConnectionConfig
-	}
+	},
+	debug?: boolean // console logging
+}
+
+interface ILoggingConfig {
+	debug: boolean
 }
 
 export class SolanaSdk implements IRaribleSolanaSdk {
@@ -28,10 +34,16 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 	public readonly nft: ISolanaNftSdk
 	public readonly order: ISolanaOrderSdk
 
-	constructor(public readonly connection: Connection, public readonly cluster: Cluster) {
-		this.balances = new SolanaBalancesSdk(connection)
-		this.nft = new SolanaNftSdk(connection)
-		this.order = new SolanaOrderSdk(connection)
+	constructor(
+		public readonly connection: Connection,
+		public readonly cluster: Cluster,
+		private readonly logging: ILoggingConfig
+	) {
+		const debugLogger = new DebugLogger(logging.debug)
+
+		this.balances = new SolanaBalancesSdk(connection, debugLogger)
+		this.nft = new SolanaNftSdk(connection, debugLogger)
+		this.order = new SolanaOrderSdk(connection, debugLogger)
 	}
 
 	confirmTransaction(...args: Parameters<typeof Connection.prototype.confirmTransaction>) {
@@ -40,6 +52,6 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 
 	static create(config: ISolanaSdkConfig): SolanaSdk {
 		const connection = new Connection(clusterApiUrl(config.connection.cluster), config.connection.commitmentOrConfig)
-		return new SolanaSdk(connection, config.connection.cluster)
+		return new SolanaSdk(connection, config.connection.cluster, { debug: !!config.debug })
 	}
 }
