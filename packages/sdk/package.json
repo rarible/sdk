@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.8.45",
+  "version": "0.8.46-hotfix.1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -12,7 +12,6 @@
   "scripts": {
     "build": "run-s create-validators build:*",
     "build:ts": "tsc --project tsconfig-build.json",
-    "build:esm": "webpack --config webpack-esm.config.js",
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
@@ -27,8 +26,8 @@
     "@rarible/flow-sdk": "~0.5.37",
     "@rarible/logger": "~0.6.2",
     "@rarible/protocol-ethereum-sdk": "~0.12.57",
-    "@rarible/sdk-transaction": "^0.8.43",
-    "@rarible/sdk-wallet": "^0.8.40",
+    "@rarible/sdk-transaction": "^0.8.46",
+    "@rarible/sdk-wallet": "^0.8.46-hotfix.1",
     "@rarible/tezos-sdk": "~0.1.4",
     "@rarible/solana-sdk": "~0.0.9",
     "@rarible/solana-wallet": "~0.0.5",

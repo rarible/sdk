@@ -1,5 +1,5 @@
 pipeline {
-  agent none
+  agent any
 
   options {
     disableConcurrentBuilds()
@@ -12,23 +12,22 @@ pipeline {
 
   stages {
 
-
     stage("Run e2e tests") {
       steps {
-        sh 'yarn'
-        sh 'yarn bootstrap'
-        sh 'yarn clean'
-        sh 'yarn build-all'
-        sh 'yarn e2e-tests'
+        withCredentials([string(credentialsId: 'npm-token', variable: 'NPM_TOKEN')]) {
+          sh 'yarn'
+          sh 'yarn bootstrap'
+          sh 'yarn clean'
+          sh 'yarn build-all'
+          sh 'yarn e2e-tests'
+        }
       }
     }
   }
 
   post {
     always {
-      node("") {
-        cleanWs()
-      }
+      cleanWs()
     }
   }
 }
