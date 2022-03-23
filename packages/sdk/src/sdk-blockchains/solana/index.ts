@@ -27,7 +27,7 @@ export function createSolanaSdk(
 		nft: {
 			mint: nftService.mint,
 			burn: nftService.burn,
-			transfer: nonImplementedAction, // nftService.transfer,
+			transfer: nftService.transfer,
 			generateTokenId: nonImplementedAction,
 			deploy: nonImplementedAction,
 			createCollection: nonImplementedAction,
