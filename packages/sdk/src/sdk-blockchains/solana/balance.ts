@@ -18,7 +18,11 @@ export class SolanaBalance {
 		if (assetType["@type"] === "SOLANA_SOL") {
 			return this.sdk.balances.getBalance(extractPublicKey(address), { commitment: "max" })
 		} else if (assetType["@type"] === "SOLANA_NFT") {
-			return this.sdk.balances.getTokenBalance(extractPublicKey(address), extractPublicKey(assetType.itemId))
+			const tokenBalance = await this.sdk.balances.getTokenBalance(
+				extractPublicKey(address),
+				extractPublicKey(assetType.itemId)
+			)
+			return tokenBalance.value?.length
 		} else {
 			throw new Error("Unsupported asset type")
 		}

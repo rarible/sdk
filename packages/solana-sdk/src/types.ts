@@ -11,7 +11,7 @@ export interface SplAssetType {
 
 export interface TransactionResult {
 	txId: string,
-	slot: number
+	slot?: number
 }
 
 export type SolanaCluster = Cluster

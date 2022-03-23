@@ -31,7 +31,7 @@ describe("solana nft sdk", () => {
 
 		await sdk.nft.burn({
 			signer: wallet,
-			token: balance.value[0].pubkey,
+			tokenAccount: balance.value[0].pubkey,
 			mint: mintTx.mint,
 			amount: 1,
 		})

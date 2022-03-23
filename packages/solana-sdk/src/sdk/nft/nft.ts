@@ -24,20 +24,18 @@ export interface ITransferRequest {
 	amount: number | u64
 }
 
-// eslint-disable-next-line no-undef
-export type ITransferResponse = Awaited<ReturnType<typeof actions.sendToken>>
+export type ITransferResponse = TransactionResult
 
 export interface IBurnRequest {
 	signer: IWalletSigner
 	mint: PublicKey
 	owner?: PublicKey
-	token: PublicKey
+	tokenAccount: PublicKey
 	amount: number | u64
 	closeAssociatedAccount?: boolean
 }
 
-// eslint-disable-next-line no-undef
-export type IBurnResponse = Awaited<ReturnType<typeof actions.burnToken>>
+export type IBurnResponse = TransactionResult
 
 export interface ISolanaNftSdk {
 	mint(request: IMintRequest): Promise<IMintResponse>
@@ -92,7 +90,7 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 		return actions.burnToken({
 			connection: this.connection,
 			wallet: request.signer,
-			token: request.token,
+			token: request.tokenAccount,
 			mint: request.mint,
 			amount: request.amount,
 			owner: request.owner,
