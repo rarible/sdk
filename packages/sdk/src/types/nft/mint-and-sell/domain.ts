@@ -24,6 +24,10 @@ export type MintAndSellRequest = MintRequest & {
 	 * Payouts, if not supported by the underlying contract, will throw Error
 	 */
 	payouts?: UnionPart[]
+	/**
+   * Order expiration date
+   */
+	expirationDate?: Date
 }
 
 export type MintAndSellResponse = MintResponse & {

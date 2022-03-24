@@ -9,6 +9,7 @@ async function transferItem(wallet: BlockchainWallet) {
 	})
 	const tx = await transferAction.submit({
 		to: toUnionAddress("<ITEM_RECIPIENT>"),
+		amount: 1,
 	})
 	await tx.wait()
 }

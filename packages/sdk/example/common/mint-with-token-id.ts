@@ -3,14 +3,22 @@ import { toContractAddress, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
 import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
 
-async function mintOnChain(wallet: BlockchainWallet, contractAddress: string) {
+async function mintOnChainWithTokenId(wallet: BlockchainWallet, contractAddress: string) {
 	const sdk = createRaribleSdk(wallet, "dev")
 
+	const collectionId = toContractAddress(contractAddress)
+	//Get tokenId for collection and mint
+	const tokenId = await sdk.nft.generateTokenId({
+		collection: collectionId,
+		minter: toUnionAddress("<CREATOR_ADDRESS>"),
+	})
+
 	const mintAction = await sdk.nft.mint({
-		collectionId: toContractAddress(contractAddress),
+		collectionId,
+		tokenId,
 	})
 	/*
-  You should upload json file with item metadata in the following format:
+  You should upload json file with item metadata with the following format:
   {
     name: string
     description: string | undefined
@@ -18,9 +26,9 @@ async function mintOnChain(wallet: BlockchainWallet, contractAddress: string) {
     "animation_url": string | undefined
     "external_url": string | undefined
     attributes: TokenMetadataAttribute[]
-	}
-	and insert link to json file to "uri" field.
-	To format your json data use "sdk.nft.preprocessMeta()" method
+  }
+  and insert link to json file to "uri" field.
+  To format your json data use "sdk.nft.preprocessMeta()" method
    */
 	const mintResult = await mintAction.submit({
 		uri: "<YOUR_LINK_TO_JSON>",
@@ -29,7 +37,7 @@ async function mintOnChain(wallet: BlockchainWallet, contractAddress: string) {
 			account: toUnionAddress("<ROYLATY_ADDRESS>"),
 			value: 1000,
 		}],
-		//optional
+		//optional, by default creator=minter
 		creators: [{
 			account: toUnionAddress("<CREATOR_ADDRESS>"),
 			value: 10000,
