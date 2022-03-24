@@ -78,7 +78,7 @@ export class TezosWallet implements AbstractWallet {
 	private async sign(p: TezosProvider, message: string, type: "operation" | "message"): Promise<TezosSignatureResult> {
 		type = type || "message"
 		const edpk = await p.public_key()
-		if (edpk == undefined) throw new Error("cannot get public key from provider")
+		if (edpk === undefined) throw new Error("cannot get public key from provider")
 		const r = await p.sign(message, type)
 		return { edpk, ...r }
 	}
