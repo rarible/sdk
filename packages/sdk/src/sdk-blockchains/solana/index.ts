@@ -6,10 +6,8 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction } from "../../common/not-implemented"
 import { SolanaNft } from "./nft"
 import { SolanaFill } from "./fill"
-import { SolanaSell } from "./sell"
+import { SolanaOrder } from "./order"
 import { SolanaBalance } from "./balance"
-import { SolanaCancel } from "./cancel"
-
 
 export function createSolanaSdk(
 	wallet: Maybe<SolanaWallet>,
@@ -19,9 +17,8 @@ export function createSolanaSdk(
 	const sdk = SolanaSdk.create({ connection: { cluster }, debug: true })
 	const nftService = new SolanaNft(sdk, wallet, apis)
 	const balanceService = new SolanaBalance(sdk, wallet)
-	const sellService = new SolanaSell(sdk, wallet)
+	const orderService = new SolanaOrder(sdk, wallet, apis)
 	const fillService = new SolanaFill(sdk, wallet, apis)
-	const cancelService = new SolanaCancel(sdk, wallet, apis)
 
 	return {
 		nft: {
@@ -37,11 +34,11 @@ export function createSolanaSdk(
 			fill: fillService.fill,
 			buy: fillService.fill,
 			acceptBid: fillService.fill,
-			sell: sellService.sell,
+			sell: orderService.sell,
 			sellUpdate: nonImplementedAction, // sellService.update,
-			bid: nonImplementedAction, // bidService.bid,
+			bid: orderService.bid, // bidService.bid,
 			bidUpdate: nonImplementedAction, // bidService.update,
-			cancel: cancelService.cancel,
+			cancel: orderService.cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance, // balanceService.getBalance,
