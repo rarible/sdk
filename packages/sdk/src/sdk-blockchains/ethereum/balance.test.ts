@@ -145,13 +145,4 @@ describe("get polygon balance", () => {
 		expect(balance.toString()).toEqual("0.009145")
 	})
 
-	test("get erc-20 balance", async () => {
-		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
-		const balance = await sdk.balances.getBalance(walletAddress, {
-			"@type": "ERC20",
-			contract: toContractAddress("POLYGON:0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa"),
-		})
-		expect(balance.toString()).toEqual("0.009145")
-	})
-
 })
