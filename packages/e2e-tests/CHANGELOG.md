@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.46-hotfix.0...v0.8.46-hotfix.1) (2022-03-21)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.8.46-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.46-hotfix.0) (2022-03-21)
+
+
+### Features
+
+* fix lint ([c2fd61a](https://github.com/rarible/sdk/commit/c2fd61a2d550202f1fed2c3c58bc3d7eb99bf6cc))
+
+
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+
+
+
 ## [0.8.40](https://github.com/rarible/sdk/compare/v0.8.39...v0.8.40) (2022-02-22)
 
 

@@ -2,20 +2,25 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
+import type { AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
+import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
+import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
 describe("get balance", () => {
-	const { web31, wallet1 } = initProviders()
+	const { web31, wallet1 } = initProviders({
+		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	})
 
 	const ethereum = new Web3Ethereum({
 		web3: web31,
 		from: wallet1.getAddressString(),
 	})
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum, Blockchain.ETHEREUM), "e2e", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "e2e", { logs: LogsLevel.DISABLED })
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -62,6 +67,70 @@ describe("get balance", () => {
 
 		expect(balance.toString()).toEqual(nextBalance)
 	})
+
+	test("convert from eth to wETH", async () => {
+		const senderRaw = wallet1.getAddressString()
+		const wethE2eAssetType: AssetType = {
+			"@type": "ERC20",
+			contract: convertEthereumContractAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2", Blockchain.ETHEREUM),
+		}
+		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
+		const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
+		const convertTx = await sdk.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: true,
+			value: "0.00000000000035",
+		})
+		await convertTx.wait()
+
+		await retry(5, 2000, async () => {
+			const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
+
+			expect(finishWethBalance.toString()).toBe(
+				new BigNumber(initWethBalance).plus("0.00000000000035").toString()
+			)
+		})
+	})
+
+	test("convert from wETH to eth", async () => {
+		const senderRaw = wallet1.getAddressString()
+		const wethE2eAssetType: AssetType = {
+			"@type": "ERC20",
+			contract: convertEthereumContractAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2", Blockchain.ETHEREUM),
+		}
+		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
+		const balanceWithoutWeth = await sdk.balances.getBalance(sender, wethE2eAssetType)
+		const prepareConvertTx = await sdk.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: true,
+			value: "0.00000000000071",
+		})
+		await prepareConvertTx.wait()
+
+		const initWethBalance = await retry(5, 2000, async () => {
+			const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
+			if (new BigNumber(balanceWithoutWeth).isEqualTo(initWethBalance)) {
+				throw new Error("Balance was not updated after init convert operation")
+			}
+			return initWethBalance
+		})
+
+		const convertTx = await sdk.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: false,
+			value: "0.00000000000039",
+		})
+		await convertTx.wait()
+
+		await retry(5, 2000, async () => {
+			const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
+
+			expect(finishWethBalance.toString()).toBe(
+				new BigNumber(initWethBalance).minus("0.00000000000039").toString()
+			)
+		})
+	})
+
 })
 
 describe("get polygon balance", () => {
@@ -72,6 +141,15 @@ describe("get polygon balance", () => {
 		const balance = await sdk.balances.getBalance(walletAddress, {
 			"@type": "ETH",
 			blockchain: Blockchain.POLYGON,
+		})
+		expect(balance.toString()).toEqual("0.009145")
+	})
+
+	test("get erc-20 balance", async () => {
+		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
+		const balance = await sdk.balances.getBalance(walletAddress, {
+			"@type": "ERC20",
+			contract: toContractAddress("POLYGON:0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa"),
 		})
 		expect(balance.toString()).toEqual("0.009145")
 	})

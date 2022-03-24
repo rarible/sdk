@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.8.43",
+  "version": "0.8.46",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -17,10 +17,10 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "~0.0.11",
-    "@rarible/ethereum-provider": "~0.12.42",
+    "@rarible/ethereum-provider": "~0.12.54",
     "@rarible/flow-sdk": "~0.5.37",
     "@rarible/protocol-ethereum-sdk": "~0.12.57",
-    "@rarible/tezos-sdk": "~0.1.3",
+    "@rarible/tezos-sdk": "~0.1.4",
     "@rarible/types": "~0.5.3"
   },
   "devDependencies": {

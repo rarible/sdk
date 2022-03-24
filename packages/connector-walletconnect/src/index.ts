@@ -2,14 +2,8 @@ import type { Observable } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
 import type WalletConnectProvider from "@walletconnect/web3-provider"
 import type { IWalletConnectProviderOptions } from "@walletconnect/types"
-import type {
-	ConnectionState,
-	EthereumProviderConnectionResult, Maybe,
-} from "@rarible/connector"
-import {
-	AbstractConnectionProvider,
-	cache, connectToWeb3, getStateConnecting, noop,
-} from "@rarible/connector"
+import type { ConnectionState, EthereumProviderConnectionResult, Maybe } from "@rarible/connector"
+import { AbstractConnectionProvider, cache, connectToWeb3, getStateConnecting } from "@rarible/connector"
 
 
 const PROVIDER_ID = "walletconnect" as const
@@ -26,7 +20,7 @@ export class WalletConnectConnectionProvider extends
 		this.instance = cache(() => this._connect())
 		this.connection = this.instance.pipe(
 			mergeMap(instance => {
-				const disconnect = () => instance.disconnect().catch(noop)
+				const disconnect = () => instance.disconnect()
 				return connectToWeb3(instance, { disconnect })
 			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID }))
