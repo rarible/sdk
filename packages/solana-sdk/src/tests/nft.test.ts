@@ -2,7 +2,7 @@ import { SolanaSdk } from "../sdk/sdk"
 import { checkTokenBalance, genTestWallet, getTestWallet, mint } from "./common"
 
 describe("solana nft sdk", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
+	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
 
 	test("Should mint nft & send", async () => {
 		const wallet = getTestWallet()

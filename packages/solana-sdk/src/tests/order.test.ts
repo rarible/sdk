@@ -3,7 +3,7 @@ import { toPublicKey } from "../common/utils"
 import { genTestWallet, getTestWallet, mint, requestSol } from "./common"
 
 describe("solana order sdk", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
+	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
 
 	test("Should sell & buy nft", async () => {
 		const sellerWallet = getTestWallet()

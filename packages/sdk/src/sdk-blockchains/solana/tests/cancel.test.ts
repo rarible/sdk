@@ -1,9 +1,9 @@
 import { SolanaWallet } from "@rarible/sdk-wallet"
 import { toBigNumber, toItemId } from "@rarible/types"
 import { toPublicKey } from "@rarible/solana-common"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
-import { getWallet } from "./common/test/test-wallets"
+import { createRaribleSdk } from "../../../index"
+import { LogsLevel } from "../../../domain"
+import { getWallet } from "../common/test/test-wallets"
 
 describe("Solana cancel", () => {
 	const wallet = getWallet(0)

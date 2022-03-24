@@ -2,10 +2,10 @@ import { SolanaWallet } from "@rarible/sdk-wallet"
 import { SolanaSdk } from "@rarible/solana-sdk"
 import { toBigNumber, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { OrderStatus, Platform } from "@rarible/api-client"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
-import { getWallet } from "./common/test/test-wallets"
-import { getAuctionHouse } from "./common/auction-house"
+import { createRaribleSdk } from "../../../index"
+import { LogsLevel } from "../../../domain"
+import { getWallet } from "../common/test/test-wallets"
+import { getAuctionHouse } from "../common/auction-house"
 
 describe("Solana sell", () => {
 	const wallet = getWallet(0)
@@ -35,7 +35,7 @@ describe("Solana sell", () => {
 		})
 
 		const buy = await buyerSdk.order.buy({
-			order: {
+			order: { // todo remove mock
 				id: toOrderId("SOLANA:1111111"),
 				fill: toBigNumber("1"),
 				platform: Platform.RARIBLE,
