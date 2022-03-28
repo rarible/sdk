@@ -15,7 +15,6 @@ import type {
 	OrderRequest,
 	OrderUpdateRequest,
 } from "../../types/order/common"
-import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
 import type { PrepareOrderUpdateRequest } from "../../types/order/common"
@@ -25,6 +24,8 @@ import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import type { GetConvertableValueRequest } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
+import type { RequestCurrencyAssetType } from "../../common/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -54,7 +55,7 @@ export class TezosBid {
 		this.convertCurrency = this.convertCurrency.bind(this)
 	}
 
-	getMakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
+	getMakeAssetType(type: RequestCurrencyAssetType): XTZAssetType | FTAssetType {
 		switch (type["@type"]) {
 			case "XTZ": {
 				return {
@@ -156,10 +157,11 @@ export class TezosBid {
 			id: "convert" as const,
 			run: async (request: OrderRequest) => {
 				const wXTZUnionAddress = this.getWXTZContractAddress()
-				if (request.currency["@type"] === "TEZOS_FT" && request.currency.contract === wXTZUnionAddress) {
+				const requestCurrency = getCurrencyAssetType(request.currency)
+				if (requestCurrency["@type"] === "TEZOS_FT" && requestCurrency.contract === wXTZUnionAddress) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
-						request.currency,
+						requestCurrency,
 						request.price,
 						request.amount,
 						originFeesSum
@@ -174,13 +176,14 @@ export class TezosBid {
 				run: async (request: OrderRequest) => {
 					const provider = getRequiredProvider(this.provider)
 					const makerPublicKey = await getMakerPublicKey(provider)
+					const requestCurrency = getCurrencyAssetType(request.currency)
 
 					const order: TezosOrder = await bid(
 						provider,
 						{
 							maker: pk_to_pkh(makerPublicKey),
 							maker_edpk: makerPublicKey,
-							make_asset_type: this.getMakeAssetType(request.currency),
+							make_asset_type: this.getMakeAssetType(requestCurrency),
 							amount: new BigNumber(request.amount),
 							take_asset_type: {
 								asset_class: itemCollection.type,

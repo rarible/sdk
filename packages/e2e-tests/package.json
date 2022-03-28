@@ -11,9 +11,9 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "~0.0.11",
+    "@rarible/api-client": "0.0.11",
     "@rarible/ethereum-sdk-test-common": "~0.12.54",
-    "@rarible/types": "~0.8.0"
+    "@rarible/types": "~0.9.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

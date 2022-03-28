@@ -3,6 +3,7 @@ import { toWord } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import * as common from "./common"
 import type { EVMBlockchain } from "./common"
 import { getEthereumItemId, getEVMBlockchain, isEVMBlockchain } from "./common"
@@ -35,14 +36,14 @@ export class EthereumSell {
 				const expirationDate = sellFormRequest.expirationDate instanceof Date
 					? Math.round(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
-
+				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 				return {
 					makeAssetType: {
 						tokenId: item.tokenId,
 						contract: item.contract,
 					},
 					amount: sellFormRequest.amount,
-					takeAssetType: common.getEthTakeAssetType(sellFormRequest.currency),
+					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,
 					payouts: common.toEthereumParts(sellFormRequest.payouts),
 					originFees: common.toEthereumParts(sellFormRequest.originFees),

@@ -1,7 +1,7 @@
 import { awaitAll, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toItemId } from "@rarible/types"
+import { toContractAddress, toCurrencyId, toItemId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
@@ -94,7 +94,6 @@ describe("sale", () => {
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
-
 	test.skip("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
@@ -130,6 +129,37 @@ describe("sale", () => {
 			errorMessage = e.message
 		}
 		expect(errorMessage).toBeTruthy()
+	})
+
+	test("erc721 sell/buy using erc-20 with CurrencyId", async () => {
+		const wallet1Address = wallet1.getAddressString()
+		const wallet2Address = wallet2.getAddressString()
+		const tokenId = 4
+		await conf.testErc721.methods.mint(wallet1Address, tokenId, "").send({ from: wallet1Address, gas: 200000 })
+		await conf.testErc20.methods.mint(wallet2Address, 100).send({ from: wallet1Address, gas: 200000 })
+		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
+
+		await awaitItem(sdk1, itemId)
+
+		const sellAction = await sdk1.order.sell({ itemId })
+		const orderId = await sellAction.submit({
+			amount: 1,
+			price: "0.000000000000000002",
+			currency: toCurrencyId(`ETHEREUM:${conf.testErc20.options.address}`),
+		})
+
+		const nextStock = "1"
+		const order = await awaitStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const fillAction = await sdk2.order.buy({ order })
+
+		const tx = await fillAction.submit({ amount: 1 })
+		await tx.wait()
+
+		const nextStock2 = "0"
+		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
 })
