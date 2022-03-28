@@ -1,9 +1,16 @@
 import type { SolanaAuctionHouseDataV1 } from "@rarible/api-client/build/models/OrderData"
-import type { Order } from "@rarible/api-client"
+import type { Order, OrderId } from "@rarible/api-client"
 import type { PublicKey } from "@solana/web3.js"
+import { keccak256 } from "@ethersproject/keccak256"
+import { toOrderId } from "@rarible/types"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import type { IApisSdk } from "../../../domain"
 import { extractPublicKey } from "./address-converters"
+
+export function getOrderId(maker: string, itemId: string, auctionHouse: string): OrderId {
+	const data = new TextEncoder().encode(maker + itemId + auctionHouse)
+	return toOrderId("SOLANA:" + keccak256(data))
+}
 
 export async function getPreparedOrder(request: PrepareFillRequest, apis: IApisSdk): Promise<Order> {
 	if ("order" in request) {
@@ -26,6 +33,8 @@ export function getOrderData(order: Order): SolanaAuctionHouseDataV1 {
 export function getMintId(order: Order): PublicKey {
 	if (order.make.type["@type"] === "SOLANA_NFT") {
 		return extractPublicKey(order.make.type.itemId)
+	} else if (order.take.type["@type"] === "SOLANA_NFT") {
+		return extractPublicKey(order.take.type.itemId)
 	}
 	throw new Error("Unsupported type")
 }
@@ -33,6 +42,8 @@ export function getMintId(order: Order): PublicKey {
 export function getPrice(order: Order): number {
 	if (order.take.type["@type"] === "SOLANA_SOL") {
 		return parseFloat(order.take.value.toString())
+	} else if (order.make.type["@type"] === "SOLANA_SOL") {
+		return parseFloat(order.make.value.toString())
 	}
 	throw new Error("Unsupported currency type")
 }
@@ -40,6 +51,8 @@ export function getPrice(order: Order): number {
 export function	getTokensAmount(order: Order): number {
 	if (order.make.type["@type"] === "SOLANA_NFT") {
 		return parseFloat(order.make.value.toString())
+	} else if (order.take.type["@type"] === "SOLANA_NFT") {
+		return parseFloat(order.take.value.toString())
 	}
 	throw new Error("Unsupported asset type")
 }

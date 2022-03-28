@@ -3,7 +3,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import { Action } from "@rarible/action"
 import { toBigNumber, toItemId } from "@rarible/types"
-import { BlockchainSolanaTransaction, BlockchainTezosTransaction } from "@rarible/sdk-transaction"
+import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -19,7 +19,9 @@ export class SolanaNft {
 		readonly wallet: Maybe<SolanaWallet>,
 		private readonly apis: IApisSdk,
 	) {
-
+		this.mint = this.mint.bind(this)
+		this.burn = this.burn.bind(this)
+		this.transfer = this.transfer.bind(this)
 	}
 
 	getCollectionId(prepareRequest: PrepareMintRequest) {
@@ -79,7 +81,10 @@ export class SolanaNft {
 				run: async (request: BurnRequest) => {
 					const amount = request?.amount ?? 1
 					const mint = extractPublicKey(item.id)
-					const tokenAccount = await this.sdk.balances.getTokenBalance(this.wallet!.provider.publicKey, mint)
+					const tokenAccount = await this.sdk.connection.getTokenAccountsByOwner(
+						this.wallet!.provider.publicKey,
+						{ mint }
+					)
 
 					const result = await this.sdk.nft.burn({
 						mint: mint,
@@ -110,7 +115,10 @@ export class SolanaNft {
 				run: async (request: TransferRequest) => {
 					const amount = request?.amount ?? 1
 					const mint = extractPublicKey(item.id)
-					const tokenAccount = await this.sdk.balances.getTokenBalance(this.wallet!.provider.publicKey, mint)
+					const tokenAccount = await this.sdk.connection.getTokenAccountsByOwner(
+						this.wallet!.provider.publicKey,
+						{ mint }
+					)
 
 					const result = await this.sdk.nft.transfer({
 						mint: mint,

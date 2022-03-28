@@ -5,7 +5,7 @@ import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 
-describe("get balance", () => {
+describe("Solana get balance", () => {
 	const wallet = getWallet()
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
 	const solanaSdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
@@ -15,7 +15,7 @@ describe("get balance", () => {
 			toUnionAddress("SOLANA:" + wallet.publicKey),
 			{ "@type": "SOLANA_SOL" }
 		)
-		expect(balance).toBeGreaterThanOrEqual(1)
+		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 	})
 
 	test("get balance NFT", async () => {
@@ -32,6 +32,6 @@ describe("get balance", () => {
 			toUnionAddress("SOLANA:" + wallet.publicKey),
 			{ "@type": "SOLANA_NFT", itemId: toItemId("SOLANA:" + mint.toString()) }
 		)
-		expect(balance).toBeGreaterThanOrEqual(1)
+		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 	})
 })

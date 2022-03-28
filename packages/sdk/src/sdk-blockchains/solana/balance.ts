@@ -16,13 +16,12 @@ export class SolanaBalance {
 
 	async getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
 		if (assetType["@type"] === "SOLANA_SOL") {
-			return this.sdk.balances.getBalance(extractPublicKey(address), { commitment: "max" })
+			return (await this.sdk.balances.getBalance(extractPublicKey(address), { commitment: "max" })).toString()
 		} else if (assetType["@type"] === "SOLANA_NFT") {
-			const tokenBalance = await this.sdk.balances.getTokenBalance(
+			return (await this.sdk.balances.getTokenBalance(
 				extractPublicKey(address),
 				extractPublicKey(assetType.itemId)
-			)
-			return tokenBalance.value?.length
+			)).toString()
 		} else {
 			throw new Error("Unsupported asset type")
 		}
