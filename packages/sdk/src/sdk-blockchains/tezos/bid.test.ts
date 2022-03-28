@@ -1,6 +1,6 @@
 import { toBigNumber, toCurrencyId, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import type { TezosFTAssetType, TezosMTAssetType } from "@rarible/api-client"
+import type { TezosFTAssetType } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
