@@ -53,7 +53,7 @@ export class SolanaFill {
 					const res = await this.sdk.order.executeSell({
 						auctionHouse: getAuctionHouse("SOL"),
 						signer: this.wallet!.provider,
-						buyerWallet: extractPublicKey(order.taker!),
+						buyerWallet: this.wallet!.provider.publicKey,
 						sellerWallet: extractPublicKey(order.maker!),
 						mint: getMintId(order),
 						price: getPrice(order),
@@ -95,8 +95,8 @@ export class SolanaFill {
 					const res = await this.sdk.order.executeSell({
 						auctionHouse: getAuctionHouse("SOL"),
 						signer: this.wallet!.provider,
-						buyerWallet: extractPublicKey(order.taker!),
-						sellerWallet: extractPublicKey(order.maker!),
+						buyerWallet: extractPublicKey(order.maker!),
+						sellerWallet: this.wallet!.provider.publicKey,
 						mint: getMintId(order),
 						price: getPrice(order),
 						tokensAmount: buyRequest.amount,

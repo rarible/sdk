@@ -6,24 +6,31 @@ import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { getAuctionHouse } from "../common/auction-house"
+import { MintType } from "../../../types/nft/mint/domain"
 
 describe("Solana sell", () => {
 	const wallet = getWallet(0)
 	const buyerWallet = getWallet(1)
-	const solanaSdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
+	//const solanaSdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
 	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev")
 	test("Should sell NFT item", async () => {
-		const { txId, mint } = await solanaSdk.nft.mint({
-			signer: wallet,
-			metadataUrl: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
-			maxSupply: 1,
-			collection: null,
+		const { submit } = await sdk.nft.mint({
+			collectionId: toContractAddress("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
 
-		expect(mint).toBeTruthy()
-		await solanaSdk.confirmTransaction(txId, "max")
-		const itemId = toItemId(`SOLANA:${mint.toString()}`)
+		const mintRes = await submit({
+			supply: 1,
+			lazyMint: false,
+			uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
+		})
+
+		expect(mintRes.itemId).toBeTruthy()
+		if (mintRes.type === MintType.ON_CHAIN) {
+			await mintRes.transaction.wait()
+		}
+
+		const itemId = mintRes.itemId
 
 		const sell = await sdk.order.sell({ itemId })
 		const orderId = await sell.submit({
@@ -33,6 +40,8 @@ describe("Solana sell", () => {
 			},
 			price: toBigNumber("0.001"),
 		})
+
+		console.log("orderid", orderId)
 
 		const buy = await buyerSdk.order.buy({
 			order: { // todo remove mock

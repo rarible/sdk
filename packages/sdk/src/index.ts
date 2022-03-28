@@ -71,7 +71,7 @@ export function createRaribleSdk(
 		order: {
 			...instance.order,
 			//sell: createSell(instance.order.sell, apis),
-			sell: mockCreateSell(instance.order.sell, apis),
+			sell: createSell(instance.order.sell, apis),
 		},
 		apis,
 		wallet,
@@ -143,7 +143,7 @@ function mockCreateSell(sell: ISellInternal, apis: IApisSdk): ISell {
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		const collectionId = toContractAddress(item.contract as any) //todo remove then fixed
+		const collectionId = toContractAddress(item.collection as any) //todo remove then fixed
 		const response = await sell({ collectionId })
 		return {
 			...response,
