@@ -2,6 +2,7 @@ import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk } from "@rarible/flow-sdk"
 import { toBigNumber } from "@rarible/types"
+import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import { createApisSdk } from "../../common/apis"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { createTestItem } from "./test/create-test-item"
@@ -10,7 +11,7 @@ import { FlowBid } from "./bid"
 import { FlowCancel } from "./cancel"
 import { awaitFlowOrder } from "./test/await-order"
 import { FlowBuy } from "./buy"
-import { createTestBid } from "./test/create-test-bid"
+import { createTestBid, createTestBidWithCurrencyId } from "./test/create-test-bid"
 
 describe("Flow bid", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
@@ -22,7 +23,7 @@ describe("Flow bid", () => {
 	const cancel = new FlowCancel(sdk, apis, "testnet")
 	const acceptBid = new FlowBuy(sdk, apis, "testnet")
 
-	test.skip("Should place a bid on flow NFT item, update bid and cancel bid ", async () => {
+	test("Should place a bid on flow NFT item, update bid and cancel bid ", async () => {
 		const itemId = await createTestItem(mint)
 
 		const orderId = await createTestBid(bid, itemId)
@@ -42,6 +43,17 @@ describe("Flow bid", () => {
 
 		const cancelledOrder = await awaitFlowOrder(sdk, updatedBidId.split(":")[1])
 		expect(cancelledOrder.status).toEqual("CANCELLED")
+	}, 1000000)
+
+	test("Should place a bid on flow NFT item with CurrencyId", async () => {
+		const itemId = await createTestItem(mint)
+
+		const orderId = await createTestBidWithCurrencyId(bid, itemId)
+
+		const order = await awaitFlowOrder(sdk, orderId.split(":")[1])
+		const takeAssetType = order.make
+		expect(takeAssetType["@type"]).toEqual("fungible")
+		expect(takeAssetType.contract).toEqual("A.ebf4ae01d1284af8.RaribleNFT")
 	}, 1000000)
 
 	test.skip("Should place a bid on flow NFT item and accept bid", async () => {

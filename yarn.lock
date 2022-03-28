@@ -4787,7 +4787,7 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@~0.0.11":
+"@rarible/api-client@0.0.11":
   version "0.0.11"
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.11.tgz#434345e5eb51c48a8b3f88beebb6234618e88346"
   integrity sha512-GZ59w8JlfOoA2W30Vxka+inf3GeMGANyR9HX/9FkC1a/B4n8EtCvDmItUqzbzdmbwIdWghsp4NV/k574pYI04w==
@@ -4962,10 +4962,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.0.tgz#7922cf982d401b9b77ddb87af662103af3dbf13c"
   integrity sha512-o58EFUPTy2YRDUZOJlbg3hiKDpLut/qA6ehhPj6TLCHhQr+mg1+UMPAVyiBKyMrm7otECh348cJEPvMf5i+1/g==
 
-"@rarible/types@~0.8.0":
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.8.0.tgz#94cc81b466b57b2d9dede328ddd36a7dfc687534"
-  integrity sha512-105o0AsD1wwfxdIxzQ3wigL86JnzdAMlH68hPKx3klTOXumK8Au7svzjSHuR0npmrZZ3LcTbR4aIMoI29w4EWg==
+"@rarible/types@~0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.1.tgz#df86ff473c4310142ca6f28faae07622d5195608"
+  integrity sha512-W5V2r8sztS3FYlTFAr0nbiFnyOLKuml3kgrFjpxMp312HVKNSLJLF3lqkwRDFcMFdvxRSGN23chaMDSoBcztSQ==
 
 "@rarible/utils@~0.5.0":
   version "0.5.0"

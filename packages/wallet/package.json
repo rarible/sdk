@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "~0.0.11",
+    "@rarible/api-client": "0.0.11",
     "@rarible/ethereum-provider": "~0.12.54"
   },
   "devDependencies": {
