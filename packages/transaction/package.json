@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.8.46",
+  "version": "0.8.47",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -22,7 +22,7 @@
     "@rarible/protocol-ethereum-sdk": "~0.12.57",
     "@rarible/tezos-sdk": "~0.1.4",
     "@rarible/solana-sdk": "~0.0.8",
-    "@rarible/types": "~0.8.3"
+    "@rarible/types": "~0.9.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

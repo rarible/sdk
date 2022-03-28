@@ -5370,7 +5370,7 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
-"@rarible/ethereum-sdk-test-common@^0.12.54", "@rarible/ethereum-sdk-test-common@~0.12.54":
+"@rarible/ethereum-sdk-test-common@~0.12.54":
   version "0.12.54"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.54.tgz#98bca947901c1249b86ed51738dbd69849190965"
   integrity sha512-daTQmLgiVw8vULn0nM/h01XCIw8M3XbrrqNrU7KsYODVxx0z5dH3phQC6yG891wcOwqiPUZO+wb4R62u6dFczw==
@@ -5515,6 +5515,11 @@
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.8.3.tgz#dea65968ec1dfec4572c1a9f099232f322c198de"
   integrity sha512-i/aUCFF6TGDz7hPLDehGFSVIizW9cs7v2PWnzbgDegWc4w/HkWr26JfR/28PFl8/NiXCME8ES/RHEOjE4KkmLA==
+
+"@rarible/types@~0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.1.tgz#df86ff473c4310142ca6f28faae07622d5195608"
+  integrity sha512-W5V2r8sztS3FYlTFAr0nbiFnyOLKuml3kgrFjpxMp312HVKNSLJLF3lqkwRDFcMFdvxRSGN23chaMDSoBcztSQ==
 
 "@rarible/utils@~0.5.0":
   version "0.5.0"

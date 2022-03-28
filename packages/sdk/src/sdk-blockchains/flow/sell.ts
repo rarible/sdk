@@ -9,6 +9,7 @@ import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import {
 	convertFlowOrderId,
 	getFlowCollection,
@@ -38,8 +39,9 @@ export class FlowSell {
 		const sellAction = Action.create({
 			id: "send-tx" as const,
 			run: async (sellRequest: OrderCommon.OrderInternalRequest) => {
-				if (sellRequest.currency["@type"] === "FLOW_FT") {
-					const currency = getFungibleTokenName(sellRequest.currency.contract)
+				const requestCurrency = getCurrencyAssetType(sellRequest.currency)
+				if (requestCurrency["@type"] === "FLOW_FT") {
+					const currency = getFungibleTokenName(requestCurrency.contract)
 					const { itemId } = parseUnionItemId(sellRequest.itemId)
 					return this.sdk.order.sell({
 						collection: contract,
@@ -50,7 +52,7 @@ export class FlowSell {
 					})
 
 				}
-				throw new Error(`Unsupported currency type: ${sellRequest.currency["@type"]}`)
+				throw new Error(`Unsupported currency type: ${requestCurrency["@type"]}`)
 			},
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 

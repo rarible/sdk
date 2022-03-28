@@ -7,7 +7,6 @@ import type { TezosProvider, FTAssetType, XTZAssetType } from "@rarible/tezos-sd
 import BigNumber from "bignumber.js"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import { Blockchain } from "@rarible/api-client"
-import type { RequestCurrency } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import { retry } from "../../common/retry"
@@ -16,6 +15,8 @@ import type {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../types/order/common"
+import type { RequestCurrencyAssetType } from "../../common/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
@@ -37,7 +38,7 @@ export class TezosSell {
 		this.update = this.update.bind(this)
 	}
 
-	parseTakeAssetType(type: RequestCurrency): XTZAssetType | FTAssetType {
+	parseTakeAssetType(type: RequestCurrencyAssetType): XTZAssetType | FTAssetType {
 		switch (type["@type"]) {
 			case "XTZ":
 				return {
@@ -76,6 +77,7 @@ export class TezosSell {
 				const item = await retry(90, 1000, async () => {
 				   return this.apis.item.getNftItemById({ itemId })
 				})
+				const requestCurrency = getCurrencyAssetType(request.currency)
 
 				const tezosRequest: TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
@@ -85,7 +87,7 @@ export class TezosSell {
 						contract: item.contract,
 						token_id: new BigNumber(item.tokenId),
 					},
-					take_asset_type: this.parseTakeAssetType(request.currency),
+					take_asset_type: this.parseTakeAssetType(requestCurrency),
 					amount: new BigNumber(request.amount),
 					price: new BigNumber(request.price),
 					payouts: await getPayouts(provider, request.payouts),

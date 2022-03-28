@@ -21,7 +21,8 @@ import type {
 } from "@rarible/ethereum-api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import type { CurrencyType, RequestCurrency } from "../../../common/domain"
+import type { CurrencyType } from "../../../common/domain"
+import type { RequestCurrencyAssetType } from "../../../common/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
 export const EVMBlockchains: EVMBlockchain[] = [
@@ -31,7 +32,7 @@ export const EVMBlockchains: EVMBlockchain[] = [
 
 export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
 
-export function getEthTakeAssetType(currency: RequestCurrency) {
+export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 	switch (currency["@type"]) {
 		case "ERC20":
 			return {

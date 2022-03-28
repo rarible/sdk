@@ -27,6 +27,7 @@ import type {
 	PrepareBidUpdateResponse,
 } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -178,8 +179,9 @@ export class EthereumBid {
 				const expirationDate = request.expirationDate instanceof Date
 					? Math.round(request.expirationDate.getTime() / 1000)
 					: undefined
+				const currencyAssetType = getCurrencyAssetType(request.currency)
 				return {
-					makeAssetType: common.getEthTakeAssetType(request.currency),
+					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					takeAssetType: takeAssetType,
 					amount: request.amount,
 					priceDecimal: request.price,
@@ -194,10 +196,11 @@ export class EthereumBid {
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderRequest) => {
 				const wethContractAddress = this.getWethContractAddress()
-				if (request.currency["@type"] === "ERC20" && request.currency.contract === wethContractAddress) {
+				const currency = getCurrencyAssetType(request.currency)
+				if (currency["@type"] === "ERC20" && currency.contract === wethContractAddress) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
-						request.currency,
+						currency,
 						request.price,
 						request.amount,
 						originFeesSum

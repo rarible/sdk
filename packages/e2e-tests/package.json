@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.8.46-hotfix.1",
+  "version": "0.8.47",
   "homepage": "",
   "license": "ISC",
   "private": true,
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@rarible/api-client": "~0.0.11-sol2",
-    "@rarible/ethereum-sdk-test-common": "^0.12.54",
-    "@rarible/types": "~0.8.3"
+    "@rarible/ethereum-sdk-test-common": "~0.12.54",
+    "@rarible/types": "~0.9.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
