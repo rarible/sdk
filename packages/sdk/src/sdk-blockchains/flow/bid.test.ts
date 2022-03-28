@@ -22,7 +22,7 @@ describe("Flow bid", () => {
 	const cancel = new FlowCancel(sdk, apis, "testnet")
 	const acceptBid = new FlowBuy(sdk, apis, "testnet")
 
-	test("Should place a bid on flow NFT item, update bid and cancel bid ", async () => {
+	test.skip("Should place a bid on flow NFT item, update bid and cancel bid ", async () => {
 		const itemId = await createTestItem(mint)
 
 		const orderId = await createTestBid(bid, itemId)
@@ -44,7 +44,7 @@ describe("Flow bid", () => {
 		expect(cancelledOrder.status).toEqual("CANCELLED")
 	}, 1000000)
 
-	test("Should place a bid on flow NFT item with CurrencyId", async () => {
+	test.skip("Should place a bid on flow NFT item with CurrencyId", async () => {
 		const itemId = await createTestItem(mint)
 
 		const orderId = await createTestBidWithCurrencyId(bid, itemId)
