@@ -1,10 +1,24 @@
-import { ZERO_ADDRESS } from "@rarible/types"
+import { toContractAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { EthErc20AssetType, EthEthereumAssetType, TezosFTAssetType, TezosXTZAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import { getCurrencyAssetType } from "./get-currency-asset-type"
 
 describe("test getCurrencyAssetType", () => {
+	test("get eth asset type from asset type", async () => {
+		const assetType = getCurrencyAssetType({
+			"@type": "ETH",
+		})
+		expect(assetType["@type"]).toEqual("ETH")
+	})
+	test("get erc-20 asset type from asset type", async () => {
+		const assetType = getCurrencyAssetType({
+			"@type": "ERC20",
+			contract: toContractAddress("ETHEREUM:0x0000000000000000000000000000000000000001"),
+		}) as EthErc20AssetType
+		expect(assetType["@type"]).toEqual("ERC20")
+		expect(assetType.contract).toEqual("ETHEREUM:0x0000000000000000000000000000000000000001")
+	})
 	test("get eth asset type from currency id", async () => {
 		const assetType = getCurrencyAssetType(`ETHEREUM:${ZERO_ADDRESS}`) as EthEthereumAssetType
 		expect(assetType["@type"]).toEqual("ETH")
