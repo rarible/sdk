@@ -70,7 +70,6 @@ export function createRaribleSdk(
 		},
 		order: {
 			...instance.order,
-			//sell: createSell(instance.order.sell, apis),
 			sell: createSell(instance.order.sell, apis),
 		},
 		apis,
@@ -120,25 +119,6 @@ function filterWallet<T extends BlockchainGroup>(
 	}
 	return undefined
 }
-
-//todo remove when getItemById will work
-function mockCreateSell(sell: ISellInternal, apis: IApisSdk): ISell {
-	return async ({ itemId }) => {
-		//const item = await apis.item.getItemById({ itemId })
-		//const collectionId = toContractAddress(item.contract as any) //todo remove then fixed
-		const response = await sell({ collectionId: toContractAddress("SOLANA:11111") })
-		return {
-			...response,
-			maxAmount: toBigNumber("1"),
-			submit: response.submit
-				.before((input: OrderRequest) => ({
-					itemId,
-					...input,
-				})),
-		}
-	}
-}
-
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {

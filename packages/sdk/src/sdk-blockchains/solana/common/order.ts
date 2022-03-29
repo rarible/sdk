@@ -1,6 +1,7 @@
 import type { SolanaAuctionHouseDataV1 } from "@rarible/api-client/build/models/OrderData"
 import type { Order, OrderId } from "@rarible/api-client"
 import type { PublicKey } from "@solana/web3.js"
+import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { keccak256 } from "@ethersproject/keccak256"
 import { toOrderId } from "@rarible/types"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
@@ -41,9 +42,9 @@ export function getMintId(order: Order): PublicKey {
 
 export function getPrice(order: Order): number {
 	if (order.take.type["@type"] === "SOLANA_SOL") {
-		return parseFloat(order.take.value.toString())
+		return parseFloat(order.take.value.toString()) / LAMPORTS_PER_SOL
 	} else if (order.make.type["@type"] === "SOLANA_SOL") {
-		return parseFloat(order.make.value.toString())
+		return parseFloat(order.make.value.toString()) / LAMPORTS_PER_SOL
 	}
 	throw new Error("Unsupported currency type")
 }

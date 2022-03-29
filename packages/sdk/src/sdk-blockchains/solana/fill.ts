@@ -8,9 +8,8 @@ import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { getAuctionHouse } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
-import { getMintId, getPreparedOrder, getPrice } from "./common/order"
+import { getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 
 export class SolanaFill {
 	constructor(
@@ -39,24 +38,28 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
+					const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
+					const mint = getMintId(order)
+					const price = getPrice(order)
+
 					// todo: unite transactions in one call
 					const buyResult = await this.sdk.order.buy({
-						auctionHouse: getAuctionHouse("SOL"),
+						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
-						mint: getMintId(order),
-						price: getPrice(order),
+						mint: mint,
+						price: price,
 						tokensAmount: buyRequest.amount,
 					})
 
 					await this.sdk.confirmTransaction(buyResult.txId, "max")
 
 					const res = await this.sdk.order.executeSell({
-						auctionHouse: getAuctionHouse("SOL"),
+						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						buyerWallet: this.wallet!.provider.publicKey,
 						sellerWallet: extractPublicKey(order.maker!),
-						mint: getMintId(order),
-						price: getPrice(order),
+						mint: mint,
+						price: price,
 						tokensAmount: buyRequest.amount,
 					})
 
@@ -81,24 +84,28 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
+					const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
+					const mint = getMintId(order)
+					const price = getPrice(order)
+
 					// todo: unite transactions in one call
 					const buyResult = await this.sdk.order.sell({
-						auctionHouse: getAuctionHouse("SOL"),
+						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
-						mint: getMintId(order),
-						price: getPrice(order),
+						mint: mint,
+						price: price,
 						tokensAmount: buyRequest.amount,
 					})
 
 					await this.sdk.confirmTransaction(buyResult.txId, "max")
 
 					const res = await this.sdk.order.executeSell({
-						auctionHouse: getAuctionHouse("SOL"),
+						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						buyerWallet: extractPublicKey(order.maker!),
 						sellerWallet: this.wallet!.provider.publicKey,
-						mint: getMintId(order),
-						price: getPrice(order),
+						mint: mint,
+						price: price,
 						tokensAmount: buyRequest.amount,
 					})
 

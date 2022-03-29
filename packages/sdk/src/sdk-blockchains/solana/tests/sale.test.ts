@@ -44,33 +44,7 @@ describe("Solana sell", () => {
 		console.log("orderid", orderId)
 
 		const buy = await buyerSdk.order.buy({
-			order: { // todo remove mock
-				id: toOrderId("SOLANA:1111111"),
-				fill: toBigNumber("1"),
-				platform: Platform.RARIBLE,
-				status: OrderStatus.ACTIVE,
-				makeStock: toBigNumber("1"),
-				cancelled: false,
-				createdAt: "2022-03-15:10:00:00",
-				lastUpdatedAt: "2022-03-15:10:00:00",
-				makePrice: toBigNumber("0.001"),
-				takePrice: toBigNumber("0.001"),
-				maker: toUnionAddress("SOLANA:" + wallet.publicKey.toString()),
-				taker: toUnionAddress("SOLANA:" + buyerWallet.publicKey.toString()),
-				make: {
-					type: { "@type": "SOLANA_NFT", itemId: itemId },
-					value: toBigNumber("1"),
-				},
-				take: {
-					type: { "@type": "SOLANA_SOL" },
-					value: toBigNumber("0.001"),
-				},
-				salt: "salt",
-				data: {
-					"@type": "SOLANA_AUCTION_HOUSE_V1",
-					auctionHouse: toContractAddress("SOLANA:" + getAuctionHouse("SOL").toString()),
-				},
-			},
+			orderId,
 		})
 
 		const tx = await buy.submit({

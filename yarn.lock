@@ -5511,11 +5511,6 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.0.tgz#7922cf982d401b9b77ddb87af662103af3dbf13c"
   integrity sha512-o58EFUPTy2YRDUZOJlbg3hiKDpLut/qA6ehhPj6TLCHhQr+mg1+UMPAVyiBKyMrm7otECh348cJEPvMf5i+1/g==
 
-"@rarible/types@~0.8.3":
-  version "0.8.3"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.8.3.tgz#dea65968ec1dfec4572c1a9f099232f322c198de"
-  integrity sha512-i/aUCFF6TGDz7hPLDehGFSVIizW9cs7v2PWnzbgDegWc4w/HkWr26JfR/28PFl8/NiXCME8ES/RHEOjE4KkmLA==
-
 "@rarible/types@~0.9.1":
   version "0.9.1"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.1.tgz#df86ff473c4310142ca6f28faae07622d5195608"
