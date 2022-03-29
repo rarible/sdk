@@ -15,11 +15,11 @@ describe("Solana sell", () => {
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
 	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev")
 	test("Should sell NFT item", async () => {
-		const { submit } = await sdk.nft.mint({
+		const mint = await sdk.nft.mint({
 			collectionId: toContractAddress("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
 
-		const mintRes = await submit({
+		const mintRes = await mint.submit({
 			supply: 1,
 			lazyMint: false,
 			uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",

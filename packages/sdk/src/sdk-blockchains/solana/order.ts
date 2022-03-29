@@ -1,25 +1,32 @@
-import { OrderStatus, Platform } from "@rarible/api-client"
-import type { Order } from "@rarible/api-client"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import { Action } from "@rarible/action"
-import { toBigNumber, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import { toPublicKey } from "@rarible/solana-common"
 import type * as OrderCommon from "../../types/order/common"
+import type {
+	OrderRequest,
+	OrderUpdateRequest,
+	PrepareOrderUpdateRequest,
+	PrepareOrderUpdateResponse,
+} from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
-import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
-import type { OrderRequest } from "../../types/order/common"
-import type { GetConvertableValueResult } from "../../types/order/bid/domain"
-import type { OrderUpdateRequest, PrepareOrderUpdateRequest, PrepareOrderUpdateResponse } from "../../types/order/common"
-import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
-import { getAuctionHouse } from "./common/auction-house"
+import type {
+	GetConvertableValueResult,
+	PrepareBidRequest,
+	PrepareBidResponse,
+	PrepareBidUpdateResponse,
+} from "../../types/order/bid/domain"
+import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
 import { getCurrencies } from "./common/currencies"
+
+const WRAPPED_SOL = "So11111111111111111111111111111111111111112"
 
 export class SolanaOrder {
 	constructor(
@@ -45,14 +52,17 @@ export class SolanaOrder {
 				const auctionHouse = getAuctionHouse("SOL")
 
 				const res = await this.sdk.order.sell({
-					auctionHouse: getAuctionHouse("SOL"),
+					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
 					price: parseFloat(request.price.toString()),
 					tokensAmount: request.amount,
 				})
 
+				await this.sdk.confirmTransaction(res.txId, "max")
+
 				return getOrderId(
+					"SELL",
 					this.wallet!.provider.publicKey.toString(),
 					mint.toString(),
 					auctionHouse.toString()
@@ -65,7 +75,7 @@ export class SolanaOrder {
 			payoutsSupport: PayoutsSupport.NONE,
 			multiple: true,
 			supportedCurrencies: getCurrencies(),
-			baseFee: 0, //await this.sdk.order.getBaseOrderFee(), //todo check this
+			baseFee: await getAuctionHouseFee(getAuctionHouse("SOL")), //todo check this
 			supportsExpirationDate: false,
 			submit: submit,
 		}
@@ -92,7 +102,10 @@ export class SolanaOrder {
 					tokensAmount: getTokensAmount(order),
 				})
 
+				await this.sdk.confirmTransaction(res.txId, "max")
+
 				return getOrderId(
+					"SELL",
 					this.wallet!.provider.publicKey.toString(),
 					mint.toString(),
 					auctionHouse.toString()
@@ -104,7 +117,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: 0, //await this.sdk.order.getBaseOrderFee(), //todo check this
+			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!), //todo check this
 			submit: updateAction,
 		}
 	}
@@ -138,12 +151,19 @@ export class SolanaOrder {
 					tokensAmount: request.amount,
 				})
 
-				return toOrderId(`SOLANA:${res.txId}`)
+				await this.sdk.confirmTransaction(res.txId, "max")
+
+				return getOrderId(
+					"BUY",
+					this.wallet!.provider.publicKey.toString(),
+					WRAPPED_SOL, //todo should be ah currency program address
+					auctionHouse.toString()
+				)
 			},
 		})
 
 		return {
-			multiple: true,
+			multiple: parseFloat(item.supply) > 1,
 			maxAmount: toBigNumber(item.supply),
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
@@ -176,9 +196,12 @@ export class SolanaOrder {
 					tokensAmount: getTokensAmount(order),
 				})
 
+				await this.sdk.confirmTransaction(res.txId, "max")
+
 				return getOrderId(
+					"BUY",
 					this.wallet!.provider.publicKey.toString(),
-					mint.toString(),
+					WRAPPED_SOL,  //todo should be ah currency program address
 					auctionHouse.toString()
 				)
 			},
@@ -197,35 +220,7 @@ export class SolanaOrder {
 	cancel: ICancel = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
-			//const order = await getPreparedOrder(request, this.apis)
-
-			const order = { // todo remove mock
-				id: toOrderId("SOLANA:1111111"),
-				fill: toBigNumber("1"),
-				platform: Platform.RARIBLE,
-				status: OrderStatus.ACTIVE,
-				makeStock: toBigNumber("1"),
-				cancelled: false,
-				createdAt: "2022-03-15:10:00:00",
-				lastUpdatedAt: "2022-03-15:10:00:00",
-				makePrice: toBigNumber("0.001"),
-				takePrice: toBigNumber("0.001"),
-				maker: toUnionAddress("SOLANA:1111"),
-				taker: undefined,
-				make: {
-					type: { "@type": "SOLANA_NFT", itemId: (request as any).itemId },
-					value: toBigNumber("1"),
-				},
-				take: {
-					type: { "@type": "SOLANA_SOL" },
-					value: toBigNumber("0.001"),
-				},
-				salt: "salt",
-				data: {
-					"@type": "SOLANA_AUCTION_HOUSE_V1",
-					auctionHouse: toContractAddress("SOLANA:" + getAuctionHouse("SOL").toString()),
-				},
-			} as Order
+			const order = await getPreparedOrder(request, this.apis)
 			const orderData = getOrderData(order)
 
 			const tx = await this.sdk.order.cancel({

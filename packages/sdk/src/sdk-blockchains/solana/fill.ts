@@ -4,12 +4,14 @@ import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import type { Order } from "@rarible/api-client"
+import { OrderStatus } from "@rarible/api-client"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
+import { getAuctionHouseFee } from "./common/auction-house"
 
 export class SolanaFill {
 	constructor(
@@ -30,6 +32,9 @@ export class SolanaFill {
 		}
 
 		const order = await getPreparedOrder(request, this.apis)
+		if (order.status !== OrderStatus.ACTIVE) {
+			throw new Error("Order is not active")
+		}
 		return this.isBuyOrder(order) ? this.buy(order) : this.acceptBid(order)
 	}
 
@@ -117,7 +122,7 @@ export class SolanaFill {
 		return {
 			multiple: true,
 			maxAmount: toBigNumber("1"),
-			baseFee: 0, // todo 0 if buy, use ah fee on fill sell or acceptbid
+			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!), // todo check this
 			supportsPartialFill: true,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,

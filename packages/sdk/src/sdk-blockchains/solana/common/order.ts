@@ -1,15 +1,14 @@
 import type { SolanaAuctionHouseDataV1 } from "@rarible/api-client/build/models/OrderData"
 import type { Order, OrderId } from "@rarible/api-client"
 import type { PublicKey } from "@solana/web3.js"
-import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { keccak256 } from "@ethersproject/keccak256"
 import { toOrderId } from "@rarible/types"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import type { IApisSdk } from "../../../domain"
 import { extractPublicKey } from "./address-converters"
 
-export function getOrderId(maker: string, itemId: string, auctionHouse: string): OrderId {
-	const data = new TextEncoder().encode(maker + itemId + auctionHouse)
+export function getOrderId(orderType: "BUY" | "SELL", maker: string, itemId: string, auctionHouse: string): OrderId {
+	const data = new TextEncoder().encode(maker + itemId + orderType + auctionHouse)
 	return toOrderId("SOLANA:" + keccak256(data))
 }
 
@@ -42,9 +41,9 @@ export function getMintId(order: Order): PublicKey {
 
 export function getPrice(order: Order): number {
 	if (order.take.type["@type"] === "SOLANA_SOL") {
-		return parseFloat(order.take.value.toString()) / LAMPORTS_PER_SOL
+		return parseFloat(order.take.value.toString())
 	} else if (order.make.type["@type"] === "SOLANA_SOL") {
-		return parseFloat(order.make.value.toString()) / LAMPORTS_PER_SOL
+		return parseFloat(order.make.value.toString())
 	}
 	throw new Error("Unsupported currency type")
 }
