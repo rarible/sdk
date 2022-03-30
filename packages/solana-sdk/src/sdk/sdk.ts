@@ -1,12 +1,20 @@
 import type { Cluster, Commitment, ConnectionConfig } from "@solana/web3.js"
+import type { IWalletSigner } from "@rarible/solana-wallet"
 import { clusterApiUrl, Connection } from "@solana/web3.js"
+import type { TransactionInstruction } from "@solana/web3.js"
 import { DebugLogger } from "../logger/debug-logger"
+import type { TransactionResult } from "../types"
+import { sendTransactionWithRetry } from "../common/transactions"
+import type { ITransactionPreparedInstructions } from "../common/transactions"
 import type { ISolanaBalancesSdk } from "./balance/balance"
 import type { ISolanaNftSdk } from "./nft/nft"
 import type { ISolanaOrderSdk } from "./order/order"
+import type { ISolanaCollectionSdk } from "./collection/collection"
 import { SolanaBalancesSdk } from "./balance/balance"
 import { SolanaNftSdk } from "./nft/nft"
 import { SolanaOrderSdk } from "./order/order"
+import { SolanaCollectionSdk } from "./collection/collection"
+import type { PreparedTransaction } from "./prepared-transaction"
 
 export interface IRaribleSolanaSdk {
 	nft: ISolanaNftSdk
@@ -15,6 +23,11 @@ export interface IRaribleSolanaSdk {
 	confirmTransaction(
 		...args: Parameters<typeof Connection.prototype.confirmTransaction>
 	): ReturnType<typeof Connection.prototype.confirmTransaction>
+	unionInstructionsAndSend(
+		signer: IWalletSigner,
+		preparedTransactions: PreparedTransaction[],
+		commitment: Commitment,
+	): Promise<TransactionResult>
 }
 
 export interface ISolanaSdkConfig {
@@ -30,24 +43,51 @@ interface ILoggingConfig {
 }
 
 export class SolanaSdk implements IRaribleSolanaSdk {
+	public readonly debugLogger: DebugLogger
+
 	public readonly balances: ISolanaBalancesSdk
 	public readonly nft: ISolanaNftSdk
 	public readonly order: ISolanaOrderSdk
+	public readonly collection: ISolanaCollectionSdk
 
 	constructor(
 		public readonly connection: Connection,
 		public readonly cluster: Cluster,
 		private readonly logging: ILoggingConfig
 	) {
-		const debugLogger = new DebugLogger(logging.debug)
+		this.debugLogger = new DebugLogger(logging.debug)
 
-		this.balances = new SolanaBalancesSdk(connection, debugLogger)
-		this.nft = new SolanaNftSdk(connection, debugLogger)
-		this.order = new SolanaOrderSdk(connection, debugLogger)
+		this.balances = new SolanaBalancesSdk(connection, this.debugLogger)
+		this.nft = new SolanaNftSdk(connection, this.debugLogger)
+		this.order = new SolanaOrderSdk(connection, this.debugLogger)
+		this.collection = new SolanaCollectionSdk(connection, this.debugLogger)
 	}
 
 	confirmTransaction(...args: Parameters<typeof Connection.prototype.confirmTransaction>) {
 		return this.connection.confirmTransaction(...args)
+	}
+
+	async unionInstructionsAndSend(
+		signer: IWalletSigner,
+		preparedTransactions: PreparedTransaction[],
+		commitment: Commitment,
+	): Promise<TransactionResult> {
+		const res = await sendTransactionWithRetry(
+			this.connection,
+			signer,
+			preparedTransactions.reduce<TransactionInstruction[]>((acc, trans) => {
+				acc.push(...trans.data.instructions)
+				return acc
+			}, []),
+			preparedTransactions.reduce<IWalletSigner[]>((acc, trans) => {
+				acc.push(...trans.data.signers)
+				return acc
+			}, []),
+			commitment,
+			this.debugLogger
+		)
+
+		return res
 	}
 
 	static create(config: ISolanaSdkConfig): SolanaSdk {

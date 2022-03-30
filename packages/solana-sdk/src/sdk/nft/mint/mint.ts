@@ -23,6 +23,7 @@ import {
 	getTokenWallet,
 } from "../../../common/helpers"
 import { METADATA_SCHEMA } from "../../../common/schema"
+import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 
 async function fetchMetadata(url: string): Promise<any> {
 	try {
@@ -98,7 +99,7 @@ export async function getMintNftInstructions(
 	maxSupply: number = 0,
 	verifyCreators: boolean = false,
 	use?: Uses,
-) {
+): Promise<ITransactionPreparedInstructions & { mint: PublicKey }> {
 	// Retrieve metadata
 	const data = await createMetadata(
 		metadataLink,

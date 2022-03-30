@@ -1,8 +1,9 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { sendTransactionWithRetry } from "../../common/transactions"
+import { ITransactionPreparedInstructions, sendTransactionWithRetry } from "../../common/transactions"
 import type { TransactionResult } from "../../types"
 import type { DebugLogger } from "../../logger/debug-logger"
+import { PreparedTransaction } from "../prepared-transaction"
 import { getAuctionHouseSellInstructions } from "./auction-house/sell"
 import { getActionHouseBuyInstructions } from "./auction-house/buy"
 import { getAuctionHouseExecuteSellInstructions } from "./auction-house/execute-sell"
@@ -17,8 +18,6 @@ export interface ISellRequest {
 	tokensAmount: number
 }
 
-export type SellResponse = TransactionResult
-
 export interface IBuyRequest {
 	auctionHouse: PublicKey
 	signer: IWalletSigner
@@ -29,8 +28,6 @@ export interface IBuyRequest {
 	tokensAmount: number
 }
 
-export type BuyResponse = TransactionResult
-
 export interface ICancelRequest {
 	auctionHouse: PublicKey
 	signer: IWalletSigner
@@ -38,8 +35,6 @@ export interface ICancelRequest {
 	price: number
 	tokensAmount: number
 }
-
-export type CancelResponse = TransactionResult
 
 export interface IExecuteSellRequest {
 	auctionHouse: PublicKey
@@ -53,21 +48,19 @@ export interface IExecuteSellRequest {
 	tokensAmount: number
 }
 
-export type ExecuteSellResponse = TransactionResult
-
 export interface ISolanaOrderSdk {
-	sell(request: ISellRequest): Promise<SellResponse>
-	buy(request: IBuyRequest): Promise<BuyResponse>
-	cancel(request: ICancelRequest): Promise<CancelResponse>
-	executeSell(request: IExecuteSellRequest): Promise<ExecuteSellResponse>
+	sell(request: ISellRequest): Promise<PreparedTransaction>
+	buy(request: IBuyRequest): Promise<PreparedTransaction>
+	cancel(request: ICancelRequest): Promise<PreparedTransaction>
+	executeSell(request: IExecuteSellRequest): Promise<PreparedTransaction>
 }
 
 export class SolanaOrderSdk implements ISolanaOrderSdk {
 	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
 	}
 
-	async sell(request: ISellRequest): Promise<SellResponse> {
-		const { instructions, signers } = await getAuctionHouseSellInstructions({
+	async sell(request: ISellRequest): Promise<PreparedTransaction> {
+		const instructions = await getAuctionHouseSellInstructions({
 			connection: this.connection,
 			auctionHouse: request.auctionHouse,
 			price: request.price,
@@ -76,30 +69,27 @@ export class SolanaOrderSdk implements ISolanaOrderSdk {
 			tokensAmount: request.tokensAmount,
 		})
 
-		const res = await sendTransactionWithRetry(
+		return new PreparedTransaction(
 			this.connection,
-			request.signer,
 			instructions,
-			signers,
-			"max",
-			this.logger
+			request.signer,
+			this.logger,
+			() => {
+				this.logger.log(
+					"Set",
+					request.tokensAmount,
+					request.mint.toString(),
+					"for sale for",
+					request.price,
+					"from your account with Auction House",
+					request.auctionHouse.toString(),
+				)
+			}
 		)
-
-		this.logger.log(
-			"Set",
-			request.tokensAmount,
-			request.mint.toString(),
-			"for sale for",
-			request.price,
-			"from your account with Auction House",
-			request.auctionHouse.toString(),
-		)
-
-		return res
 	}
 
-	async buy(request: IBuyRequest): Promise<BuyResponse> {
-		const { instructions, signers } = await getActionHouseBuyInstructions({
+	async buy(request: IBuyRequest): Promise<PreparedTransaction> {
+		const instructions = await getActionHouseBuyInstructions({
 			connection: this.connection,
 			auctionHouse: request.auctionHouse,
 			price: request.price,
@@ -109,26 +99,23 @@ export class SolanaOrderSdk implements ISolanaOrderSdk {
 			tokenAccount: request.tokenAccount,
 		})
 
-		const res = await sendTransactionWithRetry(
+		return new PreparedTransaction(
 			this.connection,
-			request.signer,
 			instructions,
-			signers,
-			"max",
-			this.logger
+			request.signer,
+			this.logger,
+			() => {
+				this.logger.log("Made offer for ",
+					request.mint.toString(),
+					"for",
+					request.price
+				)
+			}
 		)
-
-		this.logger.log("Made offer for ",
-			request.mint.toString(),
-			"for",
-			request.price
-		)
-
-		return res
 	}
 
-	async cancel(request: ICancelRequest): Promise<CancelResponse> {
-		const { instructions, signers } = await getAuctionHouseCancelInstructions({
+	async cancel(request: ICancelRequest): Promise<PreparedTransaction> {
+		const instructions = await getAuctionHouseCancelInstructions({
 			connection: this.connection,
 			auctionHouse: request.auctionHouse,
 			price: request.price,
@@ -137,35 +124,32 @@ export class SolanaOrderSdk implements ISolanaOrderSdk {
 			tokensAmount: request.tokensAmount,
 		})
 
-		const res = await sendTransactionWithRetry(
+		return new PreparedTransaction(
 			this.connection,
-			request.signer,
 			instructions,
-			signers,
-			"max",
-			this.logger
+			request.signer,
+			this.logger,
+			() => {
+				this.logger.log("Cancelled order of",
+					request.tokensAmount,
+					request.mint.toString(),
+					"for",
+					request.price,
+				)
+			}
 		)
-
-		this.logger.log("Cancelled order of",
-			request.tokensAmount,
-			request.mint.toString(),
-			"for",
-			request.price,
-		)
-
-		return res
 	}
 
-	async acceptBid(request: ISellRequest): Promise<SellResponse> {
+	async acceptBid(request: ISellRequest): Promise<PreparedTransaction> {
 		return this.sell(request)
 	}
 
-	async bid(request: IBuyRequest): Promise<BuyResponse> {
+	async bid(request: IBuyRequest): Promise<PreparedTransaction> {
 		return this.buy(request)
 	}
 
-	async executeSell(request: IExecuteSellRequest): Promise<ExecuteSellResponse> {
-		const { instructions, signers } = await getAuctionHouseExecuteSellInstructions({
+	async executeSell(request: IExecuteSellRequest): Promise<PreparedTransaction> {
+		const instructions = await getAuctionHouseExecuteSellInstructions({
 			connection: this.connection,
 			auctionHouse: request.auctionHouse,
 			signer: request.signer,
@@ -177,65 +161,26 @@ export class SolanaOrderSdk implements ISolanaOrderSdk {
 			tokensAmount: request.tokensAmount,
 		})
 
-		const res = await sendTransactionWithRetry(
+		return new PreparedTransaction(
 			this.connection,
-			request.signer,
 			instructions,
-			signers,
-			"max",
-			this.logger
-		)
-
-		this.logger.log(
-			"Accepted",
-			request.tokensAmount,
-			request.mint.toString(),
-			"sale from wallet",
-			request.sellerWallet.toString(),
-			"to",
-			request.buyerWallet.toString(),
-			"for",
-			request.price,
-			"from your account with Auction House",
-			request.auctionHouse.toString(),
-		)
-
-		return res
-	}
-
-	async buyAndExecute(request: IExecuteSellRequest & IBuyRequest): Promise<ExecuteSellResponse> {
-		// test method
-		const { instructions: buyInstructions, signers: buySigners } = await getActionHouseBuyInstructions({
-			connection: this.connection,
-			auctionHouse: request.auctionHouse,
-			price: request.price,
-			mint: request.mint,
-			signer: request.signer,
-			tokensAmount: request.tokensAmount,
-			tokenAccount: request.tokenAccount,
-		})
-
-		const { instructions: execInstructions, signers: execSigners } = await getAuctionHouseExecuteSellInstructions({
-			connection: this.connection,
-			auctionHouse: request.auctionHouse,
-			signer: request.signer,
-			buyerWallet: request.buyerWallet,
-			sellerWallet: request.sellerWallet,
-			mint: request.mint,
-			tokenAccount: request.tokenAccount,
-			price: request.price,
-			tokensAmount: request.tokensAmount,
-		})
-
-		const res = await sendTransactionWithRetry(
-			this.connection,
 			request.signer,
-			[...buyInstructions, ...execInstructions],
-			[...buySigners, ...execSigners],
-			"max",
-			this.logger
+			this.logger,
+			() => {
+				this.logger.log(
+					"Accepted",
+					request.tokensAmount,
+					request.mint.toString(),
+					"sale from wallet",
+					request.sellerWallet.toString(),
+					"to",
+					request.buyerWallet.toString(),
+					"for",
+					request.price,
+					"from your account with Auction House",
+					request.auctionHouse.toString(),
+				)
+			}
 		)
-
-		return res
 	}
 }

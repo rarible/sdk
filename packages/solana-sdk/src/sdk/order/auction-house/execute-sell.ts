@@ -7,6 +7,7 @@ import { decodeMetadata } from "../../../common/schema"
 import type { Metadata } from "../../../common/schema"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getMetadata } from "../../../common/helpers"
+import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import {
 	getAssociatedTokenAccountForMint,
 	getAuctionHouseBuyerEscrow,
@@ -29,14 +30,9 @@ export interface IActionHouseExecuteSellRequest {
 	tokensAmount: number
 }
 
-export interface IActionHouseExecuteSellResponse {
-	instructions: web3.TransactionInstruction[]
-	signers: IWalletSigner[]
-}
-
 export async function getAuctionHouseExecuteSellInstructions(
 	request: IActionHouseExecuteSellRequest
-): Promise<IActionHouseExecuteSellResponse> {
+): Promise<ITransactionPreparedInstructions> {
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 

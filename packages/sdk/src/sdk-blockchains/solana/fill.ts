@@ -1,4 +1,3 @@
-import { toBigNumber } from "@rarible/types/build/big-number"
 import { Action } from "@rarible/action"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -49,8 +48,7 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
-					// todo: unite transactions in one call
-					const buyResult = await this.sdk.order.buy({
+					const buyPrepare = await this.sdk.order.buy({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						mint: mint,
@@ -58,9 +56,7 @@ export class SolanaFill {
 						tokensAmount: buyRequest.amount,
 					})
 
-					await this.sdk.confirmTransaction(buyResult.txId, "max")
-
-					const res = await this.sdk.order.executeSell({
+					const executePrepare = await this.sdk.order.executeSell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						buyerWallet: this.wallet!.provider.publicKey,
@@ -70,7 +66,11 @@ export class SolanaFill {
 						tokensAmount: buyRequest.amount,
 					})
 
-					return res
+					return this.sdk.unionInstructionsAndSend(
+						this.wallet!.provider,
+						[buyPrepare, executePrepare],
+						"max"
+					)
 				},
 			})
 			.after(tx => new BlockchainSolanaTransaction(tx, this.sdk))
@@ -97,8 +97,7 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
-					// todo: unite transactions in one call
-					const buyResult = await this.sdk.order.sell({
+					const sellPrepare = await this.sdk.order.sell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						mint: mint,
@@ -106,9 +105,7 @@ export class SolanaFill {
 						tokensAmount: buyRequest.amount,
 					})
 
-					await this.sdk.confirmTransaction(buyResult.txId, "max")
-
-					const res = await this.sdk.order.executeSell({
+					const executePrepare = await this.sdk.order.executeSell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						buyerWallet: extractPublicKey(order.maker!),
@@ -118,7 +115,11 @@ export class SolanaFill {
 						tokensAmount: buyRequest.amount,
 					})
 
-					return res
+					return this.sdk.unionInstructionsAndSend(
+						this.wallet!.provider,
+						[sellPrepare, executePrepare],
+						"max"
+					)
 				},
 			})
 			.after(tx => new BlockchainSolanaTransaction(tx, this.sdk))
@@ -133,5 +134,4 @@ export class SolanaFill {
 			submit,
 		}
 	}
-
 }

@@ -56,20 +56,22 @@ export async function checkTokenBalance(
 	return balance
 }
 
-export async function mint({ sdk, wallet }: { sdk: SolanaSdk, wallet: SolanaKeypairWallet }) {
-	const mintTx = await sdk.nft.mint({
+export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: SolanaKeypairWallet }) {
+	const mintPrepare = await sdk.nft.mint({
 		signer: wallet,
 		metadataUrl: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 		maxSupply: 1,
 		collection: null,
 	})
 
+	const mintTx = await mintPrepare.tx.submit("max")
+
 	expect(mintTx.txId).toBeTruthy()
-	expect(mintTx.mint).toBeTruthy()
+	expect(mintPrepare.mint).toBeTruthy()
 
 	// required confirmation
 	await sdk.connection.confirmTransaction(mintTx.txId, "finalized")
-	const balance = await checkTokenBalance(sdk.connection, wallet.publicKey, mintTx.mint, 1)
+	const balance = await checkTokenBalance(sdk.connection, wallet.publicKey, mintPrepare.mint, 1)
 
-	return { mintTx, balance }
+	return { mintTx, mint: mintPrepare.mint, balance }
 }

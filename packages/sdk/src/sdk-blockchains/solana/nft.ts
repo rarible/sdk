@@ -39,22 +39,24 @@ export class SolanaNft {
 
 		return {
 			multiple: false, // todo: support
-			supportsRoyalties: false, // todo: support
+			supportsRoyalties: false,
 			supportsLazyMint: false,
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (request: MintRequest) => {
-					const result = await this.sdk.nft.mint({
+					const mintPrepare = await this.sdk.nft.mint({
 						metadataUrl: request.uri,
 						signer: this.wallet!.provider,
 						maxSupply: request.supply,
 						collection: this.getCollectionId(prepareRequest),
 					})
 
+					const res = await mintPrepare.tx.submit("single")
+
 					return {
 						type: MintType.ON_CHAIN,
-						transaction: new BlockchainSolanaTransaction(result, this.sdk),
-						itemId: toItemId(`SOLANA:${result.mint.toString()}`),
+						transaction: new BlockchainSolanaTransaction(res, this.sdk),
+						itemId: toItemId(`SOLANA:${mintPrepare.mint.toString()}`),
 					}
 				},
 			}),
@@ -85,7 +87,7 @@ export class SolanaNft {
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
-						closeAssociatedAccount: false, // should be set true if all tokens burn
+						closeAssociatedAccount: false, // todo should be set true if all tokens burn
 						tokenAccount: tokenAccount.value[0]?.pubkey,
 					})
 

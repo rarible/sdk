@@ -3,8 +3,8 @@ import { actions } from "@metaplex/js"
 import type { u64 } from "@solana/spl-token"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
-import { sendTransactionWithRetry } from "../../common/transactions"
 import type { TransactionResult } from "../../types"
+import { PreparedTransaction } from "../prepared-transaction"
 import { getMintNftInstructions } from "./mint/mint"
 
 export interface IMintRequest {
@@ -14,7 +14,7 @@ export interface IMintRequest {
 	collection: PublicKey | null
 }
 
-export type IMintResponse = TransactionResult & {mint: PublicKey}
+export type IMintResponse = {tx: PreparedTransaction, mint: PublicKey}
 
 export interface ITransferRequest {
 	signer: IWalletSigner
@@ -23,8 +23,6 @@ export interface ITransferRequest {
 	mint: PublicKey
 	amount: number | u64
 }
-
-export type ITransferResponse = TransactionResult
 
 export interface IBurnRequest {
 	signer: IWalletSigner
@@ -35,12 +33,10 @@ export interface IBurnRequest {
 	closeAssociatedAccount?: boolean
 }
 
-export type IBurnResponse = TransactionResult
-
 export interface ISolanaNftSdk {
 	mint(request: IMintRequest): Promise<IMintResponse>
-	transfer(request: ITransferRequest): Promise<ITransferResponse>
-	burn(request: IBurnRequest): Promise<IBurnResponse>
+	transfer(request: ITransferRequest): Promise<TransactionResult>
+	burn(request: IBurnRequest): Promise<TransactionResult>
 }
 
 export class SolanaNftSdk implements ISolanaNftSdk {
@@ -48,7 +44,7 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 	}
 
 	async mint(request: IMintRequest): Promise<IMintResponse> {
-		const { instructions, signers, mint } = await getMintNftInstructions(
+		const { mint, ...instructions } = await getMintNftInstructions(
 			this.connection,
 			request.signer,
 			request.metadataUrl,
@@ -57,25 +53,22 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 			request.maxSupply
 		)
 
-		const res = await sendTransactionWithRetry(
-			this.connection,
-			request.signer,
-			instructions,
-			signers,
-			"singleGossip",
-			this.logger
-		)
-
-		this.logger.log(`NFT created ${res.txId}`)
-		this.logger.log(`NFT: Mint Address is ${mint.toString()}`)
-
 		return {
-			...res,
+			tx: new PreparedTransaction(
+				this.connection,
+				instructions,
+				request.signer,
+				this.logger,
+				(tx: TransactionResult) => {
+					this.logger.log(`NFT created ${tx.txId}`)
+					this.logger.log(`NFT: Mint Address is ${mint.toString()}`)
+				}
+			),
 			mint,
 		}
 	}
 
-	async transfer(request: ITransferRequest): Promise<ITransferResponse> {
+	async transfer(request: ITransferRequest): Promise<TransactionResult> {
 		return actions.sendToken({
 			connection: this.connection,
 			wallet: request.signer,
@@ -86,7 +79,7 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 		})
 	}
 
-	async burn(request: IBurnRequest): Promise<IBurnResponse> {
+	async burn(request: IBurnRequest): Promise<TransactionResult> {
 		return actions.burnToken({
 			connection: this.connection,
 			wallet: request.signer,

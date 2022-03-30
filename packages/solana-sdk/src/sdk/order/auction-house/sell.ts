@@ -3,6 +3,7 @@ import type { IWalletSigner } from "@rarible/solana-wallet"
 import { BN } from "@project-serum/anchor"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
 import { getMetadata } from "../../../common/helpers"
+import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import {
 	getAssociatedTokenAccountForMint,
 	getAuctionHouseProgramAsSigner,
@@ -21,14 +22,9 @@ export interface IActionHouseSellRequest {
 	tokensAmount: number
 }
 
-export interface IActionHouseSellResponse {
-	instructions: TransactionInstruction[]
-	signers: IWalletSigner[]
-}
-
 export async function getAuctionHouseSellInstructions(
 	request: IActionHouseSellRequest
-): Promise<IActionHouseSellResponse> {
+): Promise<ITransactionPreparedInstructions> {
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 

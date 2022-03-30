@@ -5,6 +5,7 @@ import { BN } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import type * as web3 from "@solana/web3.js"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
+import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getMetadata } from "../../../common/helpers"
 import {
@@ -26,12 +27,10 @@ export interface IActionHouseBuyRequest {
 	tokensAmount: number
 }
 
-export type IActionHouseBuyResponse = {
-	instructions: web3.TransactionInstruction[]
-	signers: IWalletSigner[]
-}
 
-export async function getActionHouseBuyInstructions(request: IActionHouseBuyRequest): Promise<IActionHouseBuyResponse> {
+export async function getActionHouseBuyInstructions(
+	request: IActionHouseBuyRequest
+): Promise<ITransactionPreparedInstructions> {
 	const walletKeyPair = request.signer
 
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
@@ -43,7 +42,7 @@ export async function getActionHouseBuyInstructions(request: IActionHouseBuyRequ
 			auctionHouseObj.treasuryMint,
 			walletKeyPair,
 			anchorProgram,
-		)
+		),
 	)
 
 	const tokenSizeAdjusted = new BN(
@@ -52,7 +51,7 @@ export async function getActionHouseBuyInstructions(request: IActionHouseBuyRequ
 			request.mint,
 			walletKeyPair,
 			anchorProgram,
-		)
+		),
 	)
 
 	const [escrowPaymentAccount, escrowBump] = await getAuctionHouseBuyerEscrow(
@@ -75,7 +74,7 @@ export async function getActionHouseBuyInstructions(request: IActionHouseBuyRequ
 		auctionHouseObj.treasuryMint,
 		request.mint,
 		tokenSizeAdjusted,
-		buyPriceAdjusted
+		buyPriceAdjusted,
 	)
 
 	const isNative = auctionHouseObj.treasuryMint.equals(WRAPPED_SOL_MINT)

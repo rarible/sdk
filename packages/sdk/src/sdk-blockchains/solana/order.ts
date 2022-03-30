@@ -51,13 +51,13 @@ export class SolanaOrder {
 				const mint = extractPublicKey(request.itemId)
 				const auctionHouse = getAuctionHouse("SOL")
 
-				const res = await this.sdk.order.sell({
+				const res = await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
 					price: parseFloat(request.price.toString()),
 					tokensAmount: request.amount,
-				})
+				})).submit("max")
 
 				await this.sdk.confirmTransaction(res.txId, "max")
 
@@ -94,13 +94,13 @@ export class SolanaOrder {
 				const mint = getMintId(order)
 				const auctionHouse = toPublicKey(getOrderData(order).auctionHouse!)
 
-				const res = await this.sdk.order.sell({
+				const res = await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
 					price: parseFloat(updateRequest.price.toString()),
 					tokensAmount: getTokensAmount(order),
-				})
+				})).submit("max")
 
 				await this.sdk.confirmTransaction(res.txId, "max")
 
@@ -143,13 +143,13 @@ export class SolanaOrder {
 				const mint = extractPublicKey(prepare.itemId)
 				const auctionHouse = getAuctionHouse("SOL")
 
-				const res = await this.sdk.order.buy({
+				const res = await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
 					price: parseFloat(request.price.toString()),
 					tokensAmount: request.amount,
-				})
+				})).submit("max")
 
 				await this.sdk.confirmTransaction(res.txId, "max")
 
@@ -188,13 +188,13 @@ export class SolanaOrder {
 				const mint = getMintId(order)
 				const auctionHouse = toPublicKey(getOrderData(order).auctionHouse!)
 
-				const res = await this.sdk.order.buy({
+				const res = await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
 					price: parseFloat(updateRequest.price.toString()),
 					tokensAmount: getTokensAmount(order),
-				})
+				})).submit("max")
 
 				await this.sdk.confirmTransaction(res.txId, "max")
 
@@ -223,15 +223,15 @@ export class SolanaOrder {
 			const order = await getPreparedOrder(request, this.apis)
 			const orderData = getOrderData(order)
 
-			const tx = await this.sdk.order.cancel({
+			const res = await (await this.sdk.order.cancel({
 				auctionHouse: extractPublicKey(orderData.auctionHouse!),
 				signer: this.wallet!.provider,
 				mint: getMintId(order),
 				price: getPrice(order),
 				tokensAmount: getTokensAmount(order),
-			})
+			})).submit("max")
 
-			return new BlockchainSolanaTransaction(tx, this.sdk)
+			return new BlockchainSolanaTransaction(res, this.sdk)
 		},
 	})
 }

@@ -1,6 +1,7 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { sendTransactionWithRetry } from "../../common/transactions"
+import { PreparedTransaction } from "../prepared-transaction"
+import type { DebugLogger } from "../../logger/debug-logger"
 import { getVerifyCollectionInstructions } from "./verifyCollection/verify-collection"
 
 export interface IVerifyCollectionRequest {
@@ -9,36 +10,35 @@ export interface IVerifyCollectionRequest {
 	collection: PublicKey
 }
 
-// eslint-disable-next-line no-undef
-export type VerifyCollectionResponse = Awaited<ReturnType<typeof sendTransactionWithRetry>>
-
 export interface ISolanaCollectionSdk {
-	verifyCollection(request: IVerifyCollectionRequest): Promise<VerifyCollectionResponse>
+	verifyCollection(request: IVerifyCollectionRequest): Promise<PreparedTransaction>
 }
 
 export class SolanaCollectionSdk implements ISolanaCollectionSdk {
-	constructor(private readonly connection: Connection) {
+	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
 	}
 
-	async verifyCollection(request: IVerifyCollectionRequest): Promise<VerifyCollectionResponse> {
-		const { instructions, signers } = await getVerifyCollectionInstructions({
+	async verifyCollection(request: IVerifyCollectionRequest): Promise<PreparedTransaction> {
+		const instructions = await getVerifyCollectionInstructions({
 			connection: this.connection,
 			signer: request.signer,
 			mint: request.mint,
 			collection: request.collection,
 		})
 
-
-		const res = await sendTransactionWithRetry(
+		return new PreparedTransaction(
 			this.connection,
-			request.signer,
 			instructions,
-			signers,
-			"max",
+			request.signer,
+			this.logger,
+			() => {
+				this.logger.log(
+					"Mint",
+					request.mint.toString(),
+					"approved to collection",
+					request.collection.toString()
+				)
+			}
 		)
-
-		console.log(`Mint ${request.mint.toString()} approved to collection ${request.collection.toString()}`)
-
-		return res
 	}
 }

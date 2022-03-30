@@ -17,6 +17,11 @@ import type { TransactionResult } from "../types"
 
 export const DEFAULT_TIMEOUT = 15000
 
+export interface ITransactionPreparedInstructions {
+	instructions: TransactionInstruction[]
+	signers: IWalletSigner[]
+}
+
 export async function sendTransactionWithRetry(
 	connection: Connection,
 	wallet: IWalletSigner,

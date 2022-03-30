@@ -2,6 +2,7 @@ import type { Connection, PublicKey, TransactionInstruction } from "@solana/web3
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { BN } from "@project-serum/anchor"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
+import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import {
 	getAuctionHouseTradeState,
 	getPriceWithMantissa,
@@ -17,14 +18,9 @@ export interface IActionHouseCancelRequest {
 	tokensAmount: number
 }
 
-export interface IActionHouseCancelResponse {
-	instructions: TransactionInstruction[]
-	signers: IWalletSigner[]
-}
-
 export async function getAuctionHouseCancelInstructions(
 	request: IActionHouseCancelRequest
-): Promise<IActionHouseCancelResponse> {
+): Promise<ITransactionPreparedInstructions> {
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
