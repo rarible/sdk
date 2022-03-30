@@ -23,9 +23,9 @@ export function isAssetType(x: RequestCurrency): x is RequestCurrencyAssetType {
 }
 
 export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestCurrencyAssetType {
-	const [blockchain, address, tokenId] = id.split(":")
+	const { blockchain, contract, tokenId } = getDataFromCurrencyId(id)
 	if (isEVMBlockchain(blockchain)) {
-		if (address === ZERO_ADDRESS) {
+		if (contract === ZERO_ADDRESS) {
 			return {
 				"@type": "ETH",
 				blockchain: blockchain,
@@ -33,7 +33,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
 		}
 		return {
 			"@type": "ERC20",
-			contract: toContractAddress(`${blockchain}:${address}`),
+			contract: toContractAddress(`${blockchain}:${contract}`),
 		}
 	}
 	if (blockchain === Blockchain.FLOW) {
@@ -50,11 +50,23 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
 		}
 		return {
 			"@type": "TEZOS_FT",
-			contract: toContractAddress(`TEZOS:${address}`),
+			contract: toContractAddress(`TEZOS:${contract}`),
 			tokenId: tokenId ? toBigNumber(tokenId) : undefined,
 		}
 	}
 	throw new Error(`Unsupported currency type: ${id}`)
+}
+
+export function getDataFromCurrencyId(id: ApiClient.CurrencyId) {
+	const [blockchain, contract, tokenId] = id.split(":")
+	if (!(blockchain in Blockchain)) {
+		throw new Error(`Unsupported blockchain: ${id}`)
+	}
+	return {
+		blockchain: blockchain as Blockchain,
+		contract,
+		tokenId,
+	}
 }
 
 export const XTZ = "TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU" as ApiClient.CurrencyId

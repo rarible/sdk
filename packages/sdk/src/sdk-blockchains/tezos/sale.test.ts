@@ -56,7 +56,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("1")
 	})
 
-	test("sale NFT with XTZ and with CurrencyId", async () => {
+	test.skip("sale NFT with XTZ and with CurrencyId", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
