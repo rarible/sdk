@@ -4,7 +4,7 @@ import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { BN } from "@project-serum/anchor"
 import { Program, Provider } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
-import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID, SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID } from "../../contracts"
+import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID, SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID } from "../../../common/contracts"
 import { bnToBuffer } from "../../../common/utils"
 
 export async function loadAuctionHouseProgram(

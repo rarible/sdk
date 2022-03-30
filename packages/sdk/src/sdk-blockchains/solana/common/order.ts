@@ -1,8 +1,8 @@
 import type { SolanaAuctionHouseDataV1 } from "@rarible/api-client/build/models/OrderData"
-import type { Order, OrderId } from "@rarible/api-client"
+import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { PublicKey } from "@solana/web3.js"
 import { keccak256 } from "@ethersproject/keccak256"
-import { toOrderId } from "@rarible/types"
+import { toItemId, toOrderId } from "@rarible/types"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import type { IApisSdk } from "../../../domain"
 import { extractPublicKey } from "./address-converters"
@@ -37,6 +37,10 @@ export function getMintId(order: Order): PublicKey {
 		return extractPublicKey(order.take.type.itemId)
 	}
 	throw new Error("Unsupported type")
+}
+
+export function getItemId(mint: PublicKey): ItemId {
+	return toItemId("SOLANA:" + mint.toString())
 }
 
 export function getPrice(order: Order): number {

@@ -1,5 +1,5 @@
+import { toPublicKey } from "@rarible/solana-common"
 import { SolanaSdk } from "../sdk/sdk"
-import { toPublicKey } from "../common/utils"
 import { genTestWallet, getTestWallet, mint, requestSol } from "./common"
 
 describe("solana order sdk", () => {

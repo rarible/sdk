@@ -1,24 +1,15 @@
-import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { SolanaWallet } from "@rarible/sdk-wallet"
-import { SolanaSdk } from "@rarible/solana-sdk"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/domain"
 
-describe("Solana get balance", () => {
+describe("Solana burn", () => {
 	const wallet = getWallet()
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
 
-	test("get balance SOL", async () => {
-		const balance = await sdk.balances.getBalance(
-			toUnionAddress("SOLANA:" + wallet.publicKey),
-			{ "@type": "SOLANA_SOL" }
-		)
-		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
-	})
-
-	test("get balance NFT", async () => {
+	test("Should burn NFT", async () => {
 		const mint = await sdk.nft.mint({
 			collectionId: toContractAddress("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
@@ -33,10 +24,20 @@ describe("Solana get balance", () => {
 			await mintRes.transaction.wait()
 		}
 
-		const balance = await sdk.balances.getBalance(
+		let balance = await sdk.balances.getBalance(
 			toUnionAddress("SOLANA:" + wallet.publicKey),
 			{ "@type": "SOLANA_NFT", itemId: mintRes.itemId }
 		)
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
+
+		const burn = await sdk.nft.burn({ itemId: mintRes.itemId })
+		const tx = await burn.submit({ amount: parseFloat(balance.toString()) })
+		await tx?.wait()
+
+		balance = await sdk.balances.getBalance(
+			toUnionAddress("SOLANA:" + wallet.publicKey),
+			{ "@type": "SOLANA_NFT", itemId: mintRes.itemId }
+		)
+		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(0)
 	})
 })

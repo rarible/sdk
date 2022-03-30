@@ -1,5 +1,5 @@
+import { toPublicKey } from "@rarible/solana-common"
 import { SolanaSdk } from "../sdk/sdk"
-import { toPublicKey } from "../common/utils"
 
 describe("solana sdk balance", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })

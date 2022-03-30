@@ -1,5 +1,5 @@
 import type { ContractAddress } from "@rarible/types"
-import { toBigNumber, toContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { BlockchainGroup } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
@@ -123,7 +123,7 @@ function filterWallet<T extends BlockchainGroup>(
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return async ({ itemId }) => {
 		const item = await apis.item.getItemById({ itemId })
-		const collectionId = toContractAddress(item.collection as any) //todo remove then fixed
+		const collectionId = toContractAddress(item.collection!)
 		const response = await sell({ collectionId })
 		return {
 			...response,
@@ -172,7 +172,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 
 export function getCollectionId(req: HasCollectionId | HasCollection): ContractAddress {
 	if ("collection" in req) {
-		return req.collection.id  as any //todo remove then fixed
+		return toContractAddress(req.collection.id)
 	}
 	return req.collectionId
 }

@@ -37,11 +37,6 @@ export class SolanaNft {
 			throw new Error("Solana wallet not provided")
 		}
 
-		//const {
-		//	contract,
-		//	type,
-		//} = await getCollectionData(this.apis.collection, prepareRequest)
-
 		return {
 			multiple: false, // todo: support
 			supportsRoyalties: false, // todo: support
@@ -74,7 +69,7 @@ export class SolanaNft {
 		const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
 
 		return {
-			multiple: true, //todo check
+			multiple: parseFloat(item.supply) > 1,
 			maxAmount: toBigNumber(item.supply),
 			submit: Action.create({
 				id: "burn" as const,
@@ -108,7 +103,7 @@ export class SolanaNft {
 		const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
 
 		return {
-			multiple: true, //todo check
+			multiple: parseFloat(item.supply) > 1,
 			maxAmount: toBigNumber(item.supply),
 			submit: Action.create({
 				id: "transfer" as const,

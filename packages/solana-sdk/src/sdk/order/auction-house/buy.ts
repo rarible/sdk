@@ -5,7 +5,7 @@ import { BN } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import type * as web3 from "@solana/web3.js"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
-import { WRAPPED_SOL_MINT } from "../../contracts"
+import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getMetadata } from "../../../common/helpers"
 import {
 	getAssociatedTokenAccountForMint,

@@ -5,7 +5,7 @@ import type { IWalletSigner } from "@rarible/solana-wallet"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { decodeMetadata } from "../../../common/schema"
 import type { Metadata } from "../../../common/schema"
-import { WRAPPED_SOL_MINT } from "../../contracts"
+import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getMetadata } from "../../../common/helpers"
 import {
 	getAssociatedTokenAccountForMint,

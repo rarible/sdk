@@ -16,3 +16,7 @@ export function toPublicKey(key: string): web3.PublicKey {
 export function sleep(ms: number): Promise<void> {
 	return new Promise(resolve => setTimeout(resolve, ms))
 }
+
+export function getUnixTs(): number {
+	return new Date().getTime() / 1000
+}

@@ -67,7 +67,6 @@ export class SolanaOrderSdk implements ISolanaOrderSdk {
 	}
 
 	async sell(request: ISellRequest): Promise<SellResponse> {
-
 		const { instructions, signers } = await getAuctionHouseSellInstructions({
 			connection: this.connection,
 			auctionHouse: request.auctionHouse,

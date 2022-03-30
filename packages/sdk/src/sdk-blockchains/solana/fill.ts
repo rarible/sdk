@@ -10,7 +10,7 @@ import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { extractPublicKey } from "./common/address-converters"
-import { getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
+import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
 
 export class SolanaFill {
@@ -39,14 +39,16 @@ export class SolanaFill {
 	}
 
 	private async buy(order: Order): Promise<PrepareFillResponse> {
+		const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
+		const mint = getMintId(order)
+		const price = getPrice(order)
+
+		const item = await this.apis.item.getItemById({ itemId: getItemId(mint) })
+
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
-					const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
-					const mint = getMintId(order)
-					const price = getPrice(order)
-
 					// todo: unite transactions in one call
 					const buyResult = await this.sdk.order.buy({
 						auctionHouse: auctionHouse,
@@ -74,8 +76,8 @@ export class SolanaFill {
 			.after(tx => new BlockchainSolanaTransaction(tx, this.sdk))
 
 		return {
-			multiple: true,
-			maxAmount: toBigNumber("1"),
+			multiple: parseFloat(item.supply.toString()) > 1,
+			maxAmount: order.makeStock,
 			baseFee: 0, // todo 0 if buy, use ah fee on fill sell or acceptbid
 			supportsPartialFill: true,
 			originFeeSupport: OriginFeeSupport.NONE,
@@ -85,14 +87,16 @@ export class SolanaFill {
 	}
 
 	private async acceptBid(order: Order): Promise<PrepareFillResponse> {
+		const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
+		const mint = getMintId(order)
+		const price = getPrice(order)
+
+		const item = await this.apis.item.getItemById({ itemId: getItemId(mint) })
+
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
-					const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
-					const mint = getMintId(order)
-					const price = getPrice(order)
-
 					// todo: unite transactions in one call
 					const buyResult = await this.sdk.order.sell({
 						auctionHouse: auctionHouse,
@@ -120,8 +124,8 @@ export class SolanaFill {
 			.after(tx => new BlockchainSolanaTransaction(tx, this.sdk))
 
 		return {
-			multiple: true,
-			maxAmount: toBigNumber("1"),
+			multiple: parseFloat(item.supply.toString()) > 1,
+			maxAmount: order.makeStock,
 			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!), // todo check this
 			supportsPartialFill: true,
 			originFeeSupport: OriginFeeSupport.NONE,

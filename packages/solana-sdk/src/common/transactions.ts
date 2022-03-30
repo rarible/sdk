@@ -11,9 +11,9 @@ import {
 	Transaction,
 } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
+import { getUnixTs, sleep } from "@rarible/solana-common"
 import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
-import { getUnixTs, sleep } from "./utils"
 
 export const DEFAULT_TIMEOUT = 15000
 
@@ -27,7 +27,7 @@ export async function sendTransactionWithRetry(
 ): Promise<TransactionResult> {
 	const transaction = new Transaction({ feePayer: wallet.publicKey })
 	instructions.forEach(instruction => transaction.add(instruction))
-	transaction.recentBlockhash = (await connection.getRecentBlockhash(commitment)).blockhash
+	transaction.recentBlockhash = (await connection.getLatestBlockhash(commitment)).blockhash
 
 	if (signers.length > 0) {
 		await wallet.signTransaction(transaction)
