@@ -195,6 +195,16 @@ describe("bid", () => {
 
 			expect(value).toBe(undefined)
 		})
+		const value = await bidResponse.getConvertableValue({
+			currencyId: toCurrencyId(`ETHEREUM:${it.testErc20.options.address}`),
+			price: "0.00000000000000001",
+			amount: 5,
+			originFees: [{
+				account: bidderUnionAddress,
+				value: 1000,
+			}],
+		})
+		expect(value).toBe(undefined)
 	})
 
 	test("getConvertValue returns insufficient type", async () => {
@@ -225,6 +235,19 @@ describe("bid", () => {
 			expect(value.value.toString()).toBe("0.000000000000000055")
 			expect(value.type).toBe("insufficient")
 		})
+		const value = await bidResponse.getConvertableValue({
+			currencyId: toCurrencyId(wethContract),
+			price: "0.00000000000000001",
+			amount: 5,
+			originFees: [{
+				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
+				value: 1000,
+			}],
+		})
+
+		if (!value) throw new Error("Convertable value must be non-undefined")
+		expect(value.value.toString()).toBe("0.000000000000000055")
+		expect(value.type).toBe("insufficient")
 	})
 
 	test("getConvertableValue returns undefined", async () => {

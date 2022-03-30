@@ -2,7 +2,7 @@ import { toContractAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { EthErc20AssetType, EthEthereumAssetType, TezosFTAssetType, TezosXTZAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
-import { getCurrencyAssetType } from "./get-currency-asset-type"
+import { getCurrencyAssetType, getDataFromCurrencyId } from "./get-currency-asset-type"
 
 describe("test getCurrencyAssetType", () => {
 	test("get eth asset type from asset type", async () => {
@@ -48,5 +48,18 @@ describe("test getCurrencyAssetType", () => {
 		expect(assetType["@type"]).toEqual("TEZOS_FT")
 		expect(assetType.contract).toEqual("TEZOS:KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC")
 		expect(assetType.tokenId).toEqual("0")
+	})
+	test("test getDataFromCurrencyId with ETH", async () => {
+		const { blockchain, contract, tokenId } =
+      getDataFromCurrencyId("ETHEREUM:0x0000000000000000000000000000000000000000")
+		expect(blockchain).toEqual(Blockchain.ETHEREUM)
+		expect(contract).toEqual("0x0000000000000000000000000000000000000000")
+		expect(tokenId).toEqual(undefined)
+	})
+	test("test getDataFromCurrencyId with Ethereum ERC-20 contract", async () => {
+		const { blockchain, contract, tokenId } = getDataFromCurrencyId("ETHEREUM:0x0000000000000000000000000000000000000001")
+		expect(blockchain).toEqual(Blockchain.ETHEREUM)
+		expect(contract).toEqual("0x0000000000000000000000000000000000000001")
+		expect(tokenId).toEqual(undefined)
 	})
 })

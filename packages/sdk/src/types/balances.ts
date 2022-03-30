@@ -1,10 +1,10 @@
 import type { UnionAddress } from "@rarible/types"
-import type { AssetType } from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
-import type { Blockchain } from "@rarible/api-client"
+import type { RequestCurrency } from "../common/domain"
 
-export type IGetBalance = (address: UnionAddress, assetType: AssetType) => Promise<BigNumberValue>
+export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => Promise<BigNumberValue>
 
 /**
  * Convert funds to wrapped token or unwrap existed tokens (ex. ETH->wETH, wETH->ETH)

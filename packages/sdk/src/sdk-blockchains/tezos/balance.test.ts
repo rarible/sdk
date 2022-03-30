@@ -1,4 +1,4 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import BigNumber from "bignumber.js"
@@ -23,7 +23,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test("get balance XTZ without wallet", async () => {
+	test.skip("get balance XTZ without wallet", async () => {
 		const sellerSdk = createRaribleSdk(undefined, "dev", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
@@ -32,7 +32,16 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test("get balance FT", async () => {
+	test.skip("get balance XTZ without wallet with CurrencyId", async () => {
+		const sellerSdk = createRaribleSdk(undefined, "dev", { logs: LogsLevel.DISABLED })
+		const balance = await sellerSdk.balances.getBalance(
+			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
+			toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU")
+		)
+		expect(balance.toString()).toEqual("1.0093")
+	})
+
+	test.skip("get balance FT", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{
@@ -42,8 +51,15 @@ describe("get balance", () => {
 		)
 		expect(balance.toString()).toEqual("0.03")
 	})
+	test("get balance FT", async () => {
+		const balance = await sellerSdk.balances.getBalance(
+			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
+			toCurrencyId("TEZOS:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
+		)
+		expect(balance.toString()).toEqual("0.03")
+	})
 
-	test("get balance FT without wallet", async () => {
+	test.skip("get balance FT without wallet", async () => {
 		const sellerSdk = createRaribleSdk(undefined, "dev", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
