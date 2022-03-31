@@ -78,7 +78,7 @@ export class SolanaFill {
 		return {
 			multiple: parseFloat(item.supply.toString()) > 1,
 			maxAmount: order.makeStock,
-			baseFee: 0, // todo 0 if buy, use ah fee on fill sell or acceptbid
+			baseFee: 0,
 			supportsPartialFill: true,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
@@ -127,7 +127,7 @@ export class SolanaFill {
 		return {
 			multiple: parseFloat(item.supply.toString()) > 1,
 			maxAmount: order.makeStock,
-			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!), // todo check this
+			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!),
 			supportsPartialFill: true,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,

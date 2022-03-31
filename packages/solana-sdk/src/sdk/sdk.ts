@@ -87,6 +87,10 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 			this.debugLogger
 		)
 
+		preparedTransactions.forEach((trans) => {
+			trans.onSubmit?.(res)
+		})
+
 		return res
 	}
 

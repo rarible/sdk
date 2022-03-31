@@ -38,7 +38,7 @@ export class SolanaNft {
 		}
 
 		return {
-			multiple: false, // todo: support
+			multiple: false,
 			supportsRoyalties: false,
 			supportsLazyMint: false,
 			submit: Action.create({

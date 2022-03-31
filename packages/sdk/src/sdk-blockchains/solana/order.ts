@@ -75,7 +75,7 @@ export class SolanaOrder {
 			payoutsSupport: PayoutsSupport.NONE,
 			multiple: true,
 			supportedCurrencies: getCurrencies(),
-			baseFee: await getAuctionHouseFee(getAuctionHouse("SOL")), //todo check this
+			baseFee: await getAuctionHouseFee(getAuctionHouse("SOL")),
 			supportsExpirationDate: false,
 			submit: submit,
 		}
@@ -117,7 +117,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!), //todo check this
+			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!),
 			submit: updateAction,
 		}
 	}
@@ -168,7 +168,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: 0, //todo check
+			baseFee: 0,
 			getConvertableValue: this.getConvertableValue,
 			supportsExpirationDate: false,
 			submit,
@@ -211,7 +211,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: 0, // todo check
+			baseFee: 0,
 			getConvertableValue: this.getConvertableValue,
 			submit: updateAction,
 		}

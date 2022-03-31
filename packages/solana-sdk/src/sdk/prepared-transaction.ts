@@ -11,7 +11,7 @@ export class PreparedTransaction {
 		public readonly data: ITransactionPreparedInstructions,
 		public readonly signer: IWalletSigner,
 		private readonly logger: DebugLogger,
-		private readonly onSubmit?: (tx: TransactionResult) => void
+		public readonly onSubmit?: (tx: TransactionResult) => void
 	) {
 	}
 
