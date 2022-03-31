@@ -21,6 +21,7 @@ import type {
 	PrepareBidResponse,
 	PrepareBidUpdateResponse,
 } from "../../types/order/bid/domain"
+import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
@@ -40,7 +41,7 @@ export class SolanaOrder {
 		this.bidUpdate = this.bidUpdate.bind(this)
 	}
 
-	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
+	async sell(): Promise<PrepareSellInternalResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
@@ -73,7 +74,6 @@ export class SolanaOrder {
 		return {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
-			multiple: true,
 			supportedCurrencies: getCurrencies(),
 			baseFee: await getAuctionHouseFee(getAuctionHouse("SOL")),
 			supportsExpirationDate: false,

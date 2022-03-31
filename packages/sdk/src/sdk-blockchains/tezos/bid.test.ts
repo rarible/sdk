@@ -146,7 +146,7 @@ describe("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test("bid MT test with CurrencyId", async () => {
+	test.skip("bid MT test with CurrencyId", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(mtContract),
 		})

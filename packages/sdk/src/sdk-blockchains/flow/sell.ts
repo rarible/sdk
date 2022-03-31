@@ -10,6 +10,7 @@ import type { CurrencyType } from "../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import {
 	convertFlowOrderId,
 	getFlowCollection,
@@ -34,15 +35,14 @@ export class FlowSell {
 		return this.apis.order.getOrderById({ id: request })
 	}
 
-	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
-		const contract = getFlowCollection(request.collectionId)
+	async sell(): Promise<PrepareSellInternalResponse> {
 		const sellAction = Action.create({
 			id: "send-tx" as const,
 			run: async (sellRequest: OrderCommon.OrderInternalRequest) => {
 				const requestCurrency = getCurrencyAssetType(sellRequest.currency)
 				if (requestCurrency["@type"] === "FLOW_FT") {
 					const currency = getFungibleTokenName(requestCurrency.contract)
-					const { itemId } = parseUnionItemId(sellRequest.itemId)
+					const { itemId, contract } = parseUnionItemId(sellRequest.itemId)
 					return this.sdk.order.sell({
 						collection: contract,
 						currency,
@@ -58,7 +58,6 @@ export class FlowSell {
 
 
 		return {
-			multiple: false,
 			supportedCurrencies: FlowSell.supportedCurrencies,
 			baseFee: getFlowBaseFee(this.sdk),
 			originFeeSupport: OriginFeeSupport.FULL,

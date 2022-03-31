@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.49](https://github.com/rarible/sdk/compare/v0.8.48...v0.8.49) (2022-03-31)
+
+
+### Features
+
+* rm multiple field from sell prepare response ([5381e47](https://github.com/rarible/sdk/commit/5381e47d272e11dbac01a58c7eedae09351ce69a))
+
+
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+
+### Features
+
+* currency id support for get balance and get convertable value ([5906797](https://github.com/rarible/sdk/commit/5906797b15d13f71c5c6bf42fd918c7ab10f4d1c))
+
+
+
+
+
 ## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
 
 

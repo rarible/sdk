@@ -1,4 +1,4 @@
-import type { AssetType, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -20,6 +20,10 @@ import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/
 import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type { ConvertRequest } from "../../types/balances"
+import type { RequestCurrency } from "../../common/domain"
+import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -95,8 +99,8 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getOrderId(request))].acceptBid(request)
 	}
 
-	sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
-		return this.instances[extractBlockchain(request.collectionId)].sell(request)
+	sell(request: PrepareSellInternalRequest): Promise<PrepareSellInternalResponse> {
+		return this.instances[request.blockchain].sell(request)
 	}
 
 	sellUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
@@ -161,8 +165,8 @@ class UnionBalanceSdk implements IBalanceSdk {
 		this.convert = this.convert.bind(this)
 	}
 
-	getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
-		return this.instances[getBalanceBlockchain(address, assetType)].getBalance(address, assetType)
+	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
+		return this.instances[getBalanceBlockchain(address, currency)].getBalance(address, currency)
 	}
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		return this.instances[request.blockchain].convert(request)
@@ -212,12 +216,21 @@ function getBidEntity(request: PrepareBidRequest) {
 	}
 }
 
-function getBalanceBlockchain(address: UnionAddress, assetType: AssetType): Blockchain {
-	if ("blockchain" in assetType && assetType.blockchain) {
-		return assetType.blockchain
+function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency): Blockchain {
+	if (isAssetType(currency)) {
+		if ("blockchain" in currency && currency.blockchain) {
+			return currency.blockchain
+		}
+		if ("contract" in currency && currency.contract) {
+			return extractBlockchain(currency.contract)
+		}
+		return extractBlockchain(address)
+	} else if (isRequestCurrencyAssetType(currency)) {
+		const { blockchain } = getDataFromCurrencyId(currency)
+		return blockchain
+	} else {
+		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
-	if ("contract" in assetType && assetType.contract) {
-		return extractBlockchain(assetType.contract)
-	}
-	return extractBlockchain(address)
+
+
 }

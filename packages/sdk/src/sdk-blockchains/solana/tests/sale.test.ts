@@ -1,17 +1,13 @@
 import { SolanaWallet } from "@rarible/sdk-wallet"
-import { SolanaSdk } from "@rarible/solana-sdk"
-import { toBigNumber, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
-import { OrderStatus, Platform } from "@rarible/api-client"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
-import { getAuctionHouse } from "../common/auction-house"
 import { MintType } from "../../../types/nft/mint/domain"
 
 describe("Solana sell", () => {
 	const wallet = getWallet(0)
 	const buyerWallet = getWallet(1)
-	//const solanaSdk = SolanaSdk.create({ connection: { cluster: "devnet" } })
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
 	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev")
 	test("Should sell NFT item", async () => {

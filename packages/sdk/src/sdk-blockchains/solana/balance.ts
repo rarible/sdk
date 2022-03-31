@@ -1,9 +1,10 @@
 import type { UnionAddress } from "@rarible/types"
-import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { RequestCurrency } from "../../common/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import { extractPublicKey } from "./common/address-converters"
 
 export class SolanaBalance {
@@ -14,7 +15,8 @@ export class SolanaBalance {
 		this.getBalance = this.getBalance.bind(this)
 	}
 
-	async getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
+	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
+		const assetType = getCurrencyAssetType(currency)
 		if (assetType["@type"] === "SOLANA_SOL") {
 			return (await this.sdk.balances.getBalance(extractPublicKey(address), { commitment: "max" })).toString()
 		} else if (assetType["@type"] === "SOLANA_NFT") {

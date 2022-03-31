@@ -1,6 +1,5 @@
-import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { SolanaWallet } from "@rarible/sdk-wallet"
-import { SolanaSdk } from "@rarible/solana-sdk"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
