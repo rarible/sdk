@@ -3,12 +3,10 @@ import { toBigNumber, toCurrencyId } from "@rarible/types"
 import { FLOW_TESTNET_ACCOUNT_2 } from "@rarible/flow-test-common"
 import type { FlowSell } from "../sell"
 import { convertFlowUnionAddress } from "../common/converters"
-import { testFlowCollection, testFlowToken } from "./common"
+import { testFlowToken } from "./common"
 
 export async function sellItem(sell: FlowSell, itemId: ItemId, priceDecimals: string): Promise<OrderId> {
-	const { submit } = await sell.sell({
-		collectionId: testFlowCollection,
-	})
+	const { submit } = await sell.sell()
 	const orderId = await submit({
 		amount: 1,
 		price: toBigNumber(priceDecimals),
@@ -24,9 +22,7 @@ export async function sellItem(sell: FlowSell, itemId: ItemId, priceDecimals: st
 }
 
 export async function sellItemWithCurrencyId(sell: FlowSell, itemId: ItemId, priceDecimals: string): Promise<OrderId> {
-	const { submit } = await sell.sell({
-		collectionId: testFlowCollection,
-	})
+	const { submit } = await sell.sell()
 	const orderId = await submit({
 		amount: 1,
 		price: toBigNumber(priceDecimals),

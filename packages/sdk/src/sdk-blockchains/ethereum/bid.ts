@@ -241,7 +241,6 @@ export class EthereumBid {
 			assetType = request.assetType
 		} else if (request.currencyId) {
 			assetType = getCurrencyAssetType(request.currencyId)
-			console.log("currencyId", request.currencyId, "type", assetType)
 		} else {
 			throw new Error("assetType or currencyId should be specified")
 		}
