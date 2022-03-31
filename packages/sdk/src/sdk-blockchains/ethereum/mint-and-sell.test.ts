@@ -19,7 +19,6 @@ describe("mintAndSell", () => {
 			collection: `ETHEREUM:${erc721Address}`,
 		})
 		const action = await sdk.nft.mintAndSell({ collection })
-		expect(action.multiple).toBeFalsy()
 		expect(action.supportsRoyalties).toBeTruthy()
 		expect(action.originFeeSupport).toBe("FULL")
 	})

@@ -23,6 +23,8 @@ import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { ConvertRequest } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -93,8 +95,8 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getOrderId(request))].acceptBid(request)
 	}
 
-	sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
-		return this.instances[extractBlockchain(request.collectionId)].sell(request)
+	sell(request: PrepareSellInternalRequest): Promise<PrepareSellInternalResponse> {
+		return this.instances[request.blockchain].sell(request)
 	}
 
 	sellUpdate(request: OrderCommon.PrepareOrderUpdateRequest): Promise<OrderCommon.PrepareOrderUpdateResponse> {
