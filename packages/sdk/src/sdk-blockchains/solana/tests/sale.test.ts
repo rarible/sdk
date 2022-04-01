@@ -50,6 +50,5 @@ describe("Solana sell", () => {
 
 		expect(tx.hash()).toBeTruthy()
 		await tx.wait()
-		expect(tx.getTxLink()).toBeTruthy()
 	})
 })
