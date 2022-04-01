@@ -11,6 +11,7 @@ import {
 } from "@rarible/connector"
 import { getStateConnected, getStateDisconnected } from "@rarible/connector"
 import type { ConnectOpts, PhantomProvider, SolanaProviderConnectionResult } from "./domain"
+import { waitUntil } from "./utils"
 
 type ConnectStatus = "connected" | "disconnected"
 
@@ -33,6 +34,10 @@ export class PhantomConnectionProvider extends
 	}
 
 	private async _connect(): Promise<PhantomProvider> {
+		try {
+			await waitUntil(() => "solana" in window, 100, 1000)
+		} catch {}
+
 		if ("solana" in window) {
 			const anyWindow: any = window
 			const provider = anyWindow.solana
@@ -53,14 +58,14 @@ export class PhantomConnectionProvider extends
 			}
 
 			function disconnectHandler() {
-				subscriber.next("disconnected")
+				// timeout used for workaround, to skip disconnect event on page reload
+				setTimeout(() => subscriber.next("disconnected"), 500)
 			}
 
 			provider.on("connect", connectHandler)
 			provider.on("disconnect", disconnectHandler)
 
 			subscriber.add(() => {
-				console.log("para param pam")
 				provider.removeListener("connect", connectHandler)
 				provider.removeListener("disconnect", disconnectHandler)
 			})
