@@ -3,23 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
-
-
-### Bug Fixes
-
-* solana orderid calcs ([2f60348](https://github.com/rarible/sdk/commit/2f6034899325b800ca27b454ec3d3785c03be1a3))
-
-
-### Features
-
-* solana order methods ([ce6d5ea](https://github.com/rarible/sdk/commit/ce6d5eacfbee822c3799d71ba4cdcf5473a737fa))
-* solana-example integration ([c70dcb0](https://github.com/rarible/sdk/commit/c70dcb02b259b70d55ab85105cabc3b2a7d46708))
-
-
-
-
-
 ## [0.8.49](https://github.com/rarible/sdk/compare/v0.8.48...v0.8.49) (2022-03-31)
 
 **Note:** Version bump only for package example

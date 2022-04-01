@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-phantom",
-  "version": "0.8.50",
+  "version": "0.8.46",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.8.50",
+    "@rarible/connector": "^0.8.46",
     "@solana/web3.js": "^1.35.1"
   },
   "devDependencies": {
