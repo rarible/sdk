@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
+
+
+### Bug Fixes
+
+* solana currency ([518d3cd](https://github.com/rarible/sdk/commit/518d3cd29da3db0e783e5ee4c45f279539d7c2fc))
+
+
+### Features
+
+* mocked solana sell/buy ([66af958](https://github.com/rarible/sdk/commit/66af95831a3f81a634a58892130ff4ee9e664fc2))
+* solana cancel method ([daa09c2](https://github.com/rarible/sdk/commit/daa09c2c84e5bc1ab571b0df4383b34a18581915))
+* solana sdk ([478f8d6](https://github.com/rarible/sdk/commit/478f8d6822f315b0d4274d6c0d2fe628abb8b0fa))
+* solana wallet ([3dc42c1](https://github.com/rarible/sdk/commit/3dc42c195b507a1d2170c7ba24dab79ebc009d0c))
+
+
+
+
+
 ## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
 
 
