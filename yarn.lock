@@ -5336,7 +5336,7 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@~0.0.11-sol2":
+"@rarible/api-client@0.0.11-sol2":
   version "0.0.11-sol2"
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.11-sol2.tgz#aeeb9a79ef19e19973d59c4ac921bc78efc734cc"
   integrity sha512-agEPeceJSvZJxgz17Jq50PyGhIK8ty1anoU4DHVbmYcyfseqhdszR6dypEFHJdJNkCBB0nGtG75H/cKwsNiYKw==
