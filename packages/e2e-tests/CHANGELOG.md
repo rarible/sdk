@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.50-beta...v0.8.50-beta2) (2022-04-01)
+
+
+### Bug Fixes
+
+* fix api-client version ([61d45f2](https://github.com/rarible/sdk/commit/61d45f2366026401839127fcbf99a01fbb7aa905))
+
+
+
+
+
 ## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
 
 
