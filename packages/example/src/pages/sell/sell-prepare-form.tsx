@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toItemId } from "@rarible/types"
-import { PrepareOrderResponse } from "@rarible/sdk/build/types/order/common"
+import { PrepareSellResponse } from "@rarible/sdk/build/types/order/sell/domain"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -11,7 +11,7 @@ import { ConnectorContext } from "../../components/connector/sdk-connection-prov
 import { RequestResult } from "../../components/common/request-result"
 
 interface ISellPrepareFormProps {
-	onComplete: (response: PrepareOrderResponse) => void
+	onComplete: (response: PrepareSellResponse) => void
 	disabled?: boolean
 }
 
