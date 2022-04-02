@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletlink",
-  "version": "0.8.50-beta2",
+  "version": "0.8.50-beta3",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.8.50-beta2",
+    "@rarible/connector": "^0.8.50-beta3",
     "walletlink": "^2.4.1"
   },
   "devDependencies": {
