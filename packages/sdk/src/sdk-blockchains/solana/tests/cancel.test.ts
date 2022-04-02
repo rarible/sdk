@@ -1,6 +1,5 @@
 import { SolanaWallet } from "@rarible/sdk-wallet"
-import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
-import { toPublicKey } from "@rarible/solana-common"
+import { toBigNumber, toCollectionId } from "@rarible/types"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
@@ -12,7 +11,7 @@ describe("Solana cancel", () => {
 
 	test("Should cancel NFT selling", async () => {
 		const mint = await sdk.nft.mint({
-			collectionId: toContractAddress("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
+			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
 
 		const mintRes = await mint.submit({

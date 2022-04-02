@@ -8,7 +8,7 @@ import {
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { GetAllCollections200, GetCollectionsByOwner200 } from "@rarible/api-client/build/apis/CollectionControllerApi"
 import type { UnionAddress } from "@rarible/types"
-import { toContractAddress } from "@rarible/types"
+import { toCollectionId } from "@rarible/types"
 import { getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
 import { testsConfig } from "../../common/config"
 import { createSdk } from "../../common/create-sdk"
@@ -35,7 +35,7 @@ function suites(): {
 			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_NFT,
 			expectedCollection: (owner: UnionAddress): Collection => {
 				return {
-					id: toContractAddress(testsConfig.variables.TEZOS_COLLECTION_ID_NFT),
+					id: toCollectionId(testsConfig.variables.TEZOS_COLLECTION_ID_NFT),
 					blockchain: Blockchain.TEZOS,
 					type: CollectionType.TEZOS_NFT,
 					name: "NFT",

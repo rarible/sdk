@@ -1,4 +1,4 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
@@ -19,7 +19,7 @@ describe("sell test", () => {
 	test.skip("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -63,7 +63,7 @@ describe("sell test", () => {
 	test.skip("sell MT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

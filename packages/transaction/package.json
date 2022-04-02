@@ -16,13 +16,13 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "0.0.11-sol2",
+    "@rarible/api-client": "0.0.13-beta2",
     "@rarible/ethereum-provider": "~0.12.54",
     "@rarible/flow-sdk": "~0.5.37",
-    "@rarible/protocol-ethereum-sdk": "~0.12.59",
+    "@rarible/protocol-ethereum-sdk": "~0.12.61",
     "@rarible/solana-sdk": "^0.8.50-beta2",
     "@rarible/tezos-sdk": "~0.1.4",
-    "@rarible/types": "~0.9.1"
+    "@rarible/types": "~0.9.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

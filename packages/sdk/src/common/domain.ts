@@ -1,7 +1,6 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Action } from "@rarible/action"
 import type { FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
-import type { Address } from "@rarible/types"
 
 // @todo draft. probably will be changed in future
 export type CurrencyType = {
@@ -33,8 +32,5 @@ export type AbstractItemId<T extends ApiClient.Blockchain, ContractAddress exten
 	itemId: string
 }
 
+//todo completelgy get rid of this, do not parse ids
 export type FlowItemId = AbstractItemId<ApiClient.Blockchain.FLOW, FlowContractAddress>
-export type EthereumItemId = AbstractItemId<ApiClient.Blockchain.ETHEREUM, Address>
-export type TezosItemId = AbstractItemId<ApiClient.Blockchain.TEZOS, string>
-export type PolygonItemId = AbstractItemId<ApiClient.Blockchain.POLYGON, string>
-export type SolanaItemId = AbstractItemId<ApiClient.Blockchain.SOLANA, string>

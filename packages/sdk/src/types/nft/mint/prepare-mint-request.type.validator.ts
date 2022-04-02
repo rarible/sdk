@@ -29,7 +29,7 @@ export const SCHEMA = {
                     "additionalProperties": false,
                     "properties": {
                         "collectionId": {
-                            "$ref": "#/definitions/ContractAddress"
+                            "$ref": "#/definitions/CollectionId"
                         },
                         "tokenId": {
                             "$ref": "#/definitions/TokenId"
@@ -112,6 +112,9 @@ export const SCHEMA = {
                     "items": {
                         "$ref": "#/definitions/UnionAddress"
                     }
+                },
+                "meta": {
+                    "$ref": "#/definitions/CollectionMeta"
                 }
             },
             "required": [
@@ -144,7 +147,8 @@ export const SCHEMA = {
                 "ERC1155",
                 "FLOW",
                 "TEZOS_NFT",
-                "TEZOS_MT"
+                "TEZOS_MT",
+                "SOLANA"
             ]
         },
         "UnionAddress": {
@@ -161,8 +165,180 @@ export const SCHEMA = {
                 "MINT_AND_TRANSFER"
             ]
         },
-        "ContractAddress": {
-            "type": "string"
+        "CollectionMeta": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MetaContent"
+                    }
+                },
+                "externalLink": {
+                    "type": "string"
+                },
+                "sellerFeeBasisPoints": {
+                    "type": "number"
+                },
+                "feeRecipient": {
+                    "$ref": "#/definitions/UnionAddress"
+                }
+            },
+            "required": [
+                "name",
+                "content"
+            ],
+            "additionalProperties": false
+        },
+        "MetaContent": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/ImageContent"
+                },
+                {
+                    "$ref": "#/definitions/VideoContent"
+                },
+                {
+                    "$ref": "#/definitions/AudioContent"
+                },
+                {
+                    "$ref": "#/definitions/Model3dContent"
+                }
+            ]
+        },
+        "ImageContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "IMAGE"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                },
+                "width": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "MetaContentRepresentation": {
+            "type": "string",
+            "enum": [
+                "PREVIEW",
+                "BIG",
+                "ORIGINAL"
+            ]
+        },
+        "VideoContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "VIDEO"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                },
+                "width": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "AudioContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "AUDIO"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "Model3dContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "MODEL_3D"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
         },
         "HasCollection": {
             "type": "object",
@@ -180,7 +356,7 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "collectionId": {
-                    "$ref": "#/definitions/ContractAddress"
+                    "$ref": "#/definitions/CollectionId"
                 }
             },
             "required": [

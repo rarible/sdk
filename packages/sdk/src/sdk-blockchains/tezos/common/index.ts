@@ -1,4 +1,4 @@
-import type { ItemId, UnionAddress, Order, AssetType } from "@rarible/api-client"
+import type { ItemId, UnionAddress, Order, AssetType, CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
 	Provider,
@@ -30,7 +30,7 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import { toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 
@@ -421,6 +421,11 @@ export function convertTezosItemId(itemId: string): ItemId {
 export function convertTezosToContractAddress(address: string): ContractAddress {
 	return toContractAddress(`${Blockchain.TEZOS}:${address}`)
 }
+
+export function convertTezosToCollectionId(address: string): CollectionId {
+	return toCollectionId(`${Blockchain.TEZOS}:${address}`)
+}
+
 export function convertTezosToUnionAddress(address: string): UnionAddress {
 	return toUnionAddress(`${Blockchain.TEZOS}:${address}`)
 }

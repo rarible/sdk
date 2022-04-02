@@ -1,4 +1,4 @@
-import type { ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { CollectionId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -192,7 +192,9 @@ const blockchains: Blockchain[] = [
 	Blockchain.SOLANA,
 ]
 
-function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId,
+): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)

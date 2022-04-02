@@ -1,4 +1,4 @@
-import { toContractAddress } from "@rarible/types"
+import { toCollectionId } from "@rarible/types"
 import { SolanaWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
@@ -11,7 +11,7 @@ describe("Solana mint", () => {
 
 	test("mint an nft", async () => {
 		const { submit } = await sdk.nft.mint({
-			collectionId: toContractAddress("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
+			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
 
 		const res = await submit({

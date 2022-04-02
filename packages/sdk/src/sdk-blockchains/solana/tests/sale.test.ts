@@ -1,5 +1,5 @@
 import { SolanaWallet } from "@rarible/sdk-wallet"
-import { toBigNumber, toContractAddress } from "@rarible/types"
+import { toBigNumber, toCollectionId } from "@rarible/types"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
@@ -12,7 +12,7 @@ describe("Solana sell", () => {
 	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev")
 	test("Should sell NFT item", async () => {
 		const mint = await sdk.nft.mint({
-			collectionId: toContractAddress("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
+			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
 
 		const mintRes = await mint.submit({

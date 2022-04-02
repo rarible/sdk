@@ -52,6 +52,9 @@
       "yarn run prettify:packages"
     ]
   },
+  "resolutions": {
+    "@rarible/types": "0.9.3"
+  },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",

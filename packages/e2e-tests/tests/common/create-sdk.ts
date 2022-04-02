@@ -1,5 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
-import type { IRaribleSdk } from "@rarible/sdk/src/domain"
+import type { IRaribleSdk } from "@rarible/sdk"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
 import { createRaribleSdk } from "@rarible/sdk"

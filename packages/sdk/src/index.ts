@@ -1,6 +1,6 @@
 import type { ContractAddress } from "@rarible/types"
-import { toContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { CollectionId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
@@ -170,14 +170,14 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-export function getCollectionId(req: HasCollectionId | HasCollection): ContractAddress {
+export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
 	if ("collection" in req) {
-		return toContractAddress(req.collection.id)
+		return req.collection.id
 	}
 	return req.collectionId
 }
 
-function getBlockchainCollectionId(contract: ContractAddress): Blockchain {
+function getBlockchainCollectionId(contract: ContractAddress | CollectionId): Blockchain {
 	const [blockchain] = contract.split(":")
 	if (!(blockchain in Blockchain)) {
 		throw new Error(`Unrecognized blockchain in contract ${contract}`)
@@ -191,3 +191,7 @@ type MiddleMintType = {
 }
 
 export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
+export { IRaribleSdk, MintAndSellRequest }
+export { RequestCurrency } from "./common/domain"
+export { UnionPart } from "./types/order/common/index"
+export { isEVMBlockchain } from "./sdk-blockchains/ethereum/common"
