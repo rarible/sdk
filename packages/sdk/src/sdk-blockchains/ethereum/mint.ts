@@ -9,7 +9,7 @@ import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
-import { CollectionType } from "@rarible/api-client"
+import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -37,6 +37,9 @@ export class EthereumMint {
 	}
 
 	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
+		if (this.blockchain === Blockchain.POLYGON && request.lazyMint) {
+			throw new Error("Lazy minting on polygon is not supported")
+		}
 		if (EthereumSdk.isErc721v3Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
@@ -103,6 +106,9 @@ export class EthereumMint {
 	}
 
 	isSupportsLazyMint(collection: CommonNftCollection): boolean {
+		if (this.blockchain === Blockchain.POLYGON) {
+			return false
+		}
 		return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
 	}
 

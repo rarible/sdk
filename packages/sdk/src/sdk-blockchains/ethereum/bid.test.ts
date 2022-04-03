@@ -1,13 +1,9 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import {
-	awaitAll,
-	deployTestErc1155,
-	deployTestErc20,
-	deployTestErc721,
-} from "@rarible/ethereum-sdk-test-common"
-import { toAddress, toContractAddress, toItemId } from "@rarible/types"
+import { awaitAll, deployTestErc1155, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { toAddress, toContractAddress, toCurrencyId, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
+import type { EthErc20AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
 import { createRaribleSdk } from "../../index"
@@ -32,17 +28,17 @@ describe("bid", () => {
 	})
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethwallet1 = new EthereumWallet(ethereum1, Blockchain.ETHEREUM)
+	const ethwallet1 = new EthereumWallet(ethereum1)
 	const sdk1 = createRaribleSdk(ethwallet1, "e2e", { logs: LogsLevel.DISABLED })
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const ethwallet2 = new EthereumWallet(ethereum2, Blockchain.ETHEREUM)
+	const ethwallet2 = new EthereumWallet(ethereum2)
 	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
 	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
-	const nullFundsWallet = new EthereumWallet(nullFundsEthereum, Blockchain.ETHEREUM)
+	const nullFundsWallet = new EthereumWallet(nullFundsEthereum)
 	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "e2e", { logs: LogsLevel.DISABLED })
 
 	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
@@ -199,6 +195,16 @@ describe("bid", () => {
 
 			expect(value).toBe(undefined)
 		})
+		const value = await bidResponse.getConvertableValue({
+			currencyId: toCurrencyId(`ETHEREUM:${it.testErc20.options.address}`),
+			price: "0.00000000000000001",
+			amount: 5,
+			originFees: [{
+				account: bidderUnionAddress,
+				value: 1000,
+			}],
+		})
+		expect(value).toBe(undefined)
 	})
 
 	test("getConvertValue returns insufficient type", async () => {
@@ -229,6 +235,19 @@ describe("bid", () => {
 			expect(value.value.toString()).toBe("0.000000000000000055")
 			expect(value.type).toBe("insufficient")
 		})
+		const value = await bidResponse.getConvertableValue({
+			currencyId: toCurrencyId(wethContract),
+			price: "0.00000000000000001",
+			amount: 5,
+			originFees: [{
+				account: convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM),
+				value: 1000,
+			}],
+		})
+
+		if (!value) throw new Error("Convertable value must be non-undefined")
+		expect(value.value.toString()).toBe("0.000000000000000055")
+		expect(value.type).toBe("insufficient")
 	})
 
 	test("getConvertableValue returns undefined", async () => {
@@ -240,7 +259,6 @@ describe("bid", () => {
 		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
 
-		console.log("wethBidderBalance", wethBidderBalance.toString())
 		if (wethBidderBalance.lt("0.000000000000001")) {
 			const tx = await ethSdk2.balances.convert(
 				{ assetClass: "ETH" },
@@ -320,6 +338,7 @@ describe("bid", () => {
 				"@type": "ERC20",
 				contract: erc20Contract,
 			},
+			expirationDate: new Date(Date.now() + 60000),
 		})
 
 		const acceptBidResponse = await sdk1.order.acceptBid({
@@ -331,6 +350,107 @@ describe("bid", () => {
 			itemId: toItemId(`${erc721Contract}:${tokenId}`),
 		})
 		await fillBidResult.wait()
+	})
+
+	test("bid on erc721 <-> erc20 with CurrencyId", async () => {
+		const itemOwner = await ethwallet1.ethereum.getFrom()
+
+		const bidderAddress = await ethwallet2.ethereum.getFrom()
+		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
+
+		const tokenId = "7"
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
+		await it.testErc721.methods.mint(itemOwner, tokenId, "123").send({
+			from: itemOwner,
+			gas: 500000,
+		})
+		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+			from: itemOwner,
+			gas: 500000,
+		})
+		await awaitItem(sdk1, itemId)
+
+		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
+
+		const response = await sdk2.order.bid({ itemId })
+		const price = "0.00000000000000002"
+		const erc20Contract = convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM)
+		const orderId = await response.submit({
+			amount: 1,
+			price,
+			currency: toCurrencyId(erc20Contract),
+			originFees: [{
+				account: bidderUnionAddress,
+				value: 1000,
+			}],
+		})
+
+		const order = await awaitStock(sdk1, orderId, price)
+		expect(order.makeStock.toString()).toEqual(price)
+		const takeAssetType = order.make.type as EthErc20AssetType
+		expect(takeAssetType["@type"]).toEqual("ERC20")
+		expect(takeAssetType.contract.toLowerCase()).toEqual(erc20Contract.toLowerCase())
+
+		const acceptBidResponse = await sdk1.order.acceptBid({ orderId })
+		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
+		await acceptBidTx.wait()
+
+		await retry(10, 1000, async () => {
+			return sdk1.apis.ownership.getOwnershipById({
+				ownershipId: `ETHEREUM:${it.testErc721.options.address}:${tokenId}:${bidderAddress}`,
+			})
+		})
+	})
+
+
+	test.skip("bid for collection with outdated expiration date", async () => {
+		const ownerCollectionAddress = await ethereum1.getFrom()
+		const bidderAddress = await ethereum2.getFrom()
+
+		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+      	from: ownerCollectionAddress,
+      	gas: 500000,
+		})
+		const tokenId = "6"
+		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
+
+		await it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "1").send({
+			from: ownerCollectionAddress,
+			gas: 500000,
+		})
+		await awaitItem(sdk1, itemId)
+
+		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
+		const bidResponse = await sdk2.order.bid({
+			collectionId: erc721Contract,
+		})
+
+		const erc20Contract = convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM)
+		const bidOrderId = await bidResponse.submit({
+			amount: 1,
+			price: "0.00000000000000001",
+			currency: {
+				"@type": "ERC20",
+				contract: erc20Contract,
+			},
+			expirationDate: new Date(),
+		})
+
+		const acceptBidResponse = await sdk1.order.acceptBid({
+			orderId: bidOrderId,
+		})
+		let errorMessage
+		try {
+			const fillBidResult = await acceptBidResponse.submit({
+				amount: 1,
+				infiniteApproval: true,
+				itemId: toItemId(`${erc721Contract}:${tokenId}`),
+			})
+			await fillBidResult.wait()
+		} catch (e: any) {
+			errorMessage = e.message
+		}
+		expect(errorMessage).toBeTruthy()
 	})
 
 	test.skip("bid for collection and accept bid on lazy item", async () => {
@@ -370,8 +490,6 @@ describe("bid", () => {
 				contract: erc20Contract,
 			},
 		})
-
-		console.log("after bid")
 
 		const acceptBidResponse = await sdk1.order.acceptBid({
 			orderId: bidOrderId,

@@ -3,6 +3,42 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.51](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.51) (2022-04-01)
+
+
+### Features
+
+* add new addresses for eth ([3b3b5cc](https://github.com/rarible/sdk/commit/3b3b5cc956a0512b55b637b3eebf20dc0d3d3d56))
+* weth contracts was added ([b18b57d](https://github.com/rarible/sdk/commit/b18b57d5c78c85c6227a9fca8ae0337e6988d976))
+
+
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+### Features
+
+* dev env for tezos ([#163](https://github.com/rarible/sdk/issues/163)) ([d5fb00d](https://github.com/rarible/sdk/commit/d5fb00dc654cf331d480d732d9a1066730461cf7))
+
+
+
+
+
 ## [0.8.43](https://github.com/rarible/sdk/compare/v0.8.42...v0.8.43) (2022-02-25)
 
 

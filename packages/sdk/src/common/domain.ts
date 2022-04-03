@@ -15,7 +15,9 @@ export interface AbstractPrepareResponse<Id, In, Out> {
 	submit: Action<Id, In, Out>
 }
 
-export type RequestCurrency =
+export type RequestCurrency = ApiClient.CurrencyId | RequestCurrencyAssetType
+
+export type RequestCurrencyAssetType =
   | ApiClient.EthErc20AssetType
   | ApiClient.EthEthereumAssetType
   | ApiClient.FlowAssetTypeNft

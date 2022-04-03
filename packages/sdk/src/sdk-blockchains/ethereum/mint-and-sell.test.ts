@@ -3,7 +3,6 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toContractAddress, toUnionAddress } from "@rarible/types"
-import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
@@ -11,7 +10,7 @@ import { LogsLevel } from "../../domain"
 describe("mintAndSell", () => {
 	const { provider, wallet } = createE2eProvider()
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
-	const ethereumWallet = new EthereumWallet(ethereum, Blockchain.ETHEREUM)
+	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
 	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
 
@@ -20,7 +19,6 @@ describe("mintAndSell", () => {
 			collection: `ETHEREUM:${erc721Address}`,
 		})
 		const action = await sdk.nft.mintAndSell({ collection })
-		expect(action.multiple).toBeFalsy()
 		expect(action.supportsRoyalties).toBeTruthy()
 		expect(action.originFeeSupport).toBe("FULL")
 	})
