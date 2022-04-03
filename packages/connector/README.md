@@ -98,12 +98,12 @@ function mapFlowWallet<O>(provider: AbstractConnectionProvider<O, FlowProviderCo
 
 function mapTezosWallet<O>(provider: AbstractConnectionProvider<O, TezosProviderConnectionResult>): ConnectionProvider<O, WalletAndAddress> {
 	return provider.map(async state => {
-		const {
-			beacon_provider: createBeaconProvider
-		} = await import("tezos-sdk-module/dist/providers/beacon/beacon_provider")
-		const provider = await createBeaconProvider(state.wallet as any, state.toolkit)
+      const {
+        beacon_provider: createBeaconProvider
+      } = await import("@rarible/tezos-sdk/dist/providers/beacon/beacon_provider")
+      const provider = await createBeaconProvider(state.wallet as any, state.toolkit)
 
-		return {
+      return {
 			wallet: new TezosWallet(provider),
 			address: state.address,
 		}
