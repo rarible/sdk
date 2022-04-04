@@ -4927,7 +4927,7 @@
     "@rarible/tezos-common" "^0.1.4"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@~0.1.4":
+"@rarible/tezos-sdk@0.1.4", "@rarible/tezos-sdk@~0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.4.tgz#9a1bad5c3d31fd75a8ce7e1977b919d72cb76f96"
   integrity sha512-S6uXEsWF2nKPsPulcU1Xc2TCJ6UqI7V07pHhNJ8LjWZR/G/FzFUN5Hn4W2I2PWwoT0rqljiphYyN0gmzkEV1tg==
@@ -4973,6 +4973,15 @@
   integrity sha512-t1OgC2RJtRFHSqF0DKb6tk2HO3+a+lhbte1Z47AkoHoJ3oK4HjAXssydctP/wR8Y1/lIP2zMruShv297B+h8fw==
   dependencies:
     bignumber.js "^9.0.0"
+
+"@rarible/web3-ethereum@^0.12.54":
+  version "0.12.61"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.61.tgz#6b2fdd3bd46d1b3b12f7dd316d31ca04b12c41c4"
+  integrity sha512-P0YJNO3Z7+HjhJOt3tEsakKzmnxOzfCFK3Ajo5jjWp94I/ot3z7XClq06FmIj7jLzdxYLmtZQlxzJsAlahjSgQ==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.12.54"
+    eth-rpc-errors "^4.0.3"
+    exponential-backoff "^3.1.0"
 
 "@rarible/web3-ethereum@~0.12.54":
   version "0.12.54"

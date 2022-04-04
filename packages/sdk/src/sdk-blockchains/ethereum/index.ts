@@ -25,6 +25,7 @@ export function createEthereumSdk(
 	params?: ConfigurationParameters,
 	logs?: LogsLevel
 ): IRaribleInternalSdk {
+	console.log("sdk wal", wallet)
 	const sdk = createRaribleSdk(wallet?.ethereum, network, { apiClientParams: params, logs: logs })
 	const sellService = new EthereumSell(sdk, network)
 	const balanceService = new EthereumBalance(sdk, network)

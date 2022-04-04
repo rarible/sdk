@@ -80,6 +80,7 @@ export class EthereumCreateCollection {
 	createCollection = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CreateCollectionRequest) => {
+			console.log("req", request, this)
 			if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
 				throw new Error("Wrong blockchain")
 			}
