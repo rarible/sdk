@@ -46,7 +46,7 @@ const raribleSdk = createRaribleSdk(undefined, "prod")
 
 You can create EthereumWallet with one of the following providers:
 1. Web3 instance
-For example: Metamask (window.ethereum), HDWalletProvider (read when using on the backend [instruction](https://github.com/rarible/sdk#usage-sdk-on-the-server-backend)) and etc.
+For example: Metamask (window.ethereum), HDWalletProvider (read when using on the backend [instruction](#usage-sdk-on-the-server-backend)) and etc.
 2. ethers.providers.Web3Provider
 3. ethers.Wallet
 ```ts

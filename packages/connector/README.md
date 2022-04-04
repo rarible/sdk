@@ -34,7 +34,8 @@ const walletConnect = new WalletConnectConnectionProvider()
 	
 // create connector and push providers to it 
 const connector = Connector
-    .create([injected, walletConnect])
+  .create(injected)
+  .add(walletConnect)
 		
 // subscribe to connection status
 connector.connection.subscribe((con) =>
