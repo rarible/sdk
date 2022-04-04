@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Connector } from "@rarible/connector"
 import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import { IWalletAndAddress } from "./wallet-connetion"
+import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { getConnector } from "./connectors-setup"
 
 export interface IEnvironmentContext {

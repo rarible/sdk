@@ -5,7 +5,7 @@ import type { ConnectionState } from "@rarible/connector"
 import { IConnector, getStateDisconnected, Connector } from "@rarible/connector"
 import { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { EnvironmentContext } from "./environment-selector-provider"
-import { IWalletAndAddress } from "./wallet-connetion"
+import type { IWalletAndAddress } from "@rarible/connector-helper"
 
 export interface IConnectorContext {
 	connector?: IConnector<string, IWalletAndAddress>

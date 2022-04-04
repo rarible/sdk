@@ -5,6 +5,7 @@
 Yarn
 ```shell
     yarn add @rarible/connector
+    yarn add @rarible/connector-helper
     # optional: add additional connectors
     yarn add @rarible/connector-walletconnect
     yarn add @rarible/connector-fortmatic
@@ -14,6 +15,7 @@ Yarn
 NPM
 ```shell
     npm i @rarible/connector
+    npm i @rarible/connector-helper
     # optional: add additional connectors
     npm i @rarible/connector-walletconnect
     npm i @rarible/connector-fortmatic
@@ -27,10 +29,11 @@ NPM
 ```ts
 import { Connector, InjectedWeb3ConnectionProvider, DappType } from "@rarible/connector"
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
+import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
 
 // create providers with the required options
-const injected = new InjectedWeb3ConnectionProvider()
-const walletConnect = new WalletConnectConnectionProvider()
+const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
+const walletConnect = mapEthereumWallet(new WalletConnectConnectionProvider())
 	
 // create connector and push providers to it 
 const connector = Connector
@@ -69,7 +72,7 @@ import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
 import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 import { PortisConnectionProvider } from "@rarible/connector-portis"
-
+import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
 
 const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
@@ -81,34 +84,6 @@ const ethereumRpcMap: Record<number, string> = {
 export type WalletAndAddress = {
 	wallet: BlockchainWallet
 	address: string
-}
-
-function mapEthereumWallet<O>(provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>): ConnectionProvider<O, WalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new EthereumWallet(new Web3Ethereum({ web3: new Web3(state.provider), from: state.address })),
-		address: state.address
-	}))
-}
-
-function mapFlowWallet<O>(provider: AbstractConnectionProvider<O, FlowProviderConnectionResult>): ConnectionProvider<O, WalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new FlowWallet(state.fcl),
-		address: state.address,
-	}))
-}
-
-function mapTezosWallet<O>(provider: AbstractConnectionProvider<O, TezosProviderConnectionResult>): ConnectionProvider<O, WalletAndAddress> {
-	return provider.map(async state => {
-      const {
-        beacon_provider: createBeaconProvider
-      } = await import("@rarible/tezos-sdk/dist/providers/beacon/beacon_provider")
-      const provider = await createBeaconProvider(state.wallet as any, state.toolkit)
-
-      return {
-			wallet: new TezosWallet(provider),
-			address: state.address,
-		}
-	})
 }
 
 const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
