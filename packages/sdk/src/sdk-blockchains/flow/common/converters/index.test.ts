@@ -41,7 +41,11 @@ describe("Test FLOW converter functions", () => {
 		expect(test7).toThrow(Error)
 	})
 	test("parseUnionItemId function, should parse if address with prefix", () => {
-		const { blockchain, contract, itemId } = converters.parseUnionItemId(
+		const {
+			blockchain,
+			contract,
+			itemId,
+		} = converters.parseFlowItemIdFromUnionItemId(
 			toItemId("FLOW:A.0xabcdef0123456789.ContractName:12345"),
 		)
 		expect(blockchain).toEqual("FLOW")
@@ -49,7 +53,11 @@ describe("Test FLOW converter functions", () => {
 		expect(itemId.length).toEqual(5)
 	})
 	test("parseUnionItemId function, should parse if address without prefix", () => {
-		const { blockchain, contract, itemId } = converters.parseUnionItemId(
+		const {
+			blockchain,
+			contract,
+			itemId,
+		} = converters.parseFlowItemIdFromUnionItemId(
 			toItemId("FLOW:A.abcdef0123456789.ContractName:123"),
 		)
 		expect(blockchain).toEqual("FLOW")
@@ -57,31 +65,31 @@ describe("Test FLOW converter functions", () => {
 		expect(itemId.length).toEqual(3)
 	})
 	test("parseUnionItemId function should throw error, blockchain not defined", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("0xabcdef0123456789.ContractName:0"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("0xabcdef0123456789.ContractName:0"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseUnionItemId function should throw error, Blockchain not defined but colon is exist", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId(":0xabcdef0123456789.ContractName:0"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId(":0xabcdef0123456789.ContractName:0"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseUnionItemId function should throw error, incorrect address", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:bcdef0123456789.ContractName:0"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:bcdef0123456789.ContractName:0"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseUnionItemId function should throw error, incorrect contract name(with digit)", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:0xabcdef0123456789.ContractName1:0"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:0xabcdef0123456789.ContractName1:0"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseUnionItemId function should throw error, incorrect contract name length", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:0xabcdef0123456789.Co:0"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:0xabcdef0123456789.Co:0"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseUnionItemId function should throw error, token id not defined", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:0xabcdef0123456789.Co:"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:0xabcdef0123456789.Co:"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseUnionItemId function should throw error, colon and token id not defined", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:0xabcdef0123456789.Co"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:0xabcdef0123456789.Co"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseFlowMaker function, should parse address with prefix", () => {
@@ -93,23 +101,23 @@ describe("Test FLOW converter functions", () => {
 		expect(test1?.length).toEqual(18)
 	})
 	test("parseFlowMaker function should throw error, blockchain is not defined", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("0xabcdef0123456789"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("0xabcdef0123456789"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseFlowMaker function should throw error, blockchain is not defined but colon is exist", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId(":0xabcdef0123456789"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId(":0xabcdef0123456789"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseFlowMaker function should throw error, incorrect address with prefix", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:0xzbcdef0123456789"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:0xzbcdef0123456789"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseFlowMaker function should throw error, incorrect address without prefix", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:abcdef012345678z"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:abcdef012345678z"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseFlowMaker function should throw error, incorrect address length", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("FLOW:abcdef012345678"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("FLOW:abcdef012345678"))
 		expect(test1).toThrow(Error)
 	})
 
@@ -122,11 +130,11 @@ describe("Test FLOW converter functions", () => {
 		expect(test1.toString().length).toEqual(1)
 	})
 	test("parseOrderId function, should throw error, blockchain part not exist", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId("13123412"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId("13123412"))
 		expect(test1).toThrow(Error)
 	})
 	test("parseOrderId function, should throw error, blockchain part not exist but colon is exist", () => {
-		const test1 = () => converters.parseUnionItemId(toItemId(":13123412"))
+		const test1 = () => converters.parseFlowItemIdFromUnionItemId(toItemId(":13123412"))
 		expect(test1).toThrow(Error)
 	})
 	test("getFungibleTokenName function, should return FLOW", () => {
@@ -176,11 +184,17 @@ describe("Test FLOW converter functions", () => {
 			expect(test1).toThrow(Error)
 		})
 	test("toFlowParts function, should convert union address to flow address", () => {
-		const test1 = toFlowParts([{ account: toUnionAddress(`FLOW:${FLOW_ZERO_ADDRESS}`), value: 500 }])
+		const test1 = toFlowParts([{
+			account: toUnionAddress(`FLOW:${FLOW_ZERO_ADDRESS}`),
+			value: 500,
+		}])
 		expect(isFlowAddress(test1[0].account)).toBeTruthy()
 	})
 	test("toFlowParts function, should throw error, invalid union address", () => {
-		const test1 = () => toFlowParts([{ account: toUnionAddress("FLOW_ZERO_ADDRESS"), value: 500 }])
+		const test1 = () => toFlowParts([{
+			account: toUnionAddress("FLOW_ZERO_ADDRESS"),
+			value: 500,
+		}])
 		expect(test1).toThrow(Error)
 	})
 })

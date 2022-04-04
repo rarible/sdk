@@ -18,12 +18,12 @@ export interface AbstractPrepareResponse<Id, In, Out> {
 export type RequestCurrency = ApiClient.CurrencyId | RequestCurrencyAssetType
 
 export type RequestCurrencyAssetType =
-  | ApiClient.EthErc20AssetType
-  | ApiClient.EthEthereumAssetType
-  | ApiClient.FlowAssetTypeNft
-  | ApiClient.FlowAssetTypeFt
-  | ApiClient.TezosXTZAssetType
-  | ApiClient.TezosFTAssetType
+	| ApiClient.EthErc20AssetType
+	| ApiClient.EthEthereumAssetType
+	| ApiClient.FlowAssetTypeNft
+	| ApiClient.FlowAssetTypeFt
+	| ApiClient.TezosXTZAssetType
+	| ApiClient.TezosFTAssetType
 
 export type AbstractItemId<T extends ApiClient.Blockchain, ContractAddress extends string> = {
 	blockchain: T
