@@ -18,7 +18,6 @@ export type RequestCurrency = ApiClient.CurrencyId | RequestCurrencyAssetType
 export type RequestCurrencyAssetType =
 	| ApiClient.EthErc20AssetType
 	| ApiClient.EthEthereumAssetType
-	| ApiClient.FlowAssetTypeNft
 	| ApiClient.FlowAssetTypeFt
 	| ApiClient.TezosXTZAssetType
 	| ApiClient.TezosFTAssetType
