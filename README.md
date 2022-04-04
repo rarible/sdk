@@ -178,22 +178,34 @@ You can use SDK to create(mint), trade, transfer, burn NFTs. All actions are han
 
 You can find more information about Action abstraction in the dedicated GitHub readme. Or you can use it as a regular async function and work with regular Promises.
 
+### Create collection
+
+Create NFT collection to mint NFT items on Ethereum, Polygon and Tezos blockchains.
+```ts
+import { Blockchain } from "@rarible/api-client"
+//Address of collection available before approve transaction but you should wait
+const { address, tx } = await sdk.nft.deploy({ blockchain, asset })
+
+await tx.wait()
+```
+
 ### Mint
 
+To mint new item you should specify ID of existed collection or create new one ([create collection](#create-collection))
 ```ts
 //Invoke mint function. It will return a PrepareResponse with some useful information 
 const { 
   multiple, // Does the smart contract supports multiple editions or not
   supportsRoyalties, // Does the smart contract supports royalties or not
   supportsLazyMint, // Does the smart contract supports lazy minting or not
-} = await sdk.order.mint({ itemId })
+  submit //Mint item action
+} = await sdk.nft.mint({ collectionId })
 
 //collect information from the user (show the form etc)
 //then use submit Action to execute this action
 
-const orderId = await submit({
-  collection, // Information about the NFT collection (id, type, name, etc.)
-  uri, // URI of the NFT token
+const itemId = await submit({
+  uri, // URI of the JSON with NFT metadata (format metadata with sdk.nft.preprocessMeta(...))
   supply, // Amount of the NFT tokens to be minted
   lazyMint, // Minting the NFT token off-chain until the moment it's sold to its first buyer
   creators, // Address of the NFT creator
@@ -227,29 +239,7 @@ const orderId = await submit({
 ```
 
 When the order is created, it's propagated to all Protocol users.
-Any app can initiate the process to fill the order.
-
-```ts
-const {
-  maxAmount, // max amount of NFTs available for purchase
-  baseFee, // fee that will be taken from the buyer
-  originFeeSupport, // if smart contract supports custom origin fees
-  payoutsSupport, // if smart contract supports payouts
-  supportsPartialFill, // if smart contract supports partial fills 
-} = await sdk.order.fill({ order }) //you can also use orderId if you don't have order
-
-//collect information from the user 
-//then submit
-
-const tx = await submit({
-  amount, // amount to buy
-  originFees, // optional origin fees (TODO add link to explanation)
-  payouts, // optional payouts (TODO add link)
-  infiniteApproval, // if sdk should use infinite approval (usually applicable for ERC-20)
-})
-```
-
-After the call submits action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
+Any app can initiate the process to fill the order ([reference](#fill-orders-buy-or-accept-bid)).
 
 ### Bid
 
@@ -312,7 +302,7 @@ const orderId = await submit({
 When the order is created, it's propagated to all Protocol users.
 Any app can initiate the process to fill the order.
 
-Use `sdk.order.buy()` or `sdk.order.acceptBid()` methods to fill sell or bid orders.
+Use `sdk.order.buy()` method to buy NFT with orderId and `sdk.order.acceptBid()` methods to fill bid order.
 
 ```ts
 const {
@@ -321,7 +311,7 @@ const {
   originFeeSupport, // if smart contract supports custom origin fees
   payoutsSupport, // if smart contract supports payouts
   supportsPartialFill, // if smart contract supports partial fills 
-} = await sdk.order.buy({ order }) //you can also use orderId if you don't have order
+} = await sdk.order.buy({ orderId })
 
 //collect information from the user 
 //then submit
@@ -348,7 +338,7 @@ const {
 //collect information from the user (show the form etc.)
 //then use submit Action to execute this action
 
-const orderId = await submit({
+const tx = await submit({
   to, // Recipient NFT address
   amount, // Amount of NFTs to transfer
 })
@@ -366,10 +356,17 @@ const {
 //collect information from the user (show the form etc.)
 //then use submit Action to execute this action
 
-const orderId = await submit({
+const tx = await submit({
   amount, // Amount of NFTs to burn
 })
+
+//you should wait transaction if your item is on-chain
+//and tx is undefined when your item was lazy-minted
+if (tx) {
+  await tx.wait()
+}
 ```
+
 
 ### Convert to/from wrapped fungible tokens (ex. eth<->weth, xtz<->wTez)
 ```ts
