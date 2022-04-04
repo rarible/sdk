@@ -1,4 +1,4 @@
-import { toCollectionId, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toCurrencyId, toUnionAddress } from "@rarible/types"
 import { SolanaWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
@@ -36,7 +36,7 @@ describe("Solana burn", () => {
 
 		balance = await sdk.balances.getBalance(
 			toUnionAddress("SOLANA:" + wallet.publicKey),
-			{ "@type": "SOLANA_NFT", itemId: mintRes.itemId }
+			toCurrencyId(mintRes.itemId),
 		)
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(0)
 	})
