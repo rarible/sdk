@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.50-beta3...v0.8.50-beta4) (2022-04-04)
+
+
+### Bug Fixes
+
+* don't emit disconnect events when page unloading ([ea4325e](https://github.com/rarible/sdk/commit/ea4325e3c9312d4b816bf27a1a88fc6978cd45f6))
+* solana metaplex peer dependencies fix ([0f90867](https://github.com/rarible/sdk/commit/0f9086759e03507b51605ce1b2f7f4146fa8257b))
+
+
+
+
+
 ## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
 
 
