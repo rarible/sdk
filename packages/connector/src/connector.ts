@@ -128,7 +128,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	 * Add flag when page unload to avoid disconnect events from connectors
 	 */
 	static initPageUnloadProtection() {
-		if (Connector.pageUnloading === undefined) {
+		if (Connector.pageUnloading === undefined && typeof window !== "undefined") {
 			window.addEventListener("beforeunload", function (event) {
 				Connector.pageUnloading = true
 			})
