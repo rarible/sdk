@@ -58,8 +58,7 @@ export class PhantomConnectionProvider extends
 			}
 
 			function disconnectHandler() {
-				// timeout used for workaround, to skip disconnect event on page reload
-				setTimeout(() => subscriber.next("disconnected"), 500)
+				subscriber.next("disconnected")
 			}
 
 			provider.on("connect", connectHandler)
