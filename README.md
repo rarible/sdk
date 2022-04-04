@@ -152,6 +152,15 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
     }
     ```
 
+3. Try our [example](#) to buy ethereum NFT item on Rinkeby network:
+Pass private key, node rpc url, network id and item id for buyout 
+    ```shell
+    ETH_PRIVATE_KEY="0x..." \
+    ETHEREUM_RPC_URL="https://rinkeby.infura.io/..." \
+    ETHEREUM_NETWORK_ID="4" \
+    BUYOUT_ITEM_ID="0x1AF7A7555263F275433c6Bb0b8FdCD231F89B1D7:102581254137174039089845694331937600507918590364933200920056519678660477714440" \
+    ts-node packages/sdk/example/backend/buy.ts
+   ```
 ### Querying
 
 Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: http://api-dev.rarible.org/v0.1/doc or right in the typescript typings.
