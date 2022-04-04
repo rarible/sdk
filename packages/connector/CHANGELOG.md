@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
+
+
+### Bug Fixes
+
+* check window in jest ([c340281](https://github.com/rarible/sdk/commit/c3402814381c89f8593e184dee1b0d5f193c9fd5))
+
+
+
+
+
 ## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.50-beta3...v0.8.50-beta4) (2022-04-04)
 
 
