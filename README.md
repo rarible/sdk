@@ -53,6 +53,7 @@ For example: Metamask (window.ethereum), HDWalletProvider (read when using on th
 import Web3 from "web3"
 import * as HDWalletProvider from "@truffle/hdwallet-provider"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { ethers } from "ethers"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 
@@ -152,8 +153,8 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
     }
     ```
 
-3. Try our [example](#) to buy ethereum NFT item on Rinkeby network:
-Pass private key, node rpc url, network id and item id for buyout 
+3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/buy.ts) to buy ethereum NFT item on Rinkeby network:
+Pass private key, node rpc url, network id, item id for buyout and start
     ```shell
     ETH_PRIVATE_KEY="0x..." \
     ETHEREUM_RPC_URL="https://rinkeby.infura.io/..." \
