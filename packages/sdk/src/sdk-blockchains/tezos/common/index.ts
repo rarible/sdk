@@ -100,7 +100,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
 		case "hangzhou": {
-			return "https://tezos-hangzhou-api.rarible.org"
+			return "https://test-tezos-api.rarible.org"
 		}
 		case "mainnet": {
 			return "https://tezos-api.rarible.org"
@@ -134,7 +134,7 @@ export function getMaybeTezosProvider(
 					wrapper: "KT1RggVJ1mMaLJezpdsJ6YtBfL7sBfcaGD1H",
 					auction: "",
 					auction_storage: "",
-					node_url: "https://tezos-hangzhou-node.rarible.org",
+					node_url: "https://test-tezos-node.rarible.org",
 				},
 			}
 		}

@@ -44,7 +44,7 @@ describe("get balance", () => {
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{
 				"@type": "TEZOS_FT",
-				contract: toContractAddress("TEZOS:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9"),
+				contract: toContractAddress("TEZOS:KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"),
 			}
 		)
 		expect(balance.toString()).toEqual("0.03")
