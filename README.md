@@ -19,6 +19,8 @@ yarn add web3@1.5.0
 yarn add tslib@2.3.1
 ```
 
+If you have problems installing the SDK on M1 MacBook, use our [Troubleshooting](#troubleshooting) section.
+
 ## Usage
 
 SDK is written in TypeScript. You can use typings to explore SDK possibilities.
@@ -415,6 +417,72 @@ const erc20Balance = await sdk.balances.getBalance(walletAddress, {
 })
 ```
 "getBalance" method is not supports balance of NFT-tokens
+
+### Troubleshooting
+
+Possible errors after `npm install -D @rarible/sdk` command:
+
+<details>
+  <summary>Failed to replace env in config: ${NPM_TOKEN}</summary>
+ 
+```shell
+error An unexpected error occurred: "Failed to replace env in config: ${NPM_TOKEN}".
+```
+
+**Solution**
+
+Type in the command line while in the project folder:
+
+```shell
+rm -f ./.npmrc
+```
+
+</details>
+
+<details>
+  <summary>Adding the dependency to the workspace</summary>
+
+```shell
+error Running this command will add the dependency to the workspace root rather than the workspace itself, which might not be what you want - if you really meant it, make it explicit by running this command again with the -W flag (or --ignore-workspace-root-check).
+```
+
+**Solution**
+
+Type in the command line while in the project folder:
+
+```shell
+yarn add @rarible/sdk -D -W
+```
+
+</details>
+
+<details>
+  <summary>darwin-arm64.tar.gz downloading error </summary>
+
+```shell
+...
+node-pre-gyp info it worked if it ends with ok
+node-pre-gyp info using node-pre-gyp@0.13.0
+node-pre-gyp info using node@16.13.1 | darwin | arm64
+node-pre-gyp WARN Using request for node-pre-gyp https download
+...
+node-pre-gyp http GET https://node-webrtc.s3.amazonaws.com/wrtc/v0.4.7/Release/darwin-arm64.tar.gz
+node-pre-gyp http 404 https://node-webrtc.s3.amazonaws.com/wrtc/v0.4.7/Release/darwin-arm64.tar.gz
+node-pre-gyp ERR! install error
+node-pre-gyp ERR! stack Error: 404 status code downloading tarball https://node-webrtc.s3.amazonaws.com/wrtc/v0.4.7/Release/darwin-arm64.tar.gz
+...
+```
+
+**Solution**
+
+Type in the command line while in the project folder:
+
+```shell
+sudo npm install -g n
+sudo n 14.17.6
+```
+
+</details>
 
 ### Note
 
