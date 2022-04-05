@@ -15,7 +15,7 @@ describe("get balance", () => {
 	)
 	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
 
-	test("get balance XTZ", async () => {
+	test.skip("get balance XTZ", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{ "@type": "XTZ" }
@@ -51,7 +51,7 @@ describe("get balance", () => {
 		)
 		expect(balance.toString()).toEqual("0.03")
 	})
-	test("get balance FT", async () => {
+	test.skip("get balance FT", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			toCurrencyId("TEZOS:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
