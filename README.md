@@ -1,13 +1,12 @@
 # Rarible Protocol Software Development Kit
 
-Rarible Protocol SDK enables applications to easily interact with Rarible Protocol: [query](#querying), [issue](#mint), [trade](#sell) NFTs on any blockchain supported.
+Rarible Multichain Protocol is a decentralized toolset that simplifies the way developers can work with NFTs. The protocol builds an abstraction layer for several blockchains and isolates the developer from their specifics with a Multichain SDK.
 
-Currently, these blockchains are supported:
+Rarible Multichain SDK is fully blockchain-agnostic. You can find a list of supported blockchains on our [Features](https://docs.rarible.org/features/) page.
 
-* Ethereum
-* Flow
-* Tezos
-* Polygon
+We use different environments for blockchain networks. See actual information on [API Reference](https://docs.rarible.org/api-reference/) page.
+
+Rarible Multichain SDK enables applications to easily interact with Rarible Protocol: query, issue and trade NFTs on any blockchain supported. See more information on [Reference](https://docs.rarible.org/reference/reference-overview/) section.
 
 ## Installation
 
@@ -19,9 +18,19 @@ yarn add web3@1.5.0
 yarn add tslib@2.3.1
 ```
 
-If you have problems installing the SDK on M1 MacBook, use our [Troubleshooting](#troubleshooting) section.
+Also, you can install ethers if you need it to initialize the wallets:
 
-## Usage
+```shell
+yarn add ethers
+```
+
+Make sure the SDK is installed correctly:
+
+```shell
+npm view @rarible/sdk version
+```
+
+## Using SDK on client application
 
 SDK is written in TypeScript. You can use typings to explore SDK possibilities.
 
@@ -35,101 +44,117 @@ import { createRaribleSdk } from "@rarible/sdk"
 
 To use SDK, you have to create a Wallet — abstraction to communicate with real blockchain wallets.
 Initialize wallets for used blockchains or use Rarible Wallet Connector (in general for frontend)
-It is possible to use sdk without wallet (for ex. sdk.balances.getBalance), but in that case you can't send transactions
-and sign messages ()  
+It is possible to use SDK without wallet (for ex. `sdk.balances.getBalance`), but in that case you can't send transactions and sign messages:
+
 ```ts
 const raribleSdk = createRaribleSdk(undefined, "prod")
 ```
 
+#### Initialize simple wallets
 
-1. Initialize simple wallets
+* Ethereum / Polygon
 
-**Ethereum / Polygon**
+    You can create EthereumWallet with one of the following providers:
+    
+    * Web3 instance. For example, Metamask (`window.ethereum`) or HDWalletProvider
+    * ethers.providers.Web3Provider
+    * ethers.Wallet
+    
+    ```ts
+    import Web3 from "web3"
+    import * as HDWalletProvider from "@truffle/hdwallet-provider"
+    import { Web3Ethereum } from "@rarible/web3-ethereum"
+    import { ethers } from "ethers"
+    import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
+    import { EthereumWallet } from "@rarible/sdk-wallet"
+    
+    //Creating EthereumWallet with Web3
+    const web3 = new Web3(provider)
+    const web3Ethereum = new Web3Ethereum({ web3 })
+    const ethWallet = new EthereumWallet(web3Ethereum)
+    
+    //or with HDWalletProvider
+    const provider = new HDWalletProvider({
+      url: "<NODE_URL>",
+      privateKeys: ["0x0..."],
+      chainId: 1,
+    })
+    const web3 = new Web3(provider)
+    const web3Ethereum = new Web3Ethereum({ web3 })
+    const ethWallet = new EthereumWallet(web3Ethereum)
+    
+    //Creating EthereumWallet with ethers.providers.Web3Provider
+    const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
+    const ethersProvider = new EthersWeb3ProviderEthereum(ethersWeb3Provider)
+    const ethWallet = new EthereumWallet(ethersProvider)
+    
+    //Creating EthereumWallet with ethers.Wallet
+    const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
+    const ethersProvider = new EthersEthereum(new ethers.Wallet(wallet.getPrivateKeyString(), ethersWeb3Provider))
+    const ethWallet = new EthereumWallet(ethersProvider)
+    
+    // Second parameter — is environment: "prod" | "staging" | "e2e" | "dev"
+    const raribleSdk = createRaribleSdk(ethWallet, "staging")
+    ```
 
-You can create EthereumWallet with one of the following providers:
-1. Web3 instance
-For example: Metamask (window.ethereum), HDWalletProvider (read when using on the backend [instruction](#usage-sdk-on-the-server-backend)) and etc.
-2. ethers.providers.Web3Provider
-3. ethers.Wallet
-```ts
-import Web3 from "web3"
-import * as HDWalletProvider from "@truffle/hdwallet-provider"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { ethers } from "ethers"
-import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
 
-//Creating EthereumWallet with Web3
-const web3 = new Web3(provider)
-const web3Ethereum = new Web3Ethereum({ web3 })
-const ethWallet = new EthereumWallet(web3Ethereum)
+* Flow
 
-//or with HDWalletProvider
-const provider = new HDWalletProvider({
-  url: "<NODE_URL>",
-  privateKeys: ["0x0..."],
-  chainId: 1,
-})
-const web3 = new Web3(provider)
-const web3Ethereum = new Web3Ethereum({ web3 })
-const ethWallet = new EthereumWallet(web3Ethereum)
+    ```ts
+    import * as fcl from "@onflow/fcl"
+    import { FlowWallet } from "@rarible/sdk-wallet"
+    
+    const wallet =  new FlowWallet(fcl)
+    ```
+    
+    You also need to configure Flow Client Library (FCL), because Flow-sdk use [@onflow/fcl-js](link:https://github.com/onflow/fcl-js):
+    
+    ```javascript
+    //example config for testnet
+    import { config } from "@onflow/fcl";
+    config({
+      "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
+      "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
+    })
+    ```
+    
+    See more configuration details on [Flow documentation](https://docs.onflow.org/fcl/tutorials/flow-app-quickstart/#configuration).
 
-//Creating EthereumWallet with ethers.providers.Web3Provider
-const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
-const ethersProvider = new EthersWeb3ProviderEthereum(ethersWeb3Provider)
-const ethWallet = new EthereumWallet(ethersProvider)
 
-//Creating EthereumWallet with ethers.Wallet
-const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
-const ethersProvider = new EthersEthereum(new ethers.Wallet(wallet.getPrivateKeyString(), ethersWeb3Provider))
-const ethWallet = new EthereumWallet(ethersProvider)
-  
-// Second parameter — is environment: "prod" | "staging" | "e2e" | "dev"
-const raribleSdk = createRaribleSdk(ethWallet, "staging")
-```
+* Tezos
 
-**Flow**
+    To initialize wallets, you can use:
+    
+    * in_memory_provider (also for backend)
+    * beacon_provider (@rarible/tezos-sdk/dist/providers/beacon/beacon_provider)
+    
+    ```ts
+    //in_memory_provider usage example
+    import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
+    import { TezosWallet } from "@rarible/sdk-wallet"
+    
+    const provider = in_memory_provider("edsk...", nodeUrl)
+    const wallet = new TezosWallet(provider)
+    ```
 
-```ts
-import * as fcl from "@onflow/fcl"
-import { FlowWallet } from "@rarible/sdk-wallet"
+#### Use Rarible SDK Wallet Connector
 
-const wallet =  new FlowWallet(fcl)
-```
+Wallet Connector make possible to connect the following providers:
 
-You also need to configure Flow Client Library (FCL) for using Flow. See more information on [Configure fcl](https://docs.rarible.org/flow/flow-sdk/#configure-fcl).
+* InjectedWeb3ConnectionProvider — Metamask, Coinbase, etc
+* FortmaticConnectionProvider
+* PortisConnectionProvider
+* TorusConnectionProvider
+* WalletLinkConnectionProvider
+* MEWConnectionProvider
+* IframeConnectionProvider
+* WalletConnectConnectionProvider
+* BeaconConnectionProvider
+* FclConnectionProvider
 
-**Tezos**
+[Read more](https://github.com/rarible/sdk/tree/master/packages/connector) about installation and using examples of Rarible SDK Wallet Connector.
 
-You can use:
-1. in_memory_provider (also for backend)
-2. beacon_provider (@rarible/tezos-sdk/dist/providers/beacon/beacon_provider)
-3. and etc.
-```ts
-//in_memory_provider usage example
-import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-import { TezosWallet } from "@rarible/sdk-wallet"
-
-const provider = in_memory_provider("edsk...", nodeUrl)
-const wallet = new TezosWallet(provider)
-```
-
-2. Use Rarible SDK Wallet Connector 
-[Read more and see code example](https://github.com/rarible/sdk/tree/master/packages/connector#usage-with-rarible-sdk)
-
-With wallet connector make it possible to connect the following providers:
-InjectedWeb3ConnectionProvider - metamask, coinbase, etc
-FortmaticConnectionProvider
-PortisConnectionProvider 
-TorusConnectionProvider
-WalletLinkConnectionProvider
-MEWConnectionProvider
-IframeConnectionProvider
-WalletConnectConnectionProvider
-BeaconConnectionProvider
-FclConnectionProvider
- 
-### Usage SDK on the server (backend)
+## Using SDK on server application
 
 The SDK was designed for use on the frontend side. To use the SDK on the server side (backend):
 
@@ -155,21 +180,23 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
     }
     ```
 
-3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/buy.ts) to buy ethereum NFT item on Rinkeby network:
-Pass private key, node rpc url, network id, item id for buyout and start
+3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/buy.ts) to buy Ethereum NFT item on Rinkeby network:
+
+   Pass private key, node RPC URL, network ID, item ID for buyout and start:
+
     ```shell
     ETH_PRIVATE_KEY="0x..." \
     ETHEREUM_RPC_URL="https://rinkeby.infura.io/..." \
     ETHEREUM_NETWORK_ID="4" \
     BUYOUT_ITEM_ID="0x1AF7A7555263F275433c6Bb0b8FdCD231F89B1D7:102581254137174039089845694331937600507918590364933200920056519678660477714440" \
     ts-node packages/sdk/example/backend/buy.ts
-   ```
-### Querying
+    ```
 
-Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: http://api-dev.rarible.org/v0.1/doc or right in the typescript typings.
+## Querying
+
+Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: [https://multichain.redoc.ly/](https://multichain.redoc.ly/) or right in the typescript typings.
 
 ```ts
-
 //Fetch items by creator
 sdk.apis.item.getItemsByCreator({ creator: someAddress })
 
@@ -179,20 +206,22 @@ sdk.apis.activity.getActivitiesByItem({ type: ["TRANSFER"], contract, tokenId })
 //etc. Please explore SDK APIs and openAPI docs
 ```
 
-### Executing actions
+## Executing actions
 
-You can use SDK to create(mint), trade, transfer, burn NFTs. All actions are handled in the same manner:
-- you invoke function from SDK (e.g.: [mint](#mint))
-- async function returns the so-called PrepareResponse (it's different for different actions)
-- this PrepareResponse contains all needed information to show the user a form (for example, response for sell contains all supported currency types)
-- collect input from the user (show form and let the user enter the data)
-- pass this data to submit [Action](https://github.com/rarible/ts-common/tree/master/packages/action)
+You can use SDK to create (mint), trade, transfer, and burn NFTs. All actions are handled in the same manner:
 
-You can find more information about Action abstraction in the dedicated GitHub readme. Or you can use it as a regular async function and work with regular Promises.
+* you invoke function from SDK (e.g.: [mint](#mint))
+* async function returns the so-called PrepareResponse (it's different for different actions)
+* PrepareResponse contains all needed information to show the user a form (for example, response for sale contains all supported currency types)
+* collect input from the user (show form and let the user enter the data)
+* pass this data to submit [Action](https://github.com/rarible/ts-common/tree/master/packages/action)
 
-### Create collection
+You can find more information about Action abstraction in the dedicated GitHub README. Or you can use it as a regular async function and work with regular Promises.
+
+## Create collection
 
 Create NFT collection to mint NFT items on Ethereum, Polygon and Tezos blockchains.
+
 ```ts
 import { Blockchain } from "@rarible/api-client"
 //Address of collection available before approve transaction but you should wait
@@ -201,9 +230,10 @@ const { address, tx } = await sdk.nft.deploy({ blockchain, asset })
 await tx.wait()
 ```
 
-### Mint
+## Mint
 
-To mint new item you should specify ID of existed collection or create new one ([create collection](#create-collection))
+To mint new item, you should specify ID of existed collection or create new one ([create collection](#create-collection))
+
 ```ts
 //Invoke mint function. It will return a PrepareResponse with some useful information 
 const { 
@@ -225,7 +255,7 @@ const itemId = await submit({
 })
 ```
 
-### Sell
+## Sell
 
 First, sell-order should be created:
 
@@ -250,10 +280,9 @@ const orderId = await submit({
 })
 ```
 
-When the order is created, it's propagated to all Protocol users.
-Any app can initiate the process to fill the order ([reference](#fill-orders-buy-or-accept-bid)).
+When the order is created, it's propagated to all Protocol users. Any app can initiate the process to fill the order ([reference](#fill-orders-buy-or-accept-bid)).
 
-### Bid
+## Bid
 
 A bid is just an unmatched buy order. The bidder submits the order to the indexer. The seller accepts it by creating a matched order.
 
@@ -309,10 +338,9 @@ const orderId = await submit({
 })
 ```
 
-### Fill orders (buy or accept bid)
+## Fill orders (buy or accept bid)
 
-When the order is created, it's propagated to all Protocol users.
-Any app can initiate the process to fill the order.
+When the order is created, it's propagated to all Protocol users. Any app can initiate the process to fill the order.
 
 Use `sdk.order.buy()` method to buy NFT with orderId and `sdk.order.acceptBid()` methods to fill bid order.
 
@@ -336,9 +364,9 @@ const tx = await submit({
 })
 ```
 
-After the call submits action, you will get IBlockchainTransaction object which can be used to watch for transaction status (error or confirmed).
+After the call submits action, you will get IBlockchainTransaction object, which can be used to watch for transaction status (error or confirmed).
 
-### Transfer
+## Transfer
 
 ```ts
 //Invoke transfer function. It will return a PrepareResponse with some useful information 
@@ -356,7 +384,7 @@ const tx = await submit({
 })
 ```
 
-### Burn
+## Burn
 
 ```ts
 //Invoke burn function. It will return a PrepareResponse with some useful information 
@@ -379,8 +407,10 @@ if (tx) {
 }
 ```
 
+## Convert to/from wrapped fungible tokens
 
-### Convert to/from wrapped fungible tokens (ex. eth<->weth, xtz<->wTez)
+You can convert to/from wrapped fungible tokens. For example, eth <-> weth, xtz <-> wTez.
+
 ```ts
 import { Blockchain } from "@rarible/api-client"
 //Convert 0.1 ETH to 0.1 wETH (Wrapped Ether)
@@ -392,7 +422,7 @@ const tx = await sdk.balances.convert(Blockchain.ETHEREUM, false, "0.1")
 await tx.wait()
 ```
 
-### Get balance of fungible tokens
+## Get balance of fungible tokens
 
 ```ts
 import { toContractAddress, toUnionAddress } from "@rarible/types";
@@ -416,7 +446,8 @@ const erc20Balance = await sdk.balances.getBalance(walletAddress, {
   contract: toContractAddress("ETHEREUM:0x...")
 })
 ```
-"getBalance" method is not supports balance of NFT-tokens
+
+`getBalance` method is not supporting balance of NFT-tokens.
 
 ### Troubleshooting
 
