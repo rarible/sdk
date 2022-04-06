@@ -23,17 +23,16 @@ describe("test tezos mint and sell", () => {
 	)
 	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
-	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
+	// const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
+	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test.skip("sale NFT with XTZ", async () => {
-		console.log(await sellerWallet.provider.address())
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 
-		console.log("before mint")
 		const mintResult = await mintAndSellAction.submit({
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
@@ -46,18 +45,14 @@ describe("test tezos mint and sell", () => {
 		}
 		await awaitItem(sellerSdk, mintResult.itemId)
 
-		console.log("order", mintResult)
-		console.log("before buy", await buyerWallet.provider.address(), await nextBuyerWallet.provider.address())
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		// await delay(10000)
-		console.log("before submit")
 		const fillResult = await fillResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
 		})
 		await fillResult.wait()
-		console.log("after submit")
 
 		const ownership = await awaitForOwnership(
 			buyerSdk,
@@ -67,7 +62,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("1")
 	})
 
-	test.skip("sale NFT with eurTZ", async () => {
+	test("sale NFT with eurTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})

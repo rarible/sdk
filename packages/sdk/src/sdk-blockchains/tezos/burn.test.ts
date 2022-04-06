@@ -26,12 +26,10 @@ describe("burn test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		console.log("after mint")
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 
 		const transfer = await sdk.nft.burn({ itemId: mintResult.itemId })
 
-		console.log("after burn")
 		const result = await transfer.submit({ amount: 1 })
 
 		if (result) {
@@ -56,11 +54,9 @@ describe("burn test", () => {
 
 		await awaitForItemSupply(sdk, mintResult.itemId, "10")
 
-		console.log("before burn")
 		const transfer = await sdk.nft.burn({
 			itemId: mintResult.itemId,
 		})
-		console.log("before burn submit")
 		const result = await transfer.submit({ amount: 5 })
 		if (result) {
 		  await result.wait()
