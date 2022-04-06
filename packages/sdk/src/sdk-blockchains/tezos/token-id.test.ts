@@ -8,7 +8,7 @@ describe("test getting token id", () => {
 
 	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1SsPspRbf9rcNRMLEeXCgo85E6kHJSxi8m"
+	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 
 	test.skip("get tezos token id", async () => {
 

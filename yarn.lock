@@ -3756,10 +3756,10 @@
     "@rarible/tezos-common" "^0.1.5"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@~0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.5.tgz#85fcc6dc07df071798f0e00c42da97acf8747074"
-  integrity sha512-1LXzYio4Imbwfi7UKnEf29j1PE61g8WBDIAvo8R7YHxueRxQnlWWvA4qErNrJol1gGBTU6NMXERAf0p45kbJRA==
+"@rarible/tezos-sdk@~0.1.7":
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.7.tgz#b7f86545874fd938e6560281adfcedfcccd91bf1"
+  integrity sha512-gKcG7tbMl7FBNNqQGR4b8pOhk6XHk6B1GOZxY1/mW4wf5iGaIQGT5qbarHzYqkUcNM7GdFTrvmn3OiMkhmK+nQ==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.10"
     "@rarible/tezos-common" "^0.1.5"
@@ -3767,7 +3767,7 @@
     "@taquito/beacon-wallet" "^12.0.0"
     "@taquito/signer" "^12.0.0"
     "@taquito/taquito" "^12.0.0"
-    "@temple-wallet/dapp" "^6.1.1"
+    "@temple-wallet/dapp" "^7.0.0"
     "@types/bs58check" "^2.1.0"
     "@types/elliptic" "^6.4.13"
     "@types/keccak" "^3.0.1"
@@ -4214,17 +4214,10 @@
     elliptic "^6.5.4"
     typedarray-to-buffer "^4.0.0"
 
-"@temple-wallet/dapp@^5.0.2":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@temple-wallet/dapp/-/dapp-5.0.2.tgz#6a7759b1527b3e0dd0079642e3b052a027bb2953"
-  integrity sha512-IIeHTowHXOp7/JnttfzMyCJjFWwhqOauDN7S2vU0GzHkpT5gH6FBXqB3kvZUyPfoxY0PXuXg+HKh++qABx+g9A==
-  dependencies:
-    nanoid "^3.1.25"
-
-"@temple-wallet/dapp@^6.1.1":
-  version "6.1.1"
-  resolved "https://registry.yarnpkg.com/@temple-wallet/dapp/-/dapp-6.1.1.tgz#55530ecd4b9109fa8977afdd03255ce208ebe76d"
-  integrity sha512-k01pM2Bmdt3w6/kmXsFiCJRAAwSuhKVKAQtsg8rrxfThrI5/yxvoWUliytIlYPZTHt7HAhHjch0ahLI7Jx764w==
+"@temple-wallet/dapp@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@temple-wallet/dapp/-/dapp-7.0.0.tgz#f7baf38ccd775b3eb8424e62ddbbfcd57c718227"
+  integrity sha512-JbpXompkVDh4Wl0Oa+i8iKEGinFqYPTM4uuqw8eBH57vHxq52W5K3NSgVaKjfyWms9UYQ8xOfsUOzzUVWSYtxA==
   dependencies:
     nanoid "^3.1.30"
 
@@ -12482,7 +12475,7 @@ nano-json-stream-parser@^0.1.2:
   resolved "https://registry.yarnpkg.com/nano-json-stream-parser/-/nano-json-stream-parser-0.1.2.tgz#0cc8f6d0e2b622b479c40d499c46d64b755c6f5f"
   integrity sha1-DMj20OK2IrR5xA1JnEbWS3Vcb18=
 
-nanoid@^3.1.25, nanoid@^3.1.30:
+nanoid@^3.1.30:
   version "3.1.30"
   resolved "https://registry.yarnpkg.com/nanoid/-/nanoid-3.1.30.tgz#63f93cc548d2a113dc5dfbc63bfa09e2b9b64362"
   integrity sha512-zJpuPDwOv8D2zq2WRoMe1HsfZthVewpel9CAvTfc/2mBD1uUT/agc5f7GHGWXlYkFvi1mVxe4IjvP2HNrop7nQ==

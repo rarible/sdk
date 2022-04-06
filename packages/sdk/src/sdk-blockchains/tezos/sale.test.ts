@@ -2,6 +2,8 @@ import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarib
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/domain"
+import { awaitItem } from "../ethereum/test/await-item"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 
@@ -22,8 +24,8 @@ describe("test tezos mint and sell", () => {
 	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
-	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
+	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test.skip("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
@@ -37,9 +39,14 @@ describe("test tezos mint and sell", () => {
 			supply: 1,
 			lazyMint: false,
 		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+		await awaitItem(sellerSdk, mintResult.itemId)
 
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
+		// await delay(10000)
 		const fillResult = await fillResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
@@ -102,6 +109,9 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
