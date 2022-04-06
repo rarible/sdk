@@ -23,8 +23,7 @@ describe("test tezos mint and sell", () => {
 	)
 	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
-	// const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
-	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
+	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
@@ -62,7 +61,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("1")
 	})
 
-	test("sale NFT with eurTZ", async () => {
+	test.skip("sale NFT with eurTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
