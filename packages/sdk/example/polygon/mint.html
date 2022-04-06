@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://unpkg.com/@rarible/web3-ethereum@0.12.40-hotfix.3/umd/rarible-web3-ethereum.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk-wallet@0.8.40/umd/rarible-wallet-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk@0.8.45/umd/rarible-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/web3@1.6.0/dist/web3.min.js" type="text/javascript"></script>
+<script>
+  async function mintOnPolygon() {
+    const {ethereum} = window
+    if (ethereum && ethereum.isMetaMask) {
+      const web3Ethereum = new window.raribleWeb3Ethereum.Web3Ethereum({ web3: new Web3(ethereum) })
+      const wallet = new window.raribleWalletSdk.EthereumWallet(web3Ethereum, "POLYGON")
+
+      const env = "staging" // "dev" | "e2e" | "staging" | "prod"
+      const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
+      const mintFormInitial = {
+        id: "POLYGON:0xC177B53225a4fc6F44779b85AAB9494cE540CF46", // default collection on "rinkeby" that supports lazy minting
+        type: "ERC721",
+        isLazy: true,
+        isLazySupported: true,
+        loading: false,
+      }
+      const mintAction = await raribleSdk.nft.mint({
+        collectionId: mintFormInitial.id
+      })
+      const tx = await mintAction.submit({
+        uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+        royalties: [],
+        lazyMint: false,
+        supply: 1,
+      })
+      console.log('tx', tx)
+    }
+
+  }
+  mintOnPolygon()
+
+</script>
+</body>
+</html>

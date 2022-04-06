@@ -1,5 +1,4 @@
-import type { Collection } from "@rarible/api-client"
-import type { ContractAddress } from "@rarible/types"
+import type { Collection, ContractAddress } from "@rarible/api-client"
 import type { TokenId } from "../generate-token-id"
 
 export type PrepareMintRequest = {

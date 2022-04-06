@@ -3,9 +3,8 @@ import type { Address } from "@rarible/types"
 import { toAddress } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { EVMBlockchain } from "../common"
 
-export async function resetWethFunds(wallet: EthereumWallet<EVMBlockchain>, sdk: RaribleSdk, contract: Address) {
+export async function resetWethFunds(wallet: EthereumWallet, sdk: RaribleSdk, contract: Address) {
 	const wethAsset = { assetClass: "ERC20" as const, contract }
 	const walletAddress = toAddress(await wallet.ethereum.getFrom())
 	const wethBidderBalance = new BigNumber(await sdk.balances.getBalance(walletAddress, wethAsset))

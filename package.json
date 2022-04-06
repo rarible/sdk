@@ -20,6 +20,7 @@
     "build-connector-torus": "yarn workspace @rarible/connector-torus run build",
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
+    "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
@@ -32,7 +33,8 @@
     "prepare": "husky install",
     "release": "lerna publish from-package",
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
-    "publish-all": "lerna publish from-package"
+    "publish-all": "lerna publish from-package",
+    "e2e-tests": "sh ./scripts/e2e.sh"
   },
   "commitlint": {
     "extends": [
@@ -48,7 +50,6 @@
     ]
   },
   "devDependencies": {
-    "@babel/core": "7.15.5",
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@rarible/eslint-config-ts": "~0.5.0",

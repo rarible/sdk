@@ -13,6 +13,7 @@ import type {
 	PrepareBidResponse,
 	PrepareBidUpdateResponse,
 } from "../../types/order/bid/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName, toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
@@ -48,8 +49,9 @@ export class FlowBid {
 		const bidAction = Action.create({
 			id: "send-tx" as const,
 			run: async (bidRequest: OrderCommon.OrderRequest) => {
-				if (bidRequest.currency["@type"] === "FLOW_FT") {
-					const currency = getFungibleTokenName(bidRequest.currency.contract)
+				const requestCurrency = getCurrencyAssetType(bidRequest.currency)
+				if (requestCurrency["@type"] === "FLOW_FT") {
+					const currency = getFungibleTokenName(requestCurrency.contract)
 					return this.sdk.order.bid(
 						toFlowContractAddress(contract),
 						currency,
@@ -58,7 +60,7 @@ export class FlowBid {
 						toFlowParts(bidRequest.originFees),
 					)
 				}
-				throw new Error(`Unsupported currency type: ${bidRequest.currency["@type"]}`)
+				throw new Error(`Unsupported currency type: ${requestCurrency["@type"]}`)
 			},
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 
@@ -70,6 +72,7 @@ export class FlowBid {
 			maxAmount: toBigNumber("1"),
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,
+			supportsExpirationDate: false,
 			submit: bidAction,
 		}
 	}

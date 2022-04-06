@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.8.44-hotfix.3",
+  "version": "0.8.47",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -19,11 +19,8 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "~0.0.11",
-    "@rarible/ethereum-provider": "~0.12.30",
-    "@rarible/fcl-types": "~0.5.0",
-    "@rarible/tezos-sdk": "~0.1.7",
-    "@rarible/types": "~0.5.3"
+    "@rarible/api-client": "0.0.11",
+    "@rarible/ethereum-provider": "~0.12.54"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -36,7 +33,10 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
-    "@rarible/web3-ethereum": "~0.12.30",
+    "@rarible/ethereum-sdk-test-common": "~0.12.54",
+    "@rarible/fcl-types": "~0.5.0",
+    "@rarible/tezos-sdk": "~0.1.7",
+    "@rarible/web3-ethereum": "~0.12.54",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
@@ -46,7 +46,7 @@
     "stream-browserify": "^3.0.0",
     "ts-jest": "^27.0.3",
     "typescript": "^4.4.4",
-    "web3": "~1.2.11"
+    "web3": "1.5.0"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
