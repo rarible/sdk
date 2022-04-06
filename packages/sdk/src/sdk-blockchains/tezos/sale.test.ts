@@ -2,6 +2,9 @@ import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarib
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/domain"
+import { delay } from "../../common/retry"
+import { awaitItem } from "../ethereum/test/await-item"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 
@@ -22,14 +25,16 @@ describe("test tezos mint and sell", () => {
 	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
-	let nftContract: string = "KT1ANmrMfq6SfPe2b59JGVu2CDacoaoL6hW8"
-	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
+	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
-	test("sale NFT with XTZ", async () => {
+	test.skip("sale NFT with XTZ", async () => {
+		console.log(await sellerWallet.provider.address())
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toContractAddress(`TEZOS:${nftContract}`),
 		})
 
+		console.log("before mint")
 		const mintResult = await mintAndSellAction.submit({
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
@@ -37,14 +42,23 @@ describe("test tezos mint and sell", () => {
 			supply: 1,
 			lazyMint: false,
 		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+		await awaitItem(sellerSdk, mintResult.itemId)
 
+		console.log("order", mintResult)
+		console.log("before buy", await buyerWallet.provider.address(), await nextBuyerWallet.provider.address())
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
+		// await delay(10000)
+		console.log("before submit")
 		const fillResult = await fillResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
 		})
 		await fillResult.wait()
+		console.log("after submit")
 
 		const ownership = await awaitForOwnership(
 			buyerSdk,
@@ -102,6 +116,9 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({

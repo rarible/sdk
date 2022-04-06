@@ -1,19 +1,18 @@
-// eslint-disable-next-line camelcase
-import { TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
-import { createTestInMemoryProvider } from "./test/create-in-memory-provider"
+import { createTestWallet } from "./test/test-wallet"
 
 describe("burn test", () => {
-	const tezos = createTestInMemoryProvider("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const wallet = new TezosWallet(tezos)
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sellerWallet = createTestWallet(
+		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
+	const sdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
+	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test.skip("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -27,10 +26,12 @@ describe("burn test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log("after mint")
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 
 		const transfer = await sdk.nft.burn({ itemId: mintResult.itemId })
 
+		console.log("after burn")
 		const result = await transfer.submit({ amount: 1 })
 
 		if (result) {
@@ -55,9 +56,11 @@ describe("burn test", () => {
 
 		await awaitForItemSupply(sdk, mintResult.itemId, "10")
 
+		console.log("before burn")
 		const transfer = await sdk.nft.burn({
 			itemId: mintResult.itemId,
 		})
+		console.log("before burn submit")
 		const result = await transfer.submit({ amount: 5 })
 		if (result) {
 		  await result.wait()

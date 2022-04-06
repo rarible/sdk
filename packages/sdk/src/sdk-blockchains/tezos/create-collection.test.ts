@@ -12,24 +12,7 @@ describe("deploy tezos tests", () => {
 	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
 	test.skip("deploy public nft", async () => {
-		const result = await sdk.nft.deploy({
-			blockchain: Blockchain.TEZOS,
-			asset: {
-				assetType: "NFT",
-				arguments: {
-					name: "My NFT collection",
-					symbol: "MYNFT",
-					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-					isUserToken: true,
-				},
-			},
-		})
-
-		await result.tx.wait()
-	})
-
-	test.skip("deploy private nft", async () => {
-		const result = await sdk.nft.deploy({
+		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
@@ -38,6 +21,24 @@ describe("deploy tezos tests", () => {
 					symbol: "MYNFT",
 					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: false,
+				},
+			},
+		})
+
+		console.log(result)
+		await result.tx.wait()
+	})
+
+	test.skip("deploy private nft", async () => {
+		const result = await sdk.nft.createCollection({
+			blockchain: Blockchain.TEZOS,
+			asset: {
+				assetType: "NFT",
+				arguments: {
+					name: "My NFT collection",
+					symbol: "MYNFT",
+					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					isUserToken: true,
 				},
 			},
 		})
@@ -48,26 +49,7 @@ describe("deploy tezos tests", () => {
 	})
 
 	test.skip("deploy public mt", async () => {
-		const result = await sdk.nft.deploy({
-			blockchain: Blockchain.TEZOS,
-			asset: {
-				assetType: "MT",
-				arguments: {
-					name: "My NFT collection",
-					symbol: "MYNFT",
-					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-					isUserToken: true,
-				},
-			},
-		})
-
-		await result.tx.wait()
-
-		await awaitForCollection(sdk, result.address)
-	})
-
-	test.skip("deploy private mt", async () => {
-		const result = await sdk.nft.deploy({
+		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",
@@ -76,6 +58,25 @@ describe("deploy tezos tests", () => {
 					symbol: "MYNFT",
 					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: false,
+				},
+			},
+		})
+
+		await result.tx.wait()
+		console.log(result.address)
+		await awaitForCollection(sdk, result.address)
+	})
+
+	test.skip("deploy private mt", async () => {
+		const result = await sdk.nft.createCollection({
+			blockchain: Blockchain.TEZOS,
+			asset: {
+				assetType: "MT",
+				arguments: {
+					name: "My NFT collection",
+					symbol: "MYNFT",
+					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					isUserToken: true,
 				},
 			},
 		})
