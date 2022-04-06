@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.1...v0.8.44-hotfix.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* ethereum test, skip some tezos tests ([046ae1c](https://github.com/rarible/sdk/commit/046ae1c5d398d045d567763d1dc9be132a1f1238))
+
+
+
+
+
 ## [0.8.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.44-hotfix.1) (2022-04-06)
 
 **Note:** Version bump only for package root
