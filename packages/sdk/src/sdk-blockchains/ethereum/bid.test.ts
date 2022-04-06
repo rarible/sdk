@@ -21,7 +21,11 @@ import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
 describe("bid", () => {
-	const { web31, wallet1, web32 } = initProviders({
+	const {
+		web31,
+		wallet1,
+		web32,
+	} = initProviders({
 		pk1: undefined,
 		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
 	})
@@ -32,7 +36,7 @@ describe("bid", () => {
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethwallet2 = new EthereumWallet(ethereum2, Blockchain.ETHEREUM)
-	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
+	const sdk2 = createRaribleSdk(ethwallet2, "e2e", { logs: LogsLevel.DISABLED })
 	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
@@ -42,7 +46,10 @@ describe("bid", () => {
 
 	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
 	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:${wethContractEthereum}`)
-	const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
+	const wethAsset = {
+		"@type": "ERC20" as const,
+		contract: wethContract,
+	}
 
 	const e2eErc1155V2ContractAddress = convertEthereumContractAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d", Blockchain.ETHEREUM)
 
@@ -96,7 +103,10 @@ describe("bid", () => {
 		await updateAction.submit({ price: "0.00000000000000004" })
 
 		const acceptBidResponse = await sdk1.order.acceptBid({ orderId })
-		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
+		const acceptBidTx = await acceptBidResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+		})
 		await acceptBidTx.wait()
 
 		await retry(10, 1000, async () => {
@@ -146,7 +156,10 @@ describe("bid", () => {
 		await updateAction.submit({ price: "0.00000000000000004" })
 
 		const acceptBidResponse = await sdk1.order.acceptBid({ orderId })
-		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
+		const acceptBidTx = await acceptBidResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+		})
 		await acceptBidTx.wait()
 
 		await retry(10, 1000, async () => {
@@ -211,7 +224,10 @@ describe("bid", () => {
 
 		await retry(5, 2000, async () => {
 			const value = await bidResponse.getConvertableValue({
-				assetType: { "@type": "ERC20", contract: wethContract },
+				assetType: {
+					"@type": "ERC20",
+					contract: wethContract,
+				},
 				price: "0.00000000000000001",
 				amount: 5,
 				originFees: [{
@@ -232,22 +248,31 @@ describe("bid", () => {
 		const bidResponse = await sdk2.order.bid({ itemId })
 
 		const bidderUnionAddress = convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM)
-		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
+		const wethAsset = {
+			"@type": "ERC20" as const,
+			contract: wethContract,
+		}
 		const wethBidderBalance = new BigNumber(await sdk2.balances.getBalance(bidderUnionAddress, wethAsset))
 
 		console.log("wethBidderBalance", wethBidderBalance.toString())
 		if (wethBidderBalance.lt("0.000000000000001")) {
 			const tx = await ethSdk2.balances.convert(
 				{ assetClass: "ETH" },
-				{ assetClass: "ERC20", contract: toAddress(wethContractEthereum) },
-				"0.0000000000000055"
+				{
+					assetClass: "ERC20",
+					contract: toAddress(wethContractEthereum),
+				},
+				"0.0000000000000055",
 			)
 			await tx.wait()
 		}
 
 		await retry(5, 2000, async () => {
 			const value = await bidResponse.getConvertableValue({
-				assetType: { "@type": "ERC20", contract: wethContract },
+				assetType: {
+					"@type": "ERC20",
+					contract: wethContract,
+				},
 				price: "0.000000000000001",
 				amount: 5,
 				originFees: [{
@@ -290,8 +315,8 @@ describe("bid", () => {
 		const bidderAddress = await ethereum2.getFrom()
 
 		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 		const tokenId = "5"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
@@ -333,8 +358,8 @@ describe("bid", () => {
 		const bidderAddress = await ethereum2.getFrom()
 
 		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 
 		const action = await sdk1.nft.mint({ collectionId: e2eErc1155V2ContractAddress })
@@ -381,7 +406,7 @@ describe("bid", () => {
 		await fillBidResult.wait()
 
 		await retry(10, 1000, async () => {
-			 const ownership = await sdk1.apis.ownership.getOwnershipById({
+			const ownership = await sdk1.apis.ownership.getOwnershipById({
 				ownershipId: `${mintResult.itemId}:${bidderAddress}`,
 			})
 			expect(ownership.value).toBe("10")
