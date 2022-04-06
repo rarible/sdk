@@ -2,14 +2,15 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.8.44",
+  "version": "0.8.44-hotfix.0",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
     "publish": {
       "allowBranch": [
         "master",
-        "develop"
+        "fix/*",
+        "beta/*"
       ],
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
