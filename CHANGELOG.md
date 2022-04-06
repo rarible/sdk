@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta8](https://github.com/rarible/sdk/compare/v0.8.50-beta7...v0.8.50-beta8) (2022-04-06)
+
+
+### Bug Fixes
+
+* solana balance use numbers instead of BN ([1e77d6a](https://github.com/rarible/sdk/commit/1e77d6aa0432eebaf979490e89c5958d68ad4ce0))
+
+
+
+
+
 ## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
 
 **Note:** Version bump only for package root
