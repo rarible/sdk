@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.8.45",
+  "version": "0.8.45-hotfix.0",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -26,8 +26,8 @@
     "@rarible/flow-sdk": "~0.5.40",
     "@rarible/logger": "~0.6.2",
     "@rarible/protocol-ethereum-sdk": "~0.12.57",
-    "@rarible/sdk-transaction": "^0.8.44-hotfix.3",
-    "@rarible/sdk-wallet": "^0.8.44-hotfix.3",
+    "@rarible/sdk-transaction": "^0.8.45-hotfix.0",
+    "@rarible/sdk-wallet": "^0.8.45-hotfix.0",
     "@rarible/tezos-sdk": "~0.1.7",
     "@rarible/types": "~0.5.3",
     "@rarible/utils": "~0.5.0",
