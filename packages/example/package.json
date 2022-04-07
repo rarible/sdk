@@ -43,7 +43,7 @@
     "react-router-dom": "6",
     "react-scripts": "^4.0.3",
     "react-syntax-highlighter": "^15.4.5",
-    "typescript": "^4.5.4"
+    "typescript": "~4.4.4"
   },
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",
