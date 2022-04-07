@@ -51,10 +51,11 @@ describe("get balance", () => {
 		)
 		expect(balance.toString()).toEqual("0.03")
 	})
-	test("get balance FT", async () => {
+
+	test.skip("get balance FT", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
-			toCurrencyId("TEZOS:KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
+			toCurrencyId("TEZOS:KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX")
 		)
 		expect(balance.toString()).toEqual("0.03")
 	})
