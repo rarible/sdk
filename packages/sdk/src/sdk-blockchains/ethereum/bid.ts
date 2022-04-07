@@ -28,6 +28,7 @@ import type {
 } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -225,23 +226,35 @@ export class EthereumBid {
 	}
 
 	getConvertMap() {
-		return {
-			[convertEthereumContractAddress(this.sdk.balances.getWethContractAddress(), this.blockchain)]: "ETH",
+		const convertMap: Record<ContractAddress, string> = {}
+		const wethAddress = this.sdk.balances.getWethContractAddress()
+		if (wethAddress) {
+			convertMap[convertEthereumContractAddress(wethAddress, this.blockchain)] = "ETH"
 		}
+		return convertMap
 	}
 
 	private async getConvertableValue(request: GetConvertableValueRequest): Promise<GetConvertableValueResult> {
 		const convertMap = this.getConvertMap()
-
-		if (request.assetType["@type"] === "ERC20" && request.assetType.contract in convertMap) {
+		let assetType: AssetType
+		if (request.assetType) {
+			assetType = request.assetType
+		} else if (request.currencyId) {
+			assetType = getCurrencyAssetType(request.currencyId)
+		} else {
+			throw new Error("assetType or currencyId should be specified")
+		}
+		if (assetType["@type"] === "ERC20" && assetType.contract in convertMap) {
 			const originFeesSum = request.originFees.reduce((acc, fee) => fee.value, 0)
-			return this.getConvertableValueCommon(request.assetType, request.price, request.amount, originFeesSum)
+			return this.getConvertableValueCommon(assetType, request.price, request.amount, originFeesSum)
 		}
 
 		return undefined
 	}
 
-	async getConvertableValueCommon(assetType: AssetType, price: BigNumberValue, amount: number, originFeesSum: number) {
+	async getConvertableValueCommon(
+		assetType: RequestCurrencyAssetType, price: BigNumberValue, amount: number, originFeesSum: number
+	) {
 		if (!this.wallet) {
 			throw new Error("Wallet is undefined")
 		}
@@ -323,7 +336,7 @@ export class EthereumBid {
 
 				if (order.make.assetType.assetClass === "ERC20" && order.make.assetType.contract === wethContractAddress) {
 					const value = await this.getConvertableValueCommon(
-						this.convertAssetType(order.make.assetType),
+						this.convertAssetType(order.make.assetType) as RequestCurrencyAssetType,
 						request.price,
 						parseInt(order.take.value),
 						getOrderFeesSum(order)

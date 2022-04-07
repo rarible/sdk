@@ -6,7 +6,6 @@ import { Action } from "@rarible/action"
 import type { TezosProvider, FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
-import { Blockchain } from "@rarible/api-client"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import { retry } from "../../common/retry"
@@ -17,6 +16,7 @@ import type {
 } from "../../types/order/common"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
@@ -56,29 +56,22 @@ export class TezosSell {
 		}
 	}
 
-	async sell(
-		prepareRequest: OrderCommon.PrepareOrderInternalRequest
-	): Promise<OrderCommon.PrepareOrderInternalResponse> {
-		const [domain, contract] = prepareRequest.collectionId.split(":")
-		if (domain !== Blockchain.TEZOS) {
-			throw new Error("Not an tezos item")
-		}
-		const itemCollection = await this.apis.collection.getNftCollectionById({
-			collection: contract,
-		})
-
+	async sell(): Promise<PrepareSellInternalResponse> {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
 				const provider = getRequiredProvider(this.provider)
 				const makerPublicKey = await getMakerPublicKey(provider)
-				const { itemId } = getTezosItemData(request.itemId)
+				const { itemId, contract } = getTezosItemData(request.itemId)
 
 				const item = await retry(90, 1000, async () => {
 				   return this.apis.item.getNftItemById({ itemId })
 				})
 				const requestCurrency = getCurrencyAssetType(request.currency)
 
+				const itemCollection = await this.apis.collection.getNftCollectionById({
+					collection: contract,
+				})
 				const tezosRequest: TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -103,7 +96,6 @@ export class TezosSell {
 		})
 
 		return {
-			multiple: itemCollection.type === "MT",
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportedCurrencies: getSupportedCurrencies(),
