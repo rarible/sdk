@@ -3,3 +3,4 @@
 **/*type.validator.ts
 **/umd
 **/esm
+packages/sdk/example

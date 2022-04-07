@@ -4,7 +4,7 @@ import { StateConnected } from "@rarible/connector/build/connection-state"
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons"
 import { Address } from "../../../common/address"
 import { Icon } from "../../../common/icon"
-import type { IWalletAndAddress } from "../../../connector/wallet-connetion"
+import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { EnvironmentContext } from "../../../connector/environment-selector-provider"
 import { getEnvironmentName } from "../../../connector/environments"
 
