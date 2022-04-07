@@ -14,6 +14,47 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.8.44-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.2...v0.8.44-hotfix.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* tezos contracts ([963944d](https://github.com/rarible/sdk/commit/963944d84abed292f5d6ed025767df1facb64688))
+
+
+
+
+
+## [0.8.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.1...v0.8.44-hotfix.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* ethereum test, skip some tezos tests ([046ae1c](https://github.com/rarible/sdk/commit/046ae1c5d398d045d567763d1dc9be132a1f1238))
+
+
+
+
+
+## [0.8.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.44-hotfix.1) (2022-04-06)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.44...v0.8.44-hotfix.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* tezos contracts upgrade ([d4ba3aa](https://github.com/rarible/sdk/commit/d4ba3aadb6bd1db8c6267a4b912ff3ede0c23032))
+
+
+
+
+
 ## [0.8.44](https://github.com/rarible/sdk/compare/v0.8.43...v0.8.44) (2022-02-25)
 
 

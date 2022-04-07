@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.44-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.2...v0.8.44-hotfix.3) (2022-04-06)
+
+
+### Bug Fixes
+
+* tezos contracts ([963944d](https://github.com/rarible/sdk/commit/963944d84abed292f5d6ed025767df1facb64688))
+
+
+
+
+
+## [0.8.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.44-hotfix.1) (2022-04-06)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.8.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.44...v0.8.44-hotfix.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* tezos contracts upgrade ([d4ba3aa](https://github.com/rarible/sdk/commit/d4ba3aadb6bd1db8c6267a4b912ff3ede0c23032))
+
+
+
+
+
 ## [0.8.40](https://github.com/rarible/sdk/compare/v0.8.39...v0.8.40) (2022-02-22)
 
 
