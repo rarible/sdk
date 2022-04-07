@@ -19,7 +19,7 @@
   "dependencies": {
     "@rarible/connector": "0.8.46",
     "@rarible/sdk-wallet": "^0.8.47",
-    "@rarible/tezos-sdk": "0.1.4",
+    "@rarible/tezos-sdk": "0.1.7",
     "@rarible/web3-ethereum": "^0.12.54",
     "rxjs": "^6.6.7"
   },
