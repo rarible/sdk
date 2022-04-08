@@ -10,9 +10,6 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 	let env: RaribleSdkEnvironment = testsConfig.env as RaribleSdkEnvironment
 
 	switch (blockchain) {
-		case Blockchain.TEZOS:
-			env = "dev" // @todo: tezos not working in e2e, need to fix (?)
-			break
 		case Blockchain.POLYGON:
 			env = "dev"
 			break

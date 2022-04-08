@@ -11,7 +11,6 @@ export async function createCollection(sdk: IRaribleSdk,
 	console.log("Deploying collection, deploy_token_request=", deployRequest)
 	const deployResult = await sdk.nft.createCollection(deployRequest)
 	await deployResult.tx.wait()
-
 	expect(deployResult.address).toBeTruthy()
 	expect(typeof deployResult.address).toBe("string")
 	console.log("Deploy result=", deployResult)
