@@ -31,9 +31,9 @@ describe("bid test", () => {
 
 	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "dev")
 
-	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
-	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	const mtContract = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
+	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
+	const nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	const mtContract = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
 	test.skip("bid NFT test", async () => {
