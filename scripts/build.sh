@@ -16,3 +16,4 @@ yarn run build-connector-torus
 yarn run build-connector-walletlink
 yarn run build-connector-walletconnect
 yarn run build-connector-phantom
+yarn run build-connector-helper

@@ -3,87 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.50-beta8](https://github.com/rarible/sdk/compare/v0.8.50-beta7...v0.8.50-beta8) (2022-04-06)
-
-
-### Bug Fixes
-
-* solana balance use numbers instead of BN ([1e77d6a](https://github.com/rarible/sdk/commit/1e77d6aa0432eebaf979490e89c5958d68ad4ce0))
-
-
-
-
-
-## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
-
-**Note:** Version bump only for package root
-
-
-
-
-
-## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
+## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 
 ### Features
 
-* add solana support to currency converter ([14497ee](https://github.com/rarible/sdk/commit/14497eeff54db39d52c4395c1e48ef18231d6294))
+* init wallets snippets and readme ([#180](https://github.com/rarible/sdk/issues/180)) ([42a6a06](https://github.com/rarible/sdk/commit/42a6a066e62ce7eef41c3fbdb2ea84ad1a39bc04))
+* readme additionals ([#178](https://github.com/rarible/sdk/issues/178)) ([400bcd1](https://github.com/rarible/sdk/commit/400bcd1261738440fac3b3263488d94b5c4fb590))
 
 
 
 
 
-## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
+## [0.8.51](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.51) (2022-04-01)
 
 
-### Bug Fixes
+### Features
 
-* check window in jest ([c340281](https://github.com/rarible/sdk/commit/c3402814381c89f8593e184dee1b0d5f193c9fd5))
-
-
-
-
-
-## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.50-beta3...v0.8.50-beta4) (2022-04-04)
-
-
-### Bug Fixes
-
-* don't emit disconnect events when page unloading ([ea4325e](https://github.com/rarible/sdk/commit/ea4325e3c9312d4b816bf27a1a88fc6978cd45f6))
-* solana metaplex peer dependencies fix ([0f90867](https://github.com/rarible/sdk/commit/0f9086759e03507b51605ce1b2f7f4146fa8257b))
-
-
-
-
-
-## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
-
-
-### Bug Fixes
-
-* upgrade clients, use CollectionId ([f7456ff](https://github.com/rarible/sdk/commit/f7456ff61e2e83b489c1a368820f6ed9b6ab4d0f))
-
-
-
-
-
-## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.50-beta...v0.8.50-beta2) (2022-04-01)
-
-
-### Bug Fixes
-
-* fix api-client version ([61d45f2](https://github.com/rarible/sdk/commit/61d45f2366026401839127fcbf99a01fbb7aa905))
-
-
-
-
-
-## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
-
-
-### Reverts
-
-* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
+* add new addresses for eth ([3b3b5cc](https://github.com/rarible/sdk/commit/3b3b5cc956a0512b55b637b3eebf20dc0d3d3d56))
+* weth contracts was added ([b18b57d](https://github.com/rarible/sdk/commit/b18b57d5c78c85c6227a9fca8ae0337e6988d976))
 
 
 

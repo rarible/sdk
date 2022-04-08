@@ -13,6 +13,8 @@ import { getStateConnected, getStateDisconnected } from "@rarible/connector"
 import type { ConnectOpts, PhantomProvider, SolanaProviderConnectionResult } from "./domain"
 import { waitUntil } from "./utils"
 
+export * from "./domain"
+
 type ConnectStatus = "connected" | "disconnected"
 
 const PROVIDER_ID = "phantom" as const

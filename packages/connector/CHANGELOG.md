@@ -3,74 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.50-beta8](https://github.com/rarible/sdk/compare/v0.8.50-beta7...v0.8.50-beta8) (2022-04-06)
-
-**Note:** Version bump only for package @rarible/connector
+## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 
+### Features
 
-
-
-## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
-
-**Note:** Version bump only for package @rarible/connector
-
-
-
-
-
-## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
-
-**Note:** Version bump only for package @rarible/connector
-
-
-
-
-
-## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
-
-
-### Bug Fixes
-
-* check window in jest ([c340281](https://github.com/rarible/sdk/commit/c3402814381c89f8593e184dee1b0d5f193c9fd5))
-
-
-
-
-
-## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.50-beta3...v0.8.50-beta4) (2022-04-04)
-
-
-### Bug Fixes
-
-* don't emit disconnect events when page unloading ([ea4325e](https://github.com/rarible/sdk/commit/ea4325e3c9312d4b816bf27a1a88fc6978cd45f6))
-
-
-
-
-
-## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
-
-**Note:** Version bump only for package @rarible/connector
-
-
-
-
-
-## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.50-beta...v0.8.50-beta2) (2022-04-01)
-
-**Note:** Version bump only for package @rarible/connector
-
-
-
-
-
-## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
-
-
-### Reverts
-
-* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
+* init wallets snippets and readme ([#180](https://github.com/rarible/sdk/issues/180)) ([42a6a06](https://github.com/rarible/sdk/commit/42a6a066e62ce7eef41c3fbdb2ea84ad1a39bc04))
 
 
 

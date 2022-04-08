@@ -1,26 +1,20 @@
 import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import {
-	AbstractConnectionProvider,
 	ConnectionProvider,
 	Connector,
-	EthereumProviderConnectionResult,
 	IConnectorStateProvider,
 	InjectedWeb3ConnectionProvider,
 } from "@rarible/connector"
-import { FclConnectionProvider, FlowProviderConnectionResult } from "@rarible/connector-fcl"
+import { FclConnectionProvider } from "@rarible/connector-fcl"
 import { MEWConnectionProvider } from "@rarible/connector-mew"
-import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@rarible/connector-beacon"
+import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
-import type { IWalletAndAddress } from "./wallet-connetion"
-import { Blockchain } from "@rarible/api-client"
-import { SolanaProviderConnectionResult } from "@rarible/connector-phantom/build/domain"
+import type { IWalletAndAddress } from "@rarible/connector-helper"
+import { mapEthereumWallet, mapFlowWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
@@ -93,60 +87,6 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 				network: TezosNetwork.HANGZHOUNET
 			}
 	}
-}
-
-function mapEthereumWallet<O>(provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new EthereumWallet(new Web3Ethereum({ web3: new Web3(state.provider), from: state.address })),
-		address: state.address,
-		blockchain: getEvmBlockchain(state.chainId)
-	}))
-}
-
-function getEvmBlockchain(chainId: number): Blockchain.POLYGON | Blockchain.ETHEREUM {
-	switch (chainId) {
-		case 137: return Blockchain.POLYGON
-		case 80001: return Blockchain.POLYGON
-		case 300501: return Blockchain.POLYGON
-		case 200501: return Blockchain.POLYGON
-		default: return Blockchain.ETHEREUM
-	}
-}
-
-function mapFlowWallet<O>(provider: AbstractConnectionProvider<O, FlowProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new FlowWallet(state.fcl),
-		address: state.address,
-		blockchain: Blockchain.FLOW,
-	}))
-}
-
-function mapSolanaWallet<O>(provider: AbstractConnectionProvider<O, SolanaProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new SolanaWallet({
-			publicKey: state.publicKey,
-			signTransaction: state.signTransaction,
-			signAllTransactions: state.signAllTransactions,
-			signMessage: state.signMessage,
-		}),
-		address: state.address,
-		blockchain: Blockchain.SOLANA,
-	}))
-}
-
-function mapTezosWallet<O>(provider: AbstractConnectionProvider<O, TezosProviderConnectionResult>): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(async state => {
-		const {
-			beacon_provider: createBeaconProvider
-		} = await import("@rarible/tezos-sdk/dist/providers/beacon/beacon_provider")
-		const provider = await createBeaconProvider(state.wallet as any, state.toolkit)
-
-		return {
-			wallet: new TezosWallet(provider),
-			address: state.address,
-			blockchain: Blockchain.TEZOS
-		}
-	})
 }
 
 const state: IConnectorStateProvider = {

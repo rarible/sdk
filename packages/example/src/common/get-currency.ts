@@ -7,7 +7,7 @@ import {
 import { toContractAddress } from "@rarible/types"
 import { RequestCurrency } from "@rarible/sdk/build/common/domain"
 import { ConnectionState } from "@rarible/connector"
-import { IWalletAndAddress } from "../components/connector/wallet-connetion"
+import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {

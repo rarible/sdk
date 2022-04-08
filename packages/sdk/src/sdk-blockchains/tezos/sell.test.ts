@@ -13,8 +13,8 @@ describe("sell test", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	let mtContract: string = "KT1WsCHc9NBDsWvVVVShCASrAuutNJA99tJD"
+	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test.skip("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()

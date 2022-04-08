@@ -1,7 +1,7 @@
 {
   "name": "@rarible/solana-common",
   "description": "Common code",
-  "version": "0.8.50-beta8",
+  "version": "0.8.52",
   "license": "Apache-2.0",
   "files": [
     "build"
@@ -18,7 +18,7 @@
     "@solana/web3.js": "^1.35.0"
   },
   "devDependencies": {
-    "typescript": "^4.6.2"
+    "typescript": "^4.6.3"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
