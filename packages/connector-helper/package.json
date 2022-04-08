@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "@rarible/connector": "^0.8.52",
+    "@rarible/api-client": "0.0.11",
     "@rarible/sdk-wallet": "^0.8.52",
     "@rarible/tezos-sdk": "0.1.7",
     "@rarible/web3-ethereum": "^0.12.54",
