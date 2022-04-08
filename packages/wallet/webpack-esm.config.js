@@ -7,7 +7,7 @@ module.exports = {
 		path: path.resolve(__dirname, "esm"),
 		filename: "index.js",
 		library: {
-			type: "umd",
+			type: "module",
 		},
 	},
 	resolve: {

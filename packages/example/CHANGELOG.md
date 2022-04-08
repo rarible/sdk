@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
+
+
+### Features
+
+* init wallets snippets and readme ([#180](https://github.com/rarible/sdk/issues/180)) ([42a6a06](https://github.com/rarible/sdk/commit/42a6a066e62ce7eef41c3fbdb2ea84ad1a39bc04))
+
+
+
+
+
+## [0.8.51](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.51) (2022-04-01)
+
+
+### Features
+
+* weth contracts was added ([b18b57d](https://github.com/rarible/sdk/commit/b18b57d5c78c85c6227a9fca8ae0337e6988d976))
+
+
+
+
+
+## [0.8.49](https://github.com/rarible/sdk/compare/v0.8.48...v0.8.49) (2022-03-31)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([#169](https://github.com/rarible/sdk/issues/169)) ([e74bc31](https://github.com/rarible/sdk/commit/e74bc314249af7a208c9d4cbae0b2d1e1c752821))
+
+
+
+
+
+## [0.8.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.46-hotfix.0...v0.8.46-hotfix.1) (2022-03-21)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.46-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.46-hotfix.0) (2022-03-21)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
 
 

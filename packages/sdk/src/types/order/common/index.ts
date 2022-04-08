@@ -1,7 +1,7 @@
 import type { ItemId, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types/build/big-number"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
+import type { UnionAddress } from "@rarible/types"
 import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
 import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 
@@ -12,23 +12,12 @@ export type PrepareOrderRequest = {
 	itemId: ItemId
 }
 
-export type PrepareOrderInternalRequest = {
-	/**
-	 * Collection id, where Item is from
-	 */
-	collectionId: ContractAddress
-}
-
 export type UnionPart = {
 	account: UnionAddress
 	value: number
 }
 
-type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", T, OrderId> & {
-	/**
-	 * is multiple nft
-	 */
-	multiple: boolean
+export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", T, OrderId> & {
 	/**
 	 * currencies supported by the blockchain
 	 */
@@ -56,9 +45,18 @@ export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequ
 	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
 	 */
 	maxAmount: BigNumber | null
+	/**
+   * is multiple nft
+   */
+	multiple: boolean
 }
 
-export type PrepareOrderInternalResponse = BasePrepareOrderResponse<OrderInternalRequest>
+export interface PrepareOrderInternalResponse extends BasePrepareOrderResponse<OrderInternalRequest> {
+	/**
+   * is multiple nft
+   */
+	multiple: boolean
+}
 
 /**
  * Request to create a sell-order or bid-order

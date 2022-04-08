@@ -1,5 +1,6 @@
-import { toBigNumber, toItemId } from "@rarible/types"
+import { toBigNumber, toCurrencyId, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
+import type { TezosFTAssetType } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
@@ -30,9 +31,9 @@ describe("bid test", () => {
 
 	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "dev")
 
-	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
-	const nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	const mtContract = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
+	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
+	const nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	const mtContract = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
 	test.skip("bid NFT test", async () => {
@@ -133,6 +134,50 @@ describe("bid test", () => {
 				throw new Error("Bid price has been not updated")
 			}
 		})
+
+		// accept bid by item owner
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId })
+		const fillBidResult = await acceptBidResponse.submit({
+			amount: 3,
+			infiniteApproval: true,
+		})
+		await fillBidResult.wait()
+
+		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
+	}, 1500000)
+
+	test.skip("bid MT test with CurrencyId", async () => {
+		const mintResponse = await itemOwnerSdk.nft.mint({
+			collectionId: convertTezosToContractAddress(mtContract),
+		})
+		const mintResult = await mintResponse.submit({
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 10,
+			lazyMint: false,
+		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+
+		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "10")
+
+		// make bid by bidder
+		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const orderId = await bidResponse.submit({
+			amount: 3,
+			price: "0.00002",
+			currency: toCurrencyId(`${convertTezosToContractAddress(eurTzContract)}:0`),
+			originFees: [{
+				account: convertTezosToUnionAddress(await itemOwner.provider.address()),
+				value: 1000,
+			}],
+		})
+
+		const order = await awaitForOrder(bidderSdk, orderId)
+		const takeAssetType = order.make.type as TezosFTAssetType
+		expect(takeAssetType["@type"]).toEqual("TEZOS_FT")
+		expect(takeAssetType.contract).toEqual("TEZOS:KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC")
+		expect(takeAssetType.tokenId).toEqual("0")
 
 		// accept bid by item owner
 		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId })

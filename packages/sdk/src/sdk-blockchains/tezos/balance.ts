@@ -1,6 +1,5 @@
 import type { TezosProvider, TezosNetwork } from "@rarible/tezos-sdk"
 import type { UnionAddress } from "@rarible/types"
-import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 // eslint-disable-next-line camelcase
 import { get_balance, unwrap, wrap } from "@rarible/tezos-sdk"
@@ -8,6 +7,8 @@ import BigNumber from "bignumber.js"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { ConvertRequest } from "../../types/balances"
+import type { RequestCurrency } from "../../common/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { MaybeProvider } from "./common"
 import { getRequiredProvider, getTezosAddress, getTezosAssetType } from "./common"
 
@@ -20,7 +21,8 @@ export class TezosBalance {
 		this.convert = this.convert.bind(this)
 	}
 
-	async getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
+	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
+		const assetType = getCurrencyAssetType(currency)
 		const tezosAssetType = getTezosAssetType(assetType)
 		if (tezosAssetType.asset_class !== "XTZ" && tezosAssetType.asset_class !== "FT") {
 			throw new Error("Unsupported asset type")

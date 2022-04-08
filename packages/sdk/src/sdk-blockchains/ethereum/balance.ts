@@ -1,6 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { UnionAddress } from "@rarible/types"
-import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
@@ -9,6 +8,8 @@ import type {
 	AssetType as EthereumAssetType,
 } from "@rarible/ethereum-api-client"
 import type { ConvertRequest } from "../../types/balances"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { RequestCurrency } from "../../common/domain"
 import { convertToEthereumAddress, convertToEthereumAssetType } from "./common"
 
 export class EthereumBalance {
@@ -20,7 +21,8 @@ export class EthereumBalance {
 		this.convert = this.convert.bind(this)
 	}
 
-	async getBalance(address: UnionAddress, assetType: AssetType): Promise<BigNumberValue> {
+	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
+		const assetType = getCurrencyAssetType(currency)
 		const convertedAssetType = convertToEthereumAssetType(assetType)
 		if (convertedAssetType.assetClass !== "ETH" && convertedAssetType.assetClass !== "ERC20") {
 			throw new Error("Unsupported asset type for getting balance")
