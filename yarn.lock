@@ -5550,10 +5550,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.0.13-beta2":
-  version "0.0.13-beta2"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.13-beta2.tgz#8fb441f3f18af9dcc762d6ebfd31ec0e655e5f8d"
-  integrity sha512-39Tp0SKXzaW68+VLisNb+9zMvTfxQcGUSk7vfpu4HK5c81e5hBUVMgYXGJIZpVnnJPeAaTDOcmwvRzAaODwCog==
+"@rarible/api-client@0.0.13-beta4":
+  version "0.0.13-beta4"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.13-beta4.tgz#30568776aad5d3bbd71e7b8a439460e4ca33cc2d"
+  integrity sha512-sk9kIinszL6PDtO1WLZUw2szo1wG+98nfc1KgprWQwR2KfM2GIV2bxMZYCYIWchTN63uNwzkLzfVgMUV9aLRaA==
   dependencies:
     "@rarible/types" "~0.9.3"
 
