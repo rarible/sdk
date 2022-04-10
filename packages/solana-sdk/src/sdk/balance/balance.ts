@@ -1,5 +1,4 @@
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
-import { BN } from "@project-serum/anchor"
 import type { Commitment, Connection } from "@solana/web3.js"
 import type { PublicKey } from "@solana/web3.js"
 import type { DebugLogger } from "../../logger/debug-logger"
