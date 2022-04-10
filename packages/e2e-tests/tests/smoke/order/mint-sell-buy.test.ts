@@ -173,7 +173,59 @@ function suites(): {
 						value: 10000,
 					}],
 					royalties: [],
+					lazyMint: true,
+					supply: 20,
+				}
+			},
+			currency: "ERC20",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 3,
+					price: "0.0000000000000001",
+					currency: currency,
+				}
+			},
+		},
+		{
+			blockchain: Blockchain.ETHEREUM,
+			description: "ERC1155 <=> ETH",
+			wallets: { seller: getEthereumWallet(), buyer: getEthereumWalletBuyer() },
+			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
 					lazyMint: false,
+					supply: 20,
+				}
+			},
+			currency: "ETH",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 3,
+					price: "0.0000000000000001",
+					currency: currency,
+				}
+			},
+		},
+		{
+			blockchain: Blockchain.ETHEREUM,
+			description: "ERC1155 <=> ERC20",
+			wallets: { seller: getEthereumWallet(), buyer: getEthereumWalletBuyer() },
+			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: true,
 					supply: 20,
 				}
 			},
