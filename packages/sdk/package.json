@@ -16,7 +16,6 @@
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
     "create-validators": "create-validator-ts src/**/*.type.ts",
-    "test": "jest --runInBand",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
