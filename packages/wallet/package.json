@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.8.47",
+  "version": "0.8.52",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -19,10 +19,10 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "~0.0.11",
+    "@rarible/api-client": "0.0.11",
     "@rarible/ethereum-provider": "~0.12.54",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/tezos-sdk": "~0.1.7",
+    "@rarible/tezos-sdk": "~0.1.9",
     "@rarible/types": "~0.5.3"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
     "@onflow/fcl": "~0.0.77",
     "@rarible/ethereum-sdk-test-common": "~0.12.54",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/tezos-sdk": "~0.1.7",
+    "@rarible/tezos-sdk": "~0.1.9",
     "@rarible/web3-ethereum": "~0.12.54",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
