@@ -4,6 +4,7 @@ import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import { SolanaSdk } from "@rarible/solana-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction } from "../../common/not-implemented"
+import type { ISolanaSdkConfig } from "./domain"
 import { SolanaNft } from "./nft"
 import { SolanaFill } from "./fill"
 import { SolanaOrder } from "./order"
@@ -13,12 +14,13 @@ export function createSolanaSdk(
 	wallet: Maybe<SolanaWallet>,
 	apis: IApisSdk,
 	cluster: Cluster,
+	config: ISolanaSdkConfig | undefined
 ): IRaribleInternalSdk {
 	const sdk = SolanaSdk.create({ connection: { cluster }, debug: true })
-	const nftService = new SolanaNft(sdk, wallet, apis)
-	const balanceService = new SolanaBalance(sdk, wallet)
-	const orderService = new SolanaOrder(sdk, wallet, apis)
-	const fillService = new SolanaFill(sdk, wallet, apis)
+	const nftService = new SolanaNft(sdk, wallet, apis, config)
+	const balanceService = new SolanaBalance(sdk, wallet, config)
+	const orderService = new SolanaOrder(sdk, wallet, apis, config)
+	const fillService = new SolanaFill(sdk, wallet, apis, config)
 
 	return {
 		nft: {

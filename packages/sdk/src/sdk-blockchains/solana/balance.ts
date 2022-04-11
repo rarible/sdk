@@ -6,11 +6,13 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { RequestCurrency } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import { extractPublicKey } from "./common/address-converters"
+import type { ISolanaSdkConfig } from "./domain"
 
 export class SolanaBalance {
 	constructor(
 		readonly sdk: SolanaSdk,
-		readonly wallet: Maybe<SolanaWallet>
+		readonly wallet: Maybe<SolanaWallet>,
+		private readonly config: ISolanaSdkConfig | undefined,
 	) {
 		this.getBalance = this.getBalance.bind(this)
 	}

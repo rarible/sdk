@@ -26,6 +26,7 @@ import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
 import { getCurrencies } from "./common/currencies"
+import type { ISolanaSdkConfig } from "./domain"
 
 const WRAPPED_SOL = "So11111111111111111111111111111111111111112"
 
@@ -34,6 +35,7 @@ export class SolanaOrder {
 		readonly sdk: SolanaSdk,
 		readonly wallet: Maybe<SolanaWallet>,
 		private readonly apis: IApisSdk,
+		private readonly config: ISolanaSdkConfig | undefined,
 	) {
 		this.sell = this.sell.bind(this)
 		this.bid = this.bid.bind(this)
@@ -46,11 +48,12 @@ export class SolanaOrder {
 			throw new Error("Solana wallet not provided")
 		}
 
+		const auctionHouse = getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
+
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
 				const mint = extractPublicKey(request.itemId)
-				const auctionHouse = getAuctionHouse("SOL")
 
 				const res = await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
@@ -75,7 +78,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: await getAuctionHouseFee(getAuctionHouse("SOL")),
+			baseFee: await getAuctionHouseFee(auctionHouse),
 			supportsExpirationDate: false,
 			submit: submit,
 		}
@@ -135,13 +138,14 @@ export class SolanaOrder {
 			throw new Error("No ItemId provided")
 		}
 
+		const auctionHouse = getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
+
 		const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
 
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderRequest) => {
 				const mint = extractPublicKey(prepare.itemId)
-				const auctionHouse = getAuctionHouse("SOL")
 
 				const res = await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,

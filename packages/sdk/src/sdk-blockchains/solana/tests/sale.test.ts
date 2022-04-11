@@ -9,8 +9,33 @@ import { retry } from "../../../common/retry"
 describe("Solana sell", () => {
 	const wallet = getWallet(0)
 	const buyerWallet = getWallet(1)
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
-	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev")
+	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", {
+		logs: LogsLevel.DISABLED,
+		blockchain: {
+			"SOLANA": {
+				auctionHouseMapping: {
+					"SOLANA_SOL": {  // native sol
+						address: "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm",
+						baseFee: 1000,
+					},
+				},
+			},
+		},
+	})
+
+	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev", {
+		logs: LogsLevel.DISABLED,
+		blockchain: {
+			"SOLANA": {
+				auctionHouseMapping: {
+					"SOLANA_SOL": {  // native sol
+						address: "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm",
+						baseFee: 1000,
+					},
+				},
+			},
+		},
+	})
 	test("Should sell NFT item", async () => {
 		const mint = await sdk.nft.mint({
 			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),

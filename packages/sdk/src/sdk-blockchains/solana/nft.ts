@@ -12,12 +12,14 @@ import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../..
 import type { IApisSdk } from "../../domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import { extractPublicKey } from "./common/address-converters"
+import type { ISolanaSdkConfig } from "./domain"
 
 export class SolanaNft {
 	constructor(
 		readonly sdk: SolanaSdk,
 		readonly wallet: Maybe<SolanaWallet>,
 		private readonly apis: IApisSdk,
+		private readonly config: ISolanaSdkConfig | undefined,
 	) {
 		this.mint = this.mint.bind(this)
 		this.burn = this.burn.bind(this)
