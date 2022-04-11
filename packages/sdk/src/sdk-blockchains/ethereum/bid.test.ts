@@ -6,9 +6,11 @@ import BigNumber from "bignumber.js"
 import type { EthErc20AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
+import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/domain"
 import { initProvider, initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
@@ -29,23 +31,23 @@ describe("bid", () => {
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethwallet1 = new EthereumWallet(ethereum1)
-	const sdk1 = createRaribleSdk(ethwallet1, "e2e", { logs: LogsLevel.DISABLED })
+	const sdk1 = createRaribleSdk(ethwallet1, "development", { logs: LogsLevel.DISABLED })
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethwallet2 = new EthereumWallet(ethereum2)
-	const sdk2 = createRaribleSdk(ethwallet2, "e2e", { logs: LogsLevel.DISABLED })
-	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
+	const sdk2 = createRaribleSdk(ethwallet2, "development", { logs: LogsLevel.DISABLED })
+	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "dev-ethereum", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
 	const nullFundsWallet = new EthereumWallet(nullFundsEthereum)
-	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "e2e", { logs: LogsLevel.DISABLED })
+	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "development", { logs: LogsLevel.DISABLED })
 
-	const wethContractEthereum = toAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2")
+	const wethContractEthereum = toAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
 	const wethContract = toContractAddress(`${Blockchain.ETHEREUM}:${wethContractEthereum}`)
 	const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
 
-	const e2eErc1155V2ContractAddress = convertEthereumContractAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d", Blockchain.ETHEREUM)
+	const e2eErc1155V2ContractAddress = convertEthereumContractAddress("0xD7543fB84084b992a889c76Ed73799bba2AA1A38", Blockchain.ETHEREUM)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -61,11 +63,11 @@ describe("bid", () => {
 
 		const tokenId = "1"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc721.methods.mint(itemOwner, tokenId, "123").send({
+		await sentTx(it.testErc721.methods.mint(itemOwner, tokenId, "123"), {
 			from: itemOwner,
 			gas: 500000,
 		})
-		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
 			from: itemOwner,
 			gas: 500000,
 		})
@@ -162,13 +164,13 @@ describe("bid", () => {
 
 		const tokenId = "3"
 		const itemId = convertEthereumItemId(`${it.testErc1155.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123").send({
+		await sentTx(it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123"), {
 			from: senderRaw,
 			gas: 500000,
 		})
 		const bidderAddress = await ethereum2.getFrom()
 		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
-		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
 			from: senderRaw,
 			gas: 500000,
 		})
@@ -212,14 +214,13 @@ describe("bid", () => {
 
 		const tokenId = "4"
 		const itemId = convertEthereumItemId(`${it.testErc1155.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123").send({
+		await sentTx(it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123"), {
 			from: senderRaw,
 			gas: 500000,
 		})
 		await awaitItem(nullFundsSdk, itemId)
 
 		const bidResponse = await nullFundsSdk.order.bid({ itemId })
-
 		await retry(5, 2000, async () => {
 			const value = await bidResponse.getConvertableValue({
 				assetType: { "@type": "ERC20", contract: wethContract },
@@ -244,14 +245,13 @@ describe("bid", () => {
 				value: 1000,
 			}],
 		})
-
 		if (!value) throw new Error("Convertable value must be non-undefined")
 		expect(value.value.toString()).toBe("0.000000000000000055")
 		expect(value.type).toBe("insufficient")
 	})
 
 	test("getConvertableValue returns undefined", async () => {
-		const itemId = toItemId(`${Blockchain.ETHEREUM}:0xF04881F205644925596Fee9D66DACd98A9b99F05:1`)
+		const itemId = toItemId(`${Blockchain.ETHEREUM}:0x2Ac19979c171F7b626096C9eDc8Cd5C589cf110b:1`)
 
 		const bidResponse = await sdk2.order.bid({ itemId })
 
@@ -284,7 +284,7 @@ describe("bid", () => {
 	})
 
 	test("getConvertableValue returns convertable value", async () => {
-		const itemId = toItemId(`${Blockchain.ETHEREUM}:0xF04881F205644925596Fee9D66DACd98A9b99F05:1`)
+		const itemId = toItemId(`${Blockchain.ETHEREUM}:0x2Ac19979c171F7b626096C9eDc8Cd5C589cf110b:1`)
 
 		const bidResponse = await sdk2.order.bid({ itemId })
 
@@ -312,14 +312,14 @@ describe("bid", () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
-		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 		const tokenId = "5"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 
-		await it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "0").send({
+		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "0"), {
 			from: ownerCollectionAddress,
 			gas: 500000,
 		})
@@ -360,11 +360,11 @@ describe("bid", () => {
 
 		const tokenId = "7"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await it.testErc721.methods.mint(itemOwner, tokenId, "123").send({
+		await sentTx(it.testErc721.methods.mint(itemOwner, tokenId, "123"), {
 			from: itemOwner,
 			gas: 500000,
 		})
-		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
 			from: itemOwner,
 			gas: 500000,
 		})
@@ -407,14 +407,14 @@ describe("bid", () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
-		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 		const tokenId = "6"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 
-		await it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "1").send({
+		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "1"), {
 			from: ownerCollectionAddress,
 			gas: 500000,
 		})
@@ -457,9 +457,9 @@ describe("bid", () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
-		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 
 		const action = await sdk1.nft.mint({ collectionId: e2eErc1155V2ContractAddress })
@@ -474,6 +474,9 @@ describe("bid", () => {
 			lazyMint: true,
 			supply: 10,
 		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 
 		await awaitItem(sdk1, mintResult.itemId)
 
