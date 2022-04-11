@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta10](https://github.com/rarible/sdk/compare/v0.8.50-beta9...v0.8.52-beta10) (2022-04-11)
+
+**Note:** Version bump only for package @rarible/connector-torus
+
+
+
+
+
 ## [0.8.50-beta9](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.50-beta9) (2022-04-10)
 
 
