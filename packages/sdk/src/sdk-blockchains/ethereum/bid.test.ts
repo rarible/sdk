@@ -33,7 +33,7 @@ describe("bid", () => {
 
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethwallet2 = new EthereumWallet(ethereum2)
-	const sdk2 = createRaribleSdk(ethwallet2, "e2e")
+	const sdk2 = createRaribleSdk(ethwallet2, "e2e", { logs: LogsLevel.DISABLED })
 	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "e2e", { logs: LogsLevel.DISABLED })
 
 	const { web3 } = initProvider()
@@ -313,8 +313,8 @@ describe("bid", () => {
 		const bidderAddress = await ethereum2.getFrom()
 
 		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 		const tokenId = "5"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
@@ -458,8 +458,8 @@ describe("bid", () => {
 		const bidderAddress = await ethereum2.getFrom()
 
 		await it.testErc20.methods.mint(bidderAddress, "10000000000000").send({
-      	from: ownerCollectionAddress,
-      	gas: 500000,
+			from: ownerCollectionAddress,
+			gas: 500000,
 		})
 
 		const action = await sdk1.nft.mint({ collectionId: e2eErc1155V2ContractAddress })
@@ -504,7 +504,7 @@ describe("bid", () => {
 		await fillBidResult.wait()
 
 		await retry(10, 1000, async () => {
-			 const ownership = await sdk1.apis.ownership.getOwnershipById({
+			const ownership = await sdk1.apis.ownership.getOwnershipById({
 				ownershipId: `${mintResult.itemId}:${bidderAddress}`,
 			})
 			expect(ownership.value).toBe("10")
