@@ -4,6 +4,7 @@ import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/domain"
+import { retry } from "../../../common/retry"
 
 describe("Solana get balance", () => {
 	const wallet = getWallet()
@@ -32,10 +33,16 @@ describe("Solana get balance", () => {
 			await mintRes.transaction.wait()
 		}
 
-		const balance = await sdk.balances.getBalance(
-			toUnionAddress("SOLANA:" + wallet.publicKey),
-			toCurrencyId(mintRes.itemId),
-		)
+		const balance = await retry(10, 4000, async () => {
+			const balance = await sdk.balances.getBalance(
+				toUnionAddress("SOLANA:" + wallet.publicKey),
+				toCurrencyId(mintRes.itemId),
+			)
+			if (parseFloat(balance.toString()) < 1) {
+				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${parseFloat(balance.toString())}`)
+			}
+			return balance
+		})
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 	})
 })

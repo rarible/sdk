@@ -4,6 +4,7 @@ import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/domain"
+import { retry } from "../../../common/retry"
 
 describe("Solana cancel", () => {
 	const wallet = getWallet(0)
@@ -25,18 +26,20 @@ describe("Solana cancel", () => {
 		}
 
 		const itemId = mintRes.itemId
-		const sell = await sdk.order.sell({ itemId })
-		const orderId = await sell.submit({
-			amount: 1,
-			currency: {
-				"@type": "SOLANA_SOL",
-			},
-			price: toBigNumber("0.001"),
+		const orderId = await retry(10, 4000, async () => {
+			const sell = await sdk.order.sell({ itemId })
+			return sell.submit({
+				amount: 1,
+				currency: {
+					"@type": "SOLANA_SOL",
+				},
+				price: toBigNumber("0.001"),
+			})
 		})
 
-		const cancelTx = await sdk.order.cancel({
+		const cancelTx = await retry(10, 4000, () => sdk.order.cancel({
 			orderId,
-		})
+		}))
 
 		expect(cancelTx.hash()).toBeTruthy()
 		await cancelTx.wait()

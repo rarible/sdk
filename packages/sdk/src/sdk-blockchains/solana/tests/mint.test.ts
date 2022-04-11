@@ -4,6 +4,7 @@ import { createRaribleSdk } from "../../../index"
 import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/domain"
+import { retry } from "../../../common/retry"
 
 describe("Solana mint", () => {
 	const wallet = getWallet()
@@ -26,5 +27,8 @@ describe("Solana mint", () => {
 			await res.transaction.wait()
 			expect(res.transaction.hash).toBeTruthy()
 		}
+
+		const nft = await retry(10, 4000, () => sdk.apis.item.getItemById({ itemId: res.itemId }))
+		expect(nft.id).toEqual(res.itemId)
 	})
 })

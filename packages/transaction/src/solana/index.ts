@@ -13,7 +13,7 @@ export class BlockchainSolanaTransaction implements IBlockchainTransaction {
 	}
 
 	async wait() {
-		await this.sdk.connection.confirmTransaction(this.transaction.txId, "max")
+		await this.sdk.connection.confirmTransaction(this.transaction.txId, "single")
 
 		return {
 			blockchain: this.blockchain,
