@@ -2,12 +2,11 @@ import {
 	Blockchain,
 	EthErc20AssetType,
 	EthEthereumAssetType,
-	TezosXTZAssetType
+	TezosXTZAssetType,
+	FlowAssetTypeFt
 } from "@rarible/api-client"
 import { toContractAddress } from "@rarible/types"
-import { RequestCurrency } from "@rarible/sdk/build/common/domain"
-import { ConnectionState } from "@rarible/connector"
-import type { IWalletAndAddress } from "@rarible/connector-helper"
+import { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -25,30 +24,45 @@ const tezosNative: TezosXTZAssetType = {
 	"@type": "XTZ"
 }
 
-/*const tezosFt: TezosFTAssetType = {
+const flowNative: FlowAssetTypeFt = {
+	"@type": "FLOW_FT",
+	contract: toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken")
+}
+/*
+const tezosFt: TezosFTAssetType = {
 	"@type": "TEZOS_FT",
-	contract: toContractAddress("ETHEREUM:0xc778417E063141139Fce010982780140Aa0cD5Ab"),
+	contract: toContractAddress("..."),
 	tokenId:
 }*/
 
-export function getCurrency(connectionState: ConnectionState<IWalletAndAddress>, type: "NATIVE" | "FT"): RequestCurrency {
-	if (connectionState.status !== "connected") {
-		throw new Error("not connected")
-	}
-	const blockchain = connectionState.connection.blockchain
-	switch (blockchain) {
+export function getCurrency(currency: CurrencyType): RequestCurrency {
+	switch (currency.blockchain) {
 		case Blockchain.ETHEREUM:
-			return type === "NATIVE" ? getEthNative(blockchain) : ethFt
+			if (currency.type === "NATIVE") {
+				return getEthNative(currency.blockchain)
+			} else if (currency.type === "ERC20") {
+				return ethFt
+			}
+			throw new Error("Unsupported currency subtype")
 		case Blockchain.POLYGON:
-			return type === "NATIVE" ? getEthNative(blockchain) : ethFt
+			if (currency.type === "NATIVE") {
+				return getEthNative(currency.blockchain)
+			} else if (currency.type === "ERC20") {
+				return ethFt
+			}
+			throw new Error("Unsupported currency subtype")
 		case Blockchain.TEZOS:
-			if (type === "FT") {
-				throw new Error("Unsupported blockchain or asset type")
+			if (currency.type === "NATIVE") {
+				return tezosNative
+			} else if (currency.type === "TEZOS_FT") {
+				throw new Error("Unsupported currency subtype")
 			}
 			return tezosNative
 		case Blockchain.FLOW:
-			//return type === "NATIVE" ? undefined : undefined
-			throw new Error("Unsupported blockchain")
+			if (currency.type === "NATIVE") {
+				return flowNative
+			}
+			throw new Error("Unsupported currency subtype")
 		default:
 			throw new Error("Unsupported blockchain")
 	}
