@@ -3,6 +3,81 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta9](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.50-beta9) (2022-04-10)
+
+
+### Bug Fixes
+
+* upgrade clients ([7776d1a](https://github.com/rarible/sdk/commit/7776d1a31fd64eb82ab6e69cb31d65fd2dc91a20))
+
+
+
+## [0.8.50-beta8](https://github.com/rarible/sdk/compare/v0.8.50-beta7...v0.8.50-beta8) (2022-04-06)
+
+
+
+## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
+
+
+
+## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
+
+
+
+## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
+
+
+
+## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.50-beta3...v0.8.50-beta4) (2022-04-04)
+
+
+
+## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
+
+
+### Bug Fixes
+
+* upgrade clients, use CollectionId ([f7456ff](https://github.com/rarible/sdk/commit/f7456ff61e2e83b489c1a368820f6ed9b6ab4d0f))
+
+
+
+## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.50-beta2) (2022-04-01)
+
+
+### Bug Fixes
+
+* fix api-client version ([61d45f2](https://github.com/rarible/sdk/commit/61d45f2366026401839127fcbf99a01fbb7aa905))
+
+
+
+## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
+
+
+### Reverts
+
+* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
+
+
+
+## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
+
+
+### Bug Fixes
+
+* solana currency ([518d3cd](https://github.com/rarible/sdk/commit/518d3cd29da3db0e783e5ee4c45f279539d7c2fc))
+
+
+### Features
+
+* mocked solana sell/buy ([66af958](https://github.com/rarible/sdk/commit/66af95831a3f81a634a58892130ff4ee9e664fc2))
+* solana cancel method ([daa09c2](https://github.com/rarible/sdk/commit/daa09c2c84e5bc1ab571b0df4383b34a18581915))
+* solana sdk ([478f8d6](https://github.com/rarible/sdk/commit/478f8d6822f315b0d4274d6c0d2fe628abb8b0fa))
+* solana wallet ([3dc42c1](https://github.com/rarible/sdk/commit/3dc42c195b507a1d2170c7ba24dab79ebc009d0c))
+
+
+
+
+
 ## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

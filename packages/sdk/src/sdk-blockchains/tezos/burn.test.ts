@@ -1,4 +1,4 @@
-import { toCollectionId, toContractAddress } from "@rarible/types"
+import { toCollectionId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"

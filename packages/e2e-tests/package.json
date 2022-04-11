@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.8.52",
+  "version": "0.8.50-beta9",
   "homepage": "",
   "license": "ISC",
   "private": true,
@@ -11,7 +11,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "0.0.13-beta2",
+    "@rarible/api-client": "0.0.13-beta4",
     "@rarible/ethereum-sdk-test-common": "~0.12.61",
     "@rarible/types": "~0.9.3"
   },

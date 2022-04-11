@@ -1,4 +1,4 @@
-import type { Connection, PublicKey, TransactionInstruction } from "@solana/web3.js"
+import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { BN } from "@project-serum/anchor"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
@@ -51,7 +51,7 @@ export async function getAuctionHouseCancelInstructions(
 	}
 	const tokenAccountKey = tla.value[0].address
 
-	const [tradeState, tradeBump] = await getAuctionHouseTradeState(
+	const [tradeState] = await getAuctionHouseTradeState(
 		request.auctionHouse,
 		request.signer.publicKey,
 		tokenAccountKey,

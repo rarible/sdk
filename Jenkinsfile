@@ -13,6 +13,7 @@ pipeline {
 	      NPM_TOKEN = "na"
       }
       agent any
+      when { branch "master" }
       steps {
         sh 'yarn'
         sh 'yarn bootstrap'
