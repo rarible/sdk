@@ -62,6 +62,21 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+
+
+
 ## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
 
 
