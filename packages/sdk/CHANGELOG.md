@@ -3,6 +3,143 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta7-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.2...v0.8.50-beta7-hotfix.0) (2022-04-12)
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
+
+
+
+## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
+
+
+### Features
+
+* add solana support to currency converter ([14497ee](https://github.com/rarible/sdk/commit/14497eeff54db39d52c4395c1e48ef18231d6294))
+
+
+
+## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
+
+
+
+## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.50-beta4) (2022-04-04)
+
+
+
+## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
+
+
+### Bug Fixes
+
+* upgrade clients, use CollectionId ([f7456ff](https://github.com/rarible/sdk/commit/f7456ff61e2e83b489c1a368820f6ed9b6ab4d0f))
+
+
+
+## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.50-beta...v0.8.50-beta2) (2022-04-01)
+
+
+### Bug Fixes
+
+* fix api-client version ([61d45f2](https://github.com/rarible/sdk/commit/61d45f2366026401839127fcbf99a01fbb7aa905))
+
+
+
+## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
+
+
+### Reverts
+
+* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
+
+
+
+## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
+
+
+### Features
+
+* add new addresses for eth ([3b3b5cc](https://github.com/rarible/sdk/commit/3b3b5cc956a0512b55b637b3eebf20dc0d3d3d56))
+* solana combined transactions ([99cb0de](https://github.com/rarible/sdk/commit/99cb0de4d72e4e4a28b9c325aebea20883f40bb7))
+
+
+
+## [0.8.49](https://github.com/rarible/sdk/compare/v0.8.48...v0.8.49) (2022-03-31)
+
+
+### Features
+
+* rm multiple field from sell prepare response ([5381e47](https://github.com/rarible/sdk/commit/5381e47d272e11dbac01a58c7eedae09351ce69a))
+* solana combined transactions ([6357a33](https://github.com/rarible/sdk/commit/6357a33184cd8d562d2f311d3c235c885c6e0c8f))
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+
+### Bug Fixes
+
+* solana currency ([518d3cd](https://github.com/rarible/sdk/commit/518d3cd29da3db0e783e5ee4c45f279539d7c2fc))
+* solana orderid calcs ([2f60348](https://github.com/rarible/sdk/commit/2f6034899325b800ca27b454ec3d3785c03be1a3))
+
+
+### Features
+
+* currency id support for get balance and get convertable value ([5906797](https://github.com/rarible/sdk/commit/5906797b15d13f71c5c6bf42fd918c7ab10f4d1c))
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([#169](https://github.com/rarible/sdk/issues/169)) ([e74bc31](https://github.com/rarible/sdk/commit/e74bc314249af7a208c9d4cbae0b2d1e1c752821))
+* tezos sign function and improve deps ([#158](https://github.com/rarible/sdk/issues/158)) ([791e8c8](https://github.com/rarible/sdk/commit/791e8c8cf2cbac84b77c408993134eae79280049))
+
+
+### Features
+
+* solana burn method ([7fe3c5d](https://github.com/rarible/sdk/commit/7fe3c5dd382465de936a9326b7a51dbed0c9e228))
+* solana cancel method ([daa09c2](https://github.com/rarible/sdk/commit/daa09c2c84e5bc1ab571b0df4383b34a18581915))
+* solana order methods ([ce6d5ea](https://github.com/rarible/sdk/commit/ce6d5eacfbee822c3799d71ba4cdcf5473a737fa))
+* solana order methods ([95b9669](https://github.com/rarible/sdk/commit/95b9669376f073f33cf809123a94cf184411e65d))
+* solana order methods ([4ef7ec3](https://github.com/rarible/sdk/commit/4ef7ec382cafab6ee4abad93df0f15f93ae92957))
+* solana transfer ([3a212d4](https://github.com/rarible/sdk/commit/3a212d42a11f2ce730d86d8ef47ab05a051dfb48))
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* added missing apis to sdk: currency + auctions ([b7c2640](https://github.com/rarible/sdk/commit/b7c264022c838b916e5c6d1976c0e066df47a350))
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+### Features
+
+* convert method ([#149](https://github.com/rarible/sdk/issues/149)) ([d61e2f5](https://github.com/rarible/sdk/commit/d61e2f5fa86754f689ab3656564227cc80d1ac0b))
+* dev env for tezos ([#163](https://github.com/rarible/sdk/issues/163)) ([d5fb00d](https://github.com/rarible/sdk/commit/d5fb00dc654cf331d480d732d9a1066730461cf7))
+* expiration date ([3a0eafd](https://github.com/rarible/sdk/commit/3a0eafd27015cf10f177c27ef5269bf11bf0be2d))
+* mocked solana sell/buy ([66af958](https://github.com/rarible/sdk/commit/66af95831a3f81a634a58892130ff4ee9e664fc2))
+* move solana packages to union ([18f6350](https://github.com/rarible/sdk/commit/18f635023073722bf41fc574210bab6e08be2945))
+* polygon example ([552df3f](https://github.com/rarible/sdk/commit/552df3fcb64398ebc1931cac7c7aaa3485e4d421))
+* solana balance ([682e080](https://github.com/rarible/sdk/commit/682e0805d40c5ae450d146207056d0161eecd328))
+* solana sdk ([478f8d6](https://github.com/rarible/sdk/commit/478f8d6822f315b0d4274d6c0d2fe628abb8b0fa))
+* solana-example integration ([c70dcb0](https://github.com/rarible/sdk/commit/c70dcb02b259b70d55ab85105cabc3b2a7d46708))
+* test mint with token id ([de2a37e](https://github.com/rarible/sdk/commit/de2a37ec066ac7ba8df1c3eea5848d528addd1a3))
+
+
+
+
+
 ## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
 
 **Note:** Version bump only for package @rarible/sdk

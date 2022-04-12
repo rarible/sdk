@@ -3,6 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta7-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.2...v0.8.50-beta7-hotfix.0) (2022-04-12)
+
+
+
+## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
+
+
+
+## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
+
+
+
+## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
+
+
+
+## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.50-beta4) (2022-04-04)
+
+
+
+## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
+
+
+
+## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.50-beta...v0.8.50-beta2) (2022-04-01)
+
+
+
+## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
+
+
+### Reverts
+
+* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
+
+
+
+## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* do not use noop when not needed. log error if it's caught on disconnect ([8404a3a](https://github.com/rarible/sdk/commit/8404a3a45d48e23cf3a342cf11b5352d66d284c2))
+
+
+### Features
+
+* move solana packages to union ([18f6350](https://github.com/rarible/sdk/commit/18f635023073722bf41fc574210bab6e08be2945))
+
+
+
+
+
 ## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
 
 **Note:** Version bump only for package @rarible/connector-walletconnect

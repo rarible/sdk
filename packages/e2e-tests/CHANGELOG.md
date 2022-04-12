@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.50-beta7-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.2...v0.8.50-beta7-hotfix.0) (2022-04-12)
+
+
+
+## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
+
+
+
+## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
+
+
+
+## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
+
+
+
+## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.50-beta4) (2022-04-04)
+
+
+
+## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
+
+
+### Bug Fixes
+
+* upgrade clients, use CollectionId ([f7456ff](https://github.com/rarible/sdk/commit/f7456ff61e2e83b489c1a368820f6ed9b6ab4d0f))
+
+
+
+## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.50-beta...v0.8.50-beta2) (2022-04-01)
+
+
+### Bug Fixes
+
+* fix api-client version ([61d45f2](https://github.com/rarible/sdk/commit/61d45f2366026401839127fcbf99a01fbb7aa905))
+
+
+
+## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
+
+
+### Reverts
+
+* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
+
+
+
+## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+
+### Features
+
+* currency id support for get balance and get convertable value ([5906797](https://github.com/rarible/sdk/commit/5906797b15d13f71c5c6bf42fd918c7ab10f4d1c))
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([#169](https://github.com/rarible/sdk/issues/169)) ([e74bc31](https://github.com/rarible/sdk/commit/e74bc314249af7a208c9d4cbae0b2d1e1c752821))
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+### Features
+
+* fix lint ([c2fd61a](https://github.com/rarible/sdk/commit/c2fd61a2d550202f1fed2c3c58bc3d7eb99bf6cc))
+* mocked solana sell/buy ([66af958](https://github.com/rarible/sdk/commit/66af95831a3f81a634a58892130ff4ee9e664fc2))
+* move solana packages to union ([18f6350](https://github.com/rarible/sdk/commit/18f635023073722bf41fc574210bab6e08be2945))
+* solana sdk ([478f8d6](https://github.com/rarible/sdk/commit/478f8d6822f315b0d4274d6c0d2fe628abb8b0fa))
+
+
+
+
+
 ## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
