@@ -11,12 +11,14 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
+import type { ISolanaSdkConfig } from "./domain"
 
 export class SolanaFill {
 	constructor(
 		readonly sdk: SolanaSdk,
 		readonly wallet: Maybe<SolanaWallet>,
 		private readonly apis: IApisSdk,
+		private readonly config: ISolanaSdkConfig | undefined,
 	) {
 		this.fill = this.fill.bind(this)
 	}

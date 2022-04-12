@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta11](https://github.com/rarible/sdk/compare/v0.8.52-beta10...v0.8.52-beta11) (2022-04-11)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.8.52-beta10](https://github.com/rarible/sdk/compare/v0.8.50-beta9...v0.8.52-beta10) (2022-04-11)
+
+
+### Bug Fixes
+
+* update-bid-tests ([30da6e5](https://github.com/rarible/sdk/commit/30da6e5cd0e5a1b4baf79d4cf1c456598c33ead2))
+
+
+### Features
+
+* add api tests ([5a05d25](https://github.com/rarible/sdk/commit/5a05d2559926452000b08bd0bc7491206e1bc2a0))
+* solana auction house mapping configuration ([4a7e606](https://github.com/rarible/sdk/commit/4a7e606b31d4ba899f18931f1e6df061bd6467b4))
+* solana single confirmation transaction ([7098c2e](https://github.com/rarible/sdk/commit/7098c2ed4322603fb15daf3c4ba09216e3c9eb05))
+
+
+
+
+
 ## [0.8.50-beta9](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.50-beta9) (2022-04-10)
 
 

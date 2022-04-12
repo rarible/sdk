@@ -1,12 +1,14 @@
-import type { BlockchainWallet, TezosWallet } from "@rarible/sdk-wallet"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
 import { BlockchainGroup } from "@rarible/api-client"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
-import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
+// eslint-disable-next-line camelcase
+import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
+import { TezosWallet } from "@rarible/sdk-wallet"
 import { testsConfig } from "./config"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
@@ -44,8 +46,12 @@ export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
 		testsConfig.variables.TEZOS_WALLET_2,
 		testsConfig.variables.TEZOS_WALLET_3,
 	]
-
-	return createTezosWallet(edsks[walletNumber])
+	return new TezosWallet(
+		in_memory_provider(
+			edsks[walletNumber],
+			testsConfig.variables.TEZOS_WALLET_ENDPOINT
+		)
+	)
 }
 
 export function getFlowWallet(): FlowWallet {

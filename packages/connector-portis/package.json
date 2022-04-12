@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-portis",
-  "version": "0.8.50-beta9",
+  "version": "0.8.52-beta11",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@portis/web3": "^4.0.6",
-    "@rarible/connector": "^0.8.50-beta9"
+    "@rarible/connector": "^0.8.52-beta11"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

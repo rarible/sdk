@@ -56,7 +56,8 @@ export function createRaribleSdk(
 		createSolanaSdk(
 			filterWallet(wallet, BlockchainGroup.SOLANA),
 			apis,
-			blockchainConfig.solanaNetwork
+			blockchainConfig.solanaNetwork,
+			config?.blockchain?.SOLANA
 		),
 	)
 

@@ -194,6 +194,6 @@ describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
 		// Cancel order
-		await cancel(sellerSdk, sellerWallet, { orderId: bidOrder.id })
+		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 	})
 })
