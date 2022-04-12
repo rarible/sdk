@@ -183,7 +183,7 @@ describe.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
 		const collection = await getCollection(sellerSdk, suite.collectionId)
 
 		// Mint token
-		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
+		await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
 
 		// Get currency

@@ -1,6 +1,6 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import { toBigNumber, toItemId } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
@@ -18,8 +18,6 @@ import { acceptBid } from "../../common/atoms-tests/accept-bid"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
-import { convertEthereumContractAddress, getEthereumItemId } from "@rarible/sdk/src/sdk-blockchains/ethereum/common";
-import { retry } from "@rarible/sdk/src/common/retry";
 
 function suites(): {
 	blockchain: Blockchain,
