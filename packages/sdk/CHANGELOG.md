@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.45-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.1...v0.8.45-hotfix.2) (2022-04-12)
+
+
+### Bug Fixes
+
+* flow env ([b183d67](https://github.com/rarible/sdk/commit/b183d67dbaabe3556a8a6b71def31f008af17274))
+
+
+
+
+
 ## [0.8.45-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.45-hotfix.1) (2022-04-12)
 
 
