@@ -29,6 +29,9 @@ export function Navigation() {
 	}, {
 		label: "Accept Bid",
 		path: "/accept-bid"
+	}, {
+		label: "My Items",
+		path: "/items"
 	}]
 
 	return (
