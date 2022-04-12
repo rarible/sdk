@@ -2,6 +2,7 @@ import { awaitAll, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-s
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toCurrencyId, toItemId } from "@rarible/types"
+import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
@@ -12,8 +13,8 @@ describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "e2e", { logs: LogsLevel.DISABLED })
-	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "e2e", { logs: LogsLevel.DISABLED })
+	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", { logs: LogsLevel.DISABLED })
+	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", { logs: LogsLevel.DISABLED })
 
 	const conf = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -24,8 +25,14 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 		const tokenId = 1
-		await conf.testErc721.methods.mint(wallet1Address, tokenId, "").send({ from: wallet1Address, gas: 200000 })
-		await conf.testErc20.methods.mint(wallet2Address, 100).send({ from: wallet1Address, gas: 200000 })
+		await sentTx(
+			conf.testErc721.methods.mint(wallet1Address, tokenId, ""),
+			{ from: wallet1Address, gas: 200000 }
+		)
+		await sentTx(
+			conf.testErc20.methods.mint(wallet2Address, 100),
+			{ from: wallet1Address, gas: 200000 }
+		)
 		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
 
 		await awaitItem(sdk1, itemId)
@@ -38,7 +45,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
 			},
-			expirationDate: new Date(Date.now() + 20000),
+			expirationDate: new Date(Date.now() + 200000),
 		})
 
 		const nextStock = "1"
@@ -64,8 +71,14 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 		const tokenId = 2
-		await conf.testErc721.methods.mint(wallet1Address, tokenId, "").send({ from: wallet1Address, gas: 200000 })
-		await conf.testErc20.methods.mint(wallet2Address, 100).send({ from: wallet1Address, gas: 200000 })
+		await sentTx(
+			conf.testErc721.methods.mint(wallet1Address, tokenId, ""),
+			{ from: wallet1Address, gas: 200000 }
+		)
+		await sentTx(
+			conf.testErc20.methods.mint(wallet2Address, 100),
+			{ from: wallet1Address, gas: 200000 }
+		)
 		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
 
 		await awaitItem(sdk1, itemId)
@@ -98,8 +111,14 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 		const tokenId = 3
-		await conf.testErc721.methods.mint(wallet1Address, tokenId, "").send({ from: wallet1Address, gas: 200000 })
-		await conf.testErc20.methods.mint(wallet2Address, 100).send({ from: wallet1Address, gas: 200000 })
+		await sentTx(
+			conf.testErc721.methods.mint(wallet1Address, tokenId, ""),
+			{ from: wallet1Address, gas: 200000 }
+		)
+		await sentTx(
+			conf.testErc20.methods.mint(wallet2Address, 100),
+			{ from: wallet1Address, gas: 200000 }
+		)
 		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
 
 		await awaitItem(sdk1, itemId)
@@ -135,8 +154,14 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 		const tokenId = 4
-		await conf.testErc721.methods.mint(wallet1Address, tokenId, "").send({ from: wallet1Address, gas: 200000 })
-		await conf.testErc20.methods.mint(wallet2Address, 100).send({ from: wallet1Address, gas: 200000 })
+		await sentTx(
+			conf.testErc721.methods.mint(wallet1Address, tokenId, ""),
+			{ from: wallet1Address, gas: 200000 }
+		)
+		await sentTx(
+			conf.testErc20.methods.mint(wallet2Address, 100),
+			{ from: wallet1Address, gas: 200000 }
+		)
 		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
 
 		await awaitItem(sdk1, itemId)
