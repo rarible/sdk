@@ -18,6 +18,29 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * add solana support to currency converter ([14497ee](https://github.com/rarible/sdk/commit/14497eeff54db39d52c4395c1e48ef18231d6294))
 
+## [0.8.45-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.1...v0.8.45-hotfix.2) (2022-04-12)
+
+
+### Bug Fixes
+
+* flow env ([b183d67](https://github.com/rarible/sdk/commit/b183d67dbaabe3556a8a6b71def31f008af17274))
+
+
+
+
+
+## [0.8.45-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.45-hotfix.1) (2022-04-12)
+
+
+### Bug Fixes
+
+* update flow-sdk with new dev config ([2885b59](https://github.com/rarible/sdk/commit/2885b593f9815068abe03f5276cf66b2b0fd43de))
+
+
+
+
+
+## [0.8.45-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.2...v0.8.45-hotfix.0) (2022-04-07)
 
 
 

@@ -2,7 +2,6 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
 import { BlockchainGroup } from "@rarible/api-client"
 import type { TezosProvider } from "@rarible/tezos-sdk"
-import { sign } from "@rarible/tezos-sdk"
 import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { AbstractWallet, UserSignature } from "./domain"
 
