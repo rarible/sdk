@@ -169,7 +169,7 @@ export class TezosBid {
 			run: async (request: OrderRequest) => {
 				const wXTZUnionAddress = this.getWXTZContractAddress()
 				const requestCurrency = getCurrencyAssetType(request.currency)
-				if (requestCurrency["@type"] === "TEZOS_FT" && requestCurrency.contract === wXTZUnionAddress) {
+				if (requestCurrency["@type"] === "TEZOS_FT" && requestCurrency.contract.toLowerCase() === wXTZUnionAddress.toLowerCase()) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
 						requestCurrency,
@@ -237,7 +237,7 @@ export class TezosBid {
 			run: async (request: OrderUpdateRequest) => {
 				const wXTZUnionAddress = convertFromContractAddress(this.getWXTZContractAddress())
 
-				if (order.make.assetType.assetClass === "FT" && order.make.assetType.contract === wXTZUnionAddress) {
+				if (order.make.assetType.assetClass === "FT" && order.make.assetType.contract.toLowerCase() === wXTZUnionAddress.toLowerCase()) {
 					const originFeesSum = order.data.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
 						convertTezosToUnionAsset(order.make.assetType) as RequestCurrencyAssetType,

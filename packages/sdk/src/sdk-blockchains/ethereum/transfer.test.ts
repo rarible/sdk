@@ -12,7 +12,7 @@ describe("transfer", () => {
 	const { web31, wallet1, wallet2 } = initProviders()
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const senderWallet = new EthereumWallet(senderEthereum)
-	const sdk = createRaribleSdk(senderWallet, "e2e", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(senderWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),

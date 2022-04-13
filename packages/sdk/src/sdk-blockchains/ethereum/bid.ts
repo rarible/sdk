@@ -198,7 +198,7 @@ export class EthereumBid {
 			run: async (request: OrderCommon.OrderRequest) => {
 				const wethContractAddress = this.getWethContractAddress()
 				const currency = getCurrencyAssetType(request.currency)
-				if (currency["@type"] === "ERC20" && currency.contract === wethContractAddress) {
+				if (currency["@type"] === "ERC20" && currency.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
 					const value = await this.getConvertableValueCommon(
 						currency,
@@ -334,7 +334,7 @@ export class EthereumBid {
 			run: async (request: OrderCommon.OrderUpdateRequest) => {
 				const wethContractAddress = convertToEthereumAddress(this.getWethContractAddress())
 
-				if (order.make.assetType.assetClass === "ERC20" && order.make.assetType.contract === wethContractAddress) {
+				if (order.make.assetType.assetClass === "ERC20" && order.make.assetType.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
 					const value = await this.getConvertableValueCommon(
 						this.convertAssetType(order.make.assetType) as RequestCurrencyAssetType,
 						request.price,

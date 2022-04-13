@@ -15,19 +15,6 @@
     libsodium-wrappers "0.7.8"
     qrcode-generator "1.4.4"
 
-"@airgap/beacon-sdk@^2.3.10":
-  version "2.3.10"
-  resolved "https://registry.yarnpkg.com/@airgap/beacon-sdk/-/beacon-sdk-2.3.10.tgz#92cf94973889666011a3a54345d05b2b6159bccc"
-  integrity sha512-SfO+9nMZuETELzb6QWedp5Q0Egg1Id4ZM8+suVmnBUuySHGuJJ8TeWZWbSffJAJtavqpTPA6vM1i//Bj/nvW2Q==
-  dependencies:
-    "@types/chrome" "0.0.115"
-    "@types/libsodium-wrappers" "0.7.7"
-    axios "0.21.1"
-    bignumber.js "9.0.0"
-    bs58check "2.1.2"
-    libsodium-wrappers "0.7.8"
-    qrcode-generator "1.4.4"
-
 "@ampproject/remapping@^2.1.0":
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/@ampproject/remapping/-/remapping-2.1.2.tgz#4edca94973ded9630d20101cd8559cedb8d8bd34"
@@ -5507,17 +5494,6 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-common@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.5.tgz#82c9745edd7f25cf0bc02a3de2d97dfac1999022"
-  integrity sha512-xN+DfTnyiccY4hSsIJE5H+j4YcChhjm1Vt6aJkG2AQ3e/dKIEF7BAIhW0qBVeLnB0A134P+4DiBdNehattSRVQ==
-  dependencies:
-    "@taquito/taquito" "^12.0.0"
-    bignumber.js "^9.0.1"
-    bs58check "^2.1.2"
-    node-fetch "2.6.1"
-    text-encoder "^0.0.4"
-
 "@rarible/tezos-common@^0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.9.tgz#d8524f2fa59b6c1b6da70192bca0b032f048df44"
@@ -5529,14 +5505,6 @@
     node-fetch "2.6.1"
     text-encoder "^0.0.4"
 
-"@rarible/tezos-contracts@^0.1.5":
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.5.tgz#470768370c0af0f7ff276d6bc505249d6a021d23"
-  integrity sha512-8gTzIj758KWGTGAWNpV833yFc7pOe13S88HXwg9G/iU4eXJAgbpRvkGCUzyw9tIpx2u4VNd6MEnLwiFpsQ8eug==
-  dependencies:
-    "@rarible/tezos-common" "^0.1.5"
-    bignumber.js "^9.0.1"
-
 "@rarible/tezos-contracts@^0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.9.tgz#11f2e30dce37837bf084949187ffdb32de9bd933"
@@ -5545,32 +5513,7 @@
     "@rarible/tezos-common" "^0.1.9"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.7", "@rarible/tezos-sdk@~0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.7.tgz#b7f86545874fd938e6560281adfcedfcccd91bf1"
-  integrity sha512-gKcG7tbMl7FBNNqQGR4b8pOhk6XHk6B1GOZxY1/mW4wf5iGaIQGT5qbarHzYqkUcNM7GdFTrvmn3OiMkhmK+nQ==
-  dependencies:
-    "@airgap/beacon-sdk" "^2.3.10"
-    "@rarible/tezos-common" "^0.1.5"
-    "@rarible/tezos-contracts" "^0.1.5"
-    "@taquito/beacon-wallet" "^12.0.0"
-    "@taquito/signer" "^12.0.0"
-    "@taquito/taquito" "^12.0.0"
-    "@temple-wallet/dapp" "^7.0.0"
-    "@types/bs58check" "^2.1.0"
-    "@types/elliptic" "^6.4.13"
-    "@types/keccak" "^3.0.1"
-    "@types/yargs" "^17.0.7"
-    bignumber.js "^9.0.1"
-    bs58check "^2.1.2"
-    get-random-values "^1.2.2"
-    keccak "^3.0.2"
-    kukai-embed "^0.7.0"
-    node-fetch "2.6.1"
-    text-encoder "^0.0.4"
-    yargs "^17.2.1"
-
-"@rarible/tezos-sdk@~0.1.9":
+"@rarible/tezos-sdk@0.1.9", "@rarible/tezos-sdk@~0.1.9":
   version "0.1.9"
   resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.9.tgz#1b9ddf957326f1ac042939e6867588d748f80212"
   integrity sha512-c1bupgKycuuI+Mt+IP6DAubQLO6IAK+j1oWLNedRw3vATreSqB/SmZ+NjLcxPVfnxYEx1IlNUWDI36mgTtGNDg==
@@ -6011,21 +5954,13 @@
   dependencies:
     defer-to-connect "^1.0.1"
 
-"@taquito/beacon-wallet@12.0.3":
+"@taquito/beacon-wallet@12.0.3", "@taquito/beacon-wallet@^12.0.3":
   version "12.0.3"
   resolved "https://registry.yarnpkg.com/@taquito/beacon-wallet/-/beacon-wallet-12.0.3.tgz#385370b4d1a776021fd1ebdd75a285ebc6ad5f99"
   integrity sha512-cu3CWPW5h1pBY71opsroU+Nwq9rApMNZH3VfGlz1xPkOFtF4uuo7baVmc7y1NamEKdNfc8hM/XH9EYDRHCIlcg==
   dependencies:
     "@airgap/beacon-sdk" "^2.3.12"
     "@taquito/taquito" "^12.0.3"
-
-"@taquito/beacon-wallet@^12.0.0":
-  version "12.0.1"
-  resolved "https://registry.yarnpkg.com/@taquito/beacon-wallet/-/beacon-wallet-12.0.1.tgz#cfd2302e478c07fafe53ee029aeaef7d4e8fff3e"
-  integrity sha512-DKWy+i/59WjBsXRySJY1fAV+fsptjQzj7VF+qEExqj63ewA5zhelnVn2J2m8JzEQektjs6p9UU+FwnniOkv4Zw==
-  dependencies:
-    "@airgap/beacon-sdk" "^2.3.10"
-    "@taquito/taquito" "^12.0.1"
 
 "@taquito/http-utils@^12.0.1":
   version "12.0.1"
@@ -16044,11 +15979,6 @@ klona@^2.0.4:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.5.tgz#d166574d90076395d9963aa7a928fabb8d76afbc"
   integrity sha512-pJiBpiXMbt7dkzXe8Ghj/u4FfXOOa98fPW+bihOJ4SjnoijweJrNThJfd3ifXpXhREjpoF2mZVH1GfS9LV3kHQ==
-
-kukai-embed@^0.7.0:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/kukai-embed/-/kukai-embed-0.7.1.tgz#47371eeab3f917b7b71cc484dc997055d1e7e98b"
-  integrity sha512-2QNU/9Qy3XnKAsOWmxTN+XbgtyKBcud1xZp4r/XmvqrAwzn0uasH5EhVBJAfRwYodWazOXp3x6tpQn9YzdymUA==
 
 language-subtag-registry@~0.3.2:
   version "0.3.21"
