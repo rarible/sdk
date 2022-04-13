@@ -6,12 +6,24 @@ import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/domain"
 import { retry } from "../../../common/retry"
 
-describe("Solana sell", () => {
+describe("Solana sell order update", () => {
 	const wallet = getWallet(0)
 	const buyerWallet = getWallet(1)
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
-	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev", { logs: LogsLevel.DISABLED })
 
+	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev", {
+		logs: LogsLevel.DISABLED,
+		blockchain: {
+			"SOLANA": {
+				auctionHouseMapping: {
+					"SOLANA_SOL": {  // native sol
+						address: "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm",
+						baseFee: 1000,
+					},
+				},
+			},
+		},
+	})
 	test("Should sell NFT item", async () => {
 		const mint = await sdk.nft.mint({
 			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
@@ -43,18 +55,17 @@ describe("Solana sell", () => {
 
 		console.log("orderid", orderId)
 
-		const tx = await retry(10, 4000, async () => {
-			const buy = await buyerSdk.order.buy({
-				orderId,
-			})
+		let order = await sdk.apis.order.getOrderById({ id: orderId })
+		expect(order.makePrice).toEqual("0.001")
 
-			return buy.submit({
-				amount: 1,
-				itemId,
+		await retry(10, 4000, async () => {
+			const sell = await sdk.order.sellUpdate({ orderId })
+			return sell.submit({
+				price: toBigNumber("200"),
 			})
 		})
 
-		expect(tx.hash()).toBeTruthy()
-		await tx.wait()
+		order = await sdk.apis.order.getOrderById({ id: orderId })
+		expect(order.makePrice).toEqual("200")
 	})
 })

@@ -95,7 +95,7 @@ export class SolanaOrder {
 			id: "send-tx" as const,
 			run: async (updateRequest: OrderUpdateRequest) => {
 				const mint = getMintId(order)
-				const auctionHouse = toPublicKey(getOrderData(order).auctionHouse!)
+				const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
 				const res = await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
@@ -190,7 +190,7 @@ export class SolanaOrder {
 			id: "send-tx" as const,
 			run: async (updateRequest: OrderUpdateRequest) => {
 				const mint = getMintId(order)
-				const auctionHouse = toPublicKey(getOrderData(order).auctionHouse!)
+				const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
 				const res = await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
