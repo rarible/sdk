@@ -8,7 +8,7 @@ import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
 import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { createRaribleSdk } from "../../index"
-import { delay, retry } from "../../common/retry"
+import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
 import { initProvider, initProviders } from "./test/init-providers"
@@ -40,7 +40,7 @@ describe("bid", () => {
 
 
 	const { web3 } = initProvider(undefined, {
-		rpcUl: "https://dev-ethereum-node.rarible.com",
+		rpcUrl: "https://dev-ethereum-node.rarible.com",
 		networkId: 300500,
 	})
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
@@ -71,8 +71,6 @@ describe("bid", () => {
 			from: await ethereum1.getFrom(),
 			gas: 500000,
 		})
-
-		await delay(10000)
 
 		const action = await sdk1.nft.mint({
 			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),

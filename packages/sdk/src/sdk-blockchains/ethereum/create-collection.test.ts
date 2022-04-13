@@ -27,6 +27,7 @@ describe("create collection", () => {
 			},
 		})
 		await tx.wait()
+		console.log(address)
 		await retry(5, 2000, async () => {
 			return sdk1.apis.collection.getCollectionById({
 				collection: address,
