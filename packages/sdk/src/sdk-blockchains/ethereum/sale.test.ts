@@ -2,14 +2,17 @@ import { awaitAll, createE2eProvider, deployTestErc20, deployTestErc721 } from "
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
-import { toContractAddress, toCurrencyId, toItemId, toOrderId } from "@rarible/types"
+import { toAddress, toContractAddress, toCurrencyId, toItemId, toOrderId } from "@rarible/types"
 import Web3 from "web3"
 import { Platform } from "@rarible/ethereum-api-client"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/domain"
 import { initProviders } from "./test/init-providers"
 import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
+import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
 describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()
@@ -17,6 +20,9 @@ describe("sale", () => {
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", { logs: LogsLevel.DISABLED })
 	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", { logs: LogsLevel.DISABLED })
+
+	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
+	const erc1155Address = toAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a")
 
 	const conf = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -26,20 +32,31 @@ describe("sale", () => {
 	test("erc721 sell/buy using erc-20", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
-		const tokenId = 1
+
 		await sentTx(
-			conf.testErc721.methods.mint(wallet1Address, tokenId, ""),
+			conf.testErc20.methods.mint(wallet2Address, "1000000000"),
 			{ from: wallet1Address, gas: 200000 }
 		)
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, 100),
-			{ from: wallet1Address, gas: 200000 }
-		)
-		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
+		const action = await sdk1.nft.mint({
+			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+		})
+		const result = await action.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: false,
+			supply: 1,
+		})
+		if (result.type === MintType.ON_CHAIN) {
+			await result.transaction.wait()
+		}
 
-		await awaitItem(sdk1, itemId)
+		await awaitItem(sdk1, result.itemId)
 
-		const sellAction = await sdk1.order.sell({ itemId })
+		const sellAction = await sdk1.order.sell({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
 			price: "0.000000000000000002",
@@ -72,20 +89,31 @@ describe("sale", () => {
 	test("erc721 sell/buy using erc-20 with order object", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
-		const tokenId = 2
-		await sentTx(
-			conf.testErc721.methods.mint(wallet1Address, tokenId, ""),
-			{ from: wallet1Address, gas: 200000 }
-		)
+
+		const action = await sdk1.nft.mint({
+			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+		})
+		const result = await action.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: false,
+			supply: 1,
+		})
+		if (result.type === MintType.ON_CHAIN) {
+			await result.transaction.wait()
+		}
 		await sentTx(
 			conf.testErc20.methods.mint(wallet2Address, 100),
 			{ from: wallet1Address, gas: 200000 }
 		)
-		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:${tokenId}`)
 
-		await awaitItem(sdk1, itemId)
+		await awaitItem(sdk1, result.itemId)
 
-		const sellAction = await sdk1.order.sell({ itemId })
+		const sellAction = await sdk1.order.sell({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
 			price: "0.000000000000000002",

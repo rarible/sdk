@@ -72,8 +72,6 @@ describe("bid", () => {
 			gas: 500000,
 		})
 
-		await delay(10000)
-
 		const action = await sdk1.nft.mint({
 			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
 		})
