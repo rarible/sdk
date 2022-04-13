@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta14](https://github.com/rarible/sdk/compare/v0.8.52-beta13...v0.8.52-beta14) (2022-04-13)
+
+
+### Bug Fixes
+
+* solana reduced level of transaction confirmation ([6c3f6b0](https://github.com/rarible/sdk/commit/6c3f6b048ec6f15a54bd1f5ed07d443de0b92838))
+
+
+
+
+
 ## [0.8.52-beta13](https://github.com/rarible/sdk/compare/v0.8.52-beta12...v0.8.52-beta13) (2022-04-13)
 
 
