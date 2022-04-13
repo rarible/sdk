@@ -1,5 +1,4 @@
-import { Observable } from "rxjs"
-import { combineLatest } from "rxjs"
+import { Observable, combineLatest, from } from "rxjs"
 import { first, map, mergeMap, startWith, distinctUntilChanged } from "rxjs/operators"
 import type {
 	ConnectionState,
@@ -7,60 +6,61 @@ import type {
 } from "@rarible/connector"
 import {
 	AbstractConnectionProvider,
-	cache, getStateConnecting,
+	cache,
+	getStateConnecting,
 } from "@rarible/connector"
 import { getStateConnected, getStateDisconnected } from "@rarible/connector"
 import type { ISolanaProviderConnectionResult } from "@rarible/connector-helper"
-import type { ConnectOpts, PhantomProvider } from "./domain"
-import { waitUntil } from "./utils"
+import Solflare from "@solflare-wallet/sdk"
+import type { ConnectOpts, SolflareProvider } from "./domain"
 
 export * from "./domain"
 
 type ConnectStatus = "connected" | "disconnected"
 
-const PROVIDER_ID = "phantom" as const
+const PROVIDER_ID = "solflare" as const
 
-export class PhantomConnectionProvider extends
+export class SolflareConnectionProvider extends
 	AbstractConnectionProvider<typeof PROVIDER_ID, ISolanaProviderConnectionResult> {
-	private instance: Observable<PhantomProvider>
-	private readonly connection: Observable<ConnectionState<ISolanaProviderConnectionResult>>
+	private instance!: Observable<SolflareProvider>
+	private connection!: Observable<ConnectionState<ISolanaProviderConnectionResult>>
 
 	constructor(
 		private readonly config?: ConnectOpts
 	) {
 		super()
+		this.init()
+	}
+
+	private init() {
 		this.instance = cache(() => this._connect())
 		this.connection = this.instance.pipe(
-			mergeMap((instance) => this.toConnectState(instance)),
+			mergeMap((instance) => {
+				const disconnected = () => {
+					return instance.disconnect()
+				}
+				return this.toConnectState(instance, disconnected)
+			}),
 			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
 		)
 	}
 
-	private async _connect(): Promise<PhantomProvider> {
-		try {
-			await waitUntil(() => "solana" in window, 100, 1000)
-		} catch {}
-
-		if ("solana" in window) {
-			const anyWindow: any = window
-			const provider = anyWindow.solana
-			if (provider.isPhantom) {
-				await provider.connect(this.config)
-				return provider
-			}
-		}
-		throw new Error("No solana provider found")
+	private async _connect(): Promise<SolflareProvider> {
+		const wallet = new Solflare(this.config)
+		await wallet.connect()
+		return wallet
 	}
 
-	getConnectedStatus(provider: PhantomProvider): Observable<ConnectStatus> {
+	getConnectedStatus(provider: SolflareProvider): Observable<ConnectStatus> {
 		return new Observable<ConnectStatus>(subscriber => {
 			subscriber.next("connected")
 
-			function connectHandler() {
+			const connectHandler = () => {
 				subscriber.next("connected")
 			}
 
-			function disconnectHandler() {
+			const disconnectHandler = () => {
+				this.init()
 				subscriber.next("disconnected")
 			}
 
@@ -74,21 +74,24 @@ export class PhantomConnectionProvider extends
 		})
 	}
 
-	getAddress(provider: PhantomProvider): Observable<string> {
+	getAddress(provider: SolflareProvider): Observable<string> {
 		return new Observable<string>(subscriber => {
 			subscriber.next(provider.publicKey?.toString())
-			provider.on("accountChanged", async (publicKey: any /*PublicKey*/) => {
+			/*provider.on("accountChanged", async (publicKey: PublicKey) => {
 				if (publicKey) {
 					subscriber.next(publicKey.toString())
 				} else {
 					await provider.connect()
 					subscriber.next(provider.publicKey?.toString())
 				}
-			})
+			})*/
 		})
 	}
 
-	private toConnectState(provider: PhantomProvider): Observable<ConnectionState<ISolanaProviderConnectionResult>> {
+	private toConnectState(
+		provider: SolflareProvider,
+		disconnect?: () => Promise<void>
+	): Observable<ConnectionState<ISolanaProviderConnectionResult>> {
 		return combineLatest([
 			this.getAddress(provider),
 			this.getConnectedStatus(provider),
@@ -101,11 +104,14 @@ export class PhantomConnectionProvider extends
 					const wallet: ISolanaProviderConnectionResult = {
 						address: address,
 						publicKey: provider.publicKey,
-						signTransaction: provider.signTransaction,
-						signAllTransactions: provider.signAllTransactions,
-						signMessage: provider.signMessage,
+						signTransaction: provider.signTransaction.bind(provider),
+						signAllTransactions: provider.signAllTransactions.bind(provider),
+						signMessage: provider.signMessage.bind(provider),
 					}
-					return getStateConnected({ connection: wallet })
+					return getStateConnected({
+						connection: wallet,
+						disconnect,
+					})
 				} else {
 					return getStateDisconnected()
 				}

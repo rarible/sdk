@@ -107,10 +107,18 @@ export class SolanaWallet implements AbstractWallet {
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const data = new TextEncoder().encode(message)
-		const res = await this.provider.signMessage(data)
-		return {
-			signature: Buffer.from(res.signature).toString("hex"),
-			publicKey: res.publicKey.toString(),
+		const res = await this.provider.signMessage(data, "utf8")
+
+		if (res.signature) { // phantom wallet response
+			return {
+				signature: Buffer.from(res.signature).toString("hex"),
+				publicKey: res.publicKey.toString(),
+			}
+		} else { // solflare wallet response
+			return {
+				signature: Buffer.from(res).toString("hex"),
+				publicKey: this.provider.publicKey.toString(),
+			}
 		}
 	}
 }

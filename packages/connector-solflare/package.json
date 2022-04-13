@@ -1,5 +1,5 @@
 {
-  "name": "@rarible/connector-phantom",
+  "name": "@rarible/connector-solflare",
   "version": "0.8.52-beta14",
   "homepage": "",
   "license": "ISC",
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@rarible/connector": "^0.8.52-beta14",
-    "@solana/web3.js": "^1.35.1",
+    "@solflare-wallet/sdk": "^1.0.12",
     "@rarible/connector-helper": "^0.8.52-beta14"
   },
   "devDependencies": {

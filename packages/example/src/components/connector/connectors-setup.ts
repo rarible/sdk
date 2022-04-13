@@ -13,6 +13,7 @@ import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
+import { SolflareConnectionProvider } from "@rarible/connector-solflare"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { mapEthereumWallet, mapFlowWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
@@ -152,6 +153,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	}))
 
 	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
+	const solflareConnect = mapSolanaWallet(new SolflareConnectionProvider({
+		network: environment === "prod" ? "mainnet-beta" : "devnet"
+	}))
 
 	// Providers required secrets
 	// const fortmatic = mapEthereumWallet(new FortmaticConnectionProvider({ apiKey: "ENTER", ethNetwork: { chainId: 4, rpcUrl: "https://node-rinkeby.rarible.com" } }))
@@ -165,6 +169,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(fcl)
 		.add(walletConnect)
 		.add(phantomConnect)
+		.add(solflareConnect)
 	// .add(portis)
 	// .add(fortmatic)
 
