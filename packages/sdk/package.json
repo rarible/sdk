@@ -50,7 +50,7 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
-    "@rarible/ethereum-sdk-test-common": "~0.12.54",
+    "@rarible/ethereum-sdk-test-common": "~0.12.62",
     "@rarible/ethers-ethereum": "^0.12.62",
     "@rarible/flow-test-common": "~0.5.41-alpha.1",
     "@rarible/test-provider": "~0.5.4",

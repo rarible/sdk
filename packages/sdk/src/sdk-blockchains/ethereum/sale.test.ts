@@ -192,7 +192,7 @@ describe("sale", () => {
 
 describe.skip("buy item with opensea order", () => {
 	const { provider } = createE2eProvider(undefined, {
-		rpcUl: "https://node-rinkeby.rarible.com",
+		rpcUrl: "https://node-rinkeby.rarible.com",
 		networkId: 4,
 	})
 

@@ -40,7 +40,7 @@ describe("bid", () => {
 
 
 	const { web3 } = initProvider(undefined, {
-		rpcUl: "https://dev-ethereum-node.rarible.com",
+		rpcUrl: "https://dev-ethereum-node.rarible.com",
 		networkId: 300500,
 	})
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
