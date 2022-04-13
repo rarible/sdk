@@ -10,16 +10,17 @@ import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preproces
 import { LogsLevel } from "../../domain"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { awaitItem } from "./test/await-item"
+import { providerDevelopmentSettings } from "./test/common"
 
 describe("mint", () => {
-	const { provider, wallet } = createE2eProvider()
+	const { provider, wallet } = createE2eProvider(undefined, providerDevelopmentSettings)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
 
-	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
-	const erc1155Address = toAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d")
+	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
+	const erc1155Address = toAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a")
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
