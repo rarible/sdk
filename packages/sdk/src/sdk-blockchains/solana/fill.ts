@@ -71,7 +71,7 @@ export class SolanaFill {
 					return this.sdk.unionInstructionsAndSend(
 						this.wallet!.provider,
 						[buyPrepare, executePrepare],
-						"max"
+						"confirmed"
 					)
 				},
 			})
@@ -120,7 +120,7 @@ export class SolanaFill {
 					return this.sdk.unionInstructionsAndSend(
 						this.wallet!.provider,
 						[sellPrepare, executePrepare],
-						"max"
+						"confirmed"
 					)
 				},
 			})

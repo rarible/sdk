@@ -61,9 +61,7 @@ export class SolanaOrder {
 					mint: mint,
 					price: parseFloat(request.price.toString()),
 					tokensAmount: request.amount,
-				})).submit("max")
-
-				await this.sdk.confirmTransaction(res.txId, "max")
+				})).submit("confirmed")
 
 				return getOrderId(
 					"SELL",
@@ -103,9 +101,8 @@ export class SolanaOrder {
 					mint: mint,
 					price: parseFloat(updateRequest.price.toString()),
 					tokensAmount: getTokensAmount(order),
-				})).submit("max")
+				})).submit("confirmed")
 
-				await this.sdk.confirmTransaction(res.txId, "max")
 
 				return getOrderId(
 					"SELL",
@@ -153,9 +150,7 @@ export class SolanaOrder {
 					mint: mint,
 					price: parseFloat(request.price.toString()),
 					tokensAmount: request.amount,
-				})).submit("max")
-
-				await this.sdk.confirmTransaction(res.txId, "max")
+				})).submit("confirmed")
 
 				return getOrderId(
 					"BUY",
@@ -198,9 +193,7 @@ export class SolanaOrder {
 					mint: mint,
 					price: parseFloat(updateRequest.price.toString()),
 					tokensAmount: getTokensAmount(order),
-				})).submit("max")
-
-				await this.sdk.confirmTransaction(res.txId, "max")
+				})).submit("confirmed")
 
 				return getOrderId(
 					"BUY",
@@ -233,7 +226,7 @@ export class SolanaOrder {
 				mint: getMintId(order),
 				price: getPrice(order),
 				tokensAmount: getTokensAmount(order),
-			})).submit("max")
+			})).submit("confirmed")
 
 			return new BlockchainSolanaTransaction(res, this.sdk)
 		},

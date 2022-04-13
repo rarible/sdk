@@ -8,23 +8,9 @@ import { retry } from "../../../common/retry"
 
 describe("Solana sell order update", () => {
 	const wallet = getWallet(0)
-	const buyerWallet = getWallet(1)
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
 
-	const buyerSdk = createRaribleSdk(new SolanaWallet(buyerWallet), "dev", {
-		logs: LogsLevel.DISABLED,
-		blockchain: {
-			"SOLANA": {
-				auctionHouseMapping: {
-					"SOLANA_SOL": {  // native sol
-						address: "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm",
-						baseFee: 1000,
-					},
-				},
-			},
-		},
-	})
-	test("Should sell NFT item", async () => {
+	test("Should set item to sell & change price", async () => {
 		const mint = await sdk.nft.mint({
 			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
 		})
@@ -55,7 +41,7 @@ describe("Solana sell order update", () => {
 
 		console.log("orderid", orderId)
 
-		let order = await sdk.apis.order.getOrderById({ id: orderId })
+		let order = await retry(10, 4000, async () => sdk.apis.order.getOrderById({ id: orderId }))
 		expect(order.makePrice).toEqual("0.001")
 
 		await retry(10, 4000, async () => {
@@ -65,7 +51,13 @@ describe("Solana sell order update", () => {
 			})
 		})
 
-		order = await sdk.apis.order.getOrderById({ id: orderId })
+		order = await retry(10, 4000, async () => {
+			const order = await sdk.apis.order.getOrderById({ id: orderId })
+			if (order.makePrice !== "200") {
+				throw new Error("Price didn't update")
+			}
+			return order
+		})
 		expect(order.makePrice).toEqual("200")
 	})
 })
