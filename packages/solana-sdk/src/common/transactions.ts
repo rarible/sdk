@@ -93,7 +93,7 @@ export async function sendSignedTransaction(
 			txId,
 			timeout,
 			connection,
-			"confirmed",
+			"processed",
 			true,
 			logger,
 		)
