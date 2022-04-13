@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta12](https://github.com/rarible/sdk/compare/v0.8.52-beta11...v0.8.52-beta12) (2022-04-13)
+
+
+### Bug Fixes
+
+* solana order price update ([f86f5fc](https://github.com/rarible/sdk/commit/f86f5fc063565b8fa1af912dee0f250c1324ed1c))
+* solana reduced level of transaction confirmation ([850dd2e](https://github.com/rarible/sdk/commit/850dd2ef00934f98e798c757d43e2263b6db7f75))
+
+
+### Features
+
+* add floor bid e2e test ([41a78c2](https://github.com/rarible/sdk/commit/41a78c2f0efe6d63167fb4c126c915991e9ff76c))
+
+
+
+
+
 ## [0.8.52-beta11](https://github.com/rarible/sdk/compare/v0.8.52-beta10...v0.8.52-beta11) (2022-04-11)
 
 **Note:** Version bump only for package root

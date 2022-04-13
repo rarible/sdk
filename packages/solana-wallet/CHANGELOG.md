@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta12](https://github.com/rarible/sdk/compare/v0.8.52-beta11...v0.8.52-beta12) (2022-04-13)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
 ## [0.8.52-beta11](https://github.com/rarible/sdk/compare/v0.8.52-beta10...v0.8.52-beta11) (2022-04-11)
 
 **Note:** Version bump only for package @rarible/solana-wallet

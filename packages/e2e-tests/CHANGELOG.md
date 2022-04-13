@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta12](https://github.com/rarible/sdk/compare/v0.8.52-beta11...v0.8.52-beta12) (2022-04-13)
+
+
+### Features
+
+* add floor bid e2e test ([41a78c2](https://github.com/rarible/sdk/commit/41a78c2f0efe6d63167fb4c126c915991e9ff76c))
+
+
+
+
+
 ## [0.8.52-beta11](https://github.com/rarible/sdk/compare/v0.8.52-beta10...v0.8.52-beta11) (2022-04-11)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
