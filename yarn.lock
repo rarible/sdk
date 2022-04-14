@@ -4839,10 +4839,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30.tgz#28ed15acce758ecfb2188c35eaa8f62978363c80"
   integrity sha512-D9AdlmXC5fNnq/eO9dLakvY1IDJeUiwbXrEPmwmCdswt4jJp4y7pR/w3Rri7RUmEM42E3AYNXIMS0EV+O+V1QA==
 
-"@rarible/flow-sdk@~0.5.40":
-  version "0.5.40"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.40.tgz#a44db8aa47c3fa655002edae3defe3b680234c54"
-  integrity sha512-Qoebz/f7a9yz1N+iwyJCpuYEvC0UGj0Z/svFMiTlYPtpE8sg4R/6b0RMkgIspqjFbAWhrXpXhhic2vVs30U7Dw==
+"@rarible/flow-sdk@~0.5.43":
+  version "0.5.43"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.43.tgz#8569ce23b0d8edcb6ec1c38f8caf1176fe23b575"
+  integrity sha512-Bv5GuPQ9OSDcLQh6x/jINCCdnttsUDVxRaFij9DMUnr4eorFJX3jN/OkqU/AfDmWuc54vqtnk5vUHxsBTuv72A==
   dependencies:
     "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
@@ -4852,10 +4852,10 @@
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.36":
-  version "0.5.36"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.36.tgz#c124498f65799139bd685aadd85cccf995709494"
-  integrity sha512-0LjJfi+Eawi6e8eC+OQs7dp+tSsnRqu5JESV0EoemvxkE1R5jdoBvk0SvSD79Ah0sqQERBKoeVXegn6eD4/1Cg==
+"@rarible/flow-test-common@~0.5.43":
+  version "0.5.43"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.43.tgz#3434d44a47ddbab0498a13dc3a85687ecf7e1575"
+  integrity sha512-cHmTugbWuJhlF6CNRroNEsS4OnEyiZkwOoVAbE+s15Lt/CTTAnbKhyJbDBOtzhsr0b++u9u52DZGuxrdJl8l+Q==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
