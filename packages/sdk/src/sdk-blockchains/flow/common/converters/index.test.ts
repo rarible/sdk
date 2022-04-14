@@ -4,6 +4,14 @@ import * as converters from "."
 import { toFlowParts } from "."
 
 describe("Test FLOW converter functions", () => {
+	test("getFlowCollection: should success get collection with id", () => {
+		const test0 = converters.getFlowCollection(toContractAddress("FLOW:A.0xabcdef0123456789.ContractName.123"))
+		expect(typeof test0).toEqual("string")
+	})
+	test("getFlowCollection: should throw error invalid collection id delimiter", () => {
+		const test0 = () => converters.getFlowCollection(toContractAddress("FLOW:A.0xabcdef0123456789.ContractName:123"))
+		expect(test0).toThrowError("Invalid collection")
+	})
 	test("getFlowCollection: should success get collection if address with prefix", () => {
 		const test0 = converters.getFlowCollection(toContractAddress("FLOW:A.0xabcdef0123456789.ContractName"))
 		expect(typeof test0).toEqual("string")

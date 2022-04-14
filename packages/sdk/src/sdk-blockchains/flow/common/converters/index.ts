@@ -10,7 +10,7 @@ import { toBn } from "@rarible/utils/build/bn"
 import type { FlowItemId } from "../../../../common/domain"
 import type { UnionPart } from "../../../../types/order/common"
 
-const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
+const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[0-9A-Za-z_]{3,}(\.[0-9]+)?$/
 
 /**
  * Get flow collection from union collection

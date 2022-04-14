@@ -3679,10 +3679,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.33-alpha.25.tgz#6724689db4d908da14db651438a2bb6fc588cf14"
   integrity sha512-WPZJRJK2P/s7VswVfAjjT2hIBFmWEhn+6WMArcejB1mU3wUum1cUVdMl91LkKas//Chc3j2meH5i9LTjhXTK4Q==
 
-"@rarible/flow-sdk@0.5.33-alpha.26":
-  version "0.5.33-alpha.26"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.33-alpha.26.tgz#a93796f38f7c9f48f2c970aac2884e118542b092"
-  integrity sha512-j4qqJejHKxAcURR/D4AzwzYg03QH+miXM5HG5uAf6S//VYmFoI9LI6msPlYEFeFFi1zex98MB8TQf3KFbIZX4w==
+"@rarible/flow-sdk@0.5.42-alpha.1":
+  version "0.5.42-alpha.1"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.42-alpha.1.tgz#0bffc251d643e19156fb7e9bd4df593b396440cd"
+  integrity sha512-PLhgYFsP4iWF5Z/8yda+jQQ88j5i8SMJYIP7dNtWN/MU8P7FqvLlOUO49QB48Kqs56WWNizbXmS5VKrI1gCKtg==
   dependencies:
     "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
@@ -3690,14 +3690,14 @@
     "@rarible/flow-sdk-scripts" "^0.5.33-alpha.25"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@0.5.33-alpha.25":
-  version "0.5.33-alpha.25"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.33-alpha.25.tgz#eefc62500370ada86adf90f3589c3b8bf2da97a8"
-  integrity sha512-jdHjpwb241dN6S7yMIlSHeDZ2v2gGnYUc17pJEOkreL+NhFVGSoxY1CIj9ZwRuZblu3eBlve5DcXuLmfGzkELQ==
+"@rarible/flow-test-common@0.5.42-alpha.1":
+  version "0.5.42-alpha.1"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.42-alpha.1.tgz#7a515cc31f2a2ee8591a2eafad97bab71ead8c76"
+  integrity sha512-5kVrDis/G8nx77+9uPLpvyH3LmuFlgIpNhzFtPid+SD+yNePpIwe/u935VOWQumj+ezs9/PZ/VYS0ng/T1NLWQ==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
-    flow-js-testing "~0.1.15"
+    flow-js-testing "~0.1.5"
     sha3 "^2.1.4"
 
 "@rarible/logger@~0.6.2":
@@ -8637,7 +8637,7 @@ flow-js-testing@^0.1.13:
     sha3 "^2.1.4"
     yargs "^17.0.1"
 
-flow-js-testing@~0.1.15:
+flow-js-testing@~0.1.5:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/flow-js-testing/-/flow-js-testing-0.1.15.tgz#1aec1efa5092e0768ace09218b87133b8c48683d"
   integrity sha512-ouBf4BRB6UEn234pMYnsX/4bYVVxfAYZ1+lTn+kQ/fiSBXdr9faRDx0MjMJ1C372aRP/MuClLGoFNCsiBw2ElA==

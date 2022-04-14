@@ -1,10 +1,12 @@
+import type { ContractAddress } from "@rarible/types"
 import type { FlowMint } from "../mint"
 import { testFlowCollection } from "./common"
 
 const meta = "ipfs://ipfs/QmNe7Hd9xiqm1MXPtQQjVtksvWX6ieq9Wr6kgtqFo9D4CU"
-export async function createTestItem(mint: FlowMint) {
+
+export async function createTestItem(mint: FlowMint, collectionId: ContractAddress = testFlowCollection) {
 	const prepareMint = await mint.prepare({
-		collectionId: testFlowCollection,
+		collectionId: collectionId,
 	})
 	const { itemId } = await prepareMint.submit({
 		uri: meta,
