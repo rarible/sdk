@@ -1,7 +1,7 @@
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { EthereumNetwork, EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -17,18 +17,26 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
-import type { EVMBlockchain } from "./common"
 
 export function createEthereumSdk(
-	wallet: Maybe<EthereumWallet<EVMBlockchain>>,
+	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
 	network: EthereumNetwork,
-	params?: ConfigurationParameters,
-	logs?: LogsLevel
+	config: {
+		params?: ConfigurationParameters,
+		logs?: LogsLevel
+		ethereum?: EthereumNetworkConfig,
+		polygon?: EthereumNetworkConfig,
+	}
 ): IRaribleInternalSdk {
-	const sdk = createRaribleSdk(wallet?.ethereum, network, { apiClientParams: params, logs: logs })
+	const sdk = createRaribleSdk(wallet?.ethereum, network, {
+		apiClientParams: config.params,
+		logs: config.logs,
+		ethereum: config.ethereum,
+		polygon: config.polygon,
+	})
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk)
+	const balanceService = new EthereumBalance(sdk, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
@@ -56,6 +64,7 @@ export function createEthereumSdk(
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
+			convert: balanceService.convert,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

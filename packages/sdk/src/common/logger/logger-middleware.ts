@@ -1,6 +1,6 @@
 import { RemoteLogger } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
@@ -18,7 +18,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 	}
 
 	switch (wallet.blockchain) {
-		case Blockchain.ETHEREUM:
+		case BlockchainGroup.ETHEREUM:
 			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
 				.then(([chainId, address]) => {
 					info["wallet.address"] = address
@@ -28,7 +28,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 					info["wallet.address"] = `unknown (${err && err.toString()})`
 				})
 			break
-		case Blockchain.FLOW:
+		case BlockchainGroup.FLOW:
 			await wallet.fcl.currentUser().snapshot()
 				.then((userData) => {
 					info["wallet.address"] = userData.addr
@@ -38,7 +38,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 					info["wallet.address"] = `unknown (${err && err.toString()})`
 				})
 			break
-		case Blockchain.TEZOS:
+		case BlockchainGroup.TEZOS:
 			info["wallet.tezos.kind"] = wallet.provider.kind
 			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
 				.then(([chainId, address]) => {
