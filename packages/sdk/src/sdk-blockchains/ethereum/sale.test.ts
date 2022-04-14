@@ -2,10 +2,10 @@ import { awaitAll, createE2eProvider, deployTestErc20 } from "@rarible/ethereum-
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
-import { toAddress, toContractAddress, toCurrencyId, toOrderId } from "@rarible/types"
+import { toAddress, toContractAddress, toCurrencyId, toOrderId, toWord } from "@rarible/types"
 import Web3 from "web3"
-import { Platform } from "@rarible/ethereum-api-client"
 import { Blockchain } from "@rarible/api-client"
+import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
@@ -244,10 +244,11 @@ describe.skip("buy item with opensea order", () => {
 
 	const web3 = new Web3(provider)
 	const ethereum1 = new Web3Ethereum({ web3 })
+	const meta = toWord(id32("CUSTOM_META"))
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "staging", {
 		logs: LogsLevel.DISABLED,
 		ethereum: {
-			openseaOrdersPlatform: Platform.CRYPTO_PUNKS,
+			openseaOrdersMetadata: meta,
 		},
 	})
 
