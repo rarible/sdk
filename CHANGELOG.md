@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta15](https://github.com/rarible/sdk/compare/v0.8.52-beta14...v0.8.52-beta15) (2022-04-14)
+
+
+### Bug Fixes
+
+* update flow-sdk with new dev env config ([70bb0fe](https://github.com/rarible/sdk/commit/70bb0fe6c1ade6b8c59841dbb738eec0575e64dc))
+
+
+### Features
+
+* example app items page ([4a9fb00](https://github.com/rarible/sdk/commit/4a9fb00d4ed4870640c12ce257136c6cfd76bf1a))
+* setup example currencies ([6104f41](https://github.com/rarible/sdk/commit/6104f4146e9b85a74f120f3ff491d2682d692b20))
+* solana collection deploy ([26aff3d](https://github.com/rarible/sdk/commit/26aff3d2005069bd1e054f791f8cd0ace557dbf0))
+* solflare connector ([dad26bc](https://github.com/rarible/sdk/commit/dad26bc9adb2e7fa9e2187e3a808b12c86614c16))
+* support deploy erc1155 & tezos mt collection ([783e269](https://github.com/rarible/sdk/commit/783e2690456a74e50250bd21d485dbd3118642b7))
+
+
+
+
+
 ## [0.8.52-beta14](https://github.com/rarible/sdk/compare/v0.8.52-beta13...v0.8.52-beta14) (2022-04-13)
 
 

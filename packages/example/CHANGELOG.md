@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta15](https://github.com/rarible/sdk/compare/v0.8.52-beta14...v0.8.52-beta15) (2022-04-14)
+
+
+### Features
+
+* example app items page ([4a9fb00](https://github.com/rarible/sdk/commit/4a9fb00d4ed4870640c12ce257136c6cfd76bf1a))
+* example solana collection deploy ([e7c4283](https://github.com/rarible/sdk/commit/e7c42834c02bc82f5b5bdf548c632a842925a1c6))
+* setup example currencies ([6104f41](https://github.com/rarible/sdk/commit/6104f4146e9b85a74f120f3ff491d2682d692b20))
+* solflare connector ([dad26bc](https://github.com/rarible/sdk/commit/dad26bc9adb2e7fa9e2187e3a808b12c86614c16))
+* support deploy erc1155 & tezos mt collection ([783e269](https://github.com/rarible/sdk/commit/783e2690456a74e50250bd21d485dbd3118642b7))
+
+
+
+
+
 ## [0.8.52-beta14](https://github.com/rarible/sdk/compare/v0.8.52-beta13...v0.8.52-beta14) (2022-04-13)
 
 **Note:** Version bump only for package example
