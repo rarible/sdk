@@ -5,7 +5,7 @@ import type { SolanaAuctionHouseMapping } from "../domain"
 import { extractAddress } from "./address-converters"
 
 const auctionHouseFee: Record<string, number> = {
-	"8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm": 1000, // 10%
+	"8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm": 250, // 2.5%
 }
 
 type CurrencyType = SolanaNftAssetType | SolanaSolAssetType

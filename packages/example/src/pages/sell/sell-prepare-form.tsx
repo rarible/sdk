@@ -9,13 +9,16 @@ import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { useNavigate } from "react-router-dom"
 
 interface ISellPrepareFormProps {
 	onComplete: (response: PrepareSellResponse) => void
 	disabled?: boolean
+	itemId: string | undefined
 }
 
-export function SellPrepareForm({ disabled, onComplete }: ISellPrepareFormProps) {
+export function SellPrepareForm({ disabled, onComplete, itemId }: ISellPrepareFormProps) {
+	const navigate = useNavigate()
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
@@ -31,13 +34,14 @@ export function SellPrepareForm({ disabled, onComplete }: ISellPrepareFormProps)
 					onComplete(await connection.sdk.order.sell({
 						itemId: toItemId(formData.itemId)
 					}))
+					navigate(`/sell/${formData.itemId}`, {})
 				} catch (e) {
 					setError(e)
 				}
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput form={form} name="itemId" label="Item ID"/>
+					<FormTextInput form={form} defaultValue={itemId} name="itemId" label="Item ID"/>
 					<Box>
 						<FormSubmit
 							form={form}

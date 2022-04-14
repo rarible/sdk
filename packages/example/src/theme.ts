@@ -18,4 +18,4 @@ export const appTheme = createTheme({
 			main: '#f50057',
 		},
 	},
-});
+})
