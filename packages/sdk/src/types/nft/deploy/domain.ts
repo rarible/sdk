@@ -11,14 +11,25 @@ export type CreateCollectionRequest<T extends CreateCollectionBlockchains = Crea
 export interface CreateCollectionAsset extends Record<CreateCollectionBlockchains, DeployTokenAsset> {
 	[ApiClient.Blockchain.ETHEREUM]: EthereumCreateCollectionAsset;
 	[ApiClient.Blockchain.TEZOS]: TezosCreateCollectionTokenAsset;
+	[ApiClient.Blockchain.SOLANA]: SolanaCreateCollectionTokenAsset;
 }
 
 export type CreateCollectionBlockchains =
 	ApiClient.Blockchain.ETHEREUM |
 	ApiClient.Blockchain.POLYGON |
-	ApiClient.Blockchain.TEZOS
+	ApiClient.Blockchain.TEZOS |
+	ApiClient.Blockchain.SOLANA
 
-export type DeployTokenAsset = EthereumCreateCollectionAsset | TezosCreateCollectionTokenAsset
+export type DeployTokenAsset =
+	EthereumCreateCollectionAsset |
+	TezosCreateCollectionTokenAsset |
+	SolanaCreateCollectionTokenAsset
+
+export type SolanaCreateCollectionTokenAsset = {
+	arguments: {
+		metadataURI: string
+	}
+}
 
 export type TezosCreateCollectionTokenAsset = {
 	assetType: "NFT" | "MT"

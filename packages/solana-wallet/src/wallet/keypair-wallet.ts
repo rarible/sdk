@@ -34,6 +34,7 @@ export class SolanaKeypairWallet implements IWalletSigner {
 		})
 	}
 
+	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async signMessage(message: Uint8Array | string, display?: DisplayEncoding) {
 		throw new Error("Unimplemented")
 	}

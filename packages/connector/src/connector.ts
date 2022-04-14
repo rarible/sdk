@@ -129,7 +129,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	 */
 	static initPageUnloadProtection() {
 		if (Connector.pageUnloading === undefined && typeof window !== "undefined") {
-			window.addEventListener("beforeunload", function (event) {
+			window.addEventListener("beforeunload", function () {
 				Connector.pageUnloading = true
 			})
 			Connector.pageUnloading = false

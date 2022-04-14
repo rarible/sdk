@@ -1,15 +1,13 @@
-import { Observable, combineLatest, from } from "rxjs"
-import { first, map, mergeMap, startWith, distinctUntilChanged } from "rxjs/operators"
-import type {
-	ConnectionState,
-	Maybe,
-} from "@rarible/connector"
+import { combineLatest, Observable } from "rxjs"
+import { distinctUntilChanged, first, map, mergeMap, startWith } from "rxjs/operators"
+import type { ConnectionState, Maybe } from "@rarible/connector"
 import {
 	AbstractConnectionProvider,
 	cache,
+	getStateConnected,
 	getStateConnecting,
+	getStateDisconnected,
 } from "@rarible/connector"
-import { getStateConnected, getStateDisconnected } from "@rarible/connector"
 import type { ISolanaProviderConnectionResult } from "@rarible/connector-helper"
 import Solflare from "@solflare-wallet/sdk"
 import type { ConnectOpts, SolflareProvider } from "./domain"

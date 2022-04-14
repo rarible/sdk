@@ -4,7 +4,6 @@ import type { SolanaWallet } from "@rarible/sdk-wallet/src"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
-import { toPublicKey } from "@rarible/solana-common"
 import type * as OrderCommon from "../../types/order/common"
 import type {
 	OrderRequest,
@@ -55,7 +54,7 @@ export class SolanaOrder {
 			run: async (request: OrderCommon.OrderInternalRequest) => {
 				const mint = extractPublicKey(request.itemId)
 
-				const res = await (await this.sdk.order.sell({
+				await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
@@ -95,7 +94,7 @@ export class SolanaOrder {
 				const mint = getMintId(order)
 				const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
-				const res = await (await this.sdk.order.sell({
+				await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
@@ -144,7 +143,7 @@ export class SolanaOrder {
 			run: async (request: OrderRequest) => {
 				const mint = extractPublicKey(prepare.itemId)
 
-				const res = await (await this.sdk.order.buy({
+				await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
@@ -187,7 +186,7 @@ export class SolanaOrder {
 				const mint = getMintId(order)
 				const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
-				const res = await (await this.sdk.order.buy({
+				await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,

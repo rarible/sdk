@@ -9,6 +9,7 @@ import { SolanaNft } from "./nft"
 import { SolanaFill } from "./fill"
 import { SolanaOrder } from "./order"
 import { SolanaBalance } from "./balance"
+import { SolanaCollection } from "./collection"
 
 export function createSolanaSdk(
 	wallet: Maybe<SolanaWallet>,
@@ -21,6 +22,7 @@ export function createSolanaSdk(
 	const balanceService = new SolanaBalance(sdk, wallet, config)
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)
 	const fillService = new SolanaFill(sdk, wallet, apis, config)
+	const collectionService = new SolanaCollection(sdk, wallet, apis, config)
 
 	return {
 		nft: {
@@ -28,8 +30,8 @@ export function createSolanaSdk(
 			burn: nftService.burn,
 			transfer: nftService.transfer,
 			generateTokenId: nonImplementedAction,
-			deploy: nonImplementedAction,
-			createCollection: nonImplementedAction,
+			deploy: collectionService.createCollection,
+			createCollection: collectionService.createCollection,
 			preprocessMeta: nonImplementedAction as any,
 		},
 		order: {

@@ -1,7 +1,5 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { ITransactionPreparedInstructions, sendTransactionWithRetry } from "../../common/transactions"
-import type { TransactionResult } from "../../types"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { PreparedTransaction } from "../prepared-transaction"
 import { getAuctionHouseSellInstructions } from "./auction-house/sell"
