@@ -5,12 +5,10 @@ import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { CreateCollectionBlockchains, CreateCollectionRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
-import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { FormSelect } from "../../components/common/form/form-select"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { FormCheckbox } from "../../components/common/form/form-checkbox"
 import { CollectionDeployComment } from "./comments/collection-deploy-comment"
 import { RequestResult } from "../../components/common/request-result"
 import { InlineCode } from "../../components/common/inline-code"
@@ -18,34 +16,43 @@ import { CollectionResultComment } from "./comments/collection-result-comment"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
+import { DeployForm } from "./deploy-form"
 
 function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
-		case Blockchain.POLYGON:
-		case Blockchain.ETHEREUM:
+		case BlockchainGroup.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
 				asset: {
-					assetType: "ERC721",
+					assetType: data["contract"],
 					arguments: {
 						name: data["name"],
 						symbol: data["symbol"],
 						baseURI: data["baseURI"],
 						contractURI: data["contractURI"],
-						isUserToken: false
-					}
-				}
+						isUserToken: !!data["private"],
+					},
+				},
 			} as CreateCollectionRequest
 		case Blockchain.TEZOS:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
 				asset: {
-					assetType: "NFT",
+					assetType: data["collection"],
 					arguments: {
 						name: data["name"],
 						symbol: data["symbol"],
 						contractURI: data["contractURI"],
-						isUserToken: false,
+						isUserToken: !!data["private"],
+					},
+				},
+			} as CreateCollectionRequest
+		case Blockchain.SOLANA:
+			return {
+				blockchain: data["blockchain"] as CreateCollectionBlockchains,
+				asset: {
+					arguments: {
+						metadataURI: data["metadataURI"],
 					},
 				},
 			} as CreateCollectionRequest
@@ -56,7 +63,8 @@ function getDeployRequest(data: Record<string, any>) {
 
 function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 	return blockchain === BlockchainGroup.ETHEREUM ||
-		blockchain === BlockchainGroup.TEZOS
+		blockchain === BlockchainGroup.TEZOS ||
+		blockchain === BlockchainGroup.SOLANA
 }
 
 export function DeployPage() {
@@ -76,31 +84,33 @@ export function DeployPage() {
 				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<CollectionDeployComment/>}>
-				<form onSubmit={handleSubmit(async (formData) => {
-					try {
-						setComplete(await connection.sdk?.nft.deploy(getDeployRequest(formData)))
-					} catch (e) {
-						setError(e)
-					}
-				})}
+				<form
+					onSubmit={handleSubmit(async (formData) => {
+						try {
+							setComplete(await connection.sdk?.nft.deploy(getDeployRequest(formData)))
+						} catch (e) {
+							setError(e)
+						}
+					})}
 				>
 					<Stack spacing={2}>
-						<FormSelect
-							form={form}
-							defaultValue={blockchain ?? Blockchain.ETHEREUM}
-							name="blockchain"
-							label="Blockchain"
-						>
-							<MenuItem value={Blockchain.ETHEREUM}>{Blockchain.ETHEREUM}</MenuItem>
-							<MenuItem value={Blockchain.POLYGON}>{Blockchain.POLYGON}</MenuItem>
-							<MenuItem value={Blockchain.TEZOS}>{Blockchain.TEZOS}</MenuItem>
-							<MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>
-						</FormSelect>
-						<FormTextInput form={form} name="name" label="Name"/>
-						<FormTextInput form={form} name="symbol" label="Symbol"/>
-						<FormTextInput form={form} name="baseURI" label="Base URI"/>
-						<FormTextInput form={form} name="contractURI" label="Contract URI"/>
-						<FormCheckbox form={form} name="private" label="Private Collection"/>
+						{
+							blockchain &&
+							<FormSelect
+								form={form}
+								defaultValue={blockchain}
+								name="blockchain"
+								label="Blockchain"
+							>
+								<MenuItem value={BlockchainGroup.ETHEREUM}>
+									{Blockchain.ETHEREUM} / {Blockchain.POLYGON}
+								</MenuItem>
+								<MenuItem value={BlockchainGroup.TEZOS}>{BlockchainGroup.TEZOS}</MenuItem>
+								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>
+								{ /*<MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>*/ }
+							</FormSelect>
+						}
+						<DeployForm form={form}/>
 						<Box>
 							<FormSubmit
 								form={form}
