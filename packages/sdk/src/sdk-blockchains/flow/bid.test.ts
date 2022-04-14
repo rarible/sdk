@@ -10,7 +10,7 @@ import { FlowBid } from "./bid"
 import { FlowCancel } from "./cancel"
 import { awaitFlowOrder } from "./test/await-order"
 import { FlowBuy } from "./buy"
-import { createTestBid } from "./test/create-test-bid"
+import { createTestBid, createTestBidWithCurrencyId } from "./test/create-test-bid"
 
 describe("Flow bid", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
@@ -42,6 +42,17 @@ describe("Flow bid", () => {
 
 		const cancelledOrder = await awaitFlowOrder(sdk, updatedBidId.split(":")[1])
 		expect(cancelledOrder.status).toEqual("CANCELLED")
+	}, 1000000)
+
+	test.skip("Should place a bid on flow NFT item with CurrencyId", async () => {
+		const itemId = await createTestItem(mint)
+
+		const orderId = await createTestBidWithCurrencyId(bid, itemId)
+
+		const order = await awaitFlowOrder(sdk, orderId.split(":")[1])
+		const takeAssetType = order.make
+		expect(takeAssetType["@type"]).toEqual("fungible")
+		expect(takeAssetType.contract).toEqual("A.ebf4ae01d1284af8.RaribleNFT")
 	}, 1000000)
 
 	test.skip("Should place a bid on flow NFT item and accept bid", async () => {

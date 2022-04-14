@@ -40,7 +40,6 @@ export type PrepareMintAndSellResponse =
 		baseFee: number
 		originFeeSupport: OriginFeeSupport
 		payoutsSupport: PayoutsSupport
-		multiple: boolean
 		supportsRoyalties: boolean
 		supportsLazyMint: boolean
 	}

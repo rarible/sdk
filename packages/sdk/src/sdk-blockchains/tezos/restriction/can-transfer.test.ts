@@ -6,11 +6,11 @@ import { createTestWallet } from "../test/test-wallet"
 describe("canTransfer", () => {
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
+		"D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 	)
 	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 
-	test("returns false and reason for whitelisted collection", async () => {
+	test.skip("returns false and reason for whitelisted collection", async () => {
 		const me = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")
 		const otherMe = toUnionAddress("TEZOS:tz1V11fB4EX5VzPKMNQ1CsBKMSFS6fL3Br9W")
 		const result = await sdk.restriction.canTransfer(toItemId("TEZOS:KT1S3goQNhyuZgznN952Vwfqeo96YV3U4pwf:100005"), me, otherMe)

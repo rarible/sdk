@@ -329,6 +329,5 @@ describe.each(suites())("$blockchain mint => sell => sellUpdate => buy", (suite)
 
 		await awaitOrderStock(sellerSdk, sellOrder.id, toBigNumber("0"))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(orderRequest.amount)))
-		//toDo add balance verification for seller
 	})
 })

@@ -11,6 +11,7 @@
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
     "build-connector": "yarn workspace @rarible/connector run build",
+    "build-connector-helper": "yarn workspace @rarible/connector-helper run build",
     "build-connector-iframe": "yarn workspace @rarible/connector-iframe run build",
     "build-connector-fcl": "yarn workspace @rarible/connector-fcl run build",
     "build-connector-beacon": "yarn workspace @rarible/connector-beacon run build",
@@ -61,6 +62,6 @@
     "npm-run-all": "^4.1.5",
     "sort-package-json": "^1.52.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.4.4"
+    "typescript": "~4.4.4"
   }
 }

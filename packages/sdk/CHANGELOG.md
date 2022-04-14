@@ -3,6 +3,85 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
+
+
+### Features
+
+* init wallets snippets and readme ([#180](https://github.com/rarible/sdk/issues/180)) ([42a6a06](https://github.com/rarible/sdk/commit/42a6a066e62ce7eef41c3fbdb2ea84ad1a39bc04))
+
+
+
+
+
+## [0.8.51](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.51) (2022-04-01)
+
+
+### Features
+
+* add new addresses for eth ([3b3b5cc](https://github.com/rarible/sdk/commit/3b3b5cc956a0512b55b637b3eebf20dc0d3d3d56))
+* weth contracts was added ([b18b57d](https://github.com/rarible/sdk/commit/b18b57d5c78c85c6227a9fca8ae0337e6988d976))
+
+
+
+
+
+## [0.8.49](https://github.com/rarible/sdk/compare/v0.8.48...v0.8.49) (2022-03-31)
+
+
+### Features
+
+* rm multiple field from sell prepare response ([5381e47](https://github.com/rarible/sdk/commit/5381e47d272e11dbac01a58c7eedae09351ce69a))
+
+
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+
+### Features
+
+* currency id support for get balance and get convertable value ([5906797](https://github.com/rarible/sdk/commit/5906797b15d13f71c5c6bf42fd918c7ab10f4d1c))
+
+
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([#169](https://github.com/rarible/sdk/issues/169)) ([e74bc31](https://github.com/rarible/sdk/commit/e74bc314249af7a208c9d4cbae0b2d1e1c752821))
+* tezos sign function and improve deps ([#158](https://github.com/rarible/sdk/issues/158)) ([791e8c8](https://github.com/rarible/sdk/commit/791e8c8cf2cbac84b77c408993134eae79280049))
+
+
+
+
+
+## [0.8.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.46-hotfix.0...v0.8.46-hotfix.1) (2022-03-21)
+
+
+### Bug Fixes
+
+* rm esm build ([37a20d2](https://github.com/rarible/sdk/commit/37a20d202d15fb18d9d1aff9b7907251f7ad0caf))
+
+
+
+
+
+## [0.8.46-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.46-hotfix.0) (2022-03-21)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([52a43d3](https://github.com/rarible/sdk/commit/52a43d31a191993daf7ca4084da51ea79a929830))
+
+
+
+
+
 ## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
 
 

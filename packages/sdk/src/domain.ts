@@ -1,6 +1,7 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
 import type { IFill } from "./types/order/fill/domain"
@@ -33,6 +34,8 @@ export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
 	logs?: LogsLevel
 	middlewares?: Middleware[]
+	ethereum?: EthereumNetworkConfig
+	polygon?: EthereumNetworkConfig
 }
 
 export interface IRaribleSdk {

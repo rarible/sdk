@@ -3,6 +3,8 @@ import { toWord } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type * as OrderCommon from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import * as common from "./common"
 import type { EVMBlockchain } from "./common"
 import { getEthereumItemId, getEVMBlockchain, isEVMBlockchain } from "./common"
@@ -19,15 +21,7 @@ export class EthereumSell {
 		this.update = this.update.bind(this)
 	}
 
-	async sell(request: OrderCommon.PrepareOrderInternalRequest): Promise<OrderCommon.PrepareOrderInternalResponse> {
-		const [domain, contract] = request.collectionId.split(":")
-		if (!isEVMBlockchain(domain)) {
-			throw new Error("Not an ethereum item")
-		}
-		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: contract,
-		})
-
+	async sell(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
 				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
@@ -35,14 +29,14 @@ export class EthereumSell {
 				const expirationDate = sellFormRequest.expirationDate instanceof Date
 					? Math.round(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
-
+				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 				return {
 					makeAssetType: {
 						tokenId: item.tokenId,
 						contract: item.contract,
 					},
 					amount: sellFormRequest.amount,
-					takeAssetType: common.getEthTakeAssetType(sellFormRequest.currency),
+					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,
 					payouts: common.toEthereumParts(sellFormRequest.payouts),
 					originFees: common.toEthereumParts(sellFormRequest.originFees),
@@ -54,7 +48,6 @@ export class EthereumSell {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
-			multiple: collection.type === "ERC1155",
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			supportsExpirationDate: true,
