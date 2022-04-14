@@ -10,12 +10,12 @@ export async function bid(sdk: IRaribleSdk,
 						   wallet: BlockchainWallet,
 						   prepareOrderRequest: PrepareOrderRequest,
 						   orderRequest: OrderRequest): Promise<Order> {
-
-	// Get bid info
+	console.log("bid, prepare_order_update_request=", prepareOrderRequest)
 	const bidPrepare = await sdk.order.bid(prepareOrderRequest)
 
-	// Submit bid order
+	console.log("bid, order_request=", orderRequest)
 	const orderId = await bidPrepare.submit(orderRequest)
+	console.log("order_id=", orderId)
 
 	// Check order
 	//return await awaitOrderStock(sdk, orderId, orderRequest.price.toString())

@@ -15,6 +15,8 @@ export function createApisSdk(
 	})
 	return {
 		collection: new ApiClient.CollectionControllerApi(configuration),
+		currency: new ApiClient.CurrencyControllerApi(configuration),
+		auction: new ApiClient.AuctionControllerApi(configuration),
 		item: new ApiClient.ItemControllerApi(configuration),
 		ownership: new ApiClient.OwnershipControllerApi(configuration),
 		order: new ApiClient.OrderControllerApi(configuration),

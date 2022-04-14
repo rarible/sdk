@@ -97,8 +97,8 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 							if (conn.disconnect !== undefined) {
 								try {
 									await conn.disconnect()
-								} catch (_) {
-
+								} catch (e) {
+									console.warn("caught on disconnect", e)
 								}
 							}
 							this.provider.next(undefined)

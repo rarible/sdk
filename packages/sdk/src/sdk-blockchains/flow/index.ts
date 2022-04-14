@@ -4,6 +4,7 @@ import type { AuthWithPrivateKey, FlowEnv } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { FlowMint } from "./mint"
@@ -52,6 +53,7 @@ export function createFlowSdk(
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
+			convert: notImplemented,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

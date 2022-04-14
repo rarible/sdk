@@ -1,6 +1,7 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
 import type { IFill } from "./types/order/fill/domain"
@@ -9,7 +10,7 @@ import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
 import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
-import type { IGetBalance } from "./types/balances"
+import type { IConvert, IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { ICreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
@@ -33,6 +34,8 @@ export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
 	logs?: LogsLevel
 	middlewares?: Middleware[]
+	ethereum?: EthereumNetworkConfig
+	polygon?: EthereumNetworkConfig
 }
 
 export interface IRaribleSdk {
@@ -46,6 +49,8 @@ export interface IRaribleSdk {
 
 export interface IApisSdk {
 	order: ApiClient.OrderControllerApi
+	currency: ApiClient.CurrencyControllerApi
+	auction: ApiClient.AuctionControllerApi
 	collection: ApiClient.CollectionControllerApi
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi
@@ -82,6 +87,7 @@ export interface IOrderSdk {
 
 export interface IBalanceSdk {
 	getBalance: IGetBalance
+	convert: IConvert
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {

@@ -1,18 +1,14 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
-import { Blockchain } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 import type { TezosProvider } from "@rarible/tezos-sdk"
-import { sign } from "@rarible/tezos-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
-export class EthereumWallet<
-	K extends Blockchain.ETHEREUM | Blockchain.POLYGON,
-	T extends Ethereum = Ethereum
-> implements AbstractWallet {
-	constructor(
-		public readonly ethereum: T,
-		public readonly blockchain: K
-	) {}
+export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
+	readonly blockchain = BlockchainGroup.ETHEREUM
+
+	constructor(public readonly ethereum: T) {
+	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const address = await this.ethereum.getFrom()
@@ -27,7 +23,7 @@ export class EthereumWallet<
 }
 
 export class FlowWallet implements AbstractWallet {
-	readonly blockchain = Blockchain.FLOW
+	readonly blockchain = BlockchainGroup.FLOW
 
 	constructor(public readonly fcl: Fcl) {
 	}
@@ -67,10 +63,24 @@ export class FlowWallet implements AbstractWallet {
 	}
 }
 
+export interface TezosSignatureResult {
+	signature: string;
+	edpk: string;
+	prefix: string;
+}
+
 export class TezosWallet implements AbstractWallet {
-	readonly blockchain = Blockchain.TEZOS
+	readonly blockchain = BlockchainGroup.TEZOS
 
 	constructor(public readonly provider: TezosProvider) {
+	}
+
+	private async sign(p: TezosProvider, message: string, type: "operation" | "message"): Promise<TezosSignatureResult> {
+		type = type || "message"
+		const edpk = await p.public_key()
+		if (edpk === undefined) throw new Error("cannot get public key from provider")
+		const r = await p.sign(message, type)
+		return { edpk, ...r }
 	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
@@ -78,7 +88,8 @@ export class TezosWallet implements AbstractWallet {
 		if (publicKey === undefined) {
 			throw new Error("Public key undefined")
 		}
-		const result = await sign(this.provider, message, "message")
+
+		const result = await this.sign(this.provider, message, "message")
 		return {
 			signature: result.signature,
 			publicKey: `${result.edpk}_${result.prefix}`,
@@ -87,14 +98,12 @@ export class TezosWallet implements AbstractWallet {
 }
 
 export type BlockchainWallet =
-	EthereumWallet<Blockchain.ETHEREUM> |
-	EthereumWallet<Blockchain.POLYGON> |
+	EthereumWallet |
 	FlowWallet |
 	TezosWallet
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
-	"ETHEREUM": EthereumWallet<Blockchain.ETHEREUM>,
-	"POLYGON": EthereumWallet<Blockchain.POLYGON>,
+	"ETHEREUM": EthereumWallet,
 	"TEZOS": TezosWallet
 }

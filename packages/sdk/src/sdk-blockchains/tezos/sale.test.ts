@@ -1,9 +1,13 @@
-import { toBigNumber, toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress, toCurrencyId, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
+import type { TezosXTZAssetType } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/domain"
+import { awaitItem } from "../ethereum/test/await-item"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
+import { awaitForOrder } from "./test/await-for-order"
 
 describe("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
@@ -22,8 +26,8 @@ describe("test tezos mint and sell", () => {
 	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1Rgf9RNW7gLj7JGn98yyVM34S4St9eudMC"
-	let nftContract: string = "KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu"
-	let mtContract: string = "KT1BMB8m1QKqbbDDZPXpmGVCaM1cGcpTQSrw"
+	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
+	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test.skip("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
@@ -37,6 +41,44 @@ describe("test tezos mint and sell", () => {
 			supply: 1,
 			lazyMint: false,
 		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+		await awaitItem(sellerSdk, mintResult.itemId)
+
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
+
+		// await delay(10000)
+		const fillResult = await fillResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+		})
+		await fillResult.wait()
+
+		const ownership = await awaitForOwnership(
+			buyerSdk,
+			toItemId(mintResult.itemId),
+			await buyerWallet.provider.address()
+		)
+		expect(ownership.value).toBe("1")
+	})
+
+	test.skip("sale NFT with XTZ and with CurrencyId", async () => {
+		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+		})
+
+		const mintResult = await mintAndSellAction.submit({
+			price: new BigNumber("0.0001"),
+			currency: toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU"),
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
+
+		const order = await awaitForOrder(sellerSdk, mintResult.orderId)
+		const takeAssetType = order.take.type as TezosXTZAssetType
+		expect(takeAssetType["@type"]).toEqual("XTZ")
 
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
@@ -102,6 +144,9 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({

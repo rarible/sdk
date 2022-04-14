@@ -3,24 +3,24 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toContractAddress, toUnionAddress } from "@rarible/types"
-import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import { retry } from "../../common/retry"
+import { providerDevelopmentSettings } from "./test/common"
 
 describe("mintAndSell", () => {
-	const { provider, wallet } = createE2eProvider()
+	const { provider, wallet } = createE2eProvider(undefined, providerDevelopmentSettings)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
-	const ethereumWallet = new EthereumWallet(ethereum, Blockchain.ETHEREUM)
-	const sdk = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
-	const erc721Address = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
+	const ethereumWallet = new EthereumWallet(ethereum)
+	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
+	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
 
 	test("prepare should work even if wallet is undefined", async () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: `ETHEREUM:${erc721Address}`,
 		})
 		const action = await sdk.nft.mintAndSell({ collection })
-		expect(action.multiple).toBeFalsy()
 		expect(action.supportsRoyalties).toBeTruthy()
 		expect(action.originFeeSupport).toBe("FULL")
 	})
@@ -65,14 +65,16 @@ describe("mintAndSell", () => {
 			throw new Error("Minted not on chain")
 		}
 
-		const order = await sdk.apis.order.getOrderById({ id: result.orderId })
-		expect(order.makeStock.toString()).toBe("1")
-		const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
-		expect(item.supply.toString()).toEqual("1")
-		if (tokenId) {
-			expect(item.tokenId).toEqual(tokenId.tokenId)
-		} else {
-			throw new Error("Token id must be defined")
-		}
+		await retry(5, 2000, async () => {
+			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
+			expect(order.makeStock.toString()).toBe("1")
+			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+			expect(item.supply.toString()).toEqual("1")
+			if (tokenId) {
+				expect(item.tokenId).toEqual(tokenId.tokenId)
+			} else {
+				throw new Error("Token id must be defined")
+			}
+		})
 	})
 })
