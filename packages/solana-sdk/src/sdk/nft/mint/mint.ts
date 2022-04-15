@@ -58,7 +58,7 @@ function validateMetadata(metadata: any) {
 export async function createMetadata(
 	metadataLink: string,
 	collection: PublicKey | null,
-	verifyCreators: boolean,
+	verifyCreators: Record<string, boolean> = {},
 	uses: Uses | null = null,
 ): Promise<DataV2> {
 	// Metadata
@@ -72,7 +72,7 @@ export async function createMetadata(
 			return new Creator({
 				address: creator.address,
 				share: creator.share,
-				verified: verifyCreators ? true : false, //todo: (?) remove condition
+				verified: verifyCreators?.[creator.address] ?? false,
 			})
 		}
 	)
@@ -104,7 +104,7 @@ export async function getMintNftInstructions(
 	const data = await createMetadata(
 		metadataLink,
 		collection,
-		verifyCreators,
+		verifyCreators ? { [signer.publicKey.toString()]: true } : undefined,
 		use,
 	)
 

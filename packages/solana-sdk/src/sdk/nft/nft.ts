@@ -50,7 +50,8 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 			request.metadataUrl,
 			true, // mutable metadata ?
 			request.collection, // verify strategy ?
-			request.maxSupply
+			request.maxSupply,
+			true
 		)
 
 		return {
