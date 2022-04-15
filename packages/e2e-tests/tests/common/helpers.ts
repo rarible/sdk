@@ -7,6 +7,7 @@ import type { Collection } from "@rarible/api-client/build/models"
 import type { ItemId } from "@rarible/types"
 import type { Ownership } from "@rarible/api-client/build/models"
 
+
 export async function awaitOrderStock(
 	sdk: IRaribleSdk, id: OrderId, awaitingValue: BigNumber | string
 ): Promise<Order> {
@@ -33,8 +34,8 @@ export async function awaitOrderCancel(sdk: IRaribleSdk, id: OrderId): Promise<O
 	})
 }
 
-export async function awaitForItemSupply(
-	sdk: IRaribleSdk, itemId: ItemId, supply: string | number | BigNumber
+export async function awaitForItemSupply(sdk: IRaribleSdk, itemId: ItemId,
+																				 supply: string | number | BigNumber
 ): Promise<string> {
 	return retry(10, 2000, async () => {
 		const item = await sdk.apis.item.getItemById({

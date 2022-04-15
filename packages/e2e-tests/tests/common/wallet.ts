@@ -1,18 +1,20 @@
-import type { BlockchainWallet, TezosWallet } from "@rarible/sdk-wallet"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
 import { BlockchainGroup } from "@rarible/api-client"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
-import { createTestWallet as createTezosWallet } from "@rarible/sdk/src/sdk-blockchains/tezos/test/test-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
+// eslint-disable-next-line camelcase
+import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
+import { TezosWallet } from "@rarible/sdk-wallet"
 import { testsConfig } from "./config"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const config = {
 		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
-		rpcUl: testsConfig.variables.ETHEREUM_RPC_URL,
+		rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
 	}
 	const { web3, wallet } = initProvider(pk, config)
 	const ethereum = new Web3Ethereum({
@@ -25,7 +27,7 @@ export function getEthereumWallet(pk?: string): EthereumWallet {
 export function getPolygonWallet(pk?: string): EthereumWallet {
 	const { web3, wallet } = initProvider(pk, {
 		networkId: 80001,
-		rpcUl: "https://rpc-mumbai.maticvigil.com",
+		rpcUrl: "https://rpc-mumbai.maticvigil.com",
 	})
 	const ethereum = new Web3Ethereum({
 		web3: web3,
@@ -44,8 +46,12 @@ export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
 		testsConfig.variables.TEZOS_WALLET_2,
 		testsConfig.variables.TEZOS_WALLET_3,
 	]
-
-	return createTezosWallet(edsks[walletNumber])
+	return new TezosWallet(
+		in_memory_provider(
+			edsks[walletNumber],
+			testsConfig.variables.TEZOS_WALLET_ENDPOINT
+		)
+	)
 }
 
 export function getFlowWallet(): FlowWallet {

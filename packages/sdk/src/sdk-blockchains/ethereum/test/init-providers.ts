@@ -7,8 +7,12 @@ type ProvidersConfig = Partial<{
 }>
 
 export function initProviders({ pk1, pk2 }: ProvidersConfig = {}) {
-	const { provider: provider1, wallet: wallet1 } = createE2eProvider(pk1)
-	const { provider: provider2, wallet: wallet2 } = createE2eProvider(pk2)
+	const providerSettings = {
+		rpcUrl: "https://dev-ethereum-node.rarible.com",
+		networkId: 300500,
+	}
+	const { provider: provider1, wallet: wallet1 } = createE2eProvider(pk1, providerSettings)
+	const { provider: provider2, wallet: wallet2 } = createE2eProvider(pk2, providerSettings)
 
 	return {
 		web31: new Web3(provider1),

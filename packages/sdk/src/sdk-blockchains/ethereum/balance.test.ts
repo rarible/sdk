@@ -19,7 +19,7 @@ describe("get balance", () => {
 		web3: web31,
 		from: wallet1.getAddressString(),
 	})
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "e2e", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "development", { logs: LogsLevel.DISABLED })
 
 	test("get ETH balance with wallet", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
@@ -30,7 +30,7 @@ describe("get balance", () => {
 	})
 
 	test("get ETH balance without wallet", async () => {
-		const sdk = createRaribleSdk(undefined, "e2e", { logs: LogsLevel.DISABLED })
+		const sdk = createRaribleSdk(undefined, "development", { logs: LogsLevel.DISABLED })
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const balance = await sdk.balances.getBalance(walletAddress, {
 			"@type": "ETH",
@@ -39,7 +39,7 @@ describe("get balance", () => {
 	})
 
 	test("get ETH balance without wallet with CurrencyId", async () => {
-		const sdk = createRaribleSdk(undefined, "e2e", { logs: LogsLevel.DISABLED })
+		const sdk = createRaribleSdk(undefined, "development", { logs: LogsLevel.DISABLED })
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const currency = toCurrencyId(`ETHEREUM:${ZERO_ADDRESS}`)
 		const balance = await sdk.balances.getBalance(walletAddress, currency)
@@ -49,8 +49,8 @@ describe("get balance", () => {
 	test("get balance erc-20", async () => {
 		const sender = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 
-		const contract = toContractAddress("ETHEREUM:0x644522ee4627A00cBCB92Dead9499B76BB3B47Ab")
-		const nextBalance = "0.0000000000000001"
+		const contract = toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
+		const nextBalance = "0.00035"
 		const balance = await sdk.balances.getBalance(sender, {
 			"@type": "ERC20",
 			contract,
@@ -60,8 +60,8 @@ describe("get balance", () => {
 
 	test("get balance erc-20 with CurrencyId", async () => {
 		const sender = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
-		const contract = toCurrencyId("ETHEREUM:0x644522ee4627A00cBCB92Dead9499B76BB3B47Ab")
-		const nextBalance = "0.0000000000000001"
+		const contract = toCurrencyId("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
+		const nextBalance = "0.00035"
 		const balance = await sdk.balances.getBalance(sender, contract)
 		expect(balance.toString()).toEqual(nextBalance)
 	})
@@ -70,22 +70,22 @@ describe("get balance", () => {
 		const senderRaw = wallet1.getAddressString()
 		const wethE2eAssetType: AssetType = {
 			"@type": "ERC20",
-			contract: convertEthereumContractAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2", Blockchain.ETHEREUM),
+			contract: convertEthereumContractAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6", Blockchain.ETHEREUM),
 		}
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
 		const convertTx = await sdk.balances.convert({
 			blockchain: Blockchain.ETHEREUM,
 			isWrap: true,
-			value: "0.00000000000035",
+			value: "0.00035",
 		})
 		await convertTx.wait()
 
-		await retry(5, 2000, async () => {
+		await retry(10, 2000, async () => {
 			const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
 
 			expect(finishWethBalance.toString()).toBe(
-				new BigNumber(initWethBalance).plus("0.00000000000035").toString()
+				new BigNumber(initWethBalance).plus("0.00035").toString()
 			)
 		})
 	})
@@ -94,7 +94,7 @@ describe("get balance", () => {
 		const senderRaw = wallet1.getAddressString()
 		const wethE2eAssetType: AssetType = {
 			"@type": "ERC20",
-			contract: convertEthereumContractAddress("0xc6f33b62a94939e52e1b074c4ac1a801b869fdb2", Blockchain.ETHEREUM),
+			contract: convertEthereumContractAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6", Blockchain.ETHEREUM),
 		}
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const balanceWithoutWeth = await sdk.balances.getBalance(sender, wethE2eAssetType)
