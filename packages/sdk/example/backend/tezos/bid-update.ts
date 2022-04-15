@@ -1,9 +1,9 @@
 import { TezosWallet } from "@rarible/sdk-wallet"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/build"
 import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
-import { updateNodeGlobalVars } from "../../src/common/update-node-global-vars"
+import { updateNodeGlobalVars } from "../../../src/common/update-node-global-vars"
 
 updateNodeGlobalVars()
 
@@ -12,7 +12,7 @@ async function bidUpdate() {
 		in_memory_provider(
 			"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
       "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-			"https://tezos-hangzhou-node.rarible.org/"
+			"https://test-tezos-node.rarible.org"
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
@@ -24,7 +24,7 @@ async function bidUpdate() {
 		price: "0.000002",
 		currency: {
 			"@type": "TEZOS_FT",
-			contract: toContractAddress("TEZOS:KT1RggVJ1mMaLJezpdsJ6YtBfL7sBfcaGD1H"),
+			contract: toContractAddress("TEZOS:KT1WsXMAzcre2MNUjNkGtVQLpsTnNFhBJhLv"),
 			tokenId: toBigNumber("0"),
 		},
 	})

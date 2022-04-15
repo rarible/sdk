@@ -13,11 +13,11 @@ describe("get balance", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
 
 	test("get balance XTZ", async () => {
 		const balance = await sellerSdk.balances.getBalance(
-			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
+			toUnionAddress("TEZOS:tz1gqL7i1s578qj3NzgKmu6C5j3RdSBewGBo"),
 			{ "@type": "XTZ" }
 		)
 		expect(balance.toString()).toEqual("1.0093")
@@ -41,7 +41,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test.skip("get balance FT", async () => {
+	test("get balance FT", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{

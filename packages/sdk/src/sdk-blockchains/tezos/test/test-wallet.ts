@@ -9,7 +9,7 @@ export function createTestWallet(edsk: string) {
 			// "https://hangzhou.tz.functori.com"
 			// "https://hangzhounet.smartpy.io"
 			// "https://test-tezos-node.rarible.org"
-			"https://test-tezos-node.rarible.org"
+			"https://dev-tezos-node.rarible.org"
 		)
 	)
 }

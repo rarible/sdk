@@ -2,8 +2,8 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import { Blockchain } from "@rarible/api-client"
-import { createRaribleSdk } from "@rarible/sdk"
-import { updateNodeGlobalVars } from "../../src/common/update-node-global-vars"
+import { createRaribleSdk } from "@rarible/sdk/build"
+import { updateNodeGlobalVars } from "../../../src/common/update-node-global-vars"
 
 updateNodeGlobalVars()
 
@@ -12,7 +12,7 @@ async function createCollection() {
 		in_memory_provider(
 			"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
       "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-			"https://tezos-hangzhou-node.rarible.org/"
+			"https://test-tezos-node.rarible.org"
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
