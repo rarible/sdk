@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta16](https://github.com/rarible/sdk/compare/v0.8.52-beta15...v0.8.52-beta16) (2022-04-15)
+
+
+### Bug Fixes
+
+* solana correct collection minting & collection verify ([cce3a0e](https://github.com/rarible/sdk/commit/cce3a0e0cc9188a9c323c35a52b2c342a224aa78))
+
+
+### Features
+
+* solana verify creator/signer ([468be9c](https://github.com/rarible/sdk/commit/468be9cf9fe49e497e9159e352e6d75336535ea1))
+
+
+
+
+
 ## [0.8.52-beta15](https://github.com/rarible/sdk/compare/v0.8.52-beta14...v0.8.52-beta15) (2022-04-14)
 
 
