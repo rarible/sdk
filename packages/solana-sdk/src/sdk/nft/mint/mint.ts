@@ -3,26 +3,20 @@ import { SystemProgram } from "@solana/web3.js"
 import { MintLayout, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { BN } from "@project-serum/anchor"
 import {
-	CreateMetadataV2Args,
-	CreateMasterEditionV3Args,
 	DataV2,
 	Collection,
-	Creator,
+	Creator, CreateMetadataV2, CreateMasterEditionV3,
 } from "@metaplex-foundation/mpl-token-metadata"
 import type { Uses } from "@metaplex-foundation/mpl-token-metadata"
-import { serialize } from "borsh"
 import fetch from "node-fetch"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import {
 	createAssociatedTokenAccountInstruction,
-	createMasterEditionInstruction,
-	createMetadataInstruction,
 	getMasterEdition,
 	getMetadata,
 	getTokenWallet,
 } from "../../../common/helpers"
-import { METADATA_SCHEMA } from "../../../common/schema"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 
 async function fetchMetadata(url: string): Promise<any> {
@@ -157,26 +151,18 @@ export async function getMintNftInstructions(
 
 	// Create metadata
 	const metadataAccount = await getMetadata(mint.publicKey)
-	let txnData = Buffer.from(
-		serialize(
-			new Map([
-				DataV2.SCHEMA,
-				...METADATA_SCHEMA,
-				...CreateMetadataV2Args.SCHEMA,
-			]),
-			new CreateMetadataV2Args({ data, isMutable: mutableMetadata }),
-		),
-	)
 
 	instructions.push(
-		createMetadataInstruction(
-			metadataAccount,
-			mint.publicKey,
-			signer.publicKey,
-			signer.publicKey,
-			signer.publicKey,
-			txnData,
-		),
+		...new CreateMetadataV2(
+			{ feePayer: signer.publicKey },
+			{
+				metadata: metadataAccount,
+				metadataData: data,
+				updateAuthority: signer.publicKey,
+				mint: mint.publicKey,
+				mintAuthority: signer.publicKey,
+			},
+		).instructions,
 	)
 
 	instructions.push(
@@ -192,27 +178,20 @@ export async function getMintNftInstructions(
 
 	// Create master edition
 	const editionAccount = await getMasterEdition(mint.publicKey)
-	txnData = Buffer.from(
-		serialize(
-			new Map([
-				DataV2.SCHEMA,
-				...Array.from(METADATA_SCHEMA),
-				...CreateMasterEditionV3Args.SCHEMA,
-			]),
-			new CreateMasterEditionV3Args({ maxSupply: new BN(maxSupply) }),
-		),
-	)
-
 	instructions.push(
-		createMasterEditionInstruction(
-			metadataAccount,
-			editionAccount,
-			mint.publicKey,
-			signer.publicKey,
-			signer.publicKey,
-			signer.publicKey,
-			txnData,
-		),
+		...new CreateMasterEditionV3(
+			{
+				feePayer: signer.publicKey,
+			},
+			{
+				edition: editionAccount,
+				metadata: metadataAccount,
+				mint: mint.publicKey,
+				mintAuthority: signer.publicKey,
+				updateAuthority: signer.publicKey,
+				maxSupply: new BN(maxSupply),
+			},
+		).instructions,
 	)
 
 	return { instructions, signers, mint: mint.publicKey }
