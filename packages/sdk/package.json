@@ -46,6 +46,7 @@
     "@babel/plugin-proposal-optional-chaining": "^7.14.5",
     "@babel/plugin-syntax-bigint": "^7.8.3",
     "@babel/plugin-transform-runtime": "^7.15.8",
+    "@truffle/hdwallet-provider": "latest",
     "@babel/plugin-transform-typescript": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",

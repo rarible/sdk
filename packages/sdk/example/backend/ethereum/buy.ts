@@ -1,6 +1,6 @@
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/build"
 import fetch from "node-fetch"
-import { initWallet, updateNodeGlobalVars } from "./common"
+import { initWallet, updateNodeGlobalVars } from "../common"
 
 if (process.env["BUYOUT_ITEM_ID"] === undefined) {
 	throw new Error("Provide BUYOUT_ITEM_ID as environment variables!")

@@ -14,24 +14,12 @@
 
       const env = "staging" // "dev" | "e2e" | "staging" | "prod"
       const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
-      const mintFormInitial = {
-        id: "ETHEREUM:0xaAB36b137ba7b4D74E3Af6380733d9433f10f4E0", // default collection on "rinkeby" that supports lazy minting
-        type: "ERC721",
-        isLazy: true,
-        isLazySupported: true,
-        loading: false,
-      }
-      const mintAction = await raribleSdk.nft.mint({
-        collectionId: mintFormInitial.id
+      const transferAction = await raribleSdk.nft.transfer({
+        itemId: "ETHEREUM:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"
       })
-      const tx = await mintAction.submit({
-        uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-        royalties: [],
-        lazyMint: false,
-        supply: 1,
-      })
-      await tx.transaction.wait()
+      const tx = await transferAction.submit({ to: "ETHEREUM:0x0000000000000000000000000000000000000001" })
       console.log('tx', tx)
+      await tx.wait()
     }
 
   }

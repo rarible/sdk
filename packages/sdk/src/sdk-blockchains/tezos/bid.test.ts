@@ -36,7 +36,7 @@ describe("bid test", () => {
 	const mtContract = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
-	test.skip("bid NFT test", async () => {
+	test("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToContractAddress(nftContract),
 		})
