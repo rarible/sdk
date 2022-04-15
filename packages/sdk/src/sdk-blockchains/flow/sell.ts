@@ -15,7 +15,7 @@ import {
 	convertFlowOrderId,
 	getFlowCollection,
 	getFungibleTokenName,
-	parseUnionItemId,
+	parseFlowItemIdFromUnionItemId,
 	toFlowParts,
 } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
@@ -42,7 +42,10 @@ export class FlowSell {
 				const requestCurrency = getCurrencyAssetType(sellRequest.currency)
 				if (requestCurrency["@type"] === "FLOW_FT") {
 					const currency = getFungibleTokenName(requestCurrency.contract)
-					const { itemId, contract } = parseUnionItemId(sellRequest.itemId)
+					const {
+						itemId,
+						contract,
+					} = parseFlowItemIdFromUnionItemId(sellRequest.itemId)
 					return this.sdk.order.sell({
 						collection: contract,
 						currency,
