@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
+
+
+### Bug Fixes
+
+* update flow-sdk, fix definitions for collection cryptoPiggo ([c3198d9](https://github.com/rarible/sdk/commit/c3198d9a13761ee36bf631e5272d4d9c296633d4))
+
+
+
+
+
 ## [0.8.48-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.1...v0.8.48-hotfix.2) (2022-04-15)
 
 **Note:** Version bump only for package root
