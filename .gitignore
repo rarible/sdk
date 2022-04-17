@@ -18,3 +18,4 @@ source/locales/_build/
 storybook-static
 yarn-error.log
 lerna-debug.log
+.env
