@@ -11,7 +11,7 @@ import { awaitItemSupply } from "./test/await-item-supply"
 import { convertEthereumContractAddress } from "./common"
 import { awaitDeletedItem } from "./test/await-deleted-item"
 
-describe("burn", () => {
+describe.skip("burn", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
