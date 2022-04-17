@@ -7,7 +7,7 @@ import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
 
-describe("mint test", () => {
+describe.skip("mint test", () => {
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"

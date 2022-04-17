@@ -9,7 +9,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
