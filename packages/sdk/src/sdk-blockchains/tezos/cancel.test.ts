@@ -7,7 +7,7 @@ import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 
-describe("cancel test", () => {
+describe.skip("cancel test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
 

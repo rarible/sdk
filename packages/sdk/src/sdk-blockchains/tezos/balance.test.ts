@@ -8,7 +8,7 @@ import { delay } from "../../common/retry"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
 
-describe("get balance", () => {
+describe.skip("get balance", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"

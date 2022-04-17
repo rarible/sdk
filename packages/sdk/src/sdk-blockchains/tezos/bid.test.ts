@@ -13,7 +13,7 @@ import { convertTezosToContractAddress, convertTezosToUnionAddress } from "./com
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
 
-describe("bid test", () => {
+describe.skip("bid test", () => {
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
