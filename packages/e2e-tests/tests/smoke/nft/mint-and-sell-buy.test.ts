@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
@@ -10,6 +10,7 @@ import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helpe
 import { getCollection } from "../../common/helpers"
 import { mintAndSell } from "../../common/atoms-tests/mint-and-sell"
 import { buy } from "../../common/atoms-tests/buy"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -18,7 +19,8 @@ function suites(): {
 	collectionId: string,
 	mintAndSellRequest: (address: UnionAddress) => MintAndSellRequest,
 	buyAmount: number,
-	creatorBalance: number
+	creatorBalance: number,
+	mintSellActivities: Array<ActivityType>
 }[] {
 	let allBlockchains = [
 		{
@@ -44,6 +46,7 @@ function suites(): {
 			},
 			buyAmount: 1,
 			creatorBalance: 0,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -68,6 +71,7 @@ function suites(): {
 			},
 			buyAmount: 1,
 			creatorBalance: 0,
+			mintSellActivities: [ActivityType.LIST],
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -92,6 +96,7 @@ function suites(): {
 			},
 			buyAmount: 11,
 			creatorBalance: 9,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -116,6 +121,7 @@ function suites(): {
 			},
 			buyAmount: 11,
 			creatorBalance: 9,
+			mintSellActivities: [ActivityType.LIST],
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -140,6 +146,7 @@ function suites(): {
 			},
 			buyAmount: 1,
 			creatorBalance: 0,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -164,6 +171,7 @@ function suites(): {
 			},
 			buyAmount: 5,
 			creatorBalance: 0,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
 		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
@@ -185,11 +193,18 @@ describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
 		const mintAndSellResponse = await mintAndSell(creatorSdk, creatorWallet, { collection },
 			suite.mintAndSellRequest(walletAddressCreator.unionAddress))
 
+		await getActivitiesByItem(creatorSdk, mintAndSellResponse.itemId,
+			[ActivityType.MINT, ActivityType.LIST], suite.mintSellActivities)
+
 		await buy(buyerSdk, buyerWallet, mintAndSellResponse.itemId,
 			{ orderId: mintAndSellResponse.orderId }, { amount: suite.buyAmount })
 
 		// Verify buyer balance
 		await awaitForOwnershipValue(buyerSdk, mintAndSellResponse.itemId,
 			walletAddressBuyer.address, toBigNumber(String(suite.buyAmount)))
+
+		await getActivitiesByItem(creatorSdk, mintAndSellResponse.itemId,
+			[ActivityType.SELL, ActivityType.TRANSFER, ActivityType.MINT, ActivityType.LIST],
+			[ActivityType.TRANSFER, ActivityType.SELL, ActivityType.LIST, ActivityType.MINT])
 	})
 })

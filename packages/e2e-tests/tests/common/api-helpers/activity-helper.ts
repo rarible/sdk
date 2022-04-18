@@ -1,11 +1,12 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import { retry } from "@rarible/sdk/src/common/retry"
-import type { Activities, ActivityType, UserActivityType } from "@rarible/api-client/build/models"
+import type { Activities, UserActivityType } from "@rarible/api-client/build/models"
 import type {
 	GetActivitiesByCollectionResponse,
 	GetActivitiesByItemResponse, GetActivitiesByUserResponse, GetAllActivitiesResponse,
 } from "@rarible/api-client/build/apis/ActivityControllerApi"
 import type { Blockchain } from "@rarible/api-client"
+import type { ActivityType } from "@rarible/api-client"
 
 
 export async function getActivitiesByCollection(sdk: IRaribleSdk, collection: string,
@@ -37,16 +38,21 @@ export async function getActivitiesByCollectionRaw(sdk: IRaribleSdk, collection:
 
 
 export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
-	activityTypes: Array<ActivityType>): Promise<Activities> {
-
-	const activities = await retry(10, 2000, async () => {
-		return await sdk.apis.activity.getActivitiesByItem({
+	activityTypes: Array<ActivityType>,
+	shouldPresent?: Array<ActivityType>): Promise<Activities> {
+	console.log("Get activities, activityTypes=" + shouldPresent + " ,shouldPresent=" + shouldPresent)
+	return retry(10, 2000, async () => {
+		const activities = await sdk.apis.activity.getActivitiesByItem({
 			type: activityTypes,
 			itemId: itemId,
 		})
+		expect(activities).not.toBe(null)
+		if (typeof shouldPresent !== "undefined") {
+			console.log(activities.activities)
+			expect(activities.activities.map(a => a["@type"]).sort()).toEqual(shouldPresent.sort())
+		}
+		return activities
 	})
-	expect(activities).not.toBe(null)
-	return activities
 }
 
 

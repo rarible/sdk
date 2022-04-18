@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
@@ -18,6 +18,7 @@ import { acceptBid } from "../../common/atoms-tests/accept-bid"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -196,11 +197,19 @@ describe.each(suites())("$blockchain mint => bid => acceptBid", (suite) => {
 		// Create bid order
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
+		await getActivitiesByItem(buyerSdk, nft.id,
+			[ActivityType.MINT, ActivityType.BID],
+			[ActivityType.MINT, ActivityType.BID])
+
 		// Fill bid order
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })
 
 		// Check token transfer
 		// await awaitForOwnership(buyerSdk, nft.id, await getWalletAddress(buyerWallet, false))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
+
+		await getActivitiesByItem(buyerSdk, nft.id,
+			[ActivityType.TRANSFER, ActivityType.MINT, ActivityType.BID],
+			[ActivityType.TRANSFER, ActivityType.MINT, ActivityType.BID])
 	})
 })
