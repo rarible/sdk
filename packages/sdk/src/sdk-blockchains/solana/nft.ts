@@ -46,14 +46,32 @@ export class SolanaNft {
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (request: MintRequest) => {
+					const collectionId = this.getCollectionId(prepareRequest)
+					const transactions = []
+
 					const mintPrepare = await this.sdk.nft.mint({
-						metadataUrl: request.uri,
 						signer: this.wallet!.provider,
-						maxSupply: request.supply,
-						collection: this.getCollectionId(prepareRequest),
+						metadataUrl: request.uri,
+						maxSupply: 0,
+						collection: collectionId,
 					})
 
-					const res = await mintPrepare.tx.submit("single")
+					transactions.push(mintPrepare.tx)
+
+					// verify collection
+					if (collectionId) {
+						transactions.push(await this.sdk.collection.verifyCollection({
+							signer: this.wallet!.provider,
+							collection: collectionId,
+							mint: mintPrepare.mint,
+						}))
+					}
+
+					const res = await this.sdk.unionInstructionsAndSend(
+						this.wallet!.provider,
+						transactions,
+						"processed"
+					)
 
 					return {
 						type: MintType.ON_CHAIN,
