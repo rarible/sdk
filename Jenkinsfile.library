@@ -1,4 +1,4 @@
-@Library('shared-library@stable')
+@Library('shared-library@stable') _
 
 env.NPM_TOKEN=credentials('npm-token')
 
