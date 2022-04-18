@@ -3,7 +3,7 @@
 env.NPM_TOKEN=credentials('npm-token')
 
 def pipelineConfig = [
-    "stackName": "protocol"
+    "stackName": "protocol-sdk"
 ]
 
 serviceCI(pipelineConfig)
