@@ -4,6 +4,7 @@
 .husky
 .idea
 .vscode
+.npmrc
 tsconfig.json
 lerna.json
 scripts
