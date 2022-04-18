@@ -1,0 +1,16 @@
+transaction-backend:
+  image:
+    repository: sdk
+  replicas: 2
+  service:
+    enabled: true
+  environments:
+    SDK_ENV: '{{ include "service.appEnv" $ }}'
+    PORT: 8080
+  updateConfig:
+    order: start-first
+  nodeSelector:
+    node.labels.rarible.service: true
+  networks:
+    additional:
+    - proxy-staging
