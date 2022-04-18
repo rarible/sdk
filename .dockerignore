@@ -1,0 +1,17 @@
+.git
+.gitignore
+.dockerignore
+.husky
+.idea
+.vscode
+tsconfig.json
+lerna.json
+scripts
+cicd
+Jenkinsfile*
+README.md
+node_modules
+
+
+packages
+!packages/transaction-backend

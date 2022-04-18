@@ -1,0 +1,5 @@
+@Library('shared-library@stable')
+
+env.NPM_TOKEN=credentials('npm-token')
+
+buildLibrary()

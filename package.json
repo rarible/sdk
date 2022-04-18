@@ -7,6 +7,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel",
+    "build": "lerna bootstrap && lerna clean && yarn build-all",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
@@ -22,6 +23,7 @@
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
+    "build-transaction-backend": "yarn workspace @rarible/transaction-backend start",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
@@ -35,7 +37,8 @@
     "release": "lerna publish from-package",
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
-    "e2e-tests": "sh ./scripts/e2e.sh"
+    "e2e-tests": "sh ./scripts/e2e.sh",
+    "start:prod": "yarn workspace @rarible/transaction-backend start"
   },
   "commitlint": {
     "extends": [
