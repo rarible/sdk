@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta18](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta18) (2022-04-19)
+
+
+### Bug Fixes
+
+* tezos sdk version ([#192](https://github.com/rarible/sdk/issues/192)) ([f445ae5](https://github.com/rarible/sdk/commit/f445ae50d53f1dbe8100985282c09aa90a7ae8af))
+
+
+### Features
+
+* pass config ([#197](https://github.com/rarible/sdk/issues/197)) ([7f91a33](https://github.com/rarible/sdk/commit/7f91a33da17584a1818ae9814dc8644cc7e68f94))
+* tx data nodejs server ([#202](https://github.com/rarible/sdk/issues/202)) ([d0ec9c6](https://github.com/rarible/sdk/commit/d0ec9c6c5c7aa1126e8b517baca565a2c2dc705a))
+
+
+
+
+
 ## [0.8.52-beta17](https://github.com/rarible/sdk/compare/v0.8.52-beta16...v0.8.52-beta17) (2022-04-18)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

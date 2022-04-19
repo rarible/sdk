@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta18](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta18) (2022-04-19)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
 ## [0.8.52-beta17](https://github.com/rarible/sdk/compare/v0.8.52-beta16...v0.8.52-beta17) (2022-04-18)
 
 **Note:** Version bump only for package @rarible/solana-sdk
