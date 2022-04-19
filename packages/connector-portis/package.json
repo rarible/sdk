@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@portis/web3": "^4.0.6",
+    "@portis/web3": "^4.0.7",
     "@rarible/connector": "^0.8.52"
   },
   "devDependencies": {
