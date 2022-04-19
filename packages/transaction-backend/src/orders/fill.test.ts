@@ -21,7 +21,7 @@ describe("get buy transaction", () => {
 	const { provider: providerBuyer } = createE2eProvider(buyerPk)
 	const web3Buyer = new Web3(providerBuyer as any)
 
-	it("get buy transaction and send from buyer", async () => {
+	it.skip("get buy transaction and send from buyer", async () => {
 		const itemOwnerAddress = await ethereum1.getFrom()
 		const [buyerAddress] = await web3Buyer.eth.getAccounts()
 
@@ -88,7 +88,7 @@ describe("get buy transaction", () => {
 		})
 	})
 
-	it("get buy transaction with orderId and send from buyer", async () => {
+	it.skip("get buy transaction with orderId and send from buyer", async () => {
 		const itemOwnerAddress = await ethereum1.getFrom()
 		const [buyerAddress] = await web3Buyer.eth.getAccounts()
 
