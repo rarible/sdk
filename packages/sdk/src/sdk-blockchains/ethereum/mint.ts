@@ -18,7 +18,6 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type.validator"
 import type { TokenId } from "../../types/nft/generate-token-id"
-import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { EVMBlockchain } from "./common"
@@ -128,9 +127,8 @@ export class EthereumMint {
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (data: MintRequest) => {
-					const validated = validateMintRequest(data)
 					const mintResponse = await this.handleSubmit(
-						validated,
+						data,
 						nftCollection,
 						toNftTokenId(request.tokenId)
 					)

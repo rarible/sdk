@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@rarible/connector": "^0.8.52-beta17",
-    "@taquito/beacon-wallet": "^12.0.0",
+    "@taquito/beacon-wallet": "^12.0.3",
     "@taquito/taquito": "^12.0.0"
   },
   "devDependencies": {

@@ -4,7 +4,7 @@ import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { createTestWallet } from "./test/test-wallet"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"

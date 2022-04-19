@@ -16,7 +16,7 @@ import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { FlowFee } from "@rarible/flow-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { UnionPart } from "../../../../types/order/common"
-import type { FlowItemId } from "../../../../common/domain"
+import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
 
 const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
 
@@ -39,7 +39,7 @@ const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}:[0-9]{1,}/
  * @param unionItemId - e.g. "FLOW:A.0xabcdef0123456789.ContractName:123", contract address can be unprefixed
  * @returns blockchain, collectionId, itemId
  */
-export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
+export function parseFlowItemIdFromUnionItemId(unionItemId: ItemId): ParsedFlowItemIdFromUnionItemId {
 	if (FLOW_ITEM_ID_REGEXP.test(unionItemId)) {
 		const [blockchain, collectionId, itemId] = unionItemId.split(":")
 		if (!collectionId) {

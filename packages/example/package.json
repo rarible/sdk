@@ -23,7 +23,7 @@
     "@rarible/connector-walletconnect": "^0.8.52-beta17",
     "@rarible/connector-walletlink": "^0.8.52-beta17",
     "@rarible/sdk": "^0.8.52-beta17",
-    "@rarible/web3-ethereum": "~0.12.54",
+    "@rarible/web3-ethereum": "~0.12.64",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
     "@testing-library/jest-dom": "^5.16.2",
@@ -45,9 +45,6 @@
     "react-scripts": "^4.0.3",
     "react-syntax-highlighter": "^15.4.5",
     "typescript": "^4.6.3"
-  },
-  "devDependencies": {
-    "react-error-overlay": "6.0.9"
   },
   "resolutions": {
     "//": "See https://github.com/facebook/create-react-app/issues/11773",

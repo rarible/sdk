@@ -4,22 +4,23 @@ import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/domain"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitItemSupply } from "./test/await-item-supply"
 import { convertEthereumContractAddress } from "./common"
 import { awaitDeletedItem } from "./test/await-deleted-item"
 
-describe("burn", () => {
+describe.skip("burn", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(wallet, "e2e", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
-	const contractErc721 = toAddress("0x87ECcc03BaBC550c919Ad61187Ab597E9E7f7C21")
-	const contractErc1155 = toAddress("0x8812cFb55853da0968a02AaaEA84CD93EC4b42A1")
-	const e2eErc721V3ContractAddress = toAddress("0x22f8CE349A3338B15D7fEfc013FA7739F5ea2ff7")
-	const e2eErc1155V2ContractAddress = toAddress("0x268dF35c389Aa9e1ce0cd83CF8E5752b607dE90d")
+	const contractErc721 = toAddress("0x4Ab7B255Df8B212678582F7271BE99f3dECe1eAE")
+	const contractErc1155 = toAddress("0xFe3d1f0003B17eA0C8D29164F0511508f1425b3a")
+	const e2eErc721V3ContractAddress = toAddress("0x4Ab7B255Df8B212678582F7271BE99f3dECe1eAE")
+	const e2eErc1155V2ContractAddress = toAddress("0xFe3d1f0003B17eA0C8D29164F0511508f1425b3a")
 
 	test("burn erc721", async () => {
 		const senderRaw = wallet1.getAddressString()
@@ -36,6 +37,9 @@ describe("burn", () => {
 			lazyMint: false,
 			supply: 1,
 		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 
 		await awaitItem(sdk, mintResult.itemId)
 
@@ -67,6 +71,9 @@ describe("burn", () => {
 			lazyMint: false,
 			supply: 10,
 		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 

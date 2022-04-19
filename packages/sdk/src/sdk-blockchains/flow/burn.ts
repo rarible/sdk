@@ -4,7 +4,7 @@ import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
-import { parseUnionItemId } from "./common/converters"
+import { parseFlowItemIdFromUnionItemId } from "./common/converters"
 
 export class FlowBurn {
 	constructor(
@@ -18,7 +18,10 @@ export class FlowBurn {
 		if (!prepare.itemId) {
 			throw new Error("ItemId has not been specified")
 		}
-		const { itemId, contract } = parseUnionItemId(prepare.itemId)
+		const {
+			itemId,
+			contract,
+		} = parseFlowItemIdFromUnionItemId(prepare.itemId)
 
 		return {
 			multiple: false,

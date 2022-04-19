@@ -4,7 +4,7 @@ import type { FlowSdk } from "@rarible/flow-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
-import { parseFlowAddressFromUnionAddress, parseUnionItemId } from "./common/converters"
+import { parseFlowAddressFromUnionAddress, parseFlowItemIdFromUnionItemId } from "./common/converters"
 
 export class FlowTransfer {
 	constructor(
@@ -15,7 +15,10 @@ export class FlowTransfer {
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
-		const { itemId, contract } = parseUnionItemId(prepare.itemId)
+		const {
+			itemId,
+			contract,
+		} = parseFlowItemIdFromUnionItemId(prepare.itemId)
 
 		return {
 			multiple: false,

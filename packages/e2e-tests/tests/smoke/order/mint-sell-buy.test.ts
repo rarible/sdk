@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
@@ -19,6 +19,7 @@ import { buy } from "../../common/atoms-tests/buy"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -317,11 +318,19 @@ describe.each(suites())("$blockchain mint => sell => buy", (suite) => {
 		// Create sell order
 		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
+		await getActivitiesByItem(sellerSdk, nft.id,
+			[ActivityType.MINT, ActivityType.LIST],
+			[ActivityType.LIST, ActivityType.MINT])
+
 		// Fill sell order
 		const buyAmount = orderRequest.amount
 		await buy(buyerSdk, buyerWallet, nft.id, { orderId: sellOrder.id }, { amount: buyAmount })
 
 		await awaitOrderStock(sellerSdk, sellOrder.id, toBigNumber("0"))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(buyAmount)))
+
+		await getActivitiesByItem(sellerSdk, nft.id,
+			[ActivityType.SELL, ActivityType.TRANSFER, ActivityType.MINT, ActivityType.LIST],
+			[ActivityType.TRANSFER, ActivityType.SELL, ActivityType.LIST, ActivityType.MINT])
 	})
 })
