@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.52-hotfix1) (2022-04-19)
+
+
+### Bug Fixes
+
+* update-bid-tests ([30da6e5](https://github.com/rarible/sdk/commit/30da6e5cd0e5a1b4baf79d4cf1c456598c33ead2))
+
+
+### Features
+
+* add activity tests ([82ffd31](https://github.com/rarible/sdk/commit/82ffd3118c211e77eaafa5dccce5cc24e66140ef))
+* add api tests ([5a05d25](https://github.com/rarible/sdk/commit/5a05d2559926452000b08bd0bc7491206e1bc2a0))
+* pass config ([#197](https://github.com/rarible/sdk/issues/197)) ([7f91a33](https://github.com/rarible/sdk/commit/7f91a33da17584a1818ae9814dc8644cc7e68f94))
+* tx data nodejs server ([#202](https://github.com/rarible/sdk/issues/202)) ([d0ec9c6](https://github.com/rarible/sdk/commit/d0ec9c6c5c7aa1126e8b517baca565a2c2dc705a))
+
+
+
+
+
 ## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
