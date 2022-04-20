@@ -6,6 +6,7 @@ transaction-backend:
     enabled: true
   nodeSelector:
     node.labels.transaction.service: true
+  readinessProbe: false
   livenessProbe:
     enabled: false
   environments:
