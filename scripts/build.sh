@@ -1,4 +1,4 @@
-set -e
+set -ex
 yarn run build-sdk-wallet
 yarn run build-sdk-transaction
 yarn run build-sdk
