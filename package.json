@@ -10,6 +10,7 @@
     "build": "yarn bootstrap && yarn clean && yarn build-all",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
+    "build-sdk-transaction-backend": "yarn workspace @rarible/sdk-transaction-backend run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
     "build-connector": "yarn workspace @rarible/connector run build",
     "build-connector-helper": "yarn workspace @rarible/connector-helper run build",
