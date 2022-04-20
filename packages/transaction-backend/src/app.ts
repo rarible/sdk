@@ -11,6 +11,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
 app.post("/orders/fill-tx", ordersController.postFillAction)
+app.post("/orders/buy-tx", ordersController.postFillAction)
 app.use(function(req, res){
 	return res
 		.status(404)
