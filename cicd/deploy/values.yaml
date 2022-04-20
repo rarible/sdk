@@ -1,9 +1,11 @@
 transaction-backend:
   image:
     repository: sdk
-  replicas: 2
+  replicas: 1
   service:
     enabled: true
+  livenessProbe:
+    enabled: false
   environments:
     SDK_ENV: '{{ include "service.appEnv" $ }}'
   updateConfig:
