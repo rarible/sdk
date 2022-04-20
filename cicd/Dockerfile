@@ -1,5 +1,6 @@
 FROM node:16.13.0-buster as build
 
+WORKDIR /app/
 COPY packages/transaction-backend/package.json /app/package.json
 RUN yarn install
 
