@@ -38,7 +38,7 @@
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
     "e2e-tests": "sh ./scripts/e2e.sh",
-    "start:prod": "yarn workspace @rarible/transaction-backend start"
+    "start:prod": "sh ./scripts/start-prod.sh"
   },
   "commitlint": {
     "extends": [
