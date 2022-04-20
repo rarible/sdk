@@ -11,9 +11,7 @@ cicd
 Jenkinsfile*
 README.md
 node_modules
-
 scripts
-!scripts/start-prod.sh
 
 packages
 !packages/transaction-backend
