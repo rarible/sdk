@@ -2,4 +2,4 @@ transaction-backend:
   service:
     nodePort: 30336
   environments:
-    RPC_URL: https://dev-ethereum-node.rarible.com
+    RPC_URL: http://dev-node-worker.ethereum-node:8545
