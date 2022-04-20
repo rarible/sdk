@@ -2,4 +2,5 @@ transaction-backend:
   service:
     nodePort: 30336
   environments:
+    SDK_ENV: dev
     RPC_URL: http://dev-node-worker.ethereum-node:8545
