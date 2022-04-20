@@ -1,4 +1,5 @@
 import type { Request, Response } from "express"
+import fetch from "node-fetch"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
@@ -12,7 +13,11 @@ export async function postFillAction(req: Request, res: Response) {
 		}
 		const { from, request } = req.body
 		const web3Ethereum = new Web3Ethereum({ web3: web3Provider, from })
-		const sdk = createRaribleSdk(web3Ethereum, process.env.SDK_ENV as EthereumNetwork)
+		const sdk = createRaribleSdk(web3Ethereum, process.env.SDK_ENV as EthereumNetwork, {
+			apiClientParams: {
+				fetchApi: fetch,
+			},
+		})
 
 		if (request.orderId) {
 			request.order = await sdk.apis.order.getOrderByHash({

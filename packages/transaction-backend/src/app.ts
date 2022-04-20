@@ -1,6 +1,9 @@
 import express from "express"
 import bodyParser from "body-parser"
+import FormData from "form-data"
 import * as ordersController from "./orders"
+
+global.FormData = FormData as any
 
 export const app = express()
 
