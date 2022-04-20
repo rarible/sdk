@@ -13,8 +13,6 @@ transaction-backend:
     SDK_ENV: '{{ include "service.appEnv" $ }}'
   updateConfig:
     order: start-first
-  nodeSelector:
-    node.labels.rarible.service: true
   networks:
     additional:
     - proxy-staging
