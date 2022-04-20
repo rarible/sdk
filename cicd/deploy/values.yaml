@@ -6,7 +6,6 @@ transaction-backend:
     enabled: true
   environments:
     SDK_ENV: '{{ include "service.appEnv" $ }}'
-    PORT: 8080
   updateConfig:
     order: start-first
   nodeSelector:
