@@ -4,6 +4,8 @@ transaction-backend:
   replicas: 1
   service:
     enabled: true
+  nodeSelector:
+    node.labels.transaction.service: true
   livenessProbe:
     enabled: false
   environments:
