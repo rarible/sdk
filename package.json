@@ -23,7 +23,6 @@
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
-    "build-transaction-backend": "yarn workspace @rarible/transaction-backend start",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
