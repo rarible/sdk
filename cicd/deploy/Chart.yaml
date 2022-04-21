@@ -1,0 +1,8 @@
+apiVersion: v2
+name: rarible-sdk
+version: 0.1.0
+dependencies:
+  - name: rarible-helm-chart
+    alias: transaction-backend
+    repository: file://../resources/helm/rarible
+    version: 0.1.0
