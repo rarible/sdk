@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.8.52-hotfix3",
+  "version": "0.8.52-hotfix4",
   "homepage": "",
   "license": "ISC",
   "private": true,
@@ -13,8 +13,8 @@
   "dependencies": {
     "@rarible/api-client": "0.0.11",
     "@rarible/ethereum-sdk-test-common": "~0.12.64",
-    "@rarible/types": "~0.9.1",
-    "@rarible/sdk-wallet": "^0.8.52-hotfix3"
+    "@rarible/sdk-wallet": "^0.8.52-hotfix4",
+    "@rarible/types": "~0.9.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix3...v0.8.52-hotfix4) (2022-04-21)
+
+
+### Bug Fixes
+
+* update ethereum-sdk, simplify buy tx ([3f540f4](https://github.com/rarible/sdk/commit/3f540f4ba45b3f70b957a8cd7962f97dd01ad8c3))
+
+
+
+
+
 ## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
