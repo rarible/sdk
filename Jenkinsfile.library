@@ -1,0 +1,3 @@
+@Library('shared-library@stable') _
+
+buildLibrary(pipelineConfig)
