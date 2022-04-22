@@ -23,7 +23,7 @@ pipeline {
       steps {
         withCredentials([string(credentialsId: 'npm-token', variable: 'NPM_TOKEN')]) {
           sh 'yarn && yarn build'
-          sh 'npm config set registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN} --location project'
+          sh 'npm config set //registry.npmjs.org/:_authToken=${NPM_TOKEN} --location project'
           sh 'yarn release'
         }
       }
