@@ -16,7 +16,7 @@ describe("Solana Auction House registry", () => {
 	test("Should return correct Auction House with no mapping", async () => {
 		let ah = getAuctionHouse({ "@type": "SOLANA_SOL" })
 		expect(ah.toString()).toEqual("8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm")
-		expect(await getAuctionHouseFee(ah)).toEqual(1000)
+		expect(await getAuctionHouseFee(ah)).toEqual(250)
 
 		ah = getAuctionHouse({
 			"@type": "SOLANA_NFT",

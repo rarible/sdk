@@ -8,7 +8,7 @@ import { retry } from "../../../common/retry"
 
 describe("Solana get balance", () => {
 	const wallet = getWallet()
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
 
 	test("get balance SOL", async () => {
 		const balance = await sdk.balances.getBalance(
@@ -20,11 +20,11 @@ describe("Solana get balance", () => {
 
 	test("get balance NFT", async () => {
 		const mint = await sdk.nft.mint({
-			collectionId: toCollectionId("SOLANA:65DNtgn5enhi6QXevn64jFq41Qgv71bvr8UVVwGiYkLJ"),
+			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 		})
 
 		const mintRes = await mint.submit({
-			supply: 1,
+			supply: 0,
 			lazyMint: false,
 			uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 		})
