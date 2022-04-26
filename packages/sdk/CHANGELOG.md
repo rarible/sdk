@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta19](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-beta19) (2022-04-26)
+
+
+### Bug Fixes
+
+* solana baseFee on sellUpdate ([e54f370](https://github.com/rarible/sdk/commit/e54f370a357f10afc8fc6808171c8f989457ad11))
+
+
+
+
+
 ## [0.8.52-beta18](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta18) (2022-04-19)
 
 
