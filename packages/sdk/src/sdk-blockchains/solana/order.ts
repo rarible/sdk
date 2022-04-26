@@ -22,7 +22,7 @@ import type {
 } from "../../types/order/bid/domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
-import { extractPublicKey } from "./common/address-converters"
+import { extractAddress, extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
 import { getCurrencies } from "./common/currencies"
 import type { ISolanaSdkConfig } from "./domain"
@@ -116,7 +116,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!),
+			baseFee: await getAuctionHouseFee(extractAddress(getOrderData(order).auctionHouse!)),
 			submit: updateAction,
 		}
 	}

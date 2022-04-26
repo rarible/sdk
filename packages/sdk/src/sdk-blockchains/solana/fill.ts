@@ -8,7 +8,7 @@ import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { extractPublicKey } from "./common/address-converters"
+import { extractAddress, extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
 import type { ISolanaSdkConfig } from "./domain"
@@ -129,7 +129,7 @@ export class SolanaFill {
 		return {
 			multiple: parseFloat(item.supply.toString()) > 1,
 			maxAmount: order.makeStock,
-			baseFee: await getAuctionHouseFee(getOrderData(order).auctionHouse!),
+			baseFee: await getAuctionHouseFee(extractAddress(getOrderData(order).auctionHouse!)),
 			supportsPartialFill: true,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
