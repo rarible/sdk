@@ -10,8 +10,8 @@ import { toUnionAddress } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import { TezosWallet } from "@rarible/sdk-wallet"
+import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { testsConfig } from "./config"
-import { SolanaKeypairWallet } from "@rarible/solana-wallet";
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const config = {
@@ -64,7 +64,7 @@ export function getFlowWallet(): FlowWallet {
 export function getSolanaWallet(walletNumber: number = 0): SolanaWallet {
 	const wallets = [
 		testsConfig.variables.SOLANA_WALLET_1,
-		testsConfig.variables.SOLANA_WALLET_2
+		testsConfig.variables.SOLANA_WALLET_2,
 	]
 	return new SolanaWallet(SolanaKeypairWallet.createFrom(Uint8Array.from(wallets[walletNumber])))
 }

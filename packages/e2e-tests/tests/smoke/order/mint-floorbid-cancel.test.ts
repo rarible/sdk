@@ -4,6 +4,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -16,8 +17,7 @@ import { bid } from "../../common/atoms-tests/bid"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { cancel } from "../../common/atoms-tests/cancel"
-import { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain";
-import { createCollection } from "../../common/atoms-tests/create-collection";
+import { createCollection } from "../../common/atoms-tests/create-collection"
 
 function suites(): {
 	blockchain: Blockchain,

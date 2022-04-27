@@ -338,7 +338,7 @@ function suites(): {
 					currency: currency,
 				}
 			},
-		}
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
