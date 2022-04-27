@@ -19,13 +19,15 @@ pipeline {
     }
     stage('build and deploy') {
       agent any
-      when { tag "v*" }
+      when { tag "v*" ; branch 'new-cicd' }
+      environment {
+        NPM_TOKEN = credentials('npm-token')
+        NPM_HOME = ${env.WORKSPACE_TMP}
+      }
       steps {
-        withCredentials([string(credentialsId: 'npm-token', variable: 'NPM_TOKEN')]) {
           sh 'yarn && yarn build'
           sh 'npm config set //registry.npmjs.org/:_authToken=${NPM_TOKEN} --location project'
-          sh 'yarn release'
-        }
+          // sh 'yarn release'
       }
     }
   }
