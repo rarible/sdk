@@ -1,0 +1,18 @@
+transaction-backend:
+  image:
+    repository: sdk
+  replicas: 1
+  service:
+    enabled: true
+  nodeSelector:
+    node.labels.transaction.service: true
+  readinessProbe: false
+  livenessProbe:
+    enabled: false
+  environments:
+    SDK_ENV: '{{ include "service.appEnv" $ }}'
+  updateConfig:
+    order: start-first
+  networks:
+    additional:
+    - proxy-staging

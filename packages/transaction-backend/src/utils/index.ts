@@ -8,3 +8,12 @@ if (!process.env.RPC_URL) {
 	throw new Error("RPC_URL env variable has not been set")
 }
 export const web3Provider = initWeb3Provider(process.env.RPC_URL)
+
+export function getAddressParts(address: string): { blockchain: string, address: string } {
+	const parts = address.split(":")
+
+	return {
+		blockchain: parts[0],
+		address: parts[1],
+	}
+}

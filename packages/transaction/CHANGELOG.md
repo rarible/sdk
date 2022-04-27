@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.52-beta19](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-beta19) (2022-04-26)
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
 
@@ -11,162 +11,47 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.8.52-beta18](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta18) (2022-04-19)
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix3...v0.8.52-hotfix4) (2022-04-21)
+
+
+### Bug Fixes
+
+* update ethereum-sdk, simplify buy tx ([3f540f4](https://github.com/rarible/sdk/commit/3f540f4ba45b3f70b957a8cd7962f97dd01ad8c3))
+
+
+
+
+
+## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.8.52-hotfix2](https://github.com/rarible/sdk/compare/v0.8.52-hotfix1...v0.8.52-hotfix2) (2022-04-19)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.52-hotfix1) (2022-04-19)
 
 
 ### Bug Fixes
 
 * opensea order fix ([69eeb1a](https://github.com/rarible/sdk/commit/69eeb1ae282a7c238bb1860e852a96b4761828d0))
 * tezos sdk version ([#192](https://github.com/rarible/sdk/issues/192)) ([f445ae5](https://github.com/rarible/sdk/commit/f445ae50d53f1dbe8100985282c09aa90a7ae8af))
+* update flow-sdk with new dev env config ([70bb0fe](https://github.com/rarible/sdk/commit/70bb0fe6c1ade6b8c59841dbb738eec0575e64dc))
 
 
 ### Features
 
 * pass config ([#197](https://github.com/rarible/sdk/issues/197)) ([7f91a33](https://github.com/rarible/sdk/commit/7f91a33da17584a1818ae9814dc8644cc7e68f94))
 * tx data nodejs server ([#202](https://github.com/rarible/sdk/issues/202)) ([d0ec9c6](https://github.com/rarible/sdk/commit/d0ec9c6c5c7aa1126e8b517baca565a2c2dc705a))
-
-
-
-
-
-## [0.8.52-beta17](https://github.com/rarible/sdk/compare/v0.8.52-beta16...v0.8.52-beta17) (2022-04-18)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
-
-
-
-
-
-## [0.8.52-beta16](https://github.com/rarible/sdk/compare/v0.8.52-beta15...v0.8.52-beta16) (2022-04-15)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
-
-
-
-
-
-## [0.8.52-beta15](https://github.com/rarible/sdk/compare/v0.8.52-beta14...v0.8.52-beta15) (2022-04-14)
-
-
-### Bug Fixes
-
-* update flow-sdk with new dev env config ([70bb0fe](https://github.com/rarible/sdk/commit/70bb0fe6c1ade6b8c59841dbb738eec0575e64dc))
-
-
-
-
-
-## [0.8.52-beta14](https://github.com/rarible/sdk/compare/v0.8.52-beta13...v0.8.52-beta14) (2022-04-13)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
-
-
-
-
-
-## [0.8.52-beta13](https://github.com/rarible/sdk/compare/v0.8.52-beta12...v0.8.52-beta13) (2022-04-13)
-
-
-### Bug Fixes
-
-* solana reduced level of transaction confirmation ([4c302c7](https://github.com/rarible/sdk/commit/4c302c732566b68f94f6e647b55946dcd8932515))
-
-
-
-
-
-## [0.8.52-beta12](https://github.com/rarible/sdk/compare/v0.8.52-beta11...v0.8.52-beta12) (2022-04-13)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
-
-
-
-
-
-## [0.8.52-beta11](https://github.com/rarible/sdk/compare/v0.8.52-beta10...v0.8.52-beta11) (2022-04-11)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
-
-
-
-
-
-## [0.8.52-beta10](https://github.com/rarible/sdk/compare/v0.8.50-beta9...v0.8.52-beta10) (2022-04-11)
-
-
-### Features
-
-* solana single confirmation transaction ([7098c2e](https://github.com/rarible/sdk/commit/7098c2ed4322603fb15daf3c4ba09216e3c9eb05))
-
-
-
-
-
-## [0.8.50-beta9](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.50-beta9) (2022-04-10)
-
-
-### Bug Fixes
-
-* upgrade clients ([7776d1a](https://github.com/rarible/sdk/commit/7776d1a31fd64eb82ab6e69cb31d65fd2dc91a20))
-
-
-
-## [0.8.50-beta8](https://github.com/rarible/sdk/compare/v0.8.50-beta7...v0.8.50-beta8) (2022-04-06)
-
-
-
-## [0.8.50-beta7](https://github.com/rarible/sdk/compare/v0.8.50-beta6...v0.8.50-beta7) (2022-04-05)
-
-
-
-## [0.8.50-beta6](https://github.com/rarible/sdk/compare/v0.8.50-beta5...v0.8.50-beta6) (2022-04-04)
-
-
-
-## [0.8.50-beta5](https://github.com/rarible/sdk/compare/v0.8.50-beta4...v0.8.50-beta5) (2022-04-04)
-
-
-
-## [0.8.50-beta4](https://github.com/rarible/sdk/compare/v0.8.50-beta3...v0.8.50-beta4) (2022-04-04)
-
-
-
-## [0.8.50-beta3](https://github.com/rarible/sdk/compare/v0.8.50-beta2...v0.8.50-beta3) (2022-04-02)
-
-
-### Bug Fixes
-
-* upgrade clients, use CollectionId ([f7456ff](https://github.com/rarible/sdk/commit/f7456ff61e2e83b489c1a368820f6ed9b6ab4d0f))
-
-
-
-## [0.8.50-beta2](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.50-beta2) (2022-04-01)
-
-
-### Bug Fixes
-
-* fix api-client version ([61d45f2](https://github.com/rarible/sdk/commit/61d45f2366026401839127fcbf99a01fbb7aa905))
-
-
-
-## [0.8.50-beta](https://github.com/rarible/sdk/compare/v0.8.50...v0.8.50-beta) (2022-04-01)
-
-
-### Reverts
-
-* Revert "chore: bump versions after release" ([02cd529](https://github.com/rarible/sdk/commit/02cd52913a28f865714670bf755ad65943a0c1d1))
-
-
-
-## [0.8.50](https://github.com/rarible/sdk/compare/v0.8.49...v0.8.50) (2022-04-01)
-
-
-### Features
-
-* mocked solana sell/buy ([66af958](https://github.com/rarible/sdk/commit/66af95831a3f81a634a58892130ff4ee9e664fc2))
-* move solana packages to union ([18f6350](https://github.com/rarible/sdk/commit/18f635023073722bf41fc574210bab6e08be2945))
-* solana burn method ([7fe3c5d](https://github.com/rarible/sdk/commit/7fe3c5dd382465de936a9326b7a51dbed0c9e228))
-* solana sdk ([478f8d6](https://github.com/rarible/sdk/commit/478f8d6822f315b0d4274d6c0d2fe628abb8b0fa))
 
 
 

@@ -7,11 +7,13 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel",
+    "build": "yarn bootstrap && yarn clean && yarn build-all",
     "build-solana-common": "yarn workspace @rarible/solana-common run build",
     "build-solana-wallet": "yarn workspace @rarible/solana-wallet run build",
     "build-solana-sdk": "yarn workspace @rarible/solana-sdk run build",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
+    "build-sdk-transaction-backend": "yarn workspace @rarible/sdk-transaction-backend run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
     "build-connector": "yarn workspace @rarible/connector run build",
     "build-connector-helper": "yarn workspace @rarible/connector-helper run build",
@@ -70,5 +72,8 @@
     "sort-package-json": "^1.52.0",
     "tslib": "^2.3.1",
     "typescript": "^4.6.2"
+  },
+  "resolutions": {
+    "**/axios": "^0.26.1"
   }
 }
