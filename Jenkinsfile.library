@@ -22,7 +22,7 @@ pipeline {
       when { tag "v*" ; branch 'new-cicd' }
       environment {
         NPM_TOKEN = credentials('npm-token')
-        NPM_HOME = ${env.WORKSPACE_TMP}
+        NPM_HOME = env.WORKSPACE_TMP
       }
       steps {
           sh 'yarn && yarn build'
