@@ -14,7 +14,8 @@ pipeline {
       }
       agent any
       steps {
-        sh 'yarn && yarn build && yarn test'
+        sh 'echo test'
+        // sh 'yarn && yarn build && yarn test'
       }
     }
     stage('build and deploy') {
