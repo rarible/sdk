@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
@@ -30,6 +30,8 @@ export function SellPage() {
 					</CommentedBlock>
 				)
 			}
+			<Button onClick={async () => await connection.sdk?.ethereum?.wrapCryptoPunk({ punkId: 3490 })}>Wrap</Button>
+			<Button onClick={async () => await connection.sdk?.ethereum?.unwrapCryptoPunk({ punkId: 3490 })}>UnWrap</Button>
 			<CommentedBlock sx={{ my: 2 }} comment={<SellComment/>}>
 				<FormStepper
 					steps={[

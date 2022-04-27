@@ -4072,10 +4072,10 @@
     ganache "^7.0.2"
     web3-provider-engine "^16.0.1"
 
-"@rarible/ethereum-sdk-test-common@~0.12.65-beta1":
-  version "0.12.65-beta1"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.65-beta1.tgz#ccf28fc5aabf101d3dd2429daea9995643f8a441"
-  integrity sha512-nbpex+WHUgAYifiObHy7NYkxmHA8fn9p85rqJs2W+pxa/utv1pzEi+nKuroxHnK1kBYXnRexEGasOLRabFMMSQ==
+"@rarible/ethereum-sdk-test-common@~0.12.65-beta2":
+  version "0.12.65-beta2"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.65-beta2.tgz#83cf4b676ba7be5465a4d13ef45cfcb312b4d515"
+  integrity sha512-kwWcA2iJ60kzPk8D7Kf6UszsISA4zCVXjOczjgKfVoZRaRnAhXwb0It3xu0X9hs3mjcBUhc2V/oeH/wPSUe7CQ==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.64"
     "@rarible/test-provider" "~0.5.0"
@@ -4142,10 +4142,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.65-beta1":
-  version "0.12.65-beta1"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.65-beta1.tgz#a8091abbb0fab27f4982610b882f35c1c53ab3a1"
-  integrity sha512-fCFdCkQ8yQfupa/Vj7m2nUknwjkFp53wW+EqM0P0zePvDL6kkWkt5KGR09lfK2HWFzRbuekj9TwBQRJT8OBVLA==
+"@rarible/protocol-ethereum-sdk@~0.12.65-beta2":
+  version "0.12.65-beta2"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.65-beta2.tgz#9fb2a2433e25e555f88d8a6f553fb73d107d31f4"
+  integrity sha512-K3M6zhzc9Ifc/GOqA4/fN/QbhSN3okadM6l21duNy5Bhxpf11FE73vqcLO68A1HAEKA8KRCq83tDnwXvKSVCRA==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.21"

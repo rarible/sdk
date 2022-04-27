@@ -23,7 +23,9 @@ export class EthereumCryptopunk {
 			}
 
 			const tx = await this.sdk.nft.cryptoPunks.approveForWrapper(request.punkId)
-			await (new BlockchainEthereumTransaction(tx, this.network)).wait()
+			if (tx) {
+				await (new BlockchainEthereumTransaction(tx, this.network)).wait()
+			}
 
 			return request
 		},
