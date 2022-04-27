@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta.punks1](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.52-beta.punks1) (2022-04-27)
+
+
+### Features
+
+* ethereum cryptopunks wrap/unwrap ([ea771a6](https://github.com/rarible/sdk/commit/ea771a6c81844656d2fd63333fad8f4f30b2484d))
+
+
+
+
+
 ## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
 
 **Note:** Version bump only for package root
