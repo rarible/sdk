@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta.punks2](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks1...v0.8.52-beta.punks2) (2022-04-27)
+
+
+### Features
+
+* ethereum cryptopunks optional approve call ([ef8d0bb](https://github.com/rarible/sdk/commit/ef8d0bbfd82bc721a22f0aa85f25167fc59a7354))
+
+
+
+
+
 ## [0.8.52-beta.punks1](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.52-beta.punks1) (2022-04-27)
 
 **Note:** Version bump only for package example
