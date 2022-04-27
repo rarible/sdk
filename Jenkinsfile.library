@@ -20,7 +20,8 @@ pipeline {
     }
     stage('build and deploy') {
       agent any
-      when { tag "v*" ; branch 'new-cicd' }
+      // when { tag "v*" ; branch 'new-cicd' }
+      when { branch 'new-cicd' }
       environment {
         NPM_TOKEN = credentials('npm-token')
         NPM_HOME = '${env.WORKSPACE_TMP}'
