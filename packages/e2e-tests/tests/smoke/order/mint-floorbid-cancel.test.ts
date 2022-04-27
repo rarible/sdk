@@ -16,12 +16,14 @@ import { bid } from "../../common/atoms-tests/bid"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { cancel } from "../../common/atoms-tests/cancel"
+import { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain";
+import { createCollection } from "../../common/atoms-tests/create-collection";
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequest,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
 	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
@@ -31,7 +33,19 @@ function suites(): {
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721 <=> ERC20",
 			wallets: { seller: getEthereumWallet(), buyer: getEthereumWalletBuyer() },
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				asset: {
+					assetType: "ERC721",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: false,
+					},
+				},
+			} as CreateCollectionRequest,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -57,7 +71,19 @@ function suites(): {
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721_lazy <=> ERC20",
 			wallets: { seller: getEthereumWallet(), buyer: getEthereumWalletBuyer() },
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				asset: {
+					assetType: "ERC721",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: false,
+					},
+				},
+			} as CreateCollectionRequest,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -83,7 +109,19 @@ function suites(): {
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155 <=> ERC20",
 			wallets: { seller: getEthereumWallet(), buyer: getEthereumWalletBuyer() },
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				asset: {
+					assetType: "ERC1155",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: false,
+					},
+				},
+			} as CreateCollectionRequest,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -109,7 +147,19 @@ function suites(): {
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155_lazy <=> ERC20",
 			wallets: { seller: getEthereumWallet(), buyer: getEthereumWalletBuyer() },
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				asset: {
+					assetType: "ERC1155",
+					arguments: {
+						name: "name",
+						symbol: "RARI",
+						baseURI: "https://ipfs.rarible.com",
+						contractURI: "https://ipfs.rarible.com",
+						isUserToken: false,
+					},
+				},
+			} as CreateCollectionRequest,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -179,21 +229,23 @@ describe.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
 	test(suite.description, async () => {
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
-		// Get collection
-		const collection = await getCollection(sellerSdk, suite.collectionId)
+		const { address } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
+		const collection = await getCollection(sellerSdk, address)
 
-		// Mint token
 		await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
 
-		// Get currency
 		const requestCurrency = await getCurrency(suite.wallets, suite.currency)
 		const bidRequest = await suite.bidRequest(requestCurrency)
 
-		// Create bid order
 		const bidOrder = await bid(buyerSdk, buyerWallet, { collectionId: collection.id }, bidRequest)
 
-		// Cancel order
+		const collection1 = await getCollection(sellerSdk, address)
+		expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
+
+		const collection2 = await getCollection(sellerSdk, address)
+		expect(collection2.bestBidOrder).toBe(undefined)
 	})
 })

@@ -5,7 +5,13 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { sell } from "../../common/atoms-tests/sell"
-import { getEthereumWallet, getEthereumWalletBuyer, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
+import {
+	getEthereumWallet,
+	getEthereumWalletBuyer,
+	getSolanaWallet,
+	getTezosTestWallet,
+	getWalletAddressFull,
+} from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { getCollection } from "../../common/helpers"
@@ -307,6 +313,32 @@ function suites(): {
         throw new Error("Wrong blockchain")
       },
     },*/
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { seller: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "SOLANA_SOL",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.001",
+					currency: currency,
+				}
+			},
+		}
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
