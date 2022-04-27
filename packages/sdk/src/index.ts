@@ -28,13 +28,18 @@ export function createRaribleSdk(
 ): IRaribleSdk {
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
+	const ethConfig = {
+		params: config?.apiClientParams,
+		logs: config?.logs ?? LogsLevel.TRACE,
+		ethereum: config?.ethereum,
+		polygon: config?.polygon,
+	}
 	const instance = createUnionSdk(
 		createEthereumSdk(
 			filterWallet(wallet, BlockchainGroup.ETHEREUM),
 			apis,
 			blockchainConfig.ethereumEnv,
-			config?.apiClientParams,
-			config?.logs ?? LogsLevel.TRACE
+			ethConfig
 		),
 		createFlowSdk(
 			filterWallet(wallet, BlockchainGroup.FLOW),
@@ -50,8 +55,7 @@ export function createRaribleSdk(
 			filterWallet(wallet, BlockchainGroup.ETHEREUM),
 			apis,
 			blockchainConfig.polygonNetwork,
-			config?.apiClientParams,
-			config?.logs ?? LogsLevel.TRACE
+			ethConfig
 		),
 		createSolanaSdk(
 			filterWallet(wallet, BlockchainGroup.SOLANA),

@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta19](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-beta19) (2022-04-26)
+
+
+### Bug Fixes
+
+* solana baseFee on sellUpdate ([e54f370](https://github.com/rarible/sdk/commit/e54f370a357f10afc8fc6808171c8f989457ad11))
+
+
+
+
+
+## [0.8.52-beta18](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta18) (2022-04-19)
+
+
+### Bug Fixes
+
+* opensea order fix ([69eeb1a](https://github.com/rarible/sdk/commit/69eeb1ae282a7c238bb1860e852a96b4761828d0))
+* parseFlowItemIdFromUnionItemId type ([4baab2a](https://github.com/rarible/sdk/commit/4baab2a6d42d509ebc07d846e5566a193313482b))
+* remove FlowAssetTypeNft from type RequestCurrencyAssetType ([95b94ed](https://github.com/rarible/sdk/commit/95b94ed58079df206c4f9c0b7ad440f333095674))
+* remove FlowItemId usage ([1bb5d61](https://github.com/rarible/sdk/commit/1bb5d61be871c67d4f391b3e3f9633e8da275589))
+* remove unused types ([0eedce1](https://github.com/rarible/sdk/commit/0eedce145d471a935cf7830ebc5763b1fc40c5ae))
+* tezos sdk version ([#192](https://github.com/rarible/sdk/issues/192)) ([f445ae5](https://github.com/rarible/sdk/commit/f445ae50d53f1dbe8100985282c09aa90a7ae8af))
+
+
+### Features
+
+* pass config ([#197](https://github.com/rarible/sdk/issues/197)) ([7f91a33](https://github.com/rarible/sdk/commit/7f91a33da17584a1818ae9814dc8644cc7e68f94))
+* solana verify collection on mint ([5c0ae72](https://github.com/rarible/sdk/commit/5c0ae729503dda76ba6c9e884f9926d44565d746))
+* tx data nodejs server ([#202](https://github.com/rarible/sdk/issues/202)) ([d0ec9c6](https://github.com/rarible/sdk/commit/d0ec9c6c5c7aa1126e8b517baca565a2c2dc705a))
+
+
+
+
+
 ## [0.8.52-beta17](https://github.com/rarible/sdk/compare/v0.8.52-beta16...v0.8.52-beta17) (2022-04-18)
 
 **Note:** Version bump only for package @rarible/sdk

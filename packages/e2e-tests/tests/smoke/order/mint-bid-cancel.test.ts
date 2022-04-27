@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
@@ -16,6 +16,7 @@ import { bid } from "../../common/atoms-tests/bid"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { cancel } from "../../common/atoms-tests/cancel"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -219,7 +220,15 @@ describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 		// Create bid order
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
+		await getActivitiesByItem(buyerSdk, nft.id,
+			[ActivityType.MINT, ActivityType.BID],
+			[ActivityType.MINT, ActivityType.BID])
+
 		// Cancel order
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
+
+		await getActivitiesByItem(buyerSdk, nft.id,
+			[ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID],
+			[ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID])
 	})
 })

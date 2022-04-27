@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://unpkg.com/@rarible/web3-ethereum@0.12.40-hotfix.3/umd/rarible-web3-ethereum.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk-wallet@0.8.46/umd/rarible-wallet-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk@0.8.46/umd/rarible-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/web3@1.6.0/dist/web3.min.js" type="text/javascript"></script>
+<script>
+
+  async function init() {
+      const env = "staging" // "dev" | "e2e" | "staging" | "prod"
+      const raribleSdk = new window.raribleSdk.createRaribleSdk(undefined, env)
+      const balance = await raribleSdk.balances.getBalance(
+        "POLYGON:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1",
+        {
+          "@type": "ETH",
+          blockchain: "POLYGON"
+        }
+      )
+      console.log(balance.toString())
+
+  }
+  init()
+
+</script>
+</body>
+</html>

@@ -183,7 +183,7 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
     }
     ```
 
-3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/buy.ts) to buy Ethereum NFT item on Rinkeby network:
+3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/ethereum/buy.ts) to buy Ethereum NFT item on Rinkeby network:
 
    Pass private key, node RPC URL, network ID, item ID for buyout and start:
 

@@ -16,7 +16,7 @@ import { testsConfig } from "./config"
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const config = {
 		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
-		rpcUl: testsConfig.variables.ETHEREUM_RPC_URL,
+		rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
 	}
 	const { web3, wallet } = initProvider(pk, config)
 	const ethereum = new Web3Ethereum({
@@ -29,7 +29,7 @@ export function getEthereumWallet(pk?: string): EthereumWallet {
 export function getPolygonWallet(pk?: string): EthereumWallet {
 	const { web3, wallet } = initProvider(pk, {
 		networkId: 80001,
-		rpcUl: "https://rpc-mumbai.maticvigil.com",
+		rpcUrl: "https://rpc-mumbai.maticvigil.com",
 	})
 	const ethereum = new Web3Ethereum({
 		web3: web3,

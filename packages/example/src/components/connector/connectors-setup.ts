@@ -84,8 +84,8 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 		case "staging":
 		default:
 			return {
-				accessNode: "https://tezos-hangzhou-node.rarible.org",
-				network: TezosNetwork.HANGZHOUNET
+				accessNode: "https://test-tezos-node.rarible.org",
+				network: TezosNetwork.ITHACANET
 			}
 	}
 }

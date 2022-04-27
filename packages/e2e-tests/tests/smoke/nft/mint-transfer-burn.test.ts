@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
@@ -13,6 +13,7 @@ import { burn } from "../../common/atoms-tests/burn"
 import { transfer } from "../../common/atoms-tests/transfer"
 import { getCollectionById } from "../../common/api-helpers/collection-helper"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -272,7 +273,16 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 		await awaitForOwnershipValue(recipientSdk, nft.id, recipientWalletAddress.address,
 			toBigNumber(suite.recipientBalanceAfterTransfer))
 
+		await getActivitiesByItem(creatorSdk, nft.id,
+			[ActivityType.MINT, ActivityType.TRANSFER],
+			[ActivityType.MINT, ActivityType.TRANSFER])
+
 		// Burn token
 		await burn(recipientSdk, { itemId: nft.id }, suite.burnRequest, suite.totalBalanceAfterBurn)
+
+		await getActivitiesByItem(creatorSdk, nft.id,
+			[ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
+			[ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN])
+
 	})
 })

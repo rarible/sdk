@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
@@ -9,6 +9,7 @@ import { mint } from "../../common/atoms-tests/mint"
 import { getCollection } from "../../common/helpers"
 import { createCollection } from "../../common/atoms-tests/create-collection"
 import { testsConfig } from "../../common/config"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -241,6 +242,12 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 		const collection = await getCollection(sdk, address)
 
 		// Mint token
-		await mint(sdk, wallet, { collection }, suite.mintRequest(walletAddress.unionAddress))
+		const { nft } = await mint(sdk, wallet, { collection },
+			suite.mintRequest(walletAddress.unionAddress))
+
+		await getActivitiesByItem(sdk, nft.id,
+			[ActivityType.MINT, ActivityType.TRANSFER],
+			[ActivityType.MINT, ActivityType.TRANSFER])
+
 	})
 })
