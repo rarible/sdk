@@ -1,14 +1,16 @@
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, FlowWallet, SolanaWallet } from "@rarible/sdk-wallet"
 import { BlockchainGroup } from "@rarible/api-client"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
+
 import { toUnionAddress } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import { TezosWallet } from "@rarible/sdk-wallet"
+import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { testsConfig } from "./config"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
@@ -59,6 +61,14 @@ export function getFlowWallet(): FlowWallet {
 	return new FlowWallet(fcl)
 }
 
+export function getSolanaWallet(walletNumber: number = 0): SolanaWallet {
+	const wallets = [
+		testsConfig.variables.SOLANA_WALLET_1,
+		testsConfig.variables.SOLANA_WALLET_2,
+	]
+	return new SolanaWallet(SolanaKeypairWallet.createFrom(Uint8Array.from(wallets[walletNumber])))
+}
+
 export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boolean = true): Promise<string> {
 	switch (wallet.blockchain) {
 		case BlockchainGroup.ETHEREUM:
@@ -94,6 +104,10 @@ export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<Wa
 			} else {
 				throw new Error("FLOW user address is undefined")
 			}
+			break
+		case BlockchainGroup.SOLANA:
+			address = await wallet.provider.publicKey.toString()
+			addressWithPrefix = "SOLANA:" + address
 			break
 		default: throw new Error("Unrecognized wallet")
 	}

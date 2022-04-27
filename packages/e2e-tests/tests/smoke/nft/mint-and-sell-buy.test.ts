@@ -3,7 +3,7 @@ import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { MintAndSellRequest } from "@rarible/sdk"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
+import { getEthereumWallet, getSolanaWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { testsConfig } from "../../common/config"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
@@ -170,6 +170,31 @@ function suites(): {
 				}
 			},
 			buyAmount: 5,
+			creatorBalance: 0,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
+		},
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { creator: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+					price: "0.001",
+					currency: {
+						"@type": "SOLANA_SOL",
+					},
+				}
+			},
+			buyAmount: 1,
 			creatorBalance: 0,
 			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
 		},
