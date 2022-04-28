@@ -26,7 +26,7 @@ pipeline {
       }
       steps {
           sh 'yarn && yarn build'
-          sh 'npm config set registry https://registry.npmjs.org/:_authToken=${NPM_TOKEN} --location project'
+          sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
           sh 'yarn release'
       }
     }
