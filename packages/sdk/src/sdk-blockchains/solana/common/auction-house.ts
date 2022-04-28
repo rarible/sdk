@@ -5,7 +5,6 @@ import type { SolanaAuctionHouseMapping } from "../domain"
 import { extractAddress } from "./address-converters"
 
 const auctionHouseFee: Record<string, number> = {
-	"8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm": 250, // 2.5%
 	"raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp": 250, // 2.5%
 }
 
@@ -23,8 +22,7 @@ export function getAuctionHouse(currency: CurrencyType, auctionHouseMapping?: So
 		}
 	}
 
-	//return toPublicKey("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
-	return toPublicKey("8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm")
+	return toPublicKey("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
 }
 
 export async function getAuctionHouseFee(
