@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+
+### Bug Fixes
+
+* add jenkinsfile.library ([9164f94](https://github.com/rarible/sdk/commit/9164f94482d3743044c9c8875d1d70364e5d8a80))
+
+
+
+
+
 ## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.3...v0.8.48-hotfix.4) (2022-04-28)
 
 
