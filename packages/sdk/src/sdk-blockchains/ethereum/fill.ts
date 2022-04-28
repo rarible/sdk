@@ -67,10 +67,12 @@ export class EthereumFill {
 			case "OPEN_SEA_V1": {
 				request = {
 					order,
-					originFees: fillRequest.originFees?.map(payout => ({
-						account: convertToEthereumAddress(payout.account),
-						value: payout.value,
-					})),
+					...order.take.assetType.assetClass === "ETH" ? {
+						originFees: fillRequest.originFees?.map(payout => ({
+							account: convertToEthereumAddress(payout.account),
+							value: payout.value,
+						})),
+					} : {},
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
@@ -112,7 +114,7 @@ export class EthereumFill {
 			}
 			case "OPEN_SEA_V1": {
 				return {
-					originFeeSupport: OriginFeeSupport.FULL,
+					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.NONE,
 					supportsPartialFill: false,
 				}
