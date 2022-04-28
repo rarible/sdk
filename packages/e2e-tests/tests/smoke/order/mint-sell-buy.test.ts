@@ -345,8 +345,8 @@ describe.each(suites())("$blockchain mint => sell => buy", (suite) => {
 		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
 		await getActivitiesByItem(sellerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.LIST],
-			[ActivityType.LIST, ActivityType.MINT])
+			[ActivityType.LIST],
+			[ActivityType.LIST])
 
 		// Fill sell order
 		const buyAmount = orderRequest.amount
