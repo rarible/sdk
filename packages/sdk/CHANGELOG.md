@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta21](https://github.com/rarible/sdk/compare/v0.8.52-beta19...v0.8.52-beta21) (2022-04-28)
+
+
+### Bug Fixes
+
+* update tezos dev config ([fec50ea](https://github.com/rarible/sdk/commit/fec50ea6e480666b4857bb936c480f7edadfc060))
+
+
+### Features
+
+* update auction house address ([494efbf](https://github.com/rarible/sdk/commit/494efbf9d7976276f73038f51b124b1af21f132d))
+
+
+
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
+
+
+
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-hotfix4) (2022-04-21)
+
+
+### Bug Fixes
+
+* update ethereum-sdk, simplify buy tx ([3f540f4](https://github.com/rarible/sdk/commit/3f540f4ba45b3f70b957a8cd7962f97dd01ad8c3))
+
+
+
+## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
+
+
+
+## [0.8.52-hotfix2](https://github.com/rarible/sdk/compare/v0.8.52-hotfix1...v0.8.52-hotfix2) (2022-04-19)
+
+
+
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-hotfix1) (2022-04-19)
+
+
+
+
+
 ## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
 
 **Note:** Version bump only for package @rarible/sdk
