@@ -4332,7 +4332,7 @@
     "@rarible/tezos-common" "^0.1.11"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.11", "@rarible/tezos-sdk@~0.1.11", "@rarible/tezos-sdk@~0.1.9":
+"@rarible/tezos-sdk@0.1.11", "@rarible/tezos-sdk@~0.1.11":
   version "0.1.11"
   resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.11.tgz#ec8f386b1cba5f2861dfc635208937cd18409630"
   integrity sha512-I7F+tQU5QsCEBtZ07SBldGl9VhqSlFjAcwj552QEriXgq3L8g8oZeDABtCnqHHiDUmsAsfLck1XRPIarlhLKag==
