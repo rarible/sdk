@@ -7,6 +7,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel",
+    "build": "yarn bootstrap && yarn clean && yarn build-all",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
