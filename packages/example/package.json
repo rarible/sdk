@@ -23,7 +23,7 @@
     "@rarible/connector-walletconnect": "^0.8.52-beta.solana2",
     "@rarible/connector-walletlink": "^0.8.52-beta.solana2",
     "@rarible/sdk": "^0.8.52-beta.solana2",
-    "@rarible/web3-ethereum": "~0.12.64",
+    "@rarible/web3-ethereum": "~0.12.65-beta2",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
     "@testing-library/jest-dom": "^5.16.2",
