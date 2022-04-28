@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@metaplex-foundation/mpl-auction": "^0.0.2",
-    "@metaplex-foundation/mpl-auction-house": "^1.1.1",
-    "@metaplex-foundation/mpl-core": "^0.0.2",
+    "@metaplex-foundation/mpl-auction-house": "^1.2.0",
+    "@metaplex-foundation/mpl-core": "^0.0.5",
     "@metaplex-foundation/mpl-metaplex": "^0.0.5",
     "@metaplex-foundation/mpl-token-metadata": "1.2.5",
     "@metaplex-foundation/mpl-token-vault": "^0.0.2",
