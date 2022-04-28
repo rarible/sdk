@@ -44,7 +44,7 @@ describe("Solana order", () => {
 	})
 
 
-	test.skip("baseFee for bidUpdate", async () => {
+	test("baseFee for bidUpdate", async () => {
 		const bid = await sdk.order.bid({ itemId: tokenForBid.id })
 		const order = await bid.submit({
 			amount: 1,

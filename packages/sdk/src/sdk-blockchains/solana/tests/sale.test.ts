@@ -41,8 +41,6 @@ describe("Solana sell", () => {
 			})
 		})
 
-		console.log("orderid", orderId)
-
 		const tx = await retry(10, 4000, async () => {
 			const buy = await buyerSdk.order.buy({
 				orderId,
