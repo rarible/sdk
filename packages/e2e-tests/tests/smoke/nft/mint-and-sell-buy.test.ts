@@ -237,7 +237,7 @@ describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
 	test(suite.description, async () => {
 		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
-		console.log("suite.blockchain", suite.blockchain)
+
 		// Get collection
 		const collection = await getCollection(creatorSdk, suite.collectionId)
 
