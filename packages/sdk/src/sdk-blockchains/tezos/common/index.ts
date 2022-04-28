@@ -145,8 +145,8 @@ export function getMaybeTezosProvider(
 			return {
 				tezos: provider,
 				config: {
-					exchange: "KT1KDFn2Rfg597Rq14xrD2gtEEy2PP4F6kag",
-					transfer_proxy: "KT1PZGQqjcL3ww2zNyvbZY4SwBDNumTr6bmz",
+					exchange: "KT1V1FP839LnLBT7bUaR9vgTyKwoLgwH7Eni",
+					transfer_proxy: "KT1UR39jhgCStFkvriwx6QWPWiH4HHfWxorB",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
