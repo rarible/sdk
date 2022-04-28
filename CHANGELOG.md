@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta23](https://github.com/rarible/sdk/compare/v0.8.52-beta22...v0.8.52-beta23) (2022-04-28)
+
+
+### Bug Fixes
+
+* use test ah for now ([529a024](https://github.com/rarible/sdk/commit/529a0245c67480e28dfc88cc736cbda00f8793f4))
+
+
+
+
+
 ## [0.8.52-beta22](https://github.com/rarible/sdk/compare/v0.8.52-beta21...v0.8.52-beta22) (2022-04-28)
 
 **Note:** Version bump only for package root
