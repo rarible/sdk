@@ -3,9 +3,8 @@ import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork, EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
-import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
@@ -17,6 +16,7 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
+import { EthereumFillBulk } from "./fill-bulk"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -27,7 +27,7 @@ export function createEthereumSdk(
 		logs?: LogsLevel
 		ethereum?: EthereumNetworkConfig,
 		polygon?: EthereumNetworkConfig,
-	}
+	},
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, {
 		apiClientParams: config.params,
@@ -40,8 +40,10 @@ export function createEthereumSdk(
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
+	const buyBulkService = new EthereumFillBulk(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
-
+	// const b = await fillerService.buy({order})
+	// const bb = await buyBulkService.buyBulk([{order}])
 	return {
 		nft: {
 			transfer: new EthereumTransfer(sdk, network).transfer,
@@ -55,6 +57,7 @@ export function createEthereumSdk(
 		order: {
 			fill: fillerService.fill,
 			buy: fillerService.buy,
+			buyBulk: buyBulkService.buyBulk,
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,

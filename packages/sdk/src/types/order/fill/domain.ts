@@ -1,6 +1,10 @@
 import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type {
+	OpenSeaV1OrderFillRequest,
+	RaribleV2OrderFillRequest,
+} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -57,15 +61,14 @@ export interface FillRequest {
 
 export type FillActionTypes = "approve" | "send-tx"
 
-export interface PrepareFillResponse
-	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction> {
+interface CommonFillResponse {
 	/**
-   * is multiple nft
-   */
+	 * is multiple nft
+	 */
 	multiple: boolean
 	/**
 	 * Maximum amount to fill (of NFTs)
-   * null is actual for orders with COLLECTION asset type
+	 * null is actual for orders with COLLECTION asset type
 	 */
 	maxAmount: BigNumber | null
 	/**
@@ -86,4 +89,16 @@ export interface PrepareFillResponse
 	supportsPartialFill: boolean
 }
 
+export type PrepareFillResponse =
+	AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction> & CommonFillResponse
+
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
+
+export interface PrepareBulkFillResponse
+	extends AbstractPrepareResponse<FillActionTypes, FillRequest[], IBlockchainTransaction> {
+	preparedFillResponse: CommonFillResponse[]
+}
+
+export type FillOrderBulkRequest = RaribleV2OrderFillRequest | OpenSeaV1OrderFillRequest
+
+export type IFillBulk = (request: PrepareFillRequest[]) => Promise<PrepareBulkFillResponse>

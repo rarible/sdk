@@ -5442,6 +5442,13 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
+"@rarible/ethereum-provider@^0.12.66-alpha.0":
+  version "0.12.66-alpha.0"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.66-alpha.0.tgz#f441730639f882a204d624d9eb71cb87fabdf344"
+  integrity sha512-bdTreIItrK1WPD/F+LJidc205yOgos+cpUQ/VMUusSUIWFrrHnv2jRo/Bz92aUVNwDVnUepDlcGmd6LvfErtiQ==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
 "@rarible/ethereum-sdk-test-common@~0.12.64":
   version "0.12.64"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.64.tgz#19f7e58956287929ccd912045ce10f885c7bcaa5"
@@ -5512,6 +5519,21 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
+"@rarible/protocol-ethereum-sdk@0.12.66-alpha.17":
+  version "0.12.66-alpha.17"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.66-alpha.17.tgz#59b6ac3b51bb8e56f1b0dfea2bf31cea326927ea"
+  integrity sha512-nx/SeZ2hoZOMSDe0hQraEmS9Dv/xOD/+XeTR7t23sh+ZxdAdTwCHo+yvZ2ut85vaLib9wc7ev9rb5lHDvXHTqw==
+  dependencies:
+    "@rarible/action" "~0.5.0"
+    "@rarible/ethereum-api-client" "^0.1.21"
+    "@rarible/ethereum-provider" "^0.12.66-alpha.0"
+    "@rarible/logger" "~0.6.2"
+    "@rarible/utils" "~0.5.0"
+    axios "^0.25.0"
+    eth-sig-util "^3.0.0"
+    ethereumjs-util "^7.1.0"
+    exponential-backoff "^3.1.0"
+
 "@rarible/protocol-ethereum-sdk@~0.12.65":
   version "0.12.65"
   resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.65.tgz#bfc9adc52cfb790f2c1c9a142491a550d715dfc3"
@@ -5526,6 +5548,26 @@
     eth-sig-util "^3.0.0"
     ethereumjs-util "^7.1.0"
     exponential-backoff "^3.1.0"
+
+"@rarible/sdk@file:packages/sdk":
+  version "0.8.52"
+  dependencies:
+    "@babel/runtime" "^7.15.4"
+    "@rarible/action" "~0.5.0"
+    "@rarible/api-client" "0.0.11"
+    "@rarible/flow-sdk" "~0.5.44"
+    "@rarible/logger" "~0.6.2"
+    "@rarible/protocol-ethereum-sdk" "0.12.66-alpha.17"
+    "@rarible/sdk-transaction" "^0.8.52"
+    "@rarible/sdk-wallet" "^0.8.52"
+    "@rarible/tezos-sdk" "~0.1.9"
+    "@rarible/types" "~0.9.1"
+    "@rarible/utils" "~0.5.0"
+    ajv "^8.6.3"
+    axios "^0.24.0"
+    bignumber.js "^9.0.1"
+    create-validator-ts "^2.0.0"
+    tezos-api-client "~0.0.19"
 
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"

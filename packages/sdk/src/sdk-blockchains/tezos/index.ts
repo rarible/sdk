@@ -3,6 +3,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import { nonImplementedAction } from "../../common/not-implemented"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { TezosBid } from "./bid"
@@ -43,6 +44,7 @@ export function createTezosSdk(
 		order: {
 			fill: fillService.fill,
 			buy: fillService.fill,
+			buyBulk: nonImplementedAction,
 			acceptBid: fillService.fill,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,

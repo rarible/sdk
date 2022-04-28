@@ -1,7 +1,11 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber } from "@rarible/types"
-import type { FillOrderAction, FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type {
+	BulkFillRequest,
+	FillOrderBulkAction,
+	FillOrderRequest,
+} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
@@ -10,9 +14,14 @@ import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type {
+	FillOrderBulkRequest,
+	FillRequest,
+	PrepareBulkFillResponse,
+	PrepareFillRequest,
+} from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId } from "./common"
+import { convertOrderIdToEthereumHash } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -22,45 +31,23 @@ export type SupportFlagsResponse = {
 
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
 
-export class EthereumFill {
+export class EthereumFillBulk {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
 	) {
-		this.fill = this.fill.bind(this)
-		this.buy = this.buy.bind(this)
-		this.acceptBid = this.acceptBid.bind(this)
+		this.buyBulk = this.buyBulk.bind(this)
 	}
 
-	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
+	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderBulkRequest {
 		let request: FillOrderRequest
 		switch (order.type) {
-			case "RARIBLE_V1": {
-				request = {
-					order,
-					amount: fillRequest.amount,
-					infinite: fillRequest.infiniteApproval,
-					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value : 0,
-					payout: fillRequest.payouts?.[0]?.account
-						? convertToEthereumAddress(fillRequest.payouts[0].account)
-						: undefined,
-				}
-				break
-			}
 			case "RARIBLE_V2": {
 				request = {
 					order,
-					amount: fillRequest.amount,
+					amount: "amount" in fillRequest ? fillRequest.amount : 1,
 					infinite: fillRequest.infiniteApproval,
-					payouts: fillRequest.payouts?.map(payout => ({
-						account: convertToEthereumAddress(payout.account),
-						value: payout.value,
-					})),
-					originFees: fillRequest.originFees?.map(fee => ({
-						account: convertToEthereumAddress(fee.account),
-						value: fee.value,
-					})),
 				}
 				break
 			}
@@ -73,17 +60,6 @@ export class EthereumFill {
 			}
 			default: {
 				throw new Error("Unsupported order type")
-			}
-		}
-
-		if (fillRequest.itemId) {
-			const {
-				contract,
-				tokenId,
-			} = getEthereumItemId(fillRequest.itemId)
-			request.assetType = {
-				contract: toAddress(contract),
-				tokenId,
 			}
 		}
 
@@ -166,49 +142,35 @@ export class EthereumFill {
 		throw new Error("OrderId has not been found in request")
 	}
 
-	hasCollectionAssetType(order: SimplePreparedOrder) {
-		return order.take.assetType.assetClass === "COLLECTION" || order.make.assetType.assetClass === "COLLECTION"
-	}
-
-	private async commonFill(action: FillOrderAction, request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		const orderHash = this.getOrderHashFromRequest(request)
-		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+	private async commonFill(
+		action: FillOrderBulkAction, request: PrepareFillRequest[],
+	): Promise<PrepareBulkFillResponse> {
+		const ordersPrepare = await Promise.all(request.map(async r => {
+			const orderHash = this.getOrderHashFromRequest(r)
+			return this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+		}))
 
 		const submit = action
-			.before((fillRequest: FillRequest) => {
-				if (fillRequest.unwrap) {
-					throw new Error("Unwrap is not supported yet")
-				}
-				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
-					throw new Error("For collection order you should pass itemId")
-				}
-				console.log("union sdk to  thh sdk request: ", this.getFillOrderRequest(order, fillRequest))
-				return this.getFillOrderRequest(order, fillRequest)
+			.before((fillRequest: FillRequest[]) => {
+				const bulkFillRequest: BulkFillRequest[] = fillRequest.map((fillRequestSingle, index) => {
+					return this.getFillOrderRequest(ordersPrepare[index], fillRequestSingle)
+				})
+				return bulkFillRequest
 			})
-			.after((tx => new BlockchainEthereumTransaction(tx, this.network)))
+			.after(tx => new BlockchainEthereumTransaction(tx, this.network))
 
 		return {
-			...this.getSupportFlags(order),
-			multiple: await this.isMultiple(order),
-			maxAmount: await this.getMaxAmount(order),
-			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
+			preparedFillResponse: await Promise.all(ordersPrepare.map(async order => ({
+				...this.getSupportFlags(order),
+				multiple: await this.isMultiple(order),
+				maxAmount: await this.getMaxAmount(order),
+				baseFee: await this.sdk.order.getBaseOrderFillFee(order),
+			}))),
 			submit,
 		}
 	}
 
-	/**
-	 * @deprecated
-	 * @param request
-	 */
-	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		return this.commonFill(this.sdk.order.fill, request)
-	}
-
-	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		return this.commonFill(this.sdk.order.buy, request)
-	}
-
-	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		return this.commonFill(this.sdk.order.acceptBid, request)
+	async buyBulk(request: PrepareFillRequest[]): Promise<PrepareBulkFillResponse> {
+		return this.commonFill(this.sdk.order.buyBulk, request)
 	}
 }

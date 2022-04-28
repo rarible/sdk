@@ -14,6 +14,7 @@ import { MintPage } from "./pages/mint/mint-page"
 import { BidPage } from "./pages/bid/bid-page"
 import { AcceptBidPage } from "./pages/accept-bid/acceptbid-page"
 import { EnvironmentSelectorProvider } from "./components/connector/environment-selector-provider"
+import { BuyBulkPage } from "./pages/buy-bulk/buy-page"
 
 export function App() {
 	return (
@@ -26,7 +27,7 @@ export function App() {
 							mt: 2,
 							display: 'grid',
 							gridTemplateColumns: 'minmax(250px, 20%)  1fr',
-							gap: "20px"
+							gap: "20px",
 						}}>
 							<Box component="nav">
 								<Navigation/>
@@ -40,6 +41,7 @@ export function App() {
 									<Route path="mint" element={<MintPage/>}/>
 									<Route path="sell" element={<SellPage/>}/>
 									<Route path="buy" element={<BuyPage/>}/>
+									<Route path="buy-bulk" element={<BuyBulkPage/>}/>
 									<Route path="bid" element={<BidPage/>}/>
 									<Route path="accept-bid" element={<AcceptBidPage/>}/>
 									<Route path="*" element={<NotFoundPage/>}/>
@@ -50,5 +52,5 @@ export function App() {
 				</SdkConnectionProvider>
 			)}
 		</EnvironmentSelectorProvider>
-	);
+	)
 }

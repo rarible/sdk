@@ -12,19 +12,17 @@ import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type * as OrderCommon from "../../types/order/common"
-import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { PrepareBulkFillResponse, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
 import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
-import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { ConvertRequest } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
-import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
-import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
+import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -66,6 +64,7 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		this.bidUpdate = this.bidUpdate.bind(this)
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
+		this.buyBulk = this.buyBulk.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
 		this.sell = this.sell.bind(this)
 		this.sellUpdate = this.sellUpdate.bind(this)
@@ -89,6 +88,10 @@ class UnionOrderSdk implements IOrderInternalSdk {
 
 	buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.instances[extractBlockchain(getOrderId(request))].buy(request)
+	}
+
+	buyBulk(request: PrepareFillRequest[]): Promise<PrepareBulkFillResponse> {
+		return this.instances[extractBlockchain(getOrderId(request[0]))].buyBulk(request)// @todo
 	}
 
 	acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
@@ -164,6 +167,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, currency)].getBalance(address, currency)
 	}
+
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		return this.instances[request.blockchain].convert(request)
 	}
@@ -174,7 +178,7 @@ class UnionRestrictionSdk implements IRestrictionSdk {
 	}
 
 	canTransfer(
-		itemId: ItemId, from: UnionAddress, to: UnionAddress
+		itemId: ItemId, from: UnionAddress, to: UnionAddress,
 	): Promise<CanTransferResult> {
 		return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
 	}

@@ -4,7 +4,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
-import type { IFill } from "./types/order/fill/domain"
+import type { IFill, IFillBulk } from "./types/order/fill/domain"
 import type { IBurn } from "./types/nft/burn/domain"
 import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
@@ -65,8 +65,8 @@ export interface INftSdk {
 	burn: IBurn
 	generateTokenId: IGenerateTokenId
 	/**
-   * @deprecated Use {@link createCollection} instead
-   */
+	 * @deprecated Use {@link createCollection} instead
+	 */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
 }
@@ -79,6 +79,7 @@ export interface IOrderSdk {
 	 */
 	fill: IFill
 	buy: IFill
+	buyBulk: IFillBulk
 	acceptBid: IFill
 	bid: IBid
 	bidUpdate: IBidUpdate
