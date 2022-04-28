@@ -2,6 +2,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
 import { BlockchainGroup } from "@rarible/api-client"
 import type { TezosProvider } from "@rarible/tezos-sdk"
+import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractWallet, UserSignature } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
@@ -25,7 +26,11 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 export class FlowWallet implements AbstractWallet {
 	readonly blockchain = BlockchainGroup.FLOW
 
-	constructor(public readonly fcl: Fcl) {
+	constructor(public readonly fcl: Fcl, public auth?: AuthWithPrivateKey) {
+	}
+
+	getAuth(): AuthWithPrivateKey {
+		return this.auth
 	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {

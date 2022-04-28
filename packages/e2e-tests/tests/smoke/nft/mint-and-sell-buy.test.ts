@@ -1,9 +1,15 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { MintAndSellRequest } from "@rarible/sdk/build/types/nft/mint-and-sell/domain"
-import { getEthereumWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
+import {
+	getEthereumWallet,
+	getFlowBuyerWallet,
+	getFlowSellerWallet,
+	getTezosTestWallet,
+	getWalletAddressFull,
+} from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { testsConfig } from "../../common/config"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
@@ -26,7 +32,10 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721 <=> ETH",
-			wallets: { creator: getEthereumWallet(), buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER) },
+			wallets: {
+				creator: getEthereumWallet(),
+				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
+			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
@@ -51,7 +60,10 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721_lazy <=> ETH",
-			wallets: { creator: getEthereumWallet(), buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER) },
+			wallets: {
+				creator: getEthereumWallet(),
+				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
+			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
@@ -76,7 +88,10 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155 <=> ETH",
-			wallets: { creator: getEthereumWallet(), buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER) },
+			wallets: {
+				creator: getEthereumWallet(),
+				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
+			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
@@ -101,7 +116,10 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155_lazy <=> ETH",
-			wallets: { creator: getEthereumWallet(), buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER) },
+			wallets: {
+				creator: getEthereumWallet(),
+				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
+			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
@@ -126,7 +144,10 @@ function suites(): {
 		{
 			blockchain: Blockchain.TEZOS,
 			description: "NFT <=> XTZ",
-			wallets: { creator: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
+			wallets: {
+				creator: getTezosTestWallet(0),
+				buyer: getTezosTestWallet(1),
+			},
 			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_NFT,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
@@ -151,7 +172,10 @@ function suites(): {
 		{
 			blockchain: Blockchain.TEZOS,
 			description: "MT <=> XTZ",
-			wallets: { creator: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
+			wallets: {
+				creator: getTezosTestWallet(0),
+				buyer: getTezosTestWallet(1),
+			},
 			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
@@ -173,19 +197,47 @@ function suites(): {
 			creatorBalance: 0,
 			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
 		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "FLOW NFT <=> FLOW",
+			wallets: {
+				creator: getFlowSellerWallet(),
+				buyer: getFlowBuyerWallet(),
+			},
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+					price: "0.0001", //min available price for flow
+					currency: {
+						"@type": "FLOW_FT",
+						contract: toContractAddress(`FLOW:${testsConfig.variables.FLOW_FT_CONTRACT_ADDRESS}`),
+					},
+				}
+			},
+			buyAmount: 1,
+			creatorBalance: 0,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
 
 describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
-	const { creator: creatorWallet, buyer: buyerWallet } = suite.wallets
+	const {
+		creator: creatorWallet,
+		buyer: buyerWallet,
+	} = suite.wallets
 	const creatorSdk = createSdk(suite.blockchain, creatorWallet)
 	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
 		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
-
+		console.log("suite.blockchain", suite.blockchain)
 		// Get collection
 		const collection = await getCollection(creatorSdk, suite.collectionId)
 

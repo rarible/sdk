@@ -22,7 +22,7 @@ import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
 	env: RaribleSdkEnvironment,
-	config?: IRaribleSdkConfig
+	config?: IRaribleSdkConfig,
 ): IRaribleSdk {
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
@@ -37,27 +37,33 @@ export function createRaribleSdk(
 			filterWallet(wallet, BlockchainGroup.ETHEREUM),
 			apis,
 			blockchainConfig.ethereumEnv,
-			ethConfig
+			ethConfig,
 		),
 		createFlowSdk(
 			filterWallet(wallet, BlockchainGroup.FLOW),
 			apis,
-			blockchainConfig.flowEnv
+			blockchainConfig.flowEnv,
+			undefined,
+			config?.flow?.auth,
 		),
 		createTezosSdk(
 			filterWallet(wallet, BlockchainGroup.TEZOS),
 			apis,
-			blockchainConfig.tezosNetwork
+			blockchainConfig.tezosNetwork,
 		),
 		createEthereumSdk(
 			filterWallet(wallet, BlockchainGroup.ETHEREUM),
 			apis,
 			blockchainConfig.polygonNetwork,
-			ethConfig
+			ethConfig,
 		),
 	)
 
-	setupMiddleware(apis, instance, { wallet, env, config })
+	setupMiddleware(apis, instance, {
+		wallet,
+		env,
+		config,
+	})
 
 	return {
 		...instance,
@@ -80,14 +86,14 @@ export function createRaribleSdk(
 function setupMiddleware(
 	apis: IApisSdk,
 	internalSdk: IRaribleInternalSdk,
-	sdkContext: ISdkContext
+	sdkContext: ISdkContext,
 ) {
 	const middlewarer = new Middlewarer()
 
 	if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
 		middlewarer.use(getInternalLoggerMiddleware(
 			sdkContext.config?.logs ?? LogsLevel.TRACE,
-			sdkContext
+			sdkContext,
 		))
 	}
 
@@ -109,7 +115,7 @@ function setupMiddleware(
 
 function filterWallet<T extends BlockchainGroup>(
 	wallet: Maybe<BlockchainWallet>,
-	blockchain: T
+	blockchain: T,
 ): Maybe<WalletByBlockchain[T]> {
 	if (wallet?.blockchain === blockchain) {
 		return wallet as WalletByBlockchain[T]
@@ -143,12 +149,18 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 		const mintAction = mintResponse.submit
 			.around(
 				(input: MintAndSellRequest) => ({ ...input }),
-				(mintResponse, initial): MiddleMintType => ({ initial, mintResponse })
+				(mintResponse, initial): MiddleMintType => ({
+					initial,
+					mintResponse,
+				}),
 			)
 
 		const sellAction = sellResponse.submit
 			.around(
-				({ initial, mintResponse }: MiddleMintType) => ({
+				({
+					 initial,
+					 mintResponse,
+				 }: MiddleMintType) => ({
 					...initial,
 					itemId: mintResponse.itemId,
 					amount: initial.supply,
@@ -156,7 +168,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 				(orderId, { mintResponse }): MintAndSellResponse => ({
 					...mintResponse,
 					orderId,
-				})
+				}),
 			)
 
 		return {
