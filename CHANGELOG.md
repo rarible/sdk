@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.3...v0.8.48-hotfix.4) (2022-04-28)
+
+
+### Bug Fixes
+
+* update flow-sdk that fixes new dev env api url ([bb54c75](https://github.com/rarible/sdk/commit/bb54c75d3dbd5350e1658ae4fced07fec4a1e0ab))
+
+
+
+
+
 ## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
 
 
