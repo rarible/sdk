@@ -4143,6 +4143,21 @@
     ethereumjs-util "^7.1.0"
     exponential-backoff "^3.1.0"
 
+"@rarible/protocol-ethereum-sdk@~0.12.66-beta.1":
+  version "0.12.66-beta.1"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.66-beta.1.tgz#e5e088c7a287b7f65da667bb93719778fdf1ebc3"
+  integrity sha512-K/vj89RhYZgoDisNE8JbCvmc+NoxTsW8nhEZW8vTO1x+g7GMzsSMwhmDdNkuY9Ch9tZIaIYf1pbyhZ6Yt/zLww==
+  dependencies:
+    "@rarible/action" "~0.5.0"
+    "@rarible/ethereum-api-client" "^0.1.21"
+    "@rarible/ethereum-provider" "^0.12.64"
+    "@rarible/logger" "~0.6.2"
+    "@rarible/utils" "~0.5.0"
+    axios "^0.25.0"
+    eth-sig-util "^3.0.0"
+    ethereumjs-util "^7.1.0"
+    exponential-backoff "^3.1.0"
+
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.4.tgz#39122851d11e8092ce85a3ea88d64bd4df416c35"
