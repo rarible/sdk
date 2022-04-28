@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta.punks3](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks2...v0.8.52-beta.punks3) (2022-04-28)
+
+
+### Bug Fixes
+
+* update tezos dev config ([fec50ea](https://github.com/rarible/sdk/commit/fec50ea6e480666b4857bb936c480f7edadfc060))
+
+
+
+
+
 ## [0.8.52-beta.punks2](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks1...v0.8.52-beta.punks2) (2022-04-27)
 
 
