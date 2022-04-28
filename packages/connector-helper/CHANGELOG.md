@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.52-beta19](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-beta19) (2022-04-26)
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
 
 **Note:** Version bump only for package @rarible/connector-helper
 
@@ -11,7 +11,31 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.8.52-beta18](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta18) (2022-04-19)
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix3...v0.8.52-hotfix4) (2022-04-21)
+
+**Note:** Version bump only for package @rarible/connector-helper
+
+
+
+
+
+## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
+
+**Note:** Version bump only for package @rarible/connector-helper
+
+
+
+
+
+## [0.8.52-hotfix2](https://github.com/rarible/sdk/compare/v0.8.52-hotfix1...v0.8.52-hotfix2) (2022-04-19)
+
+**Note:** Version bump only for package @rarible/connector-helper
+
+
+
+
+
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.52-hotfix1) (2022-04-19)
 
 
 ### Bug Fixes
@@ -22,81 +46,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * tx data nodejs server ([#202](https://github.com/rarible/sdk/issues/202)) ([d0ec9c6](https://github.com/rarible/sdk/commit/d0ec9c6c5c7aa1126e8b517baca565a2c2dc705a))
-
-
-
-
-
-## [0.8.52-beta17](https://github.com/rarible/sdk/compare/v0.8.52-beta16...v0.8.52-beta17) (2022-04-18)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.52-beta16](https://github.com/rarible/sdk/compare/v0.8.52-beta15...v0.8.52-beta16) (2022-04-15)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.52-beta15](https://github.com/rarible/sdk/compare/v0.8.52-beta14...v0.8.52-beta15) (2022-04-14)
-
-
-### Features
-
-* solflare connector ([dad26bc](https://github.com/rarible/sdk/commit/dad26bc9adb2e7fa9e2187e3a808b12c86614c16))
-
-
-
-
-
-## [0.8.52-beta14](https://github.com/rarible/sdk/compare/v0.8.52-beta13...v0.8.52-beta14) (2022-04-13)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.52-beta13](https://github.com/rarible/sdk/compare/v0.8.52-beta12...v0.8.52-beta13) (2022-04-13)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.52-beta12](https://github.com/rarible/sdk/compare/v0.8.52-beta11...v0.8.52-beta12) (2022-04-13)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.52-beta11](https://github.com/rarible/sdk/compare/v0.8.52-beta10...v0.8.52-beta11) (2022-04-11)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.52-beta10](https://github.com/rarible/sdk/compare/v0.8.50-beta9...v0.8.52-beta10) (2022-04-11)
-
-**Note:** Version bump only for package @rarible/connector-helper
-
-
-
-
-
-## [0.8.50-beta9](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.50-beta9) (2022-04-10)
-
-**Note:** Version bump only for package @rarible/connector-helper
 
 
 

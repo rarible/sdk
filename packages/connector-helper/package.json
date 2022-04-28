@@ -22,7 +22,7 @@
     "@rarible/connector-beacon": "^0.8.52-beta19",
     "@rarible/connector-fcl": "^0.8.52-beta19",
     "@rarible/sdk-wallet": "^0.8.52-beta19",
-    "@rarible/tezos-sdk": "0.1.9",
+    "@rarible/tezos-sdk": "0.1.11",
     "@rarible/web3-ethereum": "^0.12.64",
     "rxjs": "^6.6.7"
   },

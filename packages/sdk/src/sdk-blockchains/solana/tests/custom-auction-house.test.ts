@@ -23,7 +23,7 @@ describe("Solana Auction House registry", () => {
 			itemId: toItemId("SOLANA:mintmintmintmintmintyiBGnLSpookWQiwLMvFn4NFm"),
 		})
 		// no default ah for mints registered, return default sol ah
-		expect(ah.toString()).toEqual("8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm")
+		expect(ah.toString()).toEqual("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
 	})
 
 	test("Should return correct Auction House with mapping", async () => {

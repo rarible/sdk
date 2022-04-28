@@ -154,7 +154,7 @@ export class SolanaOrder {
 				return getOrderId(
 					"BUY",
 					this.wallet!.provider.publicKey.toString(),
-					WRAPPED_SOL, //todo should be ah currency program address
+					mint.toString(),
 					auctionHouse.toString()
 				)
 			},
@@ -197,7 +197,7 @@ export class SolanaOrder {
 				return getOrderId(
 					"BUY",
 					this.wallet!.provider.publicKey.toString(),
-					WRAPPED_SOL,  //todo should be ah currency program address
+					mint.toString(),
 					auctionHouse.toString()
 				)
 			},
