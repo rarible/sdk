@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.8.52-beta23",
+  "version": "0.8.52-beta.solana1",
   "homepage": "",
   "license": "ISC",
   "private": true,
@@ -13,7 +13,7 @@
   "dependencies": {
     "@rarible/api-client": "0.0.13-beta4",
     "@rarible/ethereum-sdk-test-common": "~0.12.64",
-    "@rarible/sdk-wallet": "^0.8.52-beta23",
+    "@rarible/sdk-wallet": "^0.8.52-beta.solana1",
     "@rarible/types": "~0.9.3"
   },
   "devDependencies": {

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta.solana1](https://github.com/rarible/sdk/compare/v0.8.52-beta23...v0.8.52-beta.solana1) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-walletconnect
+
+
+
+
+
 ## [0.8.52-beta23](https://github.com/rarible/sdk/compare/v0.8.52-beta22...v0.8.52-beta23) (2022-04-28)
 
 **Note:** Version bump only for package @rarible/connector-walletconnect
