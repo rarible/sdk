@@ -30,8 +30,6 @@ export function SellPage() {
 					</CommentedBlock>
 				)
 			}
-			<Button onClick={async () => await connection.sdk?.ethereum?.wrapCryptoPunk({ punkId: 3490 })}>Wrap</Button>
-			<Button onClick={async () => await connection.sdk?.ethereum?.unwrapCryptoPunk({ punkId: 3490 })}>UnWrap</Button>
 			<CommentedBlock sx={{ my: 2 }} comment={<SellComment/>}>
 				<FormStepper
 					steps={[
