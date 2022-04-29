@@ -1,4 +1,4 @@
-import type { ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { CollectionId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -17,9 +17,8 @@ import type { ICancel } from "../../types/order/cancel/domain"
 import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
-import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { ConvertRequest } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
@@ -31,6 +30,7 @@ export function createUnionSdk(
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
 	polygon: IRaribleInternalSdk,
+	solana: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -38,24 +38,28 @@ export function createUnionSdk(
 			FLOW: flow.balances,
 			TEZOS: tezos.balances,
 			POLYGON: polygon.balances,
+			SOLANA: solana.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
 			FLOW: flow.nft,
 			TEZOS: tezos.nft,
 			POLYGON: polygon.nft,
+			SOLANA: solana.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
 			FLOW: flow.order,
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
+			SOLANA: solana.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
 			FLOW: flow.restriction,
 			TEZOS: tezos.restriction,
 			POLYGON: polygon.restriction,
+			SOLANA: solana.restriction,
 		}),
 	}
 }
@@ -185,9 +189,12 @@ const blockchains: Blockchain[] = [
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.POLYGON,
+	Blockchain.SOLANA,
 ]
 
-function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId,
+): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)

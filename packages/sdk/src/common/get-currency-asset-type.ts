@@ -1,4 +1,4 @@
-import { toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
+import { toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { toBigNumber, toContractAddress } from "@rarible/types"
@@ -52,6 +52,17 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
 			"@type": "TEZOS_FT",
 			contract: toContractAddress(`TEZOS:${contract}`),
 			tokenId: tokenId ? toBigNumber(tokenId) : undefined,
+		}
+	}
+	if (blockchain === Blockchain.SOLANA) {
+		if (contract === ZERO_ADDRESS) {
+			return {
+				"@type": "SOLANA_SOL",
+			}
+		}
+		return {
+			"@type": "SOLANA_NFT",
+			itemId: toItemId("SOLANA:" + contract),
 		}
 	}
 	throw new Error(`Unsupported currency type: ${id}`)

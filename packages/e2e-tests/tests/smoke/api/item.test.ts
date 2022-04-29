@@ -116,11 +116,11 @@ describe.each(suites())("$blockchain api => ownership", (suite) => {
 			await getItemsByOwnerRaw(sdk, address.unionAddress, 2) as GetItemsByOwner200
 		expect(itemsByOwnerRaw.value.items.length).toBeGreaterThanOrEqual(1)
 
-		const itemRoyalties = await getItemRoyaltiesById(sdk, nft.contract, nft.tokenId)
+		const itemRoyalties = await getItemRoyaltiesById(sdk, nft.contract!, nft.tokenId!)
 		expect(itemRoyalties.royalties.length).toBeGreaterThanOrEqual(0)
 
 		const itemRoyaltiesRaw =
-			await getItemRoyaltiesByIdRaw(sdk, nft.contract, nft.tokenId) as GetItemRoyaltiesById200
+			await getItemRoyaltiesByIdRaw(sdk, nft.contract!, nft.tokenId!) as GetItemRoyaltiesById200
 		expect(itemRoyaltiesRaw.value.royalties.length).toBeGreaterThanOrEqual(0)
 	})
 })

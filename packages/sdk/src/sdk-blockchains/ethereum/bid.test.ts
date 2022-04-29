@@ -15,6 +15,7 @@ import { initProvider, initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
 import {
+	convertEthereumCollectionId,
 	convertEthereumContractAddress,
 	convertEthereumItemId,
 	convertEthereumToUnionAddress,
@@ -53,7 +54,7 @@ describe("bid", () => {
 
 	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
 	const erc1155Address = toAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a")
-	const e2eErc1155V2ContractAddress = convertEthereumContractAddress(erc1155Address, Blockchain.ETHEREUM)
+	const e2eErc1155V2ContractAddress = convertEthereumCollectionId(erc1155Address, Blockchain.ETHEREUM)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -73,7 +74,7 @@ describe("bid", () => {
 		})
 
 		const action = await sdk1.nft.mint({
-			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -343,7 +344,7 @@ describe("bid", () => {
 		})
 		await awaitItem(sdk1, itemId)
 
-		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
+		const erc721Contract = convertEthereumCollectionId(it.testErc721.options.address, Blockchain.ETHEREUM)
 		const bidResponse = await sdk2.order.bid({
 			collectionId: erc721Contract,
 		})
@@ -438,7 +439,7 @@ describe("bid", () => {
 		})
 		await awaitItem(sdk1, itemId)
 
-		const erc721Contract = convertEthereumContractAddress(it.testErc721.options.address, Blockchain.ETHEREUM)
+		const erc721Contract = convertEthereumCollectionId(it.testErc721.options.address, Blockchain.ETHEREUM)
 		const bidResponse = await sdk2.order.bid({
 			collectionId: erc721Contract,
 		})

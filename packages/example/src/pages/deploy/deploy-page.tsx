@@ -47,6 +47,15 @@ function getDeployRequest(data: Record<string, any>) {
 					},
 				},
 			} as CreateCollectionRequest
+		case Blockchain.SOLANA:
+			return {
+				blockchain: data["blockchain"] as CreateCollectionBlockchains,
+				asset: {
+					arguments: {
+						metadataURI: data["metadataURI"],
+					},
+				},
+			} as CreateCollectionRequest
 		default:
 			throw new Error("Unsupported blockchain")
 	}
@@ -54,7 +63,8 @@ function getDeployRequest(data: Record<string, any>) {
 
 function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 	return blockchain === BlockchainGroup.ETHEREUM ||
-		blockchain === BlockchainGroup.TEZOS
+		blockchain === BlockchainGroup.TEZOS ||
+		blockchain === BlockchainGroup.SOLANA
 }
 
 export function DeployPage() {
@@ -96,8 +106,8 @@ export function DeployPage() {
 									{Blockchain.ETHEREUM} / {Blockchain.POLYGON}
 								</MenuItem>
 								<MenuItem value={BlockchainGroup.TEZOS}>{BlockchainGroup.TEZOS}</MenuItem>
-								{ /* <MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>
-									<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem> */}
+								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>
+								{ /*<MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>*/ }
 							</FormSelect>
 						}
 						<DeployForm form={form}/>

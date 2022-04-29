@@ -34,7 +34,7 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 		connector,
 		state: conn,
 		sdk,
-		walletAddress: conn.status === "connected" ? conn.connection.address : undefined,
+		walletAddress: conn.status === "connected" ? conn.connection.blockchain + ":" + conn.connection.address : undefined,
 	}
 
 	return <ConnectorContext.Provider value={context}>

@@ -7,6 +7,7 @@ import {
 } from "@rarible/api-client"
 import { toContractAddress } from "@rarible/types"
 import { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
+import { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -24,11 +25,16 @@ const tezosNative: TezosXTZAssetType = {
 	"@type": "XTZ"
 }
 
+const solanaNative: SolanaSolAssetType = {
+	"@type": "SOLANA_SOL"
+}
+
 const flowNative: FlowAssetTypeFt = {
 	"@type": "FLOW_FT",
 	contract: toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken")
 }
-/*
+
+/*const tezosFt: TezosFTAssetType = {
 const tezosFt: TezosFTAssetType = {
 	"@type": "TEZOS_FT",
 	contract: toContractAddress("..."),
@@ -58,6 +64,11 @@ export function getCurrency(currency: CurrencyType): RequestCurrency {
 				throw new Error("Unsupported currency subtype")
 			}
 			return tezosNative
+		case Blockchain.SOLANA:
+			if (currency.type === "ERC20") {
+				throw new Error("Unsupported blockchain or asset type")
+			}
+			return solanaNative
 		case Blockchain.FLOW:
 			if (currency.type === "NATIVE") {
 				return flowNative

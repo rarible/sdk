@@ -1,5 +1,6 @@
 import type { ContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { CollectionId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
@@ -18,6 +19,7 @@ import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
+import { createSolanaSdk } from "./sdk-blockchains/solana"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -54,6 +56,12 @@ export function createRaribleSdk(
 			apis,
 			blockchainConfig.polygonNetwork,
 			ethConfig
+		),
+		createSolanaSdk(
+			filterWallet(wallet, BlockchainGroup.SOLANA),
+			apis,
+			blockchainConfig.solanaNetwork,
+			config?.blockchain?.SOLANA
 		),
 	)
 
@@ -167,14 +175,14 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-export function getCollectionId(req: HasCollectionId | HasCollection): ContractAddress {
+export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
 	if ("collection" in req) {
 		return req.collection.id
 	}
 	return req.collectionId
 }
 
-function getBlockchainCollectionId(contract: ContractAddress): Blockchain {
+function getBlockchainCollectionId(contract: ContractAddress | CollectionId): Blockchain {
 	const [blockchain] = contract.split(":")
 	if (!(blockchain in Blockchain)) {
 		throw new Error(`Unrecognized blockchain in contract ${contract}`)
@@ -188,3 +196,7 @@ type MiddleMintType = {
 }
 
 export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
+export { IRaribleSdk, MintAndSellRequest }
+export { RequestCurrency } from "./common/domain"
+export { UnionPart } from "./types/order/common/index"
+export { isEVMBlockchain } from "./sdk-blockchains/ethereum/common"

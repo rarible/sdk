@@ -9,7 +9,7 @@ import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import { sell } from "../../common/atoms-tests/sell"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer,
+	getEthereumWalletBuyer, getSolanaWallet,
 	getTezosTestWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
@@ -292,6 +292,35 @@ function suites(): {
 			},
 			updateSellRequest: {
 				price: "0.01",
+			},
+		},
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { seller: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "SOLANA_SOL",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.002",
+					currency: currency,
+				}
+			},
+			updateSellRequest: {
+				price: "0.001",
 			},
 		},
 	]

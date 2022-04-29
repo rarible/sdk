@@ -29,7 +29,7 @@ export const SCHEMA = {
                     "additionalProperties": false,
                     "properties": {
                         "collectionId": {
-                            "$ref": "#/definitions/ContractAddress"
+                            "$ref": "#/definitions/CollectionId"
                         },
                         "tokenId": {
                             "$ref": "#/definitions/TokenId"
@@ -81,7 +81,10 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "id": {
-                    "$ref": "#/definitions/ContractAddress"
+                    "$ref": "#/definitions/CollectionId"
+                },
+                "parent": {
+                    "$ref": "#/definitions/CollectionId"
                 },
                 "blockchain": {
                     "$ref": "#/definitions/Blockchain"
@@ -109,6 +112,15 @@ export const SCHEMA = {
                     "items": {
                         "$ref": "#/definitions/UnionAddress"
                     }
+                },
+                "meta": {
+                    "$ref": "#/definitions/CollectionMeta"
+                },
+                "bestBidOrder": {
+                    "$ref": "#/definitions/Order"
+                },
+                "bestSellOrder": {
+                    "$ref": "#/definitions/Order"
                 }
             },
             "required": [
@@ -120,7 +132,7 @@ export const SCHEMA = {
             ],
             "additionalProperties": false
         },
-        "ContractAddress": {
+        "CollectionId": {
             "type": "string"
         },
         "Blockchain": {
@@ -129,7 +141,8 @@ export const SCHEMA = {
                 "ETHEREUM",
                 "POLYGON",
                 "FLOW",
-                "TEZOS"
+                "TEZOS",
+                "SOLANA"
             ]
         },
         "CollectionType": {
@@ -140,7 +153,8 @@ export const SCHEMA = {
                 "ERC1155",
                 "FLOW",
                 "TEZOS_NFT",
-                "TEZOS_MT"
+                "TEZOS_MT",
+                "SOLANA"
             ]
         },
         "UnionAddress": {
@@ -156,6 +170,1235 @@ export const SCHEMA = {
                 "SECONDARY_SALE_FEES",
                 "MINT_AND_TRANSFER"
             ]
+        },
+        "CollectionMeta": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "content": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/MetaContent"
+                    }
+                },
+                "externalLink": {
+                    "type": "string"
+                },
+                "sellerFeeBasisPoints": {
+                    "type": "number"
+                },
+                "feeRecipient": {
+                    "$ref": "#/definitions/UnionAddress"
+                }
+            },
+            "required": [
+                "name",
+                "content"
+            ],
+            "additionalProperties": false
+        },
+        "MetaContent": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/ImageContent"
+                },
+                {
+                    "$ref": "#/definitions/VideoContent"
+                },
+                {
+                    "$ref": "#/definitions/AudioContent"
+                },
+                {
+                    "$ref": "#/definitions/Model3dContent"
+                }
+            ]
+        },
+        "ImageContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "IMAGE"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                },
+                "width": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "MetaContentRepresentation": {
+            "type": "string",
+            "enum": [
+                "PREVIEW",
+                "BIG",
+                "ORIGINAL"
+            ]
+        },
+        "VideoContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "VIDEO"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                },
+                "width": {
+                    "type": "number"
+                },
+                "height": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "AudioContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "AUDIO"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "Model3dContent": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "MODEL_3D"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "representation": {
+                    "$ref": "#/definitions/MetaContentRepresentation"
+                },
+                "mimeType": {
+                    "type": "string"
+                },
+                "size": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "url",
+                "representation"
+            ],
+            "additionalProperties": false
+        },
+        "Order": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "$ref": "#/definitions/OrderId"
+                },
+                "fill": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "platform": {
+                    "$ref": "#/definitions/Platform"
+                },
+                "status": {
+                    "$ref": "#/definitions/OrderStatus"
+                },
+                "startedAt": {
+                    "type": "string"
+                },
+                "endedAt": {
+                    "type": "string"
+                },
+                "makeStock": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "cancelled": {
+                    "type": "boolean"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "lastUpdatedAt": {
+                    "type": "string"
+                },
+                "makePrice": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takePrice": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "makePriceUsd": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takePriceUsd": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "priceHistory": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/OrderPriceHistoryRecord"
+                    }
+                },
+                "maker": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "taker": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "make": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "take": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "salt": {
+                    "type": "string"
+                },
+                "signature": {
+                    "type": "string"
+                },
+                "pending": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/PendingOrder"
+                    }
+                },
+                "data": {
+                    "$ref": "#/definitions/OrderData"
+                }
+            },
+            "required": [
+                "id",
+                "fill",
+                "platform",
+                "status",
+                "makeStock",
+                "cancelled",
+                "createdAt",
+                "lastUpdatedAt",
+                "maker",
+                "make",
+                "take",
+                "salt",
+                "data"
+            ],
+            "additionalProperties": false
+        },
+        "OrderId": {
+            "type": "string"
+        },
+        "BigNumber": {
+            "type": "string"
+        },
+        "Platform": {
+            "type": "string",
+            "enum": [
+                "RARIBLE",
+                "OPEN_SEA",
+                "CRYPTO_PUNKS"
+            ]
+        },
+        "OrderStatus": {
+            "type": "string",
+            "enum": [
+                "ACTIVE",
+                "FILLED",
+                "HISTORICAL",
+                "INACTIVE",
+                "CANCELLED"
+            ]
+        },
+        "OrderPriceHistoryRecord": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string"
+                },
+                "makeValue": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takeValue": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "date",
+                "makeValue",
+                "takeValue"
+            ],
+            "additionalProperties": false
+        },
+        "Asset": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "$ref": "#/definitions/AssetType"
+                },
+                "value": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "type",
+                "value"
+            ],
+            "additionalProperties": false
+        },
+        "AssetType": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/FlowAssetTypeNft"
+                },
+                {
+                    "$ref": "#/definitions/FlowAssetTypeFt"
+                },
+                {
+                    "$ref": "#/definitions/TezosXTZAssetType"
+                },
+                {
+                    "$ref": "#/definitions/TezosFTAssetType"
+                },
+                {
+                    "$ref": "#/definitions/TezosNFTAssetType"
+                },
+                {
+                    "$ref": "#/definitions/TezosMTAssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthEthereumAssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthErc20AssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthErc721AssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthErc721LazyAssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthErc1155AssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthErc1155LazyAssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthCryptoPunksAssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthGenerativeArtAssetType"
+                },
+                {
+                    "$ref": "#/definitions/EthCollectionAssetType"
+                },
+                {
+                    "$ref": "#/definitions/SolanaNftAssetType"
+                },
+                {
+                    "$ref": "#/definitions/SolanaFtAssetType"
+                },
+                {
+                    "$ref": "#/definitions/SolanaSolAssetType"
+                }
+            ]
+        },
+        "FlowAssetTypeNft": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "FLOW_NFT"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId"
+            ],
+            "additionalProperties": false
+        },
+        "ContractAddress": {
+            "type": "string"
+        },
+        "FlowAssetTypeFt": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "FLOW_FT"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "contract"
+            ],
+            "additionalProperties": false
+        },
+        "TezosXTZAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "XTZ"
+                }
+            },
+            "required": [
+                "@type"
+            ],
+            "additionalProperties": false
+        },
+        "TezosFTAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "TEZOS_FT"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "contract"
+            ],
+            "additionalProperties": false
+        },
+        "TezosNFTAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "TEZOS_NFT"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId"
+            ],
+            "additionalProperties": false
+        },
+        "TezosMTAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "TEZOS_MT"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId"
+            ],
+            "additionalProperties": false
+        },
+        "EthEthereumAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ETH"
+                },
+                "blockchain": {
+                    "$ref": "#/definitions/Blockchain"
+                }
+            },
+            "required": [
+                "@type"
+            ],
+            "additionalProperties": false
+        },
+        "EthErc20AssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ERC20"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "contract"
+            ],
+            "additionalProperties": false
+        },
+        "EthErc721AssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ERC721"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId"
+            ],
+            "additionalProperties": false
+        },
+        "EthErc721LazyAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ERC721_Lazy"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "uri": {
+                    "type": "string"
+                },
+                "creators": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Creator"
+                    }
+                },
+                "royalties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Royalty"
+                    }
+                },
+                "signatures": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId",
+                "uri",
+                "creators",
+                "royalties",
+                "signatures"
+            ],
+            "additionalProperties": false
+        },
+        "Creator": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "value": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "account",
+                "value"
+            ],
+            "additionalProperties": false
+        },
+        "Royalty": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "value": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "account",
+                "value"
+            ],
+            "additionalProperties": false
+        },
+        "EthErc1155AssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ERC1155"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId"
+            ],
+            "additionalProperties": false
+        },
+        "EthErc1155LazyAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ERC1155_Lazy"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "uri": {
+                    "type": "string"
+                },
+                "supply": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "creators": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Creator"
+                    }
+                },
+                "royalties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Royalty"
+                    }
+                },
+                "signatures": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId",
+                "uri",
+                "supply",
+                "creators",
+                "royalties",
+                "signatures"
+            ],
+            "additionalProperties": false
+        },
+        "EthCryptoPunksAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "CRYPTO_PUNKS"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                },
+                "tokenId": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "@type",
+                "contract",
+                "tokenId"
+            ],
+            "additionalProperties": false
+        },
+        "EthGenerativeArtAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "GEN_ART"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "contract"
+            ],
+            "additionalProperties": false
+        },
+        "EthCollectionAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "COLLECTION"
+                },
+                "contract": {
+                    "$ref": "#/definitions/ContractAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "contract"
+            ],
+            "additionalProperties": false
+        },
+        "SolanaNftAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "SOLANA_NFT"
+                },
+                "itemId": {
+                    "$ref": "#/definitions/ItemId"
+                }
+            },
+            "required": [
+                "@type",
+                "itemId"
+            ],
+            "additionalProperties": false
+        },
+        "ItemId": {
+            "type": "string"
+        },
+        "SolanaFtAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "SOLANA_FT"
+                },
+                "address": {
+                    "$ref": "#/definitions/ContractAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "address"
+            ],
+            "additionalProperties": false
+        },
+        "SolanaSolAssetType": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "SOLANA_SOL"
+                }
+            },
+            "required": [
+                "@type"
+            ],
+            "additionalProperties": false
+        },
+        "PendingOrder": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/PendingOrderCancel"
+                },
+                {
+                    "$ref": "#/definitions/PendingOrderMatch"
+                },
+                {
+                    "$ref": "#/definitions/OnChainOrder"
+                }
+            ]
+        },
+        "PendingOrderCancel": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "CANCEL"
+                },
+                "id": {
+                    "$ref": "#/definitions/OrderId"
+                },
+                "make": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "take": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "maker": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "owner": {
+                    "$ref": "#/definitions/UnionAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "id",
+                "date"
+            ],
+            "additionalProperties": false
+        },
+        "PendingOrderMatch": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ORDER_SIDE_MATCH"
+                },
+                "id": {
+                    "$ref": "#/definitions/OrderId"
+                },
+                "make": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "take": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "maker": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "side": {
+                    "$ref": "#/definitions/PendingOrderMatchSide"
+                },
+                "fill": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "taker": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "counterHash": {
+                    "type": "string"
+                },
+                "makeUsd": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takeUsd": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "makePriceUsd": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takePriceUsd": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "id",
+                "date",
+                "fill"
+            ],
+            "additionalProperties": false
+        },
+        "PendingOrderMatchSide": {
+            "type": "string",
+            "enum": [
+                "LEFT",
+                "RIGHT"
+            ]
+        },
+        "OnChainOrder": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ON_CHAIN_ORDER"
+                },
+                "id": {
+                    "$ref": "#/definitions/OrderId"
+                },
+                "make": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "take": {
+                    "$ref": "#/definitions/Asset"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "maker": {
+                    "$ref": "#/definitions/UnionAddress"
+                }
+            },
+            "required": [
+                "@type",
+                "id",
+                "date"
+            ],
+            "additionalProperties": false
+        },
+        "OrderData": {
+            "anyOf": [
+                {
+                    "$ref": "#/definitions/EthOrderDataLegacy"
+                },
+                {
+                    "$ref": "#/definitions/EthOrderDataRaribleV2DataV1"
+                },
+                {
+                    "$ref": "#/definitions/EthOrderOpenSeaV1DataV1"
+                },
+                {
+                    "$ref": "#/definitions/EthOrderCryptoPunksData"
+                },
+                {
+                    "$ref": "#/definitions/TezosOrderDataRaribleV2DataV1"
+                },
+                {
+                    "$ref": "#/definitions/FlowOrderDataV1"
+                },
+                {
+                    "$ref": "#/definitions/SolanaAuctionHouseDataV1"
+                }
+            ]
+        },
+        "EthOrderDataLegacy": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ETH_RARIBLE_V1"
+                },
+                "fee": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "fee"
+            ],
+            "additionalProperties": false
+        },
+        "EthOrderDataRaribleV2DataV1": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ETH_RARIBLE_V2"
+                },
+                "payouts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Payout"
+                    }
+                },
+                "originFees": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Payout"
+                    }
+                }
+            },
+            "required": [
+                "@type",
+                "payouts",
+                "originFees"
+            ],
+            "additionalProperties": false
+        },
+        "Payout": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "value": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "account",
+                "value"
+            ],
+            "additionalProperties": false
+        },
+        "EthOrderOpenSeaV1DataV1": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ETH_OPEN_SEA_V1"
+                },
+                "exchange": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "makerRelayerFee": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takerRelayerFee": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "makerProtocolFee": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "takerProtocolFee": {
+                    "$ref": "#/definitions/BigNumber"
+                },
+                "feeRecipient": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "feeMethod": {
+                    "$ref": "#/definitions/EthOrderOpenSeaV1DataV1FeeMethod"
+                },
+                "side": {
+                    "$ref": "#/definitions/EthOrderOpenSeaV1DataV1Side"
+                },
+                "saleKind": {
+                    "$ref": "#/definitions/EthOrderOpenSeaV1DataV1SaleKind"
+                },
+                "howToCall": {
+                    "$ref": "#/definitions/EthOrderOpenSeaV1DataV1HowToCall"
+                },
+                "callData": {
+                    "type": "string"
+                },
+                "replacementPattern": {
+                    "type": "string"
+                },
+                "staticTarget": {
+                    "$ref": "#/definitions/UnionAddress"
+                },
+                "staticExtraData": {
+                    "type": "string"
+                },
+                "extra": {
+                    "$ref": "#/definitions/BigNumber"
+                }
+            },
+            "required": [
+                "@type",
+                "exchange",
+                "makerRelayerFee",
+                "takerRelayerFee",
+                "makerProtocolFee",
+                "takerProtocolFee",
+                "feeRecipient",
+                "feeMethod",
+                "side",
+                "saleKind",
+                "howToCall",
+                "callData",
+                "replacementPattern",
+                "staticTarget",
+                "staticExtraData",
+                "extra"
+            ],
+            "additionalProperties": false
+        },
+        "EthOrderOpenSeaV1DataV1FeeMethod": {
+            "type": "string",
+            "enum": [
+                "PROTOCOL_FEE",
+                "SPLIT_FEE"
+            ]
+        },
+        "EthOrderOpenSeaV1DataV1Side": {
+            "type": "string",
+            "enum": [
+                "BUY",
+                "SELL"
+            ]
+        },
+        "EthOrderOpenSeaV1DataV1SaleKind": {
+            "type": "string",
+            "enum": [
+                "FIXED_PRICE",
+                "DUTCH_AUCTION"
+            ]
+        },
+        "EthOrderOpenSeaV1DataV1HowToCall": {
+            "type": "string",
+            "enum": [
+                "CALL",
+                "DELEGATE_CALL"
+            ]
+        },
+        "EthOrderCryptoPunksData": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "ETH_CRYPTO_PUNKS"
+                },
+                "stub": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@type"
+            ],
+            "additionalProperties": false
+        },
+        "TezosOrderDataRaribleV2DataV1": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "TEZOS_RARIBLE_V2"
+                },
+                "payouts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Payout"
+                    }
+                },
+                "originFees": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Payout"
+                    }
+                },
+                "makerEdpk": {
+                    "type": "string"
+                },
+                "takerEdpk": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "@type",
+                "payouts",
+                "originFees"
+            ],
+            "additionalProperties": false
+        },
+        "FlowOrderDataV1": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "FLOW_RARIBLE_V1"
+                },
+                "payouts": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Payout"
+                    }
+                },
+                "originFees": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Payout"
+                    }
+                }
+            },
+            "required": [
+                "@type",
+                "payouts",
+                "originFees"
+            ],
+            "additionalProperties": false
+        },
+        "SolanaAuctionHouseDataV1": {
+            "type": "object",
+            "properties": {
+                "@type": {
+                    "type": "string",
+                    "const": "SOLANA_AUCTION_HOUSE_V1"
+                },
+                "auctionHouse": {
+                    "$ref": "#/definitions/ContractAddress"
+                }
+            },
+            "required": [
+                "@type"
+            ],
+            "additionalProperties": false
         },
         "HasCollection": {
             "type": "object",
@@ -173,7 +1416,7 @@ export const SCHEMA = {
             "type": "object",
             "properties": {
                 "collectionId": {
-                    "$ref": "#/definitions/ContractAddress"
+                    "$ref": "#/definitions/CollectionId"
                 }
             },
             "required": [

@@ -26,7 +26,7 @@ export class FlowMint {
 		const collection = await getCollection(this.apis.collection, prepareRequest)
 		if (collection.type === "FLOW") {
 			validatePrepareMintRequest(prepareRequest)
-			const flowCollection = getFlowCollection(collection.id)
+			const flowCollection = getFlowCollection(collection.id as any) //todo remove then fixed
 			return {
 				multiple: false,
 				supportsRoyalties: true,

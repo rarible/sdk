@@ -8,6 +8,9 @@
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel",
     "build": "yarn bootstrap && yarn clean && yarn build-all",
+    "build-solana-common": "yarn workspace @rarible/solana-common run build",
+    "build-solana-wallet": "yarn workspace @rarible/solana-wallet run build",
+    "build-solana-sdk": "yarn workspace @rarible/solana-sdk run build",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
     "build-sdk-transaction-backend": "yarn workspace @rarible/sdk-transaction-backend run build",
@@ -24,6 +27,7 @@
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
+    "build-connector-solflare": "yarn workspace @rarible/connector-solflare run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
@@ -52,6 +56,9 @@
       "yarn run prettify:packages"
     ]
   },
+  "resolutions": {
+    "@rarible/types": "0.9.3"
+  },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
@@ -64,7 +71,7 @@
     "npm-run-all": "^4.1.5",
     "sort-package-json": "^1.52.0",
     "tslib": "^2.3.1",
-    "typescript": "~4.4.4"
+    "typescript": "^4.6.2"
   },
   "resolutions": {
     "**/axios": "^0.26.1"

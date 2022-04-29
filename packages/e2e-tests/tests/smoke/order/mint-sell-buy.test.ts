@@ -8,7 +8,7 @@ import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { sell } from "../../common/atoms-tests/sell"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer,
+	getEthereumWalletBuyer, getSolanaWallet,
 	getTezosTestWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
@@ -291,6 +291,32 @@ function suites(): {
 				}
 			},
 		},
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { seller: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "SOLANA_SOL",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.001",
+					currency: currency,
+				}
+			},
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -319,8 +345,8 @@ describe.each(suites())("$blockchain mint => sell => buy", (suite) => {
 		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
 		await getActivitiesByItem(sellerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.LIST],
-			[ActivityType.LIST, ActivityType.MINT])
+			[ActivityType.LIST],
+			[ActivityType.LIST])
 
 		// Fill sell order
 		const buyAmount = orderRequest.amount

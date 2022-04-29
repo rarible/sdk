@@ -6,8 +6,8 @@ pipeline {
   }
 
   parameters {
-    choice(name: 'TEST_ENV', choices: ['development', 'e2e'], description: 'Environment')
-    choice(name: 'BLOCKCHAIN', choices: ['ETHEREUM', 'TEZOS', 'FLOW', 'ALL'], description: 'Blockchain')
+    choice(name: 'TEST_ENV', choices: ['development'], description: 'Environment')
+    choice(name: 'BLOCKCHAIN', choices: ['ETHEREUM', 'TEZOS', 'FLOW', 'SOLANA', 'ALL'], description: 'Blockchain')
   }
 
   stages {

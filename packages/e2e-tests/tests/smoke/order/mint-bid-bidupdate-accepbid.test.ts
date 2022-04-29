@@ -8,7 +8,7 @@ import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer,
+	getEthereumWalletBuyer, getSolanaWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
@@ -177,6 +177,35 @@ function suites(): {
 		// 		price: "0.03",
 		// 	},
 		// }
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { seller: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: creatorAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "SOLANA_SOL",
+			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.001",
+					currency: currency,
+				}
+			},
+			updateBidRequest: {
+				price: "0.002",
+			},
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }

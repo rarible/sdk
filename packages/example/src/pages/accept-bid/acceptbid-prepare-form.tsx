@@ -9,13 +9,16 @@ import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { useNavigate } from "react-router-dom"
 
 interface IAcceptBidPrepareFormProps {
 	disabled?: boolean
 	onComplete: (response: PrepareFillResponse) => void
+	orderId: string | undefined
 }
 
-export function AcceptBidPrepareForm({ disabled, onComplete }: IAcceptBidPrepareFormProps) {
+export function AcceptBidPrepareForm({ orderId, disabled, onComplete }: IAcceptBidPrepareFormProps) {
+	const navigate = useNavigate()
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
@@ -31,13 +34,14 @@ export function AcceptBidPrepareForm({ disabled, onComplete }: IAcceptBidPrepare
 					onComplete(await connection.sdk.order.acceptBid({
 						orderId: toOrderId(formData.orderId)
 					}))
+					navigate(`/accept-bid/${formData.orderId}`, {})
 				} catch (e) {
 					setError(e)
 				}
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput form={form} name="orderId" label="Order ID"/>
+					<FormTextInput form={form} defaultValue={orderId} name="orderId" label="Order ID"/>
 					<Box>
 						<FormSubmit
 							form={form}
