@@ -2,7 +2,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.8.48-hotfix.8",
+  "version": "0.8.48-hotfix.9",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {

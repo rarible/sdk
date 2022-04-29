@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.8...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+
+
 ## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.8.48-hotfix.8",
+  "version": "0.8.48-hotfix.9",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.8.2",
@@ -21,7 +21,7 @@
     "@rarible/connector-torus": "^0.8.46",
     "@rarible/connector-walletconnect": "^0.8.46",
     "@rarible/connector-walletlink": "^0.8.46",
-    "@rarible/sdk": "^0.8.48-hotfix.8",
+    "@rarible/sdk": "^0.8.48-hotfix.9",
     "@rarible/web3-ethereum": "~0.12.66-beta.0",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
