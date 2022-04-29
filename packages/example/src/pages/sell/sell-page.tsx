@@ -23,8 +23,6 @@ export function SellPage() {
 	const connection = useContext(ConnectorContext)
 	const blockchain = connection.sdk?.wallet?.blockchain
 
-	console.log("item" , params.itemId)
-
 	return (
 		<Page header="Sell Token">
 			{

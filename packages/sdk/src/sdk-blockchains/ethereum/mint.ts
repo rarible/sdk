@@ -175,7 +175,7 @@ export async function getCollection(
 }
 
 function toNftCollection(collection: Collection): CommonNftCollection {
-	const contract = convertToEthereumAddress(collection.id as any) //todo remove then fixed
+	const contract = convertToEthereumAddress(collection.id)
 	if (!isSupportedCollection(collection.type)) {
 		throw new Error(`Collection with type "${collection}" not supported`)
 	}

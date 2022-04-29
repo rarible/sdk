@@ -9,7 +9,6 @@ export function isPrivateKey(x: any): x is web3.Keypair {
 }
 
 export function toPublicKey(key: string): web3.PublicKey {
-	// todo: add cache ?
 	return new web3.PublicKey(key)
 }
 

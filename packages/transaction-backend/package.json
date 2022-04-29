@@ -18,8 +18,8 @@
     "serve": "nodemon"
   },
   "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "~0.12.65-beta2",
-    "@rarible/web3-ethereum": "~0.12.65-beta2",
+    "@rarible/protocol-ethereum-sdk": "~0.12.66",
+    "@rarible/web3-ethereum": "~0.12.66",
     "@types/node-fetch": "^2.6.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
@@ -34,7 +34,7 @@
     "web3": "1.5.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "~0.12.65-beta2",
+    "@rarible/ethereum-sdk-test-common": "~0.12.66",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
     "@types/jest": "^27.4.1",

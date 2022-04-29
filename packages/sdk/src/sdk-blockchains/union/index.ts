@@ -4,7 +4,7 @@ import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
-import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
+import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -24,6 +24,7 @@ import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
+import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -61,6 +62,7 @@ export function createUnionSdk(
 			POLYGON: polygon.restriction,
 			SOLANA: solana.restriction,
 		}),
+		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 	}
 }
 
@@ -184,6 +186,14 @@ class UnionRestrictionSdk implements IRestrictionSdk {
 	}
 }
 
+class UnionEthereumSpecificSdk implements IEthereumSdk {
+	constructor(private readonly ethereumSdk: IEthereumSdk) {
+	}
+
+	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
+	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+}
+
 const blockchains: Blockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.FLOW,
@@ -233,6 +243,4 @@ function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency):
 	} else {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
-
-
 }
