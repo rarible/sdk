@@ -4143,10 +4143,10 @@
     ethereumjs-util "^7.1.0"
     exponential-backoff "^3.1.0"
 
-"@rarible/protocol-ethereum-sdk@~0.12.66-beta.1":
-  version "0.12.66-beta.1"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.66-beta.1.tgz#e5e088c7a287b7f65da667bb93719778fdf1ebc3"
-  integrity sha512-K/vj89RhYZgoDisNE8JbCvmc+NoxTsW8nhEZW8vTO1x+g7GMzsSMwhmDdNkuY9Ch9tZIaIYf1pbyhZ6Yt/zLww==
+"@rarible/protocol-ethereum-sdk@~0.12.66-beta.2":
+  version "0.12.66-beta.2"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.66-beta.2.tgz#ce8c35dc9e555f6178fae97eb7374a20fc5d580e"
+  integrity sha512-7IwS1eyNfh9TU4Pb+FrqhHT9ekeGyk7EwhAcTreryzfNJ+LxIME0VkqNc+uB9nJaMmeqfQoFz0O3nTz6mb4Ffg==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.21"
