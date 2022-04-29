@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta17-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta17-hotfix.0) (2022-04-29)
+
+
+### Bug Fixes
+
+* update flow-sdk ([7fd993d](https://github.com/rarible/sdk/commit/7fd993dfd9a9d47b02f70e2aba301da43d12949a))
+
+
+
+
+
 ## [0.8.52-beta17](https://github.com/rarible/sdk/compare/v0.8.52-beta16...v0.8.52-beta17) (2022-04-18)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
