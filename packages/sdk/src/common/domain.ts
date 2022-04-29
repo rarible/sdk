@@ -1,6 +1,6 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Action } from "@rarible/action"
-import type { FlowContractAddress } from "@rarible/flow-sdk/build/common/flow-address"
+import type { FlowContractAddress } from "@rarible/flow-sdk"
 
 // @todo draft. probably will be changed in future
 export type CurrencyType = {
@@ -17,14 +17,14 @@ export interface AbstractPrepareResponse<Id, In, Out> {
 export type RequestCurrency = ApiClient.CurrencyId | RequestCurrencyAssetType
 
 export type RequestCurrencyAssetType =
-  | ApiClient.EthErc20AssetType
-  | ApiClient.EthEthereumAssetType
-  | ApiClient.FlowAssetTypeNft
-  | ApiClient.FlowAssetTypeFt
-  | ApiClient.TezosXTZAssetType
-  | ApiClient.TezosFTAssetType
-  | ApiClient.SolanaNftAssetType
-  | ApiClient.SolanaSolAssetType
+	| ApiClient.EthErc20AssetType
+	| ApiClient.EthEthereumAssetType
+	| ApiClient.FlowAssetTypeNft
+	| ApiClient.FlowAssetTypeFt
+	| ApiClient.TezosXTZAssetType
+	| ApiClient.TezosFTAssetType
+	| ApiClient.SolanaNftAssetType
+	| ApiClient.SolanaSolAssetType
 
 export type AbstractItemId<T extends ApiClient.Blockchain, ContractAddress extends string> = {
 	blockchain: T

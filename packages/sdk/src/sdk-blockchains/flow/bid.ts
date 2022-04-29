@@ -1,7 +1,6 @@
 import type { FlowSdk } from "@rarible/flow-sdk"
-import { toFlowContractAddress } from "@rarible/flow-sdk"
+import { toFlowContractAddress, toFlowItemId } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
-import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { Blockchain } from "@rarible/api-client"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
