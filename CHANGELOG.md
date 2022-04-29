@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.52-beta17-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.52-beta17-hotfix.0...v0.8.52-beta17-hotfix.1) (2022-04-29)
+
+
+### Bug Fixes
+
+* cicd config ([fc784ee](https://github.com/rarible/sdk/commit/fc784ee88dc9675803bd37f5050ba9d85d619743))
+
+
+
+
+
 ## [0.8.52-beta17-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-beta17-hotfix.0) (2022-04-29)
 
 
