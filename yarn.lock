@@ -4794,17 +4794,24 @@
     eslint-plugin-jest "^25.2.3"
     eslint-plugin-unicorn "^38.0.0"
 
-"@rarible/ethereum-api-client@^0.1.20":
-  version "0.1.20"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.20.tgz#75ad10c3a60b4f7bf944e3f19143099b97111019"
-  integrity sha512-xHAt3XfqpDKEblNFdqNPNdStFMxXx03aYgYgvg1FVqkAZivsCZ4gO4xCA0dEBmKf4N5nJVO7RIHLiqwweLJa/g==
+"@rarible/ethereum-api-client@^0.1.21":
+  version "0.1.21"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.21.tgz#23aba5e639255f7626c3ca77e5fed6ffe5a6f08c"
+  integrity sha512-qE6i/jf7L9NdXI2ipdTnP9XlynhhWSG4n+gUox+zza4E82Agn1uHvZZOtAB0kcl9YRL2vDrjfUeG2WHqulAvbw==
   dependencies:
-    "@rarible/types" "~0.5.0"
+    "@rarible/types" "~0.9.2"
 
-"@rarible/ethereum-provider@^0.12.54", "@rarible/ethereum-provider@~0.12.54":
+"@rarible/ethereum-provider@^0.12.54":
   version "0.12.54"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.54.tgz#b7bd7febc6af39061fbefe25c958eadf1d5b7c20"
   integrity sha512-jbyLj31lC62eiTPO/YLSmvYoNG0MfduO41Dx/K4nDNfCJ69A6RQCcgWobekiWNUUMJuw/XNxx/ZpWfDnyAEU8w==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
+"@rarible/ethereum-provider@^0.12.64", "@rarible/ethereum-provider@~0.12.64":
+  version "0.12.64"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.64.tgz#115b65de564538226b25b4915c23a079738fbbd1"
+  integrity sha512-/3CDvm2ivBGpI8F/zHzByN+al2hM3NAbwo+0KC8pt9FJTCwzDtztAvqBHWl5m3LR6QTelaTC38mS0qJp5i9O7w==
   dependencies:
     eth-sig-util "^3.0.0"
 
@@ -4869,14 +4876,14 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.57":
-  version "0.12.57"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.57.tgz#5be8e2c3f1a4cdf29cc1fd5ecd1e38a9ddc0c870"
-  integrity sha512-TcvTHZPEA5cy5hm65fOq7krqxB211Pug3iOxB2dbpq10CAVYH4NXO9mW1RMHtrhaH2OTC1ZhawDc1EcoJvNvvw==
+"@rarible/protocol-ethereum-sdk@~0.12.66-beta.3":
+  version "0.12.66-beta.3"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.66-beta.3.tgz#843c6e483fd5d00472bb8a537c4ea0cd17f87a30"
+  integrity sha512-DVAkZWwitsEwW8pt7AAopvenO3KE2cNB2VU9jkA3IZzh0lUvpPSHFl9QvEIWXJ9lQRG5Rchxv2TLumPECublnA==
   dependencies:
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.20"
-    "@rarible/ethereum-provider" "^0.12.54"
+    "@rarible/ethereum-api-client" "^0.1.21"
+    "@rarible/ethereum-provider" "^0.12.64"
     "@rarible/logger" "~0.6.2"
     "@rarible/utils" "~0.5.0"
     axios "^0.25.0"
@@ -4953,7 +4960,7 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.1.tgz#df86ff473c4310142ca6f28faae07622d5195608"
   integrity sha512-W5V2r8sztS3FYlTFAr0nbiFnyOLKuml3kgrFjpxMp312HVKNSLJLF3lqkwRDFcMFdvxRSGN23chaMDSoBcztSQ==
 
-"@rarible/types@~0.9.3":
+"@rarible/types@~0.9.2", "@rarible/types@~0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
@@ -4965,12 +4972,12 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@~0.12.54":
-  version "0.12.54"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.54.tgz#aa2d049b281f8a761f84da937f861fae0b834932"
-  integrity sha512-SyujeEcCUQxbFmS4BTlG6/kzzDTP0QKdFGeNbxUDNm8IHhAsr/w4KlXGYE8ADR8BGmdzZ3Fdwl3cm2e/HY7gmg==
+"@rarible/web3-ethereum@~0.12.66-beta.0":
+  version "0.12.66"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.66.tgz#acdd3719df86dc8082ec7ebaf58e95ed318bc7b9"
+  integrity sha512-YLajgTKVuqn2wsEaWzQkv4nSN7yMLlMDFUemtmnAmEu4WmNqr2+RZ4SmdB1NgsCD3hBYpCc/KiVpegGWks5LMw==
   dependencies:
-    "@rarible/ethereum-provider" "^0.12.54"
+    "@rarible/ethereum-provider" "^0.12.64"
     eth-rpc-errors "^4.0.3"
     exponential-backoff "^3.1.0"
 
