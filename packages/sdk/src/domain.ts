@@ -1,4 +1,5 @@
 import type * as ApiClient from "@rarible/api-client"
+import type { BlockchainGroup } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
@@ -18,6 +19,7 @@ import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
+import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -34,6 +36,9 @@ export interface ISdkContext {
 export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
 	logs?: LogsLevel
+	blockchain?: {
+		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig
+	}
 	middlewares?: Middleware[]
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig

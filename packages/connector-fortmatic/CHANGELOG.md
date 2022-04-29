@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.52-beta.punks3](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks2...v0.8.52-beta.punks3) (2022-04-28)
+## [0.8.52-beta.solana3](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana2...v0.8.52-beta.solana3) (2022-04-28)
 
 **Note:** Version bump only for package @rarible/connector-fortmatic
 
@@ -11,7 +11,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.8.52-beta.punks2](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks1...v0.8.52-beta.punks2) (2022-04-27)
+## [0.8.52-beta.solana2](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana1...v0.8.52-beta.solana2) (2022-04-28)
 
 **Note:** Version bump only for package @rarible/connector-fortmatic
 
@@ -19,7 +19,39 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.8.52-beta.punks1](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.52-beta.punks1) (2022-04-27)
+## [0.8.52-beta.solana1](https://github.com/rarible/sdk/compare/v0.8.52-beta23...v0.8.52-beta.solana1) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-fortmatic
+
+
+
+
+
+## [0.8.52-beta23](https://github.com/rarible/sdk/compare/v0.8.52-beta22...v0.8.52-beta23) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-fortmatic
+
+
+
+
+
+## [0.8.52-beta22](https://github.com/rarible/sdk/compare/v0.8.52-beta21...v0.8.52-beta22) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-fortmatic
+
+
+
+
+
+## [0.8.52-beta21](https://github.com/rarible/sdk/compare/v0.8.52-beta19...v0.8.52-beta21) (2022-04-28)
+
+
+
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
+
+
+
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-hotfix4) (2022-04-21)
 
 **Note:** Version bump only for package @rarible/connector-fortmatic
 

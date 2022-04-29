@@ -144,11 +144,11 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 			await getSellOrdersRaw(sellerSdk, [suite.blockchain], 2) as GetSellOrders200
 		expect(sellOrdersRaw.value.orders.length).toBeGreaterThanOrEqual(1)
 
-		const sellOrdersByItem = await getSellOrdersByItem(sellerSdk, nft.contract, nft.tokenId, 2)
+		const sellOrdersByItem = await getSellOrdersByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
 		expect(sellOrdersByItem.orders.length).toBeGreaterThanOrEqual(1)
 
 		const sellOrdersByItemRaw =
-			await getSellOrdersByItemRaw(sellerSdk, nft.contract, nft.tokenId, 2) as GetSellOrdersByItem200
+			await getSellOrdersByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetSellOrdersByItem200
 		expect(sellOrdersByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)
 
 		const sellOrdersByMaker = await getSellOrdersByMaker(sellerSdk, walletAddressSeller.unionAddress, 2)
@@ -161,11 +161,11 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 		const bidRequest = await suite.bidRequest(requestCurrency)
 		await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
-		const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract, nft.tokenId, 2)
+		const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
 		expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
 
 		const orderBidsByItemRaw =
-			await getOrderBidsByItemRaw(sellerSdk, nft.contract, nft.tokenId, 2) as GetOrderBidsByItem200
+			await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
 		expect(orderBidsByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)
 	})
 })

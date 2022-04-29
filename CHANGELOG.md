@@ -3,7 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.8.52-beta.punks3](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks2...v0.8.52-beta.punks3) (2022-04-28)
+## [0.8.52-beta.solana3](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana2...v0.8.52-beta.solana3) (2022-04-28)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.8.52-beta.solana2](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana1...v0.8.52-beta.solana2) (2022-04-28)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.8.52-beta.solana1](https://github.com/rarible/sdk/compare/v0.8.52-beta23...v0.8.52-beta.solana1) (2022-04-28)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.8.52-beta23](https://github.com/rarible/sdk/compare/v0.8.52-beta22...v0.8.52-beta23) (2022-04-28)
+
+
+### Bug Fixes
+
+* use test ah for now ([529a024](https://github.com/rarible/sdk/commit/529a0245c67480e28dfc88cc736cbda00f8793f4))
+
+
+
+
+
+## [0.8.52-beta22](https://github.com/rarible/sdk/compare/v0.8.52-beta21...v0.8.52-beta22) (2022-04-28)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.8.52-beta21](https://github.com/rarible/sdk/compare/v0.8.52-beta19...v0.8.52-beta21) (2022-04-28)
 
 
 ### Bug Fixes
@@ -11,26 +54,45 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * update tezos dev config ([fec50ea](https://github.com/rarible/sdk/commit/fec50ea6e480666b4857bb936c480f7edadfc060))
 
 
+### Features
+
+* add solana tests ([54a8fb9](https://github.com/rarible/sdk/commit/54a8fb944f9f0682b18914ad03cb809fd4309cca))
+* add solana tests ([b2ed8bf](https://github.com/rarible/sdk/commit/b2ed8bf225e3bea62344717d9ad3edadbb8d726d))
+* update auction house address ([494efbf](https://github.com/rarible/sdk/commit/494efbf9d7976276f73038f51b124b1af21f132d))
+* update tests ([d693cd1](https://github.com/rarible/sdk/commit/d693cd1bb11bcadc44a6c7362dff08d26c9349ef))
+* update tezos config ([4ea10ce](https://github.com/rarible/sdk/commit/4ea10cee7851fe0ac44cee7e02424b316eaa0e8b))
 
 
 
-## [0.8.52-beta.punks2](https://github.com/rarible/sdk/compare/v0.8.52-beta.punks1...v0.8.52-beta.punks2) (2022-04-27)
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
+
+
+
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-hotfix4) (2022-04-21)
+
+
+### Bug Fixes
+
+* fix transaction-backend dependencies ([96b0c4c](https://github.com/rarible/sdk/commit/96b0c4cd4d0483fb7e5ded1eed75dfa5b5858db2))
+* transaction-backend add node-fetch typings ([5f32318](https://github.com/rarible/sdk/commit/5f323184a3ab4894f3503f5df453f3bc7d513da0))
+* update ethereum-sdk, simplify buy tx ([3f540f4](https://github.com/rarible/sdk/commit/3f540f4ba45b3f70b957a8cd7962f97dd01ad8c3))
 
 
 ### Features
 
-* ethereum cryptopunks optional approve call ([ef8d0bb](https://github.com/rarible/sdk/commit/ef8d0bbfd82bc721a22f0aa85f25167fc59a7354))
+* transaction-backend blockchain specific addresses ([0a05fde](https://github.com/rarible/sdk/commit/0a05fde19a80bd5d430fba757a7d6ae7e5a0b320))
 
 
 
+## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
 
 
-## [0.8.52-beta.punks1](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.52-beta.punks1) (2022-04-27)
+
+## [0.8.52-hotfix2](https://github.com/rarible/sdk/compare/v0.8.52-hotfix1...v0.8.52-hotfix2) (2022-04-19)
 
 
-### Features
 
-* ethereum cryptopunks wrap/unwrap ([ea771a6](https://github.com/rarible/sdk/commit/ea771a6c81844656d2fd63333fad8f4f30b2484d))
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-hotfix1) (2022-04-19)
 
 
 

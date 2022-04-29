@@ -10,16 +10,20 @@ import {
 	cache, getStateConnecting,
 } from "@rarible/connector"
 import { getStateConnected, getStateDisconnected } from "@rarible/connector"
-import type { ConnectOpts, PhantomProvider, SolanaProviderConnectionResult } from "./domain"
+import type { ISolanaProviderConnectionResult } from "@rarible/connector-helper"
+import type { ConnectOpts, PhantomProvider } from "./domain"
+import { waitUntil } from "./utils"
+
+export * from "./domain"
 
 type ConnectStatus = "connected" | "disconnected"
 
 const PROVIDER_ID = "phantom" as const
 
 export class PhantomConnectionProvider extends
-	AbstractConnectionProvider<typeof PROVIDER_ID, SolanaProviderConnectionResult> {
+	AbstractConnectionProvider<typeof PROVIDER_ID, ISolanaProviderConnectionResult> {
 	private instance: Observable<PhantomProvider>
-	private readonly connection: Observable<ConnectionState<SolanaProviderConnectionResult>>
+	private readonly connection: Observable<ConnectionState<ISolanaProviderConnectionResult>>
 
 	constructor(
 		private readonly config?: ConnectOpts
@@ -33,6 +37,10 @@ export class PhantomConnectionProvider extends
 	}
 
 	private async _connect(): Promise<PhantomProvider> {
+		try {
+			await waitUntil(() => "solana" in window, 100, 1000)
+		} catch {}
+
 		if ("solana" in window) {
 			const anyWindow: any = window
 			const provider = anyWindow.solana
@@ -60,7 +68,6 @@ export class PhantomConnectionProvider extends
 			provider.on("disconnect", disconnectHandler)
 
 			subscriber.add(() => {
-				console.log("para param pam")
 				provider.removeListener("connect", connectHandler)
 				provider.removeListener("disconnect", disconnectHandler)
 			})
@@ -69,19 +76,19 @@ export class PhantomConnectionProvider extends
 
 	getAddress(provider: PhantomProvider): Observable<string> {
 		return new Observable<string>(subscriber => {
-			subscriber.next(provider.publicKey.toString())
+			subscriber.next(provider.publicKey?.toString())
 			provider.on("accountChanged", async (publicKey: any /*PublicKey*/) => {
 				if (publicKey) {
 					subscriber.next(publicKey.toString())
 				} else {
 					await provider.connect()
-					subscriber.next(provider.publicKey.toString())
+					subscriber.next(provider.publicKey?.toString())
 				}
 			})
 		})
 	}
 
-	private toConnectState(provider: PhantomProvider): Observable<ConnectionState<SolanaProviderConnectionResult>> {
+	private toConnectState(provider: PhantomProvider): Observable<ConnectionState<ISolanaProviderConnectionResult>> {
 		return combineLatest([
 			this.getAddress(provider),
 			this.getConnectedStatus(provider),
@@ -90,10 +97,13 @@ export class PhantomConnectionProvider extends
 				return c1[0] === c2[0] && c1[1] === c2[1]
 			}),
 			map(([address, status]) => {
-				if (status === "connected" && address) {
-					const wallet: SolanaProviderConnectionResult = {
+				if (status === "connected" && address && provider.publicKey) {
+					const wallet: ISolanaProviderConnectionResult = {
 						address: address,
-						...provider,
+						publicKey: provider.publicKey,
+						signTransaction: provider.signTransaction,
+						signAllTransactions: provider.signAllTransactions,
+						signMessage: provider.signMessage,
 					}
 					return getStateConnected({ connection: wallet })
 				} else {
@@ -116,7 +126,7 @@ export class PhantomConnectionProvider extends
 	}
 
 	async isAutoConnected(): Promise<boolean> {
-		return Promise.resolve(false)
+		return false
 	}
 
 	async isConnected(): Promise<boolean> {

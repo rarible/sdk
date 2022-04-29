@@ -1,4 +1,4 @@
-import { toContractAddress } from "@rarible/types"
+import { toCollectionId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
@@ -16,7 +16,7 @@ describe.skip("test tezos mint and sell", () => {
 
 	test.skip("mint and sell nft", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
 
 		await mintAndSellAction.submit({
@@ -30,7 +30,7 @@ describe.skip("test tezos mint and sell", () => {
 
 	test.skip("mint and sell mt", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})
 
 		await mintAndSellAction.submit({

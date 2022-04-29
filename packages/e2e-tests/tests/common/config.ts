@@ -11,7 +11,7 @@ export const testsConfig = {
 function getBlockchain() {
 	let blockchains = process.env.BLOCKCHAIN?.split(",")
 	if (blockchains === undefined || blockchains.includes("ALL")) {
-		blockchains = ["ETHEREUM", "TEZOS", "FLOW"]
+		blockchains = ["ETHEREUM", "TEZOS", "FLOW", "SOLANA"]
 	}
 	return blockchains as Blockchain[]
 }

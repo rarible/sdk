@@ -1,0 +1,56 @@
+{
+  "name": "@rarible/solana-sdk",
+  "version": "0.9.0",
+  "keywords": [
+    "solana",
+    "web3"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "build": "run-s build:*",
+    "build:esm": "tsc --project tsconfig-build.json",
+    "test": "jest --runInBand --silent",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-auction": "^0.0.2",
+    "@metaplex-foundation/mpl-auction-house": "^1.2.0",
+    "@metaplex-foundation/mpl-core": "^0.0.5",
+    "@metaplex-foundation/mpl-metaplex": "^0.0.5",
+    "@metaplex-foundation/mpl-token-metadata": "1.2.5",
+    "@metaplex-foundation/mpl-token-vault": "^0.0.2",
+    "@metaplex/js": "^4.12.0",
+    "@project-serum/anchor": "^0.22.1",
+    "@rarible/solana-common": "^0.9.0",
+    "@rarible/solana-wallet": "^0.9.0",
+    "@solana/spl-token": "^0.1.8",
+    "@solana/web3.js": "^1.36.0",
+    "@types/bs58": "^4.0.1",
+    "borsh": "^0.7.0",
+    "bs58": "^5.0.0",
+    "node-fetch": "^2.6.7"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.4.0",
+    "@types/node-fetch": "^2.6.1",
+    "form-data": "^4.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.5.1",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "8ef3989b1aff76a6345deab53a76df3480d8cf46"
+}

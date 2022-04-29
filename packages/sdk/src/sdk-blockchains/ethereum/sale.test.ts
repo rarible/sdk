@@ -12,7 +12,7 @@ import { MintType } from "../../types/nft/mint/domain"
 import { initProviders } from "./test/init-providers"
 import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
-import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
 describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()
@@ -36,7 +36,7 @@ describe("sale", () => {
 			{ from: wallet1Address, gas: 200000 }
 		)
 		const action = await sdk1.nft.mint({
-			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -89,7 +89,7 @@ describe("sale", () => {
 		const wallet2Address = wallet2.getAddressString()
 
 		const action = await sdk1.nft.mint({
-			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -143,7 +143,7 @@ describe("sale", () => {
 			{ from: wallet1Address, gas: 200000 }
 		)
 		const action = await sdk1.nft.mint({
-			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -196,7 +196,7 @@ describe("sale", () => {
 			{ from: wallet1Address, gas: 200000 }
 		)
 		const action = await sdk1.nft.mint({
-			collectionId: convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM),
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
