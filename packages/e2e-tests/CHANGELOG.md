@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.9.0](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.9.0) (2022-04-29)
+
+
+### Features
+
+* ethereum cryptopunks wrap/unwrap ([#212](https://github.com/rarible/sdk/issues/212)) ([2bcde91](https://github.com/rarible/sdk/commit/2bcde913045824fa9c92b5885bb4d30698c1379b))
+
+
+
+
+
 ## [0.8.52-beta.solana3](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana2...v0.8.52-beta.solana3) (2022-04-28)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
