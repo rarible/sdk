@@ -1,4 +1,4 @@
-import { SolanaKeypairWallet } from "@rarible/solana-wallet/src"
+import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 
 const pks = [
 	[

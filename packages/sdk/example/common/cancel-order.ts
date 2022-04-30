@@ -1,6 +1,6 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import { toOrderId } from "@rarible/types"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 async function cancelOrder(wallet: BlockchainWallet) {
 	const sdk = createRaribleSdk(wallet, "dev")

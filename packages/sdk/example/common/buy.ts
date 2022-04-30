@@ -1,6 +1,6 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import { toOrderId } from "@rarible/types"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 //Available only for ethereum
 async function buy(wallet: BlockchainWallet) {

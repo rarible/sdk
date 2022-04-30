@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { SolanaWallet } from "@rarible/sdk-wallet/src"
+import type { SolanaWallet } from "@rarible/sdk-wallet"
 import type { Order } from "@rarible/api-client"
 import { OrderStatus } from "@rarible/api-client"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"

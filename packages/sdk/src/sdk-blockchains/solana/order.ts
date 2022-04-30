@@ -1,6 +1,6 @@
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { SolanaWallet } from "@rarible/sdk-wallet/src"
+import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"

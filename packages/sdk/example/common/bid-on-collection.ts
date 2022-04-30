@@ -1,6 +1,6 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import { toContractAddress, toItemId } from "@rarible/types"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
 //Available only for ethereum

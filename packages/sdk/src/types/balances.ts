@@ -1,7 +1,7 @@
 import type { UnionAddress } from "@rarible/types"
 import type { Blockchain } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { RequestCurrency } from "../common/domain"
 
 export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => Promise<BigNumberValue>

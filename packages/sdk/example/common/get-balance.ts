@@ -1,6 +1,6 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import { toUnionAddress } from "@rarible/types"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AssetType } from "@rarible/api-client"
 
 async function getBalance(wallet: BlockchainWallet, assetType: AssetType) {
