@@ -114,7 +114,7 @@ export class EthereumFill {
 			}
 			case "OPEN_SEA_V1": {
 				return {
-					originFeeSupport: OriginFeeSupport.NONE,
+					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.NONE,
 					supportsPartialFill: false,
 				}
