@@ -10,7 +10,7 @@
     "umd"
   ],
   "scripts": {
-    "build": "run-s create-validators build:*",
+    "build": "run-s build:*",
     "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
