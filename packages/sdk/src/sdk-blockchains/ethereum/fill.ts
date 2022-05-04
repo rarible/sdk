@@ -61,7 +61,7 @@ export class EthereumFill {
 			case "OPEN_SEA_V1": {
 				request = {
 					order,
-					originFees: toEthereumParts(fillRequest.originFees),
+					originFees: order.take.assetType.assetClass === "ETH" ? toEthereumParts(fillRequest.originFees) : [],
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
