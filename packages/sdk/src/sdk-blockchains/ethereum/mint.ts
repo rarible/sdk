@@ -16,7 +16,6 @@ import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type.validator"
 import type { TokenId } from "../../types/nft/generate-token-id"
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
@@ -111,13 +110,12 @@ export class EthereumMint {
 		return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
 	}
 
-	async prepare(requestRaw: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const collection = await getCollection(this.apis.collection, requestRaw)
+	async prepare(request: PrepareMintRequest): Promise<PrepareMintResponse> {
+		const collection = await getCollection(this.apis.collection, request)
 		if (!isSupportedCollection(collection.type)) {
 			throw new Error(`Collection with type "${collection}" not supported`)
 		}
 
-		const request = validatePrepareMintRequest(requestRaw)
 		const nftCollection = toNftCollection(collection)
 
 		return {
@@ -130,7 +128,7 @@ export class EthereumMint {
 					const mintResponse = await this.handleSubmit(
 						data,
 						nftCollection,
-						toNftTokenId(request.tokenId)
+						toNftTokenId(request.tokenId),
 					)
 
 					switch (mintResponse.type) {
