@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.10](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.9...v0.8.48-hotfix.10) (2022-05-04)
+
+
+### Bug Fixes
+
+* opensea originFee support ([a3b0017](https://github.com/rarible/sdk/commit/a3b0017de5867bd7be69543e708699da147e00a6))
+
+
+
+
+
 ## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.8...v0.8.48-hotfix.9) (2022-04-29)
 
 
