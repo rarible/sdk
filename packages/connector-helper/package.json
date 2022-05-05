@@ -23,7 +23,7 @@
     "@rarible/connector-fcl": "^0.8.52-hotfix5",
     "@rarible/sdk-wallet": "^0.8.52-hotfix5",
     "@rarible/tezos-sdk": "0.1.11",
-    "@rarible/web3-ethereum": "^0.12.64",
+    "@rarible/web3-ethereum": "^0.12.67",
     "rxjs": "^6.6.7"
   },
   "devDependencies": {

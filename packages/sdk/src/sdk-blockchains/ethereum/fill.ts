@@ -62,6 +62,7 @@ export class EthereumFill {
 				request = {
 					order,
 					originFees: order.take.assetType.assetClass === "ETH" ? toEthereumParts(fillRequest.originFees) : [],
+					payouts: toEthereumParts(fillRequest.payouts),
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
@@ -104,7 +105,7 @@ export class EthereumFill {
 			case "OPEN_SEA_V1": {
 				return {
 					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
-					payoutsSupport: PayoutsSupport.NONE,
+					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: false,
 				}
 			}
