@@ -12,9 +12,12 @@ import { testsConfig } from "./config"
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const config = {
 		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
-		rpcUl: testsConfig.variables.ETHEREUM_RPC_URL,
+		rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
 	}
-	const { web3, wallet } = initProvider(pk, config)
+	const {
+		web3,
+		wallet,
+	} = initProvider(pk, config)
 	const ethereum = new Web3Ethereum({
 		web3: web3,
 		from: wallet.getAddressString(),
@@ -23,9 +26,12 @@ export function getEthereumWallet(pk?: string): EthereumWallet {
 }
 
 export function getPolygonWallet(pk?: string): EthereumWallet {
-	const { web3, wallet } = initProvider(pk, {
+	const {
+		web3,
+		wallet,
+	} = initProvider(pk, {
 		networkId: 80001,
-		rpcUl: "https://rpc-mumbai.maticvigil.com",
+		rpcUrl: "https://rpc-mumbai.maticvigil.com",
 	})
 	const ethereum = new Web3Ethereum({
 		web3: web3,
@@ -63,14 +69,15 @@ export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boo
 			const user = await wallet.fcl.currentUser().snapshot()
 			const address = user.addr
 			return (withPrefix ? "FLOW:" : "") + address
-		default: throw new Error("Unrecognized wallet")
+		default:
+			throw new Error("Unrecognized wallet")
 	}
 }
 
 export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<WalletAddress> {
 	console.log("Getting wallet_address for wallet=", wallet)
-	let address=""
-	let addressWithPrefix=""
+	let address = ""
+	let addressWithPrefix = ""
 	switch (wallet.blockchain) {
 		case BlockchainGroup.ETHEREUM:
 			address = await wallet.ethereum.getFrom()
@@ -89,7 +96,8 @@ export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<Wa
 				throw new Error("FLOW user address is undefined")
 			}
 			break
-		default: throw new Error("Unrecognized wallet")
+		default:
+			throw new Error("Unrecognized wallet")
 	}
 	const response = {
 		address: address,
