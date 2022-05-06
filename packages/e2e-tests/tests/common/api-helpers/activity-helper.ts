@@ -40,7 +40,7 @@ export async function getActivitiesByCollectionRaw(sdk: IRaribleSdk, collection:
 export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
 	activityTypes: Array<ActivityType>,
 	shouldPresent?: Array<ActivityType>): Promise<Activities> {
-	console.log("Get activities, activityTypes=" + shouldPresent + " ,shouldPresent=" + shouldPresent)
+	console.log("Get activities, activityTypes=" + activityTypes + " ,shouldPresent=" + shouldPresent)
 	return retry(10, 2000, async () => {
 		const activities = await sdk.apis.activity.getActivitiesByItem({
 			type: activityTypes,

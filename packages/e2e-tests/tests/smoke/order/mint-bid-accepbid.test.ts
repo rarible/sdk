@@ -191,7 +191,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.001",
+					price: toBigNumber("0.001"),
 					currency: currency,
 				}
 			},

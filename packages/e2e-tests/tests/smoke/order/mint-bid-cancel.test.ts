@@ -4,6 +4,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import { toBigNumber } from "@rarible/types"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer, getSolanaWallet,
@@ -189,7 +190,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.001",
+					price: toBigNumber("0.001"),
 					currency: currency,
 				}
 			},
