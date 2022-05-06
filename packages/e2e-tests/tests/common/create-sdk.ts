@@ -13,9 +13,6 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 		case Blockchain.POLYGON:
 			env = "dev"
 			break
-		case Blockchain.SOLANA:
-			env = "dev"
-			break
 		default:
 	}
 
