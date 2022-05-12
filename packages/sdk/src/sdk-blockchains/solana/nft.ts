@@ -3,6 +3,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
 import { toBigNumber, toItemId } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
@@ -11,8 +12,10 @@ import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-reque
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
+import type { CommonTokenContent, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import { extractPublicKey } from "./common/address-converters"
 import type { ISolanaSdkConfig } from "./domain"
+import type { ISolanaMetadataResponse } from "./domain"
 
 export class SolanaNft {
 	constructor(
@@ -24,6 +27,7 @@ export class SolanaNft {
 		this.mint = this.mint.bind(this)
 		this.burn = this.burn.bind(this)
 		this.transfer = this.transfer.bind(this)
+		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
 	getCollectionId(prepareRequest: PrepareMintRequest) {
@@ -148,6 +152,44 @@ export class SolanaNft {
 					return new BlockchainSolanaTransaction(result, this.sdk)
 				},
 			}),
+		}
+	}
+
+	preprocessMeta(meta: PreprocessMetaRequest): ISolanaMetadataResponse {
+		if (!this.wallet) {
+			throw new Error("Solana wallet not provided")
+		}
+
+		if (meta.blockchain !== Blockchain.SOLANA) {
+			throw new Error("Wrong blockchain")
+		}
+
+		return {
+			"name": meta.name,
+			"symbol": meta.symbol,
+			"description": meta.description,
+			"seller_fee_basis_points": (meta.royalties?.value ?? 0) * 100,
+			"image": meta.image?.url,
+			"animation_url": meta.animation?.url,
+			"external_url": meta.external,
+			"attributes": meta.attributes?.map((a) => ({
+				"trait_type": a.key,
+				"value": a.value,
+			})),
+			"properties": {
+				"files": ([meta.image, meta.animation]
+					.filter((f) => f !== undefined) as CommonTokenContent[])
+					.map((file ) => {
+						return {
+							uri: file.url,
+							type: file.mimeType,
+						}
+					}),
+				"creators": [{
+					address: this.wallet.provider.publicKey.toString(),
+					share: 100,
+				}],
+			},
 		}
 	}
 }
