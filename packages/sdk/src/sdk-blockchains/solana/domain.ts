@@ -11,7 +11,7 @@ export interface ISolanaSdkConfig {
 }
 
 export interface ISolanaTokenMetadata extends CommonTokenMetadata {
-	symbol?: string
+	symbol: string
 	royalties?: UnionPart
 }
 
