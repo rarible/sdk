@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.9.2",
+  "version": "0.9.2-beta.solana1",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
