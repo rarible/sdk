@@ -1,5 +1,6 @@
 import type { CommonTokenMetadata } from "../../types/nft/mint/preprocess-meta"
 import type { UnionPart } from "../../types/order/common"
+import type { CommonTokenContent } from "../../types/nft/mint/preprocess-meta"
 
 export type SolanaAuctionHouseMapping = Record<string, {
 	address: string,
@@ -12,6 +13,7 @@ export interface ISolanaSdkConfig {
 
 export interface ISolanaTokenMetadata extends CommonTokenMetadata {
 	symbol: string
+	image: CommonTokenContent
 	royalties?: UnionPart
 }
 

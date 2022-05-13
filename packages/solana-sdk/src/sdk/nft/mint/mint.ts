@@ -36,7 +36,7 @@ function validateMetadata(metadata: any) {
 		!metadata.properties ||
 		!Array.isArray(metadata.properties.creators)
 	) {
-		throw new Error(`Invalid metadata file ${metadata}`)
+		throw new Error("Invalid metadata file")
 	}
 
 	// Validate creators
