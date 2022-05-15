@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([fdec62d](https://github.com/rarible/sdk/commit/fdec62ddd5ef14ef6158f2c05ca4040c3631a64f))
+
+
+
+
+
 ## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
 
 
