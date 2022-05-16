@@ -38,6 +38,10 @@ export class TezosMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+		if (meta.blockchain !== Blockchain.TEZOS) {
+			throw new Error("Wrong blockchain")
+		}
+
 		const artifact = meta.animation || meta.image
 		return {
 			name: meta.name,

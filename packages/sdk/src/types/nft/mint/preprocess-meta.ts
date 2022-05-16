@@ -1,12 +1,19 @@
-import type * as ApiClient from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
-import type { UnionPart } from "../../order/common"
+import type { ISolanaMetadataResponse } from "../../../sdk-blockchains/solana/domain"
+import type { ISolanaTokenMetadata } from "../../../sdk-blockchains/solana/domain"
 
 export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
 
 export type PreprocessMetaRequest =
-  { blockchain: ApiClient.Blockchain } & CommonTokenMetadata
-export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse
+	({
+		blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.TEZOS | Blockchain.FLOW
+	} & CommonTokenMetadata)
+	| ({
+		blockchain: Blockchain.SOLANA
+	} & ISolanaTokenMetadata)
+
+export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse | ISolanaMetadataResponse
 
 export type TokenMetadataAttribute = {
 	key: string
@@ -21,7 +28,6 @@ export type CommonTokenMetadata = {
 	animation: CommonTokenContent | undefined
 	external: string | undefined
 	attributes: TokenMetadataAttribute[]
-	royalties?: UnionPart[]
 }
 
 export type CommonTokenContent = {
