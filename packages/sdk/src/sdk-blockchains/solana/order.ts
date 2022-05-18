@@ -27,8 +27,6 @@ import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTok
 import { getCurrencies } from "./common/currencies"
 import type { ISolanaSdkConfig } from "./domain"
 
-const WRAPPED_SOL = "So11111111111111111111111111111111111111112"
-
 export class SolanaOrder {
 	constructor(
 		readonly sdk: SolanaSdk,
