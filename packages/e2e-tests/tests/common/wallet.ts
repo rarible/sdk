@@ -69,20 +69,6 @@ export function getSolanaWallet(walletNumber: number = 0): SolanaWallet {
 	return new SolanaWallet(SolanaKeypairWallet.createFrom(Uint8Array.from(wallets[walletNumber])))
 }
 
-export async function getWalletAddress(wallet: BlockchainWallet, withPrefix: boolean = true): Promise<string> {
-	switch (wallet.blockchain) {
-		case BlockchainGroup.ETHEREUM:
-			return (withPrefix ? "ETHEREUM:" : "") + (await wallet.ethereum.getFrom())
-		case BlockchainGroup.TEZOS:
-			return (withPrefix ? "TEZOS:" : "") + (await wallet.provider.address())
-		case BlockchainGroup.FLOW:
-			const user = await wallet.fcl.currentUser().snapshot()
-			const address = user.addr
-			return (withPrefix ? "FLOW:" : "") + address
-		default: throw new Error("Unrecognized wallet")
-	}
-}
-
 export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<WalletAddress> {
 	console.log("Getting wallet_address for wallet=", wallet)
 	let address=""
