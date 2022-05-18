@@ -8,7 +8,7 @@ import { delay } from "../../common/retry"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
 
-describe.skip("get balance", () => {
+describe("get balance", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
@@ -23,7 +23,7 @@ describe.skip("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test.skip("get balance XTZ without wallet", async () => {
+	test("get balance XTZ without wallet", async () => {
 		const sellerSdk = createRaribleSdk(undefined, "dev", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),

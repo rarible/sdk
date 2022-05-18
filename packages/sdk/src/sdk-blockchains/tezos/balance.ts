@@ -10,7 +10,7 @@ import type { ConvertRequest } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { MaybeProvider } from "./common"
-import { getRequiredProvider, getTezosAddress, getTezosAssetType } from "./common"
+import { getRequiredProvider, getTezosAddress, getTezosAssetType, getTezosAssetTypeV2 } from "./common"
 
 export class TezosBalance {
 	constructor(
@@ -23,8 +23,8 @@ export class TezosBalance {
 
 	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
 		const assetType = getCurrencyAssetType(currency)
-		const tezosAssetType = getTezosAssetType(assetType)
-		if (tezosAssetType.asset_class !== "XTZ" && tezosAssetType.asset_class !== "FT") {
+		const tezosAssetType = await getTezosAssetTypeV2(provider, assetType)
+		if (assetType["@type"] !== "XTZ" && assetType["@type"] !== "TEZOS_FT") {
 			throw new Error("Unsupported asset type")
 		}
 		if (!this.provider.config.node_url) {
@@ -32,9 +32,11 @@ export class TezosBalance {
 		}
 		return new BigNumber(
 			await get_balance(
-				this.provider.config,
+				provider,
 				getTezosAddress(address),
-				tezosAssetType
+				tezosAssetType.s_sale_type,
+				tezosAssetType.s_sale_asset_contract,
+				tezosAssetType.s_sale_asset_token_id,
 			)
 		)
 	}

@@ -22,7 +22,7 @@
     "@rarible/api-client": "0.0.13-beta4",
     "@rarible/ethereum-provider": "~0.12.64",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/tezos-sdk": "~0.1.11",
+    "@rarible/tezos-sdk": "~0.1.15",
     "@rarible/types": "~0.9.3"
   },
   "devDependencies": {
@@ -38,7 +38,7 @@
     "@onflow/fcl": "~0.0.77",
     "@rarible/ethereum-sdk-test-common": "~0.12.66",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/tezos-sdk": "~0.1.11",
+    "@rarible/tezos-sdk": "~0.1.15",
     "@rarible/web3-ethereum": "~0.12.66",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",

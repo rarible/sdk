@@ -30,7 +30,7 @@ describe.skip("test tezos mint and sell", () => {
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
-	test.skip("sale NFT with XTZ", async () => {
+	test("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
@@ -45,6 +45,7 @@ describe.skip("test tezos mint and sell", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		console.log("mintres", mintResult)
 		await awaitItem(sellerSdk, mintResult.itemId)
 
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
