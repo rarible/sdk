@@ -44,7 +44,9 @@ export function createRaribleSdk(
 		createFlowSdk(
 			filterWallet(wallet, BlockchainGroup.FLOW),
 			apis,
-			blockchainConfig.flowEnv
+			blockchainConfig.flowEnv,
+			undefined,
+			config?.flow?.auth
 		),
 		createTezosSdk(
 			filterWallet(wallet, BlockchainGroup.TEZOS),

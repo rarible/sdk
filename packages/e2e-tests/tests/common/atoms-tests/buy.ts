@@ -4,7 +4,7 @@ import type { FillRequest, PrepareFillRequest } from "@rarible/sdk/src/types/ord
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { ItemId } from "@rarible/types"
 import { awaitForOwnership } from "../helpers"
-import { getWalletAddress } from "../wallet"
+import { getWalletAddressFull } from "../wallet"
 
 /**
  * Buying an nft
@@ -14,16 +14,13 @@ export async function buy(sdk: IRaribleSdk,
 						  itemId: ItemId,
 						  prepareFillOrderRequest: PrepareFillRequest,
 						  fillRequest: FillRequest): Promise<IBlockchainTransaction> {
-	try {
-		console.log("prepare_fill_order_request=", prepareFillOrderRequest)
-		const buyPrepare = await sdk.order.buy(prepareFillOrderRequest)
-		console.log("fill_request=", fillRequest)
-		const tx = await buyPrepare.submit(fillRequest)
-		await tx.wait()
-		console.log("submit_buy_response_tx", tx)
-		await awaitForOwnership(sdk, itemId, await getWalletAddress(wallet, false))
-		return tx
-	} catch (e: any) {
-		throw new Error(`Exception during purchase: ${e.message ?? e.toString()}`)
-	}
+	console.log("prepare_fill_order_request=", prepareFillOrderRequest)
+	const buyPrepare = await sdk.order.buy(prepareFillOrderRequest)
+	console.log("fill_request=", fillRequest)
+	const tx = await buyPrepare.submit(fillRequest)
+	await tx.wait()
+	console.log("submit_buy_response_tx", tx)
+	  const address = await getWalletAddressFull(wallet)
+	await awaitForOwnership(sdk, itemId, address.address)
+	return tx
 }
