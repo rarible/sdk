@@ -1,7 +1,8 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
-import { BlockchainGroup, Order } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
+import { BlockchainGroup } from "@rarible/api-client"
 
 /**
  * Update sell order and check stocks
