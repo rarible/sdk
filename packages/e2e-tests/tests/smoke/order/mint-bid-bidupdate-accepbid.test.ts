@@ -8,7 +8,7 @@ import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer, getSolanaWallet,
+	getEthereumWalletBuyer, getFlowBuyerWallet, getFlowSellerWallet, getSolanaWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
@@ -206,6 +206,35 @@ function suites(): {
 				price: toBigNumber("0.002"),
 			},
 		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { seller: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: creatorAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "FLOW_FT",
+			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.0001",
+					currency: currency,
+				}
+			},
+			updateBidRequest: {
+				price: "0.0002",
+			},
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -234,10 +263,10 @@ describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (su
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
 		// Create bid order
-		await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
+		const order = await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
 
 		// Fill bid order
-		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })
+		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount })
 
 		// Check token transfer
 		// await awaitForOwnership(buyerSdk, nft.id, await getWalletAddress(buyerWallet, false))

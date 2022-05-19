@@ -14,13 +14,13 @@ export async function buy(sdk: IRaribleSdk,
 						  itemId: ItemId,
 						  prepareFillOrderRequest: PrepareFillRequest,
 						  fillRequest: FillRequest): Promise<IBlockchainTransaction> {
-		console.log("prepare_fill_order_request=", prepareFillOrderRequest)
-		const buyPrepare = await sdk.order.buy(prepareFillOrderRequest)
-		console.log("fill_request=", fillRequest)
-		const tx = await buyPrepare.submit(fillRequest)
-		await tx.wait()
-		console.log("submit_buy_response_tx", tx)
+	console.log("prepare_fill_order_request=", prepareFillOrderRequest)
+	const buyPrepare = await sdk.order.buy(prepareFillOrderRequest)
+	console.log("fill_request=", fillRequest)
+	const tx = await buyPrepare.submit(fillRequest)
+	await tx.wait()
+	console.log("submit_buy_response_tx", tx)
 	  const address = await getWalletAddressFull(wallet)
-		await awaitForOwnership(sdk, itemId, address.address)
-		return tx
+	await awaitForOwnership(sdk, itemId, address.address)
+	return tx
 }

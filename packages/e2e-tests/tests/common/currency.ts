@@ -4,6 +4,7 @@ import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/
 import { toContractAddress } from "@rarible/types"
 import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { getWalletAddressFull } from "./wallet"
+import { testsConfig } from "./config"
 
 
 export async function getCurrency(wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
@@ -37,6 +38,12 @@ export async function getCurrency(wallets: { seller: BlockchainWallet, buyer: Bl
 		}
 		throw new Error(`Wrong currency provided=${currency}`)
 	} else if (wallets.seller instanceof FlowWallet && wallets.buyer instanceof FlowWallet) {
+		if (currency === "FLOW_FT") {
+			return {
+				"@type": "FLOW_FT",
+				contract: toContractAddress(`FLOW:${testsConfig.variables.FLOW_FT_CONTRACT_ADDRESS}`),
+			}
+		}
 		throw new Error(`Wrong currency provided=${currency}`)
 	} else if (wallets.seller instanceof SolanaWallet && wallets.buyer instanceof SolanaWallet) {
 		if (currency === "SOLANA_SOL") {

@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@rarible/api-client": "0.0.13-beta4",
+    "@rarible/flow-test-common": "~0.5.43",
     "@rarible/ethereum-sdk-test-common": "~0.12.66",
     "@rarible/sdk-wallet": "^0.9.0",
     "@rarible/types": "~0.9.3"
