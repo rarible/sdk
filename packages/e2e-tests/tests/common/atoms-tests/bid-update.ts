@@ -19,7 +19,7 @@ export async function bidUpdate(sdk: IRaribleSdk,
 	// Submit bid order
 	const orderId = await prepareBidUpdateResponse.submit(orderUpdateRequest)
 	// Flow create new order when update
-	if (wallet.blockchain != BlockchainGroup.FLOW) {
+	if (wallet.blockchain !== BlockchainGroup.FLOW) {
 		expect(orderId).toBe(prepareOrderUpdateRequest.orderId)
 	}
 	// Check order

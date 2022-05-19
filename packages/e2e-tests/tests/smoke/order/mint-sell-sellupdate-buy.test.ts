@@ -409,12 +409,12 @@ describe.each(suites())("$blockchain mint => sell => sellUpdate => buy", (suite)
 		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
 		// Update sell order
-		const orderId = await sellUpdate(sellerSdk, sellerWallet, { orderId: sellOrder.id }, suite.updateSellRequest)
+		const order = await sellUpdate(sellerSdk, sellerWallet, { orderId: sellOrder.id }, suite.updateSellRequest)
 
 		// Fill sell order
-		await buy(buyerSdk, buyerWallet, nft.id, { orderId: orderId }, { amount: orderRequest.amount })
+		await buy(buyerSdk, buyerWallet, nft.id, { orderId: order.id }, { amount: orderRequest.amount })
 
-		await awaitOrderStock(sellerSdk, orderId, toBigNumber("0"))
+		await awaitOrderStock(sellerSdk, order.id, toBigNumber("0"))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(orderRequest.amount)))
 	})
 })
