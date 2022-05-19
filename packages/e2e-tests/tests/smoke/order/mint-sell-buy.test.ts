@@ -285,7 +285,7 @@ function suites(): {
 			currency: "XTZ",
 			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
-					amount: 5,
+					amount: 7,
 					price: "0.02",
 					currency: currency,
 				}

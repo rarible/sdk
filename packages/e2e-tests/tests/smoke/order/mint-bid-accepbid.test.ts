@@ -103,7 +103,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: toBigNumber("0.0000000000000001"),
 					currency: currency,
 				}
 			},
@@ -217,7 +217,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.0001",
+					price: toBigNumber("0.0001"),
 					currency: currency,
 				}
 			},
@@ -250,8 +250,8 @@ describe.each(suites())("$blockchain mint => bid => acceptBid", (suite) => {
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
 		await getActivitiesByItem(buyerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.BID],
-			[ActivityType.MINT, ActivityType.BID])
+			[ActivityType.BID],
+			[ActivityType.BID])
 
 		// Fill bid order
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })

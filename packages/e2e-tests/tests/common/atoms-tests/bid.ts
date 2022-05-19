@@ -3,6 +3,8 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { Order } from "@rarible/api-client"
 import type { OrderRequest, PrepareOrderRequest } from "@rarible/sdk/src/types/order/common"
 import type { CollectionId } from "@rarible/api-client"
+import { toBn } from "@rarible/utils/build/bn"
+import { awaitOrderStock } from "../helpers"
 
 /**
  * Make new bid order
@@ -18,7 +20,6 @@ export async function bid(sdk: IRaribleSdk,
 	const orderId = await bidPrepare.submit(orderRequest)
 	console.log("order_id=", orderId)
 
-	// Check order
-	//return await awaitOrderStock(sdk, orderId, orderRequest.price.toString())
-	return await sdk.apis.order.getOrderById({ id: orderId })
+	const makeStock = toBn(orderRequest.price).multipliedBy(orderRequest.amount).toString()
+	return await awaitOrderStock(sdk, orderId, makeStock)
 }
