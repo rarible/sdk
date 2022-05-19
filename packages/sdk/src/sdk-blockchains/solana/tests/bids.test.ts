@@ -42,7 +42,7 @@ describe("Solana bid", () => {
 		await tx.wait()
 	})
 
-	test("Should bid & updateBid & accept", async () => {
+	test("Should bid & updateBid", async () => {
 		const item = await mintToken(sdk)
 		const itemId = item.id
 
