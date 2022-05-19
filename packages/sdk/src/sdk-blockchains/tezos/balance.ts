@@ -23,7 +23,7 @@ export class TezosBalance {
 
 	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
 		const assetType = getCurrencyAssetType(currency)
-		const tezosAssetType = await getTezosAssetTypeV2(provider, assetType)
+		const tezosAssetType = await getTezosAssetTypeV2(this.provider.config, assetType)
 		if (assetType["@type"] !== "XTZ" && assetType["@type"] !== "TEZOS_FT") {
 			throw new Error("Unsupported asset type")
 		}
@@ -32,7 +32,7 @@ export class TezosBalance {
 		}
 		return new BigNumber(
 			await get_balance(
-				provider,
+				this.provider.config,
 				getTezosAddress(address),
 				tezosAssetType.s_sale_type,
 				tezosAssetType.s_sale_asset_contract,

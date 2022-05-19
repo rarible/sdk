@@ -51,15 +51,11 @@ export class TezosSell {
 				}
 			case "TEZOS_FT": {
 				const provider = getRequiredProvider(this.provider)
-				const ftType = await get_ft_type(provider, type.contract)
-				if (ftType === AssetTypeV2.FA2 && type.tokenId === undefined) {
-					throw new Error("FT contract is FA2 type, tokenId should be passed")
-				}
-
+				const ftType = await get_ft_type(provider.config, type.contract)
 				return {
 					asset_class: "FT",
 					contract: convertFromContractAddress(type.contract),
-					token_id: type.tokenId ? new BigNumber(type.tokenId) : undefined,
+					token_id: ftType === AssetTypeV2.FA2 ? new BigNumber(type.tokenId || 0) : undefined,
 				}
 			}
 			default: {
@@ -69,6 +65,55 @@ export class TezosSell {
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {
+		const submit = Action.create({
+			id: "send-tx" as const,
+			run: async (request: OrderCommon.OrderInternalRequest) => {
+				const provider = getRequiredProvider(this.provider)
+				const makerPublicKey = await getMakerPublicKey(provider)
+				const { itemId, contract } = getTezosItemData(request.itemId)
+
+				const item = await retry(90, 1000, async () => {
+					return this.apis.item.getNftItemById({ itemId })
+				})
+				const requestCurrency = getCurrencyAssetType(request.currency)
+
+				const itemCollection = await this.apis.collection.getNftCollectionById({
+					collection: contract,
+				})
+				const tezosRequest: TezosSellRequest = {
+					maker: pk_to_pkh(makerPublicKey),
+					maker_edpk: makerPublicKey,
+					make_asset_type: {
+						asset_class: itemCollection.type,
+						contract: item.contract,
+						token_id: new BigNumber(item.tokenId),
+					},
+					take_asset_type: await this.parseTakeAssetType(requestCurrency),
+					amount: new BigNumber(request.amount),
+					price: new BigNumber(request.price),
+					payouts: await getPayouts(provider, request.payouts),
+					origin_fees: convertOrderPayout(request.originFees),
+				}
+
+				const sellOrder: TezosOrder = await sell(
+					provider,
+					tezosRequest
+				)
+				return convertTezosOrderId(sellOrder.hash)
+			},
+		})
+
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: parseInt(this.provider.config.fees.toString()),
+			supportsExpirationDate: false,
+			submit,
+		}
+	}
+
+	async sellV2(): Promise<PrepareSellInternalResponse> {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
@@ -84,7 +129,7 @@ export class TezosSell {
 				const tezosRequest: OrderFormV2 = {
 					s_asset_contract: contract,
 					s_asset_token_id: new BigNumber(tokenId),
-					...await getTezosAssetTypeV2(provider, requestCurrency),
+					...await getTezosAssetTypeV2(provider.config, requestCurrency),
 					s_sale: {
 						sale_amount: new BigNumber(request.price),
 						sale_asset_qty: new BigNumber(request.amount),

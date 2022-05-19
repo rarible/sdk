@@ -10,6 +10,7 @@ import type {
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import {
+	// eslint-disable-next-line camelcase
 	AssetTypeV2, get_public_key, pk_to_pkh, get_ft_type,
 } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
@@ -145,6 +146,7 @@ export function getMaybeTezosProvider(
 					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
+					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
 				},
 			}
 		}
@@ -172,6 +174,7 @@ export function getMaybeTezosProvider(
 					bid_storage: "KT19c5jc4Y8so1FWbrRA8CucjUeNXZsP8yHr",
 					sig_checker: "KT1ShTc4haTgT76z5nTLSQt3GSTLzeLPZYfT",
 					tzkt: "https://api.ithacanet.tzkt.io",
+					dipdup: "",
 				},
 			}
 		}
@@ -199,6 +202,7 @@ export function getMaybeTezosProvider(
 					bid_storage: "",
 					sig_checker: "",
 					tzkt: "",
+					dipdup: "",
 				},
 			}
 		}
@@ -462,7 +466,7 @@ export type CurrencyV2 = {
 	s_sale_asset_token_id: BigNumber | undefined
 }
 
-export async function getTezosAssetTypeV2(provider: Provider, type: AssetType): Promise<CurrencyV2> {
+export async function getTezosAssetTypeV2(config: Config, type: AssetType): Promise<CurrencyV2> {
 	switch (type["@type"]) {
 		case "XTZ": {
 			return {
@@ -472,22 +476,20 @@ export async function getTezosAssetTypeV2(provider: Provider, type: AssetType): 
 			}
 		}
 		case "TEZOS_FT": {
-			const ftType = await get_ft_type(provider, type.contract)
+			const contract = convertFromContractAddress(type.contract)
+			const ftType = await get_ft_type(config, contract)
 			if (ftType === AssetTypeV2.FA2) {
-				if (type.tokenId === undefined) {
-					throw new Error("FT contract is FA2 type, tokenId should be passed")
-				}
 				return {
 					s_sale_type: AssetTypeV2.FA2,
-					s_sale_asset_contract: convertFromContractAddress(type.contract),
-					s_sale_asset_token_id: new BigNumber(type.tokenId),
+					s_sale_asset_contract: contract,
+					s_sale_asset_token_id: new BigNumber(type.tokenId || 0),
 				}
 
 			} else if (ftType === AssetTypeV2.FA12) {
 
 				return {
 					s_sale_type: AssetTypeV2.FA12,
-					s_sale_asset_contract: convertFromContractAddress(type.contract),
+					s_sale_asset_contract: contract,
 					s_sale_asset_token_id: undefined,
 				}
 

@@ -15,12 +15,17 @@ describe("get balance", () => {
 	)
 	const sellerSdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
 
+	//eur
+	const fa2 = "TEZOS:KT1PEBh9oKkQosYuw4tvzigps5p7uqXMgdez"
+	//uusd
+	const fa12 = "TEZOS:KT1WsXMAzcre2MNUjNkGtVQLpsTnNFhBJhLv"
+
 	test("get balance XTZ", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1gqL7i1s578qj3NzgKmu6C5j3RdSBewGBo"),
 			{ "@type": "XTZ" }
 		)
-		expect(balance.toString()).toEqual("1.0093")
+		expect(balance.toString()).toEqual("1043.538791")
 	})
 
 	test("get balance XTZ without wallet", async () => {
@@ -32,7 +37,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test.skip("get balance XTZ without wallet with CurrencyId", async () => {
+	test("get balance XTZ without wallet with CurrencyId", async () => {
 		const sellerSdk = createRaribleSdk(undefined, "dev", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
@@ -46,21 +51,21 @@ describe("get balance", () => {
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{
 				"@type": "TEZOS_FT",
-				contract: toContractAddress("TEZOS:KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"),
+				contract: toContractAddress(fa12),
 			}
 		)
 		expect(balance.toString()).toEqual("0.03")
 	})
 
-	test.skip("get balance FT", async () => {
+	test("get balance FT with currencyId", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
-			toCurrencyId("TEZOS:KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX")
+			toCurrencyId(fa2)
 		)
 		expect(balance.toString()).toEqual("0.03")
 	})
 
-	test.skip("get balance FT without wallet", async () => {
+	test("get balance FT without wallet", async () => {
 		const sellerSdk = createRaribleSdk(undefined, "dev", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),

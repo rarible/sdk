@@ -8,29 +8,91 @@ import { awaitItem } from "../ethereum/test/await-item"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
+import { convertTezosToCollectionAddress } from "./common"
+import { awaitForItemSupply } from "./test/await-for-item-supply"
 
-describe.skip("test tezos mint and sell", () => {
+describe("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const buyerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const buyerSdk = createRaribleSdk(buyerWallet, "dev", { logs: LogsLevel.DISABLED })
+	const buyerSdk = createRaribleSdk(buyerWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const nextBuyerWallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
-	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "dev", { logs: LogsLevel.DISABLED })
+	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "development", { logs: LogsLevel.DISABLED })
 
-	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
+	const eurTzContract = "KT1PEBh9oKkQosYuw4tvzigps5p7uqXMgdez"
 	// const eurTzContract = "KT1NaRKxAGaoioX9CbzApaBjCYijcGHGfYJV"
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test("sale NFT with XTZ", async () => {
+		const mintResponse = await sellerSdk.nft.mint({
+			collectionId: convertTezosToCollectionAddress(nftContract),
+		})
+		const mintResult = await mintResponse.submit({
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+
+		console.log("after mint", mintResult.itemId)
+		await awaitForItemSupply(sellerSdk, mintResult.itemId, "1")
+		console.log("after mint approve")
+
+		const sellAction = await sellerSdk.order.sell({ itemId: mintResult.itemId })
+		const sellOrderId = await sellAction.submit({
+			price: new BigNumber("0.0001"),
+			currency: { "@type": "XTZ" },
+			amount: 1,
+		})
+		console.log("after sell, orderId", sellOrderId)
+		//
+		// const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+		// 	collectionId: toCollectionId(`TEZOS:${nftContract}`),
+		// })
+		//
+		// const mintResult = await mintAndSellAction.submit({
+		// 	price: new BigNumber("0.0001"),
+		// 	currency: { "@type": "XTZ" },
+		// 	uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+		// 	supply: 1,
+		// 	lazyMint: false,
+		// })
+		// if (mintResult.type === MintType.ON_CHAIN) {
+		// 	await mintResult.transaction.wait()
+		// }
+		// console.log("mintres", mintResult)
+		// await awaitItem(sellerSdk, mintResult.itemId)
+
+		// const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: sellOrderId })
+
+		// await delay(10000)
+		const fillResult = await fillResponse.submit({
+			amount: 1,
+			infiniteApproval: true,
+		})
+		await fillResult.wait()
+
+		const ownership = await awaitForOwnership(
+			buyerSdk,
+			toItemId(mintResult.itemId),
+			await buyerWallet.provider.address()
+		)
+		expect(ownership.value).toBe("1")
+	})
+
+	test("sale with mintAndSell NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
