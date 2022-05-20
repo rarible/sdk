@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.12...v0.8.48-hotfix.13) (2022-05-20)
+
+
+### Bug Fixes
+
+* update flow-sdk ([759041c](https://github.com/rarible/sdk/commit/759041cba961d8f3f706b4808cb98c980d5733a9))
+
+
+
+
+
 ## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
 
 

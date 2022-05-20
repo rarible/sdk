@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.12...v0.8.48-hotfix.13) (2022-05-20)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
 
 **Note:** Version bump only for package example
