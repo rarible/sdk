@@ -3,6 +3,7 @@ pipeline {
 
   options {
     disableConcurrentBuilds()
+    ansiColor('xterm')
   }
 
   parameters {
@@ -10,8 +11,16 @@ pipeline {
     choice(name: 'BLOCKCHAIN', choices: ['ETHEREUM', 'TEZOS', 'FLOW', 'SOLANA', 'ALL'], description: 'Blockchain')
   }
 
-  stages {
+  triggers {
+    parameterizedCron('''
+        0 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=ETHEREUM
+        30 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=TEZOS
+        0 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=SOLANA
+        30 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=FLOW
+    ''')
+  }
 
+  stages {
     stage("Run e2e tests") {
       steps {
         withCredentials([string(credentialsId: 'npm-token', variable: 'NPM_TOKEN')]) {
@@ -27,6 +36,11 @@ pipeline {
 
   post {
     always {
+      wrap([$class: 'BuildUser']) {
+        slackSend channel: '#automation-protocol',
+          color: COLOR_MAP[currentBuild.currentResult],
+          message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} by ${BUILD_USER}\n More info at: ${env.BUILD_URL}"
+      }
       cleanWs()
     }
   }
