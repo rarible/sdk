@@ -33,7 +33,17 @@ export class SolanaCollection {
 				collection: null,
 			})
 
-			const res = await mintPrepare.tx.submit("single")
+			const res = await mintPrepare.tx.submit("confirmed")
+
+			const collectionAddress = `SOLANA:${mintPrepare.mint.toString()}`
+
+			try {
+				// calling this to let backend know what mint is actually created as a collection
+				await this.apis.collection.refreshCollectionMeta({
+					collection: collectionAddress,
+				})
+			} catch (e) {
+			}
 
 			return {
 				tx: new BlockchainSolanaTransaction(res, this.sdk),

@@ -47,11 +47,13 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 		const { mint, ...instructions } = await getMintNftInstructions(
 			this.connection,
 			request.signer,
-			request.metadataUrl,
-			true, // mutable metadata ?
-			request.collection, // verify strategy ?
-			request.maxSupply,
-			true
+			{
+				metadataLink: request.metadataUrl,
+				//mutableMetadata: true,
+				collection: request.collection,
+				maxSupply: request.maxSupply,
+				verifyCreators: true,
+			}
 		)
 
 		return {

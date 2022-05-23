@@ -7,7 +7,7 @@ import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer, getSolanaWallet,
+	getEthereumWalletBuyer, getFlowBuyerWallet, getFlowSellerWallet, getSolanaWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
@@ -103,7 +103,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: toBigNumber("0.0000000000000001"),
 					currency: currency,
 				}
 			},
@@ -196,6 +196,32 @@ function suites(): {
 				}
 			},
 		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { seller: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: creatorAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "FLOW_FT",
+			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: toBigNumber("0.0001"),
+					currency: currency,
+				}
+			},
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -224,8 +250,8 @@ describe.each(suites())("$blockchain mint => bid => acceptBid", (suite) => {
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
 		await getActivitiesByItem(buyerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.BID],
-			[ActivityType.MINT, ActivityType.BID])
+			[ActivityType.BID],
+			[ActivityType.BID])
 
 		// Fill bid order
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })

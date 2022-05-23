@@ -11,7 +11,7 @@ import type {
 // eslint-disable-next-line camelcase
 import { AssetTypeV2, get_public_key, pk_to_pkh } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { get_ft_type } from "@rarible/tezos-common/src"
+import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Part } from "@rarible/tezos-common"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"

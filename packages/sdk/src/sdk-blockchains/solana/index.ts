@@ -4,6 +4,7 @@ import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { SolanaSdk } from "@rarible/solana-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction } from "../../common/not-implemented"
+import { Middlewarer } from "../../common/middleware/middleware"
 import type { ISolanaSdkConfig } from "./domain"
 import { SolanaNft } from "./nft"
 import { SolanaFill } from "./fill"
@@ -17,7 +18,7 @@ export function createSolanaSdk(
 	cluster: Cluster,
 	config: ISolanaSdkConfig | undefined
 ): IRaribleInternalSdk {
-	const sdk = SolanaSdk.create({ connection: { cluster }, debug: false })
+	const sdk = SolanaSdk.create({ connection: { cluster, commitmentOrConfig: "confirmed" }, debug: false })
 	const nftService = new SolanaNft(sdk, wallet, apis, config)
 	const balanceService = new SolanaBalance(sdk, wallet, config)
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)
@@ -32,7 +33,7 @@ export function createSolanaSdk(
 			generateTokenId: nonImplementedAction,
 			deploy: collectionService.createCollection,
 			createCollection: collectionService.createCollection,
-			preprocessMeta: nonImplementedAction as any,
+			preprocessMeta: Middlewarer.skipMiddleware(nftService.preprocessMeta),
 		},
 		order: {
 			fill: fillService.fill,

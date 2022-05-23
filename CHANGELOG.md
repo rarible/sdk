@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
+
+
+### Bug Fixes
+
+* bravo-2024 remove mintPrepare validator ([d9c21f5](https://github.com/rarible/sdk/commit/d9c21f5402e049ac24e4bbc303685a87a2e8d4d8))
+* remove ajv validator from deps ([fe887d2](https://github.com/rarible/sdk/commit/fe887d2ee8a9371767ea8efac03b08dd05901180))
+* remove create-validator-ts dependency ([a37be63](https://github.com/rarible/sdk/commit/a37be63e4a3c5a98ac91f6f6dbd340ed64364e77))
+* set solana default commitment level ([#226](https://github.com/rarible/sdk/issues/226)) ([fdb7477](https://github.com/rarible/sdk/commit/fdb747747b5d7e05e46dcb3430fb894e3b9bc958))
+* solana process metadata ([#224](https://github.com/rarible/sdk/issues/224)) ([7e62a4c](https://github.com/rarible/sdk/commit/7e62a4cdb78bdd7fbe3f3656b4bbb2506201c061))
+* update tezos dev env ([8ea2f91](https://github.com/rarible/sdk/commit/8ea2f918c07ee016cb105c85df3dd1e490faf019))
+
+
+### Features
+
+* call refreshMetadata for solana collection mint ([1107b54](https://github.com/rarible/sdk/commit/1107b54b5e8c18251e27676b6d083ae902448cd9))
+* examples ([15e4268](https://github.com/rarible/sdk/commit/15e4268b74edab1df655385e2889bb51454fd505))
+* update tests ([fb90514](https://github.com/rarible/sdk/commit/fb9051420b8cfc72b256b2d37682df35e9a66e95))
+
+
+
+
+
 ## [0.9.2](https://github.com/rarible/sdk/compare/v0.9.1...v0.9.2) (2022-04-30)
 
 
