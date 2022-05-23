@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
+
+
+### Bug Fixes
+
+* update wallet ([acf521a](https://github.com/rarible/sdk/commit/acf521ae0d4f339f95d74a211feb21cf055a64bd))
+
+
+### Features
+
+* add flow tests ([8db948a](https://github.com/rarible/sdk/commit/8db948a5428c97c192bc6149383e8303f2f0e5ef))
+* add flow tests ([d2bd860](https://github.com/rarible/sdk/commit/d2bd8607fe5fa4be29f9af2c3617b92d9bbb5a10))
+* add flow tests ([71723ec](https://github.com/rarible/sdk/commit/71723ec3635db15441c2531fe90dc6f2dd677ac5))
+* add flow tests ([84860f0](https://github.com/rarible/sdk/commit/84860f000c58d6cad4f9d3d226eca67cbf0944a6))
+* upd tests cicd ([dea172a](https://github.com/rarible/sdk/commit/dea172a4c5478d8354c74b29f780c7c398e01028))
+* upd tests cicd ([8ef2da4](https://github.com/rarible/sdk/commit/8ef2da471d160ff558347ccc070df923a3fb5de8))
+* upd tests cicd ([5a1f297](https://github.com/rarible/sdk/commit/5a1f29735a48bbb07bdc2387d792ed485aeadc4a))
+* upd tests cicd ([fa2ddfe](https://github.com/rarible/sdk/commit/fa2ddfe98e481eefdddd5775256bde017ac9acec))
+* update tezos features ([#236](https://github.com/rarible/sdk/issues/236)) ([4bb4ae4](https://github.com/rarible/sdk/commit/4bb4ae47b54809a548351a042229f783529ff277))
+
+
+
+
+
 ## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
 
 
