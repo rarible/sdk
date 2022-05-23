@@ -11,6 +11,7 @@ import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
+import type { Bid } from "@rarible/tezos-sdk/dist/bids"
 import type {
 	OrderRequest,
 	OrderUpdateRequest,
@@ -38,7 +39,11 @@ import {
 	getTezosItemData,
 	getTezosOrderId,
 	convertTezosOrderId,
-	convertTezosToUnionAddress, getTezosAssetType, convertTezosToUnionAsset, convertTezosToContractAddress,
+	convertTezosToUnionAddress,
+	getTezosAssetType,
+	convertTezosToUnionAsset,
+	convertTezosToContractAddress,
+	getTezosAssetTypeV2,
 } from "./common"
 import type { TezosBalance } from "./balance"
 
@@ -139,13 +144,13 @@ export class TezosBid {
 		}
 	}
 
-	getWXTZContractAddress(): ContractAddress {
+	getWXTZContractAddress(): ContractAddress | undefined {
 		const convertMap = this.getConvertMap()
 		const wXTZAddressEntry = Object.entries(convertMap)
 			.find(([contractAddr, currency]) => contractAddr && currency === "XTZ")
 
 		if (!wXTZAddressEntry) {
-			throw new Error("wXTZ address has not been found")
+			return
 		}
 		const [wXTZUnionContract] = wXTZAddressEntry
 		return toContractAddress(wXTZUnionContract)
@@ -168,6 +173,9 @@ export class TezosBid {
 			id: "convert" as const,
 			run: async (request: OrderRequest) => {
 				const wXTZUnionAddress = this.getWXTZContractAddress()
+				if (!wXTZUnionAddress) {
+					return request
+				}
 				const requestCurrency = getCurrencyAssetType(request.currency)
 				if (requestCurrency["@type"] === "TEZOS_FT" && requestCurrency.contract.toLowerCase() === wXTZUnionAddress.toLowerCase()) {
 					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
@@ -189,6 +197,27 @@ export class TezosBid {
 					const makerPublicKey = await getMakerPublicKey(provider)
 					const requestCurrency = getCurrencyAssetType(request.currency)
 
+					/*
+					const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
+
+					const bid: Bid = {
+						asset_contract: contract,
+						asset_token_id: new BigNumber(tokenId),
+						bid_asset_contract: argv.ft_contract,
+						bid_asset_token_id: argv.ft_token_id,
+						bid_type: argv.sale_type,
+						bid: {
+							bid_amount: new BigNumber("0.01"),
+							bid_asset_qty: new BigNumber("1"),
+							bid_payouts: [],
+							bid_origin_fees: [],
+							bid_data: undefined,
+							bid_data_type: undefined,
+						},
+					}
+
+
+           */
 					const order: TezosOrder = await bid(
 						provider,
 						{
@@ -235,7 +264,11 @@ export class TezosBid {
 		const updateAction = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderUpdateRequest) => {
-				const wXTZUnionAddress = convertFromContractAddress(this.getWXTZContractAddress())
+				const wXTZAddress = this.getWXTZContractAddress()
+				if (!wXTZAddress) {
+					return request
+				}
+				const wXTZUnionAddress = convertFromContractAddress(wXTZAddress)
 
 				if (order.make.assetType.assetClass === "FT" && order.make.assetType.contract.toLowerCase() === wXTZUnionAddress.toLowerCase()) {
 					const originFeesSum = order.data.originFees?.reduce((acc, fee) => fee.value, 0) || 0

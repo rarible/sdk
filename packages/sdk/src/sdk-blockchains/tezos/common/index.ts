@@ -458,21 +458,20 @@ export function convertTezosToUnionAddress(address: string): UnionAddress {
 }
 
 export type CurrencyV2 = {
+	type: AssetTypeV2
 	// eslint-disable-next-line camelcase
-	s_sale_type: AssetTypeV2
+	asset_contract: string | undefined
 	// eslint-disable-next-line camelcase
-	s_sale_asset_contract: string | undefined
-	// eslint-disable-next-line camelcase
-	s_sale_asset_token_id: BigNumber | undefined
+	asset_token_id: BigNumber | undefined
 }
 
 export async function getTezosAssetTypeV2(config: Config, type: AssetType): Promise<CurrencyV2> {
 	switch (type["@type"]) {
 		case "XTZ": {
 			return {
-				s_sale_type: AssetTypeV2.XTZ,
-				s_sale_asset_contract: undefined,
-				s_sale_asset_token_id: undefined,
+				type: AssetTypeV2.XTZ,
+				asset_contract: undefined,
+				asset_token_id: undefined,
 			}
 		}
 		case "TEZOS_FT": {
@@ -480,17 +479,17 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 			const ftType = await get_ft_type(config, contract)
 			if (ftType === AssetTypeV2.FA2) {
 				return {
-					s_sale_type: AssetTypeV2.FA2,
-					s_sale_asset_contract: contract,
-					s_sale_asset_token_id: new BigNumber(type.tokenId || 0),
+					type: AssetTypeV2.FA2,
+					asset_contract: contract,
+					asset_token_id: new BigNumber(type.tokenId || 0),
 				}
 
 			} else if (ftType === AssetTypeV2.FA12) {
 
 				return {
-					s_sale_type: AssetTypeV2.FA12,
-					s_sale_asset_contract: contract,
-					s_sale_asset_token_id: undefined,
+					type: AssetTypeV2.FA12,
+					asset_contract: contract,
+					asset_token_id: undefined,
 				}
 
 			} else {

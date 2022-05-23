@@ -17,19 +17,19 @@ describe("bid test", () => {
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const itemOwnerSdk = createRaribleSdk(itemOwner, "development", { logs: LogsLevel.DISABLED })
+	const itemOwnerSdk = createRaribleSdk(itemOwner, "staging", { logs: LogsLevel.DISABLED })
 
 	const bidderWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 
-	const bidderSdk = createRaribleSdk(bidderWallet, "development", { logs: LogsLevel.DISABLED })
+	const bidderSdk = createRaribleSdk(bidderWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const nullFundsWallet = createTestWallet(
 		"edskS2YAR6wms6ZWckr7wJYW1cFaEgy9mk1FbnjABsDMyh" +
     "7CUpvCS8Hfy12BcjvsQc1eprKKBMqAEc6FBgCnLLu33KvzYgsd9c")
 
-	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "development")
+	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "staging")
 
 	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
 	const nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
@@ -65,6 +65,7 @@ describe("bid test", () => {
 			},
 		})
 
+		console.log("order", orderId)
 		await awaitForOrder(bidderSdk, orderId)
 
 		// update bid price

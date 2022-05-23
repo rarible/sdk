@@ -34,9 +34,9 @@ export class TezosBalance {
 			await get_balance(
 				this.provider.config,
 				getTezosAddress(address),
-				tezosAssetType.s_sale_type,
-				tezosAssetType.s_sale_asset_contract,
-				tezosAssetType.s_sale_asset_token_id,
+				tezosAssetType.type,
+				tezosAssetType.asset_contract,
+				tezosAssetType.asset_token_id,
 			)
 		)
 	}

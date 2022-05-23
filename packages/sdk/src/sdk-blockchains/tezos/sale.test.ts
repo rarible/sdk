@@ -15,17 +15,17 @@ describe("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const buyerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const buyerSdk = createRaribleSdk(buyerWallet, "development", { logs: LogsLevel.DISABLED })
+	const buyerSdk = createRaribleSdk(buyerWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const nextBuyerWallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
-	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "development", { logs: LogsLevel.DISABLED })
+	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1PEBh9oKkQosYuw4tvzigps5p7uqXMgdez"
 	// const eurTzContract = "KT1NaRKxAGaoioX9CbzApaBjCYijcGHGfYJV"
@@ -45,7 +45,7 @@ describe("test tezos mint and sell", () => {
 			await mintResult.transaction.wait()
 		}
 
-		console.log("after mint", mintResult.itemId)
+		console.log("after mint", mintResult)
 		await awaitForItemSupply(sellerSdk, mintResult.itemId, "1")
 		console.log("after mint approve")
 
@@ -93,6 +93,7 @@ describe("test tezos mint and sell", () => {
 	})
 
 	test("sale with mintAndSell NFT with XTZ", async () => {
+
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
@@ -194,7 +195,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("1")
 	})
 
-	test.skip("sale MT with XTZ", async () => {
+	test("sale MT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})
@@ -207,9 +208,6 @@ describe("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
@@ -226,7 +224,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("10")
 	})
 
-	test.skip("item creator should receive royalty from resale MT with XTZ", async () => {
+	test("item creator should receive royalty from resale MT with XTZ", async () => {
 		const itemCreatorAddress = await sellerWallet.provider.address()
 
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
