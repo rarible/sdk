@@ -8,6 +8,7 @@ import BigNumber from "bignumber.js"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import { sellV2 } from "@rarible/tezos-sdk/dist/sales/sell"
+import type { OrderId } from "@rarible/api-client"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type {
@@ -20,7 +21,7 @@ import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { TezosOrder } from "./domain"
-import type { ITezosAPI, MaybeProvider, CurrencyV2 } from "./common"
+import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
 	convertOrderPayout,
@@ -76,13 +77,11 @@ export class TezosSell {
 				const item = await retry(20, 1000, async () => {
 					return this.apis.item.getNftItemById({ itemId })
 				})
-				console.log("sell: after get item", itemId)
 				const requestCurrency = getCurrencyAssetType(request.currency)
 
 				const itemCollection = await this.apis.collection.getNftCollectionById({
 					collection: contract,
 				})
-				console.log("sell: after get nft collection")
 				const tezosRequest: TezosSellRequest = {
 					maker: pk_to_pkh(makerPublicKey),
 					maker_edpk: makerPublicKey,
@@ -98,7 +97,6 @@ export class TezosSell {
 					origin_fees: convertOrderPayout(request.originFees),
 				}
 
-				console.log("sell: before sell", tezosRequest)
 				const sellOrder: TezosOrder = await sell(
 					provider,
 					tezosRequest
@@ -117,55 +115,45 @@ export class TezosSell {
 		}
 	}
 
-	async sellV2(): Promise<PrepareSellInternalResponse> {
-		const submit = Action.create({
-			id: "send-tx" as const,
-			run: async (request: OrderCommon.OrderInternalRequest) => {
-				const provider = getRequiredProvider(this.provider)
-				const { contract, tokenId } = getTezosItemData(request.itemId)
+	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
+		const provider = getRequiredProvider(this.provider)
+		const { contract, tokenId } = getTezosItemData(request.itemId)
 
-				const requestCurrency = getCurrencyAssetType(request.currency)
+		const requestCurrency = getCurrencyAssetType(request.currency)
 
-				const expirationDate = request.expirationDate instanceof Date
-					? Math.round(request.expirationDate.getTime() / 1000)
-					: undefined
+		const expirationDate = request.expirationDate instanceof Date
+			? Math.round(request.expirationDate.getTime() / 1000)
+			: undefined
 
-				const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
-				const tezosRequest: OrderFormV2 = {
-					s_asset_contract: contract,
-					s_asset_token_id: new BigNumber(tokenId),
-					s_sale_type: asset.type,
-					s_sale_asset_contract: asset.asset_contract,
-					s_sale_asset_token_id: asset.asset_token_id,
-					s_sale: {
-						sale_amount: new BigNumber(request.price),
-						sale_asset_qty: new BigNumber(request.amount),
-						sale_max_fees_base_boint: 10000,
-						sale_end: expirationDate,
-						sale_start: undefined,
-						sale_origin_fees: convertOrderPayout(request.originFees),
-						sale_payouts: await getPayouts(provider, request.payouts),
-						sale_data: undefined,
-						sale_data_type: undefined,
-					},
-				}
-
-				const sellOrder = await sellV2(
-					provider,
-					tezosRequest
-				)
-				return convertTezosOrderId("")
+		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
+		const tezosRequest: OrderFormV2 = {
+			s_asset_contract: contract,
+			s_asset_token_id: new BigNumber(tokenId),
+			s_sale_type: asset.type,
+			s_sale_asset_contract: asset.asset_contract,
+			s_sale_asset_token_id: asset.asset_token_id,
+			s_sale: {
+				sale_amount: new BigNumber(request.price),
+				sale_asset_qty: new BigNumber(request.amount),
+				sale_max_fees_base_boint: 10000,
+				sale_end: expirationDate,
+				sale_start: undefined,
+				sale_origin_fees: convertOrderPayout(request.originFees),
+				sale_payouts: await getPayouts(provider, request.payouts),
+				sale_data: undefined,
+				sale_data_type: undefined,
 			},
-		})
-
-		return {
-			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
-			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: parseInt(this.provider.config.fees.toString()),
-			supportsExpirationDate: false,
-			submit,
 		}
+
+		const sellOrderId = await sellV2(
+			provider,
+			tezosRequest
+		)
+
+		if (!sellOrderId) {
+			throw new Error("OrderID cannot be requested")
+		}
+		return convertTezosOrderId(sellOrderId)
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {

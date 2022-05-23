@@ -9,10 +9,9 @@ import type {
 	TezosProvider,
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import {
-	// eslint-disable-next-line camelcase
-	AssetTypeV2, get_public_key, pk_to_pkh, get_ft_type,
-} from "@rarible/tezos-sdk"
+import { AssetTypeV2, get_public_key, pk_to_pkh } from "@rarible/tezos-sdk"
+// eslint-disable-next-line camelcase
+import { get_ft_type } from "@rarible/tezos-common/src"
 import BigNumber from "bignumber.js"
 import type { Part } from "@rarible/tezos-common"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
@@ -201,7 +200,7 @@ export function getMaybeTezosProvider(
 					bid: "",
 					bid_storage: "",
 					sig_checker: "",
-					tzkt: "",
+					tzkt: "https://api.mainnet.tzkt.io/",
 					dipdup: "",
 				},
 			}
@@ -476,7 +475,12 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 		}
 		case "TEZOS_FT": {
 			const contract = convertFromContractAddress(type.contract)
-			const ftType = await get_ft_type(config, contract)
+			let ftType: AssetTypeV2 | undefined = AssetTypeV2.FA2
+			try {
+				ftType = await get_ft_type(config, contract)
+			} catch (e) {
+
+			}
 			if (ftType === AssetTypeV2.FA2) {
 				return {
 					type: AssetTypeV2.FA2,
@@ -493,7 +497,7 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 				}
 
 			} else {
-				throw new Error("Unrecognized FT contract type, should be FA2 or FA12")
+				throw new Error("Unrecognized FT contract type, check contract and network")
 			}
 		}
 		default: {

@@ -13,7 +13,7 @@ import { convertTezosToCollectionAddress, convertTezosToContractAddress, convert
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
 
-describe("bid test", () => {
+describe.skip("bid test", () => {
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
@@ -36,7 +36,7 @@ describe("bid test", () => {
 	const mtContract = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
-	test("bid NFT test", async () => {
+	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})
@@ -49,9 +49,7 @@ describe("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		console.log("after mint")
 		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
-		console.log("after mint approve")
 
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
@@ -65,7 +63,6 @@ describe("bid test", () => {
 			},
 		})
 
-		console.log("order", orderId)
 		await awaitForOrder(bidderSdk, orderId)
 
 		// update bid price

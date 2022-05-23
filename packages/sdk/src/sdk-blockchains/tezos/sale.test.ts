@@ -8,10 +8,8 @@ import { awaitItem } from "../ethereum/test/await-item"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
-import { convertTezosToCollectionAddress } from "./common"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
@@ -33,10 +31,13 @@ describe("test tezos mint and sell", () => {
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test("sale NFT with XTZ", async () => {
-		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: convertTezosToCollectionAddress(nftContract),
+		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
-		const mintResult = await mintResponse.submit({
+
+		const mintResult = await mintAndSellAction.submit({
+			price: new BigNumber("0.0001"),
+			currency: { "@type": "XTZ" },
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
 			lazyMint: false,
@@ -44,38 +45,9 @@ describe("test tezos mint and sell", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		await awaitItem(sellerSdk, mintResult.itemId)
 
-		console.log("after mint", mintResult)
-		await awaitForItemSupply(sellerSdk, mintResult.itemId, "1")
-		console.log("after mint approve")
-
-		const sellAction = await sellerSdk.order.sell({ itemId: mintResult.itemId })
-		const sellOrderId = await sellAction.submit({
-			price: new BigNumber("0.0001"),
-			currency: { "@type": "XTZ" },
-			amount: 1,
-		})
-		console.log("after sell, orderId", sellOrderId)
-		//
-		// const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-		// 	collectionId: toCollectionId(`TEZOS:${nftContract}`),
-		// })
-		//
-		// const mintResult = await mintAndSellAction.submit({
-		// 	price: new BigNumber("0.0001"),
-		// 	currency: { "@type": "XTZ" },
-		// 	uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-		// 	supply: 1,
-		// 	lazyMint: false,
-		// })
-		// if (mintResult.type === MintType.ON_CHAIN) {
-		// 	await mintResult.transaction.wait()
-		// }
-		// console.log("mintres", mintResult)
-		// await awaitItem(sellerSdk, mintResult.itemId)
-
-		// const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
-		const fillResponse = await buyerSdk.order.buy({ orderId: sellOrderId })
+		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		// await delay(10000)
 		const fillResult = await fillResponse.submit({
@@ -108,12 +80,10 @@ describe("test tezos mint and sell", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		console.log("mintres", mintResult)
 		await awaitItem(sellerSdk, mintResult.itemId)
 
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
-		// await delay(10000)
 		const fillResult = await fillResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
@@ -128,7 +98,7 @@ describe("test tezos mint and sell", () => {
 		expect(ownership.value).toBe("1")
 	})
 
-	test.skip("sale NFT with XTZ and with CurrencyId", async () => {
+	test("sale NFT with XTZ and with CurrencyId", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
