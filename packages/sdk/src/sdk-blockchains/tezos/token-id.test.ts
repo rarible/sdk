@@ -6,7 +6,7 @@ import { createTestWallet } from "./test/test-wallet"
 describe.skip("test getting token id", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 

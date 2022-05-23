@@ -9,12 +9,12 @@ describe.skip("test tezos mint and sell", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
-	test.skip("mint and sell nft", async () => {
+	test("mint and sell nft", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
@@ -28,7 +28,7 @@ describe.skip("test tezos mint and sell", () => {
 		})
 	})
 
-	test.skip("mint and sell mt", async () => {
+	test("mint and sell mt", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})

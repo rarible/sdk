@@ -1,5 +1,5 @@
 import { Action } from "@rarible/action"
-import type { Part, Part as TezosPart } from "@rarible/tezos-sdk/dist/order"
+import type { Part } from "@rarible/tezos-common"
 // eslint-disable-next-line camelcase
 import { fill_order, get_address } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
@@ -45,7 +45,7 @@ export class TezosFill {
 		}
 	}
 
-	convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
+	convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<Part> {
 		return payout?.map(p => ({
 			account: p.account,
 			value: new BigNumber(p.value),

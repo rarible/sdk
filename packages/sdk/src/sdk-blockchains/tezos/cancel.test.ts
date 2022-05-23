@@ -7,13 +7,13 @@ import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 
-describe.skip("cancel test", () => {
+describe("cancel test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 
-	test.skip("cancel order", async () => {
+	test("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
