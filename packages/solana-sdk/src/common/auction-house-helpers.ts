@@ -3,9 +3,8 @@ import { PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { BN } from "@project-serum/anchor"
 import { Program, Provider } from "@project-serum/anchor"
-import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
-import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID, SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID } from "../../../common/contracts"
-import { bnToBuffer } from "../../../common/utils"
+import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID } from "./contracts"
+import { bnToBuffer } from "./utils"
 
 export async function loadAuctionHouseProgram(
 	connection: Connection,
@@ -18,39 +17,6 @@ export async function loadAuctionHouseProgram(
 	return new Program(idl!, AUCTION_HOUSE_PROGRAM_ID, provider)
 }
 
-export async function getPriceWithMantissa(
-	price: number,
-	mint: PublicKey,
-	walletKeyPair: any,
-	anchorProgram: Program,
-): Promise<number> {
-	const token = new Token(
-		anchorProgram.provider.connection,
-		new PublicKey(mint),
-		TOKEN_PROGRAM_ID,
-		walletKeyPair,
-	)
-
-	const mintInfo = await token.getMintInfo()
-
-	const mantissa = 10 ** mintInfo.decimals
-
-	return Math.ceil(price * mantissa)
-}
-
-export async function getAssociatedTokenAccountForMint(
-	mint: PublicKey,
-	buyer: PublicKey,
-): Promise<[PublicKey, number]> {
-	return await PublicKey.findProgramAddress(
-		[
-			buyer.toBuffer(),
-			TOKEN_PROGRAM_ID.toBuffer(),
-			mint.toBuffer(),
-		],
-		SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID,
-	)
-}
 
 export async function getAuctionHouseProgramAsSigner (): Promise<[PublicKey, number]> {
 	return await PublicKey.findProgramAddress(

@@ -5,7 +5,7 @@ import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
 import type { TransactionResult } from "../../types"
 import { PreparedTransaction } from "../prepared-transaction"
-import { getMintNftInstructions } from "./mint/mint"
+import { getMintNftInstructions } from "./methods/mint"
 
 export interface IMintRequest {
 	metadataUrl: string
