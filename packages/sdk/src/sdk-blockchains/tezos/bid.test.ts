@@ -29,7 +29,7 @@ describe.skip("bid test", () => {
 		"edskS2YAR6wms6ZWckr7wJYW1cFaEgy9mk1FbnjABsDMyh" +
     "7CUpvCS8Hfy12BcjvsQc1eprKKBMqAEc6FBgCnLLu33KvzYgsd9c")
 
-	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "staging")
+	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
 	const nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"

@@ -93,8 +93,13 @@ describe("mintAndSell", () => {
 			collection: contract,
 		})
 
+		const tokenId = await sdk.nft.generateTokenId({
+			collection: contract,
+			minter: sender,
+		})
 		const action = await sdk.nft.mintAndSell({
 			collection,
+			tokenId,
 		})
 
 		const result = await action.submit({
@@ -104,7 +109,7 @@ describe("mintAndSell", () => {
 				value: 10000,
 			}],
 			royalties: [],
-			lazyMint: true,
+			lazyMint: false,
 			supply: 1,
 			price: "0.000000000000000001",
 			currency: {
@@ -117,7 +122,7 @@ describe("mintAndSell", () => {
 			expect(transaction.blockchain).toEqual("ETHEREUM")
 			expect(transaction.hash).toBeTruthy()
 		} else {
-			// throw new Error("Minted not on chain")
+			throw new Error("Minted not on chain")
 		}
 
 		await retry(5, 2000, async () => {
@@ -125,7 +130,11 @@ describe("mintAndSell", () => {
 			expect(order.makeStock.toString()).toBe("1")
 			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
 			expect(item.supply.toString()).toEqual("1")
-
+			if (tokenId) {
+				expect(item.tokenId).toEqual(tokenId.tokenId)
+			} else {
+				throw new Error("Token id must be defined")
+			}
 		})
 	})
 })
