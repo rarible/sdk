@@ -4,7 +4,7 @@ import { Action } from "@rarible/action"
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { Blockchain } from "@rarible/api-client"
-import type { CreateCollectionRequest, ICreateCollection } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequest, CreateCollection } from "../../types/nft/deploy/domain"
 import type { TezosCreateCollectionTokenAsset } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
 import { convertTezosToContractAddress, getRequiredProvider } from "./common"
@@ -42,7 +42,7 @@ export class TezosCreateCollection {
 		}
 	}
 
-	createCollection: ICreateCollection = Action.create({
+	createCollection: CreateCollection = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CreateCollectionRequest) => {
 			if (request.blockchain !== Blockchain.TEZOS) {

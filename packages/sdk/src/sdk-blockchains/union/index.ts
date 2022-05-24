@@ -4,7 +4,14 @@ import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
+import type {
+	IBalanceSdk,
+	IEthereumSdk,
+	INftSdk,
+	IOrderInternalSdk,
+	IRaribleInternalSdk,
+	ISolanaSdk,
+} from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -14,7 +21,7 @@ import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-t
 import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
-import type { ICreateCollection } from "../../types/nft/deploy/domain"
+import type { CreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
@@ -24,7 +31,8 @@ import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
-import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
+import type { CryptopunkUnwrap, CryptopunkWrap } from "../../types/ethereum/domain"
+import type { SolanaDepositEscrow, SolanaGetEscrowBalance, SolanaWithdrawEscrow } from "../../types/solana/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -63,6 +71,7 @@ export function createUnionSdk(
 			SOLANA: solana.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
+		solana: new UnionSolanaSpecificSdk(solana.solana!),
 	}
 }
 
@@ -153,7 +162,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		return this.instances[request.blockchain].preprocessMeta(request)
 	}
 
-	createCollection: ICreateCollection = Action.create({
+	createCollection: CreateCollection = Action.create({
 		id: "send-tx",
 		run: request => this.instances[request.blockchain].createCollection(request),
 	})
@@ -190,8 +199,18 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 	constructor(private readonly ethereumSdk: IEthereumSdk) {
 	}
 
-	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
-	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+	wrapCryptoPunk: CryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
+	unwrapCryptoPunk: CryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+}
+
+
+class UnionSolanaSpecificSdk implements ISolanaSdk {
+	constructor(private readonly solanaSdk: ISolanaSdk) {
+	}
+
+	getEscrowBalance: SolanaGetEscrowBalance = this.solanaSdk.getEscrowBalance
+	depositEscrow: SolanaDepositEscrow = this.solanaSdk.depositEscrow
+	withdrawEscrow: SolanaWithdrawEscrow = this.solanaSdk.withdrawEscrow
 }
 
 const blockchains: Blockchain[] = [

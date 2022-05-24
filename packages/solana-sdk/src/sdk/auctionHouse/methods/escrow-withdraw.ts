@@ -5,7 +5,7 @@ import { BN } from "@project-serum/anchor"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
-import { getAssociatedTokenAccountForMint, getPriceWithMantissa, getTokenAmount } from "../../../common/helpers"
+import { getAssociatedTokenAccountForMint, getPriceWithMantissa } from "../../../common/helpers"
 import { getAuctionHouseBuyerEscrow, loadAuctionHouseProgram } from "../../../common/auction-house-helpers"
 
 export interface IActionHouseEscrowWithdrawRequest {
@@ -14,7 +14,6 @@ export interface IActionHouseEscrowWithdrawRequest {
 	signer: IWalletSigner
 	amount: number
 }
-
 
 export async function getActionHouseEscrowWithdrawInstructions(
 	request: IActionHouseEscrowWithdrawRequest,

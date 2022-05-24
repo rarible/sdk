@@ -14,13 +14,14 @@ import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
 import type { IConvert, IGetBalance } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
-import type { ICreateCollection } from "./types/nft/deploy/domain"
+import type { CreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
-import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
+import type { CryptopunkUnwrap, CryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
+import type { SolanaDepositEscrow, SolanaGetEscrowBalance, SolanaWithdrawEscrow } from "./types/solana/domain"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -54,6 +55,7 @@ export interface IRaribleSdk {
 	restriction: IRestrictionSdk
 	wallet: Maybe<BlockchainWallet>
 	ethereum?: IEthereumSdk
+	solana?: ISolanaSdk
 }
 
 export interface IApisSdk {
@@ -76,8 +78,8 @@ export interface INftSdk {
 	/**
    * @deprecated Use {@link createCollection} instead
    */
-	deploy: ICreateCollection
-	createCollection: ICreateCollection
+	deploy: CreateCollection
+	createCollection: CreateCollection
 }
 
 export interface IOrderSdk {
@@ -100,8 +102,14 @@ export interface IBalanceSdk {
 }
 
 export interface IEthereumSdk {
-	wrapCryptoPunk: ICryptopunkWrap,
-	unwrapCryptoPunk: ICryptopunkUnwrap,
+	wrapCryptoPunk: CryptopunkWrap,
+	unwrapCryptoPunk: CryptopunkUnwrap,
+}
+
+export interface ISolanaSdk {
+	getEscrowBalance: SolanaGetEscrowBalance,
+	depositEscrow: SolanaDepositEscrow,
+	withdrawEscrow: SolanaWithdrawEscrow,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {

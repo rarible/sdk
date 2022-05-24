@@ -65,4 +65,4 @@ export type CreateCollectionResponse = {
 	address: ContractAddress
 }
 
-export type ICreateCollection = Action<"send-tx", CreateCollectionRequest, CreateCollectionResponse>
+export type CreateCollection = Action<"send-tx", CreateCollectionRequest, CreateCollectionResponse>

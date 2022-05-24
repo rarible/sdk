@@ -11,6 +11,7 @@ import { SolanaFill } from "./fill"
 import { SolanaOrder } from "./order"
 import { SolanaBalance } from "./balance"
 import { SolanaCollection } from "./collection"
+import { SolanaAuctionHouse } from "./auction-house"
 
 export function createSolanaSdk(
 	wallet: Maybe<SolanaWallet>,
@@ -24,6 +25,7 @@ export function createSolanaSdk(
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)
 	const fillService = new SolanaFill(sdk, wallet, apis, config)
 	const collectionService = new SolanaCollection(sdk, wallet, apis, config)
+	const auctionHouseService = new SolanaAuctionHouse(sdk, wallet, apis, config)
 
 	return {
 		nft: {
@@ -51,6 +53,11 @@ export function createSolanaSdk(
 		},
 		restriction: {
 			canTransfer: nonImplementedAction,
+		},
+		solana: {
+			getEscrowBalance: auctionHouseService.getEscrowBalance,
+			depositEscrow: auctionHouseService.depositEscrow,
+			withdrawEscrow: auctionHouseService.withdrawEscrow,
 		},
 	}
 }
