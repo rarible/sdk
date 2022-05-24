@@ -200,7 +200,7 @@ export function getMaybeTezosProvider(
 					bid: "",
 					bid_storage: "",
 					sig_checker: "",
-					tzkt: "https://api.mainnet.tzkt.io/",
+					tzkt: "https://api.mainnet.tzkt.io",
 					dipdup: "",
 				},
 			}
