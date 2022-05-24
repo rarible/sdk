@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.5](https://github.com/rarible/sdk/compare/v0.9.4...v0.9.5) (2022-05-24)
+
+
+### Bug Fixes
+
+* tezos prod service ([#237](https://github.com/rarible/sdk/issues/237)) ([fdeed05](https://github.com/rarible/sdk/commit/fdeed054bb71d29aa1819b39c0bd74c8465d6c21))
+
+
+
+
+
 ## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
 
 
