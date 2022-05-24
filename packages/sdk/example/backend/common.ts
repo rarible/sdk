@@ -4,6 +4,10 @@ import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
 // @ts-ignore
+import HookedWalletSubprovider from 'web3-provider-engine/subproviders/hooked-wallet-ethtx'
+// @ts-ignore
+import WalletSubprovider from 'web3-provider-engine/subproviders/wallet'
+// @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { ethers } from "ethers"
@@ -11,7 +15,6 @@ import { EthersEthereum } from "@rarible/ethers-ethereum"
 import Web3 from "web3";
 import { Web3Ethereum } from "@rarible/web3-ethereum";
 import HDWalletProvider from "@truffle/hdwallet-provider"
-
 
 export function updateNodeGlobalVars() {
 	(global as any).FormData = FormData;
@@ -27,8 +30,29 @@ export function initNodeProvider(pk: string, config: { networkId: number, rpcUrl
 	const provider = new Web3ProviderEngine({ pollingInterval: 100 })
 	const privateKey = pk.startsWith("0x") ? pk.substring(2) : pk
 	const wallet = new Wallet(Buffer.from(privateKey, "hex"))
-	provider.addProvider(new TestSubprovider(wallet, { networkId: config.networkId, chainId: config.networkId }))
+	// provider.addProvider(new TestSubprovider(wallet, { networkId: config.networkId, chainId: config.networkId }))
+  provider.addProvider(new WalletSubprovider(wallet, {}))
+
+  /*
+  provider.addProvider(new HookedWalletSubprovider({
+    getAccounts: function(callback: any) {
+      callback(null, [wallet.getAddressString()]);
+    },
+    getPrivateKey: function(address: string, callback: any) {
+      if (address === wallet.getAddressString()) {
+        // const privateBuffered = wallet.getPrivateKey()
+        const privateBuffered = Buffer.from(privateKey, "hex")
+        return callback(null, privateBuffered);
+      }
+      return callback(new Error('not private key supplied for that account'));
+    },
+  }))
+
+   */
 	provider.addProvider(new RpcSubprovider({ rpcUrl: config.rpcUrl }))
+	// provider.addProvider(
+  //   new Web3Subprovider(new Web3.providers.HttpProvider(config.rpcUrl))
+  // )
 	provider.start()
 	return provider
 }
