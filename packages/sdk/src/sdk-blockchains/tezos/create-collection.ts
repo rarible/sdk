@@ -26,7 +26,6 @@ export class TezosCreateCollection {
 
 		if (asset.assetType === "NFT") {
 			if (!asset.arguments.isUserToken) {
-				console.log(provider, owner, meta)
 				return deploy_nft_public(provider, owner, meta)
 			} else {
 				return deploy_nft_private(provider, owner, meta)

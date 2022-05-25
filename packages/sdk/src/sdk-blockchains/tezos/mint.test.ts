@@ -12,7 +12,7 @@ describe.skip("mint test", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"

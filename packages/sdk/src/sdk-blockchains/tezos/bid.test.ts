@@ -17,26 +17,26 @@ describe.skip("bid test", () => {
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const itemOwnerSdk = createRaribleSdk(itemOwner, "dev", { logs: LogsLevel.DISABLED })
+	const itemOwnerSdk = createRaribleSdk(itemOwner, "staging", { logs: LogsLevel.DISABLED })
 
 	const bidderWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 
-	const bidderSdk = createRaribleSdk(bidderWallet, "dev", { logs: LogsLevel.DISABLED })
+	const bidderSdk = createRaribleSdk(bidderWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const nullFundsWallet = createTestWallet(
 		"edskS2YAR6wms6ZWckr7wJYW1cFaEgy9mk1FbnjABsDMyh" +
     "7CUpvCS8Hfy12BcjvsQc1eprKKBMqAEc6FBgCnLLu33KvzYgsd9c")
 
-	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "dev")
+	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
 	const nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	const mtContract = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
-	test("bid NFT test", async () => {
+	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})

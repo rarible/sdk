@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.5](https://github.com/rarible/sdk/compare/v0.9.4...v0.9.5) (2022-05-24)
+
+
+### Bug Fixes
+
+* tezos prod service ([#237](https://github.com/rarible/sdk/issues/237)) ([fdeed05](https://github.com/rarible/sdk/commit/fdeed054bb71d29aa1819b39c0bd74c8465d6c21))
+
+
+
+
+
+## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
+
+
+### Features
+
+* add flow tests ([84860f0](https://github.com/rarible/sdk/commit/84860f000c58d6cad4f9d3d226eca67cbf0944a6))
+* update tezos features ([#236](https://github.com/rarible/sdk/issues/236)) ([4bb4ae4](https://github.com/rarible/sdk/commit/4bb4ae47b54809a548351a042229f783529ff277))
+
+
+
+
+
 ## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
 
 
