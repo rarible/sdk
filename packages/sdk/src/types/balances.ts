@@ -1,6 +1,7 @@
 import type { UnionAddress } from "@rarible/types"
-import type { Blockchain } from "@rarible/api-client"
+import type { Blockchain, Order, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
+import type { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { RequestCurrency } from "../common/domain"
 
@@ -19,3 +20,30 @@ export type ConvertRequest = {
 	isWrap: boolean
 	value: BigNumberValue
 }
+
+
+export type CurrencyOrOrder = {
+	currency: RequestCurrency
+} | {
+	order: Order
+} | {
+	orderId: OrderId
+}
+
+export type GetBiddingBalanceRequest = {
+	address: UnionAddress
+} & CurrencyOrOrder
+
+export type GetBiddingBalance = (request: GetBiddingBalanceRequest) => Promise<BigNumberValue>
+
+export type DepositBiddingBalanceRequest = {
+	amount: BigNumberValue
+} & CurrencyOrOrder
+
+export type DepositBiddingBalance = Action<"send-tx", DepositBiddingBalanceRequest, IBlockchainTransaction>
+
+export type WithdrawBiddingBalanceRequest = {
+	amount: BigNumberValue
+} & CurrencyOrOrder
+
+export type WithdrawBiddingBalance = Action<"send-tx", WithdrawBiddingBalanceRequest, IBlockchainTransaction>

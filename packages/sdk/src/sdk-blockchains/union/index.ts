@@ -1,4 +1,4 @@
-import type { CollectionId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { CollectionId, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -10,7 +10,6 @@ import type {
 	INftSdk,
 	IOrderInternalSdk,
 	IRaribleInternalSdk,
-	ISolanaSdk,
 } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -26,13 +25,17 @@ import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restric
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { ConvertRequest } from "../../types/balances"
+import type {
+	ConvertRequest,
+	DepositBiddingBalance,
+	GetBiddingBalanceRequest,
+	WithdrawBiddingBalance,
+} from "../../types/balances"
+import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
-import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
-import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
+import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { CryptopunkUnwrap, CryptopunkWrap } from "../../types/ethereum/domain"
-import type { SolanaDepositEscrow, SolanaGetEscrowBalance, SolanaWithdrawEscrow } from "../../types/solana/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -71,7 +74,6 @@ export function createUnionSdk(
 			SOLANA: solana.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
-		solana: new UnionSolanaSpecificSdk(solana.solana!),
 	}
 }
 
@@ -174,14 +176,30 @@ class UnionBalanceSdk implements IBalanceSdk {
 	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
+		this.getBiddingBalance = this.getBiddingBalance.bind(this)
 	}
 
 	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, currency)].getBalance(address, currency)
 	}
+
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		return this.instances[request.blockchain].convert(request)
 	}
+
+	getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
+		return this.instances[getBiddingBlockchain(request)].getBiddingBalance(request)
+	}
+
+	depositBiddingBalance: DepositBiddingBalance = Action.create({
+		id: "send-tx",
+		run: request => this.instances[getBiddingBlockchain(request)].depositBiddingBalance(request),
+	})
+
+	withdrawBiddingBalance: WithdrawBiddingBalance = Action.create({
+		id: "send-tx",
+		run: request => this.instances[getBiddingBlockchain(request)].withdrawBiddingBalance(request),
+	})
 }
 
 class UnionRestrictionSdk implements IRestrictionSdk {
@@ -189,7 +207,7 @@ class UnionRestrictionSdk implements IRestrictionSdk {
 	}
 
 	canTransfer(
-		itemId: ItemId, from: UnionAddress, to: UnionAddress
+		itemId: ItemId, from: UnionAddress, to: UnionAddress,
 	): Promise<CanTransferResult> {
 		return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
 	}
@@ -203,16 +221,6 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 	unwrapCryptoPunk: CryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
 }
 
-
-class UnionSolanaSpecificSdk implements ISolanaSdk {
-	constructor(private readonly solanaSdk: ISolanaSdk) {
-	}
-
-	getEscrowBalance: SolanaGetEscrowBalance = this.solanaSdk.getEscrowBalance
-	depositEscrow: SolanaDepositEscrow = this.solanaSdk.depositEscrow
-	withdrawEscrow: SolanaWithdrawEscrow = this.solanaSdk.withdrawEscrow
-}
-
 const blockchains: Blockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.FLOW,
@@ -222,7 +230,7 @@ const blockchains: Blockchain[] = [
 ]
 
 function extractBlockchain(
-	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId,
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId | CurrencyId,
 ): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
@@ -262,4 +270,35 @@ function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency):
 	} else {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
+}
+
+
+function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
+	if ("currency" in currencyOrOrder) {
+		if (isRequestCurrencyAssetType(currencyOrOrder.currency)) {
+			return extractBlockchain(currencyOrOrder.currency)
+		} else {
+			if (isAssetType(currencyOrOrder.currency)) {
+				if ("blockchain" in currencyOrOrder.currency && currencyOrOrder.currency.blockchain) {
+					return currencyOrOrder.currency.blockchain
+				}
+				if ("contract" in currencyOrOrder.currency && currencyOrOrder.currency.contract) {
+					return extractBlockchain(currencyOrOrder.currency.contract)
+				}
+				if ("itemId" in currencyOrOrder.currency && currencyOrOrder.currency.itemId) {
+					return extractBlockchain(currencyOrOrder.currency.itemId)
+				}
+				switch (currencyOrOrder.currency["@type"]) {
+					case "SOLANA_SOL": return Blockchain.SOLANA
+					case "ETH": return Blockchain.ETHEREUM
+					case "XTZ": return Blockchain.TEZOS
+				}
+			}
+		}
+		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currencyOrOrder.currency)}`)
+	} else if ("order" in currencyOrOrder) {
+		return extractBlockchain(currencyOrOrder.order.id)
+	}
+
+	return extractBlockchain(currencyOrOrder.orderId)
 }

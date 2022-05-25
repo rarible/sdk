@@ -12,7 +12,13 @@ import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
 import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
-import type { IConvert, IGetBalance } from "./types/balances"
+import type {
+	DepositBiddingBalance,
+	GetBiddingBalance,
+	IConvert,
+	IGetBalance,
+	WithdrawBiddingBalance,
+} from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { CreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
@@ -21,7 +27,6 @@ import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import type { CryptopunkUnwrap, CryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
-import type { SolanaDepositEscrow, SolanaGetEscrowBalance, SolanaWithdrawEscrow } from "./types/solana/domain"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -55,7 +60,6 @@ export interface IRaribleSdk {
 	restriction: IRestrictionSdk
 	wallet: Maybe<BlockchainWallet>
 	ethereum?: IEthereumSdk
-	solana?: ISolanaSdk
 }
 
 export interface IApisSdk {
@@ -99,17 +103,15 @@ export interface IOrderSdk {
 export interface IBalanceSdk {
 	getBalance: IGetBalance
 	convert: IConvert
+
+	getBiddingBalance: GetBiddingBalance
+	depositBiddingBalance: DepositBiddingBalance
+	withdrawBiddingBalance: WithdrawBiddingBalance
 }
 
 export interface IEthereumSdk {
 	wrapCryptoPunk: CryptopunkWrap,
 	unwrapCryptoPunk: CryptopunkUnwrap,
-}
-
-export interface ISolanaSdk {
-	getEscrowBalance: SolanaGetEscrowBalance,
-	depositEscrow: SolanaDepositEscrow,
-	withdrawEscrow: SolanaWithdrawEscrow,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {
