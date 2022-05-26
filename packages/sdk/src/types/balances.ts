@@ -28,6 +28,8 @@ export type CurrencyOrOrder = {
 	order: Order
 } | {
 	orderId: OrderId
+} | {
+	blockchain: Blockchain
 }
 
 export type GetBiddingBalanceRequest = {

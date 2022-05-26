@@ -4,7 +4,7 @@ import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { PublicKey } from "@solana/web3.js"
-import type  { Order } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
 import { Action } from "@rarible/action"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { RequestCurrency } from "../../common/domain"
@@ -41,7 +41,7 @@ export class SolanaBalance {
 		} else if (assetType["@type"] === "SOLANA_NFT") {
 			return (await this.sdk.balances.getTokenBalance(
 				extractPublicKey(address),
-				extractPublicKey(assetType.itemId)
+				extractPublicKey(assetType.itemId),
 			)).toString()
 		} else {
 			throw new Error("Unsupported asset type")
@@ -57,15 +57,19 @@ export class SolanaBalance {
 
 			return getAuctionHouse(assetType, this.config?.auctionHouseMapping)
 		} else {
-			let order: Order
+			let order: Order | undefined = undefined
 
 			if ("order" in currencyOrOrder) {
 				order = currencyOrOrder.order
-			} else {
+			} else if ("orderId" in currencyOrOrder) {
 				order = await this.apis.order.getOrderById({ id: currencyOrOrder.orderId })
 			}
 
-			return extractPublicKey(getOrderData(order).auctionHouse!)
+			if (order) {
+				return extractPublicKey(getOrderData(order).auctionHouse!)
+			} else {
+				return getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
+			}
 		}
 	}
 

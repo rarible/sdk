@@ -7,7 +7,6 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import { nonImplementedAction } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -38,7 +37,7 @@ export function createEthereumSdk(
 		polygon: config.polygon,
 	})
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk, network)
+	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
@@ -68,9 +67,9 @@ export function createEthereumSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
-			getBiddingBalance: nonImplementedAction,
-			depositBiddingBalance: nonImplementedAction,
-			withdrawBiddingBalance: nonImplementedAction,
+			getBiddingBalance: balanceService.getBiddingBalance,
+			depositBiddingBalance: balanceService.depositBiddingBalance,
+			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

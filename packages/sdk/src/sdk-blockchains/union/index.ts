@@ -298,7 +298,10 @@ function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currencyOrOrder.currency)}`)
 	} else if ("order" in currencyOrOrder) {
 		return extractBlockchain(currencyOrOrder.order.id)
+	} else if ("orderId" in currencyOrOrder) {
+		return extractBlockchain(currencyOrOrder.orderId)
+	} else {
+		return currencyOrOrder.blockchain
 	}
 
-	return extractBlockchain(currencyOrOrder.orderId)
 }
