@@ -31,7 +31,7 @@ export type CurrencyOrOrder = {
 }
 
 export type GetBiddingBalanceRequest = {
-	address: UnionAddress
+	walletAddress: UnionAddress
 } & CurrencyOrOrder
 
 export type GetBiddingBalance = (request: GetBiddingBalanceRequest) => Promise<BigNumberValue>

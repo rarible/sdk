@@ -78,7 +78,7 @@ export class SolanaBalance {
 		const balance = await this.sdk.auctionHouse.getEscrowBalance({
 			auctionHouse,
 			signer: this.wallet!.provider,
-			wallet: extractPublicKey(request.address),
+			wallet: extractPublicKey(request.walletAddress),
 		})
 
 		return balance.toString()

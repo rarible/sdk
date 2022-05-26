@@ -13,7 +13,7 @@ describe("Solana bidding balance", () => {
 			currency: {
 				"@type": "SOLANA_SOL",
 			},
-			address: toUnionAddress("SOLANA:" + wallet.publicKey.toString()),
+			walletAddress: toUnionAddress("SOLANA:" + wallet.publicKey.toString()),
 		})
 
 		expect(parseFloat(balance!.toString())).toBeGreaterThanOrEqual(0.00089088)
