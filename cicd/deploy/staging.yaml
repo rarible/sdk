@@ -1,0 +1,6 @@
+transaction-backend:
+  service:
+    nodePort: 30236
+  environments:
+    SDK_ENV: rinkeby
+    RPC_URL: https://rinkeby.arbitrum.io/rpc

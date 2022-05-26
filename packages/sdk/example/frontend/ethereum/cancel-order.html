@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://unpkg.com/@rarible/web3-ethereum@0.12.40-hotfix.3/umd/rarible-web3-ethereum.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk-wallet@0.8.46/umd/rarible-wallet-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk@0.8.46/umd/rarible-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/web3@1.6.0/dist/web3.min.js" type="text/javascript"></script>
+<script>
+
+  async function init() {
+    const {ethereum} = window
+    if (ethereum && ethereum.isMetaMask) {
+      const web3Ethereum = new window.raribleWeb3Ethereum.Web3Ethereum({ web3: new Web3(ethereum) })
+      const wallet = new window.raribleWalletSdk.EthereumWallet(web3Ethereum)
+
+      const env = "staging" // "dev" | "e2e" | "staging" | "prod"
+      const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
+      const cancelTx = await raribleSdk.order.cancel({
+        orderId: "ETHEREUM:<YOUR_ORDER_ID>"
+      })
+      await cancelTx.wait()
+      console.log('tx', cancelTx)
+    }
+
+  }
+  init()
+
+</script>
+</body>
+</html>

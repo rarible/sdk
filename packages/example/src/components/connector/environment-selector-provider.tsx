@@ -21,7 +21,7 @@ export interface IConnectorComponentProps {
 const LOCALSTORAGE_KEY = "saved_environment"
 
 function getSavedEnvironment(): RaribleSdkEnvironment {
-	const envs = ["dev", "e2e", "staging", "prod"]
+	const envs = ["dev", "development", "e2e", "staging", "prod"]
 	const saved = localStorage.getItem(LOCALSTORAGE_KEY)
 	return saved && envs.includes(saved) ? saved as RaribleSdkEnvironment : "staging"
 }

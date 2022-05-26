@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://unpkg.com/@rarible/web3-ethereum@0.12.40-hotfix.3/umd/rarible-web3-ethereum.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk-wallet@0.8.46/umd/rarible-wallet-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/sdk@0.8.46/umd/rarible-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/web3@1.6.0/dist/web3.min.js" type="text/javascript"></script>
+<script>
+
+  async function init() {
+    const {ethereum} = window
+    if (ethereum && ethereum.isMetaMask) {
+      const web3Ethereum = new window.raribleWeb3Ethereum.Web3Ethereum({ web3: new Web3(ethereum) })
+      const wallet = new window.raribleWalletSdk.EthereumWallet(web3Ethereum)
+
+      const env = "staging" // "dev" | "e2e" | "staging" | "prod"
+      const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
+      const bidAction = await raribleSdk.order.bid({
+        itemId: "ETHEREUM:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"
+      })
+      const orderId = await bidAction.submit({
+        amount: 1,
+        price: "0.0000000000001",
+        currency: {
+          "@type": "ERC20",
+          contract: "ETHEREUM:0xc778417e063141139fce010982780140aa0cd5ab",
+        },
+      })
+      console.log('orderId', orderId)
+
+      const updateAction = await raribleSdk.order.bidUpdate({ orderId })
+      //You can only increase price of bid order for security reasons
+      //If you want to force change bid price you should cancel order
+      await updateAction.submit({ price: "0.0000000000004" })
+
+    }
+
+  }
+  init()
+
+</script>
+</body>
+</html>

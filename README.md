@@ -183,7 +183,7 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
     }
     ```
 
-3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/buy.ts) to buy Ethereum NFT item on Rinkeby network:
+3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk/example/backend/ethereum/buy.ts) to buy Ethereum NFT item on Rinkeby network:
 
    Pass private key, node RPC URL, network ID, item ID for buyout and start:
 
@@ -233,7 +233,7 @@ See how to use common SDK functionality in our [documentation](https://docs.rari
 * [Contract Addresses](https://docs.rarible.org/reference/contract-addresses/)
 * [Search Capabilities](https://docs.rarible.org/reference/search-capabilities/)
 
-### Troubleshooting
+## Troubleshooting
 
 Possible errors after `npm install -D @rarible/sdk` command:
 
@@ -298,6 +298,20 @@ sudo n 14.17.6
 ```
 
 </details>
+
+## Suggestions
+
+You are welcome to [suggest features](https://github.com/rarible/protocol/discussions) and [report bugs found](https://github.com/rarible/protocol/issues)!
+
+## Contributing
+
+The codebase is maintained using the "contributor workflow" where everyone without exception contributes patch proposals using "pull requests" (PRs). This facilitates social contribution, easy testing, and peer review.
+
+See more information on [CONTRIBUTING.md](https://github.com/rarible/protocol/blob/main/CONTRIBUTING.md).
+
+## License
+
+Rarible Multichain SDK is available under the [MIT License](LICENSE).
 
 ### Note
 

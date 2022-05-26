@@ -9,7 +9,7 @@ import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import { sell } from "../../common/atoms-tests/sell"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer,
+	getEthereumWalletBuyer, getFlowBuyerWallet, getFlowSellerWallet, getSolanaWallet,
 	getTezosTestWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
@@ -294,6 +294,93 @@ function suites(): {
 				price: "0.01",
 			},
 		},
+		{
+			blockchain: Blockchain.TEZOS,
+			description: "MT <=> XTZ",
+			wallets: { seller: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
+			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 20,
+				}
+			},
+			currency: "XTZ",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 3,
+					price: "0.02",
+					currency: currency,
+				}
+			},
+			updateSellRequest: {
+				price: "0.01",
+			},
+		},
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { seller: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "SOLANA_SOL",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: toBigNumber("0.002"),
+					currency: currency,
+				}
+			},
+			updateSellRequest: {
+				price: toBigNumber("0.001"),
+			},
+		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { seller: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "FLOW_FT",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.0002",
+					currency: currency,
+				}
+			},
+			updateSellRequest: {
+				price: "0.0001",
+			},
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -322,13 +409,12 @@ describe.each(suites())("$blockchain mint => sell => sellUpdate => buy", (suite)
 		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
 		// Update sell order
-		await sellUpdate(sellerSdk, sellerWallet, { orderId: sellOrder.id }, suite.updateSellRequest)
+		const order = await sellUpdate(sellerSdk, sellerWallet, { orderId: sellOrder.id }, suite.updateSellRequest)
 
 		// Fill sell order
-		await buy(buyerSdk, buyerWallet, nft.id, { orderId: sellOrder.id }, { amount: orderRequest.amount })
+		await buy(buyerSdk, buyerWallet, nft.id, { orderId: order.id }, { amount: orderRequest.amount })
 
-		await awaitOrderStock(sellerSdk, sellOrder.id, toBigNumber("0"))
+		await awaitOrderStock(sellerSdk, order.id, toBigNumber("0"))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(orderRequest.amount)))
-		//toDo add balance verification for seller
 	})
 })

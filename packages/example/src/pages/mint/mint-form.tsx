@@ -32,8 +32,8 @@ export function MintForm({ prepare, disabled, onComplete }: IMintFormProps) {
 				try {
 					onComplete(await prepare.submit({
 						uri: formData.metadataUri,
-						supply: formData.supply ?? 1,
-						lazyMint: formData.lazy ?? false
+						supply: parseFloat(formData.supply) ?? 1,
+						lazyMint: formData.lazy ?? false,
 					}))
 				} catch (e) {
 					setError(e)

@@ -16,9 +16,7 @@ import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type.validator"
 import type { TokenId } from "../../types/nft/generate-token-id"
-import { validateMintRequest } from "../../types/nft/mint/mint-request.type.validator"
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { EVMBlockchain } from "./common"
@@ -112,13 +110,12 @@ export class EthereumMint {
 		return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
 	}
 
-	async prepare(requestRaw: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const collection = await getCollection(this.apis.collection, requestRaw)
+	async prepare(request: PrepareMintRequest): Promise<PrepareMintResponse> {
+		const collection = await getCollection(this.apis.collection, request)
 		if (!isSupportedCollection(collection.type)) {
 			throw new Error(`Collection with type "${collection}" not supported`)
 		}
 
-		const request = validatePrepareMintRequest(requestRaw)
 		const nftCollection = toNftCollection(collection)
 
 		return {
@@ -128,11 +125,10 @@ export class EthereumMint {
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (data: MintRequest) => {
-					const validated = validateMintRequest(data)
 					const mintResponse = await this.handleSubmit(
-						validated,
+						data,
 						nftCollection,
-						toNftTokenId(request.tokenId)
+						toNftTokenId(request.tokenId),
 					)
 
 					switch (mintResponse.type) {
@@ -156,6 +152,10 @@ export class EthereumMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+		if (meta.blockchain !== Blockchain.ETHEREUM && meta.blockchain !== Blockchain.POLYGON) {
+			throw new Error("Wrong blockchain")
+		}
+
 		return {
 			name: meta.name,
 			description: meta.description,

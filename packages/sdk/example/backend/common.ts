@@ -8,6 +8,10 @@ import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { ethers } from "ethers"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
+import Web3 from "web3";
+import { Web3Ethereum } from "@rarible/web3-ethereum";
+import HDWalletProvider from "@truffle/hdwallet-provider"
+
 
 export function updateNodeGlobalVars() {
 	(global as any).FormData = FormData;
@@ -29,21 +33,52 @@ export function initNodeProvider(pk: string, config: { networkId: number, rpcUrl
 	return provider
 }
 
-export function initWallet(privateKey: string): EthereumWallet {
+export async function initWallet(privateKey: string): Promise<EthereumWallet> {
 	if (
 		process.env["ETHEREUM_RPC_URL"] === undefined ||
     process.env["ETHEREUM_NETWORK_ID"] === undefined
 	) {
 		throw new Error("Provide ETHEREUM_RPC_URL, ETHEREUM_NETWORK_ID as environment variables!")
 	}
-	const provider = initNodeProvider(privateKey, {
-		rpcUrl: process.env["ETHEREUM_RPC_URL"],
-		networkId: +process.env["ETHEREUM_NETWORK_ID"],
-	})
-	//@ts-ignore
-	const raribleEthers = new ethers.providers.Web3Provider(provider)
+	const raribleEthers = new ethers.providers.JsonRpcProvider(process.env["ETHEREUM_RPC_URL"])
 
-	//@ts-ignore
 	const raribleProvider = new EthersEthereum(new ethers.Wallet(privateKey, raribleEthers))
 	return new EthereumWallet(raribleProvider)
+}
+
+export async function initWalletWeb3(privateKey: string): Promise<EthereumWallet> {
+  if (
+    process.env["ETHEREUM_RPC_URL"] === undefined ||
+    process.env["ETHEREUM_NETWORK_ID"] === undefined
+  ) {
+    throw new Error("Provide ETHEREUM_RPC_URL, ETHEREUM_NETWORK_ID as environment variables!")
+  }
+
+  const provider = initNodeProvider(privateKey, {
+    rpcUrl: process.env["ETHEREUM_RPC_URL"],
+    networkId: +process.env["ETHEREUM_NETWORK_ID"],
+  })
+
+  const web3 = new Web3(provider)
+
+  const web3Ethereum = new Web3Ethereum({ web3 })
+
+  return new EthereumWallet(web3Ethereum)
+}
+
+export async function initWalletWeb3WithHDWallet(privateKey: string): Promise<EthereumWallet> {
+  if (
+    process.env["ETHEREUM_RPC_URL"] === undefined ||
+    process.env["ETHEREUM_NETWORK_ID"] === undefined
+  ) {
+    throw new Error("Provide ETHEREUM_RPC_URL, ETHEREUM_NETWORK_ID as environment variables!")
+  }
+
+  const provider = new HDWalletProvider(privateKey, process.env["ETHEREUM_RPC_URL"])
+
+  const web3 = new Web3(provider)
+
+  const web3Ethereum = new Web3Ethereum({ web3 })
+
+  return new EthereumWallet(web3Ethereum)
 }

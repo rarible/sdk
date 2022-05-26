@@ -4,6 +4,7 @@ export const devConfig: RaribleSdkConfig = {
 	basePath: "https://api-dev.rarible.org",
 	ethereumEnv: "ropsten",
 	flowEnv: "dev",
-	tezosNetwork: "hangzhou",
+	tezosNetwork: "testnet",
 	polygonNetwork: "mumbai-dev",
+	solanaNetwork: "devnet",
 }

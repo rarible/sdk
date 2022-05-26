@@ -1,14 +1,22 @@
 import type { FlowContractAddress, FlowCurrency, FlowItemId as FlowItemIdSdk } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
-import type { ItemId, OrderId } from "@rarible/api-client"
+import type { CollectionId, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, FlowAddress, UnionAddress } from "@rarible/types"
-import { toBigNumber, toContractAddress, toFlowAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import {
+	toBigNumber,
+	toCollectionId,
+	toContractAddress,
+	toFlowAddress,
+	toItemId,
+	toOrderId,
+	toUnionAddress,
+} from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { FlowFee } from "@rarible/flow-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { FlowItemId } from "../../../../common/domain"
 import type { UnionPart } from "../../../../types/order/common"
+import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
 
 const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
 
@@ -16,7 +24,7 @@ const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
  * Get flow collection from union collection
  * @param collection - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFlowCollection(collection: ContractAddress): FlowContractAddress {
+export function getFlowCollection(collection: ContractAddress | CollectionId): FlowContractAddress {
 	if (FLOW_COLLECTION_REGEXP.test(collection)) {
 		const raw = collection.split(":")[1]
 		return toFlowContractAddress(raw)
@@ -31,7 +39,7 @@ const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}:[0-9]{1,}/
  * @param unionItemId - e.g. "FLOW:A.0xabcdef0123456789.ContractName:123", contract address can be unprefixed
  * @returns blockchain, collectionId, itemId
  */
-export function parseUnionItemId(unionItemId: ItemId): FlowItemId {
+export function parseFlowItemIdFromUnionItemId(unionItemId: ItemId): ParsedFlowItemIdFromUnionItemId {
 	if (FLOW_ITEM_ID_REGEXP.test(unionItemId)) {
 		const [blockchain, collectionId, itemId] = unionItemId.split(":")
 		if (!collectionId) {
@@ -132,6 +140,10 @@ export function convertFlowItemId(itemId: FlowItemIdSdk): ItemId {
 
 export function convertFlowContractAddress(contractAddress: string): ContractAddress {
 	return toContractAddress(`${Blockchain.FLOW}:${contractAddress}`)
+}
+
+export function convertFlowCollectionId(contractAddress: string): CollectionId {
+	return toCollectionId(`${Blockchain.FLOW}:${contractAddress}`)
 }
 
 export function convertFlowUnionAddress(address: string): UnionAddress {

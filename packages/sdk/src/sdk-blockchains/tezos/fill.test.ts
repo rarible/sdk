@@ -5,11 +5,11 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosOrderId } from "./common"
 
-describe("fill test", () => {
+describe.skip("fill test", () => {
 	const wallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
-	const buyerSdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const buyerSdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
 	test.skip("buy NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()

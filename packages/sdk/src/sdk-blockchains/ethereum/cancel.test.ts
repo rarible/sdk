@@ -13,7 +13,7 @@ describe("cancel", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)
-	const sdk1 = createRaribleSdk(ethereumWallet, "e2e", { logs: LogsLevel.DISABLED })
+	const sdk1 = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const conf = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),

@@ -1,4 +1,4 @@
-import { Blockchain } from "@rarible/api-client"
+import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
@@ -7,7 +7,7 @@ import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer,
+	getEthereumWalletBuyer, getFlowBuyerWallet, getFlowSellerWallet, getSolanaWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
@@ -18,6 +18,7 @@ import { acceptBid } from "../../common/atoms-tests/accept-bid"
 import { testsConfig } from "../../common/config"
 import { getCurrency } from "../../common/currency"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
+import { getActivitiesByItem } from "../../common/api-helpers/activity-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -102,7 +103,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: toBigNumber("0.0000000000000001"),
 					currency: currency,
 				}
 			},
@@ -169,6 +170,58 @@ function suites(): {
         throw new Error("Wrong blockchain")
       },
     },*/
+		{
+			blockchain: Blockchain.SOLANA,
+			description: "NFT <=> SOLANA_SOL",
+			wallets: { seller: getSolanaWallet(0), buyer: getSolanaWallet(1) },
+			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
+				return {
+					uri: testsConfig.variables.SOLANA_URI,
+					creators: [{
+						account: creatorAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "SOLANA_SOL",
+			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: toBigNumber("0.001"),
+					currency: currency,
+				}
+			},
+		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { seller: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: creatorAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "FLOW_FT",
+			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: toBigNumber("0.0001"),
+					currency: currency,
+				}
+			},
+		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
 }
@@ -196,11 +249,19 @@ describe.each(suites())("$blockchain mint => bid => acceptBid", (suite) => {
 		// Create bid order
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
+		await getActivitiesByItem(buyerSdk, nft.id,
+			[ActivityType.BID],
+			[ActivityType.BID])
+
 		// Fill bid order
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id }, { amount: bidRequest.amount })
 
 		// Check token transfer
 		// await awaitForOwnership(buyerSdk, nft.id, await getWalletAddress(buyerWallet, false))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
+
+		await getActivitiesByItem(buyerSdk, nft.id,
+			[ActivityType.TRANSFER, ActivityType.MINT, ActivityType.BID],
+			[ActivityType.TRANSFER, ActivityType.MINT, ActivityType.BID])
 	})
 })

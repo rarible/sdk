@@ -1,0 +1,42 @@
+def testSuccess = false
+
+pipeline {
+  agent none
+
+  options {
+    disableConcurrentBuilds()
+  }
+
+  stages {
+    stage('test') {
+      environment {
+	      NPM_TOKEN = "na"
+      }
+      when { branch "master"  }
+      agent any
+      steps {
+        sh 'yarn && yarn build && yarn test'
+      }
+    }
+    stage('build and deploy') {
+      agent any
+      when { tag "v*"  }
+      environment {
+        NPM_TOKEN = credentials('npm-token')
+        NPM_HOME = '${env.WORKSPACE_TMP}'
+      }
+      steps {
+          sh 'yarn && yarn build'
+          sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
+          sh 'yarn release'
+      }
+    }
+  }
+  post {
+    always {
+      node("") {
+        cleanWs()
+      }
+    }
+  }
+}

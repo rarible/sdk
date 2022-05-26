@@ -14,7 +14,7 @@ const buy = await connection.sdk.order.buy({
 //   maxAmount: BigNumber
 //   multiple: boolean
 //   submit: Function
-//   supportsPartialFill: boolean }
+//   supportsPartialFill: boolean
 // }  
 
 // send transaction
