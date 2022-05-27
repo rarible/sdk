@@ -38,6 +38,7 @@ export function createTezosSdk(
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
+			createCollectionStart: createCollectionService.createCollectionBase,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

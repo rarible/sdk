@@ -1,10 +1,14 @@
 import type { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { CreateCollectionBlockchains } from "./domain"
+import type { CreateCollectionResponse } from "./domain"
+
+export type ICreateCollectionSimplified = (req: CreateCollectionRequestSimplified) => Promise<CreateCollectionResponse>
 
 export type CreateCollectionRequestSimplified =
   | EthereumCreatePublicCollectionSimplified
   | EthereumCreatePrivateCollectionSimplified
+  | TezosCreatePublicCollectionSimplified
 
 
 export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBlockchains>
@@ -39,12 +43,10 @@ export interface EthereumCreateCollectionSimplifiedCommon {
  * Tezos
  */
 export interface TezosCreatePublicCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.TEZOS> {
+	AbstractCreateCollectionSimplified<Blockchain.TEZOS>{
 	type: "NFT" | "MT"
-	arguments: {
-		name: string
-		symbol: string
-		contractURI: string
-		isUserToken: boolean,
-	}
+	symbol: string
+	name: string
+	contractURI: string
+	isPublic: boolean
 }

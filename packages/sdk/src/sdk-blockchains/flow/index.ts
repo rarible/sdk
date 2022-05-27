@@ -38,6 +38,7 @@ export function createFlowSdk(
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
 			createCollection: nonImplementedAction,
+			createCollectionStart: notImplemented,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

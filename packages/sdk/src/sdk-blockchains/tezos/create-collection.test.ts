@@ -27,6 +27,22 @@ describe("deploy tezos tests", () => {
 		await result.tx.wait()
 	})
 
+	test("deploy public nft with simplified function createCollectionStart", async () => {
+		const result = await sdk.nft.createCollectionStart({
+			blockchain: Blockchain.TEZOS,
+			type: "NFT",
+			name: "My NFT collection",
+			symbol: "MYNFT",
+			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: true,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
+		await awaitForCollection(sdk, result.address)
+	})
+
 	test.skip("deploy private nft", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
@@ -46,6 +62,23 @@ describe("deploy tezos tests", () => {
 		await awaitForCollection(sdk, result.address)
 	})
 
+
+	test("deploy private nft with simplified function createCollectionStart", async () => {
+		const result = await sdk.nft.createCollectionStart({
+			blockchain: Blockchain.TEZOS,
+			type: "NFT",
+			name: "My NFT collection",
+			symbol: "MYNFT",
+			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: false,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
+		await awaitForCollection(sdk, result.address)
+	})
+
 	test.skip("deploy public mt", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
@@ -61,6 +94,22 @@ describe("deploy tezos tests", () => {
 		})
 
 		await result.tx.wait()
+		await awaitForCollection(sdk, result.address)
+	})
+
+	test("deploy public MT with simplified function createCollectionStart", async () => {
+		const result = await sdk.nft.createCollectionStart({
+			blockchain: Blockchain.TEZOS,
+			type: "MT",
+			name: "My NFT collection",
+			symbol: "MYNFT",
+			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: true,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
 		await awaitForCollection(sdk, result.address)
 	})
 

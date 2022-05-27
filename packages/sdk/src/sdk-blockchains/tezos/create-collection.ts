@@ -6,6 +6,8 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { Blockchain } from "@rarible/api-client"
 import type { CreateCollectionRequest, ICreateCollection } from "../../types/nft/deploy/domain"
 import type { TezosCreateCollectionTokenAsset } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
 import { convertTezosToContractAddress, getRequiredProvider } from "./common"
 
@@ -13,7 +15,9 @@ export class TezosCreateCollection {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private network: TezosNetwork,
-	) {}
+	) {
+		this.createCollectionBase = this.createCollectionBase.bind(this)
+	}
 
 	private async getDeployOperation(asset: TezosCreateCollectionTokenAsset): Promise<DeployResult> {
 		const provider = getRequiredProvider(this.provider)
@@ -54,4 +58,23 @@ export class TezosCreateCollection {
 			}
 		},
 	})
+
+	async createCollectionBase(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+		if (request.blockchain !== Blockchain.TEZOS) {
+			throw new Error("Wrong blockchain")
+		}
+		const operationResult = await this.getDeployOperation({
+			assetType: request.type,
+			arguments: {
+				name: request.name,
+				symbol: request.symbol,
+				contractURI: request.contractURI,
+				isUserToken: !request.isPublic,
+			},
+		})
+		return {
+			tx: new BlockchainTezosTransaction(operationResult, this.network),
+			address: convertTezosToContractAddress(operationResult.contract),
+		}
+	}
 }

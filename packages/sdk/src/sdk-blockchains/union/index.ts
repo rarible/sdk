@@ -25,6 +25,8 @@ import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
+import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -130,6 +132,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.transfer = this.transfer.bind(this)
 		this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
 		this.generateTokenId = this.generateTokenId.bind(this)
+		this.createCollectionStart = this.createCollectionStart.bind(this)
 	}
 
 	burn(request: PrepareBurnRequest): Promise<PrepareBurnResponse> {
@@ -159,6 +162,10 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 	})
 
 	deploy = this.createCollection
+
+	createCollectionStart(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+		return this.instances[request.blockchain].createCollectionStart(request)
+	}
 }
 
 class UnionBalanceSdk implements IBalanceSdk {

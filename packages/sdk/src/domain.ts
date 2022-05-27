@@ -21,6 +21,7 @@ import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
+import type { ICreateCollectionSimplified } from "./types/nft/deploy/simplified"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -78,6 +79,7 @@ export interface INftSdk {
    */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
+	createCollectionStart: ICreateCollectionSimplified
 }
 
 export interface IOrderSdk {

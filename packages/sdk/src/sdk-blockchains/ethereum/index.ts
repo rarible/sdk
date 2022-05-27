@@ -7,6 +7,7 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import { notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -52,6 +53,7 @@ export function createEthereumSdk(
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
+			createCollectionStart: notImplemented,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
