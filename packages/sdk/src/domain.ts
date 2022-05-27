@@ -13,14 +13,14 @@ import type { IBid, IBidUpdate } from "./types/order/bid/domain"
 import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
 import type {
-	DepositBiddingBalance,
-	GetBiddingBalance,
+	IDepositBiddingBalance,
+	IGetBiddingBalance,
 	IConvert,
 	IGetBalance,
-	WithdrawBiddingBalance,
+	IWithdrawBiddingBalance,
 } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
-import type { CreateCollection } from "./types/nft/deploy/domain"
+import type { ICreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
@@ -82,8 +82,8 @@ export interface INftSdk {
 	/**
    * @deprecated Use {@link createCollection} instead
    */
-	deploy: CreateCollection
-	createCollection: CreateCollection
+	deploy: ICreateCollection
+	createCollection: ICreateCollection
 }
 
 export interface IOrderSdk {
@@ -104,9 +104,9 @@ export interface IBalanceSdk {
 	getBalance: IGetBalance
 	convert: IConvert
 
-	getBiddingBalance: GetBiddingBalance
-	depositBiddingBalance: DepositBiddingBalance
-	withdrawBiddingBalance: WithdrawBiddingBalance
+	getBiddingBalance: IGetBiddingBalance
+	depositBiddingBalance: IDepositBiddingBalance
+	withdrawBiddingBalance: IWithdrawBiddingBalance
 }
 
 export interface IEthereumSdk {

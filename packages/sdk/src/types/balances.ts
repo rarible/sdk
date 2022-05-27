@@ -36,16 +36,16 @@ export type GetBiddingBalanceRequest = {
 	walletAddress: UnionAddress
 } & CurrencyOrOrder
 
-export type GetBiddingBalance = (request: GetBiddingBalanceRequest) => Promise<BigNumberValue>
+export type IGetBiddingBalance = (request: GetBiddingBalanceRequest) => Promise<BigNumberValue>
 
 export type DepositBiddingBalanceRequest = {
 	amount: BigNumberValue
 } & CurrencyOrOrder
 
-export type DepositBiddingBalance = Action<"send-tx", DepositBiddingBalanceRequest, IBlockchainTransaction>
+export type IDepositBiddingBalance = Action<"send-tx", DepositBiddingBalanceRequest, IBlockchainTransaction>
 
 export type WithdrawBiddingBalanceRequest = {
 	amount: BigNumberValue
 } & CurrencyOrOrder
 
-export type WithdrawBiddingBalance = Action<"send-tx", WithdrawBiddingBalanceRequest, IBlockchainTransaction>
+export type IWithdrawBiddingBalance = Action<"send-tx", WithdrawBiddingBalanceRequest, IBlockchainTransaction>

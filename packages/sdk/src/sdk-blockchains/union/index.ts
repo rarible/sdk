@@ -20,16 +20,16 @@ import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-t
 import type * as OrderCommon from "../../types/order/common"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
-import type { CreateCollection } from "../../types/nft/deploy/domain"
+import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type {
 	ConvertRequest,
-	DepositBiddingBalance,
+	IDepositBiddingBalance,
 	GetBiddingBalanceRequest,
-	WithdrawBiddingBalance,
+	IWithdrawBiddingBalance,
 } from "../../types/balances"
 import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
@@ -164,7 +164,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		return this.instances[request.blockchain].preprocessMeta(request)
 	}
 
-	createCollection: CreateCollection = Action.create({
+	createCollection: ICreateCollection = Action.create({
 		id: "send-tx",
 		run: request => this.instances[request.blockchain].createCollection(request),
 	})
@@ -191,12 +191,12 @@ class UnionBalanceSdk implements IBalanceSdk {
 		return this.instances[getBiddingBlockchain(request)].getBiddingBalance(request)
 	}
 
-	depositBiddingBalance: DepositBiddingBalance = Action.create({
+	depositBiddingBalance: IDepositBiddingBalance = Action.create({
 		id: "send-tx",
 		run: request => this.instances[getBiddingBlockchain(request)].depositBiddingBalance(request),
 	})
 
-	withdrawBiddingBalance: WithdrawBiddingBalance = Action.create({
+	withdrawBiddingBalance: IWithdrawBiddingBalance = Action.create({
 		id: "send-tx",
 		run: request => this.instances[getBiddingBlockchain(request)].withdrawBiddingBalance(request),
 	})

@@ -6,7 +6,7 @@ import { toContractAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
-import type { CreateCollectionRequest, CreateCollection } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequest, ICreateCollection } from "../../types/nft/deploy/domain"
 import type { SolanaCreateCollectionTokenAsset } from "../../types/nft/deploy/domain"
 import type { ISolanaSdkConfig } from "./domain"
 
@@ -19,7 +19,7 @@ export class SolanaCollection {
 	) {
 	}
 
-	createCollection: CreateCollection = Action.create({
+	createCollection: ICreateCollection = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CreateCollectionRequest) => {
 			if (request.blockchain !== Blockchain.SOLANA) {
