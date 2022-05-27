@@ -2,7 +2,7 @@
   "packages": [
     "packages/*"
   ],
-  "version": "0.9.5",
+  "version": "0.9.3-beta.solana.fix1",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {

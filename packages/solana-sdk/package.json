@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.9.3",
+  "version": "0.9.3-beta.solana.fix1",
   "keywords": [
     "solana",
     "web3"
