@@ -35,7 +35,7 @@ import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
-import type { CryptopunkUnwrap, CryptopunkWrap } from "../../types/ethereum/domain"
+import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -217,8 +217,8 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 	constructor(private readonly ethereumSdk: IEthereumSdk) {
 	}
 
-	wrapCryptoPunk: CryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
-	unwrapCryptoPunk: CryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
+	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
 }
 
 const blockchains: Blockchain[] = [

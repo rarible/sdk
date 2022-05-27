@@ -5,8 +5,8 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type {
 	CryptopunkUnwrapRequest,
 	CryptopunkWrapRequest,
-	CryptopunkUnwrap,
-	CryptopunkWrap,
+	ICryptopunkUnwrap,
+	ICryptopunkWrap,
 } from "../../types/ethereum/domain"
 
 export class EthereumCryptopunk {
@@ -15,7 +15,7 @@ export class EthereumCryptopunk {
 		private network: EthereumNetwork,
 	) {}
 
-	wrap: CryptopunkWrap = Action.create({
+	wrap: ICryptopunkWrap = Action.create({
 		id: "approve-tx" as const,
 		run: async (request: CryptopunkWrapRequest) => {
 			if (!request.punkId) {
@@ -37,7 +37,7 @@ export class EthereumCryptopunk {
 		},
 	})
 
-	unwrap: CryptopunkUnwrap = Action.create({
+	unwrap: ICryptopunkUnwrap = Action.create({
 		id: "unwrap-tx" as const,
 		run: async (request: CryptopunkUnwrapRequest) => {
 			if (!request.punkId) {

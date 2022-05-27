@@ -25,7 +25,7 @@ import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
-import type { CryptopunkUnwrap, CryptopunkWrap } from "./types/ethereum/domain"
+import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 
 export enum LogsLevel {
@@ -110,8 +110,8 @@ export interface IBalanceSdk {
 }
 
 export interface IEthereumSdk {
-	wrapCryptoPunk: CryptopunkWrap,
-	unwrapCryptoPunk: CryptopunkUnwrap,
+	wrapCryptoPunk: ICryptopunkWrap,
+	unwrapCryptoPunk: ICryptopunkUnwrap,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {
