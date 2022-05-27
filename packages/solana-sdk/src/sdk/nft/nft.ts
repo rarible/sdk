@@ -4,9 +4,9 @@ import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
 import type { TransactionResult } from "../../types"
 import { PreparedTransaction } from "../prepared-transaction"
-import { getMintNftInstructions } from "./mint/mint"
-import { getTokenTransferInstructions } from "./mint/transfer"
-import { getTokenBurnInstructions } from "./mint/burn"
+import { getMintNftInstructions } from "./methods/mint"
+import { getTokenTransferInstructions } from "./methods/transfer"
+import { getTokenBurnInstructions } from "./methods/burn"
 
 export interface IMintRequest {
 	metadataUrl: string

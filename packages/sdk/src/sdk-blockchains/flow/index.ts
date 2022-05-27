@@ -53,6 +53,9 @@ export function createFlowSdk(
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
 			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {
