@@ -259,6 +259,178 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.12...v0.8.48-hotfix.13) (2022-05-20)
+
+
+### Bug Fixes
+
+* update flow-sdk ([759041c](https://github.com/rarible/sdk/commit/759041cba961d8f3f706b4808cb98c980d5733a9))
+
+
+
+
+
+## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([fdec62d](https://github.com/rarible/sdk/commit/fdec62ddd5ef14ef6158f2c05ca4040c3631a64f))
+
+
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
+
+
+
+
+
+## [0.8.48-hotfix.10](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.9...v0.8.48-hotfix.10) (2022-05-04)
+
+
+### Bug Fixes
+
+* opensea originFee support ([a3b0017](https://github.com/rarible/sdk/commit/a3b0017de5867bd7be69543e708699da147e00a6))
+
+
+
+
+
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.8...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.3...v0.8.48-hotfix.4) (2022-04-28)
+
+
+### Bug Fixes
+
+* update flow-sdk that fixes new dev env api url ([bb54c75](https://github.com/rarible/sdk/commit/bb54c75d3dbd5350e1658ae4fced07fec4a1e0ab))
+
+
+
+
+
+## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
+
+
+### Bug Fixes
+
+* update flow-sdk, fix definitions for collection cryptoPiggo ([c3198d9](https://github.com/rarible/sdk/commit/c3198d9a13761ee36bf631e5272d4d9c296633d4))
+
+
+
+
+
+## [0.8.48-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.1...v0.8.48-hotfix.2) (2022-04-15)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.8.48-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.0...v0.8.48-hotfix.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* fb-697 update flow-sdk, aded new collection ([8bf6f1a](https://github.com/rarible/sdk/commit/8bf6f1ad4859a091c67b9753284c32cea8c95514))
+
+
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+
+### Features
+
+* currency id support for get balance and get convertable value ([5906797](https://github.com/rarible/sdk/commit/5906797b15d13f71c5c6bf42fd918c7ab10f4d1c))
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([#169](https://github.com/rarible/sdk/issues/169)) ([e74bc31](https://github.com/rarible/sdk/commit/e74bc314249af7a208c9d4cbae0b2d1e1c752821))
+* tezos sign function and improve deps ([#158](https://github.com/rarible/sdk/issues/158)) ([791e8c8](https://github.com/rarible/sdk/commit/791e8c8cf2cbac84b77c408993134eae79280049))
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* added missing apis to sdk: currency + auctions ([b7c2640](https://github.com/rarible/sdk/commit/b7c264022c838b916e5c6d1976c0e066df47a350))
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
+
+
+### Features
+
+* convert method ([#149](https://github.com/rarible/sdk/issues/149)) ([d61e2f5](https://github.com/rarible/sdk/commit/d61e2f5fa86754f689ab3656564227cc80d1ac0b))
+* dev env for tezos ([#163](https://github.com/rarible/sdk/issues/163)) ([d5fb00d](https://github.com/rarible/sdk/commit/d5fb00dc654cf331d480d732d9a1066730461cf7))
+* expiration date ([3a0eafd](https://github.com/rarible/sdk/commit/3a0eafd27015cf10f177c27ef5269bf11bf0be2d))
+* polygon example ([552df3f](https://github.com/rarible/sdk/commit/552df3fcb64398ebc1931cac7c7aaa3485e4d421))
+* test mint with token id ([de2a37e](https://github.com/rarible/sdk/commit/de2a37ec066ac7ba8df1c3eea5848d528addd1a3))
+
+
+
+
+
 ## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
 
 

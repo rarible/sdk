@@ -41,7 +41,7 @@ export class EthereumFill {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
-					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value: 0,
+					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value : 0,
 					payout: fillRequest.payouts?.[0]?.account
 						? convertToEthereumAddress(fillRequest.payouts[0].account)
 						: undefined,
@@ -67,6 +67,12 @@ export class EthereumFill {
 			case "OPEN_SEA_V1": {
 				request = {
 					order,
+					...order.take.assetType.assetClass === "ETH" ? {
+						originFees: fillRequest.originFees?.map(payout => ({
+							account: convertToEthereumAddress(payout.account),
+							value: payout.value,
+						})),
+					} : {},
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
@@ -77,7 +83,10 @@ export class EthereumFill {
 		}
 
 		if (fillRequest.itemId) {
-			const { contract, tokenId } = getEthereumItemId(fillRequest.itemId)
+			const {
+				contract,
+				tokenId,
+			} = getEthereumItemId(fillRequest.itemId)
 			request.assetType = {
 				contract: toAddress(contract),
 				tokenId,
@@ -105,12 +114,13 @@ export class EthereumFill {
 			}
 			case "OPEN_SEA_V1": {
 				return {
-					originFeeSupport: OriginFeeSupport.NONE,
+					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.NONE,
 					supportsPartialFill: false,
 				}
 			}
-			default: throw new Error("Unsupported order type")
+			default:
+				throw new Error("Unsupported order type")
 		}
 	}
 
@@ -126,7 +136,7 @@ export class EthereumFill {
 			const ownershipId = getOwnershipId(
 				order.take.assetType.contract,
 				order.take.assetType.tokenId,
-				toAddress(address)
+				toAddress(address),
 			)
 
 			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({ ownershipId })

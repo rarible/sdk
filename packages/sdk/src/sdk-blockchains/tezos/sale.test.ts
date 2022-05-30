@@ -178,6 +178,9 @@ describe.skip("test tezos mint and sell", () => {
 			lazyMint: false,
 		})
 
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		const fillResult = await fillResponse.submit({
