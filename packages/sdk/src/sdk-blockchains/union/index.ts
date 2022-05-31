@@ -1,10 +1,10 @@
-import type { ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { CollectionId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
-import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -12,7 +12,12 @@ import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type * as OrderCommon from "../../types/order/common"
-import type { PrepareBulkFillResponse, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type {
+	PrepareBatchFillResponse,
+	PrepareFillBatchRequestWithAmount,
+	PrepareFillRequest,
+	PrepareFillResponse,
+} from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
 import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
@@ -23,12 +28,14 @@ import type { ConvertRequest } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
 	polygon: IRaribleInternalSdk,
+	solana: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -36,25 +43,30 @@ export function createUnionSdk(
 			FLOW: flow.balances,
 			TEZOS: tezos.balances,
 			POLYGON: polygon.balances,
+			SOLANA: solana.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
 			FLOW: flow.nft,
 			TEZOS: tezos.nft,
 			POLYGON: polygon.nft,
+			SOLANA: solana.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
 			FLOW: flow.order,
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
+			SOLANA: solana.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
 			FLOW: flow.restriction,
 			TEZOS: tezos.restriction,
 			POLYGON: polygon.restriction,
+			SOLANA: solana.restriction,
 		}),
+		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 	}
 }
 
@@ -64,7 +76,8 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		this.bidUpdate = this.bidUpdate.bind(this)
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
-		this.buyBulk = this.buyBulk.bind(this)
+		this.prepareOrderForBatchPurchase = this.prepareOrderForBatchPurchase.bind(this)
+		this.buyBatch = this.buyBatch.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
 		this.sell = this.sell.bind(this)
 		this.sellUpdate = this.sellUpdate.bind(this)
@@ -90,8 +103,17 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getOrderId(request))].buy(request)
 	}
 
-	buyBulk(request: PrepareFillRequest[]): Promise<PrepareBulkFillResponse> {
-		return this.instances[extractBlockchain(getOrderId(request[0]))].buyBulk(request)// @todo
+	prepareOrderForBatchPurchase(request: PrepareFillRequest) {
+		return this.instances[extractBlockchain(getOrderId(request))].prepareOrderForBatchPurchase(request)
+	}
+
+	buyBatch(request: PrepareFillBatchRequestWithAmount[]): Promise<PrepareBatchFillResponse> {
+		const ordersBlockchain = request.filter(r => r.blockchain === request[0].blockchain)
+		if (ordersBlockchain.length === request.length) {
+			return this.instances[request[0].blockchain].buyBatch(request)
+		} else {
+			throw new Error("Batch purchase can accept orders by only one blockchain type at a time")
+		}
 	}
 
 	acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
@@ -184,14 +206,25 @@ class UnionRestrictionSdk implements IRestrictionSdk {
 	}
 }
 
+class UnionEthereumSpecificSdk implements IEthereumSdk {
+	constructor(private readonly ethereumSdk: IEthereumSdk) {
+	}
+
+	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
+	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+}
+
 const blockchains: Blockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.POLYGON,
+	Blockchain.SOLANA,
 ]
 
-function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId,
+): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)
@@ -230,6 +263,4 @@ function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency):
 	} else {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
-
-
 }

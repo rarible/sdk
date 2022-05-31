@@ -17,7 +17,8 @@ import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItem
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
 	payoutsSupport: PayoutsSupport,
-	supportsPartialFill: boolean
+	supportsPartialFill: boolean,
+	supportsBatchPurchase: boolean
 }
 
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
@@ -67,6 +68,12 @@ export class EthereumFill {
 			case "OPEN_SEA_V1": {
 				request = {
 					order,
+					...order.take.assetType.assetClass === "ETH" ? {
+						originFees: fillRequest.originFees?.map(payout => ({
+							account: convertToEthereumAddress(payout.account),
+							value: payout.value,
+						})),
+					} : {},
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
@@ -97,6 +104,7 @@ export class EthereumFill {
 					originFeeSupport: OriginFeeSupport.AMOUNT_ONLY,
 					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: true,
+					supportsBatchPurchase: false,
 				}
 			}
 			case "RARIBLE_V2": {
@@ -104,13 +112,15 @@ export class EthereumFill {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.MULTIPLE,
 					supportsPartialFill: true,
+					supportsBatchPurchase: true,
 				}
 			}
 			case "OPEN_SEA_V1": {
 				return {
-					originFeeSupport: OriginFeeSupport.NONE,
+					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.NONE,
 					supportsPartialFill: false,
+					supportsBatchPurchase: true,
 				}
 			}
 			default:
@@ -182,7 +192,6 @@ export class EthereumFill {
 				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
 					throw new Error("For collection order you should pass itemId")
 				}
-				console.log("union sdk to  thh sdk request: ", this.getFillOrderRequest(order, fillRequest))
 				return this.getFillOrderRequest(order, fillRequest)
 			})
 			.after((tx => new BlockchainEthereumTransaction(tx, this.network)))

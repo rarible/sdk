@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import { useParams } from "react-router-dom"
 import { Box, Typography } from "@mui/material"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
@@ -18,6 +19,7 @@ function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 }
 
 export function SellPage() {
+	const params = useParams()
 	const connection = useContext(ConnectorContext)
 	const blockchain = connection.sdk?.wallet?.blockchain
 
@@ -39,6 +41,7 @@ export function SellPage() {
 								return <SellPrepareForm
 									onComplete={onComplete}
 									disabled={!validateConditions(blockchain)}
+									itemId={params.itemId}
 								/>
 							}
 						},

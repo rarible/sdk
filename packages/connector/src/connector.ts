@@ -53,6 +53,7 @@ export class DefaultConnectionStateProvider implements IConnectorStateProvider {
 }
 
 export class Connector<Option, Connection> implements IConnector<Option, Connection> {
+	static pageUnloading: boolean | undefined
 	private readonly provider = new BehaviorSubject<ConnectionProvider<Option, Connection> | undefined>(undefined)
 	public connection: Observable<ConnectionState<Connection>>
 
@@ -60,6 +61,8 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 		private readonly providers: ConnectionProvider<Option, Connection>[],
 		private readonly stateProvider?: IConnectorStateProvider,
 	) {
+		Connector.initPageUnloadProtection()
+
 		this.add = this.add.bind(this)
 		this.connect = this.connect.bind(this)
 
@@ -80,6 +83,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 			),
 		).pipe(
 			distinctUntilChanged((c1, c2) => {
+				if (Connector.pageUnloading) return true
 				if (c1 === c2) return true
 				if (c1.status === "connected" && c2.status === "connected") {
 					return c1.connection === c2.connection
@@ -109,7 +113,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 				}
 			}),
 			tap(async conn => {
-				if (conn.status === "disconnected") {
+				if (conn.status === "disconnected" && !Connector.pageUnloading) {
 					this.provider.next(undefined)
 					const current = await this.stateProvider?.getValue()
 					if (current !== undefined) {
@@ -118,6 +122,18 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 				}
 			}),
 		)
+	}
+
+	/**
+	 * Add flag when page unload to avoid disconnect events from connectors
+	 */
+	static initPageUnloadProtection() {
+		if (Connector.pageUnloading === undefined && typeof window !== "undefined") {
+			window.addEventListener("beforeunload", function () {
+				Connector.pageUnloading = true
+			})
+			Connector.pageUnloading = false
+		}
 	}
 
 	/**

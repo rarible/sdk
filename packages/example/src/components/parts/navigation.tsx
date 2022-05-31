@@ -25,13 +25,16 @@ export function Navigation() {
 		path: "/buy",
 	}, {
 		label: "Bulk Purchase",
-		path: "/buy-bulk",
+		path: "/buy-batch",
 	}, {
 		label: "Bid",
 		path: "/bid",
 	}, {
 		label: "Accept Bid",
 		path: "/accept-bid",
+	}, {
+		label: "My Items",
+		path: "/items",
 	}]
 
 	return (

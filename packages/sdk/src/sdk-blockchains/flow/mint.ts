@@ -9,7 +9,6 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { IApisSdk } from "../../domain"
 import { getCollection } from "../ethereum/mint"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import { validatePrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type.validator"
 import { convertFlowItemId, getFlowCollection } from "./common/converters"
 import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
@@ -25,7 +24,6 @@ export class FlowMint {
 	async prepare(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
 		const collection = await getCollection(this.apis.collection, prepareRequest)
 		if (collection.type === "FLOW") {
-			validatePrepareMintRequest(prepareRequest)
 			const flowCollection = getFlowCollection(collection.id)
 			return {
 				multiple: false,

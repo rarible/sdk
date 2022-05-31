@@ -1,5 +1,6 @@
 import { Action } from "@rarible/action"
 import type { Part, Part as TezosPart } from "@rarible/tezos-sdk/dist/order"
+import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { fill_order, get_address } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
@@ -7,7 +8,6 @@ import { toBigNumber as toRaribleBigNumber, toBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { Order as TezosOrder } from "tezos-api-client"
 import BigNumber from "bignumber.js"
-import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -45,7 +45,7 @@ export class TezosFill {
 		}
 	}
 
-	convertOrderPayout(payout?: Array<Part> | Array<{account: string, value: number}>): Array<TezosPart> {
+	convertOrderPayout(payout?: Array<Part> | Array<{ account: string, value: number }>): Array<TezosPart> {
 		return payout?.map(p => ({
 			account: p.account,
 			value: new BigNumber(p.value),
@@ -106,7 +106,7 @@ export class TezosFill {
 					provider,
 					preparedOrder,
 					request,
-					fillRequest.unwrap
+					fillRequest.unwrap,
 				)
 				return new BlockchainTezosTransaction(fillResponse, this.network)
 			},
@@ -119,6 +119,7 @@ export class TezosFill {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportsPartialFill: true,
+			supportsBatchPurchase: false,
 			submit,
 		}
 	}

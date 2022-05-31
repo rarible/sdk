@@ -1,6 +1,7 @@
 import React, { useContext } from "react"
 import { Box } from "@mui/material"
 import { BlockchainGroup } from "@rarible/api-client"
+import { useParams } from "react-router-dom"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
@@ -17,6 +18,7 @@ function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 }
 
 export function BuyPage() {
+	const params = useParams()
 	const connection = useContext(ConnectorContext)
 	const blockchain = connection.sdk?.wallet?.blockchain
 
@@ -38,6 +40,7 @@ export function BuyPage() {
 								return <BuyPrepareForm
 									onComplete={onComplete}
 									disabled={!validateConditions(blockchain)}
+									orderId={params.orderId}
 								/>
 							}
 						},

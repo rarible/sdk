@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-torus",
-  "version": "0.8.52",
+  "version": "0.9.0",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.8.52",
+    "@rarible/connector": "^0.9.0",
     "@toruslabs/torus-embed": "^1.19.0"
   },
   "devDependencies": {
@@ -26,7 +26,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.2.4",
     "ts-jest": "^27.0.3",
-    "typescript": "~4.4.4"
+    "typescript": "^4.6.3"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

@@ -16,7 +16,8 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
-import { EthereumFillBulk } from "./fill-bulk"
+import { EthereumFillBatch } from "./fill-batch"
+import { EthereumCryptopunk } from "./cryptopunk"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -40,10 +41,10 @@ export function createEthereumSdk(
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
-	const buyBulkService = new EthereumFillBulk(sdk, wallet, network)
+	const buyBatchService = new EthereumFillBatch(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
-	// const b = await fillerService.buy({order})
-	// const bb = await buyBulkService.buyBulk([{order}])
+	const cryptopunkService = new EthereumCryptopunk(sdk, network)
+
 	return {
 		nft: {
 			transfer: new EthereumTransfer(sdk, network).transfer,
@@ -57,7 +58,8 @@ export function createEthereumSdk(
 		order: {
 			fill: fillerService.fill,
 			buy: fillerService.buy,
-			buyBulk: buyBulkService.buyBulk,
+			buyBatch: buyBatchService.buyBatch,
+			prepareOrderForBatchPurchase: buyBatchService.getPrepareFillResponse,
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
@@ -73,6 +75,10 @@ export function createEthereumSdk(
 			canTransfer(): Promise<CanTransferResult> {
 				return Promise.resolve({ success: true })
 			},
+		},
+		ethereum: {
+			wrapCryptoPunk: cryptopunkService.wrap,
+			unwrapCryptoPunk: cryptopunkService.unwrap,
 		},
 	}
 }

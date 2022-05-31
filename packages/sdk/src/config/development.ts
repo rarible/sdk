@@ -6,4 +6,5 @@ export const developmentConfig: RaribleSdkConfig = {
 	flowEnv: "dev-testnet",
 	tezosNetwork: "dev",
 	polygonNetwork: "dev-polygon",
+	solanaNetwork: "devnet",
 }

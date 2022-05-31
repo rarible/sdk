@@ -1,6 +1,6 @@
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EthereumWallet, FlowWallet, TezosWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"
 import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { getWalletAddress } from "./wallet"
@@ -35,6 +35,13 @@ export async function getCurrency(wallets: { seller: BlockchainWallet, buyer: Bl
 		}
 		throw new Error(`Wrong currency provided=${currency}`)
 	} else if (wallets.seller instanceof FlowWallet && wallets.buyer instanceof FlowWallet) {
+		throw new Error(`Wrong currency provided=${currency}`)
+	} else if (wallets.seller instanceof SolanaWallet && wallets.buyer instanceof SolanaWallet) {
+		if (currency === "SOLANA_SOL") {
+			return {
+				"@type": "SOLANA_SOL",
+			}
+		}
 		throw new Error(`Wrong currency provided=${currency}`)
 	}
 	throw new Error(`Incorrect wallet provided, seller=${wallets.seller}, buyer=${wallets.buyer}`)

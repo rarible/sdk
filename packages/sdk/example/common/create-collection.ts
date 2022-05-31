@@ -1,5 +1,5 @@
 import { createRaribleSdk } from "@rarible/sdk"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 
 async function createCollection(wallet: BlockchainWallet, collectionRequest: CreateCollectionRequest) {

@@ -1,0 +1,45 @@
+{
+  "name": "@rarible/solana-wallet",
+  "version": "0.9.0",
+  "keywords": [
+    "solana",
+    "web3"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build",
+    "build": "run-s build:*",
+    "build:esm": "tsc --project tsconfig-build.json",
+    "test": "jest --runInBand --silent",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rarible/solana-common": "^0.9.0",
+    "@solana/web3.js": "^1.35.0",
+    "@types/bs58": "^4.0.1",
+    "bs58": "^5.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "27.0.2",
+    "@types/node-fetch": "^2.5.11",
+    "form-data": "^4.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.4.7",
+    "node-fetch": "^2.6.1",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "8ef3989b1aff76a6345deab53a76df3480d8cf46"
+}

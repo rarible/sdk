@@ -1,6 +1,6 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import { toItemId, toUnionAddress } from "@rarible/types"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/src"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
 async function sellAndUpdate(wallet: BlockchainWallet, assetType: RequestCurrency) {

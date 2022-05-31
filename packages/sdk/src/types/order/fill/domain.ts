@@ -1,10 +1,7 @@
-import type { ItemId, Order, OrderId } from "@rarible/api-client"
+import type { Blockchain, ItemId, Order, OrderId } from "@rarible/api-client"
+import type { Order as EthereumApiOrder } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type {
-	OpenSeaV1OrderFillRequest,
-	RaribleV2OrderFillRequest,
-} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -19,6 +16,11 @@ export type PrepareFillRequest = {
 	 */
 	order: Order
 }
+
+export type PreparedFillBatchRequest =
+	Omit<PrepareFillResponse, "submit" | "originFeeSupport" | "payoutsSupport" | "supportsPartialFill">
+	& { order: EthereumApiOrder, blockchain: Blockchain }
+export type PrepareFillBatchRequestWithAmount = PreparedFillBatchRequest & Pick<FillRequest, "amount">
 
 export enum OriginFeeSupport {
 	NONE = "NONE",
@@ -87,6 +89,10 @@ interface CommonFillResponse {
 	 * Whether the underlying exchange contract supports partial fill
 	 */
 	supportsPartialFill: boolean
+	/**
+	 * Whether the nft can purchased in batch
+	 */
+	supportsBatchPurchase: boolean
 }
 
 export type PrepareFillResponse =
@@ -94,11 +100,8 @@ export type PrepareFillResponse =
 
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
 
-export interface PrepareBulkFillResponse
-	extends AbstractPrepareResponse<FillActionTypes, FillRequest[], IBlockchainTransaction> {
-	preparedFillResponse: CommonFillResponse[]
-}
+export type PrepareBatchFillResponse = IBlockchainTransaction
 
-export type FillOrderBulkRequest = RaribleV2OrderFillRequest | OpenSeaV1OrderFillRequest
+export type IPrepareOrderForFillBatch = (request: PrepareFillRequest) => Promise<PreparedFillBatchRequest>
 
-export type IFillBulk = (request: PrepareFillRequest[]) => Promise<PrepareBulkFillResponse>
+export type IFillBatch = (request: PrepareFillBatchRequestWithAmount[]) => Promise<PrepareBatchFillResponse>

@@ -43,7 +43,13 @@ export function TransactionInfo({ transaction }: ITransactionInfoProps) {
 		<Typography variant="overline">Transaction:</Typography>
 		<TransactionPending transaction={transaction}/>
 		<Code theme={"light"} language="json" wrap>
-			{JSON.stringify(transaction, null, " ")}
+			{
+				JSON.stringify({
+					blockchain: transaction.blockchain,
+					hash: transaction.hash(),
+					link: transaction.getTxLink()
+				}, null, " ")
+			}
 		</Code>
 	</>
 }

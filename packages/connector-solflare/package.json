@@ -1,0 +1,35 @@
+{
+  "name": "@rarible/connector-solflare",
+  "version": "0.9.2",
+  "homepage": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "test": "jest --runInBand --passWithNoTests",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rarible/connector": "^0.9.0",
+    "@rarible/connector-helper": "^0.9.2",
+    "@solflare-wallet/sdk": "^1.0.12"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.2.4",
+    "ts-jest": "^27.0.3",
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  }
+}

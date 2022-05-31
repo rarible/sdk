@@ -1,10 +1,11 @@
 import type * as ApiClient from "@rarible/api-client"
+import type { BlockchainGroup } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
-import type { IFill, IFillBulk } from "./types/order/fill/domain"
+import type { IFill, IFillBatch, IPrepareOrderForFillBatch } from "./types/order/fill/domain"
 import type { IBurn } from "./types/nft/burn/domain"
 import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
@@ -17,6 +18,8 @@ import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
+import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
+import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -33,6 +36,9 @@ export interface ISdkContext {
 export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
 	logs?: LogsLevel
+	blockchain?: {
+		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig
+	}
 	middlewares?: Middleware[]
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
@@ -45,6 +51,7 @@ export interface IRaribleSdk {
 	balances: IBalanceSdk
 	restriction: IRestrictionSdk
 	wallet: Maybe<BlockchainWallet>
+	ethereum?: IEthereumSdk
 }
 
 export interface IApisSdk {
@@ -79,7 +86,8 @@ export interface IOrderSdk {
 	 */
 	fill: IFill
 	buy: IFill
-	buyBulk: IFillBulk
+	buyBatch: IFillBatch
+	prepareOrderForBatchPurchase: IPrepareOrderForFillBatch
 	acceptBid: IFill
 	bid: IBid
 	bidUpdate: IBidUpdate
@@ -89,6 +97,11 @@ export interface IOrderSdk {
 export interface IBalanceSdk {
 	getBalance: IGetBalance
 	convert: IConvert
+}
+
+export interface IEthereumSdk {
+	wrapCryptoPunk: ICryptopunkWrap,
+	unwrapCryptoPunk: ICryptopunkUnwrap,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {
