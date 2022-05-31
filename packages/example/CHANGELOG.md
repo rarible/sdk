@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.9.3...v0.8.48-hotfix.13) (2022-05-20)
+
+
+
+## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+
+## [0.8.48-hotfix.10](https://github.com/rarible/sdk/compare/v0.9.2...v0.8.48-hotfix.10) (2022-05-04)
+
+
+
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.9.1...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.48-hotfix.4) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
+
+
+
+## [0.8.48-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.1...v0.8.48-hotfix.2) (2022-04-15)
+
+
+
+## [0.8.48-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.0...v0.8.48-hotfix.1) (2022-04-14)
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+
+
 ## [0.9.5](https://github.com/rarible/sdk/compare/v0.9.4...v0.9.5) (2022-05-24)
 
 **Note:** Version bump only for package example

@@ -3,6 +3,71 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
+
+
+
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.9.1...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.48-hotfix.4) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.45-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.2...v0.8.45-hotfix.0) (2022-04-07)
+
+
+
+## [0.8.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.44-hotfix.1) (2022-04-06)
+
+
+
+## [0.8.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.44-hotfix.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* tezos contracts upgrade ([d4ba3aa](https://github.com/rarible/sdk/commit/d4ba3aadb6bd1db8c6267a4b912ff3ede0c23032))
+
+
+
+
+
 ## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
 
 
