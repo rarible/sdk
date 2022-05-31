@@ -526,7 +526,7 @@ describe("bid", () => {
 		await fillBidResult.wait()
 
 		await retry(10, 1000, async () => {
-			 const ownership = await sdk1.apis.ownership.getOwnershipById({
+			const ownership = await sdk1.apis.ownership.getOwnershipById({
 				ownershipId: `${mintResult.itemId}:${bidderAddress}`,
 			})
 			expect(ownership.value).toBe("10")
