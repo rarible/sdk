@@ -71,7 +71,7 @@ export class SolanaFill {
 					return this.sdk.unionInstructionsAndSend(
 						this.wallet!.provider,
 						[buyPrepare, executePrepare],
-						"processed",
+						"processed"
 					)
 				},
 			})
@@ -121,7 +121,7 @@ export class SolanaFill {
 					return this.sdk.unionInstructionsAndSend(
 						this.wallet!.provider,
 						[sellPrepare, executePrepare],
-						"processed",
+						"processed"
 					)
 				},
 			})

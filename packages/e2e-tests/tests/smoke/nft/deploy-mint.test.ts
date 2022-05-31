@@ -15,8 +15,9 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequest
-	mintRequest: (address: UnionAddress) => MintRequest
+	deployRequest: CreateCollectionRequest,
+	mintRequest: (address: UnionAddress) => MintRequest,
+	activities: Array<ActivityType>
 }[] {
 	let allBlockchains = [
 		{
@@ -48,6 +49,7 @@ function suites(): {
 					supply: 1,
 				}
 			},
+			activities: [ActivityType.MINT],
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -79,6 +81,7 @@ function suites(): {
 					supply: 1,
 				}
 			},
+			activities: [],
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -109,6 +112,7 @@ function suites(): {
 					supply: 14,
 				}
 			},
+			activities: [ActivityType.MINT],
 		},
 		{
 			blockchain: Blockchain.ETHEREUM,
@@ -140,6 +144,7 @@ function suites(): {
 					supply: 14,
 				}
 			},
+			activities: [],
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -169,6 +174,7 @@ function suites(): {
 					supply: 1,
 				}
 			},
+			activities: [ActivityType.MINT],
 		},
 		{
 			blockchain: Blockchain.TEZOS,
@@ -199,6 +205,7 @@ function suites(): {
 					supply: 15,
 				}
 			},
+			activities: [ActivityType.MINT],
 		},
 		{
 			blockchain: Blockchain.SOLANA,
@@ -224,6 +231,7 @@ function suites(): {
 					supply: 1,
 				}
 			},
+			activities: [ActivityType.MINT],
 		},
 	]
 	return allBlockchains.filter(b => testsConfig.blockchain?.includes(b.blockchain))
@@ -245,9 +253,7 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 		const { nft } = await mint(sdk, wallet, { collection },
 			suite.mintRequest(walletAddress.unionAddress))
 
-		await getActivitiesByItem(sdk, nft.id,
-			[ActivityType.MINT, ActivityType.TRANSFER],
-			[ActivityType.MINT, ActivityType.TRANSFER])
+		await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
 
 	})
 })

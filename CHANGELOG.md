@@ -3,6 +3,222 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+### Bug Fixes
+
+* dependencies ([c72a726](https://github.com/rarible/sdk/commit/c72a7262b42f5b8c755e5b9e1bb3534bcfd34801))
+
+
+### Features
+
+* polygon mint example ([#240](https://github.com/rarible/sdk/issues/240)) ([57e9ed0](https://github.com/rarible/sdk/commit/57e9ed0031fc2bc30245fcee4890f418980b8761))
+
+
+
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.9.3...v0.8.48-hotfix.13) (2022-05-20)
+
+
+### Bug Fixes
+
+* update flow-sdk ([759041c](https://github.com/rarible/sdk/commit/759041cba961d8f3f706b4808cb98c980d5733a9))
+
+
+
+## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([fdec62d](https://github.com/rarible/sdk/commit/fdec62ddd5ef14ef6158f2c05ca4040c3631a64f))
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
+
+
+
+## [0.8.48-hotfix.10](https://github.com/rarible/sdk/compare/v0.9.2...v0.8.48-hotfix.10) (2022-05-04)
+
+
+### Bug Fixes
+
+* opensea originFee support ([a3b0017](https://github.com/rarible/sdk/commit/a3b0017de5867bd7be69543e708699da147e00a6))
+
+
+
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.9.1...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+
+### Bug Fixes
+
+* fix for cicd ([69cd653](https://github.com/rarible/sdk/commit/69cd65390d942745b732a9285e0cb29a8746ed4c))
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+
+### Bug Fixes
+
+* cicd config ([46ee396](https://github.com/rarible/sdk/commit/46ee396e59ce02eb8efcc81d76921ca0a392714a))
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+
+### Bug Fixes
+
+* config for cicd ([dcc70a8](https://github.com/rarible/sdk/commit/dcc70a8774d7647d8170304e2f7acc38334a272c))
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+
+### Bug Fixes
+
+* add jenkinsfile.library ([9164f94](https://github.com/rarible/sdk/commit/9164f94482d3743044c9c8875d1d70364e5d8a80))
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.48-hotfix.4) (2022-04-28)
+
+
+### Bug Fixes
+
+* update flow-sdk that fixes new dev env api url ([bb54c75](https://github.com/rarible/sdk/commit/bb54c75d3dbd5350e1658ae4fced07fec4a1e0ab))
+
+
+
+## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
+
+
+### Bug Fixes
+
+* update flow-sdk, fix definitions for collection cryptoPiggo ([c3198d9](https://github.com/rarible/sdk/commit/c3198d9a13761ee36bf631e5272d4d9c296633d4))
+
+
+
+## [0.8.48-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.1...v0.8.48-hotfix.2) (2022-04-15)
+
+
+
+## [0.8.48-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.0...v0.8.48-hotfix.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* fb-697 update flow-sdk, aded new collection ([8bf6f1a](https://github.com/rarible/sdk/commit/8bf6f1ad4859a091c67b9753284c32cea8c95514))
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.45-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.2...v0.8.45-hotfix.0) (2022-04-07)
+
+
+
+## [0.8.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.1...v0.8.44-hotfix.2) (2022-04-06)
+
+
+### Bug Fixes
+
+* ethereum test, skip some tezos tests ([046ae1c](https://github.com/rarible/sdk/commit/046ae1c5d398d045d567763d1dc9be132a1f1238))
+
+
+
+## [0.8.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.44-hotfix.0...v0.8.44-hotfix.1) (2022-04-06)
+
+
+
+## [0.8.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.44-hotfix.0) (2022-04-04)
+
+
+### Bug Fixes
+
+* tezos contracts upgrade ([d4ba3aa](https://github.com/rarible/sdk/commit/d4ba3aadb6bd1db8c6267a4b912ff3ede0c23032))
+
+
+
+
+
+## [0.9.5](https://github.com/rarible/sdk/compare/v0.9.4...v0.9.5) (2022-05-24)
+
+
+### Bug Fixes
+
+* tezos prod service ([#237](https://github.com/rarible/sdk/issues/237)) ([fdeed05](https://github.com/rarible/sdk/commit/fdeed054bb71d29aa1819b39c0bd74c8465d6c21))
+
+
+
+
+
+## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
+
+
+### Bug Fixes
+
+* update wallet ([acf521a](https://github.com/rarible/sdk/commit/acf521ae0d4f339f95d74a211feb21cf055a64bd))
+
+
+### Features
+
+* add flow tests ([8db948a](https://github.com/rarible/sdk/commit/8db948a5428c97c192bc6149383e8303f2f0e5ef))
+* add flow tests ([d2bd860](https://github.com/rarible/sdk/commit/d2bd8607fe5fa4be29f9af2c3617b92d9bbb5a10))
+* add flow tests ([71723ec](https://github.com/rarible/sdk/commit/71723ec3635db15441c2531fe90dc6f2dd677ac5))
+* add flow tests ([84860f0](https://github.com/rarible/sdk/commit/84860f000c58d6cad4f9d3d226eca67cbf0944a6))
+* upd tests cicd ([dea172a](https://github.com/rarible/sdk/commit/dea172a4c5478d8354c74b29f780c7c398e01028))
+* upd tests cicd ([8ef2da4](https://github.com/rarible/sdk/commit/8ef2da471d160ff558347ccc070df923a3fb5de8))
+* upd tests cicd ([5a1f297](https://github.com/rarible/sdk/commit/5a1f29735a48bbb07bdc2387d792ed485aeadc4a))
+* upd tests cicd ([fa2ddfe](https://github.com/rarible/sdk/commit/fa2ddfe98e481eefdddd5775256bde017ac9acec))
+* update tezos features ([#236](https://github.com/rarible/sdk/issues/236)) ([4bb4ae4](https://github.com/rarible/sdk/commit/4bb4ae47b54809a548351a042229f783529ff277))
+
+
+
+
+
+## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
+
+
+### Bug Fixes
+
+* bravo-2024 remove mintPrepare validator ([d9c21f5](https://github.com/rarible/sdk/commit/d9c21f5402e049ac24e4bbc303685a87a2e8d4d8))
+* remove ajv validator from deps ([fe887d2](https://github.com/rarible/sdk/commit/fe887d2ee8a9371767ea8efac03b08dd05901180))
+* remove create-validator-ts dependency ([a37be63](https://github.com/rarible/sdk/commit/a37be63e4a3c5a98ac91f6f6dbd340ed64364e77))
+* set solana default commitment level ([#226](https://github.com/rarible/sdk/issues/226)) ([fdb7477](https://github.com/rarible/sdk/commit/fdb747747b5d7e05e46dcb3430fb894e3b9bc958))
+* solana process metadata ([#224](https://github.com/rarible/sdk/issues/224)) ([7e62a4c](https://github.com/rarible/sdk/commit/7e62a4cdb78bdd7fbe3f3656b4bbb2506201c061))
+* update tezos dev env ([8ea2f91](https://github.com/rarible/sdk/commit/8ea2f918c07ee016cb105c85df3dd1e490faf019))
+
+
+### Features
+
+* call refreshMetadata for solana collection mint ([1107b54](https://github.com/rarible/sdk/commit/1107b54b5e8c18251e27676b6d083ae902448cd9))
+* examples ([15e4268](https://github.com/rarible/sdk/commit/15e4268b74edab1df655385e2889bb51454fd505))
+* update tests ([fb90514](https://github.com/rarible/sdk/commit/fb9051420b8cfc72b256b2d37682df35e9a66e95))
+
+
+
+
+
 ## [0.9.2](https://github.com/rarible/sdk/compare/v0.9.1...v0.9.2) (2022-04-30)
 
 

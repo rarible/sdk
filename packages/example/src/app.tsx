@@ -28,7 +28,7 @@ export function App() {
 							mt: 2,
 							display: 'grid',
 							gridTemplateColumns: 'minmax(250px, 20%)  1fr',
-							gap: "20px",
+							gap: "20px"
 						}}>
 							<Box component="nav">
 								<Navigation/>
@@ -46,10 +46,10 @@ export function App() {
 									<Route path="buy" element={<BuyPage/>}>
 										<Route path=":orderId" element={<BuyPage/>}/>
 									</Route>
-									<Route path="buy-batch" element={<BuyBatchPage/>}/>
 									<Route path="bid" element={<BidPage/>}>
 										<Route path=":itemId" element={<BidPage/>}/>
 									</Route>
+									<Route path="buy-batch" element={<BuyBatchPage/>}/>
 									<Route path="accept-bid" element={<AcceptBidPage/>}>
 										<Route path=":orderId" element={<AcceptBidPage/>}/>
 									</Route>
@@ -62,5 +62,5 @@ export function App() {
 				</SdkConnectionProvider>
 			)}
 		</EnvironmentSelectorProvider>
-	)
+	);
 }

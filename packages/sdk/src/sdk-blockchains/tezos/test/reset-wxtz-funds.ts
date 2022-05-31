@@ -14,7 +14,7 @@ export async function resetWXTZFunds(wallet: TezosWallet, sdk: IRaribleSdk, cont
 	))
 
 	if (wXTZInitBalance.gt("0")) {
-		const provider = getMaybeTezosProvider(wallet.provider, "hangzhou")
+		const provider = getMaybeTezosProvider(wallet.provider, "testnet")
 		const tx = await unwrap(getRequiredProvider(provider), wXTZInitBalance)
 		await tx.confirmation()
 	}

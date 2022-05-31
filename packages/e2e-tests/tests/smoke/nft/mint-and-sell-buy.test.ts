@@ -1,9 +1,15 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { MintAndSellRequest } from "@rarible/sdk"
-import { getEthereumWallet, getSolanaWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
+import {
+	getEthereumWallet, getFlowBuyerWallet,
+	getFlowSellerWallet,
+	getSolanaWallet,
+	getTezosTestWallet,
+	getWalletAddressFull,
+} from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { testsConfig } from "../../common/config"
 import { awaitForOwnershipValue } from "../../common/api-helpers/ownership-helper"
@@ -191,6 +197,28 @@ function suites(): {
 					price: "0.001",
 					currency: {
 						"@type": "SOLANA_SOL",
+					},
+				}
+			},
+			buyAmount: 1,
+			creatorBalance: 0,
+			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
+		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { creator: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+					price: "0.0001", //min available price for flow
+					currency: {
+						"@type": "FLOW_FT",
+						contract: toContractAddress(`FLOW:${testsConfig.variables.FLOW_FT_CONTRACT_ADDRESS}`),
 					},
 				}
 			},

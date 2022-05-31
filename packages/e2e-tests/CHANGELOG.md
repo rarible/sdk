@@ -3,6 +3,51 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
+
+
+
+
+
+## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
+
+
+### Bug Fixes
+
+* update wallet ([acf521a](https://github.com/rarible/sdk/commit/acf521ae0d4f339f95d74a211feb21cf055a64bd))
+
+
+### Features
+
+* add flow tests ([8db948a](https://github.com/rarible/sdk/commit/8db948a5428c97c192bc6149383e8303f2f0e5ef))
+* add flow tests ([d2bd860](https://github.com/rarible/sdk/commit/d2bd8607fe5fa4be29f9af2c3617b92d9bbb5a10))
+* add flow tests ([71723ec](https://github.com/rarible/sdk/commit/71723ec3635db15441c2531fe90dc6f2dd677ac5))
+* add flow tests ([84860f0](https://github.com/rarible/sdk/commit/84860f000c58d6cad4f9d3d226eca67cbf0944a6))
+
+
+
+
+
+## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
+
+
+### Features
+
+* update tests ([fb90514](https://github.com/rarible/sdk/commit/fb9051420b8cfc72b256b2d37682df35e9a66e95))
+
+
+
+
+
 # [0.9.0](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.9.0) (2022-04-29)
 
 
@@ -142,6 +187,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
 
 
 

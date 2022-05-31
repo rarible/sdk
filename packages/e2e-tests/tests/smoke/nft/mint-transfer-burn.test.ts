@@ -5,7 +5,13 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
 import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
-import { getEthereumWallet, getSolanaWallet, getTezosTestWallet, getWalletAddressFull } from "../../common/wallet"
+import {
+	getEthereumWallet, getFlowBuyerWallet,
+	getFlowSellerWallet,
+	getSolanaWallet,
+	getTezosTestWallet,
+	getWalletAddressFull,
+} from "../../common/wallet"
 import { createSdk } from "../../common/create-sdk"
 import { mint } from "../../common/atoms-tests/mint"
 import { testsConfig } from "../../common/config"
@@ -222,6 +228,37 @@ function suites(): {
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
+				return {
+					to: walletAddress,
+					amount: 1,
+				}
+			},
+			creatorBalanceAfterTransfer: "0",
+			recipientBalanceAfterTransfer: "1",
+			burnRequest: {
+				amount: 1,
+				creators: [],
+			},
+			totalBalanceAfterBurn: 0,
+		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT",
+			wallets: { creator: getFlowSellerWallet(), recipient: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 					creators: [{
 						account: walletAddress,
 						value: 10000,

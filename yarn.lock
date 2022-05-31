@@ -4313,7 +4313,7 @@
     ganache "^7.0.2"
     web3-provider-engine "^16.0.1"
 
-"@rarible/ethers-ethereum@~0.12.71":
+"@rarible/ethers-ethereum@^0.12.71":
   version "0.12.71"
   resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.71.tgz#3688d382453c2429c25f4d404f5d7fbbdbf7771a"
   integrity sha512-dwiHDKvws0Vp7GNeIKxHxJHPlHBHWWi3M7bU7FxPE59RUqcjqps2cw3OHQ7S3D++MS6bbrcYXyQfs0mObSDpjg==
@@ -4339,10 +4339,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30.tgz#28ed15acce758ecfb2188c35eaa8f62978363c80"
   integrity sha512-D9AdlmXC5fNnq/eO9dLakvY1IDJeUiwbXrEPmwmCdswt4jJp4y7pR/w3Rri7RUmEM42E3AYNXIMS0EV+O+V1QA==
 
-"@rarible/flow-sdk@~0.5.44":
-  version "0.5.46"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.46.tgz#39944a849777f549c3bf81101300c2b5087f541e"
-  integrity sha512-16vzrwcjz371sJfXYT6eNnxC0jNQmp0emKlOE/JGMexu0ow4w9HwYkVgFhR6FDtHajvXVakKgZu9N9U5QiJB3A==
+"@rarible/flow-sdk@~0.5.47":
+  version "0.5.47"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.47.tgz#bdcc529dd2a7ca05e42101694a1115c69070153e"
+  integrity sha512-RTMx5IxJOq9H/vuAQ84lmc8lvjqfsZGQjg6Z8VeAo9KPpOiHthYuZdUBQwZ9L/YNugSRSFBPlHIuAY3sLVWEnA==
   dependencies:
     "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
@@ -4395,10 +4395,10 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-common@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.11.tgz#b1ac1dd24cc8fca2221ff99b49e9da75fc604449"
-  integrity sha512-KPSaQVGo4Ri7E6kQQu1L+qMJxOptky300SMam+Pqy5xOaK1Yq3C+bCTFlQ6wZYC5Kk7qborcC6nTej5r4QJ2bQ==
+"@rarible/tezos-common@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.19.tgz#a6325adf6d8b6b4ec079a373e8912792730ed02d"
+  integrity sha512-NFD1rCv0YDwzRzSUG2CJLYSM0lg2hfhYhOSKIzY5N4aH1PXf4hCqsLxchRecNVWCZ6XsDdJ9tQNl3JNXqVmxUQ==
   dependencies:
     "@taquito/taquito" "^12.0.0"
     bignumber.js "^9.0.1"
@@ -4406,22 +4406,22 @@
     node-fetch "2.6.7"
     text-encoder "^0.0.4"
 
-"@rarible/tezos-contracts@^0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.11.tgz#b9be1a69e11952d4ae167abe18f22816ace473a3"
-  integrity sha512-G6pD05MO+0DLuIjmFk4aUfDdzfNTneZ0/Xv2f7iz67Q1+adkJbH8AkXeq65tUOvNjm96DCUloR5RAQxYzuNaxw==
+"@rarible/tezos-contracts@^0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.19.tgz#e356e282bc815bd5161a5d05e9c9ff7984013f77"
+  integrity sha512-4oWlfvzcQ73HKYcckPXJBGrHU7TShtMSXrG+b2q+7rCffh1pw2EWnNSB7t5RgFaHuJueT7lDWCygdpbRUpwnoQ==
   dependencies:
-    "@rarible/tezos-common" "^0.1.11"
+    "@rarible/tezos-common" "^0.1.19"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.11", "@rarible/tezos-sdk@~0.1.11":
-  version "0.1.11"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.11.tgz#ec8f386b1cba5f2861dfc635208937cd18409630"
-  integrity sha512-I7F+tQU5QsCEBtZ07SBldGl9VhqSlFjAcwj552QEriXgq3L8g8oZeDABtCnqHHiDUmsAsfLck1XRPIarlhLKag==
+"@rarible/tezos-sdk@0.1.19", "@rarible/tezos-sdk@~0.1.19":
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.19.tgz#2f81993e16ac46b0126ad902a100207ecc33d36f"
+  integrity sha512-LPnbR7a2kf+tZOjgBC9rLh3DDqre6NjLbMnmqHXdi7G50YMpTKZJ6PnOc+XTidca9oz3dwXNME8JKT6sHziS4w==
   dependencies:
     "@airgap/beacon-sdk" "2.3.13"
-    "@rarible/tezos-common" "^0.1.11"
-    "@rarible/tezos-contracts" "^0.1.11"
+    "@rarible/tezos-common" "^0.1.19"
+    "@rarible/tezos-contracts" "^0.1.19"
     "@taquito/beacon-wallet" "12.0.3"
     "@taquito/signer" "^12.0.0"
     "@taquito/taquito" "^12.0.0"
@@ -4443,7 +4443,7 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
   integrity sha512-ZjrJvg4iVIxatBRnUPcwWzaQRf7XN4hgjrRHqmjXv2Q+8/2vYyPL1TBFlfGunPPDMUB3hwBELaL5ZQaJsSE6oQ==
 
-"@rarible/types@^0.9.3", "@rarible/types@~0.9.2", "@rarible/types@~0.9.3":
+"@rarible/types@~0.9.2", "@rarible/types@~0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
@@ -4455,7 +4455,7 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@~0.12.71":
+"@rarible/web3-ethereum@^0.12.71", "@rarible/web3-ethereum@~0.12.71":
   version "0.12.71"
   resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.71.tgz#2359378da5e0e1061d34406ccd89faa3d28bc6ae"
   integrity sha512-DwGPTNwMu48GMY9/pEEcB2IzHI78Exh/qbjBs8lwsPj3S32GQnj/Lu8UVGIENE5LDfaZkfBjkTUkUuznTRDrmQ==

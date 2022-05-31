@@ -12,7 +12,7 @@ import { MintType } from "../../types/nft/mint/domain"
 import { initProviders } from "./test/init-providers"
 import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
-import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 
 describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()

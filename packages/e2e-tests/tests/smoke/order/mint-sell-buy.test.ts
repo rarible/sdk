@@ -8,7 +8,7 @@ import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import { sell } from "../../common/atoms-tests/sell"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer, getSolanaWallet,
+	getEthereumWalletBuyer, getFlowBuyerWallet, getFlowSellerWallet, getSolanaWallet,
 	getTezosTestWallet,
 	getWalletAddressFull,
 } from "../../common/wallet"
@@ -285,7 +285,7 @@ function suites(): {
 			currency: "XTZ",
 			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
-					amount: 5,
+					amount: 7,
 					price: "0.02",
 					currency: currency,
 				}
@@ -312,7 +312,33 @@ function suites(): {
 			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.001",
+					price: toBigNumber("0.001"),
+					currency: currency,
+				}
+			},
+		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { seller: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "FLOW_FT",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.0001",
 					currency: currency,
 				}
 			},

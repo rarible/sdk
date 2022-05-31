@@ -152,6 +152,10 @@ export class EthereumMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+		if (meta.blockchain !== Blockchain.ETHEREUM && meta.blockchain !== Blockchain.POLYGON) {
+			throw new Error("Wrong blockchain")
+		}
+
 		return {
 			name: meta.name,
 			description: meta.description,

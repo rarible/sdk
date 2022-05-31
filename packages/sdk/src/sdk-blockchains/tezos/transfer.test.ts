@@ -6,15 +6,15 @@ import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 
-describe.skip("transfer test", () => {
+describe("transfer test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
-	const receipent = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
+	const recipient = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
-	test.skip("transfer NFT test", async () => {
+	test("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
@@ -34,16 +34,16 @@ describe.skip("transfer test", () => {
 		})
 
 		const result = await transfer.submit({
-			to: toUnionAddress(`TEZOS:${receipent}`),
+			to: toUnionAddress(`TEZOS:${recipient}`),
 			amount: 1,
 		})
 
 		await result.wait()
 
-		await awaitForOwnership(sdk, mintResult.itemId, receipent)
+		await awaitForOwnership(sdk, mintResult.itemId, recipient)
 	}, 1500000)
 
-	test.skip("transfer MT test", async () => {
+	test("transfer MT test", async () => {
 
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),
@@ -62,12 +62,12 @@ describe.skip("transfer test", () => {
 			itemId: mintResult.itemId,
 		})
 		const result = await transfer.submit({
-			to: toUnionAddress(`TEZOS:${receipent}`),
+			to: toUnionAddress(`TEZOS:${recipient}`),
 			amount: 5,
 		})
 		await result.wait()
 
-		await awaitForOwnership(sdk, mintResult.itemId, receipent)
+		await awaitForOwnership(sdk, mintResult.itemId, recipient)
 
 	}, 1500000)
 

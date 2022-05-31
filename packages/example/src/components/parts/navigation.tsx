@@ -7,19 +7,19 @@ export function Navigation() {
 	const links = [{
 		label: "About",
 		path: "/about",
-		default: true,
+		default: true
 	}, {
 		label: "Connect",
-		path: "/connect",
+		path: "/connect"
 	}, {
 		label: "Deploy Collection",
-		path: "/deploy",
+		path: "/deploy"
 	}, {
 		label: "Mint Token",
-		path: "/mint",
+		path: "/mint"
 	}, {
 		label: "Sell",
-		path: "/sell",
+		path: "/sell"
 	}, {
 		label: "Buy",
 		path: "/buy",
@@ -28,13 +28,13 @@ export function Navigation() {
 		path: "/buy-batch",
 	}, {
 		label: "Bid",
-		path: "/bid",
+		path: "/bid"
 	}, {
 		label: "Accept Bid",
-		path: "/accept-bid",
+		path: "/accept-bid"
 	}, {
 		label: "My Items",
-		path: "/items",
+		path: "/items"
 	}]
 
 	return (

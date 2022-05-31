@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction-backend",
-  "version": "0.9.0",
+  "version": "0.9.6",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",

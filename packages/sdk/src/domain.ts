@@ -3,6 +3,7 @@ import type { BlockchainGroup } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { IMint } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
 import type { IFill, IFillBatch, IPrepareOrderForFillBatch } from "./types/order/fill/domain"
@@ -42,6 +43,7 @@ export interface IRaribleSdkConfig {
 	middlewares?: Middleware[]
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
+	flow?: { auth: AuthWithPrivateKey }
 }
 
 export interface IRaribleSdk {

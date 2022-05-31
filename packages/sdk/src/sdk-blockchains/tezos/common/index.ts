@@ -1,21 +1,20 @@
-import type { ItemId, UnionAddress, Order, AssetType, CollectionId } from "@rarible/api-client"
+import type { AssetType, CollectionId, ItemId, Order, UnionAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
-	Provider,
-	TezosProvider,
-	AssetType as TezosAssetType,
 	Asset as TezosLibAsset,
-	TezosNetwork,
+	AssetType as TezosAssetType,
 	Config,
+	Provider,
+	TezosNetwork,
+	TezosProvider,
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { get_public_key,  pk_to_pkh  } from "@rarible/tezos-sdk"
+import { AssetTypeV2, get_public_key, pk_to_pkh } from "@rarible/tezos-sdk"
+// eslint-disable-next-line camelcase
+import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
-import type { Part } from "@rarible/tezos-sdk/dist/order/utils"
-import type {
-	Asset as TezosClientAsset,
-	AssetType as TezosClientAssetType,
-} from "tezos-api-client/build"
+import type { Part } from "@rarible/tezos-common"
+import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
 import {
 	Configuration,
 	NftCollectionControllerApi,
@@ -25,12 +24,12 @@ import {
 } from "tezos-api-client/build"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ContractAddress, OrderId } from "@rarible/types"
+import { toCollectionId, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
-import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
+// import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import { toCollectionId, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 
@@ -99,7 +98,7 @@ export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
 
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
-		case "hangzhou": {
+		case "testnet": {
 			return "https://test-tezos-api.rarible.org"
 		}
 		case "dev": {
@@ -122,7 +121,7 @@ export function getMaybeTezosProvider(
 	provider: Maybe<TezosProvider>, network: TezosNetwork
 ): MaybeProvider<TezosProvider> {
 	switch (network) {
-		case "hangzhou": {
+		case "testnet": {
 			return {
 				tezos: provider,
 				config: {
@@ -135,9 +134,18 @@ export function getMaybeTezosProvider(
 					api_permit: `${getTezosBasePath(network)}/v0.1`,
 					permit_whitelist: [],
 					wrapper: "",
-					auction: "",
-					auction_storage: "",
+					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
+					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
 					node_url: "https://test-tezos-node.rarible.org",
+					chain_id: "NetXnHfVqm9iesp",
+					sales: "KT1QaGwLxoBqeQaWpe7HUyEFnXQfGi9P2g6a",
+					sales_storage: "KT1S3AAy7XH7qtmYHkvvPtxJj8MLxUX1FrVH",
+					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
+					bid: "KT1UcBbv2D84mZ9tZx4MVLbCNyC5ihJERED2",
+					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
+					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
+					tzkt: "https://api.ithacanet.tzkt.io",
+					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
 				},
 			}
 		}
@@ -154,9 +162,18 @@ export function getMaybeTezosProvider(
 					api_permit: `${getTezosBasePath(network)}/v0.1`,
 					permit_whitelist: [],
 					wrapper: "",
-					auction: "",
-					auction_storage: "",
+					auction: "KT1UThqUUyAM9g8Nk6u74ke6XAFZNycAWU7c",
+					auction_storage: "KT1AJXNtHfFMB4kuJJexdevH2XeULivjThEX",
 					node_url: "https://dev-tezos-node.rarible.org",
+					chain_id: "NetXfHjxW3qBoxi",
+					sales: "KT1Kgi6KFHbPLg6WfUJqQpUGpdQ4VLrrEXAe",
+					sales_storage: "KT1TQPSPCJpnDbErXY9x2jGBmGj8bgbodZVc",
+					transfer_manager: "KT1Xj6gsE694LkMg25SShYkU7dGzagm7BTSK",
+					bid: "KT1H9fa1QF4vyAt3vQcj65PiJJNG7vNVrkoW",
+					bid_storage: "KT19c5jc4Y8so1FWbrRA8CucjUeNXZsP8yHr",
+					sig_checker: "KT1ShTc4haTgT76z5nTLSQt3GSTLzeLPZYfT",
+					tzkt: "https://api.ithacanet.tzkt.io",
+					dipdup: "",
 				},
 			}
 		}
@@ -176,6 +193,15 @@ export function getMaybeTezosProvider(
 					auction: "",
 					auction_storage: "",
 					node_url: "https://mainnet.api.tez.ie",
+					chain_id: "NetXfHjxW3qBoxi",
+					sales: "",
+					sales_storage: "",
+					transfer_manager: "",
+					bid: "",
+					bid_storage: "",
+					sig_checker: "",
+					tzkt: "https://api.mainnet.tzkt.io",
+					dipdup: "",
 				},
 			}
 		}
@@ -387,7 +413,7 @@ export function convertTezosToUnionAsset(assetType: TezosClientAssetType): Asset
 	}
 }
 
-export function convertOrderPayout(payout?: Array<Payout>): Array<TezosPart> {
+export function convertOrderPayout(payout?: Array<Payout>): Array<Part> {
 	return payout?.map(p => ({
 		account: getTezosAddress(p.account),
 		value: new BigNumber(p.value),
@@ -428,4 +454,54 @@ export function convertTezosToCollectionAddress(address: string): CollectionId {
 
 export function convertTezosToUnionAddress(address: string): UnionAddress {
 	return toUnionAddress(`${Blockchain.TEZOS}:${address}`)
+}
+
+export type CurrencyV2 = {
+	type: AssetTypeV2
+	// eslint-disable-next-line camelcase
+	asset_contract: string | undefined
+	// eslint-disable-next-line camelcase
+	asset_token_id: BigNumber | undefined
+}
+
+export async function getTezosAssetTypeV2(config: Config, type: AssetType): Promise<CurrencyV2> {
+	switch (type["@type"]) {
+		case "XTZ": {
+			return {
+				type: AssetTypeV2.XTZ,
+				asset_contract: undefined,
+				asset_token_id: undefined,
+			}
+		}
+		case "TEZOS_FT": {
+			const contract = convertFromContractAddress(type.contract)
+			let ftType: AssetTypeV2 | undefined = AssetTypeV2.FA2
+			try {
+				ftType = await get_ft_type(config, contract)
+			} catch (e) {
+
+			}
+			if (ftType === AssetTypeV2.FA2) {
+				return {
+					type: AssetTypeV2.FA2,
+					asset_contract: contract,
+					asset_token_id: new BigNumber(type.tokenId || 0),
+				}
+
+			} else if (ftType === AssetTypeV2.FA12) {
+
+				return {
+					type: AssetTypeV2.FA12,
+					asset_contract: contract,
+					asset_token_id: undefined,
+				}
+
+			} else {
+				throw new Error("Unrecognized FT contract type, check contract and network")
+			}
+		}
+		default: {
+			throw new Error("Invalid asset type")
+		}
+	}
 }

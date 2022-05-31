@@ -9,6 +9,7 @@ import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
 import type { IMint, MintResponse } from "./types/nft/mint/domain"
+import { MintType } from "./types/nft/mint/domain"
 import type { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
@@ -44,7 +45,9 @@ export function createRaribleSdk(
 		createFlowSdk(
 			filterWallet(wallet, BlockchainGroup.FLOW),
 			apis,
-			blockchainConfig.flowEnv
+			blockchainConfig.flowEnv,
+			undefined,
+			config?.flow?.auth
 		),
 		createTezosSdk(
 			filterWallet(wallet, BlockchainGroup.TEZOS),
@@ -151,7 +154,12 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 		const mintAction = mintResponse.submit
 			.around(
 				(input: MintAndSellRequest) => ({ ...input }),
-				(mintResponse, initial): MiddleMintType => ({ initial, mintResponse })
+				async (mintResponse, initial): Promise<MiddleMintType> => {
+					if (mintResponse.type === MintType.ON_CHAIN) {
+						await mintResponse.transaction.wait()
+					}
+					return { initial, mintResponse }
+				}
 			)
 
 		const sellAction = sellResponse.submit

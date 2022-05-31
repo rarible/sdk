@@ -15,9 +15,8 @@ async function buy(item: string) {
 		if (!process.env["ETH_PRIVATE_KEY"]) {
 			throw new Error("Expected ETH_PRIVATE_KEY env variable")
 		}
-		const raribleSdkWallet = initWallet(process.env["ETH_PRIVATE_KEY"])
-		//@ts-ignore
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging", { fetchApi: fetch })
+		const raribleSdkWallet = await initWallet(process.env["ETH_PRIVATE_KEY"])
+		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging")
 
 		console.log(`SDK was created, searching sell order for item=${item}...`)
 		const order = (await raribleSdk.apis.item.getItemById({ itemId: "ETHEREUM:" + item })).bestSellOrder

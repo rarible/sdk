@@ -4,10 +4,11 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import { toBigNumber } from "@rarible/types"
 import { sell } from "../../common/atoms-tests/sell"
 import {
 	getEthereumWallet,
-	getEthereumWalletBuyer,
+	getEthereumWalletBuyer, getFlowBuyerWallet, getFlowSellerWallet,
 	getSolanaWallet,
 	getTezosTestWallet,
 	getWalletAddressFull,
@@ -264,56 +265,32 @@ function suites(): {
 				}
 			},
 		},
-		/*
-    {
-      blockchain: Blockchain.TEZOS,
-      wallet: getTezosTestWallet(),
-      collectionId: "TEZOS:KT1Ctz9vuC6uxsBPD4GbdbPaJvZogWhE9SLu",
-      mintRequest: (walletAddress: UnionAddress): MintRequest => {
-        return {
-          uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-          creators: [{
-            account: walletAddress,
-            value: 10000,
-          }],
-          royalties: [],
-          lazyMint: false,
-          supply: 1,
-        }
-      },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      getCurrency: async (wallet: BlockchainWallet): Promise<RequestCurrency> => {
-        if (wallet.blockchain === "TEZOS") {
-          return {
-            "@type": "XTZ",
-          }
-        }
-        throw new Error("Wrong blockchain")
-      },
-    },
-     */
-		/*{
-      blockchain: Blockchain.FLOW,
-      wallets: { seller: getFlowWallet(), buyer: getFlowWallet() },
-      collectionId: "FLOW:A.ebf4ae01d1284af8.RaribleNFT",
-      mintRequest: (walletAddress: UnionAddress) => {
-        return {
-          uri: "ipfs://ipfs/QmNe7Hd9xiqm1MXPtQQjVtksvWX6ieq9Wr6kgtqFo9D4CU",
-          supply: 1,
-          lazyMint: false,
-        }
-      },
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      getCurrency: async (wallet: BlockchainWallet): Promise<RequestCurrency> => {
-        if (wallet.blockchain === "FLOW") {
-          return {
-            "@type": "FLOW_FT",
-            contract: toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken"),
-          }
-        }
-        throw new Error("Wrong blockchain")
-      },
-    },*/
+		{
+			blockchain: Blockchain.TEZOS,
+			description: "MT <=> XTZ",
+			wallets: { seller: getTezosTestWallet(0), buyer: getTezosTestWallet(1) },
+			collectionId: testsConfig.variables.TEZOS_COLLECTION_ID_MT,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 20,
+				}
+			},
+			currency: "XTZ",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 5,
+					price: "0.02",
+					currency: currency,
+				}
+			},
+		},
 		{
 			blockchain: Blockchain.SOLANA,
 			description: "NFT <=> SOLANA_SOL",
@@ -335,7 +312,33 @@ function suites(): {
 			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.001",
+					price: toBigNumber("0.001"),
+					currency: currency,
+				}
+			},
+		},
+		{
+			blockchain: Blockchain.FLOW,
+			description: "NFT <=> FLOW_FT",
+			wallets: { seller: getFlowSellerWallet(), buyer: getFlowBuyerWallet() },
+			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+			mintRequest: (walletAddress: UnionAddress): MintRequest => {
+				return {
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: walletAddress,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				}
+			},
+			currency: "FLOW_FT",
+			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+				return {
+					amount: 1,
+					price: "0.0001",
 					currency: currency,
 				}
 			},
@@ -366,8 +369,8 @@ describe.each(suites())("$blockchain mint => sell => cancel", (suite) => {
 		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
 		await getActivitiesByItem(sellerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.LIST],
-			[ActivityType.LIST, ActivityType.MINT])
+			[ActivityType.LIST],
+			[ActivityType.LIST])
 
 		// Cancel order
 		await cancel(sellerSdk, sellerWallet, { orderId: sellOrder.id })

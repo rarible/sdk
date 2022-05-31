@@ -2,12 +2,14 @@ import type { Connection, PublicKey, TransactionInstruction } from "@solana/web3
 import { SystemProgram } from "@solana/web3.js"
 import { MintLayout, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { BN } from "@project-serum/anchor"
-import {
-	DataV2,
-	Collection,
-	Creator, CreateMetadataV2, CreateMasterEditionV3,
-} from "@metaplex-foundation/mpl-token-metadata"
 import type { Uses } from "@metaplex-foundation/mpl-token-metadata"
+import {
+	Collection,
+	CreateMasterEditionV3,
+	CreateMetadataV2,
+	Creator,
+	DataV2,
+} from "@metaplex-foundation/mpl-token-metadata"
 import fetch from "node-fetch"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
@@ -36,7 +38,7 @@ function validateMetadata(metadata: any) {
 		!metadata.properties ||
 		!Array.isArray(metadata.properties.creators)
 	) {
-		throw new Error(`Invalid metadata file ${metadata}`)
+		throw new Error("Invalid metadata file")
 	}
 
 	// Validate creators
@@ -68,7 +70,7 @@ export async function createMetadata(
 				share: creator.share,
 				verified: verifyCreators?.[creator.address] ?? false,
 			})
-		}
+		},
 	)
 
 	return new DataV2({
@@ -87,19 +89,21 @@ export async function createMetadata(
 export async function getMintNftInstructions(
 	connection: Connection,
 	signer: IWalletSigner,
-	metadataLink: string,
-	mutableMetadata: boolean = true,
-	collection: PublicKey | null = null,
-	maxSupply: number = 0,
-	verifyCreators: boolean = false,
-	use?: Uses,
+	params: {
+		metadataLink: string,
+		//mutableMetadata: boolean,
+		collection: PublicKey | null,
+		maxSupply: number,
+		verifyCreators: boolean,
+		use?: Uses,
+	}
 ): Promise<ITransactionPreparedInstructions & { mint: PublicKey }> {
 	// Retrieve metadata
 	const data = await createMetadata(
-		metadataLink,
-		collection,
-		verifyCreators ? { [signer.publicKey.toString()]: true } : undefined,
-		use,
+		params.metadataLink,
+		params.collection,
+		params.verifyCreators ? { [signer.publicKey.toString()]: true } : undefined,
+		params.use,
 	)
 
 	if (!data) {
@@ -189,10 +193,28 @@ export async function getMintNftInstructions(
 				mint: mint.publicKey,
 				mintAuthority: signer.publicKey,
 				updateAuthority: signer.publicKey,
-				maxSupply: new BN(maxSupply),
+				maxSupply: new BN(params.maxSupply),
 			},
 		).instructions,
 	)
+
+	/*
+	// not working with current mpl-token-metadata version
+
+	if (params.mutableMetadata === false) {
+		instructions.push(
+			...new UpdateMetadataV2(
+				{},
+				{
+					metadata: metadataAccount,
+					metadataData: data,
+					updateAuthority: signer.publicKey,
+					primarySaleHappened: null,
+					isMutable: false,
+				},
+			).instructions,
+		)
+	}*/
 
 	return { instructions, signers, mint: mint.publicKey }
 }
