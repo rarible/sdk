@@ -1,7 +1,7 @@
 {
 	"extends": ["@rarible/ts"],
 	"rules": {
-		"no-unused-vars": "warn"
+		"no-unused-vars": "off"
 	},
     "globals":{
       "BigInt": true
