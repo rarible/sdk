@@ -30,12 +30,13 @@ export class EthereumSell {
 					? Math.round(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
+				const amount = sellFormRequest.amount ?? 1
 				return {
 					makeAssetType: {
 						tokenId: item.tokenId,
 						contract: item.contract,
 					},
-					amount: sellFormRequest.amount,
+					amount: amount,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,
 					payouts: common.toEthereumParts(sellFormRequest.payouts),

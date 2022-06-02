@@ -21,6 +21,9 @@ import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
+import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
+import type { IMintSimplified } from "./types/nft/mint/simplified"
+import type { MintSimplifiedRequest } from "./types/nft/mint/simplified"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -167,7 +170,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 				({ initial, mintResponse }: MiddleMintType) => ({
 					...initial,
 					itemId: mintResponse.itemId,
-					amount: initial.supply,
+					amount: initial.supply === undefined ? 1 : initial.supply,
 				}),
 				(orderId, { mintResponse }): MintAndSellResponse => ({
 					...mintResponse,
@@ -179,6 +182,21 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 			...mintResponse,
 			...sellResponse,
 			submit: mintAction.thenAction(sellAction),
+		}
+	}
+}
+
+
+function createMintAndSellSimplified(mint: IMintSimplified["mintStart"], sell: ISellInternal): IMintAndSellSimplified {
+	return async (request: MintSimplifiedRequest) => {
+		const mintResponse = await mint(request)
+		const collectionId = getCollectionId(request)
+		const blockchain = getBlockchainCollectionId(collectionId)
+		const sellResponse = await sell({ blockchain })
+
+		return {
+			...mintResponse,
+			...sellResponse,
 		}
 	}
 }

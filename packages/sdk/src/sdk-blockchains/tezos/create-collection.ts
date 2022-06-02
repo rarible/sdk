@@ -16,7 +16,7 @@ export class TezosCreateCollection {
 		private provider: MaybeProvider<TezosProvider>,
 		private network: TezosNetwork,
 	) {
-		this.createCollectionBase = this.createCollectionBase.bind(this)
+		this.createCollectionSimplified = this.createCollectionSimplified.bind(this)
 	}
 
 	private async getDeployOperation(asset: TezosCreateCollectionTokenAsset): Promise<DeployResult> {
@@ -59,7 +59,7 @@ export class TezosCreateCollection {
 		},
 	})
 
-	async createCollectionBase(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+	async createCollectionSimplified(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
 		if (request.blockchain !== Blockchain.TEZOS) {
 			throw new Error("Wrong blockchain")
 		}

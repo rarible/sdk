@@ -33,12 +33,13 @@ export function createTezosSdk(
 	return {
 		nft: {
 			mint: mintService.mint,
+			mintStart: mintService.mintSimplified,
 			burn: new TezosBurn(maybeProvider, apis, network).burn,
 			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
-			createCollectionStart: createCollectionService.createCollectionBase,
+			createCollectionStart: createCollectionService.createCollectionSimplified,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

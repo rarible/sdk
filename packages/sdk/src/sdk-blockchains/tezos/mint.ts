@@ -8,13 +8,12 @@ import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { MintResponseCommon } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse, MintResponse } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, MintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { MintSimplifiedRequest, MintSimplifiedResponse } from "../../types/nft/mint/simplified"
+import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { ITezosAPI, MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
 import { convertTezosItemId, getRequiredProvider, getTezosAddress } from "./common"
 
@@ -25,10 +24,11 @@ export class TezosMint {
 		private network: TezosNetwork,
 	) {
 		this.mint = this.mint.bind(this)
+		this.mintSimplified = this.mintSimplified.bind(this)
 		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
-	getFormatsMeta(meta: PreprocessMetaRequest) {
+	private getFormatsMeta(meta: PreprocessMetaRequest) {
 		return [meta.image, meta.animation]
 			.reduce((acc, item) => {
 				if (item) {
@@ -39,7 +39,7 @@ export class TezosMint {
 			}, [] as TezosMetaContent[])
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+	public preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
 		if (meta.blockchain !== Blockchain.TEZOS) {
 			throw new Error("Wrong blockchain")
 		}
@@ -60,7 +60,7 @@ export class TezosMint {
 		}
 	}
 
-	async getOwner(request: MintRequest): Promise<string> {
+	private async getOwner(request: MintRequest): Promise<string> {
 		if (request.creators?.length) {
 			return getTezosAddress(request.creators[0].account)
 		}
@@ -69,124 +69,76 @@ export class TezosMint {
 		)
 	}
 
-	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const {
-			contract,
-			type,
-		} = await getCollectionData(this.apis.collection, prepareRequest)
+	public async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
+		const collectionData = await getCollectionData(this.apis.collection, prepareRequest)
 
 		return {
-			multiple: type === "MT",
+			multiple: collectionData.type === "MT",
 			supportsRoyalties: true,
 			supportsLazyMint: false,
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (request: MintRequest) => {
-					const royalties = request.royalties?.reduce((acc, royalty) => {
-						const account = getTezosAddress(royalty.account)
-						acc[account] = new BigNumber(royalty.value)
-						return acc
-					}, {} as { [key: string]: BigNumber }) || {}
-
-					const supply = type === "NFT" ? undefined : toBn(request.supply || 1)
-					const provider = getRequiredProvider(this.provider)
-
-					const result = await mint(
-						provider,
-						contract,
-						royalties,
-						supply,
-						undefined,
-						{
-							"": fixIpfs(request.uri),
-						},
-						await this.getOwner(request),
-					)
-
-					return {
-						type: MintType.ON_CHAIN,
-						transaction: new BlockchainTezosTransaction(result, this.network),
-						itemId: convertTezosItemId(`${contract}:${result.token_id}`),
-					}
+					return this.mintCommon({
+						...prepareRequest,
+						...request,
+					} as MintSimplifiedRequest, collectionData)
 				},
 			}),
 		}
 	}
 
-	// async mintBase<T extends MintSimplifiedRequest>(request: T): Promise<MintSimplifiedResponse<T>> {
-	async mintBase<T extends MintSimplifiedRequest>(request: T): Promise<MintResponse> {
+	private async mintCommon(request: MintSimplifiedRequest, collectionData: CollectionData): Promise<MintResponse> {
+		const royalties = request.royalties?.reduce((acc, royalty) => {
+			const account = getTezosAddress(royalty.account)
+			acc[account] = new BigNumber(royalty.value)
+			return acc
+		}, {} as { [key: string]: BigNumber }) || {}
+
+		const isNftCollection = collectionData.type === "NFT"
+		const supply = isNftCollection ? undefined : toBn(request.supply || 1)
+
+		if (isNftCollection && request.supply && request.supply > 1) {
+			throw new Error(`Invalid supply=${request.supply} for NFT collection, expected supply=1`)
+		}
+
+		const provider = getRequiredProvider(this.provider)
+
+		const result = await mint(
+			provider,
+			collectionData.contract,
+			royalties,
+			supply,
+			undefined,
+			{
+				"": fixIpfs(request.uri),
+			},
+			await this.getOwner(request),
+		)
+
+		return {
+			type: MintType.ON_CHAIN,
+			transaction: new BlockchainTezosTransaction(result, this.network),
+			itemId: convertTezosItemId(`${collectionData.contract}:${result.token_id}`),
+		}
+	}
+
+	public async mintSimplified(request: MintSimplifiedRequest): Promise<MintResponse> {
 		if (request.lazyMint) {
 			throw new Error("Lazy minting on tezos is not supporting")
 		}
-		const {
-			contract,
-			type,
-		} = await getCollectionData(this.apis.collection, request)
-		const royalties = request.royalties?.reduce((acc, royalty) => {
-			const account = getTezosAddress(royalty.account)
-			acc[account] = new BigNumber(royalty.value)
-			return acc
-		}, {} as { [key: string]: BigNumber }) || {}
+		const collectionData = await getCollectionData(this.apis.collection, request)
 
-		const supply = type === "NFT" ? undefined : toBn(request.supply || 1)
-		const provider = getRequiredProvider(this.provider)
-
-		const result = await mint(
-			provider,
-			contract,
-			royalties,
-			supply,
-			undefined,
-			{
-				"": fixIpfs(request.uri),
-			},
-			await this.getOwner(request),
-		)
-
-		return {
-			type: MintType.ON_CHAIN,
-			transaction: new BlockchainTezosTransaction(result, this.network),
-			itemId: convertTezosItemId(`${contract}:${result.token_id}`),
-		}
+		return this.mintCommon(request, collectionData)
 	}
-
-	/*
-	async mintCommon<T extends MintSimplifiedRequest>(request: T, ): Promise<MintResponse> {
-		const royalties = request.royalties?.reduce((acc, royalty) => {
-			const account = getTezosAddress(royalty.account)
-			acc[account] = new BigNumber(royalty.value)
-			return acc
-		}, {} as { [key: string]: BigNumber }) || {}
-
-		const supply = type === "NFT" ? undefined : toBn(request.supply || 1)
-		const provider = getRequiredProvider(this.provider)
-
-		const result = await mint(
-			provider,
-			contract,
-			royalties,
-			supply,
-			undefined,
-			{
-				"": fixIpfs(request.uri),
-			},
-			await this.getOwner(request),
-		)
-
-		return {
-			type: MintType.ON_CHAIN,
-			transaction: new BlockchainTezosTransaction(result, this.network),
-			itemId: convertTezosItemId(`${contract}:${result.token_id}`),
-		}
-	}
-
-   */
 }
+
+export type CollectionData = { contract: string, owner?: string, type: "NFT" | "MT" }
 
 export async function getCollectionData(
 	api: NftCollectionControllerApi,
 	prepareRequest: HasCollection | HasCollectionId,
-): Promise<{ contract: string, owner?: string, type: "NFT" | "MT" }> {
+): Promise<CollectionData> {
 	const contractAddress = getContractFromRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
 	if (blockchain !== Blockchain.TEZOS) {

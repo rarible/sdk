@@ -10,7 +10,7 @@
   ],
   "private": true,
   "scripts": {
-    "start": "node ./build/index.js",
+    "start": "RPC_URL=https://node-rinkeby.rarible.com SDK_ENV=staging node ./build/index.js",
     "build": "tsc --project ./tsconfig.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand",

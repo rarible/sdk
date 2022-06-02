@@ -22,6 +22,9 @@ import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 import type { ICreateCollectionSimplified } from "./types/nft/deploy/simplified"
+import type { IMintSimplified } from "./types/nft/mint/simplified"
+import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
+import type { ISellSimplified } from "./types/order/sell/simplified"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -71,7 +74,9 @@ export interface INftSdk {
 	transfer: ITransfer
 	preprocessMeta: IPreprocessMeta
 	mint: IMint
+	mintStart: IMintSimplified["mintStart"]
 	mintAndSell: IMintAndSell
+	mintAndSellStart: IMintAndSellSimplified["mintAndSellStart"]
 	burn: IBurn
 	generateTokenId: IGenerateTokenId
 	/**
@@ -85,6 +90,7 @@ export interface INftSdk {
 export interface IOrderSdk {
 	sell: ISell
 	sellUpdate: ISellUpdate
+	sellStart: ISellSimplified
 	/**
 	 * @deprecated Use {@link buy} or {@link acceptBid} instead
 	 */
