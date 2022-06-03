@@ -12,7 +12,6 @@ pipeline {
       environment {
 	      NPM_TOKEN = "na"
       }
-      when { branch "master"  }
       agent any
       steps {
         sh 'yarn && yarn build && yarn test'
