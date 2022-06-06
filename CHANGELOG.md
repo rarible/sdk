@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+
+### Bug Fixes
+
+* correct price for multiple solana items ([#238](https://github.com/rarible/sdk/issues/238)) ([eead462](https://github.com/rarible/sdk/commit/eead46279a6e3917997fdbdbe0d53e17e7a38daa))
+* remove extra devDeps from sdk, add solana example ([1fa4168](https://github.com/rarible/sdk/commit/1fa4168a7d88777fbb756a1cba19720d6e15ffb4))
+
+
+### Features
+
+* refactor e2e ([4b20c36](https://github.com/rarible/sdk/commit/4b20c36d4236117596b75650b25501fd7a067d7f))
+* solana escrow account & bidding balance managing ([#239](https://github.com/rarible/sdk/issues/239)) ([4b4e6a9](https://github.com/rarible/sdk/commit/4b4e6a9497c90af21fe94d841408a9971eab3f30))
+
+
+
+
+
 ## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
 
 
