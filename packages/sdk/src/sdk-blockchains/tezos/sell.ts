@@ -1,8 +1,8 @@
 import type { SellRequest as TezosSellRequest } from "@rarible/tezos-sdk/dist/order/sell"
 import { sell } from "@rarible/tezos-sdk/dist/order/sell"
-import type { FTAssetType, TezosProvider, XTZAssetType } from "@rarible/tezos-sdk"
+import type { FTAssetType, OrderDataTypeRequest, TezosProvider, XTZAssetType } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { AssetTypeV2, get_ft_type, pk_to_pkh, upsert_order } from "@rarible/tezos-sdk"
+import { AssetTypeV2, get_ft_type, get_public_key, pk_to_pkh, upsert_order } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
 import BigNumber from "bignumber.js"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"

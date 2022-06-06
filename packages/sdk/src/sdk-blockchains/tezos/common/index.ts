@@ -505,3 +505,7 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 		}
 	}
 }
+
+export function getTokenIdString(tokenId: BigNumber | string | undefined): string | undefined {
+	return tokenId !== undefined ? tokenId.toString(): undefined
+}
