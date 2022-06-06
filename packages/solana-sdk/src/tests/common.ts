@@ -46,16 +46,12 @@ export async function requestSol(connection: Connection, publicKey: PublicKey, s
 	return await connection.getBalance(publicKey)
 }
 
-export async function checkTokenBalance(
+export async function getTokenAccount(
 	connection: Connection,
 	owner: PublicKey,
 	mint: PublicKey,
-	expectedValue: number,
-	// eslint-disable-next-line no-undef
 ): Promise<Awaited<ReturnType<typeof connection.getTokenAccountsByOwner>>> {
-	const balance = await connection.getTokenAccountsByOwner(owner, { mint })
-	expect(balance.value?.length).toBeGreaterThanOrEqual(expectedValue)
-	return balance
+	return await connection.getTokenAccountsByOwner(owner, { mint })
 }
 
 export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: SolanaKeypairWallet }) {
@@ -73,7 +69,8 @@ export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: Solan
 
 	// required confirmation
 	await sdk.connection.confirmTransaction(mintTx.txId, "finalized")
-	const balance = await checkTokenBalance(sdk.connection, wallet.publicKey, mintPrepare.mint, 1)
+	expect(await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toEqual(1)
+	const tokenAccount = await getTokenAccount(sdk.connection, wallet.publicKey, mintPrepare.mint)
 
-	return { mintTx, mint: mintPrepare.mint, balance }
+	return { mintTx, mint: mintPrepare.mint, tokenAccount }
 }

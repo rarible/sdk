@@ -13,19 +13,19 @@ export class SolanaBalancesSdk implements ISolanaBalancesSdk {
 	}
 
 	async getBalance(publicKey: PublicKey, options: {commitment?: Commitment} = {}): Promise<number> {
-		return (await this.connection.getBalance(publicKey, options.commitment)) / LAMPORTS_PER_SOL
+		return (await this.connection.getBalance(publicKey, options.commitment ?? "confirmed")) / LAMPORTS_PER_SOL
 	}
 
-	async getTokenBalance(owner: PublicKey, mint: PublicKey): Promise<number> {
+	async getTokenBalance(owner: PublicKey, mint: PublicKey, options: {commitment?: Commitment} = {}): Promise<number> {
 		const accounts = await this.connection.getTokenAccountsByOwner(owner, { mint })
 
 		let res = 0
 		for (let tokenAccount of accounts.value) {
-			const balance = await this.connection.getTokenAccountBalance(tokenAccount.pubkey, "max")
+			const balance = await this.connection.getTokenAccountBalance(tokenAccount.pubkey, options.commitment ?? "confirmed")
 			res += balance?.value?.uiAmount ?? 0
 		}
 
-		this.logger.log(mint.toString(), "token balance is", res)
+		this.logger.log(`Wallet ${owner} have ${res} of ${mint.toString()} tokens`)
 		return res
 	}
 }

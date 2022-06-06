@@ -107,15 +107,16 @@ export class SolanaNft {
 						{ mint }
 					)
 
-					const result = await this.sdk.nft.burn({
+					const prepare = await this.sdk.nft.burn({
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
 						closeAssociatedAccount: false, // todo should be set true if all tokens burn
 						tokenAccount: tokenAccount.value[0]?.pubkey,
 					})
+					const tx = await prepare.submit("processed")
 
-					return new BlockchainSolanaTransaction(result, this.sdk)
+					return new BlockchainSolanaTransaction(tx, this.sdk)
 				},
 			}),
 		}
@@ -141,15 +142,16 @@ export class SolanaNft {
 						{ mint }
 					)
 
-					const result = await this.sdk.nft.transfer({
+					const prepare = await this.sdk.nft.transfer({
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
 						tokenAccount: tokenAccount.value[0]?.pubkey,
 						to: extractPublicKey(request.to),
 					})
+					const tx = await prepare.submit("processed")
 
-					return new BlockchainSolanaTransaction(result, this.sdk)
+					return new BlockchainSolanaTransaction(tx, this.sdk)
 				},
 			}),
 		}
