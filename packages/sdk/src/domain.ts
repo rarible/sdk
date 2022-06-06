@@ -4,7 +4,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import type { IMint } from "./types/nft/mint/domain"
+import type { IMint, IUploadMeta } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
 import type { IFill } from "./types/order/fill/domain"
 import type { IBurn } from "./types/nft/burn/domain"
@@ -78,6 +78,7 @@ export interface INftSdk {
    */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
+	uploadMeta: IUploadMeta
 }
 
 export interface IOrderSdk {

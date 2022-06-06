@@ -16,3 +16,5 @@ export const configsDictionary: Record<RaribleSdkEnvironment, RaribleSdkConfig> 
 export function getSdkConfig(env: RaribleSdkEnvironment): RaribleSdkConfig {
 	return configsDictionary[env]
 }
+
+export const NFT_STORAGE_URL = "https://api.nft.storage/upload"
