@@ -97,11 +97,14 @@ export class TezosSell {
 					origin_fees: convertOrderPayout(request.originFees),
 				}
 
-				const sellOrder: TezosOrder = await sell(
-					provider,
-					tezosRequest
-				)
-				return convertTezosOrderId(sellOrder.hash)
+				// const sellOrder: TezosOrder = await sell(
+				// 	provider,
+				// 	tezosRequest
+				// )
+				const orderId = await this.sellV2(request)
+				console.log(orderId, "converted", convertTezosOrderId(orderId))
+				// return convertTezosOrderId(orderId)
+				return orderId
 			},
 		})
 

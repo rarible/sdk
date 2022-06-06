@@ -9,7 +9,7 @@ describe("deploy tezos tests", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
 	test("deploy public nft", async () => {
 		const result = await sdk.nft.createCollection({
@@ -25,6 +25,7 @@ describe("deploy tezos tests", () => {
 			},
 		})
 		await result.tx.wait()
+		console.log("result", result)
 	})
 
 	test.skip("deploy private nft", async () => {
@@ -46,7 +47,7 @@ describe("deploy tezos tests", () => {
 		await awaitForCollection(sdk, result.address)
 	})
 
-	test.skip("deploy public mt", async () => {
+	test("deploy public mt", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			asset: {
@@ -61,6 +62,7 @@ describe("deploy tezos tests", () => {
 		})
 
 		await result.tx.wait()
+		console.log("result", result.address)
 		await awaitForCollection(sdk, result.address)
 	})
 

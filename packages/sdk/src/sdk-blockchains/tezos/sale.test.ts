@@ -9,26 +9,26 @@ import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
 
-describe.skip("test tezos mint and sell", () => {
+describe("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const buyerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const buyerSdk = createRaribleSdk(buyerWallet, "staging", { logs: LogsLevel.DISABLED })
+	const buyerSdk = createRaribleSdk(buyerWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const nextBuyerWallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3"
 	)
-	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "staging", { logs: LogsLevel.DISABLED })
+	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const eurTzContract = "KT1PEBh9oKkQosYuw4tvzigps5p7uqXMgdez"
 	// const eurTzContract = "KT1NaRKxAGaoioX9CbzApaBjCYijcGHGfYJV"
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	let nftContract: string = "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx"
+	let mtContract: string = "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC"
 
 	test("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
@@ -47,6 +47,8 @@ describe.skip("test tezos mint and sell", () => {
 		}
 		await awaitItem(sellerSdk, mintResult.itemId)
 
+		console.log("mintResult.itemId", mintResult.itemId)
+		console.log("mintResult.orderId", mintResult.orderId)
 		const fillResponse = await buyerSdk.order.buy({ orderId: mintResult.orderId })
 
 		// await delay(10000)

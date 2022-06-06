@@ -166,14 +166,14 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1AJXNtHfFMB4kuJJexdevH2XeULivjThEX",
 					node_url: "https://dev-tezos-node.rarible.org",
 					chain_id: "NetXfHjxW3qBoxi",
-					sales: "KT1Kgi6KFHbPLg6WfUJqQpUGpdQ4VLrrEXAe",
-					sales_storage: "KT1TQPSPCJpnDbErXY9x2jGBmGj8bgbodZVc",
+					sales: "KT1LaV45iMDES1nXELGsnQgRHKzct2wc6EcT",
+					sales_storage: "KT1TEnB3APwPN4CGePGdAEA6uihdFfx6Skmq",
 					transfer_manager: "KT1Xj6gsE694LkMg25SShYkU7dGzagm7BTSK",
 					bid: "KT1H9fa1QF4vyAt3vQcj65PiJJNG7vNVrkoW",
 					bid_storage: "KT19c5jc4Y8so1FWbrRA8CucjUeNXZsP8yHr",
 					sig_checker: "KT1ShTc4haTgT76z5nTLSQt3GSTLzeLPZYfT",
-					tzkt: "https://api.ithacanet.tzkt.io",
-					dipdup: "",
+					tzkt: "http://dev-tezos-tzkt.rarible.org",
+					dipdup: "http://dev-tezos-indexer.rarible.org/v1/graphql",
 				},
 			}
 		}

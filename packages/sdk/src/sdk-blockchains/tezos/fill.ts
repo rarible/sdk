@@ -1,22 +1,20 @@
 import { Action } from "@rarible/action"
 import type { Part } from "@rarible/tezos-common"
-import { OrderType } from "@rarible/tezos-common"
-import type { OrderDataTypeRequest, StorageSalesV2, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
+import type { OrderDataTypeRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { AssetTypeV2, fill_order, get_active_order_type, get_address, getAsset } from "@rarible/tezos-sdk"
+import { OrderType, AssetTypeV2, fill_order, get_active_order_type, get_address } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber, toBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { Order as TezosOrder } from "tezos-api-client"
 import BigNumber from "bignumber.js"
 import { Blockchain } from "@rarible/api-client"
-import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
-import { buyV2 } from "@rarible/tezos-sdk/dist/sales/buy"
-import { get_ft_type } from "@rarible/tezos-common/src/base"
+import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { UnionPart } from "../../types/order/common"
+import type { IApisSdk } from "../../domain"
 import type { ITezosAPI, MaybeProvider, PreparedOrder } from "./common"
 import {
 	convertOrderToFillOrder,
@@ -30,6 +28,7 @@ export class TezosFill {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
+		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
 		this.fill = this.fill.bind(this)
@@ -71,6 +70,7 @@ export class TezosFill {
 			if (domain !== Blockchain.TEZOS) {
 				throw new Error("Not an tezos order")
 			}
+			console.log("hash", hash)
 			const order = await this.apis.order.getOrderByHash({
 				hash,
 			})
@@ -104,21 +104,23 @@ export class TezosFill {
 		try {
 			const ftTokenId = new BigNumber(data.buy_asset_token_id || 0)
 			const amount = (order.make.value !== undefined) ? new BigNumber(order.make.value) : new BigNumber(0)
-			if (key_exists) {
-				const buyRequest: BuyRequest = {
-					asset_contract: data.contract,
-					asset_token_id: new BigNumber(data.token_id),
-					asset_seller: argv.owner!,
-					sale_type: argv.sale_type,
-					sale_asset_contract: data.buy_asset_contract,
-					sale_asset_token_id: ftTokenId,
-					sale_amount: amount,
-					sale_qty: new BigNumber(argv.qty),
-					sale_payouts: [],
-					sale_origin_fees: [],
-					use_all: false,
-				}
-
+			const buyRequest: BuyRequest = {
+				asset_contract: data.contract,
+				asset_token_id: new BigNumber(data.token_id),
+				asset_seller: data.seller,
+				// sale_type: argv.sale_type,
+				//todo
+				sale_type: AssetTypeV2.XTZ,
+				sale_asset_contract: data.buy_asset_contract,
+				sale_asset_token_id: ftTokenId,
+				sale_amount: amount,
+				sale_qty: new BigNumber(order.make.value),
+				sale_payouts: [],
+				sale_origin_fees: [],
+				use_all: false,
+			}
+			const isOrderExists = await isExistsSaleOrder(provider, buyRequest)
+			if (isOrderExists) {
 				const op = await buyV2(provider, buyRequest)
 				return op
 			} else {
@@ -153,7 +155,7 @@ export class TezosFill {
 					const type = await get_active_order_type(this.provider.config, request)
 
 					if (type === OrderType.V2) {
-
+						console.log("preparedOrder", preparedOrder)
 					}
 				}
 
