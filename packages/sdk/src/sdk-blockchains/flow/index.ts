@@ -31,6 +31,7 @@ export function createFlowSdk(
 	const bidService = new FlowBid(sdk)
 
 	return {
+
 		nft: {
 			mint: mintService.prepare,
 			burn: new FlowBurn(sdk, blockchainNetwork).burn,

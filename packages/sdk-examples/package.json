@@ -13,7 +13,7 @@
     "build": "run-s build:*",
     "build:ts": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
