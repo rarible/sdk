@@ -261,7 +261,7 @@ export async function getTokenAmount(
 	let amount = 0
 	if (!mint.equals(WRAPPED_SOL_MINT)) {
 		try {
-			const token = await connection.getTokenAccountBalance(account)
+			const token = await connection.getTokenAccountBalance(account, "confirmed")
 			if (token?.value?.uiAmount) {
 				amount = integer ? token.value.uiAmount * Math.pow(10, token.value.decimals) : token.value.uiAmount
 			}
@@ -274,7 +274,7 @@ export async function getTokenAmount(
 			)
 		}
 	} else {
-		amount = await connection.getBalance(account)
+		amount = await connection.getBalance(account, "confirmed")
 		amount = integer ? amount : amount / LAMPORTS_PER_SOL
 	}
 	return amount

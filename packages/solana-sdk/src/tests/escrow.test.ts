@@ -1,22 +1,27 @@
 import { toPublicKey } from "@rarible/solana-common"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaSdk } from "../sdk/sdk"
-import { genTestWallet, requestSol, TEST_AUCTION_HOUSE } from "./common"
+import { genTestWallet, requestSol, retry, TEST_AUCTION_HOUSE } from "./common"
 
 describe("solana sdk escrow", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
 	const ACCOUNT_DEPOSIT = 0.00089088
 
 	const checkEscrowBalance = async (wallet: IWalletSigner, expected: number | null, withDeposit: boolean = true) => {
-		const balance = await sdk.auctionHouse.getEscrowBalance({
-			wallet: wallet.publicKey,
-			signer: wallet,
-			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
+		return await retry(5, 2000, async () => {
+			const balance = await sdk.auctionHouse.getEscrowBalance({
+				wallet: wallet.publicKey,
+				signer: wallet,
+				auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
+			})
+			if (expected !== null) {
+				if (expected + (withDeposit ? ACCOUNT_DEPOSIT : 0) !== balance) {
+					throw new Error(`wrong balance: ${balance} expected: ${ expected + (withDeposit ? ACCOUNT_DEPOSIT : 0) }`)
+				}
+				expect(balance).toEqual(expected + (withDeposit ? ACCOUNT_DEPOSIT : 0))
+			}
+			return balance
 		})
-		if (expected !== null) {
-			expect(balance).toBeCloseTo(expected + (withDeposit ? ACCOUNT_DEPOSIT : 0), 9)
-		}
-		return balance
 	}
 
 	const checkWalletBalance = async (wallet: IWalletSigner, expected: number | null, minusDeposit: boolean = true) => {
