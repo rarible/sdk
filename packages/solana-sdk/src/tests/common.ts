@@ -3,6 +3,8 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import type { SolanaSdk } from "../sdk/sdk"
 
+export const TEST_AUCTION_HOUSE = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+
 export const testWallets = [{
 	privateKeyString: "2zCVNyb3KhunreVgamvMPDiFZpkHKHnhNeuyoanQcPaN5yHzKBM8f9PF2h6zSaBm2UUDYf98yBGNS7iRbRHGvYrm",
 	privateKeyArray: Uint8Array.from([
