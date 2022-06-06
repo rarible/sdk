@@ -4,7 +4,7 @@ import type { TezosNetwork } from "@rarible/tezos-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import { notImplemented } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MetaUploader } from "../union/meta/upload-meta"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
@@ -60,6 +60,9 @@ export function createTezosSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,

@@ -2,6 +2,7 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
 import { Blockchain } from "@rarible/api-client"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
@@ -149,5 +150,41 @@ describe("get polygon balance", () => {
 		const balance = await sdk.balances.getBalance(walletAddress, currency)
 		expect(balance.toString()).toEqual("0.009145")
 	})
+})
 
+describe("Bidding balance", () => {
+	const { web31, wallet1 } = initProviders({
+		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	})
+
+	const ethereum = new Web3Ethereum({ web3: web31 })
+	const wallet = new EthereumWallet(ethereum)
+	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
+
+	test("Should check bidding balance & deposit & withdraw", async () => {
+		const checkBalance = async (expecting: BigNumberValue | null) => {
+			const balance = await sdk.balances.getBiddingBalance({
+				blockchain: Blockchain.ETHEREUM,
+				walletAddress: toUnionAddress("ETHEREUM:" + wallet1.getAddressString()),
+			})
+			if (expecting !== null) {
+				expect(parseFloat(balance.toString())).toBeCloseTo(parseFloat(expecting.toString()), 5)
+			}
+			return balance
+		}
+
+		const initBalance = new BigNumber(await checkBalance(null))
+
+		await checkBalance(initBalance)
+
+		let tx = await sdk.balances.depositBiddingBalance({ amount: 0.005, blockchain: Blockchain.ETHEREUM })
+		await tx.wait()
+
+		const remainBalance = await checkBalance(new BigNumber(initBalance).plus(0.005))
+
+		tx = await sdk.balances.withdrawBiddingBalance({ amount: remainBalance, blockchain: Blockchain.ETHEREUM })
+		await tx.wait()
+
+		await checkBalance(0)
+	})
 })

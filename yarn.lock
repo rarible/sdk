@@ -11239,7 +11239,7 @@ flow-cadut@^0.1.13:
     simple-git "^2.40.0"
     yargs "^15.4.1"
 
-flow-js-testing@^0.1.13, flow-js-testing@~0.1.13:
+flow-js-testing@~0.1.13:
   version "0.1.15"
   resolved "https://registry.yarnpkg.com/flow-js-testing/-/flow-js-testing-0.1.15.tgz#1aec1efa5092e0768ace09218b87133b8c48683d"
   integrity sha512-ouBf4BRB6UEn234pMYnsX/4bYVVxfAYZ1+lTn+kQ/fiSBXdr9faRDx0MjMJ1C372aRP/MuClLGoFNCsiBw2ElA==
@@ -11882,7 +11882,7 @@ globule@^1.0.0:
     lodash "~4.17.10"
     minimatch "~3.0.2"
 
-google-protobuf@^3.11.4, google-protobuf@^3.19.1:
+google-protobuf@^3.11.4:
   version "3.20.1"
   resolved "https://registry.yarnpkg.com/google-protobuf/-/google-protobuf-3.20.1.tgz#1b255c2b59bcda7c399df46c65206aa3c7a0ce8b"
   integrity sha512-XMf1+O32FjYIV3CYu6Tuh5PNbfNEU5Xu22X+Xkdb/DUexFlCzhvv7d5Iirm4AOwn8lv4al1YvIhzGrg2j9Zfzw==
@@ -14344,11 +14344,6 @@ json-buffer@3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/json-buffer/-/json-buffer-3.0.0.tgz#5b1f397afc75d677bde8bcfc0e47e1f9a3d9a898"
   integrity sha1-Wx85evx11ne96Lz8Dkfh+aPZqJg=
-
-json-formatter-js@^2.3.4:
-  version "2.3.4"
-  resolved "https://registry.yarnpkg.com/json-formatter-js/-/json-formatter-js-2.3.4.tgz#0b49b6facd0d54cb220eb65988157c0977a85c6f"
-  integrity sha512-gmAzYRtPRmYzeAT4T7+t3NhTF89JOAIioCVDddl9YDb3ls3kWcskirafw/MZGJaRhEU6fRimGJHl7CC7gaAI2Q==
 
 json-parse-better-errors@^1.0.1, json-parse-better-errors@^1.0.2:
   version "1.0.2"

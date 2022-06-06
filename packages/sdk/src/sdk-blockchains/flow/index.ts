@@ -37,6 +37,7 @@ export function createFlowSdk(
 	const metaUploader = new MetaUploader(Blockchain.FLOW, from, preprocessMeta)
 
 	return {
+
 		nft: {
 			mint: mintService.prepare,
 			burn: new FlowBurn(sdk, blockchainNetwork).burn,
@@ -60,6 +61,9 @@ export function createFlowSdk(
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
 			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

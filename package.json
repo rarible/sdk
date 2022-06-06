@@ -28,6 +28,7 @@
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
     "build-connector-solflare": "yarn workspace @rarible/connector-solflare run build",
+    "build-sdk-examples": "yarn workspace @rarible/sdk-examples run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",

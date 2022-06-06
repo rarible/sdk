@@ -8,13 +8,13 @@ import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { UploadedFile } from "@rarible/sdk/build/sdk-blockchains/union/meta/domain"
 import { FormFileInput } from "../../components/common/form/form-file-input"
+import { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/union/meta/domain"
 
 const nftStorageApiKey = process.env["REACT_APP_NFT_STORAGE_API_KEY"]
 
 interface IUploadMEtaFormProps {
-	onComplete: (response: UploadedFile) => void
+	onComplete: (response: UploadMetaResponse) => void
 }
 
 export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {

@@ -38,7 +38,7 @@ export function createEthereumSdk(
 		polygon: config.polygon,
 	})
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk, network)
+	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
@@ -73,6 +73,9 @@ export function createEthereumSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
+			getBiddingBalance: balanceService.getBiddingBalance,
+			depositBiddingBalance: balanceService.depositBiddingBalance,
+			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {
