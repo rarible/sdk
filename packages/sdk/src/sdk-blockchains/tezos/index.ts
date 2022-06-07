@@ -45,7 +45,7 @@ export function createTezosSdk(
 			buy: fillService.fill,
 			acceptBid: fillService.fill,
 			sell: sellService.sell,
-			sellUpdate: sellService.update,
+			sellUpdate: notImplemented,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
 			cancel: new TezosCancel(maybeProvider, apis, network).cancel,

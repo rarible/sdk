@@ -92,20 +92,10 @@ describe("sell test", () => {
 				value: 10000,
 			}],
 		})
+		const order = await awaitForOrder(sellerSdk, orderId)
 
-		/*
-		await awaitForOrder(sellerSdk, orderId)
+		console.log("order", order)
 
-		const updateAction = await sellerSdk.order.sellUpdate({ orderId })
-		const createdOrderId = await updateAction.submit({ price: "0.01" })
-
-		const updatedOrder = await sellerSdk.apis.order.getOrderById({
-			id: createdOrderId,
-		})
-		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
-
-
-     */
 	}, 2900000)
 
 })
