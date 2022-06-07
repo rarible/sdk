@@ -8,6 +8,30 @@ yarn build
 yarn test
 ```
 
+### Example
+
+```ts
+import { SolanaSdk } from "@rarible/solana-sdk"
+import { SolanaKeypairWallet } from "@rarible/solana-wallet"
+
+// init sdk
+const sdk = SolanaSdk.create({ connection: { cluster: "devnet", commitmentOrConfig: "confirmed" } })
+// generate new wallet
+const wallet = SolanaKeypairWallet.generate()
+
+// airdrop some SOL to new wallet
+const airdropTx = await sdk.connection.requestAirdrop(
+  wallet.publicKey,
+  // 2 * LAMPORTS_PER_SOL
+  2 * 1000000000,
+)
+// awaiting transaction confirmation
+await sdk.confirmTransaction(airdropTx)
+
+// chaking balance
+console.log("current balance: ", await sdk.balances.getBalance(wallet.publicKey))
+```
+
 ## Usage
 
 ### SDK init
