@@ -22,13 +22,12 @@ const wallet = SolanaKeypairWallet.generate()
 // airdrop some SOL to new wallet
 const airdropTx = await sdk.connection.requestAirdrop(
   wallet.publicKey,
-  // 2 * LAMPORTS_PER_SOL
-  2 * 1000000000,
+  2 * 1000000000, // 2 * LAMPORTS_PER_SOL
 )
 // awaiting transaction confirmation
 await sdk.confirmTransaction(airdropTx)
 
-// chaking balance
+// cheking balance
 console.log("current balance: ", await sdk.balances.getBalance(wallet.publicKey))
 ```
 
