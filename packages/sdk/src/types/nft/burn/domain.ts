@@ -19,7 +19,9 @@ export type BurnRequest = {
 	creators?: Creator[]
 } | void
 
-export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction | void>{
+export type BurnResponse = IBlockchainTransaction | void
+
+export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, BurnResponse>{
 	/**
    * Is supports multiple values
    */

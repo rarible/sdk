@@ -25,6 +25,7 @@ import type { ICreateCollectionSimplified } from "./types/nft/deploy/simplified"
 import type { IMintSimplified } from "./types/nft/mint/simplified"
 import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
 import type { ISellSimplified } from "./types/order/sell/simplified"
+import type { IBurnSimplified } from "./types/nft/burn/simplified"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -78,6 +79,7 @@ export interface INftSdk {
 	mintAndSell: IMintAndSell
 	mintAndSellStart: IMintAndSellSimplified["mintAndSellStart"]
 	burn: IBurn
+	burnStart: IBurnSimplified
 	generateTokenId: IGenerateTokenId
 	/**
    * @deprecated Use {@link createCollection} instead

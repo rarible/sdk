@@ -231,6 +231,9 @@ export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain)
 }
 
 export function getEthereumItemId(itemId: ItemId) {
+	if (!itemId) {
+		throw new Error("ItemId has not been splicified")
+	}
 	const [domain, contract, tokenId] = itemId.split(":")
 	if (!isEVMBlockchain(domain)) {
 		throw new Error(`Not an ethereum item: ${itemId}`)

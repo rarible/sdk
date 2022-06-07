@@ -4,7 +4,8 @@ import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
-import { isEVMBlockchain, toEthereumParts } from "./common"
+import type { BurnSimplifiedRequest, BurnSimplifiedResponse } from "../../types/nft/burn/simplified"
+import { getEthereumItemId, isEVMBlockchain, toEthereumParts } from "./common"
 
 export class EthereumBurn {
 	constructor(
@@ -15,14 +16,7 @@ export class EthereumBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest) {
-		if (!prepare.itemId) {
-			throw new Error("ItemId has not been specified")
-		}
-
-		const [domain, contract, tokenId] = prepare.itemId.split(":")
-		if (!isEVMBlockchain(domain)) {
-			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
-		}
+		const { domain, contract, tokenId } = getEthereumItemId(prepare.itemId)
 
 		const item = await this.sdk.apis.nftItem.getNftItemById({
 			itemId: `${contract}:${tokenId}`,
@@ -54,5 +48,9 @@ export class EthereumBurn {
 				},
 			}),
 		}
+	}
+
+	async burnSimplified(request: BurnSimplifiedRequest): Promise<BurnSimplifiedResponse> {
+
 	}
 }
