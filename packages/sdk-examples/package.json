@@ -3,6 +3,9 @@
   "version": "0.9.8",
   "homepage": "",
   "license": "ISC",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
