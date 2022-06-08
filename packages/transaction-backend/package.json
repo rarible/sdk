@@ -11,7 +11,7 @@
   "private": true,
   "scripts": {
     "start": "node ./build/index.js",
-    "build": "yarn clean && tsc --project ./tsconfig.json && yarn copy-files",
+    "build": "yarn clean && yarn tsc --project ./tsconfig.json && yarn copy-files",
     "clean": "rimraf ./build",
     "copy-files": "cp ./src/openapi.yml ./build/",
     "test": "jest --runInBand",
