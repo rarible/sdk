@@ -4384,6 +4384,21 @@
     ethereumjs-util "^7.1.0"
     exponential-backoff "^3.1.0"
 
+"@rarible/protocol-ethereum-sdk@~0.12.72":
+  version "0.12.72"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.72.tgz#88c6a06cc0611359d0c655248c28161d6333f1e3"
+  integrity sha512-SKGUSwtTOyWDRaEOhj6LG393GdLHoPEECHOOf+J0w8ofFw17jajbrYxl3RRtdOwR96LM7iI41ZNUHdbd0fV8WQ==
+  dependencies:
+    "@rarible/action" "~0.5.0"
+    "@rarible/ethereum-api-client" "^0.1.21"
+    "@rarible/ethereum-provider" "^0.12.64"
+    "@rarible/logger" "~0.6.2"
+    "@rarible/utils" "~0.5.0"
+    axios "^0.25.0"
+    eth-sig-util "^3.0.0"
+    ethereumjs-util "^7.1.0"
+    exponential-backoff "^3.1.0"
+
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.4.tgz#39122851d11e8092ce85a3ea88d64bd4df416c35"
@@ -4459,6 +4474,15 @@
   version "0.12.67"
   resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.67.tgz#9c0d7f384bb0b2a5ae62c9c2d5812949d3def77a"
   integrity sha512-4MrrK2SfLTYoKVdwo+dBlnXZZZmpU2XpoCCToIk8Hf3L+jHoyD+MvDh8IlzDZWIh7cxlApCEzX2qE5og4/obrw==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.12.64"
+    eth-rpc-errors "^4.0.3"
+    exponential-backoff "^3.1.0"
+
+"@rarible/web3-ethereum@~0.12.71":
+  version "0.12.71"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.71.tgz#2359378da5e0e1061d34406ccd89faa3d28bc6ae"
+  integrity sha512-DwGPTNwMu48GMY9/pEEcB2IzHI78Exh/qbjBs8lwsPj3S32GQnj/Lu8UVGIENE5LDfaZkfBjkTUkUuznTRDrmQ==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.64"
     eth-rpc-errors "^4.0.3"
@@ -5416,6 +5440,11 @@
   dependencies:
     jest-diff "^27.0.0"
     pretty-format "^27.0.0"
+
+"@types/js-yaml@^4.0.5":
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/@types/js-yaml/-/js-yaml-4.0.5.tgz#738dd390a6ecc5442f35e7f03fa1431353f7e138"
+  integrity sha512-FhpRzf927MNQdRZP0J5DLIdTXhjLYzeUTmLAu69mnVksLH9CJY3IuSeEgbKUki7GQZm0WqDkGzyxju2EZGD2wA==
 
 "@types/json-schema@*", "@types/json-schema@^7.0.3", "@types/json-schema@^7.0.5", "@types/json-schema@^7.0.7", "@types/json-schema@^7.0.8", "@types/json-schema@^7.0.9":
   version "7.0.11"
@@ -18582,6 +18611,11 @@ redent@^3.0.0:
   dependencies:
     indent-string "^4.0.0"
     strip-indent "^3.0.0"
+
+redoc-express@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/redoc-express/-/redoc-express-1.0.0.tgz#2b4f684293adc83f5af3461b583f7f9350bd0e0f"
+  integrity sha512-N/0/WrA6U2rJc9hzLy2Jh2CHrQttIcW02jE4xGCiKkU40uTlpFTcEfu9bpsJlTcpffPXVNhhaIbTwz8kxz+M5A==
 
 refractor@^3.6.0:
   version "3.6.0"
