@@ -28,7 +28,7 @@ describe("Test flow balance function", () => {
 		expect(balance2.toString()).toEqual("0")
 	})
 
-	test("Should get FT balance for account with CurrencyId", async () => {
+	test.skip("Should get FT balance for account with CurrencyId", async () => {
 		const balance1 = await sdk.balances.getBalance(
 			address,
 			toCurrencyId("FLOW:A.0x1654653399040a61.FlowToken")
