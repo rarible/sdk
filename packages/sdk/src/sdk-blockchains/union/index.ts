@@ -1,10 +1,16 @@
-import type { ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { CollectionId, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
-import type { IBalanceSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type {
+	IBalanceSdk,
+	IEthereumSdk,
+	INftSdk,
+	IOrderInternalSdk,
+	IRaribleInternalSdk,
+} from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -17,20 +23,26 @@ import type { ICancel } from "../../types/order/cancel/domain"
 import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
-import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
-import type { ConvertRequest } from "../../types/balances"
+import type {
+	ConvertRequest,
+	IDepositBiddingBalance,
+	GetBiddingBalanceRequest,
+	IWithdrawBiddingBalance,
+} from "../../types/balances"
+import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
-import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
-import type { PrepareSellInternalRequest } from "../../types/order/sell/domain"
+import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
 	polygon: IRaribleInternalSdk,
+	solana: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -38,25 +50,30 @@ export function createUnionSdk(
 			FLOW: flow.balances,
 			TEZOS: tezos.balances,
 			POLYGON: polygon.balances,
+			SOLANA: solana.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
 			FLOW: flow.nft,
 			TEZOS: tezos.nft,
 			POLYGON: polygon.nft,
+			SOLANA: solana.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
 			FLOW: flow.order,
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
+			SOLANA: solana.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
 			FLOW: flow.restriction,
 			TEZOS: tezos.restriction,
 			POLYGON: polygon.restriction,
+			SOLANA: solana.restriction,
 		}),
+		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 	}
 }
 
@@ -159,14 +176,30 @@ class UnionBalanceSdk implements IBalanceSdk {
 	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
+		this.getBiddingBalance = this.getBiddingBalance.bind(this)
 	}
 
 	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
 		return this.instances[getBalanceBlockchain(address, currency)].getBalance(address, currency)
 	}
+
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		return this.instances[request.blockchain].convert(request)
 	}
+
+	getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
+		return this.instances[getBiddingBlockchain(request)].getBiddingBalance(request)
+	}
+
+	depositBiddingBalance: IDepositBiddingBalance = Action.create({
+		id: "send-tx",
+		run: request => this.instances[getBiddingBlockchain(request)].depositBiddingBalance(request),
+	})
+
+	withdrawBiddingBalance: IWithdrawBiddingBalance = Action.create({
+		id: "send-tx",
+		run: request => this.instances[getBiddingBlockchain(request)].withdrawBiddingBalance(request),
+	})
 }
 
 class UnionRestrictionSdk implements IRestrictionSdk {
@@ -174,10 +207,18 @@ class UnionRestrictionSdk implements IRestrictionSdk {
 	}
 
 	canTransfer(
-		itemId: ItemId, from: UnionAddress, to: UnionAddress
+		itemId: ItemId, from: UnionAddress, to: UnionAddress,
 	): Promise<CanTransferResult> {
 		return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
 	}
+}
+
+class UnionEthereumSpecificSdk implements IEthereumSdk {
+	constructor(private readonly ethereumSdk: IEthereumSdk) {
+	}
+
+	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
+	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
 }
 
 const blockchains: Blockchain[] = [
@@ -185,9 +226,12 @@ const blockchains: Blockchain[] = [
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.POLYGON,
+	Blockchain.SOLANA,
 ]
 
-function extractBlockchain(value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId): Blockchain {
+function extractBlockchain(
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId | CurrencyId,
+): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)
@@ -226,6 +270,38 @@ function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency):
 	} else {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
+}
 
+
+function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
+	if ("currency" in currencyOrOrder) {
+		if (isRequestCurrencyAssetType(currencyOrOrder.currency)) {
+			return extractBlockchain(currencyOrOrder.currency)
+		} else {
+			if (isAssetType(currencyOrOrder.currency)) {
+				if ("blockchain" in currencyOrOrder.currency && currencyOrOrder.currency.blockchain) {
+					return currencyOrOrder.currency.blockchain
+				}
+				if ("contract" in currencyOrOrder.currency && currencyOrOrder.currency.contract) {
+					return extractBlockchain(currencyOrOrder.currency.contract)
+				}
+				if ("itemId" in currencyOrOrder.currency && currencyOrOrder.currency.itemId) {
+					return extractBlockchain(currencyOrOrder.currency.itemId)
+				}
+				switch (currencyOrOrder.currency["@type"]) {
+					case "SOLANA_SOL": return Blockchain.SOLANA
+					case "ETH": return Blockchain.ETHEREUM
+					case "XTZ": return Blockchain.TEZOS
+				}
+			}
+		}
+		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currencyOrOrder.currency)}`)
+	} else if ("order" in currencyOrOrder) {
+		return extractBlockchain(currencyOrOrder.order.id)
+	} else if ("orderId" in currencyOrOrder) {
+		return extractBlockchain(currencyOrOrder.orderId)
+	} else {
+		return currencyOrOrder.blockchain
+	}
 
 }

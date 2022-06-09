@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
 import { Box, Typography } from "@mui/material"
+import { useParams } from "react-router-dom"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
@@ -18,6 +19,7 @@ function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
 }
 
 export function BidPage() {
+	const params = useParams()
 	const connection = useContext(ConnectorContext)
 	const blockchain = connection.sdk?.wallet?.blockchain
 
@@ -39,6 +41,7 @@ export function BidPage() {
 								return <BidPrepareForm
 									onComplete={onComplete}
 									disabled={!validateConditions(blockchain)}
+									itemId={params.itemId}
 								/>
 							}
 						},

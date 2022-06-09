@@ -17,6 +17,7 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
+import { EthereumCryptopunk } from "./cryptopunk"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
@@ -36,11 +37,12 @@ export function createEthereumSdk(
 		polygon: config.polygon,
 	})
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk, network)
+	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
+	const cryptopunkService = new EthereumCryptopunk(sdk, network)
 
 	return {
 		nft: {
@@ -65,11 +67,18 @@ export function createEthereumSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
+			getBiddingBalance: balanceService.getBiddingBalance,
+			depositBiddingBalance: balanceService.depositBiddingBalance,
+			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {
 				return Promise.resolve({ success: true })
 			},
+		},
+		ethereum: {
+			wrapCryptoPunk: cryptopunkService.wrap,
+			unwrapCryptoPunk: cryptopunkService.unwrap,
 		},
 	}
 }

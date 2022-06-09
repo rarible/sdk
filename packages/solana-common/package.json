@@ -1,0 +1,31 @@
+{
+  "name": "@rarible/solana-common",
+  "description": "Common code",
+  "version": "0.9.7",
+  "license": "Apache-2.0",
+  "files": [
+    "build"
+  ],
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "clean": "rimraf ./build",
+    "build": "run-s build:*",
+    "build:esm": "tsc --project tsconfig-build.json",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.35.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "8ef3989b1aff76a6345deab53a76df3480d8cf46"
+}

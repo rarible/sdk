@@ -1,4 +1,4 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
@@ -11,15 +11,15 @@ describe.skip("sell test", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
-	const sellerSdk = createRaribleSdk(sellerWallet, "dev", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
-	test.skip("sell NFT test", async () => {
+	test("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -60,10 +60,10 @@ describe.skip("sell test", () => {
 		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 1500000)
 
-	test.skip("sell MT test", async () => {
+	test("sell MT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

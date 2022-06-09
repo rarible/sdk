@@ -1,17 +1,33 @@
+@Library('shared-library') _
+
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
+
 pipeline {
   agent any
 
   options {
     disableConcurrentBuilds()
+    ansiColor('xterm')
   }
 
   parameters {
-    choice(name: 'TEST_ENV', choices: ['development', 'e2e'], description: 'Environment')
-    choice(name: 'BLOCKCHAIN', choices: ['ETHEREUM', 'TEZOS', 'FLOW', 'ALL'], description: 'Blockchain')
+    choice(name: 'TEST_ENV', choices: ['development'], description: 'Environment')
+    choice(name: 'BLOCKCHAIN', choices: ['ethereum', 'tezos', 'flow', 'solana', 'all'], description: 'Blockchain')
+  }
+
+  triggers {
+    parameterizedCron('''
+        0 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=ethereum
+        30 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=tezos
+        0 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=solana
+        30 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=flow
+    ''')
   }
 
   stages {
-
     stage("Run e2e tests") {
       steps {
         withCredentials([string(credentialsId: 'npm-token', variable: 'NPM_TOKEN')]) {
@@ -27,6 +43,11 @@ pipeline {
 
   post {
     always {
+      wrap([$class: 'BuildUser']) {
+        slackSend channel: '#automation-protocol',
+          color: COLOR_MAP[currentBuild.currentResult],
+          message: "*${currentBuild.currentResult}:* Test run for blockchain=*${params.BLOCKCHAIN}*. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
+      }
       cleanWs()
     }
   }

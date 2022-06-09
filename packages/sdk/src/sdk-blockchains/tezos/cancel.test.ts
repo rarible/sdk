@@ -1,5 +1,5 @@
 // eslint-disable-next-line camelcase
-import { toContractAddress } from "@rarible/types"
+import { toCollectionId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { delay, retry } from "../../common/retry"
@@ -7,15 +7,15 @@ import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 
-describe.skip("cancel test", () => {
+describe("cancel test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 
-	test.skip("cancel order", async () => {
+	test("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

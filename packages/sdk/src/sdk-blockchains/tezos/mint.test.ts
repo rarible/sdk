@@ -1,4 +1,4 @@
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
@@ -12,14 +12,14 @@ describe.skip("mint test", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "dev", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 
 	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
 	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
 
 	test.skip("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 		})
 
 		const mintResult = await mintResponse.submit({
@@ -44,7 +44,7 @@ describe.skip("mint test", () => {
 
 	test.skip("mint MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toContractAddress(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",

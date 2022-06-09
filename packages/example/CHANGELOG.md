@@ -3,6 +3,216 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.9](https://github.com/rarible/sdk/compare/v0.9.8...v0.9.9) (2022-06-07)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.8](https://github.com/rarible/sdk/compare/v0.9.7...v0.9.8) (2022-06-06)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.9.3...v0.8.48-hotfix.13) (2022-05-20)
+
+
+
+## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+
+## [0.8.48-hotfix.10](https://github.com/rarible/sdk/compare/v0.9.2...v0.8.48-hotfix.10) (2022-05-04)
+
+
+
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.9.1...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.48-hotfix.4) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
+
+
+
+## [0.8.48-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.1...v0.8.48-hotfix.2) (2022-04-15)
+
+
+
+## [0.8.48-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.0...v0.8.48-hotfix.1) (2022-04-14)
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+
+
+## [0.9.5](https://github.com/rarible/sdk/compare/v0.9.4...v0.9.5) (2022-05-24)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.2](https://github.com/rarible/sdk/compare/v0.9.1...v0.9.2) (2022-04-30)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.1](https://github.com/rarible/sdk/compare/v0.9.0...v0.9.1) (2022-04-29)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+# [0.9.0](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.9.0) (2022-04-29)
+
+
+### Features
+
+* ethereum cryptopunks wrap/unwrap ([#212](https://github.com/rarible/sdk/issues/212)) ([2bcde91](https://github.com/rarible/sdk/commit/2bcde913045824fa9c92b5885bb4d30698c1379b))
+
+
+
+
+
+## [0.8.52-beta.solana3](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana2...v0.8.52-beta.solana3) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.52-beta.solana2](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana1...v0.8.52-beta.solana2) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.52-beta.solana1](https://github.com/rarible/sdk/compare/v0.8.52-beta23...v0.8.52-beta.solana1) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.52-beta23](https://github.com/rarible/sdk/compare/v0.8.52-beta22...v0.8.52-beta23) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.52-beta22](https://github.com/rarible/sdk/compare/v0.8.52-beta21...v0.8.52-beta22) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.52-beta21](https://github.com/rarible/sdk/compare/v0.8.52-beta19...v0.8.52-beta21) (2022-04-28)
+
+
+
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
+
+
+
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-hotfix4) (2022-04-21)
+
+
+
+## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
+
+
+
+## [0.8.52-hotfix2](https://github.com/rarible/sdk/compare/v0.8.52-hotfix1...v0.8.52-hotfix2) (2022-04-19)
+
+
+
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-hotfix1) (2022-04-19)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
 
 **Note:** Version bump only for package example
@@ -73,6 +283,142 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.8.49](https://github.com/rarible/sdk/compare/v0.8.48...v0.8.49) (2022-03-31)
 
 **Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.13](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.12...v0.8.48-hotfix.13) (2022-05-20)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.12](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.11...v0.8.48-hotfix.12) (2022-05-15)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.10](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.9...v0.8.48-hotfix.10) (2022-05-04)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.9](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.8...v0.8.48-hotfix.9) (2022-04-29)
+
+
+### Bug Fixes
+
+* merge changes for wrapper ([81937a3](https://github.com/rarible/sdk/commit/81937a37813f7f8635f09c17b2952ad03f4120ff))
+
+
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.3...v0.8.48-hotfix.4) (2022-04-28)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.3](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.2...v0.8.48-hotfix.3) (2022-04-15)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.2](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.1...v0.8.48-hotfix.2) (2022-04-15)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.1](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.0...v0.8.48-hotfix.1) (2022-04-14)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.48](https://github.com/rarible/sdk/compare/v0.8.47...v0.8.48) (2022-03-30)
+
+
+
+## [0.8.47](https://github.com/rarible/sdk/compare/v0.8.46...v0.8.47) (2022-03-28)
+
+
+### Bug Fixes
+
+* remove lazy mint on polygon ([#169](https://github.com/rarible/sdk/issues/169)) ([e74bc31](https://github.com/rarible/sdk/commit/e74bc314249af7a208c9d4cbae0b2d1e1c752821))
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* example env ([d07406d](https://github.com/rarible/sdk/commit/d07406dd70a2aa9f4a7d26cd8ade4ce49c10350b))
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
 
 
 

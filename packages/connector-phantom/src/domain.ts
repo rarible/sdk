@@ -1,8 +1,4 @@
-import type { Transaction } from "@solana/web3.js"
-import type { ProviderConnectionResult } from "@rarible/connector"
-
-export interface SolanaProviderConnectionResult extends PhantomProvider, ProviderConnectionResult {
-}
+import type { Transaction, PublicKey } from "@solana/web3.js"
 
 type DisplayEncoding = "utf8" | "hex"
 type PhantomEvent = "disconnect" | "connect" | "accountChanged"
@@ -16,8 +12,6 @@ type PhantomRequestMethod =
 export interface ConnectOpts {
 	onlyIfTrusted: boolean
 }
-
-type PublicKey = any
 
 export interface PhantomProvider {
 	publicKey: PublicKey | null

@@ -3,6 +3,122 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.8.48-hotfix.4) (2022-04-28)
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.52...v0.8.48-hotfix.0) (2022-04-11)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+# [0.9.0](https://github.com/rarible/sdk/compare/v0.8.52-hotfix5...v0.9.0) (2022-04-29)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.52-beta.solana3](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana2...v0.8.52-beta.solana3) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.52-beta.solana2](https://github.com/rarible/sdk/compare/v0.8.52-beta.solana1...v0.8.52-beta.solana2) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.52-beta.solana1](https://github.com/rarible/sdk/compare/v0.8.52-beta23...v0.8.52-beta.solana1) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.52-beta23](https://github.com/rarible/sdk/compare/v0.8.52-beta22...v0.8.52-beta23) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.52-beta22](https://github.com/rarible/sdk/compare/v0.8.52-beta21...v0.8.52-beta22) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.52-beta21](https://github.com/rarible/sdk/compare/v0.8.52-beta19...v0.8.52-beta21) (2022-04-28)
+
+
+
+## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
+
+
+
+## [0.8.52-hotfix4](https://github.com/rarible/sdk/compare/v0.8.52-beta18...v0.8.52-hotfix4) (2022-04-21)
+
+
+
+## [0.8.52-hotfix3](https://github.com/rarible/sdk/compare/v0.8.52-hotfix2...v0.8.52-hotfix3) (2022-04-19)
+
+
+
+## [0.8.52-hotfix2](https://github.com/rarible/sdk/compare/v0.8.52-hotfix1...v0.8.52-hotfix2) (2022-04-19)
+
+
+
+## [0.8.52-hotfix1](https://github.com/rarible/sdk/compare/v0.8.52-beta17...v0.8.52-hotfix1) (2022-04-19)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
 ## [0.8.52-hotfix5](https://github.com/rarible/sdk/compare/v0.8.52-hotfix4...v0.8.52-hotfix5) (2022-04-22)
 
 **Note:** Version bump only for package @rarible/connector-beacon
@@ -49,6 +165,61 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 **Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.48-hotfix.8](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.7...v0.8.48-hotfix.8) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.48-hotfix.7](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.6...v0.8.48-hotfix.7) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.48-hotfix.6](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.5...v0.8.48-hotfix.6) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.48-hotfix.5](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.4...v0.8.48-hotfix.5) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.48-hotfix.4](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.3...v0.8.48-hotfix.4) (2022-04-28)
+
+**Note:** Version bump only for package @rarible/connector-beacon
+
+
+
+
+
+## [0.8.48-hotfix.0](https://github.com/rarible/sdk/compare/v0.8.45-hotfix.0...v0.8.48-hotfix.0) (2022-04-11)
+
+
+
+## [0.8.46](https://github.com/rarible/sdk/compare/v0.8.45...v0.8.46) (2022-03-19)
+
+
+### Bug Fixes
+
+* move Example to this monorepo + rework blockchain in EthereumWallet ([#161](https://github.com/rarible/sdk/issues/161)) ([858bacb](https://github.com/rarible/sdk/commit/858bacb094c44fae65cd940ddffc2a3378d8210b))
 
 
 

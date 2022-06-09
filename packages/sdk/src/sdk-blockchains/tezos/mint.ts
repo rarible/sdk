@@ -1,20 +1,19 @@
 import { Action } from "@rarible/action"
+import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { get_address, mint } from "@rarible/tezos-sdk"
 import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import type { ContractAddress } from "@rarible/types"
-import type { TezosProvider, TezosNetwork } from "@rarible/tezos-sdk"
+import type { CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
+import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
-import type { MintRequest } from "../../types/nft/mint/mint-request.type"
-import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import { MintType } from "../../types/nft/mint/domain"
+import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { ITezosAPI, MaybeProvider, TezosMetadataResponse, TezosMetaContent } from "./common"
+import type { ITezosAPI, MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
 import { convertTezosItemId, getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
@@ -39,6 +38,10 @@ export class TezosMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+		if (meta.blockchain !== Blockchain.TEZOS) {
+			throw new Error("Wrong blockchain")
+		}
+
 		const artifact = meta.animation || meta.image
 		return {
 			name: meta.name,
@@ -131,7 +134,7 @@ export async function getCollectionData(
 	}
 }
 
-export function getContractFromRequest(request: HasCollection | HasCollectionId): ContractAddress {
+export function getContractFromRequest(request: HasCollection | HasCollectionId): CollectionId {
 	if ("collection" in request) return request.collection.id
 	if ("collectionId" in request) return request.collectionId
 	throw new Error("Wrong request: collection or collectionId has not been found")

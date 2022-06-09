@@ -21,7 +21,7 @@ describe("get buy transaction", () => {
 	const { provider: providerBuyer } = createE2eProvider(buyerPk)
 	const web3Buyer = new Web3(providerBuyer as any)
 
-	it.skip("get buy transaction and send from buyer", async () => {
+	it("get buy transaction and send from buyer", async () => {
 		const itemOwnerAddress = await ethereum1.getFrom()
 		const [buyerAddress] = await web3Buyer.eth.getAccounts()
 
@@ -57,9 +57,9 @@ describe("get buy transaction", () => {
 		})
 
 		const response = await supertest(app)
-			.post("/orders/fill-tx")
+			.post("/v0.1/orders/fill-tx")
 			.send({
-				from: buyerAddress,
+				from: "ETHEREUM:" + buyerAddress,
 				request: {
 					order: sellOrder,
 					amount: 1,
@@ -73,6 +73,7 @@ describe("get buy transaction", () => {
 		const buyerTxData = {
 			...response.body,
 			nonce: buyerNonce,
+			gasLimit: 200000,
 		}
 		const signedBuyerTx = await web3Buyer.eth.accounts.signTransaction(buyerTxData, buyerPk)
 
@@ -88,7 +89,7 @@ describe("get buy transaction", () => {
 		})
 	})
 
-	it.skip("get buy transaction with orderId and send from buyer", async () => {
+	it("get buy transaction with orderId and send from buyer", async () => {
 		const itemOwnerAddress = await ethereum1.getFrom()
 		const [buyerAddress] = await web3Buyer.eth.getAccounts()
 
@@ -124,11 +125,11 @@ describe("get buy transaction", () => {
 		})
 
 		const response = await supertest(app)
-			.post("/orders/fill-tx")
+			.post("/v0.1/orders/fill-tx")
 			.send({
-				from: buyerAddress,
+				from: "ETHEREUM:" + buyerAddress,
 				request: {
-					orderId: sellOrder.hash,
+					orderId: "ETHEREUM:" + sellOrder.hash,
 					amount: 1,
 					originFees: [],
 					payouts: [],
@@ -140,6 +141,7 @@ describe("get buy transaction", () => {
 		const buyerTxData = {
 			...response.body,
 			nonce: buyerNonce,
+			gasLimit: 200000,
 		}
 		const signedBuyerTx = await web3Buyer.eth.accounts.signTransaction(buyerTxData, buyerPk)
 

@@ -3,9 +3,9 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
-import { TezosBid } from "./bid"
 import { getMaybeTezosProvider, getTezosAPIs } from "./common"
 import { TezosMint } from "./mint"
 import { TezosTransfer } from "./transfer"
@@ -26,7 +26,7 @@ export function createTezosSdk(
 	const sellService = new TezosSell(maybeProvider, apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
-	const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
+	// const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 
@@ -46,13 +46,16 @@ export function createTezosSdk(
 			acceptBid: fillService.fill,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
+			bid: notImplemented,
+			bidUpdate: notImplemented,
 			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
-			convert: balanceService.convert,
+			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,
