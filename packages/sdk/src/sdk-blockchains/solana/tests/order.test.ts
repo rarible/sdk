@@ -19,10 +19,10 @@ describe("Solana order", () => {
 		tokenForBid = await mintToken(sdk)
 	})
 
-	test("create order with large price", async () => {
+	test("create order with precision price", async () => {
 		const mint = await mintToken(sdk)
 		const sell = await sdk.order.sell({ itemId: mint.id })
-		const price = "10000000000"
+		const price = "10000000000.000000001"
 
 		const orderId = await sell.submit({
 			amount: 1,
@@ -30,6 +30,7 @@ describe("Solana order", () => {
 			currency: { "@type": "SOLANA_SOL" },
 		})
 		const order = await retry(10, 2000, () => sdk.apis.order.getOrderById({ id: orderId }))
+		console.log(orderId)
 		expect(order.take.value).toEqual(price)
 	})
 
