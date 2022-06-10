@@ -2,12 +2,13 @@ import { Action } from "@rarible/action"
 import type { Part } from "@rarible/tezos-common"
 import type { OrderDataTypeRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { OrderType, AssetTypeV2, fill_order, get_active_order_type, get_address } from "@rarible/tezos-sdk"
+import { OrderType, AssetTypeV2, fill_order, get_address, get_active_order_type } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber, toBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { Order as TezosOrder } from "tezos-api-client"
 import BigNumber from "bignumber.js"
+import type { Order } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
@@ -17,10 +18,11 @@ import type { UnionPart } from "../../types/order/common"
 import type { IApisSdk } from "../../domain"
 import type { ITezosAPI, MaybeProvider, PreparedOrder } from "./common"
 import {
-	convertOrderToFillOrder,
+	convertFromContractAddress,
+	convertOrderToFillOrder, convertTezosOrderId,
 	covertToLibAsset,
 	getRequiredProvider,
-	getTezosAddress,
+	getTezosAddress, getTezosAssetTypeV2,
 	getTokenIdString,
 } from "./common"
 
@@ -62,7 +64,7 @@ export class TezosFill {
 		})) || []
 	}
 
-	async getPreparedOrder(request: PrepareFillRequest): Promise<PreparedOrder> {
+	async getPreparedOrderLegacy(request: PrepareFillRequest): Promise<PreparedOrder> {
 		if ("order" in request) {
 			return convertOrderToFillOrder(request.order)
 		} else if ("orderId" in request) {
@@ -80,12 +82,28 @@ export class TezosFill {
 		}
 	}
 
-	async getMaxAmount(order: PreparedOrder): Promise<RaribleBigNumber> {
+	async getPreparedOrder(request: PrepareFillRequest): Promise<Order> {
+		if ("order" in request) {
+			return request.order
+		} else if ("orderId" in request) {
+			const [domain, hash] = request.orderId.split(":")
+			if (domain !== Blockchain.TEZOS) {
+				throw new Error("Not an tezos order")
+			}
+			console.log("hash", hash)
+			return this.unionAPI.order.getOrderById({
+				id: request.orderId,
+			})
+		} else {
+			throw new Error("Request error")
+		}
+	}
+
+	async getMaxAmount(order: Order): Promise<RaribleBigNumber> {
 		const provider = getRequiredProvider(this.provider)
-		if (order.take.asset_type.asset_class === "MT" || order.take.asset_type.asset_class === "NFT") {
-			// eslint-disable-next-line camelcase
-			const { contract, token_id } = order.take.asset_type
-			const ownershipId = `${contract}:${token_id.toString()}:${await get_address(provider)}`
+		if (order.take.type["@type"] === "TEZOS_MT" || order.take.type["@type"] === "TEZOS_NFT") {
+			const { contract, tokenId } = order.take.type
+			const ownershipId = `${contract}:${tokenId.toString()}:${await get_address(provider)}`
 			const response = await this.apis.ownership.getNftOwnershipById({
 				ownershipId,
 			})
@@ -95,44 +113,37 @@ export class TezosFill {
 		}
 	}
 
-	isMultiple(order: PreparedOrder): boolean {
-		return order.take.asset_type.asset_class === "MT" || order.make.asset_type.asset_class === "MT"
+	isMultiple(order: Order): boolean {
+		return order.take.type["@type"] === "TEZOS_MT" || order.make.type["@type"] === "TEZOS_MT"
 	}
 
-	private async buyV2(order: PreparedOrder, data: OrderDataTypeRequest) {
+	private async buyV2(order: Order, data: OrderDataTypeRequest, fillRequest: FillRequest) {
 		const provider = getRequiredProvider(this.provider)
-		try {
-			const ftTokenId = new BigNumber(data.buy_asset_token_id || 0)
-			const amount = (order.make.value !== undefined) ? new BigNumber(order.make.value) : new BigNumber(0)
-			const buyRequest: BuyRequest = {
-				asset_contract: data.contract,
-				asset_token_id: new BigNumber(data.token_id),
-				asset_seller: data.seller,
-				// sale_type: argv.sale_type,
-				//todo
-				sale_type: AssetTypeV2.XTZ,
-				sale_asset_contract: data.buy_asset_contract,
-				sale_asset_token_id: ftTokenId,
-				sale_amount: amount,
-				sale_qty: new BigNumber(order.make.value),
-				sale_payouts: [],
-				sale_origin_fees: [],
-				use_all: false,
-			}
-			const isOrderExists = await isExistsSaleOrder(provider, buyRequest)
-			if (isOrderExists) {
-				const op = await buyV2(provider, buyRequest)
-				return op
-			} else {
-				throw new Error("Error order does not exist")
-			}
-		} catch (e) {
-			try {
-				console.error(JSON.stringify(e, null, " "))
-			} catch (e) {
-				console.error(e)
-			}
+		const amount = (order.take.value !== undefined) ? new BigNumber(order.take.value) : new BigNumber(0)
+		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
+		const buyRequest: BuyRequest = {
+			asset_contract: data.contract,
+			asset_token_id: new BigNumber(data.token_id),
+			asset_seller: data.seller,
+			sale_type: currency.type,
+			sale_asset_contract: currency.asset_contract,
+			sale_asset_token_id: currency.asset_token_id,
+			sale_amount: amount,
+			sale_qty: new BigNumber(fillRequest.amount),
+			sale_payouts: convertUnionParts(fillRequest.payouts),
+			sale_origin_fees: convertUnionParts(fillRequest.originFees),
+			use_all: false,
 		}
+		console.log("buyRequest", buyRequest)
+		const isOrderExists = await isExistsSaleOrder(provider, buyRequest)
+		if (isOrderExists) {
+			console.log("before buy", JSON.stringify(buyRequest, null, "  "))
+			const op = await buyV2(provider, buyRequest)
+			return new BlockchainTezosTransaction(op, this.network)
+		} else {
+			throw new Error("Error order does not exist")
+		}
+
 	}
 
 	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
@@ -141,38 +152,21 @@ export class TezosFill {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
-				const provider = getRequiredProvider(this.provider)
-
 				const { make, take } = preparedOrder
-				if (make.asset_type.asset_class === "NFT" || make.asset_type.asset_class === "MT") {
+				if (make.type["@type"] === "TEZOS_NFT" || make.type["@type"] === "TEZOS_MT") {
 					const request: OrderDataTypeRequest = {
-						contract: make.asset_type.contract,
-						token_id: new BigNumber(make.asset_type.token_id),
-						seller: preparedOrder.maker,
-						buy_asset_contract: "contract" in take.asset_type ? take.asset_type.contract : undefined,
-						buy_asset_token_id: take.asset_type.asset_class === "FT" ? getTokenIdString(take.asset_type.token_id) : undefined,
+						contract: convertFromContractAddress(make.type.contract),
+						token_id: new BigNumber(make.type.tokenId),
+						seller: getTezosAddress(preparedOrder.maker),
+						buy_asset_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
+						buy_asset_token_id: take.type["@type"] === "TEZOS_FT" ? getTokenIdString(take.type.tokenId) : undefined,
 					}
 					const type = await get_active_order_type(this.provider.config, request)
-
 					if (type === OrderType.V2) {
-						console.log("preparedOrder", preparedOrder)
+						return this.buyV2(preparedOrder, request, fillRequest)
 					}
 				}
-
-				const request = {
-					amount: new BigNumber(fillRequest.amount),
-					payouts: convertUnionParts(fillRequest.payouts),
-					origin_fees: convertUnionParts(fillRequest.originFees),
-					infinite: fillRequest.infiniteApproval,
-					use_all: true,
-				}
-				const fillResponse = await fill_order(
-					provider,
-					preparedOrder,
-					request,
-					fillRequest.unwrap
-				)
-				return new BlockchainTezosTransaction(fillResponse, this.network)
+				return this.fillV1Order(fillRequest, preparedOrder)
 			},
 		})
 
@@ -185,6 +179,25 @@ export class TezosFill {
 			supportsPartialFill: true,
 			submit,
 		}
+	}
+
+	private async fillV1Order(fillRequest: FillRequest, order: Order) {
+		const provider = getRequiredProvider(this.provider)
+		const request = {
+			amount: new BigNumber(fillRequest.amount),
+			payouts: convertUnionParts(fillRequest.payouts),
+			origin_fees: convertUnionParts(fillRequest.originFees),
+			infinite: fillRequest.infiniteApproval,
+			use_all: true,
+		}
+		const preparedOrder = convertOrderToFillOrder(order)
+		const fillResponse = await fill_order(
+			provider,
+			preparedOrder,
+			request,
+			fillRequest.unwrap
+		)
+		return new BlockchainTezosTransaction(fillResponse, this.network)
 	}
 }
 

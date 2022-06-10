@@ -138,8 +138,8 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
 					node_url: "https://test-tezos-node.rarible.org",
 					chain_id: "NetXnHfVqm9iesp",
-					sales: "KT1QaGwLxoBqeQaWpe7HUyEFnXQfGi9P2g6a",
-					sales_storage: "KT1S3AAy7XH7qtmYHkvvPtxJj8MLxUX1FrVH",
+					sales: "KT199VxDKE7TLxoHwc3pbu9NgKhaUSki8x9i",
+					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
 					bid: "KT1UcBbv2D84mZ9tZx4MVLbCNyC5ihJERED2",
 					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
@@ -166,8 +166,8 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1AJXNtHfFMB4kuJJexdevH2XeULivjThEX",
 					node_url: "https://dev-tezos-node.rarible.org",
 					chain_id: "NetXfHjxW3qBoxi",
-					sales: "KT1LaV45iMDES1nXELGsnQgRHKzct2wc6EcT",
-					sales_storage: "KT1TEnB3APwPN4CGePGdAEA6uihdFfx6Skmq",
+					sales: "KT1Tm7AogCrKA13rCzovyoKQVeUKK9TtV7xL",
+					sales_storage: "KT19i8Dc5Bibei6YrtdzUt27B9UBkQo6oLsG",
 					transfer_manager: "KT1Xj6gsE694LkMg25SShYkU7dGzagm7BTSK",
 					bid: "KT1H9fa1QF4vyAt3vQcj65PiJJNG7vNVrkoW",
 					bid_storage: "KT19c5jc4Y8so1FWbrRA8CucjUeNXZsP8yHr",
@@ -479,7 +479,7 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 			try {
 				ftType = await get_ft_type(config, contract)
 			} catch (e) {
-
+				console.log("error get_ft_type", e, contract)
 			}
 			if (ftType === AssetTypeV2.FA2) {
 				return {
