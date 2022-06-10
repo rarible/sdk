@@ -13,5 +13,7 @@ README.md
 **/node_modules
 scripts
 
+# packages
 packages
 !packages/transaction-backend
+packages/transaction-backend/node_modules
