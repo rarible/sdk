@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction-backend",
-  "version": "0.9.7",
+  "version": "0.9.10-beta.0",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -36,12 +36,12 @@
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "~0.12.66",
-    "@types/js-yaml": "^4.0.5",
-    "@types/node-fetch": "^2.6.1",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
     "@types/jest": "^27.4.1",
+    "@types/js-yaml": "^4.0.5",
     "@types/node": "^17.0.24",
+    "@types/node-fetch": "^2.6.1",
     "@types/supertest": "^2.0.12",
     "jest": "^27.2.7",
     "nodemon": "^2.0.15",
