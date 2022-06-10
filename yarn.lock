@@ -4463,6 +4463,13 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
 
+"@rarible/utils@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.9.1.tgz#007eef8b762818b8569273e892f97b20cf07868c"
+  integrity sha512-Z+olAMTwpnu+y1rOyFlWobjFHKsWCxXWef5UyjfkbPtHUUM3R+0zt7Xp92FZWx/By4bJ9wmVvZMCDvomTPL+7g==
+  dependencies:
+    bignumber.js "^9.0.0"
+
 "@rarible/utils@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.5.0.tgz#e111e5cad0ba962747bf541eae3515b642b559de"

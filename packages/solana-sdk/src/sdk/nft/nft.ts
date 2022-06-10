@@ -1,5 +1,5 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { u64 } from "@solana/spl-token"
+import type { BigNumberValue } from "@rarible/utils"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
 import type { TransactionResult } from "../../types"
@@ -22,14 +22,14 @@ export interface ITransferRequest {
 	tokenAccount: PublicKey
 	to: PublicKey
 	mint: PublicKey
-	amount: number | u64
+	amount: BigNumberValue
 }
 
 export interface IBurnRequest {
 	signer: IWalletSigner
 	mint: PublicKey
 	tokenAccount: PublicKey
-	amount: number | u64
+	amount: BigNumberValue
 	owner?: PublicKey
 	closeAssociatedAccount?: boolean
 }

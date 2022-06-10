@@ -15,6 +15,7 @@ export function getAuctionHouse(currency: CurrencyType, auctionHouseMapping?: So
 		if (auctionHouseMapping && auctionHouseMapping["SOLANA_SOL"]) {
 			return toPublicKey(auctionHouseMapping["SOLANA_SOL"].address)
 		}
+		return toPublicKey("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
 	} else if (currency["@type"] === "SOLANA_NFT") {
 		const mintAddress = extractAddress(currency.itemId)
 		if (auctionHouseMapping && auctionHouseMapping[mintAddress]) {
@@ -22,7 +23,7 @@ export function getAuctionHouse(currency: CurrencyType, auctionHouseMapping?: So
 		}
 	}
 
-	return toPublicKey("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
+	throw new Error("Auction House for specified currency not found")
 }
 
 export async function getAuctionHouseFee(

@@ -37,12 +37,12 @@ export class SolanaBalance {
 	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
 		const assetType = getCurrencyAssetType(currency)
 		if (assetType["@type"] === "SOLANA_SOL") {
-			return (await this.sdk.balances.getBalance(extractPublicKey(address), { commitment: "max" })).toString()
+			return await this.sdk.balances.getBalance(extractPublicKey(address), { commitment: "max" })
 		} else if (assetType["@type"] === "SOLANA_NFT") {
-			return (await this.sdk.balances.getTokenBalance(
+			return await this.sdk.balances.getTokenBalance(
 				extractPublicKey(address),
 				extractPublicKey(assetType.itemId),
-			)).toString()
+			)
 		} else {
 			throw new Error("Unsupported asset type")
 		}
@@ -79,13 +79,11 @@ export class SolanaBalance {
 		}
 		const auctionHouse = await this.getAuctionHouse(request)
 
-		const balance = await this.sdk.auctionHouse.getEscrowBalance({
+		return await this.sdk.auctionHouse.getEscrowBalance({
 			auctionHouse,
 			signer: this.wallet!.provider,
 			wallet: extractPublicKey(request.walletAddress),
 		})
-
-		return balance.toString()
 	}
 
 	depositBiddingBalance = Action
@@ -100,7 +98,7 @@ export class SolanaBalance {
 				const prepare = await this.sdk.auctionHouse.depositEscrow({
 					auctionHouse,
 					signer: this.wallet!.provider,
-					amount: parseFloat(request.amount.toString()),
+					amount: request.amount,
 				})
 
 				return await prepare.submit("processed")
@@ -120,7 +118,7 @@ export class SolanaBalance {
 				const prepare = await this.sdk.auctionHouse.withdrawEscrow({
 					auctionHouse,
 					signer: this.wallet!.provider,
-					amount: parseFloat(request.amount.toString()),
+					amount: request.amount,
 				})
 
 				return await prepare.submit("processed")

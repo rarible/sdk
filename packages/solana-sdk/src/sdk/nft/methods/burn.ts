@@ -1,14 +1,15 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { u64 } from "@solana/spl-token"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { BigNumberValue } from "@rarible/utils"
+import { alignBn, bigNumToBn } from "../../../common/utils"
 
 export interface ITokenBurnRequest {
 	connection: Connection
 	signer: IWalletSigner
 	tokenAccount: PublicKey
 	mint: PublicKey
-	amount: number | u64
+	amount: BigNumberValue
 	owner?: PublicKey // owner authority for tokenAccount
 	close?: boolean // close the token account after burning the token
 }
@@ -26,7 +27,8 @@ export async function getTokenBurnInstructions(
 			request.tokenAccount,
 			request.owner ?? request.signer.publicKey,
 			[],
-			request.amount,
+			alignBn(bigNumToBn(request.amount), 8),
+			//parseFloat(request.amount.toString())
 		),
 	)
 

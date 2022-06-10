@@ -9,7 +9,7 @@ describe("solana nft sdk", () => {
 
 		const { mint, tokenAccount } = await mintToken({ sdk, wallet })
 
-		expect(await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toEqual(1)
+		expect((await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toString()).toEqual("1")
 
 		const wallet2 = genTestWallet()
 
@@ -22,8 +22,8 @@ describe("solana nft sdk", () => {
 		})
 		const transferTx = await transferPrepare.submit("max")
 		expect(transferTx).toBeTruthy()
-		expect(await sdk.balances.getTokenBalance(wallet2.publicKey, mint)).toEqual(1)
-		expect(await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toEqual(0)
+		expect((await sdk.balances.getTokenBalance(wallet2.publicKey, mint)).toString()).toEqual("1")
+		expect((await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toString()).toEqual("0")
 	})
 
 	test("Should mint nft & burn", async () => {
@@ -39,6 +39,6 @@ describe("solana nft sdk", () => {
 		})
 		const burnTx = await burnPrepare.submit("finalized")
 		expect(burnTx).toBeTruthy()
-		expect(await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toEqual(0)
+		expect((await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toString()).toEqual("0")
 	})
 })
