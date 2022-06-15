@@ -15,6 +15,7 @@ import { TezosCancel } from "./cancel"
 import { TezosBalance } from "./balance"
 import { TezosCreateCollection } from "./create-collection"
 import { TezosCanTransfer } from "./restriction"
+import { TezosBid } from "./bid"
 
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
@@ -23,10 +24,10 @@ export function createTezosSdk(
 ): IRaribleInternalSdk {
 	const apis = getTezosAPIs(network)
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
-	const sellService = new TezosSell(maybeProvider, apis)
+	const sellService = new TezosSell(maybeProvider, apis, _apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
-	// const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
+	const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, _apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 
@@ -45,10 +46,10 @@ export function createTezosSdk(
 			buy: fillService.fill,
 			acceptBid: fillService.fill,
 			sell: sellService.sell,
-			sellUpdate: notImplemented,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
+			sellUpdate: sellService.update,
+			bid: bidService.bid,
+			bidUpdate: bidService.update,
+			cancel: new TezosCancel(maybeProvider, apis, _apis, network).cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

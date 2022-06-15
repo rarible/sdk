@@ -4395,10 +4395,10 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-common@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.21.tgz#686dffa6529df4ac362aa61c5e647c2bfa3f6ea6"
-  integrity sha512-4qDQLEvLHLFjvxo1Jy6zr4JshBbRi4rwSRGYYzGgW16HiOOMsByGjJNxnRqtSFSkoqdOxZl5mswtNNh20QSSqg==
+"@rarible/tezos-common@^0.1.23":
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.23.tgz#e651523757fb92b0a83e7458cd1004dcd7071e4a"
+  integrity sha512-sZR+pWFD/AQBY0Gqi0W4tn0TaHdMMA8F8o9WOI2VFaQ/a0BD06c4aEbo6rp1cwzlS5N+Nphx4+KsEWFJm4lIhA==
   dependencies:
     "@taquito/taquito" "^12.0.0"
     bignumber.js "^9.0.1"
@@ -4406,20 +4406,22 @@
     node-fetch "2.6.7"
     text-encoder "^0.0.4"
 
-"@rarible/tezos-contracts@^0.1.21":
-  version "0.1.21"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.21.tgz#84696902dc2c244e4c9efd8bb6b17ac18e499295"
-  integrity sha512-zoThWpAm1Wt4nxDLcqYRhX5jpcJqpv29tsy41my9yVFVrrfF+863aEBbhaahxrwDGZS/2EfIEzlPKaVaknLWJA==
+"@rarible/tezos-contracts@^0.1.23":
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.23.tgz#511f46a5ae8aaa0585a5517b95fe2cfc2ea6cfa6"
+  integrity sha512-LCvwRyTaAwWWRQ1Jb0P4/Cptx8W9nludxsfUYRxd2Qt4JU5mkHKHtEHMLkhLL5DYx3Cc2zb2/3NW+pwiLTDBqw==
   dependencies:
-    "@rarible/tezos-common" "^0.1.21"
+    "@rarible/tezos-common" "^0.1.23"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@file:../rarible-tezos-sdk/packages/sdk":
-  version "0.1.22"
+"@rarible/tezos-sdk@~0.1.23":
+  version "0.1.23"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.23.tgz#8a1ffc4f12ec38457c2b8513d321677c8e93db87"
+  integrity sha512-k/7BH/lIol8ia6MjxU9oEFphSn5GlF6jOe69bIn84sCbKe7TxIzLSYz0VCcjyp0TpR21XDwYXtZ8P3+4yWI9Nw==
   dependencies:
     "@airgap/beacon-sdk" "2.3.13"
-    "@rarible/tezos-common" "^0.1.21"
-    "@rarible/tezos-contracts" "^0.1.21"
+    "@rarible/tezos-common" "^0.1.23"
+    "@rarible/tezos-contracts" "^0.1.23"
     "@taquito/beacon-wallet" "12.0.3"
     "@taquito/signer" "^12.0.0"
     "@taquito/taquito" "^12.0.0"

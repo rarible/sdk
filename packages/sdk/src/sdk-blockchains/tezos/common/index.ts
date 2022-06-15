@@ -1,4 +1,12 @@
-import type { AssetType, CollectionId, ItemId, Order, UnionAddress } from "@rarible/api-client"
+import type {
+	AssetType,
+	CollectionId,
+	ItemId,
+	Order, TezosFTAssetType,
+	TezosMTAssetType,
+	TezosNFTAssetType, TezosXTZAssetType,
+	UnionAddress,
+} from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
 	Asset as TezosLibAsset,
@@ -268,7 +276,7 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 		}]
 	}
 
-	return convertOrderPayout(payouts)
+	return convertUnionParts(payouts)
 }
 
 export function getSupportedCurrencies(): CurrencyType[] {
@@ -309,8 +317,8 @@ export function convertOrderToOrderForm(order: Order): OrderForm {
 		signature: order.signature,
 		data: {
 			data_type: "V1",
-			payouts: convertOrderPayout(order.data.payouts),
-			origin_fees: convertOrderPayout(order.data.originFees),
+			payouts: convertUnionParts(order.data.payouts),
+			origin_fees: convertUnionParts(order.data.originFees),
 		},
 	}
 }
@@ -413,8 +421,8 @@ export function convertTezosToUnionAsset(assetType: TezosClientAssetType): Asset
 	}
 }
 
-export function convertOrderPayout(payout?: Array<Payout>): Array<Part> {
-	return payout?.map(p => ({
+export function convertUnionParts(parts?: Array<Payout>): Array<Part> {
+	return parts?.map(p => ({
 		account: getTezosAddress(p.account),
 		value: new BigNumber(p.value),
 	})) || []
@@ -508,4 +516,17 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 
 export function getTokenIdString(tokenId: BigNumber | string | undefined): string | undefined {
 	return tokenId !== undefined ? tokenId.toString(): undefined
+}
+
+export function isNftAssetType(assetType: AssetType): assetType is TezosNFTAssetType {
+	return assetType["@type"] === "TEZOS_NFT"
+}
+export function isMTAssetType(assetType: AssetType): assetType is TezosMTAssetType {
+	return assetType["@type"] === "TEZOS_MT"
+}
+export function isXtzAssetType(assetType: AssetType): assetType is TezosXTZAssetType {
+	return assetType["@type"] === "XTZ"
+}
+export function isFTAssetType(assetType: AssetType): assetType is TezosFTAssetType {
+	return assetType["@type"] === "TEZOS_FT"
 }

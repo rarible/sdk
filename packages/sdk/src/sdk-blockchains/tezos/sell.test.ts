@@ -3,6 +3,7 @@ import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
+import { retry } from "../../common/retry"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
@@ -48,16 +49,21 @@ describe("sell test", () => {
 			}],
 		})
 
+		console.log("before await order", orderId)
 		await awaitForOrder(sellerSdk, orderId)
+		console.log("before sell update", orderId)
 		const updateAction = await sellerSdk.order.sellUpdate({
 			orderId,
 		})
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
+		console.log("after sell update", createdOrderId)
 
-		const updatedOrder = await sellerSdk.apis.order.getOrderById({
-			id: createdOrderId,
+		await retry(10, 2000, async () => {
+			const updatedOrder = await sellerSdk.apis.order.getOrderById({
+				id: createdOrderId,
+			})
+			expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 		})
-		expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
 	}, 1500000)
 
 	test("sell MT test", async () => {
