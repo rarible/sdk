@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.9-connectors.fix.1](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.9-connectors.fix.1) (2022-06-15)
+
+
+### Bug Fixes
+
+* transaction-backend build command ([73f74ae](https://github.com/rarible/sdk/commit/73f74aeb7bea29c499d7b555bd834962ecf3753f))
+
+
+
+
+
 ## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend
