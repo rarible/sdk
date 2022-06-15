@@ -65,3 +65,16 @@ const wallet = new TezosWallet(provider)
 const sdk = createRaribleSdk(wallet, "dev")
 ```
 #### Flow
+
+```typescript
+import { FlowWallet } from "@rarible/sdk-wallet"
+import * as fcl from "@onflow/fcl"
+import { createFlowAuth } from "@rarible/flow-test-common"
+import { createRaribleSdk } from "@rarible/sdk"
+
+export function initFlowWallet(accountAddress: string, privateKey: string) {
+	const flowAuth = createFlowAuth(fcl, "testnet", accountAddress, privateKey)
+	const raribleFlowWallet = new FlowWallet(fcl, flowAuth)
+	const raribleSdk = createRaribleSdk(wallet, "dev")
+}
+```
