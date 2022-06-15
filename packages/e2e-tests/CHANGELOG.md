@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.9-connectors.fix.3](https://github.com/rarible/sdk/compare/v0.9.9-connectors.fix.2...v0.9.9-connectors.fix.3) (2022-06-15)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
 ## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.9-connectors.fix.3](https://github.com/rarible/sdk/compare/v0.9.9-connectors.fix.2...v0.9.9-connectors.fix.3) (2022-06-15)
+
+
+### Bug Fixes
+
+* sdk-wallet dependency ([4b8fe36](https://github.com/rarible/sdk/commit/4b8fe369a724b8f8ef6f9bd4f9d981c88dedf4ba))
+
+
+
+
+
 ## [0.9.9-connectors.fix.2](https://github.com/rarible/sdk/compare/v0.9.9-connectors.fix.1...v0.9.9-connectors.fix.2) (2022-06-15)
 
 
