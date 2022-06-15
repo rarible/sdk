@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.9-connectors.fix.2](https://github.com/rarible/sdk/compare/v0.9.9-connectors.fix.1...v0.9.9-connectors.fix.2) (2022-06-15)
+
+
+### Bug Fixes
+
+* disable tests ([3bc4550](https://github.com/rarible/sdk/commit/3bc4550792018a8d53b15555d6e820301125b804))
+
+
+
+
+
 ## [0.9.9-connectors.fix.1](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.9-connectors.fix.1) (2022-06-15)
 
 
