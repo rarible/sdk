@@ -13,7 +13,7 @@ import { getMaybeTezosProvider, getTezosAPIs } from "./common"
 import { TezosSell } from "./sell"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const sellerWallet = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)

@@ -10,7 +10,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { getMaybeTezosProvider, getTezosAPIs } from "./common"
 import { TezosSell } from "./sell"
 
-describe("cancel test", () => {
+describe.skip("cancel test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const env = "development"
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
