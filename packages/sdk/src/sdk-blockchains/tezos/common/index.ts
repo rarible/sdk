@@ -154,6 +154,7 @@ export function getMaybeTezosProvider(
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
 					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
+					union_api: "https://staging-api.rarible.org/v0.1",
 				},
 			}
 		}
@@ -182,6 +183,7 @@ export function getMaybeTezosProvider(
 					sig_checker: "KT1ShTc4haTgT76z5nTLSQt3GSTLzeLPZYfT",
 					tzkt: "http://dev-tezos-tzkt.rarible.org",
 					dipdup: "http://dev-tezos-indexer.rarible.org/v1/graphql",
+					union_api: "https://dev-api.rarible.org/v0.1",
 				},
 			}
 		}
@@ -210,6 +212,7 @@ export function getMaybeTezosProvider(
 					sig_checker: "",
 					tzkt: "https://api.mainnet.tzkt.io",
 					dipdup: "",
+					union_api: "https://api.rarible.org/v0.1",
 				},
 			}
 		}

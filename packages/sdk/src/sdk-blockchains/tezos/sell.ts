@@ -130,7 +130,6 @@ export class TezosSell {
 			: undefined
 
 		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
-		console.log("exp date", expirationDate)
 		const tezosRequest: OrderFormV2 = {
 			s_asset_contract: contract,
 			s_asset_token_id: new BigNumber(tokenId),
