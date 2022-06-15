@@ -21,7 +21,7 @@
     "@rarible/flow-sdk": "~0.5.47",
     "@rarible/protocol-ethereum-sdk": "~0.12.68",
     "@rarible/solana-sdk": "^0.9.8",
-    "@rarible/tezos-sdk": "~0.1.19",
+    "@rarible/tezos-sdk": "~0.1.23",
     "@rarible/types": "~0.9.3"
   },
   "devDependencies": {

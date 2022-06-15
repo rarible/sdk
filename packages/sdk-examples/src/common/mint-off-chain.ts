@@ -3,7 +3,7 @@ import { toCollectionId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
 
-async function mintOffChain(wallet: BlockchainWallet, contractAddress: string) {
+export async function mintOffChain(wallet: BlockchainWallet, contractAddress: string) {
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	const mintAction = await sdk.nft.mint({

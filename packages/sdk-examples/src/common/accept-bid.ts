@@ -2,7 +2,7 @@ import { createRaribleSdk } from "@rarible/sdk"
 import { toOrderId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
-async function acceptBid(wallet: BlockchainWallet) {
+export async function acceptBid(wallet: BlockchainWallet) {
 	const sdk = createRaribleSdk(wallet, "dev")
 	const acceptBidResponse = await sdk.order.acceptBid({
 		orderId: toOrderId("<BIDDER_ORDER_ID>"),

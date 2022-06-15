@@ -4,7 +4,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
-async function mintAndSell(wallet: BlockchainWallet, currency: RequestCurrency) {
+export async function mintAndSell(wallet: BlockchainWallet, currency: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	const mintAction = await sdk.nft.mintAndSell({

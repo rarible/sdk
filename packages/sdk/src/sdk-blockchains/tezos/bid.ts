@@ -25,7 +25,7 @@ import { notImplemented } from "../../common/not-implemented"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
-	convertOrderPayout,
+	convertUnionParts,
 	covertToLibAsset,
 	getMakerPublicKey,
 	getPayouts,
@@ -111,7 +111,7 @@ export class TezosBid {
 						},
 						price: new BigNumber(request.price),
 						payouts: await getPayouts(provider, request.payouts),
-						origin_fees: convertOrderPayout(request.originFees),
+						origin_fees: convertUnionParts(request.originFees),
 					}
 				)
 
