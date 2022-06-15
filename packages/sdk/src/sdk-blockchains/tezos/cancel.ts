@@ -56,7 +56,6 @@ export class TezosCancel {
 
 			const v1OrderForm = convertOrderToOrderForm(order)
 
-			console.log("cancel v1 order", v1OrderForm)
 			const tx = await cancel(
 				getRequiredProvider(this.provider),
 				v1OrderForm,
@@ -77,8 +76,6 @@ export class TezosCancel {
 			sale_asset_token_id: currency.asset_token_id,
 			sale_type: currency.type,
 		}
-		console.log("cancel v2 order", JSON.stringify(order, null, "  "))
-		console.log("cancel v2 order request", JSON.stringify(cancelRequest, null, "  "))
 		const canceledOrder = await cancelV2(provider, cancelRequest)
 		if (!canceledOrder) {
 			throw new Error("Cancel transaction has not been returned")
