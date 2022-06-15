@@ -15,7 +15,7 @@ describe("get balance", () => {
 	//uusd
 	const fa12 = "TEZOS:KT1WsXMAzcre2MNUjNkGtVQLpsTnNFhBJhLv"
 
-	test("get balance XTZ", async () => {
+	test.skip("get balance XTZ", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1gqL7i1s578qj3NzgKmu6C5j3RdSBewGBo"),
 			{ "@type": "XTZ" }
