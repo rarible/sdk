@@ -4352,10 +4352,10 @@
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.43":
-  version "0.5.43"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.43.tgz#3434d44a47ddbab0498a13dc3a85687ecf7e1575"
-  integrity sha512-cHmTugbWuJhlF6CNRroNEsS4OnEyiZkwOoVAbE+s15Lt/CTTAnbKhyJbDBOtzhsr0b++u9u52DZGuxrdJl8l+Q==
+"@rarible/flow-test-common@~0.5.48-alpha.1":
+  version "0.5.48-alpha.1"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.48-alpha.1.tgz#dd72b14f714d2252f0c6d96355430a6e8347dd14"
+  integrity sha512-vd6AoCfJvxshinhQZleyR7vt9UacewbNHcxuRYnrSMZvUFi8jLknuDZTl0LRrRJBeFdEY3CRnXug1Q6TC642fQ==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
