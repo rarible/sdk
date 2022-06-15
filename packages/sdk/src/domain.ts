@@ -98,10 +98,15 @@ export interface IOrderSdk {
 	 */
 	fill: IFill
 	buy: IFill
+	buyStart: IFill
 	acceptBid: IFill
+	acceptBidStart: IFill
 	bid: IBid
+	bidStart: IBid
 	bidUpdate: IBidUpdate
+	bidUpdateStart: IBidUpdate
 	cancel: ICancel
+	cancelStart: ICancel
 }
 
 export interface IBalanceSdk {
