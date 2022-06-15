@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  version: "v0.1"
+  title: "Rarible Transaction Backend API"
+servers:
+  - description: "Production (mainnet) Environment"
+    url: "https://transaction.rarible.org/"
+  - description: "Staging Environment"
+    url: "https://transaction-staging.rarible.org/"
+  - description: "Development Environment"
+    url: "https://dev-transaction.rarible.org/"
+paths:
+  /v0.1/orders/buy-tx:
+    post:
+      operationId: "buy-tx"
+      description: "Get transaction data for NFT purchase"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FillRequest"
+        required: true
+      responses:
+        "200":
+          description: "OK"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FillResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: "#/components/responses/ServerError"
+components:
+  schemas:
+    FillRequest:
+      type: object
+      required:
+        - request
+        - from
+      properties:
+        from:
+          $ref: "#/components/schemas/UnionAddress"
+        request:
+          type: object
+          required:
+            - orderId
+            - amount
+          properties:
+            orderId:
+              $ref: "#/components/schemas/OrderId"
+            amount:
+              type: number
+              example: 1
+              description: "Amount of NFT to get from offer order"
+            originFees:
+              type: array
+              description: "Additional fees for marketplace"
+              items:
+                $ref: "#/components/schemas/Part"
+            payouts:
+              type: array
+              description: "Payouts"
+              items:
+                $ref: "#/components/schemas/Part"
+    FillResponse:
+      type: object
+      properties:
+        from:
+          $ref: "#/components/schemas/EthereumAddress"
+        to:
+          $ref: "#/components/schemas/EthereumAddress"
+        value:
+          $ref: "#/components/schemas/BigInteger"
+        data:
+          type: string
+          example: "0xe99a3f800000081bd4df76e423639f8876010d0a8192bb4..."
+          description: "Transaction data for signing"
+    UnionAddress:
+      type: string
+      description: "Blockchain address in Union format `${blockchainGroup}:${token}`"
+      example: "ETHEREUM:0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"
+    OrderId:
+      type: string
+      description: "Rarible OrderId in Union format `${blockchainGroup}:${orderId}`"
+      example: "ETHEREUM:0x3b304559e5975b0b6aa37cecf58808f1426b11a8af9fb37d59282fe65c125e36"
+    EthereumAddress:
+      type: string
+      example: "0x4765273c477c2dc484da4f1984639e943adccfeb"
+    Part:
+      type: object
+      properties:
+        account:
+          $ref: "#/components/schemas/UnionAddress"
+        value:
+          type: integer
+      required:
+        - account
+        - value
+    BigInteger:
+      type: string
+      description: "Big number representation"
+      example: "123456"
+    ApiErrorResponse:
+      required:
+        - "message"
+      type: object
+      properties:
+        message:
+          type: string
+          description: "Error message"
+  responses:
+    BadRequest:
+      description: "Bad Request"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"
+    ServerError:
+      description: "Internal Server Error"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiErrorResponse"

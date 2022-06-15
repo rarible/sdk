@@ -12,7 +12,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId } from "./common"
+import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId, toEthereumParts } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -53,26 +53,16 @@ export class EthereumFill {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
-					payouts: fillRequest.payouts?.map(payout => ({
-						account: convertToEthereumAddress(payout.account),
-						value: payout.value,
-					})),
-					originFees: fillRequest.originFees?.map(fee => ({
-						account: convertToEthereumAddress(fee.account),
-						value: fee.value,
-					})),
+					payouts: toEthereumParts(fillRequest.payouts),
+					originFees: toEthereumParts(fillRequest.originFees),
 				}
 				break
 			}
 			case "OPEN_SEA_V1": {
 				request = {
 					order,
-					...order.take.assetType.assetClass === "ETH" ? {
-						originFees: fillRequest.originFees?.map(payout => ({
-							account: convertToEthereumAddress(payout.account),
-							value: payout.value,
-						})),
-					} : {},
+					originFees: order.take.assetType.assetClass === "ETH" ? toEthereumParts(fillRequest.originFees) : [],
+					payouts: toEthereumParts(fillRequest.payouts),
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
@@ -115,7 +105,7 @@ export class EthereumFill {
 			case "OPEN_SEA_V1": {
 				return {
 					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
-					payoutsSupport: PayoutsSupport.NONE,
+					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: false,
 				}
 			}

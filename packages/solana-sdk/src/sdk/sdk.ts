@@ -9,10 +9,12 @@ import type { ISolanaBalancesSdk } from "./balance/balance"
 import type { ISolanaNftSdk } from "./nft/nft"
 import type { ISolanaOrderSdk } from "./order/order"
 import type { ISolanaCollectionSdk } from "./collection/collection"
+import type { ISolanaAuctionHouseSdk } from "./auctionHouse/auction-house"
 import { SolanaBalancesSdk } from "./balance/balance"
 import { SolanaNftSdk } from "./nft/nft"
 import { SolanaOrderSdk } from "./order/order"
 import { SolanaCollectionSdk } from "./collection/collection"
+import { SolanaAuctionHouseSdk } from "./auctionHouse/auction-house"
 import type { PreparedTransaction } from "./prepared-transaction"
 
 export interface IRaribleSolanaSdk {
@@ -48,6 +50,7 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 	public readonly nft: ISolanaNftSdk
 	public readonly order: ISolanaOrderSdk
 	public readonly collection: ISolanaCollectionSdk
+	public readonly auctionHouse: ISolanaAuctionHouseSdk
 
 	constructor(
 		public readonly connection: Connection,
@@ -60,6 +63,7 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 		this.nft = new SolanaNftSdk(connection, this.debugLogger)
 		this.order = new SolanaOrderSdk(connection, this.debugLogger)
 		this.collection = new SolanaCollectionSdk(connection, this.debugLogger)
+		this.auctionHouse = new SolanaAuctionHouseSdk(connection, this.debugLogger)
 	}
 
 	confirmTransaction(...args: Parameters<typeof Connection.prototype.confirmTransaction>) {
@@ -94,7 +98,10 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 	}
 
 	static create(config: ISolanaSdkConfig): SolanaSdk {
-		const connection = new Connection(clusterApiUrl(config.connection.cluster), config.connection.commitmentOrConfig)
+		const connection = new Connection(
+			clusterApiUrl(config.connection.cluster),
+			config.connection.commitmentOrConfig ?? "confirmed"
+		)
 		return new SolanaSdk(connection, config.connection.cluster, { debug: !!config.debug })
 	}
 }

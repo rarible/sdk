@@ -15,15 +15,15 @@ pipeline {
 
   parameters {
     choice(name: 'TEST_ENV', choices: ['development'], description: 'Environment')
-    choice(name: 'BLOCKCHAIN', choices: ['ETHEREUM', 'TEZOS', 'FLOW', 'SOLANA', 'ALL'], description: 'Blockchain')
+    choice(name: 'BLOCKCHAIN', choices: ['ethereum', 'tezos', 'flow', 'solana', 'all'], description: 'Blockchain')
   }
 
   triggers {
     parameterizedCron('''
-        0 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=ETHEREUM
-        30 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=TEZOS
-        0 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=SOLANA
-        30 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=FLOW
+        0 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=ethereum
+        30 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=tezos
+        0 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=solana
+        30 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=flow
     ''')
   }
 

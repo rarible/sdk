@@ -2,10 +2,10 @@ import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { PreparedTransaction } from "../prepared-transaction"
-import { getAuctionHouseSellInstructions } from "./auction-house/sell"
-import { getActionHouseBuyInstructions } from "./auction-house/buy"
-import { getAuctionHouseExecuteSellInstructions } from "./auction-house/execute-sell"
-import { getAuctionHouseCancelInstructions } from "./auction-house/cancel"
+import { getAuctionHouseSellInstructions } from "./methods/sell"
+import { getActionHouseBuyInstructions } from "./methods/buy"
+import { getAuctionHouseExecuteSellInstructions } from "./methods/execute-sell"
+import { getAuctionHouseCancelInstructions } from "./methods/cancel"
 
 export interface ISellRequest {
 	auctionHouse: PublicKey

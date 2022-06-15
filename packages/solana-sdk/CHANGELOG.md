@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.8](https://github.com/rarible/sdk/compare/v0.9.7...v0.9.8) (2022-06-06)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+
+### Features
+
+* solana escrow account & bidding balance managing ([#239](https://github.com/rarible/sdk/issues/239)) ([4b4e6a9](https://github.com/rarible/sdk/commit/4b4e6a9497c90af21fe94d841408a9971eab3f30))
+
+
+
+
+
 ## [0.9.3](https://github.com/rarible/sdk/compare/v0.9.2...v0.9.3) (2022-05-19)
 
 

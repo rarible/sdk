@@ -1,20 +1,19 @@
 import { toPublicKey } from "@rarible/solana-common"
 import { SolanaSdk } from "../sdk/sdk"
-import { genTestWallet, getTestWallet, mintToken, requestSol } from "./common"
+import { genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
 
 describe("solana order sdk", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
 
 	test("Should sell & buy nft", async () => {
 		const sellerWallet = getTestWallet()
-		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
 		const { mint } = await mintToken({ sdk, wallet: sellerWallet })
 
 		const price = 0.01
 		const tokenAmount = 1
 
 		const { txId: sellTxId } = await (await sdk.order.sell({
-			auctionHouse: toPublicKey(auctionHouse),
+			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			signer: sellerWallet,
 			price: price,
 			tokensAmount: tokenAmount,
@@ -26,7 +25,7 @@ describe("solana order sdk", () => {
 		await requestSol(sdk.connection, buyerWallet.publicKey, 0.1)
 
 		const { txId: buyTxId } = await (await sdk.order.buy({
-			auctionHouse: toPublicKey(auctionHouse),
+			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			signer: buyerWallet,
 			price: price,
 			tokensAmount: tokenAmount,
@@ -35,14 +34,14 @@ describe("solana order sdk", () => {
 		expect(buyTxId).toBeTruthy()
 
 		console.log(JSON.stringify({
-			auctionHouse,
+			auctionHouse: TEST_AUCTION_HOUSE,
 			sellerWallet: sellerWallet.publicKey.toString(),
 			buyerWallet: buyerWallet.publicKey.toString(),
 			mint: mint,
 		}, null, " "))
 
 		const { txId: finalTxId } = await (await sdk.order.executeSell({
-			auctionHouse: toPublicKey(auctionHouse),
+			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			signer: buyerWallet,
 			buyerWallet: buyerWallet.publicKey,
 			sellerWallet: sellerWallet.publicKey,
@@ -57,14 +56,13 @@ describe("solana order sdk", () => {
 
 	test("Should buy & execute sell in one call", async () => {
 		const sellerWallet = getTestWallet()
-		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
 		const { mint } = await mintToken({ sdk, wallet: sellerWallet })
 
 		const price = 0.01
 		const tokenAmount = 1
 
 		const { txId: sellTxId } = await (await sdk.order.sell({
-			auctionHouse: toPublicKey(auctionHouse),
+			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			signer: sellerWallet,
 			price: price,
 			tokensAmount: tokenAmount,
@@ -76,7 +74,7 @@ describe("solana order sdk", () => {
 		await requestSol(sdk.connection, buyerWallet.publicKey, 0.1)
 
 		const buyPrepare = await sdk.order.buy({
-			auctionHouse: toPublicKey(auctionHouse),
+			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			signer: buyerWallet,
 			price: price,
 			tokensAmount: tokenAmount,
@@ -84,7 +82,7 @@ describe("solana order sdk", () => {
 		})
 
 		const executeSellPrepare = await sdk.order.executeSell({
-			auctionHouse: toPublicKey(auctionHouse),
+			auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			signer: buyerWallet,
 			buyerWallet: buyerWallet.publicKey,
 			sellerWallet: sellerWallet.publicKey,

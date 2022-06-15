@@ -1,12 +1,17 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "homepage": "",
   "license": "ISC",
   "private": true,
   "scripts": {
     "test": "echo run e2e-test to run e2e-tests",
     "e2e-tests": "jest --runInBand",
+    "e2e-tests-all": "jest --runInBand --testPathPattern=tests",
+    "e2e-tests-ethereum": "jest --runInBand --testPathPattern=tests/ethereum/smoke",
+    "e2e-tests-tezos": "jest --runInBand --testPathPattern=tests/tezos/smoke",
+    "e2e-tests-solana": "jest --runInBand --testPathPattern=tests/solana/smoke",
+    "e2e-tests-flow": "jest --runInBand --testPathPattern=tests/flow/smoke",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "verify": "tsc --noEmit"
   },
@@ -14,7 +19,7 @@
     "@rarible/api-client": "0.0.13-beta4",
     "@rarible/ethereum-sdk-test-common": "~0.12.66",
     "@rarible/flow-test-common": "~0.5.43",
-    "@rarible/sdk-wallet": "^0.9.6",
+    "@rarible/sdk-wallet": "^0.9.7",
     "@rarible/types": "~0.9.3"
   },
   "devDependencies": {
