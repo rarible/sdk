@@ -1,5 +1,4 @@
 import { createRaribleSdk } from "@rarible/sdk/build"
-import fetch from "node-fetch"
 import { initWallet, updateNodeGlobalVars } from "../common"
 
 if (process.env["BUYOUT_ITEM_ID"] === undefined) {
@@ -35,4 +34,4 @@ async function buy(item: string) {
 }
 
 // Buying 1 item of https://rinkeby.rarible.com/token/0x1AF7A7555263F275433c6Bb0b8FdCD231F89B1D7:18661571940073987827662103527955627190048515004732602540856362757661044768826?tab=owners
-buy(process.env["BUYOUT_ITEM_ID"]).then(_ => {})
+buy(process.env["BUYOUT_ITEM_ID"])

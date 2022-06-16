@@ -3,7 +3,7 @@ import { toItemId, toOrderId } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 //Available only for ethereum
-async function acceptBidOnCollection(wallet: BlockchainWallet) {
+export async function acceptBidOnCollection(wallet: BlockchainWallet) {
 	const sdk = createRaribleSdk(wallet, "dev")
 	const acceptBidAction = await sdk.order.acceptBid({
 		orderId: toOrderId("<COLLECTION_ORDER_ID>"),

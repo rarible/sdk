@@ -3,7 +3,7 @@ import { toItemId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
-async function sellAndUpdate(wallet: BlockchainWallet, assetType: RequestCurrency) {
+export async function sellAndUpdate(wallet: BlockchainWallet, assetType: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "dev")
 	const sellAction = await sdk.order.sell({
 		itemId: toItemId("<YOUR_ITEM_ID>"),

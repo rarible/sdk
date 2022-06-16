@@ -178,7 +178,7 @@ export class EthereumBid {
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
 				const expirationDate = request.expirationDate instanceof Date
-					? Math.round(request.expirationDate.getTime() / 1000)
+					? Math.floor(request.expirationDate.getTime() / 1000)
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(request.currency)
 				return {
