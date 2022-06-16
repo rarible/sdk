@@ -3,17 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.9.10-beta.1](https://github.com/rarible/sdk/compare/v0.9.10-beta.0...v0.9.10-beta.1) (2022-06-10)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
+## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 
+### Features
 
-
-
-## [0.9.10-beta.0](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10-beta.0) (2022-06-10)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
+* fill v2 orders ([#249](https://github.com/rarible/sdk/issues/249)) ([77c9ea7](https://github.com/rarible/sdk/commit/77c9ea78b90be69298603c376308744435d611b4))
 
 
 

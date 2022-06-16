@@ -10,7 +10,7 @@ import { retry } from "@rarible/protocol-ethereum-sdk/build/common/retry"
 import supertest from "supertest"
 import { app } from "../app"
 
-describe("get buy transaction", () => {
+describe.skip("get buy transaction", () => {
 	const { provider } = createE2eProvider("ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9")
 	const web3Seller = new Web3(provider as any)
 	const ethereum1 = new Web3Ethereum({ web3: web3Seller, gas: 1000000 })
@@ -150,7 +150,7 @@ describe("get buy transaction", () => {
 		}
 		await web3Buyer.eth.sendSignedTransaction(signedBuyerTx.rawTransaction)
 
-		await retry(5, 2000, async () => {
+		await retry(40, 2000, async () => {
 			await sdkItemOwner.apis.nftOwnership.getNftOwnershipById({
 				ownershipId: `${mintResult.itemId}:${buyerAddress}`,
 			})

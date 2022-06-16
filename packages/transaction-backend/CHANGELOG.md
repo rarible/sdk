@@ -3,12 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.9.10-beta.0](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10-beta.0) (2022-06-10)
+## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 
 ### Bug Fixes
 
 * transaction-backend build command ([73f74ae](https://github.com/rarible/sdk/commit/73f74aeb7bea29c499d7b555bd834962ecf3753f))
+
+
+### Features
+
+* fill v2 orders ([#249](https://github.com/rarible/sdk/issues/249)) ([77c9ea7](https://github.com/rarible/sdk/commit/77c9ea78b90be69298603c376308744435d611b4))
 
 
 
