@@ -56,6 +56,6 @@ export class FortmaticConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const sdk = await this.instance.pipe(first()).toPromise()
-		return await sdk.user.isLoggedIn()
+		return !!(await sdk?.user.isLoggedIn())
 	}
 }

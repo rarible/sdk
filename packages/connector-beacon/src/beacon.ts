@@ -114,7 +114,7 @@ export class BeaconConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const instance = await this.instance.pipe(first()).toPromise()
-		const account = await instance.beaconWallet.client.getActiveAccount()
+		const account = await instance?.beaconWallet.client.getActiveAccount()
 		return !!account
 	}
 }

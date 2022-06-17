@@ -135,6 +135,6 @@ export class SolflareConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const instance = await this.instance.pipe(first()).toPromise()
-		return !!instance.isConnected
+		return !!instance?.isConnected
 	}
 }

@@ -1,5 +1,4 @@
-import { Observable } from "rxjs"
-import { fromPromise } from "rxjs/internal-compatibility"
+import { Observable, from } from "rxjs"
 
 export function getObservable<Raw, T>(
 	provider: any,
@@ -23,7 +22,7 @@ export function getObservable<Raw, T>(
 			}
 		})
 	} else {
-		return fromPromise((async () => {
+		return from((async () => {
 			const raw = await getRaw(provider)
 			return mapRaw(raw)
 		})())
