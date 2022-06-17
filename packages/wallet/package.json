@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.9.11-beta.solana.2",
+  "version": "0.9.11-beta.solana.3",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
