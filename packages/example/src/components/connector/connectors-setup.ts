@@ -79,6 +79,10 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 				network: TezosNetwork.MAINNET
 			}
 		case "dev":
+			return {
+				accessNode: "https://dev-tezos-node.rarible.org/",
+				network: TezosNetwork.CUSTOM
+			}
 		case "testnet":
 		case "staging":
 		default:
