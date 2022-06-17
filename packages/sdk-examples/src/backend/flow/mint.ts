@@ -1,21 +1,21 @@
-import { createRaribleSdk } from "@rarible/sdk/src"
+import { createRaribleSdk } from "@rarible/sdk"
 import { toCollectionId } from "@rarible/types"
 import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
 import { updateNodeGlobalVars } from "../common"
-import { initWalletWeb3WithHDWalletWithEstimate } from "./common"
+import { initFlowWallet } from "./common"
 
 updateNodeGlobalVars()
 
 async function mint() {
 	try {
-		if (!process.env["ETH_PRIVATE_KEY"]) {
-			throw new Error("Expected ETH_PRIVATE_KEY env variable")
+		if (!process.env["FLOW_PRIVATE_KEY"] || !process.env["FLOW_ACCOUNT_ADDRESS"]) {
+			throw new Error("Provide FLOW_PRIVATE_KEY and FLOW_ACCOUNT_ADDRESS as environment variables")
 		}
-		const raribleSdkWallet = await initWalletWeb3WithHDWalletWithEstimate(process.env["ETH_PRIVATE_KEY"])
+		const raribleSdkWallet = await initFlowWallet(process.env["FLOW_ACCOUNT_ADDRESS"], process.env["FLOW_PRIVATE_KEY"])
 		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging")
 
 		const mintAction = await raribleSdk.nft.mint({
-			collectionId: toCollectionId("POLYGON:0x5a3ed919c18137dcc67fbea707d7e41f3e498bef"),
+			collectionId: toCollectionId("FLOW:A.ebf4ae01d1284af8.RaribleNFT"),
 		})
 		const response = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -32,4 +32,4 @@ async function mint() {
 	}
 }
 
-mint()
+mint().then(_ => {})

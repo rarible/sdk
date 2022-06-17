@@ -1,18 +1,34 @@
-import type { AbstractConnectionProvider, ConnectionProvider, EthereumProviderConnectionResult } from "@rarible/connector"
+import type {
+	AbstractConnectionProvider,
+	ConnectionProvider,
+	EthereumProviderConnectionResult,
+} from "@rarible/connector"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { Blockchain } from "@rarible/api-client"
+import { estimate } from "@rarible/estimate-middleware"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 export function mapEthereumWallet<O>(
 	provider: AbstractConnectionProvider<O, EthereumProviderConnectionResult>
 ): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new EthereumWallet(new Web3Ethereum({ web3: new Web3(state.provider), from: state.address })),
-		address: state.address,
-		blockchain: getEvmBlockchain(state.chainId),
-	}))
+	return provider.map(state => {
+		const blockchain = getEvmBlockchain(state.chainId)
+		const web3 = blockchain === Blockchain.POLYGON ?
+			new Web3(estimate(state.provider, { force: true, threshold: 1.1 })) :
+			new Web3(estimate(state.provider))
+		return {
+			wallet: new EthereumWallet(
+				new Web3Ethereum({
+					web3,
+					from: state.address,
+				})
+			),
+			address: state.address,
+			blockchain,
+		}
+	})
 }
 
 function getEvmBlockchain(chainId: number): Blockchain.POLYGON | Blockchain.ETHEREUM {
