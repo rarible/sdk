@@ -41,7 +41,7 @@ export class BlockchainEthereumTransaction implements IBlockchainTransaction {
 			case "polygon": return `https://polygonscan.com/tx/${this.hash()}`
 			case "ropsten": return `https://ropsten.etherscan.io/tx/${this.hash()}`
 			case "rinkeby": return `https://rinkeby.etherscan.io/tx/${this.hash()}`
-			case "e2e": return ""
+			case "testnet": return `https://rinkeby.etherscan.io/tx/${this.hash()}`
 			default: throw new Error("Unsupported transaction network")
 		}
 	}

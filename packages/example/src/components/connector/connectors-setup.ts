@@ -44,8 +44,7 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 			return 1
 		case "dev":
 			return 3
-		case "e2e":
-			return 17
+		case "testnet":
 		case "staging":
 		default:
 			return 4
@@ -61,7 +60,7 @@ function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {
 				walletDiscovery: "https://flow-wallet.blocto.app/authn",
 			}
 		case "dev":
-		case "e2e":
+		case "testnet":
 		case "staging":
 		default:
 			return {
@@ -80,7 +79,7 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 				network: TezosNetwork.MAINNET
 			}
 		case "dev":
-		case "e2e":
+		case "testnet":
 		case "staging":
 		default:
 			return {
