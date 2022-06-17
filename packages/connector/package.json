@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector",
-  "version": "0.9.7",
+  "version": "0.9.11-beta.0",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {

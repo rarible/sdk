@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* sdk-examples - add examples for polygon ([271728b](https://github.com/rarible/sdk/commit/271728b769be7477a7580930e382ee45f6dd8dd3))
+* tezos mint generator update ([#257](https://github.com/rarible/sdk/issues/257)) ([ffeb16e](https://github.com/rarible/sdk/commit/ffeb16e213f1016fcc5700350968591c13f543e1))
+
+
+
+
+
 ## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 

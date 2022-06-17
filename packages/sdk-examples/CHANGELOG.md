@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* added flow nodejs wallet initialisation ([ff7b335](https://github.com/rarible/sdk/commit/ff7b3352ec3bc639b2c405e94886deb789cb2d7c))
+* sdk-examples - add examples for polygon ([271728b](https://github.com/rarible/sdk/commit/271728b769be7477a7580930e382ee45f6dd8dd3))
+
+
+
+
+
 ## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 

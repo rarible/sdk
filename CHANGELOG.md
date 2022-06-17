@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* added flow nodejs wallet initialisation ([ff7b335](https://github.com/rarible/sdk/commit/ff7b3352ec3bc639b2c405e94886deb789cb2d7c))
+* sdk-examples - add examples for polygon ([271728b](https://github.com/rarible/sdk/commit/271728b769be7477a7580930e382ee45f6dd8dd3))
+* tezos mint generator update ([#257](https://github.com/rarible/sdk/issues/257)) ([ffeb16e](https://github.com/rarible/sdk/commit/ffeb16e213f1016fcc5700350968591c13f543e1))
+* update flow deps for backend txs ([81edb21](https://github.com/rarible/sdk/commit/81edb2102d47f96d47cddca77c7953289fa9927b))
+* update flow-sdk for new spork support ([f8d528e](https://github.com/rarible/sdk/commit/f8d528ea572288d6a2aa28753b200d5988e716ff))
+
+
+### Features
+
+* ledger connect in injected connector ([2775327](https://github.com/rarible/sdk/commit/2775327f767266a9f7496d1f021861b9e5a12163))
+
+
+
+
+
 ## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 
