@@ -12,7 +12,6 @@ export const app = express()
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.post("/v0.1/orders/fill-tx", ordersController.postFillAction)
 app.post("/v0.1/orders/buy-tx", ordersController.postFillAction)
 
 app.get("/openapi.yml", (req, res) => {

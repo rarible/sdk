@@ -6,7 +6,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 
-describe("transfer test", () => {
+describe.skip("transfer test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
 	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
 

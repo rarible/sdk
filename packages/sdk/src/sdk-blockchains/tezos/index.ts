@@ -23,11 +23,10 @@ export function createTezosSdk(
 ): IRaribleInternalSdk {
 	const apis = getTezosAPIs(network)
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
-	const sellService = new TezosSell(maybeProvider, apis)
+	const sellService = new TezosSell(maybeProvider, apis, _apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
-	// const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
-	const fillService = new TezosFill(maybeProvider, apis, network)
+	const fillService = new TezosFill(maybeProvider, apis, _apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 
 	return {
@@ -48,7 +47,7 @@ export function createTezosSdk(
 			sellUpdate: sellService.update,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
+			cancel: new TezosCancel(maybeProvider, apis, _apis, network).cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

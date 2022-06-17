@@ -1,4 +1,12 @@
-import type { AssetType, CollectionId, ItemId, Order, UnionAddress } from "@rarible/api-client"
+import type {
+	AssetType,
+	CollectionId,
+	ItemId,
+	Order, TezosFTAssetType,
+	TezosMTAssetType,
+	TezosNFTAssetType, TezosXTZAssetType,
+	UnionAddress,
+} from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
 	Asset as TezosLibAsset,
@@ -138,14 +146,15 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
 					node_url: "https://test-tezos-node.rarible.org",
 					chain_id: "NetXnHfVqm9iesp",
-					sales: "KT1QaGwLxoBqeQaWpe7HUyEFnXQfGi9P2g6a",
-					sales_storage: "KT1S3AAy7XH7qtmYHkvvPtxJj8MLxUX1FrVH",
+					sales: "KT199VxDKE7TLxoHwc3pbu9NgKhaUSki8x9i",
+					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
 					bid: "KT1UcBbv2D84mZ9tZx4MVLbCNyC5ihJERED2",
 					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
 					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
+					union_api: "https://staging-api.rarible.org/v0.1",
 				},
 			}
 		}
@@ -166,14 +175,15 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1AJXNtHfFMB4kuJJexdevH2XeULivjThEX",
 					node_url: "https://dev-tezos-node.rarible.org",
 					chain_id: "NetXfHjxW3qBoxi",
-					sales: "KT1Kgi6KFHbPLg6WfUJqQpUGpdQ4VLrrEXAe",
-					sales_storage: "KT1TQPSPCJpnDbErXY9x2jGBmGj8bgbodZVc",
+					sales: "KT1Tm7AogCrKA13rCzovyoKQVeUKK9TtV7xL",
+					sales_storage: "KT19i8Dc5Bibei6YrtdzUt27B9UBkQo6oLsG",
 					transfer_manager: "KT1Xj6gsE694LkMg25SShYkU7dGzagm7BTSK",
 					bid: "KT1H9fa1QF4vyAt3vQcj65PiJJNG7vNVrkoW",
 					bid_storage: "KT19c5jc4Y8so1FWbrRA8CucjUeNXZsP8yHr",
 					sig_checker: "KT1ShTc4haTgT76z5nTLSQt3GSTLzeLPZYfT",
-					tzkt: "https://api.ithacanet.tzkt.io",
-					dipdup: "",
+					tzkt: "http://dev-tezos-tzkt.rarible.org",
+					dipdup: "http://dev-tezos-indexer.rarible.org/v1/graphql",
+					union_api: "https://dev-api.rarible.org/v0.1",
 				},
 			}
 		}
@@ -202,6 +212,7 @@ export function getMaybeTezosProvider(
 					sig_checker: "",
 					tzkt: "https://api.mainnet.tzkt.io",
 					dipdup: "",
+					union_api: "https://api.rarible.org/v0.1",
 				},
 			}
 		}
@@ -268,7 +279,7 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 		}]
 	}
 
-	return convertOrderPayout(payouts)
+	return convertUnionParts(payouts)
 }
 
 export function getSupportedCurrencies(): CurrencyType[] {
@@ -309,8 +320,8 @@ export function convertOrderToOrderForm(order: Order): OrderForm {
 		signature: order.signature,
 		data: {
 			data_type: "V1",
-			payouts: convertOrderPayout(order.data.payouts),
-			origin_fees: convertOrderPayout(order.data.originFees),
+			payouts: convertUnionParts(order.data.payouts),
+			origin_fees: convertUnionParts(order.data.originFees),
 		},
 	}
 }
@@ -413,8 +424,8 @@ export function convertTezosToUnionAsset(assetType: TezosClientAssetType): Asset
 	}
 }
 
-export function convertOrderPayout(payout?: Array<Payout>): Array<Part> {
-	return payout?.map(p => ({
+export function convertUnionParts(parts?: Array<Payout>): Array<Part> {
+	return parts?.map(p => ({
 		account: getTezosAddress(p.account),
 		value: new BigNumber(p.value),
 	})) || []
@@ -479,7 +490,7 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 			try {
 				ftType = await get_ft_type(config, contract)
 			} catch (e) {
-
+				console.log("error get_ft_type", e, contract)
 			}
 			if (ftType === AssetTypeV2.FA2) {
 				return {
@@ -504,4 +515,21 @@ export async function getTezosAssetTypeV2(config: Config, type: AssetType): Prom
 			throw new Error("Invalid asset type")
 		}
 	}
+}
+
+export function getTokenIdString(tokenId: BigNumber | string | undefined): string | undefined {
+	return tokenId !== undefined ? tokenId.toString(): undefined
+}
+
+export function isNftAssetType(assetType: AssetType): assetType is TezosNFTAssetType {
+	return assetType["@type"] === "TEZOS_NFT"
+}
+export function isMTAssetType(assetType: AssetType): assetType is TezosMTAssetType {
+	return assetType["@type"] === "TEZOS_MT"
+}
+export function isXtzAssetType(assetType: AssetType): assetType is TezosXTZAssetType {
+	return assetType["@type"] === "XTZ"
+}
+export function isFTAssetType(assetType: AssetType): assetType is TezosFTAssetType {
+	return assetType["@type"] === "TEZOS_FT"
 }

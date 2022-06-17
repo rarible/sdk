@@ -14,29 +14,30 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
 
 describe.skip("bid test", () => {
+	const env = "development"
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
 	)
-	const itemOwnerSdk = createRaribleSdk(itemOwner, "staging", { logs: LogsLevel.DISABLED })
+	const itemOwnerSdk = createRaribleSdk(itemOwner, env, { logs: LogsLevel.DISABLED })
 
 	const bidderWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
 
-	const bidderSdk = createRaribleSdk(bidderWallet, "staging", { logs: LogsLevel.DISABLED })
+	const bidderSdk = createRaribleSdk(bidderWallet, env, { logs: LogsLevel.DISABLED })
 
 	const nullFundsWallet = createTestWallet(
 		"edskS2YAR6wms6ZWckr7wJYW1cFaEgy9mk1FbnjABsDMyh" +
     "7CUpvCS8Hfy12BcjvsQc1eprKKBMqAEc6FBgCnLLu33KvzYgsd9c")
 
-	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, "staging", { logs: LogsLevel.DISABLED })
+	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, env, { logs: LogsLevel.DISABLED })
 
-	const eurTzContract = "KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"
-	const nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	const mtContract = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	const eurTzContract = "KT1HvTfYG7DgeujAQ1LDvCHiQc29VMycoJh5"
+	const nftContract: string = "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx"
+	const mtContract = "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC"
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
-	test.skip("bid NFT test", async () => {
+	test("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})
@@ -52,6 +53,7 @@ describe.skip("bid test", () => {
 		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		// make bid by bidder
+		console.log("before bid")
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
 			amount: 1,
@@ -66,6 +68,7 @@ describe.skip("bid test", () => {
 		await awaitForOrder(bidderSdk, orderId)
 
 		// update bid price
+		console.log("before bid update")
 		const updateAction = await bidderSdk.order.bidUpdate({ orderId })
 		await updateAction.submit({ price: "0.000004" })
 
@@ -78,6 +81,7 @@ describe.skip("bid test", () => {
 			}
 		})
 
+		console.log("before accept bid")
 		// accept bid by item owner
 		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId })
 		const fillBidResult = await acceptBidResponse.submit({
@@ -86,6 +90,7 @@ describe.skip("bid test", () => {
 		})
 		await fillBidResult.wait()
 
+		console.log("before check order status")
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 

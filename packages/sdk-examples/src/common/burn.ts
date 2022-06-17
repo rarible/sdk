@@ -2,7 +2,7 @@ import { createRaribleSdk } from "@rarible/sdk"
 import { toItemId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
-async function burn(wallet: BlockchainWallet) {
+export async function burn(wallet: BlockchainWallet) {
 	const sdk = createRaribleSdk(wallet, "dev")
 
 	const burnAction = await sdk.nft.burn({

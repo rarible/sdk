@@ -31,4 +31,4 @@ async function mint() {
 	}
 }
 
-mint().then(_ => {})
+mint()
