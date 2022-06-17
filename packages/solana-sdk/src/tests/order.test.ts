@@ -183,7 +183,7 @@ describe("solana order sdk", () => {
 		const price = 0.01
 		const tokenAmount = 1
 
-		const { txId: sellTxId } = await (await sdk.order.sell({
+		const { txId: sellTxId } = await (await sdk.order.buy({
 			auctionHouse: toPublicKey(auctionHouse),
 			signer: sellerWallet,
 			price: price,
@@ -200,5 +200,24 @@ describe("solana order sdk", () => {
 			mint: mint,
 		})).submit("max")
 		expect(txId).toBeTruthy()
+	})
+
+	test("Should set big sell price", async () => {
+		const sellerWallet = getTestWallet()
+		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+		const { mint } = await mintToken({ sdk, wallet: sellerWallet })
+
+		const price = "1000000000"
+		const tokenAmount = 1
+
+		const { txId: sellTxId } = await (await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: sellerWallet,
+			price: price,
+			tokensAmount: tokenAmount,
+			mint: mint,
+		})).submit("max")
+		expect(sellTxId).toBeTruthy()
+		console.log(sellTxId)
 	})
 })

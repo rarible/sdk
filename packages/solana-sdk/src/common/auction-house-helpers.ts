@@ -1,10 +1,10 @@
+import type BigNumber from "bignumber.js"
 import type { Connection } from "@solana/web3.js"
 import { PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import type { BN } from "@project-serum/anchor"
 import { Program, Provider } from "@project-serum/anchor"
 import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID } from "./contracts"
-import { bnToBuffer } from "./utils"
+import { bigNumToBuffer } from "./utils"
 
 export async function loadAuctionHouseProgram(
 	connection: Connection,
@@ -30,8 +30,8 @@ export async function getAuctionHouseTradeState (
 	tokenAccount: PublicKey,
 	treasuryMint: PublicKey,
 	tokenMint: PublicKey,
-	tokenSize: BN,
-	buyPrice: BN,
+	tokenSize: BigNumber,
+	buyPrice: BigNumber,
 ): Promise<[PublicKey, number]> {
 	return await PublicKey.findProgramAddress(
 		[
@@ -41,8 +41,8 @@ export async function getAuctionHouseTradeState (
 			tokenAccount.toBuffer(),
 			treasuryMint.toBuffer(),
 			tokenMint.toBuffer(),
-			bnToBuffer(buyPrice, "le", 8),
-			bnToBuffer(tokenSize, "le", 8),
+			bigNumToBuffer(buyPrice, "le", 8),
+			bigNumToBuffer(tokenSize, "le", 8),
 		],
 		AUCTION_HOUSE_PROGRAM_ID,
 	)

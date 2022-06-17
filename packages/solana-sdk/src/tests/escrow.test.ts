@@ -15,10 +15,10 @@ describe("solana sdk escrow", () => {
 				auctionHouse: toPublicKey(TEST_AUCTION_HOUSE),
 			})
 			if (expected !== null) {
-				if (expected + (withDeposit ? ACCOUNT_DEPOSIT : 0) !== balance) {
+				if ((expected + (withDeposit ? ACCOUNT_DEPOSIT : 0)).toString() !== balance.toString()) {
 					throw new Error(`wrong balance: ${balance} expected: ${ expected + (withDeposit ? ACCOUNT_DEPOSIT : 0) }`)
 				}
-				expect(balance).toEqual(expected + (withDeposit ? ACCOUNT_DEPOSIT : 0))
+				expect(balance.toString()).toEqual((expected + (withDeposit ? ACCOUNT_DEPOSIT : 0)).toString())
 			}
 			return balance
 		})
@@ -27,7 +27,7 @@ describe("solana sdk escrow", () => {
 	const checkWalletBalance = async (wallet: IWalletSigner, expected: number | null, minusDeposit: boolean = true) => {
 		const balance = await sdk.balances.getBalance(wallet.publicKey)
 		if (expected !== null) {
-			expect(balance).toBeCloseTo(expected - (minusDeposit ? 0.00179372 : 0), 4)
+			expect(parseFloat(balance.toString())).toBeCloseTo(expected - (minusDeposit ? 0.00179372 : 0), 4)
 		}
 		return balance
 	}
