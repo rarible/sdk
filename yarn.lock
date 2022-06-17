@@ -4334,28 +4334,28 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.30":
-  version "0.5.30"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.30.tgz#28ed15acce758ecfb2188c35eaa8f62978363c80"
-  integrity sha512-D9AdlmXC5fNnq/eO9dLakvY1IDJeUiwbXrEPmwmCdswt4jJp4y7pR/w3Rri7RUmEM42E3AYNXIMS0EV+O+V1QA==
+"@rarible/flow-sdk-scripts@^0.5.48-alpha.0":
+  version "0.5.48-alpha.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.48-alpha.0.tgz#e807e462a13f724754b6e26919730dd68aa14ec9"
+  integrity sha512-lMfx2HLNVMIYC1Vr9igv3p1efQwFIwnrm2lhIgrIfTaaAH9rc9QMlJjSkD5zVsIKu579cjzUNX4DjniXJzh42w==
 
-"@rarible/flow-sdk@~0.5.47":
-  version "0.5.47"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.47.tgz#bdcc529dd2a7ca05e42101694a1115c69070153e"
-  integrity sha512-RTMx5IxJOq9H/vuAQ84lmc8lvjqfsZGQjg6Z8VeAo9KPpOiHthYuZdUBQwZ9L/YNugSRSFBPlHIuAY3sLVWEnA==
+"@rarible/flow-sdk@~0.5.48-alpha.3":
+  version "0.5.48-alpha.3"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.48-alpha.3.tgz#819f0de5c3eff1cb58a71001d25ee7d336e4a9dd"
+  integrity sha512-zy+DwpbxTBPyi8NCxlUPaeP7J1vYtGmUmIazuDDIawUWIsn5L4FMCvVS2UvxXkX53B5O70Q51k99H9Lpv+mh2w==
   dependencies:
     "@onflow/fcl" "~0.0.77"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "~0.5.0"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.30"
+    "@rarible/flow-sdk-scripts" "^0.5.48-alpha.0"
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.43":
-  version "0.5.43"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.43.tgz#3434d44a47ddbab0498a13dc3a85687ecf7e1575"
-  integrity sha512-cHmTugbWuJhlF6CNRroNEsS4OnEyiZkwOoVAbE+s15Lt/CTTAnbKhyJbDBOtzhsr0b++u9u52DZGuxrdJl8l+Q==
+"@rarible/flow-test-common@~0.5.48-alpha.2":
+  version "0.5.48-alpha.2"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.48-alpha.2.tgz#dee7eb1936f69d0bd4b38ee5f1560522e83967a3"
+  integrity sha512-KUN7gSSDHOjecrvcUCmyxUtxIOutk5jIsAHn5XvVkLKvgBchx8MODI3Dgwk23FnUIUMD22CRGHbsEcpsBclB1A==
   dependencies:
     "@onflow/config" "^0.0.2"
     elliptic "^6.5.4"
