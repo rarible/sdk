@@ -14,7 +14,7 @@ export async function initWalletWeb3WithHDWalletWithEstimate(privateKey: string)
 
 	const provider = new HDWalletProvider(privateKey, process.env["ETHEREUM_RPC_URL"])
 
-	const web3 = new Web3(estimate(provider, {force: true, threshold: 1.1}))
+	const web3 = new Web3(estimate(provider, {threshold: 1.1, estimation: process.env["ETHEREUM_RPC_URL"]}))
 
 	const web3Ethereum = new Web3Ethereum({ web3 })
 
