@@ -29,17 +29,32 @@ export function createTezosSdk(
 	// const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
 	const fillService = new TezosFill(maybeProvider, apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
+	const transferService = new TezosTransfer(maybeProvider, apis, network)
+	const burnService = new TezosBurn(maybeProvider, apis, network)
 
 	return {
+		nftBasic: {
+			mint: mintService.mintSimplified,
+			mintAndSell: notImplemented,
+			transfer: transferService.transferBasic,
+			burn: burnService.burnBasic,
+			createCollection: createCollectionService.createCollectionSimplified,
+		},
+		orderBasic: {
+			sell: notImplemented,
+			buy: notImplemented,
+			acceptBid: notImplemented,
+			bid: notImplemented,
+			bidUpdate: notImplemented,
+			cancel: notImplemented,
+		},
 		nft: {
 			mint: mintService.mint,
-			mintStart: mintService.mintSimplified,
-			burn: new TezosBurn(maybeProvider, apis, network).burn,
-			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,
+			burn: burnService.burn,
+			transfer: transferService.transfer,
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
-			createCollectionStart: createCollectionService.createCollectionSimplified,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

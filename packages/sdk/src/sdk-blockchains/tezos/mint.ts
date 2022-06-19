@@ -9,11 +9,12 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import type { PrepareMintResponse, MintResponse } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, MintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
+import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { ITezosAPI, MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
 import { convertTezosItemId, getRequiredProvider, getTezosAddress } from "./common"
 
@@ -123,7 +124,12 @@ export class TezosMint {
 		}
 	}
 
-	public async mintSimplified(request: MintSimplifiedRequest): Promise<MintResponse> {
+	// eslint-disable-next-line no-dupe-class-members
+	mintSimplified(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	mintSimplified(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+
+	async mintSimplified(request: MintSimplifiedRequest): Promise<MintResponse> {
 		if (request.lazyMint) {
 			throw new Error("Lazy minting on tezos is not supporting")
 		}

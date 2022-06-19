@@ -31,6 +31,21 @@ export function createFlowSdk(
 	const bidService = new FlowBid(sdk)
 
 	return {
+		nftBasic: {
+			mint: notImplemented,
+			mintAndSell: notImplemented,
+			transfer: notImplemented,
+			burn: notImplemented,
+			createCollection: notImplemented,
+		},
+		orderBasic: {
+			sell: notImplemented,
+			buy: notImplemented,
+			acceptBid: notImplemented,
+			bid: notImplemented,
+			bidUpdate: notImplemented,
+			cancel: notImplemented,
+		},
 		nft: {
 			mint: mintService.prepare,
 			burn: new FlowBurn(sdk, blockchainNetwork).burn,
@@ -38,7 +53,6 @@ export function createFlowSdk(
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
 			createCollection: nonImplementedAction,
-			createCollectionStart: notImplemented,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {

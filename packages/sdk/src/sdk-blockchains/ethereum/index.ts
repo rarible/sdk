@@ -46,6 +46,21 @@ export function createEthereumSdk(
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
 
 	return {
+		nftBasic: {
+			mint: notImplemented,
+			mintAndSell: notImplemented,
+			transfer: notImplemented,
+			burn: notImplemented,
+			createCollection: notImplemented,
+		},
+		orderBasic: {
+			sell: notImplemented,
+			buy: notImplemented,
+			acceptBid: notImplemented,
+			bid: notImplemented,
+			bidUpdate: notImplemented,
+			cancel: notImplemented,
+		},
 		nft: {
 			transfer: new EthereumTransfer(sdk, network).transfer,
 			mint: mintService.prepare,
@@ -53,7 +68,6 @@ export function createEthereumSdk(
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
-			createCollectionStart: notImplemented,
 			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
 		},
 		order: {
@@ -62,7 +76,6 @@ export function createEthereumSdk(
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			sellStart: notImplemented,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			cancel: new EthereumCancel(sdk, network).cancel,

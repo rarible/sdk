@@ -26,6 +26,11 @@ import type { IMintSimplified } from "./types/nft/mint/simplified"
 import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
 import type { ISellSimplified } from "./types/order/sell/simplified"
 import type { IBurnSimplified } from "./types/nft/burn/simplified"
+import type { IBidSimplified } from "./types/order/bid/simplified"
+import type { IBidUpdateSimplified } from "./types/order/bid/simplified"
+import type { ICancelSimplified } from "./types/order/cancel/simplified"
+import type { IBuySimplified, IAcceptBidSimplified } from "./types/order/fill/simplified"
+import type { ITransferSimplified } from "./types/nft/transfer/simplified"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -54,7 +59,9 @@ export interface IRaribleSdkConfig {
 export interface IRaribleSdk {
 	apis: IApisSdk
 	nft: INftSdk
+	nftBasic: INftBasicSdk
 	order: IOrderSdk
+	orderBasic: IOrderBasicSdk
 	balances: IBalanceSdk
 	restriction: IRestrictionSdk
 	wallet: Maybe<BlockchainWallet>
@@ -75,38 +82,45 @@ export interface INftSdk {
 	transfer: ITransfer
 	preprocessMeta: IPreprocessMeta
 	mint: IMint
-	mintStart: IMintSimplified["mintStart"]
 	mintAndSell: IMintAndSell
-	mintAndSellStart: IMintAndSellSimplified["mintAndSellStart"]
 	burn: IBurn
-	burnStart: IBurnSimplified
 	generateTokenId: IGenerateTokenId
 	/**
    * @deprecated Use {@link createCollection} instead
    */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
-	createCollectionStart: ICreateCollectionSimplified
+}
+
+export interface INftBasicSdk {
+	mint: IMintSimplified["mintStart"]
+	mintAndSell: IMintAndSellSimplified["mintAndSellStart"]
+	transfer: ITransferSimplified
+	burn: IBurnSimplified
+	createCollection: ICreateCollectionSimplified
 }
 
 export interface IOrderSdk {
 	sell: ISell
 	sellUpdate: ISellUpdate
-	sellStart: ISellSimplified
 	/**
 	 * @deprecated Use {@link buy} or {@link acceptBid} instead
 	 */
 	fill: IFill
 	buy: IFill
-	buyStart: IFill
 	acceptBid: IFill
-	acceptBidStart: IFill
 	bid: IBid
-	bidStart: IBid
 	bidUpdate: IBidUpdate
-	bidUpdateStart: IBidUpdate
 	cancel: ICancel
-	cancelStart: ICancel
+}
+
+export interface IOrderBasicSdk {
+	sell: ISellSimplified
+	buy: IBuySimplified
+	acceptBid: IAcceptBidSimplified
+	bid: IBidSimplified
+	bidUpdate: IBidUpdateSimplified
+	cancel: ICancelSimplified
 }
 
 export interface IBalanceSdk {

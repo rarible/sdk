@@ -26,6 +26,21 @@ export function createSolanaSdk(
 	const collectionService = new SolanaCollection(sdk, wallet, apis, config)
 
 	return {
+		nftBasic: {
+			mint: notImplemented,
+			mintAndSell: notImplemented,
+			transfer: notImplemented,
+			burn: notImplemented,
+			createCollection: notImplemented,
+		},
+		orderBasic: {
+			sell: notImplemented,
+			buy: notImplemented,
+			acceptBid: notImplemented,
+			bid: notImplemented,
+			bidUpdate: notImplemented,
+			cancel: notImplemented,
+		},
 		nft: {
 			mint: nftService.mint,
 			burn: nftService.burn,
@@ -33,7 +48,6 @@ export function createSolanaSdk(
 			generateTokenId: nonImplementedAction,
 			deploy: collectionService.createCollection,
 			createCollection: collectionService.createCollection,
-			createCollectionStart: notImplemented,
 			preprocessMeta: Middlewarer.skipMiddleware(nftService.preprocessMeta),
 		},
 		order: {

@@ -20,6 +20,7 @@ import { retry } from "../../common/retry"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { TezosOrder } from "./domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
@@ -113,6 +114,14 @@ export class TezosSell {
 			supportsExpirationDate: false,
 			submit,
 		}
+	}
+
+	sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
+
+	}
+
+	sellCommon() {
+
 	}
 
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {

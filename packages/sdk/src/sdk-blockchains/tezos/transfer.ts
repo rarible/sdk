@@ -3,11 +3,15 @@ import { transfer } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
+import type { NftCollection, NftItem } from "tezos-api-client/build"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
+import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import { getTezosAddress, getTezosItemData, isExistedTezosProvider } from "./common"
+import type { CollectionData } from "./mint"
 
 export class TezosTransfer {
 	constructor(
@@ -38,21 +42,39 @@ export class TezosTransfer {
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: TransferRequest) => {
-					const amount = collection.type === "NFT" ? undefined : toBn((request.amount || 1).toFixed())
-
-					const result = await transfer(
-						this.getRequiredProvider(),
-						{
-							contract: item.contract,
-							token_id: toBn(item.tokenId),
-						},
-						getTezosAddress(request.to),
-						amount,
-					)
-
-					return new BlockchainTezosTransaction(result, this.network)
+					return this.transferCommon({
+						...request,
+						...prepare,
+					}, collection, item)
 				},
 			}),
 		}
+	}
+
+	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const { itemId, contract } = getTezosItemData(request.itemId)
+		const item = await this.apis.item.getNftItemById({ itemId })
+		const collection = await this.apis.collection.getNftCollectionById({
+			collection: contract,
+		})
+
+		return this.transferCommon(request, collection, item)
+	}
+
+	async transferCommon(request: TransferSimplifiedRequest, collection: NftCollection, item: NftItem) {
+		const amount = collection.type === "NFT" ? undefined : toBn((request.amount || 1).toFixed())
+
+		const result = await transfer(
+			this.getRequiredProvider(),
+			{
+				contract: item.contract,
+				token_id: toBn(item.tokenId),
+			},
+			getTezosAddress(request.to),
+			amount,
+		)
+
+		return new BlockchainTezosTransaction(result, this.network)
+
 	}
 }
