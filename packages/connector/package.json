@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector",
-  "version": "0.9.11-beta.0",
+  "version": "0.9.11-beta.1",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -17,8 +17,6 @@
     "test": "jest --runInBand",
     "verify": "tsc --noEmit"
   },
-  "dependencies": {
-  },
   "devDependencies": {
     "@types/jest": "^27.0.2",
     "identity-obj-proxy": "^3.0.0",
@@ -27,7 +25,7 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "tslib": "^2.3.1",
-    "rxjs": ">= 6.6.7 < 8.0.0"
+    "rxjs": ">= 6.6.7 < 8.0.0",
+    "tslib": "^2.3.1"
   }
 }

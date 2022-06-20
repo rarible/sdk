@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.1](https://github.com/rarible/sdk/compare/v0.9.11-beta.0...v0.9.11-beta.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* add nftStorageApiKey field in example, fix metaUpload method bug ([f54dba0](https://github.com/rarible/sdk/commit/f54dba02acbf8499322c5fa7dd05651635fea038))
+
+
+### Features
+
+* added uploadMeta function and example ([0c3c260](https://github.com/rarible/sdk/commit/0c3c260de0572a3bcec5b9b26e8f4896569dd5d0))
+
+
+
+
+
 ## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
 
 **Note:** Version bump only for package example
