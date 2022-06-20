@@ -13,6 +13,8 @@ import type { IWalletAndAddress } from "./wallet-connection"
 const polygonRpcMap = {
 	137: "https://polygon-rpc.com",
 	80001: "https://matic-mumbai.chainstacklabs.com",
+	300501: "https://dev-polygon-node.rarible.com",
+	200501: "",
 }
 
 export function mapEthereumWallet<O>(
@@ -23,7 +25,7 @@ export function mapEthereumWallet<O>(
 		let web3: Web3
 		provider.map(e => e.provider)
 		if (blockchain === Blockchain.POLYGON) {
-			if (state.chainId !== 137 && state.chainId !== 80001) {
+			if (state.chainId !== 137 && state.chainId !== 80001 && state.chainId !== 300501) {
 				throw new Error("Wrong chain id")
 			}
 			web3 = new Web3(estimate(state.provider, { threshold: 1.1, estimation: polygonRpcMap[state.chainId] }))
