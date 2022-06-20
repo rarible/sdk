@@ -43,8 +43,8 @@ export type MintAttribute = {
 export type MetaUploadRequest = {
 	nftStorageApiKey: string,
 	properties: MintProperties,
-	tokenAddress: UnionAddress,
 	royalty: string,
+	accountAddress: UnionAddress
 }
 
 export type UploadMetaResponse = {

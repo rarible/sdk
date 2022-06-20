@@ -33,8 +33,7 @@ export function createTezosSdk(
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
-	const from = wallet?.provider.address
-	const metaUploader = new MetaUploader(Blockchain.TEZOS, from, preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.TEZOS, preprocessMeta)
 
 	return {
 		nft: {

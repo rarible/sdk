@@ -44,10 +44,8 @@ export function createEthereumSdk(
 	const fillerService = new EthereumFill(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
-
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
-	const from = wallet?.ethereum.getFrom
-	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, from, preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
 	return {
 		nft: {

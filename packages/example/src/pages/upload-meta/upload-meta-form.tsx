@@ -11,8 +11,6 @@ import { RequestResult } from "../../components/common/request-result"
 import { FormFileInput } from "../../components/common/form/form-file-input"
 import { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/union/meta/domain"
 
-const nftStorageApiKey = process.env["REACT_APP_NFT_STORAGE_API_KEY"]
-
 interface IUploadMEtaFormProps {
 	onComplete: (response: UploadMetaResponse) => void
 }
@@ -26,8 +24,8 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 	const [disabled, setDisabled] = useState(true)
 
 	useEffect(() => {
-		const subscription = form.watch(({ name, description, image, tokenAddress }) => {
-		setDisabled(!(name && description && image.length && tokenAddress))
+		const subscription = form.watch(({ name, description, image, accountAddress }) => {
+		setDisabled(!(name && description && image.length && accountAddress))
 		})
 		return () => subscription.unsubscribe()
 	}, [form, form.watch])
@@ -38,12 +36,11 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 				if (!connection.sdk) {
 					return
 				}
-				if (!nftStorageApiKey) {
-					throw new Error("Please provide REACT_APP_NFT_STORAGE_API_KEY in environment variables")
-				}
-				const {name, description, image, animationUrl, tokenAddress} = formData
-				try {
+
+				const {name, description, image, animationUrl, nftStorageApiKey, accountAddress} = formData
+				// try {
 					onComplete(await connection.sdk.nft.uploadMeta({
+						accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
 						nftStorageApiKey,
 						properties: {
 							name,
@@ -52,18 +49,18 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 							animationUrl,
 							attributes: [],
 						},
-						tokenAddress: toUnionAddress(`${blockchain}:${tokenAddress}`),
 						royalty: "",
 					}))
-				} catch (e) {
-					setError(e)
-				}
+				// } catch (e) {
+				// 	setError(e)
+				// }
 			})}
 			>
 				<Stack spacing={2}>
+					<FormTextInput form={form} name="nftStorageApiKey" label="NftStorage Api Key"/>
+					<FormTextInput form={form} name="accountAddress" label="Account address"/>
 					<FormTextInput form={form} name="name" label="Name"/>
 					<FormTextInput form={form} name="description" label="Description"/>
-					<FormTextInput form={form} name="tokenAddress" label="Token address"/>
 					<FormFileInput form={form} name="image"/>
 					<Box>
 						<FormSubmit

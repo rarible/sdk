@@ -28,8 +28,7 @@ export function createSolanaSdk(
 	const collectionService = new SolanaCollection(sdk, wallet, apis, config)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
-	const from = wallet?.provider.publicKey?.toString()
-	const metaUploader = new MetaUploader(Blockchain.SOLANA, from, preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.SOLANA, preprocessMeta)
 
 	return {
 		nft: {

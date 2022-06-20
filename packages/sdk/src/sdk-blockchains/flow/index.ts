@@ -33,8 +33,7 @@ export function createFlowSdk(
 	const bidService = new FlowBid(sdk)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
-	const from = wallet?.fcl.authz().addr
-	const metaUploader = new MetaUploader(Blockchain.FLOW, from, preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
 
 	return {
 

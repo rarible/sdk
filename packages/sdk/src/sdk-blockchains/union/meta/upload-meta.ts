@@ -27,7 +27,6 @@ const IPFS_GATEWAY_URL = "https://ipfs.rarible.com/ipfs"
 export class MetaUploader {
 	constructor(
 		readonly blockchain: Blockchain,
-		readonly from: (() => Promise<string | undefined>) | string | undefined,
 		readonly preprocessMeta: IPreprocessMeta
 	) {
 		this.preprocessMeta = preprocessMeta
@@ -42,18 +41,16 @@ export class MetaUploader {
 	}
 
 	async uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
-		const { nftStorageApiKey, properties, royalty, tokenAddress } = request
+		const { nftStorageApiKey, properties, royalty, accountAddress } = request
 
 		const { files } = await this.uploadFolder( nftStorageApiKey, {
 			image: properties.image,
 			animation: properties.animationUrl,
 		})
-		const blockchain = tokenAddress.split(":")[0]
+		const blockchain = accountAddress.split(":")[0]
 		if (!(blockchain in Blockchain)) {
 			throw new Error(`Value: "${blockchain}" is not a supported blockchain type`)
 		}
-
-		const from = typeof this.from === "function" ? await this.from() : this.from
 
 		const metadataRequest = {
 			blockchain: this.blockchain,
@@ -69,7 +66,7 @@ export class MetaUploader {
 			})),
 		} as PreprocessMetaRequest
 		if (metadataRequest.blockchain === "SOLANA") {
-			metadataRequest.royalties = this.getRoyalties(royalty, toUnionAddress(`${blockchain}:${from}`))
+			metadataRequest.royalties = this.getRoyalties(royalty, toUnionAddress(accountAddress))
 		}
 
 		const metadata = this.preprocessMeta(metadataRequest)

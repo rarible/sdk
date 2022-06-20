@@ -4,13 +4,7 @@ import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type {
-	IBalanceSdk,
-	IEthereumSdk,
-	INftSdk,
-	IOrderInternalSdk,
-	IRaribleInternalSdk,
-} from "../../domain"
+import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -27,11 +21,11 @@ import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } 
 import { Middlewarer } from "../../common/middleware/middleware"
 import type {
 	ConvertRequest,
-	IDepositBiddingBalance,
+	CurrencyOrOrder,
 	GetBiddingBalanceRequest,
+	IDepositBiddingBalance,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
-import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
@@ -150,7 +144,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 	}
 
 	uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
-		return this.instances[extractBlockchain(request.tokenAddress)].uploadMeta(request)
+		return this.instances[extractBlockchain(request.accountAddress)].uploadMeta(request)
 	}
 
 	mint(request: PrepareMintRequest): Promise<PrepareMintResponse> {

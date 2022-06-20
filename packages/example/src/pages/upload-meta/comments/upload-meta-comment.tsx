@@ -8,6 +8,7 @@ export function UploadMetaComment() {
 // upload metadata
 const uploadMeta = await connection.sdk.nft.uploadMeta(
 	YOUR_NFT_STORAGE_API_KEY: string, 
+	accountAddress: string,
 	properties: {
 		name: string
 		description?: string
@@ -15,7 +16,6 @@ const uploadMeta = await connection.sdk.nft.uploadMeta(
 		animationUrl?: File
 		attributes: {key: string, value: string}[]
 	},
-	tokenAddress: string,
 	royalty: string
 )
 
