@@ -4,10 +4,12 @@ import type { AuthWithPrivateKey, FlowEnv } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
+import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import { MetaUploader } from "../union/meta/upload-meta"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -30,6 +32,9 @@ export function createFlowSdk(
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
 	const bidService = new FlowBid(sdk)
 
+	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
+
 	return {
 
 		nft: {
@@ -39,7 +44,8 @@ export function createFlowSdk(
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
 			createCollection: nonImplementedAction,
-			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
+			preprocessMeta,
+			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			sell: sellService.sell,

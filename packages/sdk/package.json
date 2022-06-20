@@ -35,7 +35,9 @@
     "@solana/web3.js": "^1.35.1",
     "axios": "^0.26.1",
     "bignumber.js": "^9.0.1",
-    "tezos-api-client": "~0.0.19"
+    "mime-types": "^2.1.27",
+    "tezos-api-client": "~0.0.19",
+    "uuid": "^8.3.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",
@@ -53,8 +55,10 @@
     "@rarible/flow-test-common": "~0.5.48-alpha.2",
     "@rarible/solana-wallet": "^0.9.7",
     "@types/jest": "^27.0.2",
+    "@types/mime-types": "^2.1.0",
     "@types/node": "^12.20.36",
     "@types/node-fetch": "^2.6.1",
+    "@types/uuid": "^8.3.0",
     "babel-plugin-transform-bigint": "^1.0.12",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
