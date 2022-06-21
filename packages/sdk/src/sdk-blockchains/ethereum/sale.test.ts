@@ -234,6 +234,49 @@ describe("sale", () => {
 		const order2 = await awaitStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
+
+	test("erc721 sell/buy using erc-20 with CurrencyId with basic functions", async () => {
+		const wallet1Address = wallet1.getAddressString()
+		const wallet2Address = wallet2.getAddressString()
+		await sentTx(
+			conf.testErc20.methods.mint(wallet2Address, 100),
+			{ from: wallet1Address, gas: 200000 }
+		)
+		const result = await sdk1.nftBasic.mint({
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+		})
+		await result.transaction.wait()
+
+		await awaitItem(sdk1, result.itemId)
+
+		const orderId = await sdk1.orderBasic.sell({
+			itemId: result.itemId,
+			amount: 1,
+			price: "0.000000000000000002",
+			currency: toCurrencyId(`ETHEREUM:${conf.testErc20.options.address}`),
+		})
+
+		const nextStock = "1"
+		const order = await awaitStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const tx = await sdk2.orderBasic.buy({
+			order,
+			amount: 1,
+		})
+
+		await tx.wait()
+
+		const nextStock2 = "0"
+		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		expect(order2.makeStock.toString()).toEqual(nextStock2)
+	})
 })
 
 describe.skip("buy item with opensea order", () => {

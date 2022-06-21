@@ -128,6 +128,66 @@ describe("bid", () => {
 		})
 	})
 
+	test("bid on erc721 <-> erc20 and update bid with basic function", async () => {
+		const itemOwner = await ethwallet1.ethereum.getFrom()
+
+		const bidderAddress = await ethwallet2.ethereum.getFrom()
+		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
+
+		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
+			from: await ethereum1.getFrom(),
+			gas: 500000,
+		})
+
+		const result = await sdk1.nftBasic.mint({
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+		})
+		await result.transaction.wait()
+
+		await awaitItem(sdk1, result.itemId)
+
+		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
+
+		const price = "0.0000000000000002"
+		const orderId = await sdk2.orderBasic.bid({
+			itemId: result.itemId,
+			amount: 1,
+			price,
+			currency: {
+				"@type": "ERC20",
+				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+			},
+			originFees: [{
+				account: bidderUnionAddress,
+				value: 1000,
+			}],
+		})
+
+
+		const order = await awaitStock(sdk1, orderId, price)
+		expect(order.makeStock.toString()).toEqual(price)
+
+		const updatedOrderId = await sdk2.orderBasic.bidUpdate({
+			orderId,
+			price: "0.0000000000000004",
+		})
+
+		console.log("before accept bid")
+		const acceptBidTx = await sdk1.orderBasic.acceptBid({
+			orderId,
+			amount: 1,
+			infiniteApproval: true,
+		})
+		await acceptBidTx.wait()
+
+		await retry(10, 1000, async () => {
+			return sdk1.apis.ownership.getOwnershipById({
+				ownershipId: `${result.itemId}:${bidderAddress}`,
+			})
+		})
+	})
+
 	test("bid on erc-1155, convert to weth and update bid", async () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 

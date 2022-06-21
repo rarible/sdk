@@ -169,10 +169,24 @@ export class SolanaOrder {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderRequest) => {
-				return this.bidCommon({
-					...request,
-					...prepare,
-				}, auctionHouse)
+				const mint = extractPublicKey(prepare.itemId)
+
+				const amount = request.amount !== undefined ? request.amount: 1
+
+				await (await this.sdk.order.buy({
+					auctionHouse: auctionHouse,
+					signer: this.wallet!.provider,
+					mint: mint,
+					price: parseFloat(request.price.toString()) * amount,
+					tokensAmount: amount,
+				})).submit("processed")
+
+				return getOrderId(
+					"BUY",
+					this.wallet!.provider.publicKey.toString(),
+					mint.toString(),
+					auctionHouse.toString()
+				)
 			},
 		})
 

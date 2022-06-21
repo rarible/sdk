@@ -5,7 +5,7 @@ import { LogsLevel } from "../../domain"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 
-describe.skip("burn test", () => {
+describe("burn test", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
@@ -36,6 +36,24 @@ describe.skip("burn test", () => {
 		  await result.wait()
 		}
 
+		await awaitForItemSupply(sdk, mintResult.itemId, "0")
+	}, 1500000)
+
+	test("burn NFT token with basic function", async () => {
+		const mintResult = await sdk.nftBasic.mint({
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+		})
+		await mintResult.transaction.wait()
+		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+
+		const burnTx = await sdk.nftBasic.burn({
+			itemId: mintResult.itemId,
+			amount: 1,
+		})
+		if (burnTx) {
+		  await burnTx.wait()
+		}
 		await awaitForItemSupply(sdk, mintResult.itemId, "0")
 	}, 1500000)
 

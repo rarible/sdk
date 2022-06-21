@@ -94,6 +94,58 @@ describe.skip("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
+	test("bid NFT test with basic function", async () => {
+		const mintResult = await itemOwnerSdk.nftBasic.mint({
+			collectionId: convertTezosToCollectionAddress(nftContract),
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+		})
+		await mintResult.transaction.wait()
+
+		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+
+		// make bid by bidder
+		console.log("before bid")
+		const orderId = await bidderSdk.orderBasic.bid({
+			itemId: mintResult.itemId,
+			amount: 1,
+			price: "0.000002",
+			currency: {
+				"@type": "TEZOS_FT",
+				contract: convertTezosToContractAddress(eurTzContract),
+				tokenId: toBigNumber("0"),
+			},
+		})
+
+		await awaitForOrder(bidderSdk, orderId)
+
+		// update bid price
+		console.log("before bid update")
+		await bidderSdk.orderBasic.bidUpdate({
+			orderId,
+			price: "0.000004",
+		})
+
+		await retry(10, 1000, async () => {
+			const order = await bidderSdk.apis.order.getOrderById({
+				id: orderId,
+			})
+			if (order.make.value !== "0.000004") {
+				throw new Error("Bid price has been not updated")
+			}
+		})
+
+		console.log("before accept bid")
+		// accept bid by item owner
+		const fillBidResult = await itemOwnerSdk.orderBasic.acceptBid({
+			orderId,
+			amount: 1,
+		})
+		await fillBidResult.wait()
+
+		console.log("before check order status")
+		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
+	}, 1500000)
+
 	test.skip("bid MT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToCollectionAddress(mtContract),

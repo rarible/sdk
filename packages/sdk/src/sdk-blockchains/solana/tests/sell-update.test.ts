@@ -46,4 +46,42 @@ describe("Solana sell order update", () => {
 		})
 		expect(order.makePrice).toEqual("200")
 	})
+
+	test("Should set item to sell & change price with basic functions", async () => {
+		const item = await mintToken(sdk)
+		const itemId = item.id
+
+		const orderId = await retry(10, 4000, async () => {
+			return sdk.orderBasic.sell({
+				itemId,
+				amount: 1,
+				currency: {
+					"@type": "SOLANA_SOL",
+				},
+				price: toBigNumber("0.001"),
+			})
+		})
+
+		console.log("orderid", orderId)
+
+		let order = await retry(10, 4000, async () => sdk.apis.order.getOrderById({ id: orderId }))
+		expect(order.makePrice).toEqual("0.001")
+
+		await retry(10, 4000, async () => {
+			return sdk.orderBasic.sellUpdate({
+				orderId,
+				price: toBigNumber("200"),
+
+			})
+		})
+
+		order = await retry(10, 4000, async () => {
+			const order = await sdk.apis.order.getOrderById({ id: orderId })
+			if (order.makePrice !== "200") {
+				throw new Error("Price didn't update")
+			}
+			return order
+		})
+		expect(order.makePrice).toEqual("200")
+	})
 })

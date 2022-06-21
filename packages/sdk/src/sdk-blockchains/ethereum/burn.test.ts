@@ -11,7 +11,7 @@ import { awaitItemSupply } from "./test/await-item-supply"
 import { convertEthereumContractAddress } from "./common"
 import { awaitDeletedItem } from "./test/await-deleted-item"
 
-describe.skip("burn", () => {
+describe("burn", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
@@ -151,6 +151,33 @@ describe.skip("burn", () => {
 			}],
 		})
 
+		await awaitDeletedItem(sdk,  mintResult.itemId)
+	})
+
+	test("burn erc1155 lazy item with basic function", async () => {
+		const senderRaw = wallet1.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
+		})
+		const mintResult = await sdk.nftBasic.mint({
+			collection,
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: sender,
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: true,
+			supply: 10,
+		})
+
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
+
+		await sdk.nftBasic.burn({
+			itemId: mintResult.itemId,
+		})
 		await awaitDeletedItem(sdk,  mintResult.itemId)
 	})
 })

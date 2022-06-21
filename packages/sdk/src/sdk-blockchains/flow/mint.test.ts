@@ -8,6 +8,7 @@ import { retry } from "../../common/retry"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { FlowMint } from "./mint"
 import { createTestItem } from "./test/create-test-item"
+import { testFlowCollection } from "./test/common"
 
 describe("Flow mint", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
@@ -18,6 +19,19 @@ describe("Flow mint", () => {
 
 	test.skip("Should mint new NFT", async () => {
 		const itemId = await createTestItem(mint)
+		const nft = await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+		expect(nft.id).toEqual(itemId)
+	})
+
+	test("Should mint new NFT with basic function", async () => {
+		const meta = "ipfs://ipfs/QmNe7Hd9xiqm1MXPtQQjVtksvWX6ieq9Wr6kgtqFo9D4CU"
+		const { itemId } = await mint.mintBasic({
+			collectionId: testFlowCollection,
+			uri: meta,
+		})
+		const flowItemId = itemId.split(":")[2]
+		expect(parseInt(flowItemId)).toBeGreaterThan(0)
+
 		const nft = await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		expect(nft.id).toEqual(itemId)
 	})

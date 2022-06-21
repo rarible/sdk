@@ -32,4 +32,27 @@ describe("Solana cancel", () => {
 		expect(cancelTx.hash()).toBeTruthy()
 		await cancelTx.wait()
 	})
+
+	test("Should cancel NFT selling with basic function", async () => {
+		const item = await mintToken(sdk)
+		const itemId = item.id
+
+		const orderId = await retry(10, 4000, async () => {
+			return sdk.orderBasic.sell({
+				itemId,
+				amount: 1,
+				currency: {
+					"@type": "SOLANA_SOL",
+				},
+				price: toBigNumber("0.001"),
+			})
+		})
+
+		const cancelTx = await retry(10, 4000, () => sdk.orderBasic.cancel({
+			orderId,
+		}))
+
+		expect(cancelTx.hash()).toBeTruthy()
+		await cancelTx.wait()
+	})
 })

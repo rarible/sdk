@@ -31,4 +31,19 @@ describe("Solana mint", () => {
 		const nft = await retry(10, 4000, () => sdk.apis.item.getItemById({ itemId: res.itemId }))
 		expect(nft.id).toEqual(res.itemId)
 	})
+
+	test("mint an nft with basic function", async () => {
+		const res = await sdk.nftBasic.mint({
+			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
+			uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
+		})
+
+		expect(res.itemId).toBeTruthy()
+		expect(res.type).toEqual(MintType.ON_CHAIN)
+		await res.transaction.wait()
+		expect(res.transaction.hash).toBeTruthy()
+
+		const nft = await retry(10, 4000, () => sdk.apis.item.getItemById({ itemId: res.itemId }))
+		expect(nft.id).toEqual(res.itemId)
+	})
 })

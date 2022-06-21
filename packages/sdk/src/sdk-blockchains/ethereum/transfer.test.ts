@@ -8,7 +8,8 @@ import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
-import { convertEthereumContractAddress } from "./common"
+import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { awaitOwnership } from "./test/await-ownership"
 
 describe("transfer", () => {
 	const { web31, wallet1, wallet2 } = initProviders()
@@ -98,6 +99,29 @@ describe("transfer", () => {
 			const balanceRecipient = await it.testErc1155.methods.balanceOf(receipentRaw, tokenId).call()
 			expect(balanceRecipient).toBe("10")
 		})
+	})
+
+	test("transfer erc1155 with basic function", async () => {
+		const receipentRaw = wallet2.getAddressString()
+		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
+
+		const { itemId, transaction } = await sdk.nftBasic.mint({
+			collectionId: toCollectionId(erc721Address),
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+		})
+
+		await transaction.wait()
+
+		await awaitItem(sdk, itemId)
+
+		const tx = await sdk.nftBasic.transfer({
+			itemId,
+			to: receipent,
+			amount: 10,
+		})
+		await tx.wait()
+
+		await awaitOwnership(sdk, itemId, receipent)
 	})
 
 })

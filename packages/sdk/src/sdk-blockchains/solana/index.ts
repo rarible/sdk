@@ -35,8 +35,8 @@ export function createSolanaSdk(
 		orderBasic: {
 			sell: orderService.sellBasic,
 			sellUpdate: orderService.sellUpdateBasic,
-			buy: fillService,
-			acceptBid: orderService,
+			buy: fillService.buyBasic,
+			acceptBid: fillService.buyBasic,
 			bid: orderService.bidBasic,
 			bidUpdate: orderService.bidUpdateBasic,
 			cancel: orderService.cancelBasic,

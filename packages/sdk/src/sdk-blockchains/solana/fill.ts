@@ -24,6 +24,8 @@ export class SolanaFill {
 		private readonly config: ISolanaSdkConfig | undefined,
 	) {
 		this.fill = this.fill.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 	}
 
 	private isBuyOrder(order: Order): boolean {
@@ -142,10 +144,12 @@ export class SolanaFill {
 	}
 
 	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
-
+		const response = await this.fill(request)
+		return response.submit(request)
 	}
 
 	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
-
+		const response = await this.fill(request)
+		return response.submit(request)
 	}
 }

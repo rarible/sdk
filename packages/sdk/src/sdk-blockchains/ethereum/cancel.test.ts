@@ -1,19 +1,23 @@
 import { awaitAll, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toItemId } from "@rarible/types"
+import { toCollectionId, toContractAddress, toItemId } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
 import { awaitOrderCancel } from "./test/await-order-cancel"
+import { convertEthereumContractAddress } from "./common"
 
 describe("cancel", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)
 	const sdk1 = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
+
+	const erc721Address = convertEthereumContractAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d", Blockchain.ETHEREUM)
 
 	const conf = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
@@ -45,6 +49,35 @@ describe("cancel", () => {
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const tx = await sdk1.order.cancel.start({ orderId }).runAll()
+		await tx.wait()
+
+		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
+		expect(cancelledOrder.cancelled).toEqual(true)
+	})
+
+	test("sell and cancel with basic function", async () => {
+		const mintResult = await sdk1.nftBasic.mint({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			collectionId: toCollectionId(erc721Address),
+		})
+		await mintResult.transaction.wait()
+		await awaitItem(sdk1, mintResult.itemId)
+
+		const orderId = await sdk1.orderBasic.sell({
+			itemId: mintResult.itemId,
+			amount: 1,
+			price: "0.000000000000000002",
+			currency: {
+				"@type": "ERC20",
+				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+			},
+		})
+
+		const nextStock = "1"
+		const order = await awaitStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const tx = await sdk1.orderBasic.cancel({ orderId })
 		await tx.wait()
 
 		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
