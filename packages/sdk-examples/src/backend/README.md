@@ -52,7 +52,7 @@ import { estimate } from "@rarible/estimate-middleware"
 const provider = new HDWalletProvider(privateKey, process.env["ETHEREUM_RPC_URL"])
 
 // create web3 object with estimate middleware for EIP1559 transactions
-const providerWithEstimateMiddleware = estimate(provider, {force: true, threshold: 1.1})
+const providerWithEstimateMiddleware = estimate(provider, {threshold: 1.1, estimation: process.env["ETHEREUM_RPC_URL"]})
 const web3 = new Web3(providerWithEstimateMiddleware)
 
 const web3Ethereum = new Web3Ethereum({ web3 })
