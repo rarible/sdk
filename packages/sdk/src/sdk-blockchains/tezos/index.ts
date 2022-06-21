@@ -3,7 +3,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import { notImplemented } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { getMaybeTezosProvider, getTezosAPIs } from "./common"
@@ -23,30 +23,30 @@ export function createTezosSdk(
 ): IRaribleInternalSdk {
 	const apis = getTezosAPIs(network)
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
-	const sellService = new TezosSell(maybeProvider, apis)
+	const sellService = new TezosSell(maybeProvider, apis, _apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
-	// const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
-	const fillService = new TezosFill(maybeProvider, apis, network)
+	const fillService = new TezosFill(maybeProvider, apis, _apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 	const transferService = new TezosTransfer(maybeProvider, apis, network)
 	const burnService = new TezosBurn(maybeProvider, apis, network)
+	const cancelService = new TezosCancel(maybeProvider, apis, _apis, network)
 
 	return {
 		nftBasic: {
 			mint: mintService.mintSimplified,
-			mintAndSell: notImplemented,
 			transfer: transferService.transferBasic,
 			burn: burnService.burnBasic,
 			createCollection: createCollectionService.createCollectionSimplified,
 		},
 		orderBasic: {
-			sell: notImplemented,
-			buy: notImplemented,
-			acceptBid: notImplemented,
+			sell: sellService.sellBasic,
+			sellUpdate: sellService.sellUpdateBasic,
+			buy: fillService.buyBasic,
+			acceptBid: fillService.acceptBidBasic,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: notImplemented,
+			cancel: cancelService.cancelBasic,
 		},
 		nft: {
 			mint: mintService.mint,
@@ -65,11 +65,14 @@ export function createTezosSdk(
 			sellUpdate: sellService.update,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,

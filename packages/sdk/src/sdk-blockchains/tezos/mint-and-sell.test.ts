@@ -28,6 +28,16 @@ describe.skip("test tezos mint and sell", () => {
 		})
 	})
 
+	test("mint and sell nft with basic function", async () => {
+		const mintAndSellAction = await sellerSdk.orderBasic.mintAndSell({
+			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			price: new BigNumber("0.0001"),
+			currency: { "@type": "XTZ" },
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+		})
+		await mintAndSellAction.transaction.wait()
+	})
+
 	test("mint and sell mt", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),

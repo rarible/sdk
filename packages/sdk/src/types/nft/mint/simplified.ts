@@ -8,5 +8,5 @@ export interface IMintSimplified {
 }
 
 export type MintSimplifiedRequest = MintSimplifiedRequestOnChain | MintSimplifiedRequestOffChain
-export type MintSimplifiedRequestOnChain = MintRequest & PrepareMintRequest & {lazyMint?: false}
-export type MintSimplifiedRequestOffChain = MintRequest & PrepareMintRequest & {lazyMint: true}
+export type MintSimplifiedRequestOnChain = Omit<MintRequest, "lazyMint"> & PrepareMintRequest & {lazyMint?: false}
+export type MintSimplifiedRequestOffChain = Omit<MintRequest, "lazyMint"> & PrepareMintRequest & {lazyMint: true}

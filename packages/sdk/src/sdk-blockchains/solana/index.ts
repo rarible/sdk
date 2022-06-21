@@ -20,7 +20,7 @@ export function createSolanaSdk(
 ): IRaribleInternalSdk {
 	const sdk = SolanaSdk.create({ connection: { cluster, commitmentOrConfig: "confirmed" }, debug: false })
 	const nftService = new SolanaNft(sdk, wallet, apis, config)
-	const balanceService = new SolanaBalance(sdk, wallet, config)
+	const balanceService = new SolanaBalance(sdk, wallet, apis, config)
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)
 	const fillService = new SolanaFill(sdk, wallet, apis, config)
 	const collectionService = new SolanaCollection(sdk, wallet, apis, config)
@@ -28,13 +28,13 @@ export function createSolanaSdk(
 	return {
 		nftBasic: {
 			mint: notImplemented,
-			mintAndSell: notImplemented,
 			transfer: notImplemented,
 			burn: notImplemented,
 			createCollection: notImplemented,
 		},
 		orderBasic: {
 			sell: notImplemented,
+			sellUpdate: notImplemented,
 			buy: notImplemented,
 			acceptBid: notImplemented,
 			bid: notImplemented,
@@ -63,6 +63,9 @@ export function createSolanaSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: nonImplementedAction,
+			getBiddingBalance: balanceService.getBiddingBalance,
+			depositBiddingBalance: balanceService.depositBiddingBalance,
+			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
 		},
 		restriction: {
 			canTransfer: nonImplementedAction,

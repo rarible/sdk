@@ -38,33 +38,36 @@ export function createEthereumSdk(
 		polygon: config.polygon,
 	})
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk, network)
+	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
+	const transferService = new EthereumTransfer(sdk, network)
+	const burnService = new EthereumBurn(sdk, network)
+	const cancelService = new EthereumCancel(sdk, network)
 
 	return {
 		nftBasic: {
-			mint: notImplemented,
-			mintAndSell: notImplemented,
-			transfer: notImplemented,
-			burn: notImplemented,
-			createCollection: notImplemented,
+			mint: mintService.mintBasic,
+			transfer: transferService.transferBasic,
+			burn: burnService.burnBasic,
+			createCollection: createCollectionService.createCollectionBasic,
 		},
 		orderBasic: {
-			sell: notImplemented,
-			buy: notImplemented,
-			acceptBid: notImplemented,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: notImplemented,
+			sell: sellService.sellBasic,
+			sellUpdate: sellService.sellUpdateBasic,
+			buy: fillerService.buyBasic,
+			acceptBid: fillerService.acceptBidBasic,
+			bid: bidService.bidBasic,
+			bidUpdate: bidService.bidUpdateBasic,
+			cancel: cancelService.cancelBasic,
 		},
 		nft: {
-			transfer: new EthereumTransfer(sdk, network).transfer,
+			transfer: transferService.transfer,
 			mint: mintService.prepare,
-			burn: new EthereumBurn(sdk, network).burn,
+			burn: burnService.burn,
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
@@ -78,11 +81,14 @@ export function createEthereumSdk(
 			sellUpdate: sellService.update,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
-			cancel: new EthereumCancel(sdk, network).cancel,
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
+			getBiddingBalance: balanceService.getBiddingBalance,
+			depositBiddingBalance: balanceService.depositBiddingBalance,
+			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

@@ -12,13 +12,15 @@ import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rar
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { PrepareMintResponse } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, MintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { TokenId } from "../../types/nft/generate-token-id"
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
+import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { EVMBlockchain } from "./common"
 import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
 
@@ -32,6 +34,7 @@ export class EthereumMint {
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.prepare = this.prepare.bind(this)
+		this.mintBasic = this.mintBasic.bind(this)
 	}
 
 	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
@@ -152,6 +155,16 @@ export class EthereumMint {
 				},
 			}),
 		}
+	}
+
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+
+	async mintBasic(request: MintSimplifiedRequest) {
+		const prepareResponse = await this.prepare(request)
+		return prepareResponse.submit(request)
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {

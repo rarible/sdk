@@ -3,12 +3,12 @@ import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from
 import type { OrderRequest } from "../../order/common"
 import type { OffChainMintResponse, OnChainMintResponse } from "../mint/domain"
 
-export interface IMintAndSellSimplified {
-	mintAndSellStart(request: MintAndSellSimplifiedRequestOnChain): Promise<MintAndSellSimplifiedResponseOnChain>
-	mintAndSellStart(request: MintAndSellSimplifiedRequestOffChain): Promise<MintAndSellSimplifiedResponseOffChain>
+export interface IMintAndSellBasic {
+	mintAndSell(request: MintAndSellBasicRequestOnChain): Promise<MintAndSellBasicResponseOnChain>
+	mintAndSell(request: MintAndSellBasicRequestOffChain): Promise<MintAndSellBasicResponseOffChain>
 }
 
-export type MintAndSellSimplifiedRequestOnChain = MintSimplifiedRequestOnChain & Omit<OrderRequest, "amount">
-export type MintAndSellSimplifiedRequestOffChain = MintSimplifiedRequestOffChain & Omit<OrderRequest, "amount">
-export type MintAndSellSimplifiedResponseOnChain = OnChainMintResponse & { orderId: OrderId }
-export type MintAndSellSimplifiedResponseOffChain = OffChainMintResponse & { orderId: OrderId }
+export type MintAndSellBasicRequestOnChain = MintSimplifiedRequestOnChain & OrderRequest
+export type MintAndSellBasicRequestOffChain = MintSimplifiedRequestOffChain & OrderRequest
+export type MintAndSellBasicResponseOnChain = OnChainMintResponse & { orderId: OrderId }
+export type MintAndSellBasicResponseOffChain = OffChainMintResponse & { orderId: OrderId }

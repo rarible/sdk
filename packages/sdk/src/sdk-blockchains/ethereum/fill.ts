@@ -4,6 +4,7 @@ import { toAddress, toBigNumber } from "@rarible/types"
 import type { FillOrderAction, FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
@@ -12,7 +13,8 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId } from "./common"
+import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId, toEthereumParts } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -31,6 +33,8 @@ export class EthereumFill {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 	}
 
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
@@ -41,7 +45,7 @@ export class EthereumFill {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
-					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value: 0,
+					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value : 0,
 					payout: fillRequest.payouts?.[0]?.account
 						? convertToEthereumAddress(fillRequest.payouts[0].account)
 						: undefined,
@@ -53,20 +57,16 @@ export class EthereumFill {
 					order,
 					amount: fillRequest.amount,
 					infinite: fillRequest.infiniteApproval,
-					payouts: fillRequest.payouts?.map(payout => ({
-						account: convertToEthereumAddress(payout.account),
-						value: payout.value,
-					})),
-					originFees: fillRequest.originFees?.map(fee => ({
-						account: convertToEthereumAddress(fee.account),
-						value: fee.value,
-					})),
+					payouts: toEthereumParts(fillRequest.payouts),
+					originFees: toEthereumParts(fillRequest.originFees),
 				}
 				break
 			}
 			case "OPEN_SEA_V1": {
 				request = {
 					order,
+					originFees: order.take.assetType.assetClass === "ETH" ? toEthereumParts(fillRequest.originFees) : [],
+					payouts: toEthereumParts(fillRequest.payouts),
 					infinite: fillRequest.infiniteApproval,
 				}
 				break
@@ -77,7 +77,10 @@ export class EthereumFill {
 		}
 
 		if (fillRequest.itemId) {
-			const { contract, tokenId } = getEthereumItemId(fillRequest.itemId)
+			const {
+				contract,
+				tokenId,
+			} = getEthereumItemId(fillRequest.itemId)
 			request.assetType = {
 				contract: toAddress(contract),
 				tokenId,
@@ -105,12 +108,13 @@ export class EthereumFill {
 			}
 			case "OPEN_SEA_V1": {
 				return {
-					originFeeSupport: OriginFeeSupport.NONE,
-					payoutsSupport: PayoutsSupport.NONE,
+					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
+					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: false,
 				}
 			}
-			default: throw new Error("Unsupported order type")
+			default:
+				throw new Error("Unsupported order type")
 		}
 	}
 
@@ -126,7 +130,7 @@ export class EthereumFill {
 			const ownershipId = getOwnershipId(
 				order.take.assetType.contract,
 				order.take.assetType.tokenId,
-				toAddress(address)
+				toAddress(address),
 			)
 
 			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({ ownershipId })
@@ -205,5 +209,32 @@ export class EthereumFill {
 
 	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.commonFill(this.sdk.order.acceptBid, request)
+	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		const orderHash = this.getOrderHashFromRequest(request)
+		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+
+		if (this.hasCollectionAssetType(order) && !request.itemId) {
+			throw new Error("For collection order you should pass itemId")
+		}
+		const buyRequest = await this.getFillOrderRequest(order, request)
+		const tx = await this.sdk.order.buy(buyRequest)
+		return new BlockchainEthereumTransaction(tx, this.network)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const orderHash = this.getOrderHashFromRequest(request)
+		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+
+		if (request.unwrap) {
+			throw new Error("Unwrap is not supported yet")
+		}
+		if (this.hasCollectionAssetType(order) && !request.itemId) {
+			throw new Error("For collection order you should pass itemId")
+		}
+		const acceptBidRequest = await this.getFillOrderRequest(order, request)
+		const tx = await this.sdk.order.acceptBid(acceptBidRequest)
+		return new BlockchainEthereumTransaction(tx, this.network)
 	}
 }

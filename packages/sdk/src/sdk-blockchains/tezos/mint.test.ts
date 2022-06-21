@@ -7,7 +7,7 @@ import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
 
-describe.skip("mint test", () => {
+describe("mint test", () => {
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
@@ -41,7 +41,6 @@ describe.skip("mint test", () => {
 		await awaitForItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
-
 	test.skip("mint MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),
@@ -62,6 +61,25 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		await awaitForItemSupply(sdk, mintResult.itemId, "12")
+
+	}, 1500000)
+
+	test("mint MT token with basic function", async () => {
+		const mintResult = await sdk.nftBasic.mint({
+			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
+			supply: 12,
+			royalties: [{
+				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
+				value: 10000,
+			}],
+			creators: [{
+				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
+				value: 10000,
+			}],
+		})
+		await mintResult.transaction.wait()
 		await awaitForItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)

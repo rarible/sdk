@@ -25,6 +25,6 @@ export async function mintAndSell(sdk: IRaribleSdk,
 		mintAndSellResponse.transaction.wait()
 	}
 	expect(mintAndSellResponse.itemId).not.toBe(null)
-	await awaitOrderStock(sdk, mintAndSellResponse.orderId, toBigNumber(mintAndSellRequest.supply.toString()))
+	await awaitOrderStock(sdk, mintAndSellResponse.orderId, toBigNumber((mintAndSellRequest?.supply || 1).toString()))
 	return mintAndSellResponse
 }

@@ -3,6 +3,8 @@ import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import type { SolanaSdk } from "../sdk/sdk"
 
+export const TEST_AUCTION_HOUSE = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+
 export const testWallets = [{
 	privateKeyString: "2zCVNyb3KhunreVgamvMPDiFZpkHKHnhNeuyoanQcPaN5yHzKBM8f9PF2h6zSaBm2UUDYf98yBGNS7iRbRHGvYrm",
 	privateKeyArray: Uint8Array.from([
@@ -44,16 +46,12 @@ export async function requestSol(connection: Connection, publicKey: PublicKey, s
 	return await connection.getBalance(publicKey)
 }
 
-export async function checkTokenBalance(
+export async function getTokenAccount(
 	connection: Connection,
 	owner: PublicKey,
 	mint: PublicKey,
-	expectedValue: number,
-	// eslint-disable-next-line no-undef
 ): Promise<Awaited<ReturnType<typeof connection.getTokenAccountsByOwner>>> {
-	const balance = await connection.getTokenAccountsByOwner(owner, { mint })
-	expect(balance.value?.length).toBeGreaterThanOrEqual(expectedValue)
-	return balance
+	return await connection.getTokenAccountsByOwner(owner, { mint })
 }
 
 export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: SolanaKeypairWallet }) {
@@ -71,7 +69,25 @@ export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: Solan
 
 	// required confirmation
 	await sdk.connection.confirmTransaction(mintTx.txId, "finalized")
-	const balance = await checkTokenBalance(sdk.connection, wallet.publicKey, mintPrepare.mint, 1)
+	expect(await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toEqual(1)
+	const tokenAccount = await getTokenAccount(sdk.connection, wallet.publicKey, mintPrepare.mint)
 
-	return { mintTx, mint: mintPrepare.mint, balance }
+	return { mintTx, mint: mintPrepare.mint, tokenAccount }
+}
+
+export function retry<T>(
+	num: number,
+	del: number,
+	thunk: () => Promise<T>
+): Promise<T> {
+	return thunk().catch((error) => {
+		if (num === 0) {
+			throw error
+		}
+		return delay(del).then(() => retry(num - 1, del, thunk))
+	})
+}
+
+export function delay(num: number) {
+	return new Promise<void>((r) => setTimeout(r, num))
 }

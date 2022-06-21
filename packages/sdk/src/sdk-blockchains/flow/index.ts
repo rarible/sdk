@@ -33,13 +33,13 @@ export function createFlowSdk(
 	return {
 		nftBasic: {
 			mint: notImplemented,
-			mintAndSell: notImplemented,
 			transfer: notImplemented,
 			burn: notImplemented,
 			createCollection: notImplemented,
 		},
 		orderBasic: {
 			sell: notImplemented,
+			sellUpdate: notImplemented,
 			buy: notImplemented,
 			acceptBid: notImplemented,
 			bid: notImplemented,
@@ -68,6 +68,9 @@ export function createFlowSdk(
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
 			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

@@ -9,6 +9,7 @@ import { toBigNumber } from "@rarible/types"
 import { pk_to_pkh } from "@rarible/tezos-sdk/dist/main"
 import type { Order as TezosOrder } from "tezos-api-client/build"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
+import type { OrderId } from "@rarible/api-client"
 import type {
 	OrderRequest,
 	OrderUpdateRequest,
@@ -22,10 +23,11 @@ import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import { notImplemented } from "../../common/not-implemented"
+import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
-	convertOrderPayout,
+	convertUnionParts,
 	covertToLibAsset,
 	getMakerPublicKey,
 	getPayouts,
@@ -34,7 +36,7 @@ import {
 	getTezosItemData,
 	getTezosOrderId,
 	convertTezosOrderId,
-	convertTezosToContractAddress,
+	convertTezosToContractAddress, getRequestAmount,
 } from "./common"
 import type { TezosBalance } from "./balance"
 
@@ -47,6 +49,7 @@ export class TezosBid {
 	) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
+		this.bidBasic = this.bidBasic.bind(this)
 	}
 
 	getMakeAssetType(type: RequestCurrencyAssetType): XTZAssetType | FTAssetType {
@@ -103,7 +106,7 @@ export class TezosBid {
 						maker: pk_to_pkh(makerPublicKey),
 						maker_edpk: makerPublicKey,
 						make_asset_type: this.getMakeAssetType(requestCurrency),
-						amount: new BigNumber(request.amount),
+						amount: getRequestAmount(request.amount, itemCollection),
 						take_asset_type: {
 							asset_class: itemCollection.type,
 							contract: item.contract,
@@ -111,7 +114,7 @@ export class TezosBid {
 						},
 						price: new BigNumber(request.price),
 						payouts: await getPayouts(provider, request.payouts),
-						origin_fees: convertOrderPayout(request.originFees),
+						origin_fees: convertUnionParts(request.originFees),
 					}
 				)
 
@@ -130,6 +133,11 @@ export class TezosBid {
 			supportsExpirationDate: false,
 			submit,
 		}
+	}
+
+	async bidBasic(request: BidSimplifiedRequest): Promise<OrderId> {
+		const response = await this.bid(request)
+		return response.submit(request)
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {

@@ -4,8 +4,9 @@ import { toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
-import type { BurnSimplifiedRequest, BurnSimplifiedResponse } from "../../types/nft/burn/simplified"
-import { getEthereumItemId, isEVMBlockchain, toEthereumParts } from "./common"
+import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
+import type { BurnResponse } from "../../types/nft/burn/domain"
+import { getEthereumItemId, toEthereumParts } from "./common"
 
 export class EthereumBurn {
 	constructor(
@@ -13,6 +14,7 @@ export class EthereumBurn {
 		private network: EthereumNetwork,
 	) {
 		this.burn = this.burn.bind(this)
+		this.burnBasic = this.burnBasic.bind(this)
 	}
 
 	async burn(prepare: PrepareBurnRequest) {
@@ -50,7 +52,8 @@ export class EthereumBurn {
 		}
 	}
 
-	async burnSimplified(request: BurnSimplifiedRequest): Promise<BurnSimplifiedResponse> {
-
+	async burnBasic(request: BurnSimplifiedRequest): Promise<BurnResponse> {
+		const response = await this.burn(request)
+		return response.submit(request)
 	}
 }

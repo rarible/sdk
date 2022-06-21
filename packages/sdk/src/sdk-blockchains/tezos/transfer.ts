@@ -20,6 +20,7 @@ export class TezosTransfer {
 		private network: TezosNetwork,
 	) {
 		this.transfer = this.transfer.bind(this)
+		this.transferBasic = this.transferBasic.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {

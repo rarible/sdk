@@ -27,6 +27,7 @@ export class TezosMint {
 		this.mint = this.mint.bind(this)
 		this.mintSimplified = this.mintSimplified.bind(this)
 		this.preprocessMeta = this.preprocessMeta.bind(this)
+		this.mintCommon = this.mintCommon.bind(this)
 	}
 
 	private getFormatsMeta(meta: PreprocessMetaRequest) {
@@ -130,9 +131,6 @@ export class TezosMint {
 	mintSimplified(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
 
 	async mintSimplified(request: MintSimplifiedRequest): Promise<MintResponse> {
-		if (request.lazyMint) {
-			throw new Error("Lazy minting on tezos is not supporting")
-		}
 		const collectionData = await getCollectionData(this.apis.collection, request)
 
 		return this.mintCommon(request, collectionData)

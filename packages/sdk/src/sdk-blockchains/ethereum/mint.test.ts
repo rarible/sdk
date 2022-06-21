@@ -25,7 +25,7 @@ describe("mint", () => {
 	test("should mint ERC721 token with simplified function", async () => {
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 
-		const result = await sdk.nft.mintStart({
+		const result = await sdk.nftBasic.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(contract),
 		})
@@ -41,7 +41,7 @@ describe("mint", () => {
 	test("should lazy mint ERC721 token with simplified function", async () => {
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 
-		const result = await sdk.nft.mintStart({
+		const result = await sdk.nftBasic.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(contract),
 			lazyMint: true,

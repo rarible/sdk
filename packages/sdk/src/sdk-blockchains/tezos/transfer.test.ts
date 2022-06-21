@@ -8,11 +8,11 @@ import { awaitForItemSupply } from "./test/await-for-item-supply"
 
 describe("transfer test", () => {
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
 	const recipient = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	let nftContract: string = "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx"
+	let mtContract: string = "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC"
 
 	test("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
@@ -44,7 +44,6 @@ describe("transfer test", () => {
 	}, 1500000)
 
 	test("transfer MT test", async () => {
-
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 		})
@@ -66,6 +65,26 @@ describe("transfer test", () => {
 			amount: 5,
 		})
 		await result.wait()
+
+		await awaitForOwnership(sdk, mintResult.itemId, recipient)
+
+	}, 1500000)
+
+	test("transfer MT test with basic function", async () => {
+		const mintResult = await sdk.nftBasic.mint({
+			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 10,
+		})
+		await mintResult.transaction.wait()
+		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+
+		const transfer = await sdk.nftBasic.transfer({
+			itemId: mintResult.itemId,
+			to: toUnionAddress(`TEZOS:${recipient}`),
+			amount: 5,
+		})
+		await transfer.wait()
 
 		await awaitForOwnership(sdk, mintResult.itemId, recipient)
 

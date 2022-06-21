@@ -8,7 +8,7 @@ import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
-import type { IMint, MintResponse } from "./types/nft/mint/domain"
+import type { IMint, MintResponse, OffChainMintResponse, OnChainMintResponse } from "./types/nft/mint/domain"
 import { MintType } from "./types/nft/mint/domain"
 import type { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
@@ -21,9 +21,15 @@ import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
-import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
+import type {
+	IMintAndSellBasic,
+	MintAndSellBasicRequestOffChain,
+	MintAndSellBasicRequestOnChain,
+	MintAndSellBasicResponseOffChain,
+	MintAndSellBasicResponseOnChain,
+} from "./types/nft/mint-and-sell/simplified"
 import type { IMintSimplified } from "./types/nft/mint/simplified"
-import type { MintSimplifiedRequest } from "./types/nft/mint/simplified"
+import type { ISellSimplified } from "./types/order/sell/simplified"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -75,6 +81,10 @@ export function createRaribleSdk(
 
 	return {
 		...instance,
+		orderBasic: {
+			...instance.orderBasic,
+			mintAndSell: createMintAndSellBasic(instance.nftBasic.mint, instance.orderBasic.sell),
+		},
 		nft: {
 			...instance.nft,
 			mintAndSell: createMintAndSell(instance.nft.mint, instance.order.sell),
@@ -186,19 +196,25 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-
-function createMintAndSellSimplified(mint: IMintSimplified["mintStart"], sell: ISellInternal): IMintAndSellSimplified {
-	return async (request: MintSimplifiedRequest) => {
-		const mintResponse = await mint(request)
-		const collectionId = getCollectionId(request)
-		const blockchain = getBlockchainCollectionId(collectionId)
-		const sellResponse = await sell({ blockchain })
+function createMintAndSellBasic(mint: IMintSimplified["mintStart"], sell: ISellSimplified): IMintAndSellBasic["mintAndSell"] {
+	async function mintAndSell(request: MintAndSellBasicRequestOnChain): Promise<MintAndSellBasicResponseOnChain>
+	async	function mintAndSell(request: MintAndSellBasicRequestOffChain): Promise<MintAndSellBasicResponseOffChain>
+	async function mintAndSell(request: MintAndSellBasicRequestOnChain | MintAndSellBasicRequestOffChain) {
+		const mintResponse = (await mint(request as Parameters<IMintSimplified["mintStart"]>[0])) as OnChainMintResponse | OffChainMintResponse
+		if (mintResponse.type === MintType.ON_CHAIN) {
+			await mintResponse.transaction.wait()
+		}
+		const orderId = await sell({
+			itemId: mintResponse.itemId,
+			...request,
+		})
 
 		return {
 			...mintResponse,
-			...sellResponse,
-		}
+			orderId,
+		} as MintAndSellBasicResponseOnChain | MintAndSellBasicResponseOffChain
 	}
+	return mintAndSell
 }
 
 export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {

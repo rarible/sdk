@@ -10,7 +10,7 @@ export type PrepareBurnRequest = {
 
 export type BurnRequest = {
 	/**
-   * Number of NFTs to transfer
+   * Number of NFTs to burn
    */
 	amount?: number
 	/**

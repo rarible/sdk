@@ -7,6 +7,8 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
 import type { CreateCollectionRequest, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { EVMBlockchain, CreateEthereumCollectionResponse } from "./common"
 import { convertEthereumContractAddress, getEVMBlockchain } from "./common"
 
@@ -19,6 +21,7 @@ export class EthereumCreateCollection {
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.startCreateCollection = this.startCreateCollection.bind(this)
+		this.createCollectionBasic = this.createCollectionBasic.bind(this)
 	}
 
 	convertOperatorsAddresses(operators: UnionAddress[]): Address[] {
@@ -89,4 +92,23 @@ export class EthereumCreateCollection {
 		},
 	})
 
+	async createCollectionBasic(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+		if (request.blockchain !== Blockchain.ETHEREUM) {
+			throw new Error("Wrong blockchain")
+		}
+
+		return this.convertResponse(
+			await this.startCreateCollection({
+				assetType: request.type,
+				arguments: {
+					name: request.name,
+					symbol: request.symbol,
+					baseURI: request.baseURI,
+					contractURI: request.contractURI,
+					isUserToken: !request.isPublic,
+					operators: "operators" in request ? request.operators : [],
+				},
+			})
+		)
+	}
 }

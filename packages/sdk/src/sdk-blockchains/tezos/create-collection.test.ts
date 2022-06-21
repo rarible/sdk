@@ -9,7 +9,7 @@ describe("deploy tezos tests", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	)
-	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
 	test("deploy public nft", async () => {
 		const result = await sdk.nft.createCollection({
@@ -28,7 +28,7 @@ describe("deploy tezos tests", () => {
 	})
 
 	test("deploy public nft with simplified function createCollectionStart", async () => {
-		const result = await sdk.nft.createCollectionStart({
+		const result = await sdk.nftBasic.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
@@ -64,7 +64,7 @@ describe("deploy tezos tests", () => {
 
 
 	test("deploy private nft with simplified function createCollectionStart", async () => {
-		const result = await sdk.nft.createCollectionStart({
+		const result = await sdk.nftBasic.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
@@ -79,7 +79,7 @@ describe("deploy tezos tests", () => {
 		await awaitForCollection(sdk, result.address)
 	})
 
-	test.skip("deploy public mt", async () => {
+	test("deploy public mt", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			asset: {
@@ -98,7 +98,7 @@ describe("deploy tezos tests", () => {
 	})
 
 	test("deploy public MT with simplified function createCollectionStart", async () => {
-		const result = await sdk.nft.createCollectionStart({
+		const result = await sdk.nftBasic.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "MT",
 			name: "My NFT collection",

@@ -20,6 +20,6 @@ export async function bid(sdk: IRaribleSdk,
 	const orderId = await bidPrepare.submit(orderRequest)
 	console.log("order_id=", orderId)
 
-	const makeStock = toBn(orderRequest.price).multipliedBy(orderRequest.amount).toString()
+	const makeStock = toBn(orderRequest.price).multipliedBy((orderRequest.amount || 1)).toString()
 	return await awaitOrderStock(sdk, orderId, makeStock)
 }

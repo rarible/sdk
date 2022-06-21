@@ -8,7 +8,7 @@ import type { NftCollection, NftItem } from "tezos-api-client/build"
 import type { BurnRequest, BurnResponse, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getTezosItemData, isExistedTezosProvider } from "./common"
+import { getRequestAmount, getTezosItemData, isExistedTezosProvider } from "./common"
 
 export class TezosBurn {
 	constructor(
@@ -17,6 +17,8 @@ export class TezosBurn {
 		private network: TezosNetwork,
 	) {
 		this.burn = this.burn.bind(this)
+		this.burnBasic = this.burnBasic.bind(this)
+		this.burnCommon = this.burnCommon.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
@@ -40,18 +42,7 @@ export class TezosBurn {
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
-					const amount = collection.type === "MT" ? new BigNumber((request?.amount ?? 1).toFixed()) : undefined
-
-					const result = await burn(
-						this.getRequiredProvider(),
-						{
-							contract: item.contract,
-							token_id: new BigNumber(item.tokenId),
-						},
-						amount
-					)
-
-					return new BlockchainTezosTransaction(result, this.network)
+					return this.burnCommon(request, collection, item)
 				},
 			}),
 		}
@@ -68,16 +59,14 @@ export class TezosBurn {
 		return this.burnCommon(request, collection, item)
 	}
 
-	async burnCommon(request: BurnSimplifiedRequest, collection: NftCollection, item: NftItem) {
-  	const amount = collection.type === "MT" ? new BigNumber((request?.amount ?? 1).toFixed()) : undefined
-
+	async burnCommon(request: BurnSimplifiedRequest | BurnRequest, collection: NftCollection, item: NftItem) {
   	const result = await burn(
   		this.getRequiredProvider(),
   		{
   			contract: item.contract,
   			token_id: new BigNumber(item.tokenId),
   		},
-  		amount
+			getRequestAmount(request?.amount, collection)
   	)
 
   	return new BlockchainTezosTransaction(result, this.network)

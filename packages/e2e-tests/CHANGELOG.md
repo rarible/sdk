@@ -3,6 +3,40 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+
+### Features
+
+* refactor e2e ([4b20c36](https://github.com/rarible/sdk/commit/4b20c36d4236117596b75650b25501fd7a067d7f))
+
+
+
+
+
+## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
+
+
+
+
+
 ## [0.9.4](https://github.com/rarible/sdk/compare/v0.9.3...v0.9.4) (2022-05-23)
 
 
@@ -172,6 +206,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [0.8.52](https://github.com/rarible/sdk/compare/v0.8.51...v0.8.52) (2022-04-07)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.8.48-hotfix.11](https://github.com/rarible/sdk/compare/v0.8.48-hotfix.10...v0.8.48-hotfix.11) (2022-05-05)
+
+
+### Bug Fixes
+
+* update ethereum-sdk ([df55b29](https://github.com/rarible/sdk/commit/df55b29a99f8db4f425e3550ed8b567a7dc3677d))
 
 
 

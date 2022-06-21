@@ -22,6 +22,6 @@ export async function sell(sdk: IRaribleSdk,
 	const orderId = await sellPrepare.submit(orderRequest)
 	console.log("order_id=", orderId)
 	// Check order stock to be equal sell amount
-	const nextStock = toBigNumber(orderRequest.amount.toString())
+	const nextStock = toBigNumber((orderRequest.amount || 1).toString())
 	return await awaitOrderStock(sdk, orderId, nextStock)
 }

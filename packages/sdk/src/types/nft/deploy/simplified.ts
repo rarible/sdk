@@ -34,6 +34,7 @@ export interface EthereumCreatePrivateCollectionSimplified extends
 
 export interface EthereumCreateCollectionSimplifiedCommon {
 	type: "ERC721" | "ERC1155"
+	name: string
 	symbol: string
 	baseURI: string
 	contractURI: string

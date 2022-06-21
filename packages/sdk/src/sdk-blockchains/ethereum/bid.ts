@@ -3,14 +3,14 @@ import type { Address, ContractAddress } from "@rarible/types"
 import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
-import type { AssetType } from "@rarible/api-client"
+import type { AssetType, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import BigNumber from "bignumber.js"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { NftItem } from "@rarible/ethereum-api-client/build/models"
+import type { NftCollection, NftItem } from "@rarible/ethereum-api-client/build/models"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import { Action } from "@rarible/action"
 import { addFee } from "@rarible/protocol-ethereum-sdk/build/order/add-fee"
@@ -29,6 +29,8 @@ import type {
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
+import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
+import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -37,7 +39,7 @@ import {
 	convertToEthereumAddress,
 	convertToEthereumAssetType,
 	getEthereumItemId,
-	getEVMBlockchain,
+	getEVMBlockchain, getOrderAmount,
 	getOrderFeesSum,
 	isEVMBlockchain,
 } from "./common"
@@ -57,6 +59,8 @@ export class EthereumBid {
 		this.update = this.update.bind(this)
 		this.getConvertableValue = this.getConvertableValue.bind(this)
 		this.convertCurrency = this.convertCurrency.bind(this)
+		this.bidBasic = this.bidBasic.bind(this)
+		this.bidUpdateBasic = this.bidUpdateBasic.bind(this)
 	}
 
 	convertAssetType(assetType: EthereumAssetType): ApiClient.AssetType {
@@ -147,8 +151,8 @@ export class EthereumBid {
 		return toContractAddress(wethUnionContract)
 	}
 
-	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		let contractAddress: Address | undefined
+	async getBidTakeData(prepare: PrepareBidRequest): Promise<BidTakeData> {
+		let contractAddress: Address
 		let item: NftItem | undefined
 		let takeAssetType: AssetTypeRequest
 
@@ -171,44 +175,59 @@ export class EthereumBid {
 			throw new Error("ItemId or CollectionId must be assigned")
 		}
 
+		return { contractAddress, item, takeAssetType }
+	}
+
+	async getBidPrepareData(request: OrderCommon.OrderRequest, bidTakeData: BidTakeData, collection: NftCollection) {
+		const expirationDate = request.expirationDate instanceof Date
+			? Math.floor(request.expirationDate.getTime() / 1000)
+			: undefined
+		const currencyAssetType = getCurrencyAssetType(request.currency)
+		return {
+			makeAssetType: common.getEthTakeAssetType(currencyAssetType),
+			takeAssetType: bidTakeData.takeAssetType,
+			amount: getOrderAmount(request.amount, collection),
+			priceDecimal: request.price,
+			payouts: common.toEthereumParts(request.payouts),
+			originFees: common.toEthereumParts(request.originFees),
+			end: expirationDate,
+		}
+	}
+
+	async convertProcedure(request: OrderCommon.OrderRequest, collection: NftCollection) {
+		const wethContractAddress = this.getWethContractAddress()
+		const currency = getCurrencyAssetType(request.currency)
+		if (currency["@type"] === "ERC20" && currency.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
+			const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
+			const value = await this.getConvertableValueCommon(
+				currency,
+				request.price,
+				getOrderAmount(request.amount, collection),
+				originFeesSum
+			)
+			await this.convertCurrency(value)
+		}
+		return request
+	}
+
+	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		const bidTakeData = await this.getBidTakeData(prepare)
+
+		const { contractAddress, item } = bidTakeData
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
 			collection: contractAddress,
 		})
 
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
-				const expirationDate = request.expirationDate instanceof Date
-					? Math.round(request.expirationDate.getTime() / 1000)
-					: undefined
-				const currencyAssetType = getCurrencyAssetType(request.currency)
-				return {
-					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					takeAssetType: takeAssetType,
-					amount: request.amount,
-					priceDecimal: request.price,
-					payouts: common.toEthereumParts(request.payouts),
-					originFees: common.toEthereumParts(request.originFees),
-					end: expirationDate,
-				}
+				return this.getBidPrepareData(request, bidTakeData, collection)
 			})
 			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
 
 		const submit = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderRequest) => {
-				const wethContractAddress = this.getWethContractAddress()
-				const currency = getCurrencyAssetType(request.currency)
-				if (currency["@type"] === "ERC20" && currency.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
-					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
-					const value = await this.getConvertableValueCommon(
-						currency,
-						request.price,
-						request.amount,
-						originFeesSum
-					)
-					await this.convertCurrency(value)
-				}
-				return request
+				return this.convertProcedure(request, collection)
 			},
 		}).thenAction(bidAction)
 
@@ -363,4 +382,28 @@ export class EthereumBid {
 			submit: sellUpdateAction,
 		}
 	}
+
+	async bidBasic(request: BidSimplifiedRequest): Promise<OrderId> {
+		const bidTakeData = await this.getBidTakeData(request)
+
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: bidTakeData.contractAddress,
+		})
+
+		await this.convertProcedure(request, collection)
+		const bidPrepareData = await this.getBidPrepareData(request, bidTakeData, collection)
+		const bidOrder = await this.sdk.order.bid(bidPrepareData)
+		return common.convertEthereumOrderHash(bidOrder.hash, this.blockchain)
+	}
+
+	async bidUpdateBasic(request: BidUpdateSimplifiedRequest): Promise<OrderId> {
+		const updateResponse = await this.update(request)
+		return updateResponse.submit(request)
+	}
+}
+
+type BidTakeData = {
+	contractAddress: Address
+	item: NftItem | undefined
+	takeAssetType: AssetTypeRequest
 }

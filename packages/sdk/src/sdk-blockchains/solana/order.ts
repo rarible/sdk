@@ -52,12 +52,14 @@ export class SolanaOrder {
 			run: async (request: OrderCommon.OrderInternalRequest) => {
 				const mint = extractPublicKey(request.itemId)
 
+				const amount = request.amount !== undefined ? request.amount: 1
+
 				await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(request.price.toString()),
-					tokensAmount: request.amount,
+					price: parseFloat(request.price.toString()) * amount,
+					tokensAmount: amount,
 				})).submit("processed")
 
 				return getOrderId(
@@ -83,8 +85,8 @@ export class SolanaOrder {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
-
 		const order = await getPreparedOrder(prepareRequest, this.apis)
+		const amount = getTokensAmount(order)
 
 		const updateAction = Action.create({
 			id: "send-tx" as const,
@@ -96,8 +98,8 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(updateRequest.price.toString()),
-					tokensAmount: getTokensAmount(order),
+					price: parseFloat(updateRequest.price.toString()) * amount,
+					tokensAmount: amount,
 				})).submit("processed")
 
 
@@ -141,12 +143,14 @@ export class SolanaOrder {
 			run: async (request: OrderRequest) => {
 				const mint = extractPublicKey(prepare.itemId)
 
+				const amount = request.amount !== undefined ? request.amount: 1
+
 				await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(request.price.toString()),
-					tokensAmount: request.amount,
+					price: parseFloat(request.price.toString()) * amount,
+					tokensAmount: amount,
 				})).submit("processed")
 
 				return getOrderId(
@@ -175,8 +179,8 @@ export class SolanaOrder {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
-
 		const order = await getPreparedOrder(prepareRequest, this.apis)
+		const amount = getTokensAmount(order)
 
 		const updateAction = Action.create({
 			id: "send-tx" as const,
@@ -188,8 +192,8 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(updateRequest.price.toString()),
-					tokensAmount: getTokensAmount(order),
+					price: parseFloat(updateRequest.price.toString()) * amount,
+					tokensAmount: amount,
 				})).submit("processed")
 
 				return getOrderId(
@@ -216,13 +220,14 @@ export class SolanaOrder {
 		run: async (request: CancelOrderRequest) => {
 			const order = await getPreparedOrder(request, this.apis)
 			const orderData = getOrderData(order)
+			const amount = getTokensAmount(order)
 
 			const res = await (await this.sdk.order.cancel({
 				auctionHouse: extractPublicKey(orderData.auctionHouse!),
 				signer: this.wallet!.provider,
 				mint: getMintId(order),
-				price: getPrice(order),
-				tokensAmount: getTokensAmount(order),
+				price: getPrice(order) * amount,
+				tokensAmount: amount,
 			})).submit("processed")
 
 			return new BlockchainSolanaTransaction(res, this.sdk)

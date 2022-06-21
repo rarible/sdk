@@ -19,4 +19,5 @@ yarn run build-connector-walletconnect
 yarn run build-connector-helper
 yarn run build-connector-phantom
 yarn run build-connector-solflare
+yarn run build-sdk-examples
 
