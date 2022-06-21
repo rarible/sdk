@@ -21,7 +21,7 @@ describe("Flow buy", () => {
 	const sell = new FlowSell(sdk, apis)
 	const fill = new FlowBuy(sdk, apis, "testnet")
 
-	test.skip("Should buy flow NFT item", async () => {
+	test("Should buy flow NFT item", async () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItem(sell, itemId, "0.1")
 		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))

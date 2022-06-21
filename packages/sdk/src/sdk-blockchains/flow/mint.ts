@@ -3,13 +3,18 @@ import type { FlowSdk } from "@rarible/flow-sdk"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
-import type { PrepareMintResponse } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { IApisSdk } from "../../domain"
 import { getCollection } from "../ethereum/mint"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type {
+	MintSimplifiedRequest,
+	MintSimplifiedRequestOffChain,
+	MintSimplifiedRequestOnChain,
+} from "../../types/nft/mint/simplified"
 import { convertFlowItemId, getFlowCollection } from "./common/converters"
 import { prepareFlowRoyalties } from "./common/prepare-flow-royalties"
 
@@ -20,6 +25,7 @@ export class FlowMint {
 		private network: FlowNetwork,
 	) {
 		this.prepare = this.prepare.bind(this)
+		this.mintBasic = this.mintBasic.bind(this)
 	}
 
 	async prepare(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
@@ -48,6 +54,16 @@ export class FlowMint {
 			}
 		}
 		throw new Error("Unsupported collection type")
+	}
+
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+
+	async mintBasic(request: MintSimplifiedRequest) {
+		const response = await this.prepare(request)
+		return response.submit(request)
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {

@@ -4,10 +4,13 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import type { Order } from "@rarible/api-client"
 import { OrderStatus } from "@rarible/api-client"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { extractAddress, extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
@@ -91,7 +94,6 @@ export class SolanaFill {
 	private async acceptBid(order: Order): Promise<PrepareFillResponse> {
 		const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 		const mint = getMintId(order)
-		const price = getPrice(order)
 
 		const item = await this.apis.item.getItemById({ itemId: getItemId(mint) })
 
@@ -99,6 +101,8 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
+					const price = getPrice(order)
+
 					const sellPrepare = await this.sdk.order.sell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
@@ -135,5 +139,13 @@ export class SolanaFill {
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,
 		}
+	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+
 	}
 }

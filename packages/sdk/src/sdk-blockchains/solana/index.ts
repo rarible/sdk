@@ -27,19 +27,19 @@ export function createSolanaSdk(
 
 	return {
 		nftBasic: {
-			mint: notImplemented,
-			transfer: notImplemented,
-			burn: notImplemented,
-			createCollection: notImplemented,
+			mint: nftService.mintBasic,
+			transfer: nftService.transferBasic,
+			burn: nftService.burnBasic,
+			createCollection: collectionService.createCollectionBasic,
 		},
 		orderBasic: {
-			sell: notImplemented,
-			sellUpdate: notImplemented,
-			buy: notImplemented,
-			acceptBid: notImplemented,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: notImplemented,
+			sell: orderService.sellBasic,
+			sellUpdate: orderService.sellUpdateBasic,
+			buy: fillService,
+			acceptBid: orderService,
+			bid: orderService.bidBasic,
+			bidUpdate: orderService.bidUpdateBasic,
+			cancel: orderService.cancelBasic,
 		},
 		nft: {
 			mint: nftService.mint,

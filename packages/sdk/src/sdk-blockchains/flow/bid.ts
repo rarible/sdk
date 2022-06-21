@@ -1,8 +1,9 @@
-import type { FlowSdk } from "@rarible/flow-sdk"
+import type { FlowItemId, FlowSdk } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import { toBigNumber } from "@rarible/types/build/big-number"
+import type { OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
@@ -14,6 +15,8 @@ import type {
 	PrepareBidUpdateResponse,
 } from "../../types/order/bid/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
+import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName, toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
@@ -26,13 +29,15 @@ export class FlowBid {
 	constructor(private sdk: FlowSdk) {
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
+		this.bidBasic = this.bidBasic.bind(this)
+		this.bidUpdateBasic = this.bidUpdateBasic.bind(this)
 	}
 
 	private async getConvertableValue(): Promise<GetConvertableValueResult> {
 		return undefined
 	}
 
-	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+	getBidObjectData(prepare: PrepareBidRequest): BidObjectData {
 		if ("collectionId" in prepare) {
 			throw new Error("Bid collection is not supported")
 		}
@@ -45,22 +50,16 @@ export class FlowBid {
 			throw new Error(`Not an flow item: ${prepare.itemId}`)
 		}
 		const itemId = toFlowItemId(`${contract}:${tokenId}`)
+		return { contract, tokenId, itemId }
+	}
+
+	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		const bidObjectData = this.getBidObjectData(prepare)
 
 		const bidAction = Action.create({
 			id: "send-tx" as const,
 			run: async (bidRequest: OrderCommon.OrderRequest) => {
-				const requestCurrency = getCurrencyAssetType(bidRequest.currency)
-				if (requestCurrency["@type"] === "FLOW_FT") {
-					const currency = getFungibleTokenName(requestCurrency.contract)
-					return this.sdk.order.bid(
-						toFlowContractAddress(contract),
-						currency,
-						itemId,
-						toBigNumber(bidRequest.price.toString()),
-						toFlowParts(bidRequest.originFees),
-					)
-				}
-				throw new Error(`Unsupported currency type: ${requestCurrency["@type"]}`)
+				return this.bidCommon(bidRequest, bidObjectData)
 			},
 		}).after((tx) => convertFlowOrderId(tx.orderId))
 
@@ -75,6 +74,21 @@ export class FlowBid {
 			supportsExpirationDate: false,
 			submit: bidAction,
 		}
+	}
+
+	async bidCommon(bidRequest: OrderCommon.OrderRequest, bidObjectData: BidObjectData) {
+		const requestCurrency = getCurrencyAssetType(bidRequest.currency)
+		if (requestCurrency["@type"] === "FLOW_FT") {
+			const currency = getFungibleTokenName(requestCurrency.contract)
+			return this.sdk.order.bid(
+				toFlowContractAddress(bidObjectData.contract),
+				currency,
+				bidObjectData.itemId,
+				toBigNumber(bidRequest.price.toString()),
+				toFlowParts(bidRequest.originFees),
+			)
+		}
+		throw new Error(`Unsupported currency type: ${requestCurrency["@type"]}`)
 	}
 
 	async update(
@@ -114,4 +128,21 @@ export class FlowBid {
 			submit: bidUpdateAction,
 		}
 	}
+
+	async bidBasic(request: BidSimplifiedRequest): Promise<OrderId> {
+		const bidObjectData = this.getBidObjectData(request)
+		const bidTx = await this.bidCommon(request, bidObjectData)
+		return convertFlowOrderId(bidTx.orderId)
+	}
+
+	async bidUpdateBasic(request: BidUpdateSimplifiedRequest): Promise<OrderId> {
+		const updateResponse = await this.update(request)
+		return updateResponse.submit(request)
+	}
+}
+
+type BidObjectData = {
+	contract: string
+	tokenId: string
+	itemId: FlowItemId
 }

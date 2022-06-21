@@ -4,6 +4,7 @@ import type { AuthWithPrivateKey, FlowEnv } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
+import { fill } from "@rarible/flow-sdk/build/order/fill/fill"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -29,27 +30,31 @@ export function createFlowSdk(
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
 	const bidService = new FlowBid(sdk)
+	const burnService = new FlowBurn(sdk, blockchainNetwork)
+	const transferService = new FlowTransfer(sdk, blockchainNetwork)
+	const fillService = new FlowBuy(sdk, apis, blockchainNetwork)
+	const cancelService = new FlowCancel(sdk, apis, blockchainNetwork)
 
 	return {
 		nftBasic: {
-			mint: notImplemented,
-			transfer: notImplemented,
-			burn: notImplemented,
+			mint: mintService.mintBasic,
+			transfer: transferService.transferBasic,
+			burn: burnService.burnBasic,
 			createCollection: notImplemented,
 		},
 		orderBasic: {
-			sell: notImplemented,
-			sellUpdate: notImplemented,
-			buy: notImplemented,
-			acceptBid: notImplemented,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: notImplemented,
+			sell: sellService.sellBasic,
+			sellUpdate: sellService.sellUpdateBasic,
+			buy: fillService.buyBasic,
+			acceptBid: fillService.acceptBidBasic,
+			bid: bidService.bidBasic,
+			bidUpdate: bidService.bidUpdateBasic,
+			cancel: cancelService.cancelBasic,
 		},
 		nft: {
 			mint: mintService.prepare,
-			burn: new FlowBurn(sdk, blockchainNetwork).burn,
-			transfer: new FlowTransfer(sdk, blockchainNetwork).transfer,
+			burn: burnService.burn,
+			transfer: transferService.transfer,
 			generateTokenId: () => Promise.resolve(undefined),
 			deploy: nonImplementedAction,
 			createCollection: nonImplementedAction,
@@ -58,12 +63,12 @@ export function createFlowSdk(
 		order: {
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
-			fill: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			buy: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			acceptBid: new FlowBuy(sdk, apis, blockchainNetwork).buy,
+			fill: fillService.buy,
+			buy: fillService.buy,
+			acceptBid: fillService.buy,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
-			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,

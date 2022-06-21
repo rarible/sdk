@@ -9,6 +9,7 @@ export type CreateCollectionRequestSimplified =
   | EthereumCreatePublicCollectionSimplified
   | EthereumCreatePrivateCollectionSimplified
   | TezosCreatePublicCollectionSimplified
+  | SolanaCreateCollectionSimplified
 
 
 export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBlockchains>
@@ -44,10 +45,17 @@ export interface EthereumCreateCollectionSimplifiedCommon {
  * Tezos
  */
 export interface TezosCreatePublicCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.TEZOS>{
+	AbstractCreateCollectionSimplified<Blockchain.TEZOS> {
 	type: "NFT" | "MT"
 	symbol: string
 	name: string
 	contractURI: string
 	isPublic: boolean
+}
+
+/**
+ * Solana
+ */
+export interface SolanaCreateCollectionSimplified extends AbstractCreateCollectionSimplified<Blockchain.SOLANA> {
+	metadataURI: string
 }
