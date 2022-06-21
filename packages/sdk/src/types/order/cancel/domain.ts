@@ -6,4 +6,8 @@ export type CancelOrderRequest = {
 	orderId: OrderId
 }
 
+/**
+ * Cancel order
+ * -
+ */
 export type ICancel = Action<"send-tx", CancelOrderRequest, IBlockchainTransaction>

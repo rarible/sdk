@@ -65,4 +65,22 @@ export type CreateCollectionResponse = {
 	address: ContractAddress
 }
 
+/**
+ * Create collection - Deploy contract with custom properties
+ * -
+ * @example
+ * const { tx, address } = sdk.nft.createCollection({
+ *	blockchain: Blockchain.ETHEREUM,
+ *	asset: {
+ *		assetType: "ERC721",
+ *		arguments: {
+ *				name: "name",
+ *				symbol: "RARI",
+ *				baseURI: "https://ipfs.rarible.com",
+ *				contractURI: "https://ipfs.rarible.com",
+ *				isUserToken: false,
+ *			},
+ *		},
+ * })
+ */
 export type ICreateCollection = Action<"send-tx", CreateCollectionRequest, CreateCollectionResponse>

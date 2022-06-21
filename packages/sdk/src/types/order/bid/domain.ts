@@ -30,7 +30,15 @@ export type GetConvertableValueResult = {
 	value: BigNumberValue
 } | undefined
 
+/**
+ * Create bid order
+ * -
+ */
 export type IBid = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
+/**
+ * Update bid order
+ * -
+ */
 export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareBidUpdateResponse>
 export type PrepareBidRequest = PrepareOrderRequest | { collectionId: CollectionId }
 

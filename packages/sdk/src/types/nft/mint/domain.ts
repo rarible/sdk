@@ -34,6 +34,40 @@ export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", Min
 	supportsLazyMint: boolean
 }
 
+/**
+ * Mint token
+ * -
+ * @param {PrepareMintRequest} request
+ * @return {Promise<PrepareMintResponse>}
+ * @example
+ *
+ * import { toUnionAddress } from "@rarible/types"
+ *
+ * const prepare = sdk.nft.mint({tokenId: toTokenId("ETHEREUM:0x...")})
+ * const tx = prepare.submit({
+ *		uri: "ipfs://..."
+ *		supply: 1
+ *		lazyMint: false
+ *		creators?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
+ *		royalties?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
+ * })
+ */
 export type IMint = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
 
+/**
+ * Upload meta data to nftStorage (for future minting)
+ * @example
+ * import { toUnionAddress } from "@rarible/types"
+ * const sdk.nft.uploadMeta({
+ * 		nftStorageApiKey: "your_nft_storage_api_key",
+ *  	properties: {
+ *  	 	name: string
+ *			description?: string
+ *			image?: File
+ *			animationUrl?: File
+ *			attributes: MintAttribute[]
+ *  	},
+ *  	accountAddress: toUnionAddress("ETHEREUM:0x...")
+ *  })
+ */
 export type IUploadMeta = (request: MetaUploadRequest) => Promise<UploadMetaResponse>

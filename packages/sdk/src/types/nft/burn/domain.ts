@@ -31,4 +31,13 @@ export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", Bur
 	maxAmount: BigNumber
 }
 
+/**
+ * Burn token
+ * -
+ * @param {PrepareBurnRequest} request
+ * @return {Promise<PrepareBurnResponse>}
+ * @example
+ * const prepare = sdk.nft.burn({itemId: toUnionId("ETHEREUM:0x...")})
+ * const tx = prepare.submit({amount?: 5, creators?: [{account: toUnionAddress("ETHEREUM:0x...", value: 100)}]})
+ */
 export type IBurn = (request: PrepareBurnRequest) => Promise<PrepareBurnResponse>

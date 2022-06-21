@@ -22,6 +22,21 @@ import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
 
+/**
+ * Rarible sdk creation function
+ *
+ * @param { Maybe<BlockchainWallet> } wallet undefined or BlockchainWallet
+ * wallet can instantiate from @rarible/sdk-wallet package
+ * @param { RaribleSdkEnvironment } env the environment that the sdk will interact with.
+ * @param { IRaribleSdkConfig } [config] config
+ * @return {IRaribleSdk} {@link IRaribleSdk}
+ *
+ * @example
+ *    const web3 = new Web3(provider)
+ *    const web3Ethereum = new Web3Ethereum({ web3 })
+ *    const ethWallet = new EthereumWallet(web3Ethereum)
+ * 	  const sdk = createRaribleSdk(, "prod")
+ */
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
 	env: RaribleSdkEnvironment,
