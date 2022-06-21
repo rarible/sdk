@@ -1,9 +1,20 @@
 import { toPublicKey } from "@rarible/solana-common"
 import { SolanaSdk } from "../sdk/sdk"
-import { genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
+import { delay, genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
 
 describe("solana order sdk", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
+
+	beforeAll(async () => {
+		const wallet1 = getTestWallet(0)
+		const wallet2 = getTestWallet(1)
+		await requestSol(sdk.connection, wallet1.publicKey, 1)
+		console.log("fund 1 wallet, awaiting...")
+		await delay(10000)
+		await requestSol(sdk.connection, wallet2.publicKey, 1)
+		console.log("fund 2 wallet")
+
+	})
 
 	test("Should sell & buy nft", async () => {
 		const sellerWallet = getTestWallet()
