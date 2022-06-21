@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.3](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.3) (2022-06-21)
+
+
+### Bug Fixes
+
+* solana burn & transfer ([2f894d8](https://github.com/rarible/sdk/commit/2f894d8a71efffa167d9eef222aa5ba4f81a07e2))
+* solana burn & transfer ([dfdaee8](https://github.com/rarible/sdk/commit/dfdaee869f173f554ab840e5e654ca27d71018df))
+
+
+### Features
+
+* add testnet env, remove e2e env ([#261](https://github.com/rarible/sdk/issues/261)) ([55c908f](https://github.com/rarible/sdk/commit/55c908f031e39b8a2ad504c1e334695d3386ce42))
+
+
+
+
+
 ## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-examples",
-  "version": "0.9.11-beta.2",
+  "version": "0.9.11-beta.3",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -23,7 +23,7 @@
     "@rarible/api-client": "0.0.13-beta4",
     "@rarible/estimate-middleware": "~0.9.4",
     "@rarible/ethers-ethereum": "^0.12.73",
-    "@rarible/sdk-wallet": "^0.9.11-beta.2",
+    "@rarible/sdk-wallet": "^0.9.11-beta.3",
     "@rarible/test-provider": "~0.5.4",
     "@rarible/types": "~0.9.3",
     "ethereumjs-wallet": "^1.0.2",
