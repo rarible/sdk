@@ -13,7 +13,20 @@ export class BlockchainSolanaTransaction implements IBlockchainTransaction {
 	}
 
 	async wait() {
-		await this.sdk.connection.confirmTransaction(this.transaction.txId, "confirmed")
+		const check = async (retryCount: number) => {
+			try {
+				await this.sdk.connection.confirmTransaction(this.transaction.txId, "confirmed")
+			} catch (e: any) {
+				if (e?.message?.includes("Transaction was not confirmed in") && retryCount > 0) {
+					console.log("solana confirm retry")
+					await check(retryCount - 1)
+				} else {
+					throw e
+				}
+			}
+		}
+
+		await check(4)
 
 		return {
 			blockchain: this.blockchain,
