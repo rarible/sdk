@@ -4,8 +4,8 @@ import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk
 
 /**
  * Prepare meta data before upload to ipfs storage
- * @param {PreprocessMetaRequest} meta metadata request for prepare
- * @return {PreprocessMetaResponse}
+ * @param meta - metadata request for prepare
+ * @returns {PreprocessMetaResponse}
  *
  * @example
  *
@@ -20,7 +20,7 @@ import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk
  */
 export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
 /**
- * @property {string} name
+ * @property name -
  * @property {string | undefined} description
  * @property {CommonTokenContent | undefined} image
  * @property {CommonTokenContent | undefined} animation

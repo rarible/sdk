@@ -29,7 +29,7 @@ import { createSolanaSdk } from "./sdk-blockchains/solana"
  * wallet can instantiate from @rarible/sdk-wallet package
  * @param { RaribleSdkEnvironment } env the environment that the sdk will interact with.
  * @param { IRaribleSdkConfig } [config] config
- * @return {IRaribleSdk} {@link IRaribleSdk}
+ * @returns {IRaribleSdk} {@link IRaribleSdk}
  *
  * @example
  *    const web3 = new Web3(provider)

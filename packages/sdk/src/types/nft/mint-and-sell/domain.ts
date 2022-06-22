@@ -48,7 +48,7 @@ export type PrepareMintAndSellResponse =
  * Mint token and create sell order from it
  * -
  * @param {PrepareMintRequest} meta metadata request for prepare
- * @return {Promise<PrepareMintAndSellResponse>}
+ * @returns {Promise<PrepareMintAndSellResponse>}
  * @example
  * import { toUnionAddress } from "@rarible/types"
  *

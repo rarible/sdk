@@ -32,14 +32,39 @@ export type GetConvertableValueResult = {
 
 /**
  * Create bid order
- * -
+ * @param {PrepareBidRequest} request itemId or collectionId
+ * @returns {Promise<PrepareBidResponse>}
+ * @example
+ * import { toItemId } from "@rarible/types"
+ * const bidAction = sdk.order.bid({itemId: toItemId("ETHEREUM:0x...")})
+ * const { orderId } = bidAction.submit({
+ * 		amount: number //How many NFTs to sell or create bid for
+ * 		price: BigNumberValue // Price per one NFT
+ * 		currency: RequestCurrency //Currency of the trade
+ * 		originFees?: UnionPart[] //Origin fees, if not supported by the underlying contract, will throw Error
+ * 		payouts?: UnionPart[] //Payouts, if not supported by the underlying contract, will throw Error
+ * 		expirationDate?: Date // Order expiration date
+ * })
  */
 export type IBid = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
 /**
  * Update bid order
- * -
+ * @param {PrepareOrderUpdateRequest} request bid "orderId" for update
+ * @returns {Promise<PrepareBidUpdateResponse>}
+ * @example
+ * const updateAction = await sdk2.order.bidUpdate({
+ *		orderId,
+ * })
+ * const orderId = await updateAction.submit({ price: "0.0000000000000004" })
  */
 export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareBidUpdateResponse>
+
+/**
+ * @typedef {import("@rarible/types").ItemId} ItemId
+ */
+/**
+ * \{itemid: {@link ItemId}\} or \{collection: {@link CollectionId}\}
+ */
 export type PrepareBidRequest = PrepareOrderRequest | { collectionId: CollectionId }
 
 export type ConvertCurrencyRequest = {

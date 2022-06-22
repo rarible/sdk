@@ -86,4 +86,23 @@ export interface PrepareFillResponse
 	supportsPartialFill: boolean
 }
 
+/**
+ * Fill sell/bid order
+ *
+ * @param {PrepareFillRequest} request
+ * @returns {Promise<PrepareFillResponse>}
+ * @example ```
+ * 		import { toOrderId, toBigNumber, toItemId } from "@rarible/types"
+ * 		const buyAction = await sdk.order.buy({ orderId: toOrderId("ETHEREUM:0x...") })
+ * 		const orderId = await buyAction.submit({
+ *			  amount: 2, // Number of NFTs to buy or to sell (in case of accepting bids)
+ *			  originFees?: [{account: toUnionAddress("ETHEREUM:0x...", value:  500)}], // Origin fees, if not supported by
+ *			  // the underlying contract, will throw Error
+ *			  payouts?: [{account: toUnionAddress("ETHEREUM:0x...", value:  500)}], // Payouts, if not supported by the
+ *			  // underlying contract, will throw Error
+ *			  infiniteApproval?: false, // Use infinite approvals (for ERC-20)
+ *			  itemId?: toItemId("ETHEREUM:0x..."), // ItemId for fill collection order
+ *			  unwrap?: false // unwrap tokens to accept bid
+ *		})```
+ */
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>

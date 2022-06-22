@@ -18,7 +18,7 @@ export type TokenId = {
  * Generates a token id (for future minting)
  * -
  * @param {GenerateTokenIdRequest} prepare
- * @return {Promise<TokenId | undefined>}
+ * @returns {Promise<TokenId | undefined>}
  * @example
  * const {tokenId, signature} = sdk.nft.generateTokenId({
  * 		collection: toContractAddress("ETHEREUM:0x..."),

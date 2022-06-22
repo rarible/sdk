@@ -38,7 +38,7 @@ export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", Min
  * Mint token
  * -
  * @param {PrepareMintRequest} request
- * @return {Promise<PrepareMintResponse>}
+ * @returns {Promise<PrepareMintResponse>}
  * @example
  *
  * import { toUnionAddress } from "@rarible/types"

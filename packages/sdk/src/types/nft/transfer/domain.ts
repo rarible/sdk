@@ -53,7 +53,7 @@ export interface PrepareTransferResponse extends AbstractPrepareResponse<"transf
  * Transfer asset to recipient
  * -
  * @param {PrepareTransferRequest} request - {itemId: ItemId}
- * @return {Promise<PrepareTransferResponse>} response - {
+ * @returns {Promise<PrepareTransferResponse>} response - {
  *   <p>multiple: boolean</p>
  *   <p>maxAmount: {@link BigNumber}</p>
  *   <p>submit: ({to: {@link UnionAddress}, amount?: number}) => Promise<IBlockchainTransaction></p>

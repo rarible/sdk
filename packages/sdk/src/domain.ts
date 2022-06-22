@@ -67,6 +67,7 @@ export interface IRaribleSdk {
 	order: IOrderSdk
 	balances: IBalanceSdk
 	/**
+	 * Restriction methods
 	 * - canTransfer - {@link IRestrictionSdk.canTransfer}
 	 */
 	restriction: IRestrictionSdk
@@ -110,7 +111,7 @@ export interface INftSdk {
 	 * Transfer asset to recipient
 	 * -
 	 * @param {PrepareTransferRequest} request - {itemId: ItemId}
-	 * @return {Promise<PrepareTransferResponse>} response - {
+	 * @returns {Promise<PrepareTransferResponse>} response - {
 	 *   <p>multiple: boolean</p>
 	 *   <p>maxAmount: {@link BigNumber}</p>
 	 *   <p>submit: ({to: {@link UnionAddress}, amount?: number}) => Promise<IBlockchainTransaction></p>
@@ -125,7 +126,7 @@ export interface INftSdk {
 	/**
 	 * Prepare meta data before upload to ipfs storage
 	 * @param {PreprocessMetaRequest} meta metadata request for prepare
-	 * @return {PreprocessMetaResponse}
+	 * @returns {PreprocessMetaResponse}
 	 *
 	 * @example
 	 *
@@ -240,13 +241,16 @@ export interface INftSdk {
  * Order methods
  * @property {ISell} sell Creates sell order
  * @property {ISellUpdate} sellUpdate Update order
- * @property {IFill} buy Fill order
- * @property {IFill} acceptBid Fill bid
- * @property {IBid} bid Create bid
- * @property {IBidUpdate} bidUpdate Update bid
+ * @property {IFill} buy Buy item(s) by filling sell order
+ * @property {IFill} acceptBid Confirm item selling by filling buy(bid) order
+ * @property {IBid} bid Create bid order
+ * @property {IBidUpdate} bidUpdate Update bid order
  * @property {ICancel} cancel Cancel order
  */
 export interface IOrderSdk {
+	/**
+	 * Create sell order
+	 */
 	sell: ISell
 	sellUpdate: ISellUpdate
 	/**
@@ -255,16 +259,23 @@ export interface IOrderSdk {
 	fill: IFill
 	/**
 	 * Buy item(s) by filling sell order
-	 * -
 	 */
 	buy: IFill
 	/**
-	 * Confirm item sell by filling buy(bid) order
-	 * -
+	 * Confirm item selling by filling bid order
 	 */
 	acceptBid: IFill
+	/**
+	 * Place a bid order on NFT
+	 */
 	bid: IBid
+	/**
+	 * Update bid order
+	 */
 	bidUpdate: IBidUpdate
+	/**
+	 * Cancel sell/bid order
+	 */
 	cancel: ICancel
 }
 /**
