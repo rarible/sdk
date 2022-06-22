@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-mew",
-  "version": "0.9.11-beta.2",
+  "version": "0.9.11-beta.4",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@myetherwallet/mewconnect-web-client": "^2.2.0-beta.16",
-    "@rarible/connector": "^0.9.11-beta.2"
+    "@rarible/connector": "^0.9.11-beta.4"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

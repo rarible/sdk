@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.4](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.4) (2022-06-22)
+
+
+### Bug Fixes
+
+* add retry policy for solana tx confirmation ([3d25ab0](https://github.com/rarible/sdk/commit/3d25ab07e57e7b34464cab1bb4f349925e7aef08))
+* set longer default timeout for solana txs ([48b4e0f](https://github.com/rarible/sdk/commit/48b4e0f020d9d2627248346f956336b39db3ee72))
+* solana burn & transfer ([2f894d8](https://github.com/rarible/sdk/commit/2f894d8a71efffa167d9eef222aa5ba4f81a07e2))
+* solana burn & transfer ([dfdaee8](https://github.com/rarible/sdk/commit/dfdaee869f173f554ab840e5e654ca27d71018df))
+* solana cancel for multiple items ([e55fa39](https://github.com/rarible/sdk/commit/e55fa394ffdd78f88990f92e2409b3083a6d733e))
+
+
+### Features
+
+* add testnet env, remove e2e env ([#261](https://github.com/rarible/sdk/issues/261)) ([55c908f](https://github.com/rarible/sdk/commit/55c908f031e39b8a2ad504c1e334695d3386ce42))
+
+
+
+
+
 ## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
 
 
