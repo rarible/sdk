@@ -223,7 +223,7 @@ export class SolanaOrder {
 				auctionHouse: extractPublicKey(orderData.auctionHouse!),
 				signer: this.wallet!.provider,
 				mint: getMintId(order),
-				price: getPrice(order).multipliedBy(amount),
+				price: getPrice(order),
 				tokensAmount: amount,
 			})).submit("processed")
 
