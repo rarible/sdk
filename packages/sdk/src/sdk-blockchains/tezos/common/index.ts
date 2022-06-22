@@ -154,7 +154,7 @@ export function getMaybeTezosProvider(
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
 					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
-					union_api: "https://staging-api.rarible.org/v0.1",
+					union_api: "https://api-staging.rarible.org/v0.1",
 				},
 			}
 		}
