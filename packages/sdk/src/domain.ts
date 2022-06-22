@@ -110,8 +110,8 @@ export interface INftSdk {
 	/**
 	 * Transfer asset to recipient
 	 * -
-	 * @param {PrepareTransferRequest} request - {itemId: ItemId}
-	 * @returns {Promise<PrepareTransferResponse>} response - {
+	 * @param request - {itemId: ItemId}
+	 * @returns response - {
 	 *   <p>multiple: boolean</p>
 	 *   <p>maxAmount: {@link BigNumber}</p>
 	 *   <p>submit: ({to: {@link UnionAddress}, amount?: number}) => Promise<IBlockchainTransaction></p>

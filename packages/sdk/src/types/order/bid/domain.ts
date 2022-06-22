@@ -32,7 +32,7 @@ export type GetConvertableValueResult = {
 
 /**
  * Create bid order
- * @param {PrepareBidRequest} request itemId or collectionId
+ * @param request itemId or collectionId
  * @returns {Promise<PrepareBidResponse>}
  * @example
  * import { toItemId } from "@rarible/types"
@@ -49,7 +49,7 @@ export type GetConvertableValueResult = {
 export type IBid = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
 /**
  * Update bid order
- * @param {PrepareOrderUpdateRequest} request bid "orderId" for update
+ * @param request bid "orderId" for update
  * @returns {Promise<PrepareBidUpdateResponse>}
  * @example
  * const updateAction = await sdk2.order.bidUpdate({

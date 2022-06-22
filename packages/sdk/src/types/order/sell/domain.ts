@@ -10,7 +10,7 @@ import type {
 
 /**
  * Create sell order
- * @param {PrepareOrderRequest} request
+ * @param request
  * @returns {Promise<PrepareSellResponse>}
  * @example
  * 		const sellAction = await sdk.order.sell({ itemId: toItemId("ETHEREUM:0x...") })
@@ -28,7 +28,7 @@ export type ISell = (request: PrepareOrderRequest) => Promise<PrepareSellRespons
 export type ISellInternal = (request: PrepareSellInternalRequest) => Promise<PrepareSellInternalResponse>
 /**
  * Update sell order
- * @param {PrepareOrderUpdateRequest} request
+ * @param request
  * @returns {Promise<PrepareOrderUpdateResponse>}
  * @example
  * 		import { toOrderId, toBigNumber } from "@rarible/types"
