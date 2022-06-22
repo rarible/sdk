@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.5](https://github.com/rarible/sdk/compare/v0.9.11-beta.4...v0.9.11-beta.5) (2022-06-22)
+
+
+### Bug Fixes
+
+* union api url for testnet ([#267](https://github.com/rarible/sdk/issues/267)) ([1ee426a](https://github.com/rarible/sdk/commit/1ee426a3417c2f38e843f2b55caf22a00a3fd61f))
+
+
+
+
+
 ## [0.9.11-beta.4](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.4) (2022-06-22)
 
 
