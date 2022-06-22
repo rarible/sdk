@@ -4322,7 +4322,7 @@
     ganache "^7.0.2"
     web3-provider-engine "^16.0.1"
 
-"@rarible/ethers-ethereum@^0.12.73":
+"@rarible/ethers-ethereum@^0.12.73", "@rarible/ethers-ethereum@~0.12.73":
   version "0.12.73"
   resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.73.tgz#871e6017a8da85ff2c742c4408e501b81309a39e"
   integrity sha512-hasH2/Eoh/lvMcDnJ+IhkmZ5LbgD14DMGMUOMdLsVSrVEzKUcrCNbA7pAAmWpVWVnNnLkW3tQqA+L1HdvBQnhg==
