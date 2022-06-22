@@ -9,6 +9,10 @@ import { mint } from "../../../common/atoms-tests/mint"
 import { getCollection } from "../../../common/helpers"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import {
+	getAllCollections, getCollectionsByOwner, verifyCollectionsByBlockchain,
+	verifyCollectionsContainsCollection, verifyCollectionsOwner,
+} from "../../../common/api-helpers/collection-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -156,6 +160,14 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 		const walletAddress = await getWalletAddressFull(wallet)
 		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 		const collection = await getCollection(sdk, address)
+
+		const collectionsAll = await getAllCollections(sdk, [suite.blockchain], 10)
+		await verifyCollectionsByBlockchain(collectionsAll, suite.blockchain)
+		await verifyCollectionsContainsCollection(collectionsAll, address)
+
+		const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
+		await verifyCollectionsOwner(collectionsByOwner, suite.blockchain)
+		await verifyCollectionsContainsCollection(collectionsByOwner, address)
 
 		const { nft } = await mint(sdk, wallet, { collection },
 			suite.mintRequest(walletAddress.unionAddress))

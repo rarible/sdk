@@ -17,6 +17,7 @@ import { transfer } from "../../../common/atoms-tests/transfer"
 import { getCollectionById } from "../../../common/api-helpers/collection-helper"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { getAllItems, verifyItemsByBlockchain, verifyItemsContainsItem } from "../../../common/api-helpers/item-helper"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -186,6 +187,10 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 
 		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
 			suite.mintRequest(creatorWalletAddress.unionAddress))
+
+		const allItems = await getAllItems(creatorSdk, [suite.blockchain], 5)
+		await verifyItemsByBlockchain(allItems, suite.blockchain)
+		await verifyItemsContainsItem(allItems, nft.id)
 
 		await transfer(creatorSdk, { itemId: nft.id },
 			suite.transferRequest(recipientWalletAddress.unionAddress))
