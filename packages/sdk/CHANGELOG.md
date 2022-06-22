@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.6](https://github.com/rarible/sdk/compare/v0.9.11-beta.5...v0.9.11-beta.6) (2022-06-22)
+
+
+### Bug Fixes
+
+* dipdup for tezos testnet ([aefa1f4](https://github.com/rarible/sdk/commit/aefa1f4c2f830555fa1bc006858cb5e5491c1ffc))
+
+
+
+
+
 ## [0.9.11-beta.5](https://github.com/rarible/sdk/compare/v0.9.11-beta.4...v0.9.11-beta.5) (2022-06-22)
 
 
