@@ -4,13 +4,7 @@ import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type {
-	IBalanceSdk,
-	IEthereumSdk,
-	INftSdk,
-	IOrderInternalSdk,
-	IRaribleInternalSdk,
-} from "../../domain"
+import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
@@ -27,15 +21,16 @@ import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } 
 import { Middlewarer } from "../../common/middleware/middleware"
 import type {
 	ConvertRequest,
-	IDepositBiddingBalance,
+	CurrencyOrOrder,
 	GetBiddingBalanceRequest,
+	IDepositBiddingBalance,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
-import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
+import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -141,10 +136,15 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.transfer = this.transfer.bind(this)
 		this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
 		this.generateTokenId = this.generateTokenId.bind(this)
+		this.uploadMeta = this.uploadMeta.bind(this)
 	}
 
 	burn(request: PrepareBurnRequest): Promise<PrepareBurnResponse> {
 		return this.instances[extractBlockchain(request.itemId)].burn(request)
+	}
+
+	uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
+		return this.instances[extractBlockchain(request.accountAddress)].uploadMeta(request)
 	}
 
 	mint(request: PrepareMintRequest): Promise<PrepareMintResponse> {

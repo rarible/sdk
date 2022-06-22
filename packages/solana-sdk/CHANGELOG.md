@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.1](https://github.com/rarible/sdk/compare/v0.9.11-beta.0...v0.9.11-beta.1) (2022-06-20)
+
+
+### Features
+
+* use bignumber in solana-sdk ([#255](https://github.com/rarible/sdk/issues/255)) ([3d755ed](https://github.com/rarible/sdk/commit/3d755ed4f88991ccb4390553a32096a10c04fd88))
+
+
+
+
+
 ## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 **Note:** Version bump only for package @rarible/solana-sdk

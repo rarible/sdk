@@ -52,6 +52,6 @@ export class WalletConnectConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const sdk = await this.instance.pipe(first()).toPromise()
-		return sdk.connected
+		return !!sdk?.connected
 	}
 }

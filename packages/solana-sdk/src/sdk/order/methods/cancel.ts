@@ -1,6 +1,7 @@
+import BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { BN } from "@project-serum/anchor"
+import type { BigNumberValue } from "@rarible/utils"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import {
@@ -8,14 +9,15 @@ import {
 	loadAuctionHouseProgram,
 } from "../../../common/auction-house-helpers"
 import { getPriceWithMantissa } from "../../../common/helpers"
+import { bigNumToBn } from "../../../common/utils"
 
 export interface IActionHouseCancelRequest {
 	connection: Connection
 	auctionHouse: PublicKey
 	signer: IWalletSigner
 	mint: PublicKey
-	price: number
-	tokensAmount: number
+	price: BigNumberValue
+	tokensAmount: BigNumberValue
 }
 
 export async function getAuctionHouseCancelInstructions(
@@ -24,22 +26,18 @@ export async function getAuctionHouseCancelInstructions(
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
-	const buyPriceAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.price,
-			auctionHouseObj.treasuryMint,
-			request.signer,
-			anchorProgram,
-		)
+	const buyPriceAdjusted = await getPriceWithMantissa(
+		new BigNumber(request.price),
+		auctionHouseObj.treasuryMint,
+		request.signer,
+		anchorProgram,
 	)
 
-	const tokenSizeAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.tokensAmount,
-			request.mint,
-			request.signer,
-			anchorProgram,
-		)
+	const tokenSizeAdjusted = await getPriceWithMantissa(
+		new BigNumber(request.tokensAmount),
+		request.mint,
+		request.signer,
+		anchorProgram,
 	)
 
 	const tla = await anchorProgram.provider.connection.getTokenLargestAccounts(request.mint)
@@ -70,8 +68,8 @@ export async function getAuctionHouseCancelInstructions(
 		auctionHouseFeeAccount: auctionHouseObj.auctionHouseFeeAccount,
 		tradeState,
 	}, {
-		buyerPrice: buyPriceAdjusted,
-		tokenSize: tokenSizeAdjusted,
+		buyerPrice: bigNumToBn(buyPriceAdjusted),
+		tokenSize: bigNumToBn(tokenSizeAdjusted),
 	})
 
 	return { instructions: [instruction], signers: [] }

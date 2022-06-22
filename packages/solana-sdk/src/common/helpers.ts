@@ -8,6 +8,7 @@ import {
 } from "@solana/web3.js"
 import type { Program } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import BigNumber from "bignumber.js"
 import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID, TOKEN_METADATA_PROGRAM_ID, WRAPPED_SOL_MINT } from "./contracts"
 
 export async function getTokenWallet(
@@ -218,11 +219,11 @@ export async function getMasterEdition(
 }
 
 export async function getPriceWithMantissa(
-	price: number,
+	price: BigNumber,
 	mint: PublicKey,
 	walletKeyPair: any,
 	anchorProgram: Program,
-): Promise<number> {
+): Promise<BigNumber> {
 	const token = new Token(
 		anchorProgram.provider.connection,
 		new PublicKey(mint),
@@ -234,7 +235,7 @@ export async function getPriceWithMantissa(
 
 	const mantissa = 10 ** mintInfo.decimals
 
-	return Math.ceil(price * mantissa)
+	return price.multipliedBy(mantissa).integerValue(BigNumber.ROUND_CEIL)
 }
 
 export async function getAssociatedTokenAccountForMint(
@@ -257,13 +258,15 @@ export async function getTokenAmount(
 	account: PublicKey,
 	mint: PublicKey,
 	integer: boolean = false
-): Promise<number> {
-	let amount = 0
+): Promise<BigNumber> {
+	let amount = new BigNumber(0)
 	if (!mint.equals(WRAPPED_SOL_MINT)) {
 		try {
 			const token = await connection.getTokenAccountBalance(account, "confirmed")
 			if (token?.value?.uiAmount) {
-				amount = integer ? token.value.uiAmount * Math.pow(10, token.value.decimals) : token.value.uiAmount
+				amount = integer ?
+					new BigNumber(token.value.uiAmount).multipliedBy(Math.pow(10, token.value.decimals)) :
+					new BigNumber(token.value.uiAmount)
 			}
 		} catch (e) {
 			console.error(e)
@@ -274,8 +277,8 @@ export async function getTokenAmount(
 			)
 		}
 	} else {
-		amount = await connection.getBalance(account, "confirmed")
-		amount = integer ? amount : amount / LAMPORTS_PER_SOL
+		amount = new BigNumber(await connection.getBalance(account, "confirmed"))
+		amount = integer ? amount : amount.dividedBy(LAMPORTS_PER_SOL)
 	}
 	return amount
 }

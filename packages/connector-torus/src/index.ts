@@ -60,6 +60,6 @@ export class TorusConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const sdk = await this.instance.pipe(first()).toPromise()
-		return sdk.isInitialized && sdk.isLoggedIn
+		return !!(sdk?.isInitialized && sdk?.isLoggedIn)
 	}
 }

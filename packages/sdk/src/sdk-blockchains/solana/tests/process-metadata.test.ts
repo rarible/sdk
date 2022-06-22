@@ -6,7 +6,7 @@ import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import type { ISolanaMetadataResponse } from "../domain"
 
-describe("Solana matadata", () => {
+describe("Solana metadata", () => {
 	const wallet = getWallet()
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
 

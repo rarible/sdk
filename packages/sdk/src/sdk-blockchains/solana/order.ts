@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
@@ -56,7 +57,7 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(request.price.toString()) * request.amount,
+					price: new BigNumber(request.price).multipliedBy(request.amount),
 					tokensAmount: request.amount,
 				})).submit("processed")
 
@@ -96,7 +97,7 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(updateRequest.price.toString()) * amount,
+					price: new BigNumber(updateRequest.price).multipliedBy(amount),
 					tokensAmount: amount,
 				})).submit("processed")
 
@@ -145,7 +146,7 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(request.price.toString()) * request.amount,
+					price: new BigNumber(request.price).multipliedBy(request.amount),
 					tokensAmount: request.amount,
 				})).submit("processed")
 
@@ -188,7 +189,7 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(updateRequest.price.toString()) * amount,
+					price: new BigNumber(updateRequest.price).multipliedBy(amount),
 					tokensAmount: amount,
 				})).submit("processed")
 
@@ -222,7 +223,7 @@ export class SolanaOrder {
 				auctionHouse: extractPublicKey(orderData.auctionHouse!),
 				signer: this.wallet!.provider,
 				mint: getMintId(order),
-				price: getPrice(order) * amount,
+				price: getPrice(order).multipliedBy(amount),
 				tokensAmount: amount,
 			})).submit("processed")
 

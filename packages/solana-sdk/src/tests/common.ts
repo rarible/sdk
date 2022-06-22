@@ -69,7 +69,7 @@ export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: Solan
 
 	// required confirmation
 	await sdk.connection.confirmTransaction(mintTx.txId, "finalized")
-	expect(await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toEqual(1)
+	expect((await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toString()).toEqual("1")
 	const tokenAccount = await getTokenAccount(sdk.connection, wallet.publicKey, mintPrepare.mint)
 
 	return { mintTx, mint: mintPrepare.mint, tokenAccount }
