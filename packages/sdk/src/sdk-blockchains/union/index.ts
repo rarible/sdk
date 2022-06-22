@@ -8,7 +8,6 @@ import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInt
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
-import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type * as OrderCommon from "../../types/order/common"
@@ -30,6 +29,7 @@ import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
+import { getCollectionId } from "../../common/get-collection-id"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(

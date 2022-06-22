@@ -133,6 +133,13 @@ export type BlockchainWallet =
 	TezosWallet |
 	SolanaWallet
 
+export function isBlockchainWallet(x: any): x is BlockchainWallet {
+	return x instanceof EthereumWallet ||
+		x instanceof TezosWallet ||
+		x instanceof FlowWallet ||
+		x instanceof SolanaWallet
+}
+
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
 	"ETHEREUM": EthereumWallet,
