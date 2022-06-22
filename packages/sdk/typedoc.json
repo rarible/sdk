@@ -1,16 +1,18 @@
 {
+  "$schema": "https://typedoc.org/schema.json",
   "name": "Raible SDK",
   "includeVersion": true,
   "hideLegend": true,
   "disableSources": true,
-  "entryPoints": ["src"],
+  "entryPointStrategy": "Expand",
+  "entryPoints": [
+    "src"
+  ],
   "excludeInternal": true,
   "excludePrivate": true,
   "out": "docs",
-  "$schema": "https://typedoc.org/schema.json",
   "sort": ["source-order"],
-  "categorizeByGroup": false,
-  "json": "docs/api.json",
+  "json": "docs/sdk-api.json",
   "pretty": true,
   "hideGenerator": true
 }
