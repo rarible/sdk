@@ -93,10 +93,13 @@ export async function getMintNftInstructions(
 		metadataLink: string,
 		//mutableMetadata: boolean,
 		collection: PublicKey | null,
-		maxSupply: number,
 		verifyCreators: boolean,
 		use?: Uses,
-	}
+	} & ({
+		maxSupply: number, // for master edition
+	} | {
+		amount: number, // for multiple items
+	})
 ): Promise<ITransactionPreparedInstructions & { mint: PublicKey }> {
 	// Retrieve metadata
 	const data = await createMetadata(
@@ -176,27 +179,29 @@ export async function getMintNftInstructions(
 			userTokenAccoutAddress,
 			signer.publicKey,
 			[],
-			1,
+			("amount" in params && params.amount) || 1,
 		),
 	)
 
-	// Create master edition
-	const editionAccount = await getMasterEdition(mint.publicKey)
-	instructions.push(
-		...new CreateMasterEditionV3(
-			{
-				feePayer: signer.publicKey,
-			},
-			{
-				edition: editionAccount,
-				metadata: metadataAccount,
-				mint: mint.publicKey,
-				mintAuthority: signer.publicKey,
-				updateAuthority: signer.publicKey,
-				maxSupply: new BN(params.maxSupply),
-			},
-		).instructions,
-	)
+	if ("maxSupply" in params) {
+		// Create master edition
+		const editionAccount = await getMasterEdition(mint.publicKey)
+		instructions.push(
+			...new CreateMasterEditionV3(
+				{
+					feePayer: signer.publicKey,
+				},
+				{
+					edition: editionAccount,
+					metadata: metadataAccount,
+					mint: mint.publicKey,
+					mintAuthority: signer.publicKey,
+					updateAuthority: signer.publicKey,
+					maxSupply: new BN(params.maxSupply),
+				},
+			).instructions,
+		)
+	}
 
 	/*
 	// not working with current mpl-token-metadata version
