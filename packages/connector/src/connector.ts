@@ -205,7 +205,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	async connect(option: ProviderOption<Option, Connection>): Promise<void> {
 		const connected = this.provider.value
 		const connectionState = await this.connection.pipe(first()).toPromise()
-		if (connected !== undefined && connectionState.status === "connected") {
+		if (connected !== undefined && connectionState?.status === "connected") {
 			throw new Error(`Provider ${JSON.stringify(connected)} already connected`)
 		}
 		this.provider.next(option.provider)

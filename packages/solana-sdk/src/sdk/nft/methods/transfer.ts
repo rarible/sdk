@@ -1,10 +1,10 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { u64 } from "@solana/spl-token"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import type { BigNumberValue } from "@rarible/utils"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { Account } from "@metaplex-foundation/mpl-core"
 import { createAssociatedTokenAccountInstruction } from "../../../common/helpers"
-
+import { alignBn, bigNumToBn } from "../../../common/utils"
 
 export interface ITokenTransferRequest {
 	connection: Connection
@@ -12,9 +12,8 @@ export interface ITokenTransferRequest {
 	tokenAccount: PublicKey
 	to: PublicKey
 	mint: PublicKey
-	amount: number | u64
+	amount: BigNumberValue
 }
-
 
 export async function getTokenTransferInstructions(
 	request: ITokenTransferRequest,
@@ -49,7 +48,7 @@ export async function getTokenTransferInstructions(
 			ata,
 			request.signer.publicKey,
 			[],
-			request.amount,
+			alignBn(bigNumToBn(request.amount), 8),
 		),
 	)
 

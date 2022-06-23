@@ -1,7 +1,8 @@
 import { createRaribleSdk } from "@rarible/sdk/src"
 import { toCollectionId } from "@rarible/types"
 import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
-import { initWalletWeb3, updateNodeGlobalVars } from "../common"
+import { updateNodeGlobalVars } from "../common"
+import { initWalletWeb3WithHDWalletWithEstimate } from "./common"
 
 updateNodeGlobalVars()
 
@@ -10,7 +11,7 @@ async function mint() {
 		if (!process.env["ETH_PRIVATE_KEY"]) {
 			throw new Error("Expected ETH_PRIVATE_KEY env variable")
 		}
-		const raribleSdkWallet = await initWalletWeb3(process.env["ETH_PRIVATE_KEY"])
+		const raribleSdkWallet = await initWalletWeb3WithHDWalletWithEstimate(process.env["ETH_PRIVATE_KEY"])
 		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging")
 
 		const mintAction = await raribleSdk.nft.mint({

@@ -1,5 +1,7 @@
+import type BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { BigNumberValue } from "@rarible/utils"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { getAuctionHouseBuyerEscrow, loadAuctionHouseProgram } from "../../common/auction-house-helpers"
 import { getTokenAmount } from "../../common/helpers"
@@ -17,17 +19,17 @@ export interface IGetEscrowBalanceRequest {
 export interface IWithdrawEscrowRequest {
 	auctionHouse: PublicKey
 	signer: IWalletSigner
-	amount: number
+	amount: BigNumberValue
 }
 
 export interface IDepositEscrowRequest {
 	auctionHouse: PublicKey
 	signer: IWalletSigner
-	amount: number
+	amount: BigNumberValue
 }
 
 export interface ISolanaAuctionHouseSdk {
-	getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<number>
+	getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<BigNumber>
 	withdrawEscrow(request: IWithdrawEscrowRequest): Promise<PreparedTransaction>
 	depositEscrow(request: IDepositEscrowRequest): Promise<PreparedTransaction>
 }
@@ -36,7 +38,7 @@ export class SolanaAuctionHouseSdk implements ISolanaAuctionHouseSdk {
 	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
 	}
 
-	async getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<number> {
+	async getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<BigNumber> {
 		const anchorProgram = await loadAuctionHouseProgram(this.connection, request.signer)
 		const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
@@ -53,8 +55,7 @@ export class SolanaAuctionHouseSdk implements ISolanaAuctionHouseSdk {
 		)
 
 		this.logger.log(
-			request.wallet.toString() + " escrow balance: " + amount +
-			" (AuctionHouse: " + request.auctionHouse.toString() + ")"
+			`${request.wallet.toString()} escrow balance: ${amount.toString()} (AuctionHouse: ${request.auctionHouse.toString()})`
 		)
 
 		return amount

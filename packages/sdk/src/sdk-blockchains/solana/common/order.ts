@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js"
 import type { SolanaAuctionHouseDataV1 } from "@rarible/api-client/build/models/OrderData"
 import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { PublicKey } from "@solana/web3.js"
@@ -43,20 +44,20 @@ export function getItemId(mint: PublicKey): ItemId {
 	return toItemId("SOLANA:" + mint.toString())
 }
 
-export function getPrice(order: Order): number {
+export function getPrice(order: Order): BigNumber {
 	if (order.take.type["@type"] === "SOLANA_SOL") {
-		return parseFloat(order.take.value.toString())
+		return new BigNumber(order.take.value)
 	} else if (order.make.type["@type"] === "SOLANA_SOL") {
-		return parseFloat(order.make.value.toString())
+		return new BigNumber(order.make.value)
 	}
 	throw new Error("Unsupported currency type")
 }
 
-export function	getTokensAmount(order: Order): number {
+export function	getTokensAmount(order: Order): BigNumber {
 	if (order.make.type["@type"] === "SOLANA_NFT") {
-		return parseFloat(order.make.value.toString())
+		return new BigNumber(order.make.value)
 	} else if (order.take.type["@type"] === "SOLANA_NFT") {
-		return parseFloat(order.take.value.toString())
+		return new BigNumber(order.take.value)
 	}
 	throw new Error("Unsupported asset type")
 }
