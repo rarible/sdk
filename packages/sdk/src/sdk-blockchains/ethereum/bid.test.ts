@@ -11,8 +11,8 @@ import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
+import { awaitItem } from "../../common/test/await-item"
 import { initProvider, initProviders } from "./test/init-providers"
-import { awaitItem } from "./test/await-item"
 import { awaitStock } from "./test/await-stock"
 import {
 	convertEthereumCollectionId,
@@ -129,14 +129,24 @@ describe("bid", () => {
 	})
 
 	test("bid on erc721 <-> erc20 and update bid with basic function", async () => {
-		const itemOwner = await ethwallet1.ethereum.getFrom()
-
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
 		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
 
-		await sentTx(it.testErc20.methods.mint(bidderAddress, "10000000000000"), {
-			from: await ethereum1.getFrom(),
-			gas: 500000,
+		const tx = await sdk2.balances.convert({
+			blockchain: Blockchain.ETHEREUM,
+			isWrap: true,
+			value: "0.00000000000002",
+		})
+		await tx.wait()
+
+		await retry(10, 2000, async () => {
+			const balance = await sdk2.balances.getBalance(bidderUnionAddress, {
+				"@type": "ERC20",
+				contract: wethContract,
+			})
+			if (new BigNumber(balance).isEqualTo(0)) {
+				throw new Error("Balance WETH is zero")
+			}
 		})
 
 		const result = await sdk1.nftBasic.mint({
@@ -147,16 +157,14 @@ describe("bid", () => {
 
 		await awaitItem(sdk1, result.itemId)
 
-		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
-
-		const price = "0.0000000000000002"
+		const price = "0.00000000000002"
 		const orderId = await sdk2.orderBasic.bid({
 			itemId: result.itemId,
 			amount: 1,
 			price,
 			currency: {
 				"@type": "ERC20",
-				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+				contract: wethContract,
 			},
 			originFees: [{
 				account: bidderUnionAddress,
@@ -164,20 +172,17 @@ describe("bid", () => {
 			}],
 		})
 
-
 		const order = await awaitStock(sdk1, orderId, price)
 		expect(order.makeStock.toString()).toEqual(price)
 
 		const updatedOrderId = await sdk2.orderBasic.bidUpdate({
 			orderId,
-			price: "0.0000000000000004",
+			price: "0.00000000000004",
 		})
 
-		console.log("before accept bid")
 		const acceptBidTx = await sdk1.orderBasic.acceptBid({
-			orderId,
+			orderId: updatedOrderId,
 			amount: 1,
-			infiniteApproval: true,
 		})
 		await acceptBidTx.wait()
 

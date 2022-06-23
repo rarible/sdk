@@ -27,7 +27,7 @@ describe("Flow burn", () => {
 		}
 	})
 
-	test("Should burn NFT", async () => {
+	test("Should burn NFT with basic function", async () => {
 		const itemId = await createTestItem(mint)
 		const nft = await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		expect(nft.id).toEqual(itemId)

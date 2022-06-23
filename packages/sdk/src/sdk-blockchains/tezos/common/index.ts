@@ -42,9 +42,8 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 // import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import type { OrderRequest, UnionPart } from "../../../types/order/common"
+import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
-import type { BurnRequest } from "../../../types/nft/burn/domain"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,

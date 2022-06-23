@@ -9,9 +9,9 @@ import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
+import { awaitItem } from "../../common/test/await-item"
 import { initProviders } from "./test/init-providers"
 import { awaitStock } from "./test/await-stock"
-import { awaitItem } from "./test/await-item"
 import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 
 describe("sale", () => {

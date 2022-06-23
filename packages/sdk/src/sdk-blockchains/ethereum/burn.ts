@@ -18,7 +18,7 @@ export class EthereumBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest) {
-		const { domain, contract, tokenId } = getEthereumItemId(prepare.itemId)
+		const { contract, tokenId } = getEthereumItemId(prepare.itemId)
 
 		const item = await this.sdk.apis.nftItem.getNftItemById({
 			itemId: `${contract}:${tokenId}`,

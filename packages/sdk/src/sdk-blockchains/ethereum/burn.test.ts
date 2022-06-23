@@ -5,8 +5,8 @@ import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
+import { awaitItem } from "../../common/test/await-item"
 import { initProviders } from "./test/init-providers"
-import { awaitItem } from "./test/await-item"
 import { awaitItemSupply } from "./test/await-item-supply"
 import { convertEthereumContractAddress } from "./common"
 import { awaitDeletedItem } from "./test/await-deleted-item"
@@ -177,6 +177,7 @@ describe("burn", () => {
 
 		await sdk.nftBasic.burn({
 			itemId: mintResult.itemId,
+			amount: 10,
 		})
 		await awaitDeletedItem(sdk,  mintResult.itemId)
 	})

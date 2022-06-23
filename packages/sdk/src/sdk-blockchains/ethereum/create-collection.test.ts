@@ -6,7 +6,6 @@ import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
-import { convertEthereumContractAddress } from "./common"
 
 describe("create collection", () => {
 	const { web31, web32 } = initProviders()

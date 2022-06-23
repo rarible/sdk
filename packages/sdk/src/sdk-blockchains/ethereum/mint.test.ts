@@ -8,8 +8,8 @@ import { MintType } from "../../types/nft/mint/domain"
 import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { LogsLevel } from "../../domain"
+import { awaitItem } from "../../common/test/await-item"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
-import { awaitItem } from "./test/await-item"
 import { providerDevelopmentSettings } from "./test/common"
 
 describe("mint", () => {

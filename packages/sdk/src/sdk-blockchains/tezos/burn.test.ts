@@ -9,10 +9,10 @@ describe("burn test", () => {
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
-	const sdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	let nftContract: string = "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx"
+	let mtContract: string = "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC"
 
 	test("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({

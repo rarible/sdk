@@ -1,7 +1,6 @@
 import * as fcl from "@onflow/fcl"
 import { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk } from "@rarible/flow-sdk"
-import { toBigNumber } from "@rarible/types"
 import { FLOW_TESTNET_ACCOUNT_2 } from "@rarible/flow-test-common"
 import { createApisSdk } from "../../common/apis"
 import { retry } from "../../common/retry"

@@ -27,11 +27,10 @@ describe("Solana bid", () => {
 			})
 		})
 
-		const tx = await retry(10, 4000, async () => {
+		await retry(10, 4000, async () => {
 			const accept = await sdk.order.acceptBid({
 				orderId,
 			})
-
 			return accept.submit({
 				amount: 1,
 				itemId,

@@ -12,7 +12,7 @@ import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rar
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { PrepareMintResponse, MintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -161,7 +161,7 @@ export class EthereumMint {
 	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
 	// eslint-disable-next-line no-dupe-class-members
 	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
-
+	// eslint-disable-next-line no-dupe-class-members
 	async mintBasic(request: MintSimplifiedRequest) {
 		const prepareResponse = await this.prepare(request)
 		return prepareResponse.submit(request)

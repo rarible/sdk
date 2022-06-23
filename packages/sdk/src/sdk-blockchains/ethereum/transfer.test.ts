@@ -1,14 +1,14 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll, deployTestErc1155, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
-import { toAddress, toCollectionId, toItemId, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toItemId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
+import { awaitItem } from "../../common/test/await-item"
 import { initProviders } from "./test/init-providers"
-import { awaitItem } from "./test/await-item"
-import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumContractAddress } from "./common"
 import { awaitOwnership } from "./test/await-ownership"
 
 describe("transfer", () => {
@@ -24,7 +24,6 @@ describe("transfer", () => {
 	})
 
 	const erc721Address = convertEthereumContractAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E", Blockchain.ETHEREUM)
-	const erc1155Address = convertEthereumContractAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a", Blockchain.ETHEREUM)
 
 	test("transfer erc721", async () => {
 		const senderRaw = wallet1.getAddressString()

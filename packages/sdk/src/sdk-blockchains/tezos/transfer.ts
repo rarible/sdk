@@ -11,7 +11,6 @@ import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { ITezosAPI, MaybeProvider } from "./common"
 import { getTezosAddress, getTezosItemData, isExistedTezosProvider } from "./common"
-import type { CollectionData } from "./mint"
 
 export class TezosTransfer {
 	constructor(

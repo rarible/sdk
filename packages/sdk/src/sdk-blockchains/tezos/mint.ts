@@ -129,7 +129,7 @@ export class TezosMint {
 	mintSimplified(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
 	// eslint-disable-next-line no-dupe-class-members
 	mintSimplified(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
-
+	// eslint-disable-next-line no-dupe-class-members
 	async mintSimplified(request: MintSimplifiedRequest): Promise<MintResponse> {
 		const collectionData = await getCollectionData(this.apis.collection, request)
 
