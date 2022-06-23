@@ -1,10 +1,11 @@
-import { toBigNumber, toCurrencyId, toItemId } from "@rarible/types"
+import { toBigNumber, toCollectionId, toCurrencyId, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import type { TezosFTAssetType } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
+import type { RaribleSdkEnvironment } from "../../config/domain"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { awaitForOrder } from "./test/await-for-order"
@@ -12,29 +13,35 @@ import { awaitForOrderStatus } from "./test/await-for-order-status"
 import { convertTezosToCollectionAddress, convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
+import { getTestContract } from "./test/test-contracts"
 
 describe.skip("bid test", () => {
-	const env = "development"
+	const env: RaribleSdkEnvironment = "staging"
 	const itemOwner = createTestWallet(
-		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw"
+		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
+		env
 	)
 	const itemOwnerSdk = createRaribleSdk(itemOwner, env, { logs: LogsLevel.DISABLED })
 
 	const bidderWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
+	)
 
 	const bidderSdk = createRaribleSdk(bidderWallet, env, { logs: LogsLevel.DISABLED })
 
 	const nullFundsWallet = createTestWallet(
 		"edskS2YAR6wms6ZWckr7wJYW1cFaEgy9mk1FbnjABsDMyh" +
-    "7CUpvCS8Hfy12BcjvsQc1eprKKBMqAEc6FBgCnLLu33KvzYgsd9c")
+    "7CUpvCS8Hfy12BcjvsQc1eprKKBMqAEc6FBgCnLLu33KvzYgsd9c",
+		env
+	)
 
 	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, env, { logs: LogsLevel.DISABLED })
 
-	const eurTzContract = "KT1HvTfYG7DgeujAQ1LDvCHiQc29VMycoJh5"
-	const nftContract: string = "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx"
-	const mtContract = "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC"
+	const eurTzContract = getTestContract(env, "eurTzContract")
+	const nftContract = getTestContract(env, "nftContract")
+	const mtContract = getTestContract(env, "mtContract")
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
 	test("bid NFT test", async () => {
@@ -60,7 +67,7 @@ describe.skip("bid test", () => {
 			price: "0.000002",
 			currency: {
 				"@type": "TEZOS_FT",
-				contract: convertTezosToContractAddress(eurTzContract),
+				contract: eurTzContract,
 				tokenId: toBigNumber("0"),
 			},
 		})
@@ -96,7 +103,7 @@ describe.skip("bid test", () => {
 
 	test.skip("bid MT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToCollectionAddress(mtContract),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -116,7 +123,7 @@ describe.skip("bid test", () => {
 			price: "0.00002",
 			currency: {
 				"@type": "TEZOS_FT",
-				contract: convertTezosToContractAddress(eurTzContract),
+				contract: eurTzContract,
 				tokenId: toBigNumber("0"),
 			},
 			originFees: [{
@@ -153,7 +160,7 @@ describe.skip("bid test", () => {
 
 	test.skip("bid MT test with CurrencyId", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToCollectionAddress(mtContract),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -171,7 +178,7 @@ describe.skip("bid test", () => {
 		const orderId = await bidResponse.submit({
 			amount: 3,
 			price: "0.00002",
-			currency: toCurrencyId(`${convertTezosToContractAddress(eurTzContract)}:0`),
+			currency: toCurrencyId(`${eurTzContract}:0`),
 			originFees: [{
 				account: convertTezosToUnionAddress(await itemOwner.provider.address()),
 				value: 1000,
@@ -263,7 +270,7 @@ describe.skip("bid test", () => {
 
 	test.skip("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToCollectionAddress(mtContract),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -281,7 +288,7 @@ describe.skip("bid test", () => {
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
 
 		const value = await bidResponse.getConvertableValue({
-			assetType: { "@type": "TEZOS_FT", contract: convertTezosToContractAddress(eurTzContract) },
+			assetType: { "@type": "TEZOS_FT", contract: eurTzContract },
 			price: "0.00001",
 			amount: 5,
 			originFees: [{
@@ -297,7 +304,7 @@ describe.skip("bid test", () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
 		const mintResponse = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToCollectionAddress(mtContract),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",

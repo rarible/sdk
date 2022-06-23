@@ -32,7 +32,7 @@ import {
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
-	getTokenIdString,
+	getTokenIdString, getTezosOrderId, covertToLibAsset,
 } from "./common"
 
 export class TezosSell {
@@ -71,7 +71,7 @@ export class TezosSell {
 	async sell(): Promise<PrepareSellInternalResponse> {
 		const submit = Action.create({
 			id: "send-tx" as const,
-			run: async (request: OrderCommon.OrderInternalRequest) => this.sellV2(request),
+			run: async (request: OrderCommon.OrderInternalRequest) => this.sellV1(request),
 		})
 
 		return {
@@ -160,6 +160,57 @@ export class TezosSell {
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+		const orderId = getTezosOrderId(request.orderId)
+
+		const order = await this.apis.order.getOrderByHash({ hash: orderId })
+		if (!order) {
+			throw new Error("Order has not been found")
+		}
+		const updateAction = Action.create({
+			id: "send-tx" as const,
+			run: async (updateRequest: OrderUpdateRequest) => {
+				const provider = getRequiredProvider(this.provider)
+
+				const orderForm: OrderForm = {
+					type: "RARIBLE_V2",
+					maker: order.maker,
+					maker_edpk: order.makerEdpk,
+					taker_edpk: order.takerEdpk,
+					make: covertToLibAsset(order.make),
+					take: {
+						...covertToLibAsset(order.take),
+						value: new BigNumber(updateRequest.price).multipliedBy(order.make.value),
+					},
+					salt: order.salt,
+					start: order.start,
+					end: order.end,
+					signature: order.signature,
+					data: {
+						data_type: "V1",
+						payouts: order.data.payouts?.map(p => ({
+							account: p.account,
+							value: new BigNumber(p.value),
+						})) || [],
+						origin_fees: order.data.originFees?.map(p => ({
+							account: p.account,
+							value: new BigNumber(p.value),
+						})) || [],
+					},
+				}
+				const updatedOrder = await upsert_order(provider, orderForm, true)
+				return convertTezosOrderId(updatedOrder.hash)
+			},
+		})
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			supportedCurrencies: getSupportedCurrencies(),
+			baseFee: parseInt(this.provider.config.fees.toString()),
+			submit: updateAction,
+		}
+	}
+
+	async updateNextVersion(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
 		const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
 		if (!order) {
 			throw new Error("Order has not been found")
