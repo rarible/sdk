@@ -24,7 +24,7 @@ describe("Flow buy", () => {
 	test("Should buy flow NFT item", async () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItem(sell, itemId, "0.1")
-		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
+		const order = await retry(20, 4000, () => apis.order.getOrderById({ id: orderId }))
 		expect(order.take.value.toString()).toEqual("0.1")
 
 		const originFees = [{ account: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_2.address), value: 200 }]
@@ -43,7 +43,7 @@ describe("Flow buy", () => {
 		const orderId = await sellItem(sell, itemId, "0.1")
 
 		console.log("after selling")
-		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
+		const order = await retry(20, 4000, () => apis.order.getOrderById({ id: orderId }))
 		expect(order.take.value.toString()).toEqual("0.1")
 
 		const originFees = [{ account: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_2.address), value: 200 }]
