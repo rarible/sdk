@@ -6,12 +6,17 @@
   "disableSources": true,
   "entryPointStrategy": "Expand",
   "entryPoints": [
-    "src"
+    "src/index.ts",
+    "src/domain.ts",
+    "src/types",
+    "src/config/domain.ts",
+    "src/sdk-blockchains/solana/domain.ts",
+    "src/sdk-blockchains/tezos/domain.ts"
   ],
   "excludeInternal": true,
   "excludePrivate": true,
   "out": "docs",
-  "sort": ["source-order"],
+  "sort": ["instance-first"],
   "json": "docs/sdk-api.json",
   "pretty": true,
   "hideGenerator": true

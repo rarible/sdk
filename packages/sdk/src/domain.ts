@@ -41,30 +41,68 @@ export interface ISdkContext {
 }
 
 export interface IRaribleSdkConfig {
+	/**
+	 * Parameters for requests to protocol API
+	 */
 	apiClientParams?: ApiClient.ConfigurationParameters
+	/**
+	 * Logging level
+	 */
 	logs?: LogsLevel
+	/**
+	 * Blockchain settings
+	 */
 	blockchain?: {
-		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig
+		/**
+		 * Solana blockchain config
+		 */
+		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig,
 	}
+	/**
+	 * Meddlewares
+	 */
 	middlewares?: Middleware[]
+	/**
+	 * Ethereum config
+	 */
 	ethereum?: EthereumNetworkConfig
+	/**
+	 * Polygon config
+	 */
 	polygon?: EthereumNetworkConfig
+	/**
+	 * Flow config
+	 */
 	flow?: { auth: AuthWithPrivateKey }
 }
 
 /**
- * @property {IApisSdk} apis Protocol api client methods
- * @property {INftSdk} nft Nft methods, mint, transfer, burn etc.
- * @property {IOrderSdk} order Order methods, sell, buy, bid etc.
- * @property {IBalanceSdk} balances Balance methods
- * @property {IRestrictionSdk} restriction
- * @property {Maybe<BlockchainWallet>} wallet
- * @property {IEthereumSdk} [ethereum]
+ * Rarible sdk instance methods
+ *
+ * @property [[`IApisSdk`]] apis Protocol api client methods
+ * @property [[`INftSdk`]] nft Nft methods, mint, transfer, burn etc.
+ * @property [[`IOrderSdk`]] order Order methods, sell, buy, bid etc.
+ * @property [[`IBalanceSdk`]] balances Balance methods
+ * @property [[`IRestrictionSdk`]] restriction Restriction methods
+ * @property {Maybe<BlockchainWallet>} wallet Wallet methods
+ * @property [[`IEthereumSdk`]] [ethereum]
  */
 export interface IRaribleSdk {
+	/**
+	 * Protocol api methods
+	 */
 	apis: IApisSdk
+	/**
+	 * Nft methods Mint, Transfer, Burn, Meta manipulation
+	 */
 	nft: INftSdk
+	/**
+	 * Order methods, create/update/cancel sel|bid orders
+	 */
 	order: IOrderSdk
+	/**
+	 * Balance methods
+	 */
 	balances: IBalanceSdk
 	/**
 	 * Restriction methods
@@ -84,6 +122,9 @@ export interface IRaribleSdk {
 	ethereum?: IEthereumSdk
 }
 
+/**
+ * Rarible Protocol Apis
+ */
 export interface IApisSdk {
 	order: ApiClient.OrderControllerApi
 	currency: ApiClient.CurrencyControllerApi
@@ -108,7 +149,7 @@ export interface IApisSdk {
  */
 export interface INftSdk {
 	/**
-	 * Transfer asset to recipient
+	 * Transfers self owned asset to recipient
 	 * -
 	 * @param request - {itemId: ItemId}
 	 * @returns response - {
