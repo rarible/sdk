@@ -284,7 +284,7 @@ describe("solana order sdk", () => {
 		const { txId: cancelTx2 } = await (await sdk.order.cancel({
 			auctionHouse: toPublicKey(auctionHouse),
 			signer: wallet2,
-			price: 0.2,
+			price: 0.1,
 			tokensAmount: 40,
 			mint: mint,
 		})).submit("max")
