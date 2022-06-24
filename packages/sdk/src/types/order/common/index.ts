@@ -21,14 +21,16 @@ export type PrepareOrderRequest = {
 }
 
 /**
- * @property {UnionAddress} account account address with blockchain prefix "ETHEREUM:0x.."
- * @property {number} value base fee value in basis points 0...10000, where 0 = 0% and 10000 = 100%
+ * - account account address with blockchain prefix "ETHEREUM:0x.."
+ * - value base fee value in basis points 0...10000, where 0 = 0% and 10000 = 100%
  * @example
+ * ```typescript
  * import { toUnionAddress } from "@rarible/types"
  * const part = [{
  * 	account: toUnionAddress("ETHEREUM:0x.."),
  * 	value: 500
  * }]
+ * ```
  */
 export type UnionPart = {
 	account: UnionAddress

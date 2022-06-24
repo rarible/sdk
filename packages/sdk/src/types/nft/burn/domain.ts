@@ -34,8 +34,8 @@ export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", Bur
 /**
  * Burn token
  * -
- * @param {PrepareBurnRequest} request
- * @returns {Promise<PrepareBurnResponse>}
+ * @param request
+ * @returns promise of {@link PrepareBurnResponse>}
  * @example
  * const prepare = sdk.nft.burn({itemId: toUnionId("ETHEREUM:0x...")})
  * const tx = prepare.submit({amount?: 5, creators?: [{account: toUnionAddress("ETHEREUM:0x...", value: 100)}]})

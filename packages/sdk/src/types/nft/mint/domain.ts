@@ -37,7 +37,7 @@ export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", Min
 /**
  * Mint token
  * -
- * @param {PrepareMintRequest} request
+ * @param request
  * @returns {Promise<PrepareMintResponse>}
  * @example
  *

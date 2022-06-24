@@ -89,7 +89,7 @@ export interface PrepareFillResponse
 /**
  * Fill sell/bid order
  *
- * @param {PrepareFillRequest} request
+ * @param request
  * @returns {Promise<PrepareFillResponse>}
  * @example ```
  * 		import { toOrderId, toBigNumber, toItemId } from "@rarible/types"

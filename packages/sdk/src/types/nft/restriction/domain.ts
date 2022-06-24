@@ -10,9 +10,9 @@ export type CanTransferResult = {
 export type IRestrictionSdk = {
 	/**
 	 *
-	 * @param {ItemId} itemId - Item id
-	 * @param {UnionAddress} from - Sender address
-	 * @param {UnionAddress} to - Recipient
+	 * @param itemId - Item id
+	 * @param from - Sender address
+	 * @param to - Recipient
 	 * @returns {Promise<CanTransferResult>} - { success: true } | { success: false, reason: string }
 	 */
 	canTransfer: (

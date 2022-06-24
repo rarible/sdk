@@ -52,7 +52,7 @@ export interface PrepareTransferResponse extends AbstractPrepareResponse<"transf
 /**
  * Transfer asset to recipient
  * -
- * @param {PrepareTransferRequest} request - {itemId: ItemId}
+ * @param request - {itemId: ItemId}
  * @returns {Promise<PrepareTransferResponse>} response - {
  *   <p>multiple: boolean</p>
  *   <p>maxAmount: {@link BigNumber}</p>

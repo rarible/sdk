@@ -1,9 +1,14 @@
-import * as ApiClient from "@rarible/api-client"
 import type { ConfigurationParameters } from "@rarible/api-client"
+import * as ApiClient from "@rarible/api-client"
 import type { RaribleSdkEnvironment } from "../config/domain"
 import type { IApisSdk } from "../domain"
 import { getSdkConfig } from "../config"
 
+/**
+ * @ignore
+ * @param env
+ * @param params
+ */
 export function createApisSdk(
 	env: RaribleSdkEnvironment,
 	params: ConfigurationParameters = {}

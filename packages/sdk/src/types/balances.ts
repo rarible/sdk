@@ -7,8 +7,8 @@ import type { RequestCurrency } from "../common/domain"
 
 /**
  * Fetch balance of fungible or non-fungible tokens
- * @param {UnionAddress} address the address for which you need to receive the balance
- * @param {RequestCurrency} currency token, the balance of which needs to be received
+ * @param address the address for which you need to receive the balance
+ * @param currency token, the balance of which needs to be received
  * @example
  * {
  *   address: "ETHEREUM:0x....",
@@ -30,10 +30,10 @@ export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => 
 
 /**
  * Convert funds to wrapped token or unwrap existed tokens (ex. ETH->wETH, wETH->ETH)
- * @param {Blockchain} blockchain Blockchain where performs operation
- * @param {boolean} isWrap Is wrap or unwrap operation
- * @param {BigNumberValue} value amount of funds to convert
- * @returns {Promise<IBlockchainTransaction>}
+ * @param blockchain Blockchain where performs operation
+ * @param isWrap Is wrap or unwrap operation
+ * @param value amount of funds to convert
+ * @returns {@link IBlockchainTransaction}
  */
 export type IConvert = (request: ConvertRequest) => Promise<IBlockchainTransaction>
 

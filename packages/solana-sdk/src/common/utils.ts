@@ -17,7 +17,7 @@ export function bigNumToBn(value: BigNumberValue) {
 /**
  * align BN internal representation to minimum len size
  * @param value - value
- * @param len - leт
+ * @param len - len
  */
 export function alignBn(value: BN, len: number) {
 	return new BN(bnToBuffer(value, "le", 8))

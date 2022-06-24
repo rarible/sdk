@@ -16,7 +16,8 @@
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
     "test": "jest --runInBand",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit",
+    "docs": "typedoc"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
@@ -71,6 +72,7 @@
     "path-browserify": "^1.0.1",
     "stream-browserify": "^3.0.0",
     "ts-jest": "^27.0.3",
+    "typedoc": "^0.22.17",
     "typescript": "^4.6.3",
     "web3": "1.5.0",
     "web3-core": "~1.2.11",
