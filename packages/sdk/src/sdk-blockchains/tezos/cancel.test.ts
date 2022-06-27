@@ -23,7 +23,7 @@ describe.skip("cancel test", () => {
 	const sellerTezosProvider = getMaybeTezosProvider(wallet.provider, tezosNetwork)
 	const apis = getTezosAPIs(tezosNetwork)
 	const unionApis = createApisSdk(env, undefined)
-	const sellerSellService = new TezosSell(sellerTezosProvider, apis, unionApis)
+	const sellerSellService = new TezosSell(sellerTezosProvider, apis, unionApis, tezosNetwork)
 
 	const nftContract: string = getTestContract(env, "nftContract")
 	const eurTzContract = getTestContract(env, "eurTzContract")

@@ -33,7 +33,7 @@ describe.skip("test tezos mint and sell", () => {
 	const sellerTezosProvider = getMaybeTezosProvider(sellerWallet.provider, tezosNetwork)
 	const apis = getTezosAPIs(tezosNetwork)
 	const unionApis = createApisSdk(env, undefined)
-	const sellerSellService = new TezosSell(sellerTezosProvider, apis, unionApis)
+	const sellerSellService = new TezosSell(sellerTezosProvider, apis, unionApis, tezosNetwork)
 
 	const eurTzContract = getTestContract(env, "eurTzContract")
 	const fa12Contract = getTestContract(env, "fa12Contract")
