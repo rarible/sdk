@@ -1,7 +1,22 @@
 import type { SellRequest as TezosSellRequest } from "@rarible/tezos-sdk/dist/order/sell"
-import type { FTAssetType, OrderDataTypeRequest, TezosProvider, XTZAssetType, OrderForm } from "@rarible/tezos-sdk"
+import type { FTAssetType, OrderDataTypeRequest, TezosProvider, XTZAssetType, OrderForm,
+	TezosNetwork } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { AssetTypeV2, fill_offchain_royalties, get_active_order_type, get_ft_type, OrderType, pk_to_pkh, upsert_order, sell } from "@rarible/tezos-sdk"
+import {
+	AssetTypeV2,
+	// eslint-disable-next-line camelcase
+	fill_offchain_royalties,
+	// eslint-disable-next-line camelcase
+	get_active_order_type,
+	// eslint-disable-next-line camelcase
+	get_ft_type,
+	OrderType,
+	// eslint-disable-next-line camelcase
+	pk_to_pkh,
+	// eslint-disable-next-line camelcase
+	upsert_order,
+	sell,
+} from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
 import BigNumber from "bignumber.js"
 import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
@@ -40,9 +55,11 @@ export class TezosSell {
 		private provider: MaybeProvider<TezosProvider>,
 		private apis: ITezosAPI,
 		private unionAPI: IApisSdk,
+		private network: TezosNetwork,
 	) {
 		this.sell = this.sell.bind(this)
-		this.update = this.update.bind(this)
+		this.updateV1 = this.updateV1.bind(this)
+		this.updateV2 = this.updateV2.bind(this)
 		this.sellV1 = this.sellV1.bind(this)
 	}
 
@@ -71,7 +88,13 @@ export class TezosSell {
 	async sell(): Promise<PrepareSellInternalResponse> {
 		const submit = Action.create({
 			id: "send-tx" as const,
-			run: async (request: OrderCommon.OrderInternalRequest) => this.sellV1(request),
+			run: async (request: OrderCommon.OrderInternalRequest) => {
+				if (this.network === "dev") {
+					return this.sellV2(request)
+				} else {
+					return this.sellV1(request)
+				}
+			},
 		})
 
 		return {
@@ -159,7 +182,7 @@ export class TezosSell {
 		return convertTezosOrderId(sellOrderId)
 	}
 
-	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+	async updateV1(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
 		const orderId = getTezosOrderId(request.orderId)
 
 		const order = await this.apis.order.getOrderByHash({ hash: orderId })
@@ -210,7 +233,7 @@ export class TezosSell {
 		}
 	}
 
-	async updateNextVersion(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+	async updateV2(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
 		const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
 		if (!order) {
 			throw new Error("Order has not been found")
