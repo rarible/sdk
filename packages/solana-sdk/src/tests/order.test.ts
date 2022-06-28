@@ -231,4 +231,64 @@ describe("solana order sdk", () => {
 		expect(sellTxId).toBeTruthy()
 		console.log(sellTxId)
 	})
+
+	test("Should sell & transfer & buy", async () => {
+		const wallet1 = getTestWallet(0)
+		const wallet2 = getTestWallet(1)
+		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+		const { mint, tokenAccount } = await mintToken({ sdk, wallet: wallet1 })
+
+		// wallet1 put item to sell
+		const { txId: sellTxId } = await (await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet1,
+			price: 0.001,
+			tokensAmount: 1,
+			mint: mint,
+		})).submit("max")
+		await sdk.confirmTransaction(sellTxId, "finalized")
+
+		// wallet1 transfer item to wallet2
+		const { txId: transferTxId } = await (await sdk.nft.transfer({
+			signer: wallet1,
+			mint: mint,
+			tokenAccount: tokenAccount.value[0].pubkey,
+			to: wallet2.publicKey,
+			amount: 1,
+		})).submit("max")
+		await sdk.confirmTransaction(transferTxId, "finalized")
+
+		// wallet2 put item to sell
+		const { txId: sellTxId2 } = await (await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet2,
+			price: 0.002,
+			tokensAmount: 1,
+			mint: mint,
+		})).submit("max")
+		await sdk.confirmTransaction(sellTxId2, "finalized")
+
+		//wallet1 buying item
+		const { txId: buyTxId } = await (await sdk.order.buy({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet1,
+			price: 0.002,
+			tokensAmount: 1,
+			mint: mint,
+		})).submit("max")
+
+		await sdk.confirmTransaction(buyTxId, "finalized")
+
+		const { txId: finalTxId } = await (await sdk.order.executeSell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet1,
+			buyerWallet: wallet1.publicKey,
+			sellerWallet: wallet2.publicKey,
+			tokensAmount: 1,
+			mint: mint,
+			price: 0.002,
+		})).submit("max")
+		await sdk.confirmTransaction(finalTxId, "finalized")
+
+	})
 })
