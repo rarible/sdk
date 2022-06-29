@@ -88,8 +88,7 @@ export async function verifyCollectionsByBlockchain(collections: Collections, bl
 
 export async function verifyCollectionsContainsCollection(collections: Collections,
 	collectionId: string): Promise<void> {
-	const ids = collections.collections.map(c => c.id)
-	expect(ids).toContain(collectionId)
+	expect(collections.collections.map(c => c.id as string)).toContain(collectionId)
 }
 
 export async function verifyCollectionsOwner(collections: Collections, owner: string): Promise<void> {

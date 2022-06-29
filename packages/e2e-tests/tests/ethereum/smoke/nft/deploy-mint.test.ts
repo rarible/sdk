@@ -166,6 +166,7 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 		await verifyCollectionsContainsCollection(collectionsAll, address)
 
 		const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
+		await verifyCollectionsByBlockchain(collectionsByOwner, suite.blockchain)
 		await verifyCollectionsOwner(collectionsByOwner, suite.blockchain)
 		await verifyCollectionsContainsCollection(collectionsByOwner, address)
 
