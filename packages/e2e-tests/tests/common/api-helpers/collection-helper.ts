@@ -21,7 +21,7 @@ export async function getCollectionById(sdk: IRaribleSdk, collectionId: string):
 }
 
 export async function getCollectionByIdRaw(sdk: IRaribleSdk,
-																					 collectionId: string): Promise<GetCollectionByIdResponse> {
+	collectionId: string): Promise<GetCollectionByIdResponse> {
 	const collection = await retry(15, 3000, async () => {
 		return await sdk.apis.collection.getCollectionByIdRaw({
 			collection: collectionId,
@@ -44,7 +44,7 @@ export async function getAllCollections(sdk: IRaribleSdk, blockchains: Array<Blo
 }
 
 export async function getAllCollectionsRaw(sdk: IRaribleSdk, blockchains: Array<Blockchain>,
-																					 size: number): Promise<GetAllCollectionsResponse> {
+	size: number): Promise<GetAllCollectionsResponse> {
 	const collections = await retry(15, 3000, async () => {
 		return await sdk.apis.collection.getAllCollectionsRaw({
 			blockchains: blockchains,
@@ -69,7 +69,7 @@ export async function getCollectionsByOwner(sdk: IRaribleSdk, owner: string, siz
 
 
 export async function getCollectionsByOwnerRaw(sdk: IRaribleSdk, owner: string,
-																							 size: number): Promise<GetCollectionsByOwnerResponse> {
+	size: number): Promise<GetCollectionsByOwnerResponse> {
 	const collections = await retry(15, 3000, async () => {
 		return await sdk.apis.collection.getCollectionsByOwnerRaw({
 			owner: owner,
@@ -78,4 +78,21 @@ export async function getCollectionsByOwnerRaw(sdk: IRaribleSdk, owner: string,
 	})
 	expect(collections).not.toBe(null)
 	return collections
+}
+
+export async function verifyCollectionsByBlockchain(collections: Collections, blockchain: Blockchain): Promise<void> {
+	collections.collections.forEach(c => {
+		expect(c.blockchain).toEqual(blockchain)
+	})
+}
+
+export async function verifyCollectionsContainsCollection(collections: Collections,
+	collectionId: string): Promise<void> {
+	expect(collections.collections.map(c => c.id as string)).toContain(collectionId)
+}
+
+export async function verifyCollectionsOwner(collections: Collections, owner: string): Promise<void> {
+	collections.collections.forEach(c => {
+		expect(c.owner).toEqual(owner)
+	})
 }
