@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.7-hotfix.0](https://github.com/rarible/sdk/compare/v0.9.11-beta.7...v0.9.11-beta.7-hotfix.0) (2022-06-29)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
 ## [0.9.11-beta.7](https://github.com/rarible/sdk/compare/v0.9.11-beta.6...v0.9.11-beta.7) (2022-06-23)
 
 **Note:** Version bump only for package @rarible/connector
