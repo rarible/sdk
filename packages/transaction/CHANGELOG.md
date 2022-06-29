@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.9](https://github.com/rarible/sdk/compare/v0.9.11-beta.8...v0.9.11-beta.9) (2022-06-29)
+
+
+### Bug Fixes
+
+* opensea order payouts ([002e901](https://github.com/rarible/sdk/commit/002e90161f5586d1ab9572fccc091b112ca5e12d))
+
+
+
+
+
 ## [0.9.11-beta.8](https://github.com/rarible/sdk/compare/v0.9.11-beta.7...v0.9.11-beta.8) (2022-06-27)
 
 **Note:** Version bump only for package @rarible/sdk-transaction

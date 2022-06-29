@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.9.11-beta.8",
+  "version": "0.9.11-beta.9",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -20,7 +20,7 @@
     "@rarible/ethereum-provider": "~0.12.64",
     "@rarible/flow-sdk": "~0.5.48-alpha.3",
     "@rarible/protocol-ethereum-sdk": "~0.12.73-hotfix.0",
-    "@rarible/solana-sdk": "^0.9.11-beta.8",
+    "@rarible/solana-sdk": "^0.9.11-beta.9",
     "@rarible/tezos-sdk": "~0.1.25",
     "@rarible/types": "~0.9.3"
   },
