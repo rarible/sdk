@@ -23,7 +23,7 @@ export async function awaitForOwnershipValue(sdk: IRaribleSdk, itemId: ItemId,
 																						 recipientAddress: string, value?: BigNumber): Promise<Ownership> {
 	const ownershipId = `${itemId}:${recipientAddress}`
 	console.log("Await for ownershipId", ownershipId)
-	const ownership = await retry(10, 2000, async () => {
+	const ownership = await retry(15, 2000, async () => {
 		return await sdk.apis.ownership.getOwnershipById({
 			ownershipId: ownershipId,
 		})

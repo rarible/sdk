@@ -4,7 +4,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import type { IMint } from "./types/nft/mint/domain"
+import type { IMint, IUploadMeta } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
 import type { IFill, IFillBatch } from "./types/order/fill/domain"
 import type { IBurn } from "./types/nft/burn/domain"
@@ -12,7 +12,13 @@ import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
 import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
 import type { ICancel } from "./types/order/cancel/domain"
-import type { IConvert, IGetBalance } from "./types/balances"
+import type {
+	IDepositBiddingBalance,
+	IGetBiddingBalance,
+	IConvert,
+	IGetBalance,
+	IWithdrawBiddingBalance,
+} from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { ICreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
@@ -78,6 +84,7 @@ export interface INftSdk {
 	 */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
+	uploadMeta: IUploadMeta
 }
 
 export interface IOrderSdk {
@@ -98,6 +105,10 @@ export interface IOrderSdk {
 export interface IBalanceSdk {
 	getBalance: IGetBalance
 	convert: IConvert
+
+	getBiddingBalance: IGetBiddingBalance
+	depositBiddingBalance: IDepositBiddingBalance
+	withdrawBiddingBalance: IWithdrawBiddingBalance
 }
 
 export interface IEthereumSdk {

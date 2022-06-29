@@ -11,7 +11,7 @@ import type { Ownership } from "@rarible/api-client/build/models"
 export async function awaitOrderStock(
 	sdk: IRaribleSdk, id: OrderId, awaitingValue: BigNumber | string
 ): Promise<Order> {
-	return retry(10, 2000, async () => {
+	return retry(15, 2000, async () => {
 		const order = await sdk.apis.order.getOrderById({ id })
 		if (awaitingValue.toString() !== order.makeStock.toString()) {
 			throw new Error(`Stock is not equal. Expected: ${awaitingValue.toString()} Received: ${order.makeStock.toString()}`)

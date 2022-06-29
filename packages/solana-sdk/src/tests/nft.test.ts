@@ -1,41 +1,46 @@
 import { SolanaSdk } from "../sdk/sdk"
-import { checkTokenBalance, genTestWallet, getTestWallet, mintToken } from "./common"
+import { genTestWallet, getTestWallet, mintToken } from "./common"
 
 describe("solana nft sdk", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
+	const sdk = SolanaSdk.create({ connection: { cluster: "devnet", commitmentOrConfig: "confirmed" }, debug: true })
 
 	test("Should mint nft & send", async () => {
 		const wallet = getTestWallet()
 
-		const { mint, balance } = await mintToken({ sdk, wallet })
+		const { mint, tokenAccount } = await mintToken({ sdk, wallet })
+
+		expect((await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toString()).toEqual("1")
 
 		const wallet2 = genTestWallet()
 
-		const transferTx = await sdk.nft.transfer({
+		const transferPrepare = await sdk.nft.transfer({
 			signer: wallet,
 			mint: mint,
-			tokenAccount: balance.value[0].pubkey,
+			tokenAccount: tokenAccount.value[0].pubkey,
 			to: wallet2.publicKey,
 			amount: 1,
 		})
-
-		expect(transferTx.txId).toBeTruthy()
-		await sdk.connection.confirmTransaction(transferTx.txId, "finalized")
-		await checkTokenBalance(sdk.connection, wallet2.publicKey, mint, 1)
+		const transferTx = await transferPrepare.submit("max")
+		expect(transferTx).toBeTruthy()
+		await sdk.confirmTransaction(transferTx.txId, "finalized")
+		expect((await sdk.balances.getTokenBalance(wallet2.publicKey, mint)).toString()).toEqual("1")
+		expect((await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toString()).toEqual("0")
 	})
 
 	test("Should mint nft & burn", async () => {
 		const wallet = getTestWallet()
 
-		const { mint, balance } = await mintToken({ sdk, wallet })
+		const { mint, tokenAccount } = await mintToken({ sdk, wallet })
 
-		const burnTx = await sdk.nft.burn({
+		const burnPrepare = await sdk.nft.burn({
 			signer: wallet,
-			tokenAccount: balance.value[0].pubkey,
+			tokenAccount: tokenAccount.value[0].pubkey,
 			mint: mint,
 			amount: 1,
 		})
-		await sdk.connection.confirmTransaction(burnTx.txId, "finalized")
-		await checkTokenBalance(sdk.connection, wallet.publicKey, mint, 0)
+		const burnTx = await burnPrepare.submit("finalized")
+		expect(burnTx).toBeTruthy()
+		await sdk.confirmTransaction(burnTx.txId, "finalized")
+		expect((await sdk.balances.getTokenBalance(wallet.publicKey, mint)).toString()).toEqual("0")
 	})
 })

@@ -27,7 +27,7 @@ export class EthereumSell {
 				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
 				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
 				const expirationDate = sellFormRequest.expirationDate instanceof Date
-					? Math.round(sellFormRequest.expirationDate.getTime() / 1000)
+					? Math.floor(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 				return {

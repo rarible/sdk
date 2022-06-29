@@ -21,7 +21,7 @@ describe("Solana transfer", () => {
 				toCurrencyId(itemId),
 			)
 			if (parseFloat(balance.toString()) < 1) {
-				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${parseFloat(balance.toString())}`)
+				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${balance.toString()}`)
 			}
 			return balance
 		})
@@ -42,7 +42,7 @@ describe("Solana transfer", () => {
 				toCurrencyId(itemId),
 			)
 			if (parseFloat(balance.toString()) < 1) {
-				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${parseFloat(balance.toString())}`)
+				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${balance.toString()}`)
 			}
 			return balance
 		})

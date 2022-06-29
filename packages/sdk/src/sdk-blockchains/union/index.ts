@@ -1,4 +1,4 @@
-import type { CollectionId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { CollectionId, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
@@ -19,11 +19,18 @@ import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restric
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
-import type { ConvertRequest } from "../../types/balances"
+import type {
+	ConvertRequest,
+	CurrencyOrOrder,
+	GetBiddingBalanceRequest,
+	IDepositBiddingBalance,
+	IWithdrawBiddingBalance,
+} from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
+import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -134,10 +141,15 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.transfer = this.transfer.bind(this)
 		this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
 		this.generateTokenId = this.generateTokenId.bind(this)
+		this.uploadMeta = this.uploadMeta.bind(this)
 	}
 
 	burn(request: PrepareBurnRequest): Promise<PrepareBurnResponse> {
 		return this.instances[extractBlockchain(request.itemId)].burn(request)
+	}
+
+	uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
+		return this.instances[extractBlockchain(request.accountAddress)].uploadMeta(request)
 	}
 
 	mint(request: PrepareMintRequest): Promise<PrepareMintResponse> {
@@ -169,6 +181,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
+		this.getBiddingBalance = this.getBiddingBalance.bind(this)
 	}
 
 	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
@@ -178,6 +191,20 @@ class UnionBalanceSdk implements IBalanceSdk {
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		return this.instances[request.blockchain].convert(request)
 	}
+
+	getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
+		return this.instances[getBiddingBlockchain(request)].getBiddingBalance(request)
+	}
+
+	depositBiddingBalance: IDepositBiddingBalance = Action.create({
+		id: "send-tx",
+		run: request => this.instances[getBiddingBlockchain(request)].depositBiddingBalance(request),
+	})
+
+	withdrawBiddingBalance: IWithdrawBiddingBalance = Action.create({
+		id: "send-tx",
+		run: request => this.instances[getBiddingBlockchain(request)].withdrawBiddingBalance(request),
+	})
 }
 
 class UnionRestrictionSdk implements IRestrictionSdk {
@@ -208,7 +235,7 @@ const blockchains: Blockchain[] = [
 ]
 
 function extractBlockchain(
-	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId,
+	value: UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId | CurrencyId,
 ): Blockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
@@ -248,4 +275,38 @@ function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency):
 	} else {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
+}
+
+
+function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
+	if ("currency" in currencyOrOrder) {
+		if (isRequestCurrencyAssetType(currencyOrOrder.currency)) {
+			return extractBlockchain(currencyOrOrder.currency)
+		} else {
+			if (isAssetType(currencyOrOrder.currency)) {
+				if ("blockchain" in currencyOrOrder.currency && currencyOrOrder.currency.blockchain) {
+					return currencyOrOrder.currency.blockchain
+				}
+				if ("contract" in currencyOrOrder.currency && currencyOrOrder.currency.contract) {
+					return extractBlockchain(currencyOrOrder.currency.contract)
+				}
+				if ("itemId" in currencyOrOrder.currency && currencyOrOrder.currency.itemId) {
+					return extractBlockchain(currencyOrOrder.currency.itemId)
+				}
+				switch (currencyOrOrder.currency["@type"]) {
+					case "SOLANA_SOL": return Blockchain.SOLANA
+					case "ETH": return Blockchain.ETHEREUM
+					case "XTZ": return Blockchain.TEZOS
+				}
+			}
+		}
+		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currencyOrOrder.currency)}`)
+	} else if ("order" in currencyOrOrder) {
+		return extractBlockchain(currencyOrOrder.order.id)
+	} else if ("orderId" in currencyOrOrder) {
+		return extractBlockchain(currencyOrOrder.orderId)
+	} else {
+		return currencyOrOrder.blockchain
+	}
+
 }

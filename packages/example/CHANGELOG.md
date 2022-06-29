@@ -3,6 +3,73 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* fix connector-helper node urls for polygon ([bac335a](https://github.com/rarible/sdk/commit/bac335ab12bd95e20704d1f5f0042ab826a8ee6f))
+
+
+
+
+
+## [0.9.11-beta.1](https://github.com/rarible/sdk/compare/v0.9.11-beta.0...v0.9.11-beta.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* add nftStorageApiKey field in example, fix metaUpload method bug ([f54dba0](https://github.com/rarible/sdk/commit/f54dba02acbf8499322c5fa7dd05651635fea038))
+
+
+### Features
+
+* added uploadMeta function and example ([0c3c260](https://github.com/rarible/sdk/commit/0c3c260de0572a3bcec5b9b26e8f4896569dd5d0))
+
+
+
+
+
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.9](https://github.com/rarible/sdk/compare/v0.9.8...v0.9.9) (2022-06-07)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.8](https://github.com/rarible/sdk/compare/v0.9.7...v0.9.8) (2022-06-06)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
 
 

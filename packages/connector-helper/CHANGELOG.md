@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* fix connector-helper node urls for polygon ([bac335a](https://github.com/rarible/sdk/commit/bac335ab12bd95e20704d1f5f0042ab826a8ee6f))
+
+
+
+
+
+## [0.9.11-beta.1](https://github.com/rarible/sdk/compare/v0.9.11-beta.0...v0.9.11-beta.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* connector-helper for polygon ([41e839f](https://github.com/rarible/sdk/commit/41e839fdefa2cf540833dcb722deeceea18ccede))
+
+
+
+
+
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* sdk-examples - add examples for polygon ([271728b](https://github.com/rarible/sdk/commit/271728b769be7477a7580930e382ee45f6dd8dd3))
+* tezos mint generator update ([#257](https://github.com/rarible/sdk/issues/257)) ([ffeb16e](https://github.com/rarible/sdk/commit/ffeb16e213f1016fcc5700350968591c13f543e1))
+
+
+
+
+
+## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
+
+
+### Features
+
+* fill v2 orders ([#249](https://github.com/rarible/sdk/issues/249)) ([77c9ea7](https://github.com/rarible/sdk/commit/77c9ea78b90be69298603c376308744435d611b4))
+
+
+
+
+
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+**Note:** Version bump only for package @rarible/connector-helper
+
+
+
+
+
 ## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
 
 **Note:** Version bump only for package @rarible/connector-helper

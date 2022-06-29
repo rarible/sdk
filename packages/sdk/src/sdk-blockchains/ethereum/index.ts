@@ -3,9 +3,11 @@ import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork, EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
+import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import { MetaUploader } from "../union/meta/upload-meta"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -37,13 +39,15 @@ export function createEthereumSdk(
 		polygon: config.polygon,
 	})
 	const sellService = new EthereumSell(sdk, network)
-	const balanceService = new EthereumBalance(sdk, network)
+	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
 	const buyBatchService = new EthereumFillBatch(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
+	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
 	return {
 		nft: {
@@ -53,7 +57,8 @@ export function createEthereumSdk(
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
-			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
+			preprocessMeta,
+			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			fill: fillerService.fill,
@@ -69,6 +74,9 @@ export function createEthereumSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
+			getBiddingBalance: balanceService.getBiddingBalance,
+			depositBiddingBalance: balanceService.depositBiddingBalance,
+			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
 		},
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {

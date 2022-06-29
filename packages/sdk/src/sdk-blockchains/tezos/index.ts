@@ -1,9 +1,11 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { TezosNetwork } from "@rarible/tezos-sdk"
+import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
+import { MetaUploader } from "../union/meta/upload-meta"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { getMaybeTezosProvider, getTezosAPIs } from "./common"
@@ -23,12 +25,14 @@ export function createTezosSdk(
 ): IRaribleInternalSdk {
 	const apis = getTezosAPIs(network)
 	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
-	const sellService = new TezosSell(maybeProvider, apis)
+	const sellService = new TezosSell(maybeProvider, apis, _apis)
 	const mintService = new TezosMint(maybeProvider, apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
-	// const bidService = new TezosBid(maybeProvider, apis, balanceService, network)
-	const fillService = new TezosFill(maybeProvider, apis, network)
+	const fillService = new TezosFill(maybeProvider, apis, _apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
+
+	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.TEZOS, preprocessMeta)
 
 	return {
 		nft: {
@@ -38,7 +42,8 @@ export function createTezosSdk(
 			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
-			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
+			preprocessMeta,
+			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			fill: fillService.fill,
@@ -49,11 +54,14 @@ export function createTezosSdk(
 			sellUpdate: sellService.update,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: new TezosCancel(maybeProvider, apis, network).cancel,
+			cancel: new TezosCancel(maybeProvider, apis, _apis, network).cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: notImplemented,
+			getBiddingBalance: nonImplementedAction,
+			depositBiddingBalance: nonImplementedAction,
+			withdrawBiddingBalance: nonImplementedAction,
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,

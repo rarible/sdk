@@ -1,3 +1,4 @@
+import BigNumber from "bignumber.js"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
@@ -56,7 +57,7 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(request.price.toString()),
+					price: new BigNumber(request.price).multipliedBy(request.amount),
 					tokensAmount: request.amount,
 				})).submit("processed")
 
@@ -83,8 +84,8 @@ export class SolanaOrder {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
-
 		const order = await getPreparedOrder(prepareRequest, this.apis)
+		const amount = getTokensAmount(order)
 
 		const updateAction = Action.create({
 			id: "send-tx" as const,
@@ -96,8 +97,8 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(updateRequest.price.toString()),
-					tokensAmount: getTokensAmount(order),
+					price: new BigNumber(updateRequest.price).multipliedBy(amount),
+					tokensAmount: amount,
 				})).submit("processed")
 
 
@@ -145,7 +146,7 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(request.price.toString()),
+					price: new BigNumber(request.price).multipliedBy(request.amount),
 					tokensAmount: request.amount,
 				})).submit("processed")
 
@@ -175,8 +176,8 @@ export class SolanaOrder {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
-
 		const order = await getPreparedOrder(prepareRequest, this.apis)
+		const amount = getTokensAmount(order)
 
 		const updateAction = Action.create({
 			id: "send-tx" as const,
@@ -188,8 +189,8 @@ export class SolanaOrder {
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: parseFloat(updateRequest.price.toString()),
-					tokensAmount: getTokensAmount(order),
+					price: new BigNumber(updateRequest.price).multipliedBy(amount),
+					tokensAmount: amount,
 				})).submit("processed")
 
 				return getOrderId(
@@ -216,13 +217,14 @@ export class SolanaOrder {
 		run: async (request: CancelOrderRequest) => {
 			const order = await getPreparedOrder(request, this.apis)
 			const orderData = getOrderData(order)
+			const amount = getTokensAmount(order)
 
 			const res = await (await this.sdk.order.cancel({
 				auctionHouse: extractPublicKey(orderData.auctionHouse!),
 				signer: this.wallet!.provider,
 				mint: getMintId(order),
 				price: getPrice(order),
-				tokensAmount: getTokensAmount(order),
+				tokensAmount: amount,
 			})).submit("processed")
 
 			return new BlockchainSolanaTransaction(res, this.sdk)

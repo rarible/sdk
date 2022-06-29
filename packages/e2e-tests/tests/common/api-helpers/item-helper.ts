@@ -9,6 +9,7 @@ import type {
 } from "@rarible/api-client/build/apis/ItemControllerApi"
 import type { Blockchain, Items, Royalties } from "@rarible/api-client"
 import type { RestrictionCheckResult } from "@rarible/api-client/build/models"
+import { Collections } from "@rarible/api-client/build/models"
 
 
 export async function awaitForItemSupply(sdk: IRaribleSdk, itemId: ItemId,
@@ -204,4 +205,15 @@ export async function checkItemRestrictionRaw(sdk: IRaribleSdk, contract: Contra
 	})
 	expect(restrictionCheckResult).not.toBe(null)
 	return restrictionCheckResult
+}
+
+export async function verifyItemsByBlockchain(items: Items, blockchain: Blockchain): Promise<void> {
+	items.items.forEach(i => {
+		expect(i.blockchain).toEqual(blockchain)
+	})
+}
+
+export async function verifyItemsContainsItem(items: Items, itemId: ItemId): Promise<void> {
+	const ids = items.items.map(c => c.id)
+	expect(ids).toContain(itemId)
 }

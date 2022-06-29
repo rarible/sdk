@@ -14,16 +14,18 @@ describe("Solana Auction House registry", () => {
 	}
 
 	test("Should return correct Auction House with no mapping", async () => {
-		let ah = getAuctionHouse({ "@type": "SOLANA_SOL" })
+		const ah = getAuctionHouse({ "@type": "SOLANA_SOL" })
 		expect(ah.toString()).toEqual("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
 		expect(await getAuctionHouseFee(ah)).toEqual(250)
+	})
 
-		ah = getAuctionHouse({
+	test("Should throw when no Auction House specified for given currency", async () => {
+		let req = () => getAuctionHouse({
 			"@type": "SOLANA_NFT",
 			itemId: toItemId("SOLANA:mintmintmintmintmintyiBGnLSpookWQiwLMvFn4NFm"),
 		})
-		// no default ah for mints registered, return default sol ah
-		expect(ah.toString()).toEqual("raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp")
+
+		expect(req).toThrow("Auction House for specified currency not found")
 	})
 
 	test("Should return correct Auction House with mapping", async () => {

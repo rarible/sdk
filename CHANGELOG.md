@@ -3,6 +3,118 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
+
+
+### Bug Fixes
+
+* fix connector-helper node urls for polygon ([bac335a](https://github.com/rarible/sdk/commit/bac335ab12bd95e20704d1f5f0042ab826a8ee6f))
+
+
+
+
+
+## [0.9.11-beta.1](https://github.com/rarible/sdk/compare/v0.9.11-beta.0...v0.9.11-beta.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* add nftStorageApiKey field in example, fix metaUpload method bug ([f54dba0](https://github.com/rarible/sdk/commit/f54dba02acbf8499322c5fa7dd05651635fea038))
+* connector-helper for polygon ([41e839f](https://github.com/rarible/sdk/commit/41e839fdefa2cf540833dcb722deeceea18ccede))
+
+
+### Features
+
+* added uploadMeta function and example ([0c3c260](https://github.com/rarible/sdk/commit/0c3c260de0572a3bcec5b9b26e8f4896569dd5d0))
+* use bignumber in solana-sdk ([#255](https://github.com/rarible/sdk/issues/255)) ([3d755ed](https://github.com/rarible/sdk/commit/3d755ed4f88991ccb4390553a32096a10c04fd88))
+
+
+
+
+
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* added flow nodejs wallet initialisation ([ff7b335](https://github.com/rarible/sdk/commit/ff7b3352ec3bc639b2c405e94886deb789cb2d7c))
+* sdk-examples - add examples for polygon ([271728b](https://github.com/rarible/sdk/commit/271728b769be7477a7580930e382ee45f6dd8dd3))
+* tezos mint generator update ([#257](https://github.com/rarible/sdk/issues/257)) ([ffeb16e](https://github.com/rarible/sdk/commit/ffeb16e213f1016fcc5700350968591c13f543e1))
+* update flow deps for backend txs ([81edb21](https://github.com/rarible/sdk/commit/81edb2102d47f96d47cddca77c7953289fa9927b))
+* update flow-sdk for new spork support ([f8d528e](https://github.com/rarible/sdk/commit/f8d528ea572288d6a2aa28753b200d5988e716ff))
+
+
+### Features
+
+* ledger connect in injected connector ([2775327](https://github.com/rarible/sdk/commit/2775327f767266a9f7496d1f021861b9e5a12163))
+
+
+
+
+
+## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
+
+
+### Bug Fixes
+
+* add opensea originFees condition ([e1b779b](https://github.com/rarible/sdk/commit/e1b779bda45524987297194c71c67c2b6db3887a))
+* getFillOrderRequest for opensea orders ([e800104](https://github.com/rarible/sdk/commit/e800104c479e8905cf63396b86f81d502313a8ef))
+* transaction-backend build command ([73f74ae](https://github.com/rarible/sdk/commit/73f74aeb7bea29c499d7b555bd834962ecf3753f))
+* update dependencies ([2d73df0](https://github.com/rarible/sdk/commit/2d73df07f3f9b397402e527b4d2e020e78268cd9))
+* update ethereum-sdk ([6bc436a](https://github.com/rarible/sdk/commit/6bc436aafee200f82bac70d90cd241113910ddc5))
+* update ethereum-sdk ([809844a](https://github.com/rarible/sdk/commit/809844a8533a4d278097afe75990d5f5d1e63f5b))
+* use predefined function to prepare opensea originFees ([bbdc756](https://github.com/rarible/sdk/commit/bbdc75628e054b068007105c043480acda1eca25))
+
+
+### Features
+
+* add originFee support for opensea order fill ([c5cadc8](https://github.com/rarible/sdk/commit/c5cadc886c306554b332258239f3c03798b55eb9))
+* fill v2 orders ([#249](https://github.com/rarible/sdk/issues/249)) ([77c9ea7](https://github.com/rarible/sdk/commit/77c9ea78b90be69298603c376308744435d611b4))
+
+
+
+
+
+## [0.9.9](https://github.com/rarible/sdk/compare/v0.9.8...v0.9.9) (2022-06-07)
+
+
+### Bug Fixes
+
+* sdk-examples publish config ([6f7365f](https://github.com/rarible/sdk/commit/6f7365fb11edecde7cfd08e0c9530e9205aed218))
+
+
+
+
+
+## [0.9.8](https://github.com/rarible/sdk/compare/v0.9.7...v0.9.8) (2022-06-06)
+
+
+### Bug Fixes
+
+* fix sdk-examples package.json tests script ([517c2b2](https://github.com/rarible/sdk/commit/517c2b26232428fca24622307e332a74ee408bfb))
+
+
+
+
+
+## [0.9.7](https://github.com/rarible/sdk/compare/v0.9.6...v0.9.7) (2022-06-06)
+
+
+### Bug Fixes
+
+* correct price for multiple solana items ([#238](https://github.com/rarible/sdk/issues/238)) ([eead462](https://github.com/rarible/sdk/commit/eead46279a6e3917997fdbdbe0d53e17e7a38daa))
+* remove extra devDeps from sdk, add solana example ([1fa4168](https://github.com/rarible/sdk/commit/1fa4168a7d88777fbb756a1cba19720d6e15ffb4))
+
+
+### Features
+
+* refactor e2e ([4b20c36](https://github.com/rarible/sdk/commit/4b20c36d4236117596b75650b25501fd7a067d7f))
+* solana escrow account & bidding balance managing ([#239](https://github.com/rarible/sdk/issues/239)) ([4b4e6a9](https://github.com/rarible/sdk/commit/4b4e6a9497c90af21fe94d841408a9971eab3f30))
+
+
+
+
+
 ## [0.9.6](https://github.com/rarible/sdk/compare/v0.9.5...v0.9.6) (2022-05-31)
 
 

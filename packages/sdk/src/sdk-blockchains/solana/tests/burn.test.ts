@@ -20,7 +20,7 @@ describe("Solana burn", () => {
 				{ "@type": "SOLANA_NFT", itemId },
 			)
 			if (parseFloat(balance.toString()) < 1) {
-				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${parseFloat(balance.toString())}`)
+				throw new Error(`Wrong balance value. Expected ${1}. Actual: ${balance.toString()}`)
 			}
 			return balance
 		})
@@ -38,10 +38,10 @@ describe("Solana burn", () => {
 				toCurrencyId(itemId),
 			)
 			if (parseFloat(balance.toString()) !== 0) {
-				throw new Error(`Wrong balance value. Expected ${0}. Actual: ${parseFloat(balance.toString())}`)
+				throw new Error(`Wrong balance value. Expected ${0}. Actual: ${balance.toString()}`)
 			}
 			return balance
 		})
-		expect(parseFloat(balance.toString())).toEqual(0)
+		expect(balance.toString()).toEqual("0")
 	})
 })

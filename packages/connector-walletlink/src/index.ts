@@ -65,6 +65,6 @@ export class WalletLinkConnectionProvider extends
 	}
 
 	async isConnected(): Promise<boolean> {
-		return (await this.instance.pipe(first()).toPromise()).walletLinkWeb3Provider.isConnected()
+		return !!((await this.instance.pipe(first()).toPromise())?.walletLinkWeb3Provider.isConnected())
 	}
 }

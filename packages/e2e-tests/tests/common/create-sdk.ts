@@ -11,9 +11,6 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 	let env: RaribleSdkEnvironment = testsConfig.env as RaribleSdkEnvironment
 	let flowAuth: AuthWithPrivateKey = undefined
 	switch (blockchain) {
-		case Blockchain.POLYGON:
-			env = "dev"
-			break
 		case Blockchain.FLOW:
 			env = "development"
 			flowAuth = wallet.blockchain === BlockchainGroup.FLOW ? wallet.getAuth() : undefined
