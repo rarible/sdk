@@ -3,7 +3,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { SolanaSdk } from "@rarible/solana-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
+import { nonImplementedAction } from "../../common/not-implemented"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type { ISolanaSdkConfig } from "./domain"
 import { SolanaNft } from "./nft"
@@ -39,7 +39,6 @@ export function createSolanaSdk(
 			fill: fillService.fill,
 			buy: fillService.fill,
 			buyBatch: nonImplementedAction,
-			prepareOrderForBatchPurchase: notImplemented,
 			acceptBid: fillService.fill,
 			sell: orderService.sell,
 			sellUpdate: orderService.sellUpdate,

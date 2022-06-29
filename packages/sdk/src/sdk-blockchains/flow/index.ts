@@ -46,7 +46,6 @@ export function createFlowSdk(
 			fill: new FlowBuy(sdk, apis, blockchainNetwork).buy,
 			buy: new FlowBuy(sdk, apis, blockchainNetwork).buy,
 			buyBatch: nonImplementedAction,
-			prepareOrderForBatchPurchase: notImplemented,
 			acceptBid: new FlowBuy(sdk, apis, blockchainNetwork).buy,
 			bid: bidService.bid,
 			bidUpdate: bidService.update,

@@ -6,11 +6,7 @@ export function BuyBatchComment() {
 		<Code>
 			{`
 // get order info
-const buy = await connection.sdk.order.buyBulk([
-	{
-  	orderId: <ORDER ID>
-	}
-])
+const buy = await connection.sdk.order.buyBatch([{orderId: <ORDER ID>}])
 // buy: {
 //   preparedFillResponse: [
 //   baseFee: number

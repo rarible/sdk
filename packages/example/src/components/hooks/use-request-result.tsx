@@ -14,6 +14,7 @@ export interface IRequestResult<T> {
 	}
 	setComplete: (data: T) => void
 	setError: (error: any) => void
+	reset: () => void
 }
 
 export function useRequestResult<T>(): IRequestResult<T> {
@@ -33,6 +34,9 @@ export function useRequestResult<T>(): IRequestResult<T> {
 				error: isString(error) ? error : (error.message ? error.message : JSON.stringify(error))
 			})
 		},
+		reset: () => {
+			setResult({type: "empty"})
+		}
 	}
 }
 

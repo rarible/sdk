@@ -1,7 +1,7 @@
-import type { Blockchain, ItemId, Order, OrderId } from "@rarible/api-client"
-import type { Order as EthereumApiOrder } from "@rarible/ethereum-api-client"
+import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -16,11 +16,6 @@ export type PrepareFillRequest = {
 	 */
 	order: Order
 }
-
-export type PreparedFillBatchRequest =
-	Omit<PrepareFillResponse, "submit" | "originFeeSupport" | "payoutsSupport" | "supportsPartialFill">
-	& { order: EthereumApiOrder, blockchain: Blockchain }
-export type PrepareFillBatchRequestWithAmount = PreparedFillBatchRequest & Pick<FillRequest, "amount">
 
 export enum OriginFeeSupport {
 	NONE = "NONE",
@@ -100,8 +95,10 @@ export type PrepareFillResponse =
 
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
 
-export type PrepareBatchFillResponse = IBlockchainTransaction
+export type CommonFillBatchResponse = Record<OrderId, CommonFillResponse & {order: SimpleOrder}>
+export type FillBatchRequest = ({orderId: OrderId} & FillRequest)[]
+export type PrepareFillBatchResponse =
+	AbstractPrepareResponse<FillActionTypes, FillBatchRequest, IBlockchainTransaction> &
+	{ preparedOrders: CommonFillBatchResponse }
 
-export type IPrepareOrderForFillBatch = (request: PrepareFillRequest) => Promise<PreparedFillBatchRequest>
-
-export type IFillBatch = (request: PrepareFillBatchRequestWithAmount[]) => Promise<PrepareBatchFillResponse>
+export type IFillBatch = (request: PrepareFillRequest[]) => Promise<PrepareFillBatchResponse>

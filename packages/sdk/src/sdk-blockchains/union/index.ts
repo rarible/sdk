@@ -12,12 +12,7 @@ import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type * as OrderCommon from "../../types/order/common"
-import type {
-	PrepareBatchFillResponse,
-	PrepareFillBatchRequestWithAmount,
-	PrepareFillRequest,
-	PrepareFillResponse,
-} from "../../types/order/fill/domain"
+import type { PrepareFillBatchResponse, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { ICancel } from "../../types/order/cancel/domain"
 import type { ICreateCollection } from "../../types/nft/deploy/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
@@ -76,7 +71,6 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		this.bidUpdate = this.bidUpdate.bind(this)
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
-		this.prepareOrderForBatchPurchase = this.prepareOrderForBatchPurchase.bind(this)
 		this.buyBatch = this.buyBatch.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
 		this.sell = this.sell.bind(this)
@@ -103,17 +97,8 @@ class UnionOrderSdk implements IOrderInternalSdk {
 		return this.instances[extractBlockchain(getOrderId(request))].buy(request)
 	}
 
-	prepareOrderForBatchPurchase(request: PrepareFillRequest) {
-		return this.instances[extractBlockchain(getOrderId(request))].prepareOrderForBatchPurchase(request)
-	}
-
-	buyBatch(request: PrepareFillBatchRequestWithAmount[]): Promise<PrepareBatchFillResponse> {
-		const ordersBlockchain = request.filter(r => r.blockchain === request[0].blockchain)
-		if (ordersBlockchain.length === request.length) {
-			return this.instances[request[0].blockchain].buyBatch(request)
-		} else {
-			throw new Error("Batch purchase can accept orders by only one blockchain type at a time")
-		}
+	buyBatch(request: PrepareFillRequest[]): Promise<PrepareFillBatchResponse> {
+		return this.instances[extractBlockchain(getOrderId(request[0]))].buyBatch(request)
 	}
 
 	acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {

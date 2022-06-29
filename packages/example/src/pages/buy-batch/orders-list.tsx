@@ -1,9 +1,8 @@
 import React from "react"
 import { Box, Typography } from "@mui/material"
-import { PrepareFillBatchRequestWithAmount } from "@rarible/sdk/src/types/order/fill/domain"
 
 interface IOrdersListProps {
-	orders: (PrepareFillBatchRequestWithAmount & { orderId: string })[]
+	orders: string[]
 }
 
 export function BatchOrdersList({ orders }: IOrdersListProps) {
@@ -23,14 +22,11 @@ export function BatchOrdersList({ orders }: IOrdersListProps) {
 			gap: 2,
 		}}>
 			{orders.map(order => <Box
-				key={order.orderId}
+				key={order}
 				display="flex"
 			>
 				<Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
-					Order ID: {order.orderId}
-				</Typography>
-				<Typography variant="body2" color="text.secondary" sx={{ textAlign: "center" }}>
-					Amount: {order.amount}
+					Order ID: {order}
 				</Typography>
 			</Box>)}
 		</Box>

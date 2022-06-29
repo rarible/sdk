@@ -15,7 +15,7 @@ import { MintPage } from "./pages/mint/mint-page"
 import { BidPage } from "./pages/bid/bid-page"
 import { AcceptBidPage } from "./pages/accept-bid/acceptbid-page"
 import { ItemsPage } from "./pages/items/items-page"
-import { BuyBatchPage } from "./pages/buy-batch/buy-page"
+import { BuyBatchPage } from "./pages/buy-batch/buy-batch-page"
 
 export function App() {
 	return (

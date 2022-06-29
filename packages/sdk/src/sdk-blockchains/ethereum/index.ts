@@ -59,7 +59,6 @@ export function createEthereumSdk(
 			fill: fillerService.fill,
 			buy: fillerService.buy,
 			buyBatch: buyBatchService.buyBatch,
-			prepareOrderForBatchPurchase: buyBatchService.getPrepareFillResponse,
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,

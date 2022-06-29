@@ -44,7 +44,6 @@ export function createTezosSdk(
 			fill: fillService.fill,
 			buy: fillService.fill,
 			buyBatch: nonImplementedAction,
-			prepareOrderForBatchPurchase: notImplemented,
 			acceptBid: fillService.fill,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
