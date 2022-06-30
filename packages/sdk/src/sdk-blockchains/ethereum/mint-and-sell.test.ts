@@ -54,7 +54,6 @@ describe("mintAndSell", () => {
 				createdAt: "2022-04-11T12:59:51.790Z",
 				lastUpdatedAt: "2022-04-11T12:59:51.790Z",
 				takePrice: toBigNumber("0.0000000000000001"),
-				priceHistory: [],
 				maker: toUnionAddress("ETHEREUM:0xa95e8f190179d999c53dd61f1a43284e12e8fdd2"),
 				make: {
 					type: {

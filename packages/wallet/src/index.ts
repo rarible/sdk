@@ -127,6 +127,21 @@ export class SolanaWallet implements AbstractWallet {
 	}
 }
 
+//todo implement immutablex wallet
+export class ImmutablexWallet implements AbstractWallet {
+  readonly blockchain = BlockchainGroup.IMMUTABLEX
+
+  constructor() {}
+
+  //todo implement sign personal message method
+  async signPersonalMessage(message: string) {
+  	return {
+  		signature: "",
+  		publicKey: "",
+  	}
+  }
+}
+
 export type BlockchainWallet =
 	EthereumWallet |
 	FlowWallet |
@@ -138,4 +153,5 @@ export type WalletByBlockchain = {
 	"ETHEREUM": EthereumWallet,
 	"TEZOS": TezosWallet
 	"SOLANA": SolanaWallet
+	"IMMUTABLEX": EthereumWallet
 }

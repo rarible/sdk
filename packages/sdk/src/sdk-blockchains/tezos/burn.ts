@@ -5,13 +5,19 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { TezosProvider, TezosNetwork, Provider } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
-import { getTezosItemData, isExistedTezosProvider } from "./common"
+import type { IApisSdk } from "../../domain"
+import type { MaybeProvider } from "./common"
+import {
+	getCollectionType,
+	getCollectionTypeAssetClass,
+	getTezosItemData,
+	isExistedTezosProvider,
+} from "./common"
 
 export class TezosBurn {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
+		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
 		this.burn = this.burn.bind(this)
@@ -25,26 +31,24 @@ export class TezosBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
-		const { itemId, contract } = getTezosItemData(prepare.itemId)
-		const item = await this.apis.item.getNftItemById({ itemId })
-
-		const collection = await this.apis.collection.getNftCollectionById({
-			collection: contract,
-		})
+		const { contract, tokenId } = getTezosItemData(prepare.itemId)
+		const item = await this.unionAPI.item.getItemById({ itemId: prepare.itemId })
+		const collectionType = await getCollectionType(this.provider, contract)
 
 		return {
-			multiple: collection.type === "MT",
+			multiple: collectionType === "TEZOS_MT",
 			maxAmount: toBigNumber(item.supply),
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
-					const amount = collection.type === "MT" ? new BigNumber((request?.amount ?? 1).toFixed()) : undefined
+					const amount = collectionType === "TEZOS_MT" ? new BigNumber((request?.amount ?? 1).toFixed()) : undefined
 
 					const result = await burn(
 						this.getRequiredProvider(),
 						{
-							contract: item.contract,
-							token_id: new BigNumber(item.tokenId),
+							asset_class: getCollectionTypeAssetClass(collectionType),
+							contract,
+							token_id: new BigNumber(tokenId),
 						},
 						amount
 					)

@@ -4,13 +4,13 @@ import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("mint test", () => {
-	const env: RaribleSdkEnvironment = "staging"
+describe("mint test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
@@ -21,7 +21,7 @@ describe.skip("mint test", () => {
 	const nftContract: string = getTestContract(env, "nftContract")
 	const mtContract: string = getTestContract(env, "mtContract")
 
-	test.skip("mint NFT token test", async () => {
+	test("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(nftContract),
 		})
@@ -42,11 +42,11 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
 
-	test.skip("mint MT token test", async () => {
+	test("mint MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
 			collectionId: toCollectionId(mtContract),
 		})
@@ -66,7 +66,7 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "12")
+		await awaitItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 

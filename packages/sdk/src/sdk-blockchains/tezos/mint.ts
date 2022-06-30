@@ -2,24 +2,24 @@ import { Action } from "@rarible/action"
 import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { get_address, mint } from "@rarible/tezos-sdk"
-import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { CollectionId } from "@rarible/api-client"
-import { Blockchain } from "@rarible/api-client"
+import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse } from "../../types/nft/mint/domain"
 import { MintType } from "../../types/nft/mint/domain"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
-import type { ITezosAPI, MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
-import { convertTezosItemId, getRequiredProvider, getTezosAddress } from "./common"
+import type { IApisSdk } from "../../domain"
+import type { MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
+import { convertTezosItemId, getCollectionType, getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
+		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
 		this.mint = this.mint.bind(this)
@@ -71,10 +71,10 @@ export class TezosMint {
 		const {
 			contract,
 			type,
-		} = await getCollectionData(this.apis.collection, prepareRequest)
+		} = await getCollectionData(this.unionAPI, prepareRequest)
 
 		return {
-			multiple: type === "MT",
+			multiple: type === CollectionType.TEZOS_MT,
 			supportsRoyalties: true,
 			supportsLazyMint: false,
 			submit: Action.create({
@@ -86,7 +86,8 @@ export class TezosMint {
 						return acc
 					}, {} as { [key: string]: BigNumber }) || {}
 
-					const supply = type === "NFT" ? undefined : toBn(request.supply)
+					const collectionType = await getCollectionType(this.provider, contract)
+					const supply = collectionType === CollectionType.TEZOS_NFT ? undefined : toBn(request.supply)
 					const provider = getRequiredProvider(this.provider)
 
 					const result = await mint(
@@ -113,16 +114,16 @@ export class TezosMint {
 }
 
 export async function getCollectionData(
-	api: NftCollectionControllerApi,
+	unionAPI: IApisSdk,
 	prepareRequest: HasCollection | HasCollectionId,
-): Promise<{ contract: string, owner?: string, type: "NFT" | "MT" }> {
+) {
 	const contractAddress = getContractFromRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
 	}
-	const collection = await api.getNftCollectionById({
-		collection: contract,
+	const collection = await unionAPI.collection.getCollectionById({
+		collection: contractAddress,
 	})
 	if (!collection) {
 		throw new Error(`Tezos collection with address=${contract} has not been found`)

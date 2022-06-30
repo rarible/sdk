@@ -1,21 +1,10 @@
-import type { SellRequest as TezosSellRequest } from "@rarible/tezos-sdk/dist/order/sell"
-import type { FTAssetType, OrderDataTypeRequest, TezosProvider, XTZAssetType, OrderForm,
+import type { FTAssetType, OrderDataRequest, TezosProvider, XTZAssetType,
 	TezosNetwork } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import {
 	AssetTypeV2,
 	// eslint-disable-next-line camelcase
-	fill_offchain_royalties,
-	// eslint-disable-next-line camelcase
-	get_active_order_type,
-	// eslint-disable-next-line camelcase
 	get_ft_type,
-	OrderType,
-	// eslint-disable-next-line camelcase
-	pk_to_pkh,
-	// eslint-disable-next-line camelcase
-	upsert_order,
-	sell,
 } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
 import BigNumber from "bignumber.js"
@@ -29,38 +18,30 @@ import type {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../types/order/common"
-import { retry } from "../../common/retry"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { IApisSdk } from "../../domain"
-import type { TezosOrder } from "./domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
-	convertUnionParts, convertOrderToOrderForm,
+	convertUnionParts,
 	convertTezosOrderId,
-	getMakerPublicKey,
-	getPayouts,
 	getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
-	getTokenIdString, getTezosOrderId, covertToLibAsset,
 } from "./common"
 
 export class TezosSell {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
 		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
 		this.sell = this.sell.bind(this)
-		this.updateV1 = this.updateV1.bind(this)
-		this.updateV2 = this.updateV2.bind(this)
-		this.sellV1 = this.sellV1.bind(this)
+		this.update = this.update.bind(this)
 	}
 
 	async parseTakeAssetType(type: RequestCurrencyAssetType): Promise<XTZAssetType | FTAssetType> {
@@ -89,11 +70,7 @@ export class TezosSell {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
-				if (this.network === "dev") {
-					return this.sellV2(request)
-				} else {
-					return this.sellV1(request)
-				}
+				return this.sellV2(request)
 			},
 		})
 
@@ -105,41 +82,6 @@ export class TezosSell {
 			supportsExpirationDate: false,
 			submit,
 		}
-	}
-
-	async sellV1(request: OrderCommon.OrderInternalRequest) {
-		const provider = getRequiredProvider(this.provider)
-		const makerPublicKey = await getMakerPublicKey(provider)
-		const { itemId, contract } = getTezosItemData(request.itemId)
-
-		const item = await retry(20, 1000, async () => {
-			return this.apis.item.getNftItemById({ itemId })
-		})
-		const requestCurrency = getCurrencyAssetType(request.currency)
-
-		const itemCollection = await this.apis.collection.getNftCollectionById({
-			collection: contract,
-		})
-		const tezosRequest: TezosSellRequest = {
-			maker: pk_to_pkh(makerPublicKey),
-			maker_edpk: makerPublicKey,
-			make_asset_type: {
-				asset_class: itemCollection.type,
-				contract: item.contract,
-				token_id: new BigNumber(item.tokenId),
-			},
-			take_asset_type: await this.parseTakeAssetType(requestCurrency),
-			amount: new BigNumber(request.amount),
-			price: new BigNumber(request.price),
-			payouts: await getPayouts(provider, request.payouts),
-			origin_fees: convertUnionParts(request.originFees),
-		}
-
-		const sellOrder: TezosOrder = await sell(
-    	provider,
-    	tezosRequest
-		)
-		return convertTezosOrderId(sellOrder.hash)
 	}
 
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
@@ -182,61 +124,13 @@ export class TezosSell {
 		return convertTezosOrderId(sellOrderId)
 	}
 
-	async updateV1(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
-		const orderId = getTezosOrderId(request.orderId)
-
-		const order = await this.apis.order.getOrderByHash({ hash: orderId })
-		if (!order) {
-			throw new Error("Order has not been found")
-		}
-		const updateAction = Action.create({
-			id: "send-tx" as const,
-			run: async (updateRequest: OrderUpdateRequest) => {
-				const provider = getRequiredProvider(this.provider)
-
-				const orderForm: OrderForm = {
-					type: "RARIBLE_V2",
-					maker: order.maker,
-					maker_edpk: order.makerEdpk,
-					taker_edpk: order.takerEdpk,
-					make: covertToLibAsset(order.make),
-					take: {
-						...covertToLibAsset(order.take),
-						value: new BigNumber(updateRequest.price).multipliedBy(order.make.value),
-					},
-					salt: order.salt,
-					start: order.start,
-					end: order.end,
-					signature: order.signature,
-					data: {
-						data_type: "V1",
-						payouts: order.data.payouts?.map(p => ({
-							account: p.account,
-							value: new BigNumber(p.value),
-						})) || [],
-						origin_fees: order.data.originFees?.map(p => ({
-							account: p.account,
-							value: new BigNumber(p.value),
-						})) || [],
-					},
-				}
-				const updatedOrder = await upsert_order(provider, orderForm, true)
-				return convertTezosOrderId(updatedOrder.hash)
-			},
-		})
-		return {
-			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
-			supportedCurrencies: getSupportedCurrencies(),
-			baseFee: parseInt(this.provider.config.fees.toString()),
-			submit: updateAction,
-		}
-	}
-
-	async updateV2(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
 		const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
 		if (!order) {
 			throw new Error("Order has not been found")
+		}
+		if (order.data["@type"] === "TEZOS_RARIBLE_V2") {
+			throw new Error("You can't change v1 version of order. Cancel order and create a new one")
 		}
 		const { make, take } = order
 		const makeAssetType = make.type
@@ -247,61 +141,42 @@ export class TezosSell {
 			id: "send-tx" as const,
 			run: async (updateRequest: OrderUpdateRequest) => {
 				const provider = getRequiredProvider(this.provider)
-				const request: OrderDataTypeRequest = {
-					contract: convertFromContractAddress(makeAssetType.contract),
-					token_id: new BigNumber(makeAssetType.tokenId),
-					seller: getTezosAddress(order.maker),
-					buy_asset_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
-					buy_asset_token_id: take.type["@type"] === "TEZOS_FT" ? getTokenIdString(take.type.tokenId) : undefined,
+				const request: OrderDataRequest = {
+					make_contract: convertFromContractAddress(makeAssetType.contract),
+					make_token_id: new BigNumber(makeAssetType.tokenId),
+					maker: getTezosAddress(order.maker),
+					take_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
 				}
-				const type = await retry(30, 2000, async () => {
-					const type = await get_active_order_type(this.provider.config, request)
-					if (type === undefined) {
-						throw new Error("Order type has not been not found")
-					}
-					return type
-				})
-
-				if (type === OrderType.V2) {
-					const asset = await getTezosAssetTypeV2(provider.config, take.type)
-					const expirationDate = order.endedAt !== undefined ? Math.floor(new Date(order.endedAt).getTime()): undefined
-
-					const tezosRequest: OrderFormV2 = {
-						s_asset_contract: request.contract,
-						s_asset_token_id: new BigNumber(makeAssetType.tokenId),
-						s_sale_type: asset.type,
-						s_sale_asset_contract: request.buy_asset_contract,
-						s_sale_asset_token_id: asset.asset_token_id,
-						s_sale: {
-							sale_amount: new BigNumber(updateRequest.price),
-							sale_asset_qty: new BigNumber(make.value),
-							sale_max_fees_base_boint: 10000,
-							sale_end: expirationDate,
-							sale_start: undefined,
-							sale_origin_fees: order.data["@type"] === "TEZOS_RARIBLE_V2" ? convertUnionParts(order.data.originFees): [],
-							sale_payouts: order.data["@type"] === "TEZOS_RARIBLE_V2" ? convertUnionParts(order.data.payouts): [],
-							sale_data: undefined,
-							sale_data_type: undefined,
-						},
-					}
-					const sellOrderId = await sellV2(
-						provider,
-						tezosRequest
-					)
-					return convertTezosOrderId(sellOrderId)
+				if (take.type["@type"] === "TEZOS_FT" && take.type.tokenId) {
+					request.take_token_id = new BigNumber(take.type.tokenId.toString())
 				}
-				const v1OrderForm = convertOrderToOrderForm(order)
-				const orderForm: OrderForm = {
-					...v1OrderForm,
-					maker_edpk: await getMakerPublicKey(provider),
-					take: {
-						...v1OrderForm.take,
-						value: new BigNumber(updateRequest.price).multipliedBy(order.make.value),
+
+				const asset = await getTezosAssetTypeV2(provider.config, take.type)
+				const expirationDate = order.endedAt !== undefined ? Math.floor(new Date(order.endedAt).getTime()): undefined
+
+				const tezosRequest: OrderFormV2 = {
+					s_asset_contract: convertFromContractAddress(makeAssetType.contract),
+					s_asset_token_id: new BigNumber(makeAssetType.tokenId),
+					s_sale_type: asset.type,
+					s_sale_asset_contract: request.take_contract,
+					s_sale_asset_token_id: asset.asset_token_id,
+					s_sale: {
+						sale_amount: new BigNumber(updateRequest.price),
+						sale_asset_qty: new BigNumber(make.value),
+						sale_max_fees_base_boint: 10000,
+						sale_end: expirationDate,
+						sale_start: undefined,
+						sale_origin_fees: order.data["@type"] === "TEZOS_RARIBLE_V2" ? convertUnionParts(order.data.originFees): [],
+						sale_payouts: order.data["@type"] === "TEZOS_RARIBLE_V2" ? convertUnionParts(order.data.payouts): [],
+						sale_data: undefined,
+						sale_data_type: undefined,
 					},
 				}
-				const orderWithRoyalties = await fill_offchain_royalties(provider, orderForm)
-				const updatedOrder = await upsert_order(provider, orderWithRoyalties, true)
-				return convertTezosOrderId(updatedOrder.hash)
+				const sellOrderId = await sellV2(
+					provider,
+					tezosRequest
+				)
+				return convertTezosOrderId(sellOrderId)
 			},
 		})
 		return {

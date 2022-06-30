@@ -5,8 +5,8 @@ import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { awaitForOrder } from "./test/await-for-order"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
@@ -36,7 +36,7 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sellerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(sellerSdk, mintResult.itemId, "1")
 
 		const sellAction = await sellerSdk.order.sell({
 			itemId: mintResult.itemId,
@@ -54,14 +54,11 @@ describe.skip("sell test", () => {
 			}],
 		})
 
-		console.log("before await order", orderId)
 		await awaitForOrder(sellerSdk, orderId)
-		console.log("before sell update", orderId)
 		const updateAction = await sellerSdk.order.sellUpdate({
 			orderId,
 		})
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
-		console.log("after sell update", createdOrderId)
 
 		await retry(10, 2000, async () => {
 			const updatedOrder = await sellerSdk.apis.order.getOrderById({
@@ -85,9 +82,8 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sellerSdk, mintResult.itemId, "10")
+		await awaitItemSupply(sellerSdk, mintResult.itemId, "10")
 
-		console.log("item", mintResult.itemId)
 		const sellAction = await sellerSdk.order.sell({
 			itemId: mintResult.itemId,
 		})
@@ -103,9 +99,7 @@ describe.skip("sell test", () => {
 				value: 10000,
 			}],
 		})
-		const order = await awaitForOrder(sellerSdk, orderId)
-
-		console.log("order", order)
+		await awaitForOrder(sellerSdk, orderId)
 
 	}, 2900000)
 

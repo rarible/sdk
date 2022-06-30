@@ -1,14 +1,15 @@
-import { toCollectionId } from "@rarible/types"
+import { toBigNumber, toCollectionId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { awaitItem } from "../ethereum/test/await-item"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("burn test", () => {
-	const env: RaribleSdkEnvironment = "staging"
+describe("burn test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
@@ -31,7 +32,7 @@ describe.skip("burn test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItem(sdk, mintResult.itemId)
 
 		const transfer = await sdk.nft.burn({ itemId: mintResult.itemId })
 
@@ -41,7 +42,7 @@ describe.skip("burn test", () => {
 		  await result.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "0")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
 	}, 1500000)
 
 	test("burn MT token test", async () => {
@@ -57,7 +58,7 @@ describe.skip("burn test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await awaitItem(sdk, mintResult.itemId)
 
 		const transfer = await sdk.nft.burn({
 			itemId: mintResult.itemId,
@@ -67,7 +68,7 @@ describe.skip("burn test", () => {
 		  await result.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "5")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	}, 1500000)
 
 })
