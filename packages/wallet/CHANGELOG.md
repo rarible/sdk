@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.10](https://github.com/rarible/sdk/compare/v0.9.11-beta.9...v0.9.11-beta.10) (2022-06-30)
+
+
+### Bug Fixes
+
+* tezos changes ([76cc534](https://github.com/rarible/sdk/commit/76cc534ac6b0f3232c5f242feaddc10dc43190cd))
+
+
+
+
+
 ## [0.9.11-beta.9](https://github.com/rarible/sdk/compare/v0.9.11-beta.8...v0.9.11-beta.9) (2022-06-29)
 
 **Note:** Version bump only for package @rarible/sdk-wallet
