@@ -1,20 +1,19 @@
 import { toPublicKey } from "@rarible/solana-common"
 import { SolanaSdk } from "../sdk/sdk"
-import { delay, genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
+import { genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
 
 describe("solana order sdk", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
 
-	beforeAll(async () => {
-		const wallet1 = getTestWallet(0)
-		const wallet2 = getTestWallet(1)
-		await requestSol(sdk.connection, wallet1.publicKey, 1)
-		console.log("fund 1 wallet, awaiting...")
-		await delay(10000)
-		await requestSol(sdk.connection, wallet2.publicKey, 1)
-		console.log("fund 2 wallet")
-
-	})
+	// beforeAll(async () => {
+	// 	const wallet1 = getTestWallet(0)
+	// 	const wallet2 = getTestWallet(1)
+	// 	await requestSol(sdk.connection, wallet1.publicKey, 1)
+	// 	console.log("fund 1 wallet, awaiting...")
+	// 	await delay(10000)
+	// 	await requestSol(sdk.connection, wallet2.publicKey, 1)
+	// 	console.log("fund 2 wallet")
+	// })
 
 	test("Should sell & buy nft", async () => {
 		const sellerWallet = getTestWallet()
@@ -236,37 +235,34 @@ describe("solana order sdk", () => {
 		const wallet1 = getTestWallet(0)
 		const wallet2 = getTestWallet(1)
 		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
-		const { mint, tokenAccount } = await mintToken({ sdk, wallet: wallet1 })
+		const { mint } = await mintToken({ sdk, wallet: wallet1 })
 
 		// wallet1 put item to sell
-		const { txId: sellTxId } = await (await sdk.order.sell({
+		await (await sdk.order.sell({
 			auctionHouse: toPublicKey(auctionHouse),
 			signer: wallet1,
 			price: 0.001,
 			tokensAmount: 1,
 			mint: mint,
 		})).submit("max")
-		await sdk.confirmTransaction(sellTxId, "finalized")
 
 		// wallet1 transfer item to wallet2
 		const { txId: transferTxId } = await (await sdk.nft.transfer({
 			signer: wallet1,
 			mint: mint,
-			tokenAccount: tokenAccount.value[0].pubkey,
 			to: wallet2.publicKey,
 			amount: 1,
 		})).submit("max")
-		await sdk.confirmTransaction(transferTxId, "finalized")
+		await sdk.confirmTransaction(transferTxId, "confirmed")
 
 		// wallet2 put item to sell
-		const { txId: sellTxId2 } = await (await sdk.order.sell({
+		await (await sdk.order.sell({
 			auctionHouse: toPublicKey(auctionHouse),
 			signer: wallet2,
 			price: 0.002,
 			tokensAmount: 1,
 			mint: mint,
 		})).submit("max")
-		await sdk.confirmTransaction(sellTxId2, "finalized")
 
 		//wallet1 buying item
 		const { txId: buyTxId } = await (await sdk.order.buy({
@@ -277,9 +273,20 @@ describe("solana order sdk", () => {
 			mint: mint,
 		})).submit("max")
 
-		await sdk.confirmTransaction(buyTxId, "finalized")
+		await sdk.confirmTransaction(buyTxId, "confirmed")
 
-		const { txId: finalTxId } = await (await sdk.order.executeSell({
+		const transactions = []
+
+		// revoke token account delegate
+		const ata = await sdk.account.getTokenAccountForMint({ mint, owner: wallet1.publicKey })
+		if (ata) {
+			const accountInfo = await sdk.account.getAccountInfo({ tokenAccount: ata, mint })
+			if (accountInfo.delegate && accountInfo.amount.toString() === "0") {
+				transactions.push(await sdk.account.revokeDelegate({ signer: wallet1, tokenAccount: ata }))
+			}
+		}
+
+		transactions.push(await sdk.order.executeSell({
 			auctionHouse: toPublicKey(auctionHouse),
 			signer: wallet1,
 			buyerWallet: wallet1.publicKey,
@@ -287,8 +294,8 @@ describe("solana order sdk", () => {
 			tokensAmount: 1,
 			mint: mint,
 			price: 0.002,
-		})).submit("max")
-		await sdk.confirmTransaction(finalTxId, "finalized")
+		}))
 
+		await sdk.unionInstructionsAndSend(wallet1, transactions, "confirmed")
 	})
 })

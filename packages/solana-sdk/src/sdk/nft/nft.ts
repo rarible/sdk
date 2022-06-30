@@ -3,6 +3,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
 import type { TransactionResult } from "../../types"
+import type { ISolanaAccountSdk } from "../account/account"
 import { PreparedTransaction } from "../prepared-transaction"
 import { getMintNftInstructions } from "./methods/mint"
 import { getTokenTransferInstructions } from "./methods/transfer"
@@ -15,11 +16,11 @@ export interface IMintRequest {
 	collection: PublicKey | null
 }
 
-export type IMintResponse = {tx: PreparedTransaction, mint: PublicKey}
+export type IMintResponse = { tx: PreparedTransaction, mint: PublicKey }
 
 export interface ITransferRequest {
 	signer: IWalletSigner
-	tokenAccount: PublicKey
+	tokenAccount?: PublicKey
 	to: PublicKey
 	mint: PublicKey
 	amount: BigNumberValue
@@ -28,20 +29,26 @@ export interface ITransferRequest {
 export interface IBurnRequest {
 	signer: IWalletSigner
 	mint: PublicKey
-	tokenAccount: PublicKey
 	amount: BigNumberValue
+	tokenAccount?: PublicKey
 	owner?: PublicKey
 	closeAssociatedAccount?: boolean
 }
 
 export interface ISolanaNftSdk {
 	mint(request: IMintRequest): Promise<IMintResponse>
+
 	transfer(request: ITransferRequest): Promise<PreparedTransaction>
+
 	burn(request: IBurnRequest): Promise<PreparedTransaction>
 }
 
 export class SolanaNftSdk implements ISolanaNftSdk {
-	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
+	constructor(
+		private readonly connection: Connection,
+		private readonly logger: DebugLogger,
+		private readonly accountSdk: ISolanaAccountSdk,
+	) {
 	}
 
 	async mint(request: IMintRequest): Promise<IMintResponse> {
@@ -54,7 +61,7 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 				collection: request.collection,
 				maxSupply: request.maxSupply,
 				verifyCreators: true,
-			}
+			},
 		)
 
 		return {
@@ -66,17 +73,28 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 				(tx: TransactionResult) => {
 					this.logger.log(`NFT created ${tx.txId}`)
 					this.logger.log(`NFT: Mint Address is ${mint.toString()}`)
-				}
+				},
 			),
 			mint,
 		}
 	}
 
 	async transfer(request: ITransferRequest): Promise<PreparedTransaction> {
+		const tokenAccount = request.tokenAccount ?? await this.accountSdk.getTokenAccountForMint(
+			{
+				owner: request.signer.publicKey,
+				mint: request.mint,
+			},
+		)
+
+		if (!tokenAccount) {
+			throw new Error("Token account not specified")
+		}
+
 		const instructions = await getTokenTransferInstructions({
 			connection: this.connection,
 			signer: request.signer,
-			tokenAccount: request.tokenAccount,
+			tokenAccount: tokenAccount,
 			to: request.to,
 			mint: request.mint,
 			amount: request.amount,
@@ -89,15 +107,26 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 			this.logger,
 			() => {
 				this.logger.log(`${request.amount.toString()} token(s) ${request.mint.toString()} transferred to ${request.to.toString()}`)
-			}
+			},
 		)
 	}
 
 	async burn(request: IBurnRequest): Promise<PreparedTransaction> {
+		const tokenAccount = request.tokenAccount ?? await this.accountSdk.getTokenAccountForMint(
+			{
+				owner: request.owner ?? request.signer.publicKey,
+				mint: request.mint,
+			},
+		)
+
+		if (!tokenAccount) {
+			throw new Error("Token account not specified")
+		}
+
 		const instructions = await getTokenBurnInstructions({
 			connection: this.connection,
 			signer: request.signer,
-			tokenAccount: request.tokenAccount,
+			tokenAccount: tokenAccount,
 			mint: request.mint,
 			amount: request.amount,
 			owner: request.owner,
@@ -111,7 +140,8 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 			this.logger,
 			() => {
 				this.logger.log(`${request.amount.toString()} token(s) ${request.mint.toString()} burned`)
-			}
+			},
 		)
 	}
+
 }

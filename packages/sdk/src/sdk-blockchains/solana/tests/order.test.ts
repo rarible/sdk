@@ -30,7 +30,6 @@ describe("Solana order", () => {
 			currency: { "@type": "SOLANA_SOL" },
 		})
 		const order = await retry(10, 2000, () => sdk.apis.order.getOrderById({ id: orderId }))
-		console.log(orderId)
 		expect(order.take.value).toEqual(price)
 	})
 

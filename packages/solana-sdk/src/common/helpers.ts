@@ -8,6 +8,7 @@ import {
 } from "@solana/web3.js"
 import type { Program } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import type { AccountInfo } from "@solana/spl-token"
 import BigNumber from "bignumber.js"
 import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID, TOKEN_METADATA_PROGRAM_ID, WRAPPED_SOL_MINT } from "./contracts"
 
@@ -104,14 +105,14 @@ export async function getMasterEdition(
 }
 
 export async function getPriceWithMantissa(
+	connection: Connection,
 	price: BigNumber,
 	mint: PublicKey,
 	walletKeyPair: any,
-	anchorProgram: Program,
 ): Promise<BigNumber> {
 	const token = new Token(
-		anchorProgram.provider.connection,
-		new PublicKey(mint),
+		connection,
+		mint,
 		TOKEN_PROGRAM_ID,
 		walletKeyPair,
 	)
@@ -123,13 +124,29 @@ export async function getPriceWithMantissa(
 	return price.multipliedBy(mantissa).integerValue(BigNumber.ROUND_CEIL)
 }
 
+export async function getAccountInfo(
+	connection: Connection,
+	mint: PublicKey,
+	walletKeyPair: any,
+	tokenAccount: PublicKey,
+): Promise<AccountInfo> {
+	const token = new Token(
+		connection,
+		mint,
+		TOKEN_PROGRAM_ID,
+		walletKeyPair,
+	)
+
+	return await token.getAccountInfo(tokenAccount)
+}
+
 export async function getAssociatedTokenAccountForMint(
 	mint: PublicKey,
-	buyer: PublicKey,
+	publicKey: PublicKey,
 ): Promise<[PublicKey, number]> {
 	return await PublicKey.findProgramAddress(
 		[
-			buyer.toBuffer(),
+			publicKey.toBuffer(),
 			TOKEN_PROGRAM_ID.toBuffer(),
 			mint.toBuffer(),
 		],

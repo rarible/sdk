@@ -46,7 +46,7 @@ export async function requestSol(connection: Connection, publicKey: PublicKey, s
 	return await connection.getBalance(publicKey)
 }
 
-export async function getTokenAccount(
+export async function getTokenAccounts(
 	connection: Connection,
 	owner: PublicKey,
 	mint: PublicKey,
@@ -70,9 +70,8 @@ export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: Solan
 	// required confirmation
 	await sdk.connection.confirmTransaction(mintTx.txId, "finalized")
 	expect((await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toString()).toEqual("1")
-	const tokenAccount = await getTokenAccount(sdk.connection, wallet.publicKey, mintPrepare.mint)
 
-	return { mintTx, mint: mintPrepare.mint, tokenAccount }
+	return { mintTx, mint: mintPrepare.mint }
 }
 
 export function retry<T>(

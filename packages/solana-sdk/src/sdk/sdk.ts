@@ -5,17 +5,20 @@ import type { TransactionInstruction } from "@solana/web3.js"
 import { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
 import { sendTransactionWithRetry } from "../common/transactions"
+import type { PreparedTransaction } from "./prepared-transaction"
 import type { ISolanaBalancesSdk } from "./balance/balance"
 import type { ISolanaNftSdk } from "./nft/nft"
 import type { ISolanaOrderSdk } from "./order/order"
 import type { ISolanaCollectionSdk } from "./collection/collection"
 import type { ISolanaAuctionHouseSdk } from "./auctionHouse/auction-house"
+import type { ISolanaAccountSdk } from "./account/account"
 import { SolanaBalancesSdk } from "./balance/balance"
 import { SolanaNftSdk } from "./nft/nft"
 import { SolanaOrderSdk } from "./order/order"
 import { SolanaCollectionSdk } from "./collection/collection"
 import { SolanaAuctionHouseSdk } from "./auctionHouse/auction-house"
-import type { PreparedTransaction } from "./prepared-transaction"
+import { SolanaAccountSdk } from "./account/account"
+
 
 export interface IRaribleSolanaSdk {
 	nft: ISolanaNftSdk
@@ -51,6 +54,7 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 	public readonly order: ISolanaOrderSdk
 	public readonly collection: ISolanaCollectionSdk
 	public readonly auctionHouse: ISolanaAuctionHouseSdk
+	public readonly account: ISolanaAccountSdk
 
 	constructor(
 		public readonly connection: Connection,
@@ -59,8 +63,9 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 	) {
 		this.debugLogger = new DebugLogger(logging.debug)
 
+		this.account = new SolanaAccountSdk(connection, this.debugLogger)
 		this.balances = new SolanaBalancesSdk(connection, this.debugLogger)
-		this.nft = new SolanaNftSdk(connection, this.debugLogger)
+		this.nft = new SolanaNftSdk(connection, this.debugLogger, this.account)
 		this.order = new SolanaOrderSdk(connection, this.debugLogger)
 		this.collection = new SolanaCollectionSdk(connection, this.debugLogger)
 		this.auctionHouse = new SolanaAuctionHouseSdk(connection, this.debugLogger)

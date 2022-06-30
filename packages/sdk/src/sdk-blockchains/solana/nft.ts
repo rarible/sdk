@@ -102,17 +102,12 @@ export class SolanaNft {
 				run: async (request: BurnRequest) => {
 					const amount = request?.amount ?? 1
 					const mint = extractPublicKey(item.id)
-					const tokenAccount = await this.sdk.connection.getTokenAccountsByOwner(
-						this.wallet!.provider.publicKey,
-						{ mint }
-					)
 
 					const prepare = await this.sdk.nft.burn({
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
 						closeAssociatedAccount: false, // todo should be set true if all tokens burn
-						tokenAccount: tokenAccount.value[0]?.pubkey,
 					})
 					const tx = await prepare.submit("processed")
 
@@ -137,16 +132,11 @@ export class SolanaNft {
 				run: async (request: TransferRequest) => {
 					const amount = request?.amount ?? 1
 					const mint = extractPublicKey(item.id)
-					const tokenAccount = await this.sdk.connection.getTokenAccountsByOwner(
-						this.wallet!.provider.publicKey,
-						{ mint }
-					)
 
 					const prepare = await this.sdk.nft.transfer({
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
-						tokenAccount: tokenAccount.value[0]?.pubkey,
 						to: extractPublicKey(request.to),
 					})
 					const tx = await prepare.submit("processed")

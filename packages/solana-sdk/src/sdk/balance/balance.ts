@@ -10,9 +10,11 @@ export interface ISolanaBalancesSdk {
 }
 
 export class SolanaBalancesSdk implements ISolanaBalancesSdk {
-	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
+	constructor(
+		private readonly connection: Connection,
+		private readonly logger: DebugLogger
+	) {
 	}
-
 	async getBalance(publicKey: PublicKey, options: {commitment?: Commitment} = {}): Promise<BigNumber> {
 		return new BigNumber(
 			await this.connection.getBalance(publicKey, options.commitment ?? "confirmed")
