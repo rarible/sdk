@@ -1,15 +1,15 @@
-import { toCollectionId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toCollectionId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("transfer test", () => {
-	const env: RaribleSdkEnvironment = "staging"
+describe("transfer test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
@@ -30,7 +30,7 @@ describe.skip("transfer test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("1"))
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
@@ -59,7 +59,7 @@ describe.skip("transfer test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,

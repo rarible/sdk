@@ -15,7 +15,7 @@ export async function getActivitiesByCollection(sdk: IRaribleSdk, collection: st
 	const activities = await retry(10, 2000, async () => {
 		return await sdk.apis.activity.getActivitiesByCollection({
 			type: activityTypes,
-			collection: collection,
+			collection: [collection],
 		})
 	})
 	expect(activities).not.toBe(null)
@@ -29,7 +29,7 @@ export async function getActivitiesByCollectionRaw(sdk: IRaribleSdk, collection:
 	const activities = await retry(10, 2000, async () => {
 		return await sdk.apis.activity.getActivitiesByCollectionRaw({
 			type: activityTypes,
-			collection: collection,
+			collection: [collection],
 		})
 	})
 	expect(activities).not.toBe(null)

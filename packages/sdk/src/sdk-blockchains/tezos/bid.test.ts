@@ -6,8 +6,8 @@ import { MintType } from "../../types/nft/mint/domain"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForOrderStatus } from "./test/await-for-order-status"
 import { convertTezosToCollectionAddress, convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
@@ -57,7 +57,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		// make bid by bidder
 		console.log("before bid")
@@ -114,7 +114,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "10")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
@@ -171,7 +171,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "10")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
@@ -215,7 +215,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		const bidResponse = await nullFundsWalletSdk.order.bid({ itemId: mintResult.itemId })
 
@@ -247,7 +247,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 
@@ -281,7 +281,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "5")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "5")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 
@@ -315,7 +315,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "4")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "4")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
@@ -364,7 +364,7 @@ describe.skip("bid test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(itemOwnerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
