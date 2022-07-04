@@ -298,4 +298,62 @@ describe("solana order sdk", () => {
 
 		await sdk.unionInstructionsAndSend(wallet1, transactions, "confirmed")
 	})
+
+	test("Should mint>sell>transfer>buy", async () => {
+		const wallet1 = getTestWallet(0)
+		const wallet2 = getTestWallet(1)
+		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
+
+		// mint multiple tokens
+		console.log("mint multiple tokens")
+		const { mint, mintTx } = await mintToken({ sdk, wallet: wallet1, tokensAmount: 100 })
+		await sdk.confirmTransaction(mintTx.txId, "finalized")
+
+		// send some to wallet2
+		console.log("transfer tokens to wallet2")
+		const prepare = await sdk.nft.transfer({
+			mint: mint,
+			signer: wallet1,
+			amount: 50,
+			to: wallet2.publicKey,
+		})
+		const transferTx = await prepare.submit("processed")
+		await sdk.confirmTransaction(transferTx.txId, "confirmed")
+
+		// sell from wallet1
+		console.log("sell tokens from wallet1")
+		const { txId: sellTx1 } = await (await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet1,
+			price: 0.2,
+			tokensAmount: 30,
+			mint: mint,
+		})).submit("confirmed")
+
+		// sell from wallet2
+		console.log("sell tokens from wallet2")
+		const { txId: sellTx2 } = await (await sdk.order.sell({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet2,
+			price: 0.1,
+			tokensAmount: 40,
+			mint: mint,
+		})).submit("confirmed")
+
+		console.log("awaiting sell txs")
+		await Promise.all([
+			sdk.confirmTransaction(sellTx1, "confirmed"),
+			sdk.confirmTransaction(sellTx2, "confirmed"),
+		])
+
+		console.log("cancel sell for wallet2")
+		const { txId: cancelTx2 } = await (await sdk.order.cancel({
+			auctionHouse: toPublicKey(auctionHouse),
+			signer: wallet2,
+			price: 0.1,
+			tokensAmount: 40,
+			mint: mint,
+		})).submit("confirmed")
+		await sdk.confirmTransaction(cancelTx2, "confirmed")
+	})
 })
