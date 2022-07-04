@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.11](https://github.com/rarible/sdk/compare/v0.9.11-beta.10...v0.9.11-beta.11) (2022-07-04)
+
+
+### Features
+
+* extend e2e tests coverage ([0f77508](https://github.com/rarible/sdk/commit/0f775087a2b00d620e517c82eeadd70ba0445e7c))
+* extend e2e tests coverage ([27dcd3c](https://github.com/rarible/sdk/commit/27dcd3c72451b19d9ae60c389262ccff8fa5c8e3))
+
+
+
+
+
 ## [0.9.11-beta.10](https://github.com/rarible/sdk/compare/v0.9.11-beta.9...v0.9.11-beta.10) (2022-06-30)
 
 
