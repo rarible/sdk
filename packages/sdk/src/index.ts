@@ -29,6 +29,7 @@ export function createRaribleSdk(
 ): IRaribleSdk {
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
+
 	const ethConfig = {
 		params: config?.apiClientParams,
 		logs: config?.logs ?? LogsLevel.TRACE,

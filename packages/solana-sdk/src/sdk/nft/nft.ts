@@ -9,12 +9,15 @@ import { getMintNftInstructions } from "./methods/mint"
 import { getTokenTransferInstructions } from "./methods/transfer"
 import { getTokenBurnInstructions } from "./methods/burn"
 
-export interface IMintRequest {
+export type IMintRequest = {
 	metadataUrl: string
 	signer: IWalletSigner
-	maxSupply: number
 	collection: PublicKey | null
-}
+} & ({
+	masterEditionSupply: number, // for master edition
+} | {
+	amount: number, // for multiple items
+})
 
 export type IMintResponse = { tx: PreparedTransaction, mint: PublicKey }
 
@@ -52,6 +55,17 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 	}
 
 	async mint(request: IMintRequest): Promise<IMintResponse> {
+		let masterEditionSupply: number | undefined
+		let amount: number
+
+		if ("amount" in request) {
+			amount = request.amount
+			masterEditionSupply = undefined
+		} else {
+			masterEditionSupply = request.masterEditionSupply
+			amount = 1
+		}
+
 		const { mint, ...instructions } = await getMintNftInstructions(
 			this.connection,
 			request.signer,
@@ -59,7 +73,8 @@ export class SolanaNftSdk implements ISolanaNftSdk {
 				metadataLink: request.metadataUrl,
 				//mutableMetadata: true,
 				collection: request.collection,
-				maxSupply: request.maxSupply,
+				masterEditionSupply,
+				amount,
 				verifyCreators: true,
 			},
 		)
