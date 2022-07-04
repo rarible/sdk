@@ -41,7 +41,7 @@ export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
 	activityTypes: Array<ActivityType>,
 	shouldPresent?: Array<ActivityType>): Promise<Activities> {
 	console.log("Get activities, activityTypes=" + activityTypes + " ,shouldPresent=" + shouldPresent)
-	return retry(10, 2000, async () => {
+	return retry(15, 2000, async () => {
 		const activities = await sdk.apis.activity.getActivitiesByItem({
 			type: activityTypes,
 			itemId: itemId,

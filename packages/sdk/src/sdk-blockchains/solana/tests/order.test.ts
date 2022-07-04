@@ -10,7 +10,7 @@ describe("Solana order", () => {
 	const wallet = getWallet()
 	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
 
-	const baseFee = 250
+	const defaultBaseFee = 0 //250
 
 	let tokenForSell: Item
 	let tokenForBid: Item
@@ -36,7 +36,7 @@ describe("Solana order", () => {
 
 	test("baseFee for sell", async () => {
 		const sell = await sdk.order.sell({ itemId: tokenForSell.id })
-		expect(sell.baseFee).toEqual(baseFee)
+		expect(sell.baseFee).toEqual(defaultBaseFee)
 	})
 
 	test("baseFee for sellUpdate", async () => {
@@ -48,7 +48,7 @@ describe("Solana order", () => {
 		})
 
 		const update = await retry(10, 4000, async () => await sdk.order.sellUpdate({ orderId: order }))
-		expect(update.baseFee).toEqual(baseFee)
+		expect(update.baseFee).toEqual(defaultBaseFee)
 	})
 
 	test("baseFee for bid", async () => {

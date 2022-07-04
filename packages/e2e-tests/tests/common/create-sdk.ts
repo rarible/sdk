@@ -15,9 +15,6 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 			env = "development"
 			flowAuth = wallet.blockchain === BlockchainGroup.FLOW ? wallet.getAuth() : undefined
 			break
-		case Blockchain.TEZOS:
-			env = "staging"
-			break
 		default:
 	}
 
