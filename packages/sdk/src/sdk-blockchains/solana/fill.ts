@@ -129,7 +129,7 @@ export class SolanaFill {
 		return {
 			multiple: parseFloat(item.supply.toString()) > 1,
 			maxAmount: order.makeStock,
-			baseFee: await getAuctionHouseFee(extractAddress(getOrderData(order).auctionHouse!)),
+			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,

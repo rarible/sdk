@@ -5,12 +5,15 @@ import type { SolanaAuctionHouseMapping } from "../domain"
 import { extractAddress } from "./address-converters"
 
 const auctionHouseFee: Record<string, number> = {
-	"raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp": 250, // 2.5%
+	"raria47jXd4tdW6Dj7T64mgahwTjMsVaDwFxMHt9Jbp": 0, // base points (250 = 2.5%)
 }
 
 type CurrencyType = SolanaNftAssetType | SolanaSolAssetType
 
-export function getAuctionHouse(currency: CurrencyType, auctionHouseMapping?: SolanaAuctionHouseMapping): PublicKey {
+export function getAuctionHouse(
+	currency: CurrencyType,
+	auctionHouseMapping: SolanaAuctionHouseMapping | undefined
+): PublicKey {
 	if (currency["@type"] === "SOLANA_SOL") {
 		if (auctionHouseMapping && auctionHouseMapping["SOLANA_SOL"]) {
 			return toPublicKey(auctionHouseMapping["SOLANA_SOL"].address)
@@ -28,7 +31,7 @@ export function getAuctionHouse(currency: CurrencyType, auctionHouseMapping?: So
 
 export async function getAuctionHouseFee(
 	ah: PublicKey | string,
-	auctionHouseMapping?: SolanaAuctionHouseMapping
+	auctionHouseMapping: SolanaAuctionHouseMapping | undefined
 ): Promise<number> {
 	const ahAddress = ah.toString()
 	if (auctionHouseMapping) {
@@ -40,5 +43,8 @@ export async function getAuctionHouseFee(
 		}
 	}
 
-	return auctionHouseFee[ahAddress] ?? 0
+	if (auctionHouseFee[ahAddress] === undefined) {
+		throw new Error("No fee info found for specified Auction House")
+	}
+	return auctionHouseFee[ahAddress]
 }
