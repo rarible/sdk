@@ -144,7 +144,7 @@ export function getMaybeTezosProvider(
 					wrapper: "",
 					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
-					node_url: "https://test-tezos-node.rarible.org",
+					node_url: "https://rpc.tzkt.io/ithacanet",
 					chain_id: "NetXnHfVqm9iesp",
 					sales: "KT199VxDKE7TLxoHwc3pbu9NgKhaUSki8x9i",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
@@ -219,6 +219,19 @@ export function getMaybeTezosProvider(
 		default: {
 			throw new Error("Unsupported tezos network for config")
 		}
+	}
+}
+
+const checkChainIdCache: Map<TezosProvider, string> = new Map()
+export async function checkChainId(provider: MaybeProvider<TezosProvider>) {
+	let walletChainId = checkChainIdCache.get(provider.tezos!)
+	if (!walletChainId) {
+		walletChainId = await provider.tezos?.chain_id()
+		checkChainIdCache.set(provider.tezos!, walletChainId!)
+	}
+
+	if (walletChainId !== provider.config.chain_id) {
+		throw new Error(`Config chainId=${provider.config.chain_id}, but wallet chainId=${walletChainId}`)
 	}
 }
 
