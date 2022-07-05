@@ -8,6 +8,7 @@ import type {
 	GetCollectionsByOwnerResponse,
 } from "@rarible/api-client"
 import type { Collections } from "@rarible/api-client/build/models"
+import { Logger } from "../logger"
 
 
 export async function getCollectionById(sdk: IRaribleSdk, collectionId: string): Promise<Collection> {
@@ -86,9 +87,11 @@ export async function verifyCollectionsByBlockchain(collections: Collections, bl
 	})
 }
 
-export async function verifyCollectionsContainsCollection(collections: Collections,
-	collectionId: string): Promise<void> {
-	expect(collections.collections.map(c => c.id as string)).toContain(collectionId)
+export async function verifyCollectionsContainsCollection(
+	collections: Collections,
+	collectionId: string
+): Promise<void> {
+	expect(collections.collections.map(c => c.id.toLowerCase())).toContain(collectionId.toLowerCase())
 }
 
 export async function verifyCollectionsOwner(collections: Collections, owner: string): Promise<void> {

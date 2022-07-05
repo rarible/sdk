@@ -21,6 +21,7 @@ import { createCollection } from "../../../common/atoms-tests/create-collection"
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
+	isLazy: boolean,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	deployRequest: CreateCollectionRequest,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
@@ -31,6 +32,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721 <=> ERC20",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -72,6 +74,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721_lazy <=> ERC20",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -113,6 +116,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155 <=> ERC20",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -154,6 +158,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155_lazy <=> ERC20",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
