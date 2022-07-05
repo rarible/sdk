@@ -5,7 +5,9 @@ import type { Blockchain, GetOwnershipByIdResponse } from "@rarible/api-client"
 import type { BigNumber, ContractAddress, ItemId } from "@rarible/types"
 import type { Ownerships } from "@rarible/api-client/build/models"
 import type {
-	GetOwnershipsByItemResponse } from "@rarible/api-client/build/apis/OwnershipControllerApi"
+	GetOwnershipsByItemResponse,
+} from "@rarible/api-client/build/apis/OwnershipControllerApi"
+import { Logger } from "../logger"
 
 
 export async function getOwnershipById(sdk: IRaribleSdk, blockchain: Blockchain, contractAddress: string,
@@ -19,10 +21,14 @@ export async function getOwnershipById(sdk: IRaribleSdk, blockchain: Blockchain,
 	return ownership
 }
 
-export async function awaitForOwnershipValue(sdk: IRaribleSdk, itemId: ItemId,
-																						 recipientAddress: string, value?: BigNumber): Promise<Ownership> {
+export async function awaitForOwnershipValue(
+	sdk: IRaribleSdk,
+	itemId: ItemId,
+	recipientAddress: string,
+	value?: BigNumber
+): Promise<Ownership> {
 	const ownershipId = `${itemId}:${recipientAddress}`
-	console.log("Await for ownershipId", ownershipId)
+	Logger.log("Await for ownershipId", ownershipId)
 	const ownership = await retry(15, 2000, async () => {
 		return await sdk.apis.ownership.getOwnershipById({
 			ownershipId: ownershipId,
@@ -44,7 +50,7 @@ export async function getOwnershipByIdRaw(sdk: IRaribleSdk, itemId: ItemId,
 		})
 	})
 	expect(ownership.value as Ownership).not.toBe(null)
-	console.log(ownership.value)
+	Logger.log(ownership.value)
 	return ownership
 }
 

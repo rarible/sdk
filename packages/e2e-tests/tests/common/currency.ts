@@ -5,11 +5,12 @@ import { toContractAddress } from "@rarible/types"
 import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { getWalletAddressFull } from "./wallet"
 import { testsConfig } from "./config"
+import { Logger } from "./logger"
 
 
 export async function getCurrency(wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	currency: string): Promise<RequestCurrency> {
-	console.log(`Get currency for=${currency}`)
+	Logger.log(`Get currency for=${currency}`)
 	if (wallets.seller instanceof EthereumWallet && wallets.buyer instanceof EthereumWallet) {
 		if (currency === "ERC20") {
 			const testErc20 = await deployTestErc20((wallets.seller.ethereum as any).config.web3, "test erc20", "TST20")
