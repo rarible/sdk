@@ -1,5 +1,7 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import BigNumber from "bignumber.js"
+import { retry } from "@rarible/sdk/src/common/retry"
 import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import type { Order } from "@rarible/api-client"
 import { BlockchainGroup } from "@rarible/api-client"
@@ -28,5 +30,10 @@ export async function sellUpdate(sdk: IRaribleSdk,
 	// Check order stock to be equal sell amount
 	// const nextStock = toBigNumber(orderRequest.amount.toString())
 	// return await awaitOrderStock(sdk, orderId, nextStock)
-	return await sdk.apis.order.getOrderById({ id: orderId })
+
+	return await retry(10, 3000, async  () => {
+		const order = await sdk.apis.order.getOrderById({ id: orderId })
+		expect(order.makePrice?.toString()).toEqual(orderUpdateRequest.price.toString())
+		return order
+	})
 }
