@@ -12,7 +12,7 @@ async function transferItem() {
 		in_memory_provider(
 			"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
       "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-			"https://test-tezos-node.rarible.org"
+			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "dev")

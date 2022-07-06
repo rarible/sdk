@@ -66,7 +66,7 @@ export class TezosFill {
 
 	private async buyV2(order: Order, data: OrderDataRequest, fillRequest: FillRequest) {
 		const provider = getRequiredProvider(this.provider)
-		const amount = (order.take.value !== undefined) ? new BigNumber(order.take.value) : new BigNumber(0)
+		const amount = (order.makePrice !== undefined) ? new BigNumber(order.makePrice) : new BigNumber(0)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
 		if (!data.make_contract || !data.make_token_id) {
 			throw new Error("Make data for buyV2 should exist")

@@ -7,12 +7,8 @@ transaction-backend:
   nodeSelector:
     node.labels.transaction.service: true
   readinessProbe: false
-  livenessProbe:
-    enabled: false
+  livenessProbe: false
   environments:
-    SDK_ENV: '{{ include "service.appEnv" $ }}'
+    SDK_ENV: '{{ include "service.env" $ }}'
   updateConfig:
     order: start-first
-  networks:
-    additional:
-    - proxy-staging
