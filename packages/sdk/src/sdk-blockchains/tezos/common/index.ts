@@ -153,7 +153,7 @@ export function getMaybeTezosProvider(
 					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
-					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
+					dipdup: "https://test-tezos-indexer.rarible.org/v1/graphql",
 					union_api: "https://staging-api.rarible.org/v0.1",
 				},
 			}
