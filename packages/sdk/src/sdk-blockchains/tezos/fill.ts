@@ -68,7 +68,7 @@ export class TezosFill {
 
 	private async buyV2(order: Order, data: OrderDataTypeRequest, fillRequest: FillRequest) {
 		const provider = getRequiredProvider(this.provider)
-		const amount = (order.take.value !== undefined) ? new BigNumber(order.take.value) : new BigNumber(0)
+		const amount = (order.makePrice !== undefined) ? new BigNumber(order.makePrice) : new BigNumber(0)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
 		const buyRequest: BuyRequest = {
 			asset_contract: data.contract,

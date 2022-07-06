@@ -144,7 +144,7 @@ export function getMaybeTezosProvider(
 					wrapper: "",
 					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
-					node_url: "https://test-tezos-node.rarible.org",
+					node_url: "https://rpc.tzkt.io/ithacanet",
 					chain_id: "NetXnHfVqm9iesp",
 					sales: "KT199VxDKE7TLxoHwc3pbu9NgKhaUSki8x9i",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
@@ -153,7 +153,7 @@ export function getMaybeTezosProvider(
 					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
-					dipdup: "https://rarible-ithacanet.dipdup.net/v1/graphql",
+					dipdup: "https://test-tezos-indexer.rarible.org/v1/graphql",
 					union_api: "https://staging-api.rarible.org/v0.1",
 				},
 			}
