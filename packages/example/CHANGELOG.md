@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.11...v0.9.11-beta.12) (2022-07-06)
+
+
+### Bug Fixes
+
+* tezos buy price for multiple items order ([225df7c](https://github.com/rarible/sdk/commit/225df7ccd10a20f86c7d3ac454c466ea77e9cd32))
+
+
+
+
+
 ## [0.9.11-beta.11](https://github.com/rarible/sdk/compare/v0.9.11-beta.10...v0.9.11-beta.11) (2022-07-04)
 
 **Note:** Version bump only for package example
