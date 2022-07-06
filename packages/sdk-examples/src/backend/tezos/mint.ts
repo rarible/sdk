@@ -13,7 +13,7 @@ async function mint() {
     "H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
 	const provider = in_memory_provider(
 		walletEdsk,
-		"https://test-tezos-node.rarible.org"
+		"https://rpc.tzkt.io/ithacanet"
 	)
 	const wallet = new TezosWallet(provider)
 	const sdk = createRaribleSdk(wallet, "dev")
