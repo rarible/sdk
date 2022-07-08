@@ -8,7 +8,7 @@ export function createTestWallet(edsk: string) {
 			edsk,
 			// "https://hangzhou.tz.functori.com"
 			// "https://hangzhounet.smartpy.io"
-			// "https://test-tezos-node.rarible.org"
+			// "https://rpc.tzkt.io/ithacanet"
 			"https://dev-tezos-node.rarible.org"
 		)
 	)
