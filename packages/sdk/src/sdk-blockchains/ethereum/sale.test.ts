@@ -28,7 +28,7 @@ describe("sale", () => {
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 	})
 
-	test("erc721 sell/buy using erc-20", async () => {
+	test.skip("erc721 sell/buy using erc-20", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 
@@ -189,7 +189,7 @@ describe("sale", () => {
 		expect(errorMessage).toBeTruthy()
 	})
 
-	test("erc721 sell/buy using erc-20 with CurrencyId", async () => {
+	test.skip("erc721 sell/buy using erc-20 with CurrencyId", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 		await sentTx(
