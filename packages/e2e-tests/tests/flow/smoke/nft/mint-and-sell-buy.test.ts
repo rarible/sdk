@@ -31,7 +31,7 @@ function suites(): {
 				buyer: getFlowBuyerWallet(),
 			},
 			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
-			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
+			mintAndSellRequest: (): MintAndSellRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 					royalties: [],

@@ -8,7 +8,7 @@ import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { extractAddress, extractPublicKey } from "./common/address-converters"
+import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
 import type { ISolanaSdkConfig } from "./domain"
@@ -23,7 +23,7 @@ export class SolanaFill {
 		this.fill = this.fill.bind(this)
 	}
 
-	private isBuyOrder(order: Order): boolean {
+	private static isBuyOrder(order: Order): boolean {
 		return order.make.type["@type"] === "SOLANA_NFT"
 	}
 
@@ -36,7 +36,7 @@ export class SolanaFill {
 		if (order.status !== OrderStatus.ACTIVE) {
 			throw new Error("Order is not active")
 		}
-		return this.isBuyOrder(order) ? this.buy(order) : this.acceptBid(order)
+		return SolanaFill.isBuyOrder(order) ? this.buy(order) : this.acceptBid(order)
 	}
 
 	private async buy(order: Order): Promise<PrepareFillResponse> {

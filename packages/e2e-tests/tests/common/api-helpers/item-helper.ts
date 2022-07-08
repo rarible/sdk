@@ -9,8 +9,6 @@ import type {
 } from "@rarible/api-client/build/apis/ItemControllerApi"
 import type { Blockchain, Items, Royalties } from "@rarible/api-client"
 import type { RestrictionCheckResult } from "@rarible/api-client/build/models"
-import { Collections } from "@rarible/api-client/build/models"
-
 
 export async function awaitForItemSupply(sdk: IRaribleSdk, itemId: ItemId,
 																				 supply: string | number | BigNumber

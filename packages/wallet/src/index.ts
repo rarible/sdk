@@ -134,6 +134,7 @@ export class ImmutablexWallet implements AbstractWallet {
   constructor() {}
 
   //todo implement sign personal message method
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async signPersonalMessage(message: string) {
   	return {
   		signature: "",
