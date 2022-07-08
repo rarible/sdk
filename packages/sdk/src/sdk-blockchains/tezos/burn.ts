@@ -6,7 +6,7 @@ import type { TezosProvider, TezosNetwork, Provider } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getTezosItemData, isExistedTezosProvider } from "./common"
+import { checkChainId, getTezosItemData, isExistedTezosProvider } from "./common"
 
 export class TezosBurn {
 	constructor(
@@ -25,6 +25,8 @@ export class TezosBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
+		await checkChainId(this.provider)
+
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 		const item = await this.apis.item.getNftItemById({ itemId })
 

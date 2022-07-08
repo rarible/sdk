@@ -7,7 +7,7 @@ import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { ITezosAPI, MaybeProvider } from "./common"
-import { getTezosAddress, getTezosItemData, isExistedTezosProvider } from "./common"
+import { checkChainId, getTezosAddress, getTezosItemData, isExistedTezosProvider } from "./common"
 
 export class TezosTransfer {
 	constructor(
@@ -26,6 +26,8 @@ export class TezosTransfer {
 	}
 
 	async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
+		await checkChainId(this.provider)
+
 		const { itemId, contract } = getTezosItemData(prepare.itemId)
 		const item = await this.apis.item.getNftItemById({ itemId })
 		const collection = await this.apis.collection.getNftCollectionById({

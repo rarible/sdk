@@ -222,6 +222,19 @@ export function getMaybeTezosProvider(
 	}
 }
 
+const checkChainIdCache: Map<TezosProvider, string> = new Map()
+export async function checkChainId(provider: MaybeProvider<TezosProvider>) {
+	let walletChainId = checkChainIdCache.get(provider.tezos!)
+	if (!walletChainId) {
+		walletChainId = await provider.tezos?.chain_id()
+		checkChainIdCache.set(provider.tezos!, walletChainId!)
+	}
+
+	if (walletChainId !== provider.config.chain_id) {
+		throw new Error(`Config chainId=${provider.config.chain_id}, but wallet chainId=${walletChainId}`)
+	}
+}
+
 export function getRequiredProvider(provider: MaybeProvider<TezosProvider>): Provider {
 	if (!isExistedTezosProvider(provider)) {
 		throw new Error("Tezos provider is required")
