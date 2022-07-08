@@ -2,14 +2,14 @@ import type { Connection, PublicKey, TransactionInstruction } from "@solana/web3
 import { SystemProgram } from "@solana/web3.js"
 import { MintLayout, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { BN } from "@project-serum/anchor"
-import {
-	DataV2,
-	Collection,
-	Creator,
-	CreateMetadataV2,
-	CreateMasterEditionV3,
-} from "@metaplex-foundation/mpl-token-metadata"
 import type { Uses } from "@metaplex-foundation/mpl-token-metadata"
+import {
+	Collection,
+	CreateMasterEditionV3,
+	CreateMetadataV2,
+	Creator,
+	DataV2,
+} from "@metaplex-foundation/mpl-token-metadata"
 import fetch from "node-fetch"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"

@@ -17,7 +17,8 @@ import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItem
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
 	payoutsSupport: PayoutsSupport,
-	supportsPartialFill: boolean
+	supportsPartialFill: boolean,
+	supportsBatchPurchase: boolean
 }
 
 export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
@@ -93,6 +94,7 @@ export class EthereumFill {
 					originFeeSupport: OriginFeeSupport.AMOUNT_ONLY,
 					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: true,
+					supportsBatchPurchase: false,
 				}
 			}
 			case "RARIBLE_V2": {
@@ -100,6 +102,7 @@ export class EthereumFill {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.MULTIPLE,
 					supportsPartialFill: true,
+					supportsBatchPurchase: true,
 				}
 			}
 			case "OPEN_SEA_V1": {
@@ -107,6 +110,7 @@ export class EthereumFill {
 					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: false,
+					supportsBatchPurchase: true,
 				}
 			}
 			default:

@@ -84,6 +84,7 @@ export class SolanaFill {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			supportsBatchPurchase: false,
 			submit,
 		}
 	}
@@ -133,6 +134,7 @@ export class SolanaFill {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			supportsBatchPurchase: false,
 			submit,
 		}
 	}

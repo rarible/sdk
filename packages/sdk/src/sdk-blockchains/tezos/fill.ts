@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
 import type { OrderDataTypeRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { OrderType, fill_order, get_address, get_active_order_type } from "@rarible/tezos-sdk"
+import { fill_order, get_active_order_type, get_address, OrderType } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -17,9 +17,11 @@ import type { ITezosAPI, MaybeProvider } from "./common"
 import {
 	checkChainId,
 	convertFromContractAddress,
-	convertOrderToFillOrder, convertUnionParts,
+	convertOrderToFillOrder,
+	convertUnionParts,
 	getRequiredProvider,
-	getTezosAddress, getTezosAssetTypeV2,
+	getTezosAddress,
+	getTezosAssetTypeV2,
 	getTokenIdString,
 } from "./common"
 
@@ -129,6 +131,7 @@ export class TezosFill {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			supportsPartialFill: true,
+			supportsBatchPurchase: false,
 			submit,
 		}
 	}

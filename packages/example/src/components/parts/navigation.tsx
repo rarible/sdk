@@ -25,7 +25,10 @@ export function Navigation() {
 		path: "/sell"
 	}, {
 		label: "Buy",
-		path: "/buy"
+		path: "/buy",
+	}, {
+		label: "Bulk Purchase",
+		path: "/buy-batch",
 	}, {
 		label: "Bid",
 		path: "/bid"

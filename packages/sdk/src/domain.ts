@@ -6,7 +6,7 @@ import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { IMint, IUploadMeta } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
-import type { IFill } from "./types/order/fill/domain"
+import type { IFill, IFillBatch } from "./types/order/fill/domain"
 import type { IBurn } from "./types/nft/burn/domain"
 import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
@@ -80,8 +80,8 @@ export interface INftSdk {
 	burn: IBurn
 	generateTokenId: IGenerateTokenId
 	/**
-   * @deprecated Use {@link createCollection} instead
-   */
+	 * @deprecated Use {@link createCollection} instead
+	 */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
 	uploadMeta: IUploadMeta
@@ -95,6 +95,7 @@ export interface IOrderSdk {
 	 */
 	fill: IFill
 	buy: IFill
+	buyBatch: IFillBatch
 	acceptBid: IFill
 	bid: IBid
 	bidUpdate: IBidUpdate

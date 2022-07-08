@@ -15,6 +15,7 @@ import { MintPage } from "./pages/mint/mint-page"
 import { BidPage } from "./pages/bid/bid-page"
 import { AcceptBidPage } from "./pages/accept-bid/acceptbid-page"
 import { ItemsPage } from "./pages/items/items-page"
+import { BuyBatchPage } from "./pages/buy-batch/buy-batch-page"
 import { UploadMetaPage } from "./pages/upload-meta/upload-meta-page"
 
 export function App() {
@@ -50,6 +51,7 @@ export function App() {
 									<Route path="bid" element={<BidPage/>}>
 										<Route path=":itemId" element={<BidPage/>}/>
 									</Route>
+									<Route path="buy-batch" element={<BuyBatchPage/>}/>
 									<Route path="accept-bid" element={<AcceptBidPage/>}>
 										<Route path=":orderId" element={<AcceptBidPage/>}/>
 									</Route>

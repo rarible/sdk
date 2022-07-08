@@ -80,6 +80,7 @@ export class FlowBuy {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			supportsBatchPurchase: false,
 			submit,
 		}
 	}

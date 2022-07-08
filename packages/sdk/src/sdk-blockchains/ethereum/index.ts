@@ -18,6 +18,7 @@ import { EthereumCancel } from "./cancel"
 import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
+import { EthereumFillBatch } from "./fill-batch"
 import { EthereumCryptopunk } from "./cryptopunk"
 
 export function createEthereumSdk(
@@ -42,6 +43,7 @@ export function createEthereumSdk(
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
+	const buyBatchService = new EthereumFillBatch(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
@@ -61,6 +63,7 @@ export function createEthereumSdk(
 		order: {
 			fill: fillerService.fill,
 			buy: fillerService.buy,
+			buyBatch: buyBatchService.buyBatch,
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
