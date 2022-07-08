@@ -46,7 +46,7 @@ export async function requestSol(connection: Connection, publicKey: PublicKey, s
 	return await connection.getBalance(publicKey)
 }
 
-export async function getTokenAccount(
+export async function getTokenAccounts(
 	connection: Connection,
 	owner: PublicKey,
 	mint: PublicKey,
@@ -54,11 +54,22 @@ export async function getTokenAccount(
 	return await connection.getTokenAccountsByOwner(owner, { mint })
 }
 
-export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: SolanaKeypairWallet }) {
+export async function mintToken(
+	{
+		sdk,
+		wallet,
+		tokensAmount = 1,
+	}: {
+		sdk: SolanaSdk,
+		wallet: SolanaKeypairWallet,
+		tokensAmount?: number
+	}
+) {
 	const mintPrepare = await sdk.nft.mint({
 		signer: wallet,
 		metadataUrl: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
-		maxSupply: 1,
+		amount: tokensAmount,
+		masterEditionSupply: tokensAmount !== 1 ? 0 : undefined,
 		collection: null,
 	})
 
@@ -69,10 +80,10 @@ export async function mintToken({ sdk, wallet }: { sdk: SolanaSdk, wallet: Solan
 
 	// required confirmation
 	await sdk.connection.confirmTransaction(mintTx.txId, "finalized")
-	expect((await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toString()).toEqual("1")
-	const tokenAccount = await getTokenAccount(sdk.connection, wallet.publicKey, mintPrepare.mint)
+	expect((await sdk.balances.getTokenBalance(wallet.publicKey, mintPrepare.mint)).toString())
+		.toEqual(tokensAmount.toString())
 
-	return { mintTx, mint: mintPrepare.mint, tokenAccount }
+	return { mintTx, mint: mintPrepare.mint }
 }
 
 export function retry<T>(

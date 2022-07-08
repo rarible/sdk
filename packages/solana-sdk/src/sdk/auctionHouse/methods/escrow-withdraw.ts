@@ -26,10 +26,10 @@ export async function getActionHouseEscrowWithdrawInstructions(
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
 	const amountAdjusted = bigNumToBn(await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.amount),
 		auctionHouseObj.treasuryMint,
-		walletKeyPair,
-		anchorProgram,
+		walletKeyPair
 	))
 
 	const [escrowPaymentAccount, escrowBump] = await getAuctionHouseBuyerEscrow(

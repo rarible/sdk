@@ -50,15 +50,34 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
-					const buyPrepare = await this.sdk.order.buy({
+					const transactions = []
+
+					// make buy order
+					transactions.push(await this.sdk.order.buy({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						mint: mint,
 						price: price,
 						tokensAmount: buyRequest.amount,
-					})
+					}))
 
-					const executePrepare = await this.sdk.order.executeSell({
+					// revoke empty delegated token account
+					const tokenAccount = await this.sdk.account.getTokenAccountForMint({
+						mint,
+						owner: this.wallet!.provider.publicKey,
+					})
+					if (tokenAccount) {
+						const accountInfo = await this.sdk.account.getAccountInfo({ tokenAccount, mint })
+						if (accountInfo.delegate && accountInfo.amount.toString() === "0") {
+							transactions.push(await this.sdk.account.revokeDelegate({
+								signer: this.wallet!.provider,
+								tokenAccount,
+							}))
+						}
+					}
+
+					// execute sell
+					transactions.push(await this.sdk.order.executeSell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						buyerWallet: this.wallet!.provider.publicKey,
@@ -66,11 +85,11 @@ export class SolanaFill {
 						mint: mint,
 						price: price,
 						tokensAmount: buyRequest.amount,
-					})
+					}))
 
 					return this.sdk.unionInstructionsAndSend(
 						this.wallet!.provider,
-						[buyPrepare, executePrepare],
+						transactions,
 						"processed"
 					)
 				},
