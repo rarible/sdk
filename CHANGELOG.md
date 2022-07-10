@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.14](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.14) (2022-07-10)
+
+
+### Bug Fixes
+
+* correct use baseFee info from auction house's mapping ([#284](https://github.com/rarible/sdk/issues/284)) ([618af85](https://github.com/rarible/sdk/commit/618af854bd7935cefa2f807ba157be75642aa5eb))
+* solana cancel for multiple items ([e55fa39](https://github.com/rarible/sdk/commit/e55fa394ffdd78f88990f92e2409b3083a6d733e))
+* solana wallet address in logs ([3cb261b](https://github.com/rarible/sdk/commit/3cb261b238bcc98a850ea36736db38aaedd117ac))
+* tezos buy price for multiple items order ([#285](https://github.com/rarible/sdk/issues/285)) ([2e5e2de](https://github.com/rarible/sdk/commit/2e5e2de26af0c0d8cbcc34e152d2f8ad82dcacc9))
+
+
+### Features
+
+* add testnet env, remove e2e env ([#261](https://github.com/rarible/sdk/issues/261)) ([55c908f](https://github.com/rarible/sdk/commit/55c908f031e39b8a2ad504c1e334695d3386ce42))
+* extend e2e tests coverage ([0f77508](https://github.com/rarible/sdk/commit/0f775087a2b00d620e517c82eeadd70ba0445e7c))
+* extend e2e tests coverage ([27dcd3c](https://github.com/rarible/sdk/commit/27dcd3c72451b19d9ae60c389262ccff8fa5c8e3))
+* seaport deps fix ([#288](https://github.com/rarible/sdk/issues/288)) ([b15cbc8](https://github.com/rarible/sdk/commit/b15cbc850efe6c4e53efae8a3872934c98d3e667))
+* tezos check wallet chain_id to be equal config chain_id ([#283](https://github.com/rarible/sdk/issues/283)) ([c89636f](https://github.com/rarible/sdk/commit/c89636fc9c75a5b8d4839be6c8b128dc3b661f99))
+
+
+
+
+
 ## [0.9.11-beta.13](https://github.com/rarible/sdk/compare/v0.9.11-beta.12...v0.9.11-beta.13) (2022-07-08)
 
 

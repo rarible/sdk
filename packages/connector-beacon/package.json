@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-beacon",
-  "version": "0.9.11-beta.13",
+  "version": "0.9.11-beta.14",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.9.11-beta.13",
+    "@rarible/connector": "^0.9.11-beta.14",
     "@taquito/beacon-wallet": "^12.0.3",
     "@taquito/taquito": "^12.0.0"
   },
