@@ -4751,15 +4751,16 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.75":
-  version "0.12.75"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.75.tgz#aa0a1852fb3d6186cf35dd86a2dfb7209ccb6917"
-  integrity sha512-+HC8DuaUMfoVO6ZMl1nVb7b4KjuSdRQanTuCHzvb1fKvrwQiv1/nd3sGJymUHg6jq0ZW6eTw5nTxwRRvb0yrYQ==
+"@rarible/protocol-ethereum-sdk@~0.12.76":
+  version "0.12.76"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.76.tgz#7c097d6d15560bd54019f9b957b36f5a3f09d7a8"
+  integrity sha512-iWXmGYICD2db6fdciU+aFOcwGBrgaR0ox6H+OKD6JUp3+b+b5P202AR5jWxkQ4VL+7zC+FYUy+mIB+WldnRzJw==
   dependencies:
     "@0xsequence/multicall" "^0.39.0"
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "~0.1.22"
     "@rarible/ethereum-provider" "^0.12.64"
+    "@rarible/ethers-ethereum" "^0.12.73"
     "@rarible/logger" "~0.6.2"
     "@rarible/utils" "~0.5.0"
     axios "^0.25.0"
