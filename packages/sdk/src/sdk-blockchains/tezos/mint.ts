@@ -14,7 +14,7 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
-import { convertTezosItemId, getCollectionType, getRequiredProvider, getTezosAddress } from "./common"
+import { checkChainId, convertTezosItemId, getCollectionType, getRequiredProvider, getTezosAddress } from "./common"
 
 export class TezosMint {
 	constructor(
@@ -68,6 +68,8 @@ export class TezosMint {
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
+		await checkChainId(this.provider)
+
 		const {
 			contract,
 			type,

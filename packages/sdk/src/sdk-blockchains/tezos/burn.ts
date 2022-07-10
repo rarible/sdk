@@ -12,6 +12,7 @@ import {
 	getCollectionTypeAssetClass,
 	getTezosItemData,
 	isExistedTezosProvider,
+	checkChainId,
 } from "./common"
 
 export class TezosBurn {
@@ -31,6 +32,8 @@ export class TezosBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
+		await checkChainId(this.provider)
+
 		const { contract, tokenId } = getTezosItemData(prepare.itemId)
 		const item = await this.unionAPI.item.getItemById({ itemId: prepare.itemId })
 		const collectionType = await getCollectionType(this.provider, contract)

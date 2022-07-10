@@ -15,6 +15,7 @@ import {
 	getTezosAddress,
 	getTezosItemData,
 	isExistedTezosProvider,
+	checkChainId,
 } from "./common"
 
 export class TezosTransfer {
@@ -34,6 +35,8 @@ export class TezosTransfer {
 	}
 
 	async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
+		await checkChainId(this.provider)
+
 		const { contract, tokenId } = getTezosItemData(prepare.itemId)
 		const item = await this.unionAPI.item.getItemById({ itemId: prepare.itemId })
 		const collectionType = await getCollectionType(this.provider, contract)

@@ -32,6 +32,7 @@ import {
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
+	checkChainId,
 } from "./common"
 
 export class TezosSell {
@@ -67,6 +68,8 @@ export class TezosSell {
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {
+		await checkChainId(this.provider)
+
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
@@ -85,6 +88,8 @@ export class TezosSell {
 	}
 
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
+		await checkChainId(this.provider)
+
 		const provider = getRequiredProvider(this.provider)
 		const { contract, tokenId } = getTezosItemData(request.itemId)
 
@@ -125,6 +130,8 @@ export class TezosSell {
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
+		await checkChainId(this.provider)
+
 		const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
 		if (!order) {
 			throw new Error("Order has not been found")

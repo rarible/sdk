@@ -12,6 +12,7 @@ import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domai
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
 import {
+	checkChainId,
 	convertFromContractAddress,
 	convertOrderToOrderForm,
 	getRequiredProvider,
@@ -30,6 +31,8 @@ export class TezosCancel {
 	cancel: ICancel = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
+			await checkChainId(this.provider)
+
 			const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
 			if (!order) {
 				throw new Error("Order has not been found")
@@ -53,6 +56,8 @@ export class TezosCancel {
 	})
 
 	async cancelV2SellOrder(order: Order): Promise<IBlockchainTransaction> {
+		await checkChainId(this.provider)
+
 		const provider = getRequiredProvider(this.provider)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
 		const cancelRequest: CancelV2OrderRequest = {

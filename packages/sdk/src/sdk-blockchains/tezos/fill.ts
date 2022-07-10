@@ -15,6 +15,7 @@ import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
 import {
+	checkChainId,
 	convertFromContractAddress,
 	convertOrderToFillOrder, convertUnionParts,
 	getRequiredProvider,
@@ -65,6 +66,7 @@ export class TezosFill {
 	}
 
 	private async buyV2(order: Order, data: OrderDataRequest, fillRequest: FillRequest) {
+		await checkChainId(this.provider)
 		const provider = getRequiredProvider(this.provider)
 		const amount = (order.makePrice !== undefined) ? new BigNumber(order.makePrice) : new BigNumber(0)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
@@ -100,6 +102,8 @@ export class TezosFill {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
+				await checkChainId(this.provider)
+
 				const { make, take } = preparedOrder
 				if (make.type["@type"] === "TEZOS_NFT" || make.type["@type"] === "TEZOS_MT") {
 					const request: OrderDataRequest = {
@@ -131,6 +135,8 @@ export class TezosFill {
 	}
 
 	private async fillV1Order(fillRequest: FillRequest, order: Order) {
+		await checkChainId(this.provider)
+
 		const provider = getRequiredProvider(this.provider)
 		const request = {
 			amount: new BigNumber(fillRequest.amount),

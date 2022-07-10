@@ -34,7 +34,7 @@ import {
 	getTezosItemData,
 	getTezosOrderId,
 	convertTezosOrderId,
-	convertTezosToContractAddress,
+	convertTezosToContractAddress, checkChainId,
 } from "./common"
 import type { TezosBalance } from "./balance"
 
@@ -78,6 +78,8 @@ export class TezosBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		await checkChainId(this.provider)
+
 		if ("collectionId" in prepare) {
 			throw new Error("Bid collection is not supported")
 		}
@@ -133,6 +135,8 @@ export class TezosBid {
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {
+		await checkChainId(this.provider)
+
 		const orderId = getTezosOrderId(request.orderId)
 
 		const order = await this.apis.order.getOrderByHash({ hash: orderId })

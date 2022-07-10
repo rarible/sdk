@@ -20,5 +20,5 @@ export function bigNumToBn(value: BigNumberValue) {
  * @param len
  */
 export function alignBn(value: BN, len: number): BN {
-	return new BN(bnToBuffer(value, "le", 8))
+	return new BN(bnToBuffer(value, "le", len))
 }

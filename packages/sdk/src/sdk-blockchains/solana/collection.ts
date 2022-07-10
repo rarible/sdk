@@ -29,7 +29,7 @@ export class SolanaCollection {
 			const mintPrepare = await this.sdk.nft.mint({
 				metadataUrl: (request.asset as SolanaCreateCollectionTokenAsset).arguments.metadataURI,
 				signer: this.wallet!.provider,
-				maxSupply: 0,
+				masterEditionSupply: 0,
 				collection: null,
 			})
 

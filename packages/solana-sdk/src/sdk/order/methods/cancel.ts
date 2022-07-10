@@ -27,17 +27,17 @@ export async function getAuctionHouseCancelInstructions(
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
 	const buyPriceAdjusted = await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.price),
 		auctionHouseObj.treasuryMint,
 		request.signer,
-		anchorProgram,
 	)
 
 	const tokenSizeAdjusted = await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.tokensAmount),
 		request.mint,
 		request.signer,
-		anchorProgram,
 	)
 
 	const tla = await anchorProgram.provider.connection.getTokenLargestAccounts(request.mint)
