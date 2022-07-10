@@ -19,7 +19,7 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
-	const { result, setError } = useRequestResult()
+	const { result } = useRequestResult()
 	const blockchain = connection.sdk?.wallet?.blockchain!
 	const [disabled, setDisabled] = useState(true)
 

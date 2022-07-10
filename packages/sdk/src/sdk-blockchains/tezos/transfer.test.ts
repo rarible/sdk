@@ -1,22 +1,25 @@
-import { toCollectionId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toCollectionId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
+import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import { getTestContract } from "./test/test-contracts"
 
-describe.skip("transfer test", () => {
-	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8")
-	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
+describe("transfer test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
+	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
+	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
 	const recipient = "tz1VXxRfyFHoPXBVUrWY5tsa1oWevrgChhSg"
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	const nftContract: string = getTestContract(env, "nftContract")
+	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("transfer NFT test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -27,7 +30,7 @@ describe.skip("transfer test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("1"))
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
@@ -46,7 +49,7 @@ describe.skip("transfer test", () => {
 	test("transfer MT test", async () => {
 
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -56,7 +59,7 @@ describe.skip("transfer test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
 		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,

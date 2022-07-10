@@ -23,7 +23,7 @@ import type {
 } from "../../types/order/bid/domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
-import { extractAddress, extractPublicKey } from "./common/address-converters"
+import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
 import { getCurrencies } from "./common/currencies"
 import type { ISolanaSdkConfig } from "./domain"

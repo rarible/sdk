@@ -38,6 +38,7 @@ export function createUnionSdk(
 	tezos: IRaribleInternalSdk,
 	polygon: IRaribleInternalSdk,
 	solana: IRaribleInternalSdk,
+	immutablex: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -46,6 +47,7 @@ export function createUnionSdk(
 			TEZOS: tezos.balances,
 			POLYGON: polygon.balances,
 			SOLANA: solana.balances,
+			IMMUTABLEX: immutablex.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
@@ -53,6 +55,7 @@ export function createUnionSdk(
 			TEZOS: tezos.nft,
 			POLYGON: polygon.nft,
 			SOLANA: solana.nft,
+			IMMUTABLEX: immutablex.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
@@ -60,6 +63,7 @@ export function createUnionSdk(
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
 			SOLANA: solana.order,
+			IMMUTABLEX: immutablex.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
@@ -67,6 +71,7 @@ export function createUnionSdk(
 			TEZOS: tezos.restriction,
 			POLYGON: polygon.restriction,
 			SOLANA: solana.restriction,
+			IMMUTABLEX: immutablex.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 	}

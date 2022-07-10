@@ -21,6 +21,7 @@ import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
+import { createImmutablexSdkBlank } from "./sdk-blockchains/immutablex"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -53,7 +54,7 @@ export function createRaribleSdk(
 		createTezosSdk(
 			filterWallet(wallet, BlockchainGroup.TEZOS),
 			apis,
-			blockchainConfig.tezosNetwork
+			blockchainConfig
 		),
 		createEthereumSdk(
 			filterWallet(wallet, BlockchainGroup.ETHEREUM),
@@ -67,6 +68,7 @@ export function createRaribleSdk(
 			blockchainConfig.solanaNetwork,
 			config?.blockchain?.SOLANA
 		),
+		createImmutablexSdkBlank()
 	)
 
 	setupMiddleware(apis, instance, { wallet, env, config })

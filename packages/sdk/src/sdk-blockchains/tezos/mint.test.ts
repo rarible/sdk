@@ -3,23 +3,27 @@ import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
+import { getTestContract } from "./test/test-contracts"
 
-describe.skip("mint test", () => {
+describe("mint test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
 	)
-	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	const nftContract: string = getTestContract(env, "nftContract")
+	const mtContract: string = getTestContract(env, "mtContract")
 
-	test.skip("mint NFT token test", async () => {
+	test("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 		})
 
 		const mintResult = await mintResponse.submit({
@@ -38,13 +42,13 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
 
-	test.skip("mint MT token test", async () => {
+	test("mint MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
@@ -62,7 +66,7 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "12")
+		await awaitItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 

@@ -1,22 +1,28 @@
-import { toCollectionId } from "@rarible/types"
+import { toBigNumber, toCollectionId } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/domain"
 import { LogsLevel } from "../../domain"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItem } from "../ethereum/test/await-item"
+import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
+import { getTestContract } from "./test/test-contracts"
 
-describe.skip("burn test", () => {
+describe("burn test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
-	const sdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
+	)
+	const sdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	const nftContract: string = getTestContract(env, "nftContract")
+	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("burn NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -26,7 +32,7 @@ describe.skip("burn test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItem(sdk, mintResult.itemId)
 
 		const transfer = await sdk.nft.burn({ itemId: mintResult.itemId })
 
@@ -36,12 +42,12 @@ describe.skip("burn test", () => {
 		  await result.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "0")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
 	}, 1500000)
 
 	test("burn MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -52,7 +58,7 @@ describe.skip("burn test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "10")
+		await awaitItem(sdk, mintResult.itemId)
 
 		const transfer = await sdk.nft.burn({
 			itemId: mintResult.itemId,
@@ -62,7 +68,7 @@ describe.skip("burn test", () => {
 		  await result.wait()
 		}
 
-		await awaitForItemSupply(sdk, mintResult.itemId, "5")
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
 	}, 1500000)
 
 })

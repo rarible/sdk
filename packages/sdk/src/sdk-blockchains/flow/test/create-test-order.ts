@@ -13,7 +13,6 @@ export function createTestOrder(orderId: string): Order {
 		createdAt: "2021-10-26T18:21:01.612Z",
 		lastUpdatedAt: "2021-10-26T18:20:52.255Z",
 		makePrice: toBigNumber("1.025"),
-		priceHistory: [],
 		maker: convertFlowUnionAddress("0x285b7909b8ed1652"),
 		make: {
 			type: {

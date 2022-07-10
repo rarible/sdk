@@ -3,6 +3,95 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.13](https://github.com/rarible/sdk/compare/v0.9.11-beta.12...v0.9.11-beta.13) (2022-07-08)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.11...v0.9.11-beta.12) (2022-07-06)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.11](https://github.com/rarible/sdk/compare/v0.9.11-beta.10...v0.9.11-beta.11) (2022-07-04)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.10](https://github.com/rarible/sdk/compare/v0.9.11-beta.9...v0.9.11-beta.10) (2022-06-30)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.9](https://github.com/rarible/sdk/compare/v0.9.11-beta.8...v0.9.11-beta.9) (2022-06-29)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.8](https://github.com/rarible/sdk/compare/v0.9.11-beta.7...v0.9.11-beta.8) (2022-06-27)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.7](https://github.com/rarible/sdk/compare/v0.9.11-beta.6...v0.9.11-beta.7) (2022-06-23)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.6](https://github.com/rarible/sdk/compare/v0.9.11-beta.5...v0.9.11-beta.6) (2022-06-22)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.5](https://github.com/rarible/sdk/compare/v0.9.11-beta.4...v0.9.11-beta.5) (2022-06-22)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.9.11-beta.4](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.4) (2022-06-22)
+
+
+### Bug Fixes
+
+* set longer default timeout for solana txs ([48b4e0f](https://github.com/rarible/sdk/commit/48b4e0f020d9d2627248346f956336b39db3ee72))
+* solana burn & transfer ([dfdaee8](https://github.com/rarible/sdk/commit/dfdaee869f173f554ab840e5e654ca27d71018df))
+
+
+### Features
+
+* add testnet env, remove e2e env ([#261](https://github.com/rarible/sdk/issues/261)) ([55c908f](https://github.com/rarible/sdk/commit/55c908f031e39b8a2ad504c1e334695d3386ce42))
+
+
+
+
+
 ## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
 
 **Note:** Version bump only for package @rarible/solana-sdk
