@@ -35,7 +35,13 @@ export function getTestContract(env: RaribleSdkEnvironment, type: contractType):
 			return convertTezosToContractAddress(contracts[type])
 		}
 		case "prod": {
-			throw new Error("Prod contracts are not exists")
+			const contracts: Record<contractType, string> = {
+				eurTzContract: "",
+				fa12Contract: "KT1XRPEPXbZK25r3Htzp2o1x7xdMMmfocKNW",
+				nftContract: "",
+				mtContract: "KT18pVpRXKPY2c4U2yFEGSH3ZnhB2kL8kwXS",
+			}
+			return convertTezosToContractAddress(contracts[type])
 		}
 		default: throw new Error("Unrecognized env")
 	}
