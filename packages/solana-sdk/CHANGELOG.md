@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.15](https://github.com/rarible/sdk/compare/v0.9.11-beta.14...v0.9.11-beta.15) (2022-07-12)
+
+
+### Bug Fixes
+
+* tezos chainId for mainnet ([#289](https://github.com/rarible/sdk/issues/289)) ([ecc42b4](https://github.com/rarible/sdk/commit/ecc42b4fb6074d0bd7f6d23d4652a8844823bded))
+
+
+
+
+
 ## [0.9.11-beta.14](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.14) (2022-07-10)
 
 
