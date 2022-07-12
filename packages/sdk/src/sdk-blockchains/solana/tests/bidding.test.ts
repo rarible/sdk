@@ -1,12 +1,10 @@
-import { SolanaWallet } from "@rarible/sdk-wallet"
 import { toUnionAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
+import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana bidding balance", () => {
 	const wallet = getWallet(0)
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet)
 
 	test("Should check bidding balance", async () => {
 		const balance = await sdk.balances.getBiddingBalance({
