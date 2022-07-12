@@ -9,7 +9,7 @@ import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
 import { getTestContract } from "./test/test-contracts"
 
-describe("mint test", () => {
+describe.skip("mint test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
@@ -32,7 +32,7 @@ describe("mint test", () => {
 			lazyMint: false,
 			royalties: [{
 				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
-				value: 10000,
+				value: 1000,
 			}],
 			creators: [{
 				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
@@ -54,10 +54,6 @@ describe("mint test", () => {
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,
 			lazyMint: false,
-			royalties: [{
-				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
-				value: 10000,
-			}],
 			creators: [{
 				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
 				value: 10000,
