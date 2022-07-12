@@ -24,7 +24,7 @@ import {
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
-describe("bid", () => {
+describe.skip("bid", () => {
 	const { web31, wallet1, web32 } = initProviders({
 		pk1: undefined,
 		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
