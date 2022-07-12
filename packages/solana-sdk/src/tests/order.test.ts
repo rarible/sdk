@@ -2,7 +2,7 @@ import { toPublicKey } from "@rarible/solana-common"
 import { SolanaSdk } from "../sdk/sdk"
 import { genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
 
-describe("solana order sdk", () => {
+describe.skip("solana order sdk", () => {
 	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
 
 	// beforeAll(async () => {

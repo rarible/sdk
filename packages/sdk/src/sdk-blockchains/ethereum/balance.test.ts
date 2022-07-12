@@ -11,7 +11,7 @@ import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
-describe("get balance", () => {
+describe.skip("get balance", () => {
 	const { web31, wallet1 } = initProviders({
 		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
 	})
@@ -132,7 +132,7 @@ describe("get balance", () => {
 
 })
 
-describe("get polygon balance", () => {
+describe.skip("get polygon balance", () => {
 	const sdk = createRaribleSdk(undefined, "staging", { logs: LogsLevel.DISABLED })
 
 	test("get Matic balance", async () => {
@@ -152,7 +152,7 @@ describe("get polygon balance", () => {
 	})
 })
 
-describe("Bidding balance", () => {
+describe.skip("Bidding balance", () => {
 	const { web31, wallet1 } = initProviders({
 		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
 	})

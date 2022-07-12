@@ -11,7 +11,7 @@ import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { providerDevelopmentSettings } from "./test/common"
 
-describe("mintAndSell", () => {
+describe.skip("mintAndSell", () => {
 	const {
 		provider,
 		wallet,

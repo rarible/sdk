@@ -69,7 +69,6 @@ describe.skip("sell test", () => {
 	}, 1500000)
 
 	test("sell MT test", async () => {
-		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
 			collectionId: toCollectionId(mtContract),
 		})
@@ -94,10 +93,6 @@ describe.skip("sell test", () => {
 			currency: {
 				"@type": "XTZ",
 			},
-			payouts: [{
-				account: toUnionAddress(`TEZOS:${sellerAddress}`),
-				value: 10000,
-			}],
 		})
 		await awaitForOrder(sellerSdk, orderId)
 

@@ -8,7 +8,7 @@ import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { awaitItem } from "./test/await-item"
 
-describe("transfer", () => {
+describe.skip("transfer", () => {
 	const { web31, wallet1, wallet2 } = initProviders()
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const senderWallet = new EthereumWallet(senderEthereum)
