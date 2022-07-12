@@ -20,6 +20,8 @@ import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
+import type * as OrderCommon from "../../../types/order/common"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
 export const EVMBlockchains: EVMBlockchain[] = [
@@ -123,11 +125,26 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		}
 	}
 }
+
 export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
 	return parts?.map((part) => ({
 		account: convertToEthereumAddress(part.account),
 		value: part.value,
 	})) || []
+}
+
+export function validateOrderDataV3Request(request: OrderCommon.OrderRequest, options?: {
+	shouldProvideMaxFeesBasePoint?: boolean
+}) {
+	if (options?.shouldProvideMaxFeesBasePoint && (!request.maxFeesBasePoint || request.maxFeesBasePoint <= 0)) {
+		throw new Error("maxFeesBasePoint should be specified in request and should be more than 0")
+	}
+	if (request.payouts && request.payouts.length > 1) {
+		throw new Error("Only 1 payout account maximum supported")
+	}
+	if (request.originFees && request.originFees.length > 2) {
+		throw new Error("Only 2 origin accounts maximum supported")
+	}
 }
 
 export function getOriginFeesSum(originFees: Array<Part>): number {
@@ -140,6 +157,28 @@ export function getOrderFeesSum(order: Order): number {
 		case "RARIBLE_V2_DATA_V1": return getOriginFeesSum(order.data.originFees)
 		case "RARIBLE_V2_DATA_V2": return getOriginFeesSum(order.data.originFees)
 		default: throw new Error("Unexpected order dataType")
+	}
+}
+
+export function getOriginFeeSupport(type: "RARIBLE_V1" | "RARIBLE_V2"): OriginFeeSupport {
+	switch (type) {
+		case "RARIBLE_V1":
+			return  OriginFeeSupport.AMOUNT_ONLY
+		case "RARIBLE_V2":
+			return  OriginFeeSupport.FULL
+		default:
+			throw new Error("Unknown order type " + type)
+	}
+}
+
+export function getPayoutsSupport(type: "RARIBLE_V1" | "RARIBLE_V2"): PayoutsSupport {
+	switch (type) {
+		case "RARIBLE_V1":
+			return PayoutsSupport.SINGLE
+		case "RARIBLE_V2":
+			return PayoutsSupport.MULTIPLE
+		default:
+			throw new Error("Unknown order type " + type)
 	}
 }
 

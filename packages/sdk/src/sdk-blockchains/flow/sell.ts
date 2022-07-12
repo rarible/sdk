@@ -7,7 +7,7 @@ import type { Order, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
@@ -65,6 +65,7 @@ export class FlowSell {
 			baseFee: getFlowBaseFee(this.sdk),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportsExpirationDate: false,
 			submit: sellAction,
 		}
@@ -100,6 +101,7 @@ export class FlowSell {
 			supportedCurrencies: FlowSell.supportedCurrencies,
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
 		}

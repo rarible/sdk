@@ -11,7 +11,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
 import {
@@ -129,6 +129,7 @@ export class TezosFill {
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportsPartialFill: true,
 			submit,
 		}

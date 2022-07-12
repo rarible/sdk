@@ -1,8 +1,7 @@
 import type * as ApiClient from "@rarible/api-client"
-import type { BlockchainGroup } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { BlockchainGroup } from "@rarible/api-client"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { IMint, IUploadMeta } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
@@ -27,6 +26,7 @@ import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
+import type { IEthereumSdkConfig } from "./sdk-blockchains/ethereum/domain"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -45,11 +45,10 @@ export interface IRaribleSdkConfig {
 	logs?: LogsLevel
 	blockchain?: {
 		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig
+		[BlockchainGroup.ETHEREUM]?: IEthereumSdkConfig
+		[BlockchainGroup.FLOW]?: { auth: AuthWithPrivateKey }
 	}
 	middlewares?: Middleware[]
-	ethereum?: EthereumNetworkConfig
-	polygon?: EthereumNetworkConfig
-	flow?: { auth: AuthWithPrivateKey }
 }
 
 export interface IRaribleSdk {

@@ -1,7 +1,7 @@
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
-import type { EthereumNetwork, EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
@@ -19,27 +19,28 @@ import { EthereumBalance } from "./balance"
 import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
 import { EthereumCryptopunk } from "./cryptopunk"
+import type { IEthereumSdkConfig } from "./domain"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
+	blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON,
 	network: EthereumNetwork,
 	config: {
 		params?: ConfigurationParameters,
 		logs?: LogsLevel
-		ethereum?: EthereumNetworkConfig,
-		polygon?: EthereumNetworkConfig,
-	}
+	} & IEthereumSdkConfig
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, {
 		apiClientParams: config.params,
 		logs: config.logs,
-		ethereum: config.ethereum,
-		polygon: config.polygon,
+		ethereum: config[Blockchain.ETHEREUM],
+		polygon: config[Blockchain.POLYGON],
 	})
-	const sellService = new EthereumSell(sdk, network)
+
+	const sellService = new EthereumSell(sdk, network, config)
 	const balanceService = new EthereumBalance(sdk, apis, network)
-	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
+	const bidService = new EthereumBid(sdk, wallet, balanceService, network, config)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillerService = new EthereumFill(sdk, wallet, network)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)

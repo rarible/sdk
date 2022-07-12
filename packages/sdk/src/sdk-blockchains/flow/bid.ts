@@ -4,7 +4,7 @@ import { Action } from "@rarible/action"
 import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { Blockchain } from "@rarible/api-client"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
 import type {
@@ -67,6 +67,7 @@ export class FlowBid {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			multiple: false,
 			maxAmount: toBigNumber("1"),
@@ -108,6 +109,7 @@ export class FlowBid {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: FlowBid.supportedCurrencies,
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,

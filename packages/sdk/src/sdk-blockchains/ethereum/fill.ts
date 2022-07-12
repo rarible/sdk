@@ -11,12 +11,13 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId, toEthereumParts } from "./common"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
 	payoutsSupport: PayoutsSupport,
+	maxFeesBasePointSupport: MaxFeesBasePointSupport,
 	supportsPartialFill: boolean
 }
 
@@ -100,6 +101,7 @@ export class EthereumFill {
 				return {
 					originFeeSupport: OriginFeeSupport.AMOUNT_ONLY,
 					payoutsSupport: PayoutsSupport.SINGLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: true,
 				}
 			}
@@ -107,6 +109,7 @@ export class EthereumFill {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.MULTIPLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: true,
 				}
 			}
@@ -114,6 +117,7 @@ export class EthereumFill {
 				return {
 					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.SINGLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: false,
 				}
 			}
@@ -122,6 +126,7 @@ export class EthereumFill {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill,
 				}
 			}
