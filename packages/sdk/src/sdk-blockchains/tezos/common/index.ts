@@ -210,7 +210,7 @@ export function getMaybeTezosProvider(
 					auction: "",
 					auction_storage: "",
 					node_url: "https://rpc.tzkt.io/mainnet",
-					chain_id: "NetXfHjxW3qBoxi",
+					chain_id: "NetXdQprcVkpaWU",
 					sales: "KT1GbPqXZ3yLUNWa7MdMiksJddD7TskTpuGU",
 					sales_storage: "KT1BEZNm3E25rZtXfPPKr5Jxygbi2kL2cCEW",
 					transfer_manager: "KT1ViAbsAM5rp89yVydEkbQozp1S12zqirwS",

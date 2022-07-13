@@ -15,7 +15,7 @@ import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
 import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 
-describe("sale", () => {
+describe.skip("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })

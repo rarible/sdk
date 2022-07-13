@@ -9,7 +9,7 @@ import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
 import { awaitOrderCancel } from "./test/await-order-cancel"
 
-describe("cancel", () => {
+describe.skip("cancel", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)

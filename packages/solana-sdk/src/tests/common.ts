@@ -1,7 +1,7 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import { LAMPORTS_PER_SOL } from "@solana/web3.js"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
-import type { SolanaSdk } from "../sdk/sdk"
+import { SolanaSdk } from "../sdk/sdk"
 
 export const TEST_AUCTION_HOUSE = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
 
@@ -28,6 +28,19 @@ export const testWallets = [{
 	]),
 	publicKeyString: "3XUb9y7Z3ADxptxgfMJHcBTxxyCpfcuLDkaTfvW2DGwf",
 }]
+
+export function createSdk(): SolanaSdk {
+	const endpoint = process.env.SOLANA_CUSTOM_ENDPOINT !== "" ? process.env.SOLANA_CUSTOM_ENDPOINT : undefined
+	console.log("solana endpoint:", endpoint)
+	return SolanaSdk.create({
+		connection: {
+			cluster: "devnet",
+			endpoint: endpoint,
+			commitmentOrConfig: "confirmed",
+		},
+		debug: true,
+	})
+}
 
 export function getTestWallet(walletIndex: number = 0): SolanaKeypairWallet {
 	return SolanaKeypairWallet.createFrom(testWallets[walletIndex].privateKeyString)

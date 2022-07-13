@@ -20,7 +20,14 @@ export function createSolanaSdk(
 	cluster: Cluster,
 	config: ISolanaSdkConfig | undefined
 ): IRaribleInternalSdk {
-	const sdk = SolanaSdk.create({ connection: { cluster, commitmentOrConfig: "confirmed" }, debug: false })
+	const sdk = SolanaSdk.create({
+		connection: {
+			cluster,
+			endpoint: config?.endpoint,
+			commitmentOrConfig: "confirmed",
+		},
+		debug: false,
+	})
 	const nftService = new SolanaNft(sdk, wallet, apis, config)
 	const balanceService = new SolanaBalance(sdk, wallet, apis, config)
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)

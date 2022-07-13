@@ -1,9 +1,8 @@
 import { toPublicKey } from "@rarible/solana-common"
-import { SolanaSdk } from "../sdk/sdk"
-import { genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
+import { createSdk, genTestWallet, getTestWallet, mintToken, requestSol, TEST_AUCTION_HOUSE } from "./common"
 
 describe("solana order sdk", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
+	const sdk = createSdk()
 
 	// beforeAll(async () => {
 	// 	const wallet1 = getTestWallet(0)
@@ -201,6 +200,7 @@ describe("solana order sdk", () => {
 			mint: mint,
 		})).submit("max")
 		expect(sellTxId).toBeTruthy()
+		await sdk.confirmTransaction(sellTxId, "confirmed")
 
 		const { txId } = await (await sdk.order.cancel({
 			auctionHouse: toPublicKey(auctionHouse),
