@@ -1,8 +1,8 @@
 import { toPublicKey } from "@rarible/solana-common"
-import { SolanaSdk } from "../sdk/sdk"
+import { createSdk } from "./common"
 
 describe("solana sdk balance", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
+	const sdk = createSdk()
 
 	test("Should check account balance", async () => {
 		const balance = await sdk.balances.getBalance(toPublicKey("2XyukL1KvwDkfNcdBpfXbj6UtPqF7zcUdTDURNjLFAMo"))

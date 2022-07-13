@@ -1,14 +1,12 @@
-import { SolanaWallet } from "@rarible/sdk-wallet"
 import type { Item } from "@rarible/api-client/build/models"
-import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { retry } from "../../../common/retry"
 import { mintToken } from "../common/test/mint"
+import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana order", () => {
 	const wallet = getWallet()
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet)
 
 	const defaultBaseFee = 0 //250
 

@@ -1,8 +1,7 @@
-import { SolanaSdk } from "../sdk/sdk"
-import { genTestWallet, getTestWallet, mintToken } from "./common"
+import { createSdk, genTestWallet, getTestWallet, mintToken } from "./common"
 
 describe("solana nft sdk", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet", commitmentOrConfig: "confirmed" }, debug: true })
+	const sdk = createSdk()
 
 	test("Should mint nft & send", async () => {
 		const wallet = getTestWallet()

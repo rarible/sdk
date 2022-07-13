@@ -37,6 +37,7 @@ export interface IRaribleSolanaSdk {
 export interface ISolanaSdkConfig {
 	connection: {
 		cluster: Cluster
+		endpoint?: string
 		commitmentOrConfig?: Commitment | ConnectionConfig
 	},
 	debug?: boolean // console logging
@@ -104,7 +105,7 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 
 	static create(config: ISolanaSdkConfig): SolanaSdk {
 		const connection = new Connection(
-			clusterApiUrl(config.connection.cluster),
+			config.connection.endpoint ?? clusterApiUrl(config.connection.cluster),
 			config.connection.commitmentOrConfig ?? "confirmed"
 		)
 		return new SolanaSdk(connection, config.connection.cluster, { debug: !!config.debug })

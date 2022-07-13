@@ -51,6 +51,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 			break
 		case BlockchainGroup.SOLANA:
 			info["wallet.address"] = wallet.provider.publicKey?.toString()
+			break
 		default:
 			info["wallet.address"] = "unknown"
 	}

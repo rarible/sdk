@@ -1,14 +1,12 @@
 import { toCurrencyId, toUnionAddress } from "@rarible/types"
-import { SolanaWallet } from "@rarible/sdk-wallet"
-import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { retry } from "../../../common/retry"
 import { mintToken } from "../common/test/mint"
+import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana burn", () => {
 	const wallet = getWallet()
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet)
 
 	test("Should burn NFT", async () => {
 		const item = await mintToken(sdk)
