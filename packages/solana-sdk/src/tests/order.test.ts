@@ -342,8 +342,8 @@ describe("solana order sdk", () => {
 
 		console.log("awaiting sell txs")
 		await Promise.all([
-			sdk.confirmTransaction(sellTx1, "confirmed"),
-			sdk.confirmTransaction(sellTx2, "confirmed"),
+			sdk.confirmTransaction(sellTx1, "finalized"),
+			sdk.confirmTransaction(sellTx2, "finalized"),
 		])
 
 		console.log("cancel sell for wallet2")
