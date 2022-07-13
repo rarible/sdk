@@ -11,6 +11,7 @@ pipeline {
     stage('test') {
       environment {
 	      NPM_TOKEN = "na"
+	      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
       }
       agent any
       steps {
