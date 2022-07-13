@@ -299,7 +299,7 @@ describe("solana order sdk", () => {
 		await sdk.unionInstructionsAndSend(wallet1, transactions, "confirmed")
 	})
 
-	test("Should mint>sell>transfer>buy", async () => {
+	test.skip("Should mint>sell>transfer>buy", async () => {
 		const wallet1 = getTestWallet(0)
 		const wallet2 = getTestWallet(1)
 		const auctionHouse = "8Qu3azqi31VpgPwVW99AyiBGnLSpookWQiwLMvFn4NFm"
