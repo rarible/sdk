@@ -9,10 +9,12 @@ import { Logger } from "../logger"
 /**
  * Make new sell order and check stocks
  */
-export async function sell(sdk: IRaribleSdk,
-						   wallet: BlockchainWallet,
-						   prepareOrderRequest: PrepareOrderRequest,
-						   orderRequest: OrderRequest): Promise<Order> {
+export async function sell(
+	sdk: IRaribleSdk,
+	wallet: BlockchainWallet,
+	prepareOrderRequest: PrepareOrderRequest,
+	orderRequest: OrderRequest,
+): Promise<Order> {
 	Logger.log("sell, prepare_order_request=", prepareOrderRequest)
 	// Get sell info
 	const sellPrepare = await sdk.order.sell(prepareOrderRequest)

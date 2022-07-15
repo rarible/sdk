@@ -9,7 +9,9 @@ import type { Ownership } from "@rarible/api-client/build/models"
 
 
 export async function awaitOrderStock(
-	sdk: IRaribleSdk, id: OrderId, awaitingValue: BigNumber | string
+	sdk: IRaribleSdk,
+	id: OrderId,
+	awaitingValue: BigNumber | string,
 ): Promise<Order> {
 	return retry(20, 2000, async () => {
 		const order = await sdk.apis.order.getOrderById({ id })
@@ -30,8 +32,10 @@ export async function awaitOrderCancel(sdk: IRaribleSdk, id: OrderId): Promise<O
 	})
 }
 
-export async function awaitForItemSupply(sdk: IRaribleSdk, itemId: ItemId,
-																				 supply: string | number | BigNumber
+export async function awaitForItemSupply(
+	sdk: IRaribleSdk,
+	itemId: ItemId,
+	supply: string | number | BigNumber,
 ): Promise<string> {
 	return retry(10, 2000, async () => {
 		const item = await sdk.apis.item.getItemById({
@@ -52,7 +56,7 @@ export async function awaitForOwnership(sdk: IRaribleSdk, itemId: ItemId, receip
 			ownershipId: `${itemId}:${receipent}`,
 		})
 
-		expect(ownership.owner.slice(ownership.owner.indexOf(":")+1)).toEqual(receipent)
+		expect(ownership.owner.slice(ownership.owner.indexOf(":") + 1)).toEqual(receipent)
 
 		return ownership
 	})

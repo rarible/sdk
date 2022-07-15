@@ -7,6 +7,7 @@ import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
+import { retry } from "@rarible/sdk/build/common/retry"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -236,13 +237,17 @@ describe.each(suites())("$blockchain mint => floorBid => bidUpdate => acceptBid"
 
 		const bidOrder = await bid(buyerSdk, buyerWallet, { collectionId: collection.id }, bidRequest)
 
-		const collection1 = await getCollection(sellerSdk, address)
-		expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+		await retry(10, 2000, async () => {
+			const collection1 = await getCollection(sellerSdk, address)
+			expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+		})
 
 		await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
 
-		const collection2 = await getCollection(sellerSdk, address)
-		expect(collection2.bestBidOrder?.takePrice).toBe(suite.updateBidRequest.price)
+		await retry(10, 2000, async () => {
+			const collection2 = await getCollection(sellerSdk, address)
+			expect(collection2.bestBidOrder?.takePrice).toBe(suite.updateBidRequest.price)
+		})
 
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id },
 			{
