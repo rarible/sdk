@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.17](https://github.com/rarible/sdk/compare/v0.9.11-beta.16...v0.9.11-beta.17) (2022-07-15)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.9.11-beta.16](https://github.com/rarible/sdk/compare/v0.9.11-beta.15...v0.9.11-beta.16) (2022-07-15)
+
+
+### Features
+
+* improve seaport ([313b932](https://github.com/rarible/sdk/commit/313b9320417ffd9aafcb5e797503eeb7422fb2e2))
+
+
+
+
+
 ## [0.9.11-beta.15](https://github.com/rarible/sdk/compare/v0.9.11-beta.14...v0.9.11-beta.15) (2022-07-12)
 
 **Note:** Version bump only for package @rarible/sdk-transaction

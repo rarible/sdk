@@ -31,7 +31,7 @@ export const testWallets = [{
 
 export function createSdk(): SolanaSdk {
 	const endpoint = process.env.SOLANA_CUSTOM_ENDPOINT !== "" ? process.env.SOLANA_CUSTOM_ENDPOINT : undefined
-	console.log("solana endpoint:", endpoint)
+	console.debug("solana endpoint:", endpoint)
 	return SolanaSdk.create({
 		connection: {
 			cluster: "devnet",

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.9.11-beta.15",
+  "version": "0.9.11-beta.17",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -23,12 +23,12 @@
     "@ethersproject/keccak256": "^5.6.0",
     "@rarible/action": "~0.5.0",
     "@rarible/api-client": "0.0.13-beta10",
-    "@rarible/flow-sdk": "~0.5.48-alpha.3",
+    "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/logger": "~0.6.2",
-    "@rarible/protocol-ethereum-sdk": "~0.12.76",
-    "@rarible/sdk-transaction": "^0.9.11-beta.15",
-    "@rarible/sdk-wallet": "^0.9.11-beta.15",
-    "@rarible/solana-sdk": "^0.9.11-beta.15",
+    "@rarible/protocol-ethereum-sdk": "~0.12.77",
+    "@rarible/sdk-transaction": "^0.9.11-beta.17",
+    "@rarible/sdk-wallet": "^0.9.11-beta.17",
+    "@rarible/solana-sdk": "^0.9.11-beta.17",
     "@rarible/tezos-sdk": "~0.1.28",
     "@rarible/types": "~0.9.3",
     "@rarible/utils": "~0.5.0",
@@ -62,6 +62,7 @@
     "babel-plugin-transform-bigint": "^1.0.12",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
+    "dotenv": "16.0.0",
     "ethers": "^5.6.2",
     "jest": "^27.2.7",
     "keccak": "^3.0.2",
@@ -78,8 +79,7 @@
     "webpack": "^5.68.0",
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
-    "yargs": "^17.2.1",
-    "dotenv": "16.0.0"
+    "yargs": "^17.2.1"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

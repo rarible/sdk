@@ -8,26 +8,27 @@ pipeline {
   }
 
   stages {
+      stage('build and deploy') {
+        agent any
+        when { tag "v*"  }
+        environment {
+          NPM_TOKEN = credentials('npm-token')
+          NPM_HOME = '${env.WORKSPACE_TMP}'
+        }
+        steps {
+            sh 'yarn && yarn build'
+            sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
+            sh 'yarn release'
+        }
+      }
     stage('test') {
       environment {
 	      NPM_TOKEN = "na"
+	      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
       }
       agent any
       steps {
         sh 'yarn && yarn build && yarn test'
-      }
-    }
-    stage('build and deploy') {
-      agent any
-      when { tag "v*"  }
-      environment {
-        NPM_TOKEN = credentials('npm-token')
-        NPM_HOME = '${env.WORKSPACE_TMP}'
-      }
-      steps {
-          sh 'yarn && yarn build'
-          sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
-          sh 'yarn release'
       }
     }
   }
