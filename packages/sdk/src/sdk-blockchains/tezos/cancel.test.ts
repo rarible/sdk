@@ -9,7 +9,7 @@ import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
-describe("cancel test", () => {
+describe.skip("cancel test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
