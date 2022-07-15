@@ -1,10 +1,9 @@
 import { toPublicKey } from "@rarible/solana-common"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { SolanaSdk } from "../sdk/sdk"
-import { genTestWallet, requestSol, retry, TEST_AUCTION_HOUSE } from "./common"
+import { createSdk, genTestWallet, requestSol, retry, TEST_AUCTION_HOUSE } from "./common"
 
 describe("solana sdk escrow", () => {
-	const sdk = SolanaSdk.create({ connection: { cluster: "devnet" }, debug: true })
+	const sdk = createSdk()
 	const ACCOUNT_DEPOSIT = 0.00089088
 
 	const checkEscrowBalance = async (wallet: IWalletSigner, expected: number | null, withDeposit: boolean = true) => {
@@ -33,7 +32,7 @@ describe("solana sdk escrow", () => {
 	}
 
 	afterEach(async () => {
-		await new Promise((r) => setTimeout(r, 5000))
+		//await new Promise((r) => setTimeout(r, 5000))
 	})
 
 	const makeBid = async (wallet: IWalletSigner, price: number) => {

@@ -7,7 +7,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { CreateCollectionRequest, ICreateCollection } from "../../types/nft/deploy/domain"
 import type { TezosCreateCollectionTokenAsset } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
-import { convertTezosToContractAddress, getRequiredProvider } from "./common"
+import { checkChainId, convertTezosToContractAddress, getRequiredProvider } from "./common"
 
 export class TezosCreateCollection {
 	constructor(
@@ -47,6 +47,8 @@ export class TezosCreateCollection {
 			if (request.blockchain !== Blockchain.TEZOS) {
 				throw new Error("Wrong blockchain")
 			}
+			await checkChainId(this.provider)
+
 			const operationResult = await this.getDeployOperation(request.asset as TezosCreateCollectionTokenAsset)
 			return {
 				tx: new BlockchainTezosTransaction(operationResult, this.network),

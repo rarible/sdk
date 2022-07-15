@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.9.11-beta.2",
+  "version": "0.9.11-beta.16",
   "keywords": [
     "solana",
     "web3"
@@ -41,6 +41,7 @@
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/node-fetch": "^2.6.1",
+    "dotenv": "16.0.0",
     "form-data": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",

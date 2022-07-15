@@ -36,17 +36,17 @@ export async function getActionHouseBuyInstructions(
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
 	const buyPriceAdjusted = await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.price),
 		auctionHouseObj.treasuryMint,
 		walletKeyPair,
-		anchorProgram,
 	)
 
 	const tokenSizeAdjusted = await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.tokensAmount),
 		request.mint,
 		walletKeyPair,
-		anchorProgram,
 	)
 
 	const [escrowPaymentAccount, escrowBump] = await getAuctionHouseBuyerEscrow(

@@ -1,14 +1,12 @@
-import { SolanaWallet } from "@rarible/sdk-wallet"
 import { toBigNumber } from "@rarible/types"
-import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import { retry } from "../../../common/retry"
 import { mintToken } from "../common/test/mint"
+import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana sell order update", () => {
 	const wallet = getWallet(0)
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet)
 
 	test("Should set item to sell & change price", async () => {
 		const item = await mintToken(sdk)

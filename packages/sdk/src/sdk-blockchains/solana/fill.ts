@@ -8,7 +8,7 @@ import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { extractAddress, extractPublicKey } from "./common/address-converters"
+import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
 import type { ISolanaSdkConfig } from "./domain"
@@ -23,7 +23,7 @@ export class SolanaFill {
 		this.fill = this.fill.bind(this)
 	}
 
-	private isBuyOrder(order: Order): boolean {
+	private static isBuyOrder(order: Order): boolean {
 		return order.make.type["@type"] === "SOLANA_NFT"
 	}
 
@@ -36,7 +36,7 @@ export class SolanaFill {
 		if (order.status !== OrderStatus.ACTIVE) {
 			throw new Error("Order is not active")
 		}
-		return this.isBuyOrder(order) ? this.buy(order) : this.acceptBid(order)
+		return SolanaFill.isBuyOrder(order) ? this.buy(order) : this.acceptBid(order)
 	}
 
 	private async buy(order: Order): Promise<PrepareFillResponse> {
@@ -50,15 +50,34 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
-					const buyPrepare = await this.sdk.order.buy({
+					const transactions = []
+
+					// make buy order
+					transactions.push(await this.sdk.order.buy({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						mint: mint,
 						price: price,
 						tokensAmount: buyRequest.amount,
-					})
+					}))
 
-					const executePrepare = await this.sdk.order.executeSell({
+					// revoke empty delegated token account
+					const tokenAccount = await this.sdk.account.getTokenAccountForMint({
+						mint,
+						owner: this.wallet!.provider.publicKey,
+					})
+					if (tokenAccount) {
+						const accountInfo = await this.sdk.account.getAccountInfo({ tokenAccount, mint })
+						if (accountInfo.delegate && accountInfo.amount.toString() === "0") {
+							transactions.push(await this.sdk.account.revokeDelegate({
+								signer: this.wallet!.provider,
+								tokenAccount,
+							}))
+						}
+					}
+
+					// execute sell
+					transactions.push(await this.sdk.order.executeSell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
 						buyerWallet: this.wallet!.provider.publicKey,
@@ -66,11 +85,11 @@ export class SolanaFill {
 						mint: mint,
 						price: price,
 						tokensAmount: buyRequest.amount,
-					})
+					}))
 
 					return this.sdk.unionInstructionsAndSend(
 						this.wallet!.provider,
-						[buyPrepare, executePrepare],
+						transactions,
 						"processed"
 					)
 				},
@@ -129,7 +148,7 @@ export class SolanaFill {
 		return {
 			multiple: parseFloat(item.supply.toString()) > 1,
 			maxAmount: order.makeStock,
-			baseFee: await getAuctionHouseFee(extractAddress(getOrderData(order).auctionHouse!)),
+			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,

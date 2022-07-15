@@ -38,17 +38,17 @@ export async function getAuctionHouseExecuteSellInstructions(
 
 	const isNative = auctionHouseObj.treasuryMint.equals(WRAPPED_SOL_MINT)
 	const buyPriceAdjusted = await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.price),
 		auctionHouseObj.treasuryMint,
 		request.signer,
-		anchorProgram,
 	)
 
 	const tokenSizeAdjusted = await getPriceWithMantissa(
+		request.connection,
 		new BigNumber(request.tokensAmount),
 		request.mint,
 		request.signer,
-		anchorProgram,
 	)
 
 	const tokenAccountKey = (await getAssociatedTokenAccountForMint(request.mint, request.sellerWallet))[0]

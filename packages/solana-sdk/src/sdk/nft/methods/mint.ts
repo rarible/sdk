@@ -95,11 +95,9 @@ export async function getMintNftInstructions(
 		collection: PublicKey | null,
 		verifyCreators: boolean,
 		use?: Uses,
-	} & ({
-		maxSupply: number, // for master edition
-	} | {
+		masterEditionSupply: number | undefined, // for master edition
 		amount: number, // for multiple items
-	})
+	}
 ): Promise<ITransactionPreparedInstructions & { mint: PublicKey }> {
 	// Retrieve metadata
 	const data = await createMetadata(
@@ -179,11 +177,15 @@ export async function getMintNftInstructions(
 			userTokenAccoutAddress,
 			signer.publicKey,
 			[],
-			("amount" in params && params.amount) || 1,
+			params.amount,
 		),
 	)
 
-	if ("maxSupply" in params) {
+	if (params.masterEditionSupply !== undefined) {
+		if (params.amount !== 1) {
+			throw new Error("For create master edition token amount of tokens should be equal 1")
+		}
+
 		// Create master edition
 		const editionAccount = await getMasterEdition(mint.publicKey)
 		instructions.push(
@@ -197,7 +199,7 @@ export async function getMintNftInstructions(
 					mint: mint.publicKey,
 					mintAuthority: signer.publicKey,
 					updateAuthority: signer.publicKey,
-					maxSupply: new BN(params.maxSupply),
+					maxSupply: new BN(params.masterEditionSupply),
 				},
 			).instructions,
 		)

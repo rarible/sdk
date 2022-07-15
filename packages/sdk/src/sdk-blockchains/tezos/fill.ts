@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
-import type { OrderDataTypeRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
+import type { OrderDataRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { OrderType, fill_order, get_address, get_active_order_type } from "@rarible/tezos-sdk"
+import { fill_order, get_address } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -13,19 +13,18 @@ import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { MaybeProvider } from "./common"
 import {
+	checkChainId,
 	convertFromContractAddress,
 	convertOrderToFillOrder, convertUnionParts,
 	getRequiredProvider,
 	getTezosAddress, getTezosAssetTypeV2,
-	getTokenIdString,
 } from "./common"
 
 export class TezosFill {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
 		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
@@ -52,8 +51,8 @@ export class TezosFill {
 		const provider = getRequiredProvider(this.provider)
 		if (order.take.type["@type"] === "TEZOS_MT" || order.take.type["@type"] === "TEZOS_NFT") {
 			const { contract, tokenId } = order.take.type
-			const ownershipId = `${convertFromContractAddress(contract)}:${tokenId.toString()}:${await get_address(provider)}`
-			const response = await this.apis.ownership.getNftOwnershipById({
+			const ownershipId = `${contract}:${tokenId.toString()}:${await get_address(provider)}`
+			const response = await this.unionAPI.ownership.getOwnershipById({
 				ownershipId,
 			})
 			return toRaribleBigNumber(response.value)
@@ -66,14 +65,18 @@ export class TezosFill {
 		return order.take.type["@type"] === "TEZOS_MT" || order.make.type["@type"] === "TEZOS_MT"
 	}
 
-	private async buyV2(order: Order, data: OrderDataTypeRequest, fillRequest: FillRequest) {
+	private async buyV2(order: Order, data: OrderDataRequest, fillRequest: FillRequest) {
+		await checkChainId(this.provider)
 		const provider = getRequiredProvider(this.provider)
 		const amount = (order.makePrice !== undefined) ? new BigNumber(order.makePrice) : new BigNumber(0)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
+		if (!data.make_contract || !data.make_token_id) {
+			throw new Error("Make data for buyV2 should exist")
+		}
 		const buyRequest: BuyRequest = {
-			asset_contract: data.contract,
-			asset_token_id: new BigNumber(data.token_id),
-			asset_seller: data.seller,
+			asset_contract: data.make_contract,
+			asset_token_id: new BigNumber(data.make_token_id),
+			asset_seller: getTezosAddress(order.maker),
 			sale_type: currency.type,
 			sale_asset_contract: currency.asset_contract,
 			sale_asset_token_id: currency.asset_token_id,
@@ -99,17 +102,20 @@ export class TezosFill {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
+				await checkChainId(this.provider)
+
 				const { make, take } = preparedOrder
 				if (make.type["@type"] === "TEZOS_NFT" || make.type["@type"] === "TEZOS_MT") {
-					const request: OrderDataTypeRequest = {
-						contract: convertFromContractAddress(make.type.contract),
-						token_id: new BigNumber(make.type.tokenId),
-						seller: getTezosAddress(preparedOrder.maker),
-						buy_asset_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
-						buy_asset_token_id: take.type["@type"] === "TEZOS_FT" ? getTokenIdString(take.type.tokenId) : undefined,
+					const request: OrderDataRequest = {
+						make_contract: convertFromContractAddress(make.type.contract),
+						make_token_id: new BigNumber(make.type.tokenId),
+						maker: getTezosAddress(preparedOrder.maker),
+						take_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
 					}
-					const type = await get_active_order_type(this.provider.config, request)
-					if (type === OrderType.V2) {
+					if (take.type["@type"] === "TEZOS_FT" && take.type.tokenId) {
+						request.take_token_id = new BigNumber(take.type.tokenId.toString())
+					}
+					if (preparedOrder.data["@type"] === "TEZOS_RARIBLE_V3") {
 						return this.buyV2(preparedOrder, request, fillRequest)
 					}
 				}
@@ -129,6 +135,8 @@ export class TezosFill {
 	}
 
 	private async fillV1Order(fillRequest: FillRequest, order: Order) {
+		await checkChainId(this.provider)
+
 		const provider = getRequiredProvider(this.provider)
 		const request = {
 			amount: new BigNumber(fillRequest.amount),

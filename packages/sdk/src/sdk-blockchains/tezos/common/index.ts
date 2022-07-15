@@ -2,12 +2,14 @@ import type {
 	AssetType,
 	CollectionId,
 	ItemId,
-	Order, TezosFTAssetType,
+	Order,
+	TezosFTAssetType,
 	TezosMTAssetType,
-	TezosNFTAssetType, TezosXTZAssetType,
+	TezosNFTAssetType,
+	TezosXTZAssetType,
 	UnionAddress,
 } from "@rarible/api-client"
-import { Blockchain } from "@rarible/api-client"
+import { Blockchain, CollectionType } from "@rarible/api-client"
 import type {
 	Asset as TezosLibAsset,
 	AssetType as TezosAssetType,
@@ -18,10 +20,10 @@ import type {
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { AssetTypeV2, get_public_key, pk_to_pkh } from "@rarible/tezos-sdk"
+import type { Part } from "@rarible/tezos-common"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
-import type { Part } from "@rarible/tezos-common"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
 import {
 	Configuration,
@@ -38,8 +40,10 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 // import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
+import axios from "axios"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
+import type { RaribleSdkConfig } from "../../../config/domain"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
@@ -126,8 +130,9 @@ export function isExistedTezosProvider(provider: MaybeProvider<TezosProvider>): 
 }
 
 export function getMaybeTezosProvider(
-	provider: Maybe<TezosProvider>, network: TezosNetwork
+	provider: Maybe<TezosProvider>, network: TezosNetwork, config: RaribleSdkConfig
 ): MaybeProvider<TezosProvider> {
+	const unionApiBaseUrl = `${config.basePath}/v0.1`
 	switch (network) {
 		case "testnet": {
 			return {
@@ -154,7 +159,8 @@ export function getMaybeTezosProvider(
 					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
 					tzkt: "https://api.ithacanet.tzkt.io",
 					dipdup: "https://test-tezos-indexer.rarible.org/v1/graphql",
-					union_api: "https://staging-api.rarible.org/v0.1",
+					union_api: unionApiBaseUrl,
+					objkt_sales_v2: "KT1T1JMFGipL6EdCmeL8tDfLiTi1BFZ1yAKV",
 				},
 			}
 		}
@@ -181,9 +187,10 @@ export function getMaybeTezosProvider(
 					bid: "KT1H9fa1QF4vyAt3vQcj65PiJJNG7vNVrkoW",
 					bid_storage: "KT19c5jc4Y8so1FWbrRA8CucjUeNXZsP8yHr",
 					sig_checker: "KT1ShTc4haTgT76z5nTLSQt3GSTLzeLPZYfT",
-					tzkt: "http://dev-tezos-tzkt.rarible.org",
-					dipdup: "http://dev-tezos-indexer.rarible.org/v1/graphql",
-					union_api: "https://dev-api.rarible.org/v0.1",
+					tzkt: "https://dev-tezos-tzkt.rarible.org",
+					dipdup: "https://dev-tezos-indexer.rarible.org/v1/graphql",
+					union_api: unionApiBaseUrl,
+					objkt_sales_v2: "KT1X1sxF2kqNKMKcNatbrx3d5M11LhSthQ3L",
 				},
 			}
 		}
@@ -202,23 +209,37 @@ export function getMaybeTezosProvider(
 					wrapper: "KT1EJkjatSNWD2NiPx8hivKnawxuyaVTwP6n",
 					auction: "",
 					auction_storage: "",
-					node_url: "https://mainnet.api.tez.ie",
-					chain_id: "NetXfHjxW3qBoxi",
-					sales: "",
-					sales_storage: "",
-					transfer_manager: "",
+					node_url: "https://rpc.tzkt.io/mainnet",
+					chain_id: "NetXdQprcVkpaWU",
+					sales: "KT1GbPqXZ3yLUNWa7MdMiksJddD7TskTpuGU",
+					sales_storage: "KT1BEZNm3E25rZtXfPPKr5Jxygbi2kL2cCEW",
+					transfer_manager: "KT1ViAbsAM5rp89yVydEkbQozp1S12zqirwS",
 					bid: "",
 					bid_storage: "",
-					sig_checker: "",
+					sig_checker: "KT1VAmfDTkcYKMZZQhwuxtCGoD1hx7v5bjZ9",
 					tzkt: "https://api.mainnet.tzkt.io",
-					dipdup: "",
-					union_api: "https://api.rarible.org/v0.1",
+					dipdup: "https://tezos-indexer.rarible.org/v1/graphql",
+					union_api: unionApiBaseUrl,
+					objkt_sales_v2: "KT1WvzYHCNBvDSdwafTHv7nJ1dWmZ8GCYuuC",
 				},
 			}
 		}
 		default: {
 			throw new Error("Unsupported tezos network for config")
 		}
+	}
+}
+
+const checkChainIdCache: Map<TezosProvider, string> = new Map()
+export async function checkChainId(provider: MaybeProvider<TezosProvider>) {
+	let walletChainId = checkChainIdCache.get(provider.tezos!)
+	if (!walletChainId) {
+		walletChainId = await provider.tezos?.chain_id()
+		checkChainIdCache.set(provider.tezos!, walletChainId!)
+	}
+
+	if (walletChainId !== provider.config.chain_id) {
+		throw new Error(`Config chainId=${provider.config.chain_id}, but wallet chainId=${walletChainId}`)
 	}
 }
 
@@ -424,6 +445,14 @@ export function convertTezosToUnionAsset(assetType: TezosClientAssetType): Asset
 	}
 }
 
+export function getCollectionTypeAssetClass(type: CollectionType.TEZOS_NFT | CollectionType.TEZOS_MT): "MT" | "NFT" {
+	switch (type) {
+		case CollectionType.TEZOS_MT: return "MT"
+		case CollectionType.TEZOS_NFT: return "NFT"
+		default: throw new Error("Unrecognized NFT collection type")
+	}
+}
+
 export function convertUnionParts(parts?: Array<Payout>): Array<Part> {
 	return parts?.map(p => ({
 		account: getTezosAddress(p.account),
@@ -532,4 +561,26 @@ export function isXtzAssetType(assetType: AssetType): assetType is TezosXTZAsset
 }
 export function isFTAssetType(assetType: AssetType): assetType is TezosFTAssetType {
 	return assetType["@type"] === "TEZOS_FT"
+}
+
+export async function getCollectionType(
+	provider: MaybeProvider<TezosProvider>, collection: string
+): Promise<CollectionType.TEZOS_NFT | CollectionType.TEZOS_MT> {
+	let response
+	try {
+		const { data } = await axios.get(`${provider.config.tzkt}/v1/contracts/${collection}/storage/schema`)
+		response = data
+	} catch (e) {
+		console.error(e)
+		throw new Error("Getting tezos collection data error")
+	}
+
+	const schema = response["schema:object"]
+	if ("ledger:big_map:object:nat" in schema) {
+		return CollectionType.TEZOS_MT
+	} else if ("ledger:big_map_flat:nat:address" in schema) {
+		return CollectionType.TEZOS_NFT
+	} else {
+		throw new Error("Unrecognized tezos collection")
+	}
 }

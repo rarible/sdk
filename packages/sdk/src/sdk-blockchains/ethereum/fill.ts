@@ -67,6 +67,14 @@ export class EthereumFill {
 				}
 				break
 			}
+			case "SEAPORT_V1": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
@@ -107,6 +115,14 @@ export class EthereumFill {
 					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.SINGLE,
 					supportsPartialFill: false,
+				}
+			}
+			case "SEAPORT_V1": {
+				const supportsPartialFill = order.data.orderType === "PARTIAL_OPEN" || order.data.orderType === "PARTIAL_RESTRICTED"
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					supportsPartialFill,
 				}
 			}
 			default:

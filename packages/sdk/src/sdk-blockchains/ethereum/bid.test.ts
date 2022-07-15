@@ -24,7 +24,7 @@ import {
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
-describe("bid", () => {
+describe.skip("bid", () => {
 	const { web31, wallet1, web32 } = initProviders({
 		pk1: undefined,
 		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
@@ -128,7 +128,7 @@ describe("bid", () => {
 		})
 	})
 
-	test("bid on erc-1155, convert to weth and update bid", async () => {
+	test.skip("bid on erc-1155, convert to weth and update bid", async () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
@@ -178,7 +178,7 @@ describe("bid", () => {
 		})
 	})
 
-	test("getConvertValue returns undefined when passed non-weth contract", async () => {
+	test.skip("getConvertValue returns undefined when passed non-weth contract", async () => {
 		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "3"
@@ -228,7 +228,7 @@ describe("bid", () => {
 		expect(value).toBe(undefined)
 	})
 
-	test("getConvertValue returns insufficient type", async () => {
+	test.skip("getConvertValue returns insufficient type", async () => {
 		const senderRaw = wallet1.getAddressString()
 
 		const tokenId = "4"
@@ -302,7 +302,7 @@ describe("bid", () => {
 		})
 	})
 
-	test("getConvertableValue returns convertable value", async () => {
+	test.skip("getConvertableValue returns convertable value", async () => {
 		const itemId = toItemId(`${Blockchain.ETHEREUM}:0x2Ac19979c171F7b626096C9eDc8Cd5C589cf110b:1`)
 
 		const bidResponse = await sdk2.order.bid({ itemId })
@@ -327,7 +327,7 @@ describe("bid", () => {
 		})
 	})
 
-	test("bid for collection", async () => {
+	test.skip("bid for collection", async () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
@@ -371,7 +371,7 @@ describe("bid", () => {
 		await fillBidResult.wait()
 	})
 
-	test("bid on erc721 <-> erc20 with CurrencyId", async () => {
+	test.skip("bid on erc721 <-> erc20 with CurrencyId", async () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()

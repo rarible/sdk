@@ -23,7 +23,7 @@ import type {
 } from "../../types/order/bid/domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
-import { extractAddress, extractPublicKey } from "./common/address-converters"
+import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
 import { getCurrencies } from "./common/currencies"
 import type { ISolanaSdkConfig } from "./domain"
@@ -74,7 +74,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: await getAuctionHouseFee(auctionHouse),
+			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			supportsExpirationDate: false,
 			submit: submit,
 		}
@@ -86,12 +86,12 @@ export class SolanaOrder {
 		}
 		const order = await getPreparedOrder(prepareRequest, this.apis)
 		const amount = getTokensAmount(order)
+		const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
 		const updateAction = Action.create({
 			id: "send-tx" as const,
 			run: async (updateRequest: OrderUpdateRequest) => {
 				const mint = getMintId(order)
-				const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
 				await (await this.sdk.order.sell({
 					auctionHouse: auctionHouse,
@@ -115,7 +115,7 @@ export class SolanaOrder {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
 			supportedCurrencies: getCurrencies(),
-			baseFee: await getAuctionHouseFee(extractAddress(getOrderData(order).auctionHouse!)),
+			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			submit: updateAction,
 		}
 	}

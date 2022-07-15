@@ -1,14 +1,14 @@
 import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { TezosNetwork } from "@rarible/tezos-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MetaUploader } from "../union/meta/upload-meta"
+import type { RaribleSdkConfig } from "../../config/domain"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
-import { getMaybeTezosProvider, getTezosAPIs } from "./common"
+import { getMaybeTezosProvider } from "./common"
 import { TezosMint } from "./mint"
 import { TezosTransfer } from "./transfer"
 import { TezosBurn } from "./burn"
@@ -21,14 +21,14 @@ import { TezosCanTransfer } from "./restriction"
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
 	_apis: IApisSdk,
-	network: TezosNetwork,
+	config: RaribleSdkConfig,
 ): IRaribleInternalSdk {
-	const apis = getTezosAPIs(network)
-	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network)
-	const sellService = new TezosSell(maybeProvider, apis, _apis)
-	const mintService = new TezosMint(maybeProvider, apis, network)
+	const network = config.tezosNetwork
+	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network, config)
+	const sellService = new TezosSell(maybeProvider, _apis, network)
+	const mintService = new TezosMint(maybeProvider, _apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
-	const fillService = new TezosFill(maybeProvider, apis, _apis, network)
+	const fillService = new TezosFill(maybeProvider, _apis, network)
 	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
@@ -37,9 +37,9 @@ export function createTezosSdk(
 	return {
 		nft: {
 			mint: mintService.mint,
-			burn: new TezosBurn(maybeProvider, apis, network).burn,
-			transfer: new TezosTransfer(maybeProvider, apis, network).transfer,
-			generateTokenId: new TezosTokenId(maybeProvider, apis).generateTokenId,
+			burn: new TezosBurn(maybeProvider, _apis, network).burn,
+			transfer: new TezosTransfer(maybeProvider, _apis, network).transfer,
+			generateTokenId: new TezosTokenId(maybeProvider).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
 			preprocessMeta,
@@ -53,7 +53,7 @@ export function createTezosSdk(
 			sellUpdate: sellService.update,
 			bid: notImplemented,
 			bidUpdate: notImplemented,
-			cancel: new TezosCancel(maybeProvider, apis, _apis, network).cancel,
+			cancel: new TezosCancel(maybeProvider, _apis, network).cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
