@@ -21,7 +21,6 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
-import type * as OrderCommon from "../../../types/order/common"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
 export const EVMBlockchains: EVMBlockchain[] = [
@@ -95,7 +94,7 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 				contract: convertToEthereumAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 				uri: assetType.uri,
-				supply: assetType.supply !== undefined ? toBigNumber(assetType.supply): toBigNumber("1"),
+				supply: assetType.supply !== undefined ? toBigNumber(assetType.supply) : toBigNumber("1"),
 				creators: assetType.creators.map(c => ({
 					account: convertToEthereumAddress(c.account),
 					value: toBn(c.value).toNumber(),
@@ -133,39 +132,29 @@ export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Par
 	})) || []
 }
 
-export function validateOrderDataV3Request(request: OrderCommon.OrderRequest, options?: {
-	shouldProvideMaxFeesBasePoint?: boolean
-}) {
-	if (options?.shouldProvideMaxFeesBasePoint && (!request.maxFeesBasePoint || request.maxFeesBasePoint <= 0)) {
-		throw new Error("maxFeesBasePoint should be specified in request and should be more than 0")
-	}
-	if (request.payouts && request.payouts.length > 1) {
-		throw new Error("Only 1 payout account maximum supported")
-	}
-	if (request.originFees && request.originFees.length > 2) {
-		throw new Error("Only 2 origin accounts maximum supported")
-	}
-}
-
 export function getOriginFeesSum(originFees: Array<Part>): number {
 	return originFees.reduce((acc, fee) => fee.value, 0)
 }
 
 export function getOrderFeesSum(order: Order): number {
 	switch (order.data.dataType) {
-		case "LEGACY": return order.data.fee
-		case "RARIBLE_V2_DATA_V1": return getOriginFeesSum(order.data.originFees)
-		case "RARIBLE_V2_DATA_V2": return getOriginFeesSum(order.data.originFees)
-		default: throw new Error("Unexpected order dataType")
+		case "LEGACY":
+			return order.data.fee
+		case "RARIBLE_V2_DATA_V1":
+			return getOriginFeesSum(order.data.originFees)
+		case "RARIBLE_V2_DATA_V2":
+			return getOriginFeesSum(order.data.originFees)
+		default:
+			throw new Error("Unexpected order dataType")
 	}
 }
 
 export function getOriginFeeSupport(type: "RARIBLE_V1" | "RARIBLE_V2"): OriginFeeSupport {
 	switch (type) {
 		case "RARIBLE_V1":
-			return  OriginFeeSupport.AMOUNT_ONLY
+			return OriginFeeSupport.AMOUNT_ONLY
 		case "RARIBLE_V2":
-			return  OriginFeeSupport.FULL
+			return OriginFeeSupport.FULL
 		default:
 			throw new Error("Unknown order type " + type)
 	}
@@ -207,7 +196,13 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 	}
 }
 
-export function getSupportedCurrencies(blockchain: EVMBlockchain = Blockchain.ETHEREUM): CurrencyType[] {
+export function getSupportedCurrencies(
+	blockchain: EVMBlockchain = Blockchain.ETHEREUM,
+	forBids: boolean = false,
+): CurrencyType[] {
+	if (forBids) {
+		return [{ blockchain, type: "ERC20" }]
+	}
 	return [
 		{ blockchain, type: "NATIVE" },
 		{ blockchain, type: "ERC20" },
@@ -224,7 +219,7 @@ export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain
 }
 
 export function convertToEthereumAddress(
-	contractAddress: UnionAddress | ContractAddress | CollectionId
+	contractAddress: UnionAddress | ContractAddress | CollectionId,
 ): Address {
 	if (!isRealBlockchainSpecified(contractAddress)) {
 		throw new Error("Not a union or contract address: " + contractAddress)
@@ -281,3 +276,5 @@ export function getEthereumItemId(itemId: ItemId) {
 		domain,
 	}
 }
+
+export * from "./validators"

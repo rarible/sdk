@@ -42,7 +42,7 @@ export function createEthereumSdk(
 	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network, config)
 	const mintService = new EthereumMint(sdk, apis, network)
-	const fillerService = new EthereumFill(sdk, wallet, network)
+	const fillerService = new EthereumFill(sdk, wallet, network, config)
 	const createCollectionService = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)

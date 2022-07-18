@@ -54,8 +54,12 @@ export interface FillRequest {
 	 * ItemId for fill collection order
 	 */
 	itemId?: ItemId
-	/*
-  * Unwrap tokens on accept bid
+	/**
+	 * Max fees value. Should be greater than 0. If required and not provided, will throw Error
+	 */
+	maxFeesBasePoint?: number,
+	/**
+   * Unwrap tokens on accept bid
    */
 	unwrap?: boolean
 }

@@ -25,7 +25,7 @@
     "@rarible/api-client": "0.0.13-beta10",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/logger": "~0.6.2",
-    "@rarible/protocol-ethereum-sdk": "~0.12.77",
+    "@rarible/protocol-ethereum-sdk": "file://Users/rzcoder/work/ethereum-sdk/packages/sdk",
     "@rarible/sdk-transaction": "^0.9.11-beta.17",
     "@rarible/sdk-wallet": "^0.9.11-beta.17",
     "@rarible/solana-sdk": "^0.9.11-beta.17",

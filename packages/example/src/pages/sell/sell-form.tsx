@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import { PrepareOrderResponse } from "@rarible/sdk/build/types/order/common"
+import { MaxFeesBasePointSupport } from "@rarible/sdk/build/types/order/fill/domain"
 import { toBigNumber } from "@rarible/types"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -29,11 +30,17 @@ export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 					return
 				}
 
+				let maxFeesBasePoint: number | undefined = undefined
+				if (prepare.maxFeesBasePointSupport === MaxFeesBasePointSupport.REQUIRED) {
+					maxFeesBasePoint = 1000
+				}
+
 				try {
 					onComplete(await prepare.submit({
 						price: toBigNumber(formData.price),
 						amount: parseInt(formData.amount),
-						currency: getCurrency(prepare.supportedCurrencies[0])
+						currency: getCurrency(prepare.supportedCurrencies[0]),
+						maxFeesBasePoint,
 					}))
 				} catch (e) {
 					setError(e)

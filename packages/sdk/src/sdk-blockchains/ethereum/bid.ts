@@ -41,7 +41,8 @@ import {
 	getOrderFeesSum,
 	getOriginFeeSupport,
 	getPayoutsSupport,
-	isEVMBlockchain, validateOrderDataV3Request,
+	isEVMBlockchain,
+	validateOrderDataV3Request,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 import type { IEthereumSdkConfig } from "./domain"
@@ -229,7 +230,7 @@ export class EthereumBid {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(),
+			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
 			multiple: collection.type === "ERC1155",
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
@@ -317,7 +318,7 @@ export class EthereumBid {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(),
+			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
 			multiple: collection.type === "ERC1155",
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
@@ -454,7 +455,7 @@ export class EthereumBid {
 			originFeeSupport: getOriginFeeSupport(order.type),
 			payoutsSupport: getPayoutsSupport(order.type),
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(),
+			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			getConvertableValue: this.getConvertableValue,
 			submit: sellUpdateAction,

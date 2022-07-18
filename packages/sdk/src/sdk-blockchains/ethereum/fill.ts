@@ -1,7 +1,12 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber } from "@rarible/types"
-import type { FillOrderAction, FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import { toAddress, toBigNumber, toWord } from "@rarible/types"
+import type {
+	FillOrderAction,
+	FillOrderRequest,
+	RaribleV2OrderFillRequestV3Buy,
+	RaribleV2OrderFillRequestV3Sell,
+} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
@@ -12,7 +17,14 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId, toEthereumParts } from "./common"
+import {
+	convertOrderIdToEthereumHash,
+	convertToEthereumAddress,
+	getEthereumItemId,
+	toEthereumParts,
+	validateOrderDataV3Request,
+} from "./common"
+import type { IEthereumSdkConfig } from "./domain"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
@@ -28,6 +40,7 @@ export class EthereumFill {
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
+		private config?: IEthereumSdkConfig
 	) {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
@@ -56,6 +69,21 @@ export class EthereumFill {
 					infinite: fillRequest.infiniteApproval,
 					payouts: toEthereumParts(fillRequest.payouts),
 					originFees: toEthereumParts(fillRequest.originFees),
+				}
+
+				switch (order.data.dataType) {
+					case "RARIBLE_V2_DATA_V3_BUY":
+						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: true });
+						(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!;
+						(request as RaribleV2OrderFillRequestV3Sell).marketplaceMarker =
+							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
+						break
+					case "RARIBLE_V2_DATA_V3_SELL":
+						(request as RaribleV2OrderFillRequestV3Buy).marketplaceMarker =
+							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
+						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: false })
+						break
+					default:
 				}
 				break
 			}
@@ -106,11 +134,29 @@ export class EthereumFill {
 				}
 			}
 			case "RARIBLE_V2": {
-				return {
-					originFeeSupport: OriginFeeSupport.FULL,
-					payoutsSupport: PayoutsSupport.MULTIPLE,
-					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-					supportsPartialFill: true,
+				switch (order.data.dataType) {
+					case "RARIBLE_V2_DATA_V3_BUY":
+						return {
+							originFeeSupport: OriginFeeSupport.FULL,
+							payoutsSupport: PayoutsSupport.SINGLE,
+							maxFeesBasePointSupport: MaxFeesBasePointSupport.REQUIRED,
+							supportsPartialFill: true,
+						}
+					case "RARIBLE_V2_DATA_V3_SELL":
+						return {
+							originFeeSupport: OriginFeeSupport.FULL,
+							payoutsSupport: PayoutsSupport.SINGLE,
+							maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+							supportsPartialFill: true,
+						}
+					case "RARIBLE_V2_DATA_V2":
+					default:
+						return {
+							originFeeSupport: OriginFeeSupport.FULL,
+							payoutsSupport: PayoutsSupport.MULTIPLE,
+							maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+							supportsPartialFill: true,
+						}
 				}
 			}
 			case "OPEN_SEA_V1": {
