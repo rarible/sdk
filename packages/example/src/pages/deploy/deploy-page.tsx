@@ -31,6 +31,7 @@ function getDeployRequest(data: Record<string, any>) {
 						baseURI: data["baseURI"],
 						contractURI: data["contractURI"],
 						isUserToken: !!data["private"],
+						operators: []
 					},
 				},
 			} as CreateCollectionRequest
