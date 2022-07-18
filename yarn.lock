@@ -4422,10 +4422,10 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-common@^0.1.27":
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.27.tgz#eecbacc056e17d7696126b4bff96fb75a38ae0cb"
-  integrity sha512-V7xvJBQvC42uoVa6FlCAfxSycmaq9/jRdoAcDB5NKWaoUFe0DPTLtO8a88xuHUQtqS93SKCWmMn5kX1yA2uSKA==
+"@rarible/tezos-common@^0.1.29":
+  version "0.1.29"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.29.tgz#d16b40767fa186b0d2a415b6c309362eae3f0799"
+  integrity sha512-utAN64EGH2OG40F9jE/NVHEKDq3BQtgBWdw/Xj+9ES5QjNvMupHsIqNrHkCtB6PJFfow/vH3mEjN5Ty3IDF54w==
   dependencies:
     "@taquito/taquito" "^12.0.0"
     bignumber.js "^9.0.1"
@@ -4433,23 +4433,23 @@
     node-fetch "2.6.7"
     text-encoder "^0.0.4"
 
-"@rarible/tezos-contracts@^0.1.27":
-  version "0.1.27"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.27.tgz#d1e37621cce4f151e1cc9ce6749c113f851e7569"
-  integrity sha512-36Yg+wgfeQvJbzzBZlPFu0l0ikZevaPezhAKPw9lCxX+jXd81QA6Vkw5SVcomXkJYUO0mFS1C9ljG0P9FZ3Wcg==
+"@rarible/tezos-contracts@^0.1.29":
+  version "0.1.29"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.29.tgz#7c6b14fd271dc0dd9d371d1d8efb1dcb38bc5370"
+  integrity sha512-sRlSFEbf7KYoAY7MhdYY1tkyg710/weXQa1kXuIw66McJyRliChVxDIQAeMzNMpiXYs4V64uRtNXfStSHqFSSA==
   dependencies:
-    "@rarible/tezos-common" "^0.1.27"
+    "@rarible/tezos-common" "^0.1.29"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.28", "@rarible/tezos-sdk@~0.1.28":
-  version "0.1.28"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.28.tgz#3edff1f7bc03c954b69b0ceb47491316b100acb5"
-  integrity sha512-1m5WfYfvgGB2C9rAUcdhhG4z8PhfYCv65VIZ/avoEf9DBnY4Ae/Nk2oBsYZA1jQixq+CLqWFqBHP90iuxoENrg==
+"@rarible/tezos-sdk@0.1.29", "@rarible/tezos-sdk@~0.1.29":
+  version "0.1.29"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.29.tgz#683b87da590b416acc798eb080f33ac1644980a3"
+  integrity sha512-Hm6Ro2ahYM03pUpTj9Ln8O+s2mgQxhEHePr67meDhrEzhsBWvCPfecD/dz/4s8Lqmcdl1xgCx8UPU5QZqU8YbQ==
   dependencies:
     "@airgap/beacon-sdk" "2.3.13"
     "@genql/runtime" "2.10.0"
-    "@rarible/tezos-common" "^0.1.27"
-    "@rarible/tezos-contracts" "^0.1.27"
+    "@rarible/tezos-common" "^0.1.29"
+    "@rarible/tezos-contracts" "^0.1.29"
     "@taquito/beacon-wallet" "12.0.3"
     "@taquito/signer" "^12.0.0"
     "@taquito/taquito" "^12.0.0"
