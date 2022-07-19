@@ -21,16 +21,18 @@ import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
+	isLazy: boolean,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	collectionId: string,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	currency: string,
-	sellRequest: (currency: RequestCurrency) => Promise<OrderRequest>
+	sellRequest: (currency: RequestCurrency) => Promise<OrderRequest>,
 }[] {
 	return [
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721 <=> ETH",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -60,6 +62,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721 <=> ERC20",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -89,6 +92,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721_lazy <=> ETH",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -118,6 +122,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721_lazy <=> ERC20",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -147,6 +152,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155 <=> ETH",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -176,6 +182,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155 <=> ERC20",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -205,6 +212,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155_lazy <=> ETH",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -234,6 +242,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155_lazy <=> ERC20",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -286,8 +295,12 @@ describe.each(suites())("$blockchain mint => sell => cancel", (suite) => {
 
 		await cancel(sellerSdk, sellerWallet, { orderId: sellOrder.id })
 
+		const NORMAL_ACTIVITIES = [ActivityType.LIST, ActivityType.MINT, ActivityType.CANCEL_LIST]
+		const LAZY_ACTIVITIES = [ActivityType.LIST, ActivityType.CANCEL_LIST] // lazy items dont mint onchain
+
 		await getActivitiesByItem(sellerSdk, nft.id,
 			[ActivityType.MINT, ActivityType.LIST, ActivityType.CANCEL_LIST],
-			[ActivityType.LIST, ActivityType.MINT, ActivityType.CANCEL_LIST])
+			suite.isLazy ? LAZY_ACTIVITIES : NORMAL_ACTIVITIES
+		)
 	})
 })

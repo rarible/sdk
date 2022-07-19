@@ -3,6 +3,7 @@ import type { UnionAddress } from "@rarible/types"
 import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { retry } from "@rarible/sdk/src/common/retry"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -152,7 +153,7 @@ function suites(): {
 	]
 }
 
-describe.each(suites())("$blockchain deploy => mint", (suite) => {
+describe.each(suites()/*.filter((t) => t.description === "ERC1155")*/)("$blockchain deploy => mint", (suite) => {
 	const wallet = suite.wallet
 	const sdk = createSdk(suite.blockchain, wallet)
 
@@ -161,17 +162,22 @@ describe.each(suites())("$blockchain deploy => mint", (suite) => {
 		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 		const collection = await getCollection(sdk, address)
 
-		const collectionsAll = await getAllCollections(sdk, [suite.blockchain], 10)
-		await verifyCollectionsByBlockchain(collectionsAll, suite.blockchain)
-		await verifyCollectionsContainsCollection(collectionsAll, address)
+		await retry(5, 2000, async () => {
+			const collectionsAll = await getAllCollections(sdk, [suite.blockchain], 10)
+			await verifyCollectionsByBlockchain(collectionsAll, suite.blockchain)
+			await verifyCollectionsContainsCollection(collectionsAll, address)
+		})
 
-		const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
-		await verifyCollectionsByBlockchain(collectionsByOwner, suite.blockchain)
-		await verifyCollectionsOwner(collectionsByOwner, suite.blockchain)
-		await verifyCollectionsContainsCollection(collectionsByOwner, address)
+		await retry(5, 2000, async () => {
+			const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
+			await verifyCollectionsByBlockchain(collectionsByOwner, suite.blockchain)
+			await verifyCollectionsOwner(collectionsByOwner, walletAddress.unionAddress)
+			await verifyCollectionsContainsCollection(collectionsByOwner, address)
+		})
 
 		const { nft } = await mint(sdk, wallet, { collection },
-			suite.mintRequest(walletAddress.unionAddress))
+			suite.mintRequest(walletAddress.unionAddress)
+		)
 
 		await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
 	})

@@ -40,8 +40,11 @@ export async function getItemByIdRaw(sdk: IRaribleSdk,
 }
 
 
-export async function getAllItems(sdk: IRaribleSdk, blockchains: Array<Blockchain>,
-	size: number): Promise<Items> {
+export async function getAllItems(
+	sdk: IRaribleSdk,
+	blockchains: Array<Blockchain>,
+	size: number
+): Promise<Items> {
 	const items = await retry(10, 2000, async () => {
 		return await sdk.apis.item.getAllItems({
 			blockchains: blockchains,
