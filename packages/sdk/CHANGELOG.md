@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.20](https://github.com/rarible/sdk/compare/v0.9.11-beta.19...v0.9.11-beta.20) (2022-07-19)
+
+
+### Bug Fixes
+
+* tezos addresses ([dda2ef0](https://github.com/rarible/sdk/commit/dda2ef09890ca4a4c374476c29e787dcdff17920))
+
+
+
+
+
 ## [0.9.11-beta.19](https://github.com/rarible/sdk/compare/v0.9.11-beta.18...v0.9.11-beta.19) (2022-07-18)
 
 
