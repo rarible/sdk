@@ -8,8 +8,6 @@ import type {
 	GetCollectionsByOwnerResponse,
 } from "@rarible/api-client"
 import type { Collections } from "@rarible/api-client/build/models"
-import { Logger } from "../logger"
-
 
 export async function getCollectionById(sdk: IRaribleSdk, collectionId: string): Promise<Collection> {
 	const collection = await retry(15, 3000, async () => {

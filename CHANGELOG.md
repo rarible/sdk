@@ -3,6 +3,36 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.19](https://github.com/rarible/sdk/compare/v0.9.11-beta.18...v0.9.11-beta.19) (2022-07-18)
+
+
+### Bug Fixes
+
+* tezos sales adresses ([d28a3bd](https://github.com/rarible/sdk/commit/d28a3bde6e69c0daff8f905746b61f2bc6f95e44))
+
+
+
+
+
+## [0.9.11-beta.18](https://github.com/rarible/sdk/compare/v0.9.11-beta.17...v0.9.11-beta.18) (2022-07-18)
+
+
+### Bug Fixes
+
+* tezos royalties ([a4b7f6b](https://github.com/rarible/sdk/commit/a4b7f6bc27649928b0dd3d4e2e5feb7e89931367))
+
+
+
+
+
+## [0.9.11-beta.17](https://github.com/rarible/sdk/compare/v0.9.11-beta.16...v0.9.11-beta.17) (2022-07-15)
+
+**Note:** Version bump only for package root
+
+
+
+
+
 ## [0.9.11-beta.16](https://github.com/rarible/sdk/compare/v0.9.11-beta.15...v0.9.11-beta.16) (2022-07-15)
 
 

@@ -1,4 +1,3 @@
-import type { Blockchain } from "@rarible/api-client"
 import { e2eTestsConfig } from "./config/e2e"
 import { developmentTestsConfig } from "./config/development"
 
