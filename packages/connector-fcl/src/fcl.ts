@@ -87,6 +87,6 @@ export class FclConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const instance = await this.instance.pipe(first()).toPromise()
-		return !!instance.currentUser()
+		return !!instance?.currentUser()
 	}
 }

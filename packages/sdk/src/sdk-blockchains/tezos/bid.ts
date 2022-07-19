@@ -36,7 +36,9 @@ import {
 	getTezosItemData,
 	getTezosOrderId,
 	convertTezosOrderId,
-	convertTezosToContractAddress, getRequestAmount,
+	convertTezosToContractAddress,
+	getRequestAmount,
+	checkChainId, getCollectionType,
 } from "./common"
 import type { TezosBalance } from "./balance"
 
@@ -81,6 +83,8 @@ export class TezosBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		await checkChainId(this.provider)
+
 		if ("collectionId" in prepare) {
 			throw new Error("Bid collection is not supported")
 		}
@@ -99,6 +103,7 @@ export class TezosBid {
 				const provider = getRequiredProvider(this.provider)
 				const makerPublicKey = await getMakerPublicKey(provider)
 				const requestCurrency = getCurrencyAssetType(request.currency)
+				const collectionType = await getCollectionType(this.provider, contract)
 
 				const order: TezosOrder = await bid(
 					provider,
@@ -106,7 +111,7 @@ export class TezosBid {
 						maker: pk_to_pkh(makerPublicKey),
 						maker_edpk: makerPublicKey,
 						make_asset_type: this.getMakeAssetType(requestCurrency),
-						amount: getRequestAmount(request.amount, itemCollection),
+						amount: getRequestAmount(request.amount, collectionType) || new BigNumber(1),
 						take_asset_type: {
 							asset_class: itemCollection.type,
 							contract: item.contract,
@@ -141,6 +146,8 @@ export class TezosBid {
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {
+		await checkChainId(this.provider)
+
 		const orderId = getTezosOrderId(request.orderId)
 
 		const order = await this.apis.order.getOrderByHash({ hash: orderId })

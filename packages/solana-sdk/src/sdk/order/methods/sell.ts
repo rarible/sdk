@@ -1,6 +1,7 @@
+import BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
+import type { BigNumberValue } from "@rarible/utils"
 import type { IWalletSigner } from "@rarible/solana-wallet"
-import { BN } from "@project-serum/anchor"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
 import { getMetadata, getAssociatedTokenAccountForMint, getPriceWithMantissa } from "../../../common/helpers"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
@@ -9,15 +10,16 @@ import {
 	getAuctionHouseTradeState,
 	loadAuctionHouseProgram,
 } from "../../../common/auction-house-helpers"
+import { bigNumToBn } from "../../../common/utils"
 
 export interface IActionHouseSellRequest {
 	connection: Connection
 	auctionHouse: PublicKey
 	signer: IWalletSigner
 	mint: PublicKey
-	price: number
+	price: BigNumberValue
 	// tokens amount to sell
-	tokensAmount: number
+	tokensAmount: BigNumberValue
 }
 
 export async function getAuctionHouseSellInstructions(
@@ -26,22 +28,18 @@ export async function getAuctionHouseSellInstructions(
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
-	const buyPriceAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.price,
-			auctionHouseObj.treasuryMint,
-			request.signer,
-			anchorProgram,
-		)
+	const buyPriceAdjusted = await getPriceWithMantissa(
+		request.connection,
+		new BigNumber(request.price),
+		auctionHouseObj.treasuryMint,
+		request.signer,
 	)
 
-	const tokenSizeAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.tokensAmount,
-			request.mint,
-			request.signer,
-			anchorProgram,
-		)
+	const tokenSizeAdjusted = await getPriceWithMantissa(
+		request.connection,
+		new BigNumber(request.tokensAmount),
+		request.mint,
+		request.signer,
 	)
 
 	const tokenAccountKey = (
@@ -49,8 +47,6 @@ export async function getAuctionHouseSellInstructions(
 	)[0]
 
 	const [programAsSigner, programAsSignerBump] = await getAuctionHouseProgramAsSigner()
-
-	// const metadata = await getMetadata(request.mint);
 
 	const [tradeState, tradeBump] = await getAuctionHouseTradeState(
 		request.auctionHouse,
@@ -69,7 +65,7 @@ export async function getAuctionHouseSellInstructions(
 		auctionHouseObj.treasuryMint,
 		request.mint,
 		tokenSizeAdjusted,
-		new BN(0),
+		new BigNumber(0),
 	)
 
 	const signers: any[] = []
@@ -88,8 +84,8 @@ export async function getAuctionHouseSellInstructions(
 		tradeStateBump: tradeBump,
 		freeTradeStateBump: freeTradeBump,
 		programAsSignerBump: programAsSignerBump,
-		buyerPrice: buyPriceAdjusted,
-		tokenSize: tokenSizeAdjusted,
+		buyerPrice: bigNumToBn(buyPriceAdjusted),
+		tokenSize: bigNumToBn(tokenSizeAdjusted),
 	})
 
 	instruction.keys

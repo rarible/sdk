@@ -6,14 +6,15 @@ import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	IBalanceSdk,
-	IEthereumSdk, INftBasicSdk,
+	IEthereumSdk,
+	INftBasicSdk,
 	INftSdk,
 	IOrderInternalSdk,
 	IRaribleInternalSdk,
 } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import type { PrepareMintResponse } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse } from "../../types/nft/mint/prepare"
 import { getCollectionId } from "../../index"
 import type { PrepareTransferRequest, PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
@@ -27,11 +28,11 @@ import type { PrepareBidRequest, PrepareBidResponse, PrepareBidUpdateResponse } 
 import { Middlewarer } from "../../common/middleware/middleware"
 import type {
 	ConvertRequest,
-	IDepositBiddingBalance,
+	CurrencyOrOrder,
 	GetBiddingBalanceRequest,
+	IDepositBiddingBalance,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
-import type { CurrencyOrOrder } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
@@ -46,12 +47,13 @@ import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
-import type { OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
+import type { OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
 import type { IMintSimplified } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { BurnResponse } from "../../types/nft/burn/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
+import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
 	ethereum: IRaribleInternalSdk,
@@ -59,6 +61,7 @@ export function createUnionSdk(
 	tezos: IRaribleInternalSdk,
 	polygon: IRaribleInternalSdk,
 	solana: IRaribleInternalSdk,
+	immutablex: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		nftBasic: new UnionNftBasicSdk({
@@ -67,6 +70,7 @@ export function createUnionSdk(
 			TEZOS: tezos.nftBasic,
 			POLYGON: polygon.nftBasic,
 			SOLANA: solana.nftBasic,
+			IMMUTABLEX: immutablex.nftBasic,
 		}),
 		orderBasic: new UnionOrderBasicSdk({
 			ETHEREUM: ethereum.orderBasic,
@@ -74,6 +78,7 @@ export function createUnionSdk(
 			TEZOS: tezos.orderBasic,
 			POLYGON: polygon.orderBasic,
 			SOLANA: solana.orderBasic,
+			IMMUTABLEX: immutablex.orderBasic,
 		}),
 		balances: new UnionBalanceSdk({
 			ETHEREUM: ethereum.balances,
@@ -81,6 +86,7 @@ export function createUnionSdk(
 			TEZOS: tezos.balances,
 			POLYGON: polygon.balances,
 			SOLANA: solana.balances,
+			IMMUTABLEX: immutablex.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
@@ -88,6 +94,7 @@ export function createUnionSdk(
 			TEZOS: tezos.nft,
 			POLYGON: polygon.nft,
 			SOLANA: solana.nft,
+			IMMUTABLEX: immutablex.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
@@ -95,6 +102,7 @@ export function createUnionSdk(
 			TEZOS: tezos.order,
 			POLYGON: polygon.order,
 			SOLANA: solana.order,
+			IMMUTABLEX: immutablex.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
@@ -102,6 +110,7 @@ export function createUnionSdk(
 			TEZOS: tezos.restriction,
 			POLYGON: polygon.restriction,
 			SOLANA: solana.restriction,
+			IMMUTABLEX: immutablex.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 	}
@@ -211,7 +220,7 @@ class UnionNftBasicSdk implements Omit<INftBasicSdk, "mintAndSell"> {
 	// eslint-disable-next-line no-dupe-class-members
 	mint(request: MintSimplifiedRequest): Promise<OnChainMintResponse | OffChainMintResponse> {
 		const collectionId = getCollectionId(request)
-		return this.instances[extractBlockchain(collectionId)].mint(request as Parameters<IMintSimplified["mintStart"]>[0])
+		return this.instances[extractBlockchain(collectionId)].mint(request as Parameters<IMintSimplified["mint"]>[0])
 	}
 
 	burn(request: BurnSimplifiedRequest): Promise<BurnResponse> {
@@ -242,10 +251,15 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 		this.transfer = this.transfer.bind(this)
 		this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
 		this.generateTokenId = this.generateTokenId.bind(this)
+		this.uploadMeta = this.uploadMeta.bind(this)
 	}
 
 	burn(request: PrepareBurnRequest): Promise<PrepareBurnResponse> {
 		return this.instances[extractBlockchain(request.itemId)].burn(request)
+	}
+
+	uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
+		return this.instances[extractBlockchain(request.accountAddress)].uploadMeta(request)
 	}
 
 	mint(request: PrepareMintRequest): Promise<PrepareMintResponse> {

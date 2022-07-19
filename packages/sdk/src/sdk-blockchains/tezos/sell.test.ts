@@ -1,26 +1,31 @@
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
+import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { awaitForOrder } from "./test/await-for-order"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
 import { createTestWallet } from "./test/test-wallet"
+import { getTestContract } from "./test/test-contracts"
 
 describe.skip("sell test", () => {
+	const env: RaribleSdkEnvironment = "staging"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj")
-	const sellerSdk = createRaribleSdk(sellerWallet, "development", { logs: LogsLevel.DISABLED })
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
+	)
+	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx"
-	let mtContract: string = "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC"
+	const nftContract: string = getTestContract(env, "nftContract")
+	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -31,7 +36,7 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sellerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(sellerSdk, mintResult.itemId, "1")
 
 		const sellAction = await sellerSdk.order.sell({
 			itemId: mintResult.itemId,
@@ -49,14 +54,11 @@ describe.skip("sell test", () => {
 			}],
 		})
 
-		console.log("before await order", orderId)
 		await awaitForOrder(sellerSdk, orderId)
-		console.log("before sell update", orderId)
 		const updateAction = await sellerSdk.order.sellUpdate({
 			orderId,
 		})
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
-		console.log("after sell update", createdOrderId)
 
 		await retry(10, 2000, async () => {
 			const updatedOrder = await sellerSdk.apis.order.getOrderById({
@@ -67,9 +69,8 @@ describe.skip("sell test", () => {
 	}, 1500000)
 
 	test("sell MT test", async () => {
-		const sellerAddress = await sellerWallet.provider.address()
 		const mintResponse = await sellerSdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -80,9 +81,8 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitForItemSupply(sellerSdk, mintResult.itemId, "10")
+		await awaitItemSupply(sellerSdk, mintResult.itemId, "10")
 
-		console.log("item", mintResult.itemId)
 		const sellAction = await sellerSdk.order.sell({
 			itemId: mintResult.itemId,
 		})
@@ -93,14 +93,8 @@ describe.skip("sell test", () => {
 			currency: {
 				"@type": "XTZ",
 			},
-			payouts: [{
-				account: toUnionAddress(`TEZOS:${sellerAddress}`),
-				value: 10000,
-			}],
 		})
-		const order = await awaitForOrder(sellerSdk, orderId)
-
-		console.log("order", order)
+		await awaitForOrder(sellerSdk, orderId)
 
 	}, 2900000)
 

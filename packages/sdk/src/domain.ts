@@ -4,14 +4,8 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import type { IMint } from "./types/nft/mint/domain"
-import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
-import type { IFill } from "./types/order/fill/domain"
-import type { IBurn } from "./types/nft/burn/domain"
-import type { ITransfer } from "./types/nft/transfer/domain"
-import type { IBid, IBidUpdate } from "./types/order/bid/domain"
-import type { IMintAndSell } from "./types/nft/mint-and-sell/domain"
-import type { ICancel } from "./types/order/cancel/domain"
+import type { IUploadMeta } from "./types/nft/mint/prepare"
+import type { ISellInternal } from "./types/order/sell/domain"
 import type {
 	IDepositBiddingBalance,
 	IGetBiddingBalance,
@@ -20,7 +14,6 @@ import type {
 	IWithdrawBiddingBalance,
 } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
-import type { ICreateCollection } from "./types/nft/deploy/domain"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
@@ -29,7 +22,7 @@ import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 import type { ICreateCollectionSimplified } from "./types/nft/deploy/simplified"
 import type { IMintSimplified } from "./types/nft/mint/simplified"
-import type { IMintAndSellBasic } from "./types/nft/mint-and-sell/simplified"
+import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
 import type { ISellSimplified } from "./types/order/sell/simplified"
 import type { IBurnSimplified } from "./types/nft/burn/simplified"
 import type { IBidSimplified } from "./types/order/bid/simplified"
@@ -38,6 +31,16 @@ import type { ICancelSimplified } from "./types/order/cancel/simplified"
 import type { IBuySimplified, IAcceptBidSimplified } from "./types/order/fill/simplified"
 import type { ITransferSimplified } from "./types/nft/transfer/simplified"
 import type { ISellUpdateSimplified } from "./types/order/sell/simplified"
+import type { IMint } from "./types/nft/mint"
+import type { IMintAndSell } from "./types/nft/mint-and-sell"
+import type { ITransfer } from "./types/nft/transfer"
+import type { IBurn } from "./types/nft/burn"
+import type { ICreateCollection } from "./types/nft/deploy"
+import type { ISell } from "./types/order/sell"
+import type { ISellUpdate } from "./types/order/sell"
+import type { IAcceptBid, IBuy, IFill } from "./types/order/fill"
+import type { IBid, IBidUpdate } from "./types/order/bid"
+import type { ICancel } from "./types/order/cancel"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -66,9 +69,7 @@ export interface IRaribleSdkConfig {
 export interface IRaribleSdk {
 	apis: IApisSdk
 	nft: INftSdk
-	nftBasic: INftBasicSdk
 	order: IOrderSdk
-	orderBasic: IOrderBasicSdk
 	balances: IBalanceSdk
 	restriction: IRestrictionSdk
 	wallet: Maybe<BlockchainWallet>
@@ -97,13 +98,7 @@ export interface INftSdk {
    */
 	deploy: ICreateCollection
 	createCollection: ICreateCollection
-}
-
-export interface INftBasicSdk {
-	mint: IMintSimplified["mintStart"]
-	transfer: ITransferSimplified
-	burn: IBurnSimplified
-	createCollection: ICreateCollectionSimplified
+	uploadMeta: IUploadMeta
 }
 
 export interface IOrderSdk {
@@ -113,22 +108,11 @@ export interface IOrderSdk {
 	 * @deprecated Use {@link buy} or {@link acceptBid} instead
 	 */
 	fill: IFill
-	buy: IFill
-	acceptBid: IFill
+	buy: IBuy
+	acceptBid: IAcceptBid
 	bid: IBid
 	bidUpdate: IBidUpdate
 	cancel: ICancel
-}
-
-export interface IOrderBasicSdk {
-	sell: ISellSimplified
-	sellUpdate: ISellUpdateSimplified
-	mintAndSell: IMintAndSellBasic["mintAndSell"]
-	buy: IBuySimplified
-	acceptBid: IAcceptBidSimplified
-	bid: IBidSimplified
-	bidUpdate: IBidUpdateSimplified
-	cancel: ICancelSimplified
 }
 
 export interface IBalanceSdk {
@@ -145,11 +129,10 @@ export interface IEthereumSdk {
 	unwrapCryptoPunk: ICryptopunkUnwrap,
 }
 
-export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet" | "orderBasic"> & {
+export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {
 	nft: INftInternalSdk
 	order: IOrderInternalSdk
 	balances: IBalanceSdk
-	orderBasic: IOrderBasicInternalSdk
 }
 
 export type INftInternalSdk = Omit<INftSdk, "mintAndSell"> & {
@@ -159,5 +142,3 @@ export type INftInternalSdk = Omit<INftSdk, "mintAndSell"> & {
 export type IOrderInternalSdk = Omit<IOrderSdk, "sell"> & {
 	sell: ISellInternal
 }
-
-export type IOrderBasicInternalSdk = Omit<IOrderBasicSdk, "mintAndSell">

@@ -10,10 +10,10 @@ import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transac
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { awaitItem } from "../../common/test/await-item"
+import { awaitStock } from "../../common/test/await-stock"
 import { initProvider, initProviders } from "./test/init-providers"
-import { awaitStock } from "./test/await-stock"
 import {
 	convertEthereumCollectionId,
 	convertEthereumContractAddress,
@@ -24,7 +24,7 @@ import {
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
-describe("bid", () => {
+describe.skip("bid", () => {
 	const { web31, wallet1, web32 } = initProviders({
 		pk1: undefined,
 		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",

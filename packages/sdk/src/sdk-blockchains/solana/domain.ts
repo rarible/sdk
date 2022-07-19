@@ -9,6 +9,7 @@ export type SolanaAuctionHouseMapping = Record<string, {
 
 export interface ISolanaSdkConfig {
 	auctionHouseMapping?: SolanaAuctionHouseMapping
+	endpoint?: string
 }
 
 export interface ISolanaTokenMetadata extends CommonTokenMetadata {

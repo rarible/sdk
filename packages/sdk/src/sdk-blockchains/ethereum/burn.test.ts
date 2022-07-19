@@ -4,12 +4,12 @@ import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { awaitItem } from "../../common/test/await-item"
+import { awaitItemSupply } from "../../common/test/await-item-supply"
+import { awaitDeletedItem } from "../../common/test/await-deleted-item"
 import { initProviders } from "./test/init-providers"
-import { awaitItemSupply } from "./test/await-item-supply"
 import { convertEthereumContractAddress } from "./common"
-import { awaitDeletedItem } from "./test/await-deleted-item"
 
 describe("burn", () => {
 	const { web31, wallet1 } = initProviders()

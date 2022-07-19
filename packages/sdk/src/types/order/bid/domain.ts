@@ -30,8 +30,8 @@ export type GetConvertableValueResult = {
 	value: BigNumberValue
 } | undefined
 
-export type IBid = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
-export type IBidUpdate = (request: PrepareOrderUpdateRequest) => Promise<PrepareBidUpdateResponse>
+export type IBidPrepare = (request: PrepareBidRequest) => Promise<PrepareBidResponse>
+export type IBidUpdatePrepare = (request: PrepareOrderUpdateRequest) => Promise<PrepareBidUpdateResponse>
 export type PrepareBidRequest = PrepareOrderRequest | { collectionId: CollectionId }
 
 export type ConvertCurrencyRequest = {

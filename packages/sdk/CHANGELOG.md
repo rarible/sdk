@@ -3,6 +3,233 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.19](https://github.com/rarible/sdk/compare/v0.9.11-beta.18...v0.9.11-beta.19) (2022-07-18)
+
+
+### Bug Fixes
+
+* tezos sales adresses ([d28a3bd](https://github.com/rarible/sdk/commit/d28a3bde6e69c0daff8f905746b61f2bc6f95e44))
+
+
+
+
+
+## [0.9.11-beta.18](https://github.com/rarible/sdk/compare/v0.9.11-beta.17...v0.9.11-beta.18) (2022-07-18)
+
+
+### Bug Fixes
+
+* tezos royalties ([a4b7f6b](https://github.com/rarible/sdk/commit/a4b7f6bc27649928b0dd3d4e2e5feb7e89931367))
+
+
+
+
+
+## [0.9.11-beta.17](https://github.com/rarible/sdk/compare/v0.9.11-beta.16...v0.9.11-beta.17) (2022-07-15)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.9.11-beta.16](https://github.com/rarible/sdk/compare/v0.9.11-beta.15...v0.9.11-beta.16) (2022-07-15)
+
+
+### Features
+
+* improve seaport ([313b932](https://github.com/rarible/sdk/commit/313b9320417ffd9aafcb5e797503eeb7422fb2e2))
+
+
+
+
+
+## [0.9.11-beta.15](https://github.com/rarible/sdk/compare/v0.9.11-beta.14...v0.9.11-beta.15) (2022-07-12)
+
+
+### Bug Fixes
+
+* tezos chainId for mainnet ([#289](https://github.com/rarible/sdk/issues/289)) ([ecc42b4](https://github.com/rarible/sdk/commit/ecc42b4fb6074d0bd7f6d23d4652a8844823bded))
+
+
+
+
+
+## [0.9.11-beta.14](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.14) (2022-07-10)
+
+
+### Bug Fixes
+
+* correct use baseFee info from auction house's mapping ([#284](https://github.com/rarible/sdk/issues/284)) ([618af85](https://github.com/rarible/sdk/commit/618af854bd7935cefa2f807ba157be75642aa5eb))
+* solana cancel for multiple items ([e55fa39](https://github.com/rarible/sdk/commit/e55fa394ffdd78f88990f92e2409b3083a6d733e))
+* solana wallet address in logs ([3cb261b](https://github.com/rarible/sdk/commit/3cb261b238bcc98a850ea36736db38aaedd117ac))
+* tezos buy price for multiple items order ([#285](https://github.com/rarible/sdk/issues/285)) ([2e5e2de](https://github.com/rarible/sdk/commit/2e5e2de26af0c0d8cbcc34e152d2f8ad82dcacc9))
+
+
+### Features
+
+* add testnet env, remove e2e env ([#261](https://github.com/rarible/sdk/issues/261)) ([55c908f](https://github.com/rarible/sdk/commit/55c908f031e39b8a2ad504c1e334695d3386ce42))
+* seaport deps fix ([#288](https://github.com/rarible/sdk/issues/288)) ([b15cbc8](https://github.com/rarible/sdk/commit/b15cbc850efe6c4e53efae8a3872934c98d3e667))
+* tezos check wallet chain_id to be equal config chain_id ([#283](https://github.com/rarible/sdk/issues/283)) ([c89636f](https://github.com/rarible/sdk/commit/c89636fc9c75a5b8d4839be6c8b128dc3b661f99))
+
+
+
+
+
+## [0.9.11-beta.13](https://github.com/rarible/sdk/compare/v0.9.11-beta.12...v0.9.11-beta.13) (2022-07-08)
+
+
+### Features
+
+* seaport orders ([#287](https://github.com/rarible/sdk/issues/287)) ([6fc0e9c](https://github.com/rarible/sdk/commit/6fc0e9caa030ba835abe6f9eb9ccc3827f78ea3f))
+
+
+
+
+
+## [0.9.11-beta.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.11...v0.9.11-beta.12) (2022-07-06)
+
+
+### Bug Fixes
+
+* tezos buy price for multiple items order ([225df7c](https://github.com/rarible/sdk/commit/225df7ccd10a20f86c7d3ac454c466ea77e9cd32))
+* tezos buy price for multiple items order ([e8779d6](https://github.com/rarible/sdk/commit/e8779d6f87f88a2707882ac80fd79c76d066debb))
+
+
+
+
+
+## [0.9.11-beta.11](https://github.com/rarible/sdk/compare/v0.9.11-beta.10...v0.9.11-beta.11) (2022-07-04)
+
+
+### Bug Fixes
+
+* correct use baseFee info from auction house's mapping ([8b66aea](https://github.com/rarible/sdk/commit/8b66aea7e360fa85487db57742791cb26b6b5643))
+
+
+
+
+
+## [0.9.11-beta.10](https://github.com/rarible/sdk/compare/v0.9.11-beta.9...v0.9.11-beta.10) (2022-06-30)
+
+
+### Bug Fixes
+
+* tezos changes ([76cc534](https://github.com/rarible/sdk/commit/76cc534ac6b0f3232c5f242feaddc10dc43190cd))
+
+
+
+
+
+## [0.9.11-beta.9](https://github.com/rarible/sdk/compare/v0.9.11-beta.8...v0.9.11-beta.9) (2022-06-29)
+
+
+### Bug Fixes
+
+* opensea order payouts ([002e901](https://github.com/rarible/sdk/commit/002e90161f5586d1ab9572fccc091b112ca5e12d))
+
+
+
+
+
+## [0.9.11-beta.8](https://github.com/rarible/sdk/compare/v0.9.11-beta.7...v0.9.11-beta.8) (2022-06-27)
+
+
+### Bug Fixes
+
+* tezos sell v2 on dev ([b15235f](https://github.com/rarible/sdk/commit/b15235fc052cdf94eaff7b0a02f0e311ca561b67))
+
+
+
+
+
+## [0.9.11-beta.7](https://github.com/rarible/sdk/compare/v0.9.11-beta.6...v0.9.11-beta.7) (2022-06-23)
+
+
+### Bug Fixes
+
+* tezos prod order versions ([c998266](https://github.com/rarible/sdk/commit/c998266b340e5200877a0f116de3f091ff6466e2))
+
+
+
+
+
+## [0.9.11-beta.6](https://github.com/rarible/sdk/compare/v0.9.11-beta.5...v0.9.11-beta.6) (2022-06-22)
+
+
+### Bug Fixes
+
+* dipdup for tezos testnet ([aefa1f4](https://github.com/rarible/sdk/commit/aefa1f4c2f830555fa1bc006858cb5e5491c1ffc))
+
+
+
+
+
+## [0.9.11-beta.5](https://github.com/rarible/sdk/compare/v0.9.11-beta.4...v0.9.11-beta.5) (2022-06-22)
+
+
+### Bug Fixes
+
+* union api url for testnet ([#267](https://github.com/rarible/sdk/issues/267)) ([1ee426a](https://github.com/rarible/sdk/commit/1ee426a3417c2f38e843f2b55caf22a00a3fd61f))
+
+
+
+
+
+## [0.9.11-beta.4](https://github.com/rarible/sdk/compare/v0.9.11-beta.2...v0.9.11-beta.4) (2022-06-22)
+
+
+### Bug Fixes
+
+* solana cancel for multiple items ([e55fa39](https://github.com/rarible/sdk/commit/e55fa394ffdd78f88990f92e2409b3083a6d733e))
+
+
+### Features
+
+* add testnet env, remove e2e env ([#261](https://github.com/rarible/sdk/issues/261)) ([55c908f](https://github.com/rarible/sdk/commit/55c908f031e39b8a2ad504c1e334695d3386ce42))
+
+
+
+
+
+## [0.9.11-beta.2](https://github.com/rarible/sdk/compare/v0.9.11-beta.1...v0.9.11-beta.2) (2022-06-20)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.9.11-beta.1](https://github.com/rarible/sdk/compare/v0.9.11-beta.0...v0.9.11-beta.1) (2022-06-20)
+
+
+### Bug Fixes
+
+* add nftStorageApiKey field in example, fix metaUpload method bug ([f54dba0](https://github.com/rarible/sdk/commit/f54dba02acbf8499322c5fa7dd05651635fea038))
+
+
+### Features
+
+* added uploadMeta function and example ([0c3c260](https://github.com/rarible/sdk/commit/0c3c260de0572a3bcec5b9b26e8f4896569dd5d0))
+* use bignumber in solana-sdk ([#255](https://github.com/rarible/sdk/issues/255)) ([3d755ed](https://github.com/rarible/sdk/commit/3d755ed4f88991ccb4390553a32096a10c04fd88))
+
+
+
+
+
+## [0.9.11-beta.0](https://github.com/rarible/sdk/compare/v0.9.10...v0.9.11-beta.0) (2022-06-17)
+
+
+### Bug Fixes
+
+* tezos mint generator update ([#257](https://github.com/rarible/sdk/issues/257)) ([ffeb16e](https://github.com/rarible/sdk/commit/ffeb16e213f1016fcc5700350968591c13f543e1))
+* update flow deps for backend txs ([81edb21](https://github.com/rarible/sdk/commit/81edb2102d47f96d47cddca77c7953289fa9927b))
+* update flow-sdk for new spork support ([f8d528e](https://github.com/rarible/sdk/commit/f8d528ea572288d6a2aa28753b200d5988e716ff))
+
+
+
+
+
 ## [0.9.10](https://github.com/rarible/sdk/compare/v0.9.9...v0.9.10) (2022-06-15)
 
 

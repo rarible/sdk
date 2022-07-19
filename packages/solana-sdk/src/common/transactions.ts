@@ -15,7 +15,7 @@ import { getUnixTs, sleep } from "@rarible/solana-common"
 import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
 
-export const DEFAULT_TIMEOUT = 15000
+export const DEFAULT_TIMEOUT = 60000
 
 export interface ITransactionPreparedInstructions {
 	instructions: TransactionInstruction[]

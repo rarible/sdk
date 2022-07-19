@@ -11,7 +11,7 @@ import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
 import { awaitOwnership } from "./test/await-ownership"
 
-describe("transfer", () => {
+describe.skip("transfer", () => {
 	const { web31, wallet1, wallet2 } = initProviders()
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const senderWallet = new EthereumWallet(senderEthereum)

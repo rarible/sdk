@@ -1,7 +1,8 @@
+import BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { BigNumberValue } from "@rarible/utils"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
-import { BN } from "@project-serum/anchor"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
@@ -12,6 +13,7 @@ import {
 	getAuctionHouseTradeState,
 	loadAuctionHouseProgram,
 } from "../../../common/auction-house-helpers"
+import { bigNumToBn } from "../../../common/utils"
 
 export interface IActionHouseBuyRequest {
 	connection: Connection
@@ -19,9 +21,9 @@ export interface IActionHouseBuyRequest {
 	signer: IWalletSigner
 	mint: PublicKey
 	tokenAccount?: PublicKey
-	price: number
+	price: BigNumberValue
 	// tokens amount to purchase
-	tokensAmount: number
+	tokensAmount: BigNumberValue
 }
 
 
@@ -33,22 +35,18 @@ export async function getActionHouseBuyInstructions(
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
-	const buyPriceAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.price,
-			auctionHouseObj.treasuryMint,
-			walletKeyPair,
-			anchorProgram,
-		),
+	const buyPriceAdjusted = await getPriceWithMantissa(
+		request.connection,
+		new BigNumber(request.price),
+		auctionHouseObj.treasuryMint,
+		walletKeyPair,
 	)
 
-	const tokenSizeAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.tokensAmount,
-			request.mint,
-			walletKeyPair,
-			anchorProgram,
-		),
+	const tokenSizeAdjusted = await getPriceWithMantissa(
+		request.connection,
+		new BigNumber(request.tokensAmount),
+		request.mint,
+		walletKeyPair,
 	)
 
 	const [escrowPaymentAccount, escrowBump] = await getAuctionHouseBuyerEscrow(
@@ -100,8 +98,8 @@ export async function getActionHouseBuyInstructions(
 	}, {
 		tradeStateBump: tradeBump,
 		escrowPaymentBump: escrowBump,
-		buyerPrice: buyPriceAdjusted,
-		tokenSize: tokenSizeAdjusted,
+		buyerPrice: bigNumToBn(buyPriceAdjusted),
+		tokenSize: bigNumToBn(tokenSizeAdjusted),
 	})
 
 	if (!isNative) {

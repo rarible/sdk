@@ -1,6 +1,6 @@
 import { toCollectionId } from "@rarible/types"
 import type { Item } from "@rarible/api-client/build/models"
-import { MintType } from "../../../../types/nft/mint/domain"
+import { MintType } from "../../../../types/nft/mint/prepare"
 import type { IRaribleSdk } from "../../../../domain"
 import { retry } from "../../../../common/retry"
 

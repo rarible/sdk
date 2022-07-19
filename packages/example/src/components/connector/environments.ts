@@ -11,8 +11,8 @@ export const ENVIRONMENTS = [{
 	value: "development",
 	label: "Development"
 }, {
-	value: "e2e",
-	label: "Rarible e2e"
+	value: "testnet",
+	label: "Testnet"
 }]
 
 export function getEnvironmentName(key: string): string {

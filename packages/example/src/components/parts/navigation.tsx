@@ -15,9 +15,12 @@ export function Navigation() {
 		label: "Deploy Collection",
 		path: "/deploy"
 	}, {
+		label: "Upload metadata",
+		path: "/upload-meta"
+	}, {
 		label: "Mint Token",
 		path: "/mint"
-	}, {
+	},{
 		label: "Sell",
 		path: "/sell"
 	}, {

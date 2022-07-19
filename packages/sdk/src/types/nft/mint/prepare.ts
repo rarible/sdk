@@ -1,6 +1,7 @@
 import type { ItemId } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AbstractPrepareResponse } from "../../../common/domain"
+import type { MetaUploadRequest, UploadMetaResponse } from "../../../sdk-blockchains/union/meta/domain"
 import type { MintRequest } from "./mint-request.type"
 import type { PrepareMintRequest } from "./prepare-mint-request.type"
 
@@ -33,4 +34,6 @@ export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", Min
 	supportsLazyMint: boolean
 }
 
-export type IMint = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
+export type IMintPrepare = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
+
+export type IUploadMeta = (request: MetaUploadRequest) => Promise<UploadMetaResponse>

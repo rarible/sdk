@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-helper",
-  "version": "0.9.10",
+  "version": "0.9.11-beta.19",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -17,14 +17,14 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "0.0.13-beta4",
-    "@rarible/connector": "^0.9.7",
-    "@rarible/connector-beacon": "^0.9.7",
-    "@rarible/connector-fcl": "^0.9.7",
-    "@rarible/sdk-wallet": "^0.9.10",
-    "@rarible/tezos-sdk": "0.1.24",
-    "@rarible/web3-ethereum": "^0.12.66",
-    "rxjs": "^6.6.7"
+    "@rarible/api-client": "0.0.13-beta10",
+    "@rarible/connector": "^0.9.11-beta.19",
+    "@rarible/connector-beacon": "^0.9.11-beta.19",
+    "@rarible/connector-fcl": "^0.9.11-beta.19",
+    "@rarible/estimate-middleware": "^0.9.4",
+    "@rarible/sdk-wallet": "^0.9.11-beta.19",
+    "@rarible/tezos-sdk": "0.1.29",
+    "@rarible/web3-ethereum": "^0.12.74"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
@@ -34,6 +34,7 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
+    "rxjs": ">= 6.6.7 < 8.0.0",
     "tslib": "^2.3.1"
   }
 }

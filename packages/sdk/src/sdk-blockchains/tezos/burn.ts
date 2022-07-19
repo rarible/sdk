@@ -4,21 +4,27 @@ import { burn } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { TezosProvider, TezosNetwork, Provider } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
-import type { NftCollection, NftItem } from "tezos-api-client/build"
+import type { IApisSdk } from "../../domain"
 import type { BurnRequest, BurnResponse, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
-import type { ITezosAPI, MaybeProvider } from "./common"
-import { getRequestAmount, getTezosItemData, isExistedTezosProvider } from "./common"
+import {
+	getRequestAmount,
+	getCollectionType,
+	getCollectionTypeAssetClass,
+	getTezosItemData,
+	isExistedTezosProvider,
+	checkChainId,
+} from "./common"
+import type { MaybeProvider } from "./common"
 
 export class TezosBurn {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
+		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
 		this.burn = this.burn.bind(this)
 		this.burnBasic = this.burnBasic.bind(this)
-		this.burnCommon = this.burnCommon.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
@@ -29,46 +35,36 @@ export class TezosBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
-		const { itemId, contract } = getTezosItemData(prepare.itemId)
-		const item = await this.apis.item.getNftItemById({ itemId })
+		await checkChainId(this.provider)
 
-		const collection = await this.apis.collection.getNftCollectionById({
-			collection: contract,
-		})
+		const { contract, tokenId } = getTezosItemData(prepare.itemId)
+		const item = await this.unionAPI.item.getItemById({ itemId: prepare.itemId })
+		const collectionType = await getCollectionType(this.provider, contract)
 
 		return {
-			multiple: collection.type === "MT",
+			multiple: collectionType === "TEZOS_MT",
 			maxAmount: toBigNumber(item.supply),
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
-					return this.burnCommon(request, collection, item)
+					const result = await burn(
+						this.getRequiredProvider(),
+						{
+							asset_class: getCollectionTypeAssetClass(collectionType),
+							contract,
+							token_id: new BigNumber(tokenId),
+						},
+						getRequestAmount(request?.amount, collectionType)
+					)
+
+					return new BlockchainTezosTransaction(result, this.network)
 				},
 			}),
 		}
 	}
 
 	async burnBasic(request: BurnSimplifiedRequest): Promise<BurnResponse> {
-		const { itemId, contract } = getTezosItemData(request.itemId)
-		const item = await this.apis.item.getNftItemById({ itemId })
-
-		const collection = await this.apis.collection.getNftCollectionById({
-			collection: contract,
-		})
-
-		return this.burnCommon(request, collection, item)
-	}
-
-	async burnCommon(request: BurnSimplifiedRequest | BurnRequest, collection: NftCollection, item: NftItem) {
-  	const result = await burn(
-  		this.getRequiredProvider(),
-  		{
-  			contract: item.contract,
-  			token_id: new BigNumber(item.tokenId),
-  		},
-			getRequestAmount(request?.amount, collection)
-  	)
-
-  	return new BlockchainTezosTransaction(result, this.network)
+		const response = await this.burn(request)
+		return response.submit(request)
 	}
 }

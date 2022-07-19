@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.9.10",
+  "version": "0.9.11-beta.19",
   "keywords": [
     "solana",
     "web3"
@@ -29,9 +29,11 @@
     "@project-serum/anchor": "^0.22.1",
     "@rarible/solana-common": "^0.9.7",
     "@rarible/solana-wallet": "^0.9.7",
+    "@rarible/utils": "^0.9.1",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.36.0",
     "@types/bs58": "^4.0.1",
+    "bignumber.js": "^9.0.1",
     "borsh": "^0.7.0",
     "bs58": "^5.0.0",
     "node-fetch": "^2.6.7"
@@ -39,6 +41,7 @@
   "devDependencies": {
     "@types/jest": "^27.4.0",
     "@types/node-fetch": "^2.6.1",
+    "dotenv": "16.0.0",
     "form-data": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",

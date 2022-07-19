@@ -6,8 +6,8 @@ import { toBigNumber, toItemId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
-import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
-import { MintType } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
+import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
@@ -68,7 +68,7 @@ export class SolanaNft {
 					const mintPrepare = await this.sdk.nft.mint({
 						signer: this.wallet!.provider,
 						metadataUrl: request.uri,
-						maxSupply: 0,
+						masterEditionSupply: 0,
 						collection: collectionId,
 					})
 
@@ -124,17 +124,12 @@ export class SolanaNft {
 				run: async (request: BurnRequest) => {
 					const amount = request?.amount ?? 1
 					const mint = extractPublicKey(item.id)
-					const tokenAccount = await this.sdk.connection.getTokenAccountsByOwner(
-						this.wallet!.provider.publicKey,
-						{ mint }
-					)
 
 					const prepare = await this.sdk.nft.burn({
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
 						closeAssociatedAccount: false, // todo should be set true if all tokens burn
-						tokenAccount: tokenAccount.value[0]?.pubkey,
 					})
 					const tx = await prepare.submit("processed")
 
@@ -164,16 +159,11 @@ export class SolanaNft {
 				run: async (request: TransferRequest) => {
 					const amount = request?.amount ?? 1
 					const mint = extractPublicKey(item.id)
-					const tokenAccount = await this.sdk.connection.getTokenAccountsByOwner(
-						this.wallet!.provider.publicKey,
-						{ mint }
-					)
 
 					const prepare = await this.sdk.nft.transfer({
 						mint: mint,
 						signer: this.wallet!.provider,
 						amount: amount,
-						tokenAccount: tokenAccount.value[0]?.pubkey,
 						to: extractPublicKey(request.to),
 					})
 					const tx = await prepare.submit("processed")

@@ -15,6 +15,7 @@ import { MintPage } from "./pages/mint/mint-page"
 import { BidPage } from "./pages/bid/bid-page"
 import { AcceptBidPage } from "./pages/accept-bid/acceptbid-page"
 import { ItemsPage } from "./pages/items/items-page"
+import { UploadMetaPage } from "./pages/upload-meta/upload-meta-page"
 
 export function App() {
 	return (
@@ -38,6 +39,7 @@ export function App() {
 									<Route path="about" element={<AboutPage/>}/>
 									<Route path="connect" element={<ConnectPage/>}/>
 									<Route path="deploy" element={<DeployPage/>}/>
+									<Route path="upload-meta" element={<UploadMetaPage/>}/>
 									<Route path="mint" element={<MintPage/>}/>
 									<Route path="sell" element={<SellPage/>}>
 										<Route path=":itemId" element={<SellPage/>}/>

@@ -1,25 +1,29 @@
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { LogsLevel } from "../../domain"
-import { awaitForItemSupply } from "./test/await-for-item-supply"
+import type { RaribleSdkEnvironment } from "../../config/domain"
+import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
+import { getTestContract } from "./test/test-contracts"
 
-describe("mint test", () => {
+describe.skip("mint test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
 	)
-	const sdk = createRaribleSdk(wallet, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
-	let nftContract: string = "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43"
-	let mtContract: string = "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj"
+	const nftContract: string = getTestContract(env, "nftContract")
+	const mtContract: string = getTestContract(env, "mtContract")
 
-	test.skip("mint NFT token test", async () => {
+	test("mint NFT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 		})
 
 		const mintResult = await mintResponse.submit({
@@ -28,7 +32,7 @@ describe("mint test", () => {
 			lazyMint: false,
 			royalties: [{
 				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
-				value: 10000,
+				value: 1000,
 			}],
 			creators: [{
 				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
@@ -38,21 +42,18 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItemSupply(sdk, mintResult.itemId, "1")
 	}, 1500000)
 
-	test.skip("mint MT token test", async () => {
+
+	test("mint MT token test", async () => {
 		const mintResponse = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,
 			lazyMint: false,
-			royalties: [{
-				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
-				value: 10000,
-			}],
 			creators: [{
 				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
 				value: 10000,
@@ -61,7 +62,7 @@ describe("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitForItemSupply(sdk, mintResult.itemId, "12")
+		await awaitItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 
@@ -80,7 +81,7 @@ describe("mint test", () => {
 			}],
 		})
 		await mintResult.transaction.wait()
-		await awaitForItemSupply(sdk, mintResult.itemId, "12")
+		await awaitItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 

@@ -1,12 +1,13 @@
-import { BN } from "@project-serum/anchor"
+import BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import * as web3 from "@solana/web3.js"
+import type { BigNumberValue } from "@rarible/utils"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token"
-import { decodeMetadata } from "../../../common/schema"
 import type { Metadata } from "../../../common/schema"
+import { decodeMetadata } from "../../../common/schema"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
-import { getMetadata, getAssociatedTokenAccountForMint, getPriceWithMantissa } from "../../../common/helpers"
+import { getAssociatedTokenAccountForMint, getMetadata, getPriceWithMantissa } from "../../../common/helpers"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import {
 	getAuctionHouseBuyerEscrow,
@@ -14,6 +15,7 @@ import {
 	getAuctionHouseTradeState,
 	loadAuctionHouseProgram,
 } from "../../../common/auction-house-helpers"
+import { bigNumToBn } from "../../../common/utils"
 
 export interface IActionHouseExecuteSellRequest {
 	connection: Connection
@@ -23,9 +25,9 @@ export interface IActionHouseExecuteSellRequest {
 	sellerWallet: PublicKey
 	mint: PublicKey
 	tokenAccount?: PublicKey
-	price: number
+	price: BigNumberValue
 	// tokens amount to purchase
-	tokensAmount: number
+	tokensAmount: BigNumberValue
 }
 
 export async function getAuctionHouseExecuteSellInstructions(
@@ -35,22 +37,18 @@ export async function getAuctionHouseExecuteSellInstructions(
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
 	const isNative = auctionHouseObj.treasuryMint.equals(WRAPPED_SOL_MINT)
-	const buyPriceAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.price,
-			auctionHouseObj.treasuryMint,
-			request.signer,
-			anchorProgram,
-		),
+	const buyPriceAdjusted = await getPriceWithMantissa(
+		request.connection,
+		new BigNumber(request.price),
+		auctionHouseObj.treasuryMint,
+		request.signer,
 	)
 
-	const tokenSizeAdjusted = new BN(
-		await getPriceWithMantissa(
-			request.tokensAmount,
-			request.mint,
-			request.signer,
-			anchorProgram,
-		),
+	const tokenSizeAdjusted = await getPriceWithMantissa(
+		request.connection,
+		new BigNumber(request.tokensAmount),
+		request.mint,
+		request.signer,
 	)
 
 	const tokenAccountKey = (await getAssociatedTokenAccountForMint(request.mint, request.sellerWallet))[0]
@@ -89,7 +87,7 @@ export async function getAuctionHouseExecuteSellInstructions(
 		auctionHouseObj.treasuryMint,
 		request.mint,
 		tokenSizeAdjusted,
-		new BN(0),
+		new BigNumber(0),
 	)
 
 	const [escrowPaymentAccount, escrowBump] = await getAuctionHouseBuyerEscrow(
@@ -138,42 +136,12 @@ export async function getAuctionHouseExecuteSellInstructions(
 
 	const tMint = auctionHouseObj.treasuryMint
 
-	/*const instruction = AuctionHouseProgram.instructions.createExecuteSaleInstruction(
-		{
-			buyer: request.buyerWallet,
-			seller: request.sellerWallet,
-			tokenAccount: tokenAccountKey,
-			tokenMint: request.mint,
-			metadata: metadata,
-			treasuryMint: tMint,
-			escrowPaymentAccount: escrowPaymentAccount,
-			sellerPaymentReceiptAccount: isNative ? request.sellerWallet :
-			(await getAssociatedTokenAccountForMint(tMint, request.sellerWallet))[0],
-			buyerReceiptTokenAccount: (await getAssociatedTokenAccountForMint(request.mint, request.buyerWallet))[0],
-			authority: auctionHouseObj.authority,
-			auctionHouse: request.auctionHouse,
-			auctionHouseFeeAccount: auctionHouseObj.auctionHouseFeeAccount,
-			auctionHouseTreasury: auctionHouseObj.auctionHouseTreasury,
-			buyerTradeState: buyerTradeState,
-			sellerTradeState: sellerTradeState,
-			freeTradeState: freeTradeState,
-			programAsSigner: programAsSigner,
-		},
-		{
-			escrowPaymentBump: escrowBump,
-			freeTradeStateBump: freeTradeStateBump,
-			programAsSignerBump: programAsSignerBump,
-			buyerPrice: buyPriceAdjusted,
-			tokenSize: tokenSizeAdjusted,
-		}
-	)*/
-
 	const instruction = await anchorProgram.instruction.executeSale(
 		escrowBump,
 		freeTradeStateBump,
 		programAsSignerBump,
-		buyPriceAdjusted,
-		tokenSizeAdjusted,
+		bigNumToBn(buyPriceAdjusted),
+		bigNumToBn(tokenSizeAdjusted),
 		{
 			accounts: {
 				buyer: request.buyerWallet,

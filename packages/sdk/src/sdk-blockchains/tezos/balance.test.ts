@@ -1,19 +1,23 @@
 import { toContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
+import type { RaribleSdkEnvironment } from "../../config/domain"
 import { createTestWallet } from "./test/test-wallet"
+import { getTestContract } from "./test/test-contracts"
 
-describe("get balance", () => {
+describe.skip("get balance", () => {
+	const env: RaribleSdkEnvironment = "staging"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, "staging", { logs: LogsLevel.DISABLED })
+	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
 
 	//eur
-	const fa2 = "TEZOS:KT1PEBh9oKkQosYuw4tvzigps5p7uqXMgdez"
+	const fa2 = getTestContract(env, "eurTzContract")
 	//uusd
-	const fa12 = "TEZOS:KT1WsXMAzcre2MNUjNkGtVQLpsTnNFhBJhLv"
+	const fa12 = getTestContract(env, "fa12Contract")
 
 	test.skip("get balance XTZ", async () => {
 		const balance = await sellerSdk.balances.getBalance(

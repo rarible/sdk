@@ -6,12 +6,12 @@ import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
+import { awaitStock } from "../../common/test/await-stock"
 import { initProviders } from "./test/init-providers"
-import { awaitStock } from "./test/await-stock"
 import { awaitOrderCancel } from "./test/await-order-cancel"
 import { convertEthereumContractAddress } from "./common"
 
-describe("cancel", () => {
+describe.skip("cancel", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)

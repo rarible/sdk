@@ -1,7 +1,7 @@
-@Library('shared-library@stable') _
+@Library('shared-library') _
 
-def pipelineConfig = [
-    "stackName": "protocol-sdk"
-]
+def pipelineConfig = [:]
+
+env.SOLANA_CUSTOM_ENDPOINT=credentials('sdk-solana-devnet-node-endpoint')
 
 serviceCI(pipelineConfig)

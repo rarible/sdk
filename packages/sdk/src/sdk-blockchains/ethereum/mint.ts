@@ -12,8 +12,10 @@ import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rar
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
-import { MintType } from "../../types/nft/mint/domain"
+import type { CollectionMeta } from "@rarible/api-client/build/models/CollectionMeta"
+import type { NftCollectionMeta } from "@rarible/ethereum-api-client/build/models/NftCollectionMeta"
+import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
+import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { TokenId } from "../../types/nft/generate-token-id"
@@ -204,6 +206,32 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
 		features: collection.features?.map(x => NftCollectionFeatures[x]),
 		minters: collection.minters?.map(minter => convertToEthereumAddress(minter)),
+		meta: convertCollectionMeta(collection.meta),
+	}
+}
+
+function convertCollectionMeta(meta?: CollectionMeta): NftCollectionMeta | undefined {
+	if (!meta) {
+		return undefined
+	}
+	const feeRecipient = meta.feeRecipient !== undefined ? toAddress(meta.feeRecipient): undefined
+	return {
+		name: meta.name,
+		description: meta.description,
+		createdAt: meta.createdAt,
+		tags: meta.tags || [],
+		genres: meta.genres || [],
+		language: meta.language,
+		rights: meta.rights,
+		rightsUri: meta.rightsUri,
+		externalUri: meta.externalUri,
+		originalMetaUri: meta.originalMetaUri,
+		sellerFeeBasisPoints: meta.sellerFeeBasisPoints,
+		content: meta.content,
+		external_link: meta.externalLink,
+		seller_fee_basis_points: meta.sellerFeeBasisPoints,
+		feeRecipient: feeRecipient,
+		fee_recipient: feeRecipient,
 	}
 }
 

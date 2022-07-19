@@ -1,7 +1,6 @@
 import { Action } from "@rarible/action"
-import type { OrderDataTypeRequest } from "@rarible/tezos-sdk/dist/main"
 // eslint-disable-next-line camelcase
-import { cancel, get_active_order_type, OrderType } from "@rarible/tezos-sdk/dist/main"
+import { cancel } from "@rarible/tezos-sdk/dist/main"
 import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -11,14 +10,13 @@ import { cancelV2 } from "@rarible/tezos-sdk/dist/sales/cancel"
 import type { Order, TezosMTAssetType, TezosNFTAssetType } from "@rarible/api-client"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"
-import type { ITezosAPI, MaybeProvider } from "./common"
+import type { MaybeProvider } from "./common"
 import {
+	checkChainId,
 	convertFromContractAddress,
 	convertOrderToOrderForm,
 	getRequiredProvider,
-	getTezosAddress,
 	getTezosAssetTypeV2,
-	getTokenIdString,
 	isMTAssetType,
 	isNftAssetType,
 } from "./common"
@@ -26,7 +24,6 @@ import {
 export class TezosCancel {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
 		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
@@ -36,11 +33,33 @@ export class TezosCancel {
 	cancel: ICancel = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
-			return this.cancelBasic(request)
+			await checkChainId(this.provider)
+
+			const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
+			if (!order) {
+				throw new Error("Order has not been found")
+			}
+			if (isNftAssetType(order.make.type) || isMTAssetType(order.make.type)) {
+				if (order.data["@type"] === "TEZOS_RARIBLE_V3") {
+					return this.cancelV2SellOrder(order)
+				}
+			}
+
+			const v1OrderForm = convertOrderToOrderForm(order)
+
+			const tx = await cancel(
+				getRequiredProvider(this.provider),
+				v1OrderForm,
+				false
+			)
+
+			return new BlockchainTezosTransaction(tx, this.network)
 		},
 	})
 
 	async cancelV2SellOrder(order: Order): Promise<IBlockchainTransaction> {
+		await checkChainId(this.provider)
+
 		const provider = getRequiredProvider(this.provider)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
 		const cancelRequest: CancelV2OrderRequest = {
@@ -57,35 +76,8 @@ export class TezosCancel {
 		return new BlockchainTezosTransaction(canceledOrder, this.network)
 	}
 
-	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
-		const order = await this.unionAPI.order.getOrderById({ id: request.orderId })
-		if (!order) {
-			throw new Error("Order has not been found")
-		}
-		const { take } = order
+  async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+    return this.cancel(request)
+  }
 
-		if (isNftAssetType(order.make.type) || isMTAssetType(order.make.type)) {
-			const typeRequest: OrderDataTypeRequest = {
-				contract: convertFromContractAddress(order.make.type.contract),
-				token_id: new BigNumber(order.make.type.tokenId),
-				seller: getTezosAddress(order.maker),
-				buy_asset_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
-				buy_asset_token_id: take.type["@type"] === "TEZOS_FT" ? getTokenIdString(take.type.tokenId) : undefined,
-			}
-			const type = await get_active_order_type(this.provider.config, typeRequest)
-			if (type === OrderType.V2) {
-				return this.cancelV2SellOrder(order)
-			}
-		}
-
-		const v1OrderForm = convertOrderToOrderForm(order)
-
-		const tx = await cancel(
-			getRequiredProvider(this.provider),
-			v1OrderForm,
-			false
-		)
-
-		return new BlockchainTezosTransaction(tx, this.network)
-	}
 }

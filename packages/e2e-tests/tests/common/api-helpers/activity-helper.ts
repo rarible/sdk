@@ -15,7 +15,7 @@ export async function getActivitiesByCollection(sdk: IRaribleSdk, collection: st
 	const activities = await retry(10, 2000, async () => {
 		return await sdk.apis.activity.getActivitiesByCollection({
 			type: activityTypes,
-			collection: collection,
+			collection: [collection],
 		})
 	})
 	expect(activities).not.toBe(null)
@@ -29,7 +29,7 @@ export async function getActivitiesByCollectionRaw(sdk: IRaribleSdk, collection:
 	const activities = await retry(10, 2000, async () => {
 		return await sdk.apis.activity.getActivitiesByCollectionRaw({
 			type: activityTypes,
-			collection: collection,
+			collection: [collection],
 		})
 	})
 	expect(activities).not.toBe(null)
@@ -41,7 +41,7 @@ export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
 	activityTypes: Array<ActivityType>,
 	shouldPresent?: Array<ActivityType>): Promise<Activities> {
 	console.log("Get activities, activityTypes=" + activityTypes + " ,shouldPresent=" + shouldPresent)
-	return retry(10, 2000, async () => {
+	return retry(15, 2000, async () => {
 		const activities = await sdk.apis.activity.getActivitiesByItem({
 			type: activityTypes,
 			itemId: itemId,

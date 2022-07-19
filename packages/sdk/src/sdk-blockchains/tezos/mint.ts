@@ -2,32 +2,38 @@ import { Action } from "@rarible/action"
 import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { get_address, mint } from "@rarible/tezos-sdk"
-import type { NftCollectionControllerApi } from "tezos-api-client/build"
 import BigNumber from "bignumber.js"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { CollectionId } from "@rarible/api-client"
-import { Blockchain } from "@rarible/api-client"
+import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
-import type { PrepareMintResponse, MintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/domain"
-import { MintType } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, MintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
+import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
-import type { ITezosAPI, MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
-import { convertTezosItemId, getRequiredProvider, getTezosAddress } from "./common"
+import type { IApisSdk } from "../../domain"
+import type { MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
+import {
+	checkChainId,
+	convertTezosItemId,
+	getCollectionType,
+	getRequiredProvider,
+	getRoyalties,
+	getTezosAddress,
+} from "./common"
 
 export class TezosMint {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
-		private apis: ITezosAPI,
+		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
 		this.mint = this.mint.bind(this)
-		this.mintSimplified = this.mintSimplified.bind(this)
+		this.mintBasic = this.mintBasic.bind(this)
 		this.preprocessMeta = this.preprocessMeta.bind(this)
-		this.mintCommon = this.mintCommon.bind(this)
 	}
 
 	private getFormatsMeta(meta: PreprocessMetaRequest) {
@@ -71,85 +77,90 @@ export class TezosMint {
 		)
 	}
 
-	public async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		const collectionData = await getCollectionData(this.apis.collection, prepareRequest)
+	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
+		console.log("before check chain id")
+		await checkChainId(this.provider)
+
+		console.log("after check chain id")
+		const {
+			contract,
+			type,
+		} = await getCollectionData(this.unionAPI, prepareRequest)
+		console.log("after get col data", contract)
 
 		return {
-			multiple: collectionData.type === "MT",
+			multiple: type === CollectionType.TEZOS_MT,
 			supportsRoyalties: true,
 			supportsLazyMint: false,
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (request: MintRequest) => {
-					return this.mintCommon({
-						...prepareRequest,
-						...request,
-					} as MintSimplifiedRequest, collectionData)
+					const royalties = getRoyalties(request.royalties)
+					const collectionType = await getCollectionType(this.provider, contract)
+					console.log("after getting collection data")
+					const isNftCollection = collectionType === CollectionType.TEZOS_NFT
+					const provider = getRequiredProvider(this.provider)
+					const supply = isNftCollection ? undefined : toBn(request.supply || 1)
+
+					if (isNftCollection && request.supply && request.supply > 1) {
+						throw new Error(`Invalid supply=${request.supply} for NFT collection, expected supply=1`)
+					}
+					console.log(
+						provider,
+						contract,
+						royalties,
+						supply,
+						undefined,
+						{
+							"": fixIpfs(request.uri),
+						},
+						await this.getOwner(request)
+					)
+
+					const result = await mint(
+						provider,
+						contract,
+						royalties,
+						supply,
+						undefined,
+						{
+							"": fixIpfs(request.uri),
+						},
+						await this.getOwner(request),
+					)
+
+					return {
+						type: MintType.ON_CHAIN,
+						transaction: new BlockchainTezosTransaction(result, this.network),
+						itemId: convertTezosItemId(`${contract}:${result.token_id}`),
+					}
 				},
 			}),
 		}
 	}
 
-	private async mintCommon(request: MintSimplifiedRequest, collectionData: CollectionData): Promise<MintResponse> {
-		const royalties = request.royalties?.reduce((acc, royalty) => {
-			const account = getTezosAddress(royalty.account)
-			acc[account] = new BigNumber(royalty.value)
-			return acc
-		}, {} as { [key: string]: BigNumber }) || {}
-
-		const isNftCollection = collectionData.type === "NFT"
-		const supply = isNftCollection ? undefined : toBn(request.supply || 1)
-
-		if (isNftCollection && request.supply && request.supply > 1) {
-			throw new Error(`Invalid supply=${request.supply} for NFT collection, expected supply=1`)
-		}
-
-		const provider = getRequiredProvider(this.provider)
-
-		const result = await mint(
-			provider,
-			collectionData.contract,
-			royalties,
-			supply,
-			undefined,
-			{
-				"": fixIpfs(request.uri),
-			},
-			await this.getOwner(request),
-		)
-
-		return {
-			type: MintType.ON_CHAIN,
-			transaction: new BlockchainTezosTransaction(result, this.network),
-			itemId: convertTezosItemId(`${collectionData.contract}:${result.token_id}`),
-		}
-	}
-
 	// eslint-disable-next-line no-dupe-class-members
-	mintSimplified(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
 	// eslint-disable-next-line no-dupe-class-members
-	mintSimplified(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
 	// eslint-disable-next-line no-dupe-class-members
-	async mintSimplified(request: MintSimplifiedRequest): Promise<MintResponse> {
-		const collectionData = await getCollectionData(this.apis.collection, request)
-
-		return this.mintCommon(request, collectionData)
+	async mintBasic(request: MintSimplifiedRequest): Promise<MintResponse> {
+		const response = await this.mint(request)
+		return response.submit(request)
 	}
 }
 
-export type CollectionData = { contract: string, owner?: string, type: "NFT" | "MT" }
-
 export async function getCollectionData(
-	api: NftCollectionControllerApi,
+	unionAPI: IApisSdk,
 	prepareRequest: HasCollection | HasCollectionId,
-): Promise<CollectionData> {
+) {
 	const contractAddress = getContractFromRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
 	}
-	const collection = await api.getNftCollectionById({
-		collection: contract,
+	const collection = await unionAPI.collection.getCollectionById({
+		collection: contractAddress,
 	})
 	if (!collection) {
 		throw new Error(`Tezos collection with address=${contract} has not been found`)

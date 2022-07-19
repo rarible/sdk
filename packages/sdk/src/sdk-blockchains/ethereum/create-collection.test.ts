@@ -7,7 +7,7 @@ import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
 
-describe("create collection", () => {
+describe.skip("create collection", () => {
 	const { web31, web32 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })

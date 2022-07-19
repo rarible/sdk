@@ -4,7 +4,7 @@ import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toCollectionId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { LogsLevel } from "../../domain"
@@ -12,7 +12,7 @@ import { awaitItem } from "../../common/test/await-item"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { providerDevelopmentSettings } from "./test/common"
 
-describe("mint", () => {
+describe.skip("mint", () => {
 	const { provider, wallet } = createE2eProvider(undefined, providerDevelopmentSettings)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 

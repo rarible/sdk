@@ -1,6 +1,6 @@
 import type { OrderId } from "@rarible/api-client"
 import type { MintRequest } from "../mint/mint-request.type"
-import type { MintResponse } from "../mint/domain"
+import type { MintResponse } from "../mint/prepare"
 import type { PrepareMintRequest } from "../mint/prepare-mint-request.type"
 import type { OriginFeeSupport, PayoutsSupport } from "../../order/fill/domain"
 import type { AbstractPrepareResponse, CurrencyType } from "../../../common/domain"
@@ -22,4 +22,4 @@ export type PrepareMintAndSellResponse =
 		supportsLazyMint: boolean
 	}
 
-export type IMintAndSell = (request: PrepareMintRequest) => Promise<PrepareMintAndSellResponse>
+export type IMintAndSellPrepare = (request: PrepareMintRequest) => Promise<PrepareMintAndSellResponse>

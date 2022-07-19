@@ -1,10 +1,10 @@
 import type { PrepareMintRequest } from "./prepare-mint-request.type"
 import type { MintRequest } from "./mint-request.type"
-import type { OnChainMintResponse, OffChainMintResponse } from "./domain"
+import type { OnChainMintResponse, OffChainMintResponse } from "./prepare"
 
 export interface IMintSimplified {
-	mintStart(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>
-	mintStart(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>
+	mint(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>
+	mint(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>
 }
 
 export type MintSimplifiedRequest = MintSimplifiedRequestOnChain | MintSimplifiedRequestOffChain

@@ -1,14 +1,12 @@
-import { SolanaWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import { toUnionAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { getWallet } from "../common/test/test-wallets"
 import type { ISolanaMetadataResponse } from "../domain"
+import { createSdk } from "../common/test/create-sdk"
 
-describe("Solana matadata", () => {
+describe("Solana metadata", () => {
 	const wallet = getWallet()
-	const sdk = createRaribleSdk(new SolanaWallet(wallet), "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet)
 
 	test("Should create correct metadata", async () => {
 		const meta = sdk.nft.preprocessMeta({

@@ -24,6 +24,7 @@ export enum DappType {
 	Dapper = "Dapper",
 	Mock = "Mock",
 	Generic = "Web3",
+	LedgerConnect = "LedgerConnect",
 }
 
 const PROVIDER_ID = "injected" as const
@@ -158,6 +159,7 @@ function getDappType(provider: any): Maybe<DappType> {
 			if (provider.isAlphaWallet) return DappType.AlphaWallet
 			if (provider.isStatus) return DappType.Status
 			if (provider.isToshi) return DappType.Coinbase
+			if (provider.isLedgerConnect) return DappType.LedgerConnect
 			if (typeof (window as any).__CIPHER__ !== "undefined") return DappType.Cipher
 			if (provider.constructor.name === "EthereumProvider") return DappType.Mist
 			if (provider.constructor.name === "Web3FrameProvider") return DappType.Parity

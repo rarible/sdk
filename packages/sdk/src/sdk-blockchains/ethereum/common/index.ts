@@ -147,7 +147,7 @@ export function getOrderFeesSum(order: Order): number {
 
 export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 	switch (network) {
-		case "e2e":
+		case "testnet":
 			return Blockchain.ETHEREUM
 		case "ropsten":
 			return Blockchain.ETHEREUM

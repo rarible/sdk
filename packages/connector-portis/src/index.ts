@@ -56,6 +56,6 @@ export class PortisConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const sdk = await this.instance.pipe(first()).toPromise()
-		return true === (await sdk.isLoggedIn()).result
+		return true === (await sdk?.isLoggedIn())?.result
 	}
 }

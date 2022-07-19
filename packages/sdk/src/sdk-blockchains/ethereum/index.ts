@@ -3,10 +3,11 @@ import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork, EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { Blockchain } from "@rarible/api-client"
+import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
-import type { LogsLevel } from "../../domain"
 import { Middlewarer } from "../../common/middleware/middleware"
+import { MetaUploader } from "../union/meta/upload-meta"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -46,6 +47,8 @@ export function createEthereumSdk(
 	const transferService = new EthereumTransfer(sdk, network)
 	const burnService = new EthereumBurn(sdk, network)
 	const cancelService = new EthereumCancel(sdk, network)
+	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
+	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
 	return {
 		nftBasic: {
@@ -70,7 +73,8 @@ export function createEthereumSdk(
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
 			deploy: createCollectionService.createCollection,
 			createCollection: createCollectionService.createCollection,
-			preprocessMeta: Middlewarer.skipMiddleware(mintService.preprocessMeta),
+			preprocessMeta,
+			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			fill: fillerService.fill,

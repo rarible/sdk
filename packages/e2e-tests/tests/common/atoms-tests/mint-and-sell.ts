@@ -2,7 +2,7 @@ import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { toBigNumber } from "@rarible/types"
 import type { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare-mint-request.type"
-import { MintType } from "@rarible/sdk/src/types/nft/mint/domain"
+import { MintType } from "@rarible/sdk/src/types/nft/mint/prepare"
 import type { MintAndSellRequest, MintAndSellResponse } from "@rarible/sdk/build/types/nft/mint-and-sell/domain"
 import { awaitOrderStock } from "../helpers"
 

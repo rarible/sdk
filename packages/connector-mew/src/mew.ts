@@ -67,6 +67,6 @@ export class MEWConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const instance = await this.instance.pipe(first()).toPromise()
-		return !!instance.Provider?.isConnected
+		return !!instance?.Provider?.isConnected
 	}
 }

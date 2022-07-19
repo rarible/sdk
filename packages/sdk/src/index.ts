@@ -8,8 +8,8 @@ import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell/domain"
 import type { OrderRequest } from "./types/order/common"
-import type { IMint, MintResponse, OffChainMintResponse, OnChainMintResponse } from "./types/nft/mint/domain"
-import { MintType } from "./types/nft/mint/domain"
+import type { IMint, MintResponse, OffChainMintResponse, OnChainMintResponse } from "./types/nft/mint/prepare"
+import { MintType } from "./types/nft/mint/prepare"
 import type { IMintAndSell, MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
@@ -21,8 +21,9 @@ import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
+import { createImmutablexSdkBlank } from "./sdk-blockchains/immutablex"
 import type {
-	IMintAndSellBasic,
+	IMintAndSellSimplified,
 	MintAndSellBasicRequestOffChain,
 	MintAndSellBasicRequestOnChain,
 	MintAndSellBasicResponseOffChain,
@@ -38,6 +39,7 @@ export function createRaribleSdk(
 ): IRaribleSdk {
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
+
 	const ethConfig = {
 		params: config?.apiClientParams,
 		logs: config?.logs ?? LogsLevel.TRACE,
@@ -61,7 +63,7 @@ export function createRaribleSdk(
 		createTezosSdk(
 			filterWallet(wallet, BlockchainGroup.TEZOS),
 			apis,
-			blockchainConfig.tezosNetwork
+			blockchainConfig
 		),
 		createEthereumSdk(
 			filterWallet(wallet, BlockchainGroup.ETHEREUM),
@@ -75,6 +77,7 @@ export function createRaribleSdk(
 			blockchainConfig.solanaNetwork,
 			config?.blockchain?.SOLANA
 		),
+		createImmutablexSdkBlank()
 	)
 
 	setupMiddleware(apis, instance, { wallet, env, config })
@@ -180,7 +183,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 				({ initial, mintResponse }: MiddleMintType) => ({
 					...initial,
 					itemId: mintResponse.itemId,
-					amount: initial.supply === undefined ? 1 : initial.supply,
+					amount: initial.supply,
 				}),
 				(orderId, { mintResponse }): MintAndSellResponse => ({
 					...mintResponse,
@@ -196,11 +199,11 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
-function createMintAndSellBasic(mint: IMintSimplified["mintStart"], sell: ISellSimplified): IMintAndSellBasic["mintAndSell"] {
+function createMintAndSellBasic(mint: IMintSimplified["mint"], sell: ISellSimplified): IMintAndSellSimplified["mintAndSell"] {
 	async function mintAndSell(request: MintAndSellBasicRequestOnChain): Promise<MintAndSellBasicResponseOnChain>
 	async	function mintAndSell(request: MintAndSellBasicRequestOffChain): Promise<MintAndSellBasicResponseOffChain>
 	async function mintAndSell(request: MintAndSellBasicRequestOnChain | MintAndSellBasicRequestOffChain) {
-		const mintResponse = (await mint(request as Parameters<IMintSimplified["mintStart"]>[0])) as OnChainMintResponse | OffChainMintResponse
+		const mintResponse = (await mint(request as Parameters<IMintSimplified["mint"]>[0])) as OnChainMintResponse | OffChainMintResponse
 		if (mintResponse.type === MintType.ON_CHAIN) {
 			await mintResponse.transaction.wait()
 		}

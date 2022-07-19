@@ -2,19 +2,20 @@ import { awaitAll, createE2eProvider, deployTestErc20 } from "@rarible/ethereum-
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
-import { toAddress, toContractAddress, toCurrencyId, toOrderId, toWord } from "@rarible/types"
+import { toAddress, toContractAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
+import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
+import { awaitStock } from "../../common/test/await-stock"
 import { initProviders } from "./test/init-providers"
-import { awaitStock } from "./test/await-stock"
 import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 
-describe("sale", () => {
+describe.skip("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
@@ -280,7 +281,7 @@ describe("sale", () => {
 })
 
 describe.skip("buy item with opensea order", () => {
-	const { provider } = createE2eProvider(undefined, {
+	const { provider } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
 		rpcUrl: "https://node-rinkeby.rarible.com",
 		networkId: 4,
 	})
@@ -288,7 +289,7 @@ describe.skip("buy item with opensea order", () => {
 	const web3 = new Web3(provider)
 	const ethereum1 = new Web3Ethereum({ web3 })
 	const meta = toWord(id32("CUSTOM_META"))
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "staging", {
+	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "testnet", {
 		logs: LogsLevel.DISABLED,
 		ethereum: {
 			openseaOrdersMetadata: meta,
@@ -301,5 +302,14 @@ describe.skip("buy item with opensea order", () => {
 		const fillAction = await sdk1.order.buy({ orderId })
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
+	})
+
+	test("buy item with seaport", async () => {
+		const orderId = toOrderId("ETHEREUM:0xefc670c6a0a5659c623a6c7163f715317cbf44139119d9ebe2d636a0f1754776")
+		const itemId = toItemId("ETHEREUM:0x1af7a7555263f275433c6bb0b8fdcd231f89b1d7:15754214302034704911334786657881932847148102202883437712117637319024858628148")
+		const fillAction = await sdk1.order.buy({ orderId })
+		const tx = await fillAction.submit({ amount: 1 })
+		await tx.wait()
+		await awaitForOwnership(sdk1, itemId, await ethereum1.getFrom())
 	})
 })

@@ -171,8 +171,6 @@ const prepare = await sdk.nft.transfer({
   signer: wallet,
   mint: mintPublicKey,
   amount: 1,
-  // token account address (not the same as the owner's wallet address!) 
-  tokenAccount: tokenAccount,
   // destintion user wallet public key
   to: destinationPublicKey,
 })
@@ -185,7 +183,6 @@ const transferTx = await prepare.submit("max")
 ```ts
 const prepare = await sdk.nft.burn({
   signer: wallet,
-  tokenAccount: tokenAccount,
   mint: mint,
   amount: 1,
 })

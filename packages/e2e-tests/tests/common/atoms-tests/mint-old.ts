@@ -1,5 +1,5 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import { MintType } from "@rarible/sdk/src/types/nft/mint/domain"
+import { MintType } from "@rarible/sdk/src/types/nft/mint/prepare"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare-mint-request.type"
 import type { MintResponse } from "@rarible/sdk/build/types/nft/mint/domain"
