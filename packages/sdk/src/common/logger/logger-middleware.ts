@@ -106,7 +106,7 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 						level: "TRACE",
 						method: callable.name,
 						message: "trace of " + callable.name,
-						time: (Date.now() - time) / 1000,
+						duration: (Date.now() - time) / 1000,
 						args: JSON.stringify(args),
 						resp: JSON.stringify(res),
 					})
@@ -117,7 +117,7 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 						level: "ERROR",
 						method: callable.name,
 						message: getErrorMessageString(err),
-						time: (Date.now() - time) / 1000,
+						duration: (Date.now() - time) / 1000,
 						args: JSON.stringify(args),
 					})
 				}
