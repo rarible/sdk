@@ -4394,6 +4394,13 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
+"@rarible/logger@~0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.5.tgz#773971ac3a4a83f4edfa565b7e2e2c7af1e5633c"
+  integrity sha512-127yckgb2Ao8pUjkNVIMn46teYfbFKkxAl4oUU7lN9iIIlJoyrqle2AVX/oPpMUpoqETf9xGLtAxX9miJZsLbg==
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
 "@rarible/protocol-ethereum-sdk@~0.12.77":
   version "0.12.77"
   resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.77.tgz#912ddda839f440b08f7512ae52b9f4632f67ec0f"
