@@ -8,6 +8,8 @@ import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
+import { MaxFeesBasePointSupport } from "../../types/order/fill/domain"
+import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
 import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
@@ -66,14 +68,22 @@ describe("Create & fill orders with order data v3", () => {
 
 	test("erc721 sell/buy", async () => {
 		const wallet1Address = wallet1.getAddressString()
+		await sentTxConfirm(it.testErc20.methods.mint(wallet2.getAddressString(), "100000000000000000"), {
+			from: wallet1Address,
+			gas: 500000,
+		})
 
 		const itemId = await mint()
 
 		const sellAction = await sdk1.order.sell({ itemId: itemId })
+		expect(sellAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.0000000000002",
-			currency: { "@type": "ETH" },
+			price: "0.004",
+			currency: {
+				"@type": "ERC20",
+				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+			},
 			originFees: [{
 				account: toUnionAddress("ETHEREUM:"+wallet1Address),
 				value: 10,
@@ -84,26 +94,28 @@ describe("Create & fill orders with order data v3", () => {
 		console.log("orderid > ", orderId)
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
-		expect(order.makeStock.toString()).toEqual(nextStock)
+		await awaitStock(sdk1, orderId, nextStock)
 
 		const updateAction = await sdk1.order.sellUpdate({ orderId })
-		await updateAction.submit({ price: "0.0000000000003" })
+		await updateAction.submit({ price: "0.003" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
 		const fillAction = await sdk2.order.buy({ orderId })
-
+		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
-		expect(order2.makeStock.toString()).toEqual(nextStock2)
+		await awaitStock(sdk1, orderId, nextStock2)
+		await retry(15, 2000, async () => {
+			const order = await sdk1.apis.order.getOrderById({ id: orderId })
+			expect(order.status).toEqual("FILLED")
+		})
 	})
 
 	test("erc721 bid/acceptBid", async () => {
-		await sentTxConfirm(it.testErc20.methods.mint(wallet2.getAddressString(), "10000000000000"), {
+		await sentTxConfirm(it.testErc20.methods.mint(wallet2.getAddressString(), "100000000000000000"), {
 			from: wallet1.getAddressString(),
 			gas: 500000,
 		})
@@ -118,34 +130,35 @@ describe("Create & fill orders with order data v3", () => {
 		const itemId = await mint()
 
 		const bidAction = await sdk2.order.bid({ itemId: itemId })
+		expect(bidAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const orderId = await bidAction.submit({
 			amount: 1,
-			price: "0.0000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
 				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
 			},
-			maxFeesBasePoint: 500,
 		})
 
 		console.log("orderid > ", orderId)
 
-		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
-		expect(order.makeStock.toString()).toEqual(nextStock)
+		await awaitStock(sdk1, orderId, 0.0002)
 
 		const updateAction = await sdk2.order.bidUpdate({ orderId })
-		await updateAction.submit({ price: "0.0000000000003" })
+		await updateAction.submit({ price: "0.0003" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
 		const fillAction = await sdk1.order.acceptBid({ orderId })
-
-		const tx = await fillAction.submit({ amount: 1 })
+		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
+		const tx = await fillAction.submit({ amount: 1, maxFeesBasePoint: 500 })
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
-		expect(order2.makeStock.toString()).toEqual(nextStock2)
+		await awaitStock(sdk1, orderId, nextStock2)
+		await retry(15, 2000, async () => {
+			const order = await sdk1.apis.order.getOrderById({ id: orderId })
+			expect(order.status).toEqual("FILLED")
+		})
 	})
 })
