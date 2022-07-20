@@ -22,6 +22,9 @@ export class EthereumCreateCollection {
 	}
 
 	convertOperatorsAddresses(operators: UnionAddress[]): Address[] {
+		if (!operators) {
+			throw new Error("Operators should be provided in case of deploy private collection")
+		}
 		return operators.map(o => {
 			const [blockchain, address] = o.split(":")
 			if (blockchain !== "ETHEREUM") {

@@ -94,6 +94,5 @@ describe.each(suites())("$blockchain api => activity", (suite) => {
 		const allActivitiesRaw = await getAllActivitiesRaw(sellerSdk,
 			[suite.blockchain], [ActivityType.MINT]) as GetAllActivities200
 		expect(allActivitiesRaw.value.activities.length).toBeGreaterThanOrEqual(1)
-
 	})
 })

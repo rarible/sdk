@@ -151,7 +151,7 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
 					node_url: "https://rpc.tzkt.io/ithacanet",
 					chain_id: "NetXnHfVqm9iesp",
-					sales: "KT199VxDKE7TLxoHwc3pbu9NgKhaUSki8x9i",
+					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
 					bid: "KT1UcBbv2D84mZ9tZx4MVLbCNyC5ihJERED2",
@@ -161,6 +161,7 @@ export function getMaybeTezosProvider(
 					dipdup: "https://test-tezos-indexer.rarible.org/v1/graphql",
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1T1JMFGipL6EdCmeL8tDfLiTi1BFZ1yAKV",
+					royalties_provider: "KT1AZfqFGFLMUrscNFyawDYAyqXYydz714ya",
 				},
 			}
 		}
@@ -181,7 +182,7 @@ export function getMaybeTezosProvider(
 					auction_storage: "KT1AJXNtHfFMB4kuJJexdevH2XeULivjThEX",
 					node_url: "https://dev-tezos-node.rarible.org",
 					chain_id: "NetXfHjxW3qBoxi",
-					sales: "KT1Tm7AogCrKA13rCzovyoKQVeUKK9TtV7xL",
+					sales: "KT198cr9bKZDGVtgj7P4DazAjq38r74hFSVu",
 					sales_storage: "KT19i8Dc5Bibei6YrtdzUt27B9UBkQo6oLsG",
 					transfer_manager: "KT1Xj6gsE694LkMg25SShYkU7dGzagm7BTSK",
 					bid: "KT1H9fa1QF4vyAt3vQcj65PiJJNG7vNVrkoW",
@@ -191,6 +192,7 @@ export function getMaybeTezosProvider(
 					dipdup: "https://dev-tezos-indexer.rarible.org/v1/graphql",
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1X1sxF2kqNKMKcNatbrx3d5M11LhSthQ3L",
+					royalties_provider: "KT1Q6gnT9KB3Y5ause5sZq3pFmBJnAeE5nvi",
 				},
 			}
 		}
@@ -211,7 +213,7 @@ export function getMaybeTezosProvider(
 					auction_storage: "",
 					node_url: "https://rpc.tzkt.io/mainnet",
 					chain_id: "NetXdQprcVkpaWU",
-					sales: "KT1GbPqXZ3yLUNWa7MdMiksJddD7TskTpuGU",
+					sales: "KT1N4Rrm6BU6229drs6scrH3vard1pPngMyA",
 					sales_storage: "KT1BEZNm3E25rZtXfPPKr5Jxygbi2kL2cCEW",
 					transfer_manager: "KT1ViAbsAM5rp89yVydEkbQozp1S12zqirwS",
 					bid: "",
@@ -221,6 +223,7 @@ export function getMaybeTezosProvider(
 					dipdup: "https://tezos-indexer.rarible.org/v1/graphql",
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1WvzYHCNBvDSdwafTHv7nJ1dWmZ8GCYuuC",
+					royalties_provider: "KT1HNNrmCk1fpqveRDz8Fvww2GM4gPzmA7fo",
 				},
 			}
 		}

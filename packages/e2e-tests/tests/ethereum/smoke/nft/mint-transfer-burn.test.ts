@@ -1,6 +1,7 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
+import { retry } from "@rarible/sdk/build/common/retry"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
@@ -188,9 +189,11 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
 			suite.mintRequest(creatorWalletAddress.unionAddress))
 
-		const allItems = await getAllItems(creatorSdk, [suite.blockchain], 5)
-		await verifyItemsByBlockchain(allItems, suite.blockchain)
-		await verifyItemsContainsItem(allItems, nft.id)
+		await retry(10, 2000, async () => {
+			const allItems = await getAllItems(creatorSdk, [suite.blockchain], 50)
+			await verifyItemsByBlockchain(allItems, suite.blockchain)
+			await verifyItemsContainsItem(allItems, nft.id)
+		})
 
 		await transfer(creatorSdk, { itemId: nft.id },
 			suite.transferRequest(recipientWalletAddress.unionAddress))

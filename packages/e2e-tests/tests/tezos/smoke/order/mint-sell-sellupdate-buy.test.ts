@@ -57,7 +57,7 @@ function suites(): {
 				}
 			},
 			updateSellRequest: {
-				price: "0.01",
+				price: "0.04",
 			},
 		},
 		{

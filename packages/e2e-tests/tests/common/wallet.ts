@@ -12,6 +12,7 @@ import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { createTestAuth, FLOW_TESTNET_ACCOUNT_3, FLOW_TESTNET_ACCOUNT_4 } from "@rarible/flow-test-common"
 import { testsConfig } from "./config"
+import { Logger } from "./logger"
 
 export function getEthereumWallet(pk?: string): EthereumWallet {
 	const config = {
@@ -128,7 +129,7 @@ export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<Wa
 		addressWithPrefix: addressWithPrefix,
 		unionAddress: toUnionAddress(addressWithPrefix),
 	}
-	console.log("wallet_address=", response)
+	Logger.log("wallet_address=", response)
 	return response
 }
 

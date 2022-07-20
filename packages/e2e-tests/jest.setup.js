@@ -7,4 +7,4 @@ global.window = {
 global.CustomEvent = function CustomEvent() {
 	return
 }
-jest.setTimeout(150000)
+jest.setTimeout(10 * 60 * 1000)

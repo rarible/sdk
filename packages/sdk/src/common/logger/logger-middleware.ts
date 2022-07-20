@@ -102,18 +102,23 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 				const res = await responsePromise
 
 				if (logsLevel >= LogsLevel.TRACE) {
-					remoteLogger.trace(callable.name, {
-						time: (Date.now() - time) / 1000,
-						args,
-						response: res,
+					remoteLogger.raw({
+						level: "TRACE",
+						method: callable.name,
+						message: "trace of " + callable.name,
+						duration: (Date.now() - time) / 1000,
+						args: JSON.stringify(args),
+						resp: JSON.stringify(res),
 					})
 				}
 			} catch (err: any) {
 				if (logsLevel >= LogsLevel.ERROR) {
-					remoteLogger.error(callable.name, {
-						time: (Date.now() - time) / 1000,
-						error: getErrorMessageString(err),
-						args,
+					remoteLogger.raw({
+						level: "ERROR",
+						method: callable.name,
+						message: getErrorMessageString(err),
+						duration: (Date.now() - time) / 1000,
+						args: JSON.stringify(args),
 					})
 				}
 			}
