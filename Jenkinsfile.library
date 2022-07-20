@@ -25,7 +25,6 @@ pipeline {
       when { tag "v*" }
       environment {
           NPM_TOKEN = credentials('npm-token')
-          NPM_HOME = '${env.WORKSPACE_TMP}'
       }
       steps {
         sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
