@@ -1,7 +1,7 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
-import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/send-transaction"
+import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { toAddress, toUnionAddress } from "@rarible/types"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
