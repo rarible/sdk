@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.22](https://github.com/rarible/sdk/compare/v0.9.11-beta.21...v0.9.11-beta.22) (2022-07-21)
+
+
+### Features
+
+* solana keypair wallet signMessage method implementation ([7c9295e](https://github.com/rarible/sdk/commit/7c9295e1cf6f07fa4f0903a66718b0c89a5ed3a9))
+
+
+
+
+
 ## [0.9.11-beta.21](https://github.com/rarible/sdk/compare/v0.9.11-beta.20...v0.9.11-beta.21) (2022-07-20)
 
 
