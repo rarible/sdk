@@ -23,13 +23,13 @@ pipeline {
         sh 'yarn && yarn release'
       }
     }
-  }
-  stage('test') {
-    environment {
-      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
-    }
-    steps {
-      sh 'yarn && yarn test'
+    stage('test') {
+      environment {
+        SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
+      }
+      steps {
+        sh 'yarn && yarn test'
+      }
     }
   }
   post {
