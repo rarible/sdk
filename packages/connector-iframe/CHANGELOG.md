@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.11-beta.23](https://github.com/rarible/sdk/compare/v0.9.11-beta.22...v0.9.11-beta.23) (2022-07-21)
+
+**Note:** Version bump only for package @rarible/connector-iframe
+
+
+
+
+
 ## [0.9.11-beta.22](https://github.com/rarible/sdk/compare/v0.9.11-beta.21...v0.9.11-beta.22) (2022-07-21)
 
 **Note:** Version bump only for package @rarible/connector-iframe

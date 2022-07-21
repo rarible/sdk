@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-torus",
-  "version": "0.9.11-beta.22",
+  "version": "0.9.11-beta.23",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.9.11-beta.22",
+    "@rarible/connector": "^0.9.11-beta.23",
     "@toruslabs/torus-embed": "^1.19.0"
   },
   "devDependencies": {
