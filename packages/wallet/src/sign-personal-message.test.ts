@@ -1,10 +1,11 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
+import { getSolanaTestWallet } from "@rarible/solana-wallet/src/tests/wallet.test"
 import * as fcl from "@onflow/fcl"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
-import { EthereumWallet, FlowWallet, TezosWallet } from "./index"
+import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./index"
 
 describe("test signPersonalMessage", () => {
 	const { provider } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
@@ -34,5 +35,10 @@ describe("test signPersonalMessage", () => {
 		const wallet = new TezosWallet(provider)
 
 		await wallet.signPersonalMessage("Dude, Where Is My Beer?")
+	})
+
+	test("solana signPersonalMessage", async () => {
+		const wallet = new SolanaWallet(getSolanaTestWallet())
+		console.log(await wallet.signPersonalMessage("Hello"))
 	})
 })
