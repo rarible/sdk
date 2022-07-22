@@ -43,7 +43,7 @@ export class SolanaKeypairWallet implements IWalletSigner {
 		} else {
 			data = message
 		}
-		return nacl.sign(data, this._keyPair.secretKey)
+		return nacl.sign(data, this._keyPair.secretKey).slice(0, nacl.sign.signatureLength)
 	}
 
 	/**
