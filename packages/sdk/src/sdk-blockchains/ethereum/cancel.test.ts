@@ -11,7 +11,7 @@ import { initProviders } from "./test/init-providers"
 import { awaitOrderCancel } from "./test/await-order-cancel"
 import { convertEthereumContractAddress } from "./common"
 
-describe.skip("cancel", () => {
+describe("cancel", () => {
 	const { web31, wallet1 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)
@@ -34,7 +34,7 @@ describe.skip("cancel", () => {
 
 		await awaitItem(sdk1, itemId)
 
-		const sellAction = await sdk1.order.sell({ itemId })
+		const sellAction = await sdk1.order.sell.prepare({ itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
 			price: "0.000000000000000002",
@@ -48,7 +48,7 @@ describe.skip("cancel", () => {
 		const order = await awaitStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
-		const tx = await sdk1.order.cancel.start({ orderId }).runAll()
+		const tx = await sdk1.order.cancel({ orderId })
 		await tx.wait()
 
 		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
@@ -56,14 +56,14 @@ describe.skip("cancel", () => {
 	})
 
 	test("sell and cancel with basic function", async () => {
-		const mintResult = await sdk1.nftBasic.mint({
+		const mintResult = await sdk1.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(erc721Address),
 		})
 		await mintResult.transaction.wait()
 		await awaitItem(sdk1, mintResult.itemId)
 
-		const orderId = await sdk1.orderBasic.sell({
+		const orderId = await sdk1.order.sell({
 			itemId: mintResult.itemId,
 			amount: 1,
 			price: "0.000000000000000002",
@@ -77,7 +77,7 @@ describe.skip("cancel", () => {
 		const order = await awaitStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
-		const tx = await sdk1.orderBasic.cancel({ orderId })
+		const tx = await sdk1.order.cancel({ orderId })
 		await tx.wait()
 
 		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)

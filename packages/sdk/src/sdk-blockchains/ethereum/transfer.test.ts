@@ -39,7 +39,7 @@ describe.skip("transfer", () => {
 
 		await awaitItem(sdk, itemId)
 
-		const transfer = await sdk.nft.transfer({ itemId })
+		const transfer = await sdk.nft.transfer.prepare({ itemId })
 		const tx = await transfer.submit({ to: receipent })
 
 		await tx.wait()
@@ -54,14 +54,14 @@ describe.skip("transfer", () => {
 		const receipentRaw = wallet2.getAddressString()
 		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(erc721Address),
 		})
 		await mintResult.transaction.wait()
 		await awaitItem(sdk, mintResult.itemId)
 
-		const transfer = await sdk.nftBasic.transfer({
+		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
 			to: receipent,
 		})
@@ -89,7 +89,7 @@ describe.skip("transfer", () => {
 
 		await awaitItem(sdk, itemId)
 
-		const transfer = await sdk.nft.transfer({ itemId })
+		const transfer = await sdk.nft.transfer.prepare({ itemId })
 		const tx = await transfer.submit({ to: receipent, amount: 10 })
 
 		await tx.wait()
@@ -104,7 +104,7 @@ describe.skip("transfer", () => {
 		const receipentRaw = wallet2.getAddressString()
 		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
-		const { itemId, transaction } = await sdk.nftBasic.mint({
+		const { itemId, transaction } = await sdk.nft.mint({
 			collectionId: toCollectionId(erc721Address),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		})
@@ -113,7 +113,7 @@ describe.skip("transfer", () => {
 
 		await awaitItem(sdk, itemId)
 
-		const tx = await sdk.nftBasic.transfer({
+		const tx = await sdk.nft.transfer({
 			itemId,
 			to: receipent,
 			amount: 10,

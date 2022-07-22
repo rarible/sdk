@@ -11,7 +11,7 @@ import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { providerDevelopmentSettings } from "./test/common"
 
-describe.skip("mintAndSell", () => {
+describe("mintAndSell", () => {
 	const {
 		provider,
 		wallet,
@@ -79,7 +79,7 @@ describe.skip("mintAndSell", () => {
 				},
 			},
 		}
-		const action = await sdk.nft.mintAndSell({ collection })
+		const action = await sdk.nft.mintAndSell.prepare({ collection })
 		expect(action.supportsRoyalties).toBeTruthy()
 		expect(action.originFeeSupport).toBe("FULL")
 	})
@@ -96,7 +96,7 @@ describe.skip("mintAndSell", () => {
 			collection: contract,
 			minter: sender,
 		})
-		const action = await sdk.nft.mintAndSell({
+		const action = await sdk.nft.mintAndSell.prepare({
 			collection,
 			tokenId,
 		})
@@ -149,7 +149,7 @@ describe.skip("mintAndSell", () => {
 			collection: contract,
 			minter: sender,
 		})
-		const result = await sdk.orderBasic.mintAndSell({
+		const result = await sdk.nft.mintAndSell({
 			collection: collection,
 			tokenId,
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -170,7 +170,49 @@ describe.skip("mintAndSell", () => {
 		expect(transaction.blockchain).toEqual("ETHEREUM")
 		expect(transaction.hash).toBeTruthy()
 
-		await retry(5, 2000, async () => {
+		await retry(10, 2000, async () => {
+			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
+			expect(order.makeStock.toString()).toBe("1")
+			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+			expect(item.supply.toString()).toEqual("1")
+			if (tokenId) {
+				expect(item.tokenId).toEqual(tokenId.tokenId)
+			} else {
+				throw new Error("Token id must be defined")
+			}
+		})
+	})
+
+	test("should lazy mint and put on sale ERC721 token with basic function", async () => {
+		const senderRaw = wallet.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: contract,
+		})
+
+		const tokenId = await sdk.nft.generateTokenId({
+			collection: contract,
+			minter: sender,
+		})
+		const result = await sdk.nft.mintAndSell({
+			collection: collection,
+			tokenId,
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: sender,
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: true,
+			supply: 1,
+			price: "0.000000000000000001",
+			currency: {
+				"@type": "ETH",
+			},
+		})
+
+		await retry(10, 2000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe("1")
 			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })

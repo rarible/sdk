@@ -15,7 +15,7 @@ describe.skip("deploy tezos tests", () => {
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
 	test("deploy public nft", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
@@ -31,7 +31,7 @@ describe.skip("deploy tezos tests", () => {
 	})
 
 	test("deploy public nft with simplified function createCollectionStart", async () => {
-		const result = await sdk.nftBasic.createCollection({
+		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
@@ -47,7 +47,7 @@ describe.skip("deploy tezos tests", () => {
 	})
 
 	test.skip("deploy private nft", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
@@ -67,7 +67,7 @@ describe.skip("deploy tezos tests", () => {
 
 
 	test("deploy private nft with simplified function createCollectionStart", async () => {
-		const result = await sdk.nftBasic.createCollection({
+		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
@@ -83,7 +83,7 @@ describe.skip("deploy tezos tests", () => {
 	})
 
 	test("deploy public mt", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",
@@ -101,7 +101,7 @@ describe.skip("deploy tezos tests", () => {
 	})
 
 	test("deploy public MT with simplified function createCollectionStart", async () => {
-		const result = await sdk.nftBasic.createCollection({
+		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "MT",
 			name: "My NFT collection",
@@ -117,7 +117,7 @@ describe.skip("deploy tezos tests", () => {
 	})
 
 	test.skip("deploy private mt", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",

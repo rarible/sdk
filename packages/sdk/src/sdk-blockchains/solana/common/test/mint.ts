@@ -5,7 +5,7 @@ import type { IRaribleSdk } from "../../../../domain"
 import { retry } from "../../../../common/retry"
 
 export async function mintToken(sdk: IRaribleSdk): Promise<Item> {
-	const mint = await sdk.nft.mint({
+	const mint = await sdk.nft.mint.prepare({
 		collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 	})
 

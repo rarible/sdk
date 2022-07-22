@@ -15,7 +15,7 @@ describe("Solana sell", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const sell = await sdk.order.sell({ itemId })
+			const sell = await sdk.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				currency: {
@@ -26,7 +26,7 @@ describe("Solana sell", () => {
 		})
 
 		const tx = await retry(10, 4000, async () => {
-			const buy = await buyerSdk.order.buy({
+			const buy = await buyerSdk.order.buy.prepare({
 				orderId,
 			})
 
@@ -45,7 +45,7 @@ describe("Solana sell", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			return sdk.orderBasic.sell({
+			return sdk.order.sell({
 				itemId,
 				amount: 1,
 				currency: {
@@ -56,7 +56,7 @@ describe("Solana sell", () => {
 		})
 
 		const tx = await retry(10, 4000, async () => {
-			return buyerSdk.orderBasic.buy({
+			return buyerSdk.order.buy({
 				orderId,
 				amount: 1,
 				itemId,

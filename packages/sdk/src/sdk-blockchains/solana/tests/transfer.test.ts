@@ -26,7 +26,7 @@ describe("Solana transfer", () => {
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 
 		const tx = await retry(10, 4000, async () => {
-			const burn = await sdk.nft.transfer({ itemId })
+			const burn = await sdk.nft.transfer.prepare({ itemId })
 			return burn.submit({
 				to: toUnionAddress("SOLANA:" + receiverWallet.publicKey),
 				amount: parseFloat(balance.toString()),
@@ -64,7 +64,7 @@ describe("Solana transfer", () => {
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 
 		const tx = await retry(10, 4000, async () => {
-			return sdk.nftBasic.transfer({
+			return sdk.nft.transfer({
 				itemId,
 				to: toUnionAddress("SOLANA:" + receiverWallet.publicKey),
 				amount: parseFloat(balance.toString()),

@@ -17,7 +17,7 @@ import type {
 } from "../../types/order/common"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type {
 	GetConvertableValueResult,
 	PrepareBidRequest,
@@ -255,7 +255,7 @@ export class SolanaOrder {
 		return updateResponse.submit(request)
 	}
 
-	cancel: ICancel = Action.create({
+	cancel: ICancelAction = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
 			const order = await getPreparedOrder(request, this.apis)

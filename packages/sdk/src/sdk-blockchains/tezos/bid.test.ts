@@ -15,7 +15,7 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("bid test", () => {
+describe("bid test", () => {
 	const env: RaribleSdkEnvironment = "staging"
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
@@ -45,7 +45,7 @@ describe.skip("bid test", () => {
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
 	test("bid NFT test", async () => {
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -61,7 +61,7 @@ describe.skip("bid test", () => {
 
 		// make bid by bidder
 		console.log("before bid")
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
 			amount: 1,
 			price: "0.000002",
@@ -76,7 +76,7 @@ describe.skip("bid test", () => {
 
 		// update bid price
 		console.log("before bid update")
-		const updateAction = await bidderSdk.order.bidUpdate({ orderId })
+		const updateAction = await bidderSdk.order.bidUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.000004" })
 
 		await retry(10, 1000, async () => {
@@ -90,7 +90,7 @@ describe.skip("bid test", () => {
 
 		console.log("before accept bid")
 		// accept bid by item owner
-		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId })
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid.prepare({ orderId })
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 1,
 			infiniteApproval: true,
@@ -102,7 +102,7 @@ describe.skip("bid test", () => {
 	}, 1500000)
 
 	test("bid NFT test with basic function", async () => {
-		const mintResult = await itemOwnerSdk.nftBasic.mint({
+		const mintResult = await itemOwnerSdk.nft.mint({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 		})
@@ -112,7 +112,7 @@ describe.skip("bid test", () => {
 
 		// make bid by bidder
 		console.log("before bid")
-		const orderId = await bidderSdk.orderBasic.bid({
+		const orderId = await bidderSdk.order.bid({
 			itemId: mintResult.itemId,
 			amount: 1,
 			price: "0.000002",
@@ -127,7 +127,7 @@ describe.skip("bid test", () => {
 
 		// update bid price
 		console.log("before bid update")
-		await bidderSdk.orderBasic.bidUpdate({
+		await bidderSdk.order.bidUpdate({
 			orderId,
 			price: "0.000004",
 		})
@@ -143,7 +143,7 @@ describe.skip("bid test", () => {
 
 		console.log("before accept bid")
 		// accept bid by item owner
-		const fillBidResult = await itemOwnerSdk.orderBasic.acceptBid({
+		const fillBidResult = await itemOwnerSdk.order.acceptBid({
 			orderId,
 			amount: 1,
 		})
@@ -154,7 +154,7 @@ describe.skip("bid test", () => {
 	}, 1500000)
 
 	test.skip("bid MT test", async () => {
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -169,7 +169,7 @@ describe.skip("bid test", () => {
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
 		// make bid by bidder
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
 			amount: 3,
 			price: "0.00002",
@@ -187,7 +187,7 @@ describe.skip("bid test", () => {
 		await awaitForOrder(bidderSdk, orderId)
 
 		// update bid price
-		const updateAction = await bidderSdk.order.bidUpdate({ orderId })
+		const updateAction = await bidderSdk.order.bidUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.00004" })
 
 		await retry(10, 2000, async () => {
@@ -200,7 +200,7 @@ describe.skip("bid test", () => {
 		})
 
 		// accept bid by item owner
-		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId })
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid.prepare({ orderId })
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 3,
 			infiniteApproval: true,
@@ -211,7 +211,7 @@ describe.skip("bid test", () => {
 	}, 1500000)
 
 	test.skip("bid MT test with CurrencyId", async () => {
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -226,7 +226,7 @@ describe.skip("bid test", () => {
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
 		// make bid by bidder
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
 			amount: 3,
 			price: "0.00002",
@@ -244,7 +244,7 @@ describe.skip("bid test", () => {
 		expect(takeAssetType.tokenId).toEqual("0")
 
 		// accept bid by item owner
-		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId })
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid.prepare({ orderId })
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 3,
 			infiniteApproval: true,
@@ -255,7 +255,7 @@ describe.skip("bid test", () => {
 	}, 1500000)
 
 	test.skip("getConvertValue returns insufficient type", async () => {
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -269,7 +269,7 @@ describe.skip("bid test", () => {
 
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
-		const bidResponse = await nullFundsWalletSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await nullFundsWalletSdk.order.bid.prepare({ itemId: mintResult.itemId })
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "TEZOS_FT", contract: wXTZContract },
@@ -287,7 +287,7 @@ describe.skip("bid test", () => {
 	})
 
 	test.skip("getConvertValue returns convertable value", async () => {
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -303,7 +303,7 @@ describe.skip("bid test", () => {
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "TEZOS_FT", contract: wXTZContract },
@@ -321,7 +321,7 @@ describe.skip("bid test", () => {
 	})
 
 	test.skip("getConvertValue returns undefined when passed non-wXTZ contract", async () => {
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -337,7 +337,7 @@ describe.skip("bid test", () => {
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
 
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 
 		const value = await bidResponse.getConvertableValue({
 			assetType: { "@type": "TEZOS_FT", contract: eurTzContract },
@@ -355,7 +355,7 @@ describe.skip("bid test", () => {
 	test.skip("convert currency on bid", async () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -370,7 +370,7 @@ describe.skip("bid test", () => {
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "4")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 
 		const wXTZAsset = { "@type": "TEZOS_FT" as const, contract: wXTZContract, tokenId: toBigNumber("0") }
 
@@ -384,10 +384,10 @@ describe.skip("bid test", () => {
 			}],
 		})
 
-		const updateAction = await bidderSdk.order.bidUpdate({ orderId: bidOrderId })
+		const updateAction = await bidderSdk.order.bidUpdate.prepare({ orderId: bidOrderId })
 		await updateAction.submit({ price: "0.00004" })
 
-		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId: bidOrderId })
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid.prepare({ orderId: bidOrderId })
 		const acceptBidTx = await acceptBidResponse.submit({
 			amount: 4,
 			infiniteApproval: true,
@@ -404,7 +404,7 @@ describe.skip("bid test", () => {
 	test.skip("unwrap wXTZ on accept bid", async () => {
 		const bidderAddress = await bidderWallet.provider.address()
 
-		const mintResponse = await itemOwnerSdk.nft.mint({
+		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: convertTezosToCollectionAddress(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -419,7 +419,7 @@ describe.skip("bid test", () => {
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		await resetWXTZFunds(bidderWallet, bidderSdk, wXTZContract)
-		const bidResponse = await bidderSdk.order.bid({ itemId: mintResult.itemId })
+		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 
 		const wXTZAsset = { "@type": "TEZOS_FT" as const, contract: wXTZContract, tokenId: toBigNumber("0") }
 
@@ -433,7 +433,7 @@ describe.skip("bid test", () => {
 			}],
 		})
 
-		const acceptBidResponse = await itemOwnerSdk.order.acceptBid({ orderId: bidOrderId })
+		const acceptBidResponse = await itemOwnerSdk.order.acceptBid.prepare({ orderId: bidOrderId })
 		const acceptBidTx = await acceptBidResponse.submit({
 			amount: 1,
 			infiniteApproval: true,

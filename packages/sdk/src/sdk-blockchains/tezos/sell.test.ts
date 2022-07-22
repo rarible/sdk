@@ -24,7 +24,7 @@ describe.skip("sell test", () => {
 
 	test("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
-		const mintResponse = await sellerSdk.nft.mint({
+		const mintResponse = await sellerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -38,7 +38,7 @@ describe.skip("sell test", () => {
 
 		await awaitItemSupply(sellerSdk, mintResult.itemId, "1")
 
-		const sellAction = await sellerSdk.order.sell({
+		const sellAction = await sellerSdk.order.sell.prepare({
 			itemId: mintResult.itemId,
 		})
 
@@ -55,7 +55,7 @@ describe.skip("sell test", () => {
 		})
 
 		await awaitForOrder(sellerSdk, orderId)
-		const updateAction = await sellerSdk.order.sellUpdate({
+		const updateAction = await sellerSdk.order.sellUpdate.prepare({
 			orderId,
 		})
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
@@ -69,7 +69,7 @@ describe.skip("sell test", () => {
 	}, 1500000)
 
 	test("sell MT test", async () => {
-		const mintResponse = await sellerSdk.nft.mint({
+		const mintResponse = await sellerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -83,7 +83,7 @@ describe.skip("sell test", () => {
 
 		await awaitItemSupply(sellerSdk, mintResult.itemId, "10")
 
-		const sellAction = await sellerSdk.order.sell({
+		const sellAction = await sellerSdk.order.sell.prepare({
 			itemId: mintResult.itemId,
 		})
 

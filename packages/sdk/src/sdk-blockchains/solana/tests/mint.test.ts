@@ -9,7 +9,7 @@ describe("Solana mint", () => {
 	const sdk = createSdk(wallet)
 
 	test("mint an nft", async () => {
-		const { submit } = await sdk.nft.mint({
+		const { submit } = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 		})
 
@@ -31,7 +31,7 @@ describe("Solana mint", () => {
 	})
 
 	test("mint an nft with basic function", async () => {
-		const res = await sdk.nftBasic.mint({
+		const res = await sdk.nft.mint({
 			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 			uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 		})

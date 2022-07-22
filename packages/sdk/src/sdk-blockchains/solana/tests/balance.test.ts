@@ -17,7 +17,7 @@ describe("Solana get balance", () => {
 	})
 
 	test("get balance NFT", async () => {
-		const mint = await sdk.nft.mint({
+		const mint = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 		})
 

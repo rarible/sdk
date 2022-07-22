@@ -8,6 +8,8 @@ import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
+import { SimplifiedWithActionClass, SimplifiedWithPrepareClass } from "../../types/common"
+import type { IMint } from "../../types/nft/mint"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -41,8 +43,8 @@ export function createEthereumSdk(
 	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
-	const fillerService = new EthereumFill(sdk, wallet, network)
-	const createCollectionService = new EthereumCreateCollection(sdk, network)
+	const fillService = new EthereumFill(sdk, wallet, network)
+	const { createCollection, createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
 	const transferService = new EthereumTransfer(sdk, network)
 	const burnService = new EthereumBurn(sdk, network)
@@ -51,40 +53,25 @@ export function createEthereumSdk(
 	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
 	return {
-		nftBasic: {
-			mint: mintService.mintBasic,
-			transfer: transferService.transferBasic,
-			burn: burnService.burnBasic,
-			createCollection: createCollectionService.createCollectionBasic,
-		},
-		orderBasic: {
-			sell: sellService.sellBasic,
-			sellUpdate: sellService.sellUpdateBasic,
-			buy: fillerService.buyBasic,
-			acceptBid: fillerService.acceptBidBasic,
-			bid: bidService.bidBasic,
-			bidUpdate: bidService.bidUpdateBasic,
-			cancel: cancelService.cancelBasic,
-		},
 		nft: {
-			transfer: transferService.transfer,
-			mint: mintService.prepare,
-			burn: burnService.burn,
+			mint: new SimplifiedWithPrepareClass(mintService.mintBasic, mintService.prepare) as IMint,
+			burn: new SimplifiedWithPrepareClass(burnService.burnBasic, burnService.burn),
+			transfer: new SimplifiedWithPrepareClass(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
-			deploy: createCollectionService.createCollection,
-			createCollection: createCollectionService.createCollection,
+			deploy: new SimplifiedWithActionClass(createCollectionSimplified, createCollection),
+			createCollection: new SimplifiedWithActionClass(createCollectionSimplified, createCollection),
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			fill: fillerService.fill,
-			buy: fillerService.buy,
-			acceptBid: fillerService.acceptBid,
-			sell: sellService.sell,
-			sellUpdate: sellService.update,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
-			cancel: cancelService.cancel,
+			fill: { prepare: fillService.fill },
+			buy: new SimplifiedWithPrepareClass(fillService.buyBasic, fillService.fill),
+			acceptBid: new SimplifiedWithPrepareClass(fillService.acceptBidBasic, fillService.fill),
+			sell: new SimplifiedWithPrepareClass(sellService.sellBasic, sellService.sell),
+			sellUpdate: new SimplifiedWithPrepareClass(sellService.sellUpdateBasic, sellService.update),
+			bid: new SimplifiedWithPrepareClass(bidService.bidBasic, bidService.bid),
+			bidUpdate: new SimplifiedWithPrepareClass(bidService.bidUpdateBasic, bidService.update),
+			cancel: new SimplifiedWithActionClass(cancelService.cancelBasic, cancelService.cancel),
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

@@ -25,7 +25,7 @@ describe("Solana burn", () => {
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 
 		const tx = await retry(10, 4000, async () => {
-			const burn = await sdk.nft.burn({ itemId })
+			const burn = await sdk.nft.burn.prepare({ itemId })
 			return burn.submit({ amount: parseFloat(balance.toString()) })
 		})
 		await tx?.wait()
@@ -60,7 +60,7 @@ describe("Solana burn", () => {
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 
 		const tx = await retry(10, 4000, async () => {
-			return sdk.nftBasic.burn({
+			return sdk.nft.burn({
 				itemId,
 				amount: parseFloat(balance.toString()),
 			})

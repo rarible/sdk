@@ -9,7 +9,7 @@ import type { OrderInternalRequest } from "../common"
 import type { OrderRequest } from "../common"
 
 export type ISellPrepare = (request: PrepareOrderRequest) => Promise<PrepareSellResponse>
-export type ISellInternal = (request: PrepareSellInternalRequest) => Promise<PrepareSellInternalResponse>
+export type ISellInternalPrepare = (request: PrepareSellInternalRequest) => Promise<PrepareSellInternalResponse>
 export type ISellUpdatePrepare = (request: PrepareOrderUpdateRequest) => Promise<PrepareOrderUpdateResponse>
 
 export type PrepareSellInternalResponse = BasePrepareOrderResponse<OrderInternalRequest>

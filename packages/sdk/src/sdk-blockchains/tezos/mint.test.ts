@@ -22,7 +22,7 @@ describe.skip("mint test", () => {
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("mint NFT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 
@@ -47,7 +47,7 @@ describe.skip("mint test", () => {
 
 
 	test("mint MT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -67,7 +67,7 @@ describe.skip("mint test", () => {
 	}, 1500000)
 
 	test("mint MT token with basic function", async () => {
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${mtContract}`),
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,

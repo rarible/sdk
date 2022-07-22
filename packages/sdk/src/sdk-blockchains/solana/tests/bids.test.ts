@@ -15,7 +15,7 @@ describe("Solana bid", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const bid = await buyerSdk.order.bid({ itemId })
+			const bid = await buyerSdk.order.bid.prepare({ itemId })
 			return bid.submit({
 				amount: 1,
 				currency: {
@@ -26,7 +26,7 @@ describe("Solana bid", () => {
 		})
 
 		await retry(10, 4000, async () => {
-			const accept = await sdk.order.acceptBid({
+			const accept = await sdk.order.acceptBid.prepare({
 				orderId,
 			})
 			return accept.submit({
@@ -41,7 +41,7 @@ describe("Solana bid", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const bid = await buyerSdk.order.bid({ itemId })
+			const bid = await buyerSdk.order.bid.prepare({ itemId })
 			return bid.submit({
 				amount: 1,
 				currency: {
@@ -52,7 +52,7 @@ describe("Solana bid", () => {
 		})
 
 		await retry(10, 4000, async () => {
-			const update = await buyerSdk.order.bidUpdate({ orderId })
+			const update = await buyerSdk.order.bidUpdate.prepare({ orderId })
 			return update.submit({
 				price: toBigNumber("0.003"),
 			})
@@ -74,7 +74,7 @@ describe("Solana bid", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const bid = await buyerSdk.order.bid({ itemId })
+			const bid = await buyerSdk.order.bid.prepare({ itemId })
 			return bid.submit({
 				amount: 1,
 				currency: {
@@ -85,7 +85,7 @@ describe("Solana bid", () => {
 		})
 
 		await retry(10, 4000, async () => {
-			const update = await buyerSdk.order.bidUpdate({ orderId })
+			const update = await buyerSdk.order.bidUpdate.prepare({ orderId })
 			return update.submit({
 				price: toBigNumber("0.003"),
 			})
@@ -107,7 +107,7 @@ describe("Solana bid", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			return buyerSdk.orderBasic.bid({
+			return buyerSdk.order.bid({
 				itemId,
 				amount: 1,
 				currency: {
@@ -118,7 +118,7 @@ describe("Solana bid", () => {
 		})
 
 		const tx = await retry(10, 4000, async () => {
-			return sdk.orderBasic.acceptBid({
+			return sdk.order.acceptBid({
 				orderId,
 				amount: 1,
 				itemId,

@@ -5,7 +5,6 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { IUploadMeta } from "./types/nft/mint/prepare"
-import type { ISellInternal } from "./types/order/sell/domain"
 import type {
 	IDepositBiddingBalance,
 	IGetBiddingBalance,
@@ -20,17 +19,6 @@ import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
-import type { ICreateCollectionSimplified } from "./types/nft/deploy/simplified"
-import type { IMintSimplified } from "./types/nft/mint/simplified"
-import type { IMintAndSellSimplified } from "./types/nft/mint-and-sell/simplified"
-import type { ISellSimplified } from "./types/order/sell/simplified"
-import type { IBurnSimplified } from "./types/nft/burn/simplified"
-import type { IBidSimplified } from "./types/order/bid/simplified"
-import type { IBidUpdateSimplified } from "./types/order/bid/simplified"
-import type { ICancelSimplified } from "./types/order/cancel/simplified"
-import type { IBuySimplified, IAcceptBidSimplified } from "./types/order/fill/simplified"
-import type { ITransferSimplified } from "./types/nft/transfer/simplified"
-import type { ISellUpdateSimplified } from "./types/order/sell/simplified"
 import type { IMint } from "./types/nft/mint"
 import type { IMintAndSell } from "./types/nft/mint-and-sell"
 import type { ITransfer } from "./types/nft/transfer"
@@ -41,6 +29,7 @@ import type { ISellUpdate } from "./types/order/sell"
 import type { IAcceptBid, IBuy, IFill } from "./types/order/fill"
 import type { IBid, IBidUpdate } from "./types/order/bid"
 import type { ICancel } from "./types/order/cancel"
+import type { ISellInternal } from "./types/order/sell"
 
 export enum LogsLevel {
 	DISABLED = 0,

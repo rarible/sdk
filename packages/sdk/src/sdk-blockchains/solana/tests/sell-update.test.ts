@@ -13,7 +13,7 @@ describe("Solana sell order update", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const sell = await sdk.order.sell({ itemId })
+			const sell = await sdk.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				currency: {
@@ -29,7 +29,7 @@ describe("Solana sell order update", () => {
 		expect(order.makePrice).toEqual("0.001")
 
 		await retry(10, 4000, async () => {
-			const sell = await sdk.order.sellUpdate({ orderId })
+			const sell = await sdk.order.sellUpdate.prepare({ orderId })
 			return sell.submit({
 				price: toBigNumber("200"),
 			})
@@ -50,7 +50,7 @@ describe("Solana sell order update", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			return sdk.orderBasic.sell({
+			return sdk.order.sell({
 				itemId,
 				amount: 1,
 				currency: {
@@ -66,7 +66,7 @@ describe("Solana sell order update", () => {
 		expect(order.makePrice).toEqual("0.001")
 
 		await retry(10, 4000, async () => {
-			return sdk.orderBasic.sellUpdate({
+			return sdk.order.sellUpdate({
 				orderId,
 				price: toBigNumber("200"),
 

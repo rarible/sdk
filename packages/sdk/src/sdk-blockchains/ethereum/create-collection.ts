@@ -21,7 +21,7 @@ export class EthereumCreateCollection {
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.startCreateCollection = this.startCreateCollection.bind(this)
-		this.createCollectionBasic = this.createCollectionBasic.bind(this)
+		this.createCollectionSimplified = this.createCollectionSimplified.bind(this)
 	}
 
 	convertOperatorsAddresses(operators: UnionAddress[]): Address[] {
@@ -92,7 +92,7 @@ export class EthereumCreateCollection {
 		},
 	})
 
-	async createCollectionBasic(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+	async createCollectionSimplified(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
 		if (request.blockchain !== Blockchain.ETHEREUM) {
 			throw new Error("Wrong blockchain")
 		}

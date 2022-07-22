@@ -18,7 +18,7 @@ describe("transfer test", () => {
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("transfer NFT test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -32,7 +32,7 @@ describe("transfer test", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("1"))
 
-		const transfer = await sdk.nft.transfer({
+		const transfer = await sdk.nft.transfer.prepare({
 			itemId: mintResult.itemId,
 		})
 
@@ -47,7 +47,7 @@ describe("transfer test", () => {
 	}, 1500000)
 
 	test("transfer MT test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -60,7 +60,7 @@ describe("transfer test", () => {
 		}
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
-		const transfer = await sdk.nft.transfer({
+		const transfer = await sdk.nft.transfer.prepare({
 			itemId: mintResult.itemId,
 		})
 		const result = await transfer.submit({
@@ -74,7 +74,7 @@ describe("transfer test", () => {
 	}, 1500000)
 
 	test("transfer MT test with basic function", async () => {
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			collectionId: toCollectionId(mtContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 10,
@@ -82,7 +82,7 @@ describe("transfer test", () => {
 		await mintResult.transaction.wait()
 		await awaitItemSupply(sdk, mintResult.itemId, "10")
 
-		const transfer = await sdk.nftBasic.transfer({
+		const transfer = await sdk.nft.transfer({
 			itemId: mintResult.itemId,
 			to: toUnionAddress(`TEZOS:${recipient}`),
 			amount: 5,

@@ -7,7 +7,7 @@ import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
 
-describe.skip("create collection", () => {
+describe("create collection", () => {
 	const { web31, web32 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
@@ -17,7 +17,7 @@ describe.skip("create collection", () => {
 	const sdk2 = createRaribleSdk(ethereumWallet2, "development", { logs: LogsLevel.DISABLED })
 
 	test("create erc-721 collection legacy", async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await sdk1.nft.createCollection.action({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",
@@ -40,7 +40,7 @@ describe.skip("create collection", () => {
 	})
 
 	test("create erc-721 collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await sdk1.nft.createCollection.action({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",
@@ -62,7 +62,7 @@ describe.skip("create collection", () => {
 	})
 
 	test("create erc-721 collection with basic function", async () => {
-		const { address, tx } = await sdk1.nftBasic.createCollection({
+		const { address, tx } = await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			type: "ERC721",
 			name: "name",
@@ -78,7 +78,7 @@ describe.skip("create collection", () => {
 			})
 		})
 		//check if collection is public
-		const mintTx = await sdk2.nftBasic.mint({
+		const mintTx = await sdk2.nft.mint({
 			collectionId: toCollectionId(address),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		})
@@ -86,7 +86,7 @@ describe.skip("create collection", () => {
 	})
 
 	test("create erc-721 user collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await sdk1.nft.createCollection.action({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC721",
@@ -109,7 +109,7 @@ describe.skip("create collection", () => {
 	})
 
 	test("create erc-1155 collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await sdk1.nft.createCollection.action({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC1155",
@@ -131,7 +131,7 @@ describe.skip("create collection", () => {
 	})
 
 	test("create erc-1155 user collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await sdk1.nft.createCollection.action({
 			blockchain: Blockchain.ETHEREUM,
 			asset: {
 				assetType: "ERC1155",

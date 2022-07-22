@@ -26,7 +26,7 @@ describe("burn", () => {
 		const senderRaw = wallet1.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -43,7 +43,7 @@ describe("burn", () => {
 
 		await awaitItem(sdk, mintResult.itemId)
 
-		const burn = await sdk.nft.burn({ itemId: mintResult.itemId })
+		const burn = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
 		const tx = await burn.submit()
 
 		if (tx) {
@@ -60,7 +60,7 @@ describe("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: `ETHEREUM:${contractErc1155}`,
 		})
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -77,7 +77,7 @@ describe("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
-		const burn = await sdk.nft.burn({
+		const burn = await sdk.nft.burn.prepare({
 			itemId: mintResult.itemId,
 		})
 		const tx = await burn.submit({ amount: 5 })
@@ -95,7 +95,7 @@ describe("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(e2eErc721V3ContractAddress, Blockchain.ETHEREUM),
 		})
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -109,7 +109,7 @@ describe("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("1"))
 
-		const burn = await sdk.nft.burn({ itemId: mintResult.itemId })
+		const burn = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
 		await burn.submit({
 			creators: [{
 				account: sender,
@@ -127,7 +127,7 @@ describe("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
 		})
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -141,7 +141,7 @@ describe("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
-		const burn = await sdk.nft.burn({
+		const burn = await sdk.nft.burn.prepare({
 			itemId: mintResult.itemId,
 		})
 		await burn.submit({
@@ -161,7 +161,7 @@ describe("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
 		})
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			collection,
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -175,7 +175,7 @@ describe("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
-		await sdk.nftBasic.burn({
+		await sdk.nft.burn({
 			itemId: mintResult.itemId,
 			amount: 10,
 		})

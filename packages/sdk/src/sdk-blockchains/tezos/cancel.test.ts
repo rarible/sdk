@@ -25,7 +25,7 @@ describe("cancel test", () => {
 	const nftContract: string = getTestContract(env, "nftContract")
 
 	test("cancel order", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -39,7 +39,7 @@ describe("cancel test", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, "1")
 
-		const sellAction = await sdk.order.sell({
+		const sellAction = await sdk.order.sell.prepare({
 			itemId: mintResult.itemId,
 		})
 
@@ -78,8 +78,7 @@ describe("cancel test", () => {
 	}, 1500000)
 
 	test("cancel order with basic function", async () => {
-		console.log("sdk.orderBasic", sdk.orderBasic)
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			collectionId: toCollectionId(nftContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 		})
@@ -87,7 +86,7 @@ describe("cancel test", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, "1")
 
-		const orderId = await sdk.orderBasic.sell({
+		const orderId = await sdk.order.sell({
 			itemId: mintResult.itemId,
 			price: "0.000001",
 			currency: {
@@ -105,7 +104,7 @@ describe("cancel test", () => {
 		})
 
 		await delay(10000)
-		const cancelTx = await sdk.orderBasic.cancel({
+		const cancelTx = await sdk.order.cancel({
 			orderId,
 		})
 		await cancelTx.wait()
@@ -121,7 +120,7 @@ describe("cancel test", () => {
 	}, 1500000)
 
 	test("cancel v1 order", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({

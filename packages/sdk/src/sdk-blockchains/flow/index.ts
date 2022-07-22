@@ -10,6 +10,8 @@ import { nonImplementedAction, notImplemented } from "../../common/not-implement
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
+import { SimplifiedWithActionClass, SimplifiedWithPrepareClass } from "../../types/common"
+import type { IMint } from "../../types/nft/mint"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -40,40 +42,25 @@ export function createFlowSdk(
 	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
 
 	return {
-		nftBasic: {
-			mint: mintService.mintBasic,
-			transfer: transferService.transferBasic,
-			burn: burnService.burnBasic,
-			createCollection: notImplemented,
-		},
-		orderBasic: {
-			sell: sellService.sellBasic,
-			sellUpdate: sellService.sellUpdateBasic,
-			buy: fillService.buyBasic,
-			acceptBid: fillService.acceptBidBasic,
-			bid: bidService.bidBasic,
-			bidUpdate: bidService.bidUpdateBasic,
-			cancel: cancelService.cancelBasic,
-		},
 		nft: {
-			mint: mintService.prepare,
-			burn: burnService.burn,
-			transfer: transferService.transfer,
+			mint: new SimplifiedWithPrepareClass(mintService.mintBasic, mintService.prepare) as IMint,
+			burn: new SimplifiedWithPrepareClass(burnService.burnBasic, burnService.burn),
+			transfer: new SimplifiedWithPrepareClass(transferService.transferBasic, transferService.transfer),
 			generateTokenId: () => Promise.resolve(undefined),
-			deploy: nonImplementedAction,
-			createCollection: nonImplementedAction,
+			deploy: new SimplifiedWithActionClass(notImplemented, nonImplementedAction),
+			createCollection: new SimplifiedWithActionClass(notImplemented, nonImplementedAction),
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			sell: sellService.sell,
-			sellUpdate: sellService.update,
-			fill: fillService.buy,
-			buy: fillService.buy,
-			acceptBid: fillService.buy,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
-			cancel: cancelService.cancel,
+			fill: { prepare: fillService.buy },
+			sell: new SimplifiedWithPrepareClass(sellService.sellBasic, sellService.sell),
+			sellUpdate: new SimplifiedWithPrepareClass(sellService.sellUpdateBasic, sellService.update),
+			buy: new SimplifiedWithPrepareClass(fillService.buyBasic, fillService.buy),
+			acceptBid: new SimplifiedWithPrepareClass(fillService.acceptBidBasic, fillService.buy),
+			bid: new SimplifiedWithPrepareClass(bidService.bidBasic, bidService.bid),
+			bidUpdate: new SimplifiedWithPrepareClass(bidService.bidUpdateBasic, bidService.update),
+			cancel: new SimplifiedWithActionClass(cancelService.cancelBasic, cancelService.cancel),
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,

@@ -12,7 +12,7 @@ import { awaitItem } from "../../common/test/await-item"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { providerDevelopmentSettings } from "./test/common"
 
-describe.skip("mint", () => {
+describe("mint", () => {
 	const { provider, wallet } = createE2eProvider(undefined, providerDevelopmentSettings)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
@@ -25,7 +25,7 @@ describe.skip("mint", () => {
 	test("should mint ERC721 token with simplified function", async () => {
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 
-		const result = await sdk.nftBasic.mint({
+		const result = await sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(contract),
 		})
@@ -41,7 +41,7 @@ describe.skip("mint", () => {
 	test("should lazy mint ERC721 token with simplified function", async () => {
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 
-		const result = await sdk.nftBasic.mint({
+		const result = await sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(contract),
 			lazyMint: true,
@@ -64,7 +64,7 @@ describe.skip("mint", () => {
 			collection: contract,
 			minter: sender,
 		})
-		const action = await sdk.nft.mint({
+		const action = await sdk.nft.mint.prepare({
 			collection,
 			tokenId: tokenId,
 		})
@@ -98,7 +98,7 @@ describe.skip("mint", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(erc1155Address, Blockchain.ETHEREUM),
 		})
-		const action = await sdk.nft.mint({ collection })
+		const action = await sdk.nft.mint.prepare({ collection })
 
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",

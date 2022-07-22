@@ -24,7 +24,7 @@ import {
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
 
-describe.skip("bid", () => {
+describe("bid", () => {
 	const { web31, wallet1, web32 } = initProviders({
 		pk1: undefined,
 		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
@@ -73,7 +73,7 @@ describe.skip("bid", () => {
 			gas: 500000,
 		})
 
-		const action = await sdk1.nft.mint({
+		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
@@ -94,7 +94,7 @@ describe.skip("bid", () => {
 
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 
-		const response = await sdk2.order.bid({ itemId: result.itemId })
+		const response = await sdk2.order.bid.prepare({ itemId: result.itemId })
 		const price = "0.0000000000000002"
 		const orderId = await response.submit({
 			amount: 1,
@@ -112,12 +112,12 @@ describe.skip("bid", () => {
 		const order = await awaitStock(sdk1, orderId, price)
 		expect(order.makeStock.toString()).toEqual(price)
 
-		const updateAction = await sdk2.order.bidUpdate({
+		const updateAction = await sdk2.order.bidUpdate.prepare({
 			orderId,
 		})
 		await updateAction.submit({ price: "0.0000000000000004" })
 
-		const acceptBidResponse = await sdk1.order.acceptBid({ orderId })
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({ orderId })
 		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
 		await acceptBidTx.wait()
 
@@ -149,7 +149,7 @@ describe.skip("bid", () => {
 			}
 		})
 
-		const result = await sdk1.nftBasic.mint({
+		const result = await sdk1.nft.mint({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		})
@@ -158,7 +158,7 @@ describe.skip("bid", () => {
 		await awaitItem(sdk1, result.itemId)
 
 		const price = "0.00000000000002"
-		const orderId = await sdk2.orderBasic.bid({
+		const orderId = await sdk2.order.bid({
 			itemId: result.itemId,
 			amount: 1,
 			price,
@@ -175,12 +175,12 @@ describe.skip("bid", () => {
 		const order = await awaitStock(sdk1, orderId, price)
 		expect(order.makeStock.toString()).toEqual(price)
 
-		const updatedOrderId = await sdk2.orderBasic.bidUpdate({
+		const updatedOrderId = await sdk2.order.bidUpdate({
 			orderId,
 			price: "0.00000000000004",
 		})
 
-		const acceptBidTx = await sdk1.orderBasic.acceptBid({
+		const acceptBidTx = await sdk1.order.acceptBid({
 			orderId: updatedOrderId,
 			amount: 1,
 		})
@@ -210,7 +210,7 @@ describe.skip("bid", () => {
 
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 
-		const response = await sdk2.order.bid({ itemId })
+		const response = await sdk2.order.bid.prepare({ itemId })
 		const price = "0.00000000000000002"
 		const orderId = await response.submit({
 			amount: 3,
@@ -227,12 +227,12 @@ describe.skip("bid", () => {
 
 		await awaitStock(sdk1, orderId, "0.00000000000000006")
 
-		const updateAction = await sdk2.order.bidUpdate({
+		const updateAction = await sdk2.order.bidUpdate.prepare({
 			orderId,
 		})
 		await updateAction.submit({ price: "0.00000000000000004" })
 
-		const acceptBidResponse = await sdk1.order.acceptBid({ orderId })
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({ orderId })
 		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
 		await acceptBidTx.wait()
 
@@ -263,7 +263,7 @@ describe.skip("bid", () => {
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 		await awaitBalance(sdk2, wethAsset, ethwallet2, "0")
 
-		const bidResponse = await sdk2.order.bid({ itemId })
+		const bidResponse = await sdk2.order.bid.prepare({ itemId })
 
 		await retry(5, 2000, async () => {
 			const value = await bidResponse.getConvertableValue({
@@ -304,7 +304,7 @@ describe.skip("bid", () => {
 		})
 		await awaitItem(nullFundsSdk, itemId)
 
-		const bidResponse = await nullFundsSdk.order.bid({ itemId })
+		const bidResponse = await nullFundsSdk.order.bid.prepare({ itemId })
 		await retry(5, 2000, async () => {
 			const value = await bidResponse.getConvertableValue({
 				assetType: { "@type": "ERC20", contract: wethContract },
@@ -337,7 +337,7 @@ describe.skip("bid", () => {
 	test("getConvertableValue returns undefined", async () => {
 		const itemId = toItemId(`${Blockchain.ETHEREUM}:0x2Ac19979c171F7b626096C9eDc8Cd5C589cf110b:1`)
 
-		const bidResponse = await sdk2.order.bid({ itemId })
+		const bidResponse = await sdk2.order.bid.prepare({ itemId })
 
 		const bidderUnionAddress = convertEthereumToUnionAddress(await ethereum2.getFrom(), Blockchain.ETHEREUM)
 		const wethAsset = { "@type": "ERC20" as const, contract: wethContract }
@@ -370,7 +370,7 @@ describe.skip("bid", () => {
 	test("getConvertableValue returns convertable value", async () => {
 		const itemId = toItemId(`${Blockchain.ETHEREUM}:0x2Ac19979c171F7b626096C9eDc8Cd5C589cf110b:1`)
 
-		const bidResponse = await sdk2.order.bid({ itemId })
+		const bidResponse = await sdk2.order.bid.prepare({ itemId })
 
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 		await awaitBalance(sdk2, wethAsset, ethwallet2, "0")
@@ -410,7 +410,7 @@ describe.skip("bid", () => {
 		await awaitItem(sdk1, itemId)
 
 		const erc721Contract = convertEthereumCollectionId(it.testErc721.options.address, Blockchain.ETHEREUM)
-		const bidResponse = await sdk2.order.bid({
+		const bidResponse = await sdk2.order.bid.prepare({
 			collectionId: erc721Contract,
 		})
 
@@ -425,7 +425,7 @@ describe.skip("bid", () => {
 			expirationDate: new Date(Date.now() + 60000),
 		})
 
-		const acceptBidResponse = await sdk1.order.acceptBid({
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({
 			orderId: bidOrderId,
 		})
 		const fillBidResult = await acceptBidResponse.submit({
@@ -456,7 +456,7 @@ describe.skip("bid", () => {
 
 		await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 
-		const response = await sdk2.order.bid({ itemId })
+		const response = await sdk2.order.bid.prepare({ itemId })
 		const price = "0.00000000000000002"
 		const erc20Contract = convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM)
 		const orderId = await response.submit({
@@ -475,7 +475,7 @@ describe.skip("bid", () => {
 		expect(takeAssetType["@type"]).toEqual("ERC20")
 		expect(takeAssetType.contract.toLowerCase()).toEqual(erc20Contract.toLowerCase())
 
-		const acceptBidResponse = await sdk1.order.acceptBid({ orderId })
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({ orderId })
 		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
 		await acceptBidTx.wait()
 
@@ -505,7 +505,7 @@ describe.skip("bid", () => {
 		await awaitItem(sdk1, itemId)
 
 		const erc721Contract = convertEthereumCollectionId(it.testErc721.options.address, Blockchain.ETHEREUM)
-		const bidResponse = await sdk2.order.bid({
+		const bidResponse = await sdk2.order.bid.prepare({
 			collectionId: erc721Contract,
 		})
 
@@ -520,7 +520,7 @@ describe.skip("bid", () => {
 			expirationDate: new Date(),
 		})
 
-		const acceptBidResponse = await sdk1.order.acceptBid({
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({
 			orderId: bidOrderId,
 		})
 		let errorMessage
@@ -546,7 +546,7 @@ describe.skip("bid", () => {
 			gas: 500000,
 		})
 
-		const action = await sdk1.nft.mint({ collectionId: e2eErc1155V2ContractAddress })
+		const action = await sdk1.nft.mint.prepare({ collectionId: e2eErc1155V2ContractAddress })
 
 		const mintResult = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -564,7 +564,7 @@ describe.skip("bid", () => {
 
 		await awaitItem(sdk1, mintResult.itemId)
 
-		const bidResponse = await sdk2.order.bid({
+		const bidResponse = await sdk2.order.bid.prepare({
 			collectionId: e2eErc1155V2ContractAddress,
 		})
 
@@ -578,7 +578,7 @@ describe.skip("bid", () => {
 			},
 		})
 
-		const acceptBidResponse = await sdk1.order.acceptBid({
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({
 			orderId: bidOrderId,
 		})
 

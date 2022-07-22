@@ -7,6 +7,8 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction } from "../../common/not-implemented"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
+import { SimplifiedWithActionClass, SimplifiedWithPrepareClass } from "../../types/common"
+import type { IMint } from "../../types/nft/mint"
 import type { ISolanaSdkConfig } from "./domain"
 import { SolanaNft } from "./nft"
 import { SolanaFill } from "./fill"
@@ -32,46 +34,31 @@ export function createSolanaSdk(
 	const balanceService = new SolanaBalance(sdk, wallet, apis, config)
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)
 	const fillService = new SolanaFill(sdk, wallet, apis, config)
-	const collectionService = new SolanaCollection(sdk, wallet, apis, config)
+	const { createCollectionBasic, createCollection } = new SolanaCollection(sdk, wallet, apis, config)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.SOLANA, preprocessMeta)
 
 	return {
-		nftBasic: {
-			mint: nftService.mintBasic,
-			transfer: nftService.transferBasic,
-			burn: nftService.burnBasic,
-			createCollection: collectionService.createCollectionBasic,
-		},
-		orderBasic: {
-			sell: orderService.sellBasic,
-			sellUpdate: orderService.sellUpdateBasic,
-			buy: fillService.buyBasic,
-			acceptBid: fillService.buyBasic,
-			bid: orderService.bidBasic,
-			bidUpdate: orderService.bidUpdateBasic,
-			cancel: orderService.cancelBasic,
-		},
 		nft: {
-			mint: nftService.mint,
-			burn: nftService.burn,
-			transfer: nftService.transfer,
+			mint: new SimplifiedWithPrepareClass(nftService.mintBasic, nftService.mint) as IMint,
+			burn: new SimplifiedWithPrepareClass(nftService.burnBasic, nftService.burn),
+			transfer: new SimplifiedWithPrepareClass(nftService.transferBasic, nftService.transfer),
 			generateTokenId: nonImplementedAction,
-			deploy: collectionService.createCollection,
-			createCollection: collectionService.createCollection,
+			deploy: new SimplifiedWithActionClass(createCollectionBasic, createCollection),
+			createCollection: new SimplifiedWithActionClass(createCollectionBasic, createCollection),
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			fill: fillService.fill,
-			buy: fillService.fill,
-			acceptBid: fillService.fill,
-			sell: orderService.sell,
-			sellUpdate: orderService.sellUpdate,
-			bid: orderService.bid,
-			bidUpdate: orderService.bidUpdate,
-			cancel: orderService.cancel,
+			fill: { prepare: fillService.fill },
+			buy: new SimplifiedWithPrepareClass(fillService.buyBasic, fillService.fill),
+			acceptBid: new SimplifiedWithPrepareClass(fillService.acceptBidBasic, fillService.fill),
+			sell: new SimplifiedWithPrepareClass(orderService.sellBasic, orderService.sell),
+			sellUpdate: new SimplifiedWithPrepareClass(orderService.sellUpdateBasic, orderService.sellUpdate),
+			bid: new SimplifiedWithPrepareClass(orderService.bidBasic, orderService.bid),
+			bidUpdate: new SimplifiedWithPrepareClass(orderService.bidUpdateBasic, orderService.bidUpdate),
+			cancel: new SimplifiedWithActionClass(orderService.cancelBasic, orderService.cancel),
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

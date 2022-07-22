@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js"
 import type { CancelV2OrderRequest } from "@rarible/tezos-sdk/dist/sales/cancel"
 import { cancelV2 } from "@rarible/tezos-sdk/dist/sales/cancel"
 import type { Order, TezosMTAssetType, TezosNFTAssetType } from "@rarible/api-client"
-import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
 import {
@@ -30,7 +30,7 @@ export class TezosCancel {
 		this.cancelBasic = this.cancelBasic.bind(this)
 	}
 
-	cancel: ICancel = Action.create({
+	cancel: ICancelAction = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
 			await checkChainId(this.provider)
@@ -76,8 +76,7 @@ export class TezosCancel {
 		return new BlockchainTezosTransaction(canceledOrder, this.network)
 	}
 
-  async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
-    return this.cancel(request)
-  }
-
+	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+		return this.cancel(request)
+	}
 }

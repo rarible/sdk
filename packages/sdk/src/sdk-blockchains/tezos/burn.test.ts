@@ -22,7 +22,7 @@ describe("burn test", () => {
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("burn NFT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -35,7 +35,7 @@ describe("burn test", () => {
 		}
 		await awaitItem(sdk, mintResult.itemId)
 
-		const transfer = await sdk.nft.burn({ itemId: mintResult.itemId })
+		const transfer = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
 
 		const result = await transfer.submit({ amount: 1 })
 
@@ -47,7 +47,7 @@ describe("burn test", () => {
 	}, 1500000)
 
 	test("burn MT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -61,7 +61,7 @@ describe("burn test", () => {
 
 		await awaitItem(sdk, mintResult.itemId)
 
-		const transfer = await sdk.nft.burn({
+		const transfer = await sdk.nft.burn.prepare({
 			itemId: mintResult.itemId,
 		})
 		const result = await transfer.submit({ amount: 5 })
@@ -73,14 +73,14 @@ describe("burn test", () => {
 	}, 1500000)
 
 	test("burn NFT token with basic function", async () => {
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 		})
 		await mintResult.transaction.wait()
 		await awaitItem(sdk, mintResult.itemId)
 
-		const burnTx = await sdk.nftBasic.burn({
+		const burnTx = await sdk.nft.burn({
 			itemId: mintResult.itemId,
 			amount: 1,
 		})
@@ -91,7 +91,7 @@ describe("burn test", () => {
 	}, 1500000)
 
 	test("burn NFT token test with basic function", async () => {
-		const mintResult = await sdk.nftBasic.mint({
+		const mintResult = await sdk.nft.mint({
 			collectionId: toCollectionId(`TEZOS:${nftContract}`),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
@@ -99,7 +99,7 @@ describe("burn test", () => {
 		await mintResult.transaction.wait()
 		await awaitItem(sdk, mintResult.itemId)
 
-		const transferResult = await sdk.nftBasic.burn({
+		const transferResult = await sdk.nft.burn({
 			itemId: mintResult.itemId,
 		})
 
