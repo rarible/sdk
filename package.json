@@ -42,7 +42,8 @@
     "release": "lerna publish from-package",
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
-    "e2e-tests": "sh ./scripts/e2e.sh"
+    "e2e-tests": "sh ./scripts/e2e.sh",
+    "docs:sdk": "yarn workspace @rarible/sdk run docs"
   },
   "commitlint": {
     "extends": [

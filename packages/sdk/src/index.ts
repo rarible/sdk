@@ -23,6 +23,27 @@ import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
 import { createImmutablexSdkBlank } from "./sdk-blockchains/immutablex"
 
+/**
+ * @module
+ */
+
+/**
+ * Rarible sdk creation function
+ *
+ * @param wallet undefined or BlockchainWallet
+ * wallet can instantiate from @rarible/sdk-wallet package
+ * @param env the environment that the sdk will interact with.
+ * @param [config] config
+ * @returns {IRaribleSdk} {@link IRaribleSdk}
+ *
+ * @example
+ * ```typescript
+ *    const web3 = new Web3(provider)
+ *    const web3Ethereum = new Web3Ethereum({ web3 })
+ *    const ethWallet = new EthereumWallet(web3Ethereum)
+ *    const sdk = createRaribleSdk(ethWallet, "prod")
+ * ```
+ */
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
 	env: RaribleSdkEnvironment,
@@ -186,6 +207,9 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	}
 }
 
+/**
+ * @internal
+ */
 export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
 	if ("collection" in req) {
 		return req.collection.id
@@ -205,6 +229,7 @@ type MiddleMintType = {
 	initial: MintAndSellRequest
 	mintResponse: MintResponse
 }
+
 
 export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
 export { IRaribleSdk, MintAndSellRequest }

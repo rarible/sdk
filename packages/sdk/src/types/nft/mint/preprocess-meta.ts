@@ -1,10 +1,32 @@
 import type { Blockchain } from "@rarible/api-client"
 import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
-import type { ISolanaMetadataResponse } from "../../../sdk-blockchains/solana/domain"
-import type { ISolanaTokenMetadata } from "../../../sdk-blockchains/solana/domain"
+import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk-blockchains/solana/domain"
 
+/**
+ * Prepare meta data before upload to ipfs storage
+ * @param meta - metadata request for prepare
+ * @returns {PreprocessMetaResponse}
+ *
+ * @example
+ *
+ * const prepared = sdk.nft.preprocessMeta({
+ *   name: "Test",
+ *   description: "Test",
+ *   image: {File},
+ *   animation: {File},
+ *   external: "http://",
+ *   attributes: [{key: "test", value: "test"}]
+ * })
+ */
 export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
-
+/**
+ * @property name -
+ * @property {string | undefined} description
+ * @property {CommonTokenContent | undefined} image
+ * @property {CommonTokenContent | undefined} animation
+ * @property {string | undefined} external
+ * @property {TokenMetadataAttribute[]} attributes
+ */
 export type PreprocessMetaRequest =
 	({
 		blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.TEZOS | Blockchain.FLOW

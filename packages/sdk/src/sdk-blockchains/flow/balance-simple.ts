@@ -8,6 +8,9 @@ import { toBn } from "@rarible/utils/build/bn"
 import { getFlowCurrencyFromAssetType } from "./common/get-flow-currency-from-asset-type"
 import { parseFlowAddressFromUnionAddress } from "./common/converters"
 
+/**
+ * @internal
+ */
 export async function getSimpleFlowFungibleBalance(
 	network: FlowEnv, address: UnionAddress, assetType: AssetType
 ): Promise<BigNumberValue> {
