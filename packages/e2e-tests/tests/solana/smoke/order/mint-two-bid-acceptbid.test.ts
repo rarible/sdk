@@ -1,6 +1,7 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
+import { retry } from "@rarible/sdk/src/common/retry"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
@@ -88,7 +89,9 @@ describe.each(suites())("$blockchain mint => two bid => acceptBid", (suite) => {
 
 		await awaitForOwnershipValue(buyerSdk, nft1.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 
-		const ordersByIds = await getOrdersByIds(sellerSdk, bidOrder2.id)
-		expect(ordersByIds.orders[0].status).toEqual("INACTIVE")
+		await retry(10, 2000, async () => {
+			const ordersByIds = await getOrdersByIds(sellerSdk, bidOrder2.id)
+			expect(ordersByIds.orders[0].status).toEqual("INACTIVE")
+		})
 	})
 })

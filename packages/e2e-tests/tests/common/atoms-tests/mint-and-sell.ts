@@ -5,6 +5,7 @@ import type { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare
 import { MintType } from "@rarible/sdk/src/types/nft/mint/prepare"
 import type { MintAndSellRequest, MintAndSellResponse } from "@rarible/sdk/build/types/nft/mint-and-sell/domain"
 import { awaitOrderStock } from "../helpers"
+import { Logger } from "../logger"
 
 /**
  * Mint and sell NFT and check stock
@@ -13,14 +14,14 @@ export async function mintAndSell(sdk: IRaribleSdk,
 													 wallet: BlockchainWallet,
 													 prepareMintRequest: PrepareMintRequest,
 													 mintAndSellRequest: MintAndSellRequest): Promise<MintAndSellResponse> {
-	console.log("Minting token, prepare_mint_request=", prepareMintRequest)
+	Logger.log("Minting token, prepare_mint_request=", prepareMintRequest)
 	// Get mint info
 	const prepareMintAndSellResponse = await sdk.nft.mintAndSell.prepare(prepareMintRequest)
 
-	console.log("mint_and_sell_request=", mintAndSellRequest)
+	Logger.log("mint_and_sell_request=", mintAndSellRequest)
 	// Mint token
 	const mintAndSellResponse = await prepareMintAndSellResponse.submit(mintAndSellRequest)
-	console.log("mint_and_sell_response", mintAndSellResponse)
+	Logger.log("mint_and_sell_response", mintAndSellResponse)
 	if (mintAndSellResponse.type === MintType.ON_CHAIN) {
 		mintAndSellResponse.transaction.wait()
 	}

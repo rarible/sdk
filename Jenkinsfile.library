@@ -1,42 +1,40 @@
 def testSuccess = false
 
 pipeline {
-  agent none
+  agent any
 
   options {
     disableConcurrentBuilds()
   }
 
   stages {
-      stage('build and deploy') {
-        agent any
-        when { tag "v*"  }
-        environment {
-          NPM_TOKEN = credentials('npm-token')
-          NPM_HOME = '${env.WORKSPACE_TMP}'
-        }
-        steps {
-            sh 'yarn && yarn build'
-            sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
-            sh 'yarn release'
-        }
+    stage('build') {
+      steps {
+          sh 'yarn && yarn build'
       }
+    }
     stage('test') {
       environment {
-	      NPM_TOKEN = "na"
 	      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
       }
-      agent any
       steps {
-        sh 'yarn && yarn build && yarn test'
+        sh 'yarn && yarn test'
+      }
+    }
+    stage('release') {
+      when { tag "v*" }
+      environment {
+          NPM_TOKEN = credentials('npm-token')
+      }
+      steps {
+        sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
+        sh 'yarn && yarn release'
       }
     }
   }
   post {
     always {
-      node("") {
-        cleanWs()
-      }
+      cleanWs()
     }
   }
 }

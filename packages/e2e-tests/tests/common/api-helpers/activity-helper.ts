@@ -7,6 +7,7 @@ import type {
 } from "@rarible/api-client/build/apis/ActivityControllerApi"
 import type { Blockchain } from "@rarible/api-client"
 import type { ActivityType } from "@rarible/api-client"
+import { Logger } from "../logger"
 
 
 export async function getActivitiesByCollection(sdk: IRaribleSdk, collection: string,
@@ -40,7 +41,7 @@ export async function getActivitiesByCollectionRaw(sdk: IRaribleSdk, collection:
 export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
 	activityTypes: Array<ActivityType>,
 	shouldPresent?: Array<ActivityType>): Promise<Activities> {
-	console.log("Get activities, activityTypes=" + activityTypes + " ,shouldPresent=" + shouldPresent)
+	Logger.log("Get activities, activityTypes=" + activityTypes + " ,shouldPresent=" + shouldPresent)
 	return retry(15, 2000, async () => {
 		const activities = await sdk.apis.activity.getActivitiesByItem({
 			type: activityTypes,
@@ -48,7 +49,7 @@ export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
 		})
 		expect(activities).not.toBe(null)
 		if (typeof shouldPresent !== "undefined") {
-			console.log(activities.activities)
+			Logger.log(activities.activities)
 			expect(activities.activities.map(a => a["@type"]).sort()).toEqual(shouldPresent.sort())
 		}
 		return activities

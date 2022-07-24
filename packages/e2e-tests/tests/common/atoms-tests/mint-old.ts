@@ -2,10 +2,11 @@ import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import { MintType } from "@rarible/sdk/src/types/nft/mint/prepare"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare-mint-request.type"
-import type { MintResponse } from "@rarible/sdk/build/types/nft/mint/domain"
+import type { MintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { Item } from "@rarible/api-client"
+import { Logger } from "../logger"
 
 /**
  * Mint NFT and check result
@@ -14,11 +15,11 @@ export async function mint(sdk: IRaribleSdk,
 						   wallet: BlockchainWallet,
 						   prepareMintRequest: PrepareMintRequest,
 						   mintRequest: MintRequest): Promise<{ mintResponse: MintResponse, nft: Item }> {
-	console.log("Minting token, prepare_mint_request=", prepareMintRequest)
+	Logger.log("Minting token, prepare_mint_request=", prepareMintRequest)
 	// Get mint info
 	const mintPrepare = await sdk.nft.mint.prepare(prepareMintRequest)
 
-	console.log("mint_request=", mintRequest)
+	Logger.log("mint_request=", mintRequest)
 	// Mint token
 	const mintResponse = await mintPrepare.submit(mintRequest)
 
@@ -39,7 +40,7 @@ export async function mint(sdk: IRaribleSdk,
 
 		expect(nft.id).toEqual(mintResponse.itemId)
 		const response = { mintResponse, nft }
-		console.log("mint response/nft", response)
+		Logger.log("mint response/nft", response)
 		return response
 	} else {
 		throw new Error("Must be on chain")

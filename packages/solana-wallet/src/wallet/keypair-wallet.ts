@@ -1,4 +1,5 @@
 import * as web3 from "@solana/web3.js"
+import * as nacl from "tweetnacl"
 import base58 from "bs58"
 import { isPrivateKey } from "@rarible/solana-common"
 import type { IWalletSigner } from "../domain"
@@ -36,7 +37,13 @@ export class SolanaKeypairWallet implements IWalletSigner {
 
 	//eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async signMessage(message: Uint8Array | string, display?: DisplayEncoding) {
-		throw new Error("Unimplemented")
+		let data: Uint8Array
+		if (typeof message === "string") {
+			data = new TextEncoder().encode(message)
+		} else {
+			data = message
+		}
+		return nacl.sign(data, this._keyPair.secretKey).slice(0, nacl.sign.signatureLength)
 	}
 
 	/**

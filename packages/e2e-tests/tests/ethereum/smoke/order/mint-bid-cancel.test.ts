@@ -21,16 +21,18 @@ import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
+	isLazy: boolean,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	collectionId: string,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
-	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
+	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>,
 }[] {
 	return [
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721 <=> ERC20",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -60,6 +62,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC721_lazy <=> ERC20",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -89,6 +92,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155 <=> ERC20",
+			isLazy: false,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -118,6 +122,7 @@ function suites(): {
 		{
 			blockchain: Blockchain.ETHEREUM,
 			description: "ERC1155_lazy <=> ERC20",
+			isLazy: true,
 			wallets: {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
@@ -174,8 +179,12 @@ describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 
+		const NORMAL_ACTIVITIES = [ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID]
+		const LAZY_ACTIVITIES = [ActivityType.BID, ActivityType.CANCEL_BID] // lazy items dont mint onchain
+
 		await getActivitiesByItem(buyerSdk, nft.id,
 			[ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID],
-			[ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID])
+			suite.isLazy ? LAZY_ACTIVITIES : NORMAL_ACTIVITIES
+		)
 	})
 })

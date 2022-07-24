@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { MintResponse, PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/domain"
+import { MintResponse, PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"

@@ -4394,6 +4394,13 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
+"@rarible/logger@~0.9.5":
+  version "0.9.5"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.5.tgz#773971ac3a4a83f4edfa565b7e2e2c7af1e5633c"
+  integrity sha512-127yckgb2Ao8pUjkNVIMn46teYfbFKkxAl4oUU7lN9iIIlJoyrqle2AVX/oPpMUpoqETf9xGLtAxX9miJZsLbg==
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
 "@rarible/protocol-ethereum-sdk@~0.12.77":
   version "0.12.77"
   resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.77.tgz#912ddda839f440b08f7512ae52b9f4632f67ec0f"
@@ -4441,10 +4448,10 @@
     "@rarible/tezos-common" "^0.1.29"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.29", "@rarible/tezos-sdk@~0.1.29":
-  version "0.1.29"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.29.tgz#683b87da590b416acc798eb080f33ac1644980a3"
-  integrity sha512-Hm6Ro2ahYM03pUpTj9Ln8O+s2mgQxhEHePr67meDhrEzhsBWvCPfecD/dz/4s8Lqmcdl1xgCx8UPU5QZqU8YbQ==
+"@rarible/tezos-sdk@0.1.30", "@rarible/tezos-sdk@~0.1.30":
+  version "0.1.30"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.30.tgz#4ea4cf099a26ae372488b08b2c682e82bda96ae9"
+  integrity sha512-W/79ENngk/wh2ECnCG+Tdc9KOtpVUFrkPoV0pc0CL2Is7WENpTn3Fxf/nPddfgRX08ET+t1P5upLAPmaTrHllw==
   dependencies:
     "@airgap/beacon-sdk" "2.3.13"
     "@genql/runtime" "2.10.0"

@@ -3,10 +3,16 @@ import type { TransactionResult } from "@rarible/solana-sdk"
 import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { IBlockchainTransaction } from "../domain"
 
+
 export class BlockchainSolanaTransaction implements IBlockchainTransaction {
 	blockchain: Blockchain = Blockchain.SOLANA
+	cluster: string
+	getSdk: () => SolanaSdk
 
-	constructor(public transaction: TransactionResult, public sdk: SolanaSdk) {}
+	constructor(public transaction: TransactionResult, sdk: SolanaSdk) {
+		this.cluster = sdk.cluster
+		this.getSdk = () => sdk // to hide sdk from json.stringify
+	}
 
 	hash() {
 		return this.transaction.txId
@@ -17,7 +23,14 @@ export class BlockchainSolanaTransaction implements IBlockchainTransaction {
 		const check = async (retryCount: number) => {
 			try {
 				// can fail after 30 sec timeout
-				await this.sdk.connection.confirmTransaction(this.transaction.txId, "confirmed")
+				const res = await (this.getSdk().confirmTransaction(this.transaction.txId, "confirmed"))
+				if (res.value?.err) {
+					if (typeof res.value.err === "string") {
+						throw new Error(res.value.err)
+					} else {
+						throw res.value.err
+					}
+				}
 			} catch (e: any) {
 				if (e?.message?.includes("Transaction was not confirmed in") && retryCount > 0) {
 					await check(retryCount - 1)
@@ -37,13 +50,20 @@ export class BlockchainSolanaTransaction implements IBlockchainTransaction {
 
 	getTxLink() {
 		const url = `https://solscan.io/tx/${this.hash()}`
-		switch (this.sdk.cluster) {
+		switch (this.cluster) {
 			case "mainnet-beta":
 				return url
 			case "testnet":
 			case "devnet":
-				return url + `?cluster=${this.sdk.cluster}`
+				return url + `?cluster=${this.cluster}`
 			default: throw new Error("Unsupported transaction network")
+		}
+	}
+
+	valueOf() {
+		return {
+			blockchain: this.blockchain,
+			transaction: this.transaction,
 		}
 	}
 }

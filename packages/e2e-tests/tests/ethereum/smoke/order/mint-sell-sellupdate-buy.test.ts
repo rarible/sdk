@@ -291,6 +291,7 @@ function suites(): {
 	]
 }
 
+// deprecated, should be removed
 describe.each(suites())("$blockchain mint => sell => sellUpdate => buy", (suite) => {
 	const {
 		seller: sellerWallet,
