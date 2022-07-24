@@ -6,7 +6,7 @@ import { Middlewarer } from "../../common/middleware/middleware"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MetaUploader } from "../union/meta/upload-meta"
 import type { RaribleSdkConfig } from "../../config/domain"
-import { SimplifiedWithActionClass, SimplifiedWithPrepareClass } from "../../types/common"
+import { MethodWithAction, MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
@@ -41,24 +41,24 @@ export function createTezosSdk(
 
 	return {
 		nft: {
-			mint: new SimplifiedWithPrepareClass(mintService.mintBasic, mintService.mint) as IMint,
-			burn: new SimplifiedWithPrepareClass(burnService.burnBasic, burnService.burn),
-			transfer: new SimplifiedWithPrepareClass(transferService.transferBasic, transferService.transfer),
+			mint: new MethodWithPrepare(mintService.mintBasic, mintService.mint) as IMint,
+			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
+			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new TezosTokenId(maybeProvider).generateTokenId,
-			deploy: new SimplifiedWithActionClass(createCollectionSimplified, createCollection),
-			createCollection: new SimplifiedWithActionClass(createCollectionSimplified, createCollection),
+			deploy: new MethodWithAction(createCollectionSimplified, createCollection),
+			createCollection: new MethodWithAction(createCollectionSimplified, createCollection),
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			fill: { prepare: fillService.fill },
-			buy: new SimplifiedWithPrepareClass(fillService.buyBasic, fillService.fill),
-			acceptBid: new SimplifiedWithPrepareClass(fillService.acceptBidBasic, fillService.fill),
-			sell: new SimplifiedWithPrepareClass(sellService.sellBasic, sellService.sell),
-			sellUpdate: new SimplifiedWithPrepareClass(sellService.sellUpdateBasic, sellService.update),
-			bid: new SimplifiedWithPrepareClass(notImplemented, nonImplementedAction),
-			bidUpdate: new SimplifiedWithPrepareClass(notImplemented, nonImplementedAction),
-			cancel: new SimplifiedWithActionClass(cancelService.cancelBasic, cancelService.cancel),
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
+			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
+			bid: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			bidUpdate: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			cancel: new MethodWithAction(cancelService.cancelBasic, cancelService.cancel),
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

@@ -1,6 +1,6 @@
-import type { SimplifiedWithPrepareClass } from "../../common"
+import type { MethodWithPrepare } from "../../common"
 import type { IBidSimplified, IBidUpdateSimplified } from "./simplified"
 import type { IBidPrepare, IBidUpdatePrepare } from "./domain"
 
-export type IBid = SimplifiedWithPrepareClass<IBidSimplified, IBidPrepare>
-export type IBidUpdate = SimplifiedWithPrepareClass<IBidUpdateSimplified, IBidUpdatePrepare>
+export type IBid = MethodWithPrepare<IBidSimplified, IBidPrepare>
+export type IBidUpdate = MethodWithPrepare<IBidUpdateSimplified, IBidUpdatePrepare>

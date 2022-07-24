@@ -17,14 +17,12 @@ export enum MintType {
 	ON_CHAIN = "on-chain"
 }
 
-export type OnChainMintResponse = {
-	itemId: ItemId
+export type OnChainMintResponse = MintResponseCommon & {
 	type: MintType.ON_CHAIN
 	transaction: IBlockchainTransaction
 }
 
-export type OffChainMintResponse = {
-	itemId: ItemId
+export type OffChainMintResponse = MintResponseCommon & {
 	type: MintType.OFF_CHAIN
 }
 

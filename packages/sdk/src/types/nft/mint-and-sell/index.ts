@@ -1,5 +1,5 @@
-import type { SimplifiedWithPrepareClassGeneral } from "../../common"
+import type { MethodWithPrepareGeneral } from "../../common"
 import type { IMintAndSellSimplified } from "./simplified"
 import type { IMintAndSellPrepare } from "./domain"
 
-export type IMintAndSell = SimplifiedWithPrepareClassGeneral<IMintAndSellSimplified["mintAndSell"], IMintAndSellPrepare>
+export type IMintAndSell = MethodWithPrepareGeneral<IMintAndSellSimplified["mintAndSell"], IMintAndSellPrepare>

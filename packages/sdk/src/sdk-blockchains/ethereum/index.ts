@@ -8,7 +8,7 @@ import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
-import { SimplifiedWithActionClass, SimplifiedWithPrepareClass } from "../../types/common"
+import { MethodWithAction, MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
@@ -54,24 +54,24 @@ export function createEthereumSdk(
 
 	return {
 		nft: {
-			mint: new SimplifiedWithPrepareClass(mintService.mintBasic, mintService.prepare) as IMint,
-			burn: new SimplifiedWithPrepareClass(burnService.burnBasic, burnService.burn),
-			transfer: new SimplifiedWithPrepareClass(transferService.transferBasic, transferService.transfer),
+			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
+			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
+			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
-			deploy: new SimplifiedWithActionClass(createCollectionSimplified, createCollection),
-			createCollection: new SimplifiedWithActionClass(createCollectionSimplified, createCollection),
+			deploy: new MethodWithAction(createCollectionSimplified, createCollection),
+			createCollection: new MethodWithAction(createCollectionSimplified, createCollection),
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			fill: { prepare: fillService.fill },
-			buy: new SimplifiedWithPrepareClass(fillService.buyBasic, fillService.fill),
-			acceptBid: new SimplifiedWithPrepareClass(fillService.acceptBidBasic, fillService.fill),
-			sell: new SimplifiedWithPrepareClass(sellService.sellBasic, sellService.sell),
-			sellUpdate: new SimplifiedWithPrepareClass(sellService.sellUpdateBasic, sellService.update),
-			bid: new SimplifiedWithPrepareClass(bidService.bidBasic, bidService.bid),
-			bidUpdate: new SimplifiedWithPrepareClass(bidService.bidUpdateBasic, bidService.update),
-			cancel: new SimplifiedWithActionClass(cancelService.cancelBasic, cancelService.cancel),
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
+			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
+			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
+			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
+			cancel: new MethodWithAction(cancelService.cancelBasic, cancelService.cancel),
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

@@ -77,15 +77,12 @@ export class TezosMint {
 	}
 
 	async mint(prepareRequest: PrepareMintRequest): Promise<PrepareMintResponse> {
-		console.log("before check chain id")
 		await checkChainId(this.provider)
 
-		console.log("after check chain id")
 		const {
 			contract,
 			type,
 		} = await getCollectionData(this.unionAPI, prepareRequest)
-		console.log("after get col data", contract)
 
 		return {
 			multiple: type === CollectionType.TEZOS_MT,
@@ -96,7 +93,6 @@ export class TezosMint {
 				run: async (request: MintRequest) => {
 					const royalties = getRoyalties(request.royalties)
 					const collectionType = await getCollectionType(this.provider, contract)
-					console.log("after getting collection data")
 					const isNftCollection = collectionType === CollectionType.TEZOS_NFT
 					const provider = getRequiredProvider(this.provider)
 					const supply = isNftCollection ? undefined : toBn(request.supply || 1)
@@ -104,17 +100,6 @@ export class TezosMint {
 					if (isNftCollection && request.supply && request.supply > 1) {
 						throw new Error(`Invalid supply=${request.supply} for NFT collection, expected supply=1`)
 					}
-					console.log(
-						provider,
-						contract,
-						royalties,
-						supply,
-						undefined,
-						{
-							"": fixIpfs(request.uri),
-						},
-						await this.getOwner(request)
-					)
 
 					const result = await mint(
 						provider,

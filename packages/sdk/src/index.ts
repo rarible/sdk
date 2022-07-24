@@ -24,15 +24,8 @@ import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
 import { createImmutablexSdkBlank } from "./sdk-blockchains/immutablex"
-import { SimplifiedWithPrepareClass } from "./types/common"
+import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
-import type {
-	MintSimplifiedRequestOffChain,
-	MintSimplifiedRequestOnChain } from "./types/nft/mint/simplified"
-import {
-	IMintSimplified,
-} from "./types/nft/mint/simplified"
-import type { MintAndSellBasicRequestOffChain, MintAndSellBasicRequestOnChain } from "./types/nft/mint-and-sell/simplified"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -81,11 +74,8 @@ export function createRaribleSdk(
 		),
 		createImmutablexSdkBlank()
 	)
-	// console.log("instance", instance, "nft", instance.nft)
 
-	console.log("instance.nft.mint", instance.nft.mint, "ins", typeof instance.nft.mint)
 	setupMiddleware(apis, instance, { wallet, env, config })
-	console.log("instance.nft.mint", instance.nft.mint, "ins", typeof instance.nft.mint)
 
 	return {
 		...instance,
@@ -146,7 +136,7 @@ function filterWallet<T extends BlockchainGroup>(
 }
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
-	return new SimplifiedWithPrepareClass(
+	return new MethodWithPrepare(
 		 (request) => sell(request),
 		async (request) => {
 			const item = await apis.item.getItemById({ itemId: request.itemId })
@@ -166,7 +156,7 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 
 function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 	// @ts-ignore
-	return new SimplifiedWithPrepareClass(
+	return new MethodWithPrepare(
 		async (request: any) => {
 			const mintResponse = await mint(request)
 			if (mintResponse.type === MintType.ON_CHAIN) {

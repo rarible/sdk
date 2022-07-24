@@ -1,9 +1,7 @@
 import { Action } from "@rarible/action"
 import {
-	SimplifiedWithPrepareClass,
-	SimplifiedWithActionClass } from "../../types/common"
-import {
-	SimplifiedWrapperWithActionClass, SimplifiedWrapperWithPrepareClass,
+	MethodWithPrepare,
+	MethodWithAction,
 } from "../../types/common"
 import { toPromise } from "./utils"
 
@@ -105,13 +103,13 @@ export class Middlewarer {
 		}
 	}
 
-	wrapMethodWithAction<T extends SimplifiedWithActionClass<any, any>>(method: T, fnName: string): T {
+	wrapMethodWithAction<T extends MethodWithAction<any, any>>(method: T, fnName: string): T {
 		this.wrapAction(method.action, fnName)
 		this.wrapFunction(method, fnName)
 		return method
 	}
 
-	wrapMethodWithPrepare<T extends SimplifiedWithPrepareClass<any, any>>(method: T, fnName: string): T {
+	wrapMethodWithPrepare<T extends MethodWithPrepare<any, any>>(method: T, fnName: string): T {
 		this.wrapFunction(method.prepare, fnName)
 		this.wrapFunction(method, fnName)
 		return method
@@ -163,12 +161,12 @@ function isAction(fn: any): fn is Action<any, any, any> {
 
 function isMethodWithAction(
 	fn: any
-): fn is SimplifiedWrapperWithActionClass<any, any> | SimplifiedWithActionClass<any, any> {
-	return fn instanceof SimplifiedWrapperWithActionClass || fn instanceof SimplifiedWithActionClass
+): fn is MethodWithAction<any, any> {
+	return fn instanceof MethodWithAction
 }
 
 function isMethodWithPrepare(
 	fn: any
-): fn is SimplifiedWrapperWithPrepareClass<any, any> | SimplifiedWithPrepareClass<any, any> {
-	return fn instanceof SimplifiedWrapperWithPrepareClass || fn instanceof SimplifiedWithPrepareClass
+): fn is MethodWithPrepare<any, any> {
+	return fn instanceof MethodWithPrepare
 }

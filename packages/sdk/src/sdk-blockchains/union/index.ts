@@ -31,8 +31,8 @@ import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 import {
-	SimplifiedWrapperWithActionClass,
-	SimplifiedWrapperWithPrepareClass,
+	MethodWithAction,
+	MethodWithPrepare,
 } from "../../types/common"
 import type { ISellUpdate } from "../../types/order/sell"
 import type { ISellInternal } from "../../types/order/sell"
@@ -42,7 +42,8 @@ import type { IBurn } from "../../types/nft/burn"
 import type { IMint } from "../../types/nft/mint"
 import type { ITransfer } from "../../types/nft/transfer"
 import { extractBlockchain } from "../../common/extract-blockchain"
-import type { IMintSimplified } from "../../types/nft/mint/simplified"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
+import type { CreateCollectionRequest } from "../../types/nft/deploy/domain"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -92,69 +93,72 @@ export function createUnionSdk(
 
 
 class UnionOrderSdk implements IOrderInternalSdk {
-  bid: SimplifiedWrapperWithPrepareClass<IBid>
-  bidUpdate: SimplifiedWrapperWithPrepareClass<IBidUpdate>
+  bid: IBid
+  bidUpdate: IBidUpdate
   /**
    * @deprecated
    * @param request
    */
   fill: IFill
-  buy: SimplifiedWrapperWithPrepareClass<IBuy>
-  acceptBid: SimplifiedWrapperWithPrepareClass<IAcceptBid>
-  sell: SimplifiedWrapperWithPrepareClass<ISellInternal>
-  sellUpdate: SimplifiedWrapperWithPrepareClass<ISellUpdate>
-  cancel: SimplifiedWrapperWithActionClass<ICancel>
+  buy: IBuy
+  acceptBid: IAcceptBid
+  sell: ISellInternal
+  sellUpdate: ISellUpdate
+  cancel: ICancel
 
   constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
-  	this.bid = new SimplifiedWrapperWithPrepareClass<IBid>(
+  	this.bid = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(getBidEntity(request))].bid(request),
+  			instances[extractBlockchain(getBidEntity(request))].bid(request),
   		(request) =>
-  			this.instances[extractBlockchain(getBidEntity(request))].bid.prepare(request),
+  			instances[extractBlockchain(getBidEntity(request))].bid.prepare(request),
   	)
-  	this.bidUpdate = new SimplifiedWrapperWithPrepareClass<IBidUpdate>(
+  	this.bidUpdate = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(request.orderId)].bidUpdate(request),
+  			instances[extractBlockchain(request.orderId)].bidUpdate(request),
   		(request) =>
-  			this.instances[extractBlockchain(request.orderId)].bidUpdate.prepare(request),
+  			instances[extractBlockchain(request.orderId)].bidUpdate.prepare(request),
   	)
   	this.fill = {
   		prepare: (request: PrepareFillRequest): Promise<PrepareFillResponse> => {
-  			return this.instances[extractBlockchain(getOrderId(request))].fill.prepare(request)
+  			return instances[extractBlockchain(getOrderId(request))].fill.prepare(request)
   		},
   	}
-  	this.buy = new SimplifiedWrapperWithPrepareClass<IBuy>(
+  	this.buy = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(getOrderId(request))].buy(request),
+  			instances[extractBlockchain(getOrderId(request))].buy(request),
   		(request) =>
-  			this.instances[extractBlockchain(getOrderId(request))].buy.prepare(request),
+  			instances[extractBlockchain(getOrderId(request))].buy.prepare(request),
   	)
-  	this.acceptBid = new SimplifiedWrapperWithPrepareClass<IAcceptBid>(
+  	this.acceptBid = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(getOrderId(request))].acceptBid(request),
+  			instances[extractBlockchain(getOrderId(request))].acceptBid(request),
   		(request) =>
-  			this.instances[extractBlockchain(getOrderId(request))].acceptBid.prepare(request),
+  			instances[extractBlockchain(getOrderId(request))].acceptBid.prepare(request),
   	)
-  	this.sell = new SimplifiedWrapperWithPrepareClass<ISellInternal>(
-  		(request) => {
-  			return this.instances[extractBlockchain(request.itemId)].sell(request)
-  		},
+  	this.sell = new MethodWithPrepare(
   		(request) =>
-  			this.instances[request.blockchain].sell.prepare(request),
+  			instances[extractBlockchain(request.itemId)].sell(request),
+  		(request) =>
+  			instances[request.blockchain].sell.prepare(request),
   	)
   	// this.sellUpdate = this.sellUpdate.bind(this)
-  	this.sellUpdate = new SimplifiedWrapperWithPrepareClass<ISellUpdate>(
+  	this.sellUpdate = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(request.orderId)].sellUpdate(request),
+  			instances[extractBlockchain(request.orderId)].sellUpdate(request),
   		(request) =>
-  			this.instances[extractBlockchain(request.orderId)].sellUpdate.prepare(request),
+  			instances[extractBlockchain(request.orderId)].sellUpdate.prepare(request),
   	)
 
-  	this.cancel = new SimplifiedWrapperWithActionClass<ICancel>(
+  	this.cancel = new MethodWithAction(
   		(request) =>
-  			this.instances[extractBlockchain(request.orderId)].cancel(request),
-  		(request) =>
-  			this.instances[extractBlockchain(request.orderId)].cancel.action(request),
+  			instances[extractBlockchain(request.orderId)].cancel(request),
+  		Action.create({
+  			id: "send-tx" as const,
+  			run: (request: CancelOrderRequest) => {
+  				return instances[extractBlockchain(request.orderId)].cancel.action(request)
+  			},
+  		})
   	)
   }
 }
@@ -168,44 +172,49 @@ function getOrderId(req: PrepareFillRequest) {
 }
 
 class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
-  transfer: SimplifiedWrapperWithPrepareClass<ITransfer>
-  mint: IMintSimplified["mint"] & SimplifiedWrapperWithPrepareClass<IMint>
-  burn: SimplifiedWrapperWithPrepareClass<IBurn>
-  createCollection: SimplifiedWrapperWithActionClass<ICreateCollection>
-  deploy: SimplifiedWrapperWithActionClass<ICreateCollection>
+  transfer: ITransfer
+  mint: IMint
+  burn: IBurn
+  createCollection: ICreateCollection
+  deploy: ICreateCollection
 
   constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
   	this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
   	this.generateTokenId = this.generateTokenId.bind(this)
   	this.uploadMeta = this.uploadMeta.bind(this)
 
-  	this.transfer = new SimplifiedWrapperWithPrepareClass<ITransfer>(
+  	this.transfer = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(request.itemId)].transfer(request),
+  			instances[extractBlockchain(request.itemId)].transfer(request),
   		(request) =>
-  			this.instances[extractBlockchain(request.itemId)].transfer.prepare(request),
+  			instances[extractBlockchain(request.itemId)].transfer.prepare(request),
   	)
 
   	// @ts-ignore
-  	this.mint = new SimplifiedWrapperWithPrepareClass<IMint>(
+  	this.mint = new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(getCollectionId(request))].mint(request),
+  	// @ts-ignore
+  			instances[extractBlockchain(getCollectionId(request))].mint(request),
   		(request) =>
-  			this.instances[extractBlockchain(getCollectionId(request))].mint.prepare(request),
+  			instances[extractBlockchain(getCollectionId(request))].mint.prepare(request),
   	)
 
-  	this.burn =  new SimplifiedWrapperWithPrepareClass<IBurn>(
+  	this.burn =  new MethodWithPrepare(
   		(request) =>
-  			this.instances[extractBlockchain(request.itemId)].burn(request),
+  			instances[extractBlockchain(request.itemId)].burn(request),
   		(request) =>
-  			this.instances[extractBlockchain(request.itemId)].burn.prepare(request),
+  			instances[extractBlockchain(request.itemId)].burn.prepare(request),
   	)
 
-  	this.createCollection = new SimplifiedWrapperWithActionClass<ICreateCollection>(
+  	this.createCollection = new MethodWithAction(
   		(request) =>
-  			this.instances[request.blockchain].createCollection(request),
-  		(request) =>
-  			this.instances[request.blockchain].createCollection.action(request),
+  			instances[request.blockchain].createCollection(request),
+  		  Action.create({
+  			  id: "send-tx" as const,
+  			  run: (request: CreateCollectionRequest) => {
+    				return instances[request.blockchain].createCollection.action(request)
+    			},
+  		})
   	)
   	this.deploy = this.createCollection
   }

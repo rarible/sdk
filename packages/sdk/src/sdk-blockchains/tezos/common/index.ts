@@ -335,9 +335,9 @@ export function convertOrderToOrderForm(order: Order): OrderForm {
 	}
 	return {
 		type: "RARIBLE_V2",
-		maker: order.maker,
+		maker: convertUnionAddress(order.maker),
 		maker_edpk: order.data.makerEdpk!,
-		taker: order.taker,
+		taker: order.taker !== undefined ? convertUnionAddress(order.taker): undefined,
 		taker_edpk: order.data.takerEdpk,
 		make: {
 			asset_type: getTezosAssetType(order.make.type),
