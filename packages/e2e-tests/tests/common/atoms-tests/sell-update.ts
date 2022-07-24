@@ -17,7 +17,7 @@ export async function sellUpdate(
 ): Promise<Order> {
 	Logger.log("sellUpdate, prepare_order_update_request=", prepareOrderUpdateRequest)
 	// Get sell info
-	const prepareOrderUpdateResponse = await sdk.order.sellUpdate(prepareOrderUpdateRequest)
+	const prepareOrderUpdateResponse = await sdk.order.sellUpdate.prepare(prepareOrderUpdateRequest)
 
 	Logger.log("prepare_order_update_response", prepareOrderUpdateResponse)
 	Logger.log("sellUpdate, order_update_request=", orderUpdateRequest)

@@ -26,4 +26,14 @@ describe("Flow transfer", () => {
 		const tx = await prepare.submit({ to })
 		expect(tx.transaction.status).toEqual(4)
 	})
+
+	test.skip("Should transfer flow NFT item with basic function", async () => {
+		const itemId = await createTestItem(mint)
+		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+		const tx = await transfer.transferBasic({
+			itemId,
+			to: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_1.address),
+		})
+		expect(tx.transaction.status).toEqual(4)
+	})
 })

@@ -5,10 +5,8 @@ import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
 export async function sellAndUpdate(wallet: BlockchainWallet, assetType: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "dev")
-	const sellAction = await sdk.order.sell({
+	const sellOrderId = await sdk.order.sell({
 		itemId: toItemId("<YOUR_ITEM_ID>"),
-	})
-	const sellOrderId = await sellAction.submit({
 		amount: 1,
 		price: "0.000002",
 		currency: assetType,
@@ -23,8 +21,11 @@ export async function sellAndUpdate(wallet: BlockchainWallet, assetType: Request
 			value: 500,
 		}],
 	})
-	const updateAction = await sdk.order.sellUpdate({ orderId: sellOrderId })
+	const updateAction = await sdk.order.sellUpdate({
+		orderId: sellOrderId,
+		price: "0.000001",
+	})
 	//You can only decrease price of sell order for security reasons
 	//If you want to force change sell price you should cancel sell order
-	await updateAction.submit({ price: "0.000001" })
+	await updateAction
 }

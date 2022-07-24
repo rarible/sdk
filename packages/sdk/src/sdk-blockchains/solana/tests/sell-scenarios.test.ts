@@ -16,7 +16,7 @@ describe("Solana sell scenarios", () => {
 
 		// wallet1 sell
 		await retry(10, 4000, async () => {
-			const sell = await sdk.order.sell({ itemId })
+			const sell = await sdk.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				currency: { "@type": "SOLANA_SOL" },
@@ -26,7 +26,7 @@ describe("Solana sell scenarios", () => {
 
 		// wallet1 transfer
 		const transferTx = await retry(10, 4000, async () => {
-			const sell = await sdk.nft.transfer({ itemId })
+			const sell = await sdk.nft.transfer.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				to: toUnionAddress("SOLANA:"+wallet2.publicKey),
@@ -36,7 +36,7 @@ describe("Solana sell scenarios", () => {
 
 		// wallet2 sell
 		const orderId = await retry(10, 4000, async () => {
-			const sell = await sdkSecond.order.sell({ itemId })
+			const sell = await sdkSecond.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				currency: { "@type": "SOLANA_SOL" },
@@ -46,7 +46,7 @@ describe("Solana sell scenarios", () => {
 
 		// wallet1 buy
 		const tx = await retry(10, 4000, async () => {
-			const buy = await sdk.order.buy({
+			const buy = await sdk.order.buy.prepare({
 				orderId,
 			})
 

@@ -15,7 +15,7 @@ describe.skip("deploy tezos tests", () => {
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
 	test("deploy public nft", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
@@ -28,11 +28,26 @@ describe.skip("deploy tezos tests", () => {
 			},
 		})
 		await result.tx.wait()
-		console.log("result", result)
+	})
+
+	test("deploy public nft with simplified function createCollectionStart", async () => {
+		const result = await sdk.nft.createCollection({
+			blockchain: Blockchain.TEZOS,
+			type: "NFT",
+			name: "My NFT collection",
+			symbol: "MYNFT",
+			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: true,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
+		await awaitForCollection(sdk, result.address)
 	})
 
 	test.skip("deploy private nft", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "NFT",
@@ -50,8 +65,25 @@ describe.skip("deploy tezos tests", () => {
 		await awaitForCollection(sdk, result.address)
 	})
 
-	test("deploy public mt", async () => {
+
+	test("deploy private nft with simplified function createCollectionStart", async () => {
 		const result = await sdk.nft.createCollection({
+			blockchain: Blockchain.TEZOS,
+			type: "NFT",
+			name: "My NFT collection",
+			symbol: "MYNFT",
+			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: false,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
+		await awaitForCollection(sdk, result.address)
+	})
+
+	test("deploy public mt", async () => {
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",
@@ -68,8 +100,24 @@ describe.skip("deploy tezos tests", () => {
 		await awaitForCollection(sdk, result.address)
 	})
 
-	test.skip("deploy private mt", async () => {
+	test("deploy public MT with simplified function createCollectionStart", async () => {
 		const result = await sdk.nft.createCollection({
+			blockchain: Blockchain.TEZOS,
+			type: "MT",
+			name: "My NFT collection",
+			symbol: "MYNFT",
+			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: true,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
+		await awaitForCollection(sdk, result.address)
+	})
+
+	test.skip("deploy private mt", async () => {
+		const result = await sdk.nft.createCollection.action({
 			blockchain: Blockchain.TEZOS,
 			asset: {
 				assetType: "MT",

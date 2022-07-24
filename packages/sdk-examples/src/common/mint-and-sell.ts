@@ -1,15 +1,12 @@
+import type { RequestCurrency } from "@rarible/sdk"
 import { createRaribleSdk } from "@rarible/sdk"
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
-import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
+import { MintType } from "@rarible/sdk/build/types/nft/mint/prepare"
 
 export async function mintAndSell(wallet: BlockchainWallet, currency: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "dev")
 
-	const mintAction = await sdk.nft.mintAndSell({
-		collectionId: toCollectionId("<NFT_CONTRACT_ADDRESS>"),
-	})
 	/*
     You should upload json file with item metadata in the following format:
     {
@@ -23,7 +20,8 @@ export async function mintAndSell(wallet: BlockchainWallet, currency: RequestCur
     and insert link to json file to "uri" field.
     To format your json data use "sdk.nft.preprocessMeta()" method
    */
-	const mintResult = await mintAction.submit({
+	const mintResult = await sdk.nft.mintAndSell({
+		collectionId: toCollectionId("<NFT_CONTRACT_ADDRESS>"),
 		uri: "<YOUR_LINK_TO_JSON>",
 		royalties: [{
 			account: toUnionAddress("<ROYLATY_ADDRESS>"),

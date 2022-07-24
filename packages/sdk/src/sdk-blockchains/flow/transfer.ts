@@ -1,9 +1,11 @@
 import { Action } from "@rarible/action"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
+import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import { parseFlowAddressFromUnionAddress, parseFlowItemIdFromUnionItemId } from "./common/converters"
 
 export class FlowTransfer {
@@ -12,6 +14,7 @@ export class FlowTransfer {
 		private network: FlowNetwork,
 	) {
 		this.transfer = this.transfer.bind(this)
+		this.transferBasic = this.transferBasic.bind(this)
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
@@ -34,4 +37,10 @@ export class FlowTransfer {
 			}),
 		}
 	}
+
+	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.transfer(request)
+		return response.submit(request)
+	}
+
 }

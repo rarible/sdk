@@ -86,4 +86,4 @@ export interface PrepareFillResponse
 	supportsPartialFill: boolean
 }
 
-export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
+export type IFillPrepare = (request: PrepareFillRequest) => Promise<PrepareFillResponse>

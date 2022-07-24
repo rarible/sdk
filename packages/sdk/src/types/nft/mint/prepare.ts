@@ -34,6 +34,6 @@ export interface PrepareMintResponse extends AbstractPrepareResponse<"mint", Min
 	supportsLazyMint: boolean
 }
 
-export type IMint = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
+export type IMintPrepare = (request: PrepareMintRequest) => Promise<PrepareMintResponse>
 
 export type IUploadMeta = (request: MetaUploadRequest) => Promise<UploadMetaResponse>

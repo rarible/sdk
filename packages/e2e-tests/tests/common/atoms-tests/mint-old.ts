@@ -1,8 +1,8 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import { MintType } from "@rarible/sdk/src/types/nft/mint/domain"
+import { MintType } from "@rarible/sdk/src/types/nft/mint/prepare"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type { PrepareMintRequest } from "@rarible/sdk/src/types/nft/mint/prepare-mint-request.type"
-import type { MintResponse } from "@rarible/sdk/build/types/nft/mint/domain"
+import type { MintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { Item } from "@rarible/api-client"
@@ -17,7 +17,7 @@ export async function mint(sdk: IRaribleSdk,
 						   mintRequest: MintRequest): Promise<{ mintResponse: MintResponse, nft: Item }> {
 	Logger.log("Minting token, prepare_mint_request=", prepareMintRequest)
 	// Get mint info
-	const mintPrepare = await sdk.nft.mint(prepareMintRequest)
+	const mintPrepare = await sdk.nft.mint.prepare(prepareMintRequest)
 
 	Logger.log("mint_request=", mintRequest)
 	// Mint token
@@ -32,8 +32,8 @@ export async function mint(sdk: IRaribleSdk,
 		// Wait until item appear
 		const nft = await retry(15, 3000, async () => {
 			const item = await sdk.apis.item.getItemById({ itemId: mintResponse.itemId })
-			if (item.supply.toString() < mintRequest.supply.toString()) {
-				throw new Error(`Expected supply ${mintRequest.supply.toString()}, but current supply ${item.supply.toString()}`)
+			if (item.supply.toString() < (mintRequest.supply || 1).toString()) {
+				throw new Error(`Expected supply ${(mintRequest.supply || 1).toString()}, but current supply ${item.supply.toString()}`)
 			}
 			return item
 		})

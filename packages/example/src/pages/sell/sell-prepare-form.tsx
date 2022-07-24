@@ -31,7 +31,7 @@ export function SellPrepareForm({ disabled, onComplete, itemId }: ISellPrepareFo
 					return
 				}
 				try {
-					onComplete(await connection.sdk.order.sell({
+					onComplete(await connection.sdk.order.sell.prepare({
 						itemId: toItemId(formData.itemId)
 					}))
 					navigate(`/sell/${formData.itemId}`, {})

@@ -21,9 +21,12 @@ async function buy(item: string) {
 		const order = (await raribleSdk.apis.item.getItemById({ itemId: "ETHEREUM:" + item })).bestSellOrder
 		if (order) {
 			console.log("Sell order was found, purchasing...")
-			const request = await raribleSdk.order.buy({ orderId: order.id })
+			const response = await raribleSdk.order.buy({
+				orderId: order.id,
+				amount: 1,
+			})
+			await response.wait()
 			console.log("The transaction was sent, waiting for a Rarible Protocol response...")
-			const response = await request.submit({ amount: 1 })
 			console.log("Rarible Protocol response:", response)
 		} else {
 			console.warn(`Sell order was not found for item=${item}`)

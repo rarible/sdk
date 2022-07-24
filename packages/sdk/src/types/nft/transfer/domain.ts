@@ -35,4 +35,4 @@ export interface PrepareTransferResponse extends AbstractPrepareResponse<"transf
 	maxAmount: BigNumber
 }
 
-export type ITransfer = (request: PrepareTransferRequest) => Promise<PrepareTransferResponse>
+export type ITransferPrepare = (request: PrepareTransferRequest) => Promise<PrepareTransferResponse>

@@ -4,6 +4,7 @@ import { toAddress, toBigNumber } from "@rarible/types"
 import type { FillOrderAction, FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
@@ -12,6 +13,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId, toEthereumParts } from "./common"
 
 export type SupportFlagsResponse = {
@@ -31,6 +33,8 @@ export class EthereumFill {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 	}
 
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
@@ -221,5 +225,32 @@ export class EthereumFill {
 
 	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.commonFill(this.sdk.order.acceptBid, request)
+	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		const orderHash = this.getOrderHashFromRequest(request)
+		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+
+		if (this.hasCollectionAssetType(order) && !request.itemId) {
+			throw new Error("For collection order you should pass itemId")
+		}
+		const buyRequest = await this.getFillOrderRequest(order, request)
+		const tx = await this.sdk.order.buy(buyRequest)
+		return new BlockchainEthereumTransaction(tx, this.network)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const orderHash = this.getOrderHashFromRequest(request)
+		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+
+		if (request.unwrap) {
+			throw new Error("Unwrap is not supported yet")
+		}
+		if (this.hasCollectionAssetType(order) && !request.itemId) {
+			throw new Error("For collection order you should pass itemId")
+		}
+		const acceptBidRequest = await this.getFillOrderRequest(order, request)
+		const tx = await this.sdk.order.acceptBid(acceptBidRequest)
+		return new BlockchainEthereumTransaction(tx, this.network)
 	}
 }

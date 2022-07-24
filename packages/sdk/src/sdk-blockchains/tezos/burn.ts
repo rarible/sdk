@@ -4,16 +4,18 @@ import { burn } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import type { TezosProvider, TezosNetwork, Provider } from "@rarible/tezos-sdk"
 import BigNumber from "bignumber.js"
-import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
-import type { MaybeProvider } from "./common"
+import type { BurnRequest, BurnResponse, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
+import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import {
+	getRequestAmount,
 	getCollectionType,
 	getCollectionTypeAssetClass,
 	getTezosItemData,
 	isExistedTezosProvider,
 	checkChainId,
 } from "./common"
+import type { MaybeProvider } from "./common"
 
 export class TezosBurn {
 	constructor(
@@ -22,6 +24,7 @@ export class TezosBurn {
 		private network: TezosNetwork,
 	) {
 		this.burn = this.burn.bind(this)
+		this.burnBasic = this.burnBasic.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
@@ -44,8 +47,6 @@ export class TezosBurn {
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
-					const amount = collectionType === "TEZOS_MT" ? new BigNumber((request?.amount ?? 1).toFixed()) : undefined
-
 					const result = await burn(
 						this.getRequiredProvider(),
 						{
@@ -53,12 +54,17 @@ export class TezosBurn {
 							contract,
 							token_id: new BigNumber(tokenId),
 						},
-						amount
+						getRequestAmount(request?.amount, collectionType)
 					)
 
 					return new BlockchainTezosTransaction(result, this.network)
 				},
 			}),
 		}
+	}
+
+	async burnBasic(request: BurnSimplifiedRequest): Promise<BurnResponse> {
+		const response = await this.burn(request)
+		return response.submit(request)
 	}
 }

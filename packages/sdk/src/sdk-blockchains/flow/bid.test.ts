@@ -67,4 +67,19 @@ describe("Flow bid", () => {
 		const acceptedOrderTx = await prepare.submit({ amount: 1 })
 		expect(acceptedOrderTx).toBeTruthy()
 	}, 1000000)
+
+	test("Should place a bid on flow NFT item and accept bid", async () => {
+		const itemId = await createTestItem(mint)
+
+		const orderId = await createTestBid(bid, itemId)
+
+		const order = await awaitFlowOrder(sdk, orderId.split(":")[1])
+		expect(order.take.value.toString()).toEqual("1")
+
+		const acceptedOrderTx = await acceptBid.buyBasic({
+			orderId,
+			amount: 1,
+		})
+		expect(acceptedOrderTx).toBeTruthy()
+	}, 1000000)
 })

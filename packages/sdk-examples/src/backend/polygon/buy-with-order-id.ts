@@ -26,9 +26,10 @@ async function buy(item: string) {
 		const orderId = toOrderId(process.env["ORDER_ID"])
 		if (orderId) {
 			console.log("Sell order was found, purchasing...")
-			const request = await raribleSdk.order.buy({ orderId })
-			console.log("The transaction was sent, waiting for a Rarible Protocol response...")
-			const response = await request.submit({ amount: 1 })
+			const response = await raribleSdk.order.buy({
+				orderId,
+				amount: 1,
+			})
 			await response.wait()
 			console.log("Rarible Protocol response:", response)
 		} else {

@@ -32,7 +32,7 @@ export function BidPrepareForm({ itemId, disabled, onComplete }: IBidPrepareForm
 					return
 				}
 				try {
-					onComplete(await connection.sdk.order.bid({
+					onComplete(await connection.sdk.order.bid.prepare({
 						itemId: toItemId(formData.itemId)
 					}))
 					navigate(`/bid/${formData.itemId}`, {})

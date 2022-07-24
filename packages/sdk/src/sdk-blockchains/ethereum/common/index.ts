@@ -18,6 +18,8 @@ import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { OrderRequest } from "packages/sdk/src/types/order/common"
+import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
 import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
 
@@ -231,6 +233,9 @@ export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain)
 }
 
 export function getEthereumItemId(itemId: ItemId) {
+	if (!itemId) {
+		throw new Error("ItemId has not been specified")
+	}
 	const [domain, contract, tokenId] = itemId.split(":")
 	if (!isEVMBlockchain(domain)) {
 		throw new Error(`Not an ethereum item: ${itemId}`)
@@ -241,4 +246,12 @@ export function getEthereumItemId(itemId: ItemId) {
 		tokenId,
 		domain,
 	}
+}
+
+export function getOrderAmount(orderAmount: OrderRequest["amount"], collection: NftCollection): number {
+	let amount = collection.type === "ERC721" ? 1 : orderAmount
+	if (amount === undefined) {
+		throw new Error("You should set amount of asset")
+	}
+	return amount
 }

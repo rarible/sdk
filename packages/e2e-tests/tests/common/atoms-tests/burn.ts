@@ -13,7 +13,7 @@ export async function burn(sdk: IRaribleSdk,
 													 supply: string | number | BigNumber) {
 	Logger.log("Burning token, prepare_burn_request=", prepareBurnRequest)
 	// Prepare burn
-	const prepareBurnResponse = await sdk.nft.burn(prepareBurnRequest)
+	const prepareBurnResponse = await sdk.nft.burn.prepare(prepareBurnRequest)
 
 	// Submit burn
 	const burnTx = await prepareBurnResponse.submit(burnRequest)

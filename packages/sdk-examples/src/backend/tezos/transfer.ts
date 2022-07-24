@@ -16,10 +16,8 @@ async function transferItem() {
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
-	const transferAction = await sdk.nft.transfer({
+	const tx = await sdk.nft.transfer({
 		itemId: toItemId("TEZOS:YOUR_ORDER_ID"),
-	})
-	const tx = await transferAction.submit({
 		to: toUnionAddress("TEZOS:ITEM_RECIPIENT"),
 	})
 	console.log("tx", tx)

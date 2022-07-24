@@ -85,7 +85,7 @@ describe.each(suites())("$blockchain mint => two bid => acceptBid", (suite) => {
 		const bidOrder1 = await bid(buyerSdk, buyerWallet, { itemId: nft1.id }, bidRequest)
 		const bidOrder2 = await bid(buyerSdk, buyerWallet, { itemId: nft2.id }, bidRequest)
 
-		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder1.id }, { amount: bidRequest.amount })
+		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder1.id }, { amount: bidRequest.amount || 1 })
 
 		await awaitForOwnershipValue(buyerSdk, nft1.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 

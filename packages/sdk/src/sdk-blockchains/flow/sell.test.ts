@@ -38,6 +38,25 @@ describe("Flow sell", () => {
 		expect(updatedOrder.take.value.toString()).toEqual("0.2")
 	})
 
+	test.skip("Should sell flow NFT item and update order with basic functions", async () => {
+		const itemId = await createTestItem(mint)
+		const orderId = await sellItem(sell, itemId, "0.1")
+		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
+		expect(order.take.value.toString()).toEqual("0.1")
+		const updatedOrderId = await sell.sellUpdateBasic({
+			orderId,
+			price: toBigNumber("0.2"),
+		})
+		const updatedOrder = await retry(10, 4000, async () => {
+			const order = await apis.order.getOrderById({ id: updatedOrderId })
+			if (order.take.value.toString() !== "0.2") {
+				throw new Error("Order is not updated yet")
+			}
+			return order
+		})
+		expect(updatedOrder.take.value.toString()).toEqual("0.2")
+	})
+
 	test.skip("Should sell flow NFT item with CurrencyId", async () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItemWithCurrencyId(sell, itemId, "0.1")

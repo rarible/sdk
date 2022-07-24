@@ -251,7 +251,7 @@ describe.each(suites())("$blockchain mint => floorBid => bidUpdate => acceptBid"
 
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id },
 			{
-				amount: bidRequest.amount,
+				amount: bidRequest.amount || 1,
 				itemId: nft.id,
 			})
 

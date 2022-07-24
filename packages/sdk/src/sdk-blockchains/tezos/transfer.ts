@@ -2,12 +2,13 @@ import type { Provider, TezosProvider, TezosNetwork } from "@rarible/tezos-sdk"
 import { transfer } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
-import { toBn } from "@rarible/utils/build/bn"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import BigNumber from "bignumber.js"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import type { IApisSdk } from "../../domain"
+import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { MaybeProvider } from "./common"
 import {
 	getCollectionType,
@@ -15,7 +16,7 @@ import {
 	getTezosAddress,
 	getTezosItemData,
 	isExistedTezosProvider,
-	checkChainId,
+	checkChainId, getRequestAmount,
 } from "./common"
 
 export class TezosTransfer {
@@ -25,6 +26,7 @@ export class TezosTransfer {
 		private network: TezosNetwork,
 	) {
 		this.transfer = this.transfer.bind(this)
+		this.transferBasic = this.transferBasic.bind(this)
 	}
 
 	private getRequiredProvider(): Provider {
@@ -47,8 +49,6 @@ export class TezosTransfer {
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: TransferRequest) => {
-					const amount = collectionType === "TEZOS_NFT" ? undefined : toBn((request.amount || 1).toFixed())
-
 					const result = await transfer(
 						this.getRequiredProvider(),
 						{
@@ -57,12 +57,17 @@ export class TezosTransfer {
 							token_id: new BigNumber(tokenId),
 						},
 						getTezosAddress(request.to),
-						amount,
+						getRequestAmount(request?.amount, collectionType),
 					)
 
 					return new BlockchainTezosTransaction(result, this.network)
 				},
 			}),
 		}
+	}
+
+	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.transfer(request)
+		return response.submit(request)
 	}
 }

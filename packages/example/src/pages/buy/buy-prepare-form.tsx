@@ -31,7 +31,7 @@ export function BuyPrepareForm({ orderId, disabled, onComplete }: IBuyPrepareFor
 					return
 				}
 				try {
-					onComplete(await connection.sdk.order.buy({
+					onComplete(await connection.sdk.order.buy.prepare({
 						orderId: toOrderId(formData.orderId)
 					}))
 					navigate(`/buy/${formData.orderId}`, {})
