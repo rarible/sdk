@@ -1,10 +1,10 @@
-# Rarible Multichain SDK
+
+# Rarible SDK
 
 ## Create SDK
-
 ```ts
 const blockchainProvider = ...
-const raribleSdk = createRaribleSdk(blockchainProvider, "staging")
+const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
 ```
 
 As `blockchainProvider` you can use
@@ -13,16 +13,13 @@ As `blockchainProvider` you can use
 * Flc provider for Flow
 * Solana provider interface with `publicKey` field and `signTransaction`, `signAllTransactions` methods
 * TezosProvider for Tezos
-
-## Usage
-
 #### About advanced methods calls
 
 Most methods have two ways to call, simple and advanced. The advanced methods consists of two stages: preparation and submit, and gives more information and control to complete the transaction.
 Example of sell NFT with simple and advanced ways:
 ```ts
 // Simple
-const orderId = await sdk.orderBasic.sell({
+const orderId = await sdk.order.sell({
   itemId: toItemId("ETHEREUM:0x64f088254d7ede5dd6208639aabf3614c80d396d:108764404607684442395098549286597885532295288457125436143364084161803586633729"),
   amount: 1,
   price: "0.1",
@@ -35,7 +32,7 @@ const orderId = await sdk.orderBasic.sell({
 
 ```ts
 // Advanced
-const prepare = await sdk.order.sell({
+const prepare = await sdk.order.sell.prepare({
   itemId: toItemId("ETHEREUM:0x64f088254d7ede5dd6208639aabf3614c80d396d:108764404607684442395098549286597885532295288457125436143364084161803586633729"),
 })
 
@@ -58,7 +55,7 @@ Before minting an NFT you might want to prepare collection for it.
 
 #### Ethereum
 ```typescript
-const { address, tx } = await sdk.nftBasic.createCollection({
+const { address, tx } = await sdk.nft.createCollection({
     blockchain: Blockchain.ETHEREUM,
     type: "ERC721",
     name: "name",
@@ -71,7 +68,7 @@ const { address, tx } = await sdk.nftBasic.createCollection({
 
 #### Solana
 ```typescript
-const { address, tx } = await sdk.nftBasic.createCollection({
+const { address, tx } = await sdk.nft.createCollection({
     blockchain: Blockchain.SOLANA,
     metadataURI: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 })
@@ -80,7 +77,7 @@ More information about [solana metadata format](https://docs.metaplex.com/archit
 
 #### Tezos
 ```typescript
-const { address, tx } = await sdk.nftBasic.createCollection({
+const { address, tx } = await sdk.nft.createCollection({
     blockchain: Blockchain.TEZOS,
     type: "NFT",
     name: "My NFT collection",
@@ -96,7 +93,7 @@ const { address, tx } = await sdk.nftBasic.createCollection({
 
 #### Ethereum
 ```typescript
-const { transaction, itemId } = await sdk.nftBasic.mint({
+const { transaction, itemId } = await sdk.nft.mint({
     uri: "ipfs://IPFS_METADATA_URI",
     collectionId: toCollectionId("ETHEREUM:0x..."),
 })
@@ -105,7 +102,7 @@ await transaction.wait()
 
 #### Solana
 ```ts
-await sdk.nftBasic.mint({
+await sdk.nft.mint({
   collectionId: toCollectionId("SOLANA:..."),
   uri: "https://SOLANA_METADATA_URI",
 })
@@ -113,7 +110,7 @@ await sdk.nftBasic.mint({
 
 #### Tezos
 ```ts
-const mintResult = await sdk.nftBasic.mint({
+const mintResult = await sdk.nft.mint({
   collectionId: toCollectionId("TEZOS:..."),
   uri: "ipfs://TEZOS_IPFS_METADATA_URI",
   supply: 12,
@@ -143,7 +140,7 @@ const { itemId } = await mint.mintBasic({
 Transfer token to another wallet.
 
 ```ts
-await sdk.nftBasic.transfer({
+await sdk.nft.transfer({
   itemId: toItemId("YOUR_ITEM_ID"),
   to: toUnionAddress("DESTINATION_WALLET_ADDRESS"),
   amount: 1,
@@ -157,7 +154,7 @@ await sdk.nftBasic.transfer({
 Burning an NFT
 
 ```typescript
-await sdk.nftBasic.burn({
+await sdk.nft.burn({
     itemId: toItemId("YOUR_ITEM_ID"),
     amount: 1,
 })
@@ -171,7 +168,7 @@ await sdk.nftBasic.burn({
 Selling NFT
 
 ```typescript
-const orderId = await sdk.orderBasic.sell({
+const orderId = await sdk.order.sell({
     itemId: toItemId("YOUR_ITEM_ID"),
     amount: 1,
     price: "0.01",
@@ -186,7 +183,7 @@ const orderId = await sdk.orderBasic.sell({
 Buy NFT using sell order
 
 ```typescript
-const tx = await sdk.orderBasic.buy({
+const tx = await sdk.order.buy({
     order: toOrderId("..."),
     amount: 1,
 })
@@ -198,7 +195,7 @@ const tx = await sdk.orderBasic.buy({
 Place bid order for an NFT
 
 ```typescript
-const orderId = await sdk.orderBasic.bid({
+const orderId = await sdk.order.bid({
     itemId: toItemId("..."),
     amount: 1,
     price: "0.01",
@@ -215,7 +212,7 @@ const orderId = await sdk.orderBasic.bid({
 Accept bid request using bid order
 
 ```typescript
-const acceptBidTx = await sdk.orderBasic.acceptBid({
+const acceptBidTx = await sdk.order.acceptBid({
     orderId: toOrderId("..."),
     amount: 1,
 })
@@ -227,7 +224,7 @@ const acceptBidTx = await sdk.orderBasic.acceptBid({
 Update price for given sell order
 
 ```typescript
-const orderId = sdk.orderBasic.sellUpdate({
+const orderId = sdk.order.sellUpdate({
     orderId: toOrderId("..."),
     price: "0.2",
 })
@@ -239,7 +236,7 @@ const orderId = sdk.orderBasic.sellUpdate({
 Update price for given bid order
 
 ```typescript
-const orderId = sdk.orderBasic.bidUpdate({
+const orderId = sdk.order.bidUpdate({
     orderId: toOrderId("..."),
     price: "0.2",
 })
@@ -249,7 +246,7 @@ const orderId = sdk.orderBasic.bidUpdate({
 ### Cancel Sell/Bid order
 
 ```typescript
-await sdk.orderBasic.cancel({ orderId: toOrderId("...") })
+await sdk.order.cancel({ orderId: toOrderId("...") })
 ```
 > *Notice:* this method has an advanced call `sdk.order.cancel({})`
 

@@ -21,7 +21,7 @@
         isLazySupported: true,
         loading: false,
       }
-      const tx = await raribleSdk.nft.mint.prepare({
+      const tx = await raribleSdk.nft.mint({
         collectionId: mintFormInitial.id,
         uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
         royalties: [],
