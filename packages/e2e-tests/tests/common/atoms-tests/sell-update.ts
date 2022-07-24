@@ -13,7 +13,7 @@ export async function sellUpdate(sdk: IRaribleSdk,
 						   orderUpdateRequest: OrderUpdateRequest): Promise<Order> {
 	console.log("sellUpdate, prepare_order_update_request=", prepareOrderUpdateRequest)
 	// Get sell info
-	const prepareOrderUpdateResponse = await sdk.order.sellUpdate(prepareOrderUpdateRequest)
+	const prepareOrderUpdateResponse = await sdk.order.sellUpdate.prepare(prepareOrderUpdateRequest)
 
 	console.log("prepare_order_update_response", prepareOrderUpdateResponse)
 	console.log("sellUpdate, order_update_request=", orderUpdateRequest)

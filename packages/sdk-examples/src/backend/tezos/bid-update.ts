@@ -16,10 +16,8 @@ async function bidUpdate() {
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
-	const bidAction = await sdk.order.bid({
+	const bidOrderId = await sdk.order.bid({
 		itemId: toItemId("TEZOS:YOUR_CONTRACT_ID:YOUR_ITEM_ID"),
-	})
-	const bidOrderId = await bidAction.submit({
 		amount: 1,
 		price: "0.000002",
 		currency: {
@@ -32,9 +30,10 @@ async function bidUpdate() {
 
 	const updateAction = await sdk.order.bidUpdate({
 		orderId: bidOrderId,
+		price: "0.000003",
 	})
 	//You can only increase price of bid order for security reasons
 	//If you want to force change bid price you should cancel order
-	await updateAction.submit({ price: "0.000003" })
+	await updateAction
 }
 bidUpdate()

@@ -30,7 +30,7 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 					const collection = await connection.sdk.apis.collection.getCollectionById({
 						collection: formData.collectionId
 					})
-					onComplete(await connection.sdk.nft.mint({ collection }))
+					onComplete(await connection.sdk.nft.mint.prepare({ collection }))
 				} catch (e) {
 					setError(e)
 				}

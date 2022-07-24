@@ -21,7 +21,7 @@
         isLazySupported: true,
         loading: false,
       }
-      const mintAction = await raribleSdk.nft.mint({
+      const mintAction = await raribleSdk.nft.mint.prepare({
         collectionId: mintFormInitial.id
       })
       const mintResponse = await mintAction.submit({

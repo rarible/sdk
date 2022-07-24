@@ -16,7 +16,7 @@ export async function mint(sdk: IRaribleSdk,
 						   mintRequest: MintRequest): Promise<{ mintResponse: MintResponse, nft: Item }> {
 	console.log("Minting token, prepare_mint_request=", prepareMintRequest)
 	// Get mint info
-	const mintPrepare = await sdk.nft.mint(prepareMintRequest)
+	const mintPrepare = await sdk.nft.mint.prepare(prepareMintRequest)
 
 	console.log("mint_request=", mintRequest)
 	// Mint token

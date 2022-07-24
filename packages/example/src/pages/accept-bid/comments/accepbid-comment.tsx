@@ -6,7 +6,7 @@ export function AcceptBidComment() {
 		<Code>
 			{`
 // get order info
-const accept = await connection.sdk.order.acceptBid({
+const accept = await connection.sdk.order.acceptBid.prepare({
   orderId: <ORDER ID>
 })
 

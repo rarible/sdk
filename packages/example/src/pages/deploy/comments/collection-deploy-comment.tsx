@@ -6,11 +6,11 @@ import { InlineCode } from "../../../components/common/inline-code"
 export function CollectionDeployComment() {
 	return <>
 		<Typography gutterBottom>
-			You can deploy new collection with <InlineCode>sdk.nft.deploy()</InlineCode> method
+			You can deploy new collection with <InlineCode>sdk.nft.deploy.action()</InlineCode> method
 		</Typography>
 		<Code>
 			{`
-sdk.nft.deploy({
+sdk.nft.deploy.action({
   blockchain: Blockchain.ETHEREUM,
   asset: {
     assetType: "ERC721",

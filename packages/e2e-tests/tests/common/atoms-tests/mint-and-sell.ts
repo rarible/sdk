@@ -15,7 +15,7 @@ export async function mintAndSell(sdk: IRaribleSdk,
 													 mintAndSellRequest: MintAndSellRequest): Promise<MintAndSellResponse> {
 	console.log("Minting token, prepare_mint_request=", prepareMintRequest)
 	// Get mint info
-	const prepareMintAndSellResponse = await sdk.nft.mintAndSell(prepareMintRequest)
+	const prepareMintAndSellResponse = await sdk.nft.mintAndSell.prepare(prepareMintRequest)
 
 	console.log("mint_and_sell_request=", mintAndSellRequest)
 	// Mint token

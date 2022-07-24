@@ -12,7 +12,7 @@ export async function acceptBid(sdk: IRaribleSdk,
 						  fillRequest: FillRequest): Promise<IBlockchainTransaction> {
 	try {
 		console.log("accept_bid, prepare_fill_order_request=", prepareFillOrderRequest)
-		const acceptBidPrepare = await sdk.order.acceptBid(prepareFillOrderRequest)
+		const acceptBidPrepare = await sdk.order.acceptBid.prepare(prepareFillOrderRequest)
 		console.log("accept_bid, fill_request=", fillRequest)
 
 		const tx = await acceptBidPrepare.submit(fillRequest)

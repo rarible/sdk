@@ -1,8 +1,8 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 
-export async function createCollection(wallet: BlockchainWallet, collectionRequest: CreateCollectionRequest) {
+export async function createCollection(wallet: BlockchainWallet, collectionRequest: CreateCollectionRequestSimplified) {
 	const sdk = createRaribleSdk(wallet, "dev")
 	const result = await sdk.nft.createCollection(collectionRequest)
 	await result.tx.wait()

@@ -2,7 +2,7 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import { Blockchain } from "@rarible/api-client"
-import { createRaribleSdk } from "@rarible/sdk/build"
+import { createRaribleSdk } from "@rarible/sdk"
 import { updateNodeGlobalVars } from "../common"
 
 updateNodeGlobalVars()
@@ -19,15 +19,11 @@ async function createCollection() {
 
 	const result = await sdk.nft.createCollection({
 		blockchain: Blockchain.TEZOS,
-		asset: {
-			assetType: "NFT",
-			arguments: {
-				name: "My NFT collection",
-				symbol: "MYNFT",
-				contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-				isUserToken: false,
-			},
-		},
+		type: "NFT",
+		name: "My NFT collection",
+		symbol: "MYNFT",
+		contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+		isPublic: false,
 	})
 	console.log("address of new collection", result.address)
 	await result.tx.wait()

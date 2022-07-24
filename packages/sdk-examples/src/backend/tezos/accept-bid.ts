@@ -17,10 +17,8 @@ async function acceptBid() {
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "dev")
-	const bidAction = await sdk.order.acceptBid({
+	const tx = await sdk.order.acceptBid({
 		orderId: toOrderId("TEZOS:YOUR_ORDER_ID"),
-	})
-	const tx = await bidAction.submit({
 		amount: 1,
 		infiniteApproval: true,
 	})

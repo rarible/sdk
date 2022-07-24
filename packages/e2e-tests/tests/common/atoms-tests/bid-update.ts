@@ -13,7 +13,7 @@ export async function bidUpdate(sdk: IRaribleSdk,
 	orderUpdateRequest: OrderUpdateRequest): Promise<Order> {
 	console.log("bidUpdate, prepare_order_update_request=", prepareOrderUpdateRequest)
 	// Get bid info
-	const prepareBidUpdateResponse = await sdk.order.bidUpdate(prepareOrderUpdateRequest)
+	const prepareBidUpdateResponse = await sdk.order.bidUpdate.prepare(prepareOrderUpdateRequest)
 
 	console.log("bidUpdate, order_update_request=", orderUpdateRequest)
 	// Submit bid order

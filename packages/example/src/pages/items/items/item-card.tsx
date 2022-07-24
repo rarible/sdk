@@ -73,7 +73,7 @@ export function ItemCard({ item }: IItemCardProps) {
 					Sell
 				</Button>
 				<Button size="small" color={"warning"} onClick={ async () => {
-					const b = await (connection?.sdk?.nft.burn({itemId: item.id}))
+					const b = await (connection?.sdk?.nft.burn.prepare({itemId: item.id}))
 					const tx = await b?.submit()
 					console.log(item.id, "done", "tx", tx?.getTxLink())
 				}}>

@@ -87,7 +87,7 @@ export function DeployPage() {
 				<form
 					onSubmit={handleSubmit(async (formData) => {
 						try {
-							setComplete(await connection.sdk?.nft.deploy(getDeployRequest(formData)))
+							setComplete(await connection.sdk?.nft.deploy.action(getDeployRequest(formData)))
 						} catch (e) {
 							setError(e)
 						}

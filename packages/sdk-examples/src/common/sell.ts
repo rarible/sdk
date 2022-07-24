@@ -5,10 +5,8 @@ import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
 export async function mintOnChain(wallet: BlockchainWallet, assetType: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "dev")
-	const sellResponse = await sdk.order.sell({
+	const sellOrderId = await sdk.order.sell({
 		itemId: toItemId("<YOUR_ITEM_ID>"),
-	})
-	const sellOrderId = await sellResponse.submit({
 		amount: 1,
 		price: "0.000002",
 		currency: assetType,

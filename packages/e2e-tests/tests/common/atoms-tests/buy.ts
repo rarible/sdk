@@ -15,7 +15,7 @@ export async function buy(sdk: IRaribleSdk,
 						  prepareFillOrderRequest: PrepareFillRequest,
 						  fillRequest: FillRequest): Promise<IBlockchainTransaction> {
 	console.log("buy, prepare_fill_order_request=", prepareFillOrderRequest)
-	const buyPrepare = await sdk.order.buy(prepareFillOrderRequest)
+	const buyPrepare = await sdk.order.buy.prepare(prepareFillOrderRequest)
 	console.log("buy, fill_request=", fillRequest)
 	const tx = await buyPrepare.submit(fillRequest)
 	await tx.wait()
