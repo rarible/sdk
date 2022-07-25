@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.22...v0.9.12) (2022-07-25)
+
+
+### Bug Fixes
+
+* tezos v1 order fix ([#306](https://github.com/rarible/sdk/issues/306)) ([9c4281f](https://github.com/rarible/sdk/commit/9c4281ff7ec9c209b661ccca8f3b8294f3c9a14f))
+
+
+
+
+
 ## [0.9.11-beta.22](https://github.com/rarible/sdk/compare/v0.9.11-beta.21...v0.9.11-beta.22) (2022-07-21)
 
 
