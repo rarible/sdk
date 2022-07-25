@@ -75,12 +75,12 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 	switch (environment) {
 		case "prod":
 			return {
-				accessNode: "https://tezos-node.rarible.org",
+				accessNode: "https://rpc.tzkt.io/mainnet",
 				network: TezosNetwork.MAINNET
 			}
 		case "dev":
 			return {
-				accessNode: "https://dev-tezos-node.rarible.org/",
+				accessNode: "https://dev-tezos-node.rarible.org",
 				network: TezosNetwork.CUSTOM
 			}
 		case "testnet":
@@ -88,7 +88,7 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 		default:
 			return {
 				accessNode: "https://rpc.tzkt.io/ithacanet",
-				network: TezosNetwork.ITHACANET
+				network: TezosNetwork.CUSTOM
 			}
 	}
 }

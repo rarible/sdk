@@ -14,11 +14,13 @@ interface IBuyFormProps {
 	onComplete: (response: any) => void
 }
 
-export function BuyForm({
-													prepare,
-													disabled,
-													onComplete,
-												}: IBuyFormProps) {
+export function BuyForm(
+	{
+		prepare,
+		disabled,
+		onComplete,
+	}: IBuyFormProps,
+) {
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form

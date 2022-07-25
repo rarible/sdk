@@ -11,7 +11,7 @@ import BigNumber from "bignumber.js"
 import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import { sellV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import type { OrderId } from "@rarible/api-client"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type {
 	OrderUpdateRequest,
@@ -80,6 +80,7 @@ export class TezosSell {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			supportsExpirationDate: false,
@@ -189,6 +190,7 @@ export class TezosSell {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit: updateAction,

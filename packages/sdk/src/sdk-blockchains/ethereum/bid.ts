@@ -18,7 +18,7 @@ import { getDecimals } from "@rarible/protocol-ethereum-sdk/build/common/get-dec
 import { getPrice } from "@rarible/protocol-ethereum-sdk/build/common/get-price"
 import type { BigNumberValue } from "@rarible/utils"
 import type * as OrderCommon from "../../types/order/common"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
 	GetConvertableValueRequest,
 	GetConvertableValueResult,
@@ -39,9 +39,13 @@ import {
 	getEthereumItemId,
 	getEVMBlockchain,
 	getOrderFeesSum,
+	getOriginFeeSupport,
+	getPayoutsSupport,
 	isEVMBlockchain,
+	validateOrderDataV3Request,
 } from "./common"
 import type { EthereumBalance } from "./balance"
+import type { IEthereumSdkConfig } from "./domain"
 
 export class EthereumBid {
 	private readonly blockchain: EVMBlockchain
@@ -51,6 +55,7 @@ export class EthereumBid {
 		private wallet: Maybe<EthereumWallet>,
 		private balanceService: EthereumBalance,
 		private network: EthereumNetwork,
+		private config?: IEthereumSdkConfig
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.bid = this.bid.bind(this)
@@ -148,6 +153,14 @@ export class EthereumBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		if (this.config?.useDataV3) {
+			return this.bidDataV3(prepare)
+		} else {
+			return this.bidDataV2(prepare)
+		}
+	}
+
+	async bidDataV2(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
 		let contractAddress: Address | undefined
 		let item: NftItem | undefined
 		let takeAssetType: AssetTypeRequest
@@ -182,6 +195,7 @@ export class EthereumBid {
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(request.currency)
 				return {
+					type: "DATA_V2",
 					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					takeAssetType: takeAssetType,
 					amount: request.amount,
@@ -215,7 +229,96 @@ export class EthereumBid {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
-			supportedCurrencies: common.getSupportedCurrencies(),
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
+			multiple: collection.type === "ERC1155",
+			maxAmount: item ? item.supply : null,
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+			getConvertableValue: this.getConvertableValue,
+			supportsExpirationDate: true,
+			submit,
+		}
+	}
+
+	async bidDataV3(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		let contractAddress: Address | undefined
+		let item: NftItem | undefined
+		let takeAssetType: AssetTypeRequest
+
+		if ("itemId" in prepare) {
+			const { itemId } = getEthereumItemId(prepare.itemId)
+			item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
+			contractAddress = item.contract
+
+			takeAssetType = {
+				tokenId: item.tokenId,
+				contract: item.contract,
+			}
+		} else if ("collectionId" in prepare) {
+			contractAddress = convertToEthereumAddress(prepare.collectionId)
+			takeAssetType = {
+				assetClass: "COLLECTION",
+				contract: contractAddress,
+			}
+		} else {
+			throw new Error("ItemId or CollectionId must be assigned")
+		}
+
+		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+			collection: contractAddress,
+		})
+
+		const bidAction = this.sdk.order.bid
+			.before(async (request: OrderCommon.OrderRequest) => {
+				validateOrderDataV3Request(request, { shouldProvideMaxFeesBasePoint: false })
+
+				const expirationDate = request.expirationDate instanceof Date
+					? Math.floor(request.expirationDate.getTime() / 1000)
+					: undefined
+				const currencyAssetType = getCurrencyAssetType(request.currency)
+
+				const payouts = common.toEthereumParts(request.payouts)
+				const originFees = common.toEthereumParts(request.originFees)
+
+				return {
+					type: "DATA_V3_BUY",
+					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
+					takeAssetType: takeAssetType,
+					amount: request.amount,
+					priceDecimal: request.price,
+					payout: payouts[0],
+					originFeeFirst: originFees[0],
+					originFeeSecond: originFees[1],
+					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
+					end: expirationDate,
+				}
+			})
+			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
+
+		const submit = Action.create({
+			id: "convert" as const,
+			run: async (request: OrderCommon.OrderRequest) => {
+				const wethContractAddress = this.getWethContractAddress()
+				const currency = getCurrencyAssetType(request.currency)
+				if (currency["@type"] === "ERC20" && currency.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
+					const originFeesSum = request.originFees?.reduce((acc, fee) => fee.value, 0) || 0
+					const value = await this.getConvertableValueCommon(
+						currency,
+						request.price,
+						request.amount,
+						originFeesSum
+					)
+					await this.convertCurrency(value)
+				}
+				return request
+			},
+		}).thenAction(bidAction)
+
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
 			multiple: collection.type === "ERC1155",
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
@@ -349,15 +452,10 @@ export class EthereumBid {
 		}).thenAction(bidUpdateAction)
 
 		return {
-			originFeeSupport:
-				order.type === "RARIBLE_V2"
-					? OriginFeeSupport.FULL
-					: OriginFeeSupport.AMOUNT_ONLY,
-			payoutsSupport:
-				order.type === "RARIBLE_V2"
-					? PayoutsSupport.MULTIPLE
-					: PayoutsSupport.SINGLE,
-			supportedCurrencies: common.getSupportedCurrencies(),
+			originFeeSupport: getOriginFeeSupport(order.type),
+			payoutsSupport: getPayoutsSupport(order.type),
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			getConvertableValue: this.getConvertableValue,
 			submit: sellUpdateAction,
