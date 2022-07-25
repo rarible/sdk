@@ -8,7 +8,7 @@ import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
-import { MethodWithAction, MethodWithPrepare } from "../../types/common"
+import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
@@ -44,7 +44,7 @@ export function createEthereumSdk(
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillService = new EthereumFill(sdk, wallet, network)
-	const { createCollection, createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
+	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
 	const transferService = new EthereumTransfer(sdk, network)
 	const burnService = new EthereumBurn(sdk, network)
@@ -58,8 +58,7 @@ export function createEthereumSdk(
 			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
 			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
-			deploy: new MethodWithAction(createCollectionSimplified, createCollection),
-			createCollection: new MethodWithAction(createCollectionSimplified, createCollection),
+			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
@@ -71,7 +70,7 @@ export function createEthereumSdk(
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
-			cancel: new MethodWithAction(cancelService.cancelBasic, cancelService.cancel),
+			cancel: cancelService.cancelBasic,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

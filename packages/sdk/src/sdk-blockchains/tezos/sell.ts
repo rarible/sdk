@@ -140,7 +140,6 @@ export class TezosSell {
 	}
 
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
-		console.log("sell v2", request)
 		await checkChainId(this.provider)
 
 		const provider = getRequiredProvider(this.provider)
@@ -170,7 +169,6 @@ export class TezosSell {
 				sale_data_type: undefined,
 			},
 		}
-		console.log("sell v2 tezos request", tezosRequest)
 		const sellOrderId = await sellV2(
 			provider,
 			tezosRequest

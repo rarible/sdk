@@ -4347,6 +4347,15 @@
     ethereumjs-util "^7.1.0"
     ethers "~5.4.4"
 
+"@rarible/ethers-ethereum@~0.12.74":
+  version "0.12.78"
+  resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.78.tgz#d28101a16de602ae8569ef3449870d9764946438"
+  integrity sha512-dj/8CXdJebW9fZaiEiuOch3f4xXRujjEFNwDFJrsrpexCoAhFAnXyGs952XnsA7FweiMhD49RhZaFx7ECxrLFQ==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.12.64"
+    ethereumjs-util "^7.1.0"
+    ethers "~5.4.4"
+
 "@rarible/fcl-types@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.0.tgz#d0697f30ed77ef80e43ef59497f1492c5b7dcf91"

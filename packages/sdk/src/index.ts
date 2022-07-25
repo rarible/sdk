@@ -1,8 +1,10 @@
 import type { ContractAddress } from "@rarible/types"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
-import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
+import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet/build"
+import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
+import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -28,10 +30,11 @@ import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 
 export function createRaribleSdk(
-	wallet: Maybe<BlockchainWallet>,
+	provider: Maybe<RaribleSdkProvider>,
 	env: RaribleSdkEnvironment,
 	config?: IRaribleSdkConfig
 ): IRaribleSdk {
+	const wallet = provider && getRaribleWallet(provider)
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
 

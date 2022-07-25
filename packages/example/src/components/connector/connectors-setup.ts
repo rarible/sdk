@@ -45,7 +45,6 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 		case "dev":
 			return 3
 		case "testnet":
-		case "staging":
 		default:
 			return 4
 	}
@@ -61,7 +60,6 @@ function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {
 			}
 		case "dev":
 		case "testnet":
-		case "staging":
 		default:
 			return {
 				network: "testnet",
@@ -84,7 +82,6 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 				network: TezosNetwork.CUSTOM
 			}
 		case "testnet":
-		case "staging":
 		default:
 			return {
 				accessNode: "https://rpc.tzkt.io/ithacanet",

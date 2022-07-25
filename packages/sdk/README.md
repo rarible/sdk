@@ -4,15 +4,37 @@
 ## Create SDK
 ```ts
 const blockchainProvider = ...
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+const raribleSdk = createRaribleSdk(blockchainProvider, "testnet") //"prod" | "testnet" | "dev" | "development"
 ```
+See [`examples`](https://github.com/rarible/sdk/tree/master/packages/sdk-examples/src) package
 
 As `blockchainProvider` you can use
 * Wallets from [`@rarile/sdk-wallets`](https://github.com/rarible/sdk/tree/master/packages/wallet) package
 * Web3 or Ethers providers
+```ts
+//ethers
+const blockchainProvider = new ethers.Wallet(pk, new ethers.providers.JsonRpcProvider("https://NODE_URL"))
+const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+//web3
+const blockchainProvider = new Web3(provider)
+const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+```
 * Flc provider for Flow
+```ts
+const raribleSdk = createRaribleSdk(fcl, "testnet")
+```
 * Solana provider interface with `publicKey` field and `signTransaction`, `signAllTransactions` methods
-* TezosProvider for Tezos
+```ts
+import { SolanaKeypairWallet } from "@rarible/solana-wallet"
+const blockchainProvider = SolanaKeypairWallet.createFrom(pk)
+const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+```
+* TezosProvider for Tezos, in_memory_provider (@rarible/tezos-sdk) or etc.
+```ts
+import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
+const blockchainProvider = in_memory_provider(edsk, "https://TEZOS_NODE_URL")
+const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+```
 #### About advanced methods calls
 
 Most methods have two ways to call, simple and advanced. The advanced methods consists of two stages: preparation and submit, and gives more information and control to complete the transaction.

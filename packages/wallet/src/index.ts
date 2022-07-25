@@ -149,6 +149,21 @@ export type BlockchainWallet =
 	TezosWallet |
 	SolanaWallet
 
+export function isBlockchainWallet(x: any): x is BlockchainWallet {
+	return x instanceof EthereumWallet ||
+		x instanceof TezosWallet ||
+		x instanceof FlowWallet ||
+		x instanceof SolanaWallet ||
+		(
+			(
+				(x.blockchain === BlockchainGroup.ETHEREUM && x.ethereum) ||
+				(x.blockchain === BlockchainGroup.SOLANA && x.provider) ||
+				(x.blockchain === BlockchainGroup.FLOW && x.fcl) ||
+				(x.blockchain === BlockchainGroup.TEZOS && x.provider)
+			) && (x.signPersonalMessage)
+		)
+}
+
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
 	"ETHEREUM": EthereumWallet,
@@ -156,3 +171,5 @@ export type WalletByBlockchain = {
 	"SOLANA": SolanaWallet
 	"IMMUTABLEX": EthereumWallet
 }
+
+export { getRaribleWallet, BlockchainProvider, RaribleSdkProvider } from "./get-wallet"

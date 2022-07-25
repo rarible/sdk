@@ -4,7 +4,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -23,7 +23,7 @@ function suites(): {
 	description: string,
 	isLazy: boolean,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	deployRequest: CreateCollectionRequest,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
 	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
@@ -39,17 +39,13 @@ function suites(): {
 			},
 			deployRequest: {
 				blockchain: Blockchain.ETHEREUM,
-				asset: {
-					assetType: "ERC721",
-					arguments: {
-						name: "name",
-						symbol: "RARI",
-						baseURI: "https://ipfs.rarible.com",
-						contractURI: "https://ipfs.rarible.com",
-						isUserToken: false,
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "ERC721",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -81,17 +77,13 @@ function suites(): {
 			},
 			deployRequest: {
 				blockchain: Blockchain.ETHEREUM,
-				asset: {
-					assetType: "ERC721",
-					arguments: {
-						name: "name",
-						symbol: "RARI",
-						baseURI: "https://ipfs.rarible.com",
-						contractURI: "https://ipfs.rarible.com",
-						isUserToken: false,
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "ERC721",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: false,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -123,17 +115,13 @@ function suites(): {
 			},
 			deployRequest: {
 				blockchain: Blockchain.ETHEREUM,
-				asset: {
-					assetType: "ERC1155",
-					arguments: {
-						name: "name",
-						symbol: "RARI",
-						baseURI: "https://ipfs.rarible.com",
-						contractURI: "https://ipfs.rarible.com",
-						isUserToken: false,
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "ERC1155",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -165,17 +153,13 @@ function suites(): {
 			},
 			deployRequest: {
 				blockchain: Blockchain.ETHEREUM,
-				asset: {
-					assetType: "ERC1155",
-					arguments: {
-						name: "name",
-						symbol: "RARI",
-						baseURI: "https://ipfs.rarible.com",
-						contractURI: "https://ipfs.rarible.com",
-						isUserToken: false,
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "ERC1155",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",

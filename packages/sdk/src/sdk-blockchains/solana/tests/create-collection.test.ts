@@ -8,13 +8,9 @@ describe("Solana collection", () => {
 	const sdk = createSdk(wallet)
 
 	test("Should create an collection", async () => {
-		const res = await sdk.nft.createCollection.action({
+		const res = await sdk.nft.createCollection({
 			blockchain: Blockchain.SOLANA,
-			asset: {
-				arguments: {
-					metadataURI: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
-				},
-			},
+			metadataURI: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 		})
 
 		await res.tx.wait()

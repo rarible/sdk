@@ -1,5 +1,4 @@
-import type { MethodWithAction } from "../../common"
-import type { ICancelSimplified } from "./simplified"
-import type { ICancelAction } from "./domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { CancelOrderRequest } from "./domain"
 
-export type ICancel = MethodWithAction<ICancelSimplified, ICancelAction>
+export type ICancel = (request: CancelOrderRequest) => Promise<IBlockchainTransaction>

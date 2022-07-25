@@ -13,7 +13,7 @@ export async function cancel(sdk: IRaribleSdk,
 							 cancelRequest: CancelOrderRequest): Promise<IBlockchainTransaction> {
 	// try {
 	Logger.log("cancel order/bid, cancel_request=", cancelRequest)
-	const tx = await sdk.order.cancel.action(cancelRequest)
+	const tx = await sdk.order.cancel(cancelRequest)
 	await tx.wait()
 
 	await awaitOrderCancel(sdk, cancelRequest.orderId)

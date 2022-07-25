@@ -21,9 +21,9 @@ export interface IConnectorComponentProps {
 const LOCALSTORAGE_KEY = "saved_environment"
 
 function getSavedEnvironment(): RaribleSdkEnvironment {
-	const envs = ["dev", "development", "testnet", "staging", "prod"]
+	const envs = ["dev", "development", "testnet", "prod"]
 	const saved = localStorage.getItem(LOCALSTORAGE_KEY)
-	return saved && envs.includes(saved) ? saved as RaribleSdkEnvironment : "staging"
+	return saved && envs.includes(saved) ? saved as RaribleSdkEnvironment : "testnet"
 }
 
 export function EnvironmentSelectorProvider({ children }: React.PropsWithChildren<IConnectorComponentProps>) {

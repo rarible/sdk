@@ -1,10 +1,9 @@
 import type { FlowSdk } from "@rarible/flow-sdk"
-import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
-import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { getFlowCollection, parseOrderId } from "./common/converters"
 
 export class FlowCancel {
@@ -13,16 +12,8 @@ export class FlowCancel {
 		private apis: IApisSdk,
 		private network: FlowNetwork,
 	) {
-		this.cancel = this.cancel.bind(this)
 		this.cancelBasic = this.cancelBasic.bind(this)
 	}
-
-	readonly cancel: ICancelAction = Action.create({
-		id: "send-tx" as const,
-		run: async (request: CancelOrderRequest) => {
-			return this.cancelCommon(request)
-		},
-	})
 
 	async cancelCommon(request: CancelOrderRequest) {
 		if (!request.orderId) {

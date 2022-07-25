@@ -15,8 +15,8 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { resetWXTZFunds } from "./test/reset-wxtz-funds"
 import { getTestContract } from "./test/test-contracts"
 
-describe("bid test", () => {
-	const env: RaribleSdkEnvironment = "staging"
+describe.skip("bid test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
 		env

@@ -68,7 +68,7 @@ describe.skip("mint test", () => {
 
 	test("mint MT token with basic function", async () => {
 		const mintResult = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${mtContract}`),
+			collectionId: toCollectionId(mtContract),
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,
 			royalties: [{

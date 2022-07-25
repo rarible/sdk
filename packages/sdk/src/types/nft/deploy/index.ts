@@ -1,5 +1,4 @@
-import type { MethodWithAction } from "../../common"
-import type { ICreateCollectionSimplified } from "./simplified"
-import type { ICreateCollectionAction } from "./domain"
+import type { CreateCollectionResponse } from "./domain"
+import type { CreateCollectionRequestSimplified } from "./simplified"
 
-export type ICreateCollection = MethodWithAction<ICreateCollectionSimplified, ICreateCollectionAction>
+export type ICreateCollection = (req: CreateCollectionRequestSimplified) => Promise<CreateCollectionResponse>

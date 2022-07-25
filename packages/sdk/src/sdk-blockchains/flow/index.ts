@@ -10,7 +10,7 @@ import { nonImplementedAction, notImplemented } from "../../common/not-implement
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
-import { MethodWithAction, MethodWithPrepare } from "../../types/common"
+import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
@@ -47,8 +47,7 @@ export function createFlowSdk(
 			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
 			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: () => Promise.resolve(undefined),
-			deploy: new MethodWithAction(notImplemented, nonImplementedAction),
-			createCollection: new MethodWithAction(notImplemented, nonImplementedAction),
+			createCollection: notImplemented,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
@@ -60,7 +59,7 @@ export function createFlowSdk(
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.buy),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
-			cancel: new MethodWithAction(cancelService.cancelBasic, cancelService.cancel),
+			cancel: cancelService.cancelBasic,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,

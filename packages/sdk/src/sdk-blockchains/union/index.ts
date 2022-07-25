@@ -14,8 +14,6 @@ import type {
 import { getCollectionId } from "../../index"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import type { ICancel } from "../../types/order/cancel"
-import type { ICreateCollection } from "../../types/nft/deploy"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
@@ -31,7 +29,6 @@ import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 import {
-	MethodWithAction,
 	MethodWithPrepare,
 } from "../../types/common"
 import type { ISellUpdate } from "../../types/order/sell"
@@ -43,7 +40,8 @@ import type { IMint } from "../../types/nft/mint"
 import type { ITransfer } from "../../types/nft/transfer"
 import { extractBlockchain } from "../../common/extract-blockchain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
-import type { CreateCollectionRequest } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -104,9 +102,10 @@ class UnionOrderSdk implements IOrderInternalSdk {
   acceptBid: IAcceptBid
   sell: ISellInternal
   sellUpdate: ISellUpdate
-  cancel: ICancel
 
   constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
+  	this.cancel = this.cancel.bind(this)
+
   	this.bid = new MethodWithPrepare(
   		(request) =>
   			instances[extractBlockchain(getBidEntity(request))].bid(request),
@@ -150,16 +149,10 @@ class UnionOrderSdk implements IOrderInternalSdk {
   			instances[extractBlockchain(request.orderId)].sellUpdate.prepare(request),
   	)
 
-  	this.cancel = new MethodWithAction(
-  		(request) =>
-  			instances[extractBlockchain(request.orderId)].cancel(request),
-  		Action.create({
-  			id: "send-tx" as const,
-  			run: (request: CancelOrderRequest) => {
-  				return instances[extractBlockchain(request.orderId)].cancel.action(request)
-  			},
-  		})
-  	)
+  }
+
+  cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+  	return this.instances[extractBlockchain(request.orderId)].cancel(request)
   }
 }
 
@@ -175,13 +168,12 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
   transfer: ITransfer
   mint: IMint
   burn: IBurn
-  createCollection: ICreateCollection
-  deploy: ICreateCollection
 
   constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
   	this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
   	this.generateTokenId = this.generateTokenId.bind(this)
   	this.uploadMeta = this.uploadMeta.bind(this)
+  	this.createCollection = this.createCollection.bind(this)
 
   	this.transfer = new MethodWithPrepare(
   		(request) =>
@@ -205,18 +197,10 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
   		(request) =>
   			instances[extractBlockchain(request.itemId)].burn.prepare(request),
   	)
+  }
 
-  	this.createCollection = new MethodWithAction(
-  		(request) =>
-  			instances[request.blockchain].createCollection(request),
-  		  Action.create({
-  			  id: "send-tx" as const,
-  			  run: (request: CreateCollectionRequest) => {
-    				return instances[request.blockchain].createCollection.action(request)
-    			},
-  		})
-  	)
-  	this.deploy = this.createCollection
+  createCollection(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+  	return this.instances[request.blockchain].createCollection(request)
   }
 
   uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {

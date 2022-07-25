@@ -11,7 +11,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
 describe.skip("sell test", () => {
-	const env: RaribleSdkEnvironment = "staging"
+	const env: RaribleSdkEnvironment = "testnet"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",

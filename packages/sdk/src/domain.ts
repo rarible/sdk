@@ -82,10 +82,6 @@ export interface INftSdk {
 	mintAndSell: IMintAndSell
 	burn: IBurn
 	generateTokenId: IGenerateTokenId
-	/**
-   * @deprecated Use {@link createCollection} instead
-   */
-	deploy: ICreateCollection
 	createCollection: ICreateCollection
 	uploadMeta: IUploadMeta
 }

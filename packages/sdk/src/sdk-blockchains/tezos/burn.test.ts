@@ -74,7 +74,7 @@ describe("burn test", () => {
 
 	test("burn NFT token with basic function", async () => {
 		const mintResult = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 		})
 		await mintResult.transaction.wait()
@@ -92,7 +92,7 @@ describe("burn test", () => {
 
 	test("burn NFT token test with basic function", async () => {
 		const mintResult = await sdk.nft.mint({
-			collectionId: toCollectionId(`TEZOS:${nftContract}`),
+			collectionId: toCollectionId(nftContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 			supply: 1,
 		})

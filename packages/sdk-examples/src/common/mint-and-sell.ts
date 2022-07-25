@@ -2,7 +2,6 @@ import type { RequestCurrency } from "@rarible/sdk"
 import { createRaribleSdk } from "@rarible/sdk"
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { MintType } from "@rarible/sdk/build/types/nft/mint/prepare"
 
 export async function mintAndSell(wallet: BlockchainWallet, currency: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "dev")
@@ -36,7 +35,5 @@ export async function mintAndSell(wallet: BlockchainWallet, currency: RequestCur
 		price: "0.000000000000000001",
 		currency,
 	})
-	if (mintResult.type === MintType.OFF_CHAIN) {
-		return mintResult.itemId
-	}
+	return mintResult.itemId
 }

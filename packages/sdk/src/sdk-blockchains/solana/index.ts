@@ -7,7 +7,7 @@ import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction } from "../../common/not-implemented"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
-import { MethodWithAction, MethodWithPrepare } from "../../types/common"
+import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import type { ISolanaSdkConfig } from "./domain"
 import { SolanaNft } from "./nft"
@@ -34,7 +34,7 @@ export function createSolanaSdk(
 	const balanceService = new SolanaBalance(sdk, wallet, apis, config)
 	const orderService = new SolanaOrder(sdk, wallet, apis, config)
 	const fillService = new SolanaFill(sdk, wallet, apis, config)
-	const { createCollectionBasic, createCollection } = new SolanaCollection(sdk, wallet, apis, config)
+	const { createCollectionBasic } = new SolanaCollection(sdk, wallet, apis, config)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.SOLANA, preprocessMeta)
@@ -45,8 +45,7 @@ export function createSolanaSdk(
 			burn: new MethodWithPrepare(nftService.burnBasic, nftService.burn),
 			transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
 			generateTokenId: nonImplementedAction,
-			deploy: new MethodWithAction(createCollectionBasic, createCollection),
-			createCollection: new MethodWithAction(createCollectionBasic, createCollection),
+			createCollection: createCollectionBasic,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
@@ -58,7 +57,7 @@ export function createSolanaSdk(
 			sellUpdate: new MethodWithPrepare(orderService.sellUpdateBasic, orderService.sellUpdate),
 			bid: new MethodWithPrepare(orderService.bidBasic, orderService.bid),
 			bidUpdate: new MethodWithPrepare(orderService.bidUpdateBasic, orderService.bidUpdate),
-			cancel: new MethodWithAction(orderService.cancelBasic, orderService.cancel),
+			cancel: orderService.cancelBasic,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

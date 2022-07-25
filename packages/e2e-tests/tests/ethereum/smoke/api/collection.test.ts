@@ -4,7 +4,7 @@ import type {
 	GetAllCollections200,
 	GetCollectionsByOwner200,
 } from "@rarible/api-client/build/apis/CollectionControllerApi"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import {
@@ -21,7 +21,7 @@ import { createCollection } from "../../../common/atoms-tests/create-collection"
 function suites(): {
 	blockchain: Blockchain,
 	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequest
+	deployRequest: CreateCollectionRequestSimplified
 }[] {
 	return [
 		{
@@ -29,17 +29,13 @@ function suites(): {
 			wallet: getEthereumWallet(),
 			deployRequest: {
 				blockchain: Blockchain.ETHEREUM,
-				asset: {
-					assetType: "ERC721",
-					arguments: {
-						name: "erc721",
-						symbol: "rari",
-						baseURI: "https://ipfs.rarible.com",
-						contractURI: "https://ipfs.rarible.com",
-						isUserToken: false,
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "ERC721",
+				name: "erc721",
+				symbol: "rari",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 		},
 	]
 }

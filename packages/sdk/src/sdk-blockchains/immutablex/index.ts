@@ -1,6 +1,6 @@
 import type { IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
-import { MethodWithAction, MethodWithPrepare } from "../../types/common"
+import { MethodWithPrepare } from "../../types/common"
 
 export function createImmutablexSdkBlank(): IRaribleInternalSdk {
 	return {
@@ -9,8 +9,7 @@ export function createImmutablexSdkBlank(): IRaribleInternalSdk {
 			burn: new MethodWithPrepare(notImplemented, notImplemented),
 			transfer: new MethodWithPrepare(notImplemented, notImplemented),
 			generateTokenId: notImplemented,
-			deploy: new MethodWithAction(notImplemented, nonImplementedAction),
-			createCollection: new MethodWithAction(notImplemented, nonImplementedAction),
+			createCollection: notImplemented,
 			preprocessMeta: notImplemented,
 			uploadMeta: notImplemented,
 		},
@@ -22,7 +21,7 @@ export function createImmutablexSdkBlank(): IRaribleInternalSdk {
 			sellUpdate: new MethodWithPrepare(notImplemented, notImplemented),
 			bid: new MethodWithPrepare(notImplemented, notImplemented),
 			bidUpdate: new MethodWithPrepare(notImplemented, notImplemented),
-			cancel: new MethodWithAction(notImplemented, nonImplementedAction),
+			cancel: notImplemented,
 		},
 		balances: {
 			getBalance: notImplemented,

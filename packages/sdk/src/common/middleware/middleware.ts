@@ -1,7 +1,6 @@
 import { Action } from "@rarible/action"
 import {
 	MethodWithPrepare,
-	MethodWithAction,
 } from "../../types/common"
 import { toPromise } from "./utils"
 
@@ -79,7 +78,7 @@ export class Middlewarer {
 	 * @param callable
 	 * @param meta metadata for new method
 	 */
-	wrap<Fun extends (...args: any[]) => Promise<any>>(
+	wrap<Fun extends (...args: any[]) => Promise<any> | MethodWithPrepare<any, any>>(
 		callable: Fun,
 		meta: { methodName?: string } = {}
 	): ((...args: Parameters<Fun>) => ReturnType<Fun>) | Fun {
@@ -92,25 +91,15 @@ export class Middlewarer {
 		if (isAction(callable)) {
 			this.wrapAction(callable, fnName)
 			return callable as Fun
-		} else if (isMethodWithAction(callable)) {
-			// console.log("isMethodWithPrepare or isMethodWithAction", fnName)
-			// this.wrapMethodWithPrepare(callable, fnName)
-			return callable
 		} else if (isMethodWithPrepare(callable)) {
-			return callable as Fun
+			return this.wrapMethodWithPrepare(callable, fnName)
 		} else {
 			return this.wrapFunction(callable, fnName)
 		}
 	}
 
-	wrapMethodWithAction<T extends MethodWithAction<any, any>>(method: T, fnName: string): T {
-		this.wrapAction(method.action, fnName)
-		this.wrapFunction(method, fnName)
-		return method
-	}
-
 	wrapMethodWithPrepare<T extends MethodWithPrepare<any, any>>(method: T, fnName: string): T {
-		this.wrapFunction(method.prepare, fnName)
+		this.wrapFunction(method.prepare, `${fnName}.prepare`)
 		this.wrapFunction(method, fnName)
 		return method
 	}
@@ -157,12 +146,6 @@ export class Middlewarer {
 
 function isAction(fn: any): fn is Action<any, any, any> {
 	return fn instanceof Action
-}
-
-function isMethodWithAction(
-	fn: any
-): fn is MethodWithAction<any, any> {
-	return fn instanceof MethodWithAction
 }
 
 function isMethodWithPrepare(

@@ -27,7 +27,7 @@ describe("Flow cancel", () => {
 		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		const orderId = await sellItem(sell, itemId, "0.1")
 		await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
-		const tx = await cancel.cancel({ orderId })
+		const tx = await cancel.cancelBasic({ orderId })
 		expect(tx).toBeTruthy()
 	})
 
@@ -48,7 +48,7 @@ describe("Flow cancel", () => {
 		expect(orderId).toBeTruthy()
 
 		await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
-		const tx = await cancel.cancel({ orderId })
+		const tx = await cancel.cancelBasic({ orderId })
 		expect(tx).toBeTruthy()
 	})
 })

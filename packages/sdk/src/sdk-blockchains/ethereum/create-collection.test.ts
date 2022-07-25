@@ -16,52 +16,7 @@ describe("create collection", () => {
 	const sdk1 = createRaribleSdk(ethereumWallet1, "development", { logs: LogsLevel.DISABLED })
 	const sdk2 = createRaribleSdk(ethereumWallet2, "development", { logs: LogsLevel.DISABLED })
 
-	test("create erc-721 collection legacy", async () => {
-		const { address, tx } = await sdk1.nft.createCollection.action({
-			blockchain: Blockchain.ETHEREUM,
-			asset: {
-				assetType: "ERC721",
-				arguments: {
-					name: "name",
-					symbol: "RARI",
-					baseURI: "https://ipfs.rarible.com",
-					contractURI: "https://ipfs.rarible.com",
-					isUserToken: false,
-				},
-			},
-		})
-		await tx.wait()
-		console.log(address)
-		await retry(5, 2000, async () => {
-			return sdk1.apis.collection.getCollectionById({
-				collection: address,
-			})
-		})
-	})
-
 	test("create erc-721 collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection.action({
-			blockchain: Blockchain.ETHEREUM,
-			asset: {
-				assetType: "ERC721",
-				arguments: {
-					name: "name",
-					symbol: "RARI",
-					baseURI: "https://ipfs.rarible.com",
-					contractURI: "https://ipfs.rarible.com",
-					isUserToken: false,
-				},
-			},
-		})
-		await tx.wait()
-		await retry(5, 2000, async () => {
-			return sdk1.apis.collection.getCollectionById({
-				collection: address,
-			})
-		})
-	})
-
-	test("create erc-721 collection with basic function", async () => {
 		const { address, tx } = await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			type: "ERC721",
@@ -85,20 +40,16 @@ describe("create collection", () => {
 		await mintTx.transaction.wait()
 	})
 
-	test("create erc-721 user collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection.action({
+	test("create erc-721 private collection", async () => {
+		const { address, tx } = await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
-			asset: {
-				assetType: "ERC721",
-				arguments: {
-					name: "name",
-					symbol: "RARI",
-					baseURI: "https://ipfs.rarible.com",
-					contractURI: "https://ipfs.rarible.com",
-					isUserToken: true,
-					operators: [],
-				},
-			},
+			type: "ERC721",
+			name: "name",
+			symbol: "RARI",
+			baseURI: "https://ipfs.rarible.com",
+			contractURI: "https://ipfs.rarible.com",
+			isPublic: false,
+			operators: [],
 		})
 		await tx.wait()
 		await retry(5, 2000, async () => {
@@ -108,19 +59,15 @@ describe("create collection", () => {
 		})
 	})
 
-	test("create erc-1155 collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection.action({
+	test("create erc-1155 public collection", async () => {
+		const { address, tx } = await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
-			asset: {
-				assetType: "ERC1155",
-				arguments: {
-					name: "name",
-					symbol: "RARI",
-					baseURI: "https://ipfs.rarible.com",
-					contractURI: "https://ipfs.rarible.com",
-					isUserToken: false,
-				},
-			},
+			type: "ERC1155",
+			name: "name",
+			symbol: "RARI",
+			baseURI: "https://ipfs.rarible.com",
+			contractURI: "https://ipfs.rarible.com",
+			isPublic: true,
 		})
 		await tx.wait()
 		await retry(5, 2000, async () => {
@@ -130,20 +77,16 @@ describe("create collection", () => {
 		})
 	})
 
-	test("create erc-1155 user collection", async () => {
-		const { address, tx } = await sdk1.nft.createCollection.action({
+	test("create erc-1155 private collection", async () => {
+		const { address, tx } = await sdk1.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
-			asset: {
-				assetType: "ERC1155",
-				arguments: {
-					name: "name",
-					symbol: "RARI",
-					baseURI: "https://ipfs.rarible.com",
-					contractURI: "https://ipfs.rarible.com",
-					isUserToken: true,
-					operators: [],
-				},
-			},
+			type: "ERC1155",
+			name: "name",
+			symbol: "RARI",
+			baseURI: "https://ipfs.rarible.com",
+			contractURI: "https://ipfs.rarible.com",
+			isPublic: false,
+			operators: [],
 		})
 		await tx.wait()
 		await retry(5, 2000, async () => {

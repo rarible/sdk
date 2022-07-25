@@ -1,8 +1,8 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getTezosTestWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -14,7 +14,7 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequest,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	activities: Array<ActivityType>
 }[] {
@@ -25,16 +25,12 @@ function suites(): {
 			wallet: getTezosTestWallet(),
 			deployRequest: {
 				blockchain: Blockchain.TEZOS,
-				asset: {
-					assetType: "NFT",
-					arguments: {
-						name: "NFT",
-						symbol: "AUTO_NFT",
-						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-						isUserToken: false,
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "NFT",
+				name: "NFT",
+				symbol: "AUTO_NFT",
+				contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",
@@ -55,17 +51,13 @@ function suites(): {
 			wallet: getTezosTestWallet(),
 			deployRequest: {
 				blockchain: Blockchain.TEZOS,
-				asset: {
-					assetType: "MT",
-					arguments: {
-						name: "MT",
-						symbol: "AUTO_MT",
-						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-						isUserToken: false,
-						operators: [],
-					},
-				},
-			} as CreateCollectionRequest,
+				type: "MT",
+				name: "MT",
+				symbol: "AUTO_MT",
+				contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+				isPublic: false,
+				operators: [],
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "ipfs:/test",

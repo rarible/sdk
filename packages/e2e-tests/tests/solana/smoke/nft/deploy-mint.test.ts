@@ -1,8 +1,8 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getSolanaWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -14,7 +14,7 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequest,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	activities: Array<ActivityType>
 }[] {
@@ -25,12 +25,8 @@ function suites(): {
 			wallet: getSolanaWallet(),
 			deployRequest: {
 				blockchain: Blockchain.SOLANA,
-				asset: {
-					arguments: {
-						metadataURI: "https://gist.githubusercontent.com/rzcoder/757f644f9755acb00aa8c34b619eb2a8/raw/ab18b90681643279c63ed96a666c622700bf30aa/konosuba",
-					},
-				},
-			} as CreateCollectionRequest,
+				metadataURI: "https://gist.githubusercontent.com/rzcoder/757f644f9755acb00aa8c34b619eb2a8/raw/ab18b90681643279c63ed96a666c622700bf30aa/konosuba",
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",

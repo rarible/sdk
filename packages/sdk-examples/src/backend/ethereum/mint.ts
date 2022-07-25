@@ -10,7 +10,7 @@ async function mint() {
 			throw new Error("Expected ETH_PRIVATE_KEY env variable")
 		}
 		const raribleSdkWallet = await initWalletWeb3(process.env["ETH_PRIVATE_KEY"])
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging")
+		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet")
 
 		const response = await raribleSdk.nft.mint({
 			collectionId: toCollectionId("ETHEREUM:0x6ede7f3c26975aad32a475e1021d8f6f39c89d82"),

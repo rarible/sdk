@@ -2,7 +2,7 @@ import React, { useContext } from "react"
 import { Box, MenuItem, Stack, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
-import { CreateCollectionBlockchains, CreateCollectionRequest } from "@rarible/sdk/build/types/nft/deploy/domain"
+import { CreateCollectionBlockchains } from "@rarible/sdk/build/types/nft/deploy/domain"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -17,46 +17,35 @@ import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { DeployForm } from "./deploy-form"
+import { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified";
 
 function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
 		case BlockchainGroup.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
-				asset: {
-					assetType: data["contract"],
-					arguments: {
-						name: data["name"],
-						symbol: data["symbol"],
-						baseURI: data["baseURI"],
-						contractURI: data["contractURI"],
-						isUserToken: !!data["private"],
-						operators: []
-					},
-				},
-			} as CreateCollectionRequest
+        type: data["contract"],
+        name: data["name"],
+        symbol: data["symbol"],
+        baseURI: data["baseURI"],
+        contractURI: data["contractURI"],
+        isPublic: !!data["private"],
+        operators: []
+			} as CreateCollectionRequestSimplified
 		case Blockchain.TEZOS:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
-				asset: {
-					assetType: data["collection"],
-					arguments: {
-						name: data["name"],
-						symbol: data["symbol"],
-						contractURI: data["contractURI"],
-						isUserToken: !!data["private"],
-					},
-				},
-			} as CreateCollectionRequest
+        type: data["collection"],
+        name: data["name"],
+        symbol: data["symbol"],
+        contractURI: data["contractURI"],
+        isPublic: !!data["private"],
+			} as CreateCollectionRequestSimplified
 		case Blockchain.SOLANA:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
-				asset: {
-					arguments: {
-						metadataURI: data["metadataURI"],
-					},
-				},
-			} as CreateCollectionRequest
+        metadataURI: data["metadataURI"],
+			} as CreateCollectionRequestSimplified
 		default:
 			throw new Error("Unsupported blockchain")
 	}
@@ -88,7 +77,7 @@ export function DeployPage() {
 				<form
 					onSubmit={handleSubmit(async (formData) => {
 						try {
-							setComplete(await connection.sdk?.nft.deploy.action(getDeployRequest(formData)))
+							setComplete(await connection.sdk?.nft.createCollection(getDeployRequest(formData)))
 						} catch (e) {
 							setError(e)
 						}

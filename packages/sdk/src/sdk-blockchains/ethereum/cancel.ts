@@ -1,9 +1,8 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { isEVMBlockchain } from "./common"
 
 export class EthereumCancel {
@@ -13,13 +12,6 @@ export class EthereumCancel {
 	) {
 		this.cancelBasic = this.cancelBasic.bind(this)
 	}
-
-	cancel: ICancelAction = Action.create({
-		id: "send-tx" as const,
-		run: async (request: CancelOrderRequest) => {
-			return this.cancelCommon(request)
-		},
-	})
 
 	async cancelCommon(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
 		if (!request.orderId) {

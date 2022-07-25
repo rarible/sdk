@@ -6,7 +6,7 @@ import { Middlewarer } from "../../common/middleware/middleware"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MetaUploader } from "../union/meta/upload-meta"
 import type { RaribleSdkConfig } from "../../config/domain"
-import { MethodWithAction, MethodWithPrepare } from "../../types/common"
+import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
@@ -31,7 +31,7 @@ export function createTezosSdk(
 	const mintService = new TezosMint(maybeProvider, _apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
 	const fillService = new TezosFill(maybeProvider, _apis, network)
-	const { createCollectionSimplified, createCollection } = new TezosCreateCollection(maybeProvider, network)
+	const { createCollectionSimplified } = new TezosCreateCollection(maybeProvider, network)
 	const transferService = new TezosTransfer(maybeProvider, _apis, network)
 	const burnService = new TezosBurn(maybeProvider, _apis, network)
 	const cancelService = new TezosCancel(maybeProvider, _apis, network)
@@ -45,8 +45,7 @@ export function createTezosSdk(
 			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
 			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new TezosTokenId(maybeProvider).generateTokenId,
-			deploy: new MethodWithAction(createCollectionSimplified, createCollection),
-			createCollection: new MethodWithAction(createCollectionSimplified, createCollection),
+			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
@@ -58,7 +57,7 @@ export function createTezosSdk(
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			bid: new MethodWithPrepare(notImplemented, nonImplementedAction),
 			bidUpdate: new MethodWithPrepare(notImplemented, nonImplementedAction),
-			cancel: new MethodWithAction(cancelService.cancelBasic, cancelService.cancel),
+			cancel: cancelService.cancelBasic,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
