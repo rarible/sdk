@@ -1,10 +1,14 @@
-import type { FTAssetType, OrderDataRequest, TezosProvider, XTZAssetType,
-	TezosNetwork } from "@rarible/tezos-sdk"
+import type {
+	FTAssetType, OrderDataRequest, SellRequest, TezosProvider, XTZAssetType,
+} from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import {
 	AssetTypeV2,
 	// eslint-disable-next-line camelcase
 	get_ft_type,
+	// eslint-disable-next-line camelcase
+	pk_to_pkh,
+	sell,
 } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
 import BigNumber from "bignumber.js"
@@ -32,14 +36,14 @@ import {
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
-	checkChainId,
+	checkChainId, getMakerPublicKey, getCollectionType, getCollectionTypeAssetClass, getPayouts,
 } from "./common"
+import type { TezosOrder } from "./domain"
 
 export class TezosSell {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private unionAPI: IApisSdk,
-		private network: TezosNetwork,
 	) {
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
@@ -195,5 +199,36 @@ export class TezosSell {
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit: updateAction,
 		}
+	}
+
+
+	async sellV1(request: OrderCommon.OrderInternalRequest) {
+		const provider = getRequiredProvider(this.provider)
+		const makerPublicKey = await getMakerPublicKey(provider)
+		const { tokenId, contract } = getTezosItemData(request.itemId)
+
+		const requestCurrency = getCurrencyAssetType(request.currency)
+		const collectionType = await getCollectionType(this.provider, contract)
+
+		const tezosRequest: SellRequest = {
+			maker: pk_to_pkh(makerPublicKey),
+			maker_edpk: makerPublicKey,
+			make_asset_type: {
+				asset_class: getCollectionTypeAssetClass(collectionType),
+				contract,
+				token_id: new BigNumber(tokenId),
+			},
+			take_asset_type: await this.parseTakeAssetType(requestCurrency),
+			amount: new BigNumber(request.amount),
+			price: new BigNumber(request.price),
+			payouts: await getPayouts(provider, request.payouts),
+			origin_fees: convertUnionParts(request.originFees),
+		}
+
+		const sellOrder: TezosOrder = await sell(
+			provider,
+			tezosRequest
+		)
+		return convertTezosOrderId(sellOrder.hash)
 	}
 }
