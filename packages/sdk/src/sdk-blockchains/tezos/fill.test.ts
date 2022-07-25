@@ -6,8 +6,8 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosOrderId } from "./common"
 
-describe.skip("fill test", () => {
-	const env: RaribleSdkEnvironment = "staging"
+describe("fill test", () => {
+	const env: RaribleSdkEnvironment = "prod"
 	const wallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3",
 		env
@@ -17,18 +17,19 @@ describe.skip("fill test", () => {
 	test("buy NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 		const fillAction = await buyerSdk.order.buy({
-			orderId: convertTezosOrderId("755dcfce-ead2-5a22-be41-da338656ff9b"),
+			orderId: convertTezosOrderId("6345c41b-b8a2-5697-8e29-1438cc5ddf6b"),
 		})
 
 		const tx = await fillAction.submit({
 			amount: 1,
 			infiniteApproval: true,
 		})
+		console.log("tx", tx)
 		await tx.wait()
 
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx:15"),
+			toItemId("TEZOS:KT18pVpRXKPY2c4U2yFEGSH3ZnhB2kL8kwXS:46284"),
 			buyerAddress
 		)
 		expect(ownership.value).toBe("1")

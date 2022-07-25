@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
 import type { OrderDataRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { fill_order, get_address } from "@rarible/tezos-sdk"
+import { fill_order, get_address, get_legacy_orders, order_of_json } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -17,9 +17,9 @@ import type { MaybeProvider } from "./common"
 import {
 	checkChainId,
 	convertFromContractAddress,
-	convertOrderToFillOrder, convertUnionParts,
+	convertUnionParts,
 	getRequiredProvider,
-	getTezosAddress, getTezosAssetTypeV2,
+	getTezosAddress, getTezosAssetTypeV2, getTezosOrderId,
 } from "./common"
 
 export class TezosFill {
@@ -145,7 +145,20 @@ export class TezosFill {
 			infinite: fillRequest.infiniteApproval,
 			use_all: true,
 		}
-		const preparedOrder = convertOrderToFillOrder(order)
+
+		let legacyOrders = await get_legacy_orders(
+			provider.config,
+			{ data: true },
+			{ order_id: getTezosOrderId(order.id) }
+		)
+		if (!legacyOrders.length) {
+			throw new Error("Tezos v1 orders has not been found")
+		}
+		if (!legacyOrders[0] || !legacyOrders[0].data) {
+			throw new Error("Tezos v1 order data is empty")
+		}
+
+		const preparedOrder = order_of_json(legacyOrders[0].data)
 		const fillResponse = await fill_order(
 			provider,
 			preparedOrder,
