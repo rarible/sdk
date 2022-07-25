@@ -6,8 +6,8 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosOrderId } from "./common"
 
-describe("fill test", () => {
-	const env: RaribleSdkEnvironment = "prod"
+describe.skip("fill test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3",
 		env
