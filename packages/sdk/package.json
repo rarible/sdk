@@ -29,7 +29,7 @@
     "@rarible/sdk-transaction": "^0.9.12",
     "@rarible/sdk-wallet": "^0.9.12",
     "@rarible/solana-sdk": "^0.9.12",
-    "@rarible/tezos-sdk": "~0.1.30",
+    "@rarible/tezos-sdk": "~0.1.31",
     "@rarible/types": "~0.9.3",
     "@rarible/utils": "~0.5.0",
     "@solana/web3.js": "^1.35.1",

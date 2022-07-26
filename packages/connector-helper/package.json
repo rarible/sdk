@@ -23,7 +23,7 @@
     "@rarible/connector-fcl": "^0.9.12",
     "@rarible/estimate-middleware": "^0.9.4",
     "@rarible/sdk-wallet": "^0.9.12",
-    "@rarible/tezos-sdk": "0.1.30",
+    "@rarible/tezos-sdk": "0.1.31",
     "@rarible/web3-ethereum": "^0.12.74"
   },
   "devDependencies": {
