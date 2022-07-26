@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.13](https://github.com/rarible/sdk/compare/v0.9.12...v0.9.13) (2022-07-26)
+
+
+### Bug Fixes
+
+* tezos sdk update, fix jenkins file ([#307](https://github.com/rarible/sdk/issues/307)) ([bc61b97](https://github.com/rarible/sdk/commit/bc61b97c1cadae7e95014af94973e9cc5b740900))
+
+
+
+
+
 ## [0.9.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.22...v0.9.12) (2022-07-25)
 
 

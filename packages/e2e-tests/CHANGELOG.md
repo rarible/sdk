@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.13](https://github.com/rarible/sdk/compare/v0.9.12...v0.9.13) (2022-07-26)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
 ## [0.9.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.22...v0.9.12) (2022-07-25)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
