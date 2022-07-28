@@ -15,7 +15,7 @@ async function createCollection() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 
 	const result = await sdk.nft.createCollection({
 		blockchain: Blockchain.TEZOS,

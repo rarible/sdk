@@ -2,7 +2,7 @@ import { toAddress, toWord } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { BlockchainEthereumTransaction } from "./"
 
-const networks: EthereumNetwork[] = ["mainnet", "mumbai", "ropsten", "rinkeby", "testnet"]
+const networks: EthereumNetwork[] = ["mainnet", "mumbai", "testnet"]
 
 describe.each(networks)("get ethereum tx link in %s network", network => {
 	test("get tx link", () => {
