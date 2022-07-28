@@ -151,7 +151,7 @@ export async function getSellOrdersByItemRaw(sdk: IRaribleSdk,
 export async function getSellOrdersByMaker(sdk: IRaribleSdk, maker: string, size: number): Promise<Orders> {
 	const orders = await retry(10, 2000, async () => {
 		return await sdk.apis.order.getSellOrdersByMaker({
-			maker: maker,
+			maker: [maker],
 			size: size,
 		})
 	})
@@ -164,7 +164,7 @@ export async function getSellOrdersByMakerRaw(sdk: IRaribleSdk, maker: string,
 	size: number): Promise<GetSellOrdersByMakerResponse> {
 	const orders = await retry(10, 2000, async () => {
 		return await sdk.apis.order.getSellOrdersByMakerRaw({
-			maker: maker,
+			maker: [maker],
 			size: size,
 		})
 	})

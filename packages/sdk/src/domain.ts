@@ -1,5 +1,5 @@
 import type * as ApiClient from "@rarible/api-client"
-import type { BlockchainGroup } from "@rarible/api-client"
+import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
@@ -44,7 +44,7 @@ export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
 	logs?: LogsLevel
 	blockchain?: {
-		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig
+		[WalletType.SOLANA]?: ISolanaSdkConfig
 	}
 	middlewares?: Middleware[]
 	ethereum?: EthereumNetworkConfig

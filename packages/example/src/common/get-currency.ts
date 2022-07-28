@@ -57,6 +57,11 @@ export function getCurrency(currency: CurrencyType): RequestCurrency {
 				return ethFt
 			}
 			throw new Error("Unsupported currency subtype")
+		case Blockchain.IMMUTABLEX:
+			if (currency.type === "NATIVE") {
+				return getEthNative(currency.blockchain)
+			}
+			throw new Error("Unsupported currency subtype")
 		case Blockchain.TEZOS:
 			if (currency.type === "NATIVE") {
 				return tezosNative

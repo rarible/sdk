@@ -1,7 +1,8 @@
 import type { ContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { CollectionId } from "@rarible/api-client"
-import { Blockchain, BlockchainGroup } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
+import { WalletType } from "@rarible/sdk-wallet"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
@@ -21,7 +22,7 @@ import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
-import { createImmutablexSdkBlank } from "./sdk-blockchains/immutablex"
+import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -39,36 +40,40 @@ export function createRaribleSdk(
 	}
 	const instance = createUnionSdk(
 		createEthereumSdk(
-			filterWallet(wallet, BlockchainGroup.ETHEREUM),
+			filterWallet(wallet, WalletType.ETHEREUM),
 			apis,
 			blockchainConfig.ethereumEnv,
 			ethConfig
 		),
 		createFlowSdk(
-			filterWallet(wallet, BlockchainGroup.FLOW),
+			filterWallet(wallet, WalletType.FLOW),
 			apis,
 			blockchainConfig.flowEnv,
 			undefined,
 			config?.flow?.auth
 		),
 		createTezosSdk(
-			filterWallet(wallet, BlockchainGroup.TEZOS),
+			filterWallet(wallet, WalletType.TEZOS),
 			apis,
 			blockchainConfig
 		),
 		createEthereumSdk(
-			filterWallet(wallet, BlockchainGroup.ETHEREUM),
+			filterWallet(wallet, WalletType.ETHEREUM),
 			apis,
 			blockchainConfig.polygonNetwork,
 			ethConfig
 		),
 		createSolanaSdk(
-			filterWallet(wallet, BlockchainGroup.SOLANA),
+			filterWallet(wallet, WalletType.SOLANA),
 			apis,
 			blockchainConfig.solanaNetwork,
 			config?.blockchain?.SOLANA
 		),
-		createImmutablexSdkBlank()
+		createImmutablexSdk(
+			filterWallet(wallet, WalletType.IMMUTABLEX),
+			apis,
+			blockchainConfig.immutablexNetwork
+		)
 	)
 
 	setupMiddleware(apis, instance, { wallet, env, config })
@@ -121,11 +126,11 @@ function setupMiddleware(
 	}
 }
 
-function filterWallet<T extends BlockchainGroup>(
+function filterWallet<T extends WalletType>(
 	wallet: Maybe<BlockchainWallet>,
-	blockchain: T
+	blockchainType: T
 ): Maybe<WalletByBlockchain[T]> {
-	if (wallet?.blockchain === blockchain) {
+	if (wallet?.walletType === blockchainType) {
 		return wallet as WalletByBlockchain[T]
 	}
 	return undefined
@@ -206,6 +211,7 @@ type MiddleMintType = {
 	mintResponse: MintResponse
 }
 
+export { WalletType }
 export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
 export { IRaribleSdk, MintAndSellRequest }
 export { RequestCurrency } from "./common/domain"

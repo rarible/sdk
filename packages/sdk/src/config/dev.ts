@@ -7,4 +7,5 @@ export const devConfig: RaribleSdkConfig = {
 	tezosNetwork: "testnet",
 	polygonNetwork: "mumbai-dev",
 	solanaNetwork: "devnet",
+	immutablexNetwork: "dev",
 }

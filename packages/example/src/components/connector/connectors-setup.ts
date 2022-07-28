@@ -15,7 +15,15 @@ import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnec
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
-import { mapEthereumWallet, mapFlowWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
+import {
+	mapEthereumWallet,
+	mapFlowWallet,
+	mapImmutableXWallet,
+	mapSolanaWallet,
+	mapTezosWallet,
+} from "@rarible/connector-helper"
+import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
+import { ImxEnv } from "@rarible/immutable-wallet"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
@@ -45,7 +53,6 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 		case "dev":
 			return 3
 		case "testnet":
-		case "staging":
 		default:
 			return 4
 	}
@@ -61,7 +68,6 @@ function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {
 			}
 		case "dev":
 		case "testnet":
-		case "staging":
 		default:
 			return {
 				network: "testnet",
@@ -84,7 +90,6 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 				network: TezosNetwork.CUSTOM
 			}
 		case "testnet":
-		case "staging":
 		default:
 			return {
 				accessNode: "https://rpc.tzkt.io/ithacanet",
@@ -92,6 +97,17 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 			}
 	}
 }
+
+function environmentToImmutableXEnv(environment: RaribleSdkEnvironment): ImxEnv {
+	switch (environment) {
+		case "prod":
+			return "prod"
+		case "dev":
+		default:
+			return "dev"
+	}
+}
+
 
 const state: IConnectorStateProvider = {
 	async getValue(): Promise<string | undefined> {
@@ -160,6 +176,11 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		network: environment === "prod" ? "mainnet-beta" : "devnet"
 	}))
 
+	const imxConnector = mapImmutableXWallet(new ImmutableXLinkConnectionProvider({
+		env: environmentToImmutableXEnv(environment),
+	}))
+
+
 	// Providers required secrets
 	// const fortmatic = mapEthereumWallet(new FortmaticConnectionProvider({ apiKey: "ENTER", ethNetwork: { chainId: 4, rpcUrl: "https://node-rinkeby.rarible.com" } }))
 	// const portis = mapEthereumWallet(new PortisConnectionProvider({ appId: "ENTER", network: "rinkeby" }))
@@ -173,6 +194,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(walletConnect)
 		.add(phantomConnect)
 		.add(solflareConnect)
+		.add(imxConnector)
 	// .add(portis)
 	// .add(fortmatic)
 

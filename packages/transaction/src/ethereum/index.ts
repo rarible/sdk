@@ -45,4 +45,8 @@ export class BlockchainEthereumTransaction implements IBlockchainTransaction {
 			default: throw new Error("Unsupported transaction network")
 		}
 	}
+
+	get isEmpty(): boolean {
+		return false
+	}
 }

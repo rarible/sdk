@@ -1,13 +1,14 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
-import { BlockchainGroup } from "@rarible/api-client"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { ImxWallet } from "@rarible/immutable-wallet"
 import type { AbstractWallet, UserSignature } from "./domain"
+import { WalletType } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
-	readonly blockchain = BlockchainGroup.ETHEREUM
+	readonly walletType = WalletType.ETHEREUM
 
 	constructor(public readonly ethereum: T) {
 	}
@@ -25,7 +26,7 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 }
 
 export class FlowWallet implements AbstractWallet {
-	readonly blockchain = BlockchainGroup.FLOW
+	readonly walletType = WalletType.FLOW
 
 	constructor(public readonly fcl: Fcl, public auth?: AuthWithPrivateKey) {
 	}
@@ -76,7 +77,7 @@ export interface TezosSignatureResult {
 }
 
 export class TezosWallet implements AbstractWallet {
-	readonly blockchain = BlockchainGroup.TEZOS
+	readonly walletType = WalletType.TEZOS
 
 	constructor(public readonly provider: TezosProvider) {
 	}
@@ -104,7 +105,7 @@ export class TezosWallet implements AbstractWallet {
 }
 
 export class SolanaWallet implements AbstractWallet {
-	readonly blockchain = BlockchainGroup.SOLANA
+	readonly walletType = WalletType.SOLANA
 
 	constructor(public readonly provider: SolanaWalletProvider) {
 	}
@@ -127,32 +128,33 @@ export class SolanaWallet implements AbstractWallet {
 	}
 }
 
-//todo implement immutablex wallet
-export class ImmutablexWallet implements AbstractWallet {
-  readonly blockchain = BlockchainGroup.IMMUTABLEX
+export class ImmutableXWallet implements AbstractWallet {
+	readonly walletType = WalletType.IMMUTABLEX
 
-  constructor() {}
+	constructor(public wallet: ImxWallet) {
+	}
 
-  //todo implement sign personal message method
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async signPersonalMessage(message: string) {
-  	return {
-  		signature: "",
-  		publicKey: "",
-  	}
-  }
+	async signPersonalMessage(message: string): Promise<UserSignature> {
+		return {
+			signature: (await this.wallet.link.sign({ message, description: message })).result,
+			publicKey: this.wallet.getConnectionData().address,
+		}
+	}
 }
 
 export type BlockchainWallet =
 	EthereumWallet |
 	FlowWallet |
 	TezosWallet |
-	SolanaWallet
+	SolanaWallet |
+	ImmutableXWallet
 
 export type WalletByBlockchain = {
 	"FLOW": FlowWallet
 	"ETHEREUM": EthereumWallet,
 	"TEZOS": TezosWallet
 	"SOLANA": SolanaWallet
-	"IMMUTABLEX": EthereumWallet
+	"IMMUTABLEX": ImmutableXWallet
 }
+
+export { WalletType }

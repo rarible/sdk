@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
 import { Box, Typography } from "@mui/material"
+import { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
@@ -11,16 +12,15 @@ import { MintForm } from "./mint-form"
 import { MintComment } from "./comments/mint-comment"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { BlockchainGroup } from "@rarible/api-client"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
-function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
+function validateConditions(blockchain: WalletType | undefined): boolean {
 	return !!blockchain
 }
 
 export function MintPage() {
 	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.blockchain
+	const blockchain = connection.sdk?.wallet?.walletType
 
 	return (
 		<Page header="Mint Token">
