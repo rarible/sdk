@@ -15,7 +15,7 @@ async function cancelOrder() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const cancelTx = await sdk.order.cancel({
 		orderId: toOrderId("TEZOS:YOUR_ORDER_ID"),
 	})

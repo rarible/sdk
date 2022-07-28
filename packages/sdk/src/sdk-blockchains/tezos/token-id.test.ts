@@ -5,7 +5,7 @@ import type { RaribleSdkEnvironment } from "../../config/domain"
 import { createTestWallet } from "./test/test-wallet"
 
 describe.skip("test getting token id", () => {
-	const env: RaribleSdkEnvironment = "staging"
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
 
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })

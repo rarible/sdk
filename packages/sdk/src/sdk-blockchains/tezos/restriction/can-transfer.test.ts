@@ -5,7 +5,7 @@ import { createTestWallet } from "../test/test-wallet"
 import type { RaribleSdkEnvironment } from "../../../config/domain"
 
 describe("canTransfer", () => {
-	const env: RaribleSdkEnvironment = "staging"
+	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
 		"D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",

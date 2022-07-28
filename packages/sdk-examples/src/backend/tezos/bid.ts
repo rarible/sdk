@@ -15,7 +15,7 @@ async function bid() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const bidAction = await sdk.order.bid({
 		itemId: toItemId("TEZOS:YOUR_CONTRACT_ID:YOUR_ITEM_ID"),
 	})

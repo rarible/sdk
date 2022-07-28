@@ -17,7 +17,7 @@ async function buy(item: string) {
 		}
 		const raribleSdkWallet = initWallet(process.env["ETH_PRIVATE_KEY"])
 		//@ts-ignore
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging", { fetchApi: fetch })
+		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet", { fetchApi: fetch })
 
 		console.log(`SDK was created, searching sell order for item=${item}...`)
 		const order = (await raribleSdk.apis.item.getItemById({ itemId: "ETHEREUM:" + item })).bestSellOrder
