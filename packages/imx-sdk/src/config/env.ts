@@ -1,4 +1,3 @@
-import type { Address } from "@rarible/types"
 import type { ImxNetwork } from "@rarible/immutable-wallet"
 import { IMX_NETWORK_CONFIG } from "@rarible/immutable-wallet"
 import type { ImxSdkConfig, ImxSdkEnvConfig } from "./domain"
@@ -8,16 +7,16 @@ export const IMX_CONFIG: Record<ImxNetwork, ImxSdkConfig> = {
 		apiAddressV1: "https://api.x.immutable.com/v1",
 		apiAddressV2: "https://api.x.immutable.com/v2",
 		protocolFee: {
-			sellerFee: { account: "" as Address, value: 250 }, // todo define an address
-			buyerFee: { account: "" as Address, value: 250 }, // todo define an address
+			sellerFee: 0,
+			buyerFee: 200, // imx service fee
 		},
 	},
 	ropsten: {
 		apiAddressV1: "https://api.ropsten.x.immutable.com/v1",
 		apiAddressV2: "https://api.ropsten.x.immutable.com/v2",
 		protocolFee: {
-			sellerFee: { account: "" as Address, value: 250 }, // todo define an address
-			buyerFee: { account: "" as Address, value: 250 }, // todo define an address
+			sellerFee: 0,
+			buyerFee: 200, // imx service fee
 		},
 	},
 }

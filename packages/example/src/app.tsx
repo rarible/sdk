@@ -19,6 +19,7 @@ import { UploadMetaPage } from "./pages/upload-meta/upload-meta-page"
 import { BurnPage } from "./pages/burn/burn-page"
 import { TransferPage } from "./pages/transfer/transfer-page"
 import { BalancePage } from "./pages/balance/balance-page"
+import { CancelPage } from "./pages/cancel/cancel-page"
 
 export function App() {
 	return (
@@ -57,6 +58,7 @@ export function App() {
 									<Route path="accept-bid" element={<AcceptBidPage/>}>
 										<Route path=":orderId" element={<AcceptBidPage/>}/>
 									</Route>
+									<Route path="cancel" element={<CancelPage/>}/>
 									<Route path="transfer" element={<TransferPage/>}>
 										<Route path=":itemId" element={<TransferPage/>}/>
 									</Route>

@@ -55,15 +55,13 @@ function getTransactionInfo(transaction: IBlockchainTransaction): string {
 }
 
 export function TransactionInfo({ transaction }: ITransactionInfoProps) {
-	if (transaction.isEmpty) {
-		return null
-	}
-
 	return <>
 		<Typography variant="overline">Transaction:</Typography>
 		<TransactionPending transaction={transaction}/>
-		<Code theme={"light"} language="json" wrap>
-			{ getTransactionInfo(transaction) }
-		</Code>
+		{
+			!transaction.isEmpty &&  <Code theme={"light"} language="json" wrap>
+				{ getTransactionInfo(transaction) }
+      </Code>
+		}
 	</>
 }

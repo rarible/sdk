@@ -46,7 +46,7 @@ export class ImxOrderService {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
-			baseFee: this.sdk.order.getOrderFee().sellerFee.value,
+			baseFee: this.sdk.order.getOrderFee().sellerFee,
 			supportsExpirationDate: false,
 			submit: submit,
 		}
@@ -91,7 +91,7 @@ export class ImxOrderService {
 		return {
 			multiple: false,
 			maxAmount: order.makeStock,
-			baseFee: this.sdk.order.getOrderFee().buyerFee.value,
+			baseFee: this.sdk.order.getOrderFee().buyerFee,
 			supportsPartialFill: false,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			originFeeSupport: OriginFeeSupport.FULL,

@@ -36,6 +36,9 @@ export function Navigation() {
 		label: "Accept Bid",
 		path: "/accept-bid"
 	}, {
+		label: "Cancel Order",
+		path: "/cancel"
+	}, {
 		label: "Transfer Token",
 		path: "/transfer"
 	}, {
