@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.9.13-beta.imx.1",
+  "version": "0.9.13-beta.imx.2",
   "keywords": [
     "solana",
     "web3"
@@ -28,7 +28,7 @@
     "@metaplex/js": "^4.12.0",
     "@project-serum/anchor": "^0.22.1",
     "@rarible/solana-common": "^0.9.7",
-    "@rarible/solana-wallet": "^0.9.13-beta.imx.1",
+    "@rarible/solana-wallet": "^0.9.13-beta.imx.2",
     "@rarible/utils": "^0.9.1",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.36.0",
