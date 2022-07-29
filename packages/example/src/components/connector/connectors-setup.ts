@@ -50,8 +50,6 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 	switch (environment) {
 		case "prod":
 			return 1
-		case "dev":
-			return 3
 		case "testnet":
 		default:
 			return 4
@@ -66,7 +64,6 @@ function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {
 				accessNode: "https://access.onflow.org",
 				walletDiscovery: "https://flow-wallet.blocto.app/authn",
 			}
-		case "dev":
 		case "testnet":
 		default:
 			return {
@@ -81,19 +78,19 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 	switch (environment) {
 		case "prod":
 			return {
-				accessNode: "https://tezos-node.rarible.org",
+				accessNode: "https://rpc.tzkt.io/mainnet",
 				network: TezosNetwork.MAINNET
 			}
-		case "dev":
+		case "development":
 			return {
-				accessNode: "https://dev-tezos-node.rarible.org/",
+				accessNode: "https://dev-tezos-node.rarible.org",
 				network: TezosNetwork.CUSTOM
 			}
 		case "testnet":
 		default:
 			return {
 				accessNode: "https://rpc.tzkt.io/ithacanet",
-				network: TezosNetwork.ITHACANET
+				network: TezosNetwork.CUSTOM
 			}
 	}
 }
@@ -102,7 +99,6 @@ function environmentToImmutableXEnv(environment: RaribleSdkEnvironment): ImxEnv 
 	switch (environment) {
 		case "prod":
 			return "prod"
-		case "dev":
 		default:
 			return "dev"
 	}

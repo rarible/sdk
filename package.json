@@ -61,7 +61,6 @@
     ]
   },
   "resolutions": {
-    "@rarible/types": "0.9.3",
     "**/axios": "^0.26.1"
   },
   "devDependencies": {

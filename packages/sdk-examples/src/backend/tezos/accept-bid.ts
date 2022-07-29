@@ -16,7 +16,7 @@ async function acceptBid() {
 			"https://dev-tezos-node.rarible.org"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const bidAction = await sdk.order.acceptBid({
 		orderId: toOrderId("TEZOS:YOUR_ORDER_ID"),
 	})

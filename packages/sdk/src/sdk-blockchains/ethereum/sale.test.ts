@@ -4,7 +4,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { toAddress, toContractAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import Web3 from "web3"
-import { Blockchain } from "@rarible/api-client"
+import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
@@ -248,8 +248,12 @@ describe.skip("buy item with opensea order", () => {
 	const meta = toWord(id32("CUSTOM_META"))
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "testnet", {
 		logs: LogsLevel.DISABLED,
-		ethereum: {
-			openseaOrdersMetadata: meta,
+		blockchain: {
+			[BlockchainGroup.ETHEREUM]: {
+				[Blockchain.ETHEREUM]: {
+					openseaOrdersMetadata: meta,
+				},
+			},
 		},
 	})
 

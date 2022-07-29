@@ -33,15 +33,15 @@ export function createRaribleSdk(
 	const apis = createApisSdk(env, config?.apiClientParams)
 
 	const ethConfig = {
+		...config?.blockchain?.ETHEREUM,
 		params: config?.apiClientParams,
 		logs: config?.logs ?? LogsLevel.TRACE,
-		ethereum: config?.ethereum,
-		polygon: config?.polygon,
 	}
 	const instance = createUnionSdk(
 		createEthereumSdk(
 			filterWallet(wallet, WalletType.ETHEREUM),
 			apis,
+			Blockchain.ETHEREUM,
 			blockchainConfig.ethereumEnv,
 			ethConfig
 		),
@@ -50,7 +50,7 @@ export function createRaribleSdk(
 			apis,
 			blockchainConfig.flowEnv,
 			undefined,
-			config?.flow?.auth
+			config?.blockchain?.FLOW?.auth
 		),
 		createTezosSdk(
 			filterWallet(wallet, WalletType.TEZOS),
@@ -60,6 +60,7 @@ export function createRaribleSdk(
 		createEthereumSdk(
 			filterWallet(wallet, WalletType.ETHEREUM),
 			apis,
+			Blockchain.POLYGON,
 			blockchainConfig.polygonNetwork,
 			ethConfig
 		),

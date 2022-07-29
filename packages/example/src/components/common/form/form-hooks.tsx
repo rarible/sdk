@@ -8,7 +8,7 @@ export function useFormInputError(form: ReturnType<typeof useForm>, field: strin
 	let message = ""
 
 	if (hasError) {
-		message = error.message
+		message = error.message ?? ""
 		if (!message) {
 			switch (error.type) {
 				case "required":

@@ -7,7 +7,7 @@ import type { ContractAddress } from "@rarible/types"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
 import { toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
@@ -80,6 +80,7 @@ export class FlowBuy {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
 		}
 	}

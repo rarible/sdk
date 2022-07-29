@@ -8,7 +8,7 @@ import type { IApisSdk } from "../../domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
 import { getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
@@ -44,6 +44,7 @@ export class ImxOrderService {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
 			baseFee: this.sdk.order.getOrderFee().sellerFee.value,
 			supportsExpirationDate: false,
@@ -54,7 +55,7 @@ export class ImxOrderService {
 	async buy(prepare: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await getPreparedOrder(prepare, this.apis)
 
-		if (order.status === OrderStatus.ACTIVE) {
+		if (order.status !== OrderStatus.ACTIVE) {
 			throw new Error("Order is not active")
 		}
 
@@ -92,6 +93,7 @@ export class ImxOrderService {
 			maxAmount: order.makeStock,
 			baseFee: this.sdk.order.getOrderFee().buyerFee.value,
 			supportsPartialFill: false,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,

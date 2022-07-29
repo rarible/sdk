@@ -13,14 +13,6 @@ pipeline {
           sh 'yarn && yarn build'
       }
     }
-    stage('test') {
-      environment {
-	      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
-      }
-      steps {
-        sh 'yarn && yarn test'
-      }
-    }
     stage('release') {
       when { tag "v*" }
       environment {
@@ -29,6 +21,14 @@ pipeline {
       steps {
         sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
         sh 'yarn && yarn release'
+      }
+    }
+    stage('test') {
+      environment {
+	      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
+      }
+      steps {
+        sh 'yarn && yarn test'
       }
     }
   }

@@ -212,10 +212,7 @@ function convertCollectionMeta(meta?: CollectionMeta): NftCollectionMeta | undef
 		originalMetaUri: meta.originalMetaUri,
 		sellerFeeBasisPoints: meta.sellerFeeBasisPoints,
 		content: meta.content,
-		external_link: meta.externalLink,
-		seller_fee_basis_points: meta.sellerFeeBasisPoints,
 		feeRecipient: feeRecipient,
-		fee_recipient: feeRecipient,
 	}
 }
 
