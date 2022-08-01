@@ -6,7 +6,7 @@ export function BidComment() {
 		<Code>
 			{`
 // get sell info
-const bid = await connection.sdk.order.bid({
+const bid = await sdk.order.bid({
   itemId: <ITEM ID>
 })
 

@@ -19,6 +19,8 @@ export function initProviders({ pk1, pk2 }: ProvidersConfig = {}) {
 		web32: new Web3(provider2),
 		wallet1,
 		wallet2,
+		provider1,
+		provider2,
 	}
 }
 

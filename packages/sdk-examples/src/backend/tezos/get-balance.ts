@@ -15,7 +15,7 @@ async function getBalance() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const balance = await sdk.balances.getBalance(
 		toUnionAddress("TEZOS:tz1Mxsc66En4HsVHr6rppYZW82ZpLhpupToC"),
 		{ "@type": "XTZ" }

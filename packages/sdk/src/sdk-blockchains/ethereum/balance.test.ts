@@ -133,7 +133,7 @@ describe.skip("get balance", () => {
 })
 
 describe.skip("get polygon balance", () => {
-	const sdk = createRaribleSdk(undefined, "staging", { logs: LogsLevel.DISABLED })
+	const sdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
 
 	test("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")

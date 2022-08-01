@@ -10,6 +10,8 @@
     "build": "yarn bootstrap && yarn clean && yarn build-all",
     "build-solana-common": "yarn workspace @rarible/solana-common run build",
     "build-solana-wallet": "yarn workspace @rarible/solana-wallet run build",
+    "build-imx-sdk": "yarn workspace @rarible/immutable-sdk run build",
+    "build-imx-wallet": "yarn workspace @rarible/immutable-wallet run build",
     "build-solana-sdk": "yarn workspace @rarible/solana-sdk run build",
     "build-sdk": "yarn workspace @rarible/sdk run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
@@ -28,6 +30,7 @@
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
     "build-connector-solflare": "yarn workspace @rarible/connector-solflare run build",
+    "build-connector-imx": "yarn workspace @rarible/connector-immutablex-link run build",
     "build-sdk-examples": "yarn workspace @rarible/sdk-examples run build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
@@ -58,7 +61,6 @@
     ]
   },
   "resolutions": {
-    "@rarible/types": "0.9.3",
     "**/axios": "^0.26.1"
   },
   "devDependencies": {

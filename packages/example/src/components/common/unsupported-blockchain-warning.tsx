@@ -1,9 +1,9 @@
 import React from "react"
-import { BlockchainGroup } from "@rarible/api-client"
 import { Alert, AlertTitle } from "@mui/material"
+import { WalletType } from "@rarible/sdk-wallet"
 
 interface IUnsupportedBlockchainWarningProps {
-	blockchain: BlockchainGroup | undefined
+	blockchain: WalletType | undefined
 	message?: string
 }
 

@@ -13,6 +13,7 @@ module.exports = {
 	},
 	resolve: {
 		fallback: {
+			"os": require.resolve("os-browserify/browser"),
 			"stream": require.resolve("stream-browserify"),
 			"buffer": require.resolve("buffer"),
 			"process": require.resolve("process/browser"),
@@ -31,6 +32,14 @@ module.exports = {
 		}),
 	],
 	mode: "production",
+	module: {
+		rules: [{
+			test: /\.mjs/,
+			resolve: {
+				fullySpecified: false,
+			},
+		}],
+	},
 	optimization: {
 		minimize: true,
 	},

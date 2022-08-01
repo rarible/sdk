@@ -1,11 +1,9 @@
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
-import { BlockchainGroup } from "@rarible/api-client"
+import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet, WalletType } from "@rarible/sdk-wallet"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
-
 import { toUnionAddress } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
@@ -94,16 +92,16 @@ export function getSolanaWallet(walletNumber: number = 0): SolanaWallet {
 export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<WalletAddress> {
 	let address = ""
 	let addressWithPrefix = ""
-	switch (wallet.blockchain) {
-		case BlockchainGroup.ETHEREUM:
+	switch (wallet.walletType) {
+		case WalletType.ETHEREUM:
 			address = await wallet.ethereum.getFrom()
 			addressWithPrefix = "ETHEREUM:" + address
 			break
-		case BlockchainGroup.TEZOS:
+		case WalletType.TEZOS:
 			address = await wallet.provider.address()
 			addressWithPrefix = "TEZOS:" + address
 			break
-		case BlockchainGroup.FLOW:
+		case WalletType.FLOW:
 			const auth = wallet.getAuth()
 			if (auth) {
 				const user = await auth()
@@ -117,7 +115,7 @@ export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<Wa
 				throw new Error("FLOW auth object is not passed to sdk")
 			}
 			break
-		case BlockchainGroup.SOLANA:
+		case WalletType.SOLANA:
 			address = await wallet.provider.publicKey.toString()
 			addressWithPrefix = "SOLANA:" + address
 			break

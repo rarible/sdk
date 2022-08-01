@@ -1,4 +1,6 @@
 set -e
+yarn run build-imx-wallet
+yarn run build-imx-sdk
 yarn run build-solana-common
 yarn run build-solana-wallet
 yarn run build-solana-sdk
@@ -19,5 +21,6 @@ yarn run build-connector-walletconnect
 yarn run build-connector-helper
 yarn run build-connector-phantom
 yarn run build-connector-solflare
+yarn run build-connector-imx
 yarn run build-sdk-examples
 

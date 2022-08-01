@@ -16,6 +16,10 @@ import { BidPage } from "./pages/bid/bid-page"
 import { AcceptBidPage } from "./pages/accept-bid/acceptbid-page"
 import { ItemsPage } from "./pages/items/items-page"
 import { UploadMetaPage } from "./pages/upload-meta/upload-meta-page"
+import { BurnPage } from "./pages/burn/burn-page"
+import { TransferPage } from "./pages/transfer/transfer-page"
+import { BalancePage } from "./pages/balance/balance-page"
+import { CancelPage } from "./pages/cancel/cancel-page"
 
 export function App() {
 	return (
@@ -38,6 +42,7 @@ export function App() {
 									<Route path="/" element={<AboutPage/>}/>
 									<Route path="about" element={<AboutPage/>}/>
 									<Route path="connect" element={<ConnectPage/>}/>
+									<Route path="balance" element={<BalancePage/>}/>
 									<Route path="deploy" element={<DeployPage/>}/>
 									<Route path="upload-meta" element={<UploadMetaPage/>}/>
 									<Route path="mint" element={<MintPage/>}/>
@@ -52,6 +57,13 @@ export function App() {
 									</Route>
 									<Route path="accept-bid" element={<AcceptBidPage/>}>
 										<Route path=":orderId" element={<AcceptBidPage/>}/>
+									</Route>
+									<Route path="cancel" element={<CancelPage/>}/>
+									<Route path="transfer" element={<TransferPage/>}>
+										<Route path=":itemId" element={<TransferPage/>}/>
+									</Route>
+									<Route path="burn" element={<BurnPage/>}>
+										<Route path=":itemId" element={<BurnPage/>}/>
 									</Route>
 									<Route path="items" element={<ItemsPage/>}/>
 									<Route path="*" element={<NotFoundPage/>}/>

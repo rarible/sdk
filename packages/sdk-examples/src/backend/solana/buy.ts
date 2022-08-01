@@ -13,7 +13,7 @@ async function buy(item: string) {
 	}
 	try {
 		const raribleSdkWallet = initSolanaWallet(process.env["SOLANA_PK"])
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "staging")
+		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet")
 
 		console.log(`SDK was created, searching sell order for item=${item}...`)
 		const order = (await raribleSdk.apis.item.getItemById({ itemId: "SOLANA:" + item })).bestSellOrder
