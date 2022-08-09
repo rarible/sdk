@@ -274,4 +274,13 @@ describe.skip("buy item with opensea order", () => {
 		await tx.wait()
 		await awaitForOwnership(sdk1, itemId, await ethereum1.getFrom())
 	})
+
+	test("buy item with looksrare order", async () => {
+		const orderId = toOrderId("ETHEREUM:0xebec9809427f03c5182ad4f463d3b66149e1272a2db691323f14d1b0c675d406")
+		const itemId = toItemId("ETHEREUM:0x1AF7A7555263F275433c6Bb0b8FdCD231F89B1D7:15754214302034704911334786657881932847148102202883437712117637319024858628267")
+		const fillAction = await sdk1.order.buy({ orderId })
+		const tx = await fillAction.submit({ amount: 1 })
+		await tx.wait()
+		await awaitForOwnership(sdk1, itemId, await ethereum1.getFrom())
+	})
 })
