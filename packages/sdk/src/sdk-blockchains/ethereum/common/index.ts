@@ -203,6 +203,10 @@ export function getSupportedCurrencies(
 	]
 }
 
+/**
+ * Return true if blockchain works like ethereum blockchain
+ * @param blockchain
+ */
 export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
 	for (const b of EVMBlockchains) {
 		if (b === blockchain) {
