@@ -24,7 +24,8 @@
     "@rarible/estimate-middleware": "^0.9.4",
     "@rarible/sdk-wallet": "^0.9.14",
     "@rarible/tezos-sdk": "0.1.32",
-    "@rarible/web3-ethereum": "^0.12.74"
+    "@rarible/web3-ethereum": "^0.12.74",
+    "@imtbl/imx-sdk": "^1.24.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
@@ -35,7 +36,6 @@
   },
   "peerDependencies": {
     "rxjs": ">= 6.6.7 < 8.0.0",
-    "tslib": "^2.3.1",
-    "@imtbl/imx-sdk": "^1.24.0"
+    "tslib": "^2.3.1"
   }
 }
