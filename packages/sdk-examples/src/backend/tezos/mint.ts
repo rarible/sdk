@@ -16,7 +16,7 @@ async function mint() {
 		"https://rpc.tzkt.io/ithacanet"
 	)
 	const wallet = new TezosWallet(provider)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 
 	const nftCollection = toCollectionId("TEZOS:KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43")
 	const mintAction = await sdk.nft.mint({
