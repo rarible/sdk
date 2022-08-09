@@ -4414,6 +4414,84 @@
   dependencies:
     "@rarible/types" "~0.9.3"
 
+"@rarible/connector-beacon@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-beacon/-/connector-beacon-0.9.12.tgz#46c5fd03ae956e80a48cd63b8bd0ff1371c480c5"
+  integrity sha512-ILztvqKa7Jv3VsQkd0tgM2x3fDhqLUm/YXUeLcdXa/9FONE30twm6xLe+xf7EUnw4pZxKxhNsQSKIcY8bW9vUw==
+  dependencies:
+    "@rarible/connector" "^0.9.12"
+    "@taquito/beacon-wallet" "^12.0.3"
+    "@taquito/taquito" "^12.0.0"
+
+"@rarible/connector-fcl@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-fcl/-/connector-fcl-0.9.12.tgz#d1c753fac3a2881d2d7bc8c017f827e727307130"
+  integrity sha512-3ehPBrJFuugwTMl5Js2t58/+p3EpFTPzytEQeSizzVW1pVFV2WWFRhmIjDAmmOcNi7wNiU8KcdeRaC7GIqOZNQ==
+  dependencies:
+    "@onflow/fcl" "~0.0.77"
+    "@rarible/connector" "^0.9.12"
+
+"@rarible/connector-fortmatic@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-fortmatic/-/connector-fortmatic-0.9.12.tgz#4b70a0d1a3f19b53f0c26979266fcb3494a77fec"
+  integrity sha512-+8QpJgHfc8QHCRfjDk3dpJa7sAciXFrXu7p8v6Os3NqBo1g/AfNhVd2JMyl4OipAxJatN32gsqmDmeRo1aTxKQ==
+  dependencies:
+    "@rarible/connector" "^0.9.12"
+    fortmatic "^2.2.1"
+
+"@rarible/connector-iframe@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-iframe/-/connector-iframe-0.9.12.tgz#3ab39ef9cedef73216d1172dc17deb4661439311"
+  integrity sha512-0swzUNlNoRCWlL47txeWYikGrKKa50I4kixkd6G06zm9isRO3bJKLml25uNQ81PgrhCPwTbqsMnyOWT69xCW9w==
+  dependencies:
+    "@ledgerhq/iframe-provider" "^0.4.2"
+    "@rarible/connector" "^0.9.12"
+
+"@rarible/connector-mew@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-mew/-/connector-mew-0.9.12.tgz#fa93029232d438122e29f73555b87ffcab0b6cf2"
+  integrity sha512-GVZY+WVc/xtlDRI/uOMBogMpiCiOR61ZeIT1C/xLOWiQ8QM8jXNfQNTw2hZV6TqWOWmvH+p/aYY5pzygU/12Bw==
+  dependencies:
+    "@myetherwallet/mewconnect-web-client" "^2.2.0-beta.16"
+    "@rarible/connector" "^0.9.12"
+
+"@rarible/connector-portis@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-portis/-/connector-portis-0.9.12.tgz#ecec512107ebd5c52c1ef782373058ee9f3ba8f0"
+  integrity sha512-0aQT2cnTC2ks3k2ZIVI3VOaZ178Ix5x+P208DwRJOQTrIpt4skdrxGY2TmrFc/2gQqkgSsTtwojpAlUiACiUdA==
+  dependencies:
+    "@portis/web3" "^4.0.7"
+    "@rarible/connector" "^0.9.12"
+
+"@rarible/connector-torus@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-torus/-/connector-torus-0.9.12.tgz#ecd3582706d1a6d2595563477820a9bf52fca29c"
+  integrity sha512-zYeklfg1nMOIZzl6CAifi5BgWfmQhm/gN5SKQ/c+xVKAAkFJTaKYaTx8obD3SQg9atBv4MMhSJXbdfMjFs/2fA==
+  dependencies:
+    "@rarible/connector" "^0.9.12"
+    "@toruslabs/torus-embed" "^1.19.0"
+
+"@rarible/connector-walletconnect@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-walletconnect/-/connector-walletconnect-0.9.12.tgz#e0f90aebf4a744685a5c96970ccabdc7ae1a08d3"
+  integrity sha512-oDql/XjAdnr6p4TSv/T9z+IkRJvGAEItf1hDTrhpbOifV6WoxiqOa/qbgzn7wPGBWbyzHNeKAxI3+HFAkvVF7Q==
+  dependencies:
+    "@rarible/connector" "^0.9.12"
+    "@walletconnect/web3-provider" "^1.7.0"
+
+"@rarible/connector-walletlink@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-walletlink/-/connector-walletlink-0.9.12.tgz#aac9a3a991208b0f4ae8624004457c98d6b3d8ca"
+  integrity sha512-ir3jLx6dQpoWWRj84z/A8Kq8xdl7mkXD5FE4F5VZnunXbxAgxUKr2wyf0kHaJ+kCmZXPQGhEamV1rZkN9OdnMQ==
+  dependencies:
+    "@rarible/connector" "^0.9.12"
+    walletlink "^2.4.1"
+
+"@rarible/connector@^0.9.11-beta.21", "@rarible/connector@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/connector/-/connector-0.9.12.tgz#20245454180fdf951d7a2ec5aeb7c6526f163edc"
+  integrity sha512-tRhqlGPiAiHwZzSx/RAWvM7DOryOMSaNZC0/OWHOzSZgJEp25ys4kMbe/sIgreGl8fEqGlGwpfcywRkqK/DiIA==
+
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/eslint-config-ts/-/eslint-config-ts-0.5.0.tgz#ba6fe1761edd1bf2bfdc8070592d9dc344655c8a"
@@ -4543,6 +4621,41 @@
     ethers "~5.4.4"
     exponential-backoff "^3.1.0"
     merkletreejs "^0.2.31"
+
+"@rarible/solana-sdk@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/solana-sdk/-/solana-sdk-0.9.12.tgz#8103747d9935efeee015f8960f15f1312f468ef0"
+  integrity sha512-+25YEe96B0/ouomuZJLu0yW1vCGpyWUs+2uYy0VctA158KKqvs8hpX6QZLwE6evvgz+w/ieWaljz79UC6FAF2g==
+  dependencies:
+    "@metaplex-foundation/mpl-auction" "^0.0.2"
+    "@metaplex-foundation/mpl-auction-house" "^1.2.0"
+    "@metaplex-foundation/mpl-core" "^0.0.5"
+    "@metaplex-foundation/mpl-metaplex" "^0.0.5"
+    "@metaplex-foundation/mpl-token-metadata" "1.2.5"
+    "@metaplex-foundation/mpl-token-vault" "^0.0.2"
+    "@metaplex/js" "^4.12.0"
+    "@project-serum/anchor" "^0.22.1"
+    "@rarible/solana-common" "^0.9.7"
+    "@rarible/solana-wallet" "^0.9.12"
+    "@rarible/utils" "^0.9.1"
+    "@solana/spl-token" "^0.1.8"
+    "@solana/web3.js" "^1.36.0"
+    "@types/bs58" "^4.0.1"
+    bignumber.js "^9.0.1"
+    borsh "^0.7.0"
+    bs58 "^5.0.0"
+    node-fetch "^2.6.7"
+
+"@rarible/solana-wallet@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/solana-wallet/-/solana-wallet-0.9.12.tgz#4e699ffd7e22bd1d3ab7c58994bcb365b3c0ce08"
+  integrity sha512-9ZTb/Q20rLtqZx98+0qSf5P4Iw0Y6J5q40mN2lAS4YhbLqLSx0/PGUEpTGFZe5VVdENM8MyqrmgL+RTMndvnhw==
+  dependencies:
+    "@rarible/solana-common" "^0.9.7"
+    "@solana/web3.js" "^1.35.0"
+    "@types/bs58" "^4.0.1"
+    bs58 "^5.0.0"
+    tweetnacl "^1.0.0"
 
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
