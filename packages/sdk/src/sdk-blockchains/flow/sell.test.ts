@@ -19,7 +19,7 @@ describe("Flow sell", () => {
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const sell = new FlowSell(sdk, apis)
 
-	test.skip("Should sell flow NFT item and update order", async () => {
+	test("Should sell flow NFT item and update order", async () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItem(sell, itemId, "0.1")
 		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
@@ -38,7 +38,7 @@ describe("Flow sell", () => {
 		expect(updatedOrder.take.value.toString()).toEqual("0.2")
 	})
 
-	test.skip("Should sell flow NFT item with CurrencyId", async () => {
+	test("Should sell flow NFT item with CurrencyId", async () => {
 		const itemId = await createTestItem(mint)
 		const orderId = await sellItemWithCurrencyId(sell, itemId, "0.1")
 		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))

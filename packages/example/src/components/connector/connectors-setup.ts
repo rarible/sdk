@@ -23,7 +23,6 @@ import {
 	mapTezosWallet,
 } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
-import { ImxEnv } from "@rarible/immutable-wallet"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
@@ -95,7 +94,7 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 	}
 }
 
-function environmentToImmutableXEnv(environment: RaribleSdkEnvironment): ImxEnv {
+function environmentToImmutableXEnv(environment: RaribleSdkEnvironment) {
 	switch (environment) {
 		case "prod":
 			return "prod"
@@ -103,7 +102,6 @@ function environmentToImmutableXEnv(environment: RaribleSdkEnvironment): ImxEnv 
 			return "dev"
 	}
 }
-
 
 const state: IConnectorStateProvider = {
 	async getValue(): Promise<string | undefined> {

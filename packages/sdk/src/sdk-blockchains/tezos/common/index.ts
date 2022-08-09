@@ -162,6 +162,8 @@ export function getMaybeTezosProvider(
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1T1JMFGipL6EdCmeL8tDfLiTi1BFZ1yAKV",
 					royalties_provider: "KT1AZfqFGFLMUrscNFyawDYAyqXYydz714ya",
+					hen_marketplace: "KT1SakgxbHuJmkMLSsTb37DNtHLz6LzyaMhx",
+					hen_objkts: "KT18pXXDDLMtXYxf6MpMGVKjmeSd6MuWnmjn",
 				},
 			}
 		}
@@ -193,6 +195,8 @@ export function getMaybeTezosProvider(
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1X1sxF2kqNKMKcNatbrx3d5M11LhSthQ3L",
 					royalties_provider: "KT1Q6gnT9KB3Y5ause5sZq3pFmBJnAeE5nvi",
+					hen_marketplace: "KT1BCcHJuWyKCWE4q6wJwnaPqfifhm3bWTpS",
+					hen_objkts: "KT1EFwQpD522Vfw7LykZkwbtRXghetRP5jNH",
 				},
 			}
 		}
@@ -224,6 +228,8 @@ export function getMaybeTezosProvider(
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1WvzYHCNBvDSdwafTHv7nJ1dWmZ8GCYuuC",
 					royalties_provider: "KT1HNNrmCk1fpqveRDz8Fvww2GM4gPzmA7fo",
+					hen_marketplace: "KT1HbQepzV1nVGg8QVznG7z4RcHseD5kwqBn",
+					hen_objkts: "KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton",
 				},
 			}
 		}
