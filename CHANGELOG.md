@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.16](https://github.com/rarible/sdk/compare/v0.9.15...v0.9.16) (2022-08-10)
+
+
+### Bug Fixes
+
+* tezos cancel, updated dev contracts ([a6ad469](https://github.com/rarible/sdk/commit/a6ad4699ef54aba605f08fe5a160925b21cf8434))
+
+
+
+
+
 ## [0.9.15](https://github.com/rarible/sdk/compare/v0.9.14...v0.9.15) (2022-08-10)
 
 
