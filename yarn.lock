@@ -4310,10 +4310,10 @@
     eth-json-rpc-middleware "^8.0.1"
     json-rpc-engine "^6.1.0"
 
-"@rarible/ethereum-api-client@^0.1.23-beta1":
-  version "0.1.23-beta1"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.23-beta1.tgz#ae85fe714545e89d1cb79a85b7cdec4f5b12468d"
-  integrity sha512-UO2hcfgOGjR+Y7R9H5Z8tRZj/F+BxU2bc/t5YqqxalXTOHnI8OjRSAmLLRk4SZs7uPy97tCFADoQksn4xP0vDg==
+"@rarible/ethereum-api-client@^0.1.23-beta5":
+  version "0.1.23-beta5"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.23-beta5.tgz#d273937f62822055e529410e3c17d65ad63b2ef4"
+  integrity sha512-sz97idysPM+ClJ8lfZOb6IAmXHfWcw/6GqLuWFwe1HhbrWpX/eUHc1p2YIKPrtMCAFRbGHx1yx4qZgDz1uc4gA==
   dependencies:
     "@rarible/types" "~0.9.2"
 
@@ -4321,6 +4321,13 @@
   version "0.12.64"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.64.tgz#115b65de564538226b25b4915c23a079738fbbd1"
   integrity sha512-/3CDvm2ivBGpI8F/zHzByN+al2hM3NAbwo+0KC8pt9FJTCwzDtztAvqBHWl5m3LR6QTelaTC38mS0qJp5i9O7w==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
+"@rarible/ethereum-provider@^0.12.80":
+  version "0.12.80"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.80.tgz#5dc17f0b9798a475a354fe7a52e92b713ec20441"
+  integrity sha512-PRDb5P+c39wBk6sl1NiFZ4MGPTrtHF/uHPdReLw85d/T9J/2ehMEKKzzjuLtiTFvfqdFa3SkNbwwD+ZOETHlrA==
   dependencies:
     eth-sig-util "^3.0.0"
 
@@ -4401,14 +4408,14 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.78":
-  version "0.12.78"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.78.tgz#d145574d21ecdd1f53e79bdc19500f991b6b6154"
-  integrity sha512-CyAjUNTh+gm5spYh1PjiU4HLjH5OAH25QYFQl5r40quMipzyMks9sxDNvibjg2JGzpGCLmz6zyNq4Nh+U+qs0g==
+"@rarible/protocol-ethereum-sdk@~0.12.81":
+  version "0.12.81"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.81.tgz#393a22c45e138053d734373a562eae645e508391"
+  integrity sha512-l/nQgJzNikGnxINKBjOaqDjXaKCXLZJx3NMEm7vleanewlHIfkhzepJwCIYB0dswHn3GokI75f1c3KukyVhODQ==
   dependencies:
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.23-beta1"
-    "@rarible/ethereum-provider" "^0.12.64"
+    "@rarible/ethereum-api-client" "^0.1.23-beta5"
+    "@rarible/ethereum-provider" "^0.12.80"
     "@rarible/logger" "~0.6.2"
     "@rarible/utils" "~0.5.0"
     axios "^0.25.0"

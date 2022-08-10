@@ -1,7 +1,6 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
-import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { toAddress, toUnionAddress } from "@rarible/types"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
@@ -16,7 +15,10 @@ import { awaitItem } from "./test/await-item"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
 describe("Create & fill orders with order data v3", () => {
-	const { web31, web32, wallet1, wallet2 } = initProviders()
+	const { web31, web32, wallet1 } = initProviders({
+		pk1: undefined,
+		pk2: "0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	})
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
@@ -68,21 +70,15 @@ describe("Create & fill orders with order data v3", () => {
 
 	test("erc721 sell/buy", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		await sentTxConfirm(it.testErc20.methods.mint(wallet2.getAddressString(), "100000000000000000"), {
-			from: wallet1Address,
-			gas: 500000,
-		})
-
 		const itemId = await mint()
 
 		const sellAction = await sdk1.order.sell({ itemId: itemId })
 		expect(sellAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.004",
+			price: "0.0000004",
 			currency: {
-				"@type": "ERC20",
-				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+				"@type": "ETH",
 			},
 			originFees: [{
 				account: toUnionAddress("ETHEREUM:"+wallet1Address),
@@ -97,7 +93,7 @@ describe("Create & fill orders with order data v3", () => {
 		await awaitStock(sdk1, orderId, nextStock)
 
 		const updateAction = await sdk1.order.sellUpdate({ orderId })
-		await updateAction.submit({ price: "0.003" })
+		await updateAction.submit({ price: "0.0000003" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
@@ -114,19 +110,7 @@ describe("Create & fill orders with order data v3", () => {
 		})
 	})
 
-	test("erc721 bid/acceptBid", async () => {
-		await sentTxConfirm(it.testErc20.methods.mint(wallet2.getAddressString(), "100000000000000000"), {
-			from: wallet1.getAddressString(),
-			gas: 500000,
-		})
-
-		// console.log("balance",
-		// 	(await sdk2.balances.getBalance(toUnionAddress("ETHEREUM:" + wallet2.getAddressString()), {
-		// 		"@type": "ERC20",
-		// 		contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
-		// 	})).toString()
-		// )
-
+	test.skip("erc721 bid/acceptBid", async () => {
 		const itemId = await mint()
 
 		const bidAction = await sdk2.order.bid({ itemId: itemId })

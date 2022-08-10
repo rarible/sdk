@@ -6,7 +6,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
 describe.skip("get balance", () => {
-	const env: RaribleSdkEnvironment = "staging"
+	const env: RaribleSdkEnvironment = "testnet"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
@@ -28,7 +28,7 @@ describe.skip("get balance", () => {
 	})
 
 	test("get balance XTZ without wallet", async () => {
-		const sellerSdk = createRaribleSdk(undefined, "staging", { logs: LogsLevel.DISABLED })
+		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{ "@type": "XTZ" }
@@ -37,7 +37,7 @@ describe.skip("get balance", () => {
 	})
 
 	test("get balance XTZ without wallet with CurrencyId", async () => {
-		const sellerSdk = createRaribleSdk(undefined, "staging", { logs: LogsLevel.DISABLED })
+		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU")
@@ -65,7 +65,7 @@ describe.skip("get balance", () => {
 	})
 
 	test("get balance FT without wallet", async () => {
-		const sellerSdk = createRaribleSdk(undefined, "staging", { logs: LogsLevel.DISABLED })
+		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{

@@ -7,9 +7,7 @@ import type { RaribleSdkEnvironment } from "../../../config/domain"
 export function getNodeForEnv(env: RaribleSdkEnvironment): string {
 	switch (env) {
 		case "development": return "https://dev-tezos-node.rarible.org"
-		case "dev":
-		case "testnet":
-		case "staging": return "https://rpc.tzkt.io/ithacanet"
+		case "testnet": return "https://rpc.tzkt.io/ithacanet"
 		case "prod": return "https://rpc.tzkt.io/mainnet"
 		default: throw new Error("Cannot get node for env")
 	}
