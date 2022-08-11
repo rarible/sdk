@@ -66,15 +66,14 @@ export interface FillRequest {
 
 export type FillActionTypes = "approve" | "send-tx"
 
-export interface PrepareFillResponse
-	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction> {
+interface PreparedFillInfo {
 	/**
-   * is multiple nft
-   */
+	 * is multiple nft
+	 */
 	multiple: boolean
 	/**
 	 * Maximum amount to fill (of NFTs)
-   * null is actual for orders with COLLECTION asset type
+	 * null is actual for orders with COLLECTION asset type
 	 */
 	maxAmount: BigNumber | null
 	/**
@@ -99,4 +98,21 @@ export interface PrepareFillResponse
 	supportsPartialFill: boolean
 }
 
+export interface PrepareFillResponse
+	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction>, PreparedFillInfo {
+}
+
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
+
+
+export type BatchFillRequest = {
+	[key in OrderId]: FillRequest
+}
+
+export type PrepareBatchBuyResponse =
+	AbstractPrepareResponse<FillActionTypes, BatchFillRequest, IBlockchainTransaction>
+	& {
+		[key in OrderId]: PreparedFillInfo
+	}
+
+export type IBatchBuy = (request: PrepareFillRequest[]) => Promise<PrepareBatchBuyResponse>

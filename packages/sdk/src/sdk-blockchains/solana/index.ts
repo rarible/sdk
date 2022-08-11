@@ -51,6 +51,7 @@ export function createSolanaSdk(
 		order: {
 			fill: fillService.fill,
 			buy: fillService.fill,
+			batchBuy: nonImplementedAction,
 			acceptBid: fillService.fill,
 			sell: orderService.sell,
 			sellUpdate: orderService.sellUpdate,

@@ -16,6 +16,7 @@ export function createImmutablexSdkBlank(): IRaribleInternalSdk {
 		order: {
 			fill: notImplemented,
 			buy: notImplemented,
+			batchBuy: nonImplementedAction,
 			acceptBid: notImplemented,
 			sell: notImplemented,
 			sellUpdate: notImplemented,

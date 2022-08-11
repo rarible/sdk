@@ -15,12 +15,20 @@ import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import { Action } from "@rarible/action"
+import type {
+	BatchFillRequest,
+	FillRequest,
+	PrepareBatchBuyResponse,
+	PrepareFillRequest,
+	PrepareFillResponse,
+} from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
 	getEthereumItemId,
+	getOrderId,
 	toEthereumParts,
 	validateOrderDataV3Request,
 } from "./common"
@@ -273,4 +281,30 @@ export class EthereumFill {
 	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.commonFill(this.sdk.order.acceptBid, request)
 	}
+
+	async batchBuy(requests: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
+		const response: PrepareBatchBuyResponse = {
+			submit: Action.create({
+				id: "send-tx" as const,
+				run: async (request: BatchFillRequest) => {
+					return null as any
+				},
+			}).after((tx => new BlockchainEthereumTransaction(tx, this.network))),
+		}
+
+		for (let request of requests) {
+			const orderHash = this.getOrderHashFromRequest(request)
+			const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+			response[getOrderId(request)] = {
+				...this.getSupportFlags(order),
+				multiple: await this.isMultiple(order),
+				maxAmount: await this.getMaxAmount(order),
+				baseFee: await this.sdk.order.getBaseOrderFillFee(order),
+			}
+		}
+
+		return response
+	}
+
+
 }

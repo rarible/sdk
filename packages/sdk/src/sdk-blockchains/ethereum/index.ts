@@ -62,6 +62,7 @@ export function createEthereumSdk(
 		order: {
 			fill: fillerService.fill,
 			buy: fillerService.buy,
+			batchBuy: fillerService.batchBuy,
 			acceptBid: fillerService.acceptBid,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,

@@ -16,6 +16,7 @@ import { BidPage } from "./pages/bid/bid-page"
 import { AcceptBidPage } from "./pages/accept-bid/acceptbid-page"
 import { ItemsPage } from "./pages/items/items-page"
 import { UploadMetaPage } from "./pages/upload-meta/upload-meta-page"
+import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 
 export function App() {
 	return (
@@ -47,6 +48,7 @@ export function App() {
 									<Route path="buy" element={<BuyPage/>}>
 										<Route path=":orderId" element={<BuyPage/>}/>
 									</Route>
+									<Route path="batch-buy" element={<BatchBuyPage/>}/>
 									<Route path="bid" element={<BidPage/>}>
 										<Route path=":itemId" element={<BidPage/>}/>
 									</Route>

@@ -5,7 +5,7 @@ import type { BlockchainGroup } from "@rarible/api-client"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { IMint, IUploadMeta } from "./types/nft/mint/domain"
 import type { ISell, ISellInternal, ISellUpdate } from "./types/order/sell/domain"
-import type { IFill } from "./types/order/fill/domain"
+import type { IBatchBuy, IFill } from "./types/order/fill/domain"
 import type { IBurn } from "./types/nft/burn/domain"
 import type { ITransfer } from "./types/nft/transfer/domain"
 import type { IBid, IBidUpdate } from "./types/order/bid/domain"
@@ -94,6 +94,7 @@ export interface IOrderSdk {
 	 */
 	fill: IFill
 	buy: IFill
+	batchBuy: IBatchBuy
 	acceptBid: IFill
 	bid: IBid
 	bidUpdate: IBidUpdate
