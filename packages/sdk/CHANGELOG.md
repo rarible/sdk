@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.17](https://github.com/rarible/sdk/compare/v0.9.16...v0.9.17) (2022-08-11)
+
+
+### Bug Fixes
+
+* seaport order fee ([5fb98b4](https://github.com/rarible/sdk/commit/5fb98b471d13738ff4833bd1a202c4efd1742667))
+
+
+
+
+
 ## [0.9.16](https://github.com/rarible/sdk/compare/v0.9.15...v0.9.16) (2022-08-10)
 
 

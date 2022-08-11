@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.17](https://github.com/rarible/sdk/compare/v0.9.16...v0.9.17) (2022-08-11)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.9.16](https://github.com/rarible/sdk/compare/v0.9.15...v0.9.16) (2022-08-10)
 
 **Note:** Version bump only for package example
