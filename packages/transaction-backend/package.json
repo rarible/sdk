@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction-backend",
-  "version": "0.9.12",
+  "version": "0.9.17",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -19,7 +19,7 @@
     "serve": "nodemon"
   },
   "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "~0.12.79",
+    "@rarible/protocol-ethereum-sdk": "~0.12.82",
     "@rarible/web3-ethereum": "~0.12.74",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
