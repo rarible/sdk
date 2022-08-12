@@ -232,6 +232,7 @@ const blockchains: Blockchain[] = [
 	Blockchain.TEZOS,
 	Blockchain.POLYGON,
 	Blockchain.SOLANA,
+	Blockchain.IMMUTABLEX,
 ]
 
 function extractBlockchain(

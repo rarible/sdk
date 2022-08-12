@@ -38,7 +38,7 @@ const raribleSdkWithWeb3 = createRaribleSdk(raribleSdkWallet, "dev")
 
 #### Polygon
 
-For Polygon you should use "ethers", same as for regular ethereum setup. 
+For Polygon you should use "ethers", same as for regular ethereum setup.
 Or "web3js" with "estimate" from [@rarible/estimate-middleware](https://www.npmjs.com/package/@rarible/estimate-middleware)
 ```typescript
 import { EthereumWallet } from "@rarible/sdk-wallet"
@@ -93,7 +93,7 @@ const provider = in_memory_provider(
     "https://test-tezos-node.rarible.org"
 )
 const wallet = new TezosWallet(provider)
-const sdk = createRaribleSdk(wallet, "dev")
+const sdk = createRaribleSdk(wallet, "testnet")
 ```
 #### Flow
 
@@ -106,6 +106,6 @@ import { createRaribleSdk } from "@rarible/sdk"
 export function initFlowWallet(accountAddress: string, privateKey: string) {
 	const flowAuth = createFlowAuth(fcl, "testnet", accountAddress, privateKey)
 	const raribleFlowWallet = new FlowWallet(fcl, flowAuth)
-	const raribleSdk = createRaribleSdk(wallet, "dev")
+	const raribleSdk = createRaribleSdk(wallet, "testnet")
 }
 ```

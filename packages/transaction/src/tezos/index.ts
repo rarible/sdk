@@ -28,4 +28,8 @@ export class BlockchainTezosTransaction implements IBlockchainTransaction {
 			default: throw new Error("Unsupported transaction network")
 		}
 	}
+
+	get isEmpty(): boolean {
+		return false
+	}
 }

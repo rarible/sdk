@@ -2,7 +2,7 @@ import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { Order } from "@rarible/api-client"
 import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
-import { BlockchainGroup } from "@rarible/api-client"
+import { WalletType } from "@rarible/sdk-wallet"
 import { Logger } from "../logger"
 
 /**
@@ -20,7 +20,7 @@ export async function bidUpdate(sdk: IRaribleSdk,
 	// Submit bid order
 	const orderId = await prepareBidUpdateResponse.submit(orderUpdateRequest)
 	// Flow create new order when update
-	if (wallet.blockchain !== BlockchainGroup.FLOW) {
+	if (wallet.walletType !== WalletType.FLOW) {
 		expect(orderId).toBe(prepareOrderUpdateRequest.orderId)
 	}
 	// Check order

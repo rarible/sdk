@@ -1,7 +1,6 @@
-import { toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, toContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { toBigNumber, toContractAddress } from "@rarible/types"
 import { isEVMBlockchain } from "../sdk-blockchains/ethereum/common"
 import type { RequestCurrency, RequestCurrencyAssetType } from "./domain"
 
@@ -24,7 +23,7 @@ export function isAssetType(x: RequestCurrency): x is RequestCurrencyAssetType {
 
 export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestCurrencyAssetType {
 	const { blockchain, contract, tokenId } = getDataFromCurrencyId(id)
-	if (isEVMBlockchain(blockchain)) {
+	if (isEVMBlockchain(blockchain) || blockchain === Blockchain.IMMUTABLEX) {
 		if (contract === ZERO_ADDRESS) {
 			return {
 				"@type": "ETH",
