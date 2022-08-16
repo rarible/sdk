@@ -22,7 +22,7 @@
   "dependencies": {
     "@rarible/api-client": "0.0.13-beta11",
     "@rarible/estimate-middleware": "~0.9.4",
-    "@rarible/ethers-ethereum": "^0.12.73",
+    "@rarible/ethers-ethereum": "^0.12.83",
     "@rarible/sdk-wallet": "^0.9.18",
     "@rarible/test-provider": "~0.5.4",
     "@rarible/types": "~0.9.6",

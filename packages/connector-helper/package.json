@@ -25,7 +25,7 @@
     "@rarible/estimate-middleware": "^0.9.4",
     "@rarible/sdk-wallet": "^0.9.18",
     "@rarible/tezos-sdk": "0.1.32",
-    "@rarible/web3-ethereum": "^0.12.74"
+    "@rarible/web3-ethereum": "^0.12.83"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
