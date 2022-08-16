@@ -15,12 +15,19 @@ import { awaitStock } from "./test/await-stock"
 import { awaitItem } from "./test/await-item"
 import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 
-describe.skip("sale", () => {
+describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders()
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", { logs: LogsLevel.DISABLED })
-	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", { logs: LogsLevel.DISABLED })
+	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
+		logs: LogsLevel.DISABLED,
+		blockchain: {
+			[BlockchainGroup.ETHEREUM]: {
+				fillCalldata: "0x000000000000000000000000000000000000000000000009",
+			},
+		},
+	})
 
 	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
 
@@ -28,7 +35,7 @@ describe.skip("sale", () => {
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 	})
 
-	test.skip("erc721 sell/buy using erc-20", async () => {
+	test("erc721 sell/buy using erc-20", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 
@@ -78,11 +85,66 @@ describe.skip("sale", () => {
 		const fillAction = await sdk2.order.buy({ orderId })
 
 		const tx = await fillAction.submit({ amount: 1 })
+		console.log("tx.transaction.data", tx.transaction.data)
+		// expect()
 		await tx.wait()
 
 		const nextStock2 = "0"
 		const order2 = await awaitStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
+	})
+
+	test("erc721 sell/buy using erc-20 with calldata", async () => {
+		const wallet1Address = wallet1.getAddressString()
+		const wallet2Address = wallet2.getAddressString()
+
+		await sentTx(
+			conf.testErc20.methods.mint(wallet2Address, "1000000000"),
+			{ from: wallet1Address, gas: 200000 }
+		)
+		const action = await sdk1.nft.mint({
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+		})
+		const result = await action.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: false,
+			supply: 1,
+		})
+		if (result.type === MintType.ON_CHAIN) {
+			await result.transaction.wait()
+		}
+
+		await awaitItem(sdk1, result.itemId)
+
+		const sellAction = await sdk1.order.sell({ itemId: result.itemId })
+		const orderId = await sellAction.submit({
+			amount: 1,
+			price: "0.000000000000000002",
+			currency: {
+				"@type": "ERC20",
+				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+			},
+			expirationDate: new Date(Date.now() + 200000),
+		})
+
+		const nextStock = "1"
+		const order = await awaitStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const fillAction = await sdk2.order.buy({ orderId })
+
+		const tx = await fillAction.submit({ amount: 1 })
+		await tx.wait()
+
+		const nextStock2 = "0"
+		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		expect(order2.makeStock.toString()).toEqual(nextStock2)
+		expect(tx.transaction.data.endsWith("00000000000000000000000000000000000000000000000909616c6c64617461")).toBe(true)
 	})
 
 	test("erc721 sell/buy using erc-20 with order object", async () => {
@@ -250,6 +312,7 @@ describe.skip("buy item with opensea order", () => {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {
+				fillCalldata: "0x000000000000000000000000000000000000000000000009",
 				[Blockchain.ETHEREUM]: {
 					openseaOrdersMetadata: meta,
 				},

@@ -4,6 +4,7 @@ import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build
 export interface IEthereumSdkConfig {
 	useDataV3?: boolean
 	marketplaceMarker?: string
+	fillCalldata?: string
 	[Blockchain.ETHEREUM]?: EthereumNetworkConfig
 	[Blockchain.POLYGON]?: EthereumNetworkConfig
 }

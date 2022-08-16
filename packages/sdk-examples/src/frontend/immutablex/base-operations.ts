@@ -7,7 +7,7 @@ import { ImxWallet } from "@rarible/immutable-wallet"
 import { ImmutableXWallet } from "@rarible/sdk-wallet"
 import type { IRaribleSdk } from "@rarible/sdk/src"
 import type { ItemId, OrderId, UnionAddress } from "@rarible/types"
-import { toItemId, toUnionAddress } from "@rarible/types"
+import { toItemId } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
 
 async function getSdk() {
@@ -23,6 +23,7 @@ async function getSdk() {
 	return createRaribleSdk(wallet, "development")
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function burn(sdk: IRaribleSdk, itemId: ItemId) {
 	const prepare = await sdk.nft.burn({
 		itemId,
@@ -32,6 +33,7 @@ async function burn(sdk: IRaribleSdk, itemId: ItemId) {
 	})
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function transfer(sdk: IRaribleSdk, itemId: ItemId, receiver: UnionAddress) {
 	const prepare = await sdk.nft.transfer({
 		itemId,
@@ -62,6 +64,7 @@ async function buy(sdk: IRaribleSdk, orderId: OrderId) {
 	})
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function cancel(sdk: IRaribleSdk, orderId: OrderId) {
 	return sdk.order.cancel({
 		orderId,
