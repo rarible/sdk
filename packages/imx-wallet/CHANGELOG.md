@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.19](https://github.com/rarible/sdk/compare/v0.9.18...v0.9.19) (2022-08-16)
+
+
+### Bug Fixes
+
+* remove test command from imx-wallet pkg ([b76bc1c](https://github.com/rarible/sdk/commit/b76bc1c3d19694930c4bf38004791b526c033afb))
+
+
+
+
+
 ## [0.9.18](https://github.com/rarible/sdk/compare/v0.9.17...v0.9.18) (2022-08-12)
 
 
