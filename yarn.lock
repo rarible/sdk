@@ -4746,10 +4746,10 @@
     eslint-plugin-jest "^25.2.3"
     eslint-plugin-unicorn "^38.0.0"
 
-"@rarible/estimate-middleware@^0.9.4", "@rarible/estimate-middleware@~0.9.4":
-  version "0.9.4"
-  resolved "https://registry.yarnpkg.com/@rarible/estimate-middleware/-/estimate-middleware-0.9.4.tgz#6a3665a672739528fdb32f47d894e6c09dd1fcbf"
-  integrity sha512-rwV55q4WAFYBDO3tFGEl2dhrqsHenzjbJ9lNbyFu9ay39sackI+e/KFxXGjLSacwNnRvhvXzV3js6ledgEVwjg==
+"@rarible/estimate-middleware@~0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@rarible/estimate-middleware/-/estimate-middleware-0.9.6.tgz#b20205dd7dadaf91a3e5f2407b870b83abeb2548"
+  integrity sha512-Av8muVI8nkCqHgB766X7pjlRgVjhO8VjwULlotKNWCdgyFWOMCQBm8TnfTpkXz/Oghudqshp3aiRFkn3k7r0Gg==
   dependencies:
     "@rarible/utils" "^0.9.1"
     eth-json-rpc-middleware "^8.0.1"
