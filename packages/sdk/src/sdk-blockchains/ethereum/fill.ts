@@ -112,6 +112,14 @@ export class EthereumFill {
 				}
 				break
 			}
+			case "LOOKSRARE": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
@@ -182,6 +190,14 @@ export class EthereumFill {
 					payoutsSupport: PayoutsSupport.NONE,
 					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill,
+				}
+			}
+			case "LOOKSRARE": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
 				}
 			}
 			default:

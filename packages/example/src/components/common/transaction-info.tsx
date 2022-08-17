@@ -38,18 +38,30 @@ export function TransactionPending({ transaction }: ITransactionInfoProps) {
 	</Box>
 }
 
+function getTransactionInfo(transaction: IBlockchainTransaction): string {
+	try {
+		return JSON.stringify({
+			blockchain: transaction.blockchain,
+			hash: transaction.hash(),
+			link: transaction.getTxLink()
+		}, null, " ")
+	} catch (e: any) {
+		console.log("Couldn't get transaction info from transaction object", e)
+		if (typeof e.message === "string") {
+			return e.message
+		}
+		return "Unknown error"
+	}
+}
+
 export function TransactionInfo({ transaction }: ITransactionInfoProps) {
 	return <>
 		<Typography variant="overline">Transaction:</Typography>
 		<TransactionPending transaction={transaction}/>
-		<Code theme={"light"} language="json" wrap>
-			{
-				JSON.stringify({
-					blockchain: transaction.blockchain,
-					hash: transaction.hash(),
-					link: transaction.getTxLink()
-				}, null, " ")
-			}
-		</Code>
+		{
+			!transaction.isEmpty &&  <Code theme={"light"} language="json" wrap>
+				{ getTransactionInfo(transaction) }
+      </Code>
+		}
 	</>
 }

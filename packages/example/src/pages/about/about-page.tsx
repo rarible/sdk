@@ -14,6 +14,7 @@ export function AboutPage() {
               <li>Sell NFTs</li>
               <li>Buy NFTs</li>
               <li>Make and accept Bid</li>
+              <li>Transfer & Burn NFT</li>
           </ul>
           This example uses:
           <ul>

@@ -4,6 +4,7 @@ import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
+import { toBinary } from "@rarible/types"
 import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
@@ -36,6 +37,7 @@ export function createEthereumSdk(
 		logs: config.logs,
 		ethereum: config[Blockchain.ETHEREUM],
 		polygon: config[Blockchain.POLYGON],
+		fillCalldata: config.fillCalldata ? toBinary(config.fillCalldata) : undefined,
 	})
 
 	const sellService = new EthereumSell(sdk, network, config)

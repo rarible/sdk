@@ -6,7 +6,7 @@ export function SellComment() {
 		<Code>
 			{`
 // get sell info
-const sell = await connection.sdk.order.sell({
+const sell = await sdk.order.sell({
   itemId: <ITEM ID>
 })
 // sell: {

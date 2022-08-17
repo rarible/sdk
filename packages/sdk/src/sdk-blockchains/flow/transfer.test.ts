@@ -14,7 +14,7 @@ describe("Flow transfer", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
-	const apis = createApisSdk("dev")
+	const apis = createApisSdk("testnet")
 	const mint = new FlowMint(sdk, apis, "testnet")
 	const transfer = new FlowTransfer(sdk, "testnet")
 

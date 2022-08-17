@@ -2,7 +2,7 @@ import { toContractAddress, toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
 import type { EthErc20AssetType, EthEthereumAssetType, TezosFTAssetType, TezosXTZAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
-import { getCurrencyAssetType, getDataFromCurrencyId } from "./get-currency-asset-type"
+import { convertCurrencyIdToAssetType, getCurrencyAssetType, getDataFromCurrencyId } from "./get-currency-asset-type"
 
 describe("test getCurrencyAssetType", () => {
 	test("get eth asset type from asset type", async () => {
@@ -61,5 +61,47 @@ describe("test getCurrencyAssetType", () => {
 		expect(blockchain).toEqual(Blockchain.ETHEREUM)
 		expect(contract).toEqual("0x0000000000000000000000000000000000000001")
 		expect(tokenId).toEqual(undefined)
+	})
+
+
+	test("test convertCurrencyIdToAssetType", async () => {
+		expect(convertCurrencyIdToAssetType(toCurrencyId("ETHEREUM:0x0000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "ETH",
+				blockchain: Blockchain.ETHEREUM,
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("POLYGON:0x0000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "ETH",
+				blockchain: Blockchain.POLYGON,
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("IMMUTABLEX:0x0000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "ETH",
+				blockchain: Blockchain.IMMUTABLEX,
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("ETHEREUM:0x1000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "ERC20",
+				contract: "ETHEREUM:0x1000000000000000000000000000000000000000",
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("POLYGON:0x2000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "ERC20",
+				contract: "POLYGON:0x2000000000000000000000000000000000000000",
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("IMMUTABLEX:0x3000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "ERC20",
+				contract: "IMMUTABLEX:0x3000000000000000000000000000000000000000",
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("SOLANA:0x0000000000000000000000000000000000000000")))
+			.toEqual({
+				"@type": "SOLANA_SOL",
+			})
+		expect(convertCurrencyIdToAssetType(toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU")))
+			.toEqual({
+				"@type": "XTZ",
+			})
 	})
 })

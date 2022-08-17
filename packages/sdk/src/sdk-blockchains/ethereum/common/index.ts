@@ -176,19 +176,13 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 	switch (network) {
 		case "testnet":
 			return Blockchain.ETHEREUM
-		case "ropsten":
-			return Blockchain.ETHEREUM
 		case "dev-ethereum":
 			return Blockchain.ETHEREUM
 		case "dev-polygon":
 			return Blockchain.POLYGON
-		case "rinkeby":
-			return Blockchain.ETHEREUM
 		case "mainnet":
 			return Blockchain.ETHEREUM
 		case "mumbai":
-			return Blockchain.POLYGON
-		case "mumbai-dev":
 			return Blockchain.POLYGON
 		case "polygon":
 			return Blockchain.POLYGON
@@ -210,6 +204,10 @@ export function getSupportedCurrencies(
 	]
 }
 
+/**
+ * Return true if blockchain works like ethereum blockchain
+ * @param blockchain
+ */
 export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
 	for (const b of EVMBlockchains) {
 		if (b === blockchain) {

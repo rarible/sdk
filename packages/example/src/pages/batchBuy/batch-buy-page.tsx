@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { Box } from "@mui/material"
-import { BlockchainGroup } from "@rarible/api-client"
+import { WalletType } from "@rarible/sdk-wallet"
 import { useParams } from "react-router-dom"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
@@ -13,14 +13,14 @@ import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
-function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
-	return blockchain === BlockchainGroup.ETHEREUM
+function validateConditions(blockchain: WalletType | undefined): boolean {
+	return blockchain === WalletType.ETHEREUM
 }
 
 export function BatchBuyPage() {
 	const params = useParams()
 	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.blockchain
+	const blockchain = connection.sdk?.wallet?.walletType
 
 	return (
 		<Page header="Batch Buy Token">

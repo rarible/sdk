@@ -5,6 +5,7 @@ module.exports = {
 	transform: {
 		"^.+\\.ts?$": "ts-jest",
 	},
+	modulePathIgnorePatterns: ["<rootDir>/src/sdk-blockchains/solana"],
 	transformIgnorePatterns: [
 		"<rootDir>/build/",
 		"<rootDir>/node_modules/",
