@@ -104,15 +104,15 @@ export interface PrepareFillResponse
 
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
 
+export type BatchFillSingleRequest = { orderId: OrderId } & FillRequest
 
-export type BatchFillRequest = {
-	[key in OrderId]: FillRequest
+export type BatchFillRequest = BatchFillSingleRequest[]
+
+type BatchSinglePrepared = { orderId: OrderId } & PreparedFillInfo
+
+export interface PrepareBatchBuyResponse extends
+	AbstractPrepareResponse<FillActionTypes, BatchFillRequest, IBlockchainTransaction> {
+	prepared: BatchSinglePrepared[]
 }
-
-export type PrepareBatchBuyResponse =
-	AbstractPrepareResponse<FillActionTypes, BatchFillRequest, IBlockchainTransaction>
-	& {
-		[key in OrderId]: PreparedFillInfo
-	}
 
 export type IBatchBuy = (request: PrepareFillRequest[]) => Promise<PrepareBatchBuyResponse>

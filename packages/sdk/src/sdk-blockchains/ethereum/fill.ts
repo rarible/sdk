@@ -15,7 +15,9 @@ import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import { Action } from "@rarible/action"
+import type { OrderId } from "@rarible/api-client"
+import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
+import type { FillBatchSingleOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type {
 	BatchFillRequest,
 	FillRequest,
@@ -52,6 +54,7 @@ export class EthereumFill {
 	) {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
+		this.batchBuy = this.batchBuy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
 	}
 
@@ -298,29 +301,63 @@ export class EthereumFill {
 		return this.commonFill(this.sdk.order.acceptBid, request)
 	}
 
-	async batchBuy(requests: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
-		const response: PrepareBatchBuyResponse = {
-			submit: Action.create({
-				id: "send-tx" as const,
-				run: async (request: BatchFillRequest) => {
-					return null as any
-				},
-			}).after((tx => new BlockchainEthereumTransaction(tx, this.network))),
-		}
+	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
+		const orders: Record<OrderId, Order> = {} // ethereum orders cache
 
-		for (let request of requests) {
-			const orderHash = this.getOrderHashFromRequest(request)
-			const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
-			response[getOrderId(request)] = {
-				...this.getSupportFlags(order),
-				multiple: await this.isMultiple(order),
-				maxAmount: await this.getMaxAmount(order),
-				baseFee: await this.sdk.order.getBaseOrderFillFee(order),
+		const submit = this.sdk.order.buyBatch.before((requests: BatchFillRequest) => {
+			return requests.map((req) => {
+				const order = orders[req.orderId]
+				if (!order) {
+					throw new Error(`Order with id ${req.orderId} not precached`)
+				}
+
+				if (req.unwrap) {
+					throw new Error("Unwrap is not supported yet")
+				}
+
+				return this.getFillOrderRequest(order, req) as FillBatchSingleOrderRequest
+			})
+		}).after((tx => new BlockchainEthereumTransaction(tx, this.network)))
+
+		const prepared = await Promise.all(prepareRequest.map(async (req) => {
+			const orderHash = this.getOrderHashFromRequest(req)
+			const ethOrder = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+			const orderId = getOrderId(req)
+			orders[orderId] = ethOrder
+
+			if (ethOrder.status !== "ACTIVE") {
+				throw new Error(`Order with id ${orderId} is not active`)
 			}
+
+			if (
+				ethOrder.type !== "OPEN_SEA_V1" &&
+				ethOrder.type !== "RARIBLE_V2" &&
+				ethOrder.type !== "SEAPORT_V1" &&
+				ethOrder.type !== "LOOKSRARE"
+				//order.type !== "X2Y2"
+			) {
+				throw new Error(`Order type ${ethOrder.type} is not supported for batch buy`)
+			}
+
+			if (
+				ethOrder.make.assetType.assetClass === "ETH" ||
+				ethOrder.make.assetType.assetClass === "ERC20"
+			) {
+				throw new Error("Bid orders is not supported")
+			}
+
+			return {
+				orderId,
+				...this.getSupportFlags(ethOrder),
+				multiple: await this.isMultiple(ethOrder),
+				maxAmount: await this.getMaxAmount(ethOrder),
+				baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
+			}
+		}))
+
+		return {
+			submit,
+			prepared,
 		}
-
-		return response
 	}
-
-
 }
