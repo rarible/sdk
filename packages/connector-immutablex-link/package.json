@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-immutablex-link",
-  "version": "0.9.18",
+  "version": "0.9.20-beta.batch.1",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {

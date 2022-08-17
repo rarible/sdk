@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.20-beta.batch.1](https://github.com/rarible/sdk/compare/v0.9.20...v0.9.20-beta.batch.1) (2022-08-17)
+
+
+### Features
+
+* added batchBuy method for ethereum ([9891ecf](https://github.com/rarible/sdk/commit/9891ecf0f2b41820cd4d099d0a2ad89e79f39852))
+* ethereum batch buy implementation ([b2018ea](https://github.com/rarible/sdk/commit/b2018eab985beb6cf10e3b345a110a5c476e26c0))
+
+
+
+
+
 ## [0.9.20](https://github.com/rarible/sdk/compare/v0.9.19...v0.9.20) (2022-08-17)
 
 **Note:** Version bump only for package example
