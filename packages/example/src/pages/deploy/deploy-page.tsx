@@ -21,7 +21,7 @@ import { DeployForm } from "./deploy-form"
 
 function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
-		case "POLYGON":
+		case Blockchain.POLYGON:
 		case WalletType.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
@@ -90,7 +90,12 @@ export function DeployPage() {
 				<form
 					onSubmit={handleSubmit(async (formData) => {
 						try {
-              formData.blockchain = formData["blockchain"] === "ETHEREUM" && (connection.state as any)?.connection.blockchain === "POLYGON" ? "POLYGON" : formData["blockchain"];
+              if (
+                formData["blockchain"] === Blockchain.ETHEREUM
+                && (connection.state as any)?.connection.blockchain === Blockchain.POLYGON
+              ) {
+                  formData.blockchain = Blockchain.POLYGON
+                }
 							setComplete(await connection.sdk?.nft.deploy(getDeployRequest(formData)))
 						} catch (e) {
 							setError(e)
