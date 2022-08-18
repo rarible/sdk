@@ -4,6 +4,7 @@ import type { BigNumber } from "@rarible/types/build/big-number"
 import type { UnionAddress } from "@rarible/types"
 import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
 import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
+import type { MaxFeesBasePointSupport } from "../fill/domain"
 
 export type PrepareOrderRequest = {
 	/**
@@ -34,6 +35,10 @@ export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "a
 	 * Whether the underlying exchange contract supports specifying payouts
 	 */
 	payoutsSupport: PayoutsSupport
+	/**
+	 * Whether the underlying exchange contract supports specifying max fees value
+	 */
+	maxFeesBasePointSupport: MaxFeesBasePointSupport
 	/**
    * Whether the expiration date
    */
@@ -83,6 +88,10 @@ export type OrderRequest = {
 	 */
 	payouts?: UnionPart[]
 	/**
+	 * Max fees value. Should be greater than 0. If required and not provided, will throw Error
+	 */
+	maxFeesBasePoint?: number
+	/**
 	 * Order expiration date
 	 */
 	expirationDate?: Date
@@ -112,6 +121,10 @@ export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"con
 	 * Whether the underlying exchange contract supports specifying payouts
 	 */
 	payoutsSupport: PayoutsSupport
+	/**
+	 * Whether the underlying exchange contract supports specifying max fees value
+	 */
+	maxFeesBasePointSupport: MaxFeesBasePointSupport
 }
 
 /**

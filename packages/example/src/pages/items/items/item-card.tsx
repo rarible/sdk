@@ -1,9 +1,20 @@
-import React, { useContext } from "react"
+import React from "react"
 import type { Item } from "@rarible/api-client"
-import { Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Typography } from "@mui/material"
+import {
+	Box,
+	Button,
+	Card,
+	CardActions,
+	CardContent,
+	CardHeader,
+	CardMedia,
+	IconButton,
+	Typography,
+} from "@mui/material"
+import DeleteIcon from "@mui/icons-material/Delete"
+import SendIcon from "@mui/icons-material/Send"
 import { MetaContent } from "@rarible/api-client/build/models/MetaContent"
 import { Link } from "react-router-dom"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 
 function getMetaImageUrl(metaContent: MetaContent[] | undefined): string | null {
 	for (let meta of metaContent || []) {
@@ -43,7 +54,6 @@ function ItemMedia({ url }: { url: string | null }) {
 }
 
 export function ItemCard({ item }: IItemCardProps) {
-	const connection = useContext(ConnectorContext)
 	return (
 		<Card sx={{ width: 200 }}>
 			<CardHeader
@@ -72,14 +82,23 @@ export function ItemCard({ item }: IItemCardProps) {
 				>
 					Sell
 				</Button>
-				<Button size="small" color={"warning"} onClick={ async () => {
-					const b = await (connection?.sdk?.nft.burn.prepare({itemId: item.id}))
-					const tx = await b?.submit()
-					console.log(item.id, "done", "tx", tx?.getTxLink())
-				}}>
-					Burn
-				</Button>
-				{/*<Button size="small" color={"warning"}>Burn</Button>*/}
+				<IconButton
+					size="small"
+					component={Link}
+					to={`/transfer/${item.id}`}
+					title="Transfer"
+				>
+					 <SendIcon />
+				</IconButton>
+				<IconButton
+					size="small"
+					color={"warning"}
+					component={Link}
+					to={`/burn/${item.id}`}
+					title="Burn"
+				>
+					<DeleteIcon />
+				</IconButton>
 			</CardActions>
 		</Card>
 	)

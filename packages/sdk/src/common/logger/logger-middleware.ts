@@ -1,6 +1,6 @@
 import { RemoteLogger } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
-import { BlockchainGroup } from "@rarible/api-client"
+import { WalletType } from "@rarible/sdk-wallet"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
@@ -14,11 +14,11 @@ const loggerConfig = {
 
 async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, string>> {
 	const info: Record<string, any> = {
-		"wallet.blockchain": wallet.blockchain,
+		"wallet.blockchain": wallet.walletType,
 	}
 
-	switch (wallet.blockchain) {
-		case BlockchainGroup.ETHEREUM:
+	switch (wallet.walletType) {
+		case WalletType.ETHEREUM:
 			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
 				.then(([chainId, address]) => {
 					info["wallet.address"] = address
@@ -28,7 +28,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 					info["wallet.address"] = `unknown (${err && err.toString()})`
 				})
 			break
-		case BlockchainGroup.FLOW:
+		case WalletType.FLOW:
 			await wallet.fcl.currentUser().snapshot()
 				.then((userData) => {
 					info["wallet.address"] = userData.addr
@@ -38,7 +38,7 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 					info["wallet.address"] = `unknown (${err && err.toString()})`
 				})
 			break
-		case BlockchainGroup.TEZOS:
+		case WalletType.TEZOS:
 			info["wallet.tezos.kind"] = wallet.provider.kind
 			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
 				.then(([chainId, address]) => {
@@ -49,8 +49,14 @@ async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, s
 					info["wallet.address"] = `unknown (${err && err.toString()})`
 				})
 			break
-		case BlockchainGroup.SOLANA:
+		case WalletType.SOLANA:
 			info["wallet.address"] = wallet.provider.publicKey?.toString()
+			break
+		case WalletType.IMMUTABLEX:
+			const data = wallet.wallet.getConnectionData()
+			info["wallet.address"] = data.address
+			info["wallet.network"] = data.ethNetwork
+			info["wallet.starkPubkey"] = data.starkPublicKey
 			break
 		default:
 			info["wallet.address"] = "unknown"

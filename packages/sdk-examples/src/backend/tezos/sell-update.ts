@@ -15,7 +15,7 @@ async function sellAndUpdate() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const sellOrderId = await sdk.order.sell({
 		itemId: toItemId("TEZOS:YOUR_COLLECTION_ID:YOUR_ITEM_ID"),
 		amount: 1,

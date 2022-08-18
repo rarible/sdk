@@ -7,4 +7,5 @@ export const prodConfig: RaribleSdkConfig = {
 	tezosNetwork: "mainnet",
 	polygonNetwork: "polygon",
 	solanaNetwork: "mainnet-beta",
+	immutablexNetwork: "prod",
 }

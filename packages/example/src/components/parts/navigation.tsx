@@ -11,6 +11,9 @@ export function Navigation() {
 	}, {
 		label: "Connect",
 		path: "/connect"
+	},  {
+		label: "Balance",
+		path: "/balance"
 	}, {
 		label: "Deploy Collection",
 		path: "/deploy"
@@ -32,6 +35,15 @@ export function Navigation() {
 	}, {
 		label: "Accept Bid",
 		path: "/accept-bid"
+	}, {
+		label: "Cancel Order",
+		path: "/cancel"
+	}, {
+		label: "Transfer Token",
+		path: "/transfer"
+	}, {
+		label: "Burn Token",
+		path: "/burn"
 	}, {
 		label: "My Items",
 		path: "/items"

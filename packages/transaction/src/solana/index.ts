@@ -60,10 +60,7 @@ export class BlockchainSolanaTransaction implements IBlockchainTransaction {
 		}
 	}
 
-	valueOf() {
-		return {
-			blockchain: this.blockchain,
-			transaction: this.transaction,
-		}
+	get isEmpty(): boolean {
+		return false
 	}
 }

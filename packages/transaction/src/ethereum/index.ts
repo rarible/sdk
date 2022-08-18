@@ -13,7 +13,6 @@ export class BlockchainEthereumTransaction implements IBlockchainTransaction {
 	private getBlockchain(network: EthereumNetwork): Blockchain {
 		switch (network) {
 			case "mumbai":
-			case "mumbai-dev":
 			case "polygon":
 				return Blockchain.POLYGON
 			default:
@@ -39,10 +38,12 @@ export class BlockchainEthereumTransaction implements IBlockchainTransaction {
 			case "mainnet": return `https://etherscan.io/tx/${this.hash()}`
 			case "mumbai": return `https://mumbai.polygonscan.com/tx/${this.hash()}`
 			case "polygon": return `https://polygonscan.com/tx/${this.hash()}`
-			case "ropsten": return `https://ropsten.etherscan.io/tx/${this.hash()}`
-			case "rinkeby": return `https://rinkeby.etherscan.io/tx/${this.hash()}`
 			case "testnet": return `https://rinkeby.etherscan.io/tx/${this.hash()}`
 			default: throw new Error("Unsupported transaction network")
 		}
+	}
+
+	get isEmpty(): boolean {
+		return false
 	}
 }

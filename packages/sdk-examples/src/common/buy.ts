@@ -4,7 +4,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 //Available only for ethereum
 export async function buy(wallet: BlockchainWallet) {
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const buyTx = await sdk.order.buy({
 		orderId: toOrderId("<SELL_ORDER_ID>"),
 		amount: 1,

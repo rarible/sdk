@@ -81,6 +81,6 @@ describe.each(providers)("Create Union SDK via $name", (suite) => {
 	test("Should create SDK", () => {
 		const sdk = createRaribleSdk(provider, "development", { logs: LogsLevel.DISABLED })
 		expect(sdk.wallet).toBeTruthy()
-		expect(sdk.wallet?.blockchain).toEqual(suite.expectedBlockchain)
+		expect(sdk.wallet?.walletType).toEqual(suite.expectedBlockchain)
 	})
 })

@@ -15,7 +15,7 @@ import type {
 	PrepareOrderUpdateRequest,
 	PrepareOrderUpdateResponse,
 } from "../../types/order/common"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type {
@@ -68,6 +68,7 @@ export class SolanaOrder {
 		return {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
 			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			supportsExpirationDate: false,
@@ -117,6 +118,7 @@ export class SolanaOrder {
 		return {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
 			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			submit: updateAction,
@@ -197,6 +199,7 @@ export class SolanaOrder {
 			maxAmount: toBigNumber(item.supply),
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
 			baseFee: 0,
 			getConvertableValue: this.getConvertableValue,
@@ -243,6 +246,7 @@ export class SolanaOrder {
 		return {
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
 			baseFee: 0,
 			getConvertableValue: this.getConvertableValue,

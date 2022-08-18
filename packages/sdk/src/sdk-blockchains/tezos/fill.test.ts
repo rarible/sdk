@@ -24,11 +24,12 @@ describe.skip("fill test", () => {
 			amount: 1,
 			infiniteApproval: true,
 		})
+		console.log("tx", tx)
 		await tx.wait()
 
 		const ownership = await awaitForOwnership(
 			buyerSdk,
-			toItemId("TEZOS:KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx:15"),
+			toItemId("TEZOS:KT18pVpRXKPY2c4U2yFEGSH3ZnhB2kL8kwXS:46284"),
 			buyerAddress
 		)
 		expect(ownership.value).toBe("1")

@@ -14,6 +14,10 @@ export interface TransactionIndexer extends Record<Blockchain, any> {
 export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
+	/**
+	 * Returns true if there is no transaction data and transaction object should be ignored
+	 */
+	isEmpty: boolean
 	hash(): string
 	wait(): Promise<Transaction<T>>
 	getTxLink(): string

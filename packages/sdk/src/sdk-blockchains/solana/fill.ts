@@ -8,9 +8,9 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
@@ -108,6 +108,7 @@ export class SolanaFill {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
 		}
 	}
@@ -157,6 +158,7 @@ export class SolanaFill {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.NONE,
 			payoutsSupport: PayoutsSupport.NONE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
 		}
 	}

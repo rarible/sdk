@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.9.11-beta.22",
+  "version": "0.9.19",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -20,15 +20,16 @@
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.4.0",
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "0.0.13-beta10",
-    "@rarible/ethereum-provider": "~0.12.64",
-    "@rarible/web3-ethereum": "~0.12.74",
-    "@rarible/ethers-ethereum": "~0.12.74",
+    "@imtbl/imx-sdk": "^1.24.0",
+    "@rarible/api-client": "0.0.13-beta11",
+    "@rarible/ethereum-provider": "~0.12.83",
+    "@rarible/web3-ethereum": "~0.12.83",
+    "@rarible/ethers-ethereum": "~0.12.83",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
-    "@rarible/solana-wallet": "^0.9.11-beta.22",
-    "@rarible/tezos-sdk": "~0.1.30",
-    "@rarible/types": "~0.9.3"
+    "@rarible/solana-wallet": "^0.9.12",
+    "@rarible/tezos-sdk": "~0.1.32",
+    "@rarible/types": "~0.9.6"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -43,7 +44,7 @@
     "@onflow/fcl": "~0.0.77",
     "@rarible/ethereum-sdk-test-common": "~0.12.73",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/web3-ethereum": "~0.12.74",
+    "@rarible/web3-ethereum": "~0.12.83",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",

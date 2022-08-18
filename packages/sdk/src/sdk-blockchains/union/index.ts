@@ -265,6 +265,7 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
 }
 
+
 function getBidEntity(request: PrepareBidRequest) {
 	if ("itemId" in request) {
 		return request.itemId

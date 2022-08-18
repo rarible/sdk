@@ -4,7 +4,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 
 export async function bid(wallet: BlockchainWallet, assetType: RequestCurrency) {
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const bidOrderId = await sdk.order.bid({
 		itemId: toItemId("<ITEM_ID>"),
 		amount: 1,

@@ -28,6 +28,11 @@ export enum PayoutsSupport {
 	MULTIPLE = "MULTIPLE",
 }
 
+export enum MaxFeesBasePointSupport {
+	IGNORED = "IGNORED",
+	REQUIRED = "REQUIRED",
+}
+
 export interface FillRequest {
 	/**
 	 * Number of NFTs to buy or to sell (in case of accepting bids)
@@ -49,8 +54,12 @@ export interface FillRequest {
 	 * ItemId for fill collection order
 	 */
 	itemId?: ItemId
-	/*
-  * Unwrap tokens on accept bid
+	/**
+	 * Max fees value. Should be greater than 0. If required and not provided, will throw Error
+	 */
+	maxFeesBasePoint?: number,
+	/**
+   * Unwrap tokens on accept bid
    */
 	unwrap?: boolean
 }
@@ -80,6 +89,10 @@ export interface PrepareFillResponse
 	 * Whether the underlying exchange contract supports specifying payouts
 	 */
 	payoutsSupport: PayoutsSupport
+	/**
+	 * Whether the underlying exchange contract supports specifying max fees value
+	 */
+	maxFeesBasePointSupport: MaxFeesBasePointSupport
 	/**
 	 * Whether the underlying exchange contract supports partial fill
 	 */

@@ -1,8 +1,7 @@
 import type * as ApiClient from "@rarible/api-client"
-import type { BlockchainGroup } from "@rarible/api-client"
+import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { IUploadMeta } from "./types/nft/mint/prepare"
 import type {
@@ -30,6 +29,7 @@ import type { IAcceptBid, IBuy, IFill } from "./types/order/fill"
 import type { IBid, IBidUpdate } from "./types/order/bid"
 import type { ICancel } from "./types/order/cancel"
 import type { ISellInternal } from "./types/order/sell"
+import type { IEthereumSdkConfig } from "./sdk-blockchains/ethereum/domain"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -47,12 +47,11 @@ export interface IRaribleSdkConfig {
 	apiClientParams?: ApiClient.ConfigurationParameters
 	logs?: LogsLevel
 	blockchain?: {
-		[BlockchainGroup.SOLANA]?: ISolanaSdkConfig
+		[WalletType.SOLANA]?: ISolanaSdkConfig
+		[WalletType.ETHEREUM]?: IEthereumSdkConfig
+		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
 	}
 	middlewares?: Middleware[]
-	ethereum?: EthereumNetworkConfig
-	polygon?: EthereumNetworkConfig
-	flow?: { auth: AuthWithPrivateKey }
 }
 
 export interface IRaribleSdk {

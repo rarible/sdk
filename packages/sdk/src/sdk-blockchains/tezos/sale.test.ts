@@ -9,6 +9,7 @@ import { awaitItem } from "../../common/test/await-item"
 import { createApisSdk } from "../../common/apis"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { getSdkConfig } from "../../config"
+// import { awaitItemSupply } from "../ethereum/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
@@ -16,7 +17,7 @@ import { getTestContract } from "./test/test-contracts"
 import { getMaybeTezosProvider } from "./common"
 import { TezosSell } from "./sell"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 
 	const sellerWallet = createTestWallet("edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw", env)

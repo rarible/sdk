@@ -42,6 +42,7 @@ describe.skip("get buy transaction", () => {
 		})
 
 		const sellOrder = await sdkItemOwner.order.sell({
+			type: "DATA_V2",
 			makeAssetType: {
 				assetClass: "ERC721",
 				contract: erc721Address as any,
@@ -110,6 +111,7 @@ describe.skip("get buy transaction", () => {
 		})
 
 		const sellOrder = await sdkItemOwner.order.sell({
+			type: "DATA_V2",
 			makeAssetType: {
 				assetClass: "ERC721",
 				contract: erc721Address as any,

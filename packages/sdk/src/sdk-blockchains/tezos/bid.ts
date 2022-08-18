@@ -14,7 +14,7 @@ import type {
 	OrderRequest,
 	OrderUpdateRequest,
 } from "../../types/order/common"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
 import type { PrepareOrderUpdateRequest } from "../../types/order/common"
 import type { PrepareBidResponse } from "../../types/order/bid/domain"
@@ -132,6 +132,7 @@ export class TezosBid {
 			maxAmount: toBigNumber(item.supply),
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			getConvertableValue: notImplemented,
@@ -194,6 +195,7 @@ export class TezosBid {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			getConvertableValue: notImplemented,

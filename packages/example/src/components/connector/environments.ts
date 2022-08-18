@@ -2,9 +2,6 @@ export const ENVIRONMENTS = [{
 	value: "prod",
 	label: "Production"
 }, {
-	value: "dev",
-	label: "Dev"
-}, {
 	value: "development",
 	label: "Development"
 }, {

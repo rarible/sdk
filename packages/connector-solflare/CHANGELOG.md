@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.19](https://github.com/rarible/sdk/compare/v0.9.18...v0.9.19) (2022-08-16)
+
+**Note:** Version bump only for package @rarible/connector-solflare
+
+
+
+
+
+## [0.9.18](https://github.com/rarible/sdk/compare/v0.9.17...v0.9.18) (2022-08-12)
+
+**Note:** Version bump only for package @rarible/connector-solflare
+
+
+
+
+
+## [0.9.14](https://github.com/rarible/sdk/compare/v0.9.13...v0.9.14) (2022-08-09)
+
+**Note:** Version bump only for package @rarible/connector-solflare
+
+
+
+
+
+## [0.9.13](https://github.com/rarible/sdk/compare/v0.9.12...v0.9.13) (2022-07-26)
+
+**Note:** Version bump only for package @rarible/connector-solflare
+
+
+
+
+
+## [0.9.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.22...v0.9.12) (2022-07-25)
+
+**Note:** Version bump only for package @rarible/connector-solflare
+
+
+
+
+
 ## [0.9.11-beta.22](https://github.com/rarible/sdk/compare/v0.9.11-beta.21...v0.9.11-beta.22) (2022-07-21)
 
 **Note:** Version bump only for package @rarible/connector-solflare

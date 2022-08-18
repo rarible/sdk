@@ -15,7 +15,7 @@ async function bidUpdate() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const bidOrderId = await sdk.order.bid({
 		itemId: toItemId("TEZOS:YOUR_CONTRACT_ID:YOUR_ITEM_ID"),
 		amount: 1,
@@ -28,12 +28,12 @@ async function bidUpdate() {
 	})
 	console.log("bid order id", bidOrderId)
 
-	const updateAction = await sdk.order.bidUpdate({
+	const updatedOrderId = await sdk.order.bidUpdate({
 		orderId: bidOrderId,
 		price: "0.000003",
 	})
 	//You can only increase price of bid order for security reasons
 	//If you want to force change bid price you should cancel order
-	await updateAction
+	await updatedOrderId
 }
 bidUpdate()

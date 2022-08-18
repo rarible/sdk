@@ -1,7 +1,12 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber } from "@rarible/types"
-import type { FillOrderAction, FillOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import { toAddress, toBigNumber, toWord } from "@rarible/types"
+import type {
+	FillOrderAction,
+	FillOrderRequest,
+	RaribleV2OrderFillRequestV3Buy,
+	RaribleV2OrderFillRequestV3Sell,
+} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
@@ -12,13 +17,21 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
-import { convertOrderIdToEthereumHash, convertToEthereumAddress, getEthereumItemId, toEthereumParts } from "./common"
+import {
+	convertOrderIdToEthereumHash,
+	convertToEthereumAddress,
+	getEthereumItemId,
+	toEthereumParts,
+	validateOrderDataV3Request,
+} from "./common"
+import type { IEthereumSdkConfig } from "./domain"
 
 export type SupportFlagsResponse = {
 	originFeeSupport: OriginFeeSupport,
 	payoutsSupport: PayoutsSupport,
+	maxFeesBasePointSupport: MaxFeesBasePointSupport,
 	supportsPartialFill: boolean
 }
 
@@ -29,6 +42,7 @@ export class EthereumFill {
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
+		private config?: IEthereumSdkConfig
 	) {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
@@ -36,6 +50,17 @@ export class EthereumFill {
 		this.buyBasic = this.buyBasic.bind(this)
 		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		const prepare = await this.buy(request)
+		return prepare.submit(request)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const prepare = await this.acceptBid(request)
+		return prepare.submit(request)
+	}
+
 
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
 		let request: FillOrderRequest
@@ -60,6 +85,21 @@ export class EthereumFill {
 					payouts: toEthereumParts(fillRequest.payouts),
 					originFees: toEthereumParts(fillRequest.originFees),
 				}
+
+				switch (order.data.dataType) {
+					case "RARIBLE_V2_DATA_V3_BUY":
+						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: true });
+						(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!;
+						(request as RaribleV2OrderFillRequestV3Sell).marketplaceMarker =
+							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
+						break
+					case "RARIBLE_V2_DATA_V3_SELL":
+						(request as RaribleV2OrderFillRequestV3Buy).marketplaceMarker =
+							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
+						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: false })
+						break
+					default:
+				}
 				break
 			}
 			case "OPEN_SEA_V1": {
@@ -72,6 +112,14 @@ export class EthereumFill {
 				break
 			}
 			case "SEAPORT_V1": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
+			case "LOOKSRARE": {
 				request = {
 					order,
 					originFees: toEthereumParts(fillRequest.originFees),
@@ -104,20 +152,41 @@ export class EthereumFill {
 				return {
 					originFeeSupport: OriginFeeSupport.AMOUNT_ONLY,
 					payoutsSupport: PayoutsSupport.SINGLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: true,
 				}
 			}
 			case "RARIBLE_V2": {
-				return {
-					originFeeSupport: OriginFeeSupport.FULL,
-					payoutsSupport: PayoutsSupport.MULTIPLE,
-					supportsPartialFill: true,
+				switch (order.data.dataType) {
+					case "RARIBLE_V2_DATA_V3_BUY":
+						return {
+							originFeeSupport: OriginFeeSupport.FULL,
+							payoutsSupport: PayoutsSupport.SINGLE,
+							maxFeesBasePointSupport: MaxFeesBasePointSupport.REQUIRED,
+							supportsPartialFill: true,
+						}
+					case "RARIBLE_V2_DATA_V3_SELL":
+						return {
+							originFeeSupport: OriginFeeSupport.FULL,
+							payoutsSupport: PayoutsSupport.SINGLE,
+							maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+							supportsPartialFill: true,
+						}
+					case "RARIBLE_V2_DATA_V2":
+					default:
+						return {
+							originFeeSupport: OriginFeeSupport.FULL,
+							payoutsSupport: PayoutsSupport.MULTIPLE,
+							maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+							supportsPartialFill: true,
+						}
 				}
 			}
 			case "OPEN_SEA_V1": {
 				return {
 					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.SINGLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: false,
 				}
 			}
@@ -126,7 +195,16 @@ export class EthereumFill {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill,
+				}
+			}
+			case "LOOKSRARE": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
 				}
 			}
 			default:
@@ -225,32 +303,5 @@ export class EthereumFill {
 
 	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.commonFill(this.sdk.order.acceptBid, request)
-	}
-
-	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
-		const orderHash = this.getOrderHashFromRequest(request)
-		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
-
-		if (this.hasCollectionAssetType(order) && !request.itemId) {
-			throw new Error("For collection order you should pass itemId")
-		}
-		const buyRequest = await this.getFillOrderRequest(order, request)
-		const tx = await this.sdk.order.buy(buyRequest)
-		return new BlockchainEthereumTransaction(tx, this.network)
-	}
-
-	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
-		const orderHash = this.getOrderHashFromRequest(request)
-		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
-
-		if (request.unwrap) {
-			throw new Error("Unwrap is not supported yet")
-		}
-		if (this.hasCollectionAssetType(order) && !request.itemId) {
-			throw new Error("For collection order you should pass itemId")
-		}
-		const acceptBidRequest = await this.getFillOrderRequest(order, request)
-		const tx = await this.sdk.order.acceptBid(acceptBidRequest)
-		return new BlockchainEthereumTransaction(tx, this.network)
 	}
 }

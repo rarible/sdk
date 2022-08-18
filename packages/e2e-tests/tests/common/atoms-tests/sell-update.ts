@@ -3,7 +3,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import type { Order } from "@rarible/api-client"
-import { BlockchainGroup } from "@rarible/api-client"
+import { WalletType } from "@rarible/sdk-wallet"
 import { Logger } from "../logger"
 
 /**
@@ -25,7 +25,7 @@ export async function sellUpdate(
 	const orderId = await prepareOrderUpdateResponse.submit(orderUpdateRequest)
 	Logger.log("order_id", orderId)
 	// Flow create new order when update
-	if (wallet.blockchain !== BlockchainGroup.FLOW) {
+	if (wallet.walletType !== WalletType.FLOW) {
 		expect(orderId).toBe(prepareOrderUpdateRequest.orderId)
 	}
 	// Check order stock to be equal sell amount

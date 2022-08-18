@@ -4,7 +4,7 @@ import { toCollectionId, toUnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 export async function mintAndSell(wallet: BlockchainWallet, currency: RequestCurrency) {
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 
 	/*
     You should upload json file with item metadata in the following format:

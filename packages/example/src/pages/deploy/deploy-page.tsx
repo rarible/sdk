@@ -1,8 +1,9 @@
 import React, { useContext } from "react"
 import { Box, MenuItem, Stack, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { Blockchain, BlockchainGroup } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import { CreateCollectionBlockchains } from "@rarible/sdk/build/types/nft/deploy/domain"
+import { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -21,7 +22,7 @@ import { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/
 
 function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
-		case BlockchainGroup.ETHEREUM:
+		case WalletType.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
         type: data["contract"],
@@ -41,7 +42,7 @@ function getDeployRequest(data: Record<string, any>) {
         contractURI: data["contractURI"],
         isPublic: !!data["private"],
 			} as CreateCollectionRequestSimplified
-		case Blockchain.SOLANA:
+		case WalletType.SOLANA:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
         metadataURI: data["metadataURI"],
@@ -51,10 +52,10 @@ function getDeployRequest(data: Record<string, any>) {
 	}
 }
 
-function validateConditions(blockchain: BlockchainGroup | undefined): boolean {
-	return blockchain === BlockchainGroup.ETHEREUM ||
-		blockchain === BlockchainGroup.TEZOS ||
-		blockchain === BlockchainGroup.SOLANA
+function validateConditions(blockchain: WalletType | undefined): boolean {
+	return blockchain === WalletType.ETHEREUM ||
+		blockchain === WalletType.TEZOS ||
+		blockchain === WalletType.SOLANA
 }
 
 export function DeployPage() {
@@ -62,7 +63,7 @@ export function DeployPage() {
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setComplete, setError } = useRequestResult()
-	const blockchain = connection.sdk?.wallet?.blockchain
+	const blockchain = connection.sdk?.wallet?.walletType
 
 	return (
 		<Page header="Deploy Collection">
@@ -92,10 +93,10 @@ export function DeployPage() {
 								name="blockchain"
 								label="Blockchain"
 							>
-								<MenuItem value={BlockchainGroup.ETHEREUM}>
+								<MenuItem value={WalletType.ETHEREUM}>
 									{Blockchain.ETHEREUM} / {Blockchain.POLYGON}
 								</MenuItem>
-								<MenuItem value={BlockchainGroup.TEZOS}>{BlockchainGroup.TEZOS}</MenuItem>
+								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>
 								{ /*<MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>*/ }
 							</FormSelect>

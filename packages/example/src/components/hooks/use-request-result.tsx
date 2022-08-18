@@ -30,7 +30,7 @@ export function useRequestResult<T>(): IRequestResult<T> {
 		setError: (error: any) => {
 			setResult({
 				type: "error",
-				error: isString(error) ? error : (error.message ? error.message : JSON.stringify(error))
+				error: !error ? "Unknown error" : (isString(error) ? error : (error.message ? error.message : JSON.stringify(error)))
 			})
 		},
 	}

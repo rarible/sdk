@@ -1,6 +1,7 @@
 import type {
 	FTAssetType, OrderDataRequest, SellRequest, TezosProvider, XTZAssetType,
 } from "@rarible/tezos-sdk"
+// eslint-disable-next-line camelcase
 import {
 	AssetTypeV2,
 	// eslint-disable-next-line camelcase
@@ -14,8 +15,7 @@ import BigNumber from "bignumber.js"
 import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import { sellV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import type { OrderId } from "@rarible/api-client"
-// eslint-disable-next-line camelcase
-import { OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type {
 	OrderUpdateRequest,
@@ -28,7 +28,6 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { IApisSdk } from "../../domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
-import type { TezosOrder } from "./domain"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -40,11 +39,12 @@ import {
 	getTezosAssetTypeV2,
 	getTezosItemData,
 	checkChainId,
-	getRequestAmount,
 	getMakerPublicKey,
-	getPayouts,
-	getCollectionTypeAssetClass, getCollectionType,
+	getCollectionType,
+	getCollectionTypeAssetClass,
+	getPayouts, getRequestAmount,
 } from "./common"
+import type { TezosOrder } from "./domain"
 
 export class TezosSell {
 	constructor(
@@ -93,41 +93,12 @@ export class TezosSell {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			supportsExpirationDate: false,
 			submit,
 		}
-	}
-
-	async sellV1(request: OrderCommon.OrderInternalRequest) {
-		const provider = getRequiredProvider(this.provider)
-		const makerPublicKey = await getMakerPublicKey(provider)
-		const { tokenId, contract } = getTezosItemData(request.itemId)
-
-		const requestCurrency = getCurrencyAssetType(request.currency)
-		const collectionType = await getCollectionType(this.provider, contract)
-
-		const tezosRequest: SellRequest = {
-			maker: pk_to_pkh(makerPublicKey),
-			maker_edpk: makerPublicKey,
-			make_asset_type: {
-				asset_class: getCollectionTypeAssetClass(collectionType),
-				contract,
-				token_id: new BigNumber(tokenId),
-			},
-			take_asset_type: await this.parseTakeAssetType(requestCurrency),
-			amount: getRequestAmount(request.amount, collectionType) || new BigNumber(1),
-			price: new BigNumber(request.price),
-			payouts: await getPayouts(provider, request.payouts),
-			origin_fees: convertUnionParts(request.originFees),
-		}
-
-		const sellOrder: TezosOrder = await sell(
-    	provider,
-    	tezosRequest
-		)
-		return convertTezosOrderId(sellOrder.hash)
 	}
 
 	async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
@@ -144,13 +115,15 @@ export class TezosSell {
 
 		const provider = getRequiredProvider(this.provider)
 		const { contract, tokenId } = getTezosItemData(request.itemId)
+
 		const requestCurrency = getCurrencyAssetType(request.currency)
+
 		const expirationDate = request.expirationDate instanceof Date
 			? Math.floor(request.expirationDate.getTime() / 1000)
 			: undefined
-		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
 		const collectionType = await getCollectionType(this.provider, contract)
 
+		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
 		const tezosRequest: OrderFormV2 = {
 			s_asset_contract: contract,
 			s_asset_token_id: new BigNumber(tokenId),
@@ -240,9 +213,41 @@ export class TezosSell {
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit: updateAction,
 		}
+	}
+
+
+	async sellV1(request: OrderCommon.OrderInternalRequest) {
+		const provider = getRequiredProvider(this.provider)
+		const makerPublicKey = await getMakerPublicKey(provider)
+		const { tokenId, contract } = getTezosItemData(request.itemId)
+
+		const requestCurrency = getCurrencyAssetType(request.currency)
+		const collectionType = await getCollectionType(this.provider, contract)
+
+		const tezosRequest: SellRequest = {
+			maker: pk_to_pkh(makerPublicKey),
+			maker_edpk: makerPublicKey,
+			make_asset_type: {
+				asset_class: getCollectionTypeAssetClass(collectionType),
+				contract,
+				token_id: new BigNumber(tokenId),
+			},
+			take_asset_type: await this.parseTakeAssetType(requestCurrency),
+			amount: getRequestAmount(request.amount, collectionType) || new BigNumber(1),
+			price: new BigNumber(request.price),
+			payouts: await getPayouts(provider, request.payouts),
+			origin_fees: convertUnionParts(request.originFees),
+		}
+
+		const sellOrder: TezosOrder = await sell(
+			provider,
+			tezosRequest
+		)
+		return convertTezosOrderId(sellOrder.hash)
 	}
 }

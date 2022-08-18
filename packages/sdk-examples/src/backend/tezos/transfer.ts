@@ -15,7 +15,7 @@ async function transferItem() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "dev")
+	const sdk = createRaribleSdk(wallet, "testnet")
 	const tx = await sdk.nft.transfer({
 		itemId: toItemId("TEZOS:YOUR_ORDER_ID"),
 		to: toUnionAddress("TEZOS:ITEM_RECIPIENT"),
