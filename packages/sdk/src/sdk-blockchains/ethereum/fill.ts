@@ -2,6 +2,7 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import type {
+	FillBatchSingleOrderRequest,
 	FillOrderAction,
 	FillOrderRequest,
 	RaribleV2OrderFillRequestV3Buy,
@@ -17,10 +18,10 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { OrderId } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
-import type { FillBatchSingleOrderRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type {
 	BatchFillRequest,
 	FillRequest,
+	IBatchBuyTransactionResult,
 	PrepareBatchBuyResponse,
 	PrepareFillRequest,
 	PrepareFillResponse,
@@ -50,7 +51,7 @@ export class EthereumFill {
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
-		private config?: IEthereumSdkConfig
+		private config?: IEthereumSdkConfig,
 	) {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
@@ -304,20 +305,53 @@ export class EthereumFill {
 	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
 		const orders: Record<OrderId, Order> = {} // ethereum orders cache
 
-		const submit = this.sdk.order.buyBatch.before((requests: BatchFillRequest) => {
-			return requests.map((req) => {
-				const order = orders[req.orderId]
-				if (!order) {
-					throw new Error(`Order with id ${req.orderId} not precached`)
-				}
+		const submit = this.sdk.order.buyBatch.around(
+			(request: BatchFillRequest) => {
+				return request.map((req) => {
+					const order = orders[req.orderId]
+					if (!order) {
+						throw new Error(`Order with id ${req.orderId} not precached`)
+					}
 
-				if (req.unwrap) {
-					throw new Error("Unwrap is not supported yet")
-				}
+					if (req.unwrap) {
+						throw new Error("Unwrap is not supported yet")
+					}
 
-				return this.getFillOrderRequest(order, req) as FillBatchSingleOrderRequest
-			})
-		}).after((tx => new BlockchainEthereumTransaction(tx, this.network)))
+					return this.getFillOrderRequest(order, req) as FillBatchSingleOrderRequest
+				})
+			},
+			(tx, request: BatchFillRequest) => {
+				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
+					tx,
+					this.network,
+					(receipt,
+					) => {
+						let executionEvents: any
+						for (let event of (receipt.events as any[] || [])) {
+							if ((Array.isArray(event) || "0" in event) && event[0]?.event === "Execution") {
+								executionEvents = event as any
+								break
+							} else if (event.event === "Execution") {
+								executionEvents = [event]
+								break
+							}
+						}
+
+						if (executionEvents) {
+							return {
+								type: "BATCH_BUY",
+								results: request.map((req, index) => ({
+									orderId: req.orderId,
+									result: !!executionEvents?.[index]?.returnValues["result"],
+								})),
+							}
+						} else {
+							return undefined
+						}
+					},
+				)
+			},
+		)
 
 		const prepared = await Promise.all(prepareRequest.map(async (req) => {
 			const orderHash = this.getOrderHashFromRequest(req)

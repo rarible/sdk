@@ -1,32 +1,30 @@
 import React, { useContext, useState } from "react"
-import { Box, Button, Stack } from "@mui/material"
+import { Box, IconButton, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { useNavigate } from "react-router-dom"
+import { toOrderId } from "@rarible/types"
+import { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
 
 interface IBatchBuyPrepareFormProps {
 	disabled?: boolean
-	onComplete: (response: PrepareFillResponse) => void
+	onComplete: (response: PrepareBatchBuyResponse) => void
 	orderId: string | undefined
 }
 
 export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuyPrepareFormProps) {
-	const navigate = useNavigate()
-	const [inputsCount, setInputsCount] = useState(1)
+	const [inputsCount, setInputsCount] = useState(2)
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
 
-	console.log((new Array(inputsCount)).fill(0).map((v, i) => {
-		return <FormTextInput key={i} form={form} defaultValue={orderId} name={`orderId[${i}]`} label="Order ID"/>
-	}))
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
@@ -35,11 +33,11 @@ export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuy
 				}
 				try {
 					console.log(formData)
-					// onComplete(await connection.sdk.order.buy({
-					//
-					// 	orderId: toOrderId(formData.orderId)
-					// }))
-					//navigate(`/buy/${formData.orderId}`, {})
+					onComplete(await connection.sdk.order.batchBuy(
+						formData.orderId.filter((id: string) => id).map((id: string) => ({
+								orderId: toOrderId(id),
+							}),
+						)))
 				} catch (e) {
 					setError(e)
 				}
@@ -51,10 +49,26 @@ export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuy
 							return <FormTextInput key={i} form={form} defaultValue={orderId} name={`orderId[${i}]`} label="Order ID"/>
 						})
 					}
-
+					<Box
+						display="flex"
+						justifyContent="flex-end"
+						alignItems="flex-end"
+					>
+						<IconButton
+							color="primary"
+							onClick={() => setInputsCount(inputsCount + 1)}
+						>
+							<AddCircleOutlineIcon/>
+						</IconButton>
+						<IconButton
+							color="error"
+							disabled={inputsCount <= 1}
+							onClick={() => setInputsCount(Math.max(1, inputsCount - 1))}
+						>
+							<RemoveCircleOutlineIcon/>
+						</IconButton>
+					</Box>
 					<Box>
-						<Button onClick={() => setInputsCount(inputsCount + 1)}>+</Button>
-						<Button onClick={() => setInputsCount(Math.max(1, inputsCount - 1))}>-</Button>
 						<FormSubmit
 							form={form}
 							label="Next"

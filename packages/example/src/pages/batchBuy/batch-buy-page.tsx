@@ -8,7 +8,7 @@ import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
 import { BatchBuyPrepareForm } from "./batch-buy-prepare-form"
 import { BatchBuyForm } from "./batch-buy-form"
-import { BuyComment } from "./comments/buy-comment"
+import { BatchBuyComment } from "./comments/batch-buy-comment"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
@@ -23,7 +23,7 @@ export function BatchBuyPage() {
 	const blockchain = connection.sdk?.wallet?.walletType
 
 	return (
-		<Page header="Batch Buy Token">
+		<Page header="Batch Buy Tokens">
 			{
 				!validateConditions(blockchain) && (
 					<CommentedBlock sx={{ my: 2 }}>
@@ -31,7 +31,7 @@ export function BatchBuyPage() {
 					</CommentedBlock>
 				)
 			}
-			<CommentedBlock sx={{ my: 2 }} comment={<BuyComment/>}>
+			<CommentedBlock sx={{ my: 2 }} comment={<BatchBuyComment/>}>
 				<FormStepper
 					steps={[
 						{

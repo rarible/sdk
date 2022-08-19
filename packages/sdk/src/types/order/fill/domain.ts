@@ -1,5 +1,6 @@
 import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
+import type { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
@@ -104,14 +105,24 @@ export interface PrepareFillResponse
 
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
 
-export type BatchFillSingleRequest = { orderId: OrderId } & FillRequest
+export interface IBatchBuyTransactionResult {
+	type: "BATCH_BUY"
+	results: {
+		orderId: OrderId,
+		result: boolean,
+	}[]
+}
 
+export type BatchFillSingleRequest = { orderId: OrderId } & FillRequest
 export type BatchFillRequest = BatchFillSingleRequest[]
 
 type BatchSinglePrepared = { orderId: OrderId } & PreparedFillInfo
 
-export interface PrepareBatchBuyResponse extends
-	AbstractPrepareResponse<FillActionTypes, BatchFillRequest, IBlockchainTransaction> {
+export interface PrepareBatchBuyResponse extends AbstractPrepareResponse<
+FillActionTypes,
+BatchFillRequest,
+IBlockchainTransaction<Blockchain, IBatchBuyTransactionResult>
+> {
 	prepared: BatchSinglePrepared[]
 }
 
