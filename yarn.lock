@@ -4762,13 +4762,6 @@
   dependencies:
     "@rarible/types" "~0.9.2"
 
-"@rarible/ethereum-provider@^0.12.64":
-  version "0.12.64"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.64.tgz#115b65de564538226b25b4915c23a079738fbbd1"
-  integrity sha512-/3CDvm2ivBGpI8F/zHzByN+al2hM3NAbwo+0KC8pt9FJTCwzDtztAvqBHWl5m3LR6QTelaTC38mS0qJp5i9O7w==
-  dependencies:
-    eth-sig-util "^3.0.0"
-
 "@rarible/ethereum-provider@^0.12.83", "@rarible/ethereum-provider@~0.12.83":
   version "0.12.83"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.83.tgz#8eaff3fd09f09a10b66764ad48230bc6c1d1569c"
@@ -4776,12 +4769,12 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
-"@rarible/ethereum-sdk-test-common@~0.12.73":
-  version "0.12.73"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.73.tgz#045f43915bb3409450caa623678ad80a05c8d334"
-  integrity sha512-kJCfenBTMJ6DIrjzZiGj1Tdjq99Qzzq11HWCl4g0FAFRWW/xjWUJHqCkG040O0iKPEjRGhH+FWKGYXfLKH2z7A==
+"@rarible/ethereum-sdk-test-common@~0.12.83":
+  version "0.12.83"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.83.tgz#82ce87d84af78f000217789c7576ba2baf1ecf07"
+  integrity sha512-jt6VDEzsbTjpwxM0QvrlsjhgNmR/Lx0D3vcxXX2Autuu5YyV3sXXSOEKFKD4MPR4u87bhXf1iGZUbRM9GTuH7A==
   dependencies:
-    "@rarible/ethereum-provider" "^0.12.64"
+    "@rarible/ethereum-provider" "^0.12.83"
     "@rarible/test-provider" "~0.5.0"
     "@rarible/types" "~0.9.2"
     "@types/web3-provider-engine" "^14.0.1"

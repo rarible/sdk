@@ -1,104 +1,92 @@
 import { Link, ProviderPreference } from "@imtbl/imx-sdk"
+import type { ConfigurableIframeOptions } from "@imtbl/imx-sdk"
 import type {
+	ImxConnectionData,
 	ImxConnectResult,
 	ImxEnv,
 	ImxNetwork,
 	ImxNetworkConfig,
 	ImxWalletConnectionStatus,
-	ImxWalletProviderName,
 } from "./domain"
+import { ImxWalletProviderEnum } from "./domain"
 import { IMX_ENV_CONFIG, IMX_NETWORK_CONFIG } from "./config"
 
-const localStorageKeys = {
-	starkKey: "IMX_STARK_KEY",
-	address: "IMX_ADDRESS",
-	provider: "IMX_PROVIDER",
-	network: "IMX_ETH_NETWORK",
-}
-
 export class ImxWallet {
-	private address: string
-	private starkPublicKey: string
-	private ethNetwork: string
-	private providerPreference: string
-	private status: ImxWalletConnectionStatus
-	public link: Link
+	private state: Record<StorageKeyEnum, string> = Object.keys(StorageKeyEnum).reduce((prev, curr) => ({
+		...prev,
+		[curr]: this.storage.getItem(curr) || "",
+	}), {} as Record<StorageKeyEnum, string>)
+
+	private status: ImxWalletConnectionStatus = this.state[StorageKeyEnum.IMX_ADDRESS] ? "connected" : "disconnected"
+
+	public network = {
+		...IMX_ENV_CONFIG[this.env],
+		env: this.env,
+	}
+
+	public readonly link = new Link(this.network.linkAddress, this.iframeOptions)
 
 	constructor(
 		private readonly env: ImxEnv,
-		private readonly provider?: ImxWalletProviderName,
-	) {
-		this.link = new Link(this.getNetworkConfig().linkAddress)
-		this.address = localStorage.getItem(localStorageKeys.address) || ""
-		this.starkPublicKey = localStorage.getItem(localStorageKeys.starkKey) || ""
-		this.ethNetwork = localStorage.getItem(localStorageKeys.network) || ""
-		this.providerPreference = localStorage.getItem(localStorageKeys.provider) || ""
-		this.status = this.address && this.starkPublicKey ? "connected" : "disconnected"
-		this.connect = this.connect.bind(this)
-		this.disconnect = this.disconnect.bind(this)
-		this.getConnectionData = this.getConnectionData.bind(this)
-		this.getNetworkConfig = this.getNetworkConfig.bind(this)
-	}
+		private readonly provider: ImxWalletProviderEnum = ImxWalletProviderEnum.NONE,
+		private readonly iframeOptions?: ConfigurableIframeOptions,
+		private readonly storage: Storage = localStorage
+	) {}
 
-	public async connect(): Promise<ImxConnectResult> {
+	connect = async (): Promise<ImxConnectResult> => {
 		try {
-			const { address, ethNetwork, providerPreference, starkPublicKey } = await this.link.setup(
-				this.provider ? { providerPreference: ProviderPreference[this.provider] } : {},
-			)
-			if (address && starkPublicKey) {
+			const data = await this.link.setup(this.getSetupOptions())
+			if (data.address && data.starkPublicKey) {
 				this.status = "connected"
-				this.address = address
-				this.starkPublicKey = starkPublicKey
-				this.ethNetwork = ethNetwork
-				this.providerPreference = providerPreference
-				localStorage.setItem(localStorageKeys.address, address)
-				localStorage.setItem(localStorageKeys.starkKey, starkPublicKey)
-				localStorage.setItem(localStorageKeys.network, ethNetwork)
-				localStorage.setItem(localStorageKeys.provider, providerPreference)
-				return { address, starkPublicKey, ethNetwork, providerPreference }
-			} else {
-				throw new Error("Connection failure! there is no address or starkAddress in response")
+				this.state = {
+					[StorageKeyEnum.IMX_ADDRESS]: data.address,
+					[StorageKeyEnum.IMX_STARK_KEY]: data.starkPublicKey,
+					[StorageKeyEnum.IMX_ETH_NETWORK]: data.ethNetwork,
+					[StorageKeyEnum.IMX_PROVIDER]: data.providerPreference,
+				}
+				this.setValue(StorageKeyEnum.IMX_ADDRESS, data.address)
+				this.setValue(StorageKeyEnum.IMX_STARK_KEY, data.starkPublicKey)
+				this.setValue(StorageKeyEnum.IMX_ETH_NETWORK, data.ethNetwork)
+				this.setValue(StorageKeyEnum.IMX_PROVIDER, data.providerPreference)
+				return data
 			}
-		} catch (e: any) {
-			console.log(`Connection failed with reason: ${e}`)
-			throw new Error(e)
+			throw new Error("There is no address or starkAddress in response")
+		} catch (error) {
+			console.error("Connection failed with reason", error)
+			throw error
 		}
 	}
 
-	public disconnect() {
-		this.address = ""
-		this.starkPublicKey = ""
-		this.ethNetwork = ""
-		this.providerPreference = ""
-		localStorage.setItem(localStorageKeys.address, "")
-		localStorage.setItem(localStorageKeys.starkKey, "")
+	disconnect = () => {
+		Object.keys(StorageKeyEnum).forEach(x => this.setValue(x as StorageKeyEnum, ""))
 		this.status = "disconnected"
-
-		if (localStorage) {
-			if ("IMX_ETH_NETWORK" in localStorage) {
-				localStorage.setItem("IMX_ETH_NETWORK", "")
-			}
-			if ("IMX_PROVIDER_PREFERENCE" in localStorage) {
-				localStorage.setItem("IMX_PROVIDER_PREFERENCE", "")
-			}
-		}
 	}
 
-	public getConnectionData(): ImxConnectResult & { link: Link, status: ImxWalletConnectionStatus } {
-		return {
-			address: this.address,
-			starkPublicKey: this.starkPublicKey,
-			ethNetwork: this.ethNetwork,
-			providerPreference: this.providerPreference,
-			link: this.link,
-			status: this.status,
-		}
+	getConnectionData = (): ImxConnectionData => ({
+		address: this.state[StorageKeyEnum.IMX_ADDRESS],
+		starkPublicKey: this.state[StorageKeyEnum.IMX_STARK_KEY],
+		ethNetwork: this.state[StorageKeyEnum.IMX_ETH_NETWORK],
+		providerPreference: this.state[StorageKeyEnum.IMX_PROVIDER],
+		link: this.link,
+		status: this.status,
+	})
+
+	private getSetupOptions() {
+		return this.provider ? { providerPreference: ProviderPreference[this.provider] } : {}
 	}
 
-	public getNetworkConfig(): ImxNetworkConfig & { env: ImxEnv } {
-		return { ...IMX_ENV_CONFIG[this.env], env: this.env }
+	private setValue(key: StorageKeyEnum, value: string) {
+		this.state[key] = value
+		return this.storage.setItem(key, value)
 	}
 }
 
-export type { ImxNetwork, ImxEnv, ImxNetworkConfig }
+enum StorageKeyEnum {
+	IMX_STARK_KEY = "IMX_STARK_KEY",
+	IMX_ADDRESS = "IMX_ADDRESS",
+	IMX_PROVIDER = "IMX_PROVIDER",
+	IMX_ETH_NETWORK = "IMX_ETH_NETWORK",
+}
+
+export type { ImxNetwork, ImxEnv, ImxNetworkConfig, ImxWalletProviderEnum }
 export { IMX_NETWORK_CONFIG, IMX_ENV_CONFIG }
