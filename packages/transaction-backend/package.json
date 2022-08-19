@@ -35,7 +35,7 @@
     "web3": "1.5.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "~0.12.73",
+    "@rarible/ethereum-sdk-test-common": "~0.12.83",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
     "@types/jest": "^27.4.1",
