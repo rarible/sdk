@@ -1,5 +1,6 @@
 import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
+import type { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
@@ -66,15 +67,14 @@ export interface FillRequest {
 
 export type FillActionTypes = "approve" | "send-tx"
 
-export interface PrepareFillResponse
-	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction> {
+interface PreparedFillInfo {
 	/**
-   * is multiple nft
-   */
+	 * is multiple nft
+	 */
 	multiple: boolean
 	/**
 	 * Maximum amount to fill (of NFTs)
-   * null is actual for orders with COLLECTION asset type
+	 * null is actual for orders with COLLECTION asset type
 	 */
 	maxAmount: BigNumber | null
 	/**
@@ -99,4 +99,31 @@ export interface PrepareFillResponse
 	supportsPartialFill: boolean
 }
 
+export interface PrepareFillResponse
+	extends AbstractPrepareResponse<FillActionTypes, FillRequest, IBlockchainTransaction>, PreparedFillInfo {
+}
+
 export type IFill = (request: PrepareFillRequest) => Promise<PrepareFillResponse>
+
+export interface IBatchBuyTransactionResult {
+	type: "BATCH_BUY"
+	results: {
+		orderId: OrderId,
+		result: boolean,
+	}[]
+}
+
+export type BatchFillSingleRequest = { orderId: OrderId } & FillRequest
+export type BatchFillRequest = BatchFillSingleRequest[]
+
+type BatchSinglePrepared = { orderId: OrderId } & PreparedFillInfo
+
+export interface PrepareBatchBuyResponse extends AbstractPrepareResponse<
+FillActionTypes,
+BatchFillRequest,
+IBlockchainTransaction<Blockchain, IBatchBuyTransactionResult>
+> {
+	prepared: BatchSinglePrepared[]
+}
+
+export type IBatchBuy = (request: PrepareFillRequest[]) => Promise<PrepareBatchBuyResponse>

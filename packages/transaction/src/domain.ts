@@ -1,9 +1,10 @@
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Blockchain } from "@rarible/api-client"
 
-interface Transaction<T extends Blockchain> {
+interface Transaction<T extends Blockchain, TransactionResult = void> {
 	blockchain: T
 	hash: string
+	result?: TransactionResult
 }
 
 export interface TransactionIndexer extends Record<Blockchain, any> {
@@ -11,7 +12,7 @@ export interface TransactionIndexer extends Record<Blockchain, any> {
 	"FLOW": FlowTransaction // @todo add typings from flow-sdk
 }
 
-export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
+export interface IBlockchainTransaction<T extends Blockchain = Blockchain, TransactionResult = undefined> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
 	/**
@@ -19,7 +20,7 @@ export interface IBlockchainTransaction<T extends Blockchain = Blockchain> {
 	 */
 	isEmpty: boolean
 	hash(): string
-	wait(): Promise<Transaction<T>>
+	wait(): Promise<Transaction<T, TransactionResult | undefined>>
 	getTxLink(): string
 }
 

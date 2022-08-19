@@ -33,6 +33,7 @@ export function createImmutablexSdk(
 		order: {
 			fill: orderService.buy,
 			buy: orderService.buy,
+			batchBuy: nonImplementedAction,
 			acceptBid: notImplemented,
 			sell: orderService.sell,
 			sellUpdate: notImplemented,

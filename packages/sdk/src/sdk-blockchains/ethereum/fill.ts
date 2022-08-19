@@ -2,6 +2,7 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import type {
+	FillBatchSingleOrderRequest,
 	FillOrderAction,
 	FillOrderRequest,
 	RaribleV2OrderFillRequestV3Buy,
@@ -15,12 +16,22 @@ import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { OrderId } from "@rarible/api-client"
+import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
+import type {
+	BatchFillRequest,
+	FillRequest,
+	IBatchBuyTransactionResult,
+	PrepareBatchBuyResponse,
+	PrepareFillRequest,
+	PrepareFillResponse,
+} from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
 	getEthereumItemId,
+	getOrderId,
 	toEthereumParts,
 	validateOrderDataV3Request,
 } from "./common"
@@ -40,10 +51,11 @@ export class EthereumFill {
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
-		private config?: IEthereumSdkConfig
+		private config?: IEthereumSdkConfig,
 	) {
 		this.fill = this.fill.bind(this)
 		this.buy = this.buy.bind(this)
+		this.batchBuy = this.batchBuy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
 	}
 
@@ -288,5 +300,98 @@ export class EthereumFill {
 
 	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		return this.commonFill(this.sdk.order.acceptBid, request)
+	}
+
+	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
+		const orders: Record<OrderId, Order> = {} // ethereum orders cache
+
+		const submit = this.sdk.order.buyBatch.around(
+			(request: BatchFillRequest) => {
+				return request.map((req) => {
+					const order = orders[req.orderId]
+					if (!order) {
+						throw new Error(`Order with id ${req.orderId} not precached`)
+					}
+
+					if (req.unwrap) {
+						throw new Error("Unwrap is not supported yet")
+					}
+
+					return this.getFillOrderRequest(order, req) as FillBatchSingleOrderRequest
+				})
+			},
+			(tx, request: BatchFillRequest) => {
+				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
+					tx,
+					this.network,
+					(receipt,
+					) => {
+						let executionEvents: any
+						for (let event of (receipt.events as any[] || [])) {
+							if ((Array.isArray(event) || "0" in event) && event[0]?.event === "Execution") {
+								executionEvents = event as any
+								break
+							} else if (event.event === "Execution") {
+								executionEvents = [event]
+								break
+							}
+						}
+
+						if (executionEvents) {
+							return {
+								type: "BATCH_BUY",
+								results: request.map((req, index) => ({
+									orderId: req.orderId,
+									result: !!executionEvents?.[index]?.returnValues["result"],
+								})),
+							}
+						} else {
+							return undefined
+						}
+					},
+				)
+			},
+		)
+
+		const prepared = await Promise.all(prepareRequest.map(async (req) => {
+			const orderHash = this.getOrderHashFromRequest(req)
+			const ethOrder = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+			const orderId = getOrderId(req)
+			orders[orderId] = ethOrder
+
+			if (ethOrder.status !== "ACTIVE") {
+				throw new Error(`Order with id ${orderId} is not active`)
+			}
+
+			if (
+				ethOrder.type !== "OPEN_SEA_V1" &&
+				ethOrder.type !== "RARIBLE_V2" &&
+				ethOrder.type !== "SEAPORT_V1" &&
+				ethOrder.type !== "LOOKSRARE"
+				//order.type !== "X2Y2"
+			) {
+				throw new Error(`Order type ${ethOrder.type} is not supported for batch buy`)
+			}
+
+			if (
+				ethOrder.make.assetType.assetClass === "ETH" ||
+				ethOrder.make.assetType.assetClass === "ERC20"
+			) {
+				throw new Error("Bid orders is not supported")
+			}
+
+			return {
+				orderId,
+				...this.getSupportFlags(ethOrder),
+				multiple: await this.isMultiple(ethOrder),
+				maxAmount: await this.getMaxAmount(ethOrder),
+				baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
+			}
+		}))
+
+		return {
+			submit,
+			prepared,
+		}
 	}
 }

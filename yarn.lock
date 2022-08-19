@@ -4790,6 +4790,20 @@
     ganache "^7.0.2"
     web3-provider-engine "^16.0.1"
 
+"@rarible/ethereum-sdk-test-common@~0.12.83":
+  version "0.12.83"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.83.tgz#82ce87d84af78f000217789c7576ba2baf1ecf07"
+  integrity sha512-jt6VDEzsbTjpwxM0QvrlsjhgNmR/Lx0D3vcxXX2Autuu5YyV3sXXSOEKFKD4MPR4u87bhXf1iGZUbRM9GTuH7A==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.12.83"
+    "@rarible/test-provider" "~0.5.0"
+    "@rarible/types" "~0.9.2"
+    "@types/web3-provider-engine" "^14.0.1"
+    eth-sig-util "^3.0.1"
+    ethereumjs-wallet "^1.0.1"
+    ganache "^7.0.2"
+    web3-provider-engine "^16.0.1"
+
 "@rarible/ethers-ethereum@^0.12.86":
   version "0.12.86"
   resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.86.tgz#29cf99dc20ec09e0b875d4ec4f17f18c32b8a8ff"

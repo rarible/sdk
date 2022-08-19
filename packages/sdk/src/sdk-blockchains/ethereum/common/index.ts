@@ -20,6 +20,7 @@ import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
+import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
@@ -272,6 +273,14 @@ export function getEthereumItemId(itemId: ItemId) {
 		contract,
 		tokenId,
 		domain,
+	}
+}
+
+export function getOrderId(fillRequest: PrepareFillRequest) {
+	if ("order" in fillRequest) {
+		return fillRequest.order.id
+	} else {
+		return fillRequest.orderId
 	}
 }
 
