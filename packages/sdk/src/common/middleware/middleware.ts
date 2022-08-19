@@ -135,7 +135,7 @@ export class Middlewarer {
 		]
 
 		for (const prop in object) {
-			if (!IGNORED_PROPS.includes(prop) && prop.endsWith("Raw") && typeof object[prop] === "function") {
+			if (!IGNORED_PROPS.includes(prop) && !prop.endsWith("Raw") && typeof object[prop] === "function") {
 				object[prop] = this.wrap(object[prop].bind(object), {
 					methodName: (meta.namespace ? meta.namespace + "." : "") + prop,
 				})
