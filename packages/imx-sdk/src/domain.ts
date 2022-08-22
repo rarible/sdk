@@ -20,7 +20,6 @@ export type ImxOrderSdk = {
 	buy(request: BuyRequest, token: Erc721AssetRequest): Promise<BuyResponse>
 	sell(request: SellRequest): Promise<SellResponse>
 	cancel(request: CancelOrderRequest): Promise<CancelOrderResponse>
-	getOrderFee(): ImxProtocolFee
 }
 
 export type ImxNftSdk = {

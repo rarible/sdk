@@ -21,10 +21,18 @@ export async function getBalance(
 	const api = new ImxBalanceControllerApi(balanceApiConfig)
 	const { result } = await api.getAllBalances({ ownerAddress: address })
 
-	const currencyBalance = result.find(b => b.symbol === assetType.assetClass)
+	if (assetType.assetClass === "ETH") {
+		const currencyBalance = result.find((b => b.token_address === ""))
 
-	if (currencyBalance) {
-		return toBn(currencyBalance.balance.toString()).dividedBy(10 ** DEFAULT_DECIMALS)
+		if (currencyBalance) {
+			return toBn(currencyBalance.balance.toString()).dividedBy(10 ** DEFAULT_DECIMALS)
+		}
+	} else if (assetType.assetClass === "ERC20") {
+		const currencyBalance = result.find(b => b.token_address?.toLowerCase() === assetType.contract.toLowerCase() )
+
+		if (currencyBalance) {
+			return toBn(currencyBalance.balance.toString()).dividedBy(10 ** DEFAULT_DECIMALS)
+		}
 	}
 
 	return toBn("0")

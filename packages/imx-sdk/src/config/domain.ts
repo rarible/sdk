@@ -8,7 +8,6 @@ export type ImxProtocolFee = {
 export type ImxSdkConfig = {
 	apiAddressV1: string
 	apiAddressV2: string
-	protocolFee: ImxProtocolFee
 }
 
 export type ImxSdkEnvConfig = Record<ImxEnv, ImxSdkConfig & ImxNetworkConfig>
