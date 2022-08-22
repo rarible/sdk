@@ -28,7 +28,7 @@ export async function getBalance(
 			return toBn(currencyBalance.balance.toString()).dividedBy(10 ** DEFAULT_DECIMALS)
 		}
 	} else if (assetType.assetClass === "ERC20") {
-		const currencyBalance = result.find(b => b.token_address === assetType.contract )
+		const currencyBalance = result.find(b => b.token_address?.toLowerCase() === assetType.contract.toLowerCase() )
 
 		if (currencyBalance) {
 			return toBn(currencyBalance.balance.toString()).dividedBy(10 ** DEFAULT_DECIMALS)
