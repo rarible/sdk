@@ -12,7 +12,7 @@ import { convertEthereumContractAddress, convertEthereumToUnionAddress } from ".
 import { awaitItem } from "./test/await-item"
 import { providerDevelopmentSettings } from "./test/common"
 
-describe.skip("mint", () => {
+describe("mint", () => {
 	const { provider, wallet } = createE2eProvider(undefined, providerDevelopmentSettings)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 

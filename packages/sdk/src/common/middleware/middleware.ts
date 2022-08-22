@@ -43,9 +43,12 @@ export class Middlewarer {
 		let wrappedCallable: any = callable
 		const callbacks = []
 
+		console.log("call fn")
 		for (const mid of this.middlewares) {
-			let cb = undefined;
-			([wrappedCallable, cb] = await mid(wrappedCallable, args))
+			// let cb = undefined
+			console.log("before mid", mid, "wrapped", wrappedCallable)
+			const [, cb] = await mid(wrappedCallable, args)
+			console.log("after mid cb", wrappedCallable, cb)
 			if (cb) {
 				callbacks.push(cb)
 			}
@@ -56,7 +59,9 @@ export class Middlewarer {
 			res = toPromise(mid(res))
 		}
 
+		console.log("after callbacks")
 		const result = await res
+		console.log("after result", result)
 		// wrapping submit methods
 		if (typeof result?.submit === "function") {
 			result.submit = this.wrap(result.submit, { methodName: callable.name + ".submit" })

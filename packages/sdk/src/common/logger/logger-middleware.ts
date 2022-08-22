@@ -6,6 +6,7 @@ import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
+import packageJson from "../../../package.json"
 
 const loggerConfig = {
 	service: "union-sdk",
@@ -85,11 +86,26 @@ export function getErrorMessageString(err: any): string {
 	}
 }
 
+export function getErrorStack(err: any): string | undefined {
+	if (err instanceof Error) {
+		return err.stack || ""
+	}
+	return undefined
+}
+
+export function getErrorLevel(callableName: string): string {
+	if (callableName.startsWith("apis.")) {
+		return "NETWORK_ERR"
+	}
+	return "ERROR"
+}
+
 export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {
 	const getContext = async () => {
 		return {
 			service: loggerConfig.service,
 			environment: sdkContext.env,
+			"@version": packageJson.version,
 			...(sdkContext.wallet ? await getWalletInfo(sdkContext.wallet) : { }),
 		}
 	}
@@ -103,10 +119,11 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 	return async (callable, args) => {
 		const time = Date.now()
 
+		console.log("args", args)
 		return [callable, async (responsePromise) => {
 			try {
 				const res = await responsePromise
-
+				console.log("success", callable, res)
 				if (logsLevel >= LogsLevel.TRACE) {
 					remoteLogger.raw({
 						level: "TRACE",
@@ -120,9 +137,10 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 			} catch (err: any) {
 				if (logsLevel >= LogsLevel.ERROR) {
 					remoteLogger.raw({
-						level: "ERROR",
+						level: getErrorLevel(callable.name),
 						method: callable.name,
 						message: getErrorMessageString(err),
+						stack: getErrorStack(err),
 						duration: (Date.now() - time) / 1000,
 						args: JSON.stringify(args),
 					})
