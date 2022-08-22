@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.22](https://github.com/rarible/sdk/compare/v0.9.21...v0.9.22) (2022-08-22)
+
+
+### Bug Fixes
+
+* correct getBalance for imx ([#319](https://github.com/rarible/sdk/issues/319)) ([fe906d2](https://github.com/rarible/sdk/commit/fe906d2a2833c8394cb076214bcd7e1938f790b4))
+
+
+
+
+
+## [0.9.21](https://github.com/rarible/sdk/compare/v0.9.20...v0.9.21) (2022-08-19)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
 ## [0.9.20](https://github.com/rarible/sdk/compare/v0.9.19...v0.9.20) (2022-08-17)
 
 

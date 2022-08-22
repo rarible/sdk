@@ -11,7 +11,8 @@ export interface GetAllBalancesResponse {
 		"symbol": string,
 		"balance": BigNumberT,
 		"preparing_withdrawal": string,
-		"withdrawable": string
+		"token_address": string,
+		"withdrawable": string,
 	}[],
 	"cursor": string
 }

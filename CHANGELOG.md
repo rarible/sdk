@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.22](https://github.com/rarible/sdk/compare/v0.9.21...v0.9.22) (2022-08-22)
+
+
+### Bug Fixes
+
+* correct getBalance for imx ([#319](https://github.com/rarible/sdk/issues/319)) ([fe906d2](https://github.com/rarible/sdk/commit/fe906d2a2833c8394cb076214bcd7e1938f790b4))
+
+
+
+
+
+## [0.9.21](https://github.com/rarible/sdk/compare/v0.9.20...v0.9.21) (2022-08-19)
+
+
+### Bug Fixes
+
+* example polygon deploy fails ([#317](https://github.com/rarible/sdk/issues/317)) ([16e12cc](https://github.com/rarible/sdk/commit/16e12ccb74e1abde330187ed78428b3d29dbfecb))
+
+
+### Features
+
+* add iframe support for imx-wallet, simplify things ([6f1a46e](https://github.com/rarible/sdk/commit/6f1a46e6e88b7be83a9cb80f8b9886a843713e57))
+
+
+
+
+
 ## [0.9.20](https://github.com/rarible/sdk/compare/v0.9.19...v0.9.20) (2022-08-17)
 
 

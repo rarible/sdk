@@ -1,8 +1,14 @@
+import type { Link } from "@imtbl/imx-sdk"
+
 export type ImxNetwork = "mainnet" | "ropsten"
 export type ImxEnv = "dev" | "prod"
 
-export type ImxWalletProviderName = "METAMASK" | "MAGIC_LINK" | "WALLET_CONNECT" | "NONE"
-
+export enum ImxWalletProviderEnum {
+	METAMASK = "METAMASK",
+	MAGIC_LINK = "MAGIC_LINK",
+	WALLET_CONNECT = "WALLET_CONNECT",
+	NONE = "NONE"
+}
 
 export type ImxNetworkConfig = {
 	network: ImxNetwork
@@ -17,6 +23,11 @@ export type ImxConnectResult = {
 	ethNetwork: string
 	providerPreference: string
 	starkPublicKey: string
+}
+
+export type ImxConnectionData = ImxConnectResult & {
+	link: Link
+	status: ImxWalletConnectionStatus
 }
 
 export type ImxWalletConnectionStatus = "connected" | "disconnected"

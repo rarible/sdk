@@ -6,18 +6,10 @@ export const IMX_CONFIG: Record<ImxNetwork, ImxSdkConfig> = {
 	mainnet: {
 		apiAddressV1: "https://api.x.immutable.com/v1",
 		apiAddressV2: "https://api.x.immutable.com/v2",
-		protocolFee: {
-			sellerFee: 0,
-			buyerFee: 200, // imx service fee
-		},
 	},
 	ropsten: {
 		apiAddressV1: "https://api.ropsten.x.immutable.com/v1",
 		apiAddressV2: "https://api.ropsten.x.immutable.com/v2",
-		protocolFee: {
-			sellerFee: 0,
-			buyerFee: 200, // imx service fee
-		},
 	},
 }
 

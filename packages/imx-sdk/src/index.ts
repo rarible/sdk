@@ -5,7 +5,6 @@ import type { RaribleImxSdk } from "./domain"
 import { transfer } from "./nft/transfer"
 import { buy, cancel, sell } from "./order"
 import { burn } from "./nft/burn"
-import { getProtocolFee } from "./common/get-protocol-fee"
 import { getBalance } from "./balance/balance"
 import type { Erc721AssetRequest } from "./nft/domain"
 
@@ -19,7 +18,6 @@ export function createImxSdk(link: Maybe<Link>, environment: ImxEnv): RaribleImx
 			sell: sell.bind(null, link),
 			buy: buy.bind(null, environment, link),
 			cancel: cancel.bind(null, link),
-			getOrderFee: getProtocolFee.bind(null, environment),
 		},
 		balance: {
 			getBalance: getBalance.bind(null, environment),
