@@ -30,6 +30,9 @@ export function Navigation() {
 		label: "Buy",
 		path: "/buy"
 	}, {
+		label: "Batch Buy",
+		path: "/batch-buy"
+	}, {
 		label: "Bid",
 		path: "/bid"
 	}, {

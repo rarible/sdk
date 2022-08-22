@@ -4,7 +4,7 @@ import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { SolanaSdk } from "@rarible/solana-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
-import { nonImplementedAction } from "../../common/not-implemented"
+import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
 import { MethodWithPrepare } from "../../types/common"
@@ -52,6 +52,7 @@ export function createSolanaSdk(
 		order: {
 			fill: { prepare: fillService.fill },
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
 			sell: new MethodWithPrepare(orderService.sellBasic, orderService.sell),
 			sellUpdate: new MethodWithPrepare(orderService.sellUpdateBasic, orderService.sellUpdate),

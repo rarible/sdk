@@ -20,6 +20,7 @@ import { BurnPage } from "./pages/burn/burn-page"
 import { TransferPage } from "./pages/transfer/transfer-page"
 import { BalancePage } from "./pages/balance/balance-page"
 import { CancelPage } from "./pages/cancel/cancel-page"
+import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 
 export function App() {
 	return (
@@ -52,6 +53,7 @@ export function App() {
 									<Route path="buy" element={<BuyPage/>}>
 										<Route path=":orderId" element={<BuyPage/>}/>
 									</Route>
+									<Route path="batch-buy" element={<BatchBuyPage/>}/>
 									<Route path="bid" element={<BidPage/>}>
 										<Route path=":itemId" element={<BidPage/>}/>
 									</Route>

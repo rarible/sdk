@@ -3,7 +3,7 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainImmutableXTransaction } from "@rarible/sdk-transaction"
 import { toAddress, toBigNumber, toOrderId } from "@rarible/types"
 import type { OrderId } from "@rarible/api-client"
-import { OrderStatus } from "@rarible/api-client"
+import { Blockchain, OrderStatus } from "@rarible/api-client"
 import { Action } from "@rarible/action"
 import type { Erc721AssetRequest } from "@rarible/immutable-sdk"
 import type { IApisSdk } from "../../domain"
@@ -13,8 +13,7 @@ import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../..
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
-import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
-import type { ICancel } from "../../types/order/cancel"
+import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import { getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
 
@@ -57,7 +56,7 @@ export class ImxOrderService {
 					takeAssetType: getTakeAssetType(request.currency),
 				})
 
-				return toOrderId("IMMUTABLEX:" + res.orderId)
+				return toOrderId(`${Blockchain.IMMUTABLEX}:${res.orderId}`)
 			},
 		})
 

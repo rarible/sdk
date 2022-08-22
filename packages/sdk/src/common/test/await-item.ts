@@ -3,5 +3,5 @@ import type { IRaribleSdk } from "../../domain"
 import { retry } from "../retry"
 
 export async function awaitItem(sdk: IRaribleSdk, itemId: ItemId) {
-	return retry(10, 2000, () => sdk.apis.item.getItemById({ itemId }))
+	return retry(40, 1000, () => sdk.apis.item.getItemById({ itemId }))
 }

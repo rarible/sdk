@@ -22,6 +22,7 @@ import type { OrderRequest } from "packages/sdk/src/types/order/common"
 import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
 import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
+import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
@@ -286,6 +287,14 @@ export function getOrderAmount(orderAmount: OrderRequest["amount"], collection: 
 		throw new Error("You should set amount of asset")
 	}
 	return amount
+}
+
+export function getOrderId(fillRequest: PrepareFillRequest) {
+	if ("order" in fillRequest) {
+		return fillRequest.order.id
+	} else {
+		return fillRequest.orderId
+	}
 }
 
 export * from "./validators"

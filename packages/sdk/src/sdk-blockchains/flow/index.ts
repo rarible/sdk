@@ -56,6 +56,7 @@ export function createFlowSdk(
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
+			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.buy),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),

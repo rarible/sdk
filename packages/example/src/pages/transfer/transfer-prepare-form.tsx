@@ -31,7 +31,7 @@ export function TransferPrepareForm({ itemId, disabled, onComplete }: ITransferP
 					return
 				}
 				try {
-					onComplete(await connection.sdk.nft.transfer({
+					onComplete(await connection.sdk.nft.transfer.prepare({
 						itemId: toItemId(formData.itemId)
 					}))
 					navigate(`/transfer/${formData.itemId}`, {})

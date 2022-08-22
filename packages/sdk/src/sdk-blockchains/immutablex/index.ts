@@ -33,6 +33,7 @@ export function createImmutablexSdk(
 		order: {
 			fill: { prepare: orderService.buy },
 			buy: new MethodWithPrepare(orderService.buyBasic, orderService.buy),
+			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
 			acceptBid: new MethodWithPrepare(orderService.acceptBidBasic, orderService.buy),
 			sell: new MethodWithPrepare(orderService.sellBasic, orderService.sell),
 			sellUpdate: new MethodWithPrepare(notImplemented, notImplemented),

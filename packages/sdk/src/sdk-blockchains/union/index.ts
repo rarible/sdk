@@ -13,7 +13,7 @@ import type {
 } from "../../domain"
 import { getCollectionId } from "../../index"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
-import type { PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { BatchFillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
@@ -42,6 +42,7 @@ import { extractBlockchain } from "../../common/extract-blockchain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
+import type { IBatchBuy } from "../../types/order/fill"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -89,7 +90,6 @@ export function createUnionSdk(
 	}
 }
 
-
 class UnionOrderSdk implements IOrderInternalSdk {
   bid: IBid
   bidUpdate: IBidUpdate
@@ -99,6 +99,7 @@ class UnionOrderSdk implements IOrderInternalSdk {
    */
   fill: IFill
   buy: IBuy
+  batchBuy: IBatchBuy
   acceptBid: IAcceptBid
   sell: ISellInternal
   sellUpdate: ISellUpdate
@@ -129,6 +130,16 @@ class UnionOrderSdk implements IOrderInternalSdk {
   		(request) =>
   			instances[extractBlockchain(getOrderId(request))].buy.prepare(request),
   	)
+
+  	this.batchBuy = new MethodWithPrepare(
+  		(requests) => {
+  			return instances[getBatchRequestBlockchain(requests)].batchBuy(requests)
+  		},
+  		(requests) => {
+  			return instances[getBatchRequestBlockchain(requests)].batchBuy.prepare(requests)
+  		}
+  	)
+
   	this.acceptBid = new MethodWithPrepare(
   		(request) =>
   			instances[extractBlockchain(getOrderId(request))].acceptBid(request),
@@ -313,6 +324,7 @@ function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
 					case "SOLANA_SOL": return Blockchain.SOLANA
 					case "ETH": return Blockchain.ETHEREUM
 					case "XTZ": return Blockchain.TEZOS
+					default:
 				}
 			}
 		}
@@ -325,4 +337,14 @@ function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
 		return currencyOrOrder.blockchain
 	}
 
+}
+
+function getBatchRequestBlockchain(requests: BatchFillRequest | PrepareFillRequest[]): Blockchain {
+	const blockchain = extractBlockchain(getOrderId(requests[0]))
+	for (let req of requests) {
+		if (extractBlockchain(getOrderId(req)) !== blockchain) {
+			throw new Error("All orders should be in same blockchain")
+		}
+	}
+	return blockchain
 }

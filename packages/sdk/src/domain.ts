@@ -3,7 +3,6 @@ import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
-import type { IUploadMeta } from "./types/nft/mint/prepare"
 import type {
 	IDepositBiddingBalance,
 	IGetBiddingBalance,
@@ -30,6 +29,8 @@ import type { IBid, IBidUpdate } from "./types/order/bid"
 import type { ICancel } from "./types/order/cancel"
 import type { ISellInternal } from "./types/order/sell"
 import type { IEthereumSdkConfig } from "./sdk-blockchains/ethereum/domain"
+import type { IUploadMeta } from "./types/nft/mint/prepare"
+import type { IBatchBuy } from "./types/order/fill"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -94,6 +95,7 @@ export interface IOrderSdk {
 	fill: IFill
 	buy: IBuy
 	acceptBid: IAcceptBid
+	batchBuy: IBatchBuy
 	bid: IBid
 	bidUpdate: IBidUpdate
 	cancel: ICancel

@@ -31,7 +31,7 @@ export function BurnPrepareForm({ itemId, disabled, onComplete }: IBurnPrepareFo
 					return
 				}
 				try {
-					onComplete(await connection.sdk.nft.burn({
+					onComplete(await connection.sdk.nft.burn.prepare({
 						itemId: toItemId(formData.itemId)
 					}))
 					navigate(`/burn/${formData.itemId}`, {})

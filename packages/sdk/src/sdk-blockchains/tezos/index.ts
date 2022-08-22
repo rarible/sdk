@@ -52,6 +52,7 @@ export function createTezosSdk(
 		order: {
 			fill: { prepare: fillService.fill },
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),

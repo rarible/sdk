@@ -77,8 +77,8 @@ export class FlowBuy {
 			supportsPartialFill: false,
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
-      maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-      submit,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+			submit,
 		}
 	}
 

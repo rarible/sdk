@@ -22,7 +22,7 @@
     "@rarible/connector": "^0.9.12",
     "@rarible/connector-beacon": "^0.9.12",
     "@rarible/connector-fcl": "^0.9.12",
-    "@rarible/estimate-middleware": "^0.9.4",
+    "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/sdk-wallet": "^0.9.19",
     "@rarible/tezos-sdk": "0.1.32",
     "@rarible/web3-ethereum": "^0.12.83"
