@@ -4769,19 +4769,12 @@
   dependencies:
     eth-sig-util "^3.0.0"
 
-"@rarible/ethereum-sdk-test-common@~0.12.83":
-  version "0.12.83"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-sdk-test-common/-/ethereum-sdk-test-common-0.12.83.tgz#82ce87d84af78f000217789c7576ba2baf1ecf07"
-  integrity sha512-jt6VDEzsbTjpwxM0QvrlsjhgNmR/Lx0D3vcxXX2Autuu5YyV3sXXSOEKFKD4MPR4u87bhXf1iGZUbRM9GTuH7A==
+"@rarible/ethereum-provider@^0.12.87":
+  version "0.12.87"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.87.tgz#a160f7ee931513dc6626d3d97462a6d534525455"
+  integrity sha512-Bra35Z/HKmJ6w+lio7rbk9meFR3m+zVb0ypaiiaxENazNsD/a6/pI91T/P7317iKNYIHMOugPOdVww8Q7/t5kg==
   dependencies:
-    "@rarible/ethereum-provider" "^0.12.83"
-    "@rarible/test-provider" "~0.5.0"
-    "@rarible/types" "~0.9.2"
-    "@types/web3-provider-engine" "^14.0.1"
-    eth-sig-util "^3.0.1"
-    ethereumjs-wallet "^1.0.1"
-    ganache "^7.0.2"
-    web3-provider-engine "^16.0.1"
+    eth-sig-util "^3.0.0"
 
 "@rarible/ethereum-sdk-test-common@~0.12.83":
   version "0.12.83"
@@ -4860,14 +4853,14 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.86":
-  version "0.12.86"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.86.tgz#c914d97b6cf1d19cdf9d75ca751d00399d346b2d"
-  integrity sha512-gR/MVZwNHsQuhdBPuTfKU8NRh4ktrjR8heNciwKtSkajUwN5EijWJ1RgZBXCSfCPxjtakbhLE0mNvrYRXUSmBQ==
+"@rarible/protocol-ethereum-sdk@~0.12.87":
+  version "0.12.87"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.87.tgz#b5e0ecf3e823ef09ed95643784bc72a3670fab17"
+  integrity sha512-MjLxXwKcXYolOJAwnMyORdFF/MClaAOKAKRrcnqnPLoyVMhlK3pEzet0SDQBDw7As/Hgue9ZewAUlVcE5MASvA==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.23-beta5"
-    "@rarible/ethereum-provider" "^0.12.83"
+    "@rarible/ethereum-provider" "^0.12.87"
     "@rarible/logger" "~0.6.2"
     "@rarible/utils" "~0.5.0"
     axios "^0.25.0"
