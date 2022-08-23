@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+
+### Features
+
+* better wallet detection ([0637a0c](https://github.com/rarible/sdk/commit/0637a0caa3bbbed5cbd78fc54520212938036f74))
+* simplify create sdk ([3aa3714](https://github.com/rarible/sdk/commit/3aa37146c880254ddc5b6cd539b5d03db07d4af4))
+
+
+
+
+
 ## [0.9.21](https://github.com/rarible/sdk/compare/v0.9.20...v0.9.21) (2022-08-19)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

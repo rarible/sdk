@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.9.21",
+  "version": "0.10.0-beta.0",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -18,18 +18,18 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@ethersproject/abstract-signer": "^5.4.0",
     "@babel/runtime": "^7.15.4",
+    "@ethersproject/abstract-signer": "^5.4.0",
     "@imtbl/imx-sdk": "^1.24.0",
     "@rarible/api-client": "0.0.13-beta11",
     "@rarible/ethereum-provider": "~0.12.83",
-    "@rarible/web3-ethereum": "~0.12.83",
     "@rarible/ethers-ethereum": "~0.12.83",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
-    "@rarible/solana-wallet": "^0.9.12",
+    "@rarible/solana-wallet": "^0.10.0-beta.0",
     "@rarible/tezos-sdk": "~0.1.32",
-    "@rarible/types": "~0.9.6"
+    "@rarible/types": "~0.9.6",
+    "@rarible/web3-ethereum": "~0.12.83"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
