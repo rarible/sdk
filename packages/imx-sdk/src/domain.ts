@@ -10,7 +10,6 @@ import type {
 	SellResponse,
 } from "./order/domain"
 import type { BalanceRequestAssetType } from "./balance/balance"
-import type { ImxProtocolFee } from "./config/domain"
 
 export type ImxFee = { recipient: string, percentage: number }
 
