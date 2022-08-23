@@ -14,7 +14,7 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
-import { getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
+import { calcBuyerBaseFee, getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
 
 export class ImxOrderService {
@@ -65,7 +65,7 @@ export class ImxOrderService {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: getCurrencies(),
-			baseFee: 0,
+			baseFee: 200, // in reality is not taken from the seller, but it needs to display fees correctly
 			supportsExpirationDate: false,
 			submit: submit,
 		}
@@ -110,7 +110,7 @@ export class ImxOrderService {
 		return {
 			multiple: false,
 			maxAmount: order.makeStock,
-			baseFee: 0,
+			baseFee: calcBuyerBaseFee(order),
 			supportsPartialFill: false,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			originFeeSupport: OriginFeeSupport.FULL,

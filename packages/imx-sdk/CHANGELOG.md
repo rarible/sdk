@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.23](https://github.com/rarible/sdk/compare/v0.9.22...v0.9.23) (2022-08-23)
+
+
+### Bug Fixes
+
+* change baseFee for imx ([#320](https://github.com/rarible/sdk/issues/320)) ([46c0e49](https://github.com/rarible/sdk/commit/46c0e49a717c894f3a97622a26dd06ed48cbe2b0))
+
+
+
+
+
 ## [0.9.22](https://github.com/rarible/sdk/compare/v0.9.21...v0.9.22) (2022-08-22)
 
 
