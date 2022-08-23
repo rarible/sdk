@@ -6,13 +6,15 @@ import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
+import type { ImxWallet } from "@rarible/immutable-wallet"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
 import type { BlockchainWallet } from "./"
 import { isBlockchainWallet } from "./"
+import { ImmutableXWallet } from "./"
 
 export type BlockchainProvider = Ethereum | SolanaWalletProvider | TezosProvider | Fcl
 type EtherSigner = TypedDataSigner & Signer
-export type EthereumProvider = Web3 | EtherSigner
+export type EthereumProvider = Web3 | EtherSigner | ImxWallet
 export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider
 
 export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet {
@@ -24,6 +26,7 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
 	if (isSolanaProvider(provider)) return new SolanaWallet(provider)
 	if (isTezosProvider(provider)) return new TezosWallet(provider)
 	if (isFlowProvider(provider)) return new FlowWallet(provider)
+	if (isImxWallet(provider)) return new ImmutableXWallet(provider)
 
 	if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
 	if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
@@ -53,4 +56,8 @@ function isWeb3(x: any): x is Web3 {
 
 function isEthersSigner(x: any): x is EtherSigner {
 	return "provider" in x && "signMessage" in x && "signTransaction" in x && x._isSigner && "_signTypedData" in x
+}
+
+function isImxWallet(x: any): x is ImxWallet {
+	return "link" in x && "network" in x && "getConnectionData" in x
 }
