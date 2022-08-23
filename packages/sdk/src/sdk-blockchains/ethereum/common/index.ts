@@ -2,7 +2,8 @@ import type { Address, UnionAddress, Word } from "@rarible/types"
 import {
 	toAddress,
 	toBigNumber,
-	toBinary, toCollectionId,
+	toBinary,
+	toCollectionId,
 	toContractAddress,
 	toItemId,
 	toOrderId,
@@ -20,10 +21,9 @@ import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { OrderRequest } from "packages/sdk/src/types/order/common"
 import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
-import type { CurrencyType } from "../../../common/domain"
-import type { RequestCurrencyAssetType } from "../../../common/domain"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
+import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
 export const EVMBlockchains: EVMBlockchain[] = [
@@ -207,8 +207,7 @@ export function getSupportedCurrencies(
 }
 
 /**
- * Return true if blockchain works like ethereum blockchain
- * @param blockchain
+ * @internal
  */
 export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
 	for (const b of EVMBlockchains) {

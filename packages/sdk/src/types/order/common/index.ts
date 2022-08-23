@@ -6,6 +6,14 @@ import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../
 import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 import type { MaxFeesBasePointSupport } from "../fill/domain"
 
+
+/**
+ * Item identifier to sell or bid
+ * @property {ItemId} itemId - item id
+ * @example
+ * import { toItemId } from "@rarible/types"
+ * const itemId = toItemId("ETHEREUM:0x395d7e3a4c0cc8fb8d19dcd0b010da43a7a98c9b:44188")
+ */
 export type PrepareOrderRequest = {
 	/**
 	 * Item identifier to sell or bid
@@ -13,11 +21,31 @@ export type PrepareOrderRequest = {
 	itemId: ItemId
 }
 
+/**
+ * - account account address with blockchain prefix "ETHEREUM:0x.."
+ * - value base fee value in basis points 0...10000, where 0 = 0% and 10000 = 100%
+ * @example
+ * ```typescript
+ * import { toUnionAddress } from "@rarible/types"
+ * const part = [{
+ * 	account: toUnionAddress("ETHEREUM:0x.."),
+ * 	value: 500
+ * }]
+ * ```
+ */
 export type UnionPart = {
 	account: UnionAddress
 	value: number
 }
 
+/**
+ * @property {(request: OrderRequest) => OrderId} submit function for place an order
+ * @property {CurrencyType[]} supportedCurrencies list of the supported currencies
+ * @property {number} baseFee base fee value in basis points 0...10000
+ * @property {OriginFeeSupport} originFeeSupport is support originFee
+ * @property {PayoutsSupport} payoutsSupport is support payouts
+ * @property {boolean} supportsExpirationDate is support expiration date
+ */
 export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", T, OrderId> & {
 	/**
 	 * currencies supported by the blockchain
@@ -65,6 +93,13 @@ export interface PrepareOrderInternalResponse extends BasePrepareOrderResponse<O
 
 /**
  * Request to create a sell-order or bid-order
+ *
+ * @property {number} amount amount to sell
+ * @property {BigNumberValue} price sell price
+ * @property {RequestCurrency} currency currency
+ * @property {UnionPart[]} [originFees] origin fees
+ * @property {UnionPart[]} [payouts] payouts
+ * @property {Date} [expirationDate] order expiration date
  */
 export type OrderRequest = {
 	/**
@@ -134,6 +169,9 @@ export type PrepareOrderUpdateRequest = {
 	orderId: OrderId
 }
 
+/**
+ * Price BigNumberValue
+ */
 export type OrderUpdateRequest = {
 	price: BigNumberValue
 }

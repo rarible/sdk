@@ -33,4 +33,10 @@ export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", Bur
 	maxAmount: BigNumber
 }
 
+/**
+ * Burn token
+ * -
+ * @param request
+ * @returns promise of {@link PrepareBurnResponse>}
+ */
 export type IBurnPrepare = (request: PrepareBurnRequest) => Promise<PrepareBurnResponse>

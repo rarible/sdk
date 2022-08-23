@@ -66,7 +66,9 @@ export class MetaUploader {
 			})),
 		} as PreprocessMetaRequest
 		if (metadataRequest.blockchain === "SOLANA") {
-			metadataRequest.royalties = this.getRoyalties(royalty, toUnionAddress(accountAddress))
+			if (royalty) {
+				metadataRequest.royalties = this.getRoyalties(royalty, toUnionAddress(accountAddress))
+			}
 		}
 
 		const metadata = this.preprocessMeta(metadataRequest)

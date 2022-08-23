@@ -6,4 +6,9 @@ export type CancelOrderRequest = {
 	orderId: OrderId
 }
 
+/**
+ * Cancel order action
+ * @example
+ * const tx = await sdk.order.cancel.start({ orderId }).runAll()
+ */
 export type ICancelAction = Action<"send-tx", CancelOrderRequest, IBlockchainTransaction>

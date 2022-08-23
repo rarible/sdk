@@ -30,6 +30,25 @@ import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 
+/**
+ * @module
+ */
+
+/**
+ * Rarible sdk creation function
+ *
+ * @param provider undefined or BlockchainWallet
+ * wallet can instantiate from @rarible/sdk-wallet package
+ * @param env the environment that the sdk will interact with.
+ * @param [config] config
+ * @returns {IRaribleSdk} {@link IRaribleSdk}
+ *
+ * @example
+ * ```typescript
+ *    const web3 = new Web3(provider)
+ *    const sdk = createRaribleSdk(web3, "prod")
+ * ```
+ */
 export function createRaribleSdk(
 	provider: Maybe<RaribleSdkProvider>,
 	env: RaribleSdkEnvironment,
@@ -218,6 +237,9 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 		})
 }
 
+/**
+ * @internal
+ */
 export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
 	if ("collection" in req) {
 		return req.collection.id

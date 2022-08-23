@@ -671,7 +671,7 @@ See how to use common SDK functionality in our [documentation](https://docs.rari
 
 ## Troubleshooting
 
-Possible errors after `npm install -D @rarible/sdk` command:
+Possible errors after `yarn add @rarible/sdk` command:
 
 <details>
   <summary>Failed to replace env in config: ${NPM_TOKEN}</summary>

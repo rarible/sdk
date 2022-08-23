@@ -12,6 +12,14 @@ export interface TransactionIndexer extends Record<Blockchain, any> {
 	"FLOW": FlowTransaction // @todo add typings from flow-sdk
 }
 
+/**
+ *
+ * @property {Blockchain} blockchain blockchain name enum
+ * @property {TransactionIndexer[Blockchain]} transaction transaction object
+ * @property {string} hash transaction hash
+ * @property {() => Promise<Transaction>} wait wait for transaction
+ * @property {string} getTxLink transaction details link
+ */
 export interface IBlockchainTransaction<T extends Blockchain = Blockchain, TransactionResult = undefined> {
 	blockchain: T
 	transaction: TransactionIndexer[T]
