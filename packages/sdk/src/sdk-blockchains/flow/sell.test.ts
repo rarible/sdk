@@ -40,7 +40,9 @@ describe("Flow sell", () => {
 
 	test("Should sell flow NFT item with CurrencyId", async () => {
 		const itemId = await createTestItem(mint)
+		console.log("itemid", itemId)
 		const orderId = await sellItemWithCurrencyId(sell, itemId, "0.1")
+		console.log("order id", orderId)
 		const order = await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
 		const takeAssetType = order.take.type as FlowAssetTypeFt
 		expect(takeAssetType["@type"]).toEqual("FLOW_FT")

@@ -7,6 +7,7 @@ import { IMX_ENV_CONFIG } from "../config/env"
 import { ImxTradesControllerApi } from "../apis/trades"
 import type { Erc721AssetRequest } from "../nft/domain"
 import { retry } from "../common/utils"
+import type { ImxApis } from "../apis"
 import type {
 	BuyRequest,
 	BuyResponse,
@@ -42,6 +43,7 @@ export async function sell(
 export async function buy(
 	env: ImxEnv,
 	link: Maybe<Link>,
+	apis: ImxApis,
 	request: BuyRequest,
 	token: Erc721AssetRequest
 ): Promise<BuyResponse> {
@@ -62,10 +64,7 @@ export async function buy(
 	let txId = undefined
 	try {
 		txId = await retry(20, 2000, async () => {
-			const { apiAddressV1 } = IMX_ENV_CONFIG[env]
-			const balanceApiConfig = new Configuration({ basePath: apiAddressV1 })
-			const api = new ImxTradesControllerApi(balanceApiConfig)
-			const { result } = await api.getTrades({
+			const { result } = await apis.trades.getTrades({
 				tokenType: token.assetClass,
 				tokenAddress: token.contract,
 				tokenId: token.tokenId,

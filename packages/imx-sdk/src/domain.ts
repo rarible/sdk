@@ -1,5 +1,6 @@
 import type { Address } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
+import type { ConfigurationParameters } from "@rarible/ethereum-api-client/build/runtime"
 import type { Erc721AssetRequest, TransferRequest, TransferResponse } from "./nft/domain"
 import type {
 	BuyRequest,
@@ -36,4 +37,8 @@ export type RaribleImxSdk = {
 
 export type ImxBalancesSdk = {
 	getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumberValue>
+}
+
+export type ImxSdkConfig = {
+	apiClientParams?: ConfigurationParameters
 }

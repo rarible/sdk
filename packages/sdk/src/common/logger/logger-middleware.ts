@@ -3,6 +3,7 @@ import type { LoggableValue } from "@rarible/logger/build/domain"
 import { WalletType } from "@rarible/sdk-wallet"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import axios from "axios"
+import { LogLevel } from "@rarible/logger/build/domain"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -93,11 +94,24 @@ export function getErrorStack(err: any): string | undefined {
 	return undefined
 }
 
-export function getErrorLevel(callableName: string): string {
+export type ErrorLevel = LogLevel | "NETWORK_ERR"
+
+export function getErrorLevel(callableName: string, err: any): ErrorLevel {
 	if (callableName.startsWith("apis.")) {
 		return "NETWORK_ERR"
 	}
-	return "ERROR"
+	if (isCancelledTx(err)) {
+		return LogLevel.WARN
+	}
+	return LogLevel.ERROR
+}
+
+function isCancelledTx(err: any): boolean {
+	if (err?.message === "MetaMask Tx Signature: User denied transaction signature.") {
+		return true
+	}
+
+	return false
 }
 
 export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {
@@ -119,14 +133,14 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 	return async (callable, args) => {
 		const time = Date.now()
 
-		console.log("args", args)
+		console.log("args", args, packageJson.version)
 		return [callable, async (responsePromise) => {
 			try {
 				const res = await responsePromise
-				console.log("success", callable, res)
+				console.log("success log", callable, res)
 				if (logsLevel >= LogsLevel.TRACE) {
 					remoteLogger.raw({
-						level: "TRACE",
+						level: LogLevel.TRACE,
 						method: callable.name,
 						message: "trace of " + callable.name,
 						duration: (Date.now() - time) / 1000,
@@ -135,15 +149,21 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 					})
 				}
 			} catch (err: any) {
+				console.log("error log", callable, err)
 				if (logsLevel >= LogsLevel.ERROR) {
-					remoteLogger.raw({
-						level: getErrorLevel(callable.name),
+					const data = {
+						level: getErrorLevel(callable.name, err),
 						method: callable.name,
 						message: getErrorMessageString(err),
 						stack: getErrorStack(err),
 						duration: (Date.now() - time) / 1000,
 						args: JSON.stringify(args),
-					})
+						requestAddress: undefined,
+					}
+					if (data.level === "NETWORK_ERR") {
+						data.requestAddress = err?.value?.url
+					}
+					remoteLogger.raw(data)
 				}
 			}
 

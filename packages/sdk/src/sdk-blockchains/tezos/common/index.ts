@@ -25,8 +25,7 @@ import type { Part } from "@rarible/tezos-common"
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
-import {
-	Configuration,
+import type {
 	NftCollectionControllerApi,
 	NftItemControllerApi,
 	NftOwnershipControllerApi,
@@ -94,19 +93,6 @@ export type TezosMetaAttribute = {
 }
 
 export const XTZ_DECIMALS = 6
-
-export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
-	const config = new Configuration({
-		basePath: getTezosBasePath(network),
-	})
-
-	return {
-		collection: new NftCollectionControllerApi(config),
-		item: new NftItemControllerApi(config),
-		ownership: new NftOwnershipControllerApi(config),
-		order: new OrderControllerApi(config),
-	}
-}
 
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
