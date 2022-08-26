@@ -114,7 +114,7 @@ export function getTezosBasePath(network: TezosNetwork): string {
 			return "https://test-tezos-api.rarible.org"
 		}
 		case "dev": {
-			return "https://dev-tezos-api.rarible.org"
+			return "http://dev-tezos-api.rarible.int"
 		}
 		case "mainnet": {
 			return "https://tezos-api.rarible.org"
@@ -183,20 +183,20 @@ export function getMaybeTezosProvider(
 					chain_id: "NetXfHjxW3qBoxi",
 					auction: "KT1L8u1GMiKSARujxwQHfMtJTkMBSonQ7FSv",
 					auction_storage: "KT1RtFbGfSbgNVuN9cfvrzhoHcq9CSUH3uMf",
-					node_url: "https://dev-tezos-node.rarible.org",
+					node_url: "http://tezos-node.dev.rarible.int",
 					sales: "KT1PFCwtC28QJZtsMDi8Gu9ezJydZ812y8Yi",
 					sales_storage: "KT1KJav7CC8ieoLfdpeeDpo7pQbKCJDNP2a6",
 					transfer_manager: "KT1RAjXqJm4MPf1MQr4NdinupYc3NxNaykaz",
 					bid: "KT1Wt3C7M7nJuuA83Ukr572vFc5uk6QJwePZ",
 					bid_storage: "KT1KJRo2tiFBXZnzTJAVxrPnn2jW3LVCZSii",
 					sig_checker: "KT1EiyFnYEGUtfMLKBcWnYzJ95d1hakR5qaX",
-					tzkt: "https://dev-tezos-tzkt.rarible.org",
+					tzkt: "http://tezos-tzkt.dev.rarible.int",
 					dipdup: "https://dev-tezos-indexer.rarible.org/v1/graphql",
 					union_api: "https://dev-api.rarible.org/v0.1",
 					objkt_sales_v2: "KT1X1sxF2kqNKMKcNatbrx3d5M11LhSthQ3L",
 					royalties_provider: "KT1ABvSRv27WymHYAyuEVnYktdhiPy3kThjk",
-					hen_marketplace: "KT1BCcHJuWyKCWE4q6wJwnaPqfifhm3bWTpS",
-					hen_objkts: "KT1EFwQpD522Vfw7LykZkwbtRXghetRP5jNH",
+					hen_marketplace: "KT1MoWbKvxhsuckLUnQUPjrnGRugiret3pSQ",
+					hen_objkts: "KT1E59fZ5vxx67h8spyQqT8nC3k9scmBBkkd",
 				},
 			}
 		}
