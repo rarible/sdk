@@ -150,7 +150,7 @@ export class TezosFill {
 		let legacyOrders = await get_legacy_orders(
 			provider.config,
 			{ data: true },
-			{ order_id: getTezosOrderId(order.id) }
+			{ order_id: [getTezosOrderId(order.id)] }
 		)
 		if (!legacyOrders.length) {
 			throw new Error("Tezos v1 orders has not been found")
@@ -164,7 +164,7 @@ export class TezosFill {
 			provider,
 			preparedOrder,
 			request,
-			fillRequest.unwrap
+			//fillRequest.unwrap
 		)
 		return new BlockchainTezosTransaction(fillResponse, this.network)
 	}
