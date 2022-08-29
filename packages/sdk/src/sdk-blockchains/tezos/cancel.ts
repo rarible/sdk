@@ -49,7 +49,7 @@ export class TezosCancel {
 				this.provider.config, {
 					data: true,
 				}, {
-					order_id: getTezosOrderId(order.id),
+					order_id: [getTezosOrderId(order.id)],
 				})
 
 			if (!legacyOrders.length) {
