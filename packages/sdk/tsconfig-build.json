@@ -1,8 +1,13 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
-    "outDir": "build",
+    "rootDir": "./src",
+    "outDir": "./build",
+    "baseUrl": ".",
+    "composite": true,  // required on the dependency project for references to work
+    "moduleResolution": "node",
+    "esModuleInterop": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts", "src/**/test/**/*"]
+  "exclude": ["src/**/*.test.ts", "src/**/test/**/*"],
 }

@@ -43,7 +43,6 @@ export function getErrorHandlerMiddleware(
 					json = await context.response.json()
 				} catch (e) {}
 				if (json) {
-					console.log("status", json, ErrorConstructor)
 					throw new ErrorConstructor(
 						response.status,
 						decodeURIComponent(response.url),

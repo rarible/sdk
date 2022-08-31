@@ -33,6 +33,8 @@
     "build-connector-imx": "yarn workspace @rarible/connector-immutablex-link run build",
     "build-sdk-examples": "yarn workspace @rarible/sdk-examples run build",
     "build-all": "sh ./scripts/build.sh",
+    "build-sdks": "sh ./scripts/build-sdks.sh",
+    "build-connectors": "sh ./scripts/build-sdks.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
     "prettify:packages": "lerna exec -- sort-package-json && sort-package-json",

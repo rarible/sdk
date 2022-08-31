@@ -11,7 +11,6 @@ import {
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { AssetType, CollectionId, Creator, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { UnionPart } from "packages/sdk/src/types/order/common"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
@@ -22,6 +21,7 @@ import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
+import type { UnionPart } from "../../../types/order/common"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
 export const EVMBlockchains: EVMBlockchain[] = [
