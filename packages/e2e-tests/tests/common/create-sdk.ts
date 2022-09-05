@@ -24,11 +24,13 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 		env,
 		{
 			logs: LogsLevel.DISABLED,
-			...flowAuth ? {
-				flow: {
-					auth: flowAuth,
+			...(flowAuth ? {
+				blockchain: {
+					[WalletType.FLOW]: {
+						auth: flowAuth,
+					},
 				},
-			} : {},
+			} : {}),
 		},
 	)
 }

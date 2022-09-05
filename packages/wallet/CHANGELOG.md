@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.25](https://github.com/rarible/sdk/compare/v0.9.24...v0.9.25) (2022-08-29)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
 ## [0.9.24](https://github.com/rarible/sdk/compare/v0.9.23...v0.9.24) (2022-08-24)
 
 **Note:** Version bump only for package @rarible/sdk-wallet
