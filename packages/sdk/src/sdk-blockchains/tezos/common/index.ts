@@ -143,10 +143,6 @@ export function getMaybeTezosProvider(
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
-					api: `${getTezosBasePath(network)}/v0.1`,
-					api_permit: `${getTezosBasePath(network)}/v0.1`,
-					permit_whitelist: [],
-					wrapper: "",
 					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
 					node_url: "https://rpc.tzkt.io/ithacanet",
@@ -168,6 +164,10 @@ export function getMaybeTezosProvider(
 					teia_marketplace: "KT1Anx515N2PK8A2ZX5uGNn7Gckh4WytLJmK",
 					versum_marketplace: "KT1B1Wz7jPH23EqKUpDwFDkw3A1yLxGZ4uJy",
 					versum_nfts: "KT1UH5RSbomuV1o6UuDB9yeACbqRMup3utGu",
+					fxhash_sales_v1: "KT1BEc3m6yxN856Y4zfArpDqQ1uZZ1HkDTRh",
+					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
+					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
+					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
 				},
 			}
 		}
@@ -180,10 +180,6 @@ export function getMaybeTezosProvider(
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
-					api: `${getTezosBasePath(network)}/v0.1`, //http://dev-tezos-api.rarible.int
-					api_permit: `${getTezosBasePath(network)}/v0.1`, //http://dev-tezos-api.rarible.int
-					permit_whitelist: [],
-					wrapper: "",
 					chain_id: "NetXnHfVqm9iesp",
 					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
@@ -205,6 +201,10 @@ export function getMaybeTezosProvider(
 					teia_marketplace: "KT1Anx515N2PK8A2ZX5uGNn7Gckh4WytLJmK",
 					versum_marketplace: "KT1B1Wz7jPH23EqKUpDwFDkw3A1yLxGZ4uJy",
 					versum_nfts: "KT1UH5RSbomuV1o6UuDB9yeACbqRMup3utGu",
+					fxhash_sales_v1: "KT1BEc3m6yxN856Y4zfArpDqQ1uZZ1HkDTRh",
+					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
+					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
+					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
 				},
 			}
 		}
@@ -217,10 +217,6 @@ export function getMaybeTezosProvider(
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
-					api: `${getTezosBasePath(network)}/v0.1`,
-					api_permit: `${getTezosBasePath(network)}/v0.1`,
-					permit_whitelist: [],
-					wrapper: "KT1EJkjatSNWD2NiPx8hivKnawxuyaVTwP6n",
 					auction: "",
 					auction_storage: "",
 					node_url: "https://rpc.tzkt.io/mainnet",
@@ -242,6 +238,10 @@ export function getMaybeTezosProvider(
 					teia_marketplace: "KT1PHubm9HtyQEJ4BBpMTVomq6mhbfNZ9z5w",
 					versum_marketplace: "KT1GyRAJNdizF1nojQz62uGYkx8WFRUJm9X5",
 					versum_nfts: "KT1LjmAdYQCLBjwv4S2oFkEzyHVkomAf5MrW",
+					fxhash_sales_v1: "KT1Xo5B7PNBAeynZPmca4bRh6LQow4og1Zb9",
+					fxhash_sales_v2: "KT1GbyoDi7H1sfXmimXpptZJuCdHMh66WS9u",
+					fxhash_nfts_v1: "KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE",
+					fxhash_nfts_v2: "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi",
 				},
 			}
 		}
