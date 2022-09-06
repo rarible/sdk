@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.28-beta.x2y2.1](https://github.com/rarible/sdk/compare/v0.9.28...v0.9.28-beta.x2y2.1) (2022-09-06)
+
+
+### Features
+
+* add x2y2 orders support ([d6e72a9](https://github.com/rarible/sdk/commit/d6e72a983e3effa925023d3544ae4ab7bc4acb07))
+
+
+
+
+
 ## [0.9.28](https://github.com/rarible/sdk/compare/v0.9.27...v0.9.28) (2022-09-05)
 
 **Note:** Version bump only for package example
