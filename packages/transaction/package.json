@@ -19,7 +19,7 @@
     "@rarible/api-client": "0.0.13-beta11",
     "@rarible/ethereum-provider": "~0.12.89",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
-    "@rarible/protocol-ethereum-sdk": "~0.12.90",
+    "@rarible/protocol-ethereum-sdk": "~0.12.91",
     "@rarible/solana-sdk": "^0.9.12",
     "@rarible/tezos-sdk": "~0.1.34",
     "@rarible/types": "~0.9.6"
