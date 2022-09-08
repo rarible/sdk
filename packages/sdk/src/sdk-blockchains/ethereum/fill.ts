@@ -340,28 +340,44 @@ export class EthereumFill {
 				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
 					tx,
 					this.network,
-					(receipt,
-					) => {
-						let executionEvents: any
-						for (let event of (receipt.events as any[] || [])) {
-							if ((Array.isArray(event) || "0" in event) && event[0]?.event === "Execution") {
-								executionEvents = event as any
-								break
-							} else if (event.event === "Execution") {
-								executionEvents = [event]
-								break
-							}
-						}
+					(receipt: any) => {
+						try {
+							let executionEvents: any[] = []
 
-						if (executionEvents) {
-							return {
-								type: "BATCH_BUY",
-								results: request.map((req, index) => ({
-									orderId: req.orderId,
-									result: !!executionEvents?.[index]?.returnValues["result"],
-								})),
+							for (let event of (receipt.events || [])) {
+								if ("0" in event && event[0]?.event === "Execution") {
+									if (Array.isArray(event)) {
+										executionEvents.push(...event)
+									} else {
+										// cycling over events "subarray", because web3 provider
+										// returning it not as real array, but as object
+										let i = 0
+										while (event[i]) {
+											executionEvents.push(event[i])
+											i += 1
+										}
+									}
+								} else if (event.event === "Execution") {
+									executionEvents.push(event)
+								}
 							}
-						} else {
+
+							if (executionEvents) {
+								return {
+									type: "BATCH_BUY",
+									results: request.map((req, index) => ({
+										orderId: req.orderId,
+										result: (
+											executionEvents[index]?.data || // ethers variant
+											executionEvents[index]?.raw?.data // web3 variant
+										) === "0x0000000000000000000000000000000000000000000000000000000000000001",
+									})),
+								}
+							} else {
+								return undefined
+							}
+						} catch (e) {
+							console.error("Can't parse transaction events", e)
 							return undefined
 						}
 					},
