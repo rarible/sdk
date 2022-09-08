@@ -1,6 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import type { EthereumTransactionEvent } from "@rarible/ethereum-provider"
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import type {
 	FillBatchSingleOrderRequest,
@@ -327,7 +326,7 @@ export class EthereumFill {
 					this.network,
 					(receipt: any) => {
 						try {
-							let executionEvents: EthereumTransactionEvent[] = []
+							let executionEvents: any[] = []
 
 							for (let event of (receipt.events || [])) {
 								if ("0" in event && event[0]?.event === "Execution") {
@@ -353,8 +352,8 @@ export class EthereumFill {
 									results: request.map((req, index) => ({
 										orderId: req.orderId,
 										result: (
-											(executionEvents[index] as any)?.data || // ethers variant
-											(executionEvents[index] as any)?.raw?.data // web3 variant
+											executionEvents[index]?.data || // ethers variant
+											executionEvents[index]?.raw?.data // web3 variant
 										) === "0x0000000000000000000000000000000000000000000000000000000000000001",
 									})),
 								}
