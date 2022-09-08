@@ -124,6 +124,14 @@ export class EthereumFill {
 				}
 				break
 			}
+			case "X2Y2": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
@@ -202,6 +210,14 @@ export class EthereumFill {
 					payoutsSupport: PayoutsSupport.NONE,
 					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: true,
+				}
+			}
+			case "X2Y2": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: false,
 				}
 			}
 			default:
@@ -367,8 +383,8 @@ export class EthereumFill {
 				ethOrder.type !== "OPEN_SEA_V1" &&
 				ethOrder.type !== "RARIBLE_V2" &&
 				ethOrder.type !== "SEAPORT_V1" &&
-				ethOrder.type !== "LOOKSRARE"
-				//order.type !== "X2Y2"
+				ethOrder.type !== "LOOKSRARE" &&
+				ethOrder.type !== "X2Y2"
 			) {
 				throw new Error(`Order type ${ethOrder.type} is not supported for batch buy`)
 			}
