@@ -12,7 +12,6 @@ export const e2eTestsConfig = {
 	TEZOS_WALLET_2: "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 	TEZOS_WALLET_3: "edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3",
 
-	SOLANA_COLLECTION: "SOLANA:2npxHjzrfas3TYM8ezLWALzFppehq46agWgRVMsDWnzW",
 	SOLANA_URI: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 	SOLANA_WALLET_1: [
 		99, 87, 171, 135, 138, 126, 92, 128, 190, 64, 22,
