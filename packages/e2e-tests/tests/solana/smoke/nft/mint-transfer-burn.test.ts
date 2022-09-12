@@ -1,6 +1,7 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
+import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
@@ -8,18 +9,19 @@ import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/doma
 import { getSolanaWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
-import { testsConfig } from "../../../common/config"
 import { burn } from "../../../common/atoms-tests/burn"
 import { transfer } from "../../../common/atoms-tests/transfer"
 import { getCollectionById } from "../../../common/api-helpers/collection-helper"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { deployCollectionDeployRequest } from "../../common/defaults"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { creator: BlockchainWallet, recipient: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequest,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	transferRequest: (address: UnionAddress) => TransferRequest,
 	creatorBalanceAfterTransfer: string,
@@ -35,7 +37,7 @@ function suites(): {
 				creator: getSolanaWallet(0),
 				recipient: getSolanaWallet(1),
 			},
-			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			deployRequest: deployCollectionDeployRequest,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
@@ -77,7 +79,8 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 		const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
 		const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
 
-		const collection = await getCollectionById(creatorSdk, suite.collectionId)
+		const { address: collectionId } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
+		const collection = await getCollectionById(creatorSdk, collectionId)
 
 		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
 			suite.mintRequest(creatorWalletAddress.unionAddress))
