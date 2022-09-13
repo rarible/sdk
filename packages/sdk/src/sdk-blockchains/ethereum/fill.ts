@@ -132,6 +132,14 @@ export class EthereumFill {
 				}
 				break
 			}
+			case "AMM": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
@@ -212,6 +220,14 @@ export class EthereumFill {
 					supportsPartialFill: true,
 				}
 			}
+			case "AMM": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
+				}
+			}
 			case "X2Y2": {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
@@ -254,6 +270,8 @@ export class EthereumFill {
 			contract = order.take.assetType.contract
 		} else if (isNft(order.make.assetType) || order.make.assetType.assetClass === "COLLECTION") {
 			contract = order.make.assetType.contract
+		} else if (order.make.assetType.assetClass === "AMM_NFT") {
+			return false
 		} else {
 			throw new Error("Nft has not been found")
 		}
@@ -400,6 +418,7 @@ export class EthereumFill {
 				ethOrder.type !== "RARIBLE_V2" &&
 				ethOrder.type !== "SEAPORT_V1" &&
 				ethOrder.type !== "LOOKSRARE" &&
+				ethOrder.type !== "AMM" &&
 				ethOrder.type !== "X2Y2"
 			) {
 				throw new Error(`Order type ${ethOrder.type} is not supported for batch buy`)
