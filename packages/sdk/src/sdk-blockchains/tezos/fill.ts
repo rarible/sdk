@@ -1,7 +1,8 @@
 import { Action } from "@rarible/action"
 import type { OrderDataRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { fill_order, get_address, get_legacy_orders, order_of_json } from "@rarible/tezos-sdk"
+import { fill_order, get_address, get_legacy_orders, order_of_json, cart_purchase } from "@rarible/tezos-sdk"
+import type { CartOrder } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -11,7 +12,15 @@ import { Blockchain } from "@rarible/api-client"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
-import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import {
+	MaxFeesBasePointSupport,
+	OriginFeeSupport,
+	PayoutsSupport,
+} from "../../types/order/fill/domain"
+import type {
+	BatchFillRequest,
+	PrepareBatchBuyResponse,
+} from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
 import {
@@ -19,8 +28,11 @@ import {
 	convertFromContractAddress,
 	convertUnionParts,
 	getRequiredProvider,
-	getTezosAddress, getTezosAssetTypeV2, getTezosOrderId,
+	getTezosAddress,
+	getTezosAssetTypeV2,
+	getTezosOrderId,
 } from "./common"
+
 
 export class TezosFill {
 	constructor(
@@ -167,5 +179,47 @@ export class TezosFill {
 			//fillRequest.unwrap
 		)
 		return new BlockchainTezosTransaction(fillResponse, this.network)
+	}
+
+	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
+		const submit = Action.create({
+			id: "send-tx" as const,
+			run: async (fillRequest: BatchFillRequest) => {
+				await checkChainId(this.provider)
+				const provider = getRequiredProvider(this.provider)
+
+				const orders: CartOrder[] = fillRequest.map((req) => {
+					return {
+						order_id: req.orderId,
+						amount: new BigNumber(req.amount),
+						payouts: convertUnionParts(req.payouts),
+						origin_fees: convertUnionParts(req.originFees),
+					}
+				})
+
+				const fillResponse = await cart_purchase(provider, orders)
+				return new BlockchainTezosTransaction(fillResponse, this.network)
+			},
+		})
+
+		const prepared = await Promise.all(prepareRequest.map(async (req) => {
+			let preparedOrder = await this.getPreparedOrder(req)
+
+			return {
+				orderId: preparedOrder.id,
+				multiple: this.isMultiple(preparedOrder),
+				maxAmount: await this.getMaxAmount(preparedOrder),
+				baseFee: parseInt(this.provider.config.fees.toString()),
+				originFeeSupport: OriginFeeSupport.FULL,
+				payoutsSupport: PayoutsSupport.MULTIPLE,
+				maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+				supportsPartialFill: true,
+			}
+		}))
+
+		return {
+			submit,
+			prepared,
+		}
 	}
 }

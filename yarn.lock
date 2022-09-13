@@ -4912,6 +4912,32 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
+"@rarible/tezos-sdk@~0.1.35":
+  version "0.1.35"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.35.tgz#5d930a2896393f28d066255bcab3eedf6a9c5c33"
+  integrity sha512-ae3Kg5colxVKoikDZyiEeNYrq1xhBsYPTAOMytVP0Ddkc5F91YWDdDtvxBNGtOxrfFvn1qAxemr3KzQJs6b5uA==
+  dependencies:
+    "@airgap/beacon-sdk" "2.3.13"
+    "@genql/runtime" "2.10.0"
+    "@rarible/tezos-common" "^0.1.34"
+    "@rarible/tezos-contracts" "^0.1.34"
+    "@taquito/beacon-wallet" "12.0.3"
+    "@taquito/signer" "^12.0.0"
+    "@taquito/taquito" "^12.0.0"
+    "@temple-wallet/dapp" "^7.0.0"
+    "@types/bs58check" "^2.1.0"
+    "@types/elliptic" "^6.4.13"
+    "@types/keccak" "^3.0.1"
+    "@types/yargs" "^17.0.7"
+    bignumber.js "^9.0.1"
+    bs58check "^2.1.2"
+    get-random-values "^1.2.2"
+    graphql "^16.5.0"
+    keccak "^3.0.2"
+    node-fetch "2.6.7"
+    text-encoder "^0.0.4"
+    yargs "^17.2.1"
+
 "@rarible/types@0.5.3":
   version "0.5.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
