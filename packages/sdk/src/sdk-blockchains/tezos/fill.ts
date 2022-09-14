@@ -41,6 +41,7 @@ export class TezosFill {
 		private network: TezosNetwork,
 	) {
 		this.fill = this.fill.bind(this)
+		this.batchBuy = this.batchBuy.bind(this)
 	}
 
 	async getPreparedOrder(request: PrepareFillRequest): Promise<Order> {
@@ -190,7 +191,7 @@ export class TezosFill {
 
 				const orders: CartOrder[] = fillRequest.map((req) => {
 					return {
-						order_id: req.orderId,
+						order_id: getTezosOrderId(req.orderId),
 						amount: new BigNumber(req.amount),
 						payouts: convertUnionParts(req.payouts),
 						origin_fees: convertUnionParts(req.originFees),
