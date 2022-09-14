@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.9.30",
+  "version": "0.9.31",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -28,8 +28,8 @@
     "@rarible/immutable-wallet": "^0.9.21",
     "@rarible/logger": "~0.9.5",
     "@rarible/protocol-ethereum-sdk": "~0.12.92",
-    "@rarible/sdk-transaction": "^0.9.30",
-    "@rarible/sdk-wallet": "^0.9.30",
+    "@rarible/sdk-transaction": "^0.9.31",
+    "@rarible/sdk-wallet": "^0.9.31",
     "@rarible/solana-sdk": "^0.9.12",
     "@rarible/tezos-sdk": "~0.1.35",
     "@rarible/types": "~0.9.6",
