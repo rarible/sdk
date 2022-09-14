@@ -1,5 +1,6 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
+import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import { toBigNumber } from "@rarible/types"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
@@ -16,12 +17,14 @@ import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { getOrdersByIds } from "../../../common/api-helpers/order-helper"
+import { deployCollectionDeployRequest } from "../../common/defaults"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequest,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
 	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
@@ -34,7 +37,7 @@ function suites(): {
 				seller: getSolanaWallet(0),
 				buyer: getSolanaWallet(1),
 			},
-			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			deployRequest: deployCollectionDeployRequest,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: testsConfig.variables.SOLANA_URI,
@@ -71,7 +74,8 @@ describe.each(suites())("$blockchain mint => two bid => acceptBid", (suite) => {
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
-		const collection = await getCollection(sellerSdk, suite.collectionId)
+		const { address: collectionId } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
+		const collection = await getCollection(sellerSdk, collectionId)
 
 		const { nft: nft1 } = await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.9.29",
+  "version": "0.9.30",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -20,7 +20,7 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "@imtbl/imx-sdk": "^1.24.0",
-    "@rarible/api-client": "0.0.13-beta11",
+    "@rarible/api-client": "0.0.13-beta12",
     "@rarible/ethereum-provider": "~0.12.89",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
@@ -39,9 +39,9 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
-    "@rarible/ethereum-sdk-test-common": "~0.12.89",
+    "@rarible/ethereum-sdk-test-common": "~0.12.92",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/web3-ethereum": "~0.12.89",
+    "@rarible/web3-ethereum": "~0.12.92",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
