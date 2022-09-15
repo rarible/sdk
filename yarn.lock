@@ -4839,15 +4839,22 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.92":
-  version "0.12.92"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.92.tgz#ca41b48eb7c8421b8c24bba42258c0c8f84e1841"
-  integrity sha512-fYKVBJTCrygytEgLGsInv6sm7TGqrE6nd5kXnFKpM3sjDoShvU/LTAZXmwPyAM2fC61TyWgXXrRjnTsjvoQ48A==
+"@rarible/logger@~0.9.8":
+  version "0.9.8"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.8.tgz#fd6691056d504ec074a5df8e22a95b55b8b3efc2"
+  integrity sha512-fkGOocArjDH1eJ2EeUpENlaibWKq9zarKqAjVIA/KStd6LGLrebocTwd8KgHoUvfFbslkACylY+P/xgXHKEVgg==
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
+"@rarible/protocol-ethereum-sdk@~0.12.94":
+  version "0.12.94"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.94.tgz#33aa8ba1a2aa781b7939a854b10952bba8338889"
+  integrity sha512-3odVj8PHWb3puoj5oExOX+NbdMiTStomHibuwJUnUMzMY+LRA71oB08ujgo+wvq/ZLRO5KKrrwUjZaAHcC++pg==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.23-beta7"
     "@rarible/ethereum-provider" "^0.12.89"
-    "@rarible/logger" "~0.9.5"
+    "@rarible/logger" "~0.9.8"
     "@rarible/utils" "~0.9.1"
     axios "^0.25.0"
     eth-sig-util "^3.0.0"
@@ -4941,10 +4948,10 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@^0.12.92", "@rarible/web3-ethereum@~0.12.", "@rarible/web3-ethereum@~0.12.92":
-  version "0.12.92"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.92.tgz#08a416162d6ce22c4f8ab43523c77a07d15ac1de"
-  integrity sha512-pqKTvCUa/B5lsYyTiUhz7NHa48CVjXn/VxcvFb9Ry1aa5ArMbc7T+zpBtqFSMuXZ3l6a7iXTiY/a0vMyJPtoOQ==
+"@rarible/web3-ethereum@^0.12.94", "@rarible/web3-ethereum@~0.12.94":
+  version "0.12.94"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.94.tgz#7645a4a11fc0bdf9f3724f7f67ddd48c04eaeb58"
+  integrity sha512-8xPLEmgrB8RrpABr26b6RaObur8eiwiartjjfNcgaCoyJxIVR7LGX0ut5bfbaVebjrDcp2F9gCeOyR/l1XsmQw==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.89"
     eth-rpc-errors "^4.0.3"

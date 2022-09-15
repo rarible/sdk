@@ -41,7 +41,7 @@
     "@onflow/fcl": "~0.0.77",
     "@rarible/ethereum-sdk-test-common": "~0.12.92",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/web3-ethereum": "~0.12.92",
+    "@rarible/web3-ethereum": "~0.12.94",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
