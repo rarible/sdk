@@ -1,12 +1,12 @@
-import {RemoteLogger} from "@rarible/logger/build"
-import type {LoggableValue} from "@rarible/logger/build/domain"
-import {LogLevel} from "@rarible/logger/build/domain"
-import type {BlockchainWallet} from "@rarible/sdk-wallet"
-import {WalletType} from "@rarible/sdk-wallet"
+import { RemoteLogger } from "@rarible/logger/build"
+import type { LoggableValue } from "@rarible/logger/build/domain"
+import { LogLevel } from "@rarible/logger/build/domain"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
-import type {Middleware} from "../middleware/middleware"
-import type {ISdkContext} from "../../domain"
-import {LogsLevel} from "../../domain"
+import type { Middleware } from "../middleware/middleware"
+import type { ISdkContext } from "../../domain"
+import { LogsLevel } from "../../domain"
 // import packageJson from "../../../package.json"
 const packageJson = require("../../../package.json")
 const loggerConfig = {
@@ -108,55 +108,55 @@ function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
 		return false
 	}
 
-  if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
-    if (
-      err.message?.includes("User denied transaction signature") ||
-      err.message?.includes("User denied message signature") ||
+	if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
+		if (
+			err.message?.includes("User denied transaction signature") ||
+      err.message?.includes("User denied message signature")
       // err.message?.includes("User denied message signature") ||
-    ) {
-      return true
-    }
-    if (
-      // err.message === "MetaMask Tx Signature: User denied transaction signature." ||
-      // err.message === "MetaMask Message Signature: User denied message signature."||
-      // err.message === "User denied message signature" ||
-      // err.message === "User denied transaction signature" ||
-      err.message === "User rejected the transaction" ||
+		) {
+			return true
+		}
+		if (
+		// err.message === "MetaMask Tx Signature: User denied transaction signature." ||
+		// err.message === "MetaMask Message Signature: User denied message signature."||
+		// err.message === "User denied message signature" ||
+		// err.message === "User denied transaction signature" ||
+			err.message === "User rejected the transaction" ||
       err.message === "Sign transaction cancelled" ||
       err.message === "cancelled" ||
       // err.message === "Tx Signature: User denied transaction signature." ||
-      err.message === "User canceled" ||
-    ) {
-      return true
-    }
-  }
+      err.message === "User canceled"
+		) {
+			return true
+		}
+	}
 
-  if (blockchain === WalletType.TEZOS) {
-    if (err.name === "UnknownBeaconError" && err?.title === "Aborted") {
-      return true
-    }
-  }
+	if (blockchain === WalletType.TEZOS) {
+		if (err.name === "UnknownBeaconError" && err?.title === "Aborted") {
+			return true
+		}
+	}
 
-  if (blockchain === WalletType.SOLANA) {
-    if (err.name === "User rejected the request.") {
-      return true
-    }
-  }
+	if (blockchain === WalletType.SOLANA) {
+		if (err.name === "User rejected the request.") {
+			return true
+		}
+	}
 
 	return false
 }
 
 function getStringifyError(error: any): string | undefined {
-  try {
-    const errorObject = Object.getOwnPropertyNames(error)
-      .reduce((acc, key) => {
-        acc[key] = error[key]
-        return acc
-    }, {} as Record<any, any>)
-    return JSON.stringify(errorObject, null, "  ")
-  } catch (e) {
-    return undefined
-  }
+	try {
+		const errorObject = Object.getOwnPropertyNames(error)
+			.reduce((acc, key) => {
+				acc[key] = error[key]
+				return acc
+			}, {} as Record<any, any>)
+		return JSON.stringify(errorObject, null, "  ")
+	} catch (e) {
+		return undefined
+	}
 }
 
 export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {

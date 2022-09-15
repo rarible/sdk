@@ -3,6 +3,7 @@ import type { UnionAddress } from "@rarible/types"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
+import { retry } from "@rarible/sdk/build/common/retry"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import type {
 	GetOrderBidsByItem200,
@@ -140,11 +141,15 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 		const bidRequest = await suite.bidRequest(requestCurrency)
 		await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
-		const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
-		expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
+		await retry(10, 2000, async () => {
+			const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
+			expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
+		})
 
-		const orderBidsByItemRaw =
-            await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
-		expect(orderBidsByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)
+		await retry(10, 2000, async () => {
+			const orderBidsByItemRaw =
+				await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
+			expect(orderBidsByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)
+		})
 	})
 })

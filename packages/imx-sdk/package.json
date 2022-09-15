@@ -1,6 +1,6 @@
 {
   "name": "@rarible/immutable-sdk",
-  "version": "0.9.21",
+  "version": "0.9.30",
   "description": "SDK for interact with immutable blockchain and Rarible protocol",
   "license": "MIT",
   "main": "build/index.js",
@@ -30,7 +30,7 @@
     "typescript": "^4.6.3"
   },
   "peerDependencies": {
-    "@rarible/ethereum-api-client": "^0.1.23-beta6"
+    "@rarible/ethereum-api-client": "^0.1.23-beta7"
   },
   "publishConfig": {
     "access": "public",

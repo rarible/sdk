@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.31](https://github.com/rarible/sdk/compare/v0.9.30...v0.9.31) (2022-09-14)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.9.30](https://github.com/rarible/sdk/compare/v0.9.29...v0.9.30) (2022-09-13)
+
+
+### Features
+
+* amm/sudoswap orders support ([#331](https://github.com/rarible/sdk/issues/331)) ([41a5452](https://github.com/rarible/sdk/commit/41a5452932cdb57c266086270aad9bda409d556b))
+
+
+
+
+
+## [0.9.29](https://github.com/rarible/sdk/compare/v0.9.28...v0.9.29) (2022-09-08)
+
+
+### Features
+
+* add x2y2 orders support ([#328](https://github.com/rarible/sdk/issues/328)) ([606703c](https://github.com/rarible/sdk/commit/606703c7986846fc68d6a5adfa093ed77a1cdd0e))
+
+
+
+
+
+## [0.9.28](https://github.com/rarible/sdk/compare/v0.9.27...v0.9.28) (2022-09-05)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.9.25](https://github.com/rarible/sdk/compare/v0.9.24...v0.9.25) (2022-08-29)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.9.24](https://github.com/rarible/sdk/compare/v0.9.23...v0.9.24) (2022-08-24)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
 ## [0.9.21](https://github.com/rarible/sdk/compare/v0.9.20...v0.9.21) (2022-08-19)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

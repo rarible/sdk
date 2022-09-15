@@ -11,7 +11,6 @@ import type {
 	SellResponse,
 } from "./order/domain"
 import type { BalanceRequestAssetType } from "./balance/balance"
-import type { ImxProtocolFee } from "./config/domain"
 
 export type ImxFee = { recipient: string, percentage: number }
 
@@ -21,7 +20,6 @@ export type ImxOrderSdk = {
 	buy(request: BuyRequest, token: Erc721AssetRequest): Promise<BuyResponse>
 	sell(request: SellRequest): Promise<SellResponse>
 	cancel(request: CancelOrderRequest): Promise<CancelOrderResponse>
-	getOrderFee(): ImxProtocolFee
 }
 
 export type ImxNftSdk = {

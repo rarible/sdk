@@ -60,3 +60,13 @@ export function getTakeAssetType(currency: RequestCurrency) {
 			throw new Error("Invalid take asset type")
 	}
 }
+
+export function calcBuyerBaseFee(order: Order): number {
+	if (order.data["@type"] !== "IMMUTABLEX_RARIBLE_V1") {
+		throw new Error(`Unsupported order type "${order.data["@type"]}", expected "IMMUTABLEX_RARIBLE_V1"`)
+	}
+
+	return (order.data.originFees || []).reduce((acc, val) => {
+		return acc + val.value
+	}, 0)
+}
