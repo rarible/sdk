@@ -7,8 +7,11 @@ import { buy, cancel, sell } from "./order"
 import { burn } from "./nft/burn"
 import { getBalance } from "./balance/balance"
 import type { Erc721AssetRequest } from "./nft/domain"
+import type { ImxSdkConfig } from "./domain"
+import { createApis } from "./apis"
 
-export function createImxSdk(link: Maybe<Link>, environment: ImxEnv): RaribleImxSdk {
+export function createImxSdk(link: Maybe<Link>, environment: ImxEnv, config: ImxSdkConfig = {}): RaribleImxSdk {
+	const apis = createApis(environment, config?.apiClientParams)
 	return {
 		nft: {
 			transfer: transfer.bind(null, link),
@@ -16,11 +19,11 @@ export function createImxSdk(link: Maybe<Link>, environment: ImxEnv): RaribleImx
 		},
 		order: {
 			sell: sell.bind(null, link),
-			buy: buy.bind(null, environment, link),
+			buy: buy.bind(null, environment, link, apis),
 			cancel: cancel.bind(null, link),
 		},
 		balance: {
-			getBalance: getBalance.bind(null, environment),
+			getBalance: getBalance.bind(null, environment, apis),
 		},
 	}
 }

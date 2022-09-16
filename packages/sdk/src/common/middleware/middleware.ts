@@ -44,8 +44,7 @@ export class Middlewarer {
 		const callbacks = []
 
 		for (const mid of this.middlewares) {
-			let cb = undefined;
-			([wrappedCallable, cb] = await mid(wrappedCallable, args))
+			const [, cb] = await mid(wrappedCallable, args)
 			if (cb) {
 				callbacks.push(cb)
 			}
@@ -109,6 +108,34 @@ export class Middlewarer {
 		for (const prop in object) {
 			if (object.hasOwnProperty(prop) && typeof object[prop] === "function") {
 				object[prop] = this.wrap(object[prop], {
+					methodName: (meta.namespace ? meta.namespace + "." : "") + prop,
+				})
+			}
+		}
+	}
+	/**
+	 * Wrap methods in api controller
+	 *
+	 * @param object
+	 * @param meta metadata for new method
+	 */
+	wrapApiControllerMethods(object: any, meta: { namespace: string }) {
+		const IGNORED_PROPS = [
+			"configuration",
+			"fetchApi",
+			"middleware",
+			"constructor",
+			"withMiddleware",
+			"withPreMiddleware",
+			"withPostMiddleware",
+			"request",
+			"createFetchParams",
+			"clone",
+		]
+
+		for (const prop in object) {
+			if (!IGNORED_PROPS.includes(prop) && !prop.endsWith("Raw") && typeof object[prop] === "function") {
+				object[prop] = this.wrap(object[prop].bind(object), {
 					methodName: (meta.namespace ? meta.namespace + "." : "") + prop,
 				})
 			}

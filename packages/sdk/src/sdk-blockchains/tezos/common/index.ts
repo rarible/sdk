@@ -25,8 +25,7 @@ import type { Part } from "@rarible/tezos-common"
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
-import {
-	Configuration,
+import type {
 	NftCollectionControllerApi,
 	NftItemControllerApi,
 	NftOwnershipControllerApi,
@@ -41,9 +40,11 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import axios from "axios"
+import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { RaribleSdkConfig } from "../../../config/domain"
+import { NetworkErrorCode } from "../../../common/apis"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
@@ -94,19 +95,6 @@ export type TezosMetaAttribute = {
 }
 
 export const XTZ_DECIMALS = 6
-
-export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
-	const config = new Configuration({
-		basePath: getTezosBasePath(network),
-	})
-
-	return {
-		collection: new NftCollectionControllerApi(config),
-		item: new NftItemControllerApi(config),
-		ownership: new NftOwnershipControllerApi(config),
-		order: new OrderControllerApi(config),
-	}
-}
 
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
@@ -593,6 +581,7 @@ export async function getCollectionType(
 		response = data
 	} catch (e) {
 		console.error(e)
+		handleAxiosErrorResponse(e, { code: NetworkErrorCode.TEZOS_EXTERNAL_ERR })
 		throw new Error("Getting tezos collection data error")
 	}
 

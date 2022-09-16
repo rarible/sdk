@@ -13,6 +13,8 @@ import type { Uses } from "@metaplex-foundation/mpl-token-metadata"
 import fetch from "node-fetch"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
+import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
+import { NetworkErrorCode } from "@rarible/sdk/src/common/apis"
 import {
 	createAssociatedTokenAccountInstruction,
 	getMasterEdition,
@@ -22,12 +24,20 @@ import {
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 
 async function fetchMetadata(url: string): Promise<any> {
+	let response
 	try {
-		return await (await fetch(url, { method: "GET" })).json()
+		response = await fetch(url, { method: "GET" })
 	} catch (e) {
-		console.log(e)
-		throw new Error(`Metadata fetch failed ${url}`)
+		throw new NetworkError({
+			url,
+			data: (e as Error).message,
+			code: NetworkErrorCode.SOLANA_EXTERNAL_ERR,
+		})
 	}
+	await handleFetchErrorResponse(response, {
+		code: NetworkErrorCode.SOLANA_EXTERNAL_ERR,
+	})
+	return response.json()
 }
 
 function validateMetadata(metadata: any) {

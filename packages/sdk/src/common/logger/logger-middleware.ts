@@ -1,12 +1,15 @@
-import { RemoteLogger } from "@rarible/logger/build"
+import { NetworkError, RemoteLogger, Warning } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
-import { WalletType } from "@rarible/sdk-wallet"
+import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
+import { NetworkErrorCode } from "../apis"
 
+const packageJson = require("../../../package.json")
 const loggerConfig = {
 	service: "union-sdk",
 	elkUrl: "https://logging.rarible.com/",
@@ -85,11 +88,71 @@ export function getErrorMessageString(err: any): string {
 	}
 }
 
+export type ErrorLevel = LogLevel | NetworkErrorCode | string
+
+export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
+	if (error instanceof NetworkError) {
+		return error.code || NetworkErrorCode.NETWORK_ERR
+	}
+	if (callableName.startsWith("apis.")) {
+		return NetworkErrorCode.NETWORK_ERR
+	}
+	if (isCancelledTx(error, wallet?.walletType) || error instanceof Warning) {
+		return LogLevel.WARN
+	}
+	return LogLevel.ERROR
+}
+
+function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
+	if (!err) {
+		return false
+	}
+
+	if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
+		if (
+			err.message?.includes("User denied transaction signature") ||
+      err.message?.includes("User denied message signature") ||
+      err.message?.includes("User rejected the transaction") ||
+      err.message?.includes("Sign transaction cancelled")
+		) {
+			return true
+		}
+	}
+
+	if (blockchain === WalletType.TEZOS) {
+		if (err.name === "UnknownBeaconError" && err?.title === "Aborted") {
+			return true
+		}
+	}
+
+	if (blockchain === WalletType.SOLANA) {
+		if (err.name === "User rejected the request.") {
+			return true
+		}
+	}
+
+	return false
+}
+
+function getStringifiedError(error: any): string | undefined {
+	try {
+		const errorObject = Object.getOwnPropertyNames(error)
+			.reduce((acc, key) => {
+				acc[key] = error[key]
+				return acc
+			}, {} as Record<any, any>)
+		return JSON.stringify(errorObject, null, "  ")
+	} catch (e) {
+		return undefined
+	}
+}
+
 export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {
 	const getContext = async () => {
 		return {
 			service: loggerConfig.service,
 			environment: sdkContext.env,
+			"@version": packageJson.version,
 			...(sdkContext.wallet ? await getWalletInfo(sdkContext.wallet) : { }),
 		}
 	}
@@ -106,10 +169,9 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 		return [callable, async (responsePromise) => {
 			try {
 				const res = await responsePromise
-
 				if (logsLevel >= LogsLevel.TRACE) {
 					remoteLogger.raw({
-						level: "TRACE",
+						level: LogLevel.TRACE,
 						method: callable.name,
 						message: "trace of " + callable.name,
 						duration: (Date.now() - time) / 1000,
@@ -119,13 +181,19 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 				}
 			} catch (err: any) {
 				if (logsLevel >= LogsLevel.ERROR) {
-					remoteLogger.raw({
-						level: "ERROR",
+					const data = {
+						level: getErrorLevel(callable.name, err, sdkContext.wallet),
 						method: callable.name,
 						message: getErrorMessageString(err),
+						error: getStringifiedError(err),
 						duration: (Date.now() - time) / 1000,
 						args: JSON.stringify(args),
-					})
+						requestAddress: undefined as undefined | string,
+					}
+					if (err instanceof NetworkError) {
+						data.requestAddress = err.url
+					}
+					remoteLogger.raw(data)
 				}
 			}
 

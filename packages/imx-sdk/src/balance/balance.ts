@@ -1,25 +1,21 @@
 import type { Address } from "@rarible/types"
 import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
-import { Configuration } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { ImxEnv } from "@rarible/immutable-wallet"
-import { ImxBalanceControllerApi } from "../apis"
-import { IMX_ENV_CONFIG } from "../config/env"
+import type { ImxApis } from "../apis"
 
 export type BalanceRequestAssetType = EthAssetType | Erc20AssetType
 
 export async function getBalance(
 	env: ImxEnv,
+	apis: ImxApis,
 	address: Address,
 	assetType: BalanceRequestAssetType,
 ): Promise<BigNumberValue> {
 	const DEFAULT_DECIMALS = 18
 
-	const { apiAddressV2 } = IMX_ENV_CONFIG[env]
-	const balanceApiConfig = new Configuration({ basePath: apiAddressV2 })
-	const api = new ImxBalanceControllerApi(balanceApiConfig)
-	const { result } = await api.getAllBalances({ ownerAddress: address })
+	const { result } = await apis.balance.getAllBalances({ ownerAddress: address })
 
 	if (assetType.assetClass === "ETH") {
 		const currencyBalance = result.find((b => b.token_address === ""))

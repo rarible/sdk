@@ -6,14 +6,10 @@ import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/domain"
 import { awaitItem } from "../ethereum/test/await-item"
 import type { RaribleSdkEnvironment } from "../../config/domain"
-import { createApisSdk } from "../../common/apis"
-import { getSdkConfig } from "../../config"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
 import { getTestContract } from "./test/test-contracts"
-import { getMaybeTezosProvider } from "./common"
-import { TezosSell } from "./sell"
 
 describe.skip("test tezos mint and sell", () => {
 	const env: RaribleSdkEnvironment = "testnet"
@@ -31,11 +27,6 @@ describe.skip("test tezos mint and sell", () => {
 	const fa12Contract = getTestContract(env, "fa12Contract")
 	const nftContract: string = getTestContract(env, "nftContract")
 	const mtContract: string = getTestContract(env, "mtContract")
-
-	const sdkConfig = getSdkConfig(env)
-	const sellerTezosProvider = getMaybeTezosProvider(sellerWallet.provider, sdkConfig.tezosNetwork, sdkConfig)
-	const unionApis = createApisSdk(env, undefined)
-	const sellerSellService = new TezosSell(sellerTezosProvider, unionApis)
 
 	test("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
