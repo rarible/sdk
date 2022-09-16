@@ -14,7 +14,6 @@ import fetch from "node-fetch"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
-import { NetworkErrorCode } from "@rarible/sdk/src/common/apis"
 import {
 	createAssociatedTokenAccountInstruction,
 	getMasterEdition,
@@ -31,11 +30,11 @@ async function fetchMetadata(url: string): Promise<any> {
 		throw new NetworkError({
 			url,
 			data: (e as Error).message,
-			code: NetworkErrorCode.SOLANA_EXTERNAL_ERR,
+			code: "SOLANA_EXTERNAL_ERR",
 		})
 	}
 	await handleFetchErrorResponse(response, {
-		code: NetworkErrorCode.SOLANA_EXTERNAL_ERR,
+		code: "SOLANA_EXTERNAL_ERR",
 	})
 	return response.json()
 }
