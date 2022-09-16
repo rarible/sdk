@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.29-hotfix.0](https://github.com/rarible/sdk/compare/v0.9.29...v0.9.29-hotfix.0) (2022-09-16)
+
+
+### Bug Fixes
+
+* eth tx events ([c80239d](https://github.com/rarible/sdk/commit/c80239d2d865a598d1199fc25ea80805d8098672))
+
+
+
+
+
 ## [0.9.29](https://github.com/rarible/sdk/compare/v0.9.28...v0.9.29) (2022-09-08)
 
 

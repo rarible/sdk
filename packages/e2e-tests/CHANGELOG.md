@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.29-hotfix.0](https://github.com/rarible/sdk/compare/v0.9.29...v0.9.29-hotfix.0) (2022-09-16)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
 ## [0.9.29](https://github.com/rarible/sdk/compare/v0.9.28...v0.9.29) (2022-09-08)
 
 
