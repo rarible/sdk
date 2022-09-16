@@ -40,9 +40,11 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import axios from "axios"
+import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { RaribleSdkConfig } from "../../../config/domain"
+import { NetworkErrorCode } from "../../../common/apis"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
@@ -579,6 +581,7 @@ export async function getCollectionType(
 		response = data
 	} catch (e) {
 		console.error(e)
+		handleAxiosErrorResponse(e, { code: NetworkErrorCode.TEZOS_EXTERNAL_ERR })
 		throw new Error("Getting tezos collection data error")
 	}
 

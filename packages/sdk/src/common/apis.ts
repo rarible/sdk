@@ -2,6 +2,7 @@ import * as ApiClient from "@rarible/api-client"
 import type { ConfigurationParameters } from "@rarible/api-client"
 import type { ResponseContext } from "@rarible/api-client/build/runtime"
 import type { Middleware } from "@rarible/api-client/build/runtime"
+import { handleFetchErrorResponse } from "@rarible/logger/build"
 import type { RaribleSdkEnvironment } from "../config/domain"
 import type { IApisSdk } from "../domain"
 import { getSdkConfig } from "../config"
@@ -14,7 +15,7 @@ export function createApisSdk(
 	const configuration = new ApiClient.Configuration({
 		basePath: config.basePath,
 		middleware: [
-			getErrorHandlerMiddleware(UnionAPIResponseError),
+			getErrorHandlerMiddleware(),
 			...(params?.middleware || []),
 		],
 		...params,
@@ -31,62 +32,22 @@ export function createApisSdk(
 }
 
 export function getErrorHandlerMiddleware(
-	// ErrorConstructor: typeof GeneralAPIResponseError = GeneralAPIResponseError
-	ErrorConstructor: typeof GeneralAPIResponseError
+	errorCode?: NetworkErrorCode
 ): Middleware {
 	return {
 		post: async (context: ResponseContext) => {
-			if (!context.response.ok) {
-				const response = context.response.clone()
-				let json = null
-				try {
-					json = await context.response.json()
-				} catch (e) {}
-				if (json) {
-					throw new ErrorConstructor(
-						response.status,
-						decodeURIComponent(response.url),
-						json
-					)
-				}
-			}
+			await handleFetchErrorResponse(context.response, { code: errorCode })
 			return context.response
 		},
 	}
 }
 
-export class GeneralAPIResponseError {
-	constructor(
-		public readonly status: number,
-		public readonly url: string,
-		public readonly value: any
-	) {}
-}
-
-export class UnionAPIResponseError extends GeneralAPIResponseError {
-	// eslint-disable-next-line unicorn/custom-error-definition
-	constructor(status: number, url: string, value: any) {
-		super(status, url, value)
-	}
-}
-
-export class EthereumAPIResponseError extends GeneralAPIResponseError {
-	// eslint-disable-next-line unicorn/custom-error-definition
-	constructor(status: number, url: string, value: any) {
-		super(status, url, value)
-	}
-}
-
-export class FlowAPIResponseError extends GeneralAPIResponseError {
-	// eslint-disable-next-line unicorn/custom-error-definition
-	constructor(status: number, url: string, value: any) {
-		super(status, url, value)
-	}
-}
-
-export class ImxAPIResponseError extends GeneralAPIResponseError {
-	// eslint-disable-next-line unicorn/custom-error-definition
-	constructor(status: number, url: string, value: any) {
-		super(status, url, value)
-	}
+export enum NetworkErrorCode {
+	NETWORK_ERR = "NETWORK_ERR",
+	ETHEREUM_NETWORK_ERR = "ETHEREUM_NETWORK_ERR",
+	FLOW_NETWORK_ERR = "FLOW_NETWORK_ERR",
+	IMX_NETWORK_ERR = "IMX_NETWORK_ERR",
+	TEZOS_EXTERNAL_ERR = "TEZOS_EXTERNAL_ERR",
+	SOLANA_EXTERNAL_ERR = "SOLANA_EXTERNAL_ERR",
+	META_EXTERNAL_ERR = "META_EXTERNAL_ERR",
 }

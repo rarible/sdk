@@ -5,7 +5,7 @@ import type { ImxEnv } from "@rarible/immutable-wallet"
 import type { IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { IApisSdk } from "../../domain"
-import { getErrorHandlerMiddleware, ImxAPIResponseError } from "../../common/apis"
+import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { ImxNftService } from "./nft"
 import { ImxOrderService } from "./order"
 import { ImxBalanceService } from "./balance"
@@ -18,7 +18,7 @@ export function createImmutablexSdk(
 	const sdk = createImxSdk(wallet?.wallet.link, env, {
 		apiClientParams: {
 			middleware: [
-				getErrorHandlerMiddleware(ImxAPIResponseError),
+				getErrorHandlerMiddleware(NetworkErrorCode.IMX_NETWORK_ERR),
 			],
 		},
 	})

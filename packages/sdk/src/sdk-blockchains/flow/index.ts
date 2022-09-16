@@ -10,7 +10,7 @@ import { nonImplementedAction, notImplemented } from "../../common/not-implement
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
-import { FlowAPIResponseError, getErrorHandlerMiddleware } from "../../common/apis"
+import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -30,14 +30,10 @@ export function createFlowSdk(
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, {
 		...(params || {}),
 		middleware: [
-			getErrorHandlerMiddleware(FlowAPIResponseError),
+			getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR),
 			...(params?.middleware || []),
 		],
 	}, auth)
-	console.log("asd", [
-		getErrorHandlerMiddleware(FlowAPIResponseError),
-		...(params?.middleware || []),
-	],)
 	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)

@@ -35,7 +35,6 @@ describe.skip("test tezos mint and sell", () => {
 	const sdkConfig = getSdkConfig(env)
 	const sellerTezosProvider = getMaybeTezosProvider(sellerWallet.provider, sdkConfig.tezosNetwork, sdkConfig)
 	const unionApis = createApisSdk(env, undefined)
-	const sellerSellService = new TezosSell(sellerTezosProvider, unionApis)
 
 	test("sale NFT with XTZ", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({

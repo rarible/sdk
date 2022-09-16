@@ -1,4 +1,4 @@
-import { RemoteLogger } from "@rarible/logger/build"
+import { NetworkError, RemoteLogger, Warning } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
@@ -7,6 +7,7 @@ import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
+import { NetworkErrorCode } from "../apis"
 // import packageJson from "../../../package.json"
 const packageJson = require("../../../package.json")
 const loggerConfig = {
@@ -87,20 +88,19 @@ export function getErrorMessageString(err: any): string {
 	}
 }
 
-export type ErrorLevel = LogLevel | "NETWORK_ERR"
+export type ErrorLevel = LogLevel | NetworkErrorCode | string
 
 export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
-	if (callableName.startsWith("apis.")) {
-		return "NETWORK_ERR"
+	if (error instanceof NetworkError) {
+		return error.code || NetworkErrorCode.NETWORK_ERR
 	}
-	if (isCancelledTx(error, wallet?.walletType)) {
+	if (callableName.startsWith("apis.")) {
+		return NetworkErrorCode.NETWORK_ERR
+	}
+	if (isCancelledTx(error, wallet?.walletType) || error instanceof Warning) {
 		return LogLevel.WARN
 	}
 	return LogLevel.ERROR
-}
-
-function handleEthereumCancelledTx(error: any) {
-
 }
 
 function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
@@ -111,21 +111,9 @@ function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
 	if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
 		if (
 			err.message?.includes("User denied transaction signature") ||
-      err.message?.includes("User denied message signature")
-      // err.message?.includes("User denied message signature") ||
-		) {
-			return true
-		}
-		if (
-		// err.message === "MetaMask Tx Signature: User denied transaction signature." ||
-		// err.message === "MetaMask Message Signature: User denied message signature."||
-		// err.message === "User denied message signature" ||
-		// err.message === "User denied transaction signature" ||
-			err.message === "User rejected the transaction" ||
-      err.message === "Sign transaction cancelled" ||
-      err.message === "cancelled" ||
-      // err.message === "Tx Signature: User denied transaction signature." ||
-      err.message === "User canceled"
+      err.message?.includes("User denied message signature") ||
+      err.message?.includes("User rejected the transaction") ||
+      err.message?.includes("Sign transaction cancelled")
 		) {
 			return true
 		}
@@ -146,7 +134,7 @@ function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
 	return false
 }
 
-function getStringifyError(error: any): string | undefined {
+function getStringifiedError(error: any): string | undefined {
 	try {
 		const errorObject = Object.getOwnPropertyNames(error)
 			.reduce((acc, key) => {
@@ -200,14 +188,15 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 						level: getErrorLevel(callable.name, err, sdkContext.wallet),
 						method: callable.name,
 						message: getErrorMessageString(err),
-						error: getStringifyError(err),
+						error: getStringifiedError(err),
 						duration: (Date.now() - time) / 1000,
 						args: JSON.stringify(args),
-						requestAddress: undefined,
+						requestAddress: undefined as undefined | string,
 					}
-					if (data.level === "NETWORK_ERR") {
-						data.requestAddress = err?.value?.url
+					if (err instanceof NetworkError) {
+						data.requestAddress = err.url
 					}
+					console.log("logger data", data)
 					remoteLogger.raw(data)
 				}
 			}

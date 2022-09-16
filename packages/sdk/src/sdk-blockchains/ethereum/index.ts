@@ -10,8 +10,7 @@ import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
 import {
-	EthereumAPIResponseError,
-	getErrorHandlerMiddleware,
+	getErrorHandlerMiddleware, NetworkErrorCode,
 } from "../../common/apis"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
@@ -40,7 +39,7 @@ export function createEthereumSdk(
 		apiClientParams: {
 			...(config?.params || {}),
 			middleware: [
-				getErrorHandlerMiddleware(EthereumAPIResponseError),
+				getErrorHandlerMiddleware(NetworkErrorCode.ETHEREUM_NETWORK_ERR),
 				...(config?.params?.middleware || []),
 			],
 		},
