@@ -4783,10 +4783,10 @@
     ganache "^7.0.2"
     web3-provider-engine "^16.0.1"
 
-"@rarible/ethers-ethereum@^0.12.89":
-  version "0.12.89"
-  resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.89.tgz#806e9dbcdbfc33f71088009cef8f8ea7d9cd186b"
-  integrity sha512-oHzgkpwgK8vNeTYOvMmYkr6G3ecK06FSkQ1WyegRs76MHe53Gqg4x6MCG2AWNmND7W0v9BffKP+GhXAxhDZIrg==
+"@rarible/ethers-ethereum@^0.12.91-hotfix.0":
+  version "0.12.91-hotfix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.91-hotfix.0.tgz#3ff2f157b1d9af8f85776960bea7615c0bd260b1"
+  integrity sha512-jqedmtCihy+8DUz2jP7vH5kgm0CZDNaQ4dC/RkWK6OqLf3dIF5TKRwRPVhPxTRLn6mYsA3+QMUUlIJB592i0EA==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.89"
     ethereumjs-util "^7.1.0"
@@ -4839,10 +4839,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.91":
-  version "0.12.91"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.91.tgz#47218263f77cdf410c74264fe9fa31558138990b"
-  integrity sha512-hPflhl6TkOCYQXSCwDpnVZRaz23wtvRMHj1AE/spC/vWwcBpvPQ9xu4HTU3JdyNzRAOpOjds4JnqiyzDAXENzg==
+"@rarible/protocol-ethereum-sdk@~0.12.91-hotfix.0":
+  version "0.12.91-hotfix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.91-hotfix.0.tgz#6dc0c37479ae455aca873a3497c016a126cc1454"
+  integrity sha512-5Q5jciVqIACXAy7UwKU2bu+uhAFtwdEEO9RJeg7YU3PW2fuOuyYUpAhMslyakBp+5E0wQmDIx1nHikvl4pU7dA==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "0.1.23-beta6"
@@ -4941,10 +4941,10 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@^0.12.89", "@rarible/web3-ethereum@~0.12.89":
-  version "0.12.89"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.89.tgz#819a739c84bcd2ae088127c0238f46993bfde323"
-  integrity sha512-+QTgD1KptXVBfKYLWx3GCDr3xQGgohIvLh8hXAllrebl2T1Ysr0jAmJxoITejLCTaqVzbLKHjmGZoExUmU27Tw==
+"@rarible/web3-ethereum@^0.12.91-hotfix.0", "@rarible/web3-ethereum@~0.12.91-hotfix.0":
+  version "0.12.91-hotfix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.91-hotfix.0.tgz#2782f09d76b40052892447303d62fceeafaf4eae"
+  integrity sha512-3uEF+f+g7srgou/Ix3Yh2VIVW9W26EsLmLeG2LlDJ+5X16mu53y+PWDowcFyNWvA2h/l7e9WyQVuOH1fcEojTQ==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.89"
     eth-rpc-errors "^4.0.3"
