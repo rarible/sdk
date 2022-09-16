@@ -4944,10 +4944,10 @@
   dependencies:
     bignumber.js "^9.0.0"
 
-"@rarible/web3-ethereum@^0.12.92", "@rarible/web3-ethereum@~0.12.92":
-  version "0.12.92"
-  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.92.tgz#08a416162d6ce22c4f8ab43523c77a07d15ac1de"
-  integrity sha512-pqKTvCUa/B5lsYyTiUhz7NHa48CVjXn/VxcvFb9Ry1aa5ArMbc7T+zpBtqFSMuXZ3l6a7iXTiY/a0vMyJPtoOQ==
+"@rarible/web3-ethereum@^0.12.94", "@rarible/web3-ethereum@~0.12.94":
+  version "0.12.94"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.94.tgz#7645a4a11fc0bdf9f3724f7f67ddd48c04eaeb58"
+  integrity sha512-8xPLEmgrB8RrpABr26b6RaObur8eiwiartjjfNcgaCoyJxIVR7LGX0ut5bfbaVebjrDcp2F9gCeOyR/l1XsmQw==
   dependencies:
     "@rarible/ethereum-provider" "^0.12.89"
     eth-rpc-errors "^4.0.3"
