@@ -13,7 +13,7 @@ import { awaitItem } from "./test/await-item"
 import { providerDevelopmentSettings } from "./test/common"
 
 describe("mint", () => {
-	const { provider, wallet } = createE2eProvider(undefined, providerDevelopmentSettings)
+	const { provider, wallet } = createE2eProvider("0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9", providerDevelopmentSettings)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)

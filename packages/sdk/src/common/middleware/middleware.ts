@@ -44,7 +44,8 @@ export class Middlewarer {
 		const callbacks = []
 
 		for (const mid of this.middlewares) {
-			const [, cb] = await mid(wrappedCallable, args)
+			let cb = undefined;
+			([wrappedCallable, cb] = await mid(wrappedCallable, args))
 			if (cb) {
 				callbacks.push(cb)
 			}
