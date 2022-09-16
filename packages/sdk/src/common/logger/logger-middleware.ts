@@ -8,7 +8,7 @@ import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
 import { NetworkErrorCode } from "../apis"
-// import packageJson from "../../../package.json"
+
 const packageJson = require("../../../package.json")
 const loggerConfig = {
 	service: "union-sdk",
@@ -166,11 +166,9 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 	return async (callable, args) => {
 		const time = Date.now()
 
-		console.log("args", args, packageJson.version)
 		return [callable, async (responsePromise) => {
 			try {
 				const res = await responsePromise
-				console.log("success log", callable, res)
 				if (logsLevel >= LogsLevel.TRACE) {
 					remoteLogger.raw({
 						level: LogLevel.TRACE,
@@ -182,7 +180,6 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 					})
 				}
 			} catch (err: any) {
-				console.log("error log", callable, err)
 				if (logsLevel >= LogsLevel.ERROR) {
 					const data = {
 						level: getErrorLevel(callable.name, err, sdkContext.wallet),
@@ -196,7 +193,6 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 					if (err instanceof NetworkError) {
 						data.requestAddress = err.url
 					}
-					console.log("logger data", data)
 					remoteLogger.raw(data)
 				}
 			}
