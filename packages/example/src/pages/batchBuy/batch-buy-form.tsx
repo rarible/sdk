@@ -2,6 +2,7 @@ import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import { Order } from "@rarible/api-client"
+import { toItemId } from "@rarible/types"
 import { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
@@ -32,8 +33,6 @@ export function BatchBuyForm(
 		setError,
 	} = useRequestResult()
 
-	console.log(orders)
-
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
@@ -45,6 +44,7 @@ export function BatchBuyForm(
 					onComplete(await prepare.submit(prepare.prepared.map((prepare) => ({
 						orderId: prepare.orderId,
 						amount: parseInt(formData[prepare.orderId + "_amount"]),
+						itemId: toItemId(formData[prepare.orderId + "_itemId"]),
 					}))))
 				} catch (e) {
 					setError(e)
