@@ -49,7 +49,8 @@ export function BatchBuyPage() {
 							render: (onComplete, lastResponse) => {
 								return <BatchBuyForm
 									onComplete={onComplete}
-									prepare={lastResponse}
+									prepare={lastResponse.prepare}
+									orders={lastResponse.orders}
 									disabled={!validateConditions(blockchain)}
 								/>
 							}

@@ -67,7 +67,7 @@ export interface FillRequest {
 
 export type FillActionTypes = "approve" | "send-tx"
 
-interface PreparedFillInfo {
+export interface PreparedFillInfo {
 	/**
 	 * is multiple nft
 	 */

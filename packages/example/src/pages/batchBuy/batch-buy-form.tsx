@@ -1,15 +1,18 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
+import { Order } from "@rarible/api-client"
+import { toItemId } from "@rarible/types"
 import { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
-import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { FillRequestForm } from "../../components/common/sdk-forms/fill-request-form"
 
 interface IBatchBuyFormProps {
 	prepare: PrepareBatchBuyResponse
+	orders: Order[],
 	disabled?: boolean
 	onComplete: (response: any) => void
 }
@@ -17,6 +20,7 @@ interface IBatchBuyFormProps {
 export function BatchBuyForm(
 	{
 		prepare,
+		orders,
 		disabled,
 		onComplete,
 	}: IBatchBuyFormProps,
@@ -29,7 +33,6 @@ export function BatchBuyForm(
 		setError,
 	} = useRequestResult()
 
-	console.log(prepare)
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
@@ -41,6 +44,7 @@ export function BatchBuyForm(
 					onComplete(await prepare.submit(prepare.prepared.map((prepare) => ({
 						orderId: prepare.orderId,
 						amount: parseInt(formData[prepare.orderId + "_amount"]),
+						itemId: toItemId(formData[prepare.orderId + "_itemId"]),
 					}))))
 				} catch (e) {
 					setError(e)
@@ -55,20 +59,11 @@ export function BatchBuyForm(
 									OrderId: {prepare.orderId}
 								</p>
 
-								<FormTextInput
-									type="number"
-									inputProps={{
-										min: 1,
-										max: prepare.maxAmount,
-										step: 1,
-									}}
+								<FillRequestForm
 									form={form}
-									options={{
-										min: 1,
-										max: Number(prepare.maxAmount),
-									}}
-									name={prepare.orderId + "_amount"}
-									label="Amount"
+									prepare={prepare}
+									namePrefix={prepare.orderId}
+									order={orders.find((order) => order.id === prepare.orderId)}
 								/>
 							</Box>
 						})

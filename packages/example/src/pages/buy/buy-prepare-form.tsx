@@ -1,4 +1,5 @@
 import React, { useContext } from "react"
+import type { Order } from "@rarible/api-client"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
@@ -13,7 +14,7 @@ import { useNavigate } from "react-router-dom"
 
 interface IBuyPrepareFormProps {
 	disabled?: boolean
-	onComplete: (response: PrepareFillResponse) => void
+	onComplete: (response: { prepare: PrepareFillResponse, order: Order }) => void
 	orderId: string | undefined
 }
 
@@ -31,9 +32,13 @@ export function BuyPrepareForm({ orderId, disabled, onComplete }: IBuyPrepareFor
 					return
 				}
 				try {
-					onComplete(await connection.sdk.order.buy({
-						orderId: toOrderId(formData.orderId)
-					}))
+					const orderId = toOrderId(formData.orderId)
+					onComplete({
+						prepare: await connection.sdk.order.buy({
+							orderId,
+						}),
+						order: await connection.sdk.apis.order.getOrderById({id: orderId})
+					})
 					navigate(`/buy/${formData.orderId}`, {})
 				} catch (e) {
 					setError(e)
