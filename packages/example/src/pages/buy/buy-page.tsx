@@ -49,7 +49,8 @@ export function BuyPage() {
 							render: (onComplete, lastResponse) => {
 								return <BuyForm
 									onComplete={onComplete}
-									prepare={lastResponse}
+									prepare={lastResponse.prepare}
+									order={lastResponse.order}
 									disabled={!validateConditions(blockchain)}
 								/>
 							}

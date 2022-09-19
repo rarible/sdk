@@ -1,15 +1,18 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
+import type { Order } from "@rarible/api-client"
 import { Box, Stack } from "@mui/material"
 import { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
-import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { FillRequestForm } from "../../components/common/sdk-forms/fill-request-form"
+import { toItemId } from "@rarible/types/build/item-id"
 
 interface IBuyFormProps {
 	prepare: PrepareFillResponse
+	order: Order,
 	disabled?: boolean
 	onComplete: (response: any) => void
 }
@@ -17,6 +20,7 @@ interface IBuyFormProps {
 export function BuyForm(
 	{
 		prepare,
+		order,
 		disabled,
 		onComplete,
 	}: IBuyFormProps,
@@ -39,6 +43,7 @@ export function BuyForm(
 				try {
 					onComplete(await prepare.submit({
 						amount: parseInt(formData.amount),
+						itemId: toItemId(formData.itemId),
 					}))
 				} catch (e) {
 					setError(e)
@@ -46,21 +51,7 @@ export function BuyForm(
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput
-						type="number"
-						inputProps={{
-							min: 1,
-							max: prepare.maxAmount,
-							step: 1,
-						}}
-						form={form}
-						options={{
-							min: 1,
-							max: Number(prepare.maxAmount),
-						}}
-						name="amount"
-						label="Amount"
-					/>
+					<FillRequestForm form={form} prepare={prepare} order={order}/>
 					<Box>
 						<FormSubmit
 							form={form}
