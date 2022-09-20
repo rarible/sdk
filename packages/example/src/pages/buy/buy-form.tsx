@@ -43,7 +43,7 @@ export function BuyForm(
 				try {
 					onComplete(await prepare.submit({
 						amount: parseInt(formData.amount),
-						itemId: toItemId(formData.itemId),
+						itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
 					}))
 				} catch (e) {
 					setError(e)

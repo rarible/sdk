@@ -44,7 +44,7 @@ export function BatchBuyForm(
 					onComplete(await prepare.submit(prepare.prepared.map((prepare) => ({
 						orderId: prepare.orderId,
 						amount: parseInt(formData[prepare.orderId + "_amount"]),
-						itemId: toItemId(formData[prepare.orderId + "_itemId"]),
+						itemId: formData[prepare.orderId + "_itemId"] ? toItemId(formData[prepare.orderId + "_itemId"]) : undefined,
 					}))))
 				} catch (e) {
 					setError(e)
