@@ -4839,10 +4839,10 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.95":
-  version "0.12.95"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.95.tgz#8436739a272ff509337efdde2c3cbae7a0329fe8"
-  integrity sha512-m0CQTyinmpP37q2YL9KrMLo8Wxh8MxsCT7gVpoIZzeIV195aDSLjgmShqxvJJgEPzQga1Tf40oK57OacPdLbTg==
+"@rarible/protocol-ethereum-sdk@~0.12.96":
+  version "0.12.96"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.96.tgz#d6779cf702efec150a9c3242238677c00304c403"
+  integrity sha512-OfS9wAHkuDoyLA1hBTw5VMGsfNFZEv0vmUYHY7z5pCZqalIDKLOywrUF7t6eKlqpmIgmCldT8DrJ9wGKo9dO4g==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.23-beta7"
