@@ -20,9 +20,7 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "NFT",
 				arguments: {
-					name: "My NFT collection",
-					symbol: "MYNFT",
-					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: false,
 				},
 			},
@@ -37,9 +35,7 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "NFT",
 				arguments: {
-					name: "My NFT collection",
-					symbol: "MYNFT",
-					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: true,
 				},
 			},
@@ -56,9 +52,7 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "MT",
 				arguments: {
-					name: "My NFT collection",
-					symbol: "MYNFT",
-					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: false,
 				},
 			},
@@ -74,9 +68,7 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "MT",
 				arguments: {
-					name: "My NFT collection",
-					symbol: "MYNFT",
-					contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: true,
 				},
 			},

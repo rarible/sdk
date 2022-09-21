@@ -19,9 +19,7 @@ export class TezosCreateCollection {
 		const provider = getRequiredProvider(this.provider)
 		const owner = await provider.tezos.address()
 		const meta = {
-			name: asset.arguments.name,
-			symbol: asset.arguments.symbol,
-			contractURI: asset.arguments.contractURI,
+			"": asset.arguments.metadataURI,
 		}
 
 		if (asset.assetType === "NFT") {

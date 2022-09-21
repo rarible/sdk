@@ -22,9 +22,7 @@ async function createCollection() {
 		asset: {
 			assetType: "NFT",
 			arguments: {
-				name: "My NFT collection",
-				symbol: "MYNFT",
-				contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+				metadataURI: "collection_metadataURI.json",
 				isUserToken: false,
 			},
 		},

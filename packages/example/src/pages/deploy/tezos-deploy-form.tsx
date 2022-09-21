@@ -22,9 +22,7 @@ export function TezosDeployForm({ form }: ITezosDeployFormProps) {
 					<MenuItem value={"NFT"}>{"NFT"}</MenuItem>
 					<MenuItem value={"MT"}>{"MT"}</MenuItem>
 				</FormSelect>
-				<FormTextInput form={form} name="name" label="Name"/>
-				<FormTextInput form={form} name="symbol" label="Symbol"/>
-				<FormTextInput form={form} name="contractURI" label="Contract URI"/>
+				<FormTextInput form={form} name="metadataURI" label="Metadata URI"/>
 				<FormCheckbox form={form} name="private" label="Private Collection"/>
 			</Stack>
 		</>
