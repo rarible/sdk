@@ -20,7 +20,8 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "NFT",
 				arguments: {
-					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					name: "My NFT collection",
+					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: false,
 				},
 			},
@@ -35,7 +36,8 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "NFT",
 				arguments: {
-					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					name: "My NFT collection",
+					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: true,
 				},
 			},
@@ -52,7 +54,8 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "MT",
 				arguments: {
-					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					name: "My NFT collection",
+					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: false,
 				},
 			},
@@ -68,7 +71,8 @@ describe.skip("deploy tezos tests", () => {
 			asset: {
 				assetType: "MT",
 				arguments: {
-					metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+					name: "My NFT collection",
+					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 					isUserToken: true,
 				},
 			},

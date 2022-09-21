@@ -22,7 +22,8 @@ async function createCollection() {
 		asset: {
 			assetType: "NFT",
 			arguments: {
-				metadataURI: "collection_metadataURI.json",
+				name: "My NFT collection",
+				homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 				isUserToken: false,
 			},
 		},

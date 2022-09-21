@@ -34,7 +34,12 @@ export type SolanaCreateCollectionTokenAsset = {
 export type TezosCreateCollectionTokenAsset = {
 	assetType: "NFT" | "MT"
 	arguments: {
-		metadataURI: string
+		name: string
+		description?: string,
+		version?: string,
+		authors?: string[]
+		license?: string
+		homepage: string
 		isUserToken: boolean
 	}
 }

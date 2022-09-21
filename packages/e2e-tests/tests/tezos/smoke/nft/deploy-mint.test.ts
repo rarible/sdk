@@ -28,7 +28,8 @@ function suites(): {
 				asset: {
 					assetType: "NFT",
 					arguments: {
-						metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+						name: "NFT",
+						homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: false,
 					},
 				},
@@ -56,7 +57,8 @@ function suites(): {
 				asset: {
 					assetType: "MT",
 					arguments: {
-						metadataURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+						name: "MT",
+						homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: false,
 					},
 				},
