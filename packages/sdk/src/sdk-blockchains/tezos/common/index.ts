@@ -26,8 +26,7 @@ import type { Part } from "@rarible/tezos-common"
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
-import {
-	Configuration,
+import type {
 	NftCollectionControllerApi,
 	NftItemControllerApi,
 	NftOwnershipControllerApi,
@@ -42,9 +41,11 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import axios from "axios"
+import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { RaribleSdkConfig } from "../../../config/domain"
+import { NetworkErrorCode } from "../../../common/apis"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
@@ -96,26 +97,13 @@ export type TezosMetaAttribute = {
 
 export const XTZ_DECIMALS = 6
 
-export function getTezosAPIs(network: TezosNetwork): ITezosAPI {
-	const config = new Configuration({
-		basePath: getTezosBasePath(network),
-	})
-
-	return {
-		collection: new NftCollectionControllerApi(config),
-		item: new NftItemControllerApi(config),
-		ownership: new NftOwnershipControllerApi(config),
-		order: new OrderControllerApi(config),
-	}
-}
-
 export function getTezosBasePath(network: TezosNetwork): string {
 	switch (network) {
 		case "testnet": {
 			return "https://test-tezos-api.rarible.org"
 		}
 		case "dev": {
-			return "https://dev-tezos-api.rarible.org"
+			return "http://dev-tezos-api.rarible.int"
 		}
 		case "mainnet": {
 			return "https://tezos-api.rarible.org"
@@ -144,10 +132,6 @@ export function getMaybeTezosProvider(
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
-					api: `${getTezosBasePath(network)}/v0.1`,
-					api_permit: `${getTezosBasePath(network)}/v0.1`,
-					permit_whitelist: [],
-					wrapper: "",
 					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
 					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
 					node_url: "https://rpc.tzkt.io/ithacanet",
@@ -155,16 +139,24 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1UcBbv2D84mZ9tZx4MVLbCNyC5ihJERED2",
-					bid_storage: "KT1VXSBANyhqGiGgXjt5mT9XXQMbujdfJFw2",
-					sig_checker: "KT1RGGtyEtGCYCoRmTVNoE6qg3ay2DZ1BmDs",
-					tzkt: "https://api.ithacanet.tzkt.io",
-					dipdup: "https://test-tezos-indexer.rarible.org/v1/graphql",
+					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
+					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
+					tzkt: "https://api.ghostnet.tzkt.io",
+					dipdup: "https://testnet-tezos-indexer.rarible.org/v1/graphql",
 					union_api: unionApiBaseUrl,
-					objkt_sales_v2: "KT1T1JMFGipL6EdCmeL8tDfLiTi1BFZ1yAKV",
-					royalties_provider: "KT1AZfqFGFLMUrscNFyawDYAyqXYydz714ya",
-					hen_marketplace: "KT1SakgxbHuJmkMLSsTb37DNtHLz6LzyaMhx",
-					hen_objkts: "KT18pXXDDLMtXYxf6MpMGVKjmeSd6MuWnmjn",
+					objkt_sales_v1: "KT1Ax5fm2UNxjXGmrMDytREfqvYoCXoBB4Jo",
+					objkt_sales_v2: "KT1GiZuR6TdkgxZGQGZSdbC3Jox9JTSbqTB6",
+					royalties_provider: "KT1F68vtdE2HHhZa3jBNT1kCkMjaQAWCShXB",
+					hen_marketplace: "KT1XYgjgFQutFfgEiD7RuppSKZsawZbkpKxL",
+					hen_objkts: "KT1P2VyFd61A3ukizJoX37nFF9fqZnihv7Lw",
+					teia_marketplace: "KT1Anx515N2PK8A2ZX5uGNn7Gckh4WytLJmK",
+					versum_marketplace: "KT1B1Wz7jPH23EqKUpDwFDkw3A1yLxGZ4uJy",
+					versum_nfts: "KT1UH5RSbomuV1o6UuDB9yeACbqRMup3utGu",
+					fxhash_sales_v1: "KT1BEc3m6yxN856Y4zfArpDqQ1uZZ1HkDTRh",
+					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
+					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
+					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
 				},
 			}
 		}
@@ -172,32 +164,36 @@ export function getMaybeTezosProvider(
 			return {
 				tezos: provider,
 				config: {
-					exchange: "KT18isH58SBp7UaRWB652UwLMPxCe1bsjMMe",
-					transfer_proxy: "KT1LmiHVNjfbZvPx9qvASVk8mzFcaJNtfj8q",
+					exchange: "KT1S6H2FWxrpaD7aPRSW1cTTE1xPucXBSTL5",
+					transfer_proxy: "KT1WbVjXdmBpzzVoYSSUiNt6QFnSC3W768d1",
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
-					api: `${getTezosBasePath(network)}/v0.1`,
-					api_permit: `${getTezosBasePath(network)}/v0.1`,
-					permit_whitelist: [],
-					wrapper: "",
-					chain_id: "NetXfHjxW3qBoxi",
-					auction: "KT1L8u1GMiKSARujxwQHfMtJTkMBSonQ7FSv",
-					auction_storage: "KT1RtFbGfSbgNVuN9cfvrzhoHcq9CSUH3uMf",
-					node_url: "https://dev-tezos-node.rarible.org",
-					sales: "KT1PFCwtC28QJZtsMDi8Gu9ezJydZ812y8Yi",
-					sales_storage: "KT1KJav7CC8ieoLfdpeeDpo7pQbKCJDNP2a6",
-					transfer_manager: "KT1RAjXqJm4MPf1MQr4NdinupYc3NxNaykaz",
-					bid: "KT1Wt3C7M7nJuuA83Ukr572vFc5uk6QJwePZ",
-					bid_storage: "KT1KJRo2tiFBXZnzTJAVxrPnn2jW3LVCZSii",
-					sig_checker: "KT1EiyFnYEGUtfMLKBcWnYzJ95d1hakR5qaX",
-					tzkt: "https://dev-tezos-tzkt.rarible.org",
+					chain_id: "NetXnHfVqm9iesp",
+					auction: "KT1CB5JBSC7kTxRV3ir2xsooMA1FLieiD4Mt",
+					auction_storage: "KT1KWAPPjuDq4ZeX67rzZWsf6eAeqwtuAfSP",
+					node_url: "https://rpc.tzkt.io/ghostnet",
+					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
+					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
+					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
+					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
+					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
+					tzkt: "https://api.ghostnet.tzkt.io",
 					dipdup: "https://dev-tezos-indexer.rarible.org/v1/graphql",
 					union_api: "https://dev-api.rarible.org/v0.1",
-					objkt_sales_v2: "KT1X1sxF2kqNKMKcNatbrx3d5M11LhSthQ3L",
-					royalties_provider: "KT1ABvSRv27WymHYAyuEVnYktdhiPy3kThjk",
-					hen_marketplace: "KT1BCcHJuWyKCWE4q6wJwnaPqfifhm3bWTpS",
-					hen_objkts: "KT1EFwQpD522Vfw7LykZkwbtRXghetRP5jNH",
+					objkt_sales_v1: "KT1Ax5fm2UNxjXGmrMDytREfqvYoCXoBB4Jo",
+					objkt_sales_v2: "KT1GiZuR6TdkgxZGQGZSdbC3Jox9JTSbqTB6",
+					royalties_provider: "KT1F68vtdE2HHhZa3jBNT1kCkMjaQAWCShXB",
+					hen_marketplace: "KT1XYgjgFQutFfgEiD7RuppSKZsawZbkpKxL",
+					hen_objkts: "KT1P2VyFd61A3ukizJoX37nFF9fqZnihv7Lw",
+					teia_marketplace: "KT1Anx515N2PK8A2ZX5uGNn7Gckh4WytLJmK",
+					versum_marketplace: "KT1B1Wz7jPH23EqKUpDwFDkw3A1yLxGZ4uJy",
+					versum_nfts: "KT1UH5RSbomuV1o6UuDB9yeACbqRMup3utGu",
+					fxhash_sales_v1: "KT1BEc3m6yxN856Y4zfArpDqQ1uZZ1HkDTRh",
+					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
+					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
+					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
 				},
 			}
 		}
@@ -210,10 +206,6 @@ export function getMaybeTezosProvider(
 					fees: new BigNumber(0),
 					nft_public: "",
 					mt_public: "",
-					api: `${getTezosBasePath(network)}/v0.1`,
-					api_permit: `${getTezosBasePath(network)}/v0.1`,
-					permit_whitelist: [],
-					wrapper: "KT1EJkjatSNWD2NiPx8hivKnawxuyaVTwP6n",
 					auction: "",
 					auction_storage: "",
 					node_url: "https://rpc.tzkt.io/mainnet",
@@ -228,9 +220,17 @@ export function getMaybeTezosProvider(
 					dipdup: "https://tezos-indexer.rarible.org/v1/graphql",
 					union_api: unionApiBaseUrl,
 					objkt_sales_v2: "KT1WvzYHCNBvDSdwafTHv7nJ1dWmZ8GCYuuC",
+					objkt_sales_v1: "KT1FvqJwEDWb1Gwc55Jd1jjTHRVWbYKUUpyq",
 					royalties_provider: "KT1HNNrmCk1fpqveRDz8Fvww2GM4gPzmA7fo",
 					hen_marketplace: "KT1HbQepzV1nVGg8QVznG7z4RcHseD5kwqBn",
 					hen_objkts: "KT1RJ6PbjHpwc3M5rw5s2Nbmefwbuwbdxton",
+					teia_marketplace: "KT1PHubm9HtyQEJ4BBpMTVomq6mhbfNZ9z5w",
+					versum_marketplace: "KT1GyRAJNdizF1nojQz62uGYkx8WFRUJm9X5",
+					versum_nfts: "KT1LjmAdYQCLBjwv4S2oFkEzyHVkomAf5MrW",
+					fxhash_sales_v1: "KT1Xo5B7PNBAeynZPmca4bRh6LQow4og1Zb9",
+					fxhash_sales_v2: "KT1GbyoDi7H1sfXmimXpptZJuCdHMh66WS9u",
+					fxhash_nfts_v1: "KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE",
+					fxhash_nfts_v2: "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi",
 				},
 			}
 		}
@@ -602,6 +602,7 @@ export async function getCollectionType(
 		response = data
 	} catch (e) {
 		console.error(e)
+		handleAxiosErrorResponse(e, { code: NetworkErrorCode.TEZOS_EXTERNAL_ERR })
 		throw new Error("Getting tezos collection data error")
 	}
 

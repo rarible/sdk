@@ -4,6 +4,7 @@ import { v4 } from "uuid"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
+import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type {
 	CommonTokenContent,
 	IPreprocessMeta,
@@ -11,6 +12,7 @@ import type {
 } from "../../../types/nft/mint/preprocess-meta"
 import type { UnionPart } from "../../../types/order/common"
 import { NFT_STORAGE_URL } from "../../../config"
+import { NetworkErrorCode } from "../../../common/apis"
 import type {
 	IPFSHash,
 	IPFSServiceResponse,
@@ -128,14 +130,19 @@ async function uploadDataToProvider(nftStorageApiKey: string, data: FormData): P
 		throw new Error("Provide NFT_STORAGE_API_KEY as environment variables!")
 	}
 	const req = transformNftStorageFormData(data)
-	const nftStorageResponse = (
-		await axios.create().post<NftStorageResponse>(NFT_STORAGE_URL, req, {
-			headers: { Authorization: `Bearer ${nftStorageApiKey}` },
-		})
-	).data
-	return {
-		ipfsHash: nftStorageResponse.value.cid,
-		size: nftStorageResponse.value.size,
+	try {
+		const nftStorageResponse = (
+			await axios.create().post<NftStorageResponse>(NFT_STORAGE_URL, req, {
+				headers: { Authorization: `Bearer ${nftStorageApiKey}` },
+			})
+		).data
+		return {
+			ipfsHash: nftStorageResponse.value.cid,
+			size: nftStorageResponse.value.size,
+		}
+	} catch (e) {
+		handleAxiosErrorResponse(e, { code: NetworkErrorCode.META_EXTERNAL_ERR })
+		throw e
 	}
 }
 

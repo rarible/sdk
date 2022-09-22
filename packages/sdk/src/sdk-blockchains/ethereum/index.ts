@@ -9,6 +9,9 @@ import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
+import {
+	getErrorHandlerMiddleware, NetworkErrorCode,
+} from "../../common/apis"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { notImplemented, nonImplementedAction } from "../../common/not-implemented"
@@ -36,7 +39,13 @@ export function createEthereumSdk(
 	} & IEthereumSdkConfig
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, {
-		apiClientParams: config.params,
+		apiClientParams: {
+			...(config?.params || {}),
+			middleware: [
+				getErrorHandlerMiddleware(NetworkErrorCode.ETHEREUM_NETWORK_ERR),
+				...(config?.params?.middleware || []),
+			],
+		},
 		logs: config.logs,
 		ethereum: config[Blockchain.ETHEREUM],
 		polygon: config[Blockchain.POLYGON],

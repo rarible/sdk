@@ -27,8 +27,7 @@ function suites(): {
 				blockchain: Blockchain.TEZOS,
 				type: "NFT",
 				name: "NFT",
-				symbol: "AUTO_NFT",
-				contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+				homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 				isPublic: true,
 			} as CreateCollectionRequestSimplified,
 			mintRequest: (walletAddress: UnionAddress) => {
@@ -53,10 +52,8 @@ function suites(): {
 				blockchain: Blockchain.TEZOS,
 				type: "MT",
 				name: "MT",
-				symbol: "AUTO_MT",
-				contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+				homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 				isPublic: false,
-				operators: [],
 			} as CreateCollectionRequestSimplified,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {

@@ -144,7 +144,7 @@ function setupMiddleware(
 	for (const prop in apis) {
 		//@ts-ignore
 		//todo: better wrap for apis methods
-		middlewarer.wrapObjectMethods(apis[prop], { namespace: "apis." + prop })
+		middlewarer.wrapApiControllerMethods(apis[prop], { namespace: "apis." + prop })
 	}
 
 	for (const prop in internalSdk) {

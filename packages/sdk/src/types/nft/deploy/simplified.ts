@@ -2,6 +2,8 @@ import type { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { CreateCollectionBlockchains } from "./domain"
 import type { CreateCollectionResponse } from "./domain"
+import type { CreatePublicCollectionArguments } from "./domain"
+import type { TezosCreateCollectionTokenAsset } from "./domain"
 
 export type ICreateCollectionSimplified = (req: CreateCollectionRequestSimplified) => Promise<CreateCollectionResponse>
 
@@ -33,25 +35,20 @@ export interface EthereumCreatePrivateCollectionSimplified extends
 	operators: UnionAddress[]
 }
 
-export interface EthereumCreateCollectionSimplifiedCommon {
+export type EthereumCreateCollectionSimplifiedCommon = {
 	type: "ERC721" | "ERC1155"
-	name: string
-	symbol: string
-	baseURI: string
-	contractURI: string
-}
+} & Omit<CreatePublicCollectionArguments, "isUserToken">
 
 /**
  * Tezos
  */
-export interface TezosCreatePublicCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.TEZOS> {
-	type: "NFT" | "MT"
-	symbol: string
-	name: string
-	contractURI: string
-	isPublic: boolean
-}
+export type TezosCreatePublicCollectionSimplified =
+	AbstractCreateCollectionSimplified<Blockchain.TEZOS>
+	& Omit<TezosCreateCollectionTokenAsset["arguments"], "isUserToken">
+	& {
+		type: "NFT" | "MT"
+		isPublic: boolean
+	}
 
 /**
  * Solana

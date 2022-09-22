@@ -1,8 +1,10 @@
 import type { ItemId, UnionAddress } from "@rarible/types"
 import type { TezosProvider } from "@rarible/tezos-sdk"
+import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
 import type { CanTransferResult } from "../../../types/nft/restriction/domain"
 import type { MaybeProvider } from "../common"
 import { convertUnionAddress, getRequiredProvider } from "../common"
+import { NetworkErrorCode } from "../../../common/apis"
 
 export class TezosCanTransfer {
 	constructor(
@@ -40,16 +42,29 @@ export class TezosCanTransfer {
 			"source": this.provider.config.transfer_proxy,
 			"unparsing_mode": "Readable",
 		}
-		const response = await window.fetch(
-			`${provider.tezos.tk.rpc.getRpcUrl()}/chains/main/blocks/head/helpers/scripts/run_view`,
-			{
-				method: "POST",
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(body),
+		const initParams = {
+			method: "POST",
+			headers: {
+				"Accept": "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(body),
+		}
+		const fetchUrl = `${provider.tezos.tk.rpc.getRpcUrl()}/chains/main/blocks/head/helpers/scripts/run_view`
+		let response
+		try {
+			response = await window.fetch(fetchUrl, initParams)
+		} catch (e) {
+			throw new NetworkError({
+				url: fetchUrl,
+				data: (e as Error).message,
+				code: NetworkErrorCode.TEZOS_EXTERNAL_ERR,
 			})
+		}
+		await handleFetchErrorResponse(response, {
+			requestInit: initParams,
+			code: NetworkErrorCode.TEZOS_EXTERNAL_ERR,
+		})
 		const result: CheckResponse = await response.json()
 		if (result.data.string === "") {
 			return { success: true }

@@ -51,7 +51,7 @@ export class TezosCancel {
 				this.provider.config, {
 					data: true,
 				}, {
-					order_id: getTezosOrderId(order.id),
+					order_id: [getTezosOrderId(order.id)],
 				})
 
 			if (!legacyOrders.length) {
@@ -63,8 +63,7 @@ export class TezosCancel {
 			const orderForm = order_of_json(legacyOrders[0].data)
 			const tx = await cancel(
 				getRequiredProvider(this.provider),
-				orderForm as OrderForm,
-				false
+				orderForm as OrderForm
 			)
 
 			return new BlockchainTezosTransaction(tx, this.network)

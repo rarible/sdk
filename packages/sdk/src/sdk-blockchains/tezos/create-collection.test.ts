@@ -19,8 +19,7 @@ describe.skip("deploy tezos tests", () => {
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
-			symbol: "MYNFT",
-			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 			isPublic: true,
 		})
 
@@ -35,8 +34,7 @@ describe.skip("deploy tezos tests", () => {
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
-			symbol: "MYNFT",
-			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 			isPublic: false,
 		})
 
@@ -51,8 +49,7 @@ describe.skip("deploy tezos tests", () => {
 			blockchain: Blockchain.TEZOS,
 			type: "MT",
 			name: "My NFT collection",
-			symbol: "MYNFT",
-			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 			isPublic: true,
 		})
 
@@ -67,8 +64,7 @@ describe.skip("deploy tezos tests", () => {
 			blockchain: Blockchain.TEZOS,
 			type: "MT",
 			name: "My NFT collection",
-			symbol: "MYNFT",
-			contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 			isPublic: false,
 		})
 

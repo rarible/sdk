@@ -16,7 +16,10 @@ import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 
 describe("sale", () => {
-	const { web31, web32, wallet1, wallet2 } = initProviders()
+	const { web31, web32, wallet1, wallet2 } = initProviders({
+		pk1: undefined,
+		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	})
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", { logs: LogsLevel.DISABLED })

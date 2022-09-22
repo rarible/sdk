@@ -9,6 +9,7 @@ import { mint } from "../../../common/atoms-tests/mint"
 import { getCollection } from "../../../common/helpers"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { deployCollectionDeployRequest } from "../../common/defaults"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -23,10 +24,7 @@ function suites(): {
 			blockchain: Blockchain.SOLANA,
 			description: "NFT",
 			wallet: getSolanaWallet(),
-			deployRequest: {
-				blockchain: Blockchain.SOLANA,
-				metadataURI: "https://gist.githubusercontent.com/rzcoder/757f644f9755acb00aa8c34b619eb2a8/raw/ab18b90681643279c63ed96a666c622700bf30aa/konosuba",
-			} as CreateCollectionRequestSimplified,
+			deployRequest: deployCollectionDeployRequest,
 			mintRequest: (walletAddress: UnionAddress) => {
 				return {
 					uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",

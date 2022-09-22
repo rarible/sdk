@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react"
 import { Box, IconButton, Stack } from "@mui/material"
+import type { Order } from "@rarible/api-client"
 import { useForm } from "react-hook-form"
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
@@ -14,7 +15,7 @@ import { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/dom
 
 interface IBatchBuyPrepareFormProps {
 	disabled?: boolean
-	onComplete: (response: PrepareBatchBuyResponse) => void
+	onComplete: (response: { prepare: PrepareBatchBuyResponse, orders: Order[] }) => void
 	orderId: string | undefined
 }
 
@@ -33,11 +34,20 @@ export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuy
 				}
 				try {
 					console.log(formData)
-					onComplete(await connection.sdk.order.batchBuy.prepare(
-						formData.orderId.filter((id: string) => id).map((id: string) => ({
-								orderId: toOrderId(id),
-							}),
-						)))
+					onComplete({
+						prepare: await connection.sdk.order.batchBuy.prepare(
+							formData.orderId.filter((id: string) => id).map((id: string) => {
+								return {
+									orderId: toOrderId(id),
+								}
+							})
+						),
+						orders: (await connection.sdk.apis.order.getOrdersByIds({
+							orderIds: {
+								ids: formData.orderId.filter((id: string) => id)
+							},
+						})).orders,
+					})
 				} catch (e) {
 					setError(e)
 				}

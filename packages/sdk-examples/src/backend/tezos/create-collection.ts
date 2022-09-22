@@ -21,8 +21,7 @@ async function createCollection() {
 		blockchain: Blockchain.TEZOS,
 		type: "NFT",
 		name: "My NFT collection",
-		symbol: "MYNFT",
-		contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+		homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 		isPublic: false,
 	})
 	console.log("address of new collection", result.address)

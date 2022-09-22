@@ -12,6 +12,7 @@ import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
+import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -28,7 +29,13 @@ export function createFlowSdk(
 	params?: ConfigurationParameters,
 	auth?: AuthWithPrivateKey,
 ): IRaribleInternalSdk {
-	const sdk = createFlowSdkInstance(wallet?.fcl, network, params, auth)
+	const sdk = createFlowSdkInstance(wallet?.fcl, network, {
+		...(params || {}),
+		middleware: [
+			getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR),
+			...(params?.middleware || []),
+		],
+	}, auth)
 	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)

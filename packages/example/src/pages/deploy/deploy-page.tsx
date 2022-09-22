@@ -39,8 +39,11 @@ function getDeployRequest(data: Record<string, any>) {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
         type: data["collection"],
         name: data["name"],
-        symbol: data["symbol"],
-        contractURI: data["contractURI"],
+        description: data["description"],
+        version: data["version"],
+        authors: data["authors"],
+        license: data["license"],
+        homepage: data["homepage"],
         isPublic: !!data["private"],
 			} as CreateCollectionRequestSimplified
 		case WalletType.SOLANA:

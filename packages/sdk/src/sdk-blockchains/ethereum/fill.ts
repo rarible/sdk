@@ -139,6 +139,22 @@ export class EthereumFill {
 				}
 				break
 			}
+			case "X2Y2": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
+			case "AMM": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
@@ -219,6 +235,22 @@ export class EthereumFill {
 					supportsPartialFill: true,
 				}
 			}
+			case "AMM": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
+				}
+			}
+			case "X2Y2": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: false,
+				}
+			}
 			default:
 				throw new Error("Unsupported order type")
 		}
@@ -253,6 +285,8 @@ export class EthereumFill {
 			contract = order.take.assetType.contract
 		} else if (isNft(order.make.assetType) || order.make.assetType.assetClass === "COLLECTION") {
 			contract = order.make.assetType.contract
+		} else if (order.make.assetType.assetClass === "AMM_NFT") {
+			return false
 		} else {
 			throw new Error("Nft has not been found")
 		}
@@ -339,28 +373,44 @@ export class EthereumFill {
 				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
 					tx,
 					this.network,
-					(receipt,
-					) => {
-						let executionEvents: any
-						for (let event of (receipt.events as any[] || [])) {
-							if ((Array.isArray(event) || "0" in event) && event[0]?.event === "Execution") {
-								executionEvents = event as any
-								break
-							} else if (event.event === "Execution") {
-								executionEvents = [event]
-								break
-							}
-						}
+					(receipt: any) => {
+						try {
+							let executionEvents: any[] = []
 
-						if (executionEvents) {
-							return {
-								type: "BATCH_BUY",
-								results: request.map((req, index) => ({
-									orderId: req.orderId,
-									result: !!executionEvents?.[index]?.returnValues["result"],
-								})),
+							for (let event of (receipt.events || [])) {
+								if ("0" in event && event[0]?.event === "Execution") {
+									if (Array.isArray(event)) {
+										executionEvents.push(...event)
+									} else {
+										// cycling over events "subarray", because web3 provider
+										// returning it not as real array, but as object
+										let i = 0
+										while (event[i]) {
+											executionEvents.push(event[i])
+											i += 1
+										}
+									}
+								} else if (event.event === "Execution") {
+									executionEvents.push(event)
+								}
 							}
-						} else {
+
+							if (executionEvents) {
+								return {
+									type: "BATCH_BUY",
+									results: request.map((req, index) => ({
+										orderId: req.orderId,
+										result: (
+											executionEvents[index]?.data || // ethers variant
+											executionEvents[index]?.raw?.data // web3 variant
+										) === "0x0000000000000000000000000000000000000000000000000000000000000001",
+									})),
+								}
+							} else {
+								return undefined
+							}
+						} catch (e) {
+							console.error("Can't parse transaction events", e)
 							return undefined
 						}
 					},
@@ -382,8 +432,9 @@ export class EthereumFill {
 				ethOrder.type !== "OPEN_SEA_V1" &&
 				ethOrder.type !== "RARIBLE_V2" &&
 				ethOrder.type !== "SEAPORT_V1" &&
-				ethOrder.type !== "LOOKSRARE"
-				//order.type !== "X2Y2"
+				ethOrder.type !== "LOOKSRARE" &&
+				ethOrder.type !== "AMM" &&
+				ethOrder.type !== "X2Y2"
 			) {
 				throw new Error(`Order type ${ethOrder.type} is not supported for batch buy`)
 			}

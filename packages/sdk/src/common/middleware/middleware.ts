@@ -134,6 +134,34 @@ export class Middlewarer {
 			}
 		}
 	}
+	/**
+	 * Wrap methods in api controller
+	 *
+	 * @param object
+	 * @param meta metadata for new method
+	 */
+	wrapApiControllerMethods(object: any, meta: { namespace: string }) {
+		const IGNORED_PROPS = [
+			"configuration",
+			"fetchApi",
+			"middleware",
+			"constructor",
+			"withMiddleware",
+			"withPreMiddleware",
+			"withPostMiddleware",
+			"request",
+			"createFetchParams",
+			"clone",
+		]
+
+		for (const prop in object) {
+			if (!IGNORED_PROPS.includes(prop) && !prop.endsWith("Raw") && typeof object[prop] === "function") {
+				object[prop] = this.wrap(object[prop].bind(object), {
+					methodName: (meta.namespace ? meta.namespace + "." : "") + prop,
+				})
+			}
+		}
+	}
 
 	static skipMiddleware<T extends Function>(something: T): T & {skipMiddleware: true} {
 		return Object.defineProperty(

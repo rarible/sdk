@@ -1,6 +1,7 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
+import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { MintAndSellRequest } from "@rarible/sdk"
 import { getSolanaWallet, getWalletAddressFull } from "../../../common/wallet"
@@ -11,12 +12,14 @@ import { getCollection } from "../../../common/helpers"
 import { mintAndSell } from "../../../common/atoms-tests/mint-and-sell"
 import { buy } from "../../../common/atoms-tests/buy"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { deployCollectionDeployRequest } from "../../common/defaults"
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { creator: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequest,
 	mintAndSellRequest: (address: UnionAddress) => MintAndSellRequest,
 	buyAmount: number,
 	creatorBalance: number,
@@ -30,7 +33,7 @@ function suites(): {
 				creator: getSolanaWallet(0),
 				buyer: getSolanaWallet(1),
 			},
-			collectionId: testsConfig.variables.SOLANA_COLLECTION,
+			deployRequest: deployCollectionDeployRequest,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
 					uri: testsConfig.variables.SOLANA_URI,
@@ -66,7 +69,8 @@ describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
 		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
-		const collection = await getCollection(creatorSdk, suite.collectionId)
+		const { address: collectionId } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
+		const collection = await getCollection(creatorSdk, collectionId)
 
 		const mintAndSellResponse = await mintAndSell(creatorSdk, creatorWallet, { collection },
 			suite.mintAndSellRequest(walletAddressCreator.unionAddress))

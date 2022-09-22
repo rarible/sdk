@@ -6,22 +6,88 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
 
 
-### Bug Fixes
-
-* flow buy test ([ef3cff8](https://github.com/rarible/sdk/commit/ef3cff8057578f795d3b3708f405687047b127cd))
-* typedoc config ([e98836c](https://github.com/rarible/sdk/commit/e98836c82c3cd7d26f9e16378afebe23e34876b3))
-* typedoc config, extend docs ([048cfed](https://github.com/rarible/sdk/commit/048cfed5005b5775af75ead358bbc069ae802894))
-
-
 ### Features
 
 * better wallet detection ([0637a0c](https://github.com/rarible/sdk/commit/0637a0caa3bbbed5cbd78fc54520212938036f74))
 * simplified methods ([7b84f75](https://github.com/rarible/sdk/commit/7b84f7503ce40d577706fca4383e6efc7ed28c1c))
 * simplify create sdk ([3aa3714](https://github.com/rarible/sdk/commit/3aa37146c880254ddc5b6cd539b5d03db07d4af4))
-* simplify methods ([826ac77](https://github.com/rarible/sdk/commit/826ac779f5442dd585aa85456003b62a4ce47a5b))
 * support create sdk with providers ([deb0098](https://github.com/rarible/sdk/commit/deb0098427cb7f39d74195ca2ddb6c4f9cc4a936))
-* support create sdk with providers ([605b17a](https://github.com/rarible/sdk/commit/605b17a1094fd97e8ab791577033dee5a9c601be))
 * update readme ([#278](https://github.com/rarible/sdk/issues/278)) ([8e4ad49](https://github.com/rarible/sdk/commit/8e4ad490b9eeb0485ff1740fbf61e3b2003017d2))
+
+
+
+
+
+## [0.9.31](https://github.com/rarible/sdk/compare/v0.9.30...v0.9.31) (2022-09-14)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.9.30](https://github.com/rarible/sdk/compare/v0.9.29...v0.9.30) (2022-09-13)
+
+
+### Features
+
+* amm/sudoswap orders support ([#331](https://github.com/rarible/sdk/issues/331)) ([41a5452](https://github.com/rarible/sdk/commit/41a5452932cdb57c266086270aad9bda409d556b))
+
+
+
+
+
+## [0.9.29](https://github.com/rarible/sdk/compare/v0.9.28...v0.9.29) (2022-09-08)
+
+
+### Bug Fixes
+
+* fixed batch buy method transaction events scan for ethers ([#329](https://github.com/rarible/sdk/issues/329)) ([6ddebd9](https://github.com/rarible/sdk/commit/6ddebd95ada40c183e96a68c10fb91c8d7d56f14))
+
+
+### Features
+
+* add x2y2 orders support ([#328](https://github.com/rarible/sdk/issues/328)) ([606703c](https://github.com/rarible/sdk/commit/606703c7986846fc68d6a5adfa093ed77a1cdd0e))
+
+
+
+
+
+## [0.9.28](https://github.com/rarible/sdk/compare/v0.9.27...v0.9.28) (2022-09-05)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.9.27](https://github.com/rarible/sdk/compare/v0.9.26...v0.9.27) (2022-08-31)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.9.26](https://github.com/rarible/sdk/compare/v0.9.25...v0.9.26) (2022-08-31)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.9.25](https://github.com/rarible/sdk/compare/v0.9.24...v0.9.25) (2022-08-29)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.9.24](https://github.com/rarible/sdk/compare/v0.9.23...v0.9.24) (2022-08-24)
+
+**Note:** Version bump only for package root
 
 
 

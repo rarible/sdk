@@ -14,7 +14,7 @@ import { UnsupportedBlockchainWarning } from "../../components/common/unsupporte
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
-	return blockchain === WalletType.ETHEREUM
+	return !!blockchain && [WalletType.ETHEREUM, WalletType.TEZOS].includes(blockchain)
 }
 
 export function BatchBuyPage() {
@@ -49,7 +49,8 @@ export function BatchBuyPage() {
 							render: (onComplete, lastResponse) => {
 								return <BatchBuyForm
 									onComplete={onComplete}
-									prepare={lastResponse}
+									prepare={lastResponse.prepare}
+									orders={lastResponse.orders}
 									disabled={!validateConditions(blockchain)}
 								/>
 							}
