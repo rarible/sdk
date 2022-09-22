@@ -44,8 +44,11 @@ function getDeployRequest(data: Record<string, any>) {
 					assetType: data["collection"],
 					arguments: {
 						name: data["name"],
-						symbol: data["symbol"],
-						contractURI: data["contractURI"],
+						description: data["description"],
+						version: data["version"],
+						authors: data["authors"],
+						license: data["license"],
+						homepage: data["homepage"],
 						isUserToken: !!data["private"],
 					},
 				},

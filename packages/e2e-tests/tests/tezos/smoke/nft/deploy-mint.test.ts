@@ -29,8 +29,7 @@ function suites(): {
 					assetType: "NFT",
 					arguments: {
 						name: "NFT",
-						symbol: "AUTO_NFT",
-						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+						homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: false,
 					},
 				},
@@ -59,10 +58,8 @@ function suites(): {
 					assetType: "MT",
 					arguments: {
 						name: "MT",
-						symbol: "AUTO_MT",
-						contractURI: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+						homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
 						isUserToken: false,
-						operators: [],
 					},
 				},
 			} as CreateCollectionRequest,

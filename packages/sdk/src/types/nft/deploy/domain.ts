@@ -35,9 +35,12 @@ export type TezosCreateCollectionTokenAsset = {
 	assetType: "NFT" | "MT"
 	arguments: {
 		name: string
-		symbol: string
-		contractURI: string
-		isUserToken: boolean,
+		description?: string,
+		version?: string,
+		authors?: string[]
+		license?: string
+		homepage: string
+		isUserToken: boolean
 	}
 }
 

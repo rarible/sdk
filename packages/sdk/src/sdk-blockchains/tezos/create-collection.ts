@@ -15,13 +15,37 @@ export class TezosCreateCollection {
 		private network: TezosNetwork,
 	) {}
 
+	private getMetadataJSON(asset: TezosCreateCollectionTokenAsset): string {
+		const json: Record<string, any> = {
+			name: asset.arguments.name,
+			homepage: asset.arguments.homepage,
+		}
+
+		if (asset.arguments.description) {
+			json["description"] = asset.arguments.description
+		}
+
+		if (asset.arguments.license) {
+			json["license"] = asset.arguments.license
+		}
+
+		if (asset.arguments.version) {
+			json["version"] = asset.arguments.version
+		}
+
+		if (asset.arguments.authors?.length) {
+			json["authors"] = asset.arguments.authors
+		}
+
+		return JSON.stringify(json)
+	}
+
 	private async getDeployOperation(asset: TezosCreateCollectionTokenAsset): Promise<DeployResult> {
 		const provider = getRequiredProvider(this.provider)
 		const owner = await provider.tezos.address()
 		const meta = {
-			name: asset.arguments.name,
-			symbol: asset.arguments.symbol,
-			contractURI: asset.arguments.contractURI,
+			"": "tezos-storage:metadata",
+			"metadata": this.getMetadataJSON(asset),
 		}
 
 		if (asset.assetType === "NFT") {
