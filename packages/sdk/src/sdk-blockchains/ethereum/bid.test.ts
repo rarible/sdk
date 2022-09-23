@@ -37,7 +37,7 @@ describe.skip("bid", () => {
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethwallet2 = new EthereumWallet(ethereum2)
 	const sdk2 = createRaribleSdk(ethwallet2, "development", { logs: LogsLevel.DISABLED })
-	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "dev-ethereum", { logs: LogsLevel.DISABLED })
+	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "dev-ethereum", { logs: { level: LogsLevel.DISABLED } })
 
 
 	const { web3 } = initProvider(undefined, {
