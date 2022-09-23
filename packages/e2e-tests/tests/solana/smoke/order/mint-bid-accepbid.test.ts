@@ -6,6 +6,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getSolanaWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -23,7 +24,7 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	deployRequest: CreateCollectionRequest,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
 	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
