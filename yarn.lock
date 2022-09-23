@@ -4832,6 +4832,13 @@
     flow-js-testing "~0.1.13"
     sha3 "^2.1.4"
 
+"@rarible/logger@^0.9.11":
+  version "0.9.11"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.11.tgz#29dedab42bb9bd14fd54167bba4c2276dd1f8d89"
+  integrity sha512-0/NZl15++wxlSAPIVn3ptsjrJhUAUF43V2Jtf67eO4XGxShmCnH9GkSHxIHHKXWal3HWTAhdIi5/tOik5n34xA==
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
 "@rarible/logger@^0.9.9":
   version "0.9.9"
   resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.9.tgz#4c8485ff8d8a5e2e56f86fe9e380ada1c75447b0"
