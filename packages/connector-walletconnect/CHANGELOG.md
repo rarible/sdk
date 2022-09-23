@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
+
+
+
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+**Note:** Version bump only for package @rarible/connector-walletconnect
+
+
+
+
+
 # [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
 
 **Note:** Version bump only for package @rarible/connector-walletconnect

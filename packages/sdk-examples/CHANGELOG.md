@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
+
+
+### Features
+
+* use metadataURI in metadata for tezos collection create ([#338](https://github.com/rarible/sdk/issues/338)) ([accf1f1](https://github.com/rarible/sdk/commit/accf1f1659840442ae6936fb6ab5052bf6814d29))
+
+
+
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+
+
+
+
 # [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
 
 **Note:** Version bump only for package @rarible/sdk-examples
