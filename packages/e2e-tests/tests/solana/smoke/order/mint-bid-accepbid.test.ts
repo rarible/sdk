@@ -1,7 +1,6 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"

@@ -5,23 +5,15 @@ import { MintType } from "../../types/nft/mint/prepare"
 import { delay, retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
-import { getSdkConfig } from "../../config"
-import { createApisSdk } from "../../common/apis"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
-import { getMaybeTezosProvider } from "./common"
-import { TezosSell } from "./sell"
 
 describe("cancel test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
-	const sdkConfig = getSdkConfig(env)
-	const sellerTezosProvider = getMaybeTezosProvider(wallet.provider, sdkConfig.tezosNetwork, sdkConfig)
-	const unionApis = createApisSdk(env, undefined)
-	const sellerSellService = new TezosSell(sellerTezosProvider, unionApis)
 	const nftContract: string = getTestContract(env, "nftContract")
 
 	test("cancel order", async () => {
