@@ -84,7 +84,7 @@ export function createEthereumSdk(
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
-			cancel: cancelService.cancelBasic,
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

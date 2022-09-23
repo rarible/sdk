@@ -12,10 +12,10 @@ export class FlowCancel {
 		private apis: IApisSdk,
 		private network: FlowNetwork,
 	) {
-		this.cancelBasic = this.cancelBasic.bind(this)
+		this.cancel = this.cancel.bind(this)
 	}
 
-	async cancelCommon(request: CancelOrderRequest) {
+	async cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
 		if (!request.orderId) {
 			throw new Error("OrderId has not been specified")
 		}
@@ -42,9 +42,4 @@ export class FlowCancel {
 				throw new Error("Not an Flow order")
 		}
 	}
-
-	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
-		return this.cancelCommon(request)
-	}
-
 }

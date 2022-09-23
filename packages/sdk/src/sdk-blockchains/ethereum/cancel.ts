@@ -10,10 +10,10 @@ export class EthereumCancel {
 		private readonly sdk: RaribleSdk,
 		private network: EthereumNetwork,
 	) {
-		this.cancelBasic = this.cancelBasic.bind(this)
+		this.cancel = this.cancel.bind(this)
 	}
 
-	async cancelCommon(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+	async cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
 		if (!request.orderId) {
 			throw new Error("OrderId has not been specified")
 		}
@@ -28,9 +28,5 @@ export class EthereumCancel {
 
 		const cancelTx = await this.sdk.order.cancel(order)
 		return new BlockchainEthereumTransaction(cancelTx, this.network)
-	}
-
-	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
-		return this.cancelCommon(request)
 	}
 }

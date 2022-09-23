@@ -3,11 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-09-23)
 
-**Note:** Version bump only for package @rarible/sdk-e2e-tests
-
-
+* The following methods was moved: <br/>
+sdk.nft.mint(...) to sdk.nft.mint.prepare(...) <br/>
+sdk.nft.transfer(...) to sdk.nft.transfer.prepare(...) <br/>
+sdk.nft.burn(...) to sdk.nft.burn.prepare(...) <br/>
+sdk.order.sell(...) to sdk.order.sell.prepare(...) <br/>
+sdk.order.sellUpdate(...) to sdk.order.sellUpdate.prepare(...) <br/>
+sdk.order.buy(...) to sdk.order.buy.prepare(...) <br/>
+sdk.order.bid(...) to sdk.order.bid.prepare(...) <br/>
+sdk.order.acceptBid(...) to sdk.order.acceptBid.prepare(...) <br/>
+sdk.order.bidUpdate(...) to sdk.order.bidUpdate.prepare(...) <br/>
+* The following methods are available with simplified call signature and it's easier to use: <br/>
+  sdk.nft.mint(...) <br/>
+  sdk.nft.transfer(...) <br/>
+  sdk.nft.burn(...) <br/>
+  sdk.order.sell(...) <br/>
+  sdk.order.sellUpdate(...) <br/>
+  sdk.order.buy(...) <br/>
+  sdk.order.bid(...) <br/>
+  sdk.order.acceptBid(...) <br/>
+  sdk.order.bidUpdate(...) <br/>
+* The following methods are not "Action" instances (but call signature still the same): <br/>
+sdk.order.cancel(...) <br/>
+sdk.nft.createCollection(...) <br/>
+* createRaribleSdk can accept Web3, Ethers, SolanaKeypairWallet, Flow Fcl, Tezos wallets without creating wallet wrappers like:
+EthereumWallet, SolanaWallet, TezosWallet, FlowWallet, ImmutableXWallet
 
 
 
