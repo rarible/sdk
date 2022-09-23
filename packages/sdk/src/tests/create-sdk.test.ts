@@ -57,12 +57,6 @@ const providers = [{
 	},
 	expectedBlockchain: BlockchainGroup.TEZOS,
 }, {
-	name: "Tezos Provider",
-	getProvider: () => {
-		return createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", "development")
-	},
-	expectedBlockchain: BlockchainGroup.TEZOS,
-}, {
 	name: "Flow Wallet",
 	getProvider: () => {
 		return new FlowWallet(fcl)

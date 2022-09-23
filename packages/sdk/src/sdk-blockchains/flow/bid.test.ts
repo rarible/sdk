@@ -38,7 +38,7 @@ describe("Flow bid", () => {
 		const updatedOrder = await awaitFlowOrder(sdk, updatedBidId.split(":")[1])
 		expect(updatedOrder.make.value.toString()).toEqual("0.2")
 
-		await cancel.cancelBasic({ orderId: updatedBidId })
+		await cancel.cancel({ orderId: updatedBidId })
 
 		const cancelledOrder = await awaitFlowOrder(sdk, updatedBidId.split(":")[1])
 		expect(cancelledOrder.status).toEqual("CANCELLED")

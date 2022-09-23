@@ -67,7 +67,7 @@ export function createFlowSdk(
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.buy),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
-			cancel: cancelService.cancelBasic,
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
