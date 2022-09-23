@@ -26,7 +26,7 @@
     "@rarible/connector-walletconnect": "^0.9.12",
     "@rarible/connector-walletlink": "^0.9.12",
     "@rarible/sdk": "^0.9.31",
-    "@rarible/web3-ethereum": "~0.12.94",
+    "@rarible/web3-ethereum": "~0.12.97",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
     "@testing-library/jest-dom": "^5.16.2",
