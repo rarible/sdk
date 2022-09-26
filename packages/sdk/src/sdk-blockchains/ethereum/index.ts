@@ -32,7 +32,7 @@ export function createEthereumSdk(
 	network: EthereumNetwork,
 	config: {
 		params?: ConfigurationParameters,
-		logs?: LogsLevel
+		logs?: { level: LogsLevel, session: string }
 	} & IEthereumSdkConfig
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, {
