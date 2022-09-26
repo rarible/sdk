@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.32-beta.x2y2.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32-beta.x2y2.1) (2022-09-26)
+
+
+### Features
+
+* add sessionId to logs ([#342](https://github.com/rarible/sdk/issues/342)) ([fb6800f](https://github.com/rarible/sdk/commit/fb6800f18ac147a41bc0d10afff5ef2f735c9164))
+* new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
+
+
+
+
+
 ## [0.9.31](https://github.com/rarible/sdk/compare/v0.9.30...v0.9.31) (2022-09-14)
 
 **Note:** Version bump only for package @rarible/connector-helper

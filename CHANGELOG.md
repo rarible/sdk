@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.32-beta.x2y2.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32-beta.x2y2.1) (2022-09-26)
+
+
+### Bug Fixes
+
+* more correct wrap for api controllers methods ([f7991a6](https://github.com/rarible/sdk/commit/f7991a6f687d17aa8f7456f25a5b027a3192c6b9))
+* more correct wrap for api controllers methods ([aa560a5](https://github.com/rarible/sdk/commit/aa560a593697e96eca3c08ee3efe901cf9c413e0))
+* network error logger ([#341](https://github.com/rarible/sdk/issues/341)) ([6109c81](https://github.com/rarible/sdk/commit/6109c8132a25ca91abf0042c2a75ec3f1410c574))
+
+
+### Features
+
+* add sessionId to logs ([#342](https://github.com/rarible/sdk/issues/342)) ([fb6800f](https://github.com/rarible/sdk/commit/fb6800f18ac147a41bc0d10afff5ef2f735c9164))
+* new error levels ([628834e](https://github.com/rarible/sdk/commit/628834e73858a049366ee5382cb9f29333745e0f))
+* new error levels ([#335](https://github.com/rarible/sdk/issues/335)) ([64ec562](https://github.com/rarible/sdk/commit/64ec5621787bc11cbc431f40a7f0f68e280b1174))
+* new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
+* stack of error ([4d70c7b](https://github.com/rarible/sdk/commit/4d70c7b8962e6233fe21a1128fe5c382f74ce5c5))
+* staging env ([#344](https://github.com/rarible/sdk/issues/344)) ([63eb2f9](https://github.com/rarible/sdk/commit/63eb2f95391914312702a0026e78ef64fee5afb1))
+* tx events ([#340](https://github.com/rarible/sdk/issues/340)) ([10856d6](https://github.com/rarible/sdk/commit/10856d6c1942128687551eb44c0c64c734dad564))
+* use metadataURI in metadata for tezos collection create ([#338](https://github.com/rarible/sdk/issues/338)) ([accf1f1](https://github.com/rarible/sdk/commit/accf1f1659840442ae6936fb6ab5052bf6814d29))
+
+
+
+
+
 ## [0.9.31](https://github.com/rarible/sdk/compare/v0.9.30...v0.9.31) (2022-09-14)
 
 **Note:** Version bump only for package root

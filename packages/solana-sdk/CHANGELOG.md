@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.32-beta.x2y2.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32-beta.x2y2.1) (2022-09-26)
+
+
+### Bug Fixes
+
+* network error logger ([#341](https://github.com/rarible/sdk/issues/341)) ([6109c81](https://github.com/rarible/sdk/commit/6109c8132a25ca91abf0042c2a75ec3f1410c574))
+
+
+### Features
+
+* add sessionId to logs ([#342](https://github.com/rarible/sdk/issues/342)) ([fb6800f](https://github.com/rarible/sdk/commit/fb6800f18ac147a41bc0d10afff5ef2f735c9164))
+* new error levels ([#335](https://github.com/rarible/sdk/issues/335)) ([64ec562](https://github.com/rarible/sdk/commit/64ec5621787bc11cbc431f40a7f0f68e280b1174))
+* new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
+
+
+
+
+
 ## [0.9.12](https://github.com/rarible/sdk/compare/v0.9.11-beta.22...v0.9.12) (2022-07-25)
 
 **Note:** Version bump only for package @rarible/solana-sdk
