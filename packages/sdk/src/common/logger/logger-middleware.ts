@@ -152,6 +152,7 @@ export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: IS
 		return {
 			service: loggerConfig.service,
 			environment: sdkContext.env,
+			sessionId: sdkContext.sessionId,
 			"@version": packageJson.version,
 			...(sdkContext.wallet ? await getWalletInfo(sdkContext.wallet) : { }),
 		}
