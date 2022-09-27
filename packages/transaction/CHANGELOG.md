@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.32-fix.0](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.32-fix.0) (2022-09-27)
+
+
+### Bug Fixes
+
+* ethereum batchbuy events parsing ([83696b6](https://github.com/rarible/sdk/commit/83696b6e79d52974ac0e181b39823b665509fc78))
+
+
+
+
+
 ## [0.9.32](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32) (2022-09-27)
 
 
