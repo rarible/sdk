@@ -10,7 +10,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 	constructor(
 		public transaction: EthereumTransaction,
 		public network: EthereumNetwork,
-		public resultExtractor?: (receipt: Awaited<ReturnType<EthereumTransaction["wait"]>>) => TransactionResult | undefined,
+		public resultExtractor?: (getEvents: EthereumTransaction["getEvents"]) => Promise<TransactionResult | undefined>,
 	) {
 		this.blockchain = this.getBlockchain(network)
 	}
@@ -30,12 +30,12 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 	}
 
 	async wait() {
-		const receipt = await this.transaction.wait()
+		await this.transaction.wait()
 
 		return {
 			blockchain: this.blockchain,
 			hash: this.transaction.hash,
-			result: this.resultExtractor?.(receipt),
+			result: await this.resultExtractor?.(this.transaction.getEvents.bind(this.transaction)),
 		}
 	}
 
