@@ -27,7 +27,11 @@ export type MintAndSellRequest = MintRequest & {
 	/**
    * Order expiration date
    */
-	expirationDate?: Date
+	expirationDate?: Date,
+	/**
+	 * Max fees value. Should be greater than 0. If required and not provided, will throw Error
+	 */
+	maxFeesBasePoint?: number
 }
 
 export type MintAndSellResponse = MintResponse & {
