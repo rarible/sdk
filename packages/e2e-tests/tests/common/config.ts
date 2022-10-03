@@ -1,4 +1,3 @@
-import { e2eTestsConfig } from "./config/e2e"
 import { developmentTestsConfig } from "./config/development"
 
 export const testsConfig = {
@@ -7,9 +6,6 @@ export const testsConfig = {
 }
 
 function fetchEnv(env?: string) {
-	if (env === "e2e") {
-		return e2eTestsConfig
-	}
 	if (env === "development") {
 		return developmentTestsConfig
 	}

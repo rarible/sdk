@@ -42,6 +42,7 @@ export interface ISdkContext {
 	wallet?: BlockchainWallet,
 	env: RaribleSdkEnvironment,
 	config?: IRaribleSdkConfig
+	sessionId: string
 }
 
 export interface IRaribleSdkConfig {
