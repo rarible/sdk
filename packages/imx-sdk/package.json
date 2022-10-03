@@ -23,7 +23,7 @@
   },
   "devDependencies": {
     "@rarible/types": "~0.9.6",
-    "@rarible/utils": "~0.9.1",
+    "@rarible/utils": "~0.9.10",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.0",
     "ts-jest": "^27.0.5",

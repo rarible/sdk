@@ -2,8 +2,9 @@ import type { ContractAddress } from "@rarible/types"
 import type { Maybe } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { WalletType } from "@rarible/sdk-wallet"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
+import { WalletType } from "@rarible/sdk-wallet"
+import { getRandomId } from "@rarible/utils"
 import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
 import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
@@ -55,13 +56,14 @@ export function createRaribleSdk(
 	config?: IRaribleSdkConfig
 ): IRaribleSdk {
 	const wallet = provider && getRaribleWallet(provider)
+	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
 
 	const ethConfig = {
 		...config?.blockchain?.ETHEREUM,
 		params: config?.apiClientParams,
-		logs: config?.logs ?? LogsLevel.TRACE,
+		logs: config?.logs ? { level: config?.logs, session: sessionId } : { level: LogsLevel.TRACE, session: sessionId },
 	}
 	const instance = createUnionSdk(
 		createEthereumSdk(
@@ -103,7 +105,7 @@ export function createRaribleSdk(
 		)
 	)
 
-	setupMiddleware(apis, instance, { wallet, env, config })
+	setupMiddleware(apis, instance, { wallet, env, config, sessionId })
 
 	return {
 		...instance,

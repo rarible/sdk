@@ -188,6 +188,10 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 			return Blockchain.POLYGON
 		case "polygon":
 			return Blockchain.POLYGON
+		case "staging":
+			return Blockchain.ETHEREUM
+		case "staging-polygon":
+			return Blockchain.POLYGON
 		default:
 			throw new Error(`Unsupported network: ${network}`)
 	}
