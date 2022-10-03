@@ -1,5 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toWord } from "@rarible/types"
+import { toAddress, toWord } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -41,8 +41,7 @@ export class EthereumSell {
 	private async sellDataV2(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
-				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
-				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
+				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
 				const expirationDate = sellFormRequest.expirationDate instanceof Date
 					? Math.floor(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
@@ -50,8 +49,8 @@ export class EthereumSell {
 				return {
 					type: "DATA_V2",
 					makeAssetType: {
-						tokenId: item.tokenId,
-						contract: item.contract,
+						tokenId: tokenId,
+						contract: toAddress(contract),
 					},
 					amount: sellFormRequest.amount,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
@@ -79,8 +78,7 @@ export class EthereumSell {
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
 				validateOrderDataV3Request(sellFormRequest, { shouldProvideMaxFeesBasePoint: true })
 
-				const { itemId } = getEthereumItemId(sellFormRequest.itemId)
-				const item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
+				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
 				const expirationDate = sellFormRequest.expirationDate instanceof Date
 					? Math.floor(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
@@ -92,8 +90,8 @@ export class EthereumSell {
 				return {
 					type: "DATA_V3_SELL",
 					makeAssetType: {
-						tokenId: item.tokenId,
-						contract: item.contract,
+						tokenId: tokenId,
+						contract: toAddress(contract),
 					},
 					payout: payouts[0],
 					originFeeFirst: originFees[0],
