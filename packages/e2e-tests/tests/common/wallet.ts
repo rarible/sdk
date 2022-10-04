@@ -51,7 +51,6 @@ export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
 	const edsks = [
 		testsConfig.variables.TEZOS_WALLET_1,
 		testsConfig.variables.TEZOS_WALLET_2,
-		testsConfig.variables.TEZOS_WALLET_3,
 	]
 	return new TezosWallet(
 		in_memory_provider(

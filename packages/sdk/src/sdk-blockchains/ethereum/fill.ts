@@ -373,11 +373,12 @@ export class EthereumFill {
 				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
 					tx,
 					this.network,
-					(receipt: any) => {
+					async (getEvents) => {
 						try {
+							const events: any = await getEvents() || []
 							let executionEvents: any[] = []
 
-							for (let event of (receipt.events || [])) {
+							for (let event of events) {
 								if ("0" in event && event[0]?.event === "Execution") {
 									if (Array.isArray(event)) {
 										executionEvents.push(...event)
