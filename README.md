@@ -735,6 +735,82 @@ sudo n 14.17.6
 
 </details>
 
+## Migration guide
+
+For migration your code to version since 0.10.* you should change the following functions:
+
+| before 0.10.0  | since 0.10.0 |
+| ------------- | ------------- |
+| sdk.nft.mint(...)  | sdk.nft.mint.prepare(...)  |
+| sdk.nft.transfer(...)  | sdk.nft.transfer.prepare(...)  |
+| sdk.nft.burn(...)  | sdk.nft.burn.prepare(...)  |
+| sdk.order.sell(...)  | sdk.order.sell.prepare(...)  |
+| sdk.order.sellUpdate(...)  | sdk.order.sellUpdate.prepare(...) |
+| sdk.order.buy(...)  | sdk.order.buy.prepare(...) |
+| sdk.order.bid(...)  | sdk.order.bid.prepare(...) |
+| sdk.order.acceptBid(...)  | sdk.order.acceptBid.prepare(...) |
+| sdk.order.bidUpdate(...)  | sdk.order.bidUpdate.prepare(...) |
+
+All of methods above supports simplified call signature, for example:
+```ts
+const { transaction, itemId } = await sdk.nft.mint({
+    uri: "ipfs://IPFS_METADATA_URI",
+    collectionId: toCollectionId("ETHEREUM:0x..."),
+})
+const { hash, blockchain } = await transaction.wait()
+```
+the same code, but with the legacy approach: 
+```ts
+const mintResponse = await sdk.nft.mint.prepare({
+  collectionId: toCollectionId("ETHEREUM:..."),
+})
+const mintResult = await mintResponse.submit({
+  uri: "ipfs://IPFS_METADATA_URI",
+  supply: 1,
+  creators: [{
+    account: sender,
+    value: 10000,
+  }],
+  royalties: [],
+  lazyMint: false,
+})
+```
+[Read more about advanced and simplified calls](#about-advanced-methods-calls) 
+
+* sdk.nft.createCollection has updated call signature
+```ts
+const { address, tx } = await sdk.nft.createCollection({
+    blockchain: Blockchain.ETHEREUM,
+    type: "ERC721",
+    name: "name",
+    symbol: "RARI",
+    baseURI: "https://ipfs.rarible.com",
+    contractURI: "https://ipfs.rarible.com",
+    isPublic: true,
+})
+```
+The legacy property "isUserToken" that means is private user collection will be created.
+It should be inverted to the new property "isPublic", for example:
+```ts
+const { address, tx } = await sdk.nft.createCollection({
+  //...
+  isUserToken: true,
+  //...
+})
+```
+it should be converted to
+```ts
+const { address, tx } = await sdk.nft.createCollection({
+  //...
+  isPublic: false,
+  //...
+})
+```
+
+* sdk.order.cancel(...) has the same call signature, but changed from "Action" instance to simple javascript function.
+
+
+
 ## Suggestions
 
 You are welcome to [suggest features](https://github.com/rarible/protocol/discussions) and [report bugs found](https://github.com/rarible/protocol/issues)!
