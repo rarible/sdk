@@ -57,6 +57,30 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.33](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.33) (2022-10-06)
+
+
+### Features
+
+* testnet network now is goerli ([#352](https://github.com/rarible/sdk/issues/352)) ([7e30363](https://github.com/rarible/sdk/commit/7e3036319b60d6805797d22fc345c60c821d9162))
+
+
+
+
+
+## [0.9.32](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32) (2022-09-27)
+
+
+### Features
+
+* add sessionId to logs ([#342](https://github.com/rarible/sdk/issues/342)) ([fb6800f](https://github.com/rarible/sdk/commit/fb6800f18ac147a41bc0d10afff5ef2f735c9164))
+* new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
+* tx events ([#340](https://github.com/rarible/sdk/issues/340)) ([10856d6](https://github.com/rarible/sdk/commit/10856d6c1942128687551eb44c0c64c734dad564))
+
+
+
+
+
 ## [0.9.31](https://github.com/rarible/sdk/compare/v0.9.30...v0.9.31) (2022-09-14)
 
 **Note:** Version bump only for package @rarible/sdk-wallet

@@ -39,6 +39,22 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.33](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.33) (2022-10-06)
+
+**Note:** Version bump only for package @rarible/connector-phantom
+
+
+
+
+
+## [0.9.32](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32) (2022-09-27)
+
+**Note:** Version bump only for package @rarible/connector-phantom
+
+
+
+
+
 ## [0.9.31](https://github.com/rarible/sdk/compare/v0.9.30...v0.9.31) (2022-09-14)
 
 **Note:** Version bump only for package @rarible/connector-phantom

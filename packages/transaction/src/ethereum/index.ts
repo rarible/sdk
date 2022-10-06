@@ -48,7 +48,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 			case "polygon":
 				return `https://polygonscan.com/tx/${this.hash()}`
 			case "testnet":
-				return `https://rinkeby.etherscan.io/tx/${this.hash()}`
+				return `https://goerli.etherscan.io/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}
