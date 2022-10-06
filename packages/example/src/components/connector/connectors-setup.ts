@@ -31,6 +31,7 @@ const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
 	3: "https://node-ropsten.rarible.com",
 	4: "https://node-rinkeby.rarible.com",
+	5: "https://goerli-ethereum-node.rarible.com",
 	17: "https://node-e2e.rarible.com",
 	137: "https://polygon-rpc.com",
 	80001: "https://rpc-mumbai.matic.today"
@@ -40,6 +41,7 @@ const ethereumNetworkMap: Record<number, string> = {
 	1: "mainnet",
 	3: "ropsten",
 	4: "rinkeby",
+	5: "goerli",
 	17: "e2e",
 	137: "polygon",
 	80001: "mumbai"
