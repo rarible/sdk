@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.33](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.33) (2022-10-06)
+
+
+### Features
+
+* testnet network now is goerli ([#352](https://github.com/rarible/sdk/issues/352)) ([7e30363](https://github.com/rarible/sdk/commit/7e3036319b60d6805797d22fc345c60c821d9162))
+
+
+
+
+
 ## [0.9.32](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32) (2022-09-27)
 
 
