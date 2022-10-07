@@ -10,9 +10,10 @@ import { awaitItem } from "../../common/test/await-item"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
 import { awaitOwnership } from "./test/await-ownership"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
-describe.skip("transfer", () => {
-	const { web31, wallet1, wallet2 } = initProviders()
+describe("transfer", () => {
+	const { web31, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const senderWallet = new EthereumWallet(senderEthereum)
 	const sdk = createRaribleSdk(senderWallet, "development", { logs: LogsLevel.DISABLED })

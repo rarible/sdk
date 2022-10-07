@@ -6,9 +6,10 @@ import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("create collection", () => {
-	const { web31, web32 } = initProviders()
+	const { web31, web32 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethereumWallet1 = new EthereumWallet(ethereum1)

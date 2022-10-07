@@ -10,9 +10,10 @@ import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { awaitDeletedItem } from "../../common/test/await-deleted-item"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("burn", () => {
-	const { web31, wallet1 } = initProviders()
+	const { web31, wallet1 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })

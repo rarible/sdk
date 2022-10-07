@@ -14,7 +14,6 @@ import {
 } from "../../common/apis"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
-import { notImplemented, nonImplementedAction } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -78,7 +77,7 @@ export function createEthereumSdk(
 		order: {
 			fill: { prepare: fillService.fill },
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
-			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
