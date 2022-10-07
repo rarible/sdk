@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-07)
+
+
+### Bug Fixes
+
+* batchbuy for simplify ([8ddb239](https://github.com/rarible/sdk/commit/8ddb239defa1f4d9a8324a235c21a2318e5dc992))
+
+
+
+
+
 # [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.33...v0.10.0-beta.3) (2022-10-06)
 
 
