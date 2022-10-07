@@ -13,12 +13,10 @@ import { awaitItem } from "../../common/test/await-item"
 import { awaitStock } from "../../common/test/await-stock"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("Create & fill orders with order data v3", () => {
-	const { web31, web32, wallet1 } = initProviders({
-		pk1: undefined,
-		pk2: "0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	})
+	const { web31, web32, wallet1 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", {

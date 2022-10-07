@@ -1,60 +1,38 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
 import Web3 from "web3"
-import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "../../index"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
-import { convertEthereumToUnionAddress } from "./common"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
-describe.skip("Batch buy", () => {
-	// 0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b
-	const { provider: providerSeller } = createE2eProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c", {
-		rpcUrl: "https://node-rinkeby.rarible.com",
-		networkId: 4,
-	})
-
-	const { provider: providerBuyer } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
-		rpcUrl: "https://node-rinkeby.rarible.com",
-		networkId: 4,
-	})
+describe("Batch buy", () => {
+	const { provider: providerSeller } = createE2eProvider(DEV_PK_1)
+	const { provider: providerBuyer } = createE2eProvider(DEV_PK_2)
 
 	const web31 = new Web3(providerSeller)
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const sdkSeller = createRaribleSdk(new EthereumWallet(ethereum1), "testnet", {
+	const sdkSeller = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
 		logs: LogsLevel.DISABLED,
 	})
 
 	const web32 = new Web3(providerBuyer)
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdkBuyer = createRaribleSdk(new EthereumWallet(ethereum2), "testnet", {
+	const sdkBuyer = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
 		logs: LogsLevel.DISABLED,
 	})
 
 	async function mint(sdk: IRaribleSdk) {
-		const sender = convertEthereumToUnionAddress("0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b", Blockchain.ETHEREUM)
-		const contract = toContractAddress("ETHEREUM:0x1943D3ebbf1F26C2Ff37dFCcd4a1f9b9Dc91Afdf") //erc721
-		const collection = await sdk.apis.collection.getCollectionById({
-			collection: contract,
-		})
-		const tokenId = await sdk.nft.generateTokenId({
-			collection: contract,
-			minter: sender,
-		})
+		const contract = toContractAddress("ETHEREUM:0x6972347e66A32F40ef3c012615C13cB88Bf681cc") //erc721
 		const action = await sdk.nft.mint.prepare({
-			collection,
-			tokenId: tokenId,
+			collectionId: toCollectionId(contract),
 		})
 
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			creators: [{
-				account: sender,
-				value: 10000,
-			}],
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
@@ -63,10 +41,8 @@ describe.skip("Batch buy", () => {
 		return awaitItem(sdk, result.itemId)
 	}
 
-
 	test("batch buy rarible orders", async () => {
 		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
-		//console.log(tokens)
 		const orders = await Promise.all(tokens.map(async (token) => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
@@ -86,6 +62,30 @@ describe.skip("Batch buy", () => {
 				value: 100,
 			}],
 		})))
+		console.log(tx)
+		await tx.wait()
+	})
+
+	test("batch buy rarible orders with simplified function", async () => {
+		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const orders = await Promise.all(tokens.map(async (token) => {
+			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
+			return await prep.submit({
+				amount: 1,
+				price: "0.00000000001",
+				currency: { "@type": "ETH" },
+			})
+		}))
+
+		const ordersRequests = orders.map((order) => ({
+			orderId: order,
+			amount: 1,
+			originFees: [{
+				account: toUnionAddress("ETHEREUM:0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+				value: 100,
+			}],
+		}))
+		const tx = await sdkBuyer.order.batchBuy(ordersRequests)
 		console.log(tx)
 		await tx.wait()
 	})

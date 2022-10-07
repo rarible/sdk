@@ -23,11 +23,12 @@ import {
 } from "./common"
 import { resetWethFunds } from "./test/reset-weth-funds"
 import { awaitBalance } from "./test/await-balance"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("bid", () => {
 	const { web31, wallet1, web32 } = initProviders({
-		pk1: undefined,
-		pk2: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+		pk1: DEV_PK_1,
+		pk2: DEV_PK_2,
 	})
 
 	const ethereum1 = new Web3Ethereum({ web3: web31 })

@@ -9,13 +9,13 @@ import { MintType } from "../../types/nft/mint/prepare"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
-import { providerDevelopmentSettings } from "./test/common"
+import { DEV_PK_1 } from "./test/common"
 
 describe("mintAndSell", () => {
 	const {
 		provider,
 		wallet,
-	} = createE2eProvider(undefined, providerDevelopmentSettings)
+	} = createE2eProvider(DEV_PK_1)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })

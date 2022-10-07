@@ -10,9 +10,10 @@ import { awaitStock } from "../../common/test/await-stock"
 import { initProviders } from "./test/init-providers"
 import { awaitOrderCancel } from "./test/await-order-cancel"
 import { convertEthereumContractAddress } from "./common"
+import { DEV_PK_1 } from "./test/common"
 
 describe("cancel", () => {
-	const { web31, wallet1 } = initProviders()
+	const { web31, wallet1 } = initProviders({ pk1: DEV_PK_1 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)
 	const sdk1 = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })

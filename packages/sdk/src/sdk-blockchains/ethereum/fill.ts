@@ -19,6 +19,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { OrderId } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
+import type { Blockchain } from "@rarible/api-client"
 import type {
 	BatchFillRequest,
 	FillRequest,
@@ -61,6 +62,7 @@ export class EthereumFill {
 		this.acceptBid = this.acceptBid.bind(this)
 		this.buyBasic = this.buyBasic.bind(this)
 		this.acceptBidBasic = this.acceptBidBasic.bind(this)
+		this.batchBuyBasic = this.batchBuyBasic.bind(this)
 	}
 
 	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
@@ -460,5 +462,12 @@ export class EthereumFill {
 			submit,
 			prepared,
 		}
+	}
+
+	async batchBuyBasic(
+		request: BatchFillRequest
+	): Promise<IBlockchainTransaction<Blockchain, IBatchBuyTransactionResult>> {
+		const response = await this.batchBuy(request)
+		return response.submit(request)
 	}
 }
