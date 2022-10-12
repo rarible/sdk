@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+
+
+## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
+
+
+### Bug Fixes
+
+* connector goerli ([64c0d7c](https://github.com/rarible/sdk/commit/64c0d7c347ed812548d13a1123862c5e6ba2ce5a))
+
+
+
+
+
 # [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-12)
 
 

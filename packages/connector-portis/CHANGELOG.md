@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+**Note:** Version bump only for package @rarible/connector-portis
+
+
+
+
+
 # [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-12)
 
 **Note:** Version bump only for package @rarible/connector-portis

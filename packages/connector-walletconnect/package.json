@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletconnect",
-  "version": "0.10.0-beta.4",
+  "version": "0.10.0-beta.5",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.10.0-beta.4",
+    "@rarible/connector": "^0.10.0-beta.5",
     "@walletconnect/web3-provider": "^1.7.0"
   },
   "devDependencies": {

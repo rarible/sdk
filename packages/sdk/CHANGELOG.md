@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+
+### Bug Fixes
+
+* batchbuy for simplify ([#354](https://github.com/rarible/sdk/issues/354)) ([3a3b675](https://github.com/rarible/sdk/commit/3a3b675808587c8ce224b992681e37481dd8f249))
+* offchain goerli mint ([2087ea1](https://github.com/rarible/sdk/commit/2087ea19edc7a721074d381402d60d0dd9390155))
+
+
+
+## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
+
+
+
+
+
 # [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-12)
 
 
