@@ -66,6 +66,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
+
+
+### Bug Fixes
+
+* testnet TX Link ([#353](https://github.com/rarible/sdk/issues/353)) ([cee2b2e](https://github.com/rarible/sdk/commit/cee2b2e9ce203b7147358c82fed5d1958cf1f919))
+
+
+
+
+
 ## [0.9.33](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.33) (2022-10-06)
 
 

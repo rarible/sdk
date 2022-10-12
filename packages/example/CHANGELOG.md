@@ -66,6 +66,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
+
+
+### Bug Fixes
+
+* connector goerli ([64c0d7c](https://github.com/rarible/sdk/commit/64c0d7c347ed812548d13a1123862c5e6ba2ce5a))
+
+
+
+
+
 ## [0.9.33](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.33) (2022-10-06)
 
 
