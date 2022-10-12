@@ -12,7 +12,7 @@ import { createTestAuth, FLOW_TESTNET_ACCOUNT_3, FLOW_TESTNET_ACCOUNT_4 } from "
 import { testsConfig } from "./config"
 import { Logger } from "./logger"
 
-export function getEthereumWallet(pk?: string): EthereumWallet {
+export function getEthereumWallet(pk: string = testsConfig.variables.ETHEREUM_WALLET_SELLER): EthereumWallet {
 	const config = {
 		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
 		rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
