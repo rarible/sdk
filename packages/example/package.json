@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.9.34",
+  "version": "0.9.35",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.8.2",
@@ -25,7 +25,7 @@
     "@rarible/connector-torus": "^0.9.12",
     "@rarible/connector-walletconnect": "^0.9.12",
     "@rarible/connector-walletlink": "^0.9.12",
-    "@rarible/sdk": "^0.9.34",
+    "@rarible/sdk": "^0.9.35",
     "@rarible/web3-ethereum": "~0.12.103",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",

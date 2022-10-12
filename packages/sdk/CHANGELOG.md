@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.35](https://github.com/rarible/sdk/compare/v0.9.34...v0.9.35) (2022-10-12)
+
+
+### Bug Fixes
+
+* offchain goerli mint ([#355](https://github.com/rarible/sdk/issues/355)) ([14a0c3c](https://github.com/rarible/sdk/commit/14a0c3c604aecdc8fab2f853258a5e09f7037ab2))
+
+
+
+
+
 ## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
 
 **Note:** Version bump only for package @rarible/sdk
