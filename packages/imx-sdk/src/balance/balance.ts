@@ -16,7 +16,6 @@ export async function getBalance(
 	const DEFAULT_DECIMALS = 18
 
 	const { result } = await apis.balance.getAllBalances({ ownerAddress: address })
-
 	if (assetType.assetClass === "ETH") {
 		const currencyBalance = result.find((b => b.token_address === ""))
 

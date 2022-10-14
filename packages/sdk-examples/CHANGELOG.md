@@ -82,6 +82,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.36](https://github.com/rarible/sdk/compare/v0.9.35...v0.9.36) (2022-10-14)
+
+
+### Bug Fixes
+
+* change imx network ([#358](https://github.com/rarible/sdk/issues/358)) ([423b136](https://github.com/rarible/sdk/commit/423b136acec46c3aa358ce6e989d20415a65b1c1))
+
+
+
+
+
 ## [0.9.33](https://github.com/rarible/sdk/compare/v0.9.32...v0.9.33) (2022-10-06)
 
 

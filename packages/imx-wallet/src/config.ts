@@ -9,9 +9,9 @@ export const IMX_NETWORK_CONFIG: Record<ImxNetwork, ImxNetworkConfig> = {
 		gasLimit: "7000000",
 		enableDebug: false,
 	},
-	ropsten: {
-		network: "ropsten",
-		linkAddress: "https://link.ropsten.x.immutable.com",
+	goerli: {
+		network: "goerli",
+		linkAddress: "https://link.sandbox.x.immutable.com",
 		gasPrice: "4000000",
 		gasLimit: "7000000",
 		enableDebug: true,
@@ -19,6 +19,6 @@ export const IMX_NETWORK_CONFIG: Record<ImxNetwork, ImxNetworkConfig> = {
 }
 
 export const IMX_ENV_CONFIG: Record<ImxEnv, ImxNetworkConfig> = {
-	dev: IMX_NETWORK_CONFIG.ropsten,
+	testnet: IMX_NETWORK_CONFIG.goerli,
 	prod: IMX_NETWORK_CONFIG.mainnet,
 }

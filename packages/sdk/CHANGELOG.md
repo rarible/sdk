@@ -13,12 +13,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
-
-
-
-
-
 # [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-12)
 
 
@@ -29,45 +23,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
-
-
-
-
-
 # [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.33...v0.10.0-beta.3) (2022-10-06)
-
-
-
-# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.9.32...v0.10.0-beta.2) (2022-10-03)
-
-
-
-# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
-
-
-
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
-
-
-### Bug Fixes
-
-* flow buy test ([ef3cff8](https://github.com/rarible/sdk/commit/ef3cff8057578f795d3b3708f405687047b127cd))
-* typedoc config ([e98836c](https://github.com/rarible/sdk/commit/e98836c82c3cd7d26f9e16378afebe23e34876b3))
-* typedoc config, extend docs ([048cfed](https://github.com/rarible/sdk/commit/048cfed5005b5775af75ead358bbc069ae802894))
-
-
-### Features
-
-* simplified methods ([7b84f75](https://github.com/rarible/sdk/commit/7b84f7503ce40d577706fca4383e6efc7ed28c1c))
-* simplify create sdk ([3aa3714](https://github.com/rarible/sdk/commit/3aa37146c880254ddc5b6cd539b5d03db07d4af4))
-* simplify methods ([826ac77](https://github.com/rarible/sdk/commit/826ac779f5442dd585aa85456003b62a4ce47a5b))
-* support create sdk with providers ([deb0098](https://github.com/rarible/sdk/commit/deb0098427cb7f39d74195ca2ddb6c4f9cc4a936))
-* support create sdk with providers ([605b17a](https://github.com/rarible/sdk/commit/605b17a1094fd97e8ab791577033dee5a9c601be))
-* update readme ([#278](https://github.com/rarible/sdk/issues/278)) ([8e4ad49](https://github.com/rarible/sdk/commit/8e4ad490b9eeb0485ff1740fbf61e3b2003017d2))
-
-
-
 
 
 # [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.10.0-beta.1...v0.10.0-beta.2) (2022-10-03)
@@ -87,31 +43,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * new error levels ([#335](https://github.com/rarible/sdk/issues/335)) ([64ec562](https://github.com/rarible/sdk/commit/64ec5621787bc11cbc431f40a7f0f68e280b1174))
 * new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
 * use metadataURI in metadata for tezos collection create ([#338](https://github.com/rarible/sdk/issues/338)) ([accf1f1](https://github.com/rarible/sdk/commit/accf1f1659840442ae6936fb6ab5052bf6814d29))
-
-
-
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
-
-
-### Bug Fixes
-
-* flow buy test ([ef3cff8](https://github.com/rarible/sdk/commit/ef3cff8057578f795d3b3708f405687047b127cd))
-* more correct wrap for api controllers methods ([f7991a6](https://github.com/rarible/sdk/commit/f7991a6f687d17aa8f7456f25a5b027a3192c6b9))
-* more correct wrap for api controllers methods ([aa560a5](https://github.com/rarible/sdk/commit/aa560a593697e96eca3c08ee3efe901cf9c413e0))
-* typedoc config ([e98836c](https://github.com/rarible/sdk/commit/e98836c82c3cd7d26f9e16378afebe23e34876b3))
-* typedoc config, extend docs ([048cfed](https://github.com/rarible/sdk/commit/048cfed5005b5775af75ead358bbc069ae802894))
-
-
-### Features
-
-* simplified methods ([7b84f75](https://github.com/rarible/sdk/commit/7b84f7503ce40d577706fca4383e6efc7ed28c1c))
-* simplify create sdk ([3aa3714](https://github.com/rarible/sdk/commit/3aa37146c880254ddc5b6cd539b5d03db07d4af4))
-* simplify methods ([826ac77](https://github.com/rarible/sdk/commit/826ac779f5442dd585aa85456003b62a4ce47a5b))
-* stack of error ([4d70c7b](https://github.com/rarible/sdk/commit/4d70c7b8962e6233fe21a1128fe5c382f74ce5c5))
-* support create sdk with providers ([deb0098](https://github.com/rarible/sdk/commit/deb0098427cb7f39d74195ca2ddb6c4f9cc4a936))
-* support create sdk with providers ([605b17a](https://github.com/rarible/sdk/commit/605b17a1094fd97e8ab791577033dee5a9c601be))
-* update readme ([#278](https://github.com/rarible/sdk/issues/278)) ([8e4ad49](https://github.com/rarible/sdk/commit/8e4ad490b9eeb0485ff1740fbf61e3b2003017d2))
-
 
 
 
@@ -159,6 +90,28 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * staging env ([#344](https://github.com/rarible/sdk/issues/344)) ([63eb2f9](https://github.com/rarible/sdk/commit/63eb2f95391914312702a0026e78ef64fee5afb1))
 * tx events ([#340](https://github.com/rarible/sdk/issues/340)) ([10856d6](https://github.com/rarible/sdk/commit/10856d6c1942128687551eb44c0c64c734dad564))
 * use metadataURI in metadata for tezos collection create ([#338](https://github.com/rarible/sdk/issues/338)) ([accf1f1](https://github.com/rarible/sdk/commit/accf1f1659840442ae6936fb6ab5052bf6814d29))
+
+
+
+
+
+## [0.9.36](https://github.com/rarible/sdk/compare/v0.9.35...v0.9.36) (2022-10-14)
+
+
+### Bug Fixes
+
+* change imx network ([#358](https://github.com/rarible/sdk/issues/358)) ([423b136](https://github.com/rarible/sdk/commit/423b136acec46c3aa358ce6e989d20415a65b1c1))
+
+
+
+
+
+## [0.9.35](https://github.com/rarible/sdk/compare/v0.9.34...v0.9.35) (2022-10-12)
+
+
+### Bug Fixes
+
+* offchain goerli mint ([#355](https://github.com/rarible/sdk/issues/355)) ([14a0c3c](https://github.com/rarible/sdk/commit/14a0c3c604aecdc8fab2f853258a5e09f7037ab2))
 
 
 

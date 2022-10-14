@@ -22,23 +22,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.33...v0.10.0-beta.3) (2022-10-06)
 
 
-
-# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.9.32...v0.10.0-beta.2) (2022-10-03)
-
-
-
-# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
-
-
-
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
-
-**Note:** Version bump only for package @rarible/immutable-wallet
-
-
-
-
-
 # [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.10.0-beta.1...v0.10.0-beta.2) (2022-10-03)
 
 **Note:** Version bump only for package @rarible/immutable-wallet
@@ -50,18 +33,23 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
 
 
-
 # [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
 
 **Note:** Version bump only for package @rarible/immutable-wallet
 
 
 
+## [0.9.36](https://github.com/rarible/sdk/compare/v0.9.35...v0.9.36) (2022-10-14)
 
 
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+### Bug Fixes
 
-**Note:** Version bump only for package @rarible/immutable-wallet
+* change imx network ([#358](https://github.com/rarible/sdk/issues/358)) ([423b136](https://github.com/rarible/sdk/commit/423b136acec46c3aa358ce6e989d20415a65b1c1))
+
+
+### Features
+
+* add gamestop wallet enum value ([#357](https://github.com/rarible/sdk/issues/357)) ([558df7b](https://github.com/rarible/sdk/commit/558df7b8c5379b77e422f35c8c18bd025147e685))
 
 
 

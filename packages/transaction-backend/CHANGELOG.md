@@ -43,46 +43,12 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.35](https://github.com/rarible/sdk/compare/v0.9.34...v0.9.35) (2022-10-12)
 
 
-# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.10.0-beta.1...v0.10.0-beta.2) (2022-10-03)
+### Bug Fixes
 
-**Note:** Version bump only for package @rarible/sdk-transaction-backend
-
-
-
-
-
-# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
-
-
-### Features
-
-* new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
-
-
-
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
-
-
-
-
-
-# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
-
-**Note:** Version bump only for package @rarible/sdk-transaction-backend
-
-
-
-
-
-## [0.9.32](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32) (2022-09-27)
-
-
-### Features
-
-* add sessionId to logs ([#342](https://github.com/rarible/sdk/issues/342)) ([fb6800f](https://github.com/rarible/sdk/commit/fb6800f18ac147a41bc0d10afff5ef2f735c9164))
-* new error levels, logger helpers ([5dfac70](https://github.com/rarible/sdk/commit/5dfac7009f0f497411ccfbbb196eb2d86af4428a))
+* offchain goerli mint ([#355](https://github.com/rarible/sdk/issues/355)) ([14a0c3c](https://github.com/rarible/sdk/commit/14a0c3c604aecdc8fab2f853258a5e09f7037ab2))
 
 
 

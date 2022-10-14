@@ -12,19 +12,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * offchain goerli mint ([2087ea1](https://github.com/rarible/sdk/commit/2087ea19edc7a721074d381402d60d0dd9390155))
 
 
-
-## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
-
-
-### Bug Fixes
-
-* connector goerli ([64c0d7c](https://github.com/rarible/sdk/commit/64c0d7c347ed812548d13a1123862c5e6ba2ce5a))
-* testnet TX Link ([#353](https://github.com/rarible/sdk/issues/353)) ([cee2b2e](https://github.com/rarible/sdk/commit/cee2b2e9ce203b7147358c82fed5d1958cf1f919))
-
-
-
-
-
 # [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-12)
 
 
@@ -32,19 +19,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * batchbuy for simplify ([#354](https://github.com/rarible/sdk/issues/354)) ([3a3b675](https://github.com/rarible/sdk/commit/3a3b675808587c8ce224b992681e37481dd8f249))
 * offchain goerli mint ([2087ea1](https://github.com/rarible/sdk/commit/2087ea19edc7a721074d381402d60d0dd9390155))
-
-
-
-## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
-
-
-### Bug Fixes
-
-* connector goerli ([64c0d7c](https://github.com/rarible/sdk/commit/64c0d7c347ed812548d13a1123862c5e6ba2ce5a))
-* testnet TX Link ([#353](https://github.com/rarible/sdk/issues/353)) ([cee2b2e](https://github.com/rarible/sdk/commit/cee2b2e9ce203b7147358c82fed5d1958cf1f919))
-
-
-
 
 
 # [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.33...v0.10.0-beta.3) (2022-10-06)
@@ -137,28 +111,27 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   EthereumWallet, SolanaWallet, TezosWallet, FlowWallet, ImmutableXWallet
 
 
-## [0.9.32](https://github.com/rarible/sdk/compare/v0.9.31...v0.9.32) (2022-09-27)
+## [0.9.36](https://github.com/rarible/sdk/compare/v0.9.35...v0.9.36) (2022-10-14)
 
 
 ### Bug Fixes
 
-* flow buy test ([ef3cff8](https://github.com/rarible/sdk/commit/ef3cff8057578f795d3b3708f405687047b127cd))
-* more correct wrap for api controllers methods ([f7991a6](https://github.com/rarible/sdk/commit/f7991a6f687d17aa8f7456f25a5b027a3192c6b9))
-* more correct wrap for api controllers methods ([aa560a5](https://github.com/rarible/sdk/commit/aa560a593697e96eca3c08ee3efe901cf9c413e0))
-* typedoc config ([e98836c](https://github.com/rarible/sdk/commit/e98836c82c3cd7d26f9e16378afebe23e34876b3))
-* typedoc config, extend docs ([048cfed](https://github.com/rarible/sdk/commit/048cfed5005b5775af75ead358bbc069ae802894))
+* change imx network ([#358](https://github.com/rarible/sdk/issues/358)) ([423b136](https://github.com/rarible/sdk/commit/423b136acec46c3aa358ce6e989d20415a65b1c1))
 
 
 ### Features
 
-* better wallet detection ([0637a0c](https://github.com/rarible/sdk/commit/0637a0caa3bbbed5cbd78fc54520212938036f74))
-* simplified methods ([7b84f75](https://github.com/rarible/sdk/commit/7b84f7503ce40d577706fca4383e6efc7ed28c1c))
-* simplify create sdk ([3aa3714](https://github.com/rarible/sdk/commit/3aa37146c880254ddc5b6cd539b5d03db07d4af4))
-* simplify methods ([826ac77](https://github.com/rarible/sdk/commit/826ac779f5442dd585aa85456003b62a4ce47a5b))
-* stack of error ([4d70c7b](https://github.com/rarible/sdk/commit/4d70c7b8962e6233fe21a1128fe5c382f74ce5c5))
-* support create sdk with providers ([deb0098](https://github.com/rarible/sdk/commit/deb0098427cb7f39d74195ca2ddb6c4f9cc4a936))
-* support create sdk with providers ([605b17a](https://github.com/rarible/sdk/commit/605b17a1094fd97e8ab791577033dee5a9c601be))
-* update readme ([#278](https://github.com/rarible/sdk/issues/278)) ([8e4ad49](https://github.com/rarible/sdk/commit/8e4ad490b9eeb0485ff1740fbf61e3b2003017d2))
+* add gamestop wallet enum value ([#357](https://github.com/rarible/sdk/issues/357)) ([558df7b](https://github.com/rarible/sdk/commit/558df7b8c5379b77e422f35c8c18bd025147e685))
+
+
+
+
+## [0.9.35](https://github.com/rarible/sdk/compare/v0.9.34...v0.9.35) (2022-10-12)
+
+
+### Bug Fixes
+
+* offchain goerli mint ([#355](https://github.com/rarible/sdk/issues/355)) ([14a0c3c](https://github.com/rarible/sdk/commit/14a0c3c604aecdc8fab2f853258a5e09f7037ab2))
 
 
 

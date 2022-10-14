@@ -21,18 +21,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 # [0.10.0-beta.4](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.4) (2022-10-12)
 
 
-
-## [0.9.34](https://github.com/rarible/sdk/compare/v0.9.33...v0.9.34) (2022-10-06)
-
-
-### Bug Fixes
-
-* connector goerli ([64c0d7c](https://github.com/rarible/sdk/commit/64c0d7c347ed812548d13a1123862c5e6ba2ce5a))
-
-
-
-
-
 # [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.33...v0.10.0-beta.3) (2022-10-06)
 
 
@@ -91,6 +79,25 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 * add sessionId to logs ([#342](https://github.com/rarible/sdk/issues/342)) ([fb6800f](https://github.com/rarible/sdk/commit/fb6800f18ac147a41bc0d10afff5ef2f735c9164))
 * use metadataURI in metadata for tezos collection create ([#338](https://github.com/rarible/sdk/issues/338)) ([accf1f1](https://github.com/rarible/sdk/commit/accf1f1659840442ae6936fb6ab5052bf6814d29))
+
+
+
+
+
+## [0.9.36](https://github.com/rarible/sdk/compare/v0.9.35...v0.9.36) (2022-10-14)
+
+
+### Bug Fixes
+
+* change imx network ([#358](https://github.com/rarible/sdk/issues/358)) ([423b136](https://github.com/rarible/sdk/commit/423b136acec46c3aa358ce6e989d20415a65b1c1))
+
+
+
+
+
+## [0.9.35](https://github.com/rarible/sdk/compare/v0.9.34...v0.9.35) (2022-10-12)
+
+**Note:** Version bump only for package example
 
 
 
