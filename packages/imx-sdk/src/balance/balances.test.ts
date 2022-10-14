@@ -4,15 +4,15 @@ import { createApis } from "../apis"
 
 describe("test imx balances", () => {
 	const address = "0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"
-	const env = "dev"
+	const env = "testnet"
 	const apis = createApis(env)
 
-	test("should get eth balance", async () => {
+	test.skip("should get eth balance", async () => {
 		const ethBalance = await getBalance(env, apis, toAddress(address), { assetClass: "ETH" })
 		expect(parseFloat(ethBalance.toString())).toBeGreaterThan(0)
 	})
 
-	test("should get erc20 balance", async () => {
+	test.skip("should get erc20 balance", async () => {
 		const ethBalance = await getBalance(env, apis, toAddress(address), {
 			assetClass: "ERC20",
 			contract: toAddress("0x26b81657e09d3a6a18ff1c6d776fd09f4bb9ee80"),

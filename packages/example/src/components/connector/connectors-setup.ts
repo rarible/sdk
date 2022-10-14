@@ -101,7 +101,7 @@ function environmentToImmutableXEnv(environment: RaribleSdkEnvironment) {
 		case "prod":
 			return "prod"
 		default:
-			return "dev"
+			return "testnet"
 	}
 }
 

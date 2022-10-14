@@ -11,7 +11,7 @@ import { toItemId } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
 
 async function getSdk() {
-	const imxConnectorWallet = new ImxWallet("dev")
+	const imxConnectorWallet = new ImxWallet("testnet")
 	await imxConnectorWallet.connect()
 	const wallet = new ImmutableXWallet(imxConnectorWallet)
 
@@ -20,7 +20,7 @@ async function getSdk() {
 		address: imxConnectorWallet.getConnectionData().address,
 	})
 
-	return createRaribleSdk(wallet, "development")
+	return createRaribleSdk(wallet, "testnet")
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

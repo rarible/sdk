@@ -7,5 +7,5 @@ export const stagingConfig: RaribleSdkConfig = {
 	tezosNetwork: "testnet",
 	polygonNetwork: "staging-polygon",
 	solanaNetwork: "devnet",
-	immutablexNetwork: "dev",
+	immutablexNetwork: "testnet",
 }
