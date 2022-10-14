@@ -1,7 +1,7 @@
 import type { Link } from "@imtbl/imx-sdk"
 
-export type ImxNetwork = "mainnet" | "ropsten"
-export type ImxEnv = "dev" | "prod"
+export type ImxNetwork = "mainnet" | "goerli"
+export type ImxEnv = "testnet" | "prod"
 
 export enum ImxWalletProviderEnum {
 	METAMASK = "METAMASK",
