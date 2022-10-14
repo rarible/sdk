@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-fcl",
-  "version": "0.10.0-beta.5",
+  "version": "0.10.0-beta.6",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@onflow/fcl": "~0.0.77",
-    "@rarible/connector": "^0.10.0-beta.5"
+    "@rarible/connector": "^0.10.0-beta.6"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
