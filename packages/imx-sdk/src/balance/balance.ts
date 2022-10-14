@@ -15,9 +15,7 @@ export async function getBalance(
 ): Promise<BigNumberValue> {
 	const DEFAULT_DECIMALS = 18
 
-	const res = await apis.balance.getAllBalances({ ownerAddress: address })
-	const { result } = res
-	console.log("res", res)
+	const { result } = await apis.balance.getAllBalances({ ownerAddress: address })
 	if (assetType.assetClass === "ETH") {
 		const currencyBalance = result.find((b => b.token_address === ""))
 
