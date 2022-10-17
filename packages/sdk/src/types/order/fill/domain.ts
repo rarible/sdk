@@ -54,7 +54,7 @@ export interface FillRequest {
 	/**
 	 * ItemId for fill collection order
 	 */
-	itemId?: ItemId
+	itemId?: ItemId | ItemId[]
 	/**
 	 * Max fees value. Should be greater than 0. If required and not provided, will throw Error
 	 */

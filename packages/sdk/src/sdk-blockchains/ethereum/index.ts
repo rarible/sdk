@@ -32,7 +32,8 @@ export function createEthereumSdk(
 	network: EthereumNetwork,
 	config: {
 		params?: ConfigurationParameters,
-		logs?: { level: LogsLevel, session: string }
+		logs?: { level: LogsLevel, session: string },
+		apiKey?: string
 	} & IEthereumSdkConfig
 ): IRaribleInternalSdk {
 	const sdk = createRaribleSdk(wallet?.ethereum, network, {
@@ -47,6 +48,7 @@ export function createEthereumSdk(
 		ethereum: config[Blockchain.ETHEREUM],
 		polygon: config[Blockchain.POLYGON],
 		fillCalldata: config.fillCalldata ? toBinary(config.fillCalldata) : undefined,
+		apiKey: config.apiKey,
 	})
 
 	const sellService = new EthereumSell(sdk, network, config)
@@ -96,6 +98,7 @@ export function createEthereumSdk(
 		ethereum: {
 			wrapCryptoPunk: cryptopunkService.wrap,
 			unwrapCryptoPunk: cryptopunkService.unwrap,
+			getBatchBuyAmmInfo: fillerService.getBuyAmmInfo,
 		},
 	}
 }

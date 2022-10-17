@@ -27,6 +27,7 @@ import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 import type { IEthereumSdkConfig } from "./sdk-blockchains/ethereum/domain"
+import type { IGetBuyAmmInfo } from "./types/balances"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -50,6 +51,7 @@ export interface IRaribleSdkConfig {
 		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
 	}
 	middlewares?: Middleware[]
+	apiKey?: string
 }
 
 export interface IRaribleSdk {
@@ -114,6 +116,7 @@ export interface IBalanceSdk {
 export interface IEthereumSdk {
 	wrapCryptoPunk: ICryptopunkWrap,
 	unwrapCryptoPunk: ICryptopunkUnwrap,
+	getBatchBuyAmmInfo: IGetBuyAmmInfo,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {

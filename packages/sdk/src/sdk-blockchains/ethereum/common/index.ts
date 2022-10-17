@@ -17,9 +17,11 @@ import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type { CurrencyType } from "../../../common/domain"
 import type { RequestCurrencyAssetType } from "../../../common/domain"
-import type { PrepareFillRequest } from "../../../types/order/fill/domain"
+import type { PrepareFillRequest, FillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { UnionPart } from "../../../types/order/common"
 
@@ -286,6 +288,29 @@ export function getOrderId(fillRequest: PrepareFillRequest) {
 	} else {
 		return fillRequest.orderId
 	}
+}
+
+export function getAssetTypeFromItemId(itemId: ItemId): NftAssetType {
+	const { contract, tokenId } = getEthereumItemId(itemId)
+	return {
+		contract: toAddress(contract),
+		tokenId,
+	}
+}
+
+export function getAssetTypeFromFillRequest(
+	itemId: FillRequest["itemId"]
+): CommonFillRequestAssetType | CommonFillRequestAssetType[] | undefined {
+	if (!itemId) {
+		return undefined
+	}
+	if (Array.isArray(itemId)) {
+		return itemId.map(item => {
+			return getAssetTypeFromItemId(item)
+		})
+	}
+
+	return getAssetTypeFromItemId(itemId)
 }
 
 export * from "./validators"
