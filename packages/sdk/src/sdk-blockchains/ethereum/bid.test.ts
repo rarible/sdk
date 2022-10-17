@@ -41,10 +41,7 @@ describe("bid", () => {
 	const ethSdk2 = createEtherumSdk(ethwallet2.ethereum as any, "dev-ethereum", { logs: { level: LogsLevel.DISABLED } })
 
 
-	const { web3 } = initProvider(undefined, {
-		rpcUrl: "https://dev-ethereum-node.rarible.com",
-		networkId: 300500,
-	})
+	const { web3 } = initProvider(undefined)
 	const nullFundsEthereum = new Web3Ethereum({ web3: web3 })
 	const nullFundsWallet = new EthereumWallet(nullFundsEthereum)
 	const nullFundsSdk = createRaribleSdk(nullFundsWallet, "development", { logs: LogsLevel.DISABLED })

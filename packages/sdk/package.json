@@ -15,7 +15,7 @@
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum",
     "verify": "tsc --noEmit",
     "docs": "typedoc"
   },

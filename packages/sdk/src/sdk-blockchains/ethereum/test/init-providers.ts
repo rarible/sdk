@@ -1,16 +1,16 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
+import { ETH_DEV_SETTINGS } from "./common"
 
 type ProvidersConfig = Partial<{
 	pk1: string
 	pk2: string
 }>
 
-export function initProviders({ pk1, pk2 }: ProvidersConfig = {}) {
-	const providerSettings = {
-		rpcUrl: "https://dev-ethereum-node.rarible.com",
-		networkId: 300500,
-	}
+export function initProviders(
+	{ pk1, pk2 }: ProvidersConfig = {},
+	providerSettings = ETH_DEV_SETTINGS
+) {
 	const { provider: provider1, wallet: wallet1 } = createE2eProvider(pk1, providerSettings)
 	const { provider: provider2, wallet: wallet2 } = createE2eProvider(pk2, providerSettings)
 

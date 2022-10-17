@@ -10,10 +10,10 @@ import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preproces
 import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
-import { DEV_PK_1, providerDevelopmentSettings } from "./test/common"
+import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
 
 describe("mint", () => {
-	const { provider, wallet } = createE2eProvider(DEV_PK_1, providerDevelopmentSettings)
+	const { provider, wallet } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)
