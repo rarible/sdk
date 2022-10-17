@@ -22,7 +22,7 @@ import type {
 	ConvertRequest,
 	CurrencyOrOrder,
 	GetBiddingBalanceRequest,
-	IDepositBiddingBalance,
+	IDepositBiddingBalance, IGetBuyAmmInfo,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
@@ -274,6 +274,7 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 
 	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
 	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+  getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
 }
 
 

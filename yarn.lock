@@ -4955,10 +4955,10 @@
     eth-json-rpc-middleware "^8.0.1"
     json-rpc-engine "^6.1.0"
 
-"@rarible/ethereum-api-client@^0.1.23-beta7":
-  version "0.1.23-beta7"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.23-beta7.tgz#a0dbf6678c5cf99130115572f02613c7f877f050"
-  integrity sha512-mJUerY1GTfMtg1onJcd2EhwecBLk7J2gDd3YnfntiHmHlyVxX3PAnegtxoNJLsySERfb+188hUDmP/f/q5VMbw==
+"@rarible/ethereum-api-client@^0.1.23-beta8":
+  version "0.1.23-beta8"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.23-beta8.tgz#7531ff143f74a48ef1151713ca11911f59f9eb58"
+  integrity sha512-PAoFPjV3Wh/uOgrZ1ChbnhRUL3jOWwShYKLhXltF9Nc0tq60yfGgYb76omj80maEB65rcMJF2VmxRVB3pl2moA==
   dependencies:
     "@rarible/types" "~0.9.2"
 
@@ -5046,13 +5046,13 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.104":
-  version "0.12.104"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.104.tgz#c9c8c1bc442ff3f258efa5ed62e620c79ed7a1ad"
-  integrity sha512-Ajjp0sqUvAIs0Cx7KepaYoLiEIQW67859NsqNiquTA3vWEa159rXtEWRKzvDZuQ6lnxsmcKzDSqaK59qX0JQCA==
+"@rarible/protocol-ethereum-sdk@~0.12.106":
+  version "0.12.106"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.106.tgz#974a6c5f052a8ec9961e13da8a04ebc87c80023d"
+  integrity sha512-6dWDMO09swpTSi2kJy37LPTS1jZyBhxX59joHfSLp+wOwWorDgGSVePJpHA1McF4yCGOcQEWeX7Y9zkyhRBXtw==
   dependencies:
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.23-beta7"
+    "@rarible/ethereum-api-client" "^0.1.23-beta8"
     "@rarible/ethereum-provider" "^0.12.98"
     "@rarible/logger" "^0.9.9"
     "@rarible/utils" "~0.9.10"

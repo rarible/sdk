@@ -19,8 +19,10 @@ import type { AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
+import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type { OrderRequest } from "../../../types/order/common"
-import type { PrepareFillRequest } from "../../../types/order/fill/domain"
+import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import type { UnionPart } from "../../../types/order/common"
@@ -211,7 +213,8 @@ export function getSupportedCurrencies(
 }
 
 /**
- * @internal
+ * Return true if blockchain works like ethereum blockchain
+ * @param blockchain
  */
 export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
 	for (const b of EVMBlockchains) {
@@ -298,6 +301,29 @@ export function getOrderId(fillRequest: PrepareFillRequest) {
 	} else {
 		return fillRequest.orderId
 	}
+}
+
+export function getAssetTypeFromItemId(itemId: ItemId): NftAssetType {
+	const { contract, tokenId } = getEthereumItemId(itemId)
+	return {
+		contract: toAddress(contract),
+		tokenId,
+	}
+}
+
+export function getAssetTypeFromFillRequest(
+	itemId: FillRequest["itemId"]
+): CommonFillRequestAssetType | CommonFillRequestAssetType[] | undefined {
+	if (!itemId) {
+		return undefined
+	}
+	if (Array.isArray(itemId)) {
+		return itemId.map(item => {
+			return getAssetTypeFromItemId(item)
+		})
+	}
+
+	return getAssetTypeFromItemId(itemId)
 }
 
 export * from "./validators"

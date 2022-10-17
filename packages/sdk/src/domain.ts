@@ -31,6 +31,7 @@ import type { ISellInternal } from "./types/order/sell"
 import type { IEthereumSdkConfig } from "./sdk-blockchains/ethereum/domain"
 import type { IUploadMeta } from "./types/nft/mint/prepare"
 import type { IBatchBuy } from "./types/order/fill"
+import type { IGetBuyAmmInfo } from "./types/balances"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -66,6 +67,7 @@ export interface IRaribleSdkConfig {
 	 * Meddlewares
 	 */
 	middlewares?: Middleware[]
+	apiKey?: string
 }
 
 /**
@@ -362,6 +364,7 @@ export interface IBalanceSdk {
 export interface IEthereumSdk {
 	wrapCryptoPunk: ICryptopunkWrap,
 	unwrapCryptoPunk: ICryptopunkUnwrap,
+	getBatchBuyAmmInfo: IGetBuyAmmInfo,
 }
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {

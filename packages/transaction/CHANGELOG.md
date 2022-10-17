@@ -95,6 +95,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.37](https://github.com/rarible/sdk/compare/v0.9.36...v0.9.37) (2022-10-17)
+
+
+### Features
+
+* amm bulk purchase ([#359](https://github.com/rarible/sdk/issues/359)) ([80bcc7c](https://github.com/rarible/sdk/commit/80bcc7ce74be6a44e309da49178bea3a956793bf))
+
+
+
+
+
 ## [0.9.35](https://github.com/rarible/sdk/compare/v0.9.34...v0.9.35) (2022-10-12)
 
 

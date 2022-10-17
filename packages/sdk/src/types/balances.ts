@@ -3,6 +3,7 @@ import type { Blockchain, Order, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { RequestCurrency } from "../common/domain"
 
 /**
@@ -71,3 +72,9 @@ export type WithdrawBiddingBalanceRequest = {
 } & CurrencyOrOrder
 
 export type IWithdrawBiddingBalance = Action<"send-tx", WithdrawBiddingBalanceRequest, IBlockchainTransaction>
+
+export type BuyAmmInfoRequest = {
+	hash: string
+	numNFTs: number
+}
+export type IGetBuyAmmInfo = (request: BuyAmmInfoRequest) => Promise<AmmTradeInfo>

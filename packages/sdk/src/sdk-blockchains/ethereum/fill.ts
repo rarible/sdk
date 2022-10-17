@@ -7,7 +7,8 @@ import type {
 	FillOrderRequest,
 	RaribleV2OrderFillRequestV3Buy,
 	RaribleV2OrderFillRequestV3Sell,
-} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+
+	AmmOrderFillRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
@@ -19,6 +20,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { OrderId } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
+import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { Blockchain } from "@rarible/api-client"
 import type {
 	BatchFillRequest,
@@ -29,10 +31,12 @@ import type {
 	PrepareFillResponse,
 } from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
+	getAssetTypeFromFillRequest,
 	getEthereumItemId,
 	getOrderId,
 	toEthereumParts,
@@ -63,6 +67,7 @@ export class EthereumFill {
 		this.buyBasic = this.buyBasic.bind(this)
 		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 		this.batchBuyBasic = this.batchBuyBasic.bind(this)
+		this.getBuyAmmInfo = this.getBuyAmmInfo.bind(this)
 	}
 
 	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
@@ -150,12 +155,12 @@ export class EthereumFill {
 				break
 			}
 			case "AMM": {
-				request = {
+				return {
 					order,
 					originFees: toEthereumParts(fillRequest.originFees),
 					amount: fillRequest.amount,
+					assetType: getAssetTypeFromFillRequest(fillRequest.itemId) as AmmOrderFillRequest["assetType"],
 				}
-				break
 			}
 			default: {
 				throw new Error("Unsupported order type")
@@ -163,6 +168,9 @@ export class EthereumFill {
 		}
 
 		if (fillRequest.itemId) {
+			if (Array.isArray(fillRequest.itemId)) {
+				throw new Error("Array of itemIds is supported only for AMM orders")
+			}
 			const {
 				contract,
 				tokenId,
@@ -462,6 +470,13 @@ export class EthereumFill {
 			submit,
 			prepared,
 		}
+	}
+
+	getBuyAmmInfo(request: BuyAmmInfoRequest): Promise<AmmTradeInfo> {
+		return this.sdk.order.getBuyAmmInfo({
+			hash: request.hash,
+			numNFTs: request.numNFTs,
+		})
 	}
 
 	async batchBuyBasic(

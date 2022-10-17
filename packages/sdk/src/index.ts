@@ -64,6 +64,7 @@ export function createRaribleSdk(
 		...config?.blockchain?.ETHEREUM,
 		params: config?.apiClientParams,
 		logs: config?.logs ? { level: config?.logs, session: sessionId } : { level: LogsLevel.TRACE, session: sessionId },
+		apiKey: config?.apiKey,
 	}
 	const instance = createUnionSdk(
 		createEthereumSdk(

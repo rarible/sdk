@@ -89,4 +89,15 @@ describe("Batch buy", () => {
 		console.log(tx)
 		await tx.wait()
 	})
+
+	test("get buy amm info", async () => {
+		if (!sdkBuyer.ethereum) {
+			throw new Error("Sdk was initialized without ethereum provider")
+		}
+		const data = await sdkBuyer.ethereum.getBatchBuyAmmInfo({
+			hash: "0x000000000000000000000000d2bfdbb7be48d63ad3aaf5311786d2da2fc0fbea",
+			numNFTs: 5,
+		})
+		expect(data.prices[4].price).toBeTruthy()
+	})
 })
