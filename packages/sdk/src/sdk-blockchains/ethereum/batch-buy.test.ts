@@ -1,7 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "../../index"
@@ -10,16 +10,16 @@ import { LogsLevel } from "../../domain"
 import { awaitItem } from "./test/await-item"
 import { convertEthereumToUnionAddress } from "./common"
 
-describe.skip("Batch buy", () => {
+describe("Batch buy", () => {
 	// 0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b
 	const { provider: providerSeller } = createE2eProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c", {
-		rpcUrl: "https://node-rinkeby.rarible.com",
-		networkId: 4,
+		rpcUrl: "https://goerli-ethereum-node.rarible.com",
+		networkId: 5,
 	})
 
 	const { provider: providerBuyer } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
-		rpcUrl: "https://node-rinkeby.rarible.com",
-		networkId: 4,
+		rpcUrl: "https://goerli-ethereum-node.rarible.com",
+		networkId: 5,
 	})
 
 	const web31 = new Web3(providerSeller)
@@ -88,5 +88,16 @@ describe.skip("Batch buy", () => {
 		})))
 		console.log(tx)
 		await tx.wait()
+	})
+
+	test("get buy amm info", async () => {
+		if (!sdkBuyer.ethereum) {
+			throw new Error("Sdk was initialized without ethereum provider")
+		}
+		const data = await sdkBuyer.ethereum.getBatchBuyAmmInfo({
+			hash: "0x000000000000000000000000d2bfdbb7be48d63ad3aaf5311786d2da2fc0fbea",
+			numNFTs: 5,
+		})
+		expect(data.prices[4].price).toBeTruthy()
 	})
 })

@@ -4,6 +4,7 @@ import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
@@ -23,7 +24,7 @@ import type {
 	ConvertRequest,
 	CurrencyOrOrder,
 	GetBiddingBalanceRequest,
-	IDepositBiddingBalance,
+	IDepositBiddingBalance, IGetBuyAmmInfo,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
@@ -31,6 +32,7 @@ import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "
 import type { PrepareSellInternalRequest, PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 import type { PrepareBatchBuyResponse } from "../../types/order/fill/domain"
+import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -236,6 +238,7 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 
 	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
 	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
+  getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
 }
 
 const blockchains: Blockchain[] = [
