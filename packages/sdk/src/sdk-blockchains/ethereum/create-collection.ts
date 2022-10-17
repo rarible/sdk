@@ -5,10 +5,9 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
-import type { EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
+import type { CreateCollectionResponse, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
-import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
-import type { EVMBlockchain, CreateEthereumCollectionResponse } from "./common"
+import type { CreateEthereumCollectionResponse, EVMBlockchain } from "./common"
 import { convertEthereumContractAddress, getEVMBlockchain } from "./common"
 
 export class EthereumCreateCollection {
@@ -82,7 +81,7 @@ export class EthereumCreateCollection {
 	}
 
 	async createCollectionSimplified(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
-		if (request.blockchain !== Blockchain.ETHEREUM) {
+		if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
 			throw new Error("Wrong blockchain")
 		}
 

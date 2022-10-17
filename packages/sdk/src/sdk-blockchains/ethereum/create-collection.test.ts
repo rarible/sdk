@@ -6,10 +6,14 @@ import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import { initProviders } from "./test/init-providers"
-import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { DEV_PK_1, DEV_PK_2, POLYGON_DEV_SETTINGS } from "./test/common"
 
-describe("create collection", () => {
-	const { web31, web32 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
+const providers: {blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON, providers: any }[] = [
+	{ blockchain: Blockchain.ETHEREUM, providers: initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 }) },
+	{ blockchain: Blockchain.POLYGON, providers: initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 }, POLYGON_DEV_SETTINGS) },
+]
+
+describe.each(providers)("create collection", ({ blockchain, providers: { web31, web32 } }) => {
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const ethereumWallet1 = new EthereumWallet(ethereum1)
@@ -17,9 +21,9 @@ describe("create collection", () => {
 	const sdk1 = createRaribleSdk(ethereumWallet1, "development", { logs: LogsLevel.DISABLED })
 	const sdk2 = createRaribleSdk(ethereumWallet2, "development", { logs: LogsLevel.DISABLED })
 
-	test("create erc-721 collection", async () => {
+	test(`${blockchain} create erc-721 collection`, async () => {
 		const { address, tx } = await sdk1.nft.createCollection({
-			blockchain: Blockchain.ETHEREUM,
+			blockchain,
 			type: "ERC721",
 			name: "name",
 			symbol: "RARI",
@@ -41,9 +45,9 @@ describe("create collection", () => {
 		await mintTx.transaction.wait()
 	})
 
-	test("create erc-721 private collection", async () => {
+	test(`${blockchain} create erc-721 private collection`, async () => {
 		const { address, tx } = await sdk1.nft.createCollection({
-			blockchain: Blockchain.ETHEREUM,
+			blockchain,
 			type: "ERC721",
 			name: "name",
 			symbol: "RARI",
@@ -60,9 +64,9 @@ describe("create collection", () => {
 		})
 	})
 
-	test("create erc-1155 public collection", async () => {
+	test(`${blockchain} create erc-1155 public collection`, async () => {
 		const { address, tx } = await sdk1.nft.createCollection({
-			blockchain: Blockchain.ETHEREUM,
+			blockchain,
 			type: "ERC1155",
 			name: "name",
 			symbol: "RARI",
@@ -78,9 +82,9 @@ describe("create collection", () => {
 		})
 	})
 
-	test("create erc-1155 private collection", async () => {
+	test(`${blockchain} create erc-1155 private collection`, async () => {
 		const { address, tx } = await sdk1.nft.createCollection({
-			blockchain: Blockchain.ETHEREUM,
+			blockchain,
 			type: "ERC1155",
 			name: "name",
 			symbol: "RARI",
