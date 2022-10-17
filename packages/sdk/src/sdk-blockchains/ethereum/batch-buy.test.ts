@@ -1,7 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { toContractAddress, toUnionAddress } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "../../index"
