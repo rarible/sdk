@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.9.38",
+  "version": "0.9.39",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",

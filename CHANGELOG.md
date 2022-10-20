@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.39](https://github.com/rarible/sdk/compare/v0.9.38...v0.9.39) (2022-10-20)
+
+
+### Bug Fixes
+
+* add royalties fix ([#363](https://github.com/rarible/sdk/issues/363)) ([a121459](https://github.com/rarible/sdk/commit/a121459114fc783229e7ba7e8cc9d8031fa4ac12))
+
+
+
+
+
 ## [0.9.38](https://github.com/rarible/sdk/compare/v0.9.37...v0.9.38) (2022-10-20)
 
 
