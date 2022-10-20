@@ -3,6 +3,86 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.10](https://github.com/rarible/sdk/compare/v0.9.38...v0.10.0-beta.10) (2022-10-20)
+
+
+### Bug Fixes
+
+* add royalties fix ([#363](https://github.com/rarible/sdk/issues/363)) ([a121459](https://github.com/rarible/sdk/commit/a121459114fc783229e7ba7e8cc9d8031fa4ac12))
+
+
+
+# [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
+
+
+### Features
+
+* ethereum wrappers contracts for mainnet and goerli ([2d9dc18](https://github.com/rarible/sdk/commit/2d9dc18072cea0c07425cf93b4c024d184451cad))
+
+
+
+# [0.10.0-beta.8](https://github.com/rarible/sdk/compare/v0.10.0-beta.7...v0.10.0-beta.8) (2022-10-18)
+
+
+
+# [0.10.0-beta.7](https://github.com/rarible/sdk/compare/v0.9.37...v0.10.0-beta.7) (2022-10-17)
+
+
+### Bug Fixes
+
+* can't create polygon collection ([#360](https://github.com/rarible/sdk/issues/360)) ([d8cf0b1](https://github.com/rarible/sdk/commit/d8cf0b11304a66a3aff9bc6b0dae72d43ac89915))
+
+
+
+# [0.10.0-beta.6](https://github.com/rarible/sdk/compare/v0.9.36...v0.10.0-beta.6) (2022-10-14)
+
+
+
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+
+### Bug Fixes
+
+* batchbuy for simplify ([#354](https://github.com/rarible/sdk/issues/354)) ([3a3b675](https://github.com/rarible/sdk/commit/3a3b675808587c8ce224b992681e37481dd8f249))
+* offchain goerli mint ([2087ea1](https://github.com/rarible/sdk/commit/2087ea19edc7a721074d381402d60d0dd9390155))
+
+
+
+# [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.34...v0.10.0-beta.3) (2022-10-06)
+
+
+
+# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.9.32...v0.10.0-beta.2) (2022-10-03)
+
+
+
+# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
+
+
+
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+
+### Bug Fixes
+
+* flow buy test ([ef3cff8](https://github.com/rarible/sdk/commit/ef3cff8057578f795d3b3708f405687047b127cd))
+* typedoc config ([e98836c](https://github.com/rarible/sdk/commit/e98836c82c3cd7d26f9e16378afebe23e34876b3))
+* typedoc config, extend docs ([048cfed](https://github.com/rarible/sdk/commit/048cfed5005b5775af75ead358bbc069ae802894))
+
+
+### Features
+
+* simplified methods ([7b84f75](https://github.com/rarible/sdk/commit/7b84f7503ce40d577706fca4383e6efc7ed28c1c))
+* simplify create sdk ([3aa3714](https://github.com/rarible/sdk/commit/3aa37146c880254ddc5b6cd539b5d03db07d4af4))
+* simplify methods ([826ac77](https://github.com/rarible/sdk/commit/826ac779f5442dd585aa85456003b62a4ce47a5b))
+* support create sdk with providers ([deb0098](https://github.com/rarible/sdk/commit/deb0098427cb7f39d74195ca2ddb6c4f9cc4a936))
+* support create sdk with providers ([605b17a](https://github.com/rarible/sdk/commit/605b17a1094fd97e8ab791577033dee5a9c601be))
+* update readme ([#278](https://github.com/rarible/sdk/issues/278)) ([8e4ad49](https://github.com/rarible/sdk/commit/8e4ad490b9eeb0485ff1740fbf61e3b2003017d2))
+
+
+
+
+
 # [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
 
 

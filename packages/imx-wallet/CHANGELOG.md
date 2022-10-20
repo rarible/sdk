@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.10](https://github.com/rarible/sdk/compare/v0.9.38...v0.10.0-beta.10) (2022-10-20)
+
+
+
+# [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
+
+
+
+# [0.10.0-beta.8](https://github.com/rarible/sdk/compare/v0.10.0-beta.7...v0.10.0-beta.8) (2022-10-18)
+
+
+
+# [0.10.0-beta.7](https://github.com/rarible/sdk/compare/v0.9.37...v0.10.0-beta.7) (2022-10-17)
+
+
+
+# [0.10.0-beta.6](https://github.com/rarible/sdk/compare/v0.9.36...v0.10.0-beta.6) (2022-10-14)
+
+
+
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+
+
+# [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.34...v0.10.0-beta.3) (2022-10-06)
+
+
+
+# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.9.32...v0.10.0-beta.2) (2022-10-03)
+
+
+
+# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
+
+
+
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+**Note:** Version bump only for package @rarible/immutable-wallet
+
+
+
+
+
 # [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
 
 **Note:** Version bump only for package @rarible/immutable-wallet
