@@ -22,6 +22,7 @@ import type { OrderId } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { Blockchain } from "@rarible/api-client"
+import { Warning } from "@rarible/logger/build"
 import type {
 	BatchFillRequest,
 	FillRequest,
@@ -160,11 +161,16 @@ export class EthereumFill {
 					originFees: toEthereumParts(fillRequest.originFees),
 					amount: fillRequest.amount,
 					assetType: getAssetTypeFromFillRequest(fillRequest.itemId) as AmmOrderFillRequest["assetType"],
-				}
+					addRoyalty: fillRequest.addRoyalties,
+				} as AmmOrderFillRequest
 			}
 			default: {
 				throw new Error("Unsupported order type")
 			}
+		}
+
+		if (fillRequest.addRoyalties) {
+			throw new Warning("Adding royalties is available only for AMM orders")
 		}
 
 		if (fillRequest.itemId) {

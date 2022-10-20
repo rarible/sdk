@@ -147,6 +147,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.9.38](https://github.com/rarible/sdk/compare/v0.9.37...v0.9.38) (2022-10-20)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.9.37](https://github.com/rarible/sdk/compare/v0.9.36...v0.9.37) (2022-10-17)
 
 **Note:** Version bump only for package example

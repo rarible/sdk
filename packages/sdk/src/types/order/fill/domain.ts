@@ -63,6 +63,10 @@ export interface FillRequest {
    * Unwrap tokens on accept bid
    */
 	unwrap?: boolean
+	/**
+   * Force pay royalties. It's working only on AMM orders
+   */
+	addRoyalties?: boolean
 }
 
 export type FillActionTypes = "approve" | "send-tx"

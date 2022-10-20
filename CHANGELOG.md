@@ -252,6 +252,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
   EthereumWallet, SolanaWallet, TezosWallet, FlowWallet, ImmutableXWallet
 
 
+## [0.9.38](https://github.com/rarible/sdk/compare/v0.9.37...v0.9.38) (2022-10-20)
+
+
+### Features
+
+* ethereum wrappers contracts for mainnet and goerli ([#362](https://github.com/rarible/sdk/issues/362)) ([1884800](https://github.com/rarible/sdk/commit/188480059345eec94fd4bcdf6421c31979993474))
+
+
+
+
+
 ## [0.9.37](https://github.com/rarible/sdk/compare/v0.9.36...v0.9.37) (2022-10-17)
 
 
@@ -274,6 +285,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * add gamestop wallet enum value ([#357](https://github.com/rarible/sdk/issues/357)) ([558df7b](https://github.com/rarible/sdk/commit/558df7b8c5379b77e422f35c8c18bd025147e685))
+
 
 
 
