@@ -27,7 +27,7 @@ export class EthereumCreateCollection {
 		}
 		return operators.map(o => {
 			const [blockchain, address] = o.split(":")
-			if (blockchain !== "ETHEREUM") {
+			if (blockchain !== Blockchain.ETHEREUM && blockchain !== Blockchain.POLYGON) {
 				throw new Error("Operator address should be in ethereum blockchain")
 			}
 			return toAddress(address)
