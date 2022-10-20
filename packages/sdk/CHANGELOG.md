@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
+
+
+### Features
+
+* ethereum wrappers contracts for mainnet and goerli ([2d9dc18](https://github.com/rarible/sdk/commit/2d9dc18072cea0c07425cf93b4c024d184451cad))
+
+
+
+
+
 # [0.10.0-beta.8](https://github.com/rarible/sdk/compare/v0.10.0-beta.7...v0.10.0-beta.8) (2022-10-18)
 
 **Note:** Version bump only for package @rarible/sdk
