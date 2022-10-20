@@ -164,7 +164,7 @@ function suites(): {
 }
 
 // deprecated, should be removed
-describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (suite) => {
+describe.skip.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (suite) => {
 	const {
 		seller: sellerWallet,
 		buyer: buyerWallet,
