@@ -5,6 +5,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
+import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -24,6 +25,7 @@ import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
 import { createSolanaSdk } from "./sdk-blockchains/solana"
 import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
+import { getSdkContext } from "./common/get-sdk-context"
 
 export function createRaribleSdk(
 	wallet: Maybe<BlockchainWallet>,
@@ -80,7 +82,13 @@ export function createRaribleSdk(
 		)
 	)
 
-	setupMiddleware(apis, instance, { wallet, env, config, sessionId })
+	const sdkContext = { wallet, env, config, sessionId }
+	setupMiddleware({
+		apis,
+		internalSdk: instance,
+		sdkContext,
+		externalLogger: config?.logger,
+	})
 
 	return {
 		...instance,
@@ -94,24 +102,30 @@ export function createRaribleSdk(
 		},
 		apis,
 		wallet,
+		getSdkContext: getSdkContext.bind(null, sdkContext),
 	}
 }
 
+export type SetupMiddlewareData = {
+	apis: IApisSdk
+	internalSdk: IRaribleInternalSdk
+	sdkContext: ISdkContext
+	externalLogger?: AbstractLogger
+}
 /**
  * Create middleware controller & wrap methods
  */
-function setupMiddleware(
-	apis: IApisSdk,
-	internalSdk: IRaribleInternalSdk,
-	sdkContext: ISdkContext
-) {
+function setupMiddleware({ apis, internalSdk, sdkContext, externalLogger }: SetupMiddlewareData) {
 	const middlewarer = new Middlewarer()
 
 	if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
-		middlewarer.use(getInternalLoggerMiddleware(
-			sdkContext.config?.logs ?? LogsLevel.TRACE,
-			sdkContext
-		))
+		middlewarer.use(
+			getInternalLoggerMiddleware(
+				sdkContext.config?.logs ?? LogsLevel.TRACE,
+				sdkContext,
+				externalLogger,
+			)
+		)
 	}
 
 	for (const middleware of (sdkContext.config?.middlewares ?? [])) {
