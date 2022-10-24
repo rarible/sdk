@@ -52,6 +52,13 @@ export function createUnionSdk(
 	polygon: IRaribleInternalSdk,
 	solana: IRaribleInternalSdk,
 	immutablex: IRaribleInternalSdk,
+
+	// ethereum: () => Promise<IRaribleInternalSdk>,
+	// flow: () => Promise<IRaribleInternalSdk>,
+	// tezos: () => Promise<IRaribleInternalSdk>,
+	// polygon: () => Promise<IRaribleInternalSdk>,
+	// solana: () => Promise<IRaribleInternalSdk>,
+	// immutablex: () => Promise<IRaribleInternalSdk>,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -222,7 +229,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
   	return this.instances[extractBlockchain(prepare.collection)].generateTokenId(prepare)
   }
 
-  preprocessMeta(request: PreprocessMetaRequest): PreprocessMetaResponse {
+  preprocessMeta(request: PreprocessMetaRequest): Promise<PreprocessMetaResponse> {
   	return this.instances[request.blockchain].preprocessMeta(request)
   }
 }

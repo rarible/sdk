@@ -120,8 +120,8 @@ describe("mint", () => {
 		}
 	})
 
-	test("test preprocess metadata", () => {
-		const response = sdk.nft.preprocessMeta({
+	test("test preprocess metadata", async () => {
+		const response = await sdk.nft.preprocessMeta({
 			blockchain: Blockchain.ETHEREUM,
 			name: "1",
 			description: "2",

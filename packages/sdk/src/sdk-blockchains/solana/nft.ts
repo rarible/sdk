@@ -179,7 +179,7 @@ export class SolanaNft {
 		return response.submit(request)
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): ISolanaMetadataResponse {
+	async preprocessMeta(meta: PreprocessMetaRequest): Promise<ISolanaMetadataResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}

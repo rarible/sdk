@@ -9,7 +9,7 @@ describe("Solana metadata", () => {
 	const sdk = createSdk(wallet)
 
 	test("Should create correct metadata", async () => {
-		const meta = sdk.nft.preprocessMeta({
+		const meta = await sdk.nft.preprocessMeta({
 			blockchain: Blockchain.SOLANA,
 			name: "name",
 			symbol: "TEST",

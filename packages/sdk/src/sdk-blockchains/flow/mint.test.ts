@@ -36,8 +36,8 @@ describe("Flow mint", () => {
 		expect(nft.id).toEqual(itemId)
 	})
 
-	test("test preprocess metadata", () => {
-		const response = mint.preprocessMeta({
+	test("test preprocess metadata", async () => {
+		const response = await mint.preprocessMeta({
 			blockchain: Blockchain.FLOW,
 			name: "1",
 			description: "2",

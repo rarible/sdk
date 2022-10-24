@@ -85,8 +85,8 @@ describe.skip("mint test", () => {
 
 	}, 1500000)
 
-	test("tezos preprocess metadata", () => {
-		const response = sdk.nft.preprocessMeta({
+	test("tezos preprocess metadata", async () => {
+		const response = await sdk.nft.preprocessMeta({
 			blockchain: Blockchain.TEZOS,
 			name: "1",
 			description: "2",

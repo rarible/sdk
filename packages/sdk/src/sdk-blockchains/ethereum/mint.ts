@@ -169,7 +169,7 @@ export class EthereumMint {
 		return prepareResponse.submit(request)
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+	async preprocessMeta(meta: PreprocessMetaRequest): Promise<CommonTokenMetadataResponse> {
 		if (meta.blockchain !== Blockchain.ETHEREUM && meta.blockchain !== Blockchain.POLYGON) {
 			throw new Error("Wrong blockchain")
 		}

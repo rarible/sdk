@@ -73,7 +73,7 @@ export class MetaUploader {
 			}
 		}
 
-		const metadata = this.preprocessMeta(metadataRequest)
+		const metadata = await this.preprocessMeta(metadataRequest)
 		const file = createJson("properties.json", metadata)
 		return this.uploadFile(nftStorageApiKey, file)
 	}

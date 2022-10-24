@@ -5,7 +5,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
-import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
+import { getRaribleWallet } from "@rarible/sdk-wallet"
 import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
@@ -66,7 +66,12 @@ export function createRaribleSdk(
 		logs: config?.logs ? { level: config?.logs, session: sessionId } : { level: LogsLevel.TRACE, session: sessionId },
 		apiKey: config?.apiKey,
 	}
+
+	const ethereumModule = import("./sdk-blockchains/ethereum")
+
+
 	const instance = createUnionSdk(
+
 		createEthereumSdk(
 			filterWallet(wallet, WalletType.ETHEREUM),
 			apis,
