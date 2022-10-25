@@ -19,7 +19,7 @@
     "serve": "nodemon"
   },
   "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "~0.12.107",
+    "@rarible/protocol-ethereum-sdk": "~0.12.108",
     "@rarible/web3-ethereum": "~0.12.103",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
