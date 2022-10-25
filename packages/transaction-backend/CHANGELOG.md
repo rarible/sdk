@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
+
+
+### Features
+
+* ethereum wrapper update ([#368](https://github.com/rarible/sdk/issues/368)) ([ed54a82](https://github.com/rarible/sdk/commit/ed54a82843063a53adc4f6d553abb3f602b56b7a))
+
+
+
+
+
 ## [0.9.38](https://github.com/rarible/sdk/compare/v0.9.37...v0.9.38) (2022-10-20)
 
 
