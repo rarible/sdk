@@ -5032,10 +5032,10 @@
     flow-js-testing "~0.1.13"
     sha3 "^2.1.4"
 
-"@rarible/logger@^0.9.11":
-  version "0.9.11"
-  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.11.tgz#29dedab42bb9bd14fd54167bba4c2276dd1f8d89"
-  integrity sha512-0/NZl15++wxlSAPIVn3ptsjrJhUAUF43V2Jtf67eO4XGxShmCnH9GkSHxIHHKXWal3HWTAhdIi5/tOik5n34xA==
+"@rarible/logger@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.12.tgz#3c37ca48a0ec2f378eda4e30b4e787c93d870f1b"
+  integrity sha512-vs/+t0SRVO19sXmEj4vSTckgtW/ZMrNTGvDYL041WJwgEkdORmwR1j10YZNwrIsmh/0osuK/uNO/N+H3M7Q7LA==
   dependencies:
     json-stringify-safe "^5.0.1"
 
@@ -6412,11 +6412,6 @@
   integrity sha512-SaAfLJY/40wKFDsNFwaNfwqFSL6kVhTx9JD18qM+Gaw1qdAXLYF/6E7TIqWEdoG4so6fki/zxURP5NsoCePYJw==
   dependencies:
     "@types/ethereum-protocol" "*"
-
-"@types/webpack-env@^1.18.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@types/webpack-env/-/webpack-env-1.18.0.tgz#ed6ecaa8e5ed5dfe8b2b3d00181702c9925f13fb"
-  integrity sha512-56/MAlX5WMsPVbOg7tAxnYvNYMMWr/QJiIp6BxVSW3JJXUVzzOn64qW8TzQyMSqSUFM2+PVI4aUHcHOzIz/1tg==
 
 "@types/webpack-sources@*":
   version "3.2.0"
