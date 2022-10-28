@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
+
+
+### Features
+
+* update wrapper ([856de99](https://github.com/rarible/sdk/commit/856de9958ef9081d547060e5cf951d48c430ee07))
+
+
+
+
+
 # [0.10.0-beta.10](https://github.com/rarible/sdk/compare/v0.9.38...v0.10.0-beta.10) (2022-10-20)
 
 

@@ -21,6 +21,10 @@ export class ImxOrderService {
 	constructor(private sdk: RaribleImxSdk, private apis: IApisSdk) {
 		this.sell = this.sell.bind(this)
 		this.buy = this.buy.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
+		this.sellBasic = this.sellBasic.bind(this)
+		this.cancelBasic = this.cancelBasic.bind(this)
 	}
 
 	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
