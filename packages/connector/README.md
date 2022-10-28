@@ -156,10 +156,10 @@ const connector = Connector
     // .add(fortmatic)
 
 
-connector.connection.subscribe((con) => {
+connector.connection.subscribe(async (con) => {
 	console.log("connection: " + JSON.stringify(con))
 	if (con.status === "connected") {
-		const sdk = createRaribleSdk(con.connection.wallet, "staging")
+		const sdk = await createRaribleSdk(con.connection.wallet, "staging")
 		// use sdk here
 	}
 })

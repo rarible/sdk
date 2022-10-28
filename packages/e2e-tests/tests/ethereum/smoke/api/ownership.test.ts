@@ -2,7 +2,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
-import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
+import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.type"
 import type { GetOwnershipsByItem200 } from "@rarible/api-client/build/apis/OwnershipControllerApi"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { testsConfig } from "../../../common/config"
@@ -46,9 +46,10 @@ function suites(): {
 
 describe.each(suites())("$blockchain api => ownership", (suite) => {
 	const wallet = suite.wallet
-	const sdk = createSdk(suite.blockchain, wallet)
 
 	test("ownership controller", async () => {
+		const sdk = await createSdk(suite.blockchain, wallet)
+
 		const address = await getWalletAddressFull(wallet)
 		const collection = await getCollection(sdk, suite.collectionId)
 		const { nft } = await mint(sdk, wallet, { collection },

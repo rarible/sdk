@@ -1,4 +1,5 @@
 import { toCollectionId, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/prepare"
 import { retry } from "../../../common/retry"
@@ -6,10 +7,12 @@ import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana get balance", () => {
 	const wallet = getWallet()
-	const sdk = createSdk(wallet)
+	const it = awaitAll({
+		sdk: createSdk(wallet),
+	})
 
 	test("get balance SOL", async () => {
-		const balance = await sdk.balances.getBalance(
+		const balance = await it.sdk.balances.getBalance(
 			toUnionAddress("SOLANA:" + wallet.publicKey),
 			toCurrencyId(`SOLANA:${ZERO_ADDRESS}`)
 		)
@@ -17,7 +20,7 @@ describe("Solana get balance", () => {
 	})
 
 	test("get balance NFT", async () => {
-		const mint = await sdk.nft.mint.prepare({
+		const mint = await it.sdk.nft.mint.prepare({
 			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 		})
 
@@ -32,7 +35,7 @@ describe("Solana get balance", () => {
 		}
 
 		const balance = await retry(10, 4000, async () => {
-			const balance = await sdk.balances.getBalance(
+			const balance = await it.sdk.balances.getBalance(
 				toUnionAddress("SOLANA:" + wallet.publicKey),
 				toCurrencyId(mintRes.itemId),
 			)

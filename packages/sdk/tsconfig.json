@@ -2,6 +2,8 @@
 	"extends": "../../tsconfig.json",
 	"include": ["src/**/*"],
   "compilerOptions": {
-    "downlevelIteration": true
+    "incremental": false,
+    "downlevelIteration": true,
+    "esModuleInterop": true
   }
 }

@@ -16,9 +16,9 @@ describe("transfer", () => {
 	const { web31, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const senderEthereum = new Web3Ethereum({ web3: web31 })
 	const senderWallet = new EthereumWallet(senderEthereum)
-	const sdk = createRaribleSdk(senderWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const it = awaitAll({
+		sdk: createRaribleSdk(senderWallet, "development", { logs: LogsLevel.DISABLED }),
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 		testErc721: deployTestErc721(web31, "Test2", "TST2"),
 		testErc1155: deployTestErc1155(web31, "Test3"),
@@ -38,9 +38,9 @@ describe("transfer", () => {
 			gas: 500000,
 		})
 
-		await awaitItem(sdk, itemId)
+		await awaitItem(it.sdk, itemId)
 
-		const transfer = await sdk.nft.transfer.prepare({ itemId })
+		const transfer = await it.sdk.nft.transfer.prepare({ itemId })
 		const tx = await transfer.submit({ to: receipent })
 
 		await tx.wait()
@@ -55,14 +55,14 @@ describe("transfer", () => {
 		const receipentRaw = wallet2.getAddressString()
 		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
-		const mintResult = await sdk.nft.mint({
+		const mintResult = await it.sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(erc721Address),
 		})
 		await mintResult.transaction.wait()
-		await awaitItem(sdk, mintResult.itemId)
+		await awaitItem(it.sdk, mintResult.itemId)
 
-		const transfer = await sdk.nft.transfer({
+		const transfer = await it.sdk.nft.transfer({
 			itemId: mintResult.itemId,
 			to: receipent,
 		})
@@ -70,7 +70,7 @@ describe("transfer", () => {
 		await transfer.wait()
 
 		await retry(10, 1000, async () => {
-			return sdk.apis.ownership.getOwnershipById({
+			return it.sdk.apis.ownership.getOwnershipById({
 				ownershipId: `${mintResult.itemId}:${receipentRaw}`,
 			})
 		})
@@ -88,9 +88,9 @@ describe("transfer", () => {
 			gas: 200000,
 		})
 
-		await awaitItem(sdk, itemId)
+		await awaitItem(it.sdk, itemId)
 
-		const transfer = await sdk.nft.transfer.prepare({ itemId })
+		const transfer = await it.sdk.nft.transfer.prepare({ itemId })
 		const tx = await transfer.submit({ to: receipent, amount: 10 })
 
 		await tx.wait()
@@ -105,23 +105,22 @@ describe("transfer", () => {
 		const receipentRaw = wallet2.getAddressString()
 		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
-		const { itemId, transaction } = await sdk.nft.mint({
+		const { itemId, transaction } = await it.sdk.nft.mint({
 			collectionId: toCollectionId(erc721Address),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		})
 
 		await transaction.wait()
 
-		await awaitItem(sdk, itemId)
+		await awaitItem(it.sdk, itemId)
 
-		const tx = await sdk.nft.transfer({
+		const tx = await it.sdk.nft.transfer({
 			itemId,
 			to: receipent,
 			amount: 10,
 		})
 		await tx.wait()
 
-		await awaitOwnership(sdk, itemId, receipent)
+		await awaitOwnership(it.sdk, itemId, receipent)
 	})
-
 })

@@ -1,7 +1,7 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { CreateCollectionResponse } from "@rarible/sdk/src/types/nft/deploy/domain"
-import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/node/types/nft/deploy/simplified"
 import { Logger } from "../logger"
 
 /**

@@ -1,5 +1,5 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import type { BurnRequest, PrepareBurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
+import type { BurnRequest, PrepareBurnRequest } from "@rarible/sdk/node/types/nft/burn/domain"
 import type { BigNumber } from "@rarible/types"
 import { awaitForItemSupply } from "../helpers"
 import { Logger } from "../logger"

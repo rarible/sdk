@@ -16,7 +16,10 @@ describe("cancel", () => {
 	const { web31, wallet1 } = initProviders({ pk1: DEV_PK_1 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereumWallet = new EthereumWallet(ethereum1)
-	const sdk1 = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
+
+	const it = awaitAll({
+		sdk1: createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED }),
+	})
 
 	const erc721Address = convertEthereumContractAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d", Blockchain.ETHEREUM)
 
@@ -33,9 +36,9 @@ describe("cancel", () => {
 		})
 		const itemId = toItemId(`ETHEREUM:${conf.testErc721.options.address}:1`)
 
-		await awaitItem(sdk1, itemId)
+		await awaitItem(it.sdk1, itemId)
 
-		const sellAction = await sdk1.order.sell.prepare({ itemId })
+		const sellAction = await it.sdk1.order.sell.prepare({ itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
 			price: "0.000000000000000002",
@@ -46,25 +49,25 @@ describe("cancel", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitStock(it.sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
-		const tx = await sdk1.order.cancel({ orderId })
+		const tx = await it.sdk1.order.cancel({ orderId })
 		await tx.wait()
 
-		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
+		const cancelledOrder = await awaitOrderCancel(it.sdk1, orderId)
 		expect(cancelledOrder.cancelled).toEqual(true)
 	})
 
 	test("sell and cancel with basic function", async () => {
-		const mintResult = await sdk1.nft.mint({
+		const mintResult = await it.sdk1.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(erc721Address),
 		})
 		await mintResult.transaction.wait()
-		await awaitItem(sdk1, mintResult.itemId)
+		await awaitItem(it.sdk1, mintResult.itemId)
 
-		const orderId = await sdk1.order.sell({
+		const orderId = await it.sdk1.order.sell({
 			itemId: mintResult.itemId,
 			amount: 1,
 			price: "0.000000000000000002",
@@ -75,13 +78,13 @@ describe("cancel", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitStock(it.sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
-		const tx = await sdk1.order.cancel({ orderId })
+		const tx = await it.sdk1.order.cancel({ orderId })
 		await tx.wait()
 
-		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
+		const cancelledOrder = await awaitOrderCancel(it.sdk1, orderId)
 		expect(cancelledOrder.cancelled).toEqual(true)
 	})
 })

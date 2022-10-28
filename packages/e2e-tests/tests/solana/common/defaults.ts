@@ -1,5 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
-import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/node/types/nft/deploy/simplified"
 
 export const deployCollectionDeployRequest: CreateCollectionRequestSimplified = {
 	blockchain: Blockchain.SOLANA,

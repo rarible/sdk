@@ -1,4 +1,4 @@
-import { createRaribleSdk } from "@rarible/sdk/build"
+import { createRaribleSdk } from "@rarible/sdk/node"
 import fetch from "node-fetch"
 import { initWallet, updateNodeGlobalVars } from "../common"
 
@@ -17,7 +17,7 @@ async function buy(item: string) {
 		}
 		const raribleSdkWallet = initWallet(process.env["ETH_PRIVATE_KEY"])
 		//@ts-ignore
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet", { fetchApi: fetch })
+		const raribleSdk = await createRaribleSdk(raribleSdkWallet, "testnet", { fetchApi: fetch })
 
 		console.log(`SDK was created, searching sell order for item=${item}...`)
 		const order = (await raribleSdk.apis.item.getItemById({ itemId: "ETHEREUM:" + item })).bestSellOrder

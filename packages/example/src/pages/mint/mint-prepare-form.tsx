@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
+import type { PrepareMintResponse } from "@rarible/sdk/esm/types/nft/mint/prepare"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"

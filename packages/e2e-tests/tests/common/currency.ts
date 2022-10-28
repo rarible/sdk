@@ -1,4 +1,4 @@
-import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
+import type { RequestCurrency } from "@rarible/sdk/node/common/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress } from "@rarible/types"

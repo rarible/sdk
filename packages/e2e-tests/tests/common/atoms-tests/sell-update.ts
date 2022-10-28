@@ -1,7 +1,7 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { retry } from "@rarible/sdk/src/common/retry"
-import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
+import type { OrderUpdateRequest, PrepareOrderUpdateRequest } from "@rarible/sdk/node/types/order/common"
 import type { Order } from "@rarible/api-client"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Logger } from "../logger"

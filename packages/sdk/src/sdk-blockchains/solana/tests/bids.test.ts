@@ -1,4 +1,5 @@
 import { toBigNumber } from "@rarible/types"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { getWallet } from "../common/test/test-wallets"
 import { retry } from "../../../common/retry"
 import { mintToken } from "../common/test/mint"
@@ -7,15 +8,18 @@ import { createSdk } from "../common/test/create-sdk"
 describe("Solana bid", () => {
 	const wallet = getWallet(0)
 	const buyerWallet = getWallet(1)
-	const sdk = createSdk(wallet)
-	const buyerSdk = createSdk(buyerWallet)
+
+	const it = awaitAll({
+		sdk: createSdk(wallet),
+		buyerSdk: createSdk(buyerWallet),
+	})
 
 	test("Should bid & accept", async () => {
-		const item = await mintToken(sdk)
+		const item = await mintToken(it.sdk)
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const bid = await buyerSdk.order.bid.prepare({ itemId })
+			const bid = await it.buyerSdk.order.bid.prepare({ itemId })
 			return bid.submit({
 				amount: 1,
 				currency: {
@@ -26,7 +30,7 @@ describe("Solana bid", () => {
 		})
 
 		await retry(10, 4000, async () => {
-			const accept = await sdk.order.acceptBid.prepare({
+			const accept = await it.sdk.order.acceptBid.prepare({
 				orderId,
 			})
 			return accept.submit({
@@ -37,11 +41,11 @@ describe("Solana bid", () => {
 	})
 
 	test("Should bid & updateBid", async () => {
-		const item = await mintToken(sdk)
+		const item = await mintToken(it.sdk)
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const bid = await buyerSdk.order.bid.prepare({ itemId })
+			const bid = await it.buyerSdk.order.bid.prepare({ itemId })
 			return bid.submit({
 				amount: 1,
 				currency: {
@@ -52,14 +56,14 @@ describe("Solana bid", () => {
 		})
 
 		await retry(10, 4000, async () => {
-			const update = await buyerSdk.order.bidUpdate.prepare({ orderId })
+			const update = await it.buyerSdk.order.bidUpdate.prepare({ orderId })
 			return update.submit({
 				price: toBigNumber("0.003"),
 			})
 		})
 
 		const order = await retry(10, 4000, async () => {
-			const order = await sdk.apis.order.getOrderById({ id: orderId })
+			const order = await it.sdk.apis.order.getOrderById({ id: orderId })
 			if (order.make.value !== "0.003") {
 				throw new Error("Wrong bid value")
 			}
@@ -70,11 +74,11 @@ describe("Solana bid", () => {
 	})
 
 	test("Should bid & updateBid", async () => {
-		const item = await mintToken(sdk)
+		const item = await mintToken(it.sdk)
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const bid = await buyerSdk.order.bid.prepare({ itemId })
+			const bid = await it.buyerSdk.order.bid.prepare({ itemId })
 			return bid.submit({
 				amount: 1,
 				currency: {
@@ -85,14 +89,14 @@ describe("Solana bid", () => {
 		})
 
 		await retry(10, 4000, async () => {
-			const update = await buyerSdk.order.bidUpdate.prepare({ orderId })
+			const update = await it.buyerSdk.order.bidUpdate.prepare({ orderId })
 			return update.submit({
 				price: toBigNumber("0.003"),
 			})
 		})
 
 		const order = await retry(10, 4000, async () => {
-			const order = await sdk.apis.order.getOrderById({ id: orderId })
+			const order = await it.sdk.apis.order.getOrderById({ id: orderId })
 			if (order.make.value !== "0.003") {
 				throw new Error("Wrong bid value")
 			}
@@ -103,11 +107,11 @@ describe("Solana bid", () => {
 	})
 
 	test("Should bid & accept with basic functions", async () => {
-		const item = await mintToken(sdk)
+		const item = await mintToken(it.sdk)
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			return buyerSdk.order.bid({
+			return it.buyerSdk.order.bid({
 				itemId,
 				amount: 1,
 				currency: {
@@ -118,7 +122,7 @@ describe("Solana bid", () => {
 		})
 
 		const tx = await retry(10, 4000, async () => {
-			return sdk.order.acceptBid({
+			return it.sdk.order.acceptBid({
 				orderId,
 				amount: 1,
 				itemId,

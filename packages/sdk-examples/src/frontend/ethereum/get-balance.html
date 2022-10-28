@@ -9,7 +9,7 @@
 
   async function init() {
       const env = "staging" // "dev" | "e2e" | "staging" | "prod"
-      const raribleSdk = new window.raribleSdk.createRaribleSdk(undefined, env)
+      const raribleSdk = await window.raribleSdk.createRaribleSdk(undefined, env)
       const balance = await raribleSdk.balances.getBalance(
         "ETHEREUM:0xe954de45ec23bF47078db77f34ef0d905F4D3051",
         { "@type": "ETH" }

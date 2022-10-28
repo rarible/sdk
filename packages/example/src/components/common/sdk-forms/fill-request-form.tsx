@@ -1,7 +1,7 @@
 import React from "react"
 import type { Order } from "@rarible/api-client"
 import { Stack } from "@mui/material"
-import type { PreparedFillInfo } from "@rarible/sdk/build/types/order/fill/domain"
+import type { PreparedFillInfo } from "@rarible/sdk/esm/types/order/fill/domain"
 import { FormTextInput } from "../form/form-text-input"
 import { UseFormReturn } from "react-hook-form"
 

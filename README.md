@@ -68,19 +68,23 @@ yarn add tslib@2.3.1
 yarn add web3@1.5.0 //or ethers@5.6.2
 ```
 
+## Usage
+
+The package is built with modularity in mind. So that the client browser does not load extra blockchain modules that it does not use. However, some versions of nodejs may not work with the module system used by default in this package, if you need to use sdk in a nodejs environment, use import commonjs version build from `@rarible/sdk/node` 
+
 ### Ethereum providers
 #### Web3
 Example of using Metamask provider ([read more about using provider](https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider))
 ```ts
 const blockchainProvider = new Web3(window.ethereum)
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet") //"prod" | "testnet" | "development"
+const raribleSdk = await createRaribleSdk(blockchainProvider, "testnet") //"prod" | "testnet" | "development"
 ```
 
 #### Ethers
 ```ts
 //read-only provider, not for sending transactions!
 const blockchainProvider = new ethers.Wallet(pk, new ethers.providers.JsonRpcProvider("https://NODE_URL"))
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+const raribleSdk = await createRaribleSdk(blockchainProvider, "testnet")
 ```
 
 ### Flow providers
@@ -91,7 +95,7 @@ fcl.config({
   "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
   "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
 })
-const raribleSdk = createRaribleSdk(fcl, "testnet")
+const raribleSdk = await createRaribleSdk(fcl, "testnet")
 ```
 
 ### Solana provider
@@ -99,7 +103,7 @@ const raribleSdk = createRaribleSdk(fcl, "testnet")
 ```ts
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 const blockchainProvider = SolanaKeypairWallet.createFrom(pk)
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+const raribleSdk = await createRaribleSdk(blockchainProvider, "testnet")
 ```
 
 ### Tezos providers
@@ -107,7 +111,7 @@ const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
 ```ts
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 const blockchainProvider = in_memory_provider(edsk, "https://TEZOS_NODE_URL")
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
+const raribleSdk = await createRaribleSdk(blockchainProvider, "testnet")
 ```
 
 ### ImmutableX provider
@@ -115,7 +119,7 @@ const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
 import { ImxWallet } from "@rarible/immutable-wallet"
 const imxConnectorWallet = new ImxWallet("prod")
 await imxConnectorWallet.connect()
-const raribleSdk = createRaribleSdk(imxConnectorWallet, "prod")
+const raribleSdk = await createRaribleSdk(imxConnectorWallet, "prod")
 ```
 
 ### Use Rarible SDK Wallet Connector

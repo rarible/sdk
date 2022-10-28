@@ -1,9 +1,9 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { retry } from "@rarible/sdk/src/common/retry"
-import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
+import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.type"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/node/types/nft/deploy/simplified"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -137,11 +137,11 @@ function suites(): {
 	]
 }
 
-describe.each(suites()/*.filter((t) => t.description === "ERC1155")*/)("$blockchain deploy => mint", (suite) => {
+describe.each(suites())("$blockchain deploy => mint", (suite) => {
 	const wallet = suite.wallet
-	const sdk = createSdk(suite.blockchain, wallet)
 
 	test(suite.description, async () => {
+		let sdk = await createSdk(suite.blockchain, wallet)
 		const walletAddress = await getWalletAddressFull(wallet)
 		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 		const collection = await getCollection(sdk, address)

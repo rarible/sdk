@@ -4,7 +4,7 @@ import type {
 	GetAllCollections200,
 	GetCollectionsByOwner200,
 } from "@rarible/api-client/build/apis/CollectionControllerApi"
-import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/node/types/nft/deploy/simplified"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import {
@@ -42,9 +42,9 @@ function suites(): {
 
 describe.each(suites())("$blockchain api => collection", (suite) => {
 	const wallet = suite.wallet
-	const sdk = createSdk(suite.blockchain, wallet)
 
 	test("collection controller", async () => {
+		const sdk = await createSdk(suite.blockchain, wallet)
 
 		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 

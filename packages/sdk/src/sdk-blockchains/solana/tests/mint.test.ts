@@ -1,4 +1,5 @@
 import { toCollectionId } from "@rarible/types"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/prepare"
 import { retry } from "../../../common/retry"
@@ -6,10 +7,12 @@ import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana mint", () => {
 	const wallet = getWallet()
-	const sdk = createSdk(wallet)
+	const it = awaitAll({
+		sdk: createSdk(wallet),
+	})
 
 	test("mint an nft", async () => {
-		const { submit } = await sdk.nft.mint.prepare({
+		const { submit } = await it.sdk.nft.mint.prepare({
 			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 		})
 
@@ -26,12 +29,12 @@ describe("Solana mint", () => {
 			expect(res.transaction.hash).toBeTruthy()
 		}
 
-		const nft = await retry(10, 4000, () => sdk.apis.item.getItemById({ itemId: res.itemId }))
+		const nft = await retry(10, 4000, () => it.sdk.apis.item.getItemById({ itemId: res.itemId }))
 		expect(nft.id).toEqual(res.itemId)
 	})
 
 	test("mint an nft with basic function", async () => {
-		const res = await sdk.nft.mint({
+		const res = await it.sdk.nft.mint({
 			collectionId: toCollectionId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ"),
 			uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
 		})
@@ -41,7 +44,7 @@ describe("Solana mint", () => {
 		await res.transaction.wait()
 		expect(res.transaction.hash).toBeTruthy()
 
-		const nft = await retry(10, 4000, () => sdk.apis.item.getItemById({ itemId: res.itemId }))
+		const nft = await retry(10, 4000, () => it.sdk.apis.item.getItemById({ itemId: res.itemId }))
 		expect(nft.id).toEqual(res.itemId)
 	})
 })

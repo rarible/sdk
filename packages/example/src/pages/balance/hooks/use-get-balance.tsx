@@ -1,14 +1,12 @@
-import { IRaribleSdk } from "@rarible/sdk"
+import type { IRaribleSdk } from "@rarible/sdk"
 import { UnionAddress } from "@rarible/types/build/union-address"
-import { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
+import type { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
 import { useEffect, useState } from "react"
 
 export function useGetBalance(sdk: IRaribleSdk, walletAddress: UnionAddress, assetType: RequestCurrencyAssetType) {
 	const [balance, setBalance] = useState<string | null>(null)
 	const [fetching, setFetching] = useState(false)
 	const [error, setError] = useState<any>(null)
-
-	console.log(assetType)
 
 	async function fetchItems() {
 		try {

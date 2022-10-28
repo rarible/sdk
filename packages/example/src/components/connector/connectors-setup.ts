@@ -1,5 +1,5 @@
 import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
-import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/esm/config/domain"
 import {
 	ConnectionProvider,
 	Connector,

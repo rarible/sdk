@@ -2,7 +2,7 @@ const path = require("path")
 const webpack = require("webpack")
 
 module.exports = {
-	entry: "./build/index.js",
+	entry: "./esm/index.js",
 	output: {
 		path: path.resolve(__dirname, "umd"),
 		filename: "rarible-sdk.js",
@@ -29,6 +29,9 @@ module.exports = {
 		}),
 		new webpack.ProvidePlugin({
 			process: "process/browser",
+		}),
+		new webpack.optimize.LimitChunkCountPlugin({
+			maxChunks: 1,
 		}),
 	],
 	mode: "production",

@@ -3,10 +3,8 @@ import type { Maybe } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
-import { WalletType } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
-import { getRaribleWallet } from "@rarible/sdk-wallet"
-import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
+import { WalletType } from "@rarible/sdk-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -19,17 +17,14 @@ import type { IMintAndSell } from "./types/nft/mint-and-sell"
 import type { MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
-import { createEthereumSdk } from "./sdk-blockchains/ethereum"
-import { createFlowSdk } from "./sdk-blockchains/flow"
-import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
-import { createSolanaSdk } from "./sdk-blockchains/solana"
-import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
+import { getRaribleWallet } from "./common/get-wallet"
+import type { RaribleSdkProvider } from "./common/get-wallet"
 
 /**
  * @module
@@ -42,20 +37,20 @@ import { extractBlockchain } from "./common/extract-blockchain"
  * wallet can instantiate from @rarible/sdk-wallet package
  * @param env the environment that the sdk will interact with.
  * @param [config] config
- * @returns {IRaribleSdk} {@link IRaribleSdk}
+ * @returns {Promise<IRaribleSdk>} {@link IRaribleSdk}
  *
  * @example
  * ```typescript
  *    const web3 = new Web3(provider)
- *    const sdk = createRaribleSdk(web3, "prod")
+ *    const sdk = await createRaribleSdk(web3, "prod")
  * ```
  */
-export function createRaribleSdk(
+export async function createRaribleSdk(
 	provider: Maybe<RaribleSdkProvider>,
 	env: RaribleSdkEnvironment,
 	config?: IRaribleSdkConfig
-): IRaribleSdk {
-	const wallet = provider && getRaribleWallet(provider)
+): Promise<IRaribleSdk> {
+	const wallet = provider && await getRaribleWallet(provider)
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
 	const apis = createApisSdk(env, config?.apiClientParams)
@@ -67,48 +62,62 @@ export function createRaribleSdk(
 		apiKey: config?.apiKey,
 	}
 
-	const ethereumModule = import("./sdk-blockchains/ethereum")
-
-
 	const instance = createUnionSdk(
-
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.ETHEREUM,
-			blockchainConfig.ethereumEnv,
-			ethConfig
-		),
-		createFlowSdk(
-			filterWallet(wallet, WalletType.FLOW),
-			apis,
-			blockchainConfig.flowEnv,
-			undefined,
-			config?.blockchain?.FLOW?.auth
-		),
-		createTezosSdk(
-			filterWallet(wallet, WalletType.TEZOS),
-			apis,
-			blockchainConfig
-		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.POLYGON,
-			blockchainConfig.polygonNetwork,
-			ethConfig
-		),
-		createSolanaSdk(
-			filterWallet(wallet, WalletType.SOLANA),
-			apis,
-			blockchainConfig.solanaNetwork,
-			config?.blockchain?.SOLANA
-		),
-		createImmutablexSdk(
-			filterWallet(wallet, WalletType.IMMUTABLEX),
-			apis,
-			blockchainConfig.immutablexNetwork
-		)
+		async () => {
+			const { createEthereumSdk } = await import("./sdk-blockchains/ethereum")
+			return createEthereumSdk(
+				filterWallet(wallet, WalletType.ETHEREUM),
+				apis,
+				Blockchain.ETHEREUM,
+				blockchainConfig.ethereumEnv,
+				ethConfig,
+			)
+		},
+		async () => {
+			const { createFlowSdk } = await import("./sdk-blockchains/flow")
+			return createFlowSdk(
+				filterWallet(wallet, WalletType.FLOW),
+				apis,
+				blockchainConfig.flowEnv,
+				undefined,
+				config?.blockchain?.FLOW?.auth
+			)
+		},
+		async () => {
+			const { createTezosSdk } = await import("./sdk-blockchains/tezos")
+			return createTezosSdk(
+				filterWallet(wallet, WalletType.TEZOS),
+				apis,
+				blockchainConfig
+			)
+		},
+		async () => {
+			const { createEthereumSdk } = await import("./sdk-blockchains/ethereum")
+			return createEthereumSdk(
+				filterWallet(wallet, WalletType.ETHEREUM),
+				apis,
+				Blockchain.POLYGON,
+				blockchainConfig.polygonNetwork,
+				ethConfig
+			)
+		},
+		async () => {
+			const { createSolanaSdk } = await import("./sdk-blockchains/solana")
+			return createSolanaSdk(
+				filterWallet(wallet, WalletType.SOLANA),
+				apis,
+				blockchainConfig.solanaNetwork,
+				config?.blockchain?.SOLANA
+			)
+		},
+		async () => {
+			const { createImmutablexSdk } = await import("./sdk-blockchains/immutablex")
+			return createImmutablexSdk(
+				filterWallet(wallet, WalletType.IMMUTABLEX),
+				apis,
+				blockchainConfig.immutablexNetwork
+			)
+		}
 	)
 
 	setupMiddleware(apis, instance, { wallet, env, config, sessionId })
@@ -208,7 +217,6 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 			}
 		},
 		async (request) => {
-			console.log("createMintAndSell mint", mint)
     	const mintResponse = await mint.prepare(request)
     	const collectionId = getCollectionId(request)
     	const blockchain = getBlockchainCollectionId(collectionId)
@@ -269,7 +277,7 @@ type MiddleMintType = {
 }
 
 export { WalletType }
-export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
+//export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
 export { IRaribleSdk, MintAndSellRequest }
 export { RequestCurrency } from "./common/domain"
 export { UnionPart } from "./types/order/common/index"

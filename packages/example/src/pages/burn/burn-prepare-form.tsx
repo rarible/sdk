@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
-import type { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/domain"
+import type { PrepareBurnResponse } from "@rarible/sdk/esm/types/nft/burn/domain"
 import { useForm } from "react-hook-form"
 import { toItemId } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"

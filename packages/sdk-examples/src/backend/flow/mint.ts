@@ -1,4 +1,4 @@
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/node"
 import { toCollectionId } from "@rarible/types"
 import { updateNodeGlobalVars } from "../common"
 import { initFlowWallet } from "./common"
@@ -11,7 +11,7 @@ async function mint() {
 			throw new Error("Provide FLOW_PRIVATE_KEY and FLOW_ACCOUNT_ADDRESS as environment variables")
 		}
 		const raribleSdkWallet = await initFlowWallet(process.env["FLOW_ACCOUNT_ADDRESS"], process.env["FLOW_PRIVATE_KEY"])
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet")
+		const raribleSdk = await createRaribleSdk(raribleSdkWallet, "testnet")
 
 		const response = await raribleSdk.nft.mint({
 			collectionId: toCollectionId("FLOW:A.ebf4ae01d1284af8.RaribleNFT"),

@@ -1,5 +1,5 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toCollectionId } from "@rarible/types"
@@ -17,7 +17,9 @@ describe("mint", () => {
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
+	const it = awaitAll({
+		sdk: createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED }),
+	})
 
 	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
 	const erc1155Address = toAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a")
@@ -25,7 +27,7 @@ describe("mint", () => {
 	test("should mint ERC721 token with simplified function", async () => {
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 
-		const result = await sdk.nft.mint({
+		const result = await it.sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(contract),
 		})
@@ -35,13 +37,13 @@ describe("mint", () => {
 		expect(transaction.blockchain).toEqual("ETHEREUM")
 		expect(transaction.hash).toBeTruthy()
 
-		await awaitItem(sdk, result.itemId)
+		await awaitItem(it.sdk, result.itemId)
 	})
 
 	test("should lazy mint ERC721 token with simplified function", async () => {
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
 
-		const result = await sdk.nft.mint({
+		const result = await it.sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			collectionId: toCollectionId(contract),
 			lazyMint: true,
@@ -50,21 +52,21 @@ describe("mint", () => {
 		expect(result.type).toBe(MintType.OFF_CHAIN)
 		expect(result.itemId).toBeTruthy()
 
-		await awaitItem(sdk, result.itemId)
+		await awaitItem(it.sdk, result.itemId)
 	})
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
 		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
-		const collection = await sdk.apis.collection.getCollectionById({
+		const collection = await it.sdk.apis.collection.getCollectionById({
 			collection: contract,
 		})
-		const tokenId = await sdk.nft.generateTokenId({
+		const tokenId = await it.sdk.nft.generateTokenId({
 			collection: contract,
 			minter: sender,
 		})
-		const action = await sdk.nft.mint.prepare({
+		const action = await it.sdk.nft.mint.prepare({
 			collection,
 			tokenId: tokenId,
 		})
@@ -85,7 +87,7 @@ describe("mint", () => {
 			expect(transaction.blockchain).toEqual("ETHEREUM")
 			expect(transaction.hash).toBeTruthy()
 
-			const item = await awaitItem(sdk, result.itemId)
+			const item = await awaitItem(it.sdk, result.itemId)
 			expect(item.tokenId).toEqual(tokenId?.tokenId)
 		} else {
 			throw new Error("Must be on chain")
@@ -95,10 +97,10 @@ describe("mint", () => {
 	test("should mint ERC1155 token", async () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
-		const collection = await sdk.apis.collection.getCollectionById({
+		const collection = await it.sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(erc1155Address, Blockchain.ETHEREUM),
 		})
-		const action = await sdk.nft.mint.prepare({ collection })
+		const action = await it.sdk.nft.mint.prepare({ collection })
 
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -121,7 +123,7 @@ describe("mint", () => {
 	})
 
 	test("test preprocess metadata", async () => {
-		const response = await sdk.nft.preprocessMeta({
+		const response = await it.sdk.nft.preprocessMeta({
 			blockchain: Blockchain.ETHEREUM,
 			name: "1",
 			description: "2",

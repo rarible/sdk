@@ -2,7 +2,7 @@ import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { MintAndSellRequest } from "@rarible/sdk"
+import type { MintAndSellRequest } from "@rarible/sdk/node"
 import {
 	getEthereumWallet,
 	getWalletAddressFull,
@@ -146,10 +146,11 @@ describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
 		creator: creatorWallet,
 		buyer: buyerWallet,
 	} = suite.wallets
-	const creatorSdk = createSdk(suite.blockchain, creatorWallet)
-	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
+		const creatorSdk = await createSdk(suite.blockchain, creatorWallet)
+		const buyerSdk = await createSdk(suite.blockchain, buyerWallet)
+
 		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 		const collection = await getCollection(creatorSdk, suite.collectionId)

@@ -1,16 +1,19 @@
 import { toAddress, toItemId, toOrderId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 
 describe("ethereum api logger", () => {
-	const sdk = createRaribleSdk(undefined, "testnet")
+	const it = awaitAll({
+		sdk: createRaribleSdk(undefined, "testnet"),
+	})
 
 	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
 
 	test("request url in error.value.url", async () => {
 		let error: any = null
 		try {
-			await sdk.apis.collection.getCollectionById({ collection: erc721Address })
+			await it.sdk.apis.collection.getCollectionById({ collection: erc721Address })
 		} catch (e) {
 			error = e
 		}
@@ -20,7 +23,7 @@ describe("ethereum api logger", () => {
 	test("request url in EthereumSDK.apis.* returns error with error.url", async () => {
 		let error: any = null
 		try {
-			const prepare = await sdk.nft.transfer.prepare({
+			const prepare = await it.sdk.nft.transfer.prepare({
 				itemId: toItemId(`${Blockchain.ETHEREUM}:0x64F088254d7EDE5dd6208639aaBf3614C80D396d:0`),
 			})
 			await prepare.submit({
@@ -36,7 +39,7 @@ describe("ethereum api logger", () => {
 	test("request url in FlowSDK.apis.* returns error with error.url", async () => {
 		let error: any = null
 		try {
-			await sdk.order.bidUpdate.prepare({
+			await it.sdk.order.bidUpdate.prepare({
 				orderId: toOrderId("FLOW:106746924000000000000"),
 			})
 		} catch (e) {

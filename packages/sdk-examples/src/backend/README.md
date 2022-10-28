@@ -13,7 +13,7 @@ import { ethers } from "ethers"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/node"
 
 const privateKey = "YOUR_ETHEREUM_PRIVATE_KEY"
 
@@ -21,7 +21,7 @@ const privateKey = "YOUR_ETHEREUM_PRIVATE_KEY"
 const raribleEthers = new ethers.providers.JsonRpcProvider(process.env["ETHEREUM_RPC_URL"])
 const raribleProvider = new EthersEthereum(new ethers.Wallet(privateKey, raribleEthers))
 const raribleWallet = new EthereumWallet(raribleProvider)
-const raribleSdkWithEthers = createRaribleSdk(raribleWallet, "staging")
+const raribleSdkWithEthers = await createRaribleSdk(raribleWallet, "staging")
 
 // init with web3
 const provider = new Web3ProviderEngine({ pollingInterval: 100 })
@@ -33,7 +33,7 @@ provider.start()
 const web3 = new Web3(provider)
 const web3Ethereum = new Web3Ethereum({ web3 })
 const raribleSdkWallet = new EthereumWallet(web3Ethereum)
-const raribleSdkWithWeb3 = createRaribleSdk(raribleSdkWallet, "dev")
+const raribleSdkWithWeb3 = await createRaribleSdk(raribleSdkWallet, "dev")
 ```
 
 #### Polygon
@@ -57,13 +57,13 @@ const web3 = new Web3(providerWithEstimateMiddleware)
 
 const web3Ethereum = new Web3Ethereum({ web3 })
 const raribleSdkWallet = new EthereumWallet(web3Ethereum)
-const raribleSdkWithWeb3 = createRaribleSdk(raribleSdkWallet, "staging")
+const raribleSdkWithWeb3 = await createRaribleSdk(raribleSdkWallet, "staging")
 
 // Setup with ethers (same as for ethereum)
 const raribleEthers = new ethers.providers.JsonRpcProvider(process.env["ETHEREUM_RPC_URL"])
 const raribleProvider = new EthersEthereum(new ethers.Wallet(privateKey, raribleEthers))
 const raribleWallet = new EthereumWallet(raribleProvider)
-const raribleSdkWithEthers = createRaribleSdk(raribleWallet, "staging")
+const raribleSdkWithEthers = await createRaribleSdk(raribleWallet, "staging")
 
 ```
 
@@ -71,20 +71,20 @@ const raribleSdkWithEthers = createRaribleSdk(raribleWallet, "staging")
 ```typescript
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { SolanaWallet } from "@rarible/sdk-wallet"
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/node"
 
 const privateKey = "YOUR_SOLANA_PRIVATE_KEY"
 
 const keypairWallet = SolanaKeypairWallet.createFrom(privateKey)
 const raribleSdkWallet = new SolanaWallet(keypairWallet)
-const raribleSdk = createRaribleSdk(raribleSdkWallet, "dev")
+const raribleSdk = await createRaribleSdk(raribleSdkWallet, "dev")
 ```
 
 #### Tezos
 ```typescript
 import { TezosWallet } from "@rarible/sdk-wallet"
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/node"
 
 const walletEdsk = "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6" +
 "H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj"
@@ -93,7 +93,7 @@ const provider = in_memory_provider(
     "https://test-tezos-node.rarible.org"
 )
 const wallet = new TezosWallet(provider)
-const sdk = createRaribleSdk(wallet, "testnet")
+const sdk = await createRaribleSdk(wallet, "testnet")
 ```
 #### Flow
 
@@ -101,11 +101,11 @@ const sdk = createRaribleSdk(wallet, "testnet")
 import { FlowWallet } from "@rarible/sdk-wallet"
 import * as fcl from "@onflow/fcl"
 import { createFlowAuth } from "@rarible/flow-test-common"
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/node"
 
-export function initFlowWallet(accountAddress: string, privateKey: string) {
+export async function initFlowWallet(accountAddress: string, privateKey: string) {
 	const flowAuth = createFlowAuth(fcl, "testnet", accountAddress, privateKey)
 	const raribleFlowWallet = new FlowWallet(fcl, flowAuth)
-	const raribleSdk = createRaribleSdk(wallet, "testnet")
+	const raribleSdk = await createRaribleSdk(wallet, "testnet")
 }
 ```

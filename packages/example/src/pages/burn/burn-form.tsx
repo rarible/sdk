@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
-import { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/domain"
+import type { PrepareBurnResponse } from "@rarible/sdk/esm/types/nft/burn/domain"
 import { Alert, AlertTitle, Box, Stack } from "@mui/material"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"

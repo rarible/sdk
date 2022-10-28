@@ -11,7 +11,7 @@ async function deploy() {
 			throw new Error("Expected ETH_PRIVATE_KEY env variable")
 		}
 		const raribleSdkWallet = await initWalletWeb3WithHDWalletWithEstimate(process.env["ETH_PRIVATE_KEY"])
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet")
+		const raribleSdk = await createRaribleSdk(raribleSdkWallet, "testnet")
 
 		const {address, tx} = await raribleSdk.nft.createCollection({
 			blockchain: Blockchain.POLYGON,

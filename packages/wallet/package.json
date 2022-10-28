@@ -13,7 +13,7 @@
     "build": "run-s build:*",
     "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./build && rimraf ./umd",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit"
   },
@@ -23,13 +23,11 @@
     "@imtbl/imx-sdk": "^1.24.0",
     "@rarible/api-client": "0.0.13-beta12",
     "@rarible/ethereum-provider": "~0.12.98",
-    "@rarible/ethers-ethereum": "~0.12.103",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/solana-wallet": "^0.10.0-beta.10",
     "@rarible/tezos-sdk": "~0.1.39",
-    "@rarible/types": "~0.9.6",
-    "@rarible/web3-ethereum": "~0.12.103"
+    "@rarible/types": "~0.9.6"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -53,7 +51,7 @@
     "path-browserify": "^1.0.1",
     "stream-browserify": "^3.0.0",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.6.3",
+    "typescript": "^4.8.4",
     "web3": "1.5.0"
   },
   "peerDependencies": {

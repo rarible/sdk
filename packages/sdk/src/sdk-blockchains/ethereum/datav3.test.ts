@@ -19,25 +19,26 @@ describe("Create & fill orders with order data v3", () => {
 	const { web31, web32, wallet1 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
-		logs: LogsLevel.DISABLED,
-		blockchain: {
-			[BlockchainGroup.ETHEREUM]: {
-				marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000face",
-				useDataV3: true,
-			},
-		},
-	})
-	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
-		logs: LogsLevel.DISABLED,
-		blockchain: {
-			[BlockchainGroup.ETHEREUM]: {
-				marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000dead",
-				useDataV3: true,
-			},
-		},
-	})
+
 	const it = awaitAll({
+		sdk1: createRaribleSdk(new EthereumWallet(ethereum1), "development", {
+			logs: LogsLevel.DISABLED,
+			blockchain: {
+				[BlockchainGroup.ETHEREUM]: {
+					marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000face",
+					useDataV3: true,
+				},
+			},
+		}),
+		sdk2: createRaribleSdk(new EthereumWallet(ethereum2), "development", {
+			logs: LogsLevel.DISABLED,
+			blockchain: {
+				[BlockchainGroup.ETHEREUM]: {
+					marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000dead",
+					useDataV3: true,
+				},
+			},
+		}),
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 	})
 
@@ -45,7 +46,7 @@ describe("Create & fill orders with order data v3", () => {
 
 	async function mint(): Promise<ItemId> {
 		const wallet1Address = wallet1.getAddressString()
-		const action = await sdk1.nft.mint.prepare({
+		const action = await it.sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
@@ -62,7 +63,7 @@ describe("Create & fill orders with order data v3", () => {
 			await result.transaction.wait()
 		}
 
-		await awaitItem(sdk1, result.itemId)
+		await awaitItem(it.sdk1, result.itemId)
 		return result.itemId
 	}
 
@@ -70,7 +71,7 @@ describe("Create & fill orders with order data v3", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const itemId = await mint()
 
-		const sellAction = await sdk1.order.sell.prepare({ itemId: itemId })
+		const sellAction = await it.sdk1.order.sell.prepare({ itemId: itemId })
 		expect(sellAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
 		const orderId = await sellAction.submit({
 			amount: 1,
@@ -88,22 +89,22 @@ describe("Create & fill orders with order data v3", () => {
 		console.log("orderid > ", orderId)
 
 		const nextStock = "1"
-		await awaitStock(sdk1, orderId, nextStock)
+		await awaitStock(it.sdk1, orderId, nextStock)
 
-		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
+		const updateAction = await it.sdk1.order.sellUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.0000003" })
 
-		await sdk1.apis.order.getOrderById({ id: orderId })
+		await it.sdk1.apis.order.getOrderById({ id: orderId })
 
-		const fillAction = await sdk2.order.buy.prepare({ orderId })
+		const fillAction = await it.sdk2.order.buy.prepare({ orderId })
 		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
 
 		const nextStock2 = "0"
-		await awaitStock(sdk1, orderId, nextStock2)
+		await awaitStock(it.sdk1, orderId, nextStock2)
 		await retry(15, 2000, async () => {
-			const order = await sdk1.apis.order.getOrderById({ id: orderId })
+			const order = await it.sdk1.apis.order.getOrderById({ id: orderId })
 			expect(order.status).toEqual("FILLED")
 		})
 	})
@@ -111,7 +112,7 @@ describe("Create & fill orders with order data v3", () => {
 	test.skip("erc721 bid/acceptBid", async () => {
 		const itemId = await mint()
 
-		const bidAction = await sdk2.order.bid.prepare({ itemId: itemId })
+		const bidAction = await it.sdk2.order.bid.prepare({ itemId: itemId })
 		expect(bidAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const orderId = await bidAction.submit({
 			amount: 1,
@@ -124,22 +125,22 @@ describe("Create & fill orders with order data v3", () => {
 
 		console.log("orderid > ", orderId)
 
-		await awaitStock(sdk1, orderId, 0.0002)
+		await awaitStock(it.sdk1, orderId, 0.0002)
 
-		const updateAction = await sdk2.order.bidUpdate.prepare({ orderId })
+		const updateAction = await it.sdk2.order.bidUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.0003" })
 
-		await sdk1.apis.order.getOrderById({ id: orderId })
+		await it.sdk1.apis.order.getOrderById({ id: orderId })
 
-		const fillAction = await sdk1.order.acceptBid.prepare({ orderId })
+		const fillAction = await it.sdk1.order.acceptBid.prepare({ orderId })
 		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
 		const tx = await fillAction.submit({ amount: 1, maxFeesBasePoint: 500 })
 		await tx.wait()
 
 		const nextStock2 = "0"
-		await awaitStock(sdk1, orderId, nextStock2)
+		await awaitStock(it.sdk1, orderId, nextStock2)
 		await retry(15, 2000, async () => {
-			const order = await sdk1.apis.order.getOrderById({ id: orderId })
+			const order = await it.sdk1.apis.order.getOrderById({ id: orderId })
 			expect(order.status).toEqual("FILLED")
 		})
 	})

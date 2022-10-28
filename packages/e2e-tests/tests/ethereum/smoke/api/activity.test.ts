@@ -1,6 +1,6 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
+import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type {
 	GetActivitiesByCollection200,
@@ -54,9 +54,10 @@ function suites(): {
 
 describe.each(suites())("$blockchain api => activity", (suite) => {
 	const { seller: sellerWallet } = suite.wallets
-	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
 
 	test("activity controller", async () => {
+		const sellerSdk = await createSdk(suite.blockchain, sellerWallet)
+
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
 		const collection = await getCollection(sellerSdk, suite.collectionId)

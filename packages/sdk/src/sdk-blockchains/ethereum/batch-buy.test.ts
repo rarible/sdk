@@ -1,4 +1,4 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
@@ -15,14 +15,17 @@ describe("Batch buy", () => {
 
 	const web31 = new Web3(providerSeller)
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const sdkSeller = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
-		logs: LogsLevel.DISABLED,
-	})
 
 	const web32 = new Web3(providerBuyer)
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdkBuyer = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
-		logs: LogsLevel.DISABLED,
+
+	const it = awaitAll({
+		sdkSeller: createRaribleSdk(new EthereumWallet(ethereum1), "development", {
+			logs: LogsLevel.DISABLED,
+		}),
+		sdkBuyer: createRaribleSdk(new EthereumWallet(ethereum2), "development", {
+			logs: LogsLevel.DISABLED,
+		}),
 	})
 
 	async function mint(sdk: IRaribleSdk) {
@@ -42,9 +45,9 @@ describe("Batch buy", () => {
 	}
 
 	test("batch buy rarible orders", async () => {
-		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const tokens = await Promise.all([mint(it.sdkSeller), mint(it.sdkSeller)])
 		const orders = await Promise.all(tokens.map(async (token) => {
-			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
+			const prep = await it.sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
 				price: "0.00000000001",
@@ -53,7 +56,7 @@ describe("Batch buy", () => {
 		}))
 
 		//console.log(orders)
-		const prep = await sdkBuyer.order.batchBuy.prepare(orders.map((order) => ({ orderId: order })))
+		const prep = await it.sdkBuyer.order.batchBuy.prepare(orders.map((order) => ({ orderId: order })))
 		const tx = await prep.submit(orders.map((order) => ({
 			orderId: order,
 			amount: 1,
@@ -67,9 +70,9 @@ describe("Batch buy", () => {
 	})
 
 	test("batch buy rarible orders with simplified function", async () => {
-		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const tokens = await Promise.all([mint(it.sdkSeller), mint(it.sdkSeller)])
 		const orders = await Promise.all(tokens.map(async (token) => {
-			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
+			const prep = await it.sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
 				price: "0.00000000001",
@@ -85,16 +88,16 @@ describe("Batch buy", () => {
 				value: 100,
 			}],
 		}))
-		const tx = await sdkBuyer.order.batchBuy(ordersRequests)
+		const tx = await it.sdkBuyer.order.batchBuy(ordersRequests)
 		console.log(tx)
 		await tx.wait()
 	})
 
 	test("get buy amm info", async () => {
-		if (!sdkBuyer.ethereum) {
+		if (!it.sdkBuyer.ethereum) {
 			throw new Error("Sdk was initialized without ethereum provider")
 		}
-		const data = await sdkBuyer.ethereum.getBatchBuyAmmInfo({
+		const data = await it.sdkBuyer.ethereum.getBatchBuyAmmInfo({
 			hash: "0x000000000000000000000000d2bfdbb7be48d63ad3aaf5311786d2da2fc0fbea",
 			numNFTs: 5,
 		})

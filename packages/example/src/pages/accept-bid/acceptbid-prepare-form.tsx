@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import type { PrepareFillResponse } from "@rarible/sdk/esm/types/order/fill/domain"
 import { toOrderId } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { FormTextInput } from "../../components/common/form/form-text-input"
