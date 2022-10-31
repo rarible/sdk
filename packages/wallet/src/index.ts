@@ -160,7 +160,7 @@ export function isBlockchainWallet(x: any): x is BlockchainWallet {
 				(x.walletType === WalletType.ETHEREUM && x.ethereum) ||
 				(x.walletType === WalletType.SOLANA && x.provider) ||
 				(x.walletType === WalletType.FLOW && x.fcl) ||
-				(x.walletType === WalletType.TEZOS && x.provider)
+				(x.walletType === WalletType.TEZOS && x.provider) ||
 				(x.walletType === WalletType.IMMUTABLEX && x.wallet)
 			) && (x.signPersonalMessage)
 		)
