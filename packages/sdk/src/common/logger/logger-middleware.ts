@@ -1,5 +1,5 @@
 import { NetworkError, RemoteLogger, Warning } from "@rarible/logger/build"
-import type { LoggableValue } from "@rarible/logger/build/domain"
+import type { LoggableValue, AbstractLogger } from "@rarible/logger/build/domain"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
@@ -8,14 +8,14 @@ import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
 import { NetworkErrorCode } from "../apis"
+import { getSdkContext } from "../get-sdk-context"
 
-const packageJson = require("../../../package.json")
-const loggerConfig = {
+export const loggerConfig = {
 	service: "union-sdk",
 	elkUrl: "https://logging.rarible.com/",
 }
 
-async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, string>> {
+export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, string>> {
 	const info: Record<string, any> = {
 		"wallet.blockchain": wallet.walletType,
 	}
@@ -148,22 +148,17 @@ function getStringifiedError(error: any): string | undefined {
 	}
 }
 
-export function getInternalLoggerMiddleware(logsLevel: LogsLevel, sdkContext: ISdkContext): Middleware {
-	const getContext = async () => {
-		return {
-			service: loggerConfig.service,
-			environment: sdkContext.env,
-			sessionId: sdkContext.sessionId,
-			"@version": packageJson.version,
-			...(sdkContext.wallet ? await getWalletInfo(sdkContext.wallet) : { }),
-		}
-	}
-
-	const remoteLogger = new RemoteLogger((msg: LoggableValue) => axios.post(loggerConfig.elkUrl, msg), {
-		initialContext: getContext(),
-		dropBatchInterval: 1000,
-		maxByteSize: 3 * 10240,
-	})
+export function getInternalLoggerMiddleware(
+	logsLevel: LogsLevel,
+	sdkContext: ISdkContext,
+	externalLogger?: AbstractLogger
+): Middleware {
+	const remoteLogger = externalLogger ?? new RemoteLogger(
+		(msg: LoggableValue) => axios.post(loggerConfig.elkUrl, msg), {
+			initialContext: getSdkContext(sdkContext),
+			dropBatchInterval: 1000,
+			maxByteSize: 3 * 10240,
+		})
 
 	return async (callable, args) => {
 		const time = Date.now()

@@ -13,6 +13,7 @@ import BigNumber from "bignumber.js"
 import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import { sellV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import type { OrderId } from "@rarible/api-client"
+import { Warning } from "@rarible/logger/build"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type {
@@ -155,7 +156,7 @@ export class TezosSell {
 			throw new Error("Order has not been found")
 		}
 		if (order.data["@type"] === "TEZOS_RARIBLE_V2") {
-			throw new Error("You can't change v1 version of order. Cancel order and create a new one")
+			throw new Warning("You can't change v1 version of order. Cancel order and create a new one")
 		}
 		const { make, take } = order
 		const makeAssetType = make.type
