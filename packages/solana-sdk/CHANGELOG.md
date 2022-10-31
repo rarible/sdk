@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
+
+
+### Bug Fixes
+
+* cancel imx order ([#369](https://github.com/rarible/sdk/issues/369)) ([963924b](https://github.com/rarible/sdk/commit/963924be551d5a854b7d9ee2209effa31472ebe0))
+
+
+
+
+
 # [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
 
 **Note:** Version bump only for package @rarible/solana-sdk

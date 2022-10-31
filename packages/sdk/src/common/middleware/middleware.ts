@@ -99,9 +99,9 @@ export class Middlewarer {
 	}
 
 	wrapMethodWithPrepare<T extends MethodWithPrepare<any, any>>(method: T, fnName: string): T {
-		this.wrapFunction(method.prepare, `${fnName}.prepare`)
-		this.wrapFunction(method, fnName)
-		return method
+		const wrappedMethod = this.wrapFunction(method, fnName)
+		wrappedMethod.prepare = this.wrapFunction(method.prepare, `${fnName}.prepare`)
+		return wrappedMethod
 	}
 
 	wrapFunction<T extends (...args: any) => any>(callable: T, fnName: string): T {
