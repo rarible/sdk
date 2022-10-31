@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
+
+
+### Features
+
+* skip cancel imx tx and update eth-sdk ([#372](https://github.com/rarible/sdk/issues/372)) ([6512fda](https://github.com/rarible/sdk/commit/6512fda58c8864de91325d12bb2bd04198fcdb5a))
+* tezos sdk update ([030edb5](https://github.com/rarible/sdk/commit/030edb539492dbd188eb665d8d14602cd69a7edc))
+
+
+
+
+
 # [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
 
 **Note:** Version bump only for package @rarible/connector-helper

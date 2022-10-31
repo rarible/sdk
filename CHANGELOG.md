@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
+
+
+### Bug Fixes
+
+* cancel imx order ([#369](https://github.com/rarible/sdk/issues/369)) ([963924b](https://github.com/rarible/sdk/commit/963924be551d5a854b7d9ee2209effa31472ebe0))
+
+
+### Features
+
+* check logging sellupdate/bidupdate ([#367](https://github.com/rarible/sdk/issues/367)) ([9a9c121](https://github.com/rarible/sdk/commit/9a9c121441eaa1f730e0d532222c9f6df42d5920))
+* logging context ([#366](https://github.com/rarible/sdk/issues/366)) ([7bb067b](https://github.com/rarible/sdk/commit/7bb067b02ba61b4f1c284ea3793f465259189c6e))
+* skip cancel imx tx and update eth-sdk ([#372](https://github.com/rarible/sdk/issues/372)) ([6512fda](https://github.com/rarible/sdk/commit/6512fda58c8864de91325d12bb2bd04198fcdb5a))
+* tezos sdk update ([030edb5](https://github.com/rarible/sdk/commit/030edb539492dbd188eb665d8d14602cd69a7edc))
+
+
+
+## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
+
+
+### Features
+
+* ethereum wrapper update ([#368](https://github.com/rarible/sdk/issues/368)) ([ed54a82](https://github.com/rarible/sdk/commit/ed54a82843063a53adc4f6d553abb3f602b56b7a))
+
+
+
+## [0.9.39](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.9.39) (2022-10-20)
+
+
+
+
+
 # [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
 
 
