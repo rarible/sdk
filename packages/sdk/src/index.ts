@@ -5,6 +5,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
 import { WalletType } from "@rarible/sdk-wallet"
+import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -25,6 +26,7 @@ import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 import { getRaribleWallet } from "./common/get-wallet"
 import type { RaribleSdkProvider } from "./common/get-wallet"
+import { getSdkContext } from "./common/get-sdk-context"
 
 /**
  * @module
@@ -120,7 +122,13 @@ export async function createRaribleSdk(
 		}
 	)
 
-	setupMiddleware(apis, instance, { wallet, env, config, sessionId })
+	const sdkContext = { wallet, env, config, sessionId }
+	setupMiddleware({
+		apis,
+		internalSdk: instance,
+		sdkContext,
+		externalLogger: config?.logger,
+	})
 
 	return {
 		...instance,
@@ -134,24 +142,30 @@ export async function createRaribleSdk(
 		},
 		apis,
 		wallet,
+		getSdkContext: getSdkContext.bind(null, sdkContext),
 	}
 }
 
+export type SetupMiddlewareData = {
+	apis: IApisSdk
+	internalSdk: IRaribleInternalSdk
+	sdkContext: ISdkContext
+	externalLogger?: AbstractLogger
+}
 /**
  * Create middleware controller & wrap methods
  */
-function setupMiddleware(
-	apis: IApisSdk,
-	internalSdk: IRaribleInternalSdk,
-	sdkContext: ISdkContext
-) {
+function setupMiddleware({ apis, internalSdk, sdkContext, externalLogger }: SetupMiddlewareData) {
 	const middlewarer = new Middlewarer()
 
 	if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
-		middlewarer.use(getInternalLoggerMiddleware(
-			sdkContext.config?.logs ?? LogsLevel.TRACE,
-			sdkContext
-		))
+		middlewarer.use(
+			getInternalLoggerMiddleware(
+				sdkContext.config?.logs ?? LogsLevel.TRACE,
+				sdkContext,
+				externalLogger,
+			)
+		)
 	}
 
 	for (const middleware of (sdkContext.config?.middlewares ?? [])) {

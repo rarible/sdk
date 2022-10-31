@@ -3,6 +3,7 @@ import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	IConvert,
@@ -33,6 +34,7 @@ import type { IEthereumSdkConfig } from "./sdk-blockchains/ethereum/domain"
 import type { IUploadMeta } from "./types/nft/mint/prepare"
 import type { IBatchBuy } from "./types/order/fill"
 import type { IGetBuyAmmInfo } from "./types/balances"
+import type { IGetSdkContext } from "./common/get-sdk-context"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -69,6 +71,7 @@ export interface IRaribleSdkConfig {
 	 */
 	middlewares?: Middleware[]
 	apiKey?: string
+	logger?: AbstractLogger
 }
 
 /**
@@ -115,6 +118,7 @@ export interface IRaribleSdk {
 	 */
 	wallet: Maybe<BlockchainWallet>
 	ethereum?: IEthereumSdk
+	getSdkContext: IGetSdkContext
 }
 
 /**
@@ -368,7 +372,7 @@ export interface IEthereumSdk {
 	getBatchBuyAmmInfo: IGetBuyAmmInfo,
 }
 
-export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet"> & {
+export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet" | "getSdkContext"> & {
 	nft: INftInternalSdk
 	order: IOrderInternalSdk
 	balances: IBalanceSdk

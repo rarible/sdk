@@ -26,7 +26,7 @@
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/solana-wallet": "^0.10.0-beta.11",
-    "@rarible/tezos-sdk": "~0.1.39",
+    "@rarible/tezos-sdk": "~0.1.40",
     "@rarible/types": "~0.9.6"
   },
   "devDependencies": {
