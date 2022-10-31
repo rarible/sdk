@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
+
+
+### Features
+
+* skip cancel imx tx and update eth-sdk ([#372](https://github.com/rarible/sdk/issues/372)) ([6512fda](https://github.com/rarible/sdk/commit/6512fda58c8864de91325d12bb2bd04198fcdb5a))
+
+
+
+## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
+
+
+### Features
+
+* ethereum wrapper update ([#368](https://github.com/rarible/sdk/issues/368)) ([ed54a82](https://github.com/rarible/sdk/commit/ed54a82843063a53adc4f6d553abb3f602b56b7a))
+
+
+
+
+
 # [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
 
 
