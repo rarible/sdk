@@ -46,6 +46,7 @@ export interface ISdkContext {
 	env: RaribleSdkEnvironment,
 	config?: IRaribleSdkConfig
 	sessionId: string
+	apiKey?: string
 }
 
 export interface IRaribleSdkConfig {
