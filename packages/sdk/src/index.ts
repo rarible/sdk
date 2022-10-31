@@ -108,7 +108,7 @@ export function createRaribleSdk(
 		)
 	)
 
-	const sdkContext = { wallet, env, config, sessionId }
+	const sdkContext = { wallet, env, config, sessionId, apiKey: config?.apiKey }
 	setupMiddleware({
 		apis,
 		internalSdk: instance,
