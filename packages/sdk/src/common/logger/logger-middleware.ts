@@ -113,7 +113,8 @@ function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
 			err.message?.includes("User denied transaction signature") ||
       err.message?.includes("User denied message signature") ||
       err.message?.includes("User rejected the transaction") ||
-      err.message?.includes("Sign transaction cancelled")
+      err.message?.includes("Sign transaction cancelled") ||
+      err.message?.includes("Link iFrame Closed")
 		) {
 			return true
 		}
