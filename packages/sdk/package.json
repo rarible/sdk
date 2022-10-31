@@ -27,7 +27,7 @@
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/immutable-sdk": "^0.10.0-beta.11",
     "@rarible/immutable-wallet": "^0.10.0-beta.11",
-    "@rarible/logger": "^0.9.11",
+    "@rarible/logger": "^0.9.12",
     "@rarible/protocol-ethereum-sdk": "~0.12.109",
     "@rarible/sdk-transaction": "^0.10.0-beta.11",
     "@rarible/sdk-wallet": "^0.10.0-beta.11",
