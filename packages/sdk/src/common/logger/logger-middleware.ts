@@ -1,5 +1,5 @@
 import { NetworkError, RemoteLogger, Warning } from "@rarible/logger/build"
-import type { LoggableValue, AbstractLogger } from "@rarible/logger/build/domain"
+import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
@@ -92,6 +92,10 @@ export type ErrorLevel = LogLevel | NetworkErrorCode | string
 
 export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
 	if (error instanceof NetworkError) {
+		if (error.status === 400) {
+			//if user's request is not correct
+			return LogLevel.WARN
+		}
 		return error.code || NetworkErrorCode.NETWORK_ERR
 	}
 	if (callableName.startsWith("apis.")) {

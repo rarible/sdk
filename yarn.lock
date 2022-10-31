@@ -5095,10 +5095,10 @@
     "@rarible/tezos-common" "^0.1.39"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.39", "@rarible/tezos-sdk@~0.1.39":
-  version "0.1.39"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.39.tgz#5306ec79ca177d50f5b40681fc173cb6fbe3fef9"
-  integrity sha512-XXrjDuonPYEYeeT38vgEsfrlXYNepe5/ZSmnoa32EeFEhPpY6KHKF//RbSqngdmHyKzbXkBEUvOFLJeRw1hS4w==
+"@rarible/tezos-sdk@0.1.40", "@rarible/tezos-sdk@~0.1.40":
+  version "0.1.40"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.40.tgz#56a874af01808413f13d105a826c2e9babd749ed"
+  integrity sha512-+ZwmtHlOtLYK+90jZnK1RCWKVOqH+aaGcvogDEEO6LuNqVBTzPv3vNRzmczPhDwpcB5t0XWeOQIKN4oieP4gAw==
   dependencies:
     "@airgap/beacon-sdk" "2.3.13"
     "@genql/runtime" "2.10.0"
