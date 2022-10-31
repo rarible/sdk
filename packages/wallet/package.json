@@ -22,14 +22,14 @@
     "@ethersproject/abstract-signer": "^5.4.0",
     "@imtbl/imx-sdk": "^1.24.0",
     "@rarible/api-client": "0.0.13-beta12",
-    "@rarible/ethereum-provider": "~0.12.98",
-    "@rarible/ethers-ethereum": "~0.12.103",
+    "@rarible/ethereum-provider": "~0.12.109",
+    "@rarible/ethers-ethereum": "~0.12.109",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/solana-wallet": "^0.10.0-beta.11",
     "@rarible/tezos-sdk": "~0.1.40",
     "@rarible/types": "~0.9.6",
-    "@rarible/web3-ethereum": "~0.12.103"
+    "@rarible/web3-ethereum": "~0.12.109"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -42,9 +42,8 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@onflow/fcl": "~0.0.77",
-    "@rarible/ethereum-sdk-test-common": "~0.12.103",
+    "@rarible/ethereum-sdk-test-common": "~0.12.109",
     "@rarible/fcl-types": "~0.5.0",
-    "@rarible/web3-ethereum": "~0.12.103",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
