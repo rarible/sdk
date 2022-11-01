@@ -4762,6 +4762,13 @@
   dependencies:
     "@rarible/types" "~0.9.2"
 
+"@rarible/ethereum-provider@^0.12.109":
+  version "0.12.109"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.109.tgz#33581c9ceb9939a102d394a2ccf6dfc61a719f2b"
+  integrity sha512-dZPqKiu7ZczxdRlh/yeSwM1z+F3bQ4QXLSbPnQUuRpHnND30s/ANNrze6hBMLkvaIP+gZlaC0ULbnDCoICXXLg==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
 "@rarible/ethereum-provider@^0.12.98", "@rarible/ethereum-provider@~0.12.98":
   version "0.12.98"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.98.tgz#bb788cb5ba5eea7cf3d2a14e660f58fa5d1e2fcd"
@@ -4839,6 +4846,13 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
+"@rarible/logger@^0.9.12":
+  version "0.9.12"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.12.tgz#3c37ca48a0ec2f378eda4e30b4e787c93d870f1b"
+  integrity sha512-vs/+t0SRVO19sXmEj4vSTckgtW/ZMrNTGvDYL041WJwgEkdORmwR1j10YZNwrIsmh/0osuK/uNO/N+H3M7Q7LA==
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
 "@rarible/logger@^0.9.9":
   version "0.9.9"
   resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.9.tgz#4c8485ff8d8a5e2e56f86fe9e380ada1c75447b0"
@@ -4846,15 +4860,15 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.108":
-  version "0.12.108"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.108.tgz#1a8359211637e62fe5485f0c39d9284b982d457d"
-  integrity sha512-qSmec4HpGvLV7+z23/9jDeubR5GZ9+MEuJHqDKc3BXJRKid8BAxz+mOvK5sUcE3xTowxSJNXqZ/gOIT9639vAQ==
+"@rarible/protocol-ethereum-sdk@~0.12.110":
+  version "0.12.110"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.110.tgz#df9756bb22298827ee74f26042810e8dda7d3c48"
+  integrity sha512-F/Xa9XbJTs7YJkVOy/4UF0b4Hu0mHQIRDvwVKrppKMHi0D7q7o6PFGT43jdYuLVqOj8c+atFVBo8QrpAPZBMVA==
   dependencies:
     "@rarible/action" "~0.5.0"
     "@rarible/ethereum-api-client" "^0.1.23-beta8"
-    "@rarible/ethereum-provider" "^0.12.98"
-    "@rarible/logger" "^0.9.9"
+    "@rarible/ethereum-provider" "^0.12.109"
+    "@rarible/logger" "^0.9.12"
     "@rarible/utils" "~0.9.10"
     axios "^0.25.0"
     eth-sig-util "^3.0.0"

@@ -205,7 +205,10 @@ export class EthereumBid {
 					end: expirationDate,
 				}
 			})
-			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.after(async (res) => {
+				await res.approveTx?.wait()
+				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+			})
 
 		const submit = Action.create({
 			id: "convert" as const,
@@ -293,7 +296,10 @@ export class EthereumBid {
 					end: expirationDate,
 				}
 			})
-			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.after(async (res) => {
+				await res.approveTx?.wait()
+				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+			})
 
 		const submit = Action.create({
 			id: "convert" as const,
@@ -430,7 +436,10 @@ export class EthereumBid {
 				orderHash: toWord(hash),
 				priceDecimal: request.price,
 			}))
-			.after((order) => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.after(async (res) => {
+				await res.approveTx?.wait()
+				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+			})
 
 		const sellUpdateAction = Action.create({
 			id: "convert" as const,
