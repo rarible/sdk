@@ -1,11 +1,12 @@
 import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
-import type { AuthWithPrivateKey, FlowEnv } from "@rarible/flow-sdk/build/types"
+import type { FlowEnv } from "@rarible/flow-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
 import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
 import { Blockchain } from "@rarible/api-client"
-import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import type { IApisSdk, IRaribleInternalSdk, IRaribleSdkConfig } from "../../domain"
+import { LogsLevel } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
@@ -25,15 +26,17 @@ export function createFlowSdk(
 	apis: IApisSdk,
 	network: FlowEnv,
 	params?: ConfigurationParameters,
-	auth?: AuthWithPrivateKey,
+	config?: IRaribleSdkConfig
 ): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, {
 		...(params || {}),
 		middleware: [
-			getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR),
+			...(config?.logs !== LogsLevel.DISABLED
+				? [getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR)]
+				: []),
 			...(params?.middleware || []),
 		],
-	}, auth)
+	}, config?.blockchain?.FLOW?.auth)
 	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)

@@ -5,7 +5,8 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
 import { toBinary } from "@rarible/types"
-import type { IApisSdk, IRaribleInternalSdk, LogsLevel } from "../../domain"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
@@ -40,7 +41,9 @@ export function createEthereumSdk(
 		apiClientParams: {
 			...(config?.params || {}),
 			middleware: [
-				getErrorHandlerMiddleware(NetworkErrorCode.ETHEREUM_NETWORK_ERR),
+				...(config.logs?.level !== LogsLevel.DISABLED
+					? [getErrorHandlerMiddleware(NetworkErrorCode.ETHEREUM_NETWORK_ERR)]
+					: []),
 				...(config?.params?.middleware || []),
 			],
 		},

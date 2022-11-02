@@ -34,7 +34,7 @@ export function createRaribleSdk(
 ): IRaribleSdk {
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
-	const apis = createApisSdk(env, config?.apiClientParams)
+	const apis = createApisSdk(env, config?.apiClientParams, config?.logs)
 
 	const ethConfig = {
 		...config?.blockchain?.ETHEREUM,
@@ -55,7 +55,7 @@ export function createRaribleSdk(
 			apis,
 			blockchainConfig.flowEnv,
 			undefined,
-			config?.blockchain?.FLOW?.auth
+			config
 		),
 		createTezosSdk(
 			filterWallet(wallet, WalletType.TEZOS),
