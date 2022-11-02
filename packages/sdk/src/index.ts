@@ -60,7 +60,7 @@ export function createRaribleSdk(
 	const wallet = provider && getRaribleWallet(provider)
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
-	const apis = createApisSdk(env, config?.apiClientParams)
+	const apis = createApisSdk(env, config?.apiClientParams, config?.logs)
 
 	const ethConfig = {
 		...config?.blockchain?.ETHEREUM,
@@ -81,7 +81,7 @@ export function createRaribleSdk(
 			apis,
 			blockchainConfig.flowEnv,
 			undefined,
-			config?.blockchain?.FLOW?.auth
+			config
 		),
 		createTezosSdk(
 			filterWallet(wallet, WalletType.TEZOS),
@@ -104,7 +104,8 @@ export function createRaribleSdk(
 		createImmutablexSdk(
 			filterWallet(wallet, WalletType.IMMUTABLEX),
 			apis,
-			blockchainConfig.immutablexNetwork
+			blockchainConfig.immutablexNetwork,
+			config?.logs
 		)
 	)
 
@@ -217,7 +218,6 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 			}
 		},
 		async (request) => {
-			console.log("createMintAndSell mint", mint)
     	const mintResponse = await mint.prepare(request)
     	const collectionId = getCollectionId(request)
     	const blockchain = getBlockchainCollectionId(collectionId)

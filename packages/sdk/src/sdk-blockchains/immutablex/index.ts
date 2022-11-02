@@ -2,9 +2,9 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { ImmutableXWallet } from "@rarible/sdk-wallet"
 import { createImxSdk } from "@rarible/immutable-sdk"
 import type { ImxEnv } from "@rarible/immutable-wallet"
-import type { IRaribleInternalSdk } from "../../domain"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
+import { LogsLevel } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
-import type { IApisSdk } from "../../domain"
 import { MethodWithPrepare } from "../../types/common"
 import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { ImxNftService } from "./nft"
@@ -15,11 +15,14 @@ export function createImmutablexSdk(
 	wallet: Maybe<ImmutableXWallet>,
 	apis: IApisSdk,
 	env: ImxEnv,
+	logsLevel?: LogsLevel
 ): IRaribleInternalSdk {
 	const sdk = createImxSdk(wallet?.wallet.link, env, {
 		apiClientParams: {
 			middleware: [
-				getErrorHandlerMiddleware(NetworkErrorCode.IMX_NETWORK_ERR),
+				...(logsLevel !== LogsLevel.DISABLED
+					? [getErrorHandlerMiddleware(NetworkErrorCode.IMX_NETWORK_ERR)]
+					: []),
 			],
 		},
 	})
