@@ -10,7 +10,9 @@ describe("get sdk context", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3: web3 })
 	const it = awaitAll({
-		sdk: createRaribleSdk(new EthereumWallet(ethereum), "development"),
+		sdk: createRaribleSdk(new EthereumWallet(ethereum), "development", {
+			apiKey: "API_KEY",
+		}),
 	})
 
 	test("get context with goerli wallet", async () => {
@@ -19,6 +21,7 @@ describe("get sdk context", () => {
 		expect(context.service).toEqual("union-sdk")
 		expect(context.environment).toEqual("development")
 		expect(context.sessionId).toBeTruthy()
+		expect(context.apiKey).toEqual("API_KEY")
 		expect(context["wallet.blockchain"]).toEqual("ETHEREUM")
 		expect(context["wallet.address"]).toEqual("0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b")
 		expect(context["wallet.chainId"]).toEqual(300500)

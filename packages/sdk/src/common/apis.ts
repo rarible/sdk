@@ -1,26 +1,30 @@
 import type { ConfigurationParameters } from "@rarible/api-client"
 import * as ApiClient from "@rarible/api-client"
-import type { ResponseContext } from "@rarible/api-client/build/runtime"
-import type { Middleware } from "@rarible/api-client/build/runtime"
+import type { Middleware, ResponseContext } from "@rarible/api-client/build/runtime"
 import { handleFetchErrorResponse } from "@rarible/logger/build"
 import type { RaribleSdkEnvironment } from "../config/domain"
 import type { IApisSdk } from "../domain"
+import { LogsLevel } from "../domain"
 import { getSdkConfig } from "../config"
 
 /**
  * @ignore
  * @param env
  * @param params
+ * @param logsLevel
  */
 export function createApisSdk(
 	env: RaribleSdkEnvironment,
-	params: ConfigurationParameters = {}
+	params: ConfigurationParameters = {},
+	logsLevel?: LogsLevel
 ): IApisSdk {
 	const config = getSdkConfig(env)
 	const configuration = new ApiClient.Configuration({
 		basePath: config.basePath,
 		middleware: [
-			getErrorHandlerMiddleware(),
+			...(logsLevel !== LogsLevel.DISABLED
+				? [getErrorHandlerMiddleware()]
+				: []),
 			...(params?.middleware || []),
 		],
 		...params,
