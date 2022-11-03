@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.13](https://github.com/rarible/sdk/compare/v0.10.0-beta.12...v0.10.0-beta.13) (2022-11-02)
+
+
+### Bug Fixes
+
+* api key in context ([#374](https://github.com/rarible/sdk/issues/374)) ([a79ded6](https://github.com/rarible/sdk/commit/a79ded6bcfca36cd3f73fa9c9bec55913cccf92a))
+* prepared method logging ([#373](https://github.com/rarible/sdk/issues/373)) ([5e3b227](https://github.com/rarible/sdk/commit/5e3b22755348b85337579b369023bdcde2510382))
+
+
+
+
+
 # [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
 
 

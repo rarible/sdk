@@ -55,7 +55,7 @@ export async function createRaribleSdk(
 	const wallet = provider && await getRaribleWallet(provider)
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
-	const apis = createApisSdk(env, config?.apiClientParams)
+	const apis = createApisSdk(env, config?.apiClientParams, config?.logs)
 
 	const ethConfig = {
 		...config?.blockchain?.ETHEREUM,
@@ -82,7 +82,7 @@ export async function createRaribleSdk(
 				apis,
 				blockchainConfig.flowEnv,
 				undefined,
-				config?.blockchain?.FLOW?.auth
+				config
 			)
 		},
 		async () => {
@@ -117,12 +117,13 @@ export async function createRaribleSdk(
 			return createImmutablexSdk(
 				filterWallet(wallet, WalletType.IMMUTABLEX),
 				apis,
-				blockchainConfig.immutablexNetwork
+				blockchainConfig.immutablexNetwork,
+				config?.logs
 			)
 		}
 	)
 
-	const sdkContext = { wallet, env, config, sessionId }
+	const sdkContext = { wallet, env, config, sessionId, apiKey: config?.apiKey }
 	setupMiddleware({
 		apis,
 		internalSdk: instance,
