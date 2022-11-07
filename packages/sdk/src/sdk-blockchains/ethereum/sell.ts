@@ -61,6 +61,7 @@ export class EthereumSell {
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 
+				console.log("before")
 				return {
 					type: "DATA_V2",
 					makeAssetType: {
@@ -75,7 +76,10 @@ export class EthereumSell {
 					end: expirationDate,
 				}
 			})
-			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.after(order => {
+				console.log("after")
+				return common.convertEthereumOrderHash(order.hash, this.blockchain)
+			})
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
