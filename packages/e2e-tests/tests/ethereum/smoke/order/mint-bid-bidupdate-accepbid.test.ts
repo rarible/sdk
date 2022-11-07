@@ -5,7 +5,7 @@ import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
-import type { OrderUpdateRequest } from "@rarible/sdk/node/types/order/common"
+import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -163,8 +163,7 @@ function suites(): {
 	]
 }
 
-// deprecated, should be removed
-describe.skip.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (suite) => {
+describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (suite) => {
 	const {
 		seller: sellerWallet,
 		buyer: buyerWallet,

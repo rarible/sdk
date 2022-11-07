@@ -19,7 +19,7 @@ function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 
 const ethFt: EthErc20AssetType = {
 	"@type": "ERC20",
-	contract: toContractAddress("ETHEREUM:0xc778417E063141139Fce010982780140Aa0cD5Ab")
+	contract: toContractAddress("ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6")
 }
 
 const tezosNative: TezosXTZAssetType = {
