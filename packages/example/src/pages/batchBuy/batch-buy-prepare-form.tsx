@@ -33,7 +33,7 @@ export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuy
 					return
 				}
 				try {
-					console.log(formData)
+					console.log('formData', formData)
 					onComplete({
 						prepare: await connection.sdk.order.batchBuy.prepare(
 							formData.orderId.filter((id: string) => id).map((id: string) => {

@@ -373,6 +373,7 @@ export class EthereumFill {
 		const submit = this.sdk.order.buyBatch.around(
 			(request: BatchFillRequest) => {
 				return request.map((req) => {
+					console.log("batch around", request)
 					const order = orders[req.orderId]
 					if (!order) {
 						throw new Error(`Order with id ${req.orderId} not precached`)

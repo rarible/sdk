@@ -41,11 +41,22 @@ export function BatchBuyForm(
 				}
 
 				try {
-					onComplete(await prepare.submit(prepare.prepared.map((prepare) => ({
-						orderId: prepare.orderId,
-						amount: parseInt(formData[prepare.orderId + "_amount"]),
-						itemId: formData[prepare.orderId + "_itemId"] ? toItemId(formData[prepare.orderId + "_itemId"]) : undefined,
-					}))))
+					onComplete(await prepare.submit(prepare.prepared.map((prepare, i) => {
+            const itemsCounter = parseInt(formData[prepare.orderId + "_itemsCounter"] || 1)
+
+            let itemId: any[] = new Array(itemsCounter)
+              .fill(0)
+              .map((a, i) => {
+                console.log('maps, index', prepare.orderId + `_itemId_${i}`, formData[prepare.orderId + `_itemId_${i}`])
+                return formData[prepare.orderId + `_itemId_${i}`] ? toItemId(formData[prepare.orderId + `_itemId_${i}`]) : undefined
+              })
+            console.log('itemId', itemId, 'itemsCounter', itemsCounter)
+            return {
+              orderId: prepare.orderId,
+              amount: parseInt(formData[prepare.orderId + "_amount"]),
+              itemId: itemId.length === 1 ? itemId[0] : itemId,
+            }
+					})))
 				} catch (e) {
 					setError(e)
 				}
@@ -53,8 +64,8 @@ export function BatchBuyForm(
 			>
 				<Stack spacing={2}>
 					{
-						prepare.prepared.map((prepare) => {
-							return <Box key={prepare.orderId}>
+						prepare.prepared.map((prepare, i) => {
+							return <Box key={prepare.orderId+i}>
 								<p>
 									OrderId: {prepare.orderId}
 								</p>
@@ -64,6 +75,7 @@ export function BatchBuyForm(
 									prepare={prepare}
 									namePrefix={prepare.orderId}
 									order={orders.find((order) => order.id === prepare.orderId)}
+                  isFillBatch={true}
 								/>
 							</Box>
 						})

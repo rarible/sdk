@@ -2,12 +2,12 @@ import React, { useContext } from "react"
 import { useRxOrThrow } from "@rixio/react"
 import { createRaribleSdk, WalletType } from "@rarible/sdk"
 import type { ConnectionState } from "@rarible/connector"
+import { Connector, getStateDisconnected, IConnector } from "@rarible/connector"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { UnionAddress } from "@rarible/types/build/union-address"
 import { toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { IConnector, getStateDisconnected, Connector } from "@rarible/connector"
-import { IRaribleSdk } from "@rarible/sdk/build/domain"
+import { IRaribleSdk, LogsLevel } from "@rarible/sdk/build/domain"
 import { EnvironmentContext } from "./environment-selector-provider"
 
 export interface IConnectorContext {
@@ -47,7 +47,8 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 	const {environment} = useContext(EnvironmentContext)
 	const conn = useRxOrThrow(connector.connection)
 	const sdk = conn.status === "connected" ? createRaribleSdk(conn.connection.wallet, environment, {
-		blockchain: {
+		// logs: LogsLevel.ERROR,
+    blockchain: {
 			[WalletType.ETHEREUM]: {
 				useDataV3: true,
 				marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000face",
