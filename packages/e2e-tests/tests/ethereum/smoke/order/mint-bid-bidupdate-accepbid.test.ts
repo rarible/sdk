@@ -6,6 +6,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
+import { delay } from "@rarible/sdk/build/common/retry"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -163,8 +164,7 @@ function suites(): {
 	]
 }
 
-// deprecated, should be removed
-describe.skip.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (suite) => {
+describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (suite) => {
 	const {
 		seller: sellerWallet,
 		buyer: buyerWallet,
@@ -187,6 +187,8 @@ describe.skip.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid"
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
 		const order = await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
+
+		await delay(3000)
 
 		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount || 1 })
 
