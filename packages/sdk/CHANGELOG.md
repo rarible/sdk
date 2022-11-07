@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-beta.2](https://github.com/rarible/sdk/compare/v0.10.0-beta.14...v0.11.0-beta.2) (2022-11-07)
+
+
+### Bug Fixes
+
+* prepared method logging ([8346b94](https://github.com/rarible/sdk/commit/8346b94309fbc11b5c578cfbf4c7f89b137fd72a))
+
+
+### Features
+
+* processMeta method now returns promise ([fc4a312](https://github.com/rarible/sdk/commit/fc4a312f50142344bcebb19865a01f41bb00a8fc))
+* two builds configs, for esm & commonjs ([e2f08be](https://github.com/rarible/sdk/commit/e2f08bed30b319b819dd73d9c051e5867920e534))
+
+
+
+
+
 # [0.10.0-beta.14](https://github.com/rarible/sdk/compare/v0.10.0-beta.13...v0.10.0-beta.14) (2022-11-07)
 
 
