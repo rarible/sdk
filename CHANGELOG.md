@@ -3,27 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.11.0-beta.1](https://github.com/rarible/sdk/compare/v0.10.0-beta.13...v0.11.0-beta.1) (2022-11-03)
+# [0.10.0-beta.14](https://github.com/rarible/sdk/compare/v0.10.0-beta.13...v0.10.0-beta.14) (2022-11-07)
 
 
 ### Bug Fixes
 
 * disabled middleware ([#376](https://github.com/rarible/sdk/issues/376)) ([4391a91](https://github.com/rarible/sdk/commit/4391a9100190146887d7d547e81dcda3d2f248d6))
-
-
-
-# [0.11.0-beta.0](https://github.com/rarible/sdk/compare/v0.10.0-beta.12...v0.11.0-beta.0) (2022-10-31)
-
-
-### Bug Fixes
-
-* prepared method logging ([8346b94](https://github.com/rarible/sdk/commit/8346b94309fbc11b5c578cfbf4c7f89b137fd72a))
+* waiting for ethereum approve transaction ([#375](https://github.com/rarible/sdk/issues/375)) ([a3ddb39](https://github.com/rarible/sdk/commit/a3ddb398973db2758816d88ecba9ea53c1d6303c))
 
 
 ### Features
 
-* processMeta method now returns promise ([fc4a312](https://github.com/rarible/sdk/commit/fc4a312f50142344bcebb19865a01f41bb00a8fc))
-* two builds configs, for esm & commonjs ([e2f08be](https://github.com/rarible/sdk/commit/e2f08bed30b319b819dd73d9c051e5867920e534))
+* use api middleware when logs enabled ([#377](https://github.com/rarible/sdk/issues/377)) ([9b66e1f](https://github.com/rarible/sdk/commit/9b66e1ff7b225f32aa490f6af7a30d420c88cc7f))
 
 
 

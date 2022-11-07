@@ -4,6 +4,6 @@
   "compilerOptions": {
     "incremental": false,
     "downlevelIteration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
   }
 }

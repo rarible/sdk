@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-immutablex-link",
-  "version": "0.11.0-beta.1",
+  "version": "0.10.0-beta.14",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@imtbl/imx-sdk": "^1.24.0",
-    "@rarible/connector": "^0.11.0-beta.1"
+    "@rarible/connector": "^0.10.0-beta.14"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
