@@ -7,7 +7,7 @@ import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { UnionAddress } from "@rarible/types/build/union-address"
 import { toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { IRaribleSdk, LogsLevel } from "@rarible/sdk/build/domain"
+import { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { EnvironmentContext } from "./environment-selector-provider"
 
 export interface IConnectorContext {
@@ -47,7 +47,6 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 	const {environment} = useContext(EnvironmentContext)
 	const conn = useRxOrThrow(connector.connection)
 	const sdk = conn.status === "connected" ? createRaribleSdk(conn.connection.wallet, environment, {
-		// logs: LogsLevel.ERROR,
     blockchain: {
 			[WalletType.ETHEREUM]: {
 				useDataV3: true,
