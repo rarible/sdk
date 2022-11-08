@@ -5,13 +5,15 @@ import { fill_order, get_address, get_legacy_orders, order_of_json, cart_purchas
 import type { CartOrder } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import BigNumber from "bignumber.js"
 import type { Order } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
-import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { FillRequest, PrepareFillRequest, PrepareFillResponse,
+	IBatchBuyTransactionResult } from "../../types/order/fill/domain"
 import {
 	MaxFeesBasePointSupport,
 	OriginFeeSupport,
@@ -22,6 +24,7 @@ import type {
 	PrepareBatchBuyResponse,
 } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
+import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { MaybeProvider } from "./common"
 import {
 	checkChainId,
@@ -42,6 +45,10 @@ export class TezosFill {
 	) {
 		this.fill = this.fill.bind(this)
 		this.batchBuy = this.batchBuy.bind(this)
+		this.batchBuyBasic = this.batchBuyBasic.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
+		this.fillCommon = this.fillCommon.bind(this)
 	}
 
 	async getPreparedOrder(request: PrepareFillRequest): Promise<Order> {
@@ -115,24 +122,7 @@ export class TezosFill {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
-				await checkChainId(this.provider)
-
-				const { make, take } = preparedOrder
-				if (make.type["@type"] === "TEZOS_NFT" || make.type["@type"] === "TEZOS_MT") {
-					const request: OrderDataRequest = {
-						make_contract: convertFromContractAddress(make.type.contract),
-						make_token_id: new BigNumber(make.type.tokenId),
-						maker: getTezosAddress(preparedOrder.maker),
-						take_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
-					}
-					if (take.type["@type"] === "TEZOS_FT" && take.type.tokenId) {
-						request.take_token_id = new BigNumber(take.type.tokenId.toString())
-					}
-					if (preparedOrder.data["@type"] === "TEZOS_RARIBLE_V3") {
-						return this.buyV2(preparedOrder, request, fillRequest)
-					}
-				}
-				return this.fillV1Order(fillRequest, preparedOrder)
+				return this.fillCommon(fillRequest, preparedOrder)
 			},
 		})
 
@@ -182,41 +172,85 @@ export class TezosFill {
 		return new BlockchainTezosTransaction(fillResponse, this.network)
 	}
 
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		let preparedOrder = await this.getPreparedOrder(request)
+		return this.fillCommon(request, preparedOrder)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		let preparedOrder = await this.getPreparedOrder(request)
+		return this.fillCommon(request, preparedOrder)
+	}
+
+	async fillCommon(fillRequest: FillRequest, preparedOrder: Order) {
+		await checkChainId(this.provider)
+
+		const { make, take } = preparedOrder
+		if (make.type["@type"] === "TEZOS_NFT" || make.type["@type"] === "TEZOS_MT") {
+			const request: OrderDataRequest = {
+				make_contract: convertFromContractAddress(make.type.contract),
+				make_token_id: new BigNumber(make.type.tokenId),
+				maker: getTezosAddress(preparedOrder.maker),
+				take_contract: "contract" in take.type ? convertFromContractAddress(take.type.contract) : undefined,
+			}
+			if (take.type["@type"] === "TEZOS_FT" && take.type.tokenId) {
+				request.take_token_id = new BigNumber(take.type.tokenId.toString())
+			}
+			if (preparedOrder.data["@type"] === "TEZOS_RARIBLE_V3") {
+				return this.buyV2(preparedOrder, request, fillRequest)
+			}
+		}
+		return this.fillV1Order(fillRequest, preparedOrder)
+	}
+
+	async batchBuyCommon(
+		fillRequest: BatchFillRequest
+	): Promise<IBlockchainTransaction<Blockchain, IBatchBuyTransactionResult>> {
+		await checkChainId(this.provider)
+		const provider = getRequiredProvider(this.provider)
+
+		const orders: CartOrder[] = fillRequest.map((req) => {
+			return {
+				order_id: getTezosOrderId(req.orderId),
+				amount: new BigNumber(req.amount),
+				payouts: convertUnionParts(req.payouts),
+				origin_fees: convertUnionParts(req.originFees),
+			}
+		})
+
+		const fillResponse = await cart_purchase(provider, orders)
+		return new BlockchainTezosTransaction(fillResponse, this.network)
+	}
+
+	async batchBuyBasic(
+		request: BatchFillRequest
+	): Promise<IBlockchainTransaction<Blockchain, IBatchBuyTransactionResult>> {
+		return this.batchBuyCommon(request)
+	}
+
 	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (fillRequest: BatchFillRequest) => {
-				await checkChainId(this.provider)
-				const provider = getRequiredProvider(this.provider)
-
-				const orders: CartOrder[] = fillRequest.map((req) => {
-					return {
-						order_id: getTezosOrderId(req.orderId),
-						amount: new BigNumber(req.amount),
-						payouts: convertUnionParts(req.payouts),
-						origin_fees: convertUnionParts(req.originFees),
-					}
-				})
-
-				const fillResponse = await cart_purchase(provider, orders)
-				return new BlockchainTezosTransaction(fillResponse, this.network)
+				return this.batchBuyCommon(fillRequest)
 			},
 		})
 
-		const prepared = await Promise.all(prepareRequest.map(async (req) => {
-			let preparedOrder = await this.getPreparedOrder(req)
+		const prepared = await Promise.all(
+			prepareRequest.map(async (req) => {
+				let preparedOrder = await this.getPreparedOrder(req)
 
-			return {
-				orderId: preparedOrder.id,
-				multiple: this.isMultiple(preparedOrder),
-				maxAmount: await this.getMaxAmount(preparedOrder),
-				baseFee: parseInt(this.provider.config.fees.toString()),
-				originFeeSupport: OriginFeeSupport.FULL,
-				payoutsSupport: PayoutsSupport.MULTIPLE,
-				maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-				supportsPartialFill: true,
-			}
-		}))
+				return {
+					orderId: preparedOrder.id,
+					multiple: this.isMultiple(preparedOrder),
+					maxAmount: await this.getMaxAmount(preparedOrder),
+					baseFee: parseInt(this.provider.config.fees.toString()),
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.MULTIPLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
+				}
+			}))
 
 		return {
 			submit,

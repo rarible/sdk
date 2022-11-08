@@ -6,6 +6,8 @@ import { Middlewarer } from "../../common/middleware/middleware"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MetaUploader } from "../union/meta/upload-meta"
 import type { RaribleSdkConfig } from "../../config/domain"
+import { MethodWithPrepare } from "../../types/common"
+import type { IMint } from "../../types/nft/mint"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { getMaybeTezosProvider } from "./common"
@@ -29,32 +31,34 @@ export function createTezosSdk(
 	const mintService = new TezosMint(maybeProvider, _apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
 	const fillService = new TezosFill(maybeProvider, _apis, network)
-	const createCollectionService = new TezosCreateCollection(maybeProvider, network)
+	const { createCollectionSimplified } = new TezosCreateCollection(maybeProvider, network)
+	const transferService = new TezosTransfer(maybeProvider, _apis, network)
+	const burnService = new TezosBurn(maybeProvider, _apis, network)
+	const cancelService = new TezosCancel(maybeProvider, _apis, network)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.TEZOS, preprocessMeta)
 
 	return {
 		nft: {
-			mint: mintService.mint,
-			burn: new TezosBurn(maybeProvider, _apis, network).burn,
-			transfer: new TezosTransfer(maybeProvider, _apis, network).transfer,
+			mint: new MethodWithPrepare(mintService.mintBasic, mintService.mint) as IMint,
+			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
+			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new TezosTokenId(maybeProvider).generateTokenId,
-			deploy: createCollectionService.createCollection,
-			createCollection: createCollectionService.createCollection,
+			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			fill: fillService.fill,
-			buy: fillService.fill,
-			batchBuy: fillService.batchBuy,
-			acceptBid: fillService.fill,
-			sell: sellService.sell,
-			sellUpdate: sellService.update,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: new TezosCancel(maybeProvider, _apis, network).cancel,
+			fill: { prepare: fillService.fill },
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
+			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
+			bid: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			bidUpdate: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			cancel: cancelService.cancelBasic,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,

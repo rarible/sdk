@@ -4,15 +4,24 @@ import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
 import { toBigNumber, toItemId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
-import type { PrepareMintResponse } from "../../types/nft/mint/domain"
-import { MintType } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
+import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { CommonTokenContent, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type {
+	MintSimplifiedRequest,
+	MintSimplifiedRequestOffChain,
+	MintSimplifiedRequestOnChain,
+} from "../../types/nft/mint/simplified"
+import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
+import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
+import type { BurnResponse } from "../../types/nft/burn/domain"
 import { extractPublicKey } from "./common/address-converters"
 import type { ISolanaSdkConfig } from "./domain"
 import type { ISolanaMetadataResponse } from "./domain"
@@ -26,8 +35,11 @@ export class SolanaNft {
 	) {
 		this.mint = this.mint.bind(this)
 		this.burn = this.burn.bind(this)
+		this.burnBasic = this.burnBasic.bind(this)
 		this.transfer = this.transfer.bind(this)
 		this.preprocessMeta = this.preprocessMeta.bind(this)
+		this.mintBasic = this.mintBasic.bind(this)
+		this.transferBasic = this.transferBasic.bind(this)
 	}
 
 	getCollectionId(prepareRequest: PrepareMintRequest) {
@@ -87,6 +99,16 @@ export class SolanaNft {
 		}
 	}
 
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	async mintBasic(request: MintSimplifiedRequest) {
+		const prepareResponse = await this.mint(request)
+		return prepareResponse.submit(request)
+	}
+
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
@@ -117,6 +139,11 @@ export class SolanaNft {
 		}
 	}
 
+	async burnBasic(request: BurnSimplifiedRequest): Promise<BurnResponse> {
+		const response = await this.burn(request)
+		return response.submit(request)
+	}
+
 	async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
@@ -145,6 +172,11 @@ export class SolanaNft {
 				},
 			}),
 		}
+	}
+
+	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.transfer(request)
+		return response.submit(request)
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): ISolanaMetadataResponse {

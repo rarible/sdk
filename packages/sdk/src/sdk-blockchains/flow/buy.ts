@@ -2,11 +2,14 @@ import { toBigNumber } from "@rarible/types/build/big-number"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress } from "@rarible/types"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import * as converters from "./common/converters"
 import { toFlowParts } from "./common/converters"
@@ -19,6 +22,8 @@ export class FlowBuy {
 		private network: FlowNetwork,
 	) {
 		this.buy = this.buy.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 	}
 
 	private async getPreparedOrder(request: PrepareFillRequest): Promise<Order> {
@@ -54,24 +59,16 @@ export class FlowBuy {
 	}
 
 	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		const order = await this.getPreparedOrder(request)
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
 				run: (buyRequest: FillRequest) => {
-					const currency = this.getFlowCurrency(order)
-					const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
-					const collectionId = converters.getFlowCollection(this.getFlowNftContract(order))
-					const orderId = converters.parseOrderId(order.id)
-					return this.sdk.order.fill(
-						collectionId,
-						currency,
-						orderId,
-						owner,
-						toFlowParts(buyRequest.originFees))
+					return this.buyCommon({
+						...buyRequest,
+						...request,
+					})
 				},
 			})
-			.after(tx => new BlockchainFlowTransaction(tx, this.network))
 
 		return {
 			multiple: false,
@@ -83,5 +80,29 @@ export class FlowBuy {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
 		}
+	}
+
+	async buyCommon(buyRequest: FillRequest & PrepareFillRequest) {
+		const order = await this.getPreparedOrder(buyRequest)
+		const currency = this.getFlowCurrency(order)
+		const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
+		const collectionId = converters.getFlowCollection(this.getFlowNftContract(order))
+		const orderId = converters.parseOrderId(order.id)
+		const tx = await this.sdk.order.fill(
+			collectionId,
+			currency,
+			orderId,
+			owner,
+			toFlowParts(buyRequest.originFees)
+		)
+		return new BlockchainFlowTransaction(tx, this.network)
+	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		return this.buyCommon(request)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		return this.buyCommon(request)
 	}
 }

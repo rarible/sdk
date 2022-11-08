@@ -3,7 +3,6 @@ import { TezosWallet } from "@rarible/sdk-wallet"
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import { createRaribleSdk } from "@rarible/sdk/build"
 import { toCollectionId } from "@rarible/types"
-import { MintType } from "@rarible/sdk/build/types/nft/mint/domain"
 import { updateNodeGlobalVars } from "../common"
 
 updateNodeGlobalVars()
@@ -19,18 +18,13 @@ async function mint() {
 	const sdk = createRaribleSdk(wallet, "testnet")
 
 	const nftCollection = toCollectionId("TEZOS:KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43")
-	const mintAction = await sdk.nft.mint({
+	const mintResult = await sdk.nft.mint({
 		collectionId: nftCollection,
-	})
-	const mintResult = await mintAction.submit({
 		uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		royalties: [],
 		lazyMint: false,
 		supply: 1,
 	})
-	console.log("mint", mintResult)
-	if (mintResult.type === MintType.ON_CHAIN) {
-		await mintResult.transaction.wait()
-	}
+	await mintResult.transaction.wait()
 }
 mint()

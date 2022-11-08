@@ -1,15 +1,31 @@
 import type { RaribleImxSdk } from "@rarible/immutable-sdk/src/domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainImmutableXTransaction } from "@rarible/sdk-transaction"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { Action } from "@rarible/action"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
+import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
+import type { BurnResponse } from "../../types/nft/burn/domain"
+import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 
 export class ImxNftService {
 	constructor(private sdk: RaribleImxSdk, private apis: IApisSdk) {
 		this.burn = this.burn.bind(this)
+		this.burnBasic = this.burnBasic.bind(this)
 		this.transfer = this.transfer.bind(this)
+		this.transferBasic = this.transferBasic.bind(this)
+	}
+
+	async burnBasic(request: BurnSimplifiedRequest): Promise<BurnResponse> {
+		const response = await this.burn(request)
+		return response.submit(request)
+	}
+
+	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.transfer(request)
+		return response.submit(request)
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {

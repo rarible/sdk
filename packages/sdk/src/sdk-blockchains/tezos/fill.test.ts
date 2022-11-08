@@ -16,8 +16,8 @@ describe.skip("fill test", () => {
 
 	test("buy NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()
-		const fillAction = await buyerSdk.order.buy({
-			orderId: convertTezosOrderId("6345c41b-b8a2-5697-8e29-1438cc5ddf6b"),
+		const fillAction = await buyerSdk.order.buy.prepare({
+			orderId: convertTezosOrderId("755dcfce-ead2-5a22-be41-da338656ff9b"),
 		})
 
 		const tx = await fillAction.submit({
@@ -38,7 +38,7 @@ describe.skip("fill test", () => {
 	test.skip("buy MT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 
-		const fillAction = await buyerSdk.order.buy({
+		const fillAction = await buyerSdk.order.buy.prepare({
 			orderId: convertTezosOrderId("f1a87424bc67e47a9a3f850b9f5a5ba13af5259f6d139d7b3710b4862a3aaac9"),
 		})
 

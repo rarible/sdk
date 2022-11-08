@@ -1,13 +1,13 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { Action } from "@rarible/action"
 import type { Address, ContractAddress, UnionAddress } from "@rarible/types"
 import { toAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
-import type { CreateCollectionRequest, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
-import type { EVMBlockchain, CreateEthereumCollectionResponse } from "./common"
+import type { CreateCollectionResponse, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CreateEthereumCollectionResponse, EVMBlockchain } from "./common"
 import { convertEthereumContractAddress, getEVMBlockchain } from "./common"
 
 export class EthereumCreateCollection {
@@ -18,7 +18,7 @@ export class EthereumCreateCollection {
 		private network: EthereumNetwork,
 	) {
 		this.blockchain = getEVMBlockchain(network)
-		this.startCreateCollection = this.startCreateCollection.bind(this)
+		this.createCollectionSimplified = this.createCollectionSimplified.bind(this)
 	}
 
 	convertOperatorsAddresses(operators: UnionAddress[]): Address[] {
@@ -80,16 +80,23 @@ export class EthereumCreateCollection {
 		}
 	}
 
-	createCollection = Action.create({
-		id: "send-tx" as const,
-		run: async (request: CreateCollectionRequest) => {
-			if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
-				throw new Error("Wrong blockchain")
-			}
-			return this.convertResponse(
-				await this.startCreateCollection(request.asset as EthereumCreateCollectionAsset)
-			)
-		},
-	})
+	async createCollectionSimplified(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+		if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
+			throw new Error("Wrong blockchain")
+		}
 
+		return this.convertResponse(
+			await this.startCreateCollection({
+				assetType: request.type,
+				arguments: {
+					name: request.name,
+					symbol: request.symbol,
+					baseURI: request.baseURI,
+					contractURI: request.contractURI,
+					isUserToken: !request.isPublic,
+					operators: "operators" in request ? request.operators : [],
+				},
+			})
+		)
+	}
 }

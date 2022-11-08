@@ -1,5 +1,5 @@
 import { NetworkError, RemoteLogger, Warning } from "@rarible/logger/build"
-import type { LoggableValue, AbstractLogger } from "@rarible/logger/build/domain"
+import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
@@ -69,68 +69,81 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 }
 
 export function getErrorMessageString(err: any): string {
-	if (!err) {
-		return "not defined"
-	} else if (typeof err === "string") {
-		return err
-	} else if (err instanceof Error) {
-		return err.message
-	} else if (err.message) {
-		return typeof err.message === "string" ? err.message : JSON.stringify(err.message)
-	} else if (err.status !== undefined && err.statusText !== undefined) {
-		return JSON.stringify({
-			url: err.url,
-			status: err.status,
-			statusText: err.statusText,
-		})
-	} else {
-		return JSON.stringify(err)
+	try {
+		if (!err) {
+			return "not defined"
+		} else if (typeof err === "string") {
+			return err
+		} else if (err instanceof Error) {
+			return err.message
+		} else if (err.message) {
+			return typeof err.message === "string" ? err.message : JSON.stringify(err.message)
+		} else if (err.status !== undefined && err.statusText !== undefined) {
+			return JSON.stringify({
+				url: err.url,
+				status: err.status,
+				statusText: err.statusText,
+			})
+		} else {
+			return JSON.stringify(err)
+		}
+	} catch (e: any) {
+		return `getErrorMessageString parse error: ${e?.message}`
 	}
 }
 
 export type ErrorLevel = LogLevel | NetworkErrorCode | string
 
 export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
-	if (error instanceof NetworkError) {
-		return error.code || NetworkErrorCode.NETWORK_ERR
+	if (error instanceof NetworkError || error?.name === "NetworkError") {
+		if (error?.status === 400) {
+			//if user's request is not correct
+			return LogLevel.WARN
+		}
+		return error?.code || NetworkErrorCode.NETWORK_ERR
 	}
-	if (callableName.startsWith("apis.")) {
+	if (callableName?.startsWith("apis.")) {
 		return NetworkErrorCode.NETWORK_ERR
 	}
-	if (isCancelledTx(error, wallet?.walletType) || error instanceof Warning) {
+	if (isCancelledTx(error, wallet?.walletType) || error instanceof Warning || error?.name === "Warning") {
 		return LogLevel.WARN
 	}
 	return LogLevel.ERROR
 }
 
+const EVM_WARN_MESSAGES = [
+	"User denied transaction signature",
+	"User denied message signature",
+	"User rejected the transaction",
+	"Sign transaction cancelled",
+	"Link iFrame Closed",
+	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
+]
+
 function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
-	if (!err) {
-		return false
-	}
-
-	if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
-		if (
-			err.message?.includes("User denied transaction signature") ||
-      err.message?.includes("User denied message signature") ||
-      err.message?.includes("User rejected the transaction") ||
-      err.message?.includes("Sign transaction cancelled")
-		) {
-			return true
+	try {
+		if (!err) {
+			return false
 		}
-	}
 
-	if (blockchain === WalletType.TEZOS) {
-		if (err.name === "UnknownBeaconError" && err?.title === "Aborted") {
-			return true
+		if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
+			if (EVM_WARN_MESSAGES.some(msg => err?.message?.includes(msg))) {
+				return true
+			}
 		}
-	}
 
-	if (blockchain === WalletType.SOLANA) {
-		if (err.name === "User rejected the request.") {
-			return true
+		if (blockchain === WalletType.TEZOS) {
+			if (err?.name === "UnknownBeaconError" && err?.title === "Aborted") {
+				return true
+			}
 		}
-	}
 
+		if (blockchain === WalletType.SOLANA) {
+			if (err?.name === "User rejected the request.") {
+				return true
+			}
+		}
+	} catch (e) {}
 	return false
 }
 
@@ -163,6 +176,16 @@ export function getInternalLoggerMiddleware(
 		const time = Date.now()
 
 		return [callable, async (responsePromise) => {
+			let parsedArgs
+			try {
+				parsedArgs = JSON.stringify(args)
+			} catch (e) {
+				try {
+				  parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
+				} catch (err) {
+					parsedArgs = "unknown"
+				}
+			}
 			try {
 				const res = await responsePromise
 				if (logsLevel >= LogsLevel.TRACE) {
@@ -171,23 +194,33 @@ export function getInternalLoggerMiddleware(
 						method: callable.name,
 						message: "trace of " + callable.name,
 						duration: (Date.now() - time) / 1000,
-						args: JSON.stringify(args),
+						args: parsedArgs,
 						resp: JSON.stringify(res),
 					})
 				}
 			} catch (err: any) {
 				if (logsLevel >= LogsLevel.ERROR) {
-					const data = {
-						level: getErrorLevel(callable.name, err, sdkContext.wallet),
-						method: callable.name,
-						message: getErrorMessageString(err),
-						error: getStringifiedError(err),
-						duration: (Date.now() - time) / 1000,
-						args: JSON.stringify(args),
-						requestAddress: undefined as undefined | string,
-					}
-					if (err instanceof NetworkError) {
-						data.requestAddress = err.url
+					let data
+					try {
+						data = {
+							level: getErrorLevel(callable?.name, err, sdkContext?.wallet),
+							method: callable?.name,
+							message: getErrorMessageString(err),
+							error: getStringifiedError(err),
+							duration: (Date.now() - time) / 1000,
+							args: parsedArgs,
+							requestAddress: undefined as undefined | string,
+						}
+						if (err instanceof NetworkError || err?.name === "NetworkError") {
+							data.requestAddress = err?.url
+						}
+					} catch (e) {
+						data = {
+							level: "LOGGING_ERROR",
+							method: callable?.name,
+							message: getErrorMessageString(e),
+							error: getStringifiedError(e),
+						}
 					}
 					remoteLogger.raw(data)
 				}

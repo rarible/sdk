@@ -1,11 +1,11 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
 import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getSolanaWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -21,7 +21,7 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { creator: BlockchainWallet, recipient: BlockchainWallet },
-	deployRequest: CreateCollectionRequest,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	transferRequest: (address: UnionAddress) => TransferRequest,
 	creatorBalanceAfterTransfer: string,

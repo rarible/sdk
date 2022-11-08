@@ -6,10 +6,8 @@ import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 //Available only for ethereum
 export async function bidOnCollection(wallet: BlockchainWallet, assetType: RequestCurrency) {
 	const sdk = createRaribleSdk(wallet, "testnet")
-	const bidAction = await sdk.order.bid({
+	const bidOrderId = await sdk.order.bid({
 		collectionId: toCollectionId("<COLLECTION_ADDRESS>"),
-	})
-	const bidOrderId = await bidAction.submit({
 		amount: 1,
 		price: "0.000002",
 		currency: assetType,

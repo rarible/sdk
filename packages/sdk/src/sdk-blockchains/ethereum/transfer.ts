@@ -1,9 +1,11 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
+import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import { convertToEthereumAddress, isEVMBlockchain } from "./common"
 
 export class EthereumTransfer {
@@ -12,6 +14,7 @@ export class EthereumTransfer {
 		private network: EthereumNetwork,
 	) {
 		this.transfer = this.transfer.bind(this)
+		this.transferBasic = this.transferBasic.bind(this)
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
@@ -48,5 +51,10 @@ export class EthereumTransfer {
 				},
 			}),
 		}
+	}
+
+	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.transfer(request)
+		return response.submit(request)
 	}
 }

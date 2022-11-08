@@ -174,7 +174,7 @@ describe.each(suites())("$blockchain mint => bid => acceptBid", (suite) => {
 		//await getActivitiesByItem(buyerSdk, nft.id, [ActivityType.BID], [ActivityType.BID])
 
 		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id },
-			{ amount: bidRequest.amount })
+			{ amount: bidRequest.amount || 1 })
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 

@@ -6,19 +6,17 @@ import type { ItemId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
-import { MintType } from "../../types/nft/mint/domain"
 import { MaxFeesBasePointSupport } from "../../types/order/fill/domain"
 import { retry } from "../../common/retry"
+import { MintType } from "../../types/nft/mint/prepare"
+import { awaitItem } from "../../common/test/await-item"
+import { awaitStock } from "../../common/test/await-stock"
 import { initProviders } from "./test/init-providers"
-import { awaitStock } from "./test/await-stock"
-import { awaitItem } from "./test/await-item"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("Create & fill orders with order data v3", () => {
-	const { web31, web32, wallet1 } = initProviders({
-		pk1: undefined,
-		pk2: "0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	})
+	const { web31, web32, wallet1 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
@@ -47,7 +45,7 @@ describe("Create & fill orders with order data v3", () => {
 
 	async function mint(): Promise<ItemId> {
 		const wallet1Address = wallet1.getAddressString()
-		const action = await sdk1.nft.mint({
+		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
 		const result = await action.submit({
@@ -72,7 +70,7 @@ describe("Create & fill orders with order data v3", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const itemId = await mint()
 
-		const sellAction = await sdk1.order.sell({ itemId: itemId })
+		const sellAction = await sdk1.order.sell.prepare({ itemId: itemId })
 		expect(sellAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
 		const orderId = await sellAction.submit({
 			amount: 1,
@@ -92,12 +90,12 @@ describe("Create & fill orders with order data v3", () => {
 		const nextStock = "1"
 		await awaitStock(sdk1, orderId, nextStock)
 
-		const updateAction = await sdk1.order.sellUpdate({ orderId })
+		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.0000003" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
-		const fillAction = await sdk2.order.buy({ orderId })
+		const fillAction = await sdk2.order.buy.prepare({ orderId })
 		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
@@ -113,7 +111,7 @@ describe("Create & fill orders with order data v3", () => {
 	test.skip("erc721 bid/acceptBid", async () => {
 		const itemId = await mint()
 
-		const bidAction = await sdk2.order.bid({ itemId: itemId })
+		const bidAction = await sdk2.order.bid.prepare({ itemId: itemId })
 		expect(bidAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const orderId = await bidAction.submit({
 			amount: 1,
@@ -128,12 +126,12 @@ describe("Create & fill orders with order data v3", () => {
 
 		await awaitStock(sdk1, orderId, 0.0002)
 
-		const updateAction = await sdk2.order.bidUpdate({ orderId })
+		const updateAction = await sdk2.order.bidUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.0003" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
-		const fillAction = await sdk1.order.acceptBid({ orderId })
+		const fillAction = await sdk1.order.acceptBid.prepare({ orderId })
 		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
 		const tx = await fillAction.submit({ amount: 1, maxFeesBasePoint: 500 })
 		await tx.wait()

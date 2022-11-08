@@ -16,10 +16,10 @@ async function burn() {
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "testnet")
-	const burnAction = await sdk.nft.burn({
+	const tx = await sdk.nft.burn({
 		itemId: toItemId("TEZOS:KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43:3"),
+		amount: 1,
 	})
-	const tx = await burnAction.submit({ amount: 1 })
 	if (tx) {
 	  await tx.wait()
 	}

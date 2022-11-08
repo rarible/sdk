@@ -190,7 +190,7 @@ describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (su
 
 		await delay(3000)
 
-		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount })
+		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount || 1 })
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 		//toDo add balance verification

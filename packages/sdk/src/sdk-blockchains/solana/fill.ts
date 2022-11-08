@@ -4,9 +4,12 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import type { Order } from "@rarible/api-client"
 import { OrderStatus } from "@rarible/api-client"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
+import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
@@ -21,6 +24,8 @@ export class SolanaFill {
 		private readonly config: ISolanaSdkConfig | undefined,
 	) {
 		this.fill = this.fill.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 	}
 
 	private static isBuyOrder(order: Order): boolean {
@@ -156,5 +161,15 @@ export class SolanaFill {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
 		}
+	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.fill(request)
+		return response.submit(request)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.fill(request)
+		return response.submit(request)
 	}
 }

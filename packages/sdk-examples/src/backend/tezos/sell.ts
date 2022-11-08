@@ -16,10 +16,8 @@ async function sellItem() {
 		)
 	)
 	const sdk = createRaribleSdk(wallet, "testnet")
-	const sellAction = await sdk.order.sell({
+	const sellOrderId = await sdk.order.sell({
 		itemId: toItemId("TEZOS:KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43:3"),
-	})
-	const sellOrderId = await sellAction.submit({
 		amount: 1,
 		price: "0.000002",
 		currency: {

@@ -6,6 +6,27 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { RequestCurrency } from "../common/domain"
 
+/**
+ * Fetch balance of fungible or non-fungible tokens
+ * @param address the address for which you need to receive the balance
+ * @param currency token, the balance of which needs to be received
+ * @example
+ * {
+ *   address: "ETHEREUM:0x....",
+ *   currency: {
+ *			"@type": "ETH";
+ *			blockchain?: Blockchain;
+ * }
+ *
+ * {
+ *   address: "ETHEREUM:0x....",
+ *   currency: {
+ *			"@type": "ERC20",
+ *			contract: ContractAddress,
+ * }
+ *
+ * @returns {Promise<BigNumberValue>}
+ */
 export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => Promise<BigNumberValue>
 
 /**
@@ -13,6 +34,7 @@ export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => 
  * @param blockchain Blockchain where performs operation
  * @param isWrap Is wrap or unwrap operation
  * @param value amount of funds to convert
+ * @returns {@link IBlockchainTransaction}
  */
 export type IConvert = (request: ConvertRequest) => Promise<IBlockchainTransaction>
 

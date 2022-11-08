@@ -3,6 +3,102 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.14](https://github.com/rarible/sdk/compare/v0.10.0-beta.13...v0.10.0-beta.14) (2022-11-07)
+
+
+### Bug Fixes
+
+* waiting for ethereum approve transaction ([#375](https://github.com/rarible/sdk/issues/375)) ([a3ddb39](https://github.com/rarible/sdk/commit/a3ddb398973db2758816d88ecba9ea53c1d6303c))
+
+
+### Features
+
+* use api middleware when logs enabled ([#377](https://github.com/rarible/sdk/issues/377)) ([9b66e1f](https://github.com/rarible/sdk/commit/9b66e1ff7b225f32aa490f6af7a30d420c88cc7f))
+
+
+
+
+
+# [0.10.0-beta.13](https://github.com/rarible/sdk/compare/v0.10.0-beta.12...v0.10.0-beta.13) (2022-11-02)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+# [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
+
+
+### Features
+
+* skip cancel imx tx and update eth-sdk ([#372](https://github.com/rarible/sdk/issues/372)) ([6512fda](https://github.com/rarible/sdk/commit/6512fda58c8864de91325d12bb2bd04198fcdb5a))
+
+
+
+## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
+
+
+
+
+
+# [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+# [0.10.0-beta.10](https://github.com/rarible/sdk/compare/v0.9.38...v0.10.0-beta.10) (2022-10-20)
+
+
+
+# [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
+
+
+
+# [0.10.0-beta.8](https://github.com/rarible/sdk/compare/v0.10.0-beta.7...v0.10.0-beta.8) (2022-10-18)
+
+
+
+# [0.10.0-beta.7](https://github.com/rarible/sdk/compare/v0.9.37...v0.10.0-beta.7) (2022-10-17)
+
+
+
+# [0.10.0-beta.6](https://github.com/rarible/sdk/compare/v0.9.36...v0.10.0-beta.6) (2022-10-14)
+
+
+
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+
+### Bug Fixes
+
+* offchain goerli mint ([2087ea1](https://github.com/rarible/sdk/commit/2087ea19edc7a721074d381402d60d0dd9390155))
+
+
+
+# [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.34...v0.10.0-beta.3) (2022-10-06)
+
+
+### Features
+
+* migration guide ([#348](https://github.com/rarible/sdk/issues/348)) ([c911dbd](https://github.com/rarible/sdk/commit/c911dbd09da074abc801e034b703909619988ea1))
+
+
+
+# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.9.32...v0.10.0-beta.2) (2022-10-03)
+
+
+
+# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
+
+
+
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+
 ## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

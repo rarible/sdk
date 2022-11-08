@@ -1,7 +1,9 @@
 import type { RaribleImxSdk } from "@rarible/immutable-sdk/src/domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainImmutableXTransaction } from "@rarible/sdk-transaction"
 import { toAddress, toBigNumber, toOrderId } from "@rarible/types"
-import { OrderStatus } from "@rarible/api-client"
+import type { OrderId } from "@rarible/api-client"
+import { Blockchain, OrderStatus } from "@rarible/api-client"
 import { Action } from "@rarible/action"
 import type { Erc721AssetRequest } from "@rarible/immutable-sdk"
 import type { IApisSdk } from "../../domain"
@@ -9,7 +11,9 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
-import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
+import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import { calcBuyerBaseFee, getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
 
@@ -17,6 +21,25 @@ export class ImxOrderService {
 	constructor(private sdk: RaribleImxSdk, private apis: IApisSdk) {
 		this.sell = this.sell.bind(this)
 		this.buy = this.buy.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
+		this.sellBasic = this.sellBasic.bind(this)
+		this.cancelBasic = this.cancelBasic.bind(this)
+	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		const prepare = await this.buy(request)
+		return prepare.submit(request)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const prepare = await this.buy(request)
+		return prepare.submit(request)
+	}
+
+	async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
+		const prepare = await this.sell()
+		return prepare.submit(request)
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {
@@ -37,7 +60,7 @@ export class ImxOrderService {
 					takeAssetType: getTakeAssetType(request.currency),
 				})
 
-				return toOrderId("IMMUTABLEX:" + res.orderId)
+				return toOrderId(`${Blockchain.IMMUTABLEX}:${res.orderId}`)
 			},
 		})
 
@@ -100,17 +123,13 @@ export class ImxOrderService {
 		}
 	}
 
-	cancel: ICancel = Action.create({
-		id: "send-tx" as const,
-		run: async (request: CancelOrderRequest) => {
+	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+		const [, orderId] = request.orderId.split(":")
 
-			const [, orderId] = request.orderId.split(":")
+		await this.sdk.order.cancel({
+			orderId: orderId,
+		})
 
-			await this.sdk.order.cancel({
-				orderId: orderId,
-			})
-
-			return new BlockchainImmutableXTransaction(undefined)
-		},
-	})
+		return new BlockchainImmutableXTransaction(undefined)
+	}
 }

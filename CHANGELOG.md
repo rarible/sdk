@@ -3,6 +3,174 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.10.0-beta.14](https://github.com/rarible/sdk/compare/v0.10.0-beta.13...v0.10.0-beta.14) (2022-11-07)
+
+
+### Bug Fixes
+
+* disabled middleware ([#376](https://github.com/rarible/sdk/issues/376)) ([4391a91](https://github.com/rarible/sdk/commit/4391a9100190146887d7d547e81dcda3d2f248d6))
+* waiting for ethereum approve transaction ([#375](https://github.com/rarible/sdk/issues/375)) ([a3ddb39](https://github.com/rarible/sdk/commit/a3ddb398973db2758816d88ecba9ea53c1d6303c))
+
+
+### Features
+
+* use api middleware when logs enabled ([#377](https://github.com/rarible/sdk/issues/377)) ([9b66e1f](https://github.com/rarible/sdk/commit/9b66e1ff7b225f32aa490f6af7a30d420c88cc7f))
+
+
+
+
+
+# [0.10.0-beta.13](https://github.com/rarible/sdk/compare/v0.10.0-beta.12...v0.10.0-beta.13) (2022-11-02)
+
+
+### Bug Fixes
+
+* api key in context ([#374](https://github.com/rarible/sdk/issues/374)) ([a79ded6](https://github.com/rarible/sdk/commit/a79ded6bcfca36cd3f73fa9c9bec55913cccf92a))
+* prepared method logging ([#373](https://github.com/rarible/sdk/issues/373)) ([5e3b227](https://github.com/rarible/sdk/commit/5e3b22755348b85337579b369023bdcde2510382))
+
+
+
+
+
+# [0.10.0-beta.12](https://github.com/rarible/sdk/compare/v0.10.0-beta.11...v0.10.0-beta.12) (2022-10-31)
+
+
+### Bug Fixes
+
+* cancel imx order ([#369](https://github.com/rarible/sdk/issues/369)) ([963924b](https://github.com/rarible/sdk/commit/963924be551d5a854b7d9ee2209effa31472ebe0))
+
+
+### Features
+
+* check logging sellupdate/bidupdate ([#367](https://github.com/rarible/sdk/issues/367)) ([9a9c121](https://github.com/rarible/sdk/commit/9a9c121441eaa1f730e0d532222c9f6df42d5920))
+* logging context ([#366](https://github.com/rarible/sdk/issues/366)) ([7bb067b](https://github.com/rarible/sdk/commit/7bb067b02ba61b4f1c284ea3793f465259189c6e))
+* skip cancel imx tx and update eth-sdk ([#372](https://github.com/rarible/sdk/issues/372)) ([6512fda](https://github.com/rarible/sdk/commit/6512fda58c8864de91325d12bb2bd04198fcdb5a))
+* tezos sdk update ([030edb5](https://github.com/rarible/sdk/commit/030edb539492dbd188eb665d8d14602cd69a7edc))
+
+
+
+## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
+
+
+### Features
+
+* ethereum wrapper update ([#368](https://github.com/rarible/sdk/issues/368)) ([ed54a82](https://github.com/rarible/sdk/commit/ed54a82843063a53adc4f6d553abb3f602b56b7a))
+
+
+
+## [0.9.39](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.9.39) (2022-10-20)
+
+
+
+
+
+# [0.10.0-beta.11](https://github.com/rarible/sdk/compare/v0.10.0-beta.10...v0.10.0-beta.11) (2022-10-25)
+
+
+### Features
+
+* update wrapper ([856de99](https://github.com/rarible/sdk/commit/856de9958ef9081d547060e5cf951d48c430ee07))
+
+
+
+
+
+# [0.10.0-beta.10](https://github.com/rarible/sdk/compare/v0.9.38...v0.10.0-beta.10) (2022-10-20)
+
+
+### Bug Fixes
+
+* add royalties fix ([#363](https://github.com/rarible/sdk/issues/363)) ([a121459](https://github.com/rarible/sdk/commit/a121459114fc783229e7ba7e8cc9d8031fa4ac12))
+
+
+
+# [0.10.0-beta.9](https://github.com/rarible/sdk/compare/v0.10.0-beta.8...v0.10.0-beta.9) (2022-10-20)
+
+
+### Features
+
+* ethereum wrappers contracts for mainnet and goerli ([2d9dc18](https://github.com/rarible/sdk/commit/2d9dc18072cea0c07425cf93b4c024d184451cad))
+
+
+
+# [0.10.0-beta.8](https://github.com/rarible/sdk/compare/v0.10.0-beta.7...v0.10.0-beta.8) (2022-10-18)
+
+
+### Bug Fixes
+
+* imx wallet getter ([#361](https://github.com/rarible/sdk/issues/361)) ([f37e340](https://github.com/rarible/sdk/commit/f37e3408502cb8ec9564945f405de8e41170251d))
+
+
+
+# [0.10.0-beta.7](https://github.com/rarible/sdk/compare/v0.9.37...v0.10.0-beta.7) (2022-10-17)
+
+
+### Bug Fixes
+
+* can't create polygon collection ([#360](https://github.com/rarible/sdk/issues/360)) ([d8cf0b1](https://github.com/rarible/sdk/commit/d8cf0b11304a66a3aff9bc6b0dae72d43ac89915))
+
+
+
+# [0.10.0-beta.6](https://github.com/rarible/sdk/compare/v0.9.36...v0.10.0-beta.6) (2022-10-14)
+
+
+
+# [0.10.0-beta.5](https://github.com/rarible/sdk/compare/v0.10.0-beta.3...v0.10.0-beta.5) (2022-10-12)
+
+
+### Bug Fixes
+
+* batchbuy for simplify ([#354](https://github.com/rarible/sdk/issues/354)) ([3a3b675](https://github.com/rarible/sdk/commit/3a3b675808587c8ce224b992681e37481dd8f249))
+* offchain goerli mint ([2087ea1](https://github.com/rarible/sdk/commit/2087ea19edc7a721074d381402d60d0dd9390155))
+
+
+
+# [0.10.0-beta.3](https://github.com/rarible/sdk/compare/v0.9.34...v0.10.0-beta.3) (2022-10-06)
+
+
+### Features
+
+* migration guide ([#348](https://github.com/rarible/sdk/issues/348)) ([c911dbd](https://github.com/rarible/sdk/commit/c911dbd09da074abc801e034b703909619988ea1))
+
+
+
+# [0.10.0-beta.2](https://github.com/rarible/sdk/compare/v0.9.32...v0.10.0-beta.2) (2022-10-03)
+
+
+
+# [0.10.0-beta.1](https://github.com/rarible/sdk/compare/v0.9.31...v0.10.0-beta.1) (2022-09-23)
+
+
+# [0.10.0-beta.0](https://github.com/rarible/sdk/compare/v0.9.23...v0.10.0-beta.0) (2022-08-23)
+
+* The following methods was moved: <br/>
+  sdk.nft.mint(...) to sdk.nft.mint.prepare(...) <br/>
+  sdk.nft.transfer(...) to sdk.nft.transfer.prepare(...) <br/>
+  sdk.nft.burn(...) to sdk.nft.burn.prepare(...) <br/>
+  sdk.order.sell(...) to sdk.order.sell.prepare(...) <br/>
+  sdk.order.sellUpdate(...) to sdk.order.sellUpdate.prepare(...) <br/>
+  sdk.order.buy(...) to sdk.order.buy.prepare(...) <br/>
+  sdk.order.bid(...) to sdk.order.bid.prepare(...) <br/>
+  sdk.order.acceptBid(...) to sdk.order.acceptBid.prepare(...) <br/>
+  sdk.order.bidUpdate(...) to sdk.order.bidUpdate.prepare(...) <br/>
+* The following methods are available with simplified call signature and it's easier to use: <br/>
+  sdk.nft.mint(...) <br/>
+  sdk.nft.transfer(...) <br/>
+  sdk.nft.burn(...) <br/>
+  sdk.order.sell(...) <br/>
+  sdk.order.sellUpdate(...) <br/>
+  sdk.order.buy(...) <br/>
+  sdk.order.bid(...) <br/>
+  sdk.order.acceptBid(...) <br/>
+  sdk.order.bidUpdate(...) <br/>
+* The following methods are not "Action" instances (but call signature still the same): <br/>
+  sdk.order.cancel(...) <br/>
+  sdk.nft.createCollection(...) <br/>
+* createRaribleSdk can accept Web3, Ethers, SolanaKeypairWallet, Flow Fcl, Tezos wallets without creating wallet wrappers like:
+  EthereumWallet, SolanaWallet, TezosWallet, FlowWallet, ImmutableXWallet
+
+
+
 ## [0.9.40](https://github.com/rarible/sdk/compare/v0.9.39...v0.9.40) (2022-10-25)
 
 
@@ -20,7 +188,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Bug Fixes
 
 * add royalties fix ([#363](https://github.com/rarible/sdk/issues/363)) ([a121459](https://github.com/rarible/sdk/commit/a121459114fc783229e7ba7e8cc9d8031fa4ac12))
-
 
 
 

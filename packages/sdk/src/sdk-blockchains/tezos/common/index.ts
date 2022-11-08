@@ -3,6 +3,7 @@ import type {
 	CollectionId,
 	ItemId,
 	Order,
+	Royalty,
 	TezosFTAssetType,
 	TezosMTAssetType,
 	TezosNFTAssetType,
@@ -312,6 +313,14 @@ export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[
 	return convertUnionParts(payouts)
 }
 
+export function getRoyalties(royalties: Royalty[] | undefined): { [key: string]: BigNumber } {
+	return royalties?.reduce((acc, royalty) => {
+		const account = getTezosAddress(royalty.account)
+		acc[account] = new BigNumber(royalty.value)
+		return acc
+	}, {} as { [key: string]: BigNumber }) || {}
+}
+
 export function getSupportedCurrencies(): CurrencyType[] {
 	return [
 		{ blockchain: Blockchain.TEZOS, type: "NATIVE" },
@@ -332,9 +341,9 @@ export function convertOrderToOrderForm(order: Order): OrderForm {
 	}
 	return {
 		type: "RARIBLE_V2",
-		maker: order.maker,
+		maker: convertUnionAddress(order.maker),
 		maker_edpk: order.data.makerEdpk!,
-		taker: order.taker,
+		taker: order.taker !== undefined ? convertUnionAddress(order.taker): undefined,
 		taker_edpk: order.data.takerEdpk,
 		make: {
 			asset_type: getTezosAssetType(order.make.type),
@@ -570,6 +579,18 @@ export function isXtzAssetType(assetType: AssetType): assetType is TezosXTZAsset
 }
 export function isFTAssetType(assetType: AssetType): assetType is TezosFTAssetType {
 	return assetType["@type"] === "TEZOS_FT"
+}
+
+export function getRequestAmount(
+	orderAmount: number | undefined, collectionType: CollectionType.TEZOS_NFT | CollectionType.TEZOS_MT
+): BigNumber | undefined {
+	if (collectionType === CollectionType.TEZOS_MT) {
+		if (orderAmount === undefined) {
+			throw new Error("You should set amount of asset")
+		}
+		return new BigNumber((orderAmount).toFixed())
+	}
+	return undefined
 }
 
 export async function getCollectionType(

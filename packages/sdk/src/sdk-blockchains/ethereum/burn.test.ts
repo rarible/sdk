@@ -4,15 +4,16 @@ import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
+import { awaitItem } from "../../common/test/await-item"
+import { awaitItemSupply } from "../../common/test/await-item-supply"
+import { awaitDeletedItem } from "../../common/test/await-deleted-item"
 import { initProviders } from "./test/init-providers"
-import { awaitItem } from "./test/await-item"
-import { awaitItemSupply } from "./test/await-item-supply"
 import { convertEthereumContractAddress } from "./common"
-import { awaitDeletedItem } from "./test/await-deleted-item"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
-describe.skip("burn", () => {
-	const { web31, wallet1 } = initProviders()
+describe("burn", () => {
+	const { web31, wallet1 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
 	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
@@ -26,7 +27,7 @@ describe.skip("burn", () => {
 		const senderRaw = wallet1.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -43,7 +44,7 @@ describe.skip("burn", () => {
 
 		await awaitItem(sdk, mintResult.itemId)
 
-		const burn = await sdk.nft.burn({ itemId: mintResult.itemId })
+		const burn = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
 		const tx = await burn.submit()
 
 		if (tx) {
@@ -60,7 +61,7 @@ describe.skip("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: `ETHEREUM:${contractErc1155}`,
 		})
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -77,7 +78,7 @@ describe.skip("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
-		const burn = await sdk.nft.burn({
+		const burn = await sdk.nft.burn.prepare({
 			itemId: mintResult.itemId,
 		})
 		const tx = await burn.submit({ amount: 5 })
@@ -95,7 +96,7 @@ describe.skip("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(e2eErc721V3ContractAddress, Blockchain.ETHEREUM),
 		})
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -109,7 +110,7 @@ describe.skip("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("1"))
 
-		const burn = await sdk.nft.burn({ itemId: mintResult.itemId })
+		const burn = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
 		await burn.submit({
 			creators: [{
 				account: sender,
@@ -127,7 +128,7 @@ describe.skip("burn", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
 		})
-		const mintAction = await sdk.nft.mint({ collection })
+		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -141,7 +142,7 @@ describe.skip("burn", () => {
 
 		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
 
-		const burn = await sdk.nft.burn({
+		const burn = await sdk.nft.burn.prepare({
 			itemId: mintResult.itemId,
 		})
 		await burn.submit({
@@ -151,6 +152,34 @@ describe.skip("burn", () => {
 			}],
 		})
 
+		await awaitDeletedItem(sdk,  mintResult.itemId)
+	})
+
+	test("burn erc1155 lazy item with basic function", async () => {
+		const senderRaw = wallet1.getAddressString()
+		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
+
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
+		})
+		const mintResult = await sdk.nft.mint({
+			collection,
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: sender,
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: true,
+			supply: 10,
+		})
+
+		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("10"))
+
+		await sdk.nft.burn({
+			itemId: mintResult.itemId,
+			amount: 10,
+		})
 		await awaitDeletedItem(sdk,  mintResult.itemId)
 	})
 })

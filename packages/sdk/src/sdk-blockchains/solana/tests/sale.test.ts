@@ -15,7 +15,7 @@ describe("Solana sell", () => {
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const sell = await sdk.order.sell({ itemId })
+			const sell = await sdk.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				currency: {
@@ -26,11 +26,38 @@ describe("Solana sell", () => {
 		})
 
 		const tx = await retry(10, 4000, async () => {
-			const buy = await buyerSdk.order.buy({
+			const buy = await buyerSdk.order.buy.prepare({
 				orderId,
 			})
 
 			return buy.submit({
+				amount: 1,
+				itemId,
+			})
+		})
+
+		expect(tx.hash()).toBeTruthy()
+		await tx.wait()
+	})
+
+	test("Should sell NFT item with basic function", async () => {
+		const item = await mintToken(sdk)
+		const itemId = item.id
+
+		const orderId = await retry(10, 4000, async () => {
+			return sdk.order.sell({
+				itemId,
+				amount: 1,
+				currency: {
+					"@type": "SOLANA_SOL",
+				},
+				price: toBigNumber("0.001"),
+			})
+		})
+
+		const tx = await retry(10, 4000, async () => {
+			return buyerSdk.order.buy({
+				orderId,
 				amount: 1,
 				itemId,
 			})

@@ -2,8 +2,7 @@ import * as web3 from "@solana/web3.js"
 import * as nacl from "tweetnacl"
 import base58 from "bs58"
 import { isPrivateKey } from "@rarible/solana-common"
-import type { IWalletSigner } from "../domain"
-import type { DisplayEncoding } from "../domain"
+import type { DisplayEncoding, IWalletSigner } from "../domain"
 
 /**
  * Abstraction over solana web3.Keypair
@@ -48,7 +47,7 @@ export class SolanaKeypairWallet implements IWalletSigner {
 
 	/**
 	 * Instantiate new SolanaWallet with provided keypair or from secret key
-	 * @param keyPair
+	 * @param keyPair - web3.Keypair | Uint8Array | string
 	 */
 	static createFrom(keyPair: web3.Keypair | Uint8Array | string): SolanaKeypairWallet {
 		if (isPrivateKey(keyPair)) {

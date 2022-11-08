@@ -1,12 +1,12 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { CreateCollectionRequest } from "@rarible/sdk/src/types/nft/deploy/domain"
 import { toBigNumber } from "@rarible/types"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getSolanaWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -24,7 +24,7 @@ function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	deployRequest: CreateCollectionRequest,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
 	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
@@ -89,7 +89,7 @@ describe.each(suites())("$blockchain mint => two bid => acceptBid", (suite) => {
 		const bidOrder1 = await bid(buyerSdk, buyerWallet, { itemId: nft1.id }, bidRequest)
 		const bidOrder2 = await bid(buyerSdk, buyerWallet, { itemId: nft2.id }, bidRequest)
 
-		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder1.id }, { amount: bidRequest.amount })
+		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder1.id }, { amount: bidRequest.amount || 1 })
 
 		await awaitForOwnershipValue(buyerSdk, nft1.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 

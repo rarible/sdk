@@ -85,7 +85,7 @@ describe.skip.each(suites())("$blockchain mint => sell => buy", (suite) => {
 			[ActivityType.LIST])
 
 		const buyAmount = orderRequest.amount
-		await buy(buyerSdk, buyerWallet, nft.id, { orderId: sellOrder.id }, { amount: buyAmount })
+		await buy(buyerSdk, buyerWallet, nft.id, { orderId: sellOrder.id }, { amount: buyAmount || 1 })
 
 		await awaitOrderStock(sellerSdk, sellOrder.id, toBigNumber("0"))
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(buyAmount)))

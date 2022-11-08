@@ -1,10 +1,12 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toWord } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { OrderId } from "@rarible/api-client"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -28,6 +30,8 @@ export class EthereumSell {
 		this.blockchain = getEVMBlockchain(network)
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
+		this.sellBasic = this.sellBasic.bind(this)
+		this.sellUpdateBasic = this.sellUpdateBasic.bind(this)
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {
@@ -38,6 +42,16 @@ export class EthereumSell {
 		}
 	}
 
+	async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
+		const prepare = await this.sell()
+		return prepare.submit(request)
+	}
+
+	async sellUpdateBasic(request: SellUpdateSimplifiedRequest): Promise<OrderId> {
+		const prepare = await this.update(request)
+		return prepare.submit(request)
+	}
+
 	private async sellDataV2(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
@@ -46,13 +60,15 @@ export class EthereumSell {
 					? Math.floor(sellFormRequest.expirationDate.getTime() / 1000)
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
+
+				console.log("before")
 				return {
 					type: "DATA_V2",
 					makeAssetType: {
 						tokenId: tokenId,
 						contract: toAddress(contract),
 					},
-					amount: sellFormRequest.amount,
+					amount: sellFormRequest.amount ?? 1,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,
 					payouts: common.toEthereumParts(sellFormRequest.payouts),
@@ -60,7 +76,10 @@ export class EthereumSell {
 					end: expirationDate,
 				}
 			})
-			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.after(order => {
+				console.log("after")
+				return common.convertEthereumOrderHash(order.hash, this.blockchain)
+			})
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
@@ -98,7 +117,7 @@ export class EthereumSell {
 					originFeeSecond: originFees[1],
 					maxFeesBasePoint: sellFormRequest.maxFeesBasePoint ?? 0,
 					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
-					amount: sellFormRequest.amount,
+					amount: sellFormRequest.amount ?? 1,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,
 					end: expirationDate,

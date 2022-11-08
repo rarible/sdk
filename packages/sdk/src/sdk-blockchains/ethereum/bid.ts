@@ -3,7 +3,7 @@ import type { Address, ContractAddress } from "@rarible/types"
 import { toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
-import type { AssetType } from "@rarible/api-client"
+import type { AssetType, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import BigNumber from "bignumber.js"
@@ -29,6 +29,8 @@ import type {
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
+import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
+import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -37,7 +39,7 @@ import {
 	convertToEthereumAddress,
 	convertToEthereumAssetType,
 	getEthereumItemId,
-	getEVMBlockchain,
+	getEVMBlockchain, getOrderAmount,
 	getOrderFeesSum,
 	getOriginFeeSupport,
 	getPayoutsSupport,
@@ -62,6 +64,8 @@ export class EthereumBid {
 		this.update = this.update.bind(this)
 		this.getConvertableValue = this.getConvertableValue.bind(this)
 		this.convertCurrency = this.convertCurrency.bind(this)
+		this.bidBasic = this.bidBasic.bind(this)
+		this.bidUpdateBasic = this.bidUpdateBasic.bind(this)
 	}
 
 	convertAssetType(assetType: EthereumAssetType): ApiClient.AssetType {
@@ -152,6 +156,16 @@ export class EthereumBid {
 		return toContractAddress(wethUnionContract)
 	}
 
+	async bidBasic(request: BidSimplifiedRequest): Promise<OrderId> {
+		const prepare = await this.bid(request)
+		return prepare.submit(request)
+	}
+
+	async bidUpdateBasic(request: BidUpdateSimplifiedRequest): Promise<OrderId> {
+		const updateResponse = await this.update(request)
+		return updateResponse.submit(request)
+	}
+
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
 		if (this.config?.useDataV3) {
 			return this.bidDataV3(prepare)
@@ -198,7 +212,7 @@ export class EthereumBid {
 					type: "DATA_V2",
 					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					takeAssetType: takeAssetType,
-					amount: request.amount,
+					amount: getOrderAmount(request.amount, collection),
 					priceDecimal: request.price,
 					payouts: common.toEthereumParts(request.payouts),
 					originFees: common.toEthereumParts(request.originFees),
@@ -220,7 +234,7 @@ export class EthereumBid {
 					const value = await this.getConvertableValueCommon(
 						currency,
 						request.price,
-						request.amount,
+						getOrderAmount(request.amount, collection),
 						originFeesSum
 					)
 					await this.convertCurrency(value)
@@ -287,7 +301,7 @@ export class EthereumBid {
 					type: "DATA_V3_BUY",
 					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					takeAssetType: takeAssetType,
-					amount: request.amount,
+					amount: getOrderAmount(request.amount, collection),
 					priceDecimal: request.price,
 					payout: payouts[0],
 					originFeeFirst: originFees[0],
@@ -311,7 +325,7 @@ export class EthereumBid {
 					const value = await this.getConvertableValueCommon(
 						currency,
 						request.price,
-						request.amount,
+						getOrderAmount(request.amount, collection),
 						originFeesSum
 					)
 					await this.convertCurrency(value)

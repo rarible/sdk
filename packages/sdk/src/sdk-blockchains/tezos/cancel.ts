@@ -11,7 +11,7 @@ import type { Order, TezosMTAssetType, TezosNFTAssetType } from "@rarible/api-cl
 // eslint-disable-next-line camelcase
 import { get_legacy_orders, order_of_json } from "@rarible/tezos-sdk"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
-import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
 import {
@@ -28,9 +28,11 @@ export class TezosCancel {
 		private provider: MaybeProvider<TezosProvider>,
 		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
-	) {}
+	) {
+		this.cancelBasic = this.cancelBasic.bind(this)
+	}
 
-	cancel: ICancel = Action.create({
+	cancel: ICancelAction = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
 			await checkChainId(this.provider)
@@ -85,5 +87,9 @@ export class TezosCancel {
 			throw new Error("Cancel transaction has not been returned")
 		}
 		return new BlockchainTezosTransaction(canceledOrder, this.network)
+	}
+
+	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+		return this.cancel(request)
 	}
 }

@@ -17,7 +17,7 @@ export async function sell(
 ): Promise<Order> {
 	Logger.log("sell, prepare_order_request=", prepareOrderRequest)
 	// Get sell info
-	const sellPrepare = await sdk.order.sell(prepareOrderRequest)
+	const sellPrepare = await sdk.order.sell.prepare(prepareOrderRequest)
 	//expect(parseInt(sellPrepare.maxAmount)).toBeGreaterThanOrEqual(orderRequest.amount)
 
 	Logger.log("sell, order_request=", orderRequest)
@@ -25,6 +25,6 @@ export async function sell(
 	const orderId = await sellPrepare.submit(orderRequest)
 	Logger.log("order_id=", orderId)
 	// Check order stock to be equal sell amount
-	const nextStock = toBigNumber(orderRequest.amount.toString())
+	const nextStock = toBigNumber((orderRequest.amount || 1).toString())
 	return await awaitOrderStock(sdk, orderId, nextStock)
 }

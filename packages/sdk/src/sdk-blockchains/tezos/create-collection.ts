@@ -4,8 +4,10 @@ import { Action } from "@rarible/action"
 import { deploy_mt_private, deploy_mt_public, deploy_nft_private, deploy_nft_public } from "@rarible/tezos-sdk"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import { Blockchain } from "@rarible/api-client"
-import type { CreateCollectionRequest, ICreateCollection } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequest, ICreateCollectionAction } from "../../types/nft/deploy/domain"
 import type { TezosCreateCollectionTokenAsset } from "../../types/nft/deploy/domain"
+import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { MaybeProvider } from "./common"
 import { checkChainId, convertTezosToContractAddress, getRequiredProvider } from "./common"
 
@@ -13,7 +15,9 @@ export class TezosCreateCollection {
 	constructor(
 		private provider: MaybeProvider<TezosProvider>,
 		private network: TezosNetwork,
-	) {}
+	) {
+		this.createCollectionSimplified = this.createCollectionSimplified.bind(this)
+	}
 
 	private getMetadataJSON(asset: TezosCreateCollectionTokenAsset): string {
 		const json: Record<string, any> = {
@@ -65,7 +69,7 @@ export class TezosCreateCollection {
 		}
 	}
 
-	createCollection: ICreateCollection = Action.create({
+	createCollection: ICreateCollectionAction = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CreateCollectionRequest) => {
 			if (request.blockchain !== Blockchain.TEZOS) {
@@ -80,4 +84,22 @@ export class TezosCreateCollection {
 			}
 		},
 	})
+
+	async createCollectionSimplified(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+		if (request.blockchain !== Blockchain.TEZOS) {
+			throw new Error("Wrong blockchain")
+		}
+		const { isPublic, type, ...commonRequest } = request
+		const operationResult = await this.getDeployOperation({
+			assetType: type,
+			arguments: {
+				...commonRequest,
+				isUserToken: !isPublic,
+			},
+		})
+		return {
+			tx: new BlockchainTezosTransaction(operationResult, this.network),
+			address: convertTezosToContractAddress(operationResult.contract),
+		}
+	}
 }

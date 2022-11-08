@@ -11,6 +11,8 @@ import { nonImplementedAction, notImplemented } from "../../common/not-implement
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
+import { MethodWithPrepare } from "../../types/common"
+import type { IMint } from "../../types/nft/mint"
 import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
@@ -41,32 +43,34 @@ export function createFlowSdk(
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
 	const bidService = new FlowBid(sdk)
+	const burnService = new FlowBurn(sdk, blockchainNetwork)
+	const transferService = new FlowTransfer(sdk, blockchainNetwork)
+	const fillService = new FlowBuy(sdk, apis, blockchainNetwork)
+	const cancelService = new FlowCancel(sdk, apis, blockchainNetwork)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
 
 	return {
-
 		nft: {
-			mint: mintService.prepare,
-			burn: new FlowBurn(sdk, blockchainNetwork).burn,
-			transfer: new FlowTransfer(sdk, blockchainNetwork).transfer,
+			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
+			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
+			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: () => Promise.resolve(undefined),
-			deploy: nonImplementedAction,
-			createCollection: nonImplementedAction,
+			createCollection: notImplemented,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			sell: sellService.sell,
-			sellUpdate: sellService.update,
-			fill: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			buy: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			batchBuy: nonImplementedAction,
-			acceptBid: new FlowBuy(sdk, apis, blockchainNetwork).buy,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
-			cancel: new FlowCancel(sdk, apis, blockchainNetwork).cancel,
+			fill: { prepare: fillService.buy },
+			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
+			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
+			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.buy),
+			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
+			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: new FlowBalance(sdk, network, wallet).getBalance,

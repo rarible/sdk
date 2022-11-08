@@ -25,6 +25,8 @@ import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { IApisSdk } from "../../domain"
+import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
+import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -35,6 +37,8 @@ import {
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
+	getCollectionType,
+	getRequestAmount,
 	checkChainId,
 } from "./common"
 
@@ -45,6 +49,8 @@ export class TezosSell {
 	) {
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
+		this.sellUpdateBasic = this.sellUpdateBasic.bind(this)
+		this.sellBasic = this.sellBasic.bind(this)
 	}
 
 	async parseTakeAssetType(type: RequestCurrencyAssetType): Promise<XTZAssetType | FTAssetType> {
@@ -90,6 +96,15 @@ export class TezosSell {
 		}
 	}
 
+	async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
+		return this.sellV2(request)
+	}
+
+	async sellUpdateBasic(request: SellUpdateSimplifiedRequest): Promise<OrderId> {
+		const prepareResponse = await this.update({ orderId: request.orderId })
+		return prepareResponse.submit({ price: request.price })
+	}
+
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
 		await checkChainId(this.provider)
 
@@ -101,6 +116,7 @@ export class TezosSell {
 		const expirationDate = request.expirationDate instanceof Date
 			? Math.floor(request.expirationDate.getTime() / 1000)
 			: undefined
+		const collectionType = await getCollectionType(this.provider, contract)
 
 		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
 		const tezosRequest: OrderFormV2 = {
@@ -111,7 +127,7 @@ export class TezosSell {
 			s_sale_asset_token_id: asset.asset_token_id,
 			s_sale: {
 				sale_amount: new BigNumber(request.price),
-				sale_asset_qty: new BigNumber(request.amount),
+				sale_asset_qty: getRequestAmount(request.amount, collectionType) || new BigNumber(1),
 				sale_max_fees_base_boint: 10000,
 				sale_end: expirationDate,
 				sale_start: undefined,

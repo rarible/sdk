@@ -2,18 +2,18 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress } from "@rarible/types"
+import { toAddress, toCollectionId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { LogsLevel } from "../../domain"
+import { awaitItem } from "../../common/test/await-item"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
-import { awaitItem } from "./test/await-item"
-import { providerDevelopmentSettings } from "./test/common"
+import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
 
 describe("mint", () => {
-	const { provider, wallet } = createE2eProvider("0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9", providerDevelopmentSettings)
+	const { provider, wallet } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)
@@ -21,6 +21,37 @@ describe("mint", () => {
 
 	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
 	const erc1155Address = toAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a")
+
+	test("should mint ERC721 token with simplified function", async () => {
+		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
+
+		const result = await sdk.nft.mint({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			collectionId: toCollectionId(contract),
+		})
+
+		expect(result.type).toBe(MintType.ON_CHAIN)
+		const transaction = await result.transaction.wait()
+		expect(transaction.blockchain).toEqual("ETHEREUM")
+		expect(transaction.hash).toBeTruthy()
+
+		await awaitItem(sdk, result.itemId)
+	})
+
+	test("should lazy mint ERC721 token with simplified function", async () => {
+		const contract = convertEthereumContractAddress(erc721Address, Blockchain.ETHEREUM)
+
+		const result = await sdk.nft.mint({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			collectionId: toCollectionId(contract),
+			lazyMint: true,
+		})
+
+		expect(result.type).toBe(MintType.OFF_CHAIN)
+		expect(result.itemId).toBeTruthy()
+
+		await awaitItem(sdk, result.itemId)
+	})
 
 	test("should mint ERC721 token", async () => {
 		const senderRaw = wallet.getAddressString()
@@ -33,7 +64,7 @@ describe("mint", () => {
 			collection: contract,
 			minter: sender,
 		})
-		const action = await sdk.nft.mint({
+		const action = await sdk.nft.mint.prepare({
 			collection,
 			tokenId: tokenId,
 		})
@@ -67,7 +98,7 @@ describe("mint", () => {
 		const collection = await sdk.apis.collection.getCollectionById({
 			collection: convertEthereumContractAddress(erc1155Address, Blockchain.ETHEREUM),
 		})
-		const action = await sdk.nft.mint({ collection })
+		const action = await sdk.nft.mint.prepare({ collection })
 
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",

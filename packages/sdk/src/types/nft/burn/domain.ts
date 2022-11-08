@@ -10,7 +10,7 @@ export type PrepareBurnRequest = {
 
 export type BurnRequest = {
 	/**
-   * Number of NFTs to transfer
+   * Number of NFTs to burn
    */
 	amount?: number
 	/**
@@ -19,7 +19,9 @@ export type BurnRequest = {
 	creators?: Creator[]
 } | void
 
-export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, IBlockchainTransaction | void>{
+export type BurnResponse = IBlockchainTransaction | void
+
+export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, BurnResponse>{
 	/**
    * Is supports multiple values
    */
@@ -31,4 +33,10 @@ export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", Bur
 	maxAmount: BigNumber
 }
 
-export type IBurn = (request: PrepareBurnRequest) => Promise<PrepareBurnResponse>
+/**
+ * Burn token
+ * -
+ * @param request
+ * @returns promise of {@link PrepareBurnResponse>}
+ */
+export type IBurnPrepare = (request: PrepareBurnRequest) => Promise<PrepareBurnResponse>

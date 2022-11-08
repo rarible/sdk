@@ -1,4 +1,7 @@
 import { Action } from "@rarible/action"
+import {
+	MethodWithPrepare,
+} from "../../types/common"
 import { toPromise } from "./utils"
 
 const SKIP_MIDDLEWARE = Symbol("SKIP_MIDDLEWARE")
@@ -75,7 +78,7 @@ export class Middlewarer {
 	 * @param callable
 	 * @param meta metadata for new method
 	 */
-	wrap<Fun extends (...args: any[]) => Promise<any>>(
+	wrap<Fun extends (...args: any[]) => Promise<any> | MethodWithPrepare<any, any>>(
 		callable: Fun,
 		meta: { methodName?: string } = {}
 	): ((...args: Parameters<Fun>) => ReturnType<Fun>) | Fun {
@@ -86,17 +89,34 @@ export class Middlewarer {
 		const fnName = meta?.methodName || callable.name || "anonymous"
 
 		if (isAction(callable)) {
-			// @ts-ignore
-			for (let step of callable.steps) {
-				const originRun = step.run
-				step.run = (...args: Parameters<Fun>) => this.call(originRun, ...args)
-				Object.defineProperty(originRun, "name", { value: fnName + "." + step.id, writable: false })
-			}
+			this.wrapAction(callable, fnName)
 			return callable as Fun
+		} else if (isMethodWithPrepare(callable)) {
+			return this.wrapMethodWithPrepare(callable, fnName)
 		} else {
-			Object.defineProperty(callable, "name", { value: fnName, writable: false })
-			return (...args: Parameters<Fun>) => this.call(callable, ...args) as ReturnType<Fun>
+			return this.wrapFunction(callable, fnName)
 		}
+	}
+
+	wrapMethodWithPrepare<T extends MethodWithPrepare<any, any>>(method: T, fnName: string): T {
+		const wrappedMethod = this.wrapFunction(method, fnName)
+		wrappedMethod.prepare = this.wrapFunction(method.prepare, `${fnName}.prepare`)
+		return wrappedMethod
+	}
+
+	wrapFunction<T extends (...args: any) => any>(callable: T, fnName: string): T {
+		Object.defineProperty(callable, "name", { value: fnName, writable: false })
+		return <T>((...args: Parameters<T>) => this.call(callable, ...args))
+	}
+
+	wrapAction<T extends Action<any, any, any>>(action: T, fnName: string): T {
+		// @ts-ignore
+		for (let step of action.steps) {
+			const originRun = step.run
+			step.run = (...args: any) => this.call(originRun, ...args)
+			Object.defineProperty(originRun, "name", { value: fnName + "." + step.id, writable: false })
+		}
+		return action
 	}
 
 	/**
@@ -154,4 +174,10 @@ export class Middlewarer {
 
 function isAction(fn: any): fn is Action<any, any, any> {
 	return fn instanceof Action
+}
+
+function isMethodWithPrepare(
+	fn: any
+): fn is MethodWithPrepare<any, any> {
+	return fn instanceof MethodWithPrepare
 }

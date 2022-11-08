@@ -1,10 +1,10 @@
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
-import { MintType } from "../../types/nft/mint/domain"
+import { MintType } from "../../types/nft/mint/prepare"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
-import { awaitItemSupply } from "../ethereum/test/await-item-supply"
+import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import type { TezosMetadataResponse } from "./common"
 import { getTestContract } from "./test/test-contracts"
@@ -22,7 +22,7 @@ describe.skip("mint test", () => {
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("mint NFT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 
@@ -47,7 +47,7 @@ describe.skip("mint test", () => {
 
 
 	test("mint MT token test", async () => {
-		const mintResponse = await sdk.nft.mint({
+		const mintResponse = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -62,6 +62,25 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
+		await awaitItemSupply(sdk, mintResult.itemId, "12")
+
+	}, 1500000)
+
+	test("mint MT token with basic function", async () => {
+		const mintResult = await sdk.nft.mint({
+			collectionId: toCollectionId(mtContract),
+			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
+			supply: 12,
+			royalties: [{
+				account: toUnionAddress(`TEZOS:${await wallet.provider.address()}`),
+				value: 10000,
+			}],
+			creators: [{
+				account: toUnionAddress("TEZOS:tz1RLtXUYvgv7uTZGJ1ZtPQFg3PZkj4NUHrz"),
+				value: 10000,
+			}],
+		})
+		await mintResult.transaction.wait()
 		await awaitItemSupply(sdk, mintResult.itemId, "12")
 
 	}, 1500000)

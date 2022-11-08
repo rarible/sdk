@@ -1,0 +1,23 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "Raible SDK",
+  "includeVersion": true,
+  "hideLegend": true,
+  "disableSources": true,
+  "entryPointStrategy": "Expand",
+  "entryPoints": [
+    "src/index.ts",
+    "src/domain.ts",
+    "src/types",
+    "src/config/domain.ts",
+    "src/sdk-blockchains/solana/domain.ts",
+    "src/sdk-blockchains/tezos/domain.ts"
+  ],
+  "excludeInternal": true,
+  "excludePrivate": true,
+  "out": "docs",
+  "sort": ["instance-first"],
+  "json": "docs/sdk-api.json",
+  "pretty": true,
+  "hideGenerator": true
+}

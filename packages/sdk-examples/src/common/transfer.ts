@@ -4,10 +4,8 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 export async function transferItem(wallet: BlockchainWallet) {
 	const sdk = createRaribleSdk(wallet, "testnet")
-	const transferAction = await sdk.nft.transfer({
+	const tx = await sdk.nft.transfer({
 		itemId: toItemId("<YOUR_ITEM_ID>"),
-	})
-	const tx = await transferAction.submit({
 		to: toUnionAddress("<ITEM_RECIPIENT>"),
 		amount: 1,
 	})

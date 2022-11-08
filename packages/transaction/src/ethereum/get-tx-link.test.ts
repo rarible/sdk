@@ -12,7 +12,7 @@ describe.each(networks)("get ethereum tx link in %s network", network => {
 			data: "" as any,
 			nonce: 0,
 			wait: () => Promise.resolve(null as any),
-			getEvents: () => Promise.resolve(null as any),
+			getEvents: async () => [],
 		}, network)
 
 		tx.getTxLink()

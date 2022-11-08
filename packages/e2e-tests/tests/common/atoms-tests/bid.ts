@@ -15,12 +15,12 @@ export async function bid(sdk: IRaribleSdk,
 						   prepareOrderRequest: PrepareOrderRequest | { collectionId: CollectionId },
 						   orderRequest: OrderRequest): Promise<Order> {
 	Logger.log("bid, prepare_order_update_request=", prepareOrderRequest)
-	const bidPrepare = await sdk.order.bid(prepareOrderRequest)
+	const bidPrepare = await sdk.order.bid.prepare(prepareOrderRequest)
 
 	Logger.log("bid, order_request=", orderRequest)
 	const orderId = await bidPrepare.submit(orderRequest)
 	Logger.log("order_id=", orderId)
 
-	const makeStock = toBn(orderRequest.price).multipliedBy(orderRequest.amount).toString()
+	const makeStock = toBn(orderRequest.price).multipliedBy(orderRequest.amount || 1).toString()
 	return await awaitOrderStock(sdk, orderId, makeStock)
 }

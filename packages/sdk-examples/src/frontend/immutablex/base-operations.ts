@@ -25,7 +25,7 @@ async function getSdk() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function burn(sdk: IRaribleSdk, itemId: ItemId) {
-	const prepare = await sdk.nft.burn({
+	const prepare = await sdk.nft.burn.prepare({
 		itemId,
 	})
 	return await prepare.submit({
@@ -35,7 +35,7 @@ async function burn(sdk: IRaribleSdk, itemId: ItemId) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function transfer(sdk: IRaribleSdk, itemId: ItemId, receiver: UnionAddress) {
-	const prepare = await sdk.nft.transfer({
+	const prepare = await sdk.nft.transfer.prepare({
 		itemId,
 	})
 	return await prepare.submit({
@@ -45,7 +45,7 @@ async function transfer(sdk: IRaribleSdk, itemId: ItemId, receiver: UnionAddress
 }
 
 async function sell(sdk: IRaribleSdk, itemId: ItemId, price: number): Promise<OrderId> {
-	const prepare = await sdk.order.sell({
+	const prepare = await sdk.order.sell.prepare({
 		itemId,
 	})
 	return await prepare.submit({
@@ -56,7 +56,7 @@ async function sell(sdk: IRaribleSdk, itemId: ItemId, price: number): Promise<Or
 }
 
 async function buy(sdk: IRaribleSdk, orderId: OrderId) {
-	const prepare = await sdk.order.buy({
+	const prepare = await sdk.order.buy.prepare({
 		orderId,
 	})
 	return await prepare.submit({

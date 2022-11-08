@@ -14,68 +14,58 @@ describe.skip("deploy tezos tests", () => {
 	)
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
-	test("deploy public nft", async () => {
+	test("deploy public nft createCollectionStart", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
-			asset: {
-				assetType: "NFT",
-				arguments: {
-					name: "My NFT collection",
-					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-					isUserToken: false,
-				},
-			},
-		})
-		await result.tx.wait()
-		console.log("result", result)
-	})
-
-	test.skip("deploy private nft", async () => {
-		const result = await sdk.nft.createCollection({
-			blockchain: Blockchain.TEZOS,
-			asset: {
-				assetType: "NFT",
-				arguments: {
-					name: "My NFT collection",
-					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-					isUserToken: true,
-				},
-			},
+			type: "NFT",
+			name: "My NFT collection",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: true,
 		})
 
 		await result.tx.wait()
-
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
 		await awaitForCollection(sdk, result.address)
 	})
 
-	test("deploy public mt", async () => {
+	test("deploy private nft createCollectionStart", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
-			asset: {
-				assetType: "MT",
-				arguments: {
-					name: "My NFT collection",
-					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-					isUserToken: false,
-				},
-			},
+			type: "NFT",
+			name: "My NFT collection",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: false,
 		})
 
 		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
+		await awaitForCollection(sdk, result.address)
+	})
+
+	test("deploy public MT createCollectionStart", async () => {
+		const result = await sdk.nft.createCollection({
+			blockchain: Blockchain.TEZOS,
+			type: "MT",
+			name: "My NFT collection",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: true,
+		})
+
+		await result.tx.wait()
+		expect(result.tx).toBeTruthy()
+		expect(result.address).toBeTruthy()
 		await awaitForCollection(sdk, result.address)
 	})
 
 	test.skip("deploy private mt", async () => {
 		const result = await sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
-			asset: {
-				assetType: "MT",
-				arguments: {
-					name: "My NFT collection",
-					homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-					isUserToken: true,
-				},
-			},
+			type: "MT",
+			name: "My NFT collection",
+			homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+			isPublic: false,
 		})
 
 		await result.tx.wait()

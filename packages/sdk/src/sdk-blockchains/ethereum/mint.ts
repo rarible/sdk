@@ -14,13 +14,15 @@ import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/c
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { CollectionMeta } from "@rarible/api-client/build/models/CollectionMeta"
 import type { NftCollectionMeta } from "@rarible/ethereum-api-client/build/models/NftCollectionMeta"
-import type { PrepareMintResponse } from "../../types/nft/mint/domain"
-import { MintType } from "../../types/nft/mint/domain"
+import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
+import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { TokenId } from "../../types/nft/generate-token-id"
 import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
+import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { EVMBlockchain } from "./common"
 import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
 
@@ -34,17 +36,21 @@ export class EthereumMint {
 	) {
 		this.blockchain = getEVMBlockchain(network)
 		this.prepare = this.prepare.bind(this)
+		this.mintBasic = this.mintBasic.bind(this)
 	}
 
 	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
 		if (this.blockchain === Blockchain.POLYGON && request.lazyMint) {
 			throw new Error("Lazy minting on polygon is not supported")
 		}
+		const isLazy = request.lazyMint ?? false
+		const supply = request.supply ?? 1
+
 		if (EthereumSdk.isErc721v3Collection(nftCollection)) {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
-				lazy: request.lazyMint,
+				lazy: isLazy,
 				royalties: this.toPart(request.royalties),
 				creators: this.toPart(request.creators),
 				nftTokenId,
@@ -69,8 +75,8 @@ export class EthereumMint {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
-				supply: request.supply,
-				lazy: request.lazyMint,
+				supply,
+				lazy: isLazy,
 				royalties: this.toPart(request.royalties),
 				creators: this.toPart(request.creators),
 				nftTokenId,
@@ -80,7 +86,7 @@ export class EthereumMint {
 			return this.sdk.nft.mint({
 				collection: nftCollection,
 				uri: request.uri,
-				supply: request.supply,
+				supply,
 				royalties: this.toPart(request.royalties),
 				nftTokenId,
 			})
@@ -151,6 +157,16 @@ export class EthereumMint {
 				},
 			}),
 		}
+	}
+
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+	// eslint-disable-next-line no-dupe-class-members
+	async mintBasic(request: MintSimplifiedRequest) {
+		const prepareResponse = await this.prepare(request)
+		return prepareResponse.submit(request)
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {

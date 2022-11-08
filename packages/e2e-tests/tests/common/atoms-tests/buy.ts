@@ -18,7 +18,7 @@ export async function buy(
 	fillRequest: FillRequest,
 ): Promise<IBlockchainTransaction> {
 	Logger.log("buy, prepare_fill_order_request=", prepareFillOrderRequest)
-	const buyPrepare = await sdk.order.buy(prepareFillOrderRequest)
+	const buyPrepare = await sdk.order.buy.prepare(prepareFillOrderRequest)
 
 	Logger.log("buy, fill_request=", fillRequest)
 

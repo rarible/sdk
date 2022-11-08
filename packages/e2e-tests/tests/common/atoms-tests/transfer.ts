@@ -10,7 +10,7 @@ export async function transfer(sdk: IRaribleSdk,
 													 transferRequest: TransferRequest) {
 	Logger.log("transfer_request=", transferRequest)
 	// Prepare transfer
-	const prepareTransferResponse = await sdk.nft.transfer(prepareTransferRequest)
+	const prepareTransferResponse = await sdk.nft.transfer.prepare(prepareTransferRequest)
 
 	// Submit transfer
 	await prepareTransferResponse.submit(transferRequest)

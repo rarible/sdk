@@ -10,9 +10,9 @@ import { LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
-import {
-	getErrorHandlerMiddleware, NetworkErrorCode,
-} from "../../common/apis"
+import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
+import { MethodWithPrepare } from "../../types/common"
+import type { IMint } from "../../types/nft/mint"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -58,33 +58,35 @@ export function createEthereumSdk(
 	const balanceService = new EthereumBalance(sdk, apis, network)
 	const bidService = new EthereumBid(sdk, wallet, balanceService, network, config)
 	const mintService = new EthereumMint(sdk, apis, network)
-	const fillerService = new EthereumFill(sdk, wallet, network, config)
-	const createCollectionService = new EthereumCreateCollection(sdk, network)
+	const fillService = new EthereumFill(sdk, wallet, network, config)
+	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, network)
+	const transferService = new EthereumTransfer(sdk, network)
+	const burnService = new EthereumBurn(sdk, network)
+	const cancelService = new EthereumCancel(sdk, network)
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
 	return {
 		nft: {
-			transfer: new EthereumTransfer(sdk, network).transfer,
-			mint: mintService.prepare,
-			burn: new EthereumBurn(sdk, network).burn,
+			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
+			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
+			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
 			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
-			deploy: createCollectionService.createCollection,
-			createCollection: createCollectionService.createCollection,
+			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			fill: fillerService.fill,
-			buy: fillerService.buy,
-			batchBuy: fillerService.batchBuy,
-			acceptBid: fillerService.acceptBid,
-			sell: sellService.sell,
-			sellUpdate: sellService.update,
-			bid: bidService.bid,
-			bidUpdate: bidService.update,
-			cancel: new EthereumCancel(sdk, network).cancel,
+			fill: { prepare: fillService.fill },
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
+			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
+			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
+			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
+			cancel: cancelService.cancel,
 		},
 		balances: {
 			getBalance: balanceService.getBalance,
@@ -101,7 +103,7 @@ export function createEthereumSdk(
 		ethereum: {
 			wrapCryptoPunk: cryptopunkService.wrap,
 			unwrapCryptoPunk: cryptopunkService.unwrap,
-			getBatchBuyAmmInfo: fillerService.getBuyAmmInfo,
+			getBatchBuyAmmInfo: fillService.getBuyAmmInfo,
 		},
 	}
 }

@@ -31,7 +31,7 @@ export function AcceptBidPrepareForm({ orderId, disabled, onComplete }: IAcceptB
 					return
 				}
 				try {
-					onComplete(await connection.sdk.order.acceptBid({
+					onComplete(await connection.sdk.order.acceptBid.prepare({
 						orderId: toOrderId(formData.orderId)
 					}))
 					navigate(`/accept-bid/${formData.orderId}`, {})

@@ -2,7 +2,8 @@ import type { Address, UnionAddress, Word } from "@rarible/types"
 import {
 	toAddress,
 	toBigNumber,
-	toBinary, toCollectionId,
+	toBinary,
+	toCollectionId,
 	toContractAddress,
 	toItemId,
 	toOrderId,
@@ -17,12 +18,13 @@ import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
-import type { CurrencyType } from "../../../common/domain"
-import type { RequestCurrencyAssetType } from "../../../common/domain"
-import type { PrepareFillRequest, FillRequest } from "../../../types/order/fill/domain"
+import type { OrderRequest } from "../../../types/order/common"
+import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
+import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import type { UnionPart } from "../../../types/order/common"
 
 export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
@@ -270,6 +272,9 @@ export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain)
 }
 
 export function getEthereumItemId(itemId: ItemId) {
+	if (!itemId) {
+		throw new Error("ItemId has not been specified")
+	}
 	const [domain, contract, tokenId] = itemId.split(":")
 	if (!isEVMBlockchain(domain)) {
 		throw new Error(`Not an ethereum item: ${itemId}`)
@@ -280,6 +285,14 @@ export function getEthereumItemId(itemId: ItemId) {
 		tokenId,
 		domain,
 	}
+}
+
+export function getOrderAmount(orderAmount: OrderRequest["amount"], collection: NftCollection): number {
+	let amount = collection.type === "ERC721" ? 1 : orderAmount
+	if (amount === undefined) {
+		throw new Error("You should set amount of asset")
+	}
+	return amount
 }
 
 export function getOrderId(fillRequest: PrepareFillRequest) {

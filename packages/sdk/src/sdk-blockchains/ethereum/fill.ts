@@ -11,6 +11,7 @@ import type {
 	AmmOrderFillRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
@@ -20,6 +21,7 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { OrderId } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
+import type { Blockchain } from "@rarible/api-client"
 import { Warning } from "@rarible/logger/build"
 import type {
 	BatchFillRequest,
@@ -31,6 +33,7 @@ import type {
 } from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { BuyAmmInfoRequest } from "../../types/balances"
+import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
@@ -62,8 +65,22 @@ export class EthereumFill {
 		this.buy = this.buy.bind(this)
 		this.batchBuy = this.batchBuy.bind(this)
 		this.acceptBid = this.acceptBid.bind(this)
+		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBidBasic = this.acceptBidBasic.bind(this)
+		this.batchBuyBasic = this.batchBuyBasic.bind(this)
 		this.getBuyAmmInfo = this.getBuyAmmInfo.bind(this)
 	}
+
+	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
+		const prepare = await this.buy(request)
+		return prepare.submit(request)
+	}
+
+	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const prepare = await this.acceptBid(request)
+		return prepare.submit(request)
+	}
+
 
 	getFillOrderRequest(order: SimpleOrder, fillRequest: FillRequest): FillOrderRequest {
 		let request: FillOrderRequest
@@ -356,6 +373,7 @@ export class EthereumFill {
 		const submit = this.sdk.order.buyBatch.around(
 			(request: BatchFillRequest) => {
 				return request.map((req) => {
+					console.log("batch around", request)
 					const order = orders[req.orderId]
 					if (!order) {
 						throw new Error(`Order with id ${req.orderId} not precached`)
@@ -466,5 +484,12 @@ export class EthereumFill {
 			hash: request.hash,
 			numNFTs: request.numNFTs,
 		})
+	}
+
+	async batchBuyBasic(
+		request: BatchFillRequest
+	): Promise<IBlockchainTransaction<Blockchain, IBatchBuyTransactionResult>> {
+		const response = await this.batchBuy(request)
+		return response.submit(request)
 	}
 }

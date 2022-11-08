@@ -4,6 +4,8 @@ import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
+import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
+import type { BurnResponse } from "../../types/nft/burn/domain"
 import { parseFlowItemIdFromUnionItemId } from "./common/converters"
 
 export class FlowBurn {
@@ -12,6 +14,7 @@ export class FlowBurn {
 		private network: FlowNetwork,
 	) {
 		this.burn = this.burn.bind(this)
+		this.burnBasic = this.burnBasic.bind(this)
 	}
 
 	async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
@@ -37,4 +40,10 @@ export class FlowBurn {
 			}),
 		}
 	}
+
+	async burnBasic(request: BurnSimplifiedRequest): Promise<BurnResponse> {
+		const response = await this.burn(request)
+		return response.submit(request)
+	}
+
 }

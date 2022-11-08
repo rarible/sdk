@@ -15,16 +15,12 @@ async function deploy() {
 
 		const {address, tx} = await raribleSdk.nft.createCollection({
 			blockchain: Blockchain.POLYGON,
-			asset: {
-				assetType: "ERC721",
-				arguments: {
-					name: "name",
-					symbol: "RARI",
-					baseURI: "https://ipfs.rarible.com",
-					contractURI: "https://ipfs.rarible.com",
-					isUserToken: false,
-				},
-			},
+			type: "ERC721",
+			name: "name",
+			symbol: "RARI",
+			baseURI: "https://ipfs.rarible.com",
+			contractURI: "https://ipfs.rarible.com",
+			isPublic: true,
 		})
 		console.log("address", address)
 		await tx.wait()

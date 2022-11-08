@@ -4,7 +4,10 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
 import { toBigNumber } from "@rarible/types"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
+import type { Order, OrderId } from "@rarible/api-client"
+import type { PublicKey } from "@solana/web3.js"
 import type * as OrderCommon from "../../types/order/common"
 import type {
 	OrderRequest,
@@ -14,7 +17,7 @@ import type {
 } from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
-import type { CancelOrderRequest, ICancel } from "../../types/order/cancel/domain"
+import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type {
 	GetConvertableValueResult,
 	PrepareBidRequest,
@@ -22,6 +25,10 @@ import type {
 	PrepareBidUpdateResponse,
 } from "../../types/order/bid/domain"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
+import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
+import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
+import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
+import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
@@ -39,34 +46,22 @@ export class SolanaOrder {
 		this.bid = this.bid.bind(this)
 		this.sellUpdate = this.sellUpdate.bind(this)
 		this.bidUpdate = this.bidUpdate.bind(this)
+		this.sellBasic = this.sellBasic.bind(this)
+		this.sellUpdateBasic = this.sellUpdateBasic.bind(this)
+		this.bidBasic = this.bidBasic.bind(this)
+		this.cancelBasic = this.cancelBasic.bind(this)
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
-
 		const auctionHouse = getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
 
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
-				const mint = extractPublicKey(request.itemId)
-
-				await (await this.sdk.order.sell({
-					auctionHouse: auctionHouse,
-					signer: this.wallet!.provider,
-					mint: mint,
-					price: new BigNumber(request.price).multipliedBy(request.amount),
-					tokensAmount: request.amount,
-				})).submit("processed")
-
-				return getOrderId(
-					"SELL",
-					this.wallet!.provider.publicKey.toString(),
-					mint.toString(),
-					auctionHouse.toString()
-				)
+				return this.sellCommon(request, auctionHouse)
 			},
 		})
 
@@ -81,34 +76,42 @@ export class SolanaOrder {
 		}
 	}
 
+	async sellCommon(request: OrderCommon.OrderInternalRequest, auctionHouse: PublicKey) {
+		const mint = extractPublicKey(request.itemId)
+		const amount = request.amount !== undefined ? request.amount: 1
+
+		await (await this.sdk.order.sell({
+			auctionHouse: auctionHouse,
+			signer: this.wallet!.provider,
+			mint: mint,
+			price: new BigNumber(request.price).multipliedBy(amount),
+			tokensAmount: amount,
+		})).submit("processed")
+
+		return getOrderId(
+			"SELL",
+			this.wallet!.provider.publicKey.toString(),
+			mint.toString(),
+			auctionHouse.toString()
+		)
+	}
+
+	async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
+		const response = await this.sell()
+		return response.submit(request)
+	}
+
 	async sellUpdate(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
 		const order = await getPreparedOrder(prepareRequest, this.apis)
-		const amount = getTokensAmount(order)
 		const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
 
 		const updateAction = Action.create({
 			id: "send-tx" as const,
 			run: async (updateRequest: OrderUpdateRequest) => {
-				const mint = getMintId(order)
-
-				await (await this.sdk.order.sell({
-					auctionHouse: auctionHouse,
-					signer: this.wallet!.provider,
-					mint: mint,
-					price: new BigNumber(updateRequest.price).multipliedBy(amount),
-					tokensAmount: amount,
-				})).submit("processed")
-
-
-				return getOrderId(
-					"SELL",
-					this.wallet!.provider.publicKey.toString(),
-					mint.toString(),
-					auctionHouse.toString()
-				)
+				return this.sellUpdateCommon(updateRequest, order)
 			},
 		})
 
@@ -122,6 +125,36 @@ export class SolanaOrder {
 		}
 	}
 
+	async sellUpdateCommon(updateRequest: OrderUpdateRequest, order: Order) {
+		const amount = getTokensAmount(order)
+		const mint = getMintId(order)
+		const auctionHouse = extractPublicKey(getOrderData(order).auctionHouse!)
+
+		await (await this.sdk.order.sell({
+			auctionHouse: auctionHouse,
+			signer: this.wallet!.provider,
+			mint: mint,
+			price: new BigNumber(updateRequest.price).multipliedBy(amount),
+			tokensAmount: amount,
+		})).submit("processed")
+
+
+		return getOrderId(
+			"SELL",
+			this.wallet!.provider.publicKey.toString(),
+			mint.toString(),
+			auctionHouse.toString()
+		)
+	}
+
+	async sellUpdateBasic(request: SellUpdateSimplifiedRequest): Promise<OrderId> {
+		if (!this.wallet) {
+			throw new Error("Solana wallet not provided")
+		}
+		const order = await getPreparedOrder(request, this.apis)
+		return this.sellUpdateCommon(request, order)
+	}
+
 	private async getConvertableValue(): Promise<GetConvertableValueResult> {
 		return undefined
 	}
@@ -130,11 +163,9 @@ export class SolanaOrder {
 		if (!this.wallet) {
 			throw new Error("Solana wallet not provided")
 		}
-
 		if (!("itemId" in prepare)) {
 			throw new Error("No ItemId provided")
 		}
-
 		const auctionHouse = getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
 
 		const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
@@ -144,12 +175,14 @@ export class SolanaOrder {
 			run: async (request: OrderRequest) => {
 				const mint = extractPublicKey(prepare.itemId)
 
+				const amount = request.amount !== undefined ? request.amount: 1
+
 				await (await this.sdk.order.buy({
 					auctionHouse: auctionHouse,
 					signer: this.wallet!.provider,
 					mint: mint,
-					price: new BigNumber(request.price).multipliedBy(request.amount),
-					tokensAmount: request.amount,
+					price: new BigNumber(request.price).multipliedBy(amount),
+					tokensAmount: amount,
 				})).submit("processed")
 
 				return getOrderId(
@@ -173,6 +206,11 @@ export class SolanaOrder {
 			supportsExpirationDate: false,
 			submit,
 		}
+	}
+
+	async bidBasic(request: BidSimplifiedRequest): Promise<OrderId> {
+		const response = await this.bid(request)
+		return response.submit(request)
 	}
 
 	async bidUpdate(prepareRequest: PrepareOrderUpdateRequest): Promise<PrepareBidUpdateResponse> {
@@ -216,7 +254,12 @@ export class SolanaOrder {
 		}
 	}
 
-	cancel: ICancel = Action.create({
+	async bidUpdateBasic(request: BidUpdateSimplifiedRequest): Promise<OrderId> {
+		const updateResponse = await this.bidUpdate(request)
+		return updateResponse.submit(request)
+	}
+
+	cancel: ICancelAction = Action.create({
 		id: "send-tx" as const,
 		run: async (request: CancelOrderRequest) => {
 			const order = await getPreparedOrder(request, this.apis)
@@ -234,4 +277,8 @@ export class SolanaOrder {
 			return new BlockchainSolanaTransaction(res, this.sdk)
 		},
 	})
+
+	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+		return this.cancel(request)
+	}
 }

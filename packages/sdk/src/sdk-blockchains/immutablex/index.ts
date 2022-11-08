@@ -5,6 +5,7 @@ import type { ImxEnv } from "@rarible/immutable-wallet"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { LogsLevel } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
+import { MethodWithPrepare } from "../../types/common"
 import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { ImxNftService } from "./nft"
 import { ImxOrderService } from "./order"
@@ -31,25 +32,24 @@ export function createImmutablexSdk(
 
 	return {
 		nft: {
-			mint: notImplemented,
-			burn: nftService.burn,
-			transfer: nftService.transfer,
+			mint: new MethodWithPrepare(notImplemented, notImplemented),
+			burn: new MethodWithPrepare(nftService.burnBasic, nftService.burn),
+			transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
 			generateTokenId: notImplemented,
-			deploy: nonImplementedAction,
 			createCollection: nonImplementedAction,
 			preprocessMeta: notImplemented,
 			uploadMeta: notImplemented,
 		},
 		order: {
-			fill: orderService.buy,
-			buy: orderService.buy,
-			batchBuy: nonImplementedAction,
-			acceptBid: notImplemented,
-			sell: orderService.sell,
-			sellUpdate: notImplemented,
-			bid: notImplemented,
-			bidUpdate: notImplemented,
-			cancel: orderService.cancel,
+			fill: { prepare: orderService.buy },
+			buy: new MethodWithPrepare(orderService.buyBasic, orderService.buy),
+			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			acceptBid: new MethodWithPrepare(orderService.acceptBidBasic, orderService.buy),
+			sell: new MethodWithPrepare(orderService.sellBasic, orderService.sell),
+			sellUpdate: new MethodWithPrepare(notImplemented, notImplemented),
+			bid: new MethodWithPrepare(notImplemented, notImplemented),
+			bidUpdate: new MethodWithPrepare(notImplemented, notImplemented),
+			cancel: orderService.cancelBasic,
 		},
 		balances: {
 			getBalance: balancesService.getBalance,

@@ -32,13 +32,13 @@ export function BuyPrepareForm({ orderId, disabled, onComplete }: IBuyPrepareFor
 					return
 				}
 				try {
-					const orderId = toOrderId(formData.orderId)
-					onComplete({
-						prepare: await connection.sdk.order.buy({
-							orderId,
-						}),
-						order: await connection.sdk.apis.order.getOrderById({id: orderId})
-					})
+          const orderId = toOrderId(formData.orderId)
+          onComplete({
+            prepare: await connection.sdk.order.buy.prepare({
+              orderId,
+            }),
+            order: await connection.sdk.apis.order.getOrderById({id: orderId})
+          })
 					navigate(`/buy/${formData.orderId}`, {})
 				} catch (e) {
 					setError(e)

@@ -87,7 +87,7 @@ describe.skip.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid"
 
 		const order = await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
 
-		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount })
+		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount || 1 })
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 		//toDo add balance verification

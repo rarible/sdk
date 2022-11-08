@@ -4,10 +4,8 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 
 export async function acceptBid(wallet: BlockchainWallet) {
 	const sdk = createRaribleSdk(wallet, "testnet")
-	const acceptBidResponse = await sdk.order.acceptBid({
+	const acceptBidTx = await sdk.order.acceptBid({
 		orderId: toOrderId("<BIDDER_ORDER_ID>"),
-	})
-	const acceptBidResult = await acceptBidResponse.submit({
 		amount: 1,
 		//optional
 		originFees: [{
@@ -26,5 +24,5 @@ export async function acceptBid(wallet: BlockchainWallet) {
 		//Set true if you want to convert received WETH/wTEZ tokens to ETH/TEZ
 		unwrap: false,
 	})
-	await acceptBidResult.wait()
+	await acceptBidTx.wait()
 }
