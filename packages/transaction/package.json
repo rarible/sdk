@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "0.0.13-beta12",
+    "@rarible/api-client": "0.0.14-beta1",
     "@rarible/ethereum-provider": "~0.12.109",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
     "@rarible/protocol-ethereum-sdk": "~0.12.112",
