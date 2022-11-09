@@ -3,6 +3,8 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import * as EthereumSdk from "@rarible/protocol-ethereum-sdk"
 import { isErc1155v2Collection, isErc721v2Collection, isErc721v3Collection } from "@rarible/protocol-ethereum-sdk"
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
+import { CollectionStatus } from "@rarible/api-client/build/models/Collection"
+import { NftCollectionStatus } from "@rarible/ethereum-api-client/build/models/NftCollection"
 import { toAddress, toBigNumber } from "@rarible/types"
 import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
@@ -199,8 +201,21 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 	if (!isSupportedCollection(collection.type)) {
 		throw new Error(`Collection with type "${collection}" not supported`)
 	}
+
+	const convertStatus = (collectionStatus: CollectionStatus | undefined): NftCollectionStatus | undefined => {
+		switch (collectionStatus) {
+			case undefined: return undefined
+			case CollectionStatus.ERROR: return NftCollectionStatus.ERROR
+			case CollectionStatus.PENDING: return NftCollectionStatus.PENDING
+			case CollectionStatus.CONFIRMED: return NftCollectionStatus.CONFIRMED
+			default:
+				throw new Error(`Unknown Collection Status (${collectionStatus})`)
+		}
+	}
+
 	return {
 		...collection,
+		status: convertStatus(collection.status),
 		id: toAddress(contract),
 		type: NftCollectionType[collection.type],
 		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
