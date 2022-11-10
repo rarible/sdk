@@ -4926,12 +4926,20 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.0.13-beta12":
-  version "0.0.13-beta12"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.13-beta12.tgz#77827e5b2aaa882fff3153b05a33f08d7c665e48"
-  integrity sha512-0T+Zgvi8ujCyHhRxQdLZqlV7A31RaJIAsouqnrOlW0YXjSdjVXr8zc7mNDT2kl+2G5NNPaWTJS/J3IZ0r90EZA==
+"@rarible/api-client@0.0.14-beta1":
+  version "0.0.14-beta1"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.14-beta1.tgz#535b4346370dba73aa3a27ed71b4ca33ddc027ef"
+  integrity sha512-s+sETnHt4g2ipxw/S/yNcmRQ6HcCqJh2gxiJUmSU2i4MaIpRLxhtqbH8YbTz5HMBthKe/URS9My2Qm/Gu13gSA==
   dependencies:
-    "@rarible/types" "~0.9.3"
+    "@rarible/types" "^0.9.6"
+
+"@rarible/connector-iframe@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-iframe/-/connector-iframe-0.10.0.tgz#df9d86e015e4a319d38a761c1dc871129388f146"
+  integrity sha512-t6PBDkFxc9DEk4N0p5YUDoUOJgAlKHbBjPz44BxQXz5LDi7m3JMSOLYkLHEbTi8KWjy3GPxwDTYOb5Wscun/OA==
+  dependencies:
+    "@ledgerhq/iframe-provider" "^0.4.2"
+    "@rarible/connector" "^0.10.0"
 
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
@@ -4955,10 +4963,10 @@
     eth-json-rpc-middleware "^8.0.1"
     json-rpc-engine "^6.1.0"
 
-"@rarible/ethereum-api-client@^0.1.23-beta8":
-  version "0.1.23-beta8"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.23-beta8.tgz#7531ff143f74a48ef1151713ca11911f59f9eb58"
-  integrity sha512-PAoFPjV3Wh/uOgrZ1ChbnhRUL3jOWwShYKLhXltF9Nc0tq60yfGgYb76omj80maEB65rcMJF2VmxRVB3pl2moA==
+"@rarible/ethereum-api-client@^0.1.24-beta1":
+  version "0.1.24-beta1"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.24-beta1.tgz#d38580d2c1a80aebc18457890da8e15decedd3aa"
+  integrity sha512-tqSocNLF7cwy0vCv55MRjQJR+xrK16W8uKjlDTk5d78KVedL9zsaHQ5cJ0HeTU5JKrT4y8x1p1j5wl59lgN5WA==
   dependencies:
     "@rarible/types" "~0.9.2"
 
@@ -5046,13 +5054,13 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
-"@rarible/protocol-ethereum-sdk@~0.12.112":
-  version "0.12.112"
-  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.112.tgz#53f4f68ae4bc7e06f0c84f27e393c4db9eb8b075"
-  integrity sha512-8PdMpoNltVOSQm+5bGjpDpw+GS5D7r3VXKYqUUk+wTrrqEExQ23d0GGGoN8+daabhXTQHOvuvV/RPq/3pMhMiA==
+"@rarible/protocol-ethereum-sdk@~0.12.113":
+  version "0.12.113"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.12.113.tgz#d8b2ad24ff93ceb32af31728bffb20f6766a3bbc"
+  integrity sha512-t8HKzfJ7yFuCs2Pv5+nCqLRC9qjLop4a3rOiiaqyyGe6DNroxTDOjRnehReZ8gVTphNuFPDr98eOmJaKSuhW0w==
   dependencies:
     "@rarible/action" "~0.5.0"
-    "@rarible/ethereum-api-client" "^0.1.23-beta8"
+    "@rarible/ethereum-api-client" "^0.1.24-beta1"
     "@rarible/ethereum-provider" "^0.12.109"
     "@rarible/logger" "^0.9.12"
     "@rarible/utils" "~0.9.10"
@@ -5127,15 +5135,15 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
   integrity sha512-ZjrJvg4iVIxatBRnUPcwWzaQRf7XN4hgjrRHqmjXv2Q+8/2vYyPL1TBFlfGunPPDMUB3hwBELaL5ZQaJsSE6oQ==
 
+"@rarible/types@^0.9.6", "@rarible/types@~0.9.6":
+  version "0.9.6"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.6.tgz#a88d40d6ef58f53d61fafb2ef992c123068b1427"
+  integrity sha512-yzbJIcOCdoMMmycRSGZKdt8AdAIcHOPPUes2biJioMHYalGk+8jzP6xB1dqtW7jqv9Wg5Ur5V/DtqVhuajlj+w==
+
 "@rarible/types@~0.9.2", "@rarible/types@~0.9.3":
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
-
-"@rarible/types@~0.9.6":
-  version "0.9.6"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.6.tgz#a88d40d6ef58f53d61fafb2ef992c123068b1427"
-  integrity sha512-yzbJIcOCdoMMmycRSGZKdt8AdAIcHOPPUes2biJioMHYalGk+8jzP6xB1dqtW7jqv9Wg5Ur5V/DtqVhuajlj+w==
 
 "@rarible/utils@^0.9.1":
   version "0.9.1"
@@ -22271,7 +22279,7 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-typescript@^4.4.3:
+typescript@^4.4.3, typescript@^4.6.3:
   version "4.6.3"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.6.3.tgz#eefeafa6afdd31d725584c67a0eaba80f6fc6c6c"
   integrity sha512-yNIatDa5iaofVozS/uQJEl3JRWLKKGJKh6Yaiv0GLGSuhpFJe7P3SbHZ8/yjAHRQwKRoA6YZqlfjXWmVzoVSMw==

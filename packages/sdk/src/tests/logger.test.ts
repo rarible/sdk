@@ -32,15 +32,21 @@ describe("Logging", () => {
 	const wallet2 = new EthereumWallet(ethereum2)
 
 	const getLogger = () => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const raw = jest.fn((data: Record<string, LoggableValue>) => {
 			//console.log("LOG", data)
 		})
 		return {
 			raw,
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			trace: (...params: LoggableValue[]) => {},
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			debug: (...params: LoggableValue[]) => {},
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			info: (...params: LoggableValue[]) => {},
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			warn: (...params: LoggableValue[]) => {},
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			error: (...params: LoggableValue[]) => {},
 		}
 	}

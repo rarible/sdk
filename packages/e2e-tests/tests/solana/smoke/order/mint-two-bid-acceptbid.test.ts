@@ -62,7 +62,7 @@ function suites(): {
 	]
 }
 
-describe.skip.each(suites())("$blockchain mint => two bid => acceptBid", (suite) => {
+describe.each(suites())("$blockchain mint => two bid => acceptBid", (suite) => {
 	const {
 		seller: sellerWallet,
 		buyer: buyerWallet,
