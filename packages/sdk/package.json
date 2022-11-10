@@ -28,7 +28,7 @@
     "@rarible/immutable-sdk": "^0.10.0",
     "@rarible/immutable-wallet": "^0.10.0",
     "@rarible/logger": "^0.9.12",
-    "@rarible/protocol-ethereum-sdk": "~0.12.113",
+    "@rarible/protocol-ethereum-sdk": "~0.12.114",
     "@rarible/sdk-transaction": "^0.10.0",
     "@rarible/sdk-wallet": "^0.10.0",
     "@rarible/solana-sdk": "^0.10.0",
