@@ -42,9 +42,9 @@ pipeline {
   }
 
   post {
-    always {
+    failure {
       wrap([$class: 'BuildUser']) {
-        slackSend channel: '#automation-protocol',
+        slackSend channel: '#protocol-e2e-tests',
           color: COLOR_MAP[currentBuild.currentResult],
           message: "*${currentBuild.currentResult}:* Test run for blockchain=*${params.BLOCKCHAIN}*. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
       }

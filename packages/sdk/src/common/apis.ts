@@ -1,7 +1,7 @@
 import type { ConfigurationParameters } from "@rarible/api-client"
 import * as ApiClient from "@rarible/api-client"
 import type { Middleware, ResponseContext } from "@rarible/api-client/build/runtime"
-import { handleFetchErrorResponse } from "@rarible/logger/build"
+import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
 import type { RaribleSdkEnvironment } from "../config/domain"
 import type { IApisSdk } from "../domain"
 import { LogsLevel } from "../domain"
@@ -21,6 +21,15 @@ export function createApisSdk(
 	const config = getSdkConfig(env)
 	const configuration = new ApiClient.Configuration({
 		basePath: config.basePath,
+		exceptionHandler: async (error, url, init) => {
+			throw new NetworkError({
+				status: -1,
+				url: decodeURIComponent(url),
+				formData: init?.body?.toString(),
+				method: init?.method,
+				data: { message: error.message },
+			})
+		},
 		middleware: [
 			...(logsLevel !== LogsLevel.DISABLED
 				? [getErrorHandlerMiddleware()]

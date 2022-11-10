@@ -70,7 +70,7 @@ yarn add web3@1.5.0 //or ethers@5.6.2
 
 ## Usage
 
-The package is built with modularity in mind. So that the client browser does not load extra blockchain modules that it does not use. However, some versions of nodejs may not work with the module system used by default in this package, if you need to use sdk in a nodejs environment, use import commonjs version build from `@rarible/sdk/node` 
+The package is built with modularity in mind. So that the client browser does not load extra blockchain modules that it does not use. However, some versions of nodejs may not work with the module system used by default in this package, if you need to use sdk in a nodejs environment, use import commonjs version build from `@rarible/sdk/node`
 
 ### Ethereum providers
 #### Web3

@@ -3,20 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [0.11.0-beta.3](https://github.com/rarible/sdk/compare/v0.11.0-beta.2...v0.11.0-beta.3) (2022-11-07)
+# [0.10.0](https://github.com/rarible/sdk/compare/v0.9.40...v0.10.0) (2022-11-08)
 
 
 ### Bug Fixes
 
-* example batch fill ([#380](https://github.com/rarible/sdk/issues/380)) ([889f8d2](https://github.com/rarible/sdk/commit/889f8d22ae67a4d065638cc7bbde9bccf39b3399))
-
-
-
-
-
-# [0.11.0-beta.2](https://github.com/rarible/sdk/compare/v0.10.0-beta.14...v0.11.0-beta.2) (2022-11-07)
-
-**Note:** Version bump only for package @rarible/sdk-transaction
+* waiting for ethereum approve transaction ([#375](https://github.com/rarible/sdk/issues/375)) ([a3ddb39](https://github.com/rarible/sdk/commit/a3ddb398973db2758816d88ecba9ea53c1d6303c))
 
 
 

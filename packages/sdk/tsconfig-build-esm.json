@@ -5,7 +5,8 @@
     "rootDir": "./src",
     "outDir": "./esm",
     "baseUrl": ".",
+    "incremental": false
   },
   "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts", "src/**/test/**/*"],
+  "exclude": ["src/**/*.test.ts", "src/**/test/**/*"]
 }
