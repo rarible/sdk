@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-helper",
-  "version": "0.10.0",
+  "version": "0.11.0-beta.4",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -19,11 +19,11 @@
   "dependencies": {
     "@imtbl/imx-sdk": "^1.24.0",
     "@rarible/api-client": "0.0.14-beta1",
-    "@rarible/connector": "^0.10.0",
-    "@rarible/connector-beacon": "^0.10.0",
-    "@rarible/connector-fcl": "^0.10.0",
+    "@rarible/connector": "^0.11.0-beta.4",
+    "@rarible/connector-beacon": "^0.11.0-beta.4",
+    "@rarible/connector-fcl": "^0.11.0-beta.4",
     "@rarible/estimate-middleware": "~0.9.6",
-    "@rarible/sdk-wallet": "^0.10.0",
+    "@rarible/sdk-wallet": "^0.11.0-beta.4",
     "@rarible/tezos-sdk": "0.1.40",
     "@rarible/web3-ethereum": "^0.12.109"
   },
