@@ -8,8 +8,6 @@ export function useGetBalance(sdk: IRaribleSdk, walletAddress: UnionAddress, ass
 	const [fetching, setFetching] = useState(false)
 	const [error, setError] = useState<any>(null)
 
-	console.log(assetType)
-
 	async function fetchItems() {
 		try {
 			setFetching(true)
