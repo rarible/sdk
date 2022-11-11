@@ -11,7 +11,7 @@ export function getTestContract(env: RaribleSdkEnvironment, type: contractType):
 				eurTzContract: "KT1HvTfYG7DgeujAQ1LDvCHiQc29VMycoJh5",
 				fa12Contract: "KT1X9S5Z69r36kToUx2xSi32gmhRjEW64dMS",
 				nftContract: "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx",
-				mtContract: "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC",
+				mtContract: "KT1Uke8qc4YTfP41dGuoGC8UsgRyCtyvKPLA",
 			}
 			return convertTezosToContractAddress(contracts[type])
 		}
