@@ -2,6 +2,6 @@
 
 def pipelineConfig = [:]
 
-env.SOLANA_CUSTOM_ENDPOINT=credentials('sdk-solana-devnet-node-endpoint')
+env.SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
 
 pipelineAppCI(pipelineConfig)
