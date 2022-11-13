@@ -3,36 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
-
-
-### Bug Fixes
-
-* api failed fetch now returns some additional details ([#382](https://github.com/rarible/sdk/issues/382)) ([a35411c](https://github.com/rarible/sdk/commit/a35411c8aa4f03eb745f05d35ae118fa7e12c579))
-* staging eth contracts ([#383](https://github.com/rarible/sdk/issues/383)) ([be1f7c6](https://github.com/rarible/sdk/commit/be1f7c696286bd16858bee4f978b104da233b26f))
-
-
-
-
-
-# [0.10.0](https://github.com/rarible/sdk/compare/v0.9.40...v0.10.0) (2022-11-08)
-
-
-### Bug Fixes
-
-* waiting for ethereum approve transaction ([#375](https://github.com/rarible/sdk/issues/375)) ([a3ddb39](https://github.com/rarible/sdk/commit/a3ddb398973db2758816d88ecba9ea53c1d6303c))
-
-
-### Features
-
-* check logging sellupdate/bidupdate ([#367](https://github.com/rarible/sdk/issues/367)) ([9a9c121](https://github.com/rarible/sdk/commit/9a9c121441eaa1f730e0d532222c9f6df42d5920))
-* logging context ([#366](https://github.com/rarible/sdk/issues/366)) ([7bb067b](https://github.com/rarible/sdk/commit/7bb067b02ba61b4f1c284ea3793f465259189c6e))
-* use api middleware when logs enabled ([#377](https://github.com/rarible/sdk/issues/377)) ([9b66e1f](https://github.com/rarible/sdk/commit/9b66e1ff7b225f32aa490f6af7a30d420c88cc7f))
-
-
-
-
-
 # [0.10.0-beta.14](https://github.com/rarible/sdk/compare/v0.10.0-beta.13...v0.10.0-beta.14) (2022-11-07)
 
 

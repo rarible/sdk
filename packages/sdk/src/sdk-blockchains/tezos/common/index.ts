@@ -20,7 +20,7 @@ import type {
 	TezosProvider,
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { AssetTypeV2, get_public_key, pk_to_pkh } from "@rarible/tezos-sdk"
+import { AssetTypeV2, get_public_key } from "@rarible/tezos-sdk"
 import type { Part } from "@rarible/tezos-common"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-common"
@@ -287,7 +287,7 @@ export function getTezosItemData(itemId: ItemId) {
 export function getTezosAddress(address: UnionAddress): string {
 	const [blockchain, tezosAddress] = address.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
-		throw new Error(`Not an tezos item: ${address}`)
+		throw new Error(`Not an tezos address: ${address}`)
 	}
 	return tezosAddress
 }
@@ -301,16 +301,7 @@ export async function getMakerPublicKey(provider: Provider): Promise<string> {
 }
 
 export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[]): Promise<Part[]> {
-	let payouts = requestPayouts || []
-
-	if (!Array.isArray(payouts) || payouts.length === 0) {
-		return [{
-			account: pk_to_pkh(await getMakerPublicKey(provider)),
-			value: new BigNumber(10000),
-		}]
-	}
-
-	return convertUnionParts(payouts)
+	return convertUnionParts(requestPayouts) || []
 }
 
 export function getRoyalties(royalties: Royalty[] | undefined): { [key: string]: BigNumber } {
@@ -486,7 +477,7 @@ export function convertFromContractAddress(contract: ContractAddress): string {
 	return tezosAddress
 }
 
-export function convertUnionAddress(address: UnionAddress): string {
+export function convertUnionAddress(address: UnionAddress | CollectionId): string {
 	const [blockchain, tezosAddress] = address.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Not a tezos address: ${address}`)
@@ -579,6 +570,9 @@ export function isXtzAssetType(assetType: AssetType): assetType is TezosXTZAsset
 }
 export function isFTAssetType(assetType: AssetType): assetType is TezosFTAssetType {
 	return assetType["@type"] === "TEZOS_FT"
+}
+export function isNftOrMTAssetType(assetType: AssetType): assetType is (TezosNFTAssetType | TezosMTAssetType) {
+	return isNftAssetType(assetType) || isMTAssetType(assetType)
 }
 
 export function getRequestAmount(
