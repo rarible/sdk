@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.11.0-beta.5",
+  "version": "0.11.0-beta.6",
   "keywords": [
     "solana",
     "web3"
@@ -29,8 +29,8 @@
     "@metaplex/js": "^4.12.0",
     "@project-serum/anchor": "^0.22.1",
     "@rarible/logger": "^0.9.12",
-    "@rarible/solana-common": "^0.11.0-beta.4",
-    "@rarible/solana-wallet": "^0.11.0-beta.4",
+    "@rarible/solana-common": "^0.11.0-beta.6",
+    "@rarible/solana-wallet": "^0.11.0-beta.6",
     "@rarible/utils": "~0.9.10",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.36.0",
