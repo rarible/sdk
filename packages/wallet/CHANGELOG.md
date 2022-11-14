@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
+
+
+### Bug Fixes
+
+* api failed fetch now returns some additional details ([#382](https://github.com/rarible/sdk/issues/382)) ([a35411c](https://github.com/rarible/sdk/commit/a35411c8aa4f03eb745f05d35ae118fa7e12c579))
+
+
+
+
+
 # [0.10.0](https://github.com/rarible/sdk/compare/v0.9.40...v0.10.0) (2022-11-08)
 
 **Note:** Version bump only for package @rarible/sdk-wallet
