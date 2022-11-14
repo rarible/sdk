@@ -48,6 +48,9 @@ export function Navigation() {
 		label: "Burn Token",
 		path: "/burn"
 	}, {
+		label: "Sign Message",
+		path: "/sign"
+	}, {
 		label: "My Items",
 		path: "/items"
 	}]
