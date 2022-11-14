@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-iframe",
-  "version": "0.11.0-beta.4",
+  "version": "0.10.1",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
