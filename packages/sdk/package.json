@@ -11,7 +11,8 @@
   },
   "types": "esm/index.d.ts",
   "files": [
-    "build",
+    "esm",
+    "node",
     "umd"
   ],
   "scripts": {
