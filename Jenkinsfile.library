@@ -1,7 +1,8 @@
 @Library('shared-library') _
 
 def pipelineConfig = [
-  "onlyTagRelease": "true"
+  "onlyTagRelease": "true",
+  "JSpublicLibrary": "true"
 ]
 
 withCredentials([string(credentialsId: 'sdk-solana-devnet-node-endpoint', variable: 'SOLANA_CUSTOM_ENDPOINT')]) {
