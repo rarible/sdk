@@ -4933,11 +4933,6 @@
   dependencies:
     "@rarible/types" "^0.9.6"
 
-"@rarible/connector@^0.11.0-beta.4":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@rarible/connector/-/connector-0.10.0.tgz#4f20bbab5502d481f85889d8d20e57530f2101de"
-  integrity sha512-/7X9jcv3BBgtBlvPdheUqSF7f6iv9DVHVyjlV0jf7cayqHpc7zEnnunkpgE+h2SMAvaFTMbt3yhxmpTFCqkglQ==
-
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/eslint-config-ts/-/eslint-config-ts-0.5.0.tgz#ba6fe1761edd1bf2bfdc8070592d9dc344655c8a"
@@ -5067,24 +5062,6 @@
     ethers "~5.4.4"
     exponential-backoff "^3.1.0"
     merkletreejs "^0.2.31"
-
-"@rarible/solana-common@^0.11.0-beta.4":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@rarible/solana-common/-/solana-common-0.10.0.tgz#15be247a140f7d7f3743aca24db1982fe4225128"
-  integrity sha512-ffQO2wBsX4ADvT/hQt3D4RFbY1lBvbZaz42WG1SHVfAzACIGepHeJpD3ci5O9z87eEkCaNayNmMT5O57c/ncnA==
-  dependencies:
-    "@solana/web3.js" "^1.35.0"
-
-"@rarible/solana-wallet@^0.11.0-beta.4":
-  version "0.10.0"
-  resolved "https://registry.yarnpkg.com/@rarible/solana-wallet/-/solana-wallet-0.10.0.tgz#a618ea3419e31e1032b9a8e523de21513c673422"
-  integrity sha512-SVz5S3y1SYa7uneDOIFkWH4gOPSzYVIfE6ik9syohOuCpBebzex6a8Ww8Hhi6ffPFn2aFDohaiZoJaotuKmLeg==
-  dependencies:
-    "@rarible/solana-common" "^0.10.0"
-    "@solana/web3.js" "^1.35.0"
-    "@types/bs58" "^4.0.1"
-    bs58 "^5.0.0"
-    tweetnacl "^1.0.0"
 
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
