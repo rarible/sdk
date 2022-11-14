@@ -9,7 +9,8 @@
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
-    "build"
+    "esm",
+    "node"
   ],
   "scripts": {
     "clean": "rimraf ./build",
