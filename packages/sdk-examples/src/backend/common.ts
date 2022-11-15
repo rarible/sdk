@@ -3,6 +3,7 @@ import fetch from "node-fetch"
 import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
+import type { provider as Web3Provider } from "web3-core"
 // @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { EthereumWallet } from "@rarible/sdk-wallet"
@@ -59,7 +60,7 @@ export async function initWalletWeb3(privateKey: string): Promise<EthereumWallet
 		networkId: +process.env["ETHEREUM_NETWORK_ID"],
 	})
 
-	const web3 = new Web3(provider)
+	const web3 = new Web3(provider as Web3Provider)
 
 	const web3Ethereum = new Web3Ethereum({ web3 })
 
@@ -76,7 +77,7 @@ export async function initWalletWeb3WithHDWallet(privateKey: string): Promise<Et
 
 	const provider = new HDWalletProvider(privateKey, process.env["ETHEREUM_RPC_URL"])
 
-	const web3 = new Web3(provider)
+	const web3 = new Web3(provider as Web3Provider)
 
 	const web3Ethereum = new Web3Ethereum({ web3 })
 

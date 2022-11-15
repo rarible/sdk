@@ -2,12 +2,20 @@
   "name": "root",
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/**/*"
   ],
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel",
     "build": "yarn bootstrap && yarn clean && yarn build-all",
+
+    "build-ethereum-test-common": "yarn workspace @rarible/ethereum-sdk-test-common run build",
+    "build-ethereum-biconomy-middleware": "yarn workspace @rarible/biconomy-middleware run build",
+    "build-ethereum-provider": "yarn workspace @rarible/ethereum-provider run build",
+    "build-ethereum-ethers": "yarn workspace @rarible/ethers-ethereum run build",
+    "build-ethereum-web3": "yarn workspace @rarible/web3-ethereum run build",
+    "build-ethereum-sdk": "yarn workspace @rarible/protocol-ethereum-sdk run build",
+
     "build-solana-common": "yarn workspace @rarible/solana-common run build",
     "build-solana-wallet": "yarn workspace @rarible/solana-wallet run build",
     "build-imx-sdk": "yarn workspace @rarible/immutable-sdk run build",

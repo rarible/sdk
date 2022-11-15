@@ -1,0 +1,112 @@
+{
+  "mainnet": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "mumbai": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "mumbai-dev": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "polygon": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "rinkeby": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "testnet": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "dev-ethereum": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "dev-polygon": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "staging-polygon": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  },
+  "staging": {
+    "RARIBLE_V1": 0,
+    "RARIBLE_V2": 0,
+    "OPEN_SEA_V1": 0,
+    "SEAPORT_V1": 0,
+    "LOOKSRARE": 0,
+    "CRYPTO_PUNK": 0,
+    "AMM": 0,
+    "X2Y2": 0,
+    "AUCTION": 0
+  }
+}

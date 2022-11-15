@@ -1,0 +1,39 @@
+{
+  "name": "@rarible/ethereum-sdk-test-common",
+  "version": "0.12.114",
+  "description": "",
+  "keywords": [
+    "ethereum",
+    "provider"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "test": "echo 'There has no tests'",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rarible/ethereum-provider": "^0.12.114",
+    "@rarible/test-provider": "~0.5.0",
+    "@rarible/types": "~0.9.6",
+    "@types/web3-provider-engine": "^14.0.1",
+    "eth-sig-util": "^3.0.1",
+    "ethereumjs-wallet": "^1.0.1",
+    "ganache": "^7.0.2",
+    "web3-provider-engine": "^16.0.4"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "e1a77d6596ee3286e6f2d7c1db5f69489c10f10c"
+}
