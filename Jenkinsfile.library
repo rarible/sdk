@@ -1,7 +1,6 @@
 @Library('shared-library') _
 
 def pipelineConfig = [
-  "onlyTagRelease": "true",
   "JSpublicLibrary": "true"
 ]
 
