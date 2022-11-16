@@ -20,9 +20,10 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
+    "@rarible/sdk": "^0.10.1",
     "@rarible/api-client": "0.0.14-beta1",
     "@rarible/estimate-middleware": "~0.9.6",
-    "@rarible/ethers-ethereum": "~0.12.114",
+    "@rarible/ethers-ethereum": "^0.12.114",
     "@rarible/sdk-wallet": "^0.10.1",
     "@rarible/test-provider": "~0.5.4",
     "@rarible/types": "~0.9.6",
