@@ -37,7 +37,7 @@
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
     "prettify:packages": "lerna exec -- sort-package-json && sort-package-json",
     "prettify": "run-s prettify:*",
-    "test": "lerna run test --parallel",
+    "test": "sh ./scripts/test.sh",
     "verify": "lerna run verify --parallel",
     "lint-staged": "lint-staged",
     "precommit": "run-s verify lint",
