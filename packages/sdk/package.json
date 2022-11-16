@@ -6,8 +6,10 @@
   "main": "esm/index.js",
   "exports": {
     ".": "esm/index.js",
-    "./web": "esm/index.js",
-    "./node": "node/index.js"
+    "./esm": "esm/index.js",
+    "./esm/*": "esm/*",
+    "./node": "node/index.js",
+    "./node/*": "node/*"
   },
   "types": "esm/index.d.ts",
   "files": [
