@@ -22,6 +22,9 @@ export async function burn(
 		tokenAddress: contract,
 		toAddress: ZERO_ADDRESS,
 	}])
+	if (!result || !result[0]) {
+		throw new Error(`Imx burn error: result is empty (${JSON.stringify(result)})`)
+	}
 	const resp = result[0]
 	return getTransferResponse(resp)
 }
