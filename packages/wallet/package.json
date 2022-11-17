@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.11.0-beta.8",
+  "version": "0.11.0-beta.9",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -26,7 +26,7 @@
     "@rarible/ethers-ethereum": "~0.12.109",
     "@rarible/fcl-types": "~0.5.0",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
-    "@rarible/solana-wallet": "^0.11.0-beta.8",
+    "@rarible/solana-wallet": "^0.11.0-beta.9",
     "@rarible/tezos-sdk": "~0.1.40",
     "@rarible/types": "~0.9.6",
     "@rarible/web3-ethereum": "~0.12.109"

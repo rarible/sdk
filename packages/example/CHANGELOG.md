@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.11.0-beta.9](https://github.com/rarible/sdk/compare/v0.11.0-beta.8...v0.11.0-beta.9) (2022-11-17)
+
+
+### Features
+
+* example app sign page ([#386](https://github.com/rarible/sdk/issues/386)) ([51448ed](https://github.com/rarible/sdk/commit/51448ed1e70c00dd18d5a98e48a4505a17c77bba))
+
+
+
+
+
 # [0.11.0-beta.8](https://github.com/rarible/sdk/compare/v0.11.0-beta.7...v0.11.0-beta.8) (2022-11-14)
 
 **Note:** Version bump only for package example
