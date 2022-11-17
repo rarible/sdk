@@ -21,6 +21,9 @@ export async function transfer(
 		tokenAddress: contract,
 		toAddress: to,
 	}])
+	if (!result || !result[0]) {
+		throw new Error(`Imx transfer error: result is empty (${JSON.stringify(result)})`)
+	}
 	const resp = result[0]
 	return getTransferResponse(resp)
 }
