@@ -1,0 +1,69 @@
+{
+  "name": "@rarible/protocol-ethereum-sdk",
+  "version": "0.12.114",
+  "keywords": [
+    "axios",
+    "typescript",
+    "openapi",
+    "openapi-generator",
+    "api_documentation"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build",
+    "umd",
+    "typings.d.ts"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build ./umd",
+    "build": "run-s build:*",
+    "build:esm": "tsc --project tsconfig-build.json",
+    "build:umd": "webpack",
+    "verify": "tsc --noEmit",
+    "test": "jest --runInBand --silent"
+  },
+  "dependencies": {
+    "@rarible/action": "~0.5.0",
+    "@rarible/ethereum-api-client": "^0.1.24-beta1",
+    "@rarible/ethereum-provider": "^0.12.114",
+    "@rarible/logger": "^0.9.12",
+    "@rarible/utils": "~0.9.10",
+    "axios": "^0.25.0",
+    "eth-sig-util": "^3.0.0",
+    "ethereumjs-util": "^7.1.0",
+    "ethers": "~5.4.4",
+    "exponential-backoff": "^3.1.0",
+    "merkletreejs": "^0.2.31"
+  },
+  "devDependencies": {
+    "@rarible/ethereum-sdk-test-common": "^0.12.114",
+    "@rarible/ethers-ethereum": "^0.12.114",
+    "@rarible/test-provider": "~0.5.0",
+    "@rarible/web3-ethereum": "^0.12.114",
+    "@types/jest": "27.0.2",
+    "@types/node-fetch": "^2.5.11",
+    "buffer": "^6.0.3",
+    "form-data": "^4.0.0",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.3.1",
+    "node-polyfill-webpack-plugin": "^1.1.4",
+    "npm-run-all": "^4.1.5",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "ts-jest": "^27.0.7",
+    "typescript": "^4.8.4",
+    "web3": "^1.8.1",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "e1a77d6596ee3286e6f2d7c1db5f69489c10f10c"
+}

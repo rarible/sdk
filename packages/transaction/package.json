@@ -17,9 +17,9 @@
   "dependencies": {
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "0.0.14-beta1",
-    "@rarible/ethereum-provider": "~0.12.109",
+    "@rarible/ethereum-provider": "^0.12.114",
     "@rarible/flow-sdk": "~0.5.48-alpha.5",
-    "@rarible/protocol-ethereum-sdk": "~0.12.114",
+    "@rarible/protocol-ethereum-sdk": "^0.12.114",
     "@rarible/solana-sdk": "^0.10.0",
     "@rarible/tezos-sdk": "~0.1.40",
     "@rarible/types": "~0.9.6"
@@ -37,7 +37,7 @@
     "@types/jest": "^27.0.2",
     "jest": "^27.2.4",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.6.3"
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

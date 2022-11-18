@@ -18,6 +18,7 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 			break
 		case Blockchain.TEZOS:
 			env = "testnet"
+			break
 		default:
 	}
 

@@ -1,0 +1,1 @@
+export const CURRENT_ORDER_TYPE_VERSION = "RARIBLE_V2"
