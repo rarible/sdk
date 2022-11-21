@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import { Configuration, OrderControllerApi } from "@rarible/ethereum-api-client"
 import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
@@ -58,7 +58,8 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			sign,
 			orderApi,
 			ethereum,
-			checkWalletChainId
+			checkWalletChainId,
+			ZERO_WORD
 		)
 
 		const result = await upserter.upsert({ order })
@@ -89,7 +90,8 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			sign,
 			orderApi,
 			ethereum,
-			checkWalletChainId
+			checkWalletChainId,
+			ZERO_WORD
 		)
 
 		const price = await upserter.getPrice(request, request.takeAssetType)
@@ -121,7 +123,8 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			sign,
 			orderApi,
 			ethereum,
-			checkWalletChainId
+			checkWalletChainId,
+			ZERO_WORD
 		)
 
 		const price = await upserter.getPrice(request, request.takeAssetType)
