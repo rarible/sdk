@@ -295,6 +295,7 @@ describe.skip("looksrare fill", () => {
 		await tx.wait()
 	})
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	async function getEthBalances(addresses: string[]) {
 		return Promise.all(
 			addresses.map(async address => {
