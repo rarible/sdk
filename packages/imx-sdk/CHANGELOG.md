@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
+
+
+### Bug Fixes
+
+* imx burn, transfer error ([#387](https://github.com/rarible/sdk/issues/387)) ([8003d4a](https://github.com/rarible/sdk/commit/8003d4a19d27a405d58a40f9d8b68e25f11f2e4a))
+
+
+
+
+
 ## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
 
 

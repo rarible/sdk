@@ -1,41 +1,9 @@
-def testSuccess = false
+@Library('shared-library') _
 
-pipeline {
-  agent any
+def pipelineConfig = [
+  "JSpublicLibrary": "true"
+]
 
-  options {
-    disableConcurrentBuilds()
-    timeout(time: 1, unit: 'HOURS')
-  }
-
-  stages {
-    stage('build') {
-      steps {
-          sh 'yarn && yarn build'
-      }
-    }
-    stage('release') {
-      when { tag "v*" }
-      environment {
-          NPM_TOKEN = credentials('npm-token')
-      }
-      steps {
-        sh 'echo //registry.npmjs.org/:_authToken=${NPM_TOKEN} > .npmrc'
-        sh 'yarn && yarn release'
-      }
-    }
-    stage('test') {
-      environment {
-	      SOLANA_CUSTOM_ENDPOINT = credentials('sdk-solana-devnet-node-endpoint')
-      }
-      steps {
-        sh 'yarn && yarn test'
-      }
-    }
-  }
-  post {
-    always {
-      cleanWs()
-    }
-  }
+withCredentials([string(credentialsId: 'sdk-solana-devnet-node-endpoint', variable: 'SOLANA_CUSTOM_ENDPOINT')]) {
+  pipelinePackageRelease(pipelineConfig)
 }

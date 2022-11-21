@@ -21,6 +21,7 @@ import { TransferPage } from "./pages/transfer/transfer-page"
 import { BalancePage } from "./pages/balance/balance-page"
 import { CancelPage } from "./pages/cancel/cancel-page"
 import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
+import { SignPage } from "./pages/sign/sign-page"
 
 export function App() {
 	return (
@@ -68,6 +69,7 @@ export function App() {
 										<Route path=":itemId" element={<BurnPage/>}/>
 									</Route>
 									<Route path="items" element={<ItemsPage/>}/>
+									<Route path="sign" element={<SignPage/>}/>
 									<Route path="*" element={<NotFoundPage/>}/>
 								</Routes>
 							</Box>

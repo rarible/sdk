@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script src="https://unpkg.com/@rarible/web3-ethereum@0.12.34/umd/rarible-web3-ethereum.js" type="text/javascript"></script>
+<script src="https://unpkg.com/@rarible/protocol-ethereum-sdk@0.12.38/umd/rarible-ethereum-sdk.js" type="text/javascript"></script>
+<script src="https://unpkg.com/web3@1.6.0/dist/web3.min.js" type="text/javascript"></script>
+<script>
+  async function init() {
+    const {ethereum} = window
+    if (ethereum && ethereum.isMetaMask) {
+      const web = new Web3(ethereum)
+      const web3Ethereum = new window.raribleWeb3Ethereum.Web3Ethereum({ web3: web })
+      const env = "rinkeby" // "e2e" | "ropsten" | "rinkeby" | "polygon" | "mumbai" | "mumbai-dev | "mainnet"
+      const raribleSdk = new window.raribleEthereumSdk.createRaribleSdk(web3Ethereum, env)
+      const mintFormInitial = {
+        id: "0x6ede7f3c26975aad32a475e1021d8f6f39c89d82", // default collection on "rinkeby" that supports lazy minting
+        type: "ERC721",
+        isLazy: true,
+        isLazySupported: true,
+        loading: false,
+      }
+      const nftCollection = await raribleSdk.apis.nftCollection.getNftCollectionById({ collection: mintFormInitial.id })
+      const tx = await raribleSdk.nft.mint({
+        uri: "ipfs://ipfs/hash",
+        royalties: [],
+        collection: nftCollection,
+      })
+      console.log('tx', tx)
+    }
+
+  }
+  init()
+
+</script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+{
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheableOperations": []
+      }
+    }
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ]
+    },
+    "build:esm": {
+      "dependsOn": [
+        "^build:esm"
+      ]
+    },
+    "build:umd": {
+      "dependsOn": [
+        "^build:umd"
+      ]
+    },
+    "build:ts": {
+      "dependsOn": [
+        "^build:ts"
+      ]
+    }
+  }
+}
