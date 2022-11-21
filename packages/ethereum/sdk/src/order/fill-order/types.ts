@@ -56,7 +56,10 @@ export type OpenSeaV1OrderFillRequest =
 export type SeaportV1OrderFillRequest = CommonFillRequest<SimpleSeaportV1Order> & { originFees?: Part[] }
 export type X2Y2OrderFillRequest = CommonFillRequest<SimpleX2Y2Order> & { originFees?: Part[] }
 
-export type LooksrareOrderFillRequest = CommonFillRequest<SimpleLooksrareOrder> & { originFees?: Part[] }
+export type LooksrareOrderFillRequest = CommonFillRequest<SimpleLooksrareOrder> & {
+	originFees?: Part[],
+	addRoyalty?: boolean
+}
 
 export type AmmOrderFillRequest = CommonFillRequest<SimpleAmmOrder> & {
 	originFees?: Part[],
