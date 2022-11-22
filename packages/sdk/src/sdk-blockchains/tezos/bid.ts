@@ -98,6 +98,7 @@ export class TezosBid {
 						...commonBidData,
 						asset_token_id: new BigNumber(requestInfo.tokenId),
 					}
+					console.log("bidrequest", JSON.stringify(bidRequest, null, "  "))
 					orderId = await put_bid(provider, bidRequest)
 
 				} else if ("collectionId" in prepare) {
@@ -143,6 +144,7 @@ export class TezosBid {
 		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
 		const nftAmount = new BigNumber(request.amount || 1)
 		const assetTotalAmount = nftAmount.multipliedBy(request.price)
+		// const assetTotalAmount = new BigNumber(request.price)
 		return {
 			bid_type: asset.type,
 			bid_asset_contract: asset.asset_contract,

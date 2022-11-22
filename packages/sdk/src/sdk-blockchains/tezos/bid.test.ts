@@ -14,7 +14,7 @@ import { convertTezosToCollectionAddress, convertTezosToContractAddress, convert
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("bid test", () => {
+describe("bid test", () => {
 	const env: RaribleSdkEnvironment = "development"
 	const itemOwner = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
@@ -139,7 +139,7 @@ describe.skip("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test.skip("bid MT test", async () => {
+	test("bid MT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
@@ -154,6 +154,7 @@ describe.skip("bid test", () => {
 
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
+		console.log("item", mintResult)
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
@@ -172,13 +173,16 @@ describe.skip("bid test", () => {
 
 		await awaitForOrder(bidderSdk, orderId)
 
+		console.log("order", orderId)
 		// update bid price
+		return
 		const updateAction = await bidderSdk.order.bidUpdate.prepare({ orderId })
-		await updateAction.submit({ price: "0.00004" })
+		const updatedOrderId = await updateAction.submit({ price: "0.00004" })
 
+		console.log("updated order", updatedOrderId)
 		await retry(10, 2000, async () => {
 			const order = await bidderSdk.apis.order.getOrderById({
-				id: orderId,
+				id: updatedOrderId,
 			})
 			if (order.make.value !== "0.00012") {
 				throw new Error("Bid price has been not updated")
