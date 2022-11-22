@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
+
+
+### Features
+
+* looksrare royalties ([#390](https://github.com/rarible/sdk/issues/390)) ([4df48db](https://github.com/rarible/sdk/commit/4df48db39dafe0e9746bfa01efb999f324651f08))
+
+
+
+
+
 # [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
 
 
