@@ -11,7 +11,6 @@ import type { EthereumConfig } from "../../../config/type"
 import { createSudoswapRouterV1Contract } from "../../contracts/sudoswap-router-v1"
 import { getUpdatedCalldata } from "../common/get-updated-call"
 import type { IRaribleEthereumSdkConfig } from "../../../types"
-import type { RaribleEthereumApis } from "../../../common/apis"
 import { createSudoswapPairContract } from "../../contracts/sudoswap-pair"
 
 
@@ -19,7 +18,6 @@ export class SudoswapFill {
 	static async getDirectFillData(
 		ethereum: Ethereum,
 		request: AmmOrderFillRequest,
-		apis: RaribleEthereumApis,
 		config: EthereumConfig,
 		sdkConfig?: IRaribleEthereumSdkConfig
 	): Promise<OrderFillSendData> {

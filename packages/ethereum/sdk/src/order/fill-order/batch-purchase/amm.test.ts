@@ -33,23 +33,25 @@ describe("amm batch buy tests", () => {
 	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
 
 
-	test("amm sudoswap few items sell form different pools", async () => {
+	test.skip("amm sudoswap few items sell form different pools", async () => {
 		const orders = await Promise.all([
-			makeAmmOrder(sdkSeller, ethereum, send, config),
-			makeAmmOrder(sdkSeller, ethereum, send, config),
+			makeAmmOrder(sdkSeller, env, ethereum, send, config),
+			makeAmmOrder(sdkSeller, env, ethereum, send, config),
 		])
 
+		console.log("order", orders[0])
 		const tx = await sdkBuyer.order.buyBatch(ordersToRequests(orders, [{
 			account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 			value: 100,
 		}]))
-		console.log(tx)
 		await tx.wait()
+		console.log(tx)
 	})
 
 	test("amm sudoswap few items sell from one pool one request", async () => {
 		const { poolAddress, items, contract } = await mintTokensToNewSudoswapPool(
 			sdkSeller,
+			env,
 			ethereum,
 			send,
 			config.sudoswap.pairFactory,

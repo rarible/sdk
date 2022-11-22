@@ -468,3 +468,18 @@ export const EXCHANGEV2_BULK_ABI: AbiItem[] = [
 		"payable": true,
 	},
 ]
+
+export const ADDITIONAL_DATA_STRUCT = {
+	components: [
+		{
+			name: "data",
+			type: "bytes",
+		},
+		{
+			name: "additionalRoyalties",
+			type: "uint[]",
+		},
+	],
+	name: "data",
+	type: "tuple",
+}

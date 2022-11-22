@@ -24,7 +24,7 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 		case WalletType.ETHEREUM:
 			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
 				.then(([chainId, address]) => {
-					info["wallet.address"] = address
+					info["wallet.address"] = address && address.toLowerCase()
 					info["wallet.chainId"] = chainId
 				})
 				.catch((err) => {
