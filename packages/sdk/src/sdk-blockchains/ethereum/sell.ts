@@ -61,7 +61,6 @@ export class EthereumSell {
 					: undefined
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 
-				console.log("before")
 				return {
 					type: "DATA_V2",
 					makeAssetType: {
@@ -77,7 +76,6 @@ export class EthereumSell {
 				}
 			})
 			.after(order => {
-				console.log("after")
 				return common.convertEthereumOrderHash(order.hash, this.blockchain)
 			})
 
@@ -116,7 +114,6 @@ export class EthereumSell {
 					originFeeFirst: originFees[0],
 					originFeeSecond: originFees[1],
 					maxFeesBasePoint: sellFormRequest.maxFeesBasePoint ?? 0,
-					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
 					amount: sellFormRequest.amount ?? 1,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,

@@ -306,7 +306,6 @@ export class EthereumBid {
 					payout: payouts[0],
 					originFeeFirst: originFees[0],
 					originFeeSecond: originFees[1],
-					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
 					end: expirationDate,
 				}
 			})

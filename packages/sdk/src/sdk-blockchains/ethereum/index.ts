@@ -50,7 +50,7 @@ export function createEthereumSdk(
 		logs: config.logs,
 		ethereum: config[Blockchain.ETHEREUM],
 		polygon: config[Blockchain.POLYGON],
-		fillCalldata: config.fillCalldata ? toBinary(config.fillCalldata) : undefined,
+		marketplaceMarker: config.marketplaceMarker ? toBinary(config.marketplaceMarker) : undefined,
 		apiKey: config.apiKey,
 	})
 
