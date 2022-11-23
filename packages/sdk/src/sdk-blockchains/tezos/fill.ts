@@ -14,7 +14,7 @@ import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 // eslint-disable-next-line camelcase
 import { accept_bid } from "@rarible/tezos-sdk/bids"
-import type { AcceptBid } from "@rarible/tezos-sdk/bids/index"
+import type { AcceptBid } from "@rarible/tezos-sdk/bids"
 import { Warning } from "@rarible/logger/build"
 import { toBn } from "@rarible/utils/build/bn"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse,
@@ -33,7 +33,7 @@ import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../typ
 import type { MaybeProvider } from "./common"
 import {
 	checkChainId,
-	convertFromContractAddress,
+	convertFromContractAddress, convertUnionAddress,
 	convertUnionParts, getPayouts,
 	getRequiredProvider,
 	getTezosAddress,
@@ -212,7 +212,7 @@ export class TezosFill {
 				const acceptBidRequest: AcceptBid = {
 					asset_contract: convertFromContractAddress(take.type.contract),
 					asset_token_id: new BigNumber(take.type.tokenId),
-					bidder: await provider.tezos.address(),
+					bidder: convertUnionAddress(preparedOrder.maker),
 					bid_type: asset.type,
 					bid_asset_contract: asset.asset_contract,
 					bid_asset_token_id: asset.asset_token_id,

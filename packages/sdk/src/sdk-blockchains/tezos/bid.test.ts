@@ -14,10 +14,10 @@ import { convertTezosToCollectionAddress, convertTezosToContractAddress, convert
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 
-describe("bid test", () => {
+describe.skip("bid test", () => {
 	const env: RaribleSdkEnvironment = "development"
 	const itemOwner = createTestWallet(
-		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
 		env
 	)
 	const itemOwnerSdk = createRaribleSdk(itemOwner, env, { logs: LogsLevel.DISABLED })
@@ -43,6 +43,12 @@ describe("bid test", () => {
 	const mtContract = getTestContract(env, "mtContract")
 	const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
+	beforeAll(async () => {
+		console.log({
+			itemOwner: await itemOwner.provider.address(),
+			bidder: await bidderWallet.provider.address(),
+		})
+	})
 	test("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
@@ -155,18 +161,25 @@ describe("bid test", () => {
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
 		console.log("item", mintResult)
+
+		const originFeeWallet = convertTezosToUnionAddress(await nullFundsWallet.provider.address())
+		const startBalanceFeesWallet = await itemOwnerSdk.balances.getBalance(originFeeWallet, {
+			"@type": "TEZOS_FT",
+			contract: eurTzContract,
+			tokenId: toBigNumber("0"),
+		})
 		// make bid by bidder
 		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
 			amount: 3,
-			price: "0.00002",
+			price: "0.002",
 			currency: {
 				"@type": "TEZOS_FT",
 				contract: eurTzContract,
 				tokenId: toBigNumber("0"),
 			},
 			originFees: [{
-				account: convertTezosToUnionAddress(await itemOwner.provider.address()),
+				account: originFeeWallet,
 				value: 1000,
 			}],
 		})
@@ -175,16 +188,15 @@ describe("bid test", () => {
 
 		console.log("order", orderId)
 		// update bid price
-		return
 		const updateAction = await bidderSdk.order.bidUpdate.prepare({ orderId })
-		const updatedOrderId = await updateAction.submit({ price: "0.00004" })
+		const updatedOrderId = await updateAction.submit({ price: "0.004" })
 
 		console.log("updated order", updatedOrderId)
 		await retry(10, 2000, async () => {
 			const order = await bidderSdk.apis.order.getOrderById({
 				id: updatedOrderId,
 			})
-			if (order.make.value !== "0.00012") {
+			if (order.make.value !== "12000") {
 				throw new Error("Bid price has been not updated")
 			}
 		})
@@ -194,10 +206,22 @@ describe("bid test", () => {
 		const fillBidResult = await acceptBidResponse.submit({
 			amount: 3,
 			infiniteApproval: true,
+			originFees: [{
+				account: originFeeWallet,
+				value: 500,
+			}],
 		})
+		console.log("accept bid", fillBidResult)
 		await fillBidResult.wait()
 
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
+
+		const finishBalanceFeesWallet = await itemOwnerSdk.balances.getBalance(originFeeWallet, {
+			"@type": "TEZOS_FT",
+			contract: eurTzContract,
+			tokenId: toBigNumber("0"),
+		})
+		console.log("finishBalanceFeesWallet", startBalanceFeesWallet.toString(), finishBalanceFeesWallet.toString())
 	}, 1500000)
 
 	test.skip("bid MT test with CurrencyId", async () => {
