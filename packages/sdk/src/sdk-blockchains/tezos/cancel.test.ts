@@ -9,16 +9,16 @@ import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
-describe("cancel test", () => {
-	const env: RaribleSdkEnvironment = "testnet"
+describe.skip("cancel test", () => {
+	const env: RaribleSdkEnvironment = "development"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
 
-	const nftContract: string = getTestContract(env, "nftContract")
+	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("cancel order", async () => {
 		const mintResponse = await sdk.nft.mint.prepare({
-			collectionId: toCollectionId(nftContract),
+			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -71,7 +71,7 @@ describe("cancel test", () => {
 
 	test("cancel order with basic function", async () => {
 		const mintResult = await sdk.nft.mint({
-			collectionId: toCollectionId(nftContract),
+			collectionId: toCollectionId(mtContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 		})
 		await mintResult.transaction.wait()
@@ -101,6 +101,55 @@ describe("cancel test", () => {
 		})
 		await cancelTx.wait()
 		await retry(20, 2000, async () => {
+			const canceledOrder = await sdk.apis.order.getOrderById({
+				id: orderId,
+			})
+			if (canceledOrder.status !== "CANCELLED") {
+				throw new Error("Order has not been cancelled")
+			}
+		})
+
+	}, 1500000)
+
+
+	test("cancel bid order", async () => {
+		const mintResponse = await sdk.nft.mint.prepare({
+			collectionId: toCollectionId(mtContract),
+		})
+		const mintResult = await mintResponse.submit({
+			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+			supply: 1,
+			lazyMint: false,
+		})
+		if (mintResult.type === MintType.ON_CHAIN) {
+			await mintResult.transaction.wait()
+		}
+
+		await awaitItemSupply(sdk, mintResult.itemId, "1")
+
+		const bidResponse = await sdk.order.bid.prepare({ itemId: mintResult.itemId })
+		const orderId = await bidResponse.submit({
+			amount: 1,
+			price: "0.000002",
+			currency: {
+				"@type": "XTZ",
+			},
+		})
+
+		await retry(10, 1000, async () => {
+			const order = await sdk.apis.order.getOrderById({
+				id: orderId,
+			})
+			if (order.status !== "ACTIVE") {
+				throw new Error("Order status is not active")
+			}
+		})
+
+		const cancelTx = await sdk.order.cancel({
+			orderId,
+		})
+		await cancelTx.wait()
+		await retry(10, 2000, async () => {
 			const canceledOrder = await sdk.apis.order.getOrderById({
 				id: orderId,
 			})

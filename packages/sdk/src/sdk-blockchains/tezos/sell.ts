@@ -27,6 +27,7 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { IApisSdk } from "../../domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
+import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -113,9 +114,7 @@ export class TezosSell {
 
 		const requestCurrency = getCurrencyAssetType(request.currency)
 
-		const expirationDate = request.expirationDate instanceof Date
-			? Math.floor(request.expirationDate.getTime() / 1000)
-			: undefined
+		const expirationDate = convertDateToTimestamp(request.expirationDate)
 		const collectionType = await getCollectionType(this.provider, contract)
 
 		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)

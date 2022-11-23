@@ -11,6 +11,9 @@ import type { Order, TezosMTAssetType, TezosNFTAssetType } from "@rarible/api-cl
 // eslint-disable-next-line camelcase
 import { get_legacy_orders, order_of_json } from "@rarible/tezos-sdk"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
+// eslint-disable-next-line camelcase
+import { cancel_bid } from "@rarible/tezos-sdk/dist/bids"
+import type { CancelBid } from "@rarible/tezos-sdk/bids/index"
 import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
@@ -18,7 +21,8 @@ import {
 	checkChainId,
 	convertFromContractAddress,
 	getRequiredProvider,
-	getTezosAssetTypeV2, getTezosOrderId,
+	getTezosAssetTypeV2,
+	getTezosOrderId,
 	isMTAssetType,
 	isNftAssetType,
 } from "./common"
@@ -41,14 +45,28 @@ export class TezosCancel {
 			if (!order) {
 				throw new Error("Order has not been found")
 			}
-			if (isNftAssetType(order.make.type) || isMTAssetType(order.make.type)) {
-				if (order.data["@type"] === "TEZOS_RARIBLE_V3") {
+			const provider = getRequiredProvider(this.provider)
+
+			if (order.data["@type"] === "TEZOS_RARIBLE_V3") {
+			  if (isNftAssetType(order.make.type) || isMTAssetType(order.make.type)) {
 					return this.cancelV2SellOrder(order)
+				}
+				if (isNftAssetType(order.take.type) || isMTAssetType(order.take.type)) {
+					const asset = await getTezosAssetTypeV2(provider.config, order.make.type)
+					const bidData: CancelBid = {
+						asset_contract: convertFromContractAddress(order.take.type.contract),
+						asset_token_id: new BigNumber(order.take.type.tokenId),
+						bid_type: asset.type,
+						bid_asset_contract: asset.asset_contract,
+						bid_asset_token_id: asset.asset_token_id,
+					}
+					const tx = await cancel_bid(provider, bidData)
+					return new BlockchainTezosTransaction(tx, this.network)
 				}
 			}
 
 			const legacyOrders = await get_legacy_orders(
-				this.provider.config, {
+				provider.config, {
 					data: true,
 				}, {
 					order_id: [getTezosOrderId(order.id)],

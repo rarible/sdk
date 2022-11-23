@@ -95,11 +95,11 @@ export function getErrorMessageString(err: any): string {
 export type ErrorLevel = LogLevel | NetworkErrorCode | string
 
 export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
+	if (error?.status === 400) {
+		//if user's network request is not correct
+		return LogLevel.WARN
+	}
 	if (error instanceof NetworkError || error?.name === "NetworkError") {
-		if (error?.status === 400) {
-			//if user's request is not correct
-			return LogLevel.WARN
-		}
 		return error?.code || NetworkErrorCode.NETWORK_ERR
 	}
 	if (callableName?.startsWith("apis.")) {
