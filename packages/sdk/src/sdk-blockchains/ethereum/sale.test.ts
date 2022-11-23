@@ -26,7 +26,7 @@ describe("sale", () => {
 			logs: LogsLevel.DISABLED,
 			blockchain: {
 				[BlockchainGroup.ETHEREUM]: {
-					fillCalldata: "0x000000000000000000000000000000000000000000000009",
+					marketplaceMarker: "0x000000000000000000000000000000000000000000000009",
 				},
 			},
 		}),
@@ -403,7 +403,7 @@ describe.skip("buy item with opensea order", () => {
 			logs: LogsLevel.DISABLED,
 			blockchain: {
 				[BlockchainGroup.ETHEREUM]: {
-					fillCalldata: "0x000000000000000000000000000000000000000000000009",
+					marketplaceMarker: "0x000000000000000000000000000000000000000000000009",
 					[Blockchain.ETHEREUM]: {
 						openseaOrdersMetadata: meta,
 					},

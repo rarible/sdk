@@ -56,7 +56,7 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 						blockchain: {
 							[WalletType.ETHEREUM]: {
 								useDataV3: true,
-								marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000face",
+								marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
 							}
 						}
 					}))

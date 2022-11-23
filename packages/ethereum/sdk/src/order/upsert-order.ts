@@ -58,7 +58,6 @@ export type OrderRequestV3Sell = {
 	payout: Part
 	originFeeFirst?: Part
 	originFeeSecond?: Part
-	marketplaceMarker?: Word
 	maxFeesBasePoint: number
 	start?: number
 	end?: number
@@ -70,7 +69,6 @@ export type OrderRequestV3Buy = {
 	payout?: Part
 	originFeeFirst?: Part
 	originFeeSecond?: Part
-	marketplaceMarker?: Word
 	start?: number
 	end?: number
 }
@@ -87,6 +85,7 @@ export class UpsertOrder {
 		private readonly orderApi: OrderControllerApi,
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly checkWalletChainId: () => Promise<boolean>,
+		private readonly marketplaceMarker: Word | undefined
 	) {}
 
 	readonly upsert = Action
@@ -170,7 +169,7 @@ export class UpsertOrder {
 					payout: request.payout,
 					originFeeFirst: request.originFeeFirst,
 					originFeeSecond: request.originFeeSecond,
-					marketplaceMarker: request.marketplaceMarker,
+					marketplaceMarker: this.marketplaceMarker,
 				}
 				break
 			case "DATA_V3_SELL":
@@ -179,7 +178,7 @@ export class UpsertOrder {
 					payout: request.payout,
 					originFeeFirst: request.originFeeFirst,
 					originFeeSecond: request.originFeeSecond,
-					marketplaceMarker: request.marketplaceMarker,
+					marketplaceMarker: this.marketplaceMarker,
 					maxFeesBasePoint: request.maxFeesBasePoint,
 				}
 				break
