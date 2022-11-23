@@ -1,4 +1,4 @@
-import { toAddress } from "@rarible/types"
+import { toAddress, ZERO_WORD } from "@rarible/types"
 import {
 	Configuration, GatewayControllerApi,
 	NftCollectionControllerApi, NftLazyMintControllerApi,
@@ -63,6 +63,7 @@ describe("bid", () => {
 		orderApi,
 		ethereum2,
 		checkWalletChainId2,
+		ZERO_WORD
 	)
 	const orderBid = new OrderBid(upserter, checkAssetType, checkWalletChainId2)
 

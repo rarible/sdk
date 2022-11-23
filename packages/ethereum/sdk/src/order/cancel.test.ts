@@ -1,7 +1,7 @@
 import { awaitAll, createE2eProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { Address, OrderForm } from "@rarible/ethereum-api-client"
 import { Configuration, OrderControllerApi } from "@rarible/ethereum-api-client"
 import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
@@ -128,7 +128,8 @@ describe("cancel order", () => {
 			sign,
 			orderApi,
 			ethereum,
-			checkWalletChainId
+			checkWalletChainId,
+			ZERO_WORD
 		)
 
 		const order = await upserter.upsert({ order: form })

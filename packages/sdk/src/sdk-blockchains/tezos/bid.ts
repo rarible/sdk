@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
 import type { TezosNetwork, TezosProvider, FTAssetType, XTZAssetType } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { put_bid } from "@rarible/tezos-sdk/bids"
+import { put_bid } from "@rarible/tezos-sdk/dist/bids"
 import BigNumber from "bignumber.js"
 import { toBigNumber } from "@rarible/types"
 // eslint-disable-next-line camelcase

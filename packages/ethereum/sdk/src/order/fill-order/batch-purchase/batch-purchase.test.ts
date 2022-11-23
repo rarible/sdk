@@ -60,8 +60,8 @@ describe("Batch purchase", function () {
 
 	test("RaribleOrder few items sell", async () => {
 		const orders = await Promise.all([
-			makeRaribleV2Order(sdkSeller, {}),
-			makeRaribleV2Order(sdkSeller, {}),
+			makeRaribleV2Order(sdkSeller, env),
+			makeRaribleV2Order(sdkSeller, env),
 		])
 
 		await buyout(orders, [{
@@ -72,8 +72,8 @@ describe("Batch purchase", function () {
 
 	test("Seaport few items sell", async () => {
 		const orders = await Promise.all([
-			makeSeaportOrder(sdkSeller, ethereum, send),
-			makeSeaportOrder(sdkSeller, ethereum, send),
+			makeSeaportOrder(sdkSeller, ethereum, env, send),
+			makeSeaportOrder(sdkSeller, ethereum, env, send),
 		])
 
 		await buyout(orders, [{
@@ -84,8 +84,8 @@ describe("Batch purchase", function () {
 
 	test("looksrare few items sell", async () => {
 		const orders = [
-			await makeLooksrareOrder(sdkSeller, ethereum, send, config),
-			await makeLooksrareOrder(sdkSeller, ethereum, send, config),
+			await makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
+			await makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
 		]
 
 		await buyout(orders, [{
@@ -96,10 +96,10 @@ describe("Batch purchase", function () {
 
 	test("Different orders types sell", async () => {
 		const orders = await Promise.all([
-			makeRaribleV2Order(sdkSeller, {}),
-			makeSeaportOrder(sdkSeller, ethereum, send),
-			makeLooksrareOrder(sdkSeller, ethereum, send, config),
-			makeRaribleV2Order(sdkSeller, {}),
+			makeRaribleV2Order(sdkSeller, env),
+			makeSeaportOrder(sdkSeller, ethereum, env, send),
+			makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
+			makeRaribleV2Order(sdkSeller, env),
 		])
 
 		const requests = [

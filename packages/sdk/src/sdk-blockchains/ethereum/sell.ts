@@ -111,7 +111,6 @@ export class EthereumSell {
 					originFeeFirst: originFees[0],
 					originFeeSecond: originFees[1],
 					maxFeesBasePoint: sellFormRequest.maxFeesBasePoint ?? 0,
-					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
 					amount: sellFormRequest.amount ?? 1,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,

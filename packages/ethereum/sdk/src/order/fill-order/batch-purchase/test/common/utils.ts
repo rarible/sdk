@@ -15,14 +15,16 @@ import type { SendFunction } from "../../../../../common/send-transaction"
 import { makeRaribleSellOrder } from "../../../looksrare-utils/create-order"
 import type { EthereumConfig } from "../../../../../config/type"
 import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
+import { getTestContract } from "../../../../../common/test/test-credentials"
+import type { EthereumNetwork } from "../../../../../types"
 
 // const goerliErc721V3ContractAddress = toAddress("0x1723017329a804564bC8d215496C89eaBf1F3211")
-const devErc721V3ContractAddress = toAddress("0xf9864189fe52456345DD0055D210fD160694Dd08")
+// const devErc721V3ContractAddress = toAddress("0xf9864189fe52456345DD0055D210fD160694Dd08")
 
-export async function mintTestToken(sdk: RaribleSdk) {
+export async function mintTestToken(sdk: RaribleSdk, env: EthereumNetwork) {
 	const sellItem = await sdk.nft.mint({
 		// collection: createErc721V3Collection(goerliErc721V3ContractAddress),
-		collection: createErc721V3Collection(devErc721V3ContractAddress),
+		collection: createErc721V3Collection(getTestContract(env, "erc721V3")),
 		uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		royalties: [
 			{
@@ -45,16 +47,17 @@ export async function mintTestToken(sdk: RaribleSdk) {
 
 export async function makeRaribleV2Order(
 	sdk: RaribleSdk,
-	request: {
+	env: EthereumNetwork,
+	request?: {
 		price?: string,
 	},
 ) {
-	const token = await mintTestToken(sdk)
+	const token = await mintTestToken(sdk, env)
 	//token
 	const sellOrder = await sdk.order.sell({
 		type: "DATA_V2",
 		amount: 1,
-		priceDecimal: toBn(request.price ?? "0.000000000001"),
+		priceDecimal: toBn(request?.price ?? "0.000000000001"),
 		takeAssetType: {
 			assetClass: "ETH",
 		},
@@ -73,9 +76,10 @@ export async function makeRaribleV2Order(
 export async function makeSeaportOrder(
 	sdk: RaribleSdk,
 	ethereum: Ethereum,
+	env: EthereumNetwork,
 	send: SendFunction,
 ) {
-	const token = await mintTestToken(sdk)
+	const token = await mintTestToken(sdk, env)
 	await delay(10000)
 	const orderHash = await retry(10, 1000, async () => {
 		const make = {
@@ -92,10 +96,11 @@ export async function makeSeaportOrder(
 export async function makeLooksrareOrder(
 	sdk: RaribleSdk,
 	ethereum: Ethereum,
+	env: EthereumNetwork,
 	send: SendFunction,
 	config: EthereumConfig
 ) {
-	const token = await mintTestToken(sdk)
+	const token = await mintTestToken(sdk, env)
 
 	const sellOrder = await makeRaribleSellOrder(
 		ethereum,
@@ -113,11 +118,12 @@ export async function makeLooksrareOrder(
 
 export async function makeAmmOrder(
 	sdk: RaribleSdk,
+	env: EthereumNetwork,
 	ethereum: Ethereum,
 	send: SendFunction,
 	config: EthereumConfig
 ): Promise<SimpleAmmOrder> {
-	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, ethereum, send, config.sudoswap.pairFactory, 1)
+	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, env, ethereum, send, config.sudoswap.pairFactory, 2)
 	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
 	return await retry(20, 2000, async () => {
 		return await sdk.apis.order.getOrderByHash({ hash: orderHash })

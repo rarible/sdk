@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import {
 	Configuration,
@@ -72,6 +72,7 @@ describe.each(providers)("bid", (ethereum) => {
 		orderApi,
 		ethereum,
 		checkWalletChainId,
+		ZERO_WORD
 	)
 	const orderSell = new OrderBid(upserter, checkAssetType, checkWalletChainId)
 	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")

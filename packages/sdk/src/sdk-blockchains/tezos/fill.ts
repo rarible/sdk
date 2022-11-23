@@ -13,8 +13,8 @@ import { Blockchain } from "@rarible/api-client"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 // eslint-disable-next-line camelcase
-import { accept_bid } from "@rarible/tezos-sdk/bids"
-import type { AcceptBid } from "@rarible/tezos-sdk/bids"
+import { accept_bid } from "@rarible/tezos-sdk/dist/bids"
+import type { AcceptBid } from "@rarible/tezos-sdk/dist/bids"
 import { Warning } from "@rarible/logger/build"
 import { toBn } from "@rarible/utils/build/bn"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse,

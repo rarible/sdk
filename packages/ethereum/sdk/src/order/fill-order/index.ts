@@ -62,6 +62,7 @@ export class OrderFiller {
 	x2y2Handler: X2Y2OrderHandler
 	ammHandler: AmmOrderHandler
 	private checkAssetType: CheckAssetTypeFunction
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private checkLazyAssetType: (type: AssetType) => Promise<AssetType>
 
 	constructor(
@@ -94,6 +95,7 @@ export class OrderFiller {
 			config,
 			getBaseOrderFee,
 			env,
+			apis,
 			sdkConfig,
 		)
 		this.x2y2Handler = new X2Y2OrderHandler(ethereum, send, config, getBaseOrderFee, apis)

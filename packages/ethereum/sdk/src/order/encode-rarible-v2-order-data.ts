@@ -22,7 +22,6 @@ export function encodePartToBuffer(part: Part | undefined): BigNumber {
 	return toBigNumber("0x" + value.padStart(12, "0") + account)
 }
 
-//todo wrongEncode когда применять?
 export function encodeRaribleV2OrderData(
 	ethereum: Ethereum,
 	data: OrderData,

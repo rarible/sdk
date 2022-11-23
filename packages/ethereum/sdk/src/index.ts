@@ -5,6 +5,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
+import { toWord } from "@rarible/types"
 import { getEthereumConfig } from "./config"
 import type { UpsertOrderAction } from "./order/upsert-order"
 import { UpsertOrder } from "./order/upsert-order"
@@ -58,6 +59,7 @@ import { getAuctionHash } from "./auction/common"
 import type { CryptoPunksWrapper } from "./common/crypto-punks"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./nft/cryptopunk-wrapper"
 import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purchase"
+import { getUpdatedCalldata } from "./order/fill-order/common/get-updated-call"
 
 export interface RaribleOrderSdk {
 	/**
@@ -292,7 +294,8 @@ export function createRaribleSdk(
 		partialCall(signOrderTemplate, ethereum, config),
 		apis.order,
 		ethereum,
-		checkWalletChainId
+		checkWalletChainId,
+		toWord(getUpdatedCalldata(sdkConfig))
 	)
 
 	const sellService = new OrderSell(upsertService, checkAssetType, checkWalletChainId)

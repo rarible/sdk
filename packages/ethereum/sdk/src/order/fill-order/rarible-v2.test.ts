@@ -228,9 +228,9 @@ describe("buy & acceptBid orders", () => {
 		const startErc20Balance = toBn(await it.testErc20.methods.balanceOf(buyerAddress).call())
 		const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
 
-		const fillCalldata = toBinary(`${ZERO_ADDRESS}00000001`)
+		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
 		const filler = new OrderFiller(provider, send, config, apis, getBaseOrderFee, env, {
-			fillCalldata,
+			marketplaceMarker,
 		})
 		const tx = await filler.buy({ order: finalOrder, amount: 1, payouts: [], originFees: [] })
 		await tx.wait()
@@ -603,12 +603,12 @@ describe("buy & acceptBid orders", () => {
 			from: sellerAddress,
 		})
 
-		const fillCalldata = toBinary(`${ZERO_ADDRESS}00000001`)
+		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
 		const sdkBuyer = createRaribleSdk(buyerEthereum, env, {
-			fillCalldata,
+			marketplaceMarker,
 		})
 		const tx = await sdkBuyer.order.buy({ order: finalOrder, amount: 2, originFees: [] })
-		expect(tx.data.endsWith(fillCalldata.concat(FILL_CALLDATA_TAG).slice(2))).toBe(true)
+		expect(tx.data.endsWith(marketplaceMarker.concat(FILL_CALLDATA_TAG).slice(2))).toBe(true)
 		await tx.wait()
 	})
 })

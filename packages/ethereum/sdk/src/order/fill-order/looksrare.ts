@@ -17,12 +17,18 @@ import type { SimpleLooksrareOrder, SimpleOrder } from "../types"
 import { isNft } from "../is-nft"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
+import type { RaribleEthereumApis } from "../../common/apis"
 import type { MakerOrderWithVRS, TakerOrderWithEncodedParams } from "./looksrare-utils/types"
 import type { LooksrareOrderFillRequest, OrderFillSendData } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { getUpdatedCalldata } from "./common/get-updated-call"
 import type { PreparedOrderRequestDataForExchangeWrapper } from "./types"
 import { calcValueWithFees, originFeeValueConvert } from "./common/origin-fees-utils"
+import {
+	addFeeDependsOnExternalFee,
+	encodeDataWithRoyalties,
+	getRoyaltiesAmount,
+} from "./common/get-market-data"
 
 export class LooksrareOrderHandler {
 	constructor(
@@ -31,6 +37,7 @@ export class LooksrareOrderHandler {
 		private readonly config: EthereumConfig,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
+		private readonly apis: RaribleEthereumApis,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
 
@@ -104,7 +111,7 @@ export class LooksrareOrderHandler {
 		)
 	}
 
-	private prepareTransactionData(
+	private async prepareTransactionData(
 		request: LooksrareOrderFillRequest,
 		originFees: Part[] | undefined,
 		encodedFeesValue?: BigNumber,
@@ -137,7 +144,7 @@ export class LooksrareOrderHandler {
 		)
 
 		const { totalFeeBasisPoints, encodedFeesValue: localEncodedFee, feeAddresses } = originFeeValueConvert(originFees)
-		const valueForSending = calcValueWithFees(toBigNumber(makerOrder.price.toString()), totalFeeBasisPoints)
+		let valueWithOriginFees = calcValueWithFees(toBigNumber(makerOrder.price.toString()), totalFeeBasisPoints)
 
 		const feeEncodedValue = encodedFeesValue ?? localEncodedFee
 
@@ -148,10 +155,31 @@ export class LooksrareOrderHandler {
 			data: fulfillData,
 		}
 
+		if (request.addRoyalty) {
+			const royalties = (await this.apis.nftItem.getNftItemRoyaltyById({
+				itemId: `${makerOrder.collection}:${makerOrder.tokenId}`,
+			})).royalty
+
+			if (royalties?.length) {
+				data.data = encodeDataWithRoyalties({
+					royalties,
+					data: fulfillData,
+					provider: this.ethereum,
+				})
+				const royaltiesAmount = getRoyaltiesAmount(
+					royalties,
+					makerOrder.price.toString() ?? 0
+				)
+				valueWithOriginFees = toBn(valueWithOriginFees.plus(royaltiesAmount).toString())
+
+				data.fees = addFeeDependsOnExternalFee(request.originFees, encodedFeesValue)
+			}
+		}
+
 		return {
 			requestData: {
 				data: data,
-				options: { value: valueForSending.toString() },
+				options: { value: valueWithOriginFees.toString() },
 			},
 			feeAddresses,
 		}
@@ -162,11 +190,11 @@ export class LooksrareOrderHandler {
 		originFees: Part[] | undefined,
 		encodedFeesValue: BigNumber,
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-		return this.prepareTransactionData(request, originFees, encodedFeesValue).requestData
+		return (await this.prepareTransactionData(request, originFees, encodedFeesValue)).requestData
 	}
 
 	async getTransactionData(request: LooksrareOrderFillRequest): Promise<OrderFillSendData> {
-		const { requestData, feeAddresses } = this.prepareTransactionData(request, request.originFees, undefined)
+		const { requestData, feeAddresses } = await this.prepareTransactionData(request, request.originFees, undefined)
 
 		const provider = getRequiredWallet(this.ethereum)
 		const wrapperContract = createExchangeWrapperContract(provider, this.config.exchange.wrapper)
