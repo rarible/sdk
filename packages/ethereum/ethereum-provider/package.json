@@ -1,0 +1,32 @@
+{
+  "name": "@rarible/ethereum-provider",
+  "version": "0.13.0",
+  "description": "Library to abstract from web3.js or ethers.js",
+  "keywords": [
+    "ethereum",
+    "provider"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "test": "echo \"There's no tests yet\"",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "eth-sig-util": "^3.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "e1a77d6596ee3286e6f2d7c1db5f69489c10f10c"
+}

@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+# [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
+
+
+### Features
+
+* example app sign page ([#386](https://github.com/rarible/sdk/issues/386)) ([51448ed](https://github.com/rarible/sdk/commit/51448ed1e70c00dd18d5a98e48a4505a17c77bba))
+
+
+
+
+
 ## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
 
 
