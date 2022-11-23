@@ -8,10 +8,10 @@ export function getTestContract(env: RaribleSdkEnvironment, type: contractType):
 	switch (env) {
 		case "development": {
 			const contracts: Record<contractType, string> = {
-				eurTzContract: "KT1HvTfYG7DgeujAQ1LDvCHiQc29VMycoJh5",
-				fa12Contract: "KT1X9S5Z69r36kToUx2xSi32gmhRjEW64dMS",
+				eurTzContract: "KT1PEBh9oKkQosYuw4tvzigps5p7uqXMgdez",
+				fa12Contract: "KT1WsXMAzcre2MNUjNkGtVQLpsTnNFhBJhLv",
 				nftContract: "KT1PuABq2ReD789KtKetktvVKJcCMpyDgwUx",
-				mtContract: "KT1DqmzJCkUQ8xAqeKzz9L4g4owLiQj87XaC",
+				mtContract: "KT1Uke8qc4YTfP41dGuoGC8UsgRyCtyvKPLA",
 			}
 			return convertTezosToContractAddress(contracts[type])
 		}
