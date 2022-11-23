@@ -5,4 +5,10 @@ module.exports = {
 		"^.+\\.ts?$": "ts-jest",
 	},
 	testResultsProcessor: "jest-junit",
+	reporters: [
+		"default",
+		["jest-junit", {
+			outputDirectory: "reports",
+		}],
+	],
 }

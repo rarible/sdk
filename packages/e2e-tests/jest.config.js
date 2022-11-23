@@ -12,4 +12,10 @@ module.exports = {
 		"<rootDir>/node_modules/",
 	],
 	testResultsProcessor: "jest-junit",
+	reporters: [
+		"default",
+		["jest-junit", {
+			outputDirectory: "reports",
+		}],
+	],
 }

@@ -4,6 +4,7 @@ node_modules/
 *.iml
 .husky/_
 *junit.xml
+reports/
 
 tsconfig.tsbuildinfo
 platforms/
