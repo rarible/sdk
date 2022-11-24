@@ -34,7 +34,7 @@ pipeline {
           sh 'yarn'
           sh 'yarn bootstrap'
           sh 'yarn clean'
-          sh 'yarn build-all'
+          sh 'yarn build'
           sh 'yarn e2e-tests'
         }
       }

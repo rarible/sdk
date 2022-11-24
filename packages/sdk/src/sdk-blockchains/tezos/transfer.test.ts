@@ -8,7 +8,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 
-describe("transfer test", () => {
+describe.skip("transfer test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
 	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })

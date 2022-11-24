@@ -1,4 +1,4 @@
-import { NetworkError, RemoteLogger, Warning } from "@rarible/logger/build"
+import { NetworkError, RemoteLogger } from "@rarible/logger/build"
 import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
@@ -7,8 +7,8 @@ import axios from "axios"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
-import { NetworkErrorCode } from "../apis"
 import { getSdkContext } from "../get-sdk-context"
+import { getErrorLevel } from "./logger-overrides"
 
 export const loggerConfig = {
 	service: "union-sdk",
@@ -92,60 +92,6 @@ export function getErrorMessageString(err: any): string {
 	}
 }
 
-export type ErrorLevel = LogLevel | NetworkErrorCode | string
-
-export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
-	if (error instanceof NetworkError || error?.name === "NetworkError") {
-		if (error?.status === 400) {
-			//if user's request is not correct
-			return LogLevel.WARN
-		}
-		return error?.code || NetworkErrorCode.NETWORK_ERR
-	}
-	if (callableName?.startsWith("apis.")) {
-		return NetworkErrorCode.NETWORK_ERR
-	}
-	if (isCancelledTx(error, wallet?.walletType) || error instanceof Warning || error?.name === "Warning") {
-		return LogLevel.WARN
-	}
-	return LogLevel.ERROR
-}
-
-const EVM_WARN_MESSAGES = [
-	"User denied transaction signature",
-	"User denied message signature",
-	"User rejected the transaction",
-	"Sign transaction cancelled",
-	"Link iFrame Closed",
-	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
-]
-
-function isCancelledTx(err: any, blockchain: WalletType | undefined): boolean {
-	try {
-		if (!err) {
-			return false
-		}
-
-		if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
-			if (EVM_WARN_MESSAGES.some(msg => err?.message?.includes(msg))) {
-				return true
-			}
-		}
-
-		if (blockchain === WalletType.TEZOS) {
-			if (err?.name === "UnknownBeaconError" && err?.title === "Aborted") {
-				return true
-			}
-		}
-
-		if (blockchain === WalletType.SOLANA) {
-			if (err?.name === "User rejected the request.") {
-				return true
-			}
-		}
-	} catch (e) {}
-	return false
-}
 
 function getStringifiedError(error: any): string | undefined {
 	try {
@@ -225,7 +171,6 @@ export function getInternalLoggerMiddleware(
 					remoteLogger.raw(data)
 				}
 			}
-
 			return responsePromise
 		}]
 	}

@@ -19,6 +19,7 @@ import { TezosCancel } from "./cancel"
 import { TezosBalance } from "./balance"
 import { TezosCreateCollection } from "./create-collection"
 import { TezosCanTransfer } from "./restriction"
+import { TezosBid } from "./bid"
 
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
@@ -35,6 +36,7 @@ export function createTezosSdk(
 	const transferService = new TezosTransfer(maybeProvider, _apis, network)
 	const burnService = new TezosBurn(maybeProvider, _apis, network)
 	const cancelService = new TezosCancel(maybeProvider, _apis, network)
+	const bidService = new TezosBid(maybeProvider, _apis, network)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.TEZOS, preprocessMeta)
@@ -53,11 +55,11 @@ export function createTezosSdk(
 			fill: { prepare: fillService.fill },
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
 			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
-			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
-			bid: new MethodWithPrepare(notImplemented, nonImplementedAction),
-			bidUpdate: new MethodWithPrepare(notImplemented, nonImplementedAction),
+			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
+			bidUpdate: new MethodWithPrepare(bidService.updateBasic, bidService.update),
 			cancel: cancelService.cancelBasic,
 		},
 		balances: {

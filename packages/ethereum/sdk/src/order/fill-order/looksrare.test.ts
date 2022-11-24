@@ -274,9 +274,9 @@ describe.skip("looksrare fill", () => {
 		)
 		console.log("sellOrder", sellOrder)
 
-		const fillCalldata = toBinary(`${ZERO_ADDRESS}00000009`)
+		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000009`)
 		const sdkBuyer = createRaribleSdk(buyerEthereum.provider, "testnet", {
-			fillCalldata,
+			marketplaceMarker,
 		})
 		const tx = await sdkBuyer.order.buy({
 			order: sellOrder,
@@ -289,7 +289,7 @@ describe.skip("looksrare fill", () => {
 				value: 50,
 			}],
 		})
-		const fullAdditionalData = fillCalldata.concat(FILL_CALLDATA_TAG).slice(2)
+		const fullAdditionalData = marketplaceMarker.concat(FILL_CALLDATA_TAG).slice(2)
 		console.log(tx)
 		expect(tx.data.endsWith(fullAdditionalData)).toBe(true)
 		await tx.wait()

@@ -328,7 +328,7 @@ describe.skip("seaport", () => {
 		console.log("accountAddressBuyer", accountAddressBuyer)
 		console.log("seller", await ethereumSeller.getFrom())
 
-		const fillCalldata = toBinary(`${ZERO_ADDRESS}00000009`)
+		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000009`)
 		const orderHash = await mintAndCreateSeaportOrder(
 			sdkSeller,
 			ethereumSeller,
@@ -336,7 +336,7 @@ describe.skip("seaport", () => {
 			rinkebyErc721V3ContractAddress
 		)
 		const sdkBuyer = createRaribleSdk(ethereum, "testnet", {
-			fillCalldata,
+			marketplaceMarker,
 		})
 
 		const order = await awaitOrder(sdkBuyer, orderHash)
@@ -346,7 +346,7 @@ describe.skip("seaport", () => {
 			amount: 1,
 		})
 		console.log("tx", tx)
-		const fullAdditionalData = fillCalldata.concat(FILL_CALLDATA_TAG).slice(2)
+		const fullAdditionalData = marketplaceMarker.concat(FILL_CALLDATA_TAG).slice(2)
 		console.log("tx data buy", tx.data.slice(-fullAdditionalData.length))
 		console.log("tx data add", fullAdditionalData)
 		expect(tx.data.endsWith(fullAdditionalData)).toBe(true)

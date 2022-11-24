@@ -1,13 +1,11 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber, toWord } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import type {
 	FillBatchSingleOrderRequest,
 	FillOrderAction,
 	FillOrderRequest,
-	RaribleV2OrderFillRequestV3Buy,
 	RaribleV2OrderFillRequestV3Sell,
-
 	AmmOrderFillRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
@@ -109,13 +107,9 @@ export class EthereumFill {
 				switch (order.data.dataType) {
 					case "RARIBLE_V2_DATA_V3_BUY":
 						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: true });
-						(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!;
-						(request as RaribleV2OrderFillRequestV3Sell).marketplaceMarker =
-							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
+						(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!
 						break
 					case "RARIBLE_V2_DATA_V3_SELL":
-						(request as RaribleV2OrderFillRequestV3Buy).marketplaceMarker =
-							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
 						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: false })
 						break
 					default:
@@ -373,7 +367,6 @@ export class EthereumFill {
 		const submit = this.sdk.order.buyBatch.around(
 			(request: BatchFillRequest) => {
 				return request.map((req) => {
-					console.log("batch around", request)
 					const order = orders[req.orderId]
 					if (!order) {
 						throw new Error(`Order with id ${req.orderId} not precached`)
