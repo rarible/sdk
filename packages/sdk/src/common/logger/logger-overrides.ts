@@ -73,7 +73,10 @@ function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
 		}
 
 		if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
-			if (EVM_WARN_MESSAGES.some(msg => err?.message?.includes(msg))) {
+			if (
+				err.error?.code === 4001 ||
+				EVM_WARN_MESSAGES.some(msg => err?.message?.includes(msg))
+			) {
 				return true
 			}
 		}

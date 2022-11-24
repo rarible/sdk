@@ -161,18 +161,14 @@ export function getInternalLoggerMiddleware(
 							data.requestAddress = err?.url
 						}
 					} catch (e) {
-						try {
-							data = {
-								level: "LOGGING_ERROR",
-								method: callable?.name,
-								message: getErrorMessageString(e),
-								error: getStringifiedError(e),
-							}
-							remoteLogger.raw(data)
-						} catch (e) {
-							console.error("Error while sending log", e)
+						data = {
+							level: "LOGGING_ERROR",
+							method: callable?.name,
+							message: getErrorMessageString(e),
+							error: getStringifiedError(e),
 						}
 					}
+					remoteLogger.raw(data)
 				}
 			}
 			return responsePromise
