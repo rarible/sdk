@@ -15,4 +15,11 @@ module.exports = {
 	moduleNameMapper: {
 		"source-map-support/register": "identity-obj-proxy",
 	},
+	testResultsProcessor: "jest-junit",
+	reporters: [
+		"default",
+		["jest-junit", {
+			outputDirectory: "reports",
+		}],
+	],
 }
