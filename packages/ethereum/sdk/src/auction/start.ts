@@ -46,7 +46,9 @@ export type AuctionStartResponse = {
 }
 
 export class StartAuction {
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private readonly checkAssetType: (asset: AssetTypeRequest) => Promise<AssetTypeResponse>
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private readonly getAuctionHash: (auctionId: BigNumber) => string
 	private readonly MAX_DURATION_SECONDS = 60 * 60 * 24 * 1000 //1000 days
 	private readonly MIN_DURATION_SECONDS = 60 * 60 * 15 // 15 minutes

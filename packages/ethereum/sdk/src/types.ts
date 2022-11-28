@@ -27,7 +27,7 @@ export interface IRaribleEthereumSdkConfig {
 	logs?: LogsConfig
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
-	fillCalldata?: Binary
+	marketplaceMarker?: Binary
 	apiKey?: string
 }
 

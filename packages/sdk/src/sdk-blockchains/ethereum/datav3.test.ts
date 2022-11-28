@@ -23,7 +23,7 @@ describe("Create & fill orders with order data v3", () => {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {
-				marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000face",
+				marketplaceMarker: "0x00000000000000000000000000000000000000000000face",
 				useDataV3: true,
 			},
 		},
@@ -32,7 +32,7 @@ describe("Create & fill orders with order data v3", () => {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {
-				marketplaceMarker: "0x000000000000000000000000000000000000000000000000000000000000dead",
+				marketplaceMarker: "0x00000000000000000000000000000000000000000000dead",
 				useDataV3: true,
 			},
 		},

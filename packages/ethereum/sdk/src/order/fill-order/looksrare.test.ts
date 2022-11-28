@@ -5,6 +5,7 @@ import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { Erc1155AssetType, LooksRareOrder } from "@rarible/ethereum-api-client"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import { ethers } from "ethers"
+import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
 import { checkChainId } from "../check-chain-id"
@@ -13,7 +14,9 @@ import { createErc1155V2Collection, createErc721V3Collection } from "../../commo
 import { MintResponseTypeEnum } from "../../nft/mint"
 import { awaitOwnership } from "../test/await-ownership"
 import { FILL_CALLDATA_TAG } from "../../config/common"
-import { DEV_PK_1, DEV_PK_2, GOERLI_CONFIG } from "../../common/test/test-credentials"
+import { DEV_PK_1, DEV_PK_2, getTestContract, GOERLI_CONFIG } from "../../common/test/test-credentials"
+import type { EthereumNetwork } from "../../types"
+import { delay } from "../../common/retry"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
@@ -48,17 +51,25 @@ describe.skip("looksrare fill", () => {
 		new ethers.Wallet(DEV_PK_1, buyerEthersWeb3Provider)
 	)
 
-	const sdkBuyer = createRaribleSdk(buyerWeb3, "testnet")
-	const sdkSeller = createRaribleSdk(ethereumSeller, "testnet")
+	const env: EthereumNetwork = "testnet"
+	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
+	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
-	const goerliErc721V3ContractAddress = toAddress("0x1723017329a804564bC8d215496C89eaBf1F3211")
-	const goerliErc1155V2ContractAddress = toAddress("0xe46D6235f3488B8Ce8AA054e8E5bc0aE86146145")
+	const goerliErc721V3ContractAddress = getTestContract(env, "erc721V3")
+	const goerliErc1155V2ContractAddress = getTestContract(env, "erc1155V2")
 	const originFeeAddress = toAddress(feeWallet.getAddressString())
 
 	const config = getEthereumConfig("testnet")
 
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+
+	beforeAll(async () => {
+		console.log({
+			buyerWallet: await buyerWeb3.getFrom(),
+			sellerWallet: await ethereumSeller.getFrom(),
+		})
+	})
 
 	test("fill erc 721", async () => {
 		if (!config.exchange.looksrare) {
@@ -100,6 +111,68 @@ describe.skip("looksrare fill", () => {
 		})
 		console.log(tx)
 		await tx.wait()
+	})
+
+	test("fill erc 721 with royalties", async () => {
+		if (!config.exchange.looksrare) {
+			throw new Error("Looksrare contract has not been set")
+		}
+
+		const sellItem = await sdkSeller.nft.mint({
+			collection: createErc721V3Collection(goerliErc721V3ContractAddress),
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			royalties: [{
+				account: toAddress("0xf6a21e471E07793C06D285CEa7AabA8B72029435"),
+				value: 300,
+			}, {
+				account: toAddress("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE"),
+				value: 400,
+			}],
+			lazy: false,
+		})
+		if (sellItem.type === MintResponseTypeEnum.ON_CHAIN) {
+			await sellItem.transaction.wait()
+		}
+
+		// const [royalty1BalanceOnStart, royalty2BalanceOnStart] = await getEthBalances([
+		// 	"0xf6a21e471E07793C06D285CEa7AabA8B72029435",
+		// 	"0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE",
+		// ])
+		console.log("sellitem", sellItem)
+
+		const sellOrder = await makeRaribleSellOrder(
+			ethereumSeller,
+			{
+				assetClass: "ERC721",
+				contract: sellItem.contract,
+				tokenId: sellItem.tokenId,
+			},
+			send,
+			toAddress(config.exchange.looksrare)
+		)
+		console.log("sellOrder", sellOrder)
+
+		const tx = await sdkBuyer.order.buy({
+			order: sellOrder,
+			amount: 1,
+			addRoyalty: true,
+			originFees: [{
+				account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+				value: 1000,
+			}, {
+				account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+				value: 2000,
+			}],
+		})
+		console.log(tx)
+		await tx.wait()
+
+		await delay(5000)
+
+		// const [royalty1BalanceOnFinish, royalty2BalanceOnFinish] = await getEthBalances([
+		// 	"0xf6a21e471E07793C06D285CEa7AabA8B72029435",
+		// 	"0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE",
+		// ])
 	})
 
 	test("fill erc 1155", async () => {
@@ -201,9 +274,9 @@ describe.skip("looksrare fill", () => {
 		)
 		console.log("sellOrder", sellOrder)
 
-		const fillCalldata = toBinary(`${ZERO_ADDRESS}00000009`)
+		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000009`)
 		const sdkBuyer = createRaribleSdk(buyerEthereum.provider, "testnet", {
-			fillCalldata,
+			marketplaceMarker,
 		})
 		const tx = await sdkBuyer.order.buy({
 			order: sellOrder,
@@ -216,10 +289,18 @@ describe.skip("looksrare fill", () => {
 				value: 50,
 			}],
 		})
-		const fullAdditionalData = fillCalldata.concat(FILL_CALLDATA_TAG).slice(2)
+		const fullAdditionalData = marketplaceMarker.concat(FILL_CALLDATA_TAG).slice(2)
 		console.log(tx)
 		expect(tx.data.endsWith(fullAdditionalData)).toBe(true)
 		await tx.wait()
 	})
 
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	async function getEthBalances(addresses: string[]) {
+		return Promise.all(
+			addresses.map(async address => {
+				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+			})
+		)
+	}
 })

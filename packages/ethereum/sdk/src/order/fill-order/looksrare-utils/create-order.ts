@@ -31,7 +31,7 @@ export async function makeSellOrder(
 		isOrderAsk: true,
 		signer: signerAddress,
 		collection: assetType.contract,
-		price: "100000000",
+		price: "1000",
 		tokenId: assetType.tokenId,
 		amount: "1",
 		strategy: addresses.STRATEGY_STANDARD_SALE,

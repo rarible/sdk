@@ -1,6 +1,6 @@
 {
   "name": "@rarible/biconomy-middleware",
-  "version": "0.12.114",
+  "version": "0.13.0",
   "description": "Middleware for biconomy integration",
   "keywords": [
     "ethereum",
@@ -23,19 +23,20 @@
     "@biconomy/mexa": "^2.0.25",
     "@rarible/logger": "^0.9.12",
     "eth-json-rpc-middleware": "^7.0.1",
-    "json-rpc-engine": "^6.1.0",
-    "eth-sig-util": "^3.0.1"
+    "eth-sig-util": "^3.0.1",
+    "json-rpc-engine": "^6.1.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.12.114",
-    "@types/jest": "^27.0.2",
+    "@rarible/ethereum-sdk-test-common": "^0.13.0",
     "@types/eth-sig-util": "^2.1.1",
+    "@types/jest": "^27.0.2",
     "form-data": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.3.1",
     "node-fetch": "^2.6.7",
     "typescript": "^4.8.4",
-    "web3": "^1.8.1"
+    "web3": "^1.8.1",
+    "jest-junit": "^15.0.0"
   },
   "peerDependencies": {
     "ethers": "^5.0.24",
