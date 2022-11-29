@@ -137,14 +137,30 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 				},
 			}
 		} else {
-			const functionCall = exchangeContract.functionCall(
-				"matchOrders",
-				await this.fixForTx(initial),
-				fixSignature(initial.signature) || "0x",
-				orderToStruct(this.ethereum, inverted),
-				fixSignature(inverted.signature) || "0x",
-			)
+			const nftStruct = assetTypeToStruct(this.ethereum, initial.take.assetType)
+			const [, sellOrderData] = encodeRaribleV2OrderData(this.ethereum, inverted.data)
+			const [buyOrderDataType, buyOrderData] = encodeRaribleV2OrderData(this.ethereum, initial.data)
 
+			const functionCall = exchangeContract.functionCall(
+				"directAcceptBid",
+				{
+					bidMaker: initial.maker,
+					bidNftAmount: initial.take.value,
+					nftAssetClass: nftStruct.assetClass,
+					nftData: nftStruct.data,
+					bidPaymentAmount: initial.make.value,
+					paymentToken: initial.make.assetType.assetClass === "ETH" ? ZERO_ADDRESS : initial.make.assetType.contract,
+					bidSalt: initial.salt,
+					bidStart: initial.start ?? 0,
+					bidEnd: initial.end ?? 0,
+					bidDataType: buyOrderDataType,
+					bidData: buyOrderData,
+					bidSignature: fixSignature(initial.signature) || "0x",
+					sellOrderPaymentAmount: inverted.take.value,
+					sellOrderNftAmount: inverted.make.value,
+					sellOrderData: sellOrderData,
+				}
+			)
 			const options = await this.getMatchV2Options(initial, inverted)
 
 			return {
