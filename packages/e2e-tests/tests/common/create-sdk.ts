@@ -20,7 +20,7 @@ export async function createSdk(blockchain: Blockchain, wallet: BlockchainWallet
 			env = "testnet"
 			break
 		default:
-			env = "testnet"
+			break
 	}
 
 	return await createRaribleSdk(
