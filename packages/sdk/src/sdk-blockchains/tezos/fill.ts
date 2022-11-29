@@ -12,6 +12,11 @@ import type { Order } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BuyRequest } from "@rarible/tezos-sdk/dist/sales/buy"
 import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
+// eslint-disable-next-line camelcase
+import { accept_bid } from "@rarible/tezos-sdk/dist/bids"
+import type { AcceptBid } from "@rarible/tezos-sdk/dist/bids"
+import { Warning } from "@rarible/logger/build"
+import { toBn } from "@rarible/utils/build/bn"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse,
 	IBatchBuyTransactionResult } from "../../types/order/fill/domain"
 import {
@@ -28,12 +33,12 @@ import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../typ
 import type { MaybeProvider } from "./common"
 import {
 	checkChainId,
-	convertFromContractAddress,
-	convertUnionParts,
+	convertFromContractAddress, convertUnionAddress,
+	convertUnionParts, getPayouts,
 	getRequiredProvider,
 	getTezosAddress,
 	getTezosAssetTypeV2,
-	getTezosOrderId,
+	getTezosOrderId, isNftOrMTAssetType,
 } from "./common"
 
 
@@ -47,6 +52,7 @@ export class TezosFill {
 		this.batchBuy = this.batchBuy.bind(this)
 		this.batchBuyBasic = this.batchBuyBasic.bind(this)
 		this.buyBasic = this.buyBasic.bind(this)
+		this.acceptBid = this.acceptBid.bind(this)
 		this.acceptBidBasic = this.acceptBidBasic.bind(this)
 		this.fillCommon = this.fillCommon.bind(this)
 	}
@@ -178,15 +184,63 @@ export class TezosFill {
 	}
 
 	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
+		const response = await this.acceptBid(request)
+		return response.submit(request)
+	}
+
+	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		let preparedOrder = await this.getPreparedOrder(request)
-		return this.fillCommon(request, preparedOrder)
+
+		const { make, take, data } = preparedOrder
+		const submit = Action.create({
+			id: "send-tx" as const,
+			run: async (fillRequest: FillRequest) => {
+				await checkChainId(this.provider)
+				const provider = getRequiredProvider(this.provider)
+
+				if (!isNftOrMTAssetType(take.type)) {
+					throw new Warning("Non-bid order has been passed")
+				}
+				if (data["@type"] !== "TEZOS_RARIBLE_V3") {
+					throw new Error("It's not TEZOS_RARIBLE_V3 order")
+				}
+				if (!(toBn(fillRequest.amount).isEqualTo(take.value))) {
+					throw new Warning("Partial fill is unavailable for tezos orders")
+				}
+				const asset = await getTezosAssetTypeV2(provider.config, make.type)
+
+				const acceptBidRequest: AcceptBid = {
+					asset_contract: convertFromContractAddress(take.type.contract),
+					asset_token_id: new BigNumber(take.type.tokenId),
+					bidder: convertUnionAddress(preparedOrder.maker),
+					bid_type: asset.type,
+					bid_asset_contract: asset.asset_contract,
+					bid_asset_token_id: asset.asset_token_id,
+					bid_origin_fees: convertUnionParts(data.originFees),
+					bid_payouts: await getPayouts(provider, data.payouts),
+				}
+				const tx = await accept_bid(provider, acceptBidRequest)
+				return new BlockchainTezosTransaction(tx, this.network)
+			},
+		})
+
+		return {
+			multiple: this.isMultiple(preparedOrder),
+			maxAmount: await this.getMaxAmount(preparedOrder),
+			baseFee: parseInt(this.provider.config.fees.toString()),
+			originFeeSupport: OriginFeeSupport.FULL,
+			payoutsSupport: PayoutsSupport.MULTIPLE,
+			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+			supportsPartialFill: false,
+			submit,
+		}
 	}
 
 	async fillCommon(fillRequest: FillRequest, preparedOrder: Order) {
 		await checkChainId(this.provider)
 
 		const { make, take } = preparedOrder
-		if (make.type["@type"] === "TEZOS_NFT" || make.type["@type"] === "TEZOS_MT") {
+		if (isNftOrMTAssetType(make.type)) {
 			const request: OrderDataRequest = {
 				make_contract: convertFromContractAddress(make.type.contract),
 				make_token_id: new BigNumber(make.type.tokenId),

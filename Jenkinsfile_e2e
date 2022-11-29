@@ -10,7 +10,7 @@ pipeline {
 
   options {
     disableConcurrentBuilds()
-    ansiColor('xterm')
+    timeout(time: 1, unit: 'HOURS')
   }
 
   parameters {
@@ -29,14 +29,19 @@ pipeline {
 
   stages {
     stage("Run e2e tests") {
-      steps {
-        withCredentials([string(credentialsId: 'npm-token', variable: 'NPM_TOKEN')]) {
-          sh 'yarn'
-          sh 'yarn bootstrap'
-          sh 'yarn clean'
-          sh 'yarn build-all'
-          sh 'yarn e2e-tests'
+      agent {
+        docker {
+          image "node:16-bullseye"
+          args utils.dockerAgentArgs()
+          reuseNode true
         }
+      }
+      steps {
+          sh '''yarn
+              yarn bootstrap
+              yarn clean
+              yarn build
+              yarn e2e-tests'''
       }
     }
   }
@@ -48,6 +53,9 @@ pipeline {
           color: COLOR_MAP[currentBuild.currentResult],
           message: "*${currentBuild.currentResult}:* Test run for blockchain=*${params.BLOCKCHAIN}*. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
       }
+    }
+    always {
+      postReport([:])   
       cleanWs()
     }
   }

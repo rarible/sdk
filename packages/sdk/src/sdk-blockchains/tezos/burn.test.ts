@@ -9,8 +9,7 @@ import { awaitItem } from "../../common/test/await-item"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
-
-describe("burn test", () => {
+describe.skip("burn test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
