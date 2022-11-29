@@ -6,7 +6,7 @@ import { Grid, MenuItem, Stack } from "@mui/material"
 import { FormTextInput } from "../form/form-text-input"
 import { UseFormReturn } from "react-hook-form"
 import { FormSelect } from "../form/form-select"
-import { CurrencyOption } from "../../../common/get-default-currency"
+import { CurrencyOption } from "../../../common/currency-helpers"
 import { ContractAddress, toContractAddress } from "@rarible/types"
 
 interface IPriceFormProps {
