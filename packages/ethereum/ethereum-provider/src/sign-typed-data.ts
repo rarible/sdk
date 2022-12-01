@@ -1,6 +1,7 @@
 import { TypedDataUtils } from "eth-sig-util"
 import type { MessageTypes, TypedMessage } from "./domain"
 import { SignTypedDataMethodEnum } from "./domain"
+import { EthereumProviderError } from "./errors"
 
 export type SendFunction = (method: string, params: any) => Promise<any>
 
@@ -10,18 +11,31 @@ export async function signTypedData<T extends MessageTypes>(
 	try {
 		return await send(SignTypedDataMethodEnum.V4, [signer, JSON.stringify(data)])
 	} catch (error) {
-		console.error("got error while executing sign typed data v4", error)
-		if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
-			return signWithHardwareWallets(send, signer, data)
-		} else {
-			filterErrors(error)
-			try {
-				return await send(SignTypedDataMethodEnum.V3, [signer, JSON.stringify(data)])
-			} catch (error) {
-				console.error("got error while executing sign typed data v3", error)
+		try {
+			console.error("got error while executing sign typed data v4", error)
+			if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
+				return await signWithHardwareWallets(send, signer, data)
+			} else {
 				filterErrors(error)
-				return send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
+				try {
+					return await send(SignTypedDataMethodEnum.V3, [signer, JSON.stringify(data)])
+				} catch (error) {
+					console.error("got error while executing sign typed data v3", error)
+					filterErrors(error)
+					return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
+				}
 			}
+		} catch (e) {
+			throw new EthereumProviderError({
+				error: e,
+				data: {
+					signer,
+					data,
+					v4SignError: error,
+				},
+				method: "EthereumProvider.signTypedData",
+				signer,
+			})
 		}
 	}
 }

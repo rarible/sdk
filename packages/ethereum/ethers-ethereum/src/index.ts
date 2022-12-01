@@ -2,13 +2,12 @@ import type { Contract } from "ethers"
 import { ethers } from "ethers"
 import type { TransactionResponse } from "@ethersproject/abstract-provider"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
-import { Provider, signTypedData } from "@rarible/ethereum-provider"
-import type { Address, Binary, BigNumber, Word } from "@rarible/types"
+import type { EthereumTransactionEvent, MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
+import { EthereumProviderError, Provider, signTypedData } from "@rarible/ethereum-provider"
+import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
-import type { MessageTypes, TypedMessage, EthereumTransactionEvent } from "@rarible/ethereum-provider"
 import type { TypedDataSigner } from "@ethersproject/abstract-signer"
 import { BigNumber as EthersBN } from "ethers/lib/ethers"
-import { EthereumProviderError } from "@rarible/ethereum-provider"
 import { decodeParameters, encodeParameters } from "./abi-coder"
 import { getTxEvents } from "./utils/parse-logs"
 
@@ -29,8 +28,12 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 
 	async send(method: string, params: any): Promise<any> {
 		try {
-		  return this.web3Provider.send(method, params)
+		  return await this.web3Provider.send(method, params)
 		} catch (e) {
+			let signer: string | undefined
+			try {
+				signer = await this.getFrom()
+			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.send",
@@ -38,21 +41,37 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 				data: {
 					method,
 					params,
-					from: await this.getFrom(),
+					from: signer,
 				},
 			})
 		}
 	}
 
-	personalSign(message: string): Promise<string> {
-		return this.web3Provider.getSigner().signMessage(message)
+	async personalSign(message: string): Promise<string> {
+		try {
+		  return await this.web3Provider.getSigner().signMessage(message)
+		} catch (e) {
+			let signer: string | undefined
+			try {
+				signer = await this.getFrom()
+			} catch (e) {}
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersWeb3ProviderEthereum.personalSign",
+				error: e,
+				data: {
+					message,
+					from: signer,
+				},
+			})
+		}
 	}
 
 	async signTypedData<T extends MessageTypes>(data: TypedMessage<T>): Promise<string> {
 		let signer: string | undefined
 		try {
 			signer = await this.getFrom()
-			return signTypedData(this.send, signer, data)
+			return await signTypedData(this.send, signer, data)
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
@@ -128,15 +147,31 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		return new EthersContract(new ethers.Contract(address, abi, this.signer), this.signer)
 	}
 
-	personalSign(message: string): Promise<string> {
-		return this.signer.signMessage(message)
+	async personalSign(message: string): Promise<string> {
+		try {
+		  return await this.signer.signMessage(message)
+		} catch (e) {
+			let signer: string | undefined
+			try {
+				signer = await this.getFrom()
+			} catch (e) {}
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersEthereum.personalSign",
+				error: e,
+				data: {
+					message,
+					from: signer,
+				},
+			})
+		}
 	}
 
 	async signTypedData<T extends MessageTypes>(data: TypedMessage<T>): Promise<string> {
 		try {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { EIP712Domain, ...types } = data.types
-			return this.signer._signTypedData(data.domain, types, data.message)
+			return await this.signer._signTypedData(data.domain, types, data.message)
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
@@ -252,12 +287,30 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 		return value.toNumber()
 	}
 
-	call(options?: EthereumProvider.EthereumSendOptions): Promise<any> {
-		const func = this.contract[this.name].bind(null, ...this.args)
-		if (options) {
-			return func(options)
-		} else {
-			return func()
+	async call(options?: EthereumProvider.EthereumSendOptions): Promise<any> {
+		try {
+			const func = this.contract[this.name].bind(null, ...this.args)
+			if (options) {
+				return await func(options)
+			} else {
+				return await func()
+			}
+		} catch (e) {
+			let callInfo = null, callData = null
+			try {
+				callInfo = await this.getCallInfo()
+				callData = await this.getData()
+			} catch (e) {}
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersFunctionCall.call",
+				error: e,
+				data: {
+					...(callInfo || {}),
+					data: callData,
+					options,
+				},
+			})
 		}
 	}
 
@@ -294,13 +347,18 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 				return new EthersTransaction(tx)
 			}
 		} catch (e) {
+			let callInfo = null, callData = null
+			try {
+				callInfo = await this.getCallInfo()
+				callData = await this.getData()
+			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersFunctionCall.send",
 				error: e,
 				data: {
-					...(await this.getCallInfo()),
-					data: await this.getData(),
+					...(callInfo || {}),
+					data: callData,
 					hash: hashValue,
 					options,
 				},
