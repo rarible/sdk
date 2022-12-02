@@ -40,12 +40,9 @@ import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-numb
 // import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import axios from "axios"
-import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { RaribleSdkConfig } from "../../../config/domain"
-import { NetworkErrorCode } from "../../../common/apis"
 
 export interface ITezosAPI {
 	collection: NftCollectionControllerApi,
@@ -157,6 +154,8 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
 					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
 					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
+					aggregator_tracker: "KT1DajvCNVScudRm3kCHPfUjsRCtmPnm375s",
+					aggregator_tracker_id: "09616c6c64617461",
 				},
 			}
 		}
@@ -194,6 +193,8 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
 					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
 					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
+					aggregator_tracker: "KT1DajvCNVScudRm3kCHPfUjsRCtmPnm375s",
+					aggregator_tracker_id: "09616c6c64617461",
 				},
 			}
 		}
@@ -231,6 +232,9 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GbyoDi7H1sfXmimXpptZJuCdHMh66WS9u",
 					fxhash_nfts_v1: "KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE",
 					fxhash_nfts_v2: "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi",
+					//TODO replace with mainnet address
+					aggregator_tracker: "",
+					aggregator_tracker_id: "",
 				},
 			}
 		}
@@ -585,27 +589,4 @@ export function getRequestAmount(
 		return new BigNumber((orderAmount).toFixed())
 	}
 	return undefined
-}
-
-export async function getCollectionType(
-	provider: MaybeProvider<TezosProvider>, collection: string
-): Promise<CollectionType.TEZOS_NFT | CollectionType.TEZOS_MT> {
-	let response
-	try {
-		const { data } = await axios.get(`${provider.config.tzkt}/v1/contracts/${collection}/storage/schema`)
-		response = data
-	} catch (e) {
-		console.error(e)
-		handleAxiosErrorResponse(e, { code: NetworkErrorCode.TEZOS_EXTERNAL_ERR })
-		throw new Error("Getting tezos collection data error")
-	}
-
-	const schema = response["schema:object"]
-	if ("ledger:big_map:object:nat" in schema) {
-		return CollectionType.TEZOS_MT
-	} else if ("ledger:big_map_flat:nat:address" in schema) {
-		return CollectionType.TEZOS_NFT
-	} else {
-		throw new Error("Unrecognized tezos collection")
-	}
 }

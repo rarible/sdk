@@ -9,13 +9,13 @@ import type { BurnRequest, BurnResponse, PrepareBurnRequest, PrepareBurnResponse
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import {
 	getRequestAmount,
-	getCollectionType,
 	getCollectionTypeAssetClass,
 	getTezosItemData,
 	isExistedTezosProvider,
 	checkChainId,
 } from "./common"
 import type { MaybeProvider } from "./common"
+import { getCollectionType } from "./common/get-collection-type"
 
 export class TezosBurn {
 	constructor(
