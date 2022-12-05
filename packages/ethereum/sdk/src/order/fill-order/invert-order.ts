@@ -12,12 +12,17 @@ export function invertOrder<T extends SimpleOrder>(
 	maker: Address,
 	salt: Word = ZERO
 ): T {
+	const isBid = isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION"
+
 	const [makeValue, takeValue] = calculateAmounts(
 		toBn(order.make.value),
 		toBn(order.take.value),
 		amount,
-		isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION"
+		isBid
 	)
+
+	checkValue(isBid ? takeValue : makeValue )
+
 	return {
 		...order,
 		make: {
@@ -45,5 +50,11 @@ function calculateAmounts(
 		return [amount, toBn(amount).multipliedBy(make).div(take)]
 	} else {
 		return [toBn(amount).multipliedBy(take).div(make), amount]
+	}
+}
+
+function checkValue(value: BigNumberValue) {
+	if (parseFloat(value.toString()) < 1) {
+		throw new Error("Invalid order. Price per one item is less than minimum allowable currency amount.")
 	}
 }
