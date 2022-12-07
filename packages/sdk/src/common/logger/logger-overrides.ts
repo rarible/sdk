@@ -4,6 +4,11 @@ import { WalletType } from "@rarible/sdk-wallet"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { NetworkErrorCode } from "../apis"
 
+const COMMON_NETWORK_ERROR_MESSAGES = [
+	"Network request failed",
+	"Failed to fetch",
+]
+
 const EVM_WARN_MESSAGES = [
 	"User denied transaction signature",
 	"User denied message signature",
@@ -91,7 +96,16 @@ function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
 			}
 		}
 	} catch (e) {}
+
 	return false
+}
+
+function isNetworkError(callableName: string, error: any): boolean {
+	if (callableName?.startsWith("apis.")) {
+		return true
+	}
+
+	return COMMON_NETWORK_ERROR_MESSAGES.some(msg => error?.message?.includes(msg))
 }
 
 function isTezosWarning(err: any): boolean {
@@ -114,14 +128,22 @@ export function getErrorLevel(callableName: string, error: any, wallet: Blockcha
 		//if user's network request is not correct
 		return LogLevel.WARN
 	}
+
 	if (error instanceof NetworkError || error?.name === "NetworkError") {
 		return error?.code || NetworkErrorCode.NETWORK_ERR
 	}
-	if (callableName?.startsWith("apis.")) {
+
+	if (isNetworkError(callableName, error)) {
 		return NetworkErrorCode.NETWORK_ERR
 	}
-	if (isErrorWarning(error, wallet?.walletType) || error instanceof Warning || error?.name === "Warning") {
+
+	if (
+		isErrorWarning(error, wallet?.walletType) ||
+		error instanceof Warning ||
+		error?.name === "Warning"
+	) {
 		return LogLevel.WARN
 	}
+
 	return LogLevel.ERROR
 }

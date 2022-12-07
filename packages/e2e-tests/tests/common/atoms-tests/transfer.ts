@@ -14,5 +14,4 @@ export async function transfer(sdk: IRaribleSdk,
 
 	// Submit transfer
 	await prepareTransferResponse.submit(transferRequest)
-
 }

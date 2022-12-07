@@ -66,12 +66,12 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
 			updateBidRequest: {
-				price: "0.0000000000000002",
+				price: "12",
 			},
 		},
 		{
@@ -106,12 +106,12 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
 			updateBidRequest: {
-				price: "0.0000000000000002",
+				price: "12",
 			},
 		},
 		{
@@ -146,12 +146,12 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
 			updateBidRequest: {
-				price: "0.0000000000000002",
+				price: "12",
 			},
 		},
 		{
@@ -186,12 +186,12 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
 			updateBidRequest: {
-				price: "0.0000000000000002",
+				price: "12",
 			},
 		},
 	]
