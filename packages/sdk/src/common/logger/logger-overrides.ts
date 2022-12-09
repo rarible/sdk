@@ -71,7 +71,7 @@ const EVM_WARN_MESSAGES = [
  * @param err
  * @param blockchain
  */
-function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
+export function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
 	try {
 		if (!err) {
 			return false
