@@ -29,7 +29,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	async send(method: string, params: any): Promise<any> {
 		try {
 		  return await this.web3Provider.send(method, params)
-		} catch (e) {
+		} catch (e: any) {
 			let signer: string | undefined
 			try {
 				signer = await this.getFrom()
@@ -38,6 +38,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.send",
 				error: e,
+				code: e?.code,
 				data: {
 					method,
 					params,
@@ -50,7 +51,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	async personalSign(message: string): Promise<string> {
 		try {
 		  return await this.web3Provider.getSigner().signMessage(message)
-		} catch (e) {
+		} catch (e: any) {
 			let signer: string | undefined
 			try {
 				signer = await this.getFrom()
@@ -59,6 +60,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.personalSign",
 				error: e,
+				code: e?.code,
 				data: {
 					message,
 					from: signer,
@@ -72,11 +74,12 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 		try {
 			signer = await this.getFrom()
 			return await signTypedData(this.send, signer, data)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.signTypedData",
 				error: e,
+				code: e?.code,
 				data,
 				signer,
 			})
@@ -94,11 +97,12 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	encodeParameter(type: any, parameter: any): string {
 		try {
 		  return encodeParameters([type], [parameter])
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.encodeParameter",
 				error: e,
+				code: e?.code,
 				data: { type, parameter },
 			})
 		}
@@ -107,11 +111,12 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	decodeParameter(type: any, data: string): any {
 		try {
 		  return decodeParameters([type], data)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.decodeParameter",
 				error: e,
+				code: e?.code,
 				data: { type, data },
 			})
 		}
@@ -121,11 +126,12 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 		try {
 			const balance = await this.web3Provider.getBalance(address)
 			return toBigNumber(balance.toString())
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.getBalance",
 				error: e,
+				code: e?.code,
 				data: { address },
 			})
 		}
@@ -150,7 +156,7 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 	async personalSign(message: string): Promise<string> {
 		try {
 		  return await this.signer.signMessage(message)
-		} catch (e) {
+		} catch (e: any) {
 			let signer: string | undefined
 			try {
 				signer = await this.getFrom()
@@ -159,6 +165,7 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.personalSign",
 				error: e,
+				code: e?.code,
 				data: {
 					message,
 					from: signer,
@@ -172,11 +179,12 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { EIP712Domain, ...types } = data.types
 			return await this.signer._signTypedData(data.domain, types, data.message)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.signTypedData",
 				error: e,
+				code: e?.code,
 				data,
 			})
 		}
@@ -189,11 +197,12 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 	encodeParameter(type: any, parameter: any): string {
 		try {
 		  return encodeParameters([type], [parameter])
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.encodeParameter",
 				error: e,
+				code: e?.code,
 				data: { type, parameter },
 			})
 		}
@@ -202,11 +211,12 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 	decodeParameter(type: any, data: string): any {
 		try {
 		  return decodeParameters([type], data)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.decodeParameter",
 				error: e,
+				code: e?.code,
 				data: { type, data },
 			})
 		}
@@ -219,11 +229,12 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		try {
 			const balance = await this.signer.provider.getBalance(address)
 			return toBigNumber(balance.toString())
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.getBalance",
 				error: e,
+				code: e?.code,
 				data: { address },
 			})
 		}
@@ -267,11 +278,12 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 	async getData(): Promise<string> {
 		try {
 		  return (await this.contract.populateTransaction[this.name](...this.args)).data || "0x"
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersFunctionCall.getData",
 				error: e,
+				code: e?.code,
 				data: {
 					args: this.args,
 					name: this.name,
@@ -295,7 +307,7 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 			} else {
 				return await func()
 			}
-		} catch (e) {
+		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
 				callInfo = await this.getCallInfo()
@@ -305,6 +317,7 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 				provider: Provider.ETHERS,
 				method: "EthersFunctionCall.call",
 				error: e,
+				code: e?.code,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -346,7 +359,7 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 				hashValue = tx.hash
 				return new EthersTransaction(tx)
 			}
-		} catch (e) {
+		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
 				callInfo = await this.getCallInfo()
@@ -356,6 +369,7 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 				provider: Provider.ETHERS,
 				method: "EthersFunctionCall.send",
 				error: e,
+				code: e?.code,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -386,11 +400,12 @@ export class EthersTransaction implements EthereumProvider.EthereumTransaction {
 				...receipt,
 				status,
 			}
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersTransaction.wait",
 				error: e,
+				code: e?.code,
 				data: {
 					hash: this.hash,
 					data: this.data,
@@ -411,11 +426,12 @@ export class EthersTransaction implements EthereumProvider.EthereumTransaction {
 			}
 
 			return (receipt as any)?.events || []
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
 				method: "EthersTransaction.getEvents",
 				error: e,
+				code: e?.code,
 				data: {
 					hash: this.hash,
 					data: this.data,

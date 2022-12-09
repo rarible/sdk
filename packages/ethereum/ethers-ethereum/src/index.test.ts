@@ -5,6 +5,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { toAddress } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
+import { parseRequestError } from "@rarible/web3-ethereum/src/utils/parse-request-error"
 import { EthersEthereum, EthersTransaction, EthersWeb3ProviderEthereum } from "./index"
 
 const testPK = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
@@ -108,5 +109,17 @@ describe("get transaction receipt events", () => {
 		const events = await ethersTx.getEvents()
 
 		expect(events.find(e => e.event === "OrderFulfilled")).toBeTruthy()
+	})
+
+	test("should correctly parse error for invalid method request", async () => {
+		let ok = false
+		try {
+			await ethereum.send("unknown method", [])
+			ok = true
+		} catch (err) {
+			const error = parseRequestError(err)
+			expect(error?.code).toEqual(-32601)
+		}
+		expect(ok).toBeFalsy()
 	})
 })
