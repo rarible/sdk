@@ -38,10 +38,10 @@ import {
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
-	getCollectionType,
 	getRequestAmount,
 	checkChainId,
 } from "./common"
+import { getCollectionType } from "./common/get-collection-type"
 
 export class TezosSell {
 	constructor(
