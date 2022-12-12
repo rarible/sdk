@@ -30,6 +30,7 @@ import type {
 } from "../../types/order/fill/domain"
 import type { IApisSdk } from "../../domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import { checkPayouts } from "../../common/check-payouts"
 import type { MaybeProvider } from "./common"
 import {
 	checkChainId,
@@ -93,6 +94,7 @@ export class TezosFill {
 
 	private async buyV2(order: Order, data: OrderDataRequest, fillRequest: FillRequest) {
 		await checkChainId(this.provider)
+		checkPayouts(fillRequest.payouts)
 		const provider = getRequiredProvider(this.provider)
 		const amount = (order.makePrice !== undefined) ? new BigNumber(order.makePrice) : new BigNumber(0)
 		const currency = await getTezosAssetTypeV2(this.provider.config, order.take.type)
@@ -196,6 +198,7 @@ export class TezosFill {
 			id: "send-tx" as const,
 			run: async (fillRequest: FillRequest) => {
 				await checkChainId(this.provider)
+				checkPayouts(fillRequest.payouts)
 				const provider = getRequiredProvider(this.provider)
 
 				if (!isNftOrMTAssetType(take.type)) {
@@ -238,6 +241,7 @@ export class TezosFill {
 
 	async fillCommon(fillRequest: FillRequest, preparedOrder: Order) {
 		await checkChainId(this.provider)
+		checkPayouts(fillRequest.payouts)
 
 		const { make, take } = preparedOrder
 		if (isNftOrMTAssetType(make.type)) {
@@ -264,6 +268,7 @@ export class TezosFill {
 		const provider = getRequiredProvider(this.provider)
 
 		const orders: CartOrder[] = fillRequest.map((req) => {
+			checkPayouts(req.payouts)
 			return {
 				order_id: getTezosOrderId(req.orderId),
 				amount: new BigNumber(req.amount),

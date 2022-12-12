@@ -8,6 +8,7 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { checkPayouts } from "../../common/check-payouts"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -56,6 +57,7 @@ export class EthereumSell {
 	private async sellDataV2(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
+				checkPayouts(sellFormRequest.payouts)
 				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
 				const expirationDate = convertDateToTimestamp(sellFormRequest.expirationDate)
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)

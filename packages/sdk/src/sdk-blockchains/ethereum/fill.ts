@@ -32,6 +32,7 @@ import type {
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import { checkPayouts } from "../../common/check-payouts"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
@@ -326,11 +327,12 @@ export class EthereumFill {
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {
+				checkPayouts(fillRequest.payouts)
 				if (fillRequest.unwrap) {
-					throw new Error("Unwrap is not supported yet")
+					throw new Warning("Unwrap is not supported yet")
 				}
 				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
-					throw new Error("For collection order you should pass itemId")
+					throw new Warning("For collection order you should pass itemId")
 				}
 				return this.getFillOrderRequest(order, fillRequest)
 			})
@@ -367,6 +369,7 @@ export class EthereumFill {
 		const submit = this.sdk.order.buyBatch.around(
 			(request: BatchFillRequest) => {
 				return request.map((req) => {
+					checkPayouts(req.payouts)
 					const order = orders[req.orderId]
 					if (!order) {
 						throw new Error(`Order with id ${req.orderId} not precached`)

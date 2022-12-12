@@ -33,6 +33,7 @@ import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { checkPayouts } from "../../common/check-payouts"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -315,6 +316,7 @@ export class EthereumBid {
 		const submit = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderRequest) => {
+				checkPayouts(request.payouts)
 				const wethContractAddress = this.getWethContractAddress()
 				const currency = getCurrencyAssetType(request.currency)
 				if (currency["@type"] === "ERC20" && currency.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
