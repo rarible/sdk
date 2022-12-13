@@ -240,7 +240,9 @@ describe.each(suites())("$blockchain mint => floorBid => bidUpdate => acceptBid"
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 
-		const collection3 = await getCollection(sellerSdk, address)
-		expect(collection3.bestBidOrder).toBe(undefined)
+		await retry(10, 2000, async () => {
+			const collection3 = await getCollection(sellerSdk, address)
+			expect(collection3.bestBidOrder).toBe(undefined)
+		})
 	})
 })

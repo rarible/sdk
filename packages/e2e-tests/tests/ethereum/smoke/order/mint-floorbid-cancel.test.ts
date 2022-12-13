@@ -4,6 +4,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import { retry } from "@rarible/sdk/build/common/retry"
 import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import {
 	getEthereumWallet,
@@ -211,7 +212,9 @@ describe.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
 
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 
-		const collection2 = await getCollection(sellerSdk, address)
-		expect(collection2.bestBidOrder).toBe(undefined)
+		await retry(10, 2000, async () => {
+			const collection2 = await getCollection(sellerSdk, address)
+			expect(collection2.bestBidOrder).toBe(undefined)
+		})
 	})
 })

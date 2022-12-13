@@ -3,6 +3,7 @@ import { Box, MenuItem, Stack, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { Blockchain } from "@rarible/api-client"
 import { CreateCollectionBlockchains } from "@rarible/sdk/build/types/nft/deploy/domain"
+import { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
@@ -18,7 +19,6 @@ import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { DeployForm } from "./deploy-form"
-import { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified";
 
 function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
