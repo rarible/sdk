@@ -23,8 +23,9 @@ export class BlockchainTezosTransaction implements IBlockchainTransaction {
 
 	getTxLink() {
 		switch (this.network) {
+			case "testnet":
+			case "dev": return `https://ghostnet.tzkt.io/${this.hash()}`
 			case "mainnet": return `https://tzkt.io/${this.hash()}`
-			case "testnet": return `https://ithacanet.tzkt.io/${this.hash()}`
 			default: throw new Error("Unsupported transaction network")
 		}
 	}

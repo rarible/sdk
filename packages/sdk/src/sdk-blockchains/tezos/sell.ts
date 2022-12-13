@@ -28,6 +28,7 @@ import type { IApisSdk } from "../../domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { checkPayouts } from "../../common/check-payouts"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -38,10 +39,10 @@ import {
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
-	getCollectionType,
 	getRequestAmount,
 	checkChainId,
 } from "./common"
+import { getCollectionType } from "./common/get-collection-type"
 
 export class TezosSell {
 	constructor(
@@ -108,6 +109,7 @@ export class TezosSell {
 
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
 		await checkChainId(this.provider)
+		checkPayouts(request.payouts)
 
 		const provider = getRequiredProvider(this.provider)
 		const { contract, tokenId } = getTezosItemData(request.itemId)

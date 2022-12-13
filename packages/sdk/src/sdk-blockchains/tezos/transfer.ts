@@ -11,13 +11,13 @@ import type { IApisSdk } from "../../domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { MaybeProvider } from "./common"
 import {
-	getCollectionType,
 	getCollectionTypeAssetClass,
 	getTezosAddress,
 	getTezosItemData,
 	isExistedTezosProvider,
 	checkChainId, getRequestAmount,
 } from "./common"
+import { getCollectionType } from "./common/get-collection-type"
 
 export class TezosTransfer {
 	constructor(

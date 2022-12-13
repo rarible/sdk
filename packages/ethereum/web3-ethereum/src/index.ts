@@ -30,7 +30,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	async send(method: string, params: unknown[]): Promise<any> {
 		try {
 		  return await providerRequest(this.config.web3.currentProvider, method, params)
-		} catch (e) {
+		} catch (e: any) {
 			let signer: string | undefined
 			try {
 				signer = await this.getFrom()
@@ -38,6 +38,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				error: e,
+				code: e?.code,
 				method: "Web3Ethereum.send",
 				data: {
 					method,
@@ -53,10 +54,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		try {
 			signer = await this.getFrom()
 			return await (this.config.web3.eth.personal as any).sign(message, signer)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				error: e,
+				code: e?.code,
 				method: "Web3Ethereum.personalSign",
 				data: {
 					message,
@@ -71,11 +73,12 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		try {
 			signer = await this.getFrom()
 			return await signTypedData(this.send, signer, data)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3Ethereum.signTypedData",
 				error: e,
+				code: e.code,
 				data,
 				signer,
 			})
@@ -89,10 +92,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	encodeParameter(type: any, parameter: any): string {
 		try {
 		  return this.config.web3.eth.abi.encodeParameter(type, parameter)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3Ethereum.encodeParameter",
+				code: e?.code,
 				error: e,
 				data: { type, parameter },
 			})
@@ -102,11 +106,12 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	decodeParameter(type: any, data: string): any {
 		try {
 		  return this.config.web3.eth.abi.decodeParameters([type], data)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3Ethereum.decodeParameter",
 				error: e,
+				code: e?.code,
 				data: { type, data },
 			})
 		}
@@ -115,11 +120,12 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	async getBalance(address: Address): Promise<BigNumber> {
 		try {
 		  return toBigNumber(await this.config.web3.eth.getBalance(address))
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3Ethereum.getBalance",
 				error: e,
+				code: e?.code,
 				data: { address },
 			})
 		}
@@ -156,11 +162,12 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 	) {
 		try {
 		  this.sendMethod = this.contract.methods[this.methodName](...this.args)
-		} catch (e) {
+		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3FunctionCall.constructor",
 				error: e,
+				code: e?.code,
 				data: {
 					contract: this.contract.options.address,
 					methodName: this.methodName,
@@ -195,7 +202,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				gas: options.gas,
 				gasPrice: options.gasPrice?.toString(),
 			})
-		} catch (e) {
+		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
 				callInfo = await this.getCallInfo()
@@ -205,6 +212,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				provider: Provider.WEB3,
 				method: "Web3FunctionCall.call",
 				error: e,
+				code: e?.code,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -263,7 +271,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				from,
 				toAddress(this.contract.options.address)
 			)
-		} catch (e) {
+		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
 				callInfo = await this.getCallInfo()
@@ -273,6 +281,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				provider: Provider.WEB3,
 				method: "Web3FunctionCall.send",
 				error: e,
+				code: e?.code,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -324,6 +333,7 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 				provider: Provider.WEB3,
 				method: "Web3Transaction.wait",
 				error: e,
+				code: e?.code,
 				data: {
 					hash: this.hash,
 					data: this.data,

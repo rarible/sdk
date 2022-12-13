@@ -18,11 +18,11 @@ import type { MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./c
 import {
 	checkChainId,
 	convertTezosItemId,
-	getCollectionType,
 	getRequiredProvider,
 	getRoyalties,
 	getTezosAddress,
 } from "./common"
+import { getCollectionType } from "./common/get-collection-type"
 
 export class TezosMint {
 	constructor(

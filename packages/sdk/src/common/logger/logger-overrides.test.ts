@@ -1,6 +1,21 @@
-import { getExecRevertedMessage } from "./logger-overrides"
+import { EthereumProviderError } from "@rarible/ethereum-provider"
+import { WalletType } from "../../index"
+import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
 describe("logger overrides", () => {
+	test("isErrorWarning", async () => {
+		const err = new EthereumProviderError({
+			data: null,
+			error: {
+				code: -32603,
+				message: '[ethjs-query] while formatting outputs from RPC \'{"value":{"code":-32603,"data":{"code":-32000,"message":"transaction underpriced"}}}',
+			},
+			method: "any",
+		})
+		const isError = isErrorWarning(err, WalletType.ETHEREUM)
+		expect(isError).toBeTruthy()
+	})
+
 	test("simple message", () => {
 		expect(getExecRevertedMessage("execution reverted: simple error")).toEqual("simple error")
 	})
@@ -24,6 +39,7 @@ describe("logger overrides", () => {
 		const error = "execution reverted: Mxp: noop"
 		expect(getExecRevertedMessage(error)).toEqual("Mxp: noop")
 	})
+
 	test("creator error", () => {
 		const error = "execution reverted: AssetContractShared#creatorOnly: ONLY_CREATOR_ALLOWED"
 		expect(getExecRevertedMessage(error)).toEqual("AssetContractShared#creatorOnly: ONLY_CREATOR_ALLOWED")

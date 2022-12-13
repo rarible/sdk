@@ -71,7 +71,7 @@ const EVM_WARN_MESSAGES = [
  * @param err
  * @param blockchain
  */
-function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
+export function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
 	try {
 		if (!err) {
 			return false
@@ -87,9 +87,7 @@ function isErrorWarning(err: any, blockchain: WalletType | undefined): boolean {
 		}
 
 		if (blockchain === WalletType.TEZOS) {
-			if (err?.name === "UnknownBeaconError" && err?.title === "Aborted") {
-				return true
-			}
+			return isTezosWarning(err)
 		}
 
 		if (blockchain === WalletType.SOLANA) {
@@ -108,6 +106,19 @@ function isNetworkError(callableName: string, error: any): boolean {
 	}
 
 	return COMMON_NETWORK_ERROR_MESSAGES.some(msg => error?.message?.includes(msg))
+}
+
+function isTezosWarning(err: any): boolean {
+	const isWrappedError = err.name === "TezosProviderError"
+	const originalError = isWrappedError ? err.error : err
+	return (originalError?.name === "UnknownBeaconError" && originalError?.title === "Aborted")
+    || originalError?.name === "NotGrantedTempleWalletError"
+    || originalError?.name === "NoAddressBeaconError"
+    || originalError?.name === "NoPrivateKeyBeaconError"
+    || originalError?.name === "BroadcastBeaconError"
+    || originalError?.name === "MissedBlockDuringConfirmationError"
+    || originalError?.message === "Error: timeout of 30000ms exceeded"
+    || err?.message?.endsWith("does not have enough funds for transaction")
 }
 
 export type ErrorLevel = LogLevel | NetworkErrorCode | CustomErrorCode | string
