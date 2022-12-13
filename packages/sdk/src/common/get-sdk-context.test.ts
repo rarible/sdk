@@ -1,4 +1,4 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
@@ -9,12 +9,14 @@ describe("get sdk context", () => {
 
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3: web3 })
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "development", {
-		apiKey: "API_KEY",
+	const it = awaitAll({
+		sdk: createRaribleSdk(new EthereumWallet(ethereum), "development", {
+			apiKey: "API_KEY",
+		}),
 	})
 
 	test("get context with goerli wallet", async () => {
-		const context = await sdk.getSdkContext()
+		const context = await it.sdk.getSdkContext()
 
 		expect(context.service).toEqual("union-sdk")
 		expect(context.environment).toEqual("development")

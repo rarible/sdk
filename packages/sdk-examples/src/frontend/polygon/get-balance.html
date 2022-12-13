@@ -9,7 +9,7 @@
 
   async function init() {
       const env = "staging" // "dev" | "e2e" | "staging" | "prod"
-      const raribleSdk = new window.raribleSdk.createRaribleSdk(undefined, env)
+      const raribleSdk = await window.raribleSdk.createRaribleSdk(undefined, env)
       const balance = await raribleSdk.balances.getBalance(
         "POLYGON:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1",
         {

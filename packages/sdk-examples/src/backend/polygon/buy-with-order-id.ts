@@ -1,6 +1,6 @@
 import fetch from "node-fetch"
 import { toOrderId } from "@rarible/types"
-import { createRaribleSdk } from "@rarible/sdk"
+import { createRaribleSdk } from "@rarible/sdk/node"
 import { initWalletWeb3, updateNodeGlobalVars } from "../common"
 
 if (process.env["ORDER_ID"] === undefined) {
@@ -18,7 +18,7 @@ async function buy(item: string) {
 		}
 		const raribleSdkWallet = await initWalletWeb3(process.env["ETH_PRIVATE_KEY"])
 		//@ts-ignore
-		const raribleSdk = createRaribleSdk(raribleSdkWallet, "prod", { fetchApi: fetch })
+		const raribleSdk = await createRaribleSdk(raribleSdkWallet, "prod", { fetchApi: fetch })
 
 		if (!process.env["ORDER_ID"]) {
 			throw new Error("ORDER_ID has not been specified")

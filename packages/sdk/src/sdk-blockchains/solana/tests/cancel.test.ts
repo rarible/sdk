@@ -1,4 +1,5 @@
 import { toBigNumber, toItemId } from "@rarible/types"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { getWallet } from "../common/test/test-wallets"
 import { retry } from "../../../common/retry"
 import { mintToken } from "../common/test/mint"
@@ -6,14 +7,16 @@ import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana cancel", () => {
 	const wallet = getWallet(0)
-	const sdk = createSdk(wallet)
+	const it = awaitAll({
+		sdk: createSdk(wallet),
+	})
 
 	test("Should cancel NFT selling", async () => {
-		const item = await mintToken(sdk)
+		const item = await mintToken(it.sdk)
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			const sell = await sdk.order.sell.prepare({ itemId })
+			const sell = await it.sdk.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 1,
 				currency: {
@@ -23,7 +26,7 @@ describe("Solana cancel", () => {
 			})
 		})
 
-		const cancelTx = await retry(10, 4000, () => sdk.order.cancel({
+		const cancelTx = await retry(10, 4000, () => it.sdk.order.cancel({
 			orderId,
 		}))
 
@@ -32,11 +35,11 @@ describe("Solana cancel", () => {
 	})
 
 	test("Should cancel NFT selling with basic function", async () => {
-		const item = await mintToken(sdk)
+		const item = await mintToken(it.sdk)
 		const itemId = item.id
 
 		const orderId = await retry(10, 4000, async () => {
-			return sdk.order.sell({
+			return it.sdk.order.sell({
 				itemId,
 				amount: 1,
 				currency: {
@@ -46,7 +49,7 @@ describe("Solana cancel", () => {
 			})
 		})
 
-		const cancelTx = await retry(10, 4000, () => sdk.order.cancel({
+		const cancelTx = await retry(10, 4000, () => it.sdk.order.cancel({
 			orderId,
 		}))
 
@@ -58,7 +61,7 @@ describe("Solana cancel", () => {
 		const itemId = toItemId("SOLANA:7axrWQBXRQosdoz99Wo8JM3SnEMbh5wk8tcjJTP38nHt")
 
 		const orderId = await retry(10, 1000, async () => {
-			const sell = await sdk.order.sell.prepare({ itemId })
+			const sell = await it.sdk.order.sell.prepare({ itemId })
 			return sell.submit({
 				amount: 10,
 				currency: {
@@ -68,7 +71,7 @@ describe("Solana cancel", () => {
 			})
 		})
 
-		const cancelTx = await retry(10, 4000, () => sdk.order.cancel({
+		const cancelTx = await retry(10, 4000, () => it.sdk.order.cancel({
 			orderId,
 		}))
 

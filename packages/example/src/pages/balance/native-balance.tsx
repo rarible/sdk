@@ -1,5 +1,5 @@
 import React from "react"
-import type { IRaribleSdk } from "@rarible/sdk/build/domain"
+import type { IRaribleSdk } from "@rarible/sdk"
 import { CircularProgress } from "@mui/material"
 import { getCurrenciesForBlockchain } from "./utils/currencies"
 import { UnionAddress } from "@rarible/types/build/union-address"

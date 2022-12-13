@@ -1,4 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { toUnionAddress } from "@rarible/types"
 import { getWallet } from "../common/test/test-wallets"
 import type { ISolanaMetadataResponse } from "../domain"
@@ -6,10 +7,12 @@ import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana metadata", () => {
 	const wallet = getWallet()
-	const sdk = createSdk(wallet)
+	const it = awaitAll({
+		sdk: createSdk(wallet),
+	})
 
 	test("Should create correct metadata", async () => {
-		const meta = sdk.nft.preprocessMeta({
+		const meta = await it.sdk.nft.preprocessMeta({
 			blockchain: Blockchain.SOLANA,
 			name: "name",
 			symbol: "TEST",

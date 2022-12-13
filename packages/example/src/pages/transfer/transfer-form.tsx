@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
-import { PrepareTransferResponse } from "@rarible/sdk/build/types/nft/transfer/domain"
+import type { PrepareTransferResponse } from "@rarible/sdk/esm/types/nft/transfer/domain"
 import { Box, Stack } from "@mui/material"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"

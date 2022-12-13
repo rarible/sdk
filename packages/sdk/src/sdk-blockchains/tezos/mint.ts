@@ -46,7 +46,7 @@ export class TezosMint {
 			}, [] as TezosMetaContent[])
 	}
 
-	public preprocessMeta(meta: PreprocessMetaRequest): TezosMetadataResponse {
+	public async preprocessMeta(meta: PreprocessMetaRequest): Promise<TezosMetadataResponse> {
 		if (meta.blockchain !== Blockchain.TEZOS) {
 			throw new Error("Wrong blockchain")
 		}

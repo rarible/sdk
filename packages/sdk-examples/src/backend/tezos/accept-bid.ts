@@ -1,7 +1,7 @@
 import { TezosWallet } from "@rarible/sdk-wallet"
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-import { createRaribleSdk } from "@rarible/sdk/build"
+import { createRaribleSdk } from "@rarible/sdk/node"
 import { toOrderId } from "@rarible/types"
 import { updateNodeGlobalVars } from "../common"
 
@@ -16,7 +16,7 @@ async function acceptBid() {
 			"https://rpc.tzkt.io/ithacanet"
 		)
 	)
-	const sdk = createRaribleSdk(wallet, "testnet")
+	const sdk = await createRaribleSdk(wallet, "testnet")
 	const tx = await sdk.order.acceptBid({
 		orderId: toOrderId("TEZOS:YOUR_ORDER_ID"),
 		amount: 1,

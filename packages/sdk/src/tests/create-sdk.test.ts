@@ -72,8 +72,8 @@ const providers = [{
 
 describe.each(providers)("Create Union SDK via $name", (suite) => {
 	const provider = suite.getProvider()
-	test("Should create SDK", () => {
-		const sdk = createRaribleSdk(provider, "development", { logs: LogsLevel.DISABLED })
+	test("Should create SDK", async () => {
+		const sdk = await createRaribleSdk(provider, "development", { logs: LogsLevel.DISABLED })
 		expect(sdk.wallet).toBeTruthy()
 		expect(sdk.wallet?.walletType).toEqual(suite.expectedBlockchain)
 	})

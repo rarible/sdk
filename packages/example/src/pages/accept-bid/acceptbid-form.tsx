@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { MaxFeesBasePointSupport, PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import { MaxFeesBasePointSupport, PrepareFillResponse } from "@rarible/sdk/esm/types/order/fill/domain"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"

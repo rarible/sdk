@@ -9,7 +9,7 @@ import { resultToState, useRequestResult } from "../../components/hooks/use-requ
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { FormFileInput } from "../../components/common/form/form-file-input"
-import { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/union/meta/domain"
+import { UploadMetaResponse } from "@rarible/sdk/esm/sdk-blockchains/union/meta/domain"
 
 interface IUploadMEtaFormProps {
 	onComplete: (response: UploadMetaResponse) => void

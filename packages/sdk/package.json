@@ -3,18 +3,26 @@
   "version": "0.13.1",
   "homepage": "",
   "license": "ISC",
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
+  "main": "esm/index.js",
+  "exports": {
+    ".": "esm/index.js",
+    "./esm": "esm/index.js",
+    "./esm/*": "esm/*",
+    "./node": "node/index.js",
+    "./node/*": "node/*"
+  },
+  "types": "esm/index.d.ts",
   "files": [
-    "build",
+    "esm",
+    "node",
     "umd"
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:ts": "tsc --project tsconfig-build.json",
+    "build:ts": "tsc --project tsconfig-build-esm.json ; tsc --project tsconfig-build-node.json",
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
-    "clean": "rimraf ./build",
+    "clean": "rimraf ./node && rimraf ./esm && rimraf ./umd",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit",
     "docs": "typedoc"
@@ -36,6 +44,8 @@
     "@rarible/types": "~0.9.6",
     "@rarible/utils": "~0.9.10",
     "@solana/web3.js": "^1.35.1",
+    "@rarible/web3-ethereum": "~0.12.109",
+    "@rarible/ethers-ethereum": "~0.12.109",
     "axios": "^0.26.1",
     "bignumber.js": "^9.0.1",
     "callable-instance": "^2.0.0",

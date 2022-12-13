@@ -3,5 +3,6 @@
 **/*type.validator.ts
 **/umd
 **/esm
+**/node
 **/docs
 packages/sdk/example

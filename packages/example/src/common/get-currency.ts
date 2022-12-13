@@ -6,8 +6,9 @@ import {
 	FlowAssetTypeFt
 } from "@rarible/api-client"
 import { toContractAddress } from "@rarible/types"
-import { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
 import { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { CurrencyType } from "@rarible/sdk/esm/common/domain"
+import type { RequestCurrency } from "@rarible/sdk"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import type { IRaribleSdk } from "@rarible/sdk/build/domain"
+import type { IRaribleSdk } from "@rarible/sdk"
 import type { Items } from "@rarible/api-client"
 import { Alert, AlertTitle, Box, CircularProgress } from "@mui/material"
 import { Page } from "../../components/page"

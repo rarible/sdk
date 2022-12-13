@@ -4,6 +4,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type {
 	IConvert,
 	IDepositBiddingBalance,
@@ -16,7 +17,7 @@ import type { IRestrictionSdk } from "./types/nft/restriction/domain"
 import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
-import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
+import type { CryptopunkUnwrapRequest, CryptopunkWrapRequest } from "./types/ethereum/domain"
 import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 import type { IMint } from "./types/nft/mint"
 import type { IMintAndSell } from "./types/nft/mint-and-sell"
@@ -367,8 +368,8 @@ export interface IBalanceSdk {
 }
 
 export interface IEthereumSdk {
-	wrapCryptoPunk: ICryptopunkWrap,
-	unwrapCryptoPunk: ICryptopunkUnwrap,
+	wrapCryptoPunk(request: CryptopunkWrapRequest): Promise<IBlockchainTransaction>,
+	unwrapCryptoPunk(request: CryptopunkUnwrapRequest): Promise<IBlockchainTransaction>,
 	getBatchBuyAmmInfo: IGetBuyAmmInfo,
 }
 

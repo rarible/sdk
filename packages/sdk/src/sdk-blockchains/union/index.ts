@@ -4,13 +4,8 @@ import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type {
-	IBalanceSdk,
-	IEthereumSdk,
-	INftSdk,
-	IOrderInternalSdk,
-	IRaribleInternalSdk,
-} from "../../domain"
+import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
+import type { IBalanceSdk, IEthereumSdk, INftSdk, IOrderInternalSdk, IRaribleInternalSdk } from "../../domain"
 import { getCollectionId } from "../../index"
 import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-token-id"
 import type { BatchFillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
@@ -19,22 +14,20 @@ import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type {
+	BuyAmmInfoRequest,
 	ConvertRequest,
 	CurrencyOrOrder,
 	GetBiddingBalanceRequest,
-	IDepositBiddingBalance, IGetBuyAmmInfo,
+	IDepositBiddingBalance,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
 import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
-import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
-import {
-	MethodWithPrepare,
-} from "../../types/common"
-import type { ISellUpdate } from "../../types/order/sell"
-import type { ISellInternal } from "../../types/order/sell"
+import type { CryptopunkUnwrapRequest, CryptopunkWrapRequest } from "../../types/ethereum/domain"
+import { MethodWithPrepare } from "../../types/common"
+import type { ISellInternal, ISellUpdate } from "../../types/order/sell"
 import type { IBid, IBidUpdate } from "../../types/order/bid"
-import type { IAcceptBid, IBuy, IFill } from "../../types/order/fill"
+import type { IAcceptBid, IBatchBuy, IBuy, IFill } from "../../types/order/fill"
 import type { IBurn } from "../../types/nft/burn"
 import type { IMint } from "../../types/nft/mint"
 import type { ITransfer } from "../../types/nft/transfer"
@@ -42,51 +35,35 @@ import { extractBlockchain } from "../../common/extract-blockchain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
-import type { IBatchBuy } from "../../types/order/fill"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
-	ethereum: IRaribleInternalSdk,
-	flow: IRaribleInternalSdk,
-	tezos: IRaribleInternalSdk,
-	polygon: IRaribleInternalSdk,
-	solana: IRaribleInternalSdk,
-	immutablex: IRaribleInternalSdk,
+	ethereum: () => Promise<IRaribleInternalSdk>,
+	flow: () => Promise<IRaribleInternalSdk>,
+	tezos: () => Promise<IRaribleInternalSdk>,
+	polygon: () => Promise<IRaribleInternalSdk>,
+	solana: () => Promise<IRaribleInternalSdk>,
+	immutablex: () => Promise<IRaribleInternalSdk>,
 ): IRaribleInternalSdk {
+
+	const blockchainModuleGetter = async (blockchain: Blockchain) => {
+		switch (blockchain) {
+			case Blockchain.ETHEREUM: return await ethereum()
+			case Blockchain.FLOW: return await flow()
+			case Blockchain.TEZOS: return await tezos()
+			case Blockchain.POLYGON: return await polygon()
+			case Blockchain.SOLANA: return await solana()
+			case Blockchain.IMMUTABLEX: return await immutablex()
+			default:
+				throw new Error("Unsupported blockchain " + blockchain)
+		}
+	}
 	return {
-		balances: new UnionBalanceSdk({
-			ETHEREUM: ethereum.balances,
-			FLOW: flow.balances,
-			TEZOS: tezos.balances,
-			POLYGON: polygon.balances,
-			SOLANA: solana.balances,
-			IMMUTABLEX: immutablex.balances,
-		}),
-		nft: new UnionNftSdk({
-			ETHEREUM: ethereum.nft,
-			FLOW: flow.nft,
-			TEZOS: tezos.nft,
-			POLYGON: polygon.nft,
-			SOLANA: solana.nft,
-			IMMUTABLEX: immutablex.nft,
-		}),
-		order: new UnionOrderSdk({
-			ETHEREUM: ethereum.order,
-			FLOW: flow.order,
-			TEZOS: tezos.order,
-			POLYGON: polygon.order,
-			SOLANA: solana.order,
-			IMMUTABLEX: immutablex.order,
-		}),
-		restriction: new UnionRestrictionSdk({
-			ETHEREUM: ethereum.restriction,
-			FLOW: flow.restriction,
-			TEZOS: tezos.restriction,
-			POLYGON: polygon.restriction,
-			SOLANA: solana.restriction,
-			IMMUTABLEX: immutablex.restriction,
-		}),
-		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
+		balances: new UnionBalanceSdk(blockchainModuleGetter),
+		nft: new UnionNftSdk(blockchainModuleGetter),
+		order: new UnionOrderSdk(blockchainModuleGetter),
+		restriction: new UnionRestrictionSdk(blockchainModuleGetter),
+		ethereum: new UnionEthereumSpecificSdk(ethereum),
 	}
 }
 
@@ -104,66 +81,65 @@ class UnionOrderSdk implements IOrderInternalSdk {
   sell: ISellInternal
   sellUpdate: ISellUpdate
 
-  constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
+  constructor(private readonly instances: (blockchain: Blockchain) => Promise<IRaribleInternalSdk>) {
   	this.cancel = this.cancel.bind(this)
 
   	this.bid = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(getBidEntity(request))].bid(request),
-  		(request) =>
-  			instances[extractBlockchain(getBidEntity(request))].bid.prepare(request),
+  		async (request) =>
+			  (await instances(extractBlockchain(getBidEntity(request)))).order.bid(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(getBidEntity(request)))).order.bid.prepare(request),
   	)
   	this.bidUpdate = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(request.orderId)].bidUpdate(request),
-  		(request) =>
-  			instances[extractBlockchain(request.orderId)].bidUpdate.prepare(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.orderId))).order.bidUpdate(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.orderId))).order.bidUpdate.prepare(request),
   	)
   	this.fill = {
-  		prepare: (request: PrepareFillRequest): Promise<PrepareFillResponse> => {
-  			return instances[extractBlockchain(getOrderId(request))].fill.prepare(request)
+  		prepare: async (request: PrepareFillRequest): Promise<PrepareFillResponse> => {
+  			return (await instances(extractBlockchain(getOrderId(request)))).order.fill.prepare(request)
   		},
   	}
   	this.buy = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(getOrderId(request))].buy(request),
-  		(request) =>
-  			instances[extractBlockchain(getOrderId(request))].buy.prepare(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(getOrderId(request)))).order.buy(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(getOrderId(request)))).order.buy.prepare(request),
   	)
 
   	this.batchBuy = new MethodWithPrepare(
-  		(requests) => {
-  			return instances[getBatchRequestBlockchain(requests)].batchBuy(requests)
+		  async (requests) => {
+  			return (await instances(getBatchRequestBlockchain(requests))).order.batchBuy(requests)
   		},
-  		(requests) => {
-  			return instances[getBatchRequestBlockchain(requests)].batchBuy.prepare(requests)
+		  async (requests) => {
+  			return (await instances(getBatchRequestBlockchain(requests))).order.batchBuy.prepare(requests)
   		}
   	)
 
   	this.acceptBid = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(getOrderId(request))].acceptBid(request),
-  		(request) =>
-  			instances[extractBlockchain(getOrderId(request))].acceptBid.prepare(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(getOrderId(request)))).order.acceptBid(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(getOrderId(request)))).order.acceptBid.prepare(request),
   	)
   	this.sell = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(request.itemId)].sell(request),
-  		(request) =>
-  			instances[request.blockchain].sell.prepare(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.itemId))).order.sell(request),
+		  async (request) =>
+			  (await instances(request.blockchain)).order.sell.prepare(request),
   	)
   	// this.sellUpdate = this.sellUpdate.bind(this)
   	this.sellUpdate = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(request.orderId)].sellUpdate(request),
-  		(request) =>
-  			instances[extractBlockchain(request.orderId)].sellUpdate.prepare(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.orderId))).order.sellUpdate(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.orderId))).order.sellUpdate.prepare(request),
   	)
-
   }
 
-  cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
-  	return this.instances[extractBlockchain(request.orderId)].cancel(request)
+  async cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+  	return (await this.instances(extractBlockchain(request.orderId))).order.cancel(request)
   }
 }
 
@@ -180,101 +156,113 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
   mint: IMint
   burn: IBurn
 
-  constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
+  constructor(private readonly instances: (blockchain: Blockchain) => Promise<IRaribleInternalSdk>) {
   	this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
   	this.generateTokenId = this.generateTokenId.bind(this)
   	this.uploadMeta = this.uploadMeta.bind(this)
   	this.createCollection = this.createCollection.bind(this)
 
   	this.transfer = new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(request.itemId)].transfer(request),
-  		(request) =>
-  			instances[extractBlockchain(request.itemId)].transfer.prepare(request),
+  		async (request) =>
+  			(await instances(extractBlockchain(request.itemId))).nft.transfer(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.itemId))).nft.transfer.prepare(request),
   	)
 
-  	// @ts-ignore
   	this.mint = new MethodWithPrepare(
-  		(request) =>
-  	// @ts-ignore
-  			instances[extractBlockchain(getCollectionId(request))].mint(request),
-  		(request) =>
-  			instances[extractBlockchain(getCollectionId(request))].mint.prepare(request),
+  		async (request) =>
+			  //@ts-ignore
+			  (await instances(extractBlockchain(getCollectionId(request)))).nft.mint(request),
+  		async (request) =>
+			  (await instances(extractBlockchain(getCollectionId(request)))).nft.mint.prepare(request),
   	)
 
   	this.burn =  new MethodWithPrepare(
-  		(request) =>
-  			instances[extractBlockchain(request.itemId)].burn(request),
-  		(request) =>
-  			instances[extractBlockchain(request.itemId)].burn.prepare(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.itemId))).nft.burn(request),
+		  async (request) =>
+			  (await instances(extractBlockchain(request.itemId))).nft.burn.prepare(request),
   	)
   }
 
-  createCollection(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
-  	return this.instances[request.blockchain].createCollection(request)
+  async createCollection(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+  	return (await this.instances(request.blockchain)).nft.createCollection(request)
   }
 
-  uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
-  	return this.instances[extractBlockchain(request.accountAddress)].uploadMeta(request)
+  async uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
+  	return (await this.instances(extractBlockchain(request.accountAddress))).nft.uploadMeta(request)
   }
 
-  generateTokenId(prepare: GenerateTokenIdRequest): Promise<TokenId | undefined> {
-  	return this.instances[extractBlockchain(prepare.collection)].generateTokenId(prepare)
+  async generateTokenId(prepare: GenerateTokenIdRequest): Promise<TokenId | undefined> {
+  	return (await this.instances(extractBlockchain(prepare.collection))).nft.generateTokenId(prepare)
   }
 
-  preprocessMeta(request: PreprocessMetaRequest): PreprocessMetaResponse {
-  	return this.instances[request.blockchain].preprocessMeta(request)
+  async preprocessMeta(request: PreprocessMetaRequest): Promise<PreprocessMetaResponse> {
+  	return (await this.instances(request.blockchain)).nft.preprocessMeta(request)
   }
 }
 
 class UnionBalanceSdk implements IBalanceSdk {
-	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
+	constructor(private readonly instances: (blockchain: Blockchain) => Promise<IRaribleInternalSdk>) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
 		this.getBiddingBalance = this.getBiddingBalance.bind(this)
 	}
 
-	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
-		return this.instances[getBalanceBlockchain(address, currency)].getBalance(address, currency)
+	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
+		return (await this.instances(getBalanceBlockchain(address, currency))).balances.getBalance(address, currency)
 	}
 
-	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
-		return this.instances[request.blockchain].convert(request)
+	async convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
+		return (await this.instances(request.blockchain)).balances.convert(request)
 	}
 
-	getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
-		return this.instances[getBiddingBlockchain(request)].getBiddingBalance(request)
+	async getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
+		return (await this.instances(getBiddingBlockchain(request))).balances.getBiddingBalance(request)
 	}
 
 	depositBiddingBalance: IDepositBiddingBalance = Action.create({
 		id: "send-tx",
-		run: request => this.instances[getBiddingBlockchain(request)].depositBiddingBalance(request),
+		run: async request => (await this.instances(getBiddingBlockchain(request)))
+			.balances.depositBiddingBalance(request),
 	})
 
 	withdrawBiddingBalance: IWithdrawBiddingBalance = Action.create({
 		id: "send-tx",
-		run: request => this.instances[getBiddingBlockchain(request)].withdrawBiddingBalance(request),
+		run: async request => (await this.instances(getBiddingBlockchain(request)))
+			.balances.withdrawBiddingBalance(request),
 	})
 }
 
 class UnionRestrictionSdk implements IRestrictionSdk {
-	constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {
+	constructor(private readonly instances: (blockchain: Blockchain) => Promise<IRaribleInternalSdk>) {
 	}
 
-	canTransfer(
+	async canTransfer(
 		itemId: ItemId, from: UnionAddress, to: UnionAddress,
 	): Promise<CanTransferResult> {
-		return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
+		return (await this.instances(extractBlockchain(itemId))).restriction.canTransfer(itemId, from, to)
 	}
 }
 
 class UnionEthereumSpecificSdk implements IEthereumSdk {
-	constructor(private readonly ethereumSdk: IEthereumSdk) {
+	constructor(private readonly ethereumGetter: () => Promise<IRaribleInternalSdk>) {
+		this.wrapCryptoPunk = this.wrapCryptoPunk.bind(this)
+		this.unwrapCryptoPunk = this.unwrapCryptoPunk.bind(this)
+		this.getBatchBuyAmmInfo = this.getBatchBuyAmmInfo.bind(this)
 	}
 
-	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
-	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
-  getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
+	async wrapCryptoPunk(request: CryptopunkWrapRequest): Promise<IBlockchainTransaction> {
+		return (await this.ethereumGetter()).ethereum!.wrapCryptoPunk(request)
+	}
+
+	async unwrapCryptoPunk(request: CryptopunkUnwrapRequest): Promise<IBlockchainTransaction> {
+		return (await this.ethereumGetter()).ethereum!.unwrapCryptoPunk(request)
+	}
+
+	async getBatchBuyAmmInfo(request: BuyAmmInfoRequest): Promise<AmmTradeInfo> {
+		return (await this.ethereumGetter()).ethereum!.getBatchBuyAmmInfo(request)
+	}
 }
 
 

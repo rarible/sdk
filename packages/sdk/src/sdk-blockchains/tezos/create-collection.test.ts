@@ -1,4 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
@@ -12,10 +13,12 @@ describe.skip("deploy tezos tests", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const it = awaitAll({
+		sdk: createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED }),
+	})
 
 	test("deploy public nft createCollectionStart", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await it.sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
@@ -26,11 +29,11 @@ describe.skip("deploy tezos tests", () => {
 		await result.tx.wait()
 		expect(result.tx).toBeTruthy()
 		expect(result.address).toBeTruthy()
-		await awaitForCollection(sdk, result.address)
+		await awaitForCollection(it.sdk, result.address)
 	})
 
 	test("deploy private nft createCollectionStart", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await it.sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "NFT",
 			name: "My NFT collection",
@@ -41,11 +44,11 @@ describe.skip("deploy tezos tests", () => {
 		await result.tx.wait()
 		expect(result.tx).toBeTruthy()
 		expect(result.address).toBeTruthy()
-		await awaitForCollection(sdk, result.address)
+		await awaitForCollection(it.sdk, result.address)
 	})
 
 	test("deploy public MT createCollectionStart", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await it.sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "MT",
 			name: "My NFT collection",
@@ -56,11 +59,11 @@ describe.skip("deploy tezos tests", () => {
 		await result.tx.wait()
 		expect(result.tx).toBeTruthy()
 		expect(result.address).toBeTruthy()
-		await awaitForCollection(sdk, result.address)
+		await awaitForCollection(it.sdk, result.address)
 	})
 
 	test.skip("deploy private mt", async () => {
-		const result = await sdk.nft.createCollection({
+		const result = await it.sdk.nft.createCollection({
 			blockchain: Blockchain.TEZOS,
 			type: "MT",
 			name: "My NFT collection",
@@ -70,6 +73,6 @@ describe.skip("deploy tezos tests", () => {
 
 		await result.tx.wait()
 
-		await awaitForCollection(sdk, result.address)
+		await awaitForCollection(it.sdk, result.address)
 	})
 })

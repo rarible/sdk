@@ -1,12 +1,11 @@
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
-import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
+import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
-import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
-import { delay } from "@rarible/sdk/build/common/retry"
+import type { OrderUpdateRequest } from "@rarible/sdk/node/types/order/common"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -169,10 +168,11 @@ describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (su
 		seller: sellerWallet,
 		buyer: buyerWallet,
 	} = suite.wallets
-	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
-	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
+		const sellerSdk = await createSdk(suite.blockchain, sellerWallet)
+		const buyerSdk = await createSdk(suite.blockchain, buyerWallet)
+
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
@@ -187,8 +187,6 @@ describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (su
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
 		const order = await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
-
-		await delay(3000)
 
 		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount || 1 })
 

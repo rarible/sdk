@@ -13,7 +13,7 @@
       const wallet = new window.raribleWalletSdk.EthereumWallet(web3Ethereum)
 
       const env = "staging" // "dev" | "e2e" | "staging" | "prod"
-      const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
+      const raribleSdk = await window.raribleSdk.createRaribleSdk(wallet, env)
       const mintFormInitial = {
         id: "ETHEREUM:0xaAB36b137ba7b4D74E3Af6380733d9433f10f4E0", // default collection on "rinkeby" that supports lazy minting
         type: "ERC721",

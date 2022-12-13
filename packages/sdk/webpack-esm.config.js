@@ -2,12 +2,12 @@ const path = require("path")
 const webpack = require("webpack")
 
 module.exports = {
-	entry: "./build/index.js",
+	entry: "./esm/index.js",
 	experiments: {
 		outputModule: true,
 	},
 	output: {
-		path: path.resolve(__dirname, "esm"),
+		path: path.resolve(__dirname, "esm-umd"),
 		filename: "index.js",
 		library: {
 			type: "module",

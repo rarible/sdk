@@ -1,10 +1,10 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
-import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
+import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
-import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
+import type { BurnRequest } from "@rarible/sdk/node/types/nft/burn/domain"
+import type { TransferRequest } from "@rarible/sdk/node/types/nft/transfer/domain"
 import { getFlowBuyerWallet, getFlowSellerWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
@@ -70,10 +70,11 @@ describe.skip.each(suites())("$blockchain mint => transfer => burn", (suite) => 
 		creator: creatorWallet,
 		recipient: recipientWallet,
 	} = suite.wallets
-	const creatorSdk = createSdk(suite.blockchain, creatorWallet)
-	const recipientSdk = createSdk(suite.blockchain, recipientWallet)
 
 	test(suite.description, async () => {
+		const creatorSdk = await createSdk(suite.blockchain, creatorWallet)
+		const recipientSdk = await createSdk(suite.blockchain, recipientWallet)
+
 		const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
 		const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
 

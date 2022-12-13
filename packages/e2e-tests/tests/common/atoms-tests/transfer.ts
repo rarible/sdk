@@ -1,5 +1,5 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import type { TransferRequest, PrepareTransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
+import type { TransferRequest, PrepareTransferRequest } from "@rarible/sdk/node/types/nft/transfer/domain"
 import { Logger } from "../logger"
 
 /**

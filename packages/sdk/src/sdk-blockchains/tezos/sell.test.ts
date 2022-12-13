@@ -1,5 +1,6 @@
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/prepare"
 import { LogsLevel } from "../../domain"
@@ -17,14 +18,16 @@ describe.skip("sell test", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+	const it = awaitAll({
+		sellerSdk: createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED }),
+	})
 
 	const nftContract: string = getTestContract(env, "nftContract")
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("sell NFT test", async () => {
 		const sellerAddress = await sellerWallet.provider.address()
-		const mintResponse = await sellerSdk.nft.mint.prepare({
+		const mintResponse = await it.sellerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -36,9 +39,9 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitItemSupply(sellerSdk, mintResult.itemId, "1")
+		await awaitItemSupply(it.sellerSdk, mintResult.itemId, "1")
 
-		const sellAction = await sellerSdk.order.sell.prepare({
+		const sellAction = await it.sellerSdk.order.sell.prepare({
 			itemId: mintResult.itemId,
 		})
 
@@ -54,14 +57,14 @@ describe.skip("sell test", () => {
 			}],
 		})
 
-		await awaitForOrder(sellerSdk, orderId)
-		const updateAction = await sellerSdk.order.sellUpdate.prepare({
+		await awaitForOrder(it.sellerSdk, orderId)
+		const updateAction = await it.sellerSdk.order.sellUpdate.prepare({
 			orderId,
 		})
 		const createdOrderId = await updateAction.submit({ price: "0.01" })
 
 		await retry(10, 2000, async () => {
-			const updatedOrder = await sellerSdk.apis.order.getOrderById({
+			const updatedOrder = await it.sellerSdk.apis.order.getOrderById({
 				id: createdOrderId,
 			})
 			expect(new BigNumber(updatedOrder.take.value).toString()).toBe(new BigNumber("0.01").toString())
@@ -69,7 +72,7 @@ describe.skip("sell test", () => {
 	}, 1500000)
 
 	test("sell MT test", async () => {
-		const mintResponse = await sellerSdk.nft.mint.prepare({
+		const mintResponse = await it.sellerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -81,9 +84,9 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitItemSupply(sellerSdk, mintResult.itemId, "10")
+		await awaitItemSupply(it.sellerSdk, mintResult.itemId, "10")
 
-		const sellAction = await sellerSdk.order.sell.prepare({
+		const sellAction = await it.sellerSdk.order.sell.prepare({
 			itemId: mintResult.itemId,
 		})
 
@@ -94,7 +97,7 @@ describe.skip("sell test", () => {
 				"@type": "XTZ",
 			},
 		})
-		await awaitForOrder(sellerSdk, orderId)
+		await awaitForOrder(it.sellerSdk, orderId)
 
 	}, 2900000)
 

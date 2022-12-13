@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { PrepareBidResponse } from "@rarible/sdk/build/types/order/bid/domain"
+import type { PrepareBidResponse } from "@rarible/sdk/esm/types/order/bid/domain"
 import { toBigNumber } from "@rarible/types"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"

@@ -1,5 +1,5 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber, toCollectionId, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
@@ -18,11 +18,13 @@ describe("mintAndSell", () => {
 	} = createE2eProvider(DEV_PK_1)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
+	const it = awaitAll({
+		sdk: createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED }),
+	})
 	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
 
 	test("prepare should work even if wallet is undefined", async () => {
-		// const collection = await sdk.apis.collection.getCollectionById({
+		// const collection = await it.sdk.apis.collection.getCollectionById({
 		// 	collection: `ETHEREUM:${erc721Address}`,
 		// })
 		const collection: Collection = {
@@ -79,7 +81,7 @@ describe("mintAndSell", () => {
 				},
 			},
 		}
-		const action = await sdk.nft.mintAndSell.prepare({ collection })
+		const action = await it.sdk.nft.mintAndSell.prepare({ collection })
 		expect(action.supportsRoyalties).toBeTruthy()
 		expect(action.originFeeSupport).toBe("FULL")
 	})
@@ -88,15 +90,15 @@ describe("mintAndSell", () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
-		const collection = await sdk.apis.collection.getCollectionById({
+		const collection = await it.sdk.apis.collection.getCollectionById({
 			collection: contract,
 		})
 
-		const tokenId = await sdk.nft.generateTokenId({
+		const tokenId = await it.sdk.nft.generateTokenId({
 			collection: contract,
 			minter: sender,
 		})
-		const action = await sdk.nft.mintAndSell.prepare({
+		const action = await it.sdk.nft.mintAndSell.prepare({
 			collection,
 			tokenId,
 		})
@@ -125,9 +127,9 @@ describe("mintAndSell", () => {
 		}
 
 		await retry(5, 2000, async () => {
-			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
+			const order = await it.sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe("1")
-			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+			const item = await it.sdk.apis.item.getItemById({ itemId: result.itemId })
 			expect(item.supply.toString()).toEqual("1")
 			if (tokenId) {
 				expect(item.tokenId).toEqual(tokenId.tokenId)
@@ -141,15 +143,15 @@ describe("mintAndSell", () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
-		const collection = await sdk.apis.collection.getCollectionById({
+		const collection = await it.sdk.apis.collection.getCollectionById({
 			collection: contract,
 		})
 
-		const tokenId = await sdk.nft.generateTokenId({
+		const tokenId = await it.sdk.nft.generateTokenId({
 			collection: contract,
 			minter: sender,
 		})
-		const result = await sdk.nft.mintAndSell({
+		const result = await it.sdk.nft.mintAndSell({
 			collection: collection,
 			tokenId,
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -171,9 +173,9 @@ describe("mintAndSell", () => {
 		expect(transaction.hash).toBeTruthy()
 
 		await retry(10, 2000, async () => {
-			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
+			const order = await it.sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe("1")
-			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+			const item = await it.sdk.apis.item.getItemById({ itemId: result.itemId })
 			expect(item.supply.toString()).toEqual("1")
 			if (tokenId) {
 				expect(item.tokenId).toEqual(tokenId.tokenId)
@@ -187,15 +189,15 @@ describe("mintAndSell", () => {
 		const senderRaw = wallet.getAddressString()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
-		const collection = await sdk.apis.collection.getCollectionById({
+		const collection = await it.sdk.apis.collection.getCollectionById({
 			collection: contract,
 		})
 
-		const tokenId = await sdk.nft.generateTokenId({
+		const tokenId = await it.sdk.nft.generateTokenId({
 			collection: contract,
 			minter: sender,
 		})
-		const result = await sdk.nft.mintAndSell({
+		const result = await it.sdk.nft.mintAndSell({
 			collection: collection,
 			tokenId,
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -213,9 +215,9 @@ describe("mintAndSell", () => {
 		})
 
 		await retry(10, 2000, async () => {
-			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
+			const order = await it.sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe("1")
-			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+			const item = await it.sdk.apis.item.getItemById({ itemId: result.itemId })
 			expect(item.supply.toString()).toEqual("1")
 			if (tokenId) {
 				expect(item.tokenId).toEqual(tokenId.tokenId)

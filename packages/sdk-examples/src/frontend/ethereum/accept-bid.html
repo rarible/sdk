@@ -15,7 +15,7 @@
       const wallet = new window.raribleWalletSdk.EthereumWallet(web3Ethereum)
 
       const env = "staging" // "dev" | "e2e" | "staging" | "prod"
-      const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
+      const raribleSdk = await window.raribleSdk.createRaribleSdk(wallet, env)
       const bidAction = await raribleSdk.order.acceptBid({
         orderId: "ETHEREUM:<YOUR_ORDER_ID>"
       })

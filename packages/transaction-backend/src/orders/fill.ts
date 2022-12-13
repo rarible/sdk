@@ -38,7 +38,7 @@ export async function postFillAction(req: Request, res: Response) {
 
 async function ethereumPostFillAction(from: string, request: any, res: Response) {
 	const web3Ethereum = new Web3Ethereum({ web3: web3Provider, from })
-	const sdk = createRaribleSdk(web3Ethereum, process.env.SDK_ENV as EthereumNetwork, {
+	const sdk = await createRaribleSdk(web3Ethereum, process.env.SDK_ENV as EthereumNetwork, {
 		apiClientParams: {
 			fetchApi: fetch,
 		},

@@ -5636,6 +5636,22 @@
   dependencies:
     "@rarible/types" "~0.9.2"
 
+"@rarible/ethereum-provider@^0.12.109":
+  version "0.12.109"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-provider/-/ethereum-provider-0.12.109.tgz#33581c9ceb9939a102d394a2ccf6dfc61a719f2b"
+  integrity sha512-dZPqKiu7ZczxdRlh/yeSwM1z+F3bQ4QXLSbPnQUuRpHnND30s/ANNrze6hBMLkvaIP+gZlaC0ULbnDCoICXXLg==
+  dependencies:
+    eth-sig-util "^3.0.0"
+
+"@rarible/ethers-ethereum@~0.12.109":
+  version "0.12.109"
+  resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.12.109.tgz#0c12510dafd1659c4ae7cbdd05521f12134ccef8"
+  integrity sha512-vtWA/FVfoYHXUaecu+NujTdtQm0cK4ft9htCvk1JBiuZ8s6k3LDfvMFH2TjGIS5xuL7N2hnsWFAdJuVC3cXtKw==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.12.109"
+    ethereumjs-util "^7.1.0"
+    ethers "~5.4.4"
+
 "@rarible/fcl-types@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.0.tgz#d0697f30ed77ef80e43ef59497f1492c5b7dcf91"
@@ -5784,6 +5800,15 @@
   integrity sha512-efq8jxlLsNQAC6iY7jcKYlxeV0SAOfp2F4c7VXQv/JCivoDxkMnMzUWaQuxR/XN6UjV2UjpJ364xmaisiqh82g==
   dependencies:
     bignumber.js "^9.0.0"
+
+"@rarible/web3-ethereum@~0.12.109":
+  version "0.12.109"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.12.109.tgz#9b66f4b8e0d43179fa0e328551761fe28b692684"
+  integrity sha512-KEg309gG9z5g9NGsbJ1EMdIfzII+l84l+SowwbI2a0yyQGF8oUDm47xjE7SK0NM+oLL3up9uPpGbN2i+UtBnmQ==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.12.109"
+    eth-rpc-errors "^4.0.3"
+    exponential-backoff "^3.1.0"
 
 "@rixio/atom@^0.12.1":
   version "0.12.1"

@@ -9,7 +9,7 @@ import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk
  *
  * @example
  *
- * const prepared = sdk.nft.preprocessMeta({
+ * const prepared = await sdk.nft.preprocessMeta({
  *   name: "Test",
  *   description: "Test",
  *   image: {File},
@@ -18,7 +18,7 @@ import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk
  *   attributes: [{key: "test", value: "test"}]
  * })
  */
-export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaResponse
+export type IPreprocessMeta = (meta: PreprocessMetaRequest) => Promise<PreprocessMetaResponse>
 /**
  * @property name -
  * @property {string | undefined} description

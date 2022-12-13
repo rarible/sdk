@@ -13,7 +13,7 @@
       const web3Ethereum = new window.raribleWeb3Ethereum.Web3Ethereum({ web3: new Web3(ethereum) })
       const wallet = new window.raribleWalletSdk.EthereumWallet(web3Ethereum)
       const env = "staging" // "dev" | "e2e" | "staging" | "prod"
-      const raribleSdk = new window.raribleSdk.createRaribleSdk(wallet, env)
+      const raribleSdk = await window.raribleSdk.createRaribleSdk(wallet, env)
       const tx = await raribleSdk.nft.createCollection({
         blockchain: "ETHEREUM",
         asset: {

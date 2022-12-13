@@ -1,13 +1,16 @@
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { toUnionAddress } from "@rarible/types"
 import { getWallet } from "../common/test/test-wallets"
 import { createSdk } from "../common/test/create-sdk"
 
 describe("Solana bidding balance", () => {
 	const wallet = getWallet(0)
-	const sdk = createSdk(wallet)
+	const it = awaitAll({
+		sdk: createSdk(wallet),
+	})
 
 	test("Should check bidding balance", async () => {
-		const balance = await sdk.balances.getBiddingBalance({
+		const balance = await it.sdk.balances.getBiddingBalance({
 			currency: {
 				"@type": "SOLANA_SOL",
 			},
@@ -18,7 +21,7 @@ describe("Solana bidding balance", () => {
 	})
 
 	test("Should deposit bidding balance", async () => {
-		const tx = await sdk.balances.depositBiddingBalance({
+		const tx = await it.sdk.balances.depositBiddingBalance({
 			currency: {
 				"@type": "SOLANA_SOL",
 			},
@@ -30,7 +33,7 @@ describe("Solana bidding balance", () => {
 	})
 
 	test("Should withdraw bidding balance", async () => {
-		const tx = await sdk.balances.withdrawBiddingBalance({
+		const tx = await it.sdk.balances.withdrawBiddingBalance({
 			currency: {
 				"@type": "SOLANA_SOL",
 			},

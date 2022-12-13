@@ -66,7 +66,7 @@ export class FlowMint {
 		return response.submit(request)
 	}
 
-	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+	async preprocessMeta(meta: PreprocessMetaRequest): Promise<CommonTokenMetadataResponse> {
 		if (meta.blockchain !== Blockchain.FLOW) {
 			throw new Error("Wrong blockchain")
 		}

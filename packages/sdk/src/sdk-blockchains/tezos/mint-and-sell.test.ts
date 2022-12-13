@@ -1,5 +1,6 @@
 import { toCollectionId } from "@rarible/types"
 import BigNumber from "bignumber.js"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
@@ -13,13 +14,15 @@ describe.skip("test tezos mint and sell", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+	const it = awaitAll({
+		sellerSdk: createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED }),
+	})
 
 	const nftContract: string = getTestContract(env, "nftContract")
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("mint and sell nft", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+		const mintAndSellAction = await it.sellerSdk.nft.mintAndSell.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 
@@ -33,7 +36,7 @@ describe.skip("test tezos mint and sell", () => {
 	})
 
 	test("mint and sell nft with basic function", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+		const mintAndSellAction = await it.sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(nftContract),
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
@@ -43,7 +46,7 @@ describe.skip("test tezos mint and sell", () => {
 	})
 
 	test("mint and sell mt", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+		const mintAndSellAction = await it.sellerSdk.nft.mintAndSell.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 

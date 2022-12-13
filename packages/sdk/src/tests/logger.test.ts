@@ -55,7 +55,7 @@ describe("Logging", () => {
 
 	test("Should log simple blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = await createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
 		const collection = await sdk.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			baseURI: "1",
@@ -88,7 +88,7 @@ describe("Logging", () => {
 
 	test("Should log simple api call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = await createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
 		await sdk.apis.collection.getCollectionById({
 			collection: collectionAddress!,
 		})
@@ -102,7 +102,7 @@ describe("Logging", () => {
 	let nftId: string | undefined = undefined
 	test("Should log prepared blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = await createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
 		const prepare = await sdk.nft.mint.prepare({
 			collectionId: toCollectionId(collectionAddress!),
 		})
@@ -129,7 +129,7 @@ describe("Logging", () => {
 	let orderId: undefined | string = undefined
 	test("Should log simplified blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = await createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
 		orderId = await sdk.order.sell({ itemId: toItemId(nftId!), currency: { "@type": "ETH" }, amount: 1, price: 0.000001 })
 		expect(logger.raw.mock.calls[0][0]).toMatchObject({
 			level: "TRACE",
@@ -139,7 +139,7 @@ describe("Logging", () => {
 
 	test("Should log error api call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = await createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
 		try {
 			await sdk.apis.collection.getCollectionById({
 				collection: "unknown",
@@ -156,7 +156,7 @@ describe("Logging", () => {
 
 	test("Should log error simplified blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(wallet2, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = await createRaribleSdk(wallet2, "development", { logs: LogsLevel.TRACE, logger })
 		try {
 			await sdk.order.buy({ orderId: toOrderId(orderId!), amount: 1 })
 		} catch (e) {

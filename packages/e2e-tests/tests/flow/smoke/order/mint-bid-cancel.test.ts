@@ -1,6 +1,6 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request.type"
+import type { MintRequest } from "@rarible/sdk/node/types/nft/mint/mint-request.type"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
@@ -61,10 +61,11 @@ describe.skip.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 		seller: sellerWallet,
 		buyer: buyerWallet,
 	} = suite.wallets
-	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
-	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
 	test(suite.description, async () => {
+		const sellerSdk = await createSdk(suite.blockchain, sellerWallet)
+		const buyerSdk = await createSdk(suite.blockchain, buyerWallet)
+
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
 		const collection = await getCollection(sellerSdk, suite.collectionId)

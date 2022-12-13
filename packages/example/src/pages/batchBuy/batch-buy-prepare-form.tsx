@@ -5,13 +5,13 @@ import { useForm } from "react-hook-form"
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline"
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { toOrderId } from "@rarible/types"
+import type { PrepareBatchBuyResponse } from "@rarible/sdk/esm/types/order/fill/domain"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { toOrderId } from "@rarible/types"
-import { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
 
 interface IBatchBuyPrepareFormProps {
 	disabled?: boolean

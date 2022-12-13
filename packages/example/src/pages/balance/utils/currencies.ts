@@ -1,5 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
-import { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
+import type { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
 import { WalletType } from "@rarible/sdk-wallet"
 
 interface ISupportedCurrency {

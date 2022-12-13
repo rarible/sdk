@@ -1,5 +1,6 @@
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import { awaitAll } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/prepare"
 import { LogsLevel } from "../../domain"
@@ -16,13 +17,15 @@ describe.skip("mint test", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const it = awaitAll({
+		sdk: createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED }),
+	})
 
 	const nftContract: string = getTestContract(env, "nftContract")
 	const mtContract: string = getTestContract(env, "mtContract")
 
 	test("mint NFT token test", async () => {
-		const mintResponse = await sdk.nft.mint.prepare({
+		const mintResponse = await it.sdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
 
@@ -42,12 +45,12 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitItemSupply(sdk, mintResult.itemId, "1")
+		await awaitItemSupply(it.sdk, mintResult.itemId, "1")
 	}, 1500000)
 
 
 	test("mint MT token test", async () => {
-		const mintResponse = await sdk.nft.mint.prepare({
+		const mintResponse = await it.sdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})
 		const mintResult = await mintResponse.submit({
@@ -62,12 +65,12 @@ describe.skip("mint test", () => {
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
-		await awaitItemSupply(sdk, mintResult.itemId, "12")
+		await awaitItemSupply(it.sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 
 	test("mint MT token with basic function", async () => {
-		const mintResult = await sdk.nft.mint({
+		const mintResult = await it.sdk.nft.mint({
 			collectionId: toCollectionId(mtContract),
 			uri: "ipfs://bafkreiczcdnvl3qr7fscbokjd5cakiuihhbb7q3zjpxpo5ij6ehazfjety",
 			supply: 12,
@@ -81,12 +84,12 @@ describe.skip("mint test", () => {
 			}],
 		})
 		await mintResult.transaction.wait()
-		await awaitItemSupply(sdk, mintResult.itemId, "12")
+		await awaitItemSupply(it.sdk, mintResult.itemId, "12")
 
 	}, 1500000)
 
-	test("tezos preprocess metadata", () => {
-		const response = sdk.nft.preprocessMeta({
+	test("tezos preprocess metadata", async () => {
+		const response = await it.sdk.nft.preprocessMeta({
 			blockchain: Blockchain.TEZOS,
 			name: "1",
 			description: "2",
