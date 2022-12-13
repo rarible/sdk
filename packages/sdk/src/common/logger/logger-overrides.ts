@@ -156,6 +156,7 @@ function isContractError(error: any): boolean {
 }
 
 export function getExecRevertedMessage(msg: string) {
+	if (!msg) return msg
 	try {
 		const result = msg.match(execRevertedRegexp)
 		if (result && result[1]) {
