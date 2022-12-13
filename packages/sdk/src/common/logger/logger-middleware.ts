@@ -8,7 +8,7 @@ import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
 import { getSdkContext } from "../get-sdk-context"
-import { getErrorLevel } from "./logger-overrides"
+import { getErrorLevel, getExecRevertedMessage } from "./logger-overrides"
 
 export const loggerConfig = {
 	service: "union-sdk",
@@ -75,9 +75,9 @@ export function getErrorMessageString(err: any): string {
 		} else if (typeof err === "string") {
 			return err
 		} else if (err instanceof Error) {
-			return err.message
+			return getExecRevertedMessage(err.message)
 		} else if (err.message) {
-			return typeof err.message === "string" ? err.message : JSON.stringify(err.message)
+			return typeof err.message === "string" ? getExecRevertedMessage(err.message) : JSON.stringify(err.message)
 		} else if (err.status !== undefined && err.statusText !== undefined) {
 			return JSON.stringify({
 				url: err.url,

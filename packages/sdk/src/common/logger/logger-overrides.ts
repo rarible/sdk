@@ -1,7 +1,7 @@
 import { NetworkError, Warning } from "@rarible/logger/build"
 import { LogLevel } from "@rarible/logger/build/domain"
-import { WalletType } from "@rarible/sdk-wallet"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { WalletType } from "@rarible/sdk-wallet"
 import { NetworkErrorCode } from "../apis"
 
 const COMMON_NETWORK_ERROR_MESSAGES = [
@@ -77,7 +77,7 @@ export function isErrorWarning(err: any, blockchain: WalletType | undefined): bo
 			return false
 		}
 
-		if (blockchain === WalletType.ETHEREUM || blockchain === WalletType.IMMUTABLEX) {
+		if (isEVMWalletType(blockchain)) {
 			if (
 				err.error?.code === 4001 ||
 				EVM_WARN_MESSAGES.some(msg => err?.message?.includes(msg))
@@ -121,7 +121,11 @@ function isTezosWarning(err: any): boolean {
     || err?.message?.endsWith("does not have enough funds for transaction")
 }
 
-export type ErrorLevel = LogLevel | NetworkErrorCode | string
+export type ErrorLevel = LogLevel | NetworkErrorCode | CustomErrorCode | string
+
+export enum CustomErrorCode {
+	CONTRACT_ERROR = "CONTRACT_ERROR"
+}
 
 export function getErrorLevel(callableName: string, error: any, wallet: BlockchainWallet | undefined): ErrorLevel {
 	if (error?.status === 400) {
@@ -145,5 +149,33 @@ export function getErrorLevel(callableName: string, error: any, wallet: Blockcha
 		return LogLevel.WARN
 	}
 
+	if (isEVMWalletType(wallet?.walletType) && isContractError(error)) {
+		return CustomErrorCode.CONTRACT_ERROR
+	}
+
 	return LogLevel.ERROR
+}
+
+function isEVMWalletType(walletType: WalletType | undefined) {
+	return walletType === WalletType.ETHEREUM || walletType === WalletType.IMMUTABLEX
+}
+
+const execRevertedRegexp = /execution reverted:(.*[^\\])/
+const ethersSig = "Error while gas estimation with message cannot estimate gas"
+const ethersRevertedRegexp = /"execution reverted[:]?(.*?)"/
+
+function isContractError(error: any): boolean {
+	return error?.message?.includes("execution reverted")
+}
+
+export function getExecRevertedMessage(msg: string) {
+	if (!msg) return msg
+	try {
+		const result = msg.includes(ethersSig) ? msg.match(ethersRevertedRegexp): msg.match(execRevertedRegexp)
+		if (result && result[1]) {
+			return result[1].trim()
+		}
+	} catch (e) {}
+
+	return msg
 }
