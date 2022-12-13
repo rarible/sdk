@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.13.0",
+  "version": "0.13.2",
   "keywords": [
     "solana",
     "web3"
@@ -29,7 +29,7 @@
     "@project-serum/anchor": "^0.22.1",
     "@rarible/logger": "^0.9.12",
     "@rarible/solana-common": "^0.13.0",
-    "@rarible/solana-wallet": "^0.13.0",
+    "@rarible/solana-wallet": "^0.13.2",
     "@rarible/utils": "~0.9.10",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.36.0",
@@ -46,9 +46,9 @@
     "form-data": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
+    "jest-junit": "^15.0.0",
     "ts-jest": "^27.0.7",
-    "typescript": "^4.8.4",
-    "jest-junit": "^15.0.0"
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

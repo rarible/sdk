@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Features
+
+* add check when total price in solana instructions larger than u64 ([#401](https://github.com/rarible/sdk/issues/401)) ([b4d38f3](https://github.com/rarible/sdk/commit/b4d38f382f187dbc7cc5315e93a54ef4f4fb5d4d))
+
+
+
+
+
 # [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
 
 **Note:** Version bump only for package @rarible/solana-sdk

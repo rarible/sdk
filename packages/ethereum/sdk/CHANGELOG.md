@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Features
+
+* ethereum sdk directAcceptBid support ([7eee004](https://github.com/rarible/sdk/commit/7eee004b07e8f369fcb2d9c83c06d2002659997e))
+* ethereum sdk directAcceptBid support ([3376c1c](https://github.com/rarible/sdk/commit/3376c1c24ca82e9fa0b570c5a05b29b003343475))
+* show error then amount of items in order greater than amount of wei's ([#399](https://github.com/rarible/sdk/issues/399)) ([c1eb51f](https://github.com/rarible/sdk/commit/c1eb51f80298645cbbb6a3dfa60216135ec7e3fd))
+
+
+
+
+
 ## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
 
 

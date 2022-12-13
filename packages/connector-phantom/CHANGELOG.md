@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+**Note:** Version bump only for package @rarible/connector-phantom
+
+
+
+
+
 # [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
 
 **Note:** Version bump only for package @rarible/connector-phantom

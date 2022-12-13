@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* tezos errors ([b794e37](https://github.com/rarible/sdk/commit/b794e37266e1870b062d5dfc90a18b4596b511bf))
+
+
+### Features
+
+* add currency selector for bid/sell in example app ([96d423a](https://github.com/rarible/sdk/commit/96d423a74b3843f6ca2fec7662096752a8b46fdc))
+* ethereum sdk directAcceptBid support ([90cef3b](https://github.com/rarible/sdk/commit/90cef3b314f8871a3f69531e2f23581ca591d960))
+
+
+
+
+
 ## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
 
 **Note:** Version bump only for package example

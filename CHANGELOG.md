@@ -3,6 +3,34 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* checking payouts ([#404](https://github.com/rarible/sdk/issues/404)) ([eb55f3b](https://github.com/rarible/sdk/commit/eb55f3bffb434a704941990623230564680d3632))
+* ethereum provider error codes ([b1bf76d](https://github.com/rarible/sdk/commit/b1bf76d05fe7217e6582557f434d1b55daf6e3a2))
+* improve logging ([#394](https://github.com/rarible/sdk/issues/394)) ([141bbff](https://github.com/rarible/sdk/commit/141bbff30f6ba19f963b16eb8b2f3814f2ab1a28))
+* tezos errors ([b794e37](https://github.com/rarible/sdk/commit/b794e37266e1870b062d5dfc90a18b4596b511bf))
+
+
+### Features
+
+* add check when total price in solana instructions larger than u64 ([#401](https://github.com/rarible/sdk/issues/401)) ([b4d38f3](https://github.com/rarible/sdk/commit/b4d38f382f187dbc7cc5315e93a54ef4f4fb5d4d))
+* add currency selector for bid/sell in example app ([96d423a](https://github.com/rarible/sdk/commit/96d423a74b3843f6ca2fec7662096752a8b46fdc))
+* catch contracts errors messages ([#405](https://github.com/rarible/sdk/issues/405)) ([d20cd5b](https://github.com/rarible/sdk/commit/d20cd5b17c94581ac34884ed3e74d2fde1886d45))
+* change log level for some type of errors ([#393](https://github.com/rarible/sdk/issues/393)) ([2a3364c](https://github.com/rarible/sdk/commit/2a3364cb1820305e01dd7175fbd1a4ea84aaf68c))
+* change some log levels to network_error ([#398](https://github.com/rarible/sdk/issues/398)) ([31a370e](https://github.com/rarible/sdk/commit/31a370e132bc6e39152b394a75cd7496173fc818))
+* ethereum sdk directAcceptBid support ([7eee004](https://github.com/rarible/sdk/commit/7eee004b07e8f369fcb2d9c83c06d2002659997e))
+* ethereum sdk directAcceptBid support ([90cef3b](https://github.com/rarible/sdk/commit/90cef3b314f8871a3f69531e2f23581ca591d960))
+* ethereum sdk directAcceptBid support ([3376c1c](https://github.com/rarible/sdk/commit/3376c1c24ca82e9fa0b570c5a05b29b003343475))
+* show error then amount of items in order greater than amount of wei's ([#399](https://github.com/rarible/sdk/issues/399)) ([c1eb51f](https://github.com/rarible/sdk/commit/c1eb51f80298645cbbb6a3dfa60216135ec7e3fd))
+* tezos v2 bids ([#384](https://github.com/rarible/sdk/issues/384)) ([716088a](https://github.com/rarible/sdk/commit/716088abeb22036a504062748821b6380541c2a0))
+
+
+
+
+
 ## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
 
 

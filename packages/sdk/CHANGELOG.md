@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* checking payouts ([#404](https://github.com/rarible/sdk/issues/404)) ([eb55f3b](https://github.com/rarible/sdk/commit/eb55f3bffb434a704941990623230564680d3632))
+* tezos errors ([b794e37](https://github.com/rarible/sdk/commit/b794e37266e1870b062d5dfc90a18b4596b511bf))
+
+
+### Features
+
+* catch contracts errors messages ([#405](https://github.com/rarible/sdk/issues/405)) ([d20cd5b](https://github.com/rarible/sdk/commit/d20cd5b17c94581ac34884ed3e74d2fde1886d45))
+* change log level for some type of errors ([#393](https://github.com/rarible/sdk/issues/393)) ([2a3364c](https://github.com/rarible/sdk/commit/2a3364cb1820305e01dd7175fbd1a4ea84aaf68c))
+* change some log levels to network_error ([#398](https://github.com/rarible/sdk/issues/398)) ([31a370e](https://github.com/rarible/sdk/commit/31a370e132bc6e39152b394a75cd7496173fc818))
+* tezos v2 bids ([#384](https://github.com/rarible/sdk/issues/384)) ([716088a](https://github.com/rarible/sdk/commit/716088abeb22036a504062748821b6380541c2a0))
+
+
+
+
+
 ## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
 
 

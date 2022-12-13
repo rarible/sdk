@@ -1,6 +1,6 @@
 {
   "name": "@rarible/protocol-ethereum-sdk",
-  "version": "0.13.1",
+  "version": "0.13.2",
   "keywords": [
     "axios",
     "typescript",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@rarible/action": "~0.5.0",
     "@rarible/ethereum-api-client": "^0.1.24-beta1",
-    "@rarible/ethereum-provider": "^0.13.0",
+    "@rarible/ethereum-provider": "^0.13.2",
     "@rarible/logger": "^0.9.12",
     "@rarible/utils": "~0.9.10",
     "axios": "^0.25.0",
@@ -38,16 +38,17 @@
     "merkletreejs": "^0.2.31"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.0",
-    "@rarible/ethers-ethereum": "^0.13.0",
+    "@rarible/ethereum-sdk-test-common": "^0.13.2",
+    "@rarible/ethers-ethereum": "^0.13.2",
     "@rarible/test-provider": "~0.5.0",
-    "@rarible/web3-ethereum": "^0.13.0",
+    "@rarible/web3-ethereum": "^0.13.2",
     "@types/jest": "27.0.2",
     "@types/node-fetch": "^2.5.11",
     "buffer": "^6.0.3",
     "form-data": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.3.1",
+    "jest-junit": "^15.0.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "npm-run-all": "^4.1.5",
     "process": "^0.11.10",
@@ -56,8 +57,7 @@
     "typescript": "^4.8.4",
     "web3": "^1.8.1",
     "webpack": "^5.68.0",
-    "webpack-cli": "^4.9.2",
-    "jest-junit": "^15.0.0"
+    "webpack-cli": "^4.9.2"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

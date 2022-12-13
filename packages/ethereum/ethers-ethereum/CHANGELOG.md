@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* ethereum provider error codes ([b1bf76d](https://github.com/rarible/sdk/commit/b1bf76d05fe7217e6582557f434d1b55daf6e3a2))
+* improve logging ([#394](https://github.com/rarible/sdk/issues/394)) ([141bbff](https://github.com/rarible/sdk/commit/141bbff30f6ba19f963b16eb8b2f3814f2ab1a28))
+
+
+
+
+
 # [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
 
 **Note:** Version bump only for package @rarible/ethers-ethereum
