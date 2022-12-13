@@ -11,6 +11,7 @@ import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../..
 import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { checkPayouts } from "../../common/check-payouts"
 import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
@@ -55,6 +56,7 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
+					checkPayouts(buyRequest.payouts)
 					const transactions = []
 
 					// make buy order
@@ -124,6 +126,7 @@ export class SolanaFill {
 			.create({
 				id: "send-tx" as const,
 				run: async (buyRequest: FillRequest) => {
+					checkPayouts(buyRequest.payouts)
 					const sellPrepare = await this.sdk.order.sell({
 						auctionHouse: auctionHouse,
 						signer: this.wallet!.provider,
