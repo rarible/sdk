@@ -64,6 +64,7 @@ const EVM_WARN_MESSAGES = [
 	"The gas price is low, please increase the gas price try again",
 	"transaction underpriced",
 	"Комиссия за газ обновлена, и вам необходимо",
+	"Insufficient ETH funds",
 ]
 
 /**
