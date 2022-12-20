@@ -30,6 +30,7 @@ import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplif
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
@@ -282,5 +283,13 @@ export class SolanaOrder {
 
 	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
 		return this.cancel(request)
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		const auctionHouse = getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
+		return {
+			originFeeSupport: OriginFeeSupport.NONE,
+			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
+		}
 	}
 }

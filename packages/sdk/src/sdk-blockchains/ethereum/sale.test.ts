@@ -12,6 +12,7 @@ import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
 import { awaitStock } from "../../common/test/await-stock"
+import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
@@ -340,6 +341,14 @@ describe("sale", () => {
 		const nextStock2 = "0"
 		const order2 = await awaitStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
+	})
+
+	test("get future order fees", async () => {
+		const fees = await sdk1.restriction.getFutureOrderFees(
+			toItemId("ETHEREUM:0x1AF7A7555263F275433c6Bb0b8FdCD231F89B1D7:15754214302034704911334786657881932847148102202883437712117637319024858628267")
+		)
+		expect(fees.originFeeSupport).toBe(OriginFeeSupport.FULL)
+		expect(fees.baseFee).toBe(0)
 	})
 })
 

@@ -13,6 +13,7 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import {
 	convertFlowOrderId,
 	getFlowCollection,
@@ -37,6 +38,13 @@ export class FlowSell {
 
 	async getPreparedOrder(request: OrderId): Promise<Order> {
 		return this.apis.order.getOrderById({ id: request })
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: getFlowBaseFee(this.sdk),
+		}
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {

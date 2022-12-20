@@ -1,4 +1,4 @@
-import { toCollectionId, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/prepare"
@@ -6,6 +6,7 @@ import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
+import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { awaitForOrder } from "./test/await-for-order"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
@@ -81,6 +82,7 @@ describe.skip("sell test", () => {
 			await mintResult.transaction.wait()
 		}
 
+		console.log("mint", mintResult)
 		await awaitItemSupply(sellerSdk, mintResult.itemId, "10")
 
 		const sellAction = await sellerSdk.order.sell.prepare({
@@ -98,4 +100,11 @@ describe.skip("sell test", () => {
 
 	}, 2900000)
 
+	test("get future order fees", async () => {
+		const fees = await sellerSdk.restriction.getFutureOrderFees(
+			toItemId("TEZOS:KT1Uke8qc4YTfP41dGuoGC8UsgRyCtyvKPLA:1282")
+		)
+		expect(fees.originFeeSupport).toBe(OriginFeeSupport.FULL)
+		expect(fees.baseFee).toBe(0)
+	})
 })

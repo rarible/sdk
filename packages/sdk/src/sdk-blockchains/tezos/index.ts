@@ -8,6 +8,7 @@ import { MetaUploader } from "../union/meta/upload-meta"
 import type { RaribleSdkConfig } from "../../config/domain"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { TezosSell } from "./sell"
 import { TezosFill } from "./fill"
 import { getMaybeTezosProvider } from "./common"
@@ -71,6 +72,9 @@ export function createTezosSdk(
 		},
 		restriction: {
 			canTransfer: new TezosCanTransfer(maybeProvider).canTransfer,
+			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+				return sellService.getFutureOrderFees()
+			},
 		},
 	}
 }

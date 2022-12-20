@@ -14,6 +14,7 @@ import { MetaUploader } from "../union/meta/upload-meta"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { FlowMint } from "./mint"
 import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
@@ -82,6 +83,9 @@ export function createFlowSdk(
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {
 				return Promise.resolve({ success: true })
+			},
+			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+				return sellService.getFutureOrderFees()
 			},
 		},
 	}

@@ -15,6 +15,7 @@ import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { calcBuyerBaseFee, getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
 
@@ -74,6 +75,13 @@ export class ImxOrderService {
 			baseFee: 200, // in reality is not taken from the seller, but it needs to display fees correctly
 			supportsExpirationDate: false,
 			submit: submit,
+		}
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: 200,
 		}
 	}
 
