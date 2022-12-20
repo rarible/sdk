@@ -13,6 +13,7 @@ import { MetaUploader } from "../union/meta/upload-meta"
 import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -98,6 +99,9 @@ export function createEthereumSdk(
 		restriction: {
 			canTransfer(): Promise<CanTransferResult> {
 				return Promise.resolve({ success: true })
+			},
+			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+				return sellService.getFutureOrderFees()
 			},
 		},
 		ethereum: {

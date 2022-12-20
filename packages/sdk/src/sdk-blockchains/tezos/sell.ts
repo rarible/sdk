@@ -29,6 +29,7 @@ import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -74,6 +75,13 @@ export class TezosSell {
 			default: {
 				throw new Error("Unsupported take asset type")
 			}
+		}
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: parseInt(this.provider.config.fees.toString()),
 		}
 	}
 

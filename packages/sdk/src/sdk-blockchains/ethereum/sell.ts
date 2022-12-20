@@ -9,6 +9,7 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -52,6 +53,13 @@ export class EthereumSell {
 	async sellUpdateBasic(request: SellUpdateSimplifiedRequest): Promise<OrderId> {
 		const prepare = await this.update(request)
 		return prepare.submit(request)
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+		}
 	}
 
 	private async sellDataV2(): Promise<PrepareSellInternalResponse> {

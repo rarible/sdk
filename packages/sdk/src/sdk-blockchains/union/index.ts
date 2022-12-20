@@ -43,6 +43,7 @@ import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { IBatchBuy } from "../../types/order/fill"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -258,14 +259,25 @@ class UnionBalanceSdk implements IBalanceSdk {
 }
 
 class UnionRestrictionSdk implements IRestrictionSdk {
-	constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {
-	}
+  blockchainFeeData: Map<Blockchain, GetFutureOrderFeeData> = new Map()
 
-	canTransfer(
-		itemId: ItemId, from: UnionAddress, to: UnionAddress,
-	): Promise<CanTransferResult> {
-		return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
-	}
+  constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {}
+
+  canTransfer(
+  	itemId: ItemId, from: UnionAddress, to: UnionAddress,
+  ): Promise<CanTransferResult> {
+  	return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
+  }
+
+  async getFutureOrderFees(itemId: ItemId): Promise<GetFutureOrderFeeData> {
+  	const blockchain = extractBlockchain(itemId)
+  	if (!this.blockchainFeeData.has(blockchain)) {
+  	  const data = await this.instances[blockchain].getFutureOrderFees(itemId)
+  		this.blockchainFeeData.set(blockchain, data)
+  		return data
+  	}
+  	return this.blockchainFeeData.get(blockchain)!
+  }
 }
 
 class UnionEthereumSpecificSdk implements IEthereumSdk {
