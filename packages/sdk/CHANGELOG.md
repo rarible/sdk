@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.3](https://github.com/rarible/sdk/compare/v0.13.2...v0.13.3) (2022-12-20)
+
+
+### Features
+
+* funds warn ([#406](https://github.com/rarible/sdk/issues/406)) ([793baaa](https://github.com/rarible/sdk/commit/793baaaf80d5dbb4d5190c8f37b8533aab9650da))
+* get future order fees ([#408](https://github.com/rarible/sdk/issues/408)) ([7019c16](https://github.com/rarible/sdk/commit/7019c16eac0775fd32ccb91d29766dde61e339b8))
+
+
+
+
+
 ## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
 
 
