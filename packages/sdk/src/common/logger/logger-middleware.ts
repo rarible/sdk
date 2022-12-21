@@ -28,7 +28,8 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 					info["wallet.chainId"] = chainId
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${err && err.toString()})`
+					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
+					info["wallet.address.error"] = getStringifiedError(err)
 				})
 			break
 		case WalletType.FLOW:
@@ -38,7 +39,8 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 					info["wallet.flow.chainId"] = userData.cid
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${err && err.toString()})`
+					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
+					info["wallet.address.error"] = getStringifiedError(err)
 				})
 			break
 		case WalletType.TEZOS:
@@ -49,7 +51,8 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 					info["wallet.tezos.chainId"] = chainId
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${err && err.toString()})`
+					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
+					info["wallet.address.error"] = getStringifiedError(err)
 				})
 			break
 		case WalletType.SOLANA:
