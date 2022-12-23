@@ -8,8 +8,6 @@ import BigNumber from "bignumber.js"
 import type { CancelV2OrderRequest } from "@rarible/tezos-sdk/dist/sales/cancel"
 import { cancelV2 } from "@rarible/tezos-sdk/dist/sales/cancel"
 import type { Order, TezosMTAssetType, TezosNFTAssetType } from "@rarible/api-client"
-// eslint-disable-next-line camelcase
-import { get_legacy_orders, order_of_json } from "@rarible/tezos-sdk"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 // eslint-disable-next-line camelcase
 import { cancel_bid } from "@rarible/tezos-sdk/dist/bids"
@@ -22,7 +20,7 @@ import {
 	convertFromContractAddress,
 	getRequiredProvider,
 	getTezosAssetTypeV2,
-	getTezosOrderId,
+	getTezosOrderLegacyForm,
 	isMTAssetType,
 	isNftAssetType,
 } from "./common"
@@ -65,20 +63,7 @@ export class TezosCancel {
 				}
 			}
 
-			const legacyOrders = await get_legacy_orders(
-				provider.config, {
-					data: true,
-				}, {
-					order_id: [getTezosOrderId(order.id)],
-				})
-
-			if (!legacyOrders.length) {
-				throw new Error("Tezos v1 orders has not been found")
-			}
-			if (!legacyOrders[0] || !legacyOrders[0].data) {
-				throw new Error("Tezos v1 order data is empty")
-			}
-			const orderForm = order_of_json(legacyOrders[0].data)
+			const orderForm = getTezosOrderLegacyForm(order)
 			const tx = await cancel(
 				getRequiredProvider(this.provider),
 				orderForm as OrderForm
