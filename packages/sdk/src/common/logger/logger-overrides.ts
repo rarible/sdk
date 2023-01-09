@@ -66,6 +66,7 @@ const EVM_WARN_MESSAGES = [
 	"Комиссия за газ обновлена, и вам необходимо",
 	"Insufficient ETH funds",
 	"Please enable Blind signing or Contract data in the Ethereum app Settings",
+	"Failed to sign transaction",
 ]
 
 /**
