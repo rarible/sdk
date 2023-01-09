@@ -22,12 +22,12 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.2",
+    "@rarible/ethereum-provider": "~0.13.2",
     "ethereumjs-util": "^7.1.0",
     "ethers": "~5.4.4"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.2",
+    "@rarible/ethereum-sdk-test-common": "~0.13.2",
     "@types/jest": "^27.0.2",
     "jest": "^27.3.1",
     "jest-junit": "^15.0.0",
