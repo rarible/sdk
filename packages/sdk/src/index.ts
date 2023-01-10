@@ -21,7 +21,6 @@ import type { MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-a
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import { createEthereumSdk } from "./sdk-blockchains/ethereum"
-import { createFlowSdk } from "./sdk-blockchains/flow"
 import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
