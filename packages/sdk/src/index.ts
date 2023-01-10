@@ -32,6 +32,7 @@ import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 import { getSdkContext } from "./common/get-sdk-context"
+import { createUnavailableBlockchain } from "./common/unavailable-blockchain"
 
 /**
  * @module
@@ -76,13 +77,7 @@ export function createRaribleSdk(
 			blockchainConfig.ethereumEnv,
 			ethConfig
 		),
-		createFlowSdk(
-			filterWallet(wallet, WalletType.FLOW),
-			apis,
-			blockchainConfig.flowEnv,
-			undefined,
-			config
-		),
+		createUnavailableBlockchain("Flow blockchain is no longer supported"),
 		createTezosSdk(
 			filterWallet(wallet, WalletType.TEZOS),
 			apis,
