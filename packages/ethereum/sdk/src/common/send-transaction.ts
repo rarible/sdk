@@ -42,11 +42,6 @@ export function getSendWithInjects(injects: {
 		try {
 			const tx = await functionCall.send(options)
 			try {
-			  await createPendingLogs(api, tx)
-			} catch (e) {
-				console.error("createPendingLogs error", e)
-			}
-			try {
 				if (logger?.level && logger.level >= LogsLevel.TRACE) {
 					logger.instance.raw({
 						level: "TRACE",
@@ -155,17 +150,6 @@ export function getSimpleSendWithInjects(injects: {
 			throw err
 		}
 	}
-}
-
-export async function createPendingLogs(api: GatewayControllerApi, tx: EthereumTransaction) {
-	const createTransactionRequest = {
-		hash: toWord(tx.hash),
-		from: toAddress(tx.from),
-		to: tx.to ? toAddress(tx.to) : undefined,
-		input: toBinary(tx.data),
-		nonce: tx.nonce,
-	}
-	return await api.createGatewayPendingTransactions({ createTransactionRequest })
 }
 
 function getTxData(tx: EthereumTransaction) {
