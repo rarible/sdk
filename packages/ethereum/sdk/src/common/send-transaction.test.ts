@@ -19,13 +19,9 @@ describe("sendTransaction", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 	const env: EthereumNetwork = "dev-ethereum"
-	const config = getEthereumConfig(env)
 	const configuration = new Configuration(getApiConfig(env))
-	const gatewayApi = new GatewayControllerApi(configuration)
 	const collectionApi = new NftCollectionControllerApi(configuration)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
 	const getTokenId = getTokenIdTemplate.bind(null, collectionApi)
 
 	let testErc721: EthereumContract
