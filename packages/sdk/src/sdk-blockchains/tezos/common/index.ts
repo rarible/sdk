@@ -164,7 +164,7 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid: "KT1FiEi3Mrh31vJy39CD4hkiHq1AfRpTxNpF",
 					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
 					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
 					tzkt: "https://api.ghostnet.tzkt.io",
@@ -203,7 +203,7 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid: "KT1FiEi3Mrh31vJy39CD4hkiHq1AfRpTxNpF",
 					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
 					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
 					tzkt: "https://api.ghostnet.tzkt.io",
@@ -633,6 +633,5 @@ export function getTezosOrderLegacyForm(order: Order): OrderForm {
 	} catch (e) {
 		throw new Error("Tezos legacy order parse data error")
 	}
-	console.log("parsedLegacyData", parsedLegacyData)
 	return order_of_json(parsedLegacyData)
 }

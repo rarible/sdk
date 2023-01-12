@@ -1,6 +1,5 @@
 import type { ContractSendMethod, SendOptions } from "web3-eth-contract"
 import type { PromiEvent, TransactionReceipt } from "web3-core"
-import { toAddress, toBinary, toWord } from "@rarible/types"
 import type { GatewayControllerApi } from "@rarible/ethereum-api-client"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
 import { LogsLevel } from "../types"
@@ -41,11 +40,6 @@ export function getSendWithInjects(injects: {
 
 		try {
 			const tx = await functionCall.send(options)
-			try {
-			  await createPendingLogs(api, tx)
-			} catch (e) {
-				console.error("createPendingLogs error", e)
-			}
 			try {
 				if (logger?.level && logger.level >= LogsLevel.TRACE) {
 					logger.instance.raw({
@@ -155,17 +149,6 @@ export function getSimpleSendWithInjects(injects: {
 			throw err
 		}
 	}
-}
-
-export async function createPendingLogs(api: GatewayControllerApi, tx: EthereumTransaction) {
-	const createTransactionRequest = {
-		hash: toWord(tx.hash),
-		from: toAddress(tx.from),
-		to: tx.to ? toAddress(tx.to) : undefined,
-		input: toBinary(tx.data),
-		nonce: tx.nonce,
-	}
-	return await api.createGatewayPendingTransactions({ createTransactionRequest })
 }
 
 function getTxData(tx: EthereumTransaction) {

@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@onflow/fcl": "~0.0.77",
-    "@rarible/connector": "^0.13.2"
+    "@rarible/connector": "~0.13.2"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

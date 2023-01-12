@@ -5593,10 +5593,10 @@
     bs58 "^4.0.1"
     eventemitter3 "^4.0.4"
 
-"@rarible/action@~0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.5.0.tgz#3dede3c046eafbdbfb84e18f063745a4adfb890a"
-  integrity sha512-02UgwX1COBacoaoDs1vOkJUFCvSwHRmSYdpVgFdNwLi2DIO0pokn5Yxx6uM52RfRewsnz/IoPHWgz4YlX+TTGw==
+"@rarible/action@~0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@rarible/action/-/action-0.9.1.tgz#fe4f13c2b44b32d82bc0a4d2c6efc9ff167924c9"
+  integrity sha512-kdrc0vaPjD3JRGLxcAkglDMvTysQpMuCckiAZmi6Sq23d+ianzBfBT2yHCCzl2BGgccsopiksp7NwYY1jkmwqg==
   dependencies:
     callable-instance "^2.0.0"
 
@@ -5690,6 +5690,13 @@
   dependencies:
     json-stringify-safe "^5.0.1"
 
+"@rarible/logger@~0.9.12":
+  version "0.9.15"
+  resolved "https://registry.yarnpkg.com/@rarible/logger/-/logger-0.9.15.tgz#a5fa516bac1dd760b425eaedef5bc0dfbc1f8e37"
+  integrity sha512-42IaMt6bLErydvp1ptUR/1iVmpCWMIfuL6dWFRFUp9p+CFwMS63b6jkGWBL3cMclyoI7P51r/t4Lye+aGdOKDw==
+  dependencies:
+    json-stringify-safe "^5.0.1"
+
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
   resolved "https://registry.yarnpkg.com/@rarible/test-provider/-/test-provider-0.5.4.tgz#39122851d11e8092ce85a3ea88d64bd4df416c35"
@@ -5722,7 +5729,7 @@
     "@rarible/tezos-common" "^0.1.43"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@~0.1.43":
+"@rarible/tezos-sdk@0.1.43", "@rarible/tezos-sdk@~0.1.43":
   version "0.1.43"
   resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.43.tgz#978d13091be2be3a2f4c0f75ef43bf2ac870f6fd"
   integrity sha512-7CH0rex2NlNdBDUagfWpXpkPPrv3NeQlCmKimegvPdund5hLLDXGra0x6DihmoJyeCEFNEqt2eIwJSt78An8Ig==

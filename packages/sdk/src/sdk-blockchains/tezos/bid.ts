@@ -3,7 +3,7 @@ import type { TezosNetwork, TezosProvider, FTAssetType, XTZAssetType } from "@ra
 // eslint-disable-next-line camelcase
 import { put_bid } from "@rarible/tezos-sdk/dist/bids"
 import BigNumber from "bignumber.js"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toOrderId } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-sdk/dist/main"
 import { AssetTypeV2 } from "@rarible/tezos-common"
@@ -36,7 +36,6 @@ import {
 	getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosItemData,
-	convertTezosOrderId,
 	convertTezosToContractAddress,
 	getTezosAssetTypeV2,
 	isNftOrMTAssetType,
@@ -98,9 +97,7 @@ export class TezosBid {
 						...commonBidData,
 						asset_token_id: new BigNumber(requestInfo.tokenId),
 					}
-					console.log("bidrequest", JSON.stringify(bidRequest, null, "  "))
 					orderId = await put_bid(provider, bidRequest)
-
 				} else if ("collectionId" in prepare) {
 					throw new Warning("Floor bids are not available yet")
 					// const bidRequest: FloorBid = commonBidData
@@ -114,7 +111,7 @@ export class TezosBid {
 					throw new Error("OrderID cannot be requested")
 				}
 
-				return convertTezosOrderId(orderId)
+				return toOrderId(orderId)
 			},
 		})
 
@@ -207,7 +204,7 @@ export class TezosBid {
 					throw new Error("OrderID cannot be requested")
 				}
 
-				return convertTezosOrderId(orderId)
+				return toOrderId(orderId)
 			},
 		})
 

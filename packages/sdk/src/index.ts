@@ -21,7 +21,6 @@ import type { MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-a
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import { createEthereumSdk } from "./sdk-blockchains/ethereum"
-import { createFlowSdk } from "./sdk-blockchains/flow"
 import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
@@ -32,6 +31,7 @@ import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 import { getSdkContext } from "./common/get-sdk-context"
+import { createUnavailableBlockchain } from "./common/unavailable-blockchain"
 
 /**
  * @module
@@ -76,13 +76,7 @@ export function createRaribleSdk(
 			blockchainConfig.ethereumEnv,
 			ethConfig
 		),
-		createFlowSdk(
-			filterWallet(wallet, WalletType.FLOW),
-			apis,
-			blockchainConfig.flowEnv,
-			undefined,
-			config
-		),
+		createUnavailableBlockchain("Flow blockchain is no longer supported"),
 		createTezosSdk(
 			filterWallet(wallet, WalletType.TEZOS),
 			apis,

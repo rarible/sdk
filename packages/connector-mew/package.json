@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@myetherwallet/mewconnect-web-client": "^2.2.0-beta.18",
-    "@rarible/connector": "^0.13.2",
+    "@rarible/connector": "~0.13.2",
     "rollup": "^2.0.0"
   },
   "devDependencies": {

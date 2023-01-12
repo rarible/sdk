@@ -6,6 +6,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "../../types"
 import type { LogsLevel } from "../../types"
+const packageJson = require("../../../package.json")
 
 type Environment = "prod" | "testnet" | "dev" | "staging"
 
@@ -63,6 +64,7 @@ export function createRemoteLogger(context: {
 			service: loggerConfig.service,
 			environment: context.env,
 			sessionId: context.sessionId ?? getRandomId("ethereum"),
+			version: packageJson.version,
 			"web3Address": (await context.ethereum?.getFrom()) ?? "unknown",
 			"ethNetwork": (await context.ethereum?.getChainId())?.toString() ?? "unknown",
 		}

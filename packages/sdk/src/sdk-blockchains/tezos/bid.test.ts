@@ -14,8 +14,8 @@ import { convertTezosToCollectionAddress, convertTezosToContractAddress, convert
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("bid test", () => {
-	const env: RaribleSdkEnvironment = "development"
+describe("bid test", () => {
+	const env: RaribleSdkEnvironment = "testnet"
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
 		env
@@ -51,21 +51,21 @@ describe.skip("bid test", () => {
 	})
 	test("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
-			collectionId: toCollectionId(mtContract),
+			collectionId: toCollectionId(nftContract),
 		})
 		const mintResult = await mintResponse.submit({
 			uri: "ipfs://QmQ4x5BR7ecGVjyhZ7o87m2rPgzp8sBzxFbM4gtHiQQ6ay",
-			supply: 10,
+			supply: 1,
 		})
 		if (mintResult.type === MintType.ON_CHAIN) {
 			await mintResult.transaction.wait()
 		}
 
-		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
+		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "1")
 
 		const bidResponse = await bidderSdk.order.bid.prepare({ itemId: mintResult.itemId })
 		const orderId = await bidResponse.submit({
-			amount: 9,
+			amount: 1,
 			price: "0.000001",
 			currency: {
 				"@type": "XTZ",
@@ -82,7 +82,7 @@ describe.skip("bid test", () => {
 			const order = await bidderSdk.apis.order.getOrderById({
 				id: updatedBidOrderId,
 			})
-			if (order.make.value !== "0.000018") {
+			if (order.make.value !== "0.000002") {
 				throw new Error("Bid price has been not updated")
 			}
 		})
@@ -90,7 +90,7 @@ describe.skip("bid test", () => {
 		// accept bid by item owner
 		const acceptBidResponse = await itemOwnerSdk.order.acceptBid.prepare({ orderId: updatedBidOrderId })
 		const fillBidResult = await acceptBidResponse.submit({
-			amount: 9,
+			amount: 1,
 			infiniteApproval: true,
 		})
 		await fillBidResult.wait()
@@ -100,7 +100,7 @@ describe.skip("bid test", () => {
 
 	test("bid NFT test with basic function", async () => {
 		const mintResult = await itemOwnerSdk.nft.mint({
-			collectionId: convertTezosToCollectionAddress(nftContract),
+			collectionId: toCollectionId(nftContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
 		})
 		await mintResult.transaction.wait()
@@ -113,7 +113,7 @@ describe.skip("bid test", () => {
 			price: "0.000002",
 			currency: {
 				"@type": "TEZOS_FT",
-				contract: convertTezosToContractAddress(eurTzContract),
+				contract: eurTzContract,
 				tokenId: toBigNumber("0"),
 			},
 		})
@@ -121,16 +121,17 @@ describe.skip("bid test", () => {
 		await awaitForOrder(bidderSdk, orderId)
 
 		// update bid price
-		await bidderSdk.order.bidUpdate({
+		const updatedBidOrderId = await bidderSdk.order.bidUpdate({
 			orderId,
 			price: "0.000004",
 		})
 
 		await retry(10, 1000, async () => {
 			const order = await bidderSdk.apis.order.getOrderById({
-				id: orderId,
+				id: updatedBidOrderId,
 			})
-			if (order.make.value !== "0.000004") {
+			// if (order.make.value !== "0.000004") {
+			if (order.make.value !== "4") {
 				throw new Error("Bid price has been not updated")
 			}
 		})
@@ -160,8 +161,6 @@ describe.skip("bid test", () => {
 
 		await awaitItemSupply(itemOwnerSdk, mintResult.itemId, "10")
 
-		console.log("item", mintResult)
-
 		const originFeeWallet = convertTezosToUnionAddress(await nullFundsWallet.provider.address())
 		const startBalanceFeesWallet = await itemOwnerSdk.balances.getBalance(originFeeWallet, {
 			"@type": "TEZOS_FT",
@@ -186,12 +185,10 @@ describe.skip("bid test", () => {
 
 		await awaitForOrder(bidderSdk, orderId)
 
-		console.log("order", orderId)
 		// update bid price
 		const updateAction = await bidderSdk.order.bidUpdate.prepare({ orderId })
 		const updatedOrderId = await updateAction.submit({ price: "0.004" })
 
-		console.log("updated order", updatedOrderId)
 		await retry(10, 2000, async () => {
 			const order = await bidderSdk.apis.order.getOrderById({
 				id: updatedOrderId,
@@ -211,7 +208,6 @@ describe.skip("bid test", () => {
 				value: 500,
 			}],
 		})
-		console.log("accept bid", fillBidResult)
 		await fillBidResult.wait()
 
 		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")

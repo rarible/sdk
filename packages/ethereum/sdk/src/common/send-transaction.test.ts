@@ -11,7 +11,7 @@ import { ERC721VersionEnum } from "../nft/contracts/domain"
 import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
-import { createPendingLogs, getSendWithInjects } from "./send-transaction"
+import { getSendWithInjects } from "./send-transaction"
 import { DEV_PK_1 } from "./test/test-credentials"
 
 describe("sendTransaction", () => {
@@ -19,30 +19,15 @@ describe("sendTransaction", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 	const env: EthereumNetwork = "dev-ethereum"
-	const config = getEthereumConfig(env)
 	const configuration = new Configuration(getApiConfig(env))
-	const gatewayApi = new GatewayControllerApi(configuration)
 	const collectionApi = new NftCollectionControllerApi(configuration)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
 	const getTokenId = getTokenIdTemplate.bind(null, collectionApi)
 
 	let testErc721: EthereumContract
 	const collectionId = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 	beforeAll(async () => {
 		testErc721 = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, collectionId)
-	})
-
-	test("should send transaction and create pending logs", async () => {
-		const minter = toAddress(wallet.getAddressString())
-		const { tokenId, signature: { v, r, s } } = await getTokenId(collectionId, minter)
-		const functionCall = testErc721.functionCall("mint", tokenId, v, r, s, [], "uri")
-		const tx = await send(functionCall)
-
-		const logs = await createPendingLogs(gatewayApi, tx)
-		expect(logs).toBeTruthy()
-		expect(tx.from.toLowerCase()).toBe(minter.toLowerCase())
 	})
 
 	test("throw error if config.chainId is make a difference with chainId of wallet", async () => {
