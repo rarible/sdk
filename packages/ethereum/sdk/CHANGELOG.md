@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
+
+
+### Bug Fixes
+
+* add log wallet address err description ([#410](https://github.com/rarible/sdk/issues/410)) ([625ea78](https://github.com/rarible/sdk/commit/625ea78583e6c5005d7c6b5a80c954c8cb6db403))
+* disable flow lint fix ([#417](https://github.com/rarible/sdk/issues/417)) ([2ebfe90](https://github.com/rarible/sdk/commit/2ebfe90565ca2db3765ca8962fd178c37d0481f6))
+
+
+### Features
+
+* remove creating pending logs ([#415](https://github.com/rarible/sdk/issues/415)) ([34d3eb4](https://github.com/rarible/sdk/commit/34d3eb46624e1c3183ee82e975245ea06282d2a4))
+* wrapper on mumbai ([#418](https://github.com/rarible/sdk/issues/418)) ([be71064](https://github.com/rarible/sdk/commit/be710644a5121e2ba4c0ddfda27fa81f6d28ce34))
+
+
+
+
+
 ## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
 
 

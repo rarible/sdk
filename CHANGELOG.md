@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
+
+
+### Bug Fixes
+
+* add log wallet address err description ([#410](https://github.com/rarible/sdk/issues/410)) ([625ea78](https://github.com/rarible/sdk/commit/625ea78583e6c5005d7c6b5a80c954c8cb6db403))
+* disable flow lint fix ([#417](https://github.com/rarible/sdk/issues/417)) ([2ebfe90](https://github.com/rarible/sdk/commit/2ebfe90565ca2db3765ca8962fd178c37d0481f6))
+* ledger blind signing warn ([#409](https://github.com/rarible/sdk/issues/409)) ([9bcfc82](https://github.com/rarible/sdk/commit/9bcfc82d9cc7369a2d927eb91d6cdffc9712c0ef))
+
+
+### Features
+
+* disable flow blockchain ([#416](https://github.com/rarible/sdk/issues/416)) ([4abb54c](https://github.com/rarible/sdk/commit/4abb54cbbbed109d9a0e257755b050f5ad29d662))
+* remove creating pending logs ([#415](https://github.com/rarible/sdk/issues/415)) ([34d3eb4](https://github.com/rarible/sdk/commit/34d3eb46624e1c3183ee82e975245ea06282d2a4))
+* warn coinbase wallet ([#414](https://github.com/rarible/sdk/issues/414)) ([82554f6](https://github.com/rarible/sdk/commit/82554f65e9cdafed5c905c947712860046733203))
+* wrapper on mumbai ([#418](https://github.com/rarible/sdk/issues/418)) ([be71064](https://github.com/rarible/sdk/commit/be710644a5121e2ba4c0ddfda27fa81f6d28ce34))
+
+
+
+
+
 ## [0.13.3](https://github.com/rarible/sdk/compare/v0.13.2...v0.13.3) (2022-12-20)
 
 
