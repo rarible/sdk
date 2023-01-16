@@ -9,6 +9,7 @@ pipeline {
   agent any
 
   environment {
+    BLOCKCHAIN = 'ethereum'
     TEST_ENV = 'staging'
   }
 
@@ -28,10 +29,10 @@ pipeline {
       }
       steps {
           sh '''yarn
-              yarn bootstrap
-              yarn clean
-              yarn build
-              yarn e2e-tests'''
+                yarn bootstrap
+                yarn clean
+                yarn build
+                yarn e2e-tests'''
       }
     }
   }
