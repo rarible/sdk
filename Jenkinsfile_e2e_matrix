@@ -15,31 +15,19 @@ pipeline {
 
   stages {
     stage("Run e2e tests") {
-      matrix {
-        agent {
-          docker {
-            image "node:16-bullseye"
-            args utils.dockerAgentArgs()
-            reuseNode true
-          }
+      agent {
+        docker {
+          image "node:16-bullseye"
+          args utils.dockerAgentArgs()
+          reuseNode true
         }
-        axes {
-          axis {
-            name 'TEST_ENV'
-            values 'development', 'staging'
-          }
-        }
-        stages {
-          stage("Run e2e tests") {
-            steps {
-              sh '''yarn
-                    yarn bootstrap
-                    yarn clean
-                    yarn build
-                    yarn e2e-tests'''
-            }
-          }
-        }
+      }
+      steps {
+          sh '''yarn
+              yarn bootstrap
+              yarn clean
+              yarn build
+              yarn e2e-tests'''
       }
     }
   }
@@ -49,7 +37,7 @@ pipeline {
       wrap([$class: 'BuildUser']) {
         slackSend channel: '#protocol-e2e-tests',
           color: COLOR_MAP[currentBuild.currentResult],
-          message: "*${currentBuild.currentResult}:* Test run for blockchain=*${params.BLOCKCHAIN}*. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
+          message: "*${currentBuild.currentResult}:* Test run. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
       }
     }
     always {
