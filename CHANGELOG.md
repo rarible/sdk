@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.5](https://github.com/rarible/sdk/compare/v0.13.4...v0.13.5) (2023-01-17)
+
+
+### Bug Fixes
+
+* batch buy error ([#421](https://github.com/rarible/sdk/issues/421)) ([8da4dc8](https://github.com/rarible/sdk/commit/8da4dc8985874cee3868aebb5151b7ae5ba8020e))
+
+
+
+
+
 ## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
 
 
