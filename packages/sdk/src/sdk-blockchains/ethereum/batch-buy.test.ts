@@ -95,7 +95,7 @@ describe("Batch buy", () => {
 			throw new Error("Sdk was initialized without ethereum provider")
 		}
 		const data = await sdkBuyer.ethereum.getBatchBuyAmmInfo({
-			hash: "0x000000000000000000000000d2bfdbb7be48d63ad3aaf5311786d2da2fc0fbea",
+			hash: "0x000000000000000000000000fc065082a3a05f1605d94113987c0fac117b20e7",
 			numNFTs: 5,
 		})
 		expect(data.prices[4].price).toBeTruthy()
