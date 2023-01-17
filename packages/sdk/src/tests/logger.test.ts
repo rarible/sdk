@@ -48,8 +48,6 @@ describe("Logging", () => {
 		}
 	}
 
-	let collectionAddress: string | undefined = undefined
-
 	test("Should log simple blockchain call", async () => {
 		const logger = getLogger()
 		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.TRACE, logger })
@@ -76,7 +74,6 @@ describe("Logging", () => {
 			"resp",
 		])
 		await collection.tx.wait()
-		collectionAddress = collection.address
 		await retry(10, 2000, async () => await sdk.apis.collection.getCollectionById({
 			collection: collection.address,
 		}))
