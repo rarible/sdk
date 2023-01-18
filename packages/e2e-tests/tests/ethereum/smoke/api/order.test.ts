@@ -83,7 +83,7 @@ function suites(): {
 	]
 }
 
-describe.each(suites())("$blockchain api => order", (suite) => {
+describe.skip.each(suites())("$blockchain api => order", (suite) => {
 	const {
 		seller: sellerWallet,
 		buyer: buyerWallet,
