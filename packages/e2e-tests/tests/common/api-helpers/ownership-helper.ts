@@ -92,7 +92,7 @@ export async function awaitOwnershipsByItemRaw(sdk: IRaribleSdk, contract: Contr
 											 tokenId: BigNumber, count: number): Promise<GetOwnershipsByItemResponse> {
 	return await retry(10, 2000, async () => {
 		const ownershipAll = await getOwnershipsByItemRaw(sdk, contract, tokenId) as GetOwnershipsByItem200
-		expect(ownershipAll.value).toBeGreaterThanOrEqual(count)
+		expect(ownershipAll.value.ownerships.length).toBeGreaterThanOrEqual(count)
 		return ownershipAll
 	})
 }
