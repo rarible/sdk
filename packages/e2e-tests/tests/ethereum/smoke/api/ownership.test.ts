@@ -10,7 +10,7 @@ import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
 import { getCollection } from "../../../common/helpers"
 import {
-	awaitForOwnershipValue,
+	awaitForOwnershipValue, awaitOwnershipsByItem, awaitOwnershipsByItemRaw,
 	getOwnershipByIdRaw,
 	getOwnershipsByItem,
 	getOwnershipsByItemRaw,
@@ -58,11 +58,8 @@ describe.each(suites())("$blockchain api => ownership", (suite) => {
 
 		await getOwnershipByIdRaw(sdk, nft.id, address.address)
 
-		const actualOwnerships = await getOwnershipsByItem(sdk, nft.contract!, nft.tokenId!)
-		expect(actualOwnerships.ownerships.length).toBeGreaterThanOrEqual(1)
+		await awaitOwnershipsByItem(sdk, nft.contract!, nft.tokenId!, 1)
 
-		const actualOwnershipsAll =
-            await getOwnershipsByItemRaw(sdk, nft.contract!, nft.tokenId!) as GetOwnershipsByItem200
-		expect(actualOwnershipsAll.value.ownerships.length).toBeGreaterThanOrEqual(1)
+		await awaitOwnershipsByItemRaw(sdk, nft.contract!, nft.tokenId!, 1)
 	})
 })
