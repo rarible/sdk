@@ -24,6 +24,7 @@ import {
 	getAllActivities,
 	getAllActivitiesRaw,
 } from "../../../common/api-helpers/activity-helper"
+import {retry} from "@rarible/sdk/build/common/retry";
 
 function suites(): {
 	blockchain: Blockchain,
@@ -52,7 +53,7 @@ function suites(): {
 	]
 }
 
-describe.skip.each(suites())("$blockchain api => activity", (suite) => {
+describe.each(suites())("$blockchain api => activity", (suite) => {
 	const { seller: sellerWallet } = suite.wallets
 	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
 
@@ -64,35 +65,44 @@ describe.skip.each(suites())("$blockchain api => activity", (suite) => {
 		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
 
-		const activitiesByCollection = await getActivitiesByCollection(sellerSdk,
-			suite.collectionId, [ActivityType.MINT])
-		expect(activitiesByCollection.activities.length).toBeGreaterThanOrEqual(1)
-
-		const activitiesByCollectionRaw = await getActivitiesByCollectionRaw(sellerSdk,
-			suite.collectionId, [ActivityType.MINT]) as GetActivitiesByCollection200
-		expect(activitiesByCollectionRaw.value.activities.length).toBeGreaterThanOrEqual(1)
-
-		const activitiesByItem = await getActivitiesByItem(sellerSdk, nft.id, [ActivityType.MINT])
-		expect(activitiesByItem.activities.length).toBeGreaterThanOrEqual(1)
-
-		const activitiesByItemRaw = await getActivitiesByItemRaw(sellerSdk,
-			nft.id, [ActivityType.MINT]) as GetActivitiesByItem200
-		expect(activitiesByItemRaw.value.activities.length).toBeGreaterThanOrEqual(1)
-
-		const activitiesByUser = await getActivitiesByUser(sellerSdk,
-			[walletAddressSeller.unionAddress], [UserActivityType.MINT])
-		expect(activitiesByUser.activities.length).toBeGreaterThanOrEqual(1)
-
-		const activitiesByUserRaw = await getActivitiesByUserRaw(sellerSdk,
-			[walletAddressSeller.unionAddress], [UserActivityType.MINT]) as GetActivitiesByUser200
-		expect(activitiesByUserRaw.value.activities.length).toBeGreaterThanOrEqual(1)
-
-		const allActivities = await getAllActivities(sellerSdk,
-			[suite.blockchain], [ActivityType.MINT])
-		expect(allActivities.activities.length).toBeGreaterThanOrEqual(1)
-
-		const allActivitiesRaw = await getAllActivitiesRaw(sellerSdk,
-			[suite.blockchain], [ActivityType.MINT]) as GetAllActivities200
-		expect(allActivitiesRaw.value.activities.length).toBeGreaterThanOrEqual(1)
+		await retry(10, 2000, async () => {
+			const activitiesByCollection = await getActivitiesByCollection(sellerSdk,
+				suite.collectionId, [ActivityType.MINT])
+			expect(activitiesByCollection.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const activitiesByCollectionRaw = await getActivitiesByCollectionRaw(sellerSdk,
+				suite.collectionId, [ActivityType.MINT]) as GetActivitiesByCollection200
+			expect(activitiesByCollectionRaw.value.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const activitiesByItem = await getActivitiesByItem(sellerSdk, nft.id, [ActivityType.MINT])
+			expect(activitiesByItem.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const activitiesByItemRaw = await getActivitiesByItemRaw(sellerSdk,
+				nft.id, [ActivityType.MINT]) as GetActivitiesByItem200
+			expect(activitiesByItemRaw.value.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const activitiesByUser = await getActivitiesByUser(sellerSdk,
+				[walletAddressSeller.unionAddress], [UserActivityType.MINT])
+			expect(activitiesByUser.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const activitiesByUserRaw = await getActivitiesByUserRaw(sellerSdk,
+				[walletAddressSeller.unionAddress], [UserActivityType.MINT]) as GetActivitiesByUser200
+			expect(activitiesByUserRaw.value.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const allActivities = await getAllActivities(sellerSdk,
+				[suite.blockchain], [ActivityType.MINT])
+			expect(allActivities.activities.length).toBeGreaterThanOrEqual(1)
+		})
+		await retry(10, 2000, async () => {
+			const allActivitiesRaw = await getAllActivitiesRaw(sellerSdk,
+				[suite.blockchain], [ActivityType.MINT]) as GetAllActivities200
+			expect(allActivitiesRaw.value.activities.length).toBeGreaterThanOrEqual(1)
+		})
 	})
 })

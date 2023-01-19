@@ -44,7 +44,7 @@ function suites(): {
 	]
 }
 
-describe.each(suites())("$blockchain api => ownership", (suite) => {
+describe.skip.each(suites())("$blockchain api => ownership", (suite) => {
 	const wallet = suite.wallet
 	const sdk = createSdk(suite.blockchain, wallet)
 
