@@ -8,7 +8,7 @@ import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { testsConfig } from "../../../common/config"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
-import { getCollection } from "../../../common/helpers"
+import {awaitExpected, getCollection} from "../../../common/helpers"
 import {
 	awaitForOwnershipValue, awaitOwnershipsByItem, awaitOwnershipsByItemRaw,
 	getOwnershipByIdRaw,
@@ -58,8 +58,15 @@ describe.skip.each(suites())("$blockchain api => ownership", (suite) => {
 
 		await getOwnershipByIdRaw(sdk, nft.id, address.address)
 
-		await awaitOwnershipsByItem(sdk, nft.contract!, nft.tokenId!, 1)
-
-		await awaitOwnershipsByItemRaw(sdk, nft.contract!, nft.tokenId!, 1)
+		await awaitExpected(async () => {
+			const ownerships = await getOwnershipsByItem(sdk, nft.contract!, nft.tokenId)
+			expect(ownerships.ownerships.length).toBeGreaterThanOrEqual(1)
+			return ownerships
+		})
+		await awaitExpected(async () => {
+			const ownershipAll = await getOwnershipsByItemRaw(sdk, nft.contract!, nft.tokenId!) as GetOwnershipsByItem200
+			expect(ownershipAll.value.ownerships.length).toBeGreaterThanOrEqual(1)
+			return ownershipAll
+		})
 	})
 })

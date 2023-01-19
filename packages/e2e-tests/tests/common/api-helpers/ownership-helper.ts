@@ -67,15 +67,6 @@ export async function getOwnershipsByItem(sdk: IRaribleSdk, contract: ContractAd
 	return ownerships
 }
 
-export async function awaitOwnershipsByItem(sdk: IRaribleSdk, contract: ContractAddress,
-										  tokenId: BigNumber, count: number): Promise<Ownerships> {
-	return await retry(10, 2000, async () => {
-		const ownerships = await getOwnershipsByItem(sdk, contract, tokenId)
-		expect(ownerships.ownerships.length).toBeGreaterThanOrEqual(count)
-		return ownerships
-	})
-}
-
 export async function getOwnershipsByItemRaw(sdk: IRaribleSdk, contract: ContractAddress,
 																						 tokenId: BigNumber): Promise<GetOwnershipsByItemResponse> {
 	const ownershipId = `${contract}:${tokenId}`
@@ -86,13 +77,4 @@ export async function getOwnershipsByItemRaw(sdk: IRaribleSdk, contract: Contrac
 	})
 	expect(ownerships).not.toBe(null)
 	return ownerships
-}
-
-export async function awaitOwnershipsByItemRaw(sdk: IRaribleSdk, contract: ContractAddress,
-											 tokenId: BigNumber, count: number): Promise<GetOwnershipsByItemResponse> {
-	return await retry(10, 2000, async () => {
-		const ownershipAll = await getOwnershipsByItemRaw(sdk, contract, tokenId) as GetOwnershipsByItem200
-		expect(ownershipAll.value.ownerships.length).toBeGreaterThanOrEqual(count)
-		return ownershipAll
-	})
 }
