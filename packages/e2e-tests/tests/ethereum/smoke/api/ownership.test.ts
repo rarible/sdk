@@ -44,7 +44,7 @@ function suites(): {
 	]
 }
 
-describe.skip.each(suites())("$blockchain api => ownership", (suite) => {
+describe.each(suites())("$blockchain api => ownership", (suite) => {
 	const wallet = suite.wallet
 	const sdk = createSdk(suite.blockchain, wallet)
 
@@ -59,7 +59,7 @@ describe.skip.each(suites())("$blockchain api => ownership", (suite) => {
 		await getOwnershipByIdRaw(sdk, nft.id, address.address)
 
 		await awaitExpected(async () => {
-			const ownerships = await getOwnershipsByItem(sdk, nft.contract!, nft.tokenId)
+			const ownerships = await getOwnershipsByItem(sdk, nft.contract!, nft.tokenId!)
 			expect(ownerships.ownerships.length).toBeGreaterThanOrEqual(1)
 			return ownerships
 		})

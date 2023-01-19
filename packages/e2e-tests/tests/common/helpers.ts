@@ -78,7 +78,7 @@ export async function getCollection(sdk: IRaribleSdk, collectionId: string): Pro
 }
 
 export async function awaitExpected<T>(method: () => Promise<T>): Promise<T> {
-	return  retry(10, 2000, async () => {
+	return  retry(20, 2000, async () => {
 		return method()
 	})
 }
