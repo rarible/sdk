@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.6](https://github.com/rarible/sdk/compare/v0.13.5...v0.13.6) (2023-01-19)
+
+
+### Features
+
+* direct seaport tx ([#425](https://github.com/rarible/sdk/issues/425)) ([32d1faa](https://github.com/rarible/sdk/commit/32d1faa6064c7923d7abd790e0da61c49370c995))
+
+
+
+
+
 ## [0.13.5](https://github.com/rarible/sdk/compare/v0.13.4...v0.13.5) (2023-01-17)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.6](https://github.com/rarible/sdk/compare/v0.13.5...v0.13.6) (2023-01-19)
+
+
+### Bug Fixes
+
+* ethereum tests update ([#422](https://github.com/rarible/sdk/issues/422)) ([3ef5923](https://github.com/rarible/sdk/commit/3ef59233ff3ae0bf963138e40204570ed2f2430a))
+
+
+
+
+
 ## [0.13.5](https://github.com/rarible/sdk/compare/v0.13.4...v0.13.5) (2023-01-17)
 
 **Note:** Version bump only for package @rarible/sdk
