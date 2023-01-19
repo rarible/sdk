@@ -10,7 +10,7 @@ import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
 import {awaitExpected, getCollection} from "../../../common/helpers"
 import {
-	awaitForOwnershipValue, awaitOwnershipsByItem, awaitOwnershipsByItemRaw,
+	awaitForOwnershipValue,
 	getOwnershipByIdRaw,
 	getOwnershipsByItem,
 	getOwnershipsByItemRaw,
