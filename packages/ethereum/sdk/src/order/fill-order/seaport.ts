@@ -66,34 +66,6 @@ export class SeaportOrderHandler {
 
 		const { unitsToFill, takeIsNft } = getUnitsToFill(request)
 
-		if (this.env !== "mainnet") {
-			if (order.take.assetType.assetClass === "ETH") {
-				const { wrapper } = this.config.exchange
-				if (!wrapper || wrapper === ZERO_ADDRESS) {
-					throw new Error("Seaport wrapper address has not been set. Change address in config")
-				}
-
-				const { functionCall, options } = await fulfillOrderWithWrapper(
-					ethereum,
-					this.send.bind(this),
-					order,
-					{
-						unitsToFill,
-						originFees: request.originFees,
-						seaportWrapper: wrapper,
-					},
-				)
-
-				return {
-					functionCall,
-					options: {
-						...options,
-						additionalData: getUpdatedCalldata(this.sdkConfig),
-					},
-				}
-			}
-		}
-
 		let tips: TipInputItem[] | undefined = []
 		if (!takeIsNft) {
 			tips = this.convertOriginFeesToTips(request)
