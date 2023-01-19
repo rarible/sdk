@@ -185,7 +185,7 @@ function suites(): {
 	]
 }
 
-describe.skip.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
+describe.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
 	const {
 		seller: sellerWallet,
 		buyer: buyerWallet,

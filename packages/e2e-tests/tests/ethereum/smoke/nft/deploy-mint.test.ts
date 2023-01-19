@@ -137,7 +137,7 @@ function suites(): {
 	]
 }
 
-describe.skip.each(suites()/*.filter((t) => t.description === "ERC1155")*/)("$blockchain deploy => mint", (suite) => {
+describe.each(suites()/*.filter((t) => t.description === "ERC1155")*/)("$blockchain deploy => mint", (suite) => {
 	const wallet = suite.wallet
 	const sdk = createSdk(suite.blockchain, wallet)
 
