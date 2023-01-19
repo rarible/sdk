@@ -67,6 +67,7 @@ const EVM_WARN_MESSAGES = [
 	"Insufficient ETH funds",
 	"Please enable Blind signing or Contract data in the Ethereum app Settings",
 	"Failed to sign transaction",
+	"Permission not given for signing message",
 ]
 
 /**
