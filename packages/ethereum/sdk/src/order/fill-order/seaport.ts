@@ -18,7 +18,7 @@ import { getRequiredWallet } from "../../common/get-required-wallet"
 import { CROSS_CHAIN_SEAPORT_ADDRESS, ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
-import { fulfillOrderWithWrapper, prepareSeaportExchangeData } from "./seaport-utils/seaport-wrapper-utils"
+import { prepareSeaportExchangeData } from "./seaport-utils/seaport-wrapper-utils"
 import { fulfillOrder } from "./seaport-utils/seaport-utils"
 import type { OrderFillSendData } from "./types"
 import { getUpdatedCalldata } from "./common/get-updated-call"
@@ -65,34 +65,6 @@ export class SeaportOrderHandler {
 		}
 
 		const { unitsToFill, takeIsNft } = getUnitsToFill(request)
-
-		if (this.env !== "mainnet") {
-			if (order.take.assetType.assetClass === "ETH") {
-				const { wrapper } = this.config.exchange
-				if (!wrapper || wrapper === ZERO_ADDRESS) {
-					throw new Error("Seaport wrapper address has not been set. Change address in config")
-				}
-
-				const { functionCall, options } = await fulfillOrderWithWrapper(
-					ethereum,
-					this.send.bind(this),
-					order,
-					{
-						unitsToFill,
-						originFees: request.originFees,
-						seaportWrapper: wrapper,
-					},
-				)
-
-				return {
-					functionCall,
-					options: {
-						...options,
-						additionalData: getUpdatedCalldata(this.sdkConfig),
-					},
-				}
-			}
-		}
 
 		let tips: TipInputItem[] | undefined = []
 		if (!takeIsNft) {
