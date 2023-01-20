@@ -15,7 +15,12 @@ export async function approveErc721(
 		throw new Error("Wallet undefined")
 	}
 	const erc721 = createErc721Contract(ethereum, contract)
-	const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
+	let allowance: boolean
+	try {
+		allowance = await erc721.functionCall("isApprovedForAll", owner, operator).call()
+	} catch (e) {
+		allowance = false
+	}
 	if (!allowance) {
 		return await send(erc721.functionCall("setApprovalForAll", operator, true))
 	}
