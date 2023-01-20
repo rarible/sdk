@@ -2,7 +2,7 @@ import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Action } from "@rarible/action"
 import type { Address, AssetType } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
-import { toBn } from "@rarible/utils"
+import { BigNumber as BigNum, toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
 import { toAddress } from "@rarible/types"
 import type { SimpleOpenSeaV1Order, SimpleOrder, SimpleRaribleV2Order } from "../../types"
@@ -37,6 +37,7 @@ import { createExchangeWrapperContract } from "../../contracts/exchange-wrapper"
 import type { SeaportV1OrderFillRequest } from "../types"
 import type { X2Y2OrderFillRequest } from "../types"
 import { getUpdatedCalldata } from "../common/get-updated-call"
+import { getRequiredWallet } from "../../../common/get-required-wallet"
 
 export class BatchOrderFiller {
 	v2Handler: RaribleV2OrderHandler
@@ -211,11 +212,26 @@ export class BatchOrderFiller {
 			feeAddresses[1],
 			true // allowFail
 		)
+		let gasLimit = await wrapperContract.functionCall(
+			"bulkPurchase",
+			ordersCallData,
+			feeAddresses[0],
+			feeAddresses[1],
+			false // allowFail
+		).estimateGas({
+			value: totalValue.toString(),
+			from: await getRequiredWallet(this.ethereum).getFrom(),
+		})
+		const gasLimitWithTheshold = toBn(gasLimit)
+			.multipliedBy(1.1)
+			.integerValue(BigNum.ROUND_FLOOR)
+			.toNumber()
 
 		return {
 			functionCall,
 			options: {
 				value: totalValue.toString(),
+				gas: gasLimitWithTheshold,
 				additionalData: getUpdatedCalldata(this.sdkConfig),
 			},
 		}

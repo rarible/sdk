@@ -1,0 +1,53 @@
+@Library('shared-library') _
+
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
+
+pipeline {
+  agent any
+
+  environment {
+    BLOCKCHAIN = 'ethereum'
+    TEST_ENV = 'development'
+  }
+
+  options {
+    disableConcurrentBuilds()
+    timeout(time: 1, unit: 'HOURS')
+  }
+
+  stages {
+    stage("Run e2e tests") {
+      agent {
+        docker {
+          image "node:16-bullseye"
+          args utils.dockerAgentArgs()
+          reuseNode true
+        }
+      }
+      steps {
+          sh '''yarn
+                yarn bootstrap
+                yarn clean
+                yarn build
+                yarn e2e-tests'''
+      }
+    }
+  }
+
+  post {
+    failure {
+      wrap([$class: 'BuildUser']) {
+        slackSend channel: '#protocol-e2e-tests',
+          color: COLOR_MAP[currentBuild.currentResult],
+          message: "*${currentBuild.currentResult}:* Test run. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
+      }
+    }
+    always {
+      postReport([:])
+      cleanWs()
+    }
+  }
+}
