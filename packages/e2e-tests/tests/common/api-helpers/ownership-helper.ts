@@ -4,6 +4,7 @@ import type { Ownership } from "@rarible/api-client/build/models"
 import type { Blockchain, GetOwnershipByIdResponse } from "@rarible/api-client"
 import type { BigNumber, ContractAddress, ItemId } from "@rarible/types"
 import type { Ownerships } from "@rarible/api-client/build/models"
+import type { GetOwnershipsByItem200 } from "@rarible/api-client/build/apis/OwnershipControllerApi"
 import type {
 	GetOwnershipsByItemResponse,
 } from "@rarible/api-client/build/apis/OwnershipControllerApi"
