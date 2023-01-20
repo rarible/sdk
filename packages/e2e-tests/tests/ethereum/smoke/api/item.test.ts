@@ -16,7 +16,7 @@ import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { testsConfig } from "../../../common/config"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
-import { awaitForItemSupply, getCollection } from "../../../common/helpers"
+import {awaitExpected, awaitForItemSupply, getCollection} from "../../../common/helpers"
 import {
 	awaitForOwnershipValue,
 } from "../../../common/api-helpers/ownership-helper"
@@ -76,38 +76,49 @@ describe.each(suites())("$blockchain api => ownership", (suite) => {
 
 		await getItemByIdRaw(sdk, nft.id)
 
-		const allItems = await getAllItems(sdk, [suite.blockchain], 2)
-		expect(allItems.items.length).toBeGreaterThanOrEqual(1)
-
-		const allItemsRaw = await getAllItemsRaw(sdk, [suite.blockchain], 2) as GetAllItems200
-		expect(allItemsRaw.value.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemsByCollection = await getItemsByCollection(sdk, collection.id, 2)
-		expect(itemsByCollection.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemsByCollectionRaw =
-            await getItemsByCollectionRaw(sdk, collection.id, 2) as GetItemsByCollection200
-		expect(itemsByCollectionRaw.value.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemsByCreator = await getItemsByCreator(sdk, address.unionAddress, 2)
-		expect(itemsByCreator.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemsByCreatorRaw =
-            await getItemsByCreatorRaw(sdk, address.unionAddress, 2) as GetItemsByCreator200
-		expect(itemsByCreatorRaw.value.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemsByOwner = await getItemsByOwner(sdk, address.unionAddress, 2)
-		expect(itemsByOwner.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemsByOwnerRaw =
-            await getItemsByOwnerRaw(sdk, address.unionAddress, 2) as GetItemsByOwner200
-		expect(itemsByOwnerRaw.value.items.length).toBeGreaterThanOrEqual(1)
-
-		const itemRoyalties = await getItemRoyaltiesById(sdk, nft.contract!, nft.tokenId!)
-		expect(itemRoyalties.royalties.length).toBeGreaterThanOrEqual(0)
-
-		const itemRoyaltiesRaw =
-            await getItemRoyaltiesByIdRaw(sdk, nft.contract!, nft.tokenId!) as GetItemRoyaltiesById200
-		expect(itemRoyaltiesRaw.value.royalties.length).toBeGreaterThanOrEqual(0)
+		await awaitExpected(async () => {
+			const allItems = await getAllItems(sdk, [suite.blockchain], 2)
+			expect(allItems.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const allItemsRaw = await getAllItemsRaw(sdk, [suite.blockchain], 2) as GetAllItems200
+			expect(allItemsRaw.value.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemsByCollection = await getItemsByCollection(sdk, collection.id, 2)
+			expect(itemsByCollection.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemsByCollectionRaw =
+				await getItemsByCollectionRaw(sdk, collection.id, 2) as GetItemsByCollection200
+			expect(itemsByCollectionRaw.value.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemsByCreator = await getItemsByCreator(sdk, address.unionAddress, 2)
+			expect(itemsByCreator.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemsByCreatorRaw =
+				await getItemsByCreatorRaw(sdk, address.unionAddress, 2) as GetItemsByCreator200
+			expect(itemsByCreatorRaw.value.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemsByOwner = await getItemsByOwner(sdk, address.unionAddress, 2)
+			expect(itemsByOwner.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemsByOwnerRaw =
+				await getItemsByOwnerRaw(sdk, address.unionAddress, 2) as GetItemsByOwner200
+			expect(itemsByOwnerRaw.value.items.length).toBeGreaterThanOrEqual(1)
+		})
+		await awaitExpected(async () => {
+			const itemRoyalties = await getItemRoyaltiesById(sdk, nft.contract!, nft.tokenId!)
+			expect(itemRoyalties.royalties.length).toBeGreaterThanOrEqual(0)
+		})
+		await awaitExpected(async () => {
+			const itemRoyaltiesRaw =
+				await getItemRoyaltiesByIdRaw(sdk, nft.contract!, nft.tokenId!) as GetItemRoyaltiesById200
+			expect(itemRoyaltiesRaw.value.royalties.length).toBeGreaterThanOrEqual(0)
+		})
 	})
 })
