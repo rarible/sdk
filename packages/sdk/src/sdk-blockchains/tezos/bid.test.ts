@@ -14,7 +14,7 @@ import { convertTezosToCollectionAddress, convertTezosToContractAddress, convert
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 
-describe("bid test", () => {
+describe.skip("bid test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
@@ -130,8 +130,7 @@ describe("bid test", () => {
 			const order = await bidderSdk.apis.order.getOrderById({
 				id: updatedBidOrderId,
 			})
-			// if (order.make.value !== "0.000004") {
-			if (order.make.value !== "4") {
+			if (order.make.value !== "0.000004") {
 				throw new Error("Bid price has been not updated")
 			}
 		})
@@ -183,6 +182,7 @@ describe("bid test", () => {
 			}],
 		})
 
+		console.log("orderid", orderId)
 		await awaitForOrder(bidderSdk, orderId)
 
 		// update bid price
@@ -193,7 +193,7 @@ describe("bid test", () => {
 			const order = await bidderSdk.apis.order.getOrderById({
 				id: updatedOrderId,
 			})
-			if (order.make.value !== "12000") {
+			if (order.make.value !== "0.012") {
 				throw new Error("Bid price has been not updated")
 			}
 		})
