@@ -4967,10 +4967,10 @@
     react-transition-group "^4.4.2"
     rifm "^0.12.1"
 
-"@myetherwallet/mewconnect-web-client@^2.2.0-beta.16":
-  version "2.2.0-beta.16"
-  resolved "https://registry.yarnpkg.com/@myetherwallet/mewconnect-web-client/-/mewconnect-web-client-2.2.0-beta.16.tgz#24cfe7d4b7f6a78eb1d3b89943b37f8a53cd3135"
-  integrity sha512-epLW9fAb/bkVrhmnF1oAm9Wlu3vKT4Go331+6b14LDBTTQ7r1VmdUerADz7vbIHVFNIDfQd+dG5wbcURgV2Ytg==
+"@myetherwallet/mewconnect-web-client@^2.2.0-beta.18":
+  version "2.2.0-beta.18"
+  resolved "https://registry.yarnpkg.com/@myetherwallet/mewconnect-web-client/-/mewconnect-web-client-2.2.0-beta.18.tgz#defd51512eab528dab3d19339c5149cac2b82cc4"
+  integrity sha512-b1OEbJBPtICBKSZ9s473oLZ1tKaoyeWzH74UF1KdVcAjROqh/ksnk1UEJrvEw3tAc2B0Xtj0odGzgYx2Okodig==
   dependencies:
     "@rollup/plugin-babel" "^5.3.0"
     "@rollup/plugin-commonjs" "^20.0.0"
@@ -5600,10 +5600,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.0.14-beta1":
-  version "0.0.14-beta1"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.14-beta1.tgz#535b4346370dba73aa3a27ed71b4ca33ddc027ef"
-  integrity sha512-s+sETnHt4g2ipxw/S/yNcmRQ6HcCqJh2gxiJUmSU2i4MaIpRLxhtqbH8YbTz5HMBthKe/URS9My2Qm/Gu13gSA==
+"@rarible/api-client@0.0.15-beta1":
+  version "0.0.15-beta1"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.0.15-beta1.tgz#7853652631fa9c891ab41de21594e934c2d02a90"
+  integrity sha512-V243+GHDaF6e6IZC2pRm7p9M96K7npXsMnFG5xMkeq62tvKPdcXS6mdqWyW+1BkYo9KX1tk/dAZWi4MXCYEFPw==
   dependencies:
     "@rarible/types" "^0.9.6"
 
@@ -5708,10 +5708,10 @@
     ethereumjs-util "^7.1.0"
     ethereumjs-wallet "^1.0.1"
 
-"@rarible/tezos-common@^0.1.42":
-  version "0.1.42"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.42.tgz#b779c2401c38f7147e784074ecb649ccec9c825f"
-  integrity sha512-jXh2MYOq53kqb2RHzz/gbjSWdATXeECC8ERlixqoalu9UVOPx4qxzv1yydBtizFeO/abnNOPnldmoWl+abnnFA==
+"@rarible/tezos-common@^0.1.43":
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-common/-/tezos-common-0.1.43.tgz#2f2b00d5452b8558a91fb9b46777ccaf5afdf158"
+  integrity sha512-7UDwfvNRlkVKU9t7KXzPGVFEXIb7fTuigGdIIlgYRzhFKwM3X0JW4o29oOxalkK8y4+TJD268OXCWgqFaK/Diw==
   dependencies:
     "@genql/runtime" "2.10.0"
     "@rarible/logger" "^0.9.9"
@@ -5721,24 +5721,24 @@
     node-fetch "2.6.7"
     text-encoder "^0.0.4"
 
-"@rarible/tezos-contracts@^0.1.42":
-  version "0.1.42"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.42.tgz#041c0505bb27d12578b5627f65bd08a95248f5d9"
-  integrity sha512-KszJFuSALLLE9r221vHgPfzN9db04G1ewjO4rFwo5YJb0tzeqQ0uVp2UuRrsmlbs6IK4kgK94N5d5VGXVlwsyQ==
+"@rarible/tezos-contracts@^0.1.43":
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-contracts/-/tezos-contracts-0.1.43.tgz#498950304de6282d7700d7c1d3f6f0cebf5ed02c"
+  integrity sha512-jHO5m68bq6LvNg8XycdZoYnpcZUxze0IEzp3lTVwowqCfMtc1WK0gheZRdyDgDz9nqV0DoZUpu4I6tLigfVuwA==
   dependencies:
-    "@rarible/tezos-common" "^0.1.42"
+    "@rarible/tezos-common" "^0.1.43"
     bignumber.js "^9.0.1"
 
-"@rarible/tezos-sdk@0.1.42":
-  version "0.1.42"
-  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.42.tgz#3c16e40d58051f937683d85d2d57672d0675c214"
-  integrity sha512-8LYbn3EicVb0TEm0W8l2KWHAQnePEqBki0B16hSZayP49wUaJoO3ynZ9vvO7CL4qesy/8voY0N6kU8eLmdmN+Q==
+"@rarible/tezos-sdk@0.1.43", "@rarible/tezos-sdk@~0.1.43":
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/@rarible/tezos-sdk/-/tezos-sdk-0.1.43.tgz#978d13091be2be3a2f4c0f75ef43bf2ac870f6fd"
+  integrity sha512-7CH0rex2NlNdBDUagfWpXpkPPrv3NeQlCmKimegvPdund5hLLDXGra0x6DihmoJyeCEFNEqt2eIwJSt78An8Ig==
   dependencies:
     "@airgap/beacon-sdk" "2.3.13"
     "@genql/runtime" "2.10.0"
     "@rarible/logger" "^0.9.9"
-    "@rarible/tezos-common" "^0.1.42"
-    "@rarible/tezos-contracts" "^0.1.42"
+    "@rarible/tezos-common" "^0.1.43"
+    "@rarible/tezos-contracts" "^0.1.43"
     "@taquito/beacon-wallet" "12.0.3"
     "@taquito/signer" "^12.0.0"
     "@taquito/taquito" "^12.0.0"

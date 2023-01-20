@@ -9,6 +9,7 @@ import type {
 	TezosNFTAssetType,
 	TezosXTZAssetType,
 	UnionAddress,
+	TezosOrderDataLegacy,
 } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type {
@@ -18,9 +19,15 @@ import type {
 	Provider,
 	TezosNetwork,
 	TezosProvider,
+	Platform,
 } from "@rarible/tezos-sdk"
-// eslint-disable-next-line camelcase
-import { AssetTypeV2, get_public_key } from "@rarible/tezos-sdk"
+import {
+	AssetTypeV2,
+	// eslint-disable-next-line camelcase
+	get_public_key,
+	// eslint-disable-next-line camelcase
+	order_of_json,
+} from "@rarible/tezos-sdk"
 import type { Part } from "@rarible/tezos-common"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-common"
@@ -92,6 +99,27 @@ export type TezosMetaAttribute = {
 	type?: string
 }
 
+export interface OrderDataRequest {
+	// eslint-disable-next-line camelcase
+	order_id?: string[],
+	maker?: string,
+	// eslint-disable-next-line camelcase
+	make_contract?: string,
+	// eslint-disable-next-line camelcase
+	make_token_id?: BigNumber,
+	// eslint-disable-next-line camelcase
+	take_contract?: string,
+	// eslint-disable-next-line camelcase
+	take_token_id?: BigNumber
+	platform?: Platform,
+	status?: string,
+	// eslint-disable-next-line camelcase
+	activity_id?: string,
+	// eslint-disable-next-line camelcase
+	op_hash?: string,
+}
+
+
 export const XTZ_DECIMALS = 6
 
 export function getTezosBasePath(network: TezosNetwork): string {
@@ -136,7 +164,7 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid: "KT1FiEi3Mrh31vJy39CD4hkiHq1AfRpTxNpF",
 					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
 					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
 					tzkt: "https://api.ghostnet.tzkt.io",
@@ -175,7 +203,7 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid: "KT1FiEi3Mrh31vJy39CD4hkiHq1AfRpTxNpF",
 					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
 					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
 					tzkt: "https://api.ghostnet.tzkt.io",
@@ -589,4 +617,21 @@ export function getRequestAmount(
 		return new BigNumber((orderAmount).toFixed())
 	}
 	return undefined
+}
+
+export function getTezosOrderLegacyForm(order: Order): OrderForm {
+	if (order.data["@type"] !== "TEZOS_RARIBLE_V2") {
+		throw new Error(`Tezos order is not legacy (orderId=${order.id})`)
+	}
+	const orderData = order.data as TezosOrderDataLegacy
+	if (!orderData.legacyData) {
+		throw new Error(`Tezos legacy order have to include legacyData (orderId=${order.id})`)
+	}
+	let parsedLegacyData
+	try {
+		parsedLegacyData = JSON.parse(orderData.legacyData)
+	} catch (e) {
+		throw new Error("Tezos legacy order parse data error")
+	}
+	return order_of_json(parsedLegacyData)
 }

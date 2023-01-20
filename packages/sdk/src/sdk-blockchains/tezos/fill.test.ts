@@ -7,7 +7,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosOrderId } from "./common"
 
 describe.skip("fill test", () => {
-	const env: RaribleSdkEnvironment = "testnet"
+	const env: RaribleSdkEnvironment = "prod"
 	const wallet = createTestWallet(
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3",
 		env
@@ -17,7 +17,7 @@ describe.skip("fill test", () => {
 	test("buy NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()
 		const fillAction = await buyerSdk.order.buy.prepare({
-			orderId: convertTezosOrderId("755dcfce-ead2-5a22-be41-da338656ff9b"),
+			orderId: convertTezosOrderId("49860bc2-afc0-545c-bcde-657f437407e4"),
 		})
 
 		const tx = await fillAction.submit({

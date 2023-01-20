@@ -1,5 +1,5 @@
 import type {
-	FTAssetType, OrderDataRequest, TezosProvider, XTZAssetType,
+	FTAssetType, TezosProvider, XTZAssetType,
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import {
@@ -30,7 +30,7 @@ import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplif
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
-import type { MaybeProvider } from "./common"
+import type { MaybeProvider, OrderDataRequest } from "./common"
 import {
 	convertFromContractAddress,
 	convertUnionParts,

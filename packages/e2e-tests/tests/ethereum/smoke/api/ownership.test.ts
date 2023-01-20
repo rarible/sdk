@@ -8,7 +8,7 @@ import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { testsConfig } from "../../../common/config"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
-import {awaitExpected, getCollection} from "../../../common/helpers"
+import { awaitExpected, getCollection } from "../../../common/helpers"
 import {
 	awaitForOwnershipValue,
 	getOwnershipByIdRaw,

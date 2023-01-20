@@ -1,7 +1,7 @@
 import { Action } from "@rarible/action"
-import type { OrderDataRequest, TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
+import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { fill_order, get_address, get_legacy_orders, order_of_json, cart_purchase } from "@rarible/tezos-sdk"
+import { fill_order, get_address, cart_purchase } from "@rarible/tezos-sdk"
 import type { CartOrder } from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
@@ -17,8 +17,12 @@ import { accept_bid } from "@rarible/tezos-sdk/dist/bids"
 import type { AcceptBid } from "@rarible/tezos-sdk/dist/bids"
 import { Warning } from "@rarible/logger/build"
 import { toBn } from "@rarible/utils/build/bn"
-import type { FillRequest, PrepareFillRequest, PrepareFillResponse,
-	IBatchBuyTransactionResult } from "../../types/order/fill/domain"
+import type {
+	FillRequest,
+	PrepareFillRequest,
+	PrepareFillResponse,
+	IBatchBuyTransactionResult,
+} from "../../types/order/fill/domain"
 import {
 	MaxFeesBasePointSupport,
 	OriginFeeSupport,
@@ -31,7 +35,7 @@ import type {
 import type { IApisSdk } from "../../domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
-import type { MaybeProvider } from "./common"
+import type { MaybeProvider, OrderDataRequest } from "./common"
 import {
 	checkChainId,
 	convertFromContractAddress, convertUnionAddress,
@@ -39,7 +43,7 @@ import {
 	getRequiredProvider,
 	getTezosAddress,
 	getTezosAssetTypeV2,
-	getTezosOrderId, isNftOrMTAssetType,
+	getTezosOrderId, getTezosOrderLegacyForm, isNftOrMTAssetType,
 } from "./common"
 
 
@@ -158,19 +162,7 @@ export class TezosFill {
 			use_all: true,
 		}
 
-		let legacyOrders = await get_legacy_orders(
-			provider.config,
-			{ data: true },
-			{ order_id: [getTezosOrderId(order.id)] }
-		)
-		if (!legacyOrders.length) {
-			throw new Error("Tezos v1 orders has not been found")
-		}
-		if (!legacyOrders[0] || !legacyOrders[0].data) {
-			throw new Error("Tezos v1 order data is empty")
-		}
-
-		const preparedOrder = order_of_json(legacyOrders[0].data)
+		const preparedOrder = getTezosOrderLegacyForm(order)
 		const fillResponse = await fill_order(
 			provider,
 			preparedOrder,
