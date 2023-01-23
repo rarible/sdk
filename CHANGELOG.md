@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+
+### Bug Fixes
+
+* example app process error ([#419](https://github.com/rarible/sdk/issues/419)) ([60ece81](https://github.com/rarible/sdk/commit/60ece81b8773ee10e7499d9f0eb6a7bdbe5c883a))
+* handle checking approvals ([#426](https://github.com/rarible/sdk/issues/426)) ([13ae517](https://github.com/rarible/sdk/commit/13ae517eb72f43b8b5a9c88eec72fae9780f4126))
+* logger warn override ([#427](https://github.com/rarible/sdk/issues/427)) ([d3a891c](https://github.com/rarible/sdk/commit/d3a891cb6de660e1c1057d6bed2ada854460ed34))
+
+
+### Features
+
+* tezos migrates to union ([#412](https://github.com/rarible/sdk/issues/412)) ([e2c677c](https://github.com/rarible/sdk/commit/e2c677c3eac2ab152a15afacbc50fc3c12b03f38))
+
+
+
+
+
 ## [0.13.6](https://github.com/rarible/sdk/compare/v0.13.5...v0.13.6) (2023-01-19)
 
 

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+
+### Features
+
+* tezos migrates to union ([#412](https://github.com/rarible/sdk/issues/412)) ([e2c677c](https://github.com/rarible/sdk/commit/e2c677c3eac2ab152a15afacbc50fc3c12b03f38))
+
+
+
+
+
 ## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
 
 

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+**Note:** Version bump only for package @rarible/connector-solflare
+
+
+
+
+
 ## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
 
 

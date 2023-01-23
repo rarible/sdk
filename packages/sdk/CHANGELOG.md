@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+
+### Bug Fixes
+
+* logger warn override ([#427](https://github.com/rarible/sdk/issues/427)) ([d3a891c](https://github.com/rarible/sdk/commit/d3a891cb6de660e1c1057d6bed2ada854460ed34))
+
+
+### Features
+
+* tezos migrates to union ([#412](https://github.com/rarible/sdk/issues/412)) ([e2c677c](https://github.com/rarible/sdk/commit/e2c677c3eac2ab152a15afacbc50fc3c12b03f38))
+
+
+
+
+
 ## [0.13.6](https://github.com/rarible/sdk/compare/v0.13.5...v0.13.6) (2023-01-19)
 
 

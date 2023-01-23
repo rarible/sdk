@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.13.4",
+  "version": "0.13.7",
   "homepage": "",
   "license": "ISC",
   "private": true,
@@ -19,7 +19,7 @@
     "@rarible/api-client": "0.0.15-beta1",
     "@rarible/ethereum-sdk-test-common": "~0.13.4",
     "@rarible/flow-test-common": "~0.5.48-alpha.2",
-    "@rarible/sdk-wallet": "^0.13.4",
+    "@rarible/sdk-wallet": "^0.13.7",
     "@rarible/types": "~0.9.6",
     "bignumber.js": "^9.0.1"
   },
