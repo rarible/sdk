@@ -2,7 +2,7 @@ import type { RequestCurrency } from "@rarible/sdk/build/common/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toAddress } from "@rarible/types"
-import { getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
+import { deployTestErc20, getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
 import { getWalletAddressFull } from "./wallet"
 import { testsConfig } from "./config"
 import { Logger } from "./logger"
@@ -11,26 +11,31 @@ import { Logger } from "./logger"
 export async function getCurrency(
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	currency: string,
-	mint: boolean = false
 ): Promise<RequestCurrency> {
 	Logger.log(`Get currency for=${currency}`)
 	if (wallets.seller instanceof EthereumWallet && wallets.buyer instanceof EthereumWallet) {
 		if (currency === "ERC20") {
+			const sellerWeb3 = (wallets.seller.ethereum as any).config.web3
+			const deployedErc20 = await deployTestErc20(sellerWeb3, "E2ETestToken", "TST")
 			const testErc20 = getTestErc20Contract(
-				(wallets.seller.ethereum as any).config.web3,
-				toAddress(testsConfig.variables.ETHEREUM_ERC20)
+				sellerWeb3,
+				toAddress(deployedErc20.options.address)
 			)
-			if (mint) {
-				const addressBuyer = await getWalletAddressFull(wallets.buyer)
-				const addressSeller = await getWalletAddressFull(wallets.seller)
-				await testErc20.methods.mint(addressBuyer.address, "1000000000000000000000000000").send({
+			const addressBuyer = await getWalletAddressFull(wallets.buyer)
+			const addressSeller = await getWalletAddressFull(wallets.seller)
+			const promiEvent = testErc20.methods
+				.mint(addressBuyer.address, "1000000000000000000000000000")
+				.send({
 					from: addressSeller.address,
 					gas: 200000,
 				})
-			}
+			await new Promise((resolve, reject) => {
+				promiEvent.once("transactionHash", (hash: string) => resolve(hash))
+				promiEvent.once("error", (error: any) => reject(error))
+			})
 			return {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${testsConfig.variables.ETHEREUM_ERC20}`),
+				contract: toContractAddress(`ETHEREUM:${deployedErc20.options.address}`),
 			}
 		}
 		if (currency === "ETH") {

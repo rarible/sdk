@@ -12,7 +12,7 @@ import { UserActivityType } from "@rarible/api-client/build/models"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
-import {awaitExpected, getCollection} from "../../../common/helpers"
+import { awaitExpected, getCollection } from "../../../common/helpers"
 import { testsConfig } from "../../../common/config"
 import {
 	getActivitiesByCollection,
@@ -24,7 +24,6 @@ import {
 	getAllActivities,
 	getAllActivitiesRaw,
 } from "../../../common/api-helpers/activity-helper"
-import {retry} from "@rarible/sdk/build/common/retry";
 
 function suites(): {
 	blockchain: Blockchain,

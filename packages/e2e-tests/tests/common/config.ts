@@ -1,5 +1,5 @@
 import { developmentTestsConfig } from "./config/development"
-import {stagingTestsConfig} from "./config/staging";
+import { stagingTestsConfig } from "./config/staging"
 
 export const testsConfig = {
 	env: process.env.TEST_ENV,
