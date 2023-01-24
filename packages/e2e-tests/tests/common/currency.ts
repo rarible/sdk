@@ -16,15 +16,14 @@ export async function getCurrency(
 	if (wallets.seller instanceof EthereumWallet && wallets.buyer instanceof EthereumWallet) {
 		if (currency === "ERC20") {
 			const sellerWeb3 = (wallets.seller.ethereum as any).config.web3
-			const deployedErc20 = await deployTestErc20(sellerWeb3, "E2ETestToken", "TST")
 			const testErc20 = getTestErc20Contract(
 				sellerWeb3,
-				toAddress(deployedErc20.options.address)
+				toAddress(testsConfig.variables.ETHEREUM_ERC20)
 			)
 			const addressBuyer = await getWalletAddressFull(wallets.buyer)
 			const addressSeller = await getWalletAddressFull(wallets.seller)
 			const promiEvent = testErc20.methods
-				.mint(addressBuyer.address, "1000000000000000000000000000")
+				.mint(addressBuyer.address, "1000000000000000000000000")
 				.send({
 					from: addressSeller.address,
 					gas: 200000,
@@ -35,7 +34,7 @@ export async function getCurrency(
 			})
 			return {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${deployedErc20.options.address}`),
+				contract: toContractAddress(`ETHEREUM:${testsConfig.variables.ETHEREUM_ERC20}`),
 			}
 		}
 		if (currency === "ETH") {
