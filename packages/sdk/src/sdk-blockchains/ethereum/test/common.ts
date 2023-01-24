@@ -6,6 +6,10 @@ export const ETH_GOERLI_SETTINGS = {
 	rpcUrl: "https://goerli-ethereum-node.rarible.com",
 	networkId: 5,
 }
+export const ETH_STAGING_SETTINGS = {
+	rpcUrl: "https://staging-ethereum-node.rarible.com",
+	networkId: 200500,
+}
 
 export const POLYGON_DEV_SETTINGS = {
 	rpcUrl: "https://dev-polygon-node.rarible.com",

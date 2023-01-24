@@ -11,23 +11,27 @@ import { Logger } from "./logger"
 export async function getCurrency(
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
 	currency: string,
-	mint: boolean = false
 ): Promise<RequestCurrency> {
 	Logger.log(`Get currency for=${currency}`)
 	if (wallets.seller instanceof EthereumWallet && wallets.buyer instanceof EthereumWallet) {
 		if (currency === "ERC20") {
+			const sellerWeb3 = (wallets.seller.ethereum as any).config.web3
 			const testErc20 = getTestErc20Contract(
-				(wallets.seller.ethereum as any).config.web3,
+				sellerWeb3,
 				toAddress(testsConfig.variables.ETHEREUM_ERC20)
 			)
-			if (mint) {
-				const addressBuyer = await getWalletAddressFull(wallets.buyer)
-				const addressSeller = await getWalletAddressFull(wallets.seller)
-				await testErc20.methods.mint(addressBuyer.address, "1000000000000000000000000000").send({
+			const addressBuyer = await getWalletAddressFull(wallets.buyer)
+			const addressSeller = await getWalletAddressFull(wallets.seller)
+			const promiEvent = testErc20.methods
+				.mint(addressBuyer.address, "1000000000000000000000000")
+				.send({
 					from: addressSeller.address,
 					gas: 200000,
 				})
-			}
+			await new Promise((resolve, reject) => {
+				promiEvent.once("transactionHash", (hash: string) => resolve(hash))
+				promiEvent.once("error", (error: any) => reject(error))
+			})
 			return {
 				"@type": "ERC20",
 				contract: toContractAddress(`ETHEREUM:${testsConfig.variables.ETHEREUM_ERC20}`),
