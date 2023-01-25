@@ -251,7 +251,10 @@ export function createRaribleSdk(
 	sdkConfig?: IRaribleEthereumSdkConfig
 ): RaribleSdk {
 	const config = getEthereumConfig(env)
-	const apis = createEthereumApis(env, sdkConfig?.apiClientParams)
+	const apis = createEthereumApis(env, {
+		...(sdkConfig?.apiClientParams || {}),
+		apiKey: sdkConfig?.apiKey,
+	})
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 
 	const sendWithInjects = partialCall(getSendWithInjects({

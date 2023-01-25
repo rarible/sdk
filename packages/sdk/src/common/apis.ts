@@ -21,6 +21,7 @@ export function createApisSdk(
 	const config = getSdkConfig(env)
 	const configuration = new ApiClient.Configuration({
 		basePath: config.basePath,
+		headers: typeof params.apiKey === "string" ? { "X-API-KEY": params.apiKey } : {},
 		exceptionHandler: async (error, url, init) => {
 			throw new NetworkError({
 				status: -1,

@@ -11,7 +11,7 @@ import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 
-describe.skip("get balance", () => {
+describe("get balance", () => {
 	const { web31, wallet1 } = initProviders({
 		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
 	})
