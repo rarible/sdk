@@ -21,6 +21,7 @@ export function createEthereumApis(
 	params: EthereumApiClient.ConfigurationParameters = {}
 ): RaribleEthereumApis {
 	const config = getApiConfig(env, {
+		headers: typeof params.apiKey === "string" ? { "X-API-KEY": params.apiKey } : {},
 		exceptionHandler: async (error, url, init) => {
 			throw new NetworkError({
 				status: -1,

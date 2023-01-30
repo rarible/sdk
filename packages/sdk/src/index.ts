@@ -60,7 +60,13 @@ export function createRaribleSdk(
 	const wallet = provider && getRaribleWallet(provider)
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
-	const apis = createApisSdk(env, config?.apiClientParams, config?.logs)
+	const apis = createApisSdk(
+		env,
+		{
+			...(config?.apiClientParams || {}),
+			apiKey: config?.apiKey,
+		},
+		config?.logs)
 
 	const ethConfig = {
 		...config?.blockchain?.ETHEREUM,
