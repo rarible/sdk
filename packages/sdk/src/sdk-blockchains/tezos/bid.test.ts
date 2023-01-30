@@ -14,7 +14,7 @@ import { convertTezosToCollectionAddress, convertTezosToContractAddress, convert
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 
-describe.skip("bid test", () => {
+describe("bid test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const itemOwner = createTestWallet(
 		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",

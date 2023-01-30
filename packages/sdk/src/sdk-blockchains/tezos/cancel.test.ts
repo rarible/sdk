@@ -8,6 +8,7 @@ import type { RaribleSdkEnvironment } from "../../config/domain"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
+import { awaitCancelledOrder } from "./test/await-cancelled-order"
 
 describe.skip("cancel test", () => {
 	const env: RaribleSdkEnvironment = "development"
@@ -100,14 +101,7 @@ describe.skip("cancel test", () => {
 			orderId,
 		})
 		await cancelTx.wait()
-		await retry(20, 2000, async () => {
-			const canceledOrder = await sdk.apis.order.getOrderById({
-				id: orderId,
-			})
-			if (canceledOrder.status !== "CANCELLED") {
-				throw new Error("Order has not been cancelled")
-			}
-		})
+		await awaitCancelledOrder(sdk, orderId)
 
 	}, 1500000)
 
@@ -149,14 +143,7 @@ describe.skip("cancel test", () => {
 			orderId,
 		})
 		await cancelTx.wait()
-		await retry(10, 2000, async () => {
-			const canceledOrder = await sdk.apis.order.getOrderById({
-				id: orderId,
-			})
-			if (canceledOrder.status !== "CANCELLED") {
-				throw new Error("Order has not been cancelled")
-			}
-		})
+		await awaitCancelledOrder(sdk, orderId)
 
 	}, 1500000)
 })

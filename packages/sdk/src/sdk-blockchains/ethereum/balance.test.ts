@@ -1,6 +1,6 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toContractAddress, toCurrencyId, toOrderId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { Blockchain } from "@rarible/api-client"
@@ -10,6 +10,7 @@ import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { POLYGON_TESTNET_SETTINGS } from "./test/common"
 
 describe.skip("get balance", () => {
 	const { web31, wallet1 } = initProviders({
@@ -132,8 +133,27 @@ describe.skip("get balance", () => {
 
 })
 
-describe.skip("get polygon balance", () => {
-	const sdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
+describe("get polygon balance", () => {
+	const { web31, wallet1 } = initProviders({
+		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	}, POLYGON_TESTNET_SETTINGS)
+
+	const ethereum = new Web3Ethereum({
+		web3: web31,
+		from: wallet1.getAddressString(),
+	})
+
+	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "testnet", { logs: LogsLevel.DISABLED })
+
+	test("fill order", async () => {
+		const orderId = toOrderId("POLYGON:0xd079b36b6c650686cfdad7dfbe1cdff7cd5900989e376805f37ee5fb0e20bbc5")
+		const tx = await sdk.order.buy({
+			orderId,
+			amount: 1,
+		})
+		await tx.wait()
+		console.log("ok")
+	})
 
 	test("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
