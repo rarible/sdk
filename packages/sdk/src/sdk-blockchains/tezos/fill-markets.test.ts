@@ -30,11 +30,11 @@ describe.skip("fill markets orders test", () => {
 
 	beforeAll(async () => {
 		buyerAddress = await wallet.provider.address()
-		// await returnNftsToSeller("KT1UH5RSbomuV1o6UuDB9yeACbqRMup3utGu:0")//TEZOS_VERSUM_V1
-		// await returnNftsToSeller("KT18pXXDDLMtXYxf6MpMGVKjmeSd6MuWnmjn:763001")//TEZOS_HEN
-		// await returnNftsToSeller("KT1P2VyFd61A3ukizJoX37nFF9fqZnihv7Lw:763001")//TEZOS_TEIA_V1
-		// await returnNftsToSeller("KT1TcrYJatTbrg9GoYDbsCu3phPGzMcTSaJn:0")    //TEZOS_OBJKT_V1 + TEZOS_OBJKT_V2
-		// await returnNftsToSeller("KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j:1")    //TEZOS_FXHASH_V1
+		await returnNftsToSeller("KT1UH5RSbomuV1o6UuDB9yeACbqRMup3utGu:0")//TEZOS_VERSUM_V1
+		await returnNftsToSeller("KT18pXXDDLMtXYxf6MpMGVKjmeSd6MuWnmjn:763001")//TEZOS_HEN
+		await returnNftsToSeller("KT1P2VyFd61A3ukizJoX37nFF9fqZnihv7Lw:763001")//TEZOS_TEIA_V1
+		await returnNftsToSeller("KT1TcrYJatTbrg9GoYDbsCu3phPGzMcTSaJn:0")    //TEZOS_OBJKT_V1 + TEZOS_OBJKT_V2
+		await returnNftsToSeller("KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j:1")    //TEZOS_FXHASH_V1
 		await returnNftsToSeller("KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ:3")    //TEZOS_FXHASH_V2
 		await returnNftsToSeller("KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ:1")    //TEZOS_FXHASH_V2
 	})

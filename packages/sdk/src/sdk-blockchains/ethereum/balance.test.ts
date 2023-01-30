@@ -145,16 +145,6 @@ describe("get polygon balance", () => {
 
 	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "testnet", { logs: LogsLevel.DISABLED })
 
-	test("fill order", async () => {
-		const orderId = toOrderId("POLYGON:0xd079b36b6c650686cfdad7dfbe1cdff7cd5900989e376805f37ee5fb0e20bbc5")
-		const tx = await sdk.order.buy({
-			orderId,
-			amount: 1,
-		})
-		await tx.wait()
-		console.log("ok")
-	})
-
 	test("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
 		const balance = await sdk.balances.getBalance(walletAddress, {
