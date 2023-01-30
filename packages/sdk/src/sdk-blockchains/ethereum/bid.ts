@@ -239,6 +239,7 @@ export class EthereumBid {
 						originFeesSum
 					)
 					await this.convertCurrency(value)
+					console.log("after convert")
 				}
 				return request
 			},

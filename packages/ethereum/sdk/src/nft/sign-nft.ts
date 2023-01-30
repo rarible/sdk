@@ -32,7 +32,11 @@ export async function signNft(ethereum: Maybe<Ethereum>, chainId: number, nft: S
 					tokenURI: nft.uri,
 				},
 			}
-			return toBinary(await ethereum.signTypedData(data))
+			const signedData = await ethereum.signTypedData(data)
+			if (!signedData) {
+				throw new Error(`signNft error: signedData=${signedData}, data=${JSON.stringify(data)}`)
+			}
+			return toBinary(signedData)
 		}
 		case "ERC1155": {
 			const domain = createEIP712NftDomain(chainId, nft.contract, "ERC1155")
@@ -46,7 +50,11 @@ export async function signNft(ethereum: Maybe<Ethereum>, chainId: number, nft: S
 					tokenURI: nft.uri,
 				},
 			}
-			return toBinary(await ethereum.signTypedData(data))
+			const signedData = await ethereum.signTypedData(data)
+			if (!signedData) {
+				throw new Error(`signNft error: signedData=${signedData}, data=${JSON.stringify(data)}`)
+			}
+			return toBinary(signedData)
 		}
 		default: {
 			throw new Error("Unexpected")

@@ -11,6 +11,7 @@ import type {
 import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import { Warning } from "@rarible/logger/build"
 import type { SendFunction } from "../common/send-transaction"
 import type { CommonNftCollection } from "../common/mint"
 import { mintOffChain } from "./mint-off-chain"
@@ -98,6 +99,9 @@ export async function mint(
 	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
+	}
+	if (data.uri === undefined) {
+		throw new Warning("URI should be not undefined")
 	}
 	if (isERC1155Request(data)) {
 		if (isERC1155v2Request(data)) {
