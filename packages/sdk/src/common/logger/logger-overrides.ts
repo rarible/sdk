@@ -13,6 +13,8 @@ const EVM_WARN_MESSAGES = [
 	"User denied transaction signature",
 	"User denied message signature",
 	"User rejected the transaction",
+	"User rejected the request",
+	"Request rejected",
 	"Sign transaction cancelled",
 	"Link iFrame Closed",
 	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
@@ -68,6 +70,8 @@ const EVM_WARN_MESSAGES = [
 	"Please enable Blind signing or Contract data in the Ethereum app Settings",
 	"Failed to sign transaction",
 	"Permission not given for signing message",
+	"rejected request from DeFi Wallet",
+	"Транзакция отменена",
 ]
 
 /**

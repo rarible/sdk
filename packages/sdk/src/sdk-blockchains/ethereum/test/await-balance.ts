@@ -13,6 +13,7 @@ export async function awaitBalance(
 	return await retry(5, 2000, async () => {
 		const address = convertEthereumToUnionAddress(await wallet.ethereum.getFrom(), Blockchain.ETHEREUM)
 		const balance = new BigNumber(await sdk.balances.getBalance(address, assetType))
+		console.log("bal", balance.toString())
 		expect(balance.toString()).toBe(value.toString())
 		return balance
 	})

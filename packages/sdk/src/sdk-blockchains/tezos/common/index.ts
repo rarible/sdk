@@ -33,30 +33,16 @@ import type { Part } from "@rarible/tezos-common"
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
-import type {
-	NftCollectionControllerApi,
-	NftItemControllerApi,
-	NftOwnershipControllerApi,
-	OrderControllerApi,
-} from "tezos-api-client/build"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ContractAddress, OrderId } from "@rarible/types"
 import { toCollectionId, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
-// import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { RaribleSdkConfig } from "../../../config/domain"
-
-export interface ITezosAPI {
-	collection: NftCollectionControllerApi,
-	item: NftItemControllerApi,
-	ownership: NftOwnershipControllerApi,
-	order: OrderControllerApi,
-}
 
 export type MaybeProvider<P extends TezosProvider> = {
 	tezos: Maybe<P>

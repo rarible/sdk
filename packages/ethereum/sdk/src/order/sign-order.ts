@@ -26,12 +26,16 @@ export async function signOrder(
 		}
 		case "RARIBLE_V2": {
 			const domain = createEIP712Domain(config.chainId, config.exchange.v2)
+			const structMessage = orderToStruct(ethereum, order)
 			const signature = await ethereum.signTypedData({
 				primaryType: EIP712_ORDER_TYPE,
 				domain,
 				types: EIP712_ORDER_TYPES,
-				message: orderToStruct(ethereum, order),
+				message: structMessage,
 			})
+			if (!signature) {
+				throw new Error(`signOrder error: signature=${signature}, data=${JSON.stringify(structMessage)}`)
+			}
 			return toBinary(signature)
 		}
 		default: {

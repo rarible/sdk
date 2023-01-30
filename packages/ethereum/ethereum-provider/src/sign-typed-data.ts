@@ -1,7 +1,6 @@
 import { TypedDataUtils } from "eth-sig-util"
 import type { MessageTypes, TypedMessage } from "./domain"
 import { SignTypedDataMethodEnum } from "./domain"
-import { EthereumProviderError } from "./errors"
 
 export type SendFunction = (method: string, params: any) => Promise<any>
 
@@ -11,6 +10,12 @@ export async function signTypedData<T extends MessageTypes>(
 	try {
 		return await send(SignTypedDataMethodEnum.V4, [signer, JSON.stringify(data)])
 	} catch (error) {
+		if (isError(error) && error.message?.includes("MetaMask Typed Message Signature: User denied message signature")) {
+			throw new SignTypedDataError({
+				error,
+				data: { signer, data },
+			})
+		}
 		try {
 			console.error("got error while executing sign typed data v4", error)
 			if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
@@ -26,15 +31,14 @@ export async function signTypedData<T extends MessageTypes>(
 				}
 			}
 		} catch (e) {
-			throw new EthereumProviderError({
+			throw new SignTypedDataError({
+				message: "Can't sign typed data by V4/V3/Default methods",
 				error: e,
 				data: {
 					signer,
 					data,
-					v4SignError: error,
+					v4ErrorMessage: isError(error) ? error.message : "",
 				},
-				method: "EthereumProvider.signTypedData",
-				signer,
 			})
 		}
 	}
@@ -78,4 +82,17 @@ function toBuffer(hex: string) {
 	} else {
 		return Buffer.from(hex, "hex")
 	}
+}
+
+export class SignTypedDataError extends Error {
+  data: any
+  error: any
+
+  constructor(data: { error: any, data: any, message?: string }) {
+  	super(data.message || data?.error?.message || "SignTypedDataError")
+  	Object.setPrototypeOf(this, SignTypedDataError.prototype)
+  	this.name = "SignTypedDataError"
+  	this.error = data?.error
+  	this.data = data?.data
+  }
 }
