@@ -3,17 +3,15 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import {
 	awaitAll,
 	deployTestErc1155,
-	deployTestErc20,
 	deployTestErc721,
 	getTestErc20Contract,
 } from "@rarible/ethereum-sdk-test-common"
-import { toAddress, toCollectionId, toContractAddress, toCurrencyId, toItemId } from "@rarible/types"
+import { toAddress, toContractAddress, toCurrencyId, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import type { EthErc20AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
 import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
-import { testsConfig } from "@rarible/sdk-e2e-tests/tests/common/config"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -29,7 +27,6 @@ import {
 	getEthereumItemId,
 } from "./common"
 import { resetWethFunds } from "./test/reset-weth-funds"
-import { awaitBalance } from "./test/await-balance"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("bid", () => {
@@ -207,7 +204,7 @@ describe("bid", () => {
 	})
 
 	test("bid on erc-1155, convert to weth and update bid", async () => {
-		const itemOwner = await ethwallet1.ethereum.getFrom()
+		// const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
 		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
@@ -256,7 +253,7 @@ describe("bid", () => {
 	})
 
 	test("getConvertValue returns undefined when passed non-weth contract", async () => {
-		const senderRaw = wallet1.getAddressString()
+		// const senderRaw = wallet1.getAddressString()
 
 		const nftMintTx = await sdk1.nft.mint({
 			collectionId: e2eErc1155V2ContractAddress,
@@ -439,7 +436,7 @@ describe("bid", () => {
 	})
 
 	test("bid on erc721 <-> erc20 with CurrencyId", async () => {
-		const itemOwner = await ethwallet1.ethereum.getFrom()
+		// const itemOwner = await ethwallet1.ethereum.getFrom()
 
 		const bidderAddress = await ethwallet2.ethereum.getFrom()
 		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
