@@ -1,6 +1,6 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toCurrencyId, toOrderId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { Blockchain } from "@rarible/api-client"
