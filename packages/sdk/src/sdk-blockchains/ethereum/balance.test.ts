@@ -10,6 +10,7 @@ import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { POLYGON_TESTNET_SETTINGS } from "./test/common"
 
 describe("get balance", () => {
 	const { web31, wallet1 } = initProviders({
@@ -132,8 +133,17 @@ describe("get balance", () => {
 
 })
 
-describe.skip("get polygon balance", () => {
-	const sdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
+describe("get polygon balance", () => {
+	const { web31, wallet1 } = initProviders({
+		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	}, POLYGON_TESTNET_SETTINGS)
+
+	const ethereum = new Web3Ethereum({
+		web3: web31,
+		from: wallet1.getAddressString(),
+	})
+
+	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "testnet", { logs: LogsLevel.DISABLED })
 
 	test("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")

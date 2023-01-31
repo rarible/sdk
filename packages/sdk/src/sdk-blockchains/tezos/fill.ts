@@ -1,8 +1,16 @@
 import { Action } from "@rarible/action"
-import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
+import type {
+	TezosNetwork,
+	TezosProvider,
+	CartOrder,
+} from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
-import { fill_order, get_address, cart_purchase } from "@rarible/tezos-sdk"
-import type { CartOrder } from "@rarible/tezos-sdk"
+import { fill_order, get_address, cart_purchase, fxhash_v1_collect,
+// eslint-disable-next-line camelcase
+	versum_collect, teia_collect, objkt_fulfill_ask_v2, objkt_fulfill_ask_v1,
+	// eslint-disable-next-line camelcase
+	fxhash_v2_listing_accept, hen_collect,
+} from "@rarible/tezos-sdk"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
@@ -235,6 +243,7 @@ export class TezosFill {
 		await checkChainId(this.provider)
 		checkPayouts(fillRequest.payouts)
 
+		const provider = getRequiredProvider(this.provider)
 		const { make, take } = preparedOrder
 		if (isNftOrMTAssetType(make.type)) {
 			const request: OrderDataRequest = {
@@ -249,6 +258,63 @@ export class TezosFill {
 			if (preparedOrder.data["@type"] === "TEZOS_RARIBLE_V3") {
 				return this.buyV2(preparedOrder, request, fillRequest)
 			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_HEN") {
+				const op = await hen_collect(provider, preparedOrder.id)
+				if (!op) {
+					throw new Error("TEZOS_HEN operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_VERSUM_V1") {
+				const op = await versum_collect(provider, preparedOrder.id, new BigNumber(fillRequest.amount))
+				if (!op) {
+					throw new Error("TEZOS_VERSUM_V1 operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_TEIA_V1") {
+				const op = await teia_collect(provider, preparedOrder.id)
+				if (!op) {
+					throw new Error("TEZOS_TEIA_V1 operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_OBJKT_V1") {
+				const op = await objkt_fulfill_ask_v1(provider, preparedOrder.id)
+				if (!op) {
+					throw new Error("TEZOS_OBJKT_V1 operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_OBJKT_V2") {
+				const op = await objkt_fulfill_ask_v2(provider, preparedOrder.id)
+				if (!op) {
+					throw new Error("TEZOS_OBJKT_V2 operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_FXHASH_V1") {
+				const op = await fxhash_v1_collect(provider, preparedOrder.id)
+				if (!op) {
+					throw new Error("TEZOS_FXHASH_V1 operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
+			if (preparedOrder.data["@type"] === "TEZOS_FXHASH_V2") {
+				const op = await fxhash_v2_listing_accept(provider, preparedOrder.id)
+				if (!op) {
+					throw new Error("TEZOS_FXHASH_V2 operation result is empty")
+				}
+				return new BlockchainTezosTransaction(op, this.network)
+			}
+
 		}
 		return this.fillV1Order(fillRequest, preparedOrder)
 	}

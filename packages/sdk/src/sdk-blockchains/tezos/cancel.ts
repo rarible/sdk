@@ -1,6 +1,9 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
-import { cancel } from "@rarible/tezos-sdk/dist/main"
+import { cancel, versum_cancel_swap, hen_cancel_swap, teia_cancel_swap, objkt_retract_ask_v1,
+// eslint-disable-next-line camelcase
+	objkt_retract_ask_v2, fxhash_v1_cancel_offer, fxhash_v2_cancel_listing,
+} from "@rarible/tezos-sdk/dist/main"
 import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -45,8 +48,10 @@ export class TezosCancel {
 			}
 			const provider = getRequiredProvider(this.provider)
 
+			const makeIsNft = isNftAssetType(order.make.type) || isMTAssetType(order.make.type)
+
 			if (order.data["@type"] === "TEZOS_RARIBLE_V3") {
-			  if (isNftAssetType(order.make.type) || isMTAssetType(order.make.type)) {
+			  if (makeIsNft) {
 					return this.cancelV2SellOrder(order)
 				}
 				if (isNftAssetType(order.take.type) || isMTAssetType(order.take.type)) {
@@ -60,6 +65,64 @@ export class TezosCancel {
 					}
 					const tx = await cancel_bid(provider, bidData)
 					return new BlockchainTezosTransaction(tx, this.network)
+				}
+			}
+
+			if (makeIsNft) {
+				if (order.data["@type"] === "TEZOS_HEN") {
+					const op = await hen_cancel_swap(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_VERSUM_V1") {
+					const op = await versum_cancel_swap(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_TEIA_V1") {
+					const op = await teia_cancel_swap(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_OBJKT_V1") {
+					const op = await objkt_retract_ask_v1(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_OBJKT_V2") {
+					const op = await objkt_retract_ask_v2(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_FXHASH_V1") {
+					const op = await fxhash_v1_cancel_offer(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_FXHASH_V2") {
+					const op = await fxhash_v2_cancel_listing(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
 				}
 			}
 

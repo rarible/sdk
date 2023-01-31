@@ -14,6 +14,7 @@ import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import { sellV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import type { OrderId } from "@rarible/api-client"
 import { Warning } from "@rarible/logger/build"
+import { toOrderId } from "@rarible/types"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type {
@@ -34,7 +35,6 @@ import type { MaybeProvider, OrderDataRequest } from "./common"
 import {
 	convertFromContractAddress,
 	convertUnionParts,
-	convertTezosOrderId,
 	getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosAddress,
@@ -154,7 +154,7 @@ export class TezosSell {
 		if (!sellOrderId) {
 			throw new Error("OrderID cannot be requested")
 		}
-		return convertTezosOrderId(sellOrderId)
+		return toOrderId(sellOrderId)
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
@@ -211,7 +211,7 @@ export class TezosSell {
 					provider,
 					tezosRequest
 				)
-				return convertTezosOrderId(sellOrderId)
+				return toOrderId(sellOrderId)
 			},
 		})
 		return {
