@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
+
+
+### Features
+
+* api keys ([#430](https://github.com/rarible/sdk/issues/430)) ([38cbd76](https://github.com/rarible/sdk/commit/38cbd7693ba54681d74af701c377b95a6f0ae1f7))
+* qa tests ([#429](https://github.com/rarible/sdk/issues/429)) ([88a94f2](https://github.com/rarible/sdk/commit/88a94f28c78f46ef2a8ea2a0eb437e9756b4a7df))
+
+
+
+
+
 ## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
 
 

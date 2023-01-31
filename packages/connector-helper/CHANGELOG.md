@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
+
+
+### Features
+
+* new types of tezos orders ([#432](https://github.com/rarible/sdk/issues/432)) ([55f482f](https://github.com/rarible/sdk/commit/55f482f97ae80e8f2000ab9ee1e78f014d2d4dd4))
+
+
+
+
+
 ## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
 
 
