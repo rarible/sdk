@@ -617,6 +617,13 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
 
 Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: [https://multichain.redoc.ly/](https://multichain.redoc.ly/) or right in the typescript typings.
 
+For using API with api key you should pass:
+```ts
+const raribleSdk = createRaribleSdk(provider, "testnet", {
+  apiKey: "$API_KEY"
+}) //"prod" | "testnet" | "development"
+```
+
 ```ts
 //Fetch items by creator
 sdk.apis.item.getItemsByCreator({ creator: someAddress })
