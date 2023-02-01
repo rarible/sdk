@@ -4,6 +4,9 @@ module.exports = {
 		"<rootDir>/jest.setup.js",
 		"dotenv/config",
 	],
+	setupFilesAfterEnv: [
+		"jest-allure/dist/setup",
+	],
 	transform: {
 		"^.+\\.ts?$": "ts-jest",
 	},
@@ -11,11 +14,9 @@ module.exports = {
 		"<rootDir>/build/",
 		"<rootDir>/node_modules/",
 	],
-	testResultsProcessor: "jest-junit",
+	testRunner: "jest-jasmine2",
 	reporters: [
 		"default",
-		["jest-junit", {
-			outputDirectory: "reports",
-		}],
+		"jest-allure",
 	],
 }
