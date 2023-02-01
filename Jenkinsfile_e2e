@@ -43,7 +43,7 @@ pipeline {
                 sh '''
                     wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
                     chmod +x ./allurectl
-                    yarn
+                    yarn install --network-timeout=30000
                     yarn build
                     ./allurectl watch --results ./packages/e2e-tests/allure-results -- yarn e2e-tests
                   '''
@@ -65,6 +65,15 @@ pipeline {
     always {
       postReport([:])   
       cleanWs()
+      script {
+        allure([
+          includeProperties: false,
+          jdk: '',
+          properties: [],
+          reportBuildPolicy: 'ALWAYS',
+          results: [[path: 'allure-results']]
+        ])
+      }
     }
   }
 }
