@@ -55,13 +55,13 @@ pipeline {
   }
 
   post {
-    failure {
-      wrap([$class: 'BuildUser']) {
-        slackSend channel: '#protocol-e2e-tests',
-          color: COLOR_MAP[currentBuild.currentResult],
-          message: "*${currentBuild.currentResult}:* Test run for blockchain=*${params.BLOCKCHAIN}*. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
-      }
-    }
+    // failure {
+    //   wrap([$class: 'BuildUser']) {
+    //     slackSend channel: '#protocol-e2e-tests',
+    //       color: COLOR_MAP[currentBuild.currentResult],
+    //       message: "*${currentBuild.currentResult}:* Test run for blockchain=*${params.BLOCKCHAIN}*. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
+    //   }
+    // }
     always {
       postReport([:])   
       cleanWs()
