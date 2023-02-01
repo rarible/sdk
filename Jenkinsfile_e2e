@@ -5,30 +5,30 @@ def COLOR_MAP = [
     'FAILURE': 'danger',
 ]
 
-pipeline {
+matrix {
   agent any
 
   options {
     disableConcurrentBuilds()
     timeout(time: 1, unit: 'HOURS')
   }
-
-  parameters {
-    choice(name: 'TEST_ENV', choices: ['development'], description: 'Environment')
-    choice(name: 'BLOCKCHAIN', choices: ['ethereum', 'tezos', 'flow', 'solana', 'all'], description: 'Blockchain')
+  environment {
+    ALLURE_TOKEN = '5f5c7394-5595-4636-8757-3f2d7469d03a'
+    ALLURE_ENDPOINT = 'https://rarible.testops.cloud/'
+    ALLURE_PROJECT_ID = '2'
   }
-
-  triggers {
-    parameterizedCron('''
-        0 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=ethereum
-        30 7 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=tezos
-        0 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=solana
-        30 8 * * 1-5 %TEST_ENV=development;BLOCKCHAIN=flow
-    ''')
+  axes {
+    axis {
+      name 'BLOCKCHAIN'
+      values 'ethereum'
+    }
+    axis {
+      name 'TEST_ENV'
+      values 'development', 'staging'
+    }
   }
-
   stages {
-    stage("Run e2e tests") {
+    stage("SDK e2e tests") {
       agent {
         docker {
           image "node:16-bullseye"
@@ -37,11 +37,13 @@ pipeline {
         }
       }
       steps {
-          sh '''yarn
-              yarn bootstrap
-              yarn clean
+          sh '''
+              wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
+              chmod +x ./allurectl
+              yarn
               yarn build
-              yarn e2e-tests'''
+              ./allurectl watch --results ./packages/e2e-tests/allure-results -- yarn e2e-tests
+            '''
       }
     }
   }
