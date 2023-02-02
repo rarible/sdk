@@ -36,7 +36,6 @@ pipeline {
               docker {
                 image "node:16-bullseye"
                 args utils.dockerAgentArgs()
-                reuseNode true
               }
             }
             steps {
