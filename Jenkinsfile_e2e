@@ -41,11 +41,12 @@ pipeline {
             }
             steps {
                 sh '''
+                    echo "Running on $BLOCKCHAIN $TEST_ENV"
                     wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
                     chmod +x ./allurectl
                     yarn install --network-timeout=30000
                     yarn build
-                    ./allurectl watch --results ./packages/e2e-tests/allure-results -- yarn e2e-tests
+                    ./allurectl watch --launch-name "E2E SDK Tests $BLOCKCHAIN $TEST_ENV #$BUILD_NUMBER" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests
                   '''
             }
           }
