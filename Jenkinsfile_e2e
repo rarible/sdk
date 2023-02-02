@@ -66,7 +66,8 @@ pipeline {
     }
     always {
       script {
-        def shOutput = sh(returnStdout: true, script: 'find . -type d -name "allure-reports"' )
+        def shOutput = sh(returnStdout: true, script: 'find . -type d -name "allure-results"' )
+        echo '${shOutput}'
         allure([
           includeProperties: false,
           jdk: '',
