@@ -39,16 +39,16 @@ pipeline {
               }
             }
             steps {
-                sh label: 'Output where we are running' script: 'echo "Running on $BLOCKCHAIN $TEST_ENV"' 
-                sh label: 'Download allurectl' script: '''    
+                sh(label: 'Output where we are running', script: 'echo "Running on $BLOCKCHAIN $TEST_ENV"') 
+                sh(label: 'Download allurectl', script: '''    
                     wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
                     chmod +x ./allurectl
-                   '''
-                sh label: 'Build sdk and e2e-tests' script: '''
+                   ''')
+                sh(label: 'Build sdk and e2e-tests', script: '''
                     yarn install --network-timeout=30000
                     yarn build
-                   '''
-                sh label: 'Run e2e-tests with reporting Allure TestOps' script: './allurectl watch --launch-name "E2E SDK $BLOCKCHAIN $TEST_ENV #$BUILD_NUMBER" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests'
+                   ''')
+                sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-name "E2E SDK $BLOCKCHAIN $TEST_ENV #$BUILD_NUMBER" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
             }
           }
         }
