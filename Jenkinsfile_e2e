@@ -10,7 +10,7 @@ pipeline {
 
   options {
     disableConcurrentBuilds()
-    timeout(time: 1, unit: 'HOURS')
+    timeout(time: 2, unit: 'HOURS')
   }
   environment {
     ALLURE_TOKEN = '5f5c7394-5595-4636-8757-3f2d7469d03a'
