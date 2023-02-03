@@ -1,0 +1,38 @@
+@Library('shared-library') _
+
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
+
+pipeline {
+  agent any
+
+  options {
+    disableConcurrentBuilds()
+    timeout(time: 2, unit: 'HOURS')
+  }
+  stages{
+    stage("Run SDK e2e tests in parallel") {
+      steps {
+          script {
+            def environments = ['development', 'staging']
+            def blockchains = ['ethereum']
+            def jobs = []
+            for(environment in environments){
+              for(blockchain in blockchains){
+                def job = build job: "e2e_sdk_child",
+                  parameters: [
+                    string(name: 'TEST_ENV', value: "$environment"),
+                    string(name: 'BLOCKCHAIN', value: "$blockchain")
+                  ],
+                  wait: true
+                jobs.add(job)
+              }
+            }
+            parallel jobs
+          }
+      }
+    }
+  }
+}
