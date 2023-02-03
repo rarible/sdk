@@ -39,7 +39,7 @@ pipeline {
               yarn install --network-timeout=40000
               yarn build
               ''')
-          sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results allure-results -- yarn e2e-tests')
+          sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
       }
     }
   }
