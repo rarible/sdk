@@ -18,7 +18,7 @@ pipeline {
           script {
             def environments = ['development', 'staging']
             def blockchains = ['ethereum']
-            def jobs = []
+            def jobs = [:]
             for(environment in environments){
               for(blockchain in blockchains){
                 def job = build job: "e2e-sdk-child",
@@ -28,7 +28,7 @@ pipeline {
                   ],
                   quietPeriod: 2,
                   wait: false
-                jobs.add(job)
+                jobs[blockchain + " " + environment] = job
               }
             }
             parallel jobs
