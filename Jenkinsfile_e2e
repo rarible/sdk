@@ -34,8 +34,7 @@ pipeline {
           stage("SDK e2e tests") {
             agent {
               docker {
-                image "node:16-bullseye"
-                args utils.dockerAgentArgs()
+                image "node:16-bullseye-slim"
               }
             }
             steps {
@@ -45,7 +44,7 @@ pipeline {
                     chmod +x ./allurectl
                    ''')
                 sh(label: 'Build sdk and e2e-tests', script: '''
-                    yarn install --network-timeout=30000
+                    yarn install --network-timeout=40000
                     yarn build
                    ''')
                 sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-name "E2E SDK $BLOCKCHAIN $TEST_ENV #$BUILD_NUMBER" --results allure-results -- yarn e2e-tests')
@@ -65,17 +64,6 @@ pipeline {
       }
     }
     always {
-      script {
-        def shOutput = sh(returnStdout: true, script: 'find . -type d -name "allure-results"' )
-        echo '${shOutput}'
-        allure([
-          includeProperties: false,
-          jdk: '',
-          properties: [],
-          reportBuildPolicy: 'ALWAYS',
-          results: [[path: '${shOutput}']]
-        ])
-      }
       postReport([:])   
       cleanWs()
     }
