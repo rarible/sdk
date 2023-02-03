@@ -207,8 +207,10 @@ describe.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
 
 		const bidOrder = await bid(buyerSdk, buyerWallet, { collectionId: collection.id }, bidRequest)
 
-		const collection1 = await getCollection(sellerSdk, address)
-		expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+		await retry(10, 2000, async () => {
+			const collection1 = await getCollection(sellerSdk, address)
+			expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+		})
 
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 
