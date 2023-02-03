@@ -9,12 +9,11 @@ pipeline {
   agent any
 
   options {
-    disableConcurrentBuilds()
     timeout(time: 2, unit: 'HOURS')
   }
   parameters {
-    choice(name: 'TEST_ENV', choices: ['development', 'staging'], description: 'Environment')
-    choice(name: 'BLOCKCHAIN', choices: ['ethereum', 'tezos', 'flow', 'solana', 'all'], description: 'Blockchain')
+    string(name: 'TEST_ENV', description: 'Environment')
+    string(name: 'BLOCKCHAIN', description: 'Blockchain')
   }
   environment {
     ALLURE_TOKEN = '5f5c7394-5595-4636-8757-3f2d7469d03a'
@@ -48,7 +47,7 @@ pipeline {
       wrap([$class: 'BuildUser']) {
         slackSend channel: '#protocol-e2e-tests',
           color: COLOR_MAP[currentBuild.currentResult],
-          message: "*${currentBuild.currentResult}:* e2e sdk test run. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
+          message: "*${currentBuild.currentResult}:* e2e sdk tests on ${params.BLOCKCHAIN} ${params.TEST_ENV}. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
       }
     }
     always {
