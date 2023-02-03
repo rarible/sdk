@@ -35,7 +35,7 @@ pipeline {
             agent {
               docker {
                 image "node:16-bullseye"
-                args '-u root:root'
+                args utils.dockerAgentArgs()
               }
             }
             steps {
@@ -48,7 +48,7 @@ pipeline {
                     yarn install --network-timeout=40000
                     yarn build
                    ''')
-                sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-name "E2E SDK $BLOCKCHAIN $TEST_ENV #$BUILD_NUMBER" --results allure-results -- yarn e2e-tests')
+                sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results allure-results -- yarn e2e-tests')
             }
           }
         }
