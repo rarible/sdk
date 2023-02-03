@@ -34,7 +34,7 @@ pipeline {
           stage("SDK e2e tests") {
             agent {
               docker {
-                image "node:16-bullseye-slim"
+                image "node:16-bullseye"
               }
             }
             steps {
