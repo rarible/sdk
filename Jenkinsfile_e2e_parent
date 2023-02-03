@@ -21,7 +21,7 @@ pipeline {
             def jobs = []
             for(environment in environments){
               for(blockchain in blockchains){
-                def job = build job: "e2e_sdk_child",
+                def job = build job: "e2e-sdk-child",
                   parameters: [
                     string(name: 'TEST_ENV', value: "$environment"),
                     string(name: 'BLOCKCHAIN', value: "$blockchain")
