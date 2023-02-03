@@ -26,7 +26,7 @@ pipeline {
                     string(name: 'TEST_ENV', value: "$environment"),
                     string(name: 'BLOCKCHAIN', value: "$blockchain")
                   ],
-                  wait: true
+                  quietPeriod: 2
                 jobs.add(job)
               }
             }
