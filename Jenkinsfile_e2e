@@ -35,7 +35,7 @@ pipeline {
             agent {
               docker {
                 image "node:16-bullseye"
-                args utils.dockerAgentArgs()
+                args '-u root:root'
               }
             }
             steps {
