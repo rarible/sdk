@@ -21,13 +21,14 @@ pipeline {
             def jobs = [:]
             for(environment in environments){
               for(blockchain in blockchains){
-                jobs[blockchain + " " + environment] = { build job: "e2e-sdk-child",
+                def job = { build job: "e2e-sdk-child",
                   parameters: [
                     string(name: 'TEST_ENV', value: "$environment"),
                     string(name: 'BLOCKCHAIN', value: "$blockchain")
                   ],
-                  quietPeriod: 2,
                   wait: false }
+                def index = blockchain + " " + environment
+                jobs[index] = job
               }
             }
             parallel jobs
