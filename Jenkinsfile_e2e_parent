@@ -8,6 +8,10 @@ def COLOR_MAP = [
 pipeline {
   agent any
 
+  triggers {
+    cron('30 03 * * 1-5')
+  }
+
   options {
     disableConcurrentBuilds()
     timeout(time: 2, unit: 'HOURS')
