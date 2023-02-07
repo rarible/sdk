@@ -1,0 +1,59 @@
+@Library('shared-library') _
+
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
+
+pipeline {
+  agent any
+
+  options {
+    timeout(time: 2, unit: 'HOURS')
+  }
+  parameters {
+    string(name: 'TEST_ENV', description: 'Environment')
+    string(name: 'BLOCKCHAIN', description: 'Blockchain')
+  }
+  environment {
+    ALLURE_TOKEN = '5f5c7394-5595-4636-8757-3f2d7469d03a'
+    ALLURE_ENDPOINT = 'https://rarible.testops.cloud/'
+    ALLURE_PROJECT_ID = '2'
+  }
+  stages{
+    stage("SDK e2e tests") {
+      agent {
+        docker {
+          image "node:16-bullseye"
+          reuseNode true
+          args '-u root:root'
+        }
+      }
+      steps {
+          sh(label: 'Output where we are running', script: 'echo "Running on $BLOCKCHAIN $TEST_ENV"') 
+          sh(label: 'Download allurectl', script: '''    
+              wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
+              chmod +x ./allurectl
+              ''')
+          sh(label: 'Build sdk and e2e-tests', script: '''
+              yarn install --network-timeout=40000
+              yarn build
+              ''')
+          sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-name "E2E SDK #$BUILD_NUMBER" --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
+      }
+    }
+  }
+  post {
+    failure {
+      wrap([$class: 'BuildUser']) {
+        slackSend channel: '#protocol-e2e-tests',
+          color: COLOR_MAP[currentBuild.currentResult],
+          message: "*${currentBuild.currentResult}:* e2e sdk tests on ${params.BLOCKCHAIN} ${params.TEST_ENV}. Duration=${currentBuild.durationString}\n More info: ${env.BUILD_URL}"
+      }
+    }
+    always {
+      postReport([:])   
+      cleanWs()
+    }
+  }
+} 
