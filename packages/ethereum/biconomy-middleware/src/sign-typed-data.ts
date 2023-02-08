@@ -18,7 +18,7 @@ export async function signTypedData<T extends MessageTypes>(
 		} catch (error) {
 			console.error("got error white executing sign typed data v3", error)
 			filterErrors(error)
-			return send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
+			return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
 		}
 	}
 }
