@@ -72,6 +72,7 @@ const EVM_WARN_MESSAGES = [
 	"Permission not given for signing message",
 	"rejected request from DeFi Wallet",
 	"Транзакция отменена",
+	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 ]
 
 /**
