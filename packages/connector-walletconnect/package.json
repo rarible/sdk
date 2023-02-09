@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@rarible/connector": "~0.13.2",
-    "@walletconnect/web3-provider": "^1.7.0"
+    "@walletconnect/ethereum-provider": "^2.3.3"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
