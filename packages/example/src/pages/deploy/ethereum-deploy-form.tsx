@@ -1,6 +1,6 @@
 import React from "react"
 import { MenuItem, Stack } from "@mui/material"
-import { useForm } from "react-hook-form"
+import type { useForm } from "react-hook-form"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormCheckbox } from "../../components/common/form/form-checkbox"
 import { FormSelect } from "../../components/common/form/form-select"

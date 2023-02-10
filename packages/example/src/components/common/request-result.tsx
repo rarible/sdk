@@ -1,8 +1,8 @@
 import React from "react"
 import { Alert, AlertTitle, Box } from "@mui/material"
-import { IRequestResult } from "../hooks/use-request-result"
-import { Icon } from "./icon"
 import { faCheck, faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
+import type { IRequestResult } from "../hooks/use-request-result"
+import { Icon } from "./icon"
 
 interface IRequestResultProps<T> {
 	result: IRequestResult<any>["result"]
@@ -10,6 +10,7 @@ interface IRequestResultProps<T> {
 }
 
 export function RequestResult({ result, completeRender }: IRequestResultProps<any>) {
+	// eslint-disable-next-line default-case
 	switch (result.type) {
 		case "empty":
 			return null

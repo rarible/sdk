@@ -8,13 +8,13 @@ export type MethodWithPrepareGeneral<
 export class MethodWithPrepare
 <SimplifiedMethod extends (...args: any) => any, PrepareMethod extends (...args: any) => any>
 	extends CallableInstance<Parameters<SimplifiedMethod>, ReturnType<SimplifiedMethod>> {
-  prepare: PrepareMethod
-  constructor(public simplifiedMethod: SimplifiedMethod, prepareFn: PrepareMethod) {
+	prepare: PrepareMethod
+	constructor(public simplifiedMethod: SimplifiedMethod, prepareFn: PrepareMethod) {
   	super("simplified")
   	this.prepare = prepareFn
-  }
+	}
 
-  simplified(...args: Parameters<SimplifiedMethod>): ReturnType<SimplifiedMethod> {
+	simplified(...args: Parameters<SimplifiedMethod>): ReturnType<SimplifiedMethod> {
   	return this.simplifiedMethod(...args)
-  }
+	}
 }

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { isString } from "lodash"
-import { FormState } from "../common/form/types"
+import type { FormState } from "../common/form/types"
 
 export interface IRequestResult<T> {
 	result: {
@@ -17,20 +17,21 @@ export interface IRequestResult<T> {
 }
 
 export function useRequestResult<T>(): IRequestResult<T> {
-	const [result, setResult] = useState<IRequestResult<T>["result"]>({type: "empty"})
+	const [result, setResult] = useState<IRequestResult<T>["result"]>({ type: "empty" })
 
 	return {
 		result,
 		setComplete: (data: T) => {
 			setResult({
 				type: "complete",
-				data
+				data,
 			})
 		},
 		setError: (error: any) => {
 			setResult({
 				type: "error",
-				error: !error ? "Unknown error" : (isString(error) ? error : (error.message ? error.message : JSON.stringify(error)))
+				// eslint-disable-next-line no-nested-ternary
+				error: !error ? "Unknown error" : (isString(error) ? error : (error.message ? error.message : JSON.stringify(error))),
 			})
 		},
 	}

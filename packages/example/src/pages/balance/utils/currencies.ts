@@ -1,5 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
-import { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
+import type { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
 import { WalletType } from "@rarible/sdk-wallet"
 
 interface ISupportedCurrency {
@@ -14,6 +14,7 @@ export function getCurrenciesForBlockchain(blockchain: WalletType): ISupportedCu
 			return [{
 				isNative: true,
 				requireContract: false,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				getAssetType: (contract?: string) => ({
 					"@type": "ETH",
 					blockchain: Blockchain.ETHEREUM,
@@ -23,6 +24,7 @@ export function getCurrenciesForBlockchain(blockchain: WalletType): ISupportedCu
 			return [{
 				isNative: true,
 				requireContract: false,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				getAssetType: (contract?: string) => ({
 					"@type": "ETH",
 					blockchain: Blockchain.IMMUTABLEX,
@@ -32,16 +34,18 @@ export function getCurrenciesForBlockchain(blockchain: WalletType): ISupportedCu
 			return [{
 				isNative: true,
 				requireContract: false,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				getAssetType: (contract?: string) => ({
-					"@type": "SOLANA_SOL"
+					"@type": "SOLANA_SOL",
 				}),
 			}]
 		case WalletType.TEZOS:
 			return [{
 				isNative: true,
 				requireContract: false,
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				getAssetType: (contract?: string) => ({
-					"@type": "XTZ"
+					"@type": "XTZ",
 				}),
 			}]
 		case WalletType.FLOW:

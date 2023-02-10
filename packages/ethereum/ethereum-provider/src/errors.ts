@@ -10,14 +10,14 @@ export type EthereumProviderErrorData = {
 }
 
 export class EthereumProviderError extends Error {
-  data: any
-  error: any
-  provider?: Provider
-  method: string
-  code?: string | number
-  signer?: string
+	data: any
+	error: any
+	provider?: Provider
+	method: string
+	code?: string | number
+	signer?: string
 
-  constructor(data: EthereumProviderErrorData) {
+	constructor(data: EthereumProviderErrorData) {
   	super(data?.error?.message || "EthereumProviderError")
   	Object.setPrototypeOf(this, EthereumProviderError.prototype)
   	this.name = "EthereumProviderError"
@@ -27,5 +27,5 @@ export class EthereumProviderError extends Error {
   	this.method = data?.method
   	this.code = data?.code
   	this.signer = data?.signer
-  }
+	}
 }

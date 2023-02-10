@@ -1,13 +1,14 @@
 import React, { useState } from "react"
-import {
+import type {
 	Blockchain,
 } from "@rarible/api-client"
 import { Grid, MenuItem, Stack } from "@mui/material"
+import type { UseFormReturn } from "react-hook-form"
+import type { ContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
 import { FormTextInput } from "../form/form-text-input"
-import { UseFormReturn } from "react-hook-form"
 import { FormSelect } from "../form/form-select"
-import { CurrencyOption } from "../../../common/currency-helpers"
-import { ContractAddress, toContractAddress } from "@rarible/types"
+import type { CurrencyOption } from "../../../common/currency-helpers"
 
 interface IPriceFormProps {
 	form: UseFormReturn
@@ -23,11 +24,11 @@ export function parseCurrencyType(value: string): {
 	type: CurrencyOption["type"],
 	contract: ContractAddress | undefined,
 } {
-	const [blockchain,type, contract] = value.split("::")
+	const [blockchain, type, contract] = value.split("::")
 	return {
 		blockchain: blockchain as Blockchain,
 		type: type as CurrencyOption["type"],
-		contract: contract ? toContractAddress(contract) : undefined
+		contract: contract ? toContractAddress(contract) : undefined,
 	}
 }
 
@@ -67,7 +68,7 @@ export function PriceForm(props: IPriceFormProps) {
 					label="Currency"
 				>
 					{
-						currencyOptions.map((option, index) => {
+						currencyOptions.map((option) => {
 							const value = getCurrencyOptionValue(option)
 							return <MenuItem key={value} value={value}>
 								{option.label}
@@ -87,7 +88,7 @@ export function PriceForm(props: IPriceFormProps) {
 					name="contract"
 					label="Contract"
 				/>
-			: null
+				: null
 		}
 	</Stack>
 }

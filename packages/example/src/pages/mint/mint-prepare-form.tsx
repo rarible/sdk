@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
+import type { PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -28,7 +28,7 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 				}
 				try {
 					const collection = await connection.sdk.apis.collection.getCollectionById({
-						collection: formData.collectionId
+						collection: formData.collectionId,
 					})
 					onComplete(await connection.sdk.nft.mint.prepare({ collection }))
 				} catch (e) {

@@ -4,8 +4,8 @@ import { Rx } from "@rixio/react"
 import { LoadingButton } from "@mui/lab"
 import { Box, Button, MenuItem, Stack, TextField } from "@mui/material"
 import { faChevronRight, faLinkSlash } from "@fortawesome/free-solid-svg-icons"
-import { StateConnected } from "@rarible/connector/build/connection-state"
-import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import type { StateConnected } from "@rarible/connector/build/connection-state"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { Icon } from "../../components/common/icon"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
@@ -41,12 +41,12 @@ export function ConnectOptions() {
 		pl: "3rem",
 		"& .MuiButton-startIcon": {
 			position: "absolute",
-			left: "1.25rem"
-		}
+			left: "1.25rem",
+		},
 	}
 
 	return <Box sx={{
-		maxWidth: 300
+		maxWidth: 300,
 	}}>
 		<Rx value$={options$}>
 			{options => (

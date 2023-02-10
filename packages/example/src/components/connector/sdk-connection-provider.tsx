@@ -1,13 +1,13 @@
 import React, { useContext } from "react"
 import { useRxOrThrow } from "@rixio/react"
 import { createRaribleSdk, WalletType } from "@rarible/sdk"
-import type { ConnectionState } from "@rarible/connector"
-import { Connector, getStateDisconnected, IConnector } from "@rarible/connector"
+import type { ConnectionState, Connector, IConnector } from "@rarible/connector"
+import { getStateDisconnected } from "@rarible/connector"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
-import { UnionAddress } from "@rarible/types/build/union-address"
+import type { UnionAddress } from "@rarible/types/build/union-address"
 import { toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { IRaribleSdk } from "@rarible/sdk/build/domain"
+import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { EnvironmentContext } from "./environment-selector-provider"
 
 export interface IConnectorContext {
@@ -21,7 +21,7 @@ export const ConnectorContext = React.createContext<IConnectorContext>({
 	connector: undefined,
 	state: getStateDisconnected(),
 	sdk: undefined,
-	walletAddress: undefined
+	walletAddress: undefined,
 })
 
 export interface ISdkConnectionProviderProps {
@@ -44,15 +44,15 @@ function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress
 }
 
 export function SdkConnectionProvider({ connector, children }: React.PropsWithChildren<ISdkConnectionProviderProps>) {
-	const {environment} = useContext(EnvironmentContext)
+	const { environment } = useContext(EnvironmentContext)
 	const conn = useRxOrThrow(connector.connection)
 	const sdk = conn.status === "connected" ? createRaribleSdk(conn.connection.wallet, environment, {
-    blockchain: {
+		blockchain: {
 			[WalletType.ETHEREUM]: {
 				useDataV3: true,
 				marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
-			}
-		}
+			},
+		},
 	}) : undefined
 
 	const context: IConnectorContext = {

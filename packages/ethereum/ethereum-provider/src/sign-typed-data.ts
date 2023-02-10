@@ -85,14 +85,14 @@ function toBuffer(hex: string) {
 }
 
 export class SignTypedDataError extends Error {
-  data: any
-  error: any
+	data: any
+	error: any
 
-  constructor(data: { error: any, data: any, message?: string }) {
+	constructor(data: { error: any, data: any, message?: string }) {
   	super(data.message || data?.error?.message || "SignTypedDataError")
   	Object.setPrototypeOf(this, SignTypedDataError.prototype)
   	this.name = "SignTypedDataError"
   	this.error = data?.error
   	this.data = data?.data
-  }
+	}
 }

@@ -92,20 +92,20 @@ export function createUnionSdk(
 }
 
 class UnionOrderSdk implements IOrderInternalSdk {
-  bid: IBid
-  bidUpdate: IBidUpdate
-  /**
+	bid: IBid
+	bidUpdate: IBidUpdate
+	/**
    * @deprecated
    * @param request
    */
-  fill: IFill
-  buy: IBuy
-  batchBuy: IBatchBuy
-  acceptBid: IAcceptBid
-  sell: ISellInternal
-  sellUpdate: ISellUpdate
+	fill: IFill
+	buy: IBuy
+	batchBuy: IBatchBuy
+	acceptBid: IAcceptBid
+	sell: ISellInternal
+	sellUpdate: ISellUpdate
 
-  constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
+	constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
   	this.cancel = this.cancel.bind(this)
 
   	this.bid = new MethodWithPrepare(
@@ -161,11 +161,11 @@ class UnionOrderSdk implements IOrderInternalSdk {
   			instances[extractBlockchain(request.orderId)].sellUpdate.prepare(request),
   	)
 
-  }
+	}
 
-  cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
+	cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
   	return this.instances[extractBlockchain(request.orderId)].cancel(request)
-  }
+	}
 }
 
 function getOrderId(req: PrepareFillRequest) {
@@ -177,11 +177,11 @@ function getOrderId(req: PrepareFillRequest) {
 }
 
 class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
-  transfer: ITransfer
-  mint: IMint
-  burn: IBurn
+	transfer: ITransfer
+	mint: IMint
+	burn: IBurn
 
-  constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
+	constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
   	this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
   	this.generateTokenId = this.generateTokenId.bind(this)
   	this.uploadMeta = this.uploadMeta.bind(this)
@@ -209,23 +209,23 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
   		(request) =>
   			instances[extractBlockchain(request.itemId)].burn.prepare(request),
   	)
-  }
+	}
 
-  createCollection(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
+	createCollection(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
   	return this.instances[request.blockchain].createCollection(request)
-  }
+	}
 
-  uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
+	uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
   	return this.instances[extractBlockchain(request.accountAddress)].uploadMeta(request)
-  }
+	}
 
-  generateTokenId(prepare: GenerateTokenIdRequest): Promise<TokenId | undefined> {
+	generateTokenId(prepare: GenerateTokenIdRequest): Promise<TokenId | undefined> {
   	return this.instances[extractBlockchain(prepare.collection)].generateTokenId(prepare)
-  }
+	}
 
-  preprocessMeta(request: PreprocessMetaRequest): PreprocessMetaResponse {
+	preprocessMeta(request: PreprocessMetaRequest): PreprocessMetaResponse {
   	return this.instances[request.blockchain].preprocessMeta(request)
-  }
+	}
 }
 
 class UnionBalanceSdk implements IBalanceSdk {
@@ -259,17 +259,17 @@ class UnionBalanceSdk implements IBalanceSdk {
 }
 
 class UnionRestrictionSdk implements IRestrictionSdk {
-  blockchainFeeData: Map<Blockchain, GetFutureOrderFeeData> = new Map()
+	blockchainFeeData: Map<Blockchain, GetFutureOrderFeeData> = new Map()
 
-  constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {}
+	constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {}
 
-  canTransfer(
+	canTransfer(
   	itemId: ItemId, from: UnionAddress, to: UnionAddress,
-  ): Promise<CanTransferResult> {
+	): Promise<CanTransferResult> {
   	return this.instances[extractBlockchain(itemId)].canTransfer(itemId, from, to)
-  }
+	}
 
-  async getFutureOrderFees(itemId: ItemId): Promise<GetFutureOrderFeeData> {
+	async getFutureOrderFees(itemId: ItemId): Promise<GetFutureOrderFeeData> {
   	const blockchain = extractBlockchain(itemId)
   	if (!this.blockchainFeeData.has(blockchain)) {
   	  const data = await this.instances[blockchain].getFutureOrderFees(itemId)
@@ -277,7 +277,7 @@ class UnionRestrictionSdk implements IRestrictionSdk {
   		return data
   	}
   	return this.blockchainFeeData.get(blockchain)!
-  }
+	}
 }
 
 class UnionEthereumSpecificSdk implements IEthereumSdk {
@@ -286,7 +286,7 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 
 	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
 	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
-  getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
+	getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
 }
 
 

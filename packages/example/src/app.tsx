@@ -32,9 +32,9 @@ export function App() {
 						<Header/>
 						<Container maxWidth="xl" sx={{
 							mt: 2,
-							display: 'grid',
-							gridTemplateColumns: 'minmax(250px, 20%)  1fr',
-							gap: "20px"
+							display: "grid",
+							gridTemplateColumns: "minmax(250px, 20%)  1fr",
+							gap: "20px",
 						}}>
 							<Box component="nav">
 								<Navigation/>
@@ -78,5 +78,5 @@ export function App() {
 				</SdkConnectionProvider>
 			)}
 		</EnvironmentSelectorProvider>
-	);
+	)
 }

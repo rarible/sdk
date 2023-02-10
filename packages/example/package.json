@@ -62,13 +62,7 @@
     "start": "HTTPS=true DISABLE_ESLINT_PLUGIN=true SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
     "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "eject": "SKIP_PREFLIGHT_CHECK=true react-scripts eject",
-    "verify": "tsc --noEmit"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "verify": "DISABLE_ESLINT_PLUGIN=true tsc --noEmit"
   },
   "browserslist": {
     "production": [

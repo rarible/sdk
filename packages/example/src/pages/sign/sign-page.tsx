@@ -1,17 +1,17 @@
 import React, { useContext, useState } from "react"
-import { WalletType } from "@rarible/sdk-wallet"
+import type { WalletType } from "@rarible/sdk-wallet"
 import { LoadingButton } from "@mui/lab"
 import { Alert, Box, TextField, Typography } from "@mui/material"
 import { faCheck, faExclamationCircle, faFileSignature } from "@fortawesome/free-solid-svg-icons"
-import { UserSignature } from "@rarible/sdk-wallet/src/domain"
+import type { UserSignature } from "@rarible/sdk-wallet/src/domain"
 import { Page } from "../../components/page"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { SignMessageComment } from "./comments/signmessage-comment"
 import { Icon } from "../../components/common/icon"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
+import { SignMessageComment } from "./comments/signmessage-comment"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
 	return !!blockchain
@@ -64,7 +64,7 @@ export function SignPage() {
 								setSigning(false)
 								setError(e.message || e.toString())
 							}
-					}}
+						}}
 
 					>Sign</LoadingButton>
 				</Box>
@@ -72,21 +72,21 @@ export function SignPage() {
 					{
 						error &&
             <Alert variant="outlined" severity="error" icon={<Icon icon={faExclamationCircle}/>}>
-							{error}
+            	{error}
             </Alert>
 					}
 					{ !error && result &&
 						<Alert variant="outlined" severity="success" icon={<Icon icon={faCheck}/>}>
-              <Typography variant="overline">Signature:</Typography>
-              <div>
+							<Typography variant="overline">Signature:</Typography>
+							<div>
 								<InlineCode wrap>{result.signature}</InlineCode> <CopyToClipboard value={result.signature}/>
-              </div>
-              <Box sx={{ my: 2 }}>
+							</div>
+							<Box sx={{ my: 2 }}>
 	              <Typography variant="overline">Public Key:</Typography>
 	              <div>
 									<InlineCode wrap>{result.publicKey}</InlineCode> <CopyToClipboard value={result.publicKey}/>
 	              </div>
-              </Box>
+							</Box>
 						</Alert>
 					}
 				</Box>

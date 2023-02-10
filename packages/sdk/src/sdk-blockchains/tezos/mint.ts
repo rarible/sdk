@@ -124,9 +124,9 @@ export class TezosMint {
 	}
 
 	// eslint-disable-next-line no-dupe-class-members
-	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>;
+	mintBasic(request: MintSimplifiedRequestOnChain): Promise<OnChainMintResponse>
 	// eslint-disable-next-line no-dupe-class-members
-	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>;
+	mintBasic(request: MintSimplifiedRequestOffChain): Promise<OffChainMintResponse>
 	// eslint-disable-next-line no-dupe-class-members
 	async mintBasic(request: MintSimplifiedRequest): Promise<MintResponse> {
 		const response = await this.mint(request)

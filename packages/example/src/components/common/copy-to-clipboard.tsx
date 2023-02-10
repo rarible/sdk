@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react"
 import { IconButton, Tooltip } from "@mui/material"
-import { Icon } from "./icon"
 import { faCheck, faCopy, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { Icon } from "./icon"
 
 interface ICopyToClipboardProps {
 	value: string
@@ -20,10 +20,16 @@ export function CopyToClipboard({ value }: ICopyToClipboardProps) {
 
 	return <Tooltip title="Copy To Clipboard" placement="top">
 		<IconButton
-			color={copied === true ? "success" : (copied === false ? "warning" : "default")}
+			color={
+				// eslint-disable-next-line no-nested-ternary
+				copied === true ? "success" : (copied === false ? "warning" : "default")
+			}
 			onClick={copyHandler}
 		>
-			<Icon icon={copied === true ? faCheck : (copied === false ? faTimes : faCopy)}/>
+			<Icon icon={
+				// eslint-disable-next-line no-nested-ternary
+				copied === true ? faCheck : (copied === false ? faTimes : faCopy)
+			}/>
 		</IconButton>
 	</Tooltip>
 }

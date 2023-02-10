@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react"
-import { Code } from "./code"
-import { IBlockchainTransaction } from "@rarible/sdk-transaction/build/domain"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction/build/domain"
 import { Box, Chip, CircularProgress, Typography } from "@mui/material"
 import { faCheckDouble, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { Code } from "./code"
 import { Icon } from "./icon"
 
 interface ITransactionInfoProps {
@@ -54,7 +54,6 @@ function getTransactionResult(result: any) {
 }
 
 
-
 export function TransactionInfo({ transaction }: ITransactionInfoProps) {
 	const [state, setState] = useState<"resolve" | "reject" | "pending">("pending")
 	const [result, setResult] = useState(undefined)
@@ -74,19 +73,19 @@ export function TransactionInfo({ transaction }: ITransactionInfoProps) {
 			<>
 				{state === "pending" && <><CircularProgress size={14}/> Processing</>}
 				{state === "resolve" && <Chip
-          label="Confirmed"
-          icon={<Icon icon={faCheckDouble}/>}
-          variant="outlined"
-          color="success"
-          size="small"
-        />}
+					label="Confirmed"
+					icon={<Icon icon={faCheckDouble}/>}
+					variant="outlined"
+					color="success"
+					size="small"
+				/>}
 				{state === "reject" && <Chip
-          label="Rejected"
-          icon={<Icon icon={faTimes}/>}
-          variant="outlined"
-          color="error"
-          size="small"
-        />}
+					label="Rejected"
+					icon={<Icon icon={faTimes}/>}
+					variant="outlined"
+					color="error"
+					size="small"
+				/>}
 			</>
 		</Box>
 		{ !transaction.isEmpty && getTransactionInfo(transaction) }

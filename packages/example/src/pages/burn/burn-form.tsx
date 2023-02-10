@@ -1,6 +1,6 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
-import { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/domain"
+import type { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/domain"
 import { Alert, AlertTitle, Box, Stack } from "@mui/material"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -18,7 +18,7 @@ export function BurnForm(
 	{
 		disabled,
 		onComplete,
-		prepare
+		prepare,
 	}: IBurnFormProps,
 ) {
 	const connection = useContext(ConnectorContext)
@@ -31,7 +31,7 @@ export function BurnForm(
 
 	return (
 		<>
-			<Alert severity="warning" sx={{my: 2}}>
+			<Alert severity="warning" sx={{ my: 2 }}>
 				<AlertTitle>Warning</AlertTitle>
 				Submitting this form will destroy token
 			</Alert>

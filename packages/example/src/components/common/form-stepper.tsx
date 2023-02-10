@@ -22,6 +22,7 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 		type: "prev"
 	}) => {
 		const state = cloneDeep(prevState)
+		// eslint-disable-next-line default-case
 		switch (action.type) {
 			case "next":
 				state.responses[state.currentStep] = action.response
@@ -33,7 +34,7 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 		}
 	}, {
 		currentStep: 0,
-		responses: []
+		responses: [],
 	})
 
 	console.log(state)
@@ -51,8 +52,8 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 							index={index}
 							sx={{
 								".Mui-completed": {
-									color: lastCompleted ? "green" : "primary"
-								}
+									color: lastCompleted ? "green" : "primary",
+								},
 							}}
 							completed={lastCompleted ? true : undefined}
 						>
@@ -75,14 +76,14 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 			{
 				state.currentStep > 0 &&
                 <Box sx={{ mt: 2 }}>
-                    <Button
-                        startIcon={<Icon icon={faAngleLeft}/>}
-                        color={"inherit"}
-                        variant="text"
-                        onClick={() => setFormResponse({ type: "prev" })}
-                    >
+                	<Button
+                		startIcon={<Icon icon={faAngleLeft}/>}
+                		color={"inherit"}
+                		variant="text"
+                		onClick={() => setFormResponse({ type: "prev" })}
+                	>
                         Back
-                    </Button>
+                	</Button>
                 </Box>
 			}
 		</>

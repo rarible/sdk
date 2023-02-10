@@ -12,6 +12,6 @@ export function InlineCode({ wrap, children }: React.PropsWithChildren<IInlineCo
 		padding: "0 4px",
 		color: "#df3d3d",
 		wordBreak: wrap ? "break-word" : "normal",
-		userSelect: "all"
+		userSelect: "all",
 	}}>{children}</code>
 }
