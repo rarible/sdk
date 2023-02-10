@@ -53,7 +53,7 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 			return 1
 		case "testnet":
 		default:
-			return 4
+			return 5
 	}
 }
 
@@ -163,8 +163,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	}))
 
 	const walletConnect = mapEthereumWallet(new WalletConnectConnectionProvider({
-		rpc: ethereumRpcMap,
-		chainId: ethChainId,
+    projectId: "102a773bb5dee01b51957b489a44adaf",
+    chains: [ethChainId],
+    rpcMap: ethereumRpcMap,
 	}))
 
 	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
