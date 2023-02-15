@@ -42,13 +42,14 @@ pipeline {
                 yarn install --network-timeout=40000
                 yarn build
                 ''')
-            sh(label: 'Run e2e-tests with reporting Allure TestOps', script: './allurectl watch --launch-name "E2E SDK #$BUILD_NUMBER" --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
+            def returnCode = sh(label: 'Run e2e-tests with reporting Allure TestOps', returnStatus: true, script: './allurectl watch --launch-name "E2E SDK #$BUILD_NUMBER" --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
             sh(label: 'Grab Allure TestOps Link', script: '''
                   export $(./allurectl job-run env | grep ALLURE | xargs -L1)
                   echo "$ALLURE_LAUNCH_URL" > allure_launch
                 ''')
             allure_launch_url = readFile('allure_launch').trim()
-            currentBuild.description = "Allure TestOps URL: " + allure_launch_url     
+            currentBuild.description = "Allure TestOps URL: " + allure_launch_url
+            return returnCode == 0     
           }
         }
       }
