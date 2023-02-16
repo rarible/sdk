@@ -23,9 +23,9 @@ import {
 	mapTezosWallet,
 } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
+import { BloctoEVMConnectionProvider } from "@rarible/connector-blocto-evm"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
-
 
 const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
@@ -118,7 +118,7 @@ const state: IConnectorStateProvider = {
 export function getConnector(environment: RaribleSdkEnvironment) {
 	const ethChainId = environmentToEthereumChainId(environment)
 	const ethNetworkName = ethereumNetworkMap[ethChainId]
-	const isEthNetwork = ["mainnet", "ropsten", "rinkeby"].includes(ethNetworkName)
+	const isEthNetwork = ["mainnet", "ropsten", "goerli"].includes(ethNetworkName)
 	const flowNetwork = environmentToFlowNetwork(environment)
 	const tezosNetwork = environmentToTezosNetwork(environment)
 
@@ -167,6 +167,11 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		chainId: ethChainId,
 	}))
 
+	const blocto = mapEthereumWallet(new BloctoEVMConnectionProvider({
+		chainId: ethChainId,
+		rpc: ethereumRpcMap[ethChainId],
+	}))
+
 	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
 	const solflareConnect = mapSolanaWallet(new SolflareConnectionProvider({
 		network: environment === "prod" ? "mainnet-beta" : "devnet"
@@ -191,6 +196,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(phantomConnect)
 		.add(solflareConnect)
 		.add(imxConnector)
+		.add(blocto)
 	// .add(portis)
 	// .add(fortmatic)
 

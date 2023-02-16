@@ -27,6 +27,7 @@
     "@rarible/connector-torus": "^0.13.4",
     "@rarible/connector-walletconnect": "^0.13.4",
     "@rarible/connector-walletlink": "^0.13.4",
+    "@rarible/connector-blocto-evm": "^0.13.4",
     "@rarible/sdk": "^0.13.8",
     "@rarible/web3-ethereum": "^0.13.8",
     "@rixio/atom": "^0.12.1",
