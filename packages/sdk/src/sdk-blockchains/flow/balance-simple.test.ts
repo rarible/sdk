@@ -10,7 +10,7 @@ describe("Test flow simple balance function", () => {
 
 	const address = convertFlowUnionAddress("0x324c4173e0175672")
 
-	test.skip("Should get balance for account", async () => {
+	test("Should get balance for account", async () => {
 		const balance1 = await getSimpleFlowFungibleBalance("mainnet", address, {
 			"@type": "FLOW_FT",
 			contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
