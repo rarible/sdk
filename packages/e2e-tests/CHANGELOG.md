@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.9](https://github.com/rarible/sdk/compare/v0.13.8...v0.13.9) (2023-02-17)
+
+
+### Features
+
+* Improve e2e tests ([f4b6d63](https://github.com/rarible/sdk/commit/f4b6d6349defc67fe0be36b70c967c8b2b47afd9))
+
+
+
+
+
 ## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

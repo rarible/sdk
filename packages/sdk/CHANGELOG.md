@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.9](https://github.com/rarible/sdk/compare/v0.13.8...v0.13.9) (2023-02-17)
+
+
+### Bug Fixes
+
+* log improvement ([#434](https://github.com/rarible/sdk/issues/434)) ([51e0b29](https://github.com/rarible/sdk/commit/51e0b293027ae0e562a2dd660c129a18ea222d5f))
+
+
+### Features
+
+* flow enabling ([#438](https://github.com/rarible/sdk/issues/438)) ([52553de](https://github.com/rarible/sdk/commit/52553de276c6239ea6122401f30734c43b342380))
+
+
+
+
+
 ## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
 
 
