@@ -65,7 +65,7 @@ function suites(): {
 	]
 }
 
-describe.skip.each(suites())("$blockchain mint => transfer => burn", (suite) => {
+describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 	const {
 		creator: creatorWallet,
 		recipient: recipientWallet,
