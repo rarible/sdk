@@ -43,7 +43,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		private readonly config: EthereumConfig,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
-	) {}
+	) { }
 
 	invert(request: RaribleV2OrderFillRequest, maker: Address): SimpleRaribleV2Order {
 		const inverted = invertOrder(request.order, request.amount, maker)
@@ -108,6 +108,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		const exchangeContract = createExchangeV2Contract(this.ethereum, this.config.exchange.v2)
 
 		if (isSellOrder(initial)) {
+			debugger
 			const nftStruct = assetTypeToStruct(this.ethereum, initial.make.assetType)
 			const [sellOrderDataType, sellOrderData] = encodeRaribleV2OrderData(this.ethereum, initial.data)
 			const [, buyOrderData] = encodeRaribleV2OrderData(this.ethereum, inverted.data)
@@ -301,7 +302,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
  * Check if order selling something for currency
  */
 function isSellOrder(order: SimpleOrder): boolean {
-	return order.take.assetType.assetClass === "ETH" || order.take.assetType.assetClass ==="ERC20"
+	return order.take.assetType.assetClass === "ETH" || order.take.assetType.assetClass === "ERC20"
 }
 
 function isCollectionOrder(order: SimpleOrder): boolean {

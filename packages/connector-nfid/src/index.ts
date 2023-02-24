@@ -56,7 +56,7 @@ export class NFIDConnectionProvider extends
 		return this.connection
 	}
 
-	getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
+	getOption(): Promise<typeof PROVIDER_ID> {
 		return Promise.resolve(PROVIDER_ID)
 	}
 

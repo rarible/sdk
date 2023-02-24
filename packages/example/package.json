@@ -16,7 +16,7 @@
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/material": "^5.5.0",
     "@nfid/wallet": "^1.1.0",
-    "@nfid/embed": "*",
+    "@nfid/embed": "0.0.0",
     "@rarible/api-client": "0.0.15-beta1",
     "@rarible/connector": "~0.13.2",
     "@rarible/connector-beacon": "^0.13.4",
