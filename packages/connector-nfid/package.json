@@ -16,7 +16,7 @@
   "dependencies": {
     "@rarible/connector": "~0.13.2",
     "ethers": "^5.7.2",
-    "@nfid/embed": "0.0.1-alpha.0",
+    "@nfid/embed": "0.0.2-alpha.0",
     "rollup": "^2.0.0"
   },
   "devDependencies": {

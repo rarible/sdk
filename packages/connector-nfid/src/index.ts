@@ -19,8 +19,7 @@ import { nfid } from "@nfid/embed"
 import type { NFID } from "@nfid/embed"
 
 export type NFIDConfig = {
-	rpcUrl: string
-	networkId: number
+	origin: string
 }
 
 const PROVIDER_ID = "NFID" as const
@@ -31,7 +30,9 @@ export class NFIDConnectionProvider extends
 	private readonly instance: Observable<NFID>
 	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
-	constructor() {
+	constructor(
+		private readonly config: NFIDConfig
+	) {
 		super()
 		this.instance = cache(() => this._connect())
 		this.connection = this.instance.pipe(
@@ -43,7 +44,8 @@ export class NFIDConnectionProvider extends
 	}
 
 	private async _connect(): Promise<NFID> {
-		await nfid.init()
+		debugger
+		await nfid.init(this.config)
 		await nfid.login()
 		return nfid
 	}

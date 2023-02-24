@@ -133,7 +133,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		rpcUrl: ethereumRpcMap[ethChainId]
 	}))
 
-	const nfid = mapEthereumWallet(new NFIDConnectionProvider())
+	const nfid = mapEthereumWallet(new NFIDConnectionProvider({
+		origin: process.env.REACT_APP_NFID_ORIGIN || "https://nfid.one",
+	}))
 
 	const beacon: ConnectionProvider<"beacon", IWalletAndAddress> = mapTezosWallet(new BeaconConnectionProvider({
 		appName: "Rarible Test",
