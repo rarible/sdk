@@ -87,11 +87,20 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	}
 
 	async getFrom(): Promise<string> {
-		if (!this.from) {
-			const [first] = await this.web3Provider.listAccounts()
-			return first
+		try {
+			if (!this.from) {
+				const [first] = await this.web3Provider.listAccounts()
+				return first
+			}
+			return this.from
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersWeb3ProviderEthereum.getFrom",
+				error: e,
+				data: null,
+			})
 		}
-		return this.from
 	}
 
 	encodeParameter(type: any, parameter: any): string {
@@ -138,8 +147,17 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	}
 
 	async getChainId(): Promise<number> {
-		const { chainId } = await this.web3Provider.getNetwork()
-		return chainId
+		try {
+			const { chainId } = await this.web3Provider.getNetwork()
+			return chainId
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersWeb3ProviderEthereum.getChainId",
+				error: e,
+				data: null,
+			})
+		}
 	}
 }
 
@@ -190,8 +208,17 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		}
 	}
 
-	getFrom(): Promise<string> {
-		return this.signer.getAddress()
+	async getFrom(): Promise<string> {
+		try {
+		  return await this.signer.getAddress()
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersEthereum.getFrom",
+				error: e,
+				data: null,
+			})
+		}
 	}
 
 	encodeParameter(type: any, parameter: any): string {
@@ -241,7 +268,16 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 	}
 
 	async getChainId(): Promise<number> {
-		return this.signer.getChainId()
+		try {
+		  return await this.signer.getChainId()
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersEthereum.getChainId",
+				error: e,
+				data: null,
+			})
+		}
 	}
 }
 
@@ -294,9 +330,18 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 	}
 
 	async estimateGas(options?: EthereumProvider.EthereumSendOptions) {
-		const func = this.contract.estimateGas[this.name].bind(null, ...this.args)
-		const value = await func(options)
-		return value.toNumber()
+		try {
+			const func = this.contract.estimateGas[this.name].bind(null, ...this.args)
+			const value = await func(options)
+			return value.toNumber()
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.ETHERS,
+				method: "EthersFunctionCall.estimateGas",
+				error: e,
+				data: { options },
+			})
+		}
 	}
 
 	async call(options?: EthereumProvider.EthereumSendOptions): Promise<any> {
