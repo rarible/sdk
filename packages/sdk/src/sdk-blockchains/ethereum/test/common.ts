@@ -11,6 +11,11 @@ export const ETH_STAGING_SETTINGS = {
 	networkId: 200500,
 }
 
+export const POLYGON_MAINNET_SETTINGS = {
+	rpcUrl: "https://node-mainnet-polygon.rarible.com",
+	networkId: 137,
+}
+
 export const POLYGON_TESTNET_SETTINGS = {
 	rpcUrl: "https://node-mumbai.rarible.com",
 	networkId: 80001,

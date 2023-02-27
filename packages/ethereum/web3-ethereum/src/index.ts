@@ -86,7 +86,16 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	}
 
 	async getFrom(): Promise<string> {
-		return getFrom(this.config.web3, this.config.from)
+		try {
+			return await getFrom(this.config.web3, this.config.from)
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.WEB3,
+				method: "Web3Ethereum.getFrom",
+				error: e,
+				data: null,
+			})
+		}
 	}
 
 	encodeParameter(type: any, parameter: any): string {
@@ -132,7 +141,16 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	}
 
 	async getChainId(): Promise<number> {
-		return this.config.web3.eth.getChainId()
+		try {
+		  return await this.config.web3.eth.getChainId()
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.WEB3,
+				method: "Web3Ethereum.getChainId",
+				error: e,
+				data: null,
+			})
+		}
 	}
 
 	getWeb3Instance(): Web3 {
@@ -188,11 +206,33 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 	}
 
 	async getData(): Promise<string> {
-		return this.sendMethod.encodeABI()
+		try {
+		  return await this.sendMethod.encodeABI()
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.WEB3,
+				method: "Web3FunctionCall.getData",
+				error: e,
+				data: {
+					contract: this.contract.options.address,
+					methodName: this.methodName,
+					args: this.args,
+				},
+			})
+		}
 	}
 
-	estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
-		return this.sendMethod.estimateGas(options)
+	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
+		try {
+		  return await this.sendMethod.estimateGas(options)
+		} catch (e) {
+			throw new EthereumProviderError({
+				provider: Provider.WEB3,
+				method: "Web3FunctionCall.estimateGas",
+				error: e,
+				data: { options },
+			})
+		}
 	}
 
 	async call(options: EthereumProvider.EthereumSendOptions = {}): Promise<any> {
