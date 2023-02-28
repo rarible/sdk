@@ -44,7 +44,6 @@ export class NFIDConnectionProvider extends
 	}
 
 	private async _connect(): Promise<NFID> {
-		debugger
 		await nfid.init(this.config)
 		await nfid.login()
 		return nfid

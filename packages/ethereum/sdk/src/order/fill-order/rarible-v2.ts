@@ -108,7 +108,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		const exchangeContract = createExchangeV2Contract(this.ethereum, this.config.exchange.v2)
 
 		if (isSellOrder(initial)) {
-			debugger
 			const nftStruct = assetTypeToStruct(this.ethereum, initial.make.assetType)
 			const [sellOrderDataType, sellOrderData] = encodeRaribleV2OrderData(this.ethereum, initial.data)
 			const [, buyOrderData] = encodeRaribleV2OrderData(this.ethereum, inverted.data)
