@@ -26,6 +26,7 @@ Rarible Multichain SDK enables applications to easily interact with Rarible Prot
   - [Burn](#burn)
   - [Sell](#sell)
   - [Buy](#buy)
+  - [Batch purchase](#batch-purchase)
   - [Bid](#bid)
   - [Accept bid](#accept-bid)
   - [Update sell order](#update-sell-order)
@@ -391,7 +392,7 @@ Buy NFT using sell order
 
 ```typescript
 const tx = await sdk.order.buy({
-    order: toOrderId("..."),
+    orderId: toOrderId("..."),
     amount: 1,
 })
 await tx.wait()
@@ -405,7 +406,23 @@ const {
   originFeeSupport,
   payoutsSupport,
   supportsPartialFill
-} = await sdk.order.buy.prepare({ order: toOrderId("...") })
+} = await sdk.order.buy.prepare({ orderId: toOrderId("...") })
+await tx.wait()
+```
+
+### Batch purchase
+
+Batch purchase NFT 
+
+```typescript
+const tx = await sdk.order.batchBuy([
+  {
+    orderId: toOrderId("..."),
+    amount: 1,
+    originFees?: [...]
+  },
+  //...
+])
 await tx.wait()
 ```
 
