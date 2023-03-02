@@ -26,7 +26,7 @@ export type FclConfig = {
 	auth0RedirectUrl: string
 }
 
-const PROVIDER_ID = "magiclink" as const
+const PROVIDER_ID = "mattel" as const
 
 export interface MattelProviderConnectionResult extends ProviderConnectionResult {
 	fcl: Fcl
