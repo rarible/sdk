@@ -150,8 +150,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     auth0Domain: "login-test.mattel.com",
     auth0ClientId: "E9oV8wVCB89jcaThWny7STYHcm59REke",
     auth0RedirectUrl: "https://marketplace-test.mattel.com",
-    accessNode: "https://rest-testnet.onflow.org",
-    network: "testnet",
+    accessNode: flowNetwork.accessNode,
+    network: flowNetwork.network,
   }) as any) as any
 
 	let torus = undefined

@@ -35,6 +35,7 @@
     "build-connector-torus": "yarn workspace @rarible/connector-torus run build",
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
     "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
+    "build-connector-mattel": "yarn workspace @rarible/connector-mattel run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
     "build-connector-solflare": "yarn workspace @rarible/connector-solflare run build",
     "build-connector-imx": "yarn workspace @rarible/connector-immutablex-link run build",
