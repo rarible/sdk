@@ -10,7 +10,7 @@ export function Navigation() {
 		default: true
 	}, {
 		label: "Connect",
-		path: "/connect"
+		path: "/shopify/login_redirect"
 	},  {
 		label: "Balance",
 		path: "/balance"
