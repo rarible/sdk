@@ -5346,15 +5346,10 @@
   resolved "https://registry.yarnpkg.com/@nfid/core/-/core-1.0.2.tgz#ee9ae17650bcee7cd14689c5bbaf101a0b240d5e"
   integrity sha512-Utw8R69KSlwnfVcoritY99iW0eF/z/JGj0MKWawTQQdqFZL1xCN7RtFx35Lwupnx9cWzcIvv6lQfzp7wQsPjFg==
 
-"@nfid/embed@0.0.1-alpha.0":
-  version "0.0.1-alpha.0"
-  resolved "https://registry.yarnpkg.com/@nfid/embed/-/embed-0.0.1-alpha.0.tgz#03726c3bb327b4c267da48445a7df7c9138e0a2b"
-  integrity sha512-OvCLpX4tiHQ6WEdsMCCzOLp1Pjo3SVESVgQ7leynUSIBPItAmBaYZpHo3bAMrY7P2Rhsut3Ge0ZNhqZaRIOCqw==
-
-"@nfid/embed@0.0.2-alpha.0":
-  version "0.0.2-alpha.0"
-  resolved "https://registry.yarnpkg.com/@nfid/embed/-/embed-0.0.2-alpha.0.tgz#5e53cf948efdb2656e09ffb66fa0ed76761e91c7"
-  integrity sha512-JW1FOtc0Pyl/AElPpXkcY5aJ4TiBKtQ5PJKX6dop78IYvYONXBjRMVW+Yj9qfm4gKklodLdJKzyLcN5K11HF/Q==
+"@nfid/embed@0.0.4-alpha.0":
+  version "0.0.4-alpha.0"
+  resolved "https://registry.yarnpkg.com/@nfid/embed/-/embed-0.0.4-alpha.0.tgz#d0eb7f0dcc9c5dc6066e63f2c8590f3dff0e3e48"
+  integrity sha512-AvdESxrtsh71pCDYnUsbhkkA5FAvdnc5+IhWPY9JgVkgQ4/K6vcn/ekgK9/SweysKDCpI2qqt9EY7n89qPEPiA==
 
 "@nfid/wallet@^1.1.0":
   version "1.1.0"
