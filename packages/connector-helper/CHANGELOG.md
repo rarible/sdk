@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Features
+
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+
+
+
+
+
 ## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
 
 

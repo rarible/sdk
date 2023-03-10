@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Features
+
+* handle wallet http errors ([#440](https://github.com/rarible/sdk/issues/440)) ([3a45e1a](https://github.com/rarible/sdk/commit/3a45e1a9640e7ec37952d8a5a80aac8789adb711))
+
+
+
+
+
 ## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
 
 **Note:** Version bump only for package @rarible/ethers-ethereum

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Features
+
+* seaport v1.4 update ([#444](https://github.com/rarible/sdk/issues/444)) ([bafa1fe](https://github.com/rarible/sdk/commit/bafa1feb91b3454a0c537f5c3bbf1f8889012edd))
+
+
+
+
+
 ## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
 
 

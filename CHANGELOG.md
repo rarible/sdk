@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* e2e flow tests ([a295e68](https://github.com/rarible/sdk/commit/a295e6811eab3da44face39c4e507cd3c9db893f))
+* example navigation ([#443](https://github.com/rarible/sdk/issues/443)) ([e53374e](https://github.com/rarible/sdk/commit/e53374e73fe09c118abff592e9d3a6208614b06b))
+
+
+### Features
+
+* batch buy readme ([#442](https://github.com/rarible/sdk/issues/442)) ([239d34d](https://github.com/rarible/sdk/commit/239d34d922d91f4d3a665b05af287a171d263134))
+* handle wallet http errors ([#440](https://github.com/rarible/sdk/issues/440)) ([3a45e1a](https://github.com/rarible/sdk/commit/3a45e1a9640e7ec37952d8a5a80aac8789adb711))
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+* seaport v1.4 update ([#444](https://github.com/rarible/sdk/issues/444)) ([bafa1fe](https://github.com/rarible/sdk/commit/bafa1feb91b3454a0c537f5c3bbf1f8889012edd))
+
+
+
+
+
 ## [0.13.10](https://github.com/rarible/sdk/compare/v0.13.9...v0.13.10) (2023-02-17)
 
 

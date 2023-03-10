@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* example navigation ([#443](https://github.com/rarible/sdk/issues/443)) ([e53374e](https://github.com/rarible/sdk/commit/e53374e73fe09c118abff592e9d3a6208614b06b))
+
+
+### Features
+
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+
+
+
+
+
 ## [0.13.10](https://github.com/rarible/sdk/compare/v0.13.9...v0.13.10) (2023-02-17)
 
 **Note:** Version bump only for package example
