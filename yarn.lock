@@ -5061,16 +5061,16 @@
   integrity sha512-vNoR7b2r+lRBJTbhCXxO3KCPA6CGsvmqNj8Kbkk1M9qixGOFhNsYTrOzxp5AK8vggIIOrVjvqP9y2ryemkhckg==
 
 "@magic-sdk/commons@^9.4.0":
-  version "9.4.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-9.4.0.tgz#bc23889f420071c959deaca1d6c73a7ec1b016ac"
-  integrity sha512-HRofg3XTiuyHJdF8f5I2K/X9Vj1vtevxC1n0ZAgxQ0Vr4XGHCqIVbduQ6ucd99+MZ9v2I6bwE4214Pys7iVasA==
+  version "9.6.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-9.6.0.tgz#28d4c33d91a5933b965f606d4e4ed5e82e46c720"
+  integrity sha512-J8Ys3vYrgeBG2eYH2/SemthIH50KmqGZ5ieTmoZ13EJNMn8MzzGAdu0jh3GYMkw1UYPnFxiWGJA9dcdQJtVj2Q==
 
 "@magic-sdk/provider@^13.4.0":
-  version "13.4.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-13.4.0.tgz#47ba487ee8caf99f4b76320a03f494dc023b1140"
-  integrity sha512-ehTQmSKbjfKS8RokLa1cL1pm/tuG8uJwwXNPtlGpPPojCJVLAKna40GpGYQCgwkUWpwEUI9jEtlRNFemZhOaqg==
+  version "13.6.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-13.6.0.tgz#f0a61eeee4d4ac57f447bbe511f0462bb416fc4a"
+  integrity sha512-2LV8cSSQ5BfG5JphmIVYwOW6vBij+eysAGD89QPxvoLYyf8TJ/HJrdD+ijVpjxF0QR2F4Cri2Uxsknkmm8JLYQ==
   dependencies:
-    "@magic-sdk/types" "^11.4.0"
+    "@magic-sdk/types" "^11.6.0"
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
@@ -5083,10 +5083,10 @@
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
-"@magic-sdk/types@^11.4.0":
-  version "11.4.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-11.4.0.tgz#bdc54aec36a06e9c22373093c8e3b5d3db9553b1"
-  integrity sha512-EBod1CVzLx6ikVf2bYPJiRZIyMYJZ4h7Z/fuOuAwWyylY62JqsFrpw7SCv1716xgRBz5ZA33YjNy+MPEW3vwCQ==
+"@magic-sdk/types@^11.4.0", "@magic-sdk/types@^11.6.0":
+  version "11.6.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-11.6.0.tgz#0087db0464a02fe9eeb763dc6e92a05974a16f7f"
+  integrity sha512-r+sjmhGjJ9AaHnMvbNY2Wj+FL8o2V2FyPOXAZNtgC0Uv8oniJ7zaDx06SULOozoyAVHuzizs27riT4F6SLIaFA==
 
 "@magic-sdk/types@^6.0.0":
   version "6.0.0"
@@ -6115,10 +6115,10 @@
     eth-json-rpc-middleware "^8.0.1"
     json-rpc-engine "^6.1.0"
 
-"@rarible/ethereum-api-client@^0.1.24-beta1":
-  version "0.1.24-beta1"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.24-beta1.tgz#d38580d2c1a80aebc18457890da8e15decedd3aa"
-  integrity sha512-tqSocNLF7cwy0vCv55MRjQJR+xrK16W8uKjlDTk5d78KVedL9zsaHQ5cJ0HeTU5JKrT4y8x1p1j5wl59lgN5WA==
+"@rarible/ethereum-api-client@^0.1.25-beta1":
+  version "0.1.25-beta1"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.25-beta1.tgz#f6a2872a3cb7db799d5a550ef1f0e02590dbfd0e"
+  integrity sha512-8TYwBh/nP3JYKtkGzWrSNTQTq0SybmEmFJQ5efI7w9HtWHLTcyC/ZceLHHiltv0oKxroawccdgE7ZAWgc3l3XQ==
   dependencies:
     "@rarible/types" "~0.9.2"
 

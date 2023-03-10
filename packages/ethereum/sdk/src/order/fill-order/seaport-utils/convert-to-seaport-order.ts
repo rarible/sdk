@@ -1,12 +1,8 @@
 import type { SimpleSeaportV1Order } from "../../types"
 import { convertItemType, convertOrderType } from "../seaport"
 import type { OrderWithCounter } from "./types"
-import { CROSS_CHAIN_SEAPORT_ADDRESS } from "./constants"
 
 export function convertAPIOrderToSeaport(order: SimpleSeaportV1Order): OrderWithCounter {
-	if (order.data.protocol !== CROSS_CHAIN_SEAPORT_ADDRESS) {
-		throw new Error("Unsupported protocol")
-	}
 	if (!order.signature) {
 		throw new Error("Signature should exists")
 	}
@@ -14,9 +10,13 @@ export function convertAPIOrderToSeaport(order: SimpleSeaportV1Order): OrderWith
 		throw new Error("Order should includes start/end fields")
 	}
 
+	if (order.data.nonce === undefined) {
+		throw new Error("Converting Seaport order error: nonce is undefined")
+	}
+
 	return {
 		parameters: {
-			counter: order.data.counter,
+			counter: order.data.nonce,
 			offerer: order.maker,
 			zone: order.data.zone,
 			orderType: convertOrderType(order.data.orderType),

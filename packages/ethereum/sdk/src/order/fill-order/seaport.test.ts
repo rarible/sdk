@@ -23,25 +23,22 @@ import { checkChainId } from "../check-chain-id"
 import type { SendFunction } from "../../common/send-transaction"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { FILL_CALLDATA_TAG } from "../../config/common"
+import { GOERLI_CONFIG } from "../../common/test/test-credentials"
 import { ItemType } from "./seaport-utils/constants"
 import type { CreateInputItem } from "./seaport-utils/types"
 import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
 describe.skip("seaport", () => {
-	const providerConfig = {
-		networkId: 4,
-		rpcUrl: "https://node-rinkeby.rarible.com",
-	}
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
-		providerConfig
+		GOERLI_CONFIG
 	)
 	const { provider: providerSeller } = createE2eProvider(
 		"0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
-		providerConfig
+		GOERLI_CONFIG
 	)
-	const { wallet: feeWallet } = createE2eProvider(undefined, providerConfig)
+	const { wallet: feeWallet } = createE2eProvider(undefined, GOERLI_CONFIG)
 	const web3Seller = new Web3(providerSeller as any)
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 	const web3 = new Web3(providerBuyer as any)
@@ -57,7 +54,7 @@ describe.skip("seaport", () => {
 	const sdkSeller = createRaribleSdk(ethereumSeller, "testnet")
 
 	const rinkebyErc721V3ContractAddress = toAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
-	const rinkebyErc1155V2ContractAddress = toAddress("0x1af7a7555263f275433c6bb0b8fdcd231f89b1d7")
+	const goerliErc1155V2ContractAddress = toAddress("0xC87FA76c704fE8dE4BC727ef337907BF1e316418")
 	const originFeeAddress = toAddress(feeWallet.getAddressString())
 
 	const config = getEthereumConfig("testnet")
@@ -122,7 +119,7 @@ describe.skip("seaport", () => {
 		const accountAddressBuyer = toAddress(await ethereum.getFrom())
 
 		const sellItem = await sdkSeller.nft.mint({
-			collection: createErc1155V2Collection(rinkebyErc1155V2ContractAddress),
+			collection: createErc1155V2Collection(goerliErc1155V2ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			royalties: [],
 			supply: 100,
@@ -157,7 +154,7 @@ describe.skip("seaport", () => {
 		const accountAddress = await ethereumSeller.getFrom()
 
 		const sellItem = await sdkSeller.nft.mint({
-			collection: createErc1155V2Collection(rinkebyErc1155V2ContractAddress),
+			collection: createErc1155V2Collection(goerliErc1155V2ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			royalties: [],
 			supply: 100,
@@ -191,7 +188,7 @@ describe.skip("seaport", () => {
 		const accountAddressBuyer = toAddress(await ethereum.getFrom())
 
 		const sellItem = await sdkSeller.nft.mint({
-			collection: createErc1155V2Collection(rinkebyErc1155V2ContractAddress),
+			collection: createErc1155V2Collection(goerliErc1155V2ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			royalties: [],
 			supply: 100,
@@ -241,7 +238,7 @@ describe.skip("seaport", () => {
 		const accountAddressBuyer = toAddress(await ethereum.getFrom())
 
 		const sellItem = await sdkSeller.nft.mint({
-			collection: createErc1155V2Collection(rinkebyErc1155V2ContractAddress),
+			collection: createErc1155V2Collection(goerliErc1155V2ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			royalties: [],
 			supply: 100,

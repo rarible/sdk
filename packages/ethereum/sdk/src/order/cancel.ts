@@ -23,11 +23,11 @@ import type {
 import { orderToStruct } from "./sign-order"
 import { convertOpenSeaOrderToDTO } from "./fill-order/open-sea-converter"
 import type { CheckLazyOrderPart } from "./check-lazy-order"
-import { createSeaportContract } from "./contracts/seaport"
-import { CROSS_CHAIN_SEAPORT_ADDRESS } from "./fill-order/seaport-utils/constants"
+import { CROSS_CHAIN_SEAPORT_V1_4_ADDRESS } from "./fill-order/seaport-utils/constants"
 import { convertAPIOrderToSeaport } from "./fill-order/seaport-utils/convert-to-seaport-order"
 import { createLooksrareExchange } from "./contracts/looksrare-exchange"
 import { createX2Y2Contract } from "./contracts/exchange-x2y2-v1"
+import { createSeaportV14Contract } from "./contracts/seaport-v14"
 
 export async function cancel(
 	checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
@@ -185,7 +185,7 @@ export async function cancelSeaportOrder(
 	ethereum: Ethereum, send: SendFunction, order: SimpleSeaportV1Order
 ) {
 	const orderParams = convertAPIOrderToSeaport(order).parameters
-	const seaport = createSeaportContract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	const seaport = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 	return send(seaport.functionCall("cancel", [orderParams]))
 }
 

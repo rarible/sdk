@@ -1,10 +1,12 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
+import type { Address } from "@rarible/types"
+import { toAddress, toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { Blockchain } from "@rarible/api-client"
 import BigNumber from "bignumber.js"
+import { createWethContract } from "@rarible/ethereum-sdk-test-common"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -23,12 +25,17 @@ describe("get balance", () => {
 	})
 	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "development", { logs: LogsLevel.DISABLED })
 
-	test("get ETH balance with wallet", async () => {
-		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
+	test("should be the same balance", async () => {
+		const ethWalletAddess = toAddress("0x00a329c0648769A73afAc7F9381E08FB43dBEA72")
+		const walletAddress = toUnionAddress(`ETHEREUM:${ethWalletAddess}`)
 		const balance = await sdk.balances.getBalance(walletAddress, {
-			"@type": "ETH",
+			"@type": "ERC20",
+			contract: toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
 		})
-		expect(balance.toString()).toEqual("1.9355")
+		const wethContract = createWethContract((ethereum as any).config.web3, "0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6" as Address)
+		const wethBalance = new BigNumber(await wethContract.methods.balanceOf(ethWalletAddess).call())
+			.div(new BigNumber(10).pow(18))
+		expect(balance.toString()).toEqual(wethBalance.toString())
 	})
 
 	test("get ETH balance without wallet", async () => {

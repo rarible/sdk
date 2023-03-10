@@ -36,7 +36,7 @@ export type OrderParameters = {
 	conduitKey: string;
 }
 
-export type OrderComponents = OrderParameters & { counter: number }
+export type OrderComponents = OrderParameters & { counter: number | string }
 
 export type Order = {
 	parameters: OrderParameters;

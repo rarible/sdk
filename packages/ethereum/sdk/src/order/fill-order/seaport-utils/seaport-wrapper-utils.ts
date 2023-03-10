@@ -7,14 +7,19 @@ import type { Address, Part } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { SendFunction } from "../../../common/send-transaction"
 import type { SimpleSeaportV1Order } from "../../types"
-import { createSeaportContract } from "../../contracts/seaport"
 import type { OrderFillSendData } from "../types"
 import { ExchangeWrapperOrderType } from "../types"
 import type { PreparedOrderRequestDataForExchangeWrapper } from "../types"
 import { createExchangeWrapperContract } from "../../contracts/exchange-wrapper"
 import { calcValueWithFees, originFeeValueConvert } from "../common/origin-fees-utils"
+import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import type { InputCriteria } from "./types"
-import { CONDUIT_KEYS_TO_CONDUIT, CROSS_CHAIN_DEFAULT_CONDUIT_KEY, CROSS_CHAIN_SEAPORT_ADDRESS } from "./constants"
+import {
+	CROSS_CHAIN_SEAPORT_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	KNOWN_CONDUIT_KEYS_TO_CONDUIT,
+	NO_CONDUIT,
+} from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 import { getBalancesAndApprovals } from "./balance-and-approval-check"
 import { getOrderHash } from "./get-order-hash"
@@ -68,7 +73,7 @@ export async function prepareSeaportExchangeData(
 		totalFeeBasisPoints: number
 	}
 ): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-	const seaportContract = createSeaportContract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
@@ -76,10 +81,10 @@ export async function prepareSeaportExchangeData(
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 
-	const offererOperator = CONDUIT_KEYS_TO_CONDUIT[orderParameters.conduitKey]
+	const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
 
-	const conduitKey = CROSS_CHAIN_DEFAULT_CONDUIT_KEY
-	const fulfillerOperator = CONDUIT_KEYS_TO_CONDUIT[conduitKey]
+	const conduitKey = NO_CONDUIT
+	const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
 
 	const extraData = "0x"
 	const recipientAddress = fulfillerAddress
