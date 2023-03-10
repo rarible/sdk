@@ -15,7 +15,7 @@ import type { EthereumConfig } from "../../config/type"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
-import { CROSS_CHAIN_SEAPORT_ADDRESS, ItemType, OrderType } from "./seaport-utils/constants"
+import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
 import { prepareSeaportExchangeData } from "./seaport-utils/seaport-wrapper-utils"
@@ -50,9 +50,6 @@ export class SeaportOrderHandler {
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
-		if (order.data.protocol !== CROSS_CHAIN_SEAPORT_ADDRESS) {
-			throw new Error("Unsupported protocol")
-		}
 		if (!order.signature) {
 			throw new Error("Signature should exists")
 		}

@@ -3,7 +3,7 @@ import { ZERO_ADDRESS } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/ethereum-api-client"
 import type { SendFunction } from "../../../common/send-transaction"
-import { createSeaportContract } from "../../contracts/seaport"
+import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./types"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import type { TimeBasedItemParams } from "./item"
@@ -53,7 +53,7 @@ export async function getFulfillAdvancedOrderData({
 	recipientAddress: string;
 	timeBasedItemParams: TimeBasedItemParams;
 }) {
-	const seaportContract = createSeaportContract(ethereum, seaportAddress)
+	const seaportContract = createSeaportV14Contract(ethereum, seaportAddress)
 
 	// If we are supplying units to fill, we adjust the order by the minimum of the amount to fill and
 	// the remaining order left to be fulfilled

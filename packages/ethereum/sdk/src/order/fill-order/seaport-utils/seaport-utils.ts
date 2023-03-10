@@ -3,9 +3,9 @@ import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
-import { createSeaportContract } from "../../contracts/seaport"
 import type { SimpleSeaportV1Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
+import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { getOrderHash } from "./get-order-hash"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import {
@@ -26,7 +26,11 @@ import { getBalancesAndApprovals } from "./balance-and-approval-check"
 import { getfulfillBasicOrderData } from "./fulfill-basic"
 import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
-import { CONDUIT_KEYS_TO_CONDUIT, CROSS_CHAIN_DEFAULT_CONDUIT_KEY, CROSS_CHAIN_SEAPORT_ADDRESS } from "./constants"
+import {
+	CROSS_CHAIN_SEAPORT_ADDRESS,
+	KNOWN_CONDUIT_KEYS_TO_CONDUIT,
+	NO_CONDUIT,
+} from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
 export async function fulfillOrder(
@@ -35,7 +39,7 @@ export async function fulfillOrder(
 	simpleOrder: SimpleSeaportV1Order,
 	{ tips, unitsToFill }: {tips?: TipInputItem[], unitsToFill?: BigNumberValue}
 ) {
-	const seaportContract = createSeaportContract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
 
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
@@ -43,10 +47,10 @@ export async function fulfillOrder(
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 
-	const offererOperator = CONDUIT_KEYS_TO_CONDUIT[orderParameters.conduitKey]
+	const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
 
-	const conduitKey = CROSS_CHAIN_DEFAULT_CONDUIT_KEY
-	const fulfillerOperator = CONDUIT_KEYS_TO_CONDUIT[conduitKey]
+	const conduitKey = NO_CONDUIT
+	const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
 
 	const extraData = "0x"
 	const recipientAddress = ZERO_ADDRESS
@@ -124,6 +128,8 @@ export async function fulfillOrder(
 			timeBasedItemParams,
 			conduitKey,
 			tips: tipConsiderationItems,
+
+
 		})
 	}
 

@@ -2,15 +2,15 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumber } from "@rarible/utils"
 import type { BigNumberValue } from "@rarible/utils"
-import { createSeaportContract } from "../../contracts/seaport"
 import type { OrderFillSendData } from "../types"
+import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
 import { generateCriteriaResolvers } from "./criteria"
 import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./types"
 import { getSummedTokenAndIdentifierAmounts, isCriteriaItem } from "./item"
 import type { TimeBasedItemParams } from "./item"
 import { mapOrderAmountsFromFilledStatus, mapOrderAmountsFromUnitsToFill } from "./order"
-import { CROSS_CHAIN_SEAPORT_ADDRESS } from "./constants"
+import { CROSS_CHAIN_SEAPORT_V1_4_ADDRESS } from "./constants"
 
 export async function getFulfillStandardOrderData({
 	ethereum,
@@ -106,7 +106,7 @@ export async function getFulfillStandardOrderData({
 		unitsToFill
 	)
 
-	const seaportContract = createSeaportContract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 
 	if (useAdvanced) {
 		const functionCall = await seaportContract.functionCall("fulfillAdvancedOrder",
