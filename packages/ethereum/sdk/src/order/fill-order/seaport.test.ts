@@ -344,8 +344,6 @@ describe.skip("seaport", () => {
 		})
 		console.log("tx", tx)
 		const fullAdditionalData = marketplaceMarker.concat(FILL_CALLDATA_TAG).slice(2)
-		console.log("tx data buy", tx.data.slice(-fullAdditionalData.length))
-		console.log("tx data add", fullAdditionalData)
 		expect(tx.data.endsWith(fullAdditionalData)).toBe(true)
 		await tx.wait()
 	})

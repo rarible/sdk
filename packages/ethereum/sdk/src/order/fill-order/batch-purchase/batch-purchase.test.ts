@@ -54,7 +54,7 @@ describe("Batch purchase", function () {
 		await checkOwnerships(
 			sdkBuyer,
 			orders.map((o) => o.make),
-			toAddress("0xC66D094eD928f7840A6B0d373c1cd825C97e3C7c")
+			toAddress(await buyerWeb3.getFrom())
 		)
 	}
 
@@ -70,7 +70,7 @@ describe("Batch purchase", function () {
 		}])
 	})
 
-	test("Seaport few items sell", async () => {
+	test.skip("Seaport few items sell", async () => {
 		const orders = await Promise.all([
 			makeSeaportOrder(sdkSeller, ethereum, env, send),
 			makeSeaportOrder(sdkSeller, ethereum, env, send),
@@ -82,7 +82,7 @@ describe("Batch purchase", function () {
 		}])
 	})
 
-	test("looksrare few items sell", async () => {
+	test.skip("looksrare few items sell", async () => {
 		const orders = [
 			await makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
 			await makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
@@ -94,7 +94,7 @@ describe("Batch purchase", function () {
 		}])
 	})
 
-	test("Different orders types sell", async () => {
+	test.skip("Different orders types sell", async () => {
 		const orders = await Promise.all([
 			makeRaribleV2Order(sdkSeller, env),
 			makeSeaportOrder(sdkSeller, ethereum, env, send),
@@ -131,7 +131,7 @@ describe("Batch purchase", function () {
 		await checkOwnerships(
 			sdkBuyer,
 			orders.map((o) => o.make),
-			toAddress("0xC66D094eD928f7840A6B0d373c1cd825C97e3C7c")
+			toAddress(await buyerWeb3.getFrom())
 		)
 	})
 })

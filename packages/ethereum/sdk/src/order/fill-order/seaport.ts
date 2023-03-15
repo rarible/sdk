@@ -21,7 +21,6 @@ import type { TipInputItem } from "./seaport-utils/types"
 import { prepareSeaportExchangeData } from "./seaport-utils/seaport-wrapper-utils"
 import { fulfillOrder } from "./seaport-utils/seaport-utils"
 import type { OrderFillSendData } from "./types"
-import { getUpdatedCalldata } from "./common/get-updated-call"
 import { originFeeValueConvert } from "./common/origin-fees-utils"
 
 export class SeaportOrderHandler {
@@ -79,10 +78,7 @@ export class SeaportOrderHandler {
 
 		return {
 			functionCall,
-			options: {
-				...options,
-				additionalData: getUpdatedCalldata(this.sdkConfig),
-			},
+			options,
 		}
 	}
 

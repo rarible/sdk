@@ -102,6 +102,9 @@ export async function makeLooksrareOrder(
 ) {
 	const token = await mintTestToken(sdk, env)
 
+	if (!config.exchange.looksrare) {
+		throw new Error(`Set looksrare contract address for ${env} env`)
+	}
 	const sellOrder = await makeRaribleSellOrder(
 		ethereum,
 		{
@@ -110,7 +113,7 @@ export async function makeLooksrareOrder(
 			tokenId: token.tokenId,
 		},
 		send,
-		toAddress(config.exchange.looksrare!)
+		toAddress(config.exchange.looksrare)
 	)
 
 	return sellOrder
@@ -180,6 +183,8 @@ export async function checkOwnerships(sdk: RaribleSdk, assets: Asset[], expected
 				contract: asset.assetType.contract,
 				tokenId: asset.assetType.tokenId.toString(),
 			})
+			console.log("asset:", asset.assetType.contract, asset.assetType.tokenId.toString())
+			console.log("expectedOwner:", expectedOwner)
 
 			expect(ownership.ownerships[0].owner).toEqual(expectedOwner)
 		})

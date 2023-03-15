@@ -37,34 +37,65 @@ describe("Create & fill orders with order data v3", () => {
 			},
 		},
 	})
+
+	const sdk2WithoutMarker = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
+		logs: LogsLevel.DISABLED,
+		blockchain: {
+			[BlockchainGroup.ETHEREUM]: {
+				useDataV3: true,
+			},
+		},
+	})
+
 	const it = awaitAll({
 		testErc20: deployTestErc20(web31, "Test1", "TST1"),
 	})
 
 	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
 
-	async function mint(): Promise<ItemId> {
+	test("erc721 sell/buy with default marketplace marker", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const action = await sdk1.nft.mint.prepare({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
-		})
-		const result = await action.submit({
-			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			creators: [{
-				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
-				value: 10000,
-			}],
-			royalties: [],
-			lazyMint: false,
-			supply: 1,
-		})
-		if (result.type === MintType.ON_CHAIN) {
-			await result.transaction.wait()
-		}
+		const itemId = await mint()
 
-		await awaitItem(sdk1, result.itemId)
-		return result.itemId
-	}
+		const sellAction = await sdk1.order.sell.prepare({ itemId: itemId })
+		expect(sellAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.REQUIRED)
+		const orderId = await sellAction.submit({
+			amount: 1,
+			price: "0.0000004",
+			currency: {
+				"@type": "ETH",
+			},
+			originFees: [{
+				account: toUnionAddress("ETHEREUM:"+wallet1Address),
+				value: 10,
+			}],
+			maxFeesBasePoint: 500,
+		})
+
+		console.log("orderid > ", orderId)
+
+		const nextStock = "1"
+		await awaitStock(sdk1, orderId, nextStock)
+
+		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
+		await updateAction.submit({ price: "0.0000003" })
+
+		await sdk1.apis.order.getOrderById({ id: orderId })
+
+		const fillAction = await sdk2WithoutMarker.order.buy.prepare({ orderId })
+		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
+		const tx = await fillAction.submit({ amount: 1 })
+		console.log("tx", tx)
+		expect(tx.transaction.data.endsWith("000009616c6c64617461")).toEqual(true)
+		await tx.wait()
+
+		const nextStock2 = "0"
+		await awaitStock(sdk1, orderId, nextStock2)
+		await retry(15, 2000, async () => {
+			const order = await sdk1.apis.order.getOrderById({ id: orderId })
+			expect(order.status).toEqual("FILLED")
+		})
+	})
 
 	test("erc721 sell/buy", async () => {
 		const wallet1Address = wallet1.getAddressString()
@@ -98,6 +129,7 @@ describe("Create & fill orders with order data v3", () => {
 		const fillAction = await sdk2.order.buy.prepare({ orderId })
 		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const tx = await fillAction.submit({ amount: 1 })
+		expect(tx.transaction.data.endsWith("dead09616c6c64617461")).toEqual(true)
 		await tx.wait()
 
 		const nextStock2 = "0"
@@ -143,4 +175,28 @@ describe("Create & fill orders with order data v3", () => {
 			expect(order.status).toEqual("FILLED")
 		})
 	})
+
+	async function mint(): Promise<ItemId> {
+		const wallet1Address = wallet1.getAddressString()
+		const action = await sdk1.nft.mint.prepare({
+			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+		})
+		const result = await action.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: false,
+			supply: 1,
+		})
+		if (result.type === MintType.ON_CHAIN) {
+			await result.transaction.wait()
+		}
+
+		await awaitItem(sdk1, result.itemId)
+		return result.itemId
+	}
+
 })

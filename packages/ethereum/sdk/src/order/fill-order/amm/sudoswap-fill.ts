@@ -9,8 +9,6 @@ import { BigNumber as BigNum } from "@rarible/utils"
 import type { AmmOrderFillRequest, OrderFillSendData } from "../types"
 import type { EthereumConfig } from "../../../config/type"
 import { createSudoswapRouterV1Contract } from "../../contracts/sudoswap-router-v1"
-import { getUpdatedCalldata } from "../common/get-updated-call"
-import type { IRaribleEthereumSdkConfig } from "../../../types"
 import { createSudoswapPairContract } from "../../contracts/sudoswap-pair"
 
 
@@ -19,7 +17,6 @@ export class SudoswapFill {
 		ethereum: Ethereum,
 		request: AmmOrderFillRequest,
 		config: EthereumConfig,
-		sdkConfig?: IRaribleEthereumSdkConfig
 	): Promise<OrderFillSendData> {
 		const order = this.getOrder(request)
 
@@ -49,10 +46,7 @@ export class SudoswapFill {
 
 		return {
 			functionCall: fillData.functionCall,
-			options: {
-				...fillData.options,
-				additionalData: getUpdatedCalldata(sdkConfig),
-			},
+			options: fillData.options,
 		}
 	}
 

@@ -8,7 +8,7 @@ describe("getUpdatedFunctionCall",  () => {
 			getUpdatedCalldata(
 				{ marketplaceMarker: toBinary("0x") },
 			)
-		expect(promise).rejects.toThrow("Fill call data has length = 0, but should be = 48")
+		expect(promise).rejects.toThrow("MarketplaceMarker has length = 0, but should be = 48")
 	})
 
 	test("get updated call with non-hex fillCalldata should be rejected", async () => {
@@ -16,7 +16,7 @@ describe("getUpdatedFunctionCall",  () => {
 			getUpdatedCalldata(
 				{ marketplaceMarker: toBinary("heh,hoh,2022") }
 			)
-		expect(promise).rejects.toThrow("Fill calldata is not a hex value")
+		expect(promise).rejects.toThrow("MarketplaceMarker is not a hex value")
 	})
 
 	test("get updated call with fillCalldata should returns correct FunctionCall", async () => {
