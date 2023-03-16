@@ -22,6 +22,7 @@
     "@rarible/connector": "~0.13.2",
     "@rarible/connector-beacon": "^0.13.4",
     "@rarible/connector-fcl": "^0.13.4",
+    "@rarible/connector-mattel": "^0.13.11",
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/sdk-wallet": "^0.13.11",
     "@rarible/tezos-sdk": "0.1.44",

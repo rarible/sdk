@@ -25,22 +25,6 @@ describe("Batch buy", () => {
 		logs: LogsLevel.DISABLED,
 	})
 
-	async function mint(sdk: IRaribleSdk) {
-		const contract = toContractAddress("ETHEREUM:0x6972347e66A32F40ef3c012615C13cB88Bf681cc") //erc721
-		const action = await sdk.nft.mint.prepare({
-			collectionId: toCollectionId(contract),
-		})
-
-		const result = await action.submit({
-			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			royalties: [],
-			lazyMint: false,
-			supply: 1,
-		})
-
-		return awaitItem(sdk, result.itemId)
-	}
-
 	test("batch buy rarible orders", async () => {
 		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
 		const orders = await Promise.all(tokens.map(async (token) => {
@@ -63,6 +47,7 @@ describe("Batch buy", () => {
 			}],
 		})))
 		console.log(tx)
+		expect(tx.transaction.data.endsWith("000009616c6c64617461")).toEqual(true)
 		await tx.wait()
 	})
 
@@ -101,3 +86,19 @@ describe("Batch buy", () => {
 		expect(data.prices[4].price).toBeTruthy()
 	})
 })
+
+async function mint(sdk: IRaribleSdk) {
+	const contract = toContractAddress("ETHEREUM:0x6972347e66A32F40ef3c012615C13cB88Bf681cc") //erc721
+	const action = await sdk.nft.mint.prepare({
+		collectionId: toCollectionId(contract),
+	})
+
+	const result = await action.submit({
+		uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+		royalties: [],
+		lazyMint: false,
+		supply: 1,
+	})
+
+	return awaitItem(sdk, result.itemId)
+}

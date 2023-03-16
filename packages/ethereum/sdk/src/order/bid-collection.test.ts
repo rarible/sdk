@@ -4,7 +4,7 @@ import {
 	NftCollectionControllerApi, NftLazyMintControllerApi,
 	OrderControllerApi,
 } from "@rarible/ethereum-api-client"
-import { awaitAll, createE2eProvider, deployTestErc20, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
@@ -28,6 +28,7 @@ import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { checkChainId } from "./check-chain-id"
 import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
+import { createErc20Contract } from "./contracts/erc20"
 
 describe("bid", () => {
 	const { provider: provider1 } = createE2eProvider(DEV_PK_1)
@@ -76,10 +77,18 @@ describe("bid", () => {
 		.bind(null, ethereum1, send1, sign1, nftCollectionApi)
 		.bind(null, nftLazyMintApi, checkWalletChainId1)
 	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
 
 	const it = awaitAll({
-		testErc20: deployTestErc20(web32, "Test1", "TST1"),
 		testErc721: deployTestErc721(web31, "Test", "TST"),
+	})
+
+	beforeAll(async () => {
+		const tx = await send2(
+			createErc20Contract(ethereum2, erc20Contract)
+				.functionCall("mint", await ethereum2.getFrom(), "1000000000000000000")
+		)
+		await tx.wait()
 	})
 
 	const filler1 = new OrderFiller(ethereum1, send1, config, apis, getBaseOrderFee, env)
@@ -88,19 +97,10 @@ describe("bid", () => {
 		const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
 		const bidderAddress = toAddress(await ethereum2.getFrom())
 
-		await sentTx(
-			it.testErc20.methods.mint(bidderAddress, "100000000000000"), {
-			  from: bidderAddress,
-			  gas: 200000,
-		  }
-		)
-
 		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 0, "0x"), { from: ownerCollectionAddress })
 		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 1, "0x"), { from: ownerCollectionAddress })
 
 		await delay(5000)
-
-		const erc20Contract = toAddress(it.testErc20.options.address)
 
 		const { order } = await orderBid.bid({
 			type: "DATA_V2",
@@ -113,7 +113,7 @@ describe("bid", () => {
 				assetClass: "COLLECTION",
 				contract: toAddress(it.testErc721.options.address),
 			},
-			price: toBn("12"),
+			price: toBn("1000000000000000000"),
 			amount: 1,
 			payouts: [],
 			originFees: [],
@@ -136,13 +136,6 @@ describe("bid", () => {
 		const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
 		const bidderAddress = toAddress(await ethereum2.getFrom())
 
-		await sentTx(
-			it.testErc20.methods.mint(bidderAddress, "100000000000000"), {
-			  from: bidderAddress,
-			  gas: 8000000,
-		  }
-		)
-
 		const mintedItem = await mint1({
 			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -150,8 +143,6 @@ describe("bid", () => {
 			royalties: [],
 			lazy: true,
 		} as ERC721RequestV3) as MintOffChainResponse
-
-		const erc20Contract = toAddress(it.testErc20.options.address)
 
 		const { order } = await orderBid.bid({
 			type: "DATA_V2",
@@ -164,7 +155,7 @@ describe("bid", () => {
 				assetClass: "COLLECTION",
 				contract: e2eErc721V3ContractAddress,
 			},
-			price: toBn("12"),
+			price: toBn("10000"),
 			amount: 1,
 			payouts: [],
 			originFees: [],

@@ -74,7 +74,7 @@ export class AmmOrderHandler {
 		let fillData: OrderFillSendData
 		switch (request.order.data.dataType) {
 			case "SUDOSWAP_AMM_DATA_V1":
-				fillData = await SudoswapFill.getDirectFillData(ethereum, request, this.config, this.sdkConfig)
+				fillData = await SudoswapFill.getDirectFillData(ethereum, request, this.config)
 				break
 			default:
 				throw new Error("Unsupported order data type " + request.order.data.dataType)
