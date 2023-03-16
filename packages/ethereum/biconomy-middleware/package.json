@@ -1,6 +1,6 @@
 {
   "name": "@rarible/biconomy-middleware",
-  "version": "0.13.9",
+  "version": "0.13.10-hotfix.0",
   "description": "Middleware for biconomy integration",
   "keywords": [
     "ethereum",

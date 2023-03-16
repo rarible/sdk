@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector",
-  "version": "0.13.2",
+  "version": "0.13.10-hotfix.0",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
