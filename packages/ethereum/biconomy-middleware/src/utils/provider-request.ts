@@ -14,9 +14,9 @@ function legacySend(
 	callback: (error: Error | null, result?: JsonRpcResponse | undefined) => void
 ) {
 	if (provider !== null && typeof provider === "object") {
-		if ("sendAsync" in provider && typeof provider.sendAsync === "function") {
+		if (("sendAsync" in provider || !!provider.sendAsync) && typeof provider.sendAsync === "function") {
 			provider.sendAsync(payload, callback)
-		} else if ("send" in provider && typeof provider.send === "function") {
+		} else if (("send" in provider || !!provider.send) && typeof provider.send === "function") {
 			provider.send(payload, callback)
 		} else {
 			throw new Error("No send method defined")
