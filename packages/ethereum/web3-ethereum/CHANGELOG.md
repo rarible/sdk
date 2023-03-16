@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+
+### Bug Fixes
+
+* no send method defined ([#446](https://github.com/rarible/sdk/issues/446)) ([05099d8](https://github.com/rarible/sdk/commit/05099d8e46fd9d20d13b1e4b52a0f48307bcfcba))
+
+
+
+
+
 ## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
 
 
