@@ -15,6 +15,7 @@ import type { EthereumConfig } from "../../config/type"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
+import type { RaribleEthereumApis } from "../../common/apis"
 import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
@@ -28,6 +29,7 @@ export class SeaportOrderHandler {
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
+		private readonly apis: RaribleEthereumApis,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
@@ -49,9 +51,9 @@ export class SeaportOrderHandler {
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
-		if (!order.signature) {
-			throw new Error("Signature should exists")
-		}
+		// if (!order.signature) {
+		// 	throw new Error("Signature should exists")
+		// }
 		if (order.start === undefined || order.end === undefined) {
 			throw new Error("Order should includes start/end fields")
 		}
@@ -65,6 +67,13 @@ export class SeaportOrderHandler {
 		let tips: TipInputItem[] | undefined = []
 		if (!takeIsNft) {
 			tips = this.convertOriginFeesToTips(request)
+		}
+
+		if (!order.signature || order.signature === "0x") {
+			const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
+				hash: request.order.hash,
+			})
+			order.signature = signature
 		}
 		const { functionCall, options } = await fulfillOrder(
 			ethereum,
@@ -111,6 +120,13 @@ export class SeaportOrderHandler {
 		const { unitsToFill } = getUnitsToFill(request)
 
 		const { totalFeeBasisPoints } = originFeeValueConvert(originFees)
+
+		if (!request.order.signature || request.order.signature === "0x") {
+			const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
+				hash: request.order.hash,
+			})
+			request.order.signature = signature
+		}
 
 		return prepareSeaportExchangeData(
 			this.ethereum,

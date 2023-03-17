@@ -165,7 +165,7 @@ export async function prepareSeaportExchangeData(
 
 	return {
 		data: {
-			marketId: ExchangeWrapperOrderType.SEAPORT_ADVANCED_ORDERS,
+			marketId: getMarketIdByOpenseaContract(simpleOrder.data.protocol),
 			amount: fulfillOrdersData.value,
 			fees: encodedFeesValue,
 			data: fulfillOrdersData.data,
@@ -174,4 +174,13 @@ export async function prepareSeaportExchangeData(
 			value: valueForSending.toString(),
 		},
 	}
+}
+
+export function getMarketIdByOpenseaContract(contract: Address) {
+	if (contract === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+		return ExchangeWrapperOrderType.SEAPORT_V14
+	} else if (contract === "0x00000000006c3852cbef3e08e8df289169ede581") {
+		return ExchangeWrapperOrderType.SEAPORT_ADVANCED_ORDERS
+	}
+	throw new Error("Unrecognized opensea protocol contract")
 }

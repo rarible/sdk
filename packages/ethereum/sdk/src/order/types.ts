@@ -22,7 +22,7 @@ export type SimpleCryptoPunkOrder =
 	Pick<CryptoPunkOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
 
 export type SimpleSeaportV1Order =
-	Pick<SeaportV1Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
+	Pick<SeaportV1Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature" | "hash">
 
 export type SimpleLooksrareOrder =
 	Pick<LooksRareOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
