@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+
+### Features
+
+* opensea orders ([#448](https://github.com/rarible/sdk/issues/448)) ([858e716](https://github.com/rarible/sdk/commit/858e716aac3cdf4af44184e01f0d813c0f058ed9))
+
+
+
+
+
 ## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
 
 
