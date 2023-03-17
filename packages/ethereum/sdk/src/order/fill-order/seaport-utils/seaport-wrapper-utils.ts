@@ -1,4 +1,4 @@
-import type { Ethereum } from "@rarible/ethereum-provider"
+import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
@@ -12,12 +12,10 @@ import { ExchangeWrapperOrderType } from "../types"
 import type { PreparedOrderRequestDataForExchangeWrapper } from "../types"
 import { createExchangeWrapperContract } from "../../contracts/exchange-wrapper"
 import { calcValueWithFees, originFeeValueConvert } from "../common/origin-fees-utils"
-import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import type { InputCriteria } from "./types"
 import {
 	CROSS_CHAIN_SEAPORT_ADDRESS,
-	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
-	KNOWN_CONDUIT_KEYS_TO_CONDUIT,
+	getConduitByKey,
 	NO_CONDUIT,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
@@ -26,11 +24,13 @@ import { getOrderHash } from "./get-order-hash"
 import { validateAndSanitizeFromOrderStatus } from "./fulfill"
 import { getFulfillAdvancedOrderData } from "./fulfill-advance"
 import type { OrderStatus } from "./types"
+import { getSeaportContract } from "./seaport-utils"
 
 export async function fulfillOrderWithWrapper(
 	ethereum: Ethereum,
 	send: SendFunction,
 	simpleOrder: SimpleSeaportV1Order,
+	seaportContract: EthereumContract,
 	{ unitsToFill, seaportWrapper, originFees }: {
 		unitsToFill?: BigNumberValue,
 		seaportWrapper: Address,
@@ -62,6 +62,7 @@ export async function prepareSeaportExchangeData(
 	ethereum: Ethereum,
 	send: SendFunction,
 	simpleOrder: SimpleSeaportV1Order,
+	// seaportContract: EthereumContract,
 	{
 		unitsToFill,
 		encodedFeesValue,
@@ -73,7 +74,8 @@ export async function prepareSeaportExchangeData(
 		totalFeeBasisPoints: number
 	}
 ): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
+	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
+	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
 
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
@@ -81,10 +83,13 @@ export async function prepareSeaportExchangeData(
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 
-	const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
+	// const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
 
 	const conduitKey = NO_CONDUIT
-	const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
+	// const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
+	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
 	const extraData = "0x"
 	const recipientAddress = fulfillerAddress
@@ -151,13 +156,14 @@ export async function prepareSeaportExchangeData(
 		timeBasedItemParams,
 		conduitKey,
 		recipientAddress,
+		seaportContract,
 	})
 
 	const valueForSending = calcValueWithFees(toBigNumber(fulfillOrdersData.value), totalFeeBasisPoints)
 
 	return {
 		data: {
-			marketId: ExchangeWrapperOrderType.SEAPORT_ADVANCED_ORDERS,
+			marketId: getMarketIdByOpenseaContract(simpleOrder.data.protocol),
 			amount: fulfillOrdersData.value,
 			fees: encodedFeesValue,
 			data: fulfillOrdersData.data,
@@ -166,4 +172,13 @@ export async function prepareSeaportExchangeData(
 			value: valueForSending.toString(),
 		},
 	}
+}
+
+export function getMarketIdByOpenseaContract(contract: Address) {
+	if (contract === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+		return ExchangeWrapperOrderType.SEAPORT_V14
+	} else if (contract === "0x00000000006c3852cbef3e08e8df289169ede581") {
+		return ExchangeWrapperOrderType.SEAPORT_ADVANCED_ORDERS
+	}
+	throw new Error("Unrecognized opensea protocol contract")
 }

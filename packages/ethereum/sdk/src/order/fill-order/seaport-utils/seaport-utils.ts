@@ -1,4 +1,4 @@
-import type { Ethereum } from "@rarible/ethereum-provider"
+import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
@@ -6,6 +6,7 @@ import { toBn } from "@rarible/utils"
 import type { SimpleSeaportV1Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
+import { createSeaportContract } from "../../contracts/seaport"
 import { getOrderHash } from "./get-order-hash"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import {
@@ -27,11 +28,20 @@ import { getfulfillBasicOrderData } from "./fulfill-basic"
 import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
-	CROSS_CHAIN_SEAPORT_ADDRESS,
-	KNOWN_CONDUIT_KEYS_TO_CONDUIT,
+	getConduitByKey,
 	NO_CONDUIT,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
+
+export function getSeaportContract(ethereum: Ethereum, protocol: string): EthereumContract {
+	if (protocol === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+	  return createSeaportV14Contract(ethereum, toAddress(protocol))
+	} else if (protocol === "0x00000000006c3852cbef3e08e8df289169ede581") {
+		return createSeaportContract(ethereum, toAddress(protocol))
+	} else {
+		throw new Error("Unrecognized Seaport protocol")
+	}
+}
 
 export async function fulfillOrder(
 	ethereum: Ethereum,
@@ -39,7 +49,8 @@ export async function fulfillOrder(
 	simpleOrder: SimpleSeaportV1Order,
 	{ tips, unitsToFill }: {tips?: TipInputItem[], unitsToFill?: BigNumberValue}
 ) {
-	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
 
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
@@ -47,10 +58,12 @@ export async function fulfillOrder(
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 
-	const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	// const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
 
 	const conduitKey = NO_CONDUIT
-	const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
+	// const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
+	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
 	const extraData = "0x"
 	const recipientAddress = ZERO_ADDRESS
@@ -123,13 +136,11 @@ export async function fulfillOrder(
 			fulfillerOperator,
 		})
 		return getfulfillBasicOrderData({
-			ethereum,
 			order: sanitizedOrder,
 			timeBasedItemParams,
 			conduitKey,
 			tips: tipConsiderationItems,
-
-
+			seaportContract,
 		})
 	}
 
@@ -152,7 +163,6 @@ export async function fulfillOrder(
 		fulfillerOperator,
 	})
 	return getFulfillStandardOrderData({
-		ethereum,
 		order: sanitizedOrder,
 		unitsToFill,
 		totalFilled,
@@ -166,6 +176,7 @@ export async function fulfillOrder(
 		timeBasedItemParams,
 		conduitKey,
 		recipientAddress,
+		seaportContract,
 	})
 }
 

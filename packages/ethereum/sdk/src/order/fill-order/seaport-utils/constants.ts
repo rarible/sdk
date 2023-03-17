@@ -1,4 +1,5 @@
 import { toBn } from "@rarible/utils"
+import type { Address } from "@rarible/ethereum-api-client"
 
 export const SEAPORT_CONTRACT_NAME = "Seaport"
 export const SEAPORT_CONTRACT_VERSION = "1.1"
@@ -125,4 +126,14 @@ export const DOMAIN_REGISTRY_ADDRESS =
 export const KNOWN_CONDUIT_KEYS_TO_CONDUIT = {
 	[OPENSEA_CONDUIT_KEY]: OPENSEA_CONDUIT_ADDRESS,
 	[NO_CONDUIT]: CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+}
+
+export function getConduitByKey(key: string = NO_CONDUIT, contractAddress: Address): string {
+	if (key === OPENSEA_CONDUIT_KEY) {
+		return OPENSEA_CONDUIT_ADDRESS
+	}
+	if (key === NO_CONDUIT) {
+		return contractAddress
+	}
+	throw new Error(`Unexpected conduit key: ${key}`)
 }

@@ -88,7 +88,7 @@ export class OrderFiller {
 		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
 		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
 		this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
-		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, getBaseOrderFee, env, sdkConfig)
+		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, apis, getBaseOrderFee, env, sdkConfig)
 		this.looksrareHandler = new LooksrareOrderHandler(
 			ethereum,
 			send,

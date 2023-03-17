@@ -30,7 +30,7 @@
     "typescript": "^4.8.4"
   },
   "peerDependencies": {
-    "@rarible/ethereum-api-client": "^0.1.24-beta1"
+    "@rarible/ethereum-api-client": "^0.1.24-beta3"
   },
   "publishConfig": {
     "access": "public",
