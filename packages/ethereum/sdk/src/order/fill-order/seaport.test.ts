@@ -81,7 +81,6 @@ describe.skip("seaport", () => {
 		console.log("accountAddressBuyer", accountAddressBuyer)
 		console.log("seller", await ethereumSeller.getFrom())
 
-		/*
 		const sellItem = await sdkSeller.nft.mint({
 			collection: createErc721V3Collection(rinkebyErc721V3ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -101,11 +100,6 @@ describe.skip("seaport", () => {
 		const take = getOpenseaEthTakeData("10000000000")
 		const orderHash = await createSeaportOrder(ethereumSeller, send, make, take)
 
-    */
-		// const sellItem = {
-		// 	itemId: "0x5a644acd663d7e4d07eeabe43df0f985670f8f9a:47",
-		// }
-		const orderHash = "0x82ffb7451be01e452d87f5398a4090e479b5f179efcf646bce27050199493703"
 		const order = await awaitOrder(sdkBuyer, orderHash)
 
 		const tx = await sdkBuyer.order.buy({

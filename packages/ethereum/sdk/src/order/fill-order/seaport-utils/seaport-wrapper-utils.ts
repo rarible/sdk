@@ -12,12 +12,10 @@ import { ExchangeWrapperOrderType } from "../types"
 import type { PreparedOrderRequestDataForExchangeWrapper } from "../types"
 import { createExchangeWrapperContract } from "../../contracts/exchange-wrapper"
 import { calcValueWithFees, originFeeValueConvert } from "../common/origin-fees-utils"
-import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import type { InputCriteria } from "./types"
 import {
 	CROSS_CHAIN_SEAPORT_ADDRESS,
-	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS, getConduitByKey,
-	KNOWN_CONDUIT_KEYS_TO_CONDUIT,
+	getConduitByKey,
 	NO_CONDUIT,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"

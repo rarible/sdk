@@ -136,7 +136,6 @@ export async function fulfillOrder(
 			fulfillerOperator,
 		})
 		return getfulfillBasicOrderData({
-			ethereum,
 			order: sanitizedOrder,
 			timeBasedItemParams,
 			conduitKey,
@@ -164,7 +163,6 @@ export async function fulfillOrder(
 		fulfillerOperator,
 	})
 	return getFulfillStandardOrderData({
-		ethereum,
 		order: sanitizedOrder,
 		unitsToFill,
 		totalFilled,

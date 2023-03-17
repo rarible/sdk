@@ -1,21 +1,16 @@
-import type { Ethereum } from "@rarible/ethereum-provider"
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumber } from "@rarible/utils"
 import type { BigNumberValue } from "@rarible/utils"
-import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import type { OrderFillSendData } from "../types"
-import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
 import { generateCriteriaResolvers } from "./criteria"
 import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./types"
 import { getSummedTokenAndIdentifierAmounts, isCriteriaItem } from "./item"
 import type { TimeBasedItemParams } from "./item"
 import { mapOrderAmountsFromFilledStatus, mapOrderAmountsFromUnitsToFill } from "./order"
-import { CROSS_CHAIN_SEAPORT_V1_4_ADDRESS } from "./constants"
 
 export async function getFulfillStandardOrderData({
-	ethereum,
 	order,
 	unitsToFill = 0,
 	totalSize,
@@ -29,7 +24,6 @@ export async function getFulfillStandardOrderData({
 	recipientAddress,
 	seaportContract,
 }: {
-	ethereum: Ethereum;
 	order: Order;
 	unitsToFill?: BigNumberValue;
 	totalFilled: BigNumber;
@@ -155,7 +149,6 @@ export async function getFulfillStandardOrderData({
 		"fulfillOrder",
 		orderAccountingForTips, conduitKey
 	)
-	console.log("fulfillOrder", JSON.stringify(orderAccountingForTips, null, "  "), "conduitKey", conduitKey)
 	return {
 		functionCall,
 		options: { value: totalNativeAmount?.toString() },
