@@ -2,6 +2,8 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumber } from "@rarible/utils"
 import type { BigNumberValue } from "@rarible/utils"
+import type { Contract } from "web3-eth-contract"
+import type { EthereumContract } from "@rarible/ethereum-provider"
 import type { OrderFillSendData } from "../types"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
@@ -25,6 +27,7 @@ export async function getFulfillStandardOrderData({
 	timeBasedItemParams,
 	conduitKey,
 	recipientAddress,
+	seaportContract,
 }: {
 	ethereum: Ethereum;
 	order: Order;
@@ -38,6 +41,7 @@ export async function getFulfillStandardOrderData({
 	conduitKey: string;
 	recipientAddress: string;
 	timeBasedItemParams: TimeBasedItemParams;
+	seaportContract: EthereumContract
 }): Promise<OrderFillSendData> {
 	// If we are supplying units to fill, we adjust the order by the minimum of the amount to fill and
 	// the remaining order left to be fulfilled
@@ -106,7 +110,7 @@ export async function getFulfillStandardOrderData({
 		unitsToFill
 	)
 
-	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
+	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 
 	if (useAdvanced) {
 		const functionCall = await seaportContract.functionCall("fulfillAdvancedOrder",
@@ -126,6 +130,21 @@ export async function getFulfillStandardOrderData({
 			conduitKey,
 			recipientAddress,
 		)
+		console.log("fulfillAdvancedOrder", JSON.stringify([{
+			...orderAccountingForTips,
+			numerator,
+			denominator,
+			extraData: extraData ?? "0x",
+		},
+		hasCriteriaItems
+			? generateCriteriaResolvers({
+				orders: [order],
+				offerCriterias: [offerCriteria],
+				considerationCriterias: [considerationCriteria],
+			})
+			: [],
+		conduitKey,
+		recipientAddress], null, "  "))
 		return {
 			functionCall,
 			options: { value: totalNativeAmount?.toString() },
@@ -136,6 +155,7 @@ export async function getFulfillStandardOrderData({
 		"fulfillOrder",
 		orderAccountingForTips, conduitKey
 	)
+	console.log("fulfillOrder", JSON.stringify(orderAccountingForTips, null, "  "), "conduitKey", conduitKey)
 	return {
 		functionCall,
 		options: { value: totalNativeAmount?.toString() },

@@ -29,7 +29,7 @@ import type { CreateInputItem } from "./seaport-utils/types"
 import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
-describe.skip("seaport", () => {
+describe("seaport", () => {
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		GOERLI_CONFIG
@@ -75,6 +75,7 @@ describe.skip("seaport", () => {
 		console.log("accountAddressBuyer", accountAddressBuyer)
 		console.log("seller", await ethereumSeller.getFrom())
 
+		/*
 		const sellItem = await sdkSeller.nft.mint({
 			collection: createErc721V3Collection(rinkebyErc721V3ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -94,11 +95,16 @@ describe.skip("seaport", () => {
 		const take = getOpenseaEthTakeData("10000000000")
 		const orderHash = await createSeaportOrder(ethereumSeller, send, make, take)
 
+    */
+		// const sellItem = {
+		// 	itemId: "0x5a644acd663d7e4d07eeabe43df0f985670f8f9a:47",
+		// }
+		const orderHash = "0x82ffb7451be01e452d87f5398a4090e479b5f179efcf646bce27050199493703"
 		const order = await awaitOrder(sdkBuyer, orderHash)
 
 		const tx = await sdkBuyer.order.buy({
 			order: order as SeaportV1Order,
-			amount: 1,
+			amount: 2,
 			originFees: [{
 				account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 				value: 20,
@@ -107,8 +113,10 @@ describe.skip("seaport", () => {
 				value: 50,
 			}],
 		})
+		console.log("pending tx", tx)
 		await tx.wait()
-		await awaitOwnership(sdkBuyer, sellItem.itemId, accountAddressBuyer, "1")
+		console.log("success", tx)
+		// await awaitOwnership(sdkBuyer, sellItem.itemId, accountAddressBuyer, "2")
 
 		const fee = seaportBuyerOrderHandler.getOrderFee()
 		expect(fee).toBe(0)

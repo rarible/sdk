@@ -76,6 +76,7 @@ export class SeaportOrderHandler {
 			},
 		)
 
+		// throw new Error("asd")
 		return {
 			functionCall,
 			options,

@@ -1,11 +1,13 @@
 import type { JsonRpcPayload, JsonRpcResponse } from "web3-core-helpers"
 
 export async function providerRequest(provider: any, method: string, params: unknown[]): Promise<any> {
-	if ("request" in provider && typeof provider.request === "function") {
-		return provider.request({ method, params })
-	} else {
+	if (typeof provider !== "object" || provider === null) {
+		throw new Error("Provider is not an object")
+	}
+	if (typeof provider.request !== "function") {
 		return requestLegacy(provider, method, params)
 	}
+	return provider.request({ method, params })
 }
 
 function legacySend(
@@ -14,9 +16,9 @@ function legacySend(
 	callback: (error: Error | null, result?: JsonRpcResponse | undefined) => void
 ) {
 	if (provider !== null && typeof provider === "object") {
-		if (("sendAsync" in provider || !!provider.sendAsync) && typeof provider.sendAsync === "function") {
+		if (typeof provider.sendAsync === "function") {
 			provider.sendAsync(payload, callback)
-		} else if (("send" in provider || !!provider.send) && typeof provider.send === "function") {
+		} else if (typeof provider.send === "function") {
 			provider.send(payload, callback)
 		} else {
 			throw new Error("No send method defined")
