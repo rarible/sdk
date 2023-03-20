@@ -23,11 +23,10 @@ import type {
 import { orderToStruct } from "./sign-order"
 import { convertOpenSeaOrderToDTO } from "./fill-order/open-sea-converter"
 import type { CheckLazyOrderPart } from "./check-lazy-order"
-import { CROSS_CHAIN_SEAPORT_V1_4_ADDRESS } from "./fill-order/seaport-utils/constants"
 import { convertAPIOrderToSeaport } from "./fill-order/seaport-utils/convert-to-seaport-order"
 import { createLooksrareExchange } from "./contracts/looksrare-exchange"
 import { createX2Y2Contract } from "./contracts/exchange-x2y2-v1"
-import { createSeaportV14Contract } from "./contracts/seaport-v14"
+import { getSeaportContract } from "./fill-order/seaport-utils/seaport-utils"
 
 export async function cancel(
 	checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
@@ -49,7 +48,7 @@ export async function cancel(
 			case "OPEN_SEA_V1":
 				return cancelOpenseaOrderV1(ethereum, send, order)
 			case "SEAPORT_V1":
-				return cancelSeaportOrder(ethereum, send, order)
+				return cancelSeaportOrder(ethereum, send, apis, order)
 			case "LOOKSRARE":
 				return cancelLooksRareOrder(ethereum, send, config, order)
 			case "CRYPTO_PUNK":
@@ -182,10 +181,19 @@ export function cancelCryptoPunkOrderByAsset(
 }
 
 export async function cancelSeaportOrder(
-	ethereum: Ethereum, send: SendFunction, order: SimpleSeaportV1Order
+	ethereum: Ethereum,
+	send: SendFunction,
+	apis: RaribleEthereumApis,
+	order: SimpleSeaportV1Order
 ) {
+	if (!order.signature || order.signature === "0x") {
+		const { signature } = await apis.orderSignature.getSeaportOrderSignature({
+			hash: order.hash,
+		})
+		order.signature = signature
+	}
 	const orderParams = convertAPIOrderToSeaport(order).parameters
-	const seaport = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
+	const seaport = getSeaportContract(ethereum, toAddress(order.data.protocol))
 	return send(seaport.functionCall("cancel", [orderParams]))
 }
 

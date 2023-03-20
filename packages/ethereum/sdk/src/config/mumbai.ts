@@ -10,7 +10,7 @@ export const mumbaiConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x2Fc743F5419637B93dDAC159715B902186300041"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0xe961DAffA8C3fd46374d7694eEd50183fF964c1A"),
+		wrapper: toAddress("0x892ff9654653A6DeE284aBDB6f147198f6186537"),
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
