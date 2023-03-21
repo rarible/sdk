@@ -9,6 +9,7 @@ import { backOff } from "exponential-backoff"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { AbiItem } from "web3-utils"
 import { EthereumProviderError } from "@rarible/ethereum-provider"
+import { filterErrors } from "@rarible/ethereum-provider"
 import type { Web3EthereumConfig } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
@@ -53,7 +54,9 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		let signer: string | undefined
 		try {
 			signer = await this.getFrom()
-			return await (this.config.web3.eth.personal as any).sign(message, signer)
+			const signature = await (this.config.web3.eth.personal as any).sign(message, signer)
+			filterErrors(signature)
+			return signature
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,

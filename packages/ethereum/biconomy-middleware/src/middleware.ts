@@ -7,6 +7,7 @@ import type { IBiconomyConfig, IContractRegistry, ILimitsRegistry } from "./type
 import { MetaContractAbi } from "./abi/methods-abi"
 import { providerRequest } from "./utils/provider-request"
 import { signTypedData } from "./sign-typed-data"
+import { BiconomyMiddlewareError } from "./errors"
 
 export function biconomyMiddleware(
 	provider: any,
@@ -55,7 +56,14 @@ export function biconomyMiddleware(
 						return
 					}
 				} catch (err: any) {
-					res.error = err
+					res.error = new BiconomyMiddlewareError({
+						message: err?.message,
+						error: err,
+						data: {
+							signer,
+							req,
+						},
+					})
 				}
 			}
 		}
