@@ -1,5 +1,6 @@
 import type { MessageTypes, TypedMessage } from "./domain"
 import { SignTypedDataMethodEnum } from "./domain"
+import { BiconomyMiddlewareError } from "./errors"
 
 export type SendFunction = (method: string, params: any) => Promise<any>
 
@@ -18,7 +19,18 @@ export async function signTypedData<T extends MessageTypes>(
 		} catch (error) {
 			console.error("got error white executing sign typed data v3", error)
 			filterErrors(error)
-			return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
+			try {
+			  return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
+			} catch (e: any) {
+				throw new BiconomyMiddlewareError({
+					message: e?.message,
+					error: e,
+					data: {
+						signer,
+						data,
+					},
+				})
+			}
 		}
 	}
 }

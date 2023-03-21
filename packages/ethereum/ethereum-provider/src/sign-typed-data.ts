@@ -8,14 +8,11 @@ export async function signTypedData<T extends MessageTypes>(
 	send: SendFunction, signer: string, data: TypedMessage<T>,
 ): Promise<string> {
 	try {
-		return await send(SignTypedDataMethodEnum.V4, [signer, JSON.stringify(data)])
+		const signature = await send(SignTypedDataMethodEnum.V4, [signer, JSON.stringify(data)])
+		filterErrors(signature)
+		return signature
 	} catch (error) {
-		if (isError(error) && error.message?.includes("MetaMask Typed Message Signature: User denied message signature")) {
-			throw new SignTypedDataError({
-				error,
-				data: { signer, data },
-			})
-		}
+		filterErrors(error)
 		try {
 			console.error("got error while executing sign typed data v4", error)
 			if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
@@ -32,12 +29,11 @@ export async function signTypedData<T extends MessageTypes>(
 			}
 		} catch (e) {
 			throw new SignTypedDataError({
-				message: "Can't sign typed data by V4/V3/Default methods",
+				message: isError(error) ? error.message : "Can't sign typed data by V4/V3/Default methods",
 				error: e,
 				data: {
 					signer,
 					data,
-					v4ErrorMessage: isError(error) ? error.message : "",
 				},
 			})
 		}
@@ -64,7 +60,7 @@ async function signWithHardwareWallets<T extends MessageTypes>(
 	4100 - not authorized in wallet
 */
 
-function filterErrors(original: unknown) {
+export function filterErrors(original: unknown) {
 	if (hasCode(original)) {
 		if ([4900, 4001, 4901, 4100].includes(original.code)) {
 			throw original
