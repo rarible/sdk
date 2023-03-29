@@ -246,9 +246,8 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GbyoDi7H1sfXmimXpptZJuCdHMh66WS9u",
 					fxhash_nfts_v1: "KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE",
 					fxhash_nfts_v2: "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi",
-					//TODO replace with mainnet address
-					aggregator_tracker: "",
-					aggregator_tracker_id: "",
+					aggregator_tracker: "KT1Gv1tPJ3nU5T6VmFc12M6NKc5i51MYVPjG",
+					aggregator_tracker_id: "09616c6c64617461",
 				},
 			}
 		}
