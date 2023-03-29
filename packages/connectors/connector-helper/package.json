@@ -25,7 +25,7 @@
     "@rarible/connector-mattel": "^0.13.13",
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/sdk-wallet": "^0.13.14",
-    "@rarible/tezos-sdk": "0.1.44",
+    "@rarible/tezos-sdk": "0.1.45",
     "@rarible/web3-ethereum": "^0.13.14"
   },
   "devDependencies": {
