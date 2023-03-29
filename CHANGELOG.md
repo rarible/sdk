@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.15](https://github.com/rarible/sdk/compare/v0.13.14...v0.13.15) (2023-03-29)
+
+
+### Bug Fixes
+
+* eth-client version ([71ae8bb](https://github.com/rarible/sdk/commit/71ae8bbeb92247c98be71fc8066aa9e34100f451))
+
+
+
+
+
 ## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
 
 
