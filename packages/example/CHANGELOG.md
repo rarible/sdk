@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* cancel seaport order ([#449](https://github.com/rarible/sdk/issues/449)) ([95b4af0](https://github.com/rarible/sdk/commit/95b4af03dae0a09fad3c02a04c1027047c1acb02))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+
+
+
+
+
 ## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
 
 **Note:** Version bump only for package example

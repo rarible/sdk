@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Features
+
+* flow storefront v2 support ([5094dd9](https://github.com/rarible/sdk/commit/5094dd9907c78efec5c7defc028856c503868722))
+
+
+
+
+
 ## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
 
 **Note:** Version bump only for package @rarible/connector-fcl

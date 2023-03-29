@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* flow change price comission ([9fd8470](https://github.com/rarible/sdk/commit/9fd8470cfa3262f44b237e1f73371accd8854dcd))
+* flow storefront contracts ([0beabeb](https://github.com/rarible/sdk/commit/0beabeb5ea901e5fe68f48bdb89eb033e6eb1b0c))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+* flow storefront v2 support ([5094dd9](https://github.com/rarible/sdk/commit/5094dd9907c78efec5c7defc028856c503868722))
+
+
+
+
+
 ## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
 
 **Note:** Version bump only for package @rarible/sdk-wallet
