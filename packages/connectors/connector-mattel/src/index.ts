@@ -66,6 +66,7 @@ export class MattelConnectionProvider extends
 				if (await result.magic.user.isLoggedIn()) {
 					const user = await result.magic.user.getMetadata()
 
+					console.log("fcl", result.fcl, "magic flow", result.magic.flow)
 					return {
 						user,
 						auth: result.magic.flow.authorization,
@@ -84,6 +85,7 @@ export class MattelConnectionProvider extends
 					})
 				}
 				const user = await result.magic.user.getMetadata()
+				console.log("result.magic.flow", result.magic.flow, "fcl", result.fcl)
 				return {
 					user,
 					auth: result.magic.flow.authorization,
@@ -123,6 +125,7 @@ export class MattelConnectionProvider extends
 				}),
 			],
 		})
+		console.log("magic", magic)
 		fcl.config().put("accessNode.api", this.config.accessNode)
 
 		return { fcl, magic }

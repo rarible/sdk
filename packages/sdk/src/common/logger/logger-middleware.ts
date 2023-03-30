@@ -149,6 +149,7 @@ export function getInternalLoggerMiddleware(
 				}
 			} catch (err: any) {
 				if (logsLevel >= LogsLevel.ERROR) {
+					console.error(err)
 					let data
 					try {
 						data = {

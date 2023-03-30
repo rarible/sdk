@@ -39,7 +39,7 @@ export function createFlowSdk(
 				: []),
 			...(params?.middleware || []),
 		],
-	}, config?.blockchain?.FLOW?.auth)
+	}, config?.blockchain?.FLOW?.auth || wallet?.getAuth() || undefined)
 	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)

@@ -149,7 +149,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     magicAPIKey: "pk_live_63A5A557D1D4882D",
     auth0Domain: "login-test.mattel.com",
     auth0ClientId: "E9oV8wVCB89jcaThWny7STYHcm59REke",
-    auth0RedirectUrl: "https://marketplace-test.mattel.com",
+    auth0RedirectUrl: "https://test-virtual.mattel.com",
     accessNode: flowNetwork.accessNode,
     network: flowNetwork.network,
   }) as any) as any

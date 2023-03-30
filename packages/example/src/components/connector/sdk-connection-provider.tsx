@@ -52,7 +52,7 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 				useDataV3: true,
 				marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
 			}
-		}
+		},
 	}) : undefined
 
 	const context: IConnectorContext = {
