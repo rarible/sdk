@@ -422,7 +422,7 @@ describe("bid", () => {
 				"@type": "ERC20",
 				contract: erc20Contract,
 			},
-			expirationDate: new Date(Date.now() + 60000),
+			expirationDate: new Date(Date.now() + 1000 * 60 * 10),
 		})
 
 		const acceptBidResponse = await sdk1.order.acceptBid.prepare({
