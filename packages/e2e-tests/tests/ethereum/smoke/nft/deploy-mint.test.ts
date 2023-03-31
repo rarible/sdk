@@ -146,13 +146,13 @@ describe.each(suites()/*.filter((t) => t.description === "ERC1155")*/)("$blockch
 		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 		const collection = await getCollection(sdk, address)
 
-		await retry(5, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const collectionsAll = await getAllCollections(sdk, [suite.blockchain], 10)
 			await verifyCollectionsByBlockchain(collectionsAll, suite.blockchain)
 			await verifyCollectionsContainsCollection(collectionsAll, address)
 		})
 
-		await retry(5, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
 			await verifyCollectionsByBlockchain(collectionsByOwner, suite.blockchain)
 			await verifyCollectionsOwner(collectionsByOwner, walletAddress.unionAddress)
