@@ -3,7 +3,7 @@ import type { Observable } from "rxjs"
 import { first, mergeMap, startWith } from "rxjs/operators"
 import type {
 	ConnectionState,
-	EthereumProviderConnectionResult, Maybe,
+	EthereumProviderConnectionResult,
 } from "@rarible/connector"
 import {
 	connectToWeb3,
