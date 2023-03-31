@@ -64,7 +64,7 @@ export interface Ethereum {
 
 export * from "./domain"
 export * from "./errors"
-export { signTypedData } from "./sign-typed-data"
+export { signTypedData, filterErrors } from "./sign-typed-data"
 export type {
 	EthereumEstimateGasOptions,
 	EthereumFunctionCallInfo,

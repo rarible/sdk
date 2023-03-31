@@ -33,7 +33,6 @@ import type {
 } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { ZERO_FEE_VALUE } from "./common/origin-fees-utils"
-import { getUpdatedCalldata } from "./common/get-updated-call"
 
 export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillRequest> {
 
@@ -136,10 +135,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 
 			return {
 				functionCall,
-				options: {
-					...options,
-					additionalData: getUpdatedCalldata(this.sdkConfig),
-				},
+				options,
 			}
 		} else {
 			let functionCall: EthereumFunctionCall
@@ -181,10 +177,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 
 			return {
 				functionCall,
-				options: {
-					...options,
-					additionalData: getUpdatedCalldata(this.sdkConfig),
-				},
+				options,
 			}
 		}
 	}

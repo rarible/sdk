@@ -39,6 +39,6 @@ export function EnvironmentSelectorProvider({ children }: React.PropsWithChildre
 	}
 
 	return <EnvironmentContext.Provider value={context}>
-		{children(connector)}
+		{children(connector as any)}
 	</EnvironmentContext.Provider>
 }

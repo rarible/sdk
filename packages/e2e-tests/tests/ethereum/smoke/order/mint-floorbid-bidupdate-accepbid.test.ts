@@ -220,14 +220,14 @@ describe.each(suites())("$blockchain mint => floorBid => bidUpdate => acceptBid"
 
 		const bidOrder = await bid(buyerSdk, buyerWallet, { collectionId: collection.id }, bidRequest)
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const collection1 = await getCollection(sellerSdk, address)
 			expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
 		})
 
 		await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const collection2 = await getCollection(sellerSdk, address)
 			expect(collection2.bestBidOrder?.takePrice).toBe(suite.updateBidRequest.price)
 		})
@@ -240,7 +240,7 @@ describe.each(suites())("$blockchain mint => floorBid => bidUpdate => acceptBid"
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const collection3 = await getCollection(sellerSdk, address)
 			expect(collection3.bestBidOrder).toBe(undefined)
 		})

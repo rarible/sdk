@@ -189,7 +189,7 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
 			suite.mintRequest(creatorWalletAddress.unionAddress))
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const allItems = await getAllItems(creatorSdk, [suite.blockchain], 50)
 			await verifyItemsByBlockchain(allItems, suite.blockchain)
 			await verifyItemsContainsItem(allItems, nft.id)

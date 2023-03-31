@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.15](https://github.com/rarible/sdk/compare/v0.13.14...v0.13.15) (2023-03-29)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* cancel seaport order ([#449](https://github.com/rarible/sdk/issues/449)) ([95b4af0](https://github.com/rarible/sdk/commit/95b4af03dae0a09fad3c02a04c1027047c1acb02))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* example navigation ([#443](https://github.com/rarible/sdk/issues/443)) ([e53374e](https://github.com/rarible/sdk/commit/e53374e73fe09c118abff592e9d3a6208614b06b))
+
+
+### Features
+
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+
+
+
+
+
 ## [0.13.10](https://github.com/rarible/sdk/compare/v0.13.9...v0.13.10) (2023-02-17)
 
 **Note:** Version bump only for package example

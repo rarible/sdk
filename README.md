@@ -26,6 +26,7 @@ Rarible Multichain SDK enables applications to easily interact with Rarible Prot
   - [Burn](#burn)
   - [Sell](#sell)
   - [Buy](#buy)
+  - [Batch purchase](#batch-purchase)
   - [Bid](#bid)
   - [Accept bid](#accept-bid)
   - [Update sell order](#update-sell-order)
@@ -44,7 +45,7 @@ See our example how it works:
 > **Note:** on Apple silicon, you have to run NodeJS in `x64` mode. You'll see [this issue otherwise](https://github.com/rarible/sdk/issues/402). Follow [these steps to solve](https://stackoverflow.com/a/67907214/861773).
 
     ```shell
-    yarn && yarn bootstrap && yarn build
+    yarn && yarn bootstrap && yarn build-all
     ```
 
 3. Start the application in development mode:
@@ -393,7 +394,7 @@ Buy NFT using sell order
 
 ```typescript
 const tx = await sdk.order.buy({
-    order: toOrderId("..."),
+    orderId: toOrderId("..."),
     amount: 1,
 })
 await tx.wait()
@@ -407,7 +408,23 @@ const {
   originFeeSupport,
   payoutsSupport,
   supportsPartialFill
-} = await sdk.order.buy.prepare({ order: toOrderId("...") })
+} = await sdk.order.buy.prepare({ orderId: toOrderId("...") })
+await tx.wait()
+```
+
+### Batch purchase
+
+Batch purchase NFT 
+
+```typescript
+const tx = await sdk.order.batchBuy([
+  {
+    orderId: toOrderId("..."),
+    amount: 1,
+    originFees?: [...]
+  },
+  //...
+])
 await tx.wait()
 ```
 

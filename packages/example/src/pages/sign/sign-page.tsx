@@ -61,6 +61,7 @@ export function SignPage() {
 								setResult(res)
 								setError(undefined)
 							} catch (e: any) {
+                console.error(e)
 								setSigning(false)
 								setError(e.message || e.toString())
 							}

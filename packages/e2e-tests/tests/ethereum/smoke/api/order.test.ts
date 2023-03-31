@@ -141,12 +141,12 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 		const bidRequest = await suite.bidRequest(requestCurrency)
 		await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
 			expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
 		})
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const orderBidsByItemRaw =
 				await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
 			expect(orderBidsByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)

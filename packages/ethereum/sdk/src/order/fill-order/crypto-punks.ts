@@ -12,7 +12,6 @@ import type { SimpleOrder } from "../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { invertOrder } from "./invert-order"
 import type { CryptoPunksOrderFillRequest, OrderFillSendData, OrderHandler } from "./types"
-import { getUpdatedCalldata } from "./common/get-updated-call"
 
 export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFillRequest> {
 	constructor(
@@ -42,13 +41,10 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 	async getTransactionData(
 		initial: SimpleCryptoPunkOrder, inverted: SimpleCryptoPunkOrder,
 	): Promise<OrderFillSendData> {
-		const options = {
-			...this.getMatchV2Options(initial, inverted),
-			additionalData: getUpdatedCalldata(this.sdkConfig),
+		return {
+			functionCall: this.getPunkOrderCallMethod(initial),
+			options: this.getMatchV2Options(initial, inverted),
 		}
-		const functionCall = this.getPunkOrderCallMethod(initial)
-
-		return { functionCall, options }
 	}
 
 	async sendTransaction(

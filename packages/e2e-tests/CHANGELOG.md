@@ -3,6 +3,52 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Features
+
+* flow storefront v2 support ([5094dd9](https://github.com/rarible/sdk/commit/5094dd9907c78efec5c7defc028856c503868722))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* e2e flow tests ([a295e68](https://github.com/rarible/sdk/commit/a295e6811eab3da44face39c4e507cd3c9db893f))
+
+
+
+
+
 ## [0.13.9](https://github.com/rarible/sdk/compare/v0.13.8...v0.13.9) (2023-02-17)
 
 

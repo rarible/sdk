@@ -79,11 +79,11 @@ describe.each(providers)("bid", (ethereum) => {
 	const treasury = createE2eWallet()
 	const treasuryAddress = toAddress(treasury.getAddressString())
 
-	const erc20Contract = toAddress("0xfcaEB56C49b9eb2EA0a18992603F566a18E9db68")
+	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
 	beforeAll(async () => {
 		const tx = await send(
 			createErc20Contract(ethereum, erc20Contract)
-				.functionCall("mint", await ethereum.getFrom(), 1000)
+				.functionCall("mint", await ethereum.getFrom(), "10000000")
 		)
 		await tx.wait()
 	})
@@ -112,7 +112,7 @@ describe.each(providers)("bid", (ethereum) => {
 				contract: minted.contract,
 				tokenId: minted.tokenId,
 			},
-			price: toBn("100"),
+			price: toBn("10000"),
 			makeAssetType: {
 				assetClass: "ERC20",
 				contract: erc20Contract,
@@ -127,7 +127,7 @@ describe.each(providers)("bid", (ethereum) => {
 		expect(order.hash).toBeTruthy()
 
 		await retry(5, 2000, async () => {
-			const nextPrice = "150"
+			const nextPrice = "15000"
 			const { order: updatedOrder } = await orderSell.update({
 				orderHash: order.hash,
 				price: toBigNumber(nextPrice),
@@ -170,7 +170,7 @@ describe.each(providers)("bid", (ethereum) => {
 					assetClass: "ERC20",
 					contract: erc20Contract,
 				},
-				value: toBigNumber("200"),
+				value: toBigNumber("20000"),
 			},
 			salt: toBigNumber("10"),
 			type: "RARIBLE_V1",
@@ -183,7 +183,7 @@ describe.each(providers)("bid", (ethereum) => {
 		const order = await upserter.upsert({ order: form })
 
 		await retry(5, 2000, async () => {
-			const nextPrice = "250"
+			const nextPrice = "25000"
 			const { order: updatedOrder } = await orderSell.update({
 				orderHash: order.hash,
 				price: toBigNumber(nextPrice),

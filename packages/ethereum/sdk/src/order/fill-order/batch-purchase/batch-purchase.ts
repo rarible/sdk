@@ -61,7 +61,7 @@ export class BatchOrderFiller {
 	) {
 		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, config, getBaseOrderFee)
 		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
-		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, getBaseOrderFee, env)
+		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, apis, getBaseOrderFee, env)
 		this.looksrareHandler = new LooksrareOrderHandler(ethereum, send, config, getBaseOrderFee, env, apis)
 		this.x2Y2Handler = new X2Y2OrderHandler(ethereum, send, config, getBaseOrderFee, apis)
 		this.ammHandler = new AmmOrderHandler(ethereum, send, config, getBaseOrderFee, apis, env)

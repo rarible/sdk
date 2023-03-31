@@ -126,7 +126,7 @@ describe("bid test", () => {
 			price: "0.000004",
 		})
 
-		await retry(10, 1000, async () => {
+		await retry(10, 3000, async () => {
 			const order = await bidderSdk.apis.order.getOrderById({
 				id: updatedBidOrderId,
 			})

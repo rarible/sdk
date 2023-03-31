@@ -3,6 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+
+### Features
+
+* tezos marker ([55f19e9](https://github.com/rarible/sdk/commit/55f19e934df1a2dc04acfcc03f18ffb2d98d8433))
+
+
+
+
+
+## [0.13.15](https://github.com/rarible/sdk/compare/v0.13.14...v0.13.15) (2023-03-29)
+
+
+### Bug Fixes
+
+* eth-client version ([71ae8bb](https://github.com/rarible/sdk/commit/71ae8bbeb92247c98be71fc8066aa9e34100f451))
+
+
+
+
+
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* cancel seaport order ([#449](https://github.com/rarible/sdk/issues/449)) ([95b4af0](https://github.com/rarible/sdk/commit/95b4af03dae0a09fad3c02a04c1027047c1acb02))
+* flow change price comission ([9fd8470](https://github.com/rarible/sdk/commit/9fd8470cfa3262f44b237e1f73371accd8854dcd))
+* flow storefront contracts ([0beabeb](https://github.com/rarible/sdk/commit/0beabeb5ea901e5fe68f48bdb89eb033e6eb1b0c))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+* flow storefront v2 support ([5094dd9](https://github.com/rarible/sdk/commit/5094dd9907c78efec5c7defc028856c503868722))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+
+### Features
+
+* opensea orders ([#448](https://github.com/rarible/sdk/issues/448)) ([858e716](https://github.com/rarible/sdk/commit/858e716aac3cdf4af44184e01f0d813c0f058ed9))
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+
+### Bug Fixes
+
+* marketplace marker ([#445](https://github.com/rarible/sdk/issues/445)) ([cb8ba5a](https://github.com/rarible/sdk/commit/cb8ba5aedc53b6efc56eecb3c0ec787a668d1d57))
+* no send method defined ([#446](https://github.com/rarible/sdk/issues/446)) ([05099d8](https://github.com/rarible/sdk/commit/05099d8e46fd9d20d13b1e4b52a0f48307bcfcba))
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* e2e flow tests ([a295e68](https://github.com/rarible/sdk/commit/a295e6811eab3da44face39c4e507cd3c9db893f))
+* example navigation ([#443](https://github.com/rarible/sdk/issues/443)) ([e53374e](https://github.com/rarible/sdk/commit/e53374e73fe09c118abff592e9d3a6208614b06b))
+
+
+### Features
+
+* batch buy readme ([#442](https://github.com/rarible/sdk/issues/442)) ([239d34d](https://github.com/rarible/sdk/commit/239d34d922d91f4d3a665b05af287a171d263134))
+* handle wallet http errors ([#440](https://github.com/rarible/sdk/issues/440)) ([3a45e1a](https://github.com/rarible/sdk/commit/3a45e1a9640e7ec37952d8a5a80aac8789adb711))
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+* seaport v1.4 update ([#444](https://github.com/rarible/sdk/issues/444)) ([bafa1fe](https://github.com/rarible/sdk/commit/bafa1feb91b3454a0c537f5c3bbf1f8889012edd))
+
+
+
+
+
 ## [0.13.10](https://github.com/rarible/sdk/compare/v0.13.9...v0.13.10) (2023-02-17)
 
 

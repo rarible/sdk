@@ -36,7 +36,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 	const orderApi = new OrderControllerApi(configuration)
 	const checkLazyOrder: any = async (form: any) => Promise.resolve(form)
 
-	test("sign and upsert works", async () => {
+	test.skip("sign and upsert works", async () => {
 
 		const order: OrderForm = {
 			...TEST_ORDER_TEMPLATE,

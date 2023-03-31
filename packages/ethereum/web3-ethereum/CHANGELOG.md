@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* cancel seaport order ([#449](https://github.com/rarible/sdk/issues/449)) ([95b4af0](https://github.com/rarible/sdk/commit/95b4af03dae0a09fad3c02a04c1027047c1acb02))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+
+### Features
+
+* opensea orders ([#448](https://github.com/rarible/sdk/issues/448)) ([858e716](https://github.com/rarible/sdk/commit/858e716aac3cdf4af44184e01f0d813c0f058ed9))
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+
+### Bug Fixes
+
+* no send method defined ([#446](https://github.com/rarible/sdk/issues/446)) ([05099d8](https://github.com/rarible/sdk/commit/05099d8e46fd9d20d13b1e4b52a0f48307bcfcba))
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Features
+
+* handle wallet http errors ([#440](https://github.com/rarible/sdk/issues/440)) ([3a45e1a](https://github.com/rarible/sdk/commit/3a45e1a9640e7ec37952d8a5a80aac8789adb711))
+
+
+
+
+
 ## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
 
 **Note:** Version bump only for package @rarible/web3-ethereum

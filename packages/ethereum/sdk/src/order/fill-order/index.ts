@@ -11,7 +11,6 @@ import type {
 	SimpleOpenSeaV1Order,
 	SimpleOrder,
 	SimpleRaribleV2Order,
-	SimpleX2Y2Order,
 } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
@@ -51,6 +50,7 @@ import { SeaportOrderHandler } from "./seaport"
 import { X2Y2OrderHandler } from "./x2y2"
 import { LooksrareOrderHandler } from "./looksrare"
 import { AmmOrderHandler } from "./amm"
+import { getUpdatedCalldata } from "./common/get-updated-call"
 
 export class OrderFiller {
 	v1Handler: RaribleV1OrderHandler
@@ -88,7 +88,7 @@ export class OrderFiller {
 		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
 		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
 		this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
-		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, getBaseOrderFee, env, sdkConfig)
+		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, apis, getBaseOrderFee, env, sdkConfig)
 		this.looksrareHandler = new LooksrareOrderHandler(
 			ethereum,
 			send,
@@ -226,40 +226,13 @@ export class OrderFiller {
 		}
 	}
 
-	private async sendTransaction(request: FillOrderRequest, inverted: SimpleOrder) {
-		switch (inverted.type) {
-			case "RARIBLE_V1":
-				return this.v1Handler.sendTransaction(
-					<SimpleLegacyOrder>request.order,
-					inverted,
-					<LegacyOrderFillRequest>request
-				)
-			case "RARIBLE_V2":
-				return this.v2Handler.sendTransaction(<SimpleRaribleV2Order>request.order, inverted)
-			case "OPEN_SEA_V1":
-				return this.openSeaHandler.sendTransaction(
-					<SimpleOpenSeaV1Order>request.order,
-					inverted,
-					<OpenSeaV1OrderFillRequest>request
-				)
-			case "SEAPORT_V1":
-				return this.seaportHandler.sendTransaction(
-					<SeaportV1OrderFillRequest>request
-				)
-			case "LOOKSRARE":
-				return this.looksrareHandler.sendTransaction(<LooksrareOrderFillRequest>request)
-			case "X2Y2":
-				return this.x2y2Handler.fillOrder(
-					<SimpleX2Y2Order>request.order,
-					<X2Y2OrderFillRequest>request
-				)
-			case "CRYPTO_PUNK":
-				return this.punkHandler.sendTransaction(<SimpleCryptoPunkOrder>request.order, inverted)
-			case "AMM":
-				return this.ammHandler.sendTransaction(<AmmOrderFillRequest>request)
-			default:
-				throw new Error(`Unsupported order: ${JSON.stringify(inverted)}`)
-		}
+	private async sendTransaction(request: FillOrderRequest, inverted: SimpleOrder): Promise<EthereumTransaction> {
+		const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
+		return this.send(
+			functionCall, {
+				...options,
+				additionalData: getUpdatedCalldata(this.sdkConfig),
+			})
 	}
 
 	private async getTransactionRequestData(

@@ -22,7 +22,7 @@ export class ConvertWeth {
 		this.getWethContractAddress = this.getWethContractAddress.bind(this)
 	}
 
-	private async convertEthToWeth(value: BigNumberValue): Promise<EthereumTransaction> {
+	async convertEthToWeth(value: BigNumberValue): Promise<EthereumTransaction> {
 		if (!this.ethereum) {
 			throw new Error("Wallet is undefined")
 		}
@@ -39,7 +39,7 @@ export class ConvertWeth {
 		)
 	}
 
-	private async convertWethToEth(value: BigNumberValue): Promise<EthereumTransaction> {
+	async convertWethToEth(value: BigNumberValue): Promise<EthereumTransaction> {
 		if (!this.ethereum) {
 			throw new Error("Wallet is undefined")
 		}

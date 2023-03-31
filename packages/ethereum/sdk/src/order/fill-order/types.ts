@@ -113,7 +113,8 @@ export enum ExchangeWrapperOrderType {
 	SEAPORT_ADVANCED_ORDERS = 2,
 	X2Y2 = 3,
 	LOOKSRARE_ORDERS = 4,
-	AAM = 5
+	AAM = 5,
+	SEAPORT_V14 = 6
 }
 
 export type PreparedOrderRequestDataForExchangeWrapper = {

@@ -3,7 +3,7 @@ import type { TezosProvider } from "@rarible/tezos-sdk"
 import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
 import type { CanTransferResult } from "../../../types/nft/restriction/domain"
 import type { MaybeProvider } from "../common"
-import { convertUnionAddress, getRequiredProvider } from "../common"
+import { convertUnionAddress, getRequiredProvider, getTezosItemData } from "../common"
 import { NetworkErrorCode } from "../../../common/apis"
 
 export class TezosCanTransfer {
@@ -17,11 +17,9 @@ export class TezosCanTransfer {
 		itemId: ItemId, from: UnionAddress, to: UnionAddress,
 	): Promise<CanTransferResult> {
 		const provider = getRequiredProvider(this.provider)
-		const parsed = itemId.split(":")
-		const contract = parsed[1]
-		const tokenId = parsed[2]
+		const { tokenId, contract } = getTezosItemData(itemId)
 		const body = {
-			"chain_id": "NetXZSsxBpMQeAT",
+			"chain_id": this.provider.config.chain_id,
 			"contract": contract,
 			"entrypoint": "can_transfer",
 			"gas": "100000",
@@ -38,7 +36,7 @@ export class TezosCanTransfer {
 					},
 				],
 			},
-			"payer": this.provider.config.transfer_proxy,
+			"payer": convertUnionAddress(from),
 			"source": this.provider.config.transfer_proxy,
 			"unparsing_mode": "Readable",
 		}

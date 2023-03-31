@@ -21,7 +21,6 @@ import type { RaribleEthereumApis } from "../../common/apis"
 import type { MakerOrderWithVRS, TakerOrderWithEncodedParams } from "./looksrare-utils/types"
 import type { LooksrareOrderFillRequest, OrderFillSendData } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
-import { getUpdatedCalldata } from "./common/get-updated-call"
 import type { PreparedOrderRequestDataForExchangeWrapper } from "./types"
 import { calcValueWithFees, originFeeValueConvert } from "./common/origin-fees-utils"
 import {
@@ -205,14 +204,11 @@ export class LooksrareOrderHandler {
 			feeAddresses[0],
 			feeAddresses[1]
 		)
-		const options = {
-			value: requestData.options.value.toString(),
-			additionalData: getUpdatedCalldata(this.sdkConfig),
-		}
-
 		return {
 			functionCall,
-			options,
+			options: {
+				value: requestData.options.value.toString(),
+			},
 		}
 	}
 

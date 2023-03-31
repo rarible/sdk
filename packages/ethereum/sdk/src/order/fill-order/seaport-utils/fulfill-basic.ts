@@ -1,24 +1,27 @@
-import type { Ethereum } from "@rarible/ethereum-provider"
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
-import { createSeaportContract } from "../../contracts/seaport"
+import { ZERO_ADDRESS } from "@rarible/types"
+import type { EthereumContract } from "@rarible/ethereum-provider"
 import type { OrderFillSendData } from "../types"
 import type { BasicOrderParametersStruct, ConsiderationItem, Order } from "./types"
 import { getSummedTokenAndIdentifierAmounts } from "./item"
 import type { TimeBasedItemParams } from "./item"
-import { BasicOrderRouteType, CROSS_CHAIN_SEAPORT_ADDRESS, ItemType, NO_CONDUIT } from "./constants"
+import {
+	BasicOrderRouteType,
+	ItemType,
+	NO_CONDUIT,
+} from "./constants"
 
 export async function getfulfillBasicOrderData({
-	ethereum,
 	order,
 	timeBasedItemParams,
 	tips = [],
 	conduitKey = NO_CONDUIT,
+	seaportContract,
 }: {
-	ethereum: Ethereum,
 	order: Order;
 	timeBasedItemParams: TimeBasedItemParams;
 	tips?: ConsiderationItem[];
 	conduitKey: string;
+	seaportContract: EthereumContract
 }): Promise<OrderFillSendData> {
 	const { offer, consideration } = order.parameters
 	const considerationIncludingTips = [...consideration, ...tips]
@@ -79,8 +82,10 @@ export async function getfulfillBasicOrderData({
 		zoneHash: order.parameters.zoneHash,
 	}
 
-	const seaportContract = createSeaportContract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
+	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 	const functionCall = seaportContract.functionCall("fulfillBasicOrder", basicOrderParameters)
+
+	console.log("fulfillBasicOrder", JSON.stringify(basicOrderParameters, null, " "))
 
 	return {
 		functionCall,
