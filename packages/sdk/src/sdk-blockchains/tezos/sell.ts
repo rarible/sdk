@@ -1,5 +1,5 @@
 import type {
-	FTAssetType, OrderDataRequest, TezosProvider, XTZAssetType,
+	FTAssetType, TezosProvider, XTZAssetType,
 } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import {
@@ -14,6 +14,7 @@ import type { OrderFormV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import { sellV2 } from "@rarible/tezos-sdk/dist/sales/sell"
 import type { OrderId } from "@rarible/api-client"
 import { Warning } from "@rarible/logger/build"
+import { toOrderId } from "@rarible/types"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type {
@@ -27,20 +28,22 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { IApisSdk } from "../../domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
-import type { MaybeProvider } from "./common"
+import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import type { MaybeProvider, OrderDataRequest } from "./common"
 import {
 	convertFromContractAddress,
 	convertUnionParts,
-	convertTezosOrderId,
 	getRequiredProvider,
 	getSupportedCurrencies,
 	getTezosAddress,
 	getTezosAssetTypeV2,
 	getTezosItemData,
-	getCollectionType,
 	getRequestAmount,
 	checkChainId,
 } from "./common"
+import { getCollectionType } from "./common/get-collection-type"
 
 export class TezosSell {
 	constructor(
@@ -72,6 +75,13 @@ export class TezosSell {
 			default: {
 				throw new Error("Unsupported take asset type")
 			}
+		}
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: parseInt(this.provider.config.fees.toString()),
 		}
 	}
 
@@ -107,15 +117,14 @@ export class TezosSell {
 
 	async sellV2(request: OrderCommon.OrderInternalRequest): Promise<OrderId> {
 		await checkChainId(this.provider)
+		checkPayouts(request.payouts)
 
 		const provider = getRequiredProvider(this.provider)
 		const { contract, tokenId } = getTezosItemData(request.itemId)
 
 		const requestCurrency = getCurrencyAssetType(request.currency)
 
-		const expirationDate = request.expirationDate instanceof Date
-			? Math.floor(request.expirationDate.getTime() / 1000)
-			: undefined
+		const expirationDate = convertDateToTimestamp(request.expirationDate)
 		const collectionType = await getCollectionType(this.provider, contract)
 
 		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)
@@ -145,7 +154,7 @@ export class TezosSell {
 		if (!sellOrderId) {
 			throw new Error("OrderID cannot be requested")
 		}
-		return convertTezosOrderId(sellOrderId)
+		return toOrderId(sellOrderId)
 	}
 
 	async update(request: PrepareOrderUpdateRequest): Promise<PrepareOrderUpdateResponse> {
@@ -202,7 +211,7 @@ export class TezosSell {
 					provider,
 					tezosRequest
 				)
-				return convertTezosOrderId(sellOrderId)
+				return toOrderId(sellOrderId)
 			},
 		})
 		return {

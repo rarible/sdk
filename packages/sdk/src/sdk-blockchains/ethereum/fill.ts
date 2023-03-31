@@ -1,13 +1,11 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber, toWord } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import type {
 	FillBatchSingleOrderRequest,
 	FillOrderAction,
 	FillOrderRequest,
-	RaribleV2OrderFillRequestV3Buy,
 	RaribleV2OrderFillRequestV3Sell,
-
 	AmmOrderFillRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
@@ -34,6 +32,7 @@ import type {
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
+import { checkPayouts } from "../../common/check-payouts"
 import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
@@ -109,13 +108,9 @@ export class EthereumFill {
 				switch (order.data.dataType) {
 					case "RARIBLE_V2_DATA_V3_BUY":
 						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: true });
-						(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!;
-						(request as RaribleV2OrderFillRequestV3Sell).marketplaceMarker =
-							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
+						(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!
 						break
 					case "RARIBLE_V2_DATA_V3_SELL":
-						(request as RaribleV2OrderFillRequestV3Buy).marketplaceMarker =
-							this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined
 						validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: false })
 						break
 					default:
@@ -332,11 +327,12 @@ export class EthereumFill {
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {
+				checkPayouts(fillRequest.payouts)
 				if (fillRequest.unwrap) {
-					throw new Error("Unwrap is not supported yet")
+					throw new Warning("Unwrap is not supported yet")
 				}
 				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
-					throw new Error("For collection order you should pass itemId")
+					throw new Warning("For collection order you should pass itemId")
 				}
 				return this.getFillOrderRequest(order, fillRequest)
 			})
@@ -373,7 +369,7 @@ export class EthereumFill {
 		const submit = this.sdk.order.buyBatch.around(
 			(request: BatchFillRequest) => {
 				return request.map((req) => {
-					console.log("batch around", request)
+					checkPayouts(req.payouts)
 					const order = orders[req.orderId]
 					if (!order) {
 						throw new Error(`Order with id ${req.orderId} not precached`)

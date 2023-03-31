@@ -1,0 +1,72 @@
+@Library('shared-library') _
+
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
+
+def allure_launch_url = "None"
+
+pipeline {
+  agent any
+
+  options {
+    timeout(time: 2, unit: 'HOURS')
+  }
+  parameters {
+    string(name: 'TEST_ENV', description: 'Environment')
+    string(name: 'BLOCKCHAIN', description: 'Blockchain')
+  }
+  environment {
+    ALLURE_ENDPOINT = 'https://rarible.testops.cloud/'
+    ALLURE_PROJECT_ID = '2'
+  }
+  stages{
+    stage("SDK e2e tests") {
+      agent {
+        docker {
+          image "node:16-bullseye"
+          reuseNode true
+          args '-u root:root'
+        }
+      }
+      steps {
+        script {
+          def returnCode = 1
+          withCredentials([string(credentialsId: 'allure-testops-token', variable: 'ALLURE_TOKEN')]) {
+            sh(label: 'Output where we are running', script: 'echo "Running on $BLOCKCHAIN $TEST_ENV"') 
+            sh(label: 'Download allurectl', script: '''    
+                wget https://github.com/allure-framework/allurectl/releases/latest/download/allurectl_linux_amd64 -O ./allurectl
+                chmod +x ./allurectl
+                ''')
+            sh(label: 'Build sdk and e2e-tests', script: '''
+                yarn install --network-timeout=40000
+                yarn build
+                ''')
+            returnCode = sh(label: 'Run e2e-tests with reporting Allure TestOps', returnStatus: true, script: './allurectl watch --launch-name "E2E SDK #$BUILD_NUMBER" --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
+            sh(label: 'Grab Allure TestOps Link', script: '''
+                  export $(./allurectl job-run env | grep ALLURE | xargs -L1)
+                  echo "$ALLURE_LAUNCH_URL" > allure_launch
+                ''')
+            allure_launch_url = readFile('allure_launch').trim()
+            currentBuild.description = "Allure TestOps URL: " + allure_launch_url
+          }
+          if(returnCode != 0) {
+            sh "exit 1"
+          }
+        }
+      }
+    }
+  }
+  post {
+    always {
+      wrap([$class: 'BuildUser']) {
+        slackSend channel: '#protocol-e2e-tests',
+          color: COLOR_MAP[currentBuild.currentResult],
+          message: "*${currentBuild.currentResult}:* e2e sdk tests on ${params.BLOCKCHAIN} ${params.TEST_ENV}. Duration=${currentBuild.durationString}\n Jenkins Job: ${env.BUILD_URL}\n Allure TestOps Launch: ${allure_launch_url}"
+      }
+      postReport([:])   
+      cleanWs()
+    }
+  }
+} 

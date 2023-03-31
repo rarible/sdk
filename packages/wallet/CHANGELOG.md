@@ -3,6 +3,111 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+
+### Features
+
+* tezos marker ([55f19e9](https://github.com/rarible/sdk/commit/55f19e934df1a2dc04acfcc03f18ffb2d98d8433))
+
+
+
+
+
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* flow change price comission ([9fd8470](https://github.com/rarible/sdk/commit/9fd8470cfa3262f44b237e1f73371accd8854dcd))
+* flow storefront contracts ([0beabeb](https://github.com/rarible/sdk/commit/0beabeb5ea901e5fe68f48bdb89eb033e6eb1b0c))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+* flow storefront v2 support ([5094dd9](https://github.com/rarible/sdk/commit/5094dd9907c78efec5c7defc028856c503868722))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
+
+
+### Features
+
+* new types of tezos orders ([#432](https://github.com/rarible/sdk/issues/432)) ([55f482f](https://github.com/rarible/sdk/commit/55f482f97ae80e8f2000ab9ee1e78f014d2d4dd4))
+
+
+
+
+
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+
+### Features
+
+* tezos migrates to union ([#412](https://github.com/rarible/sdk/issues/412)) ([e2c677c](https://github.com/rarible/sdk/commit/e2c677c3eac2ab152a15afacbc50fc3c12b03f38))
+
+
+
+
+
+## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
+
+
+### Bug Fixes
+
+* add log wallet address err description ([#410](https://github.com/rarible/sdk/issues/410)) ([625ea78](https://github.com/rarible/sdk/commit/625ea78583e6c5005d7c6b5a80c954c8cb6db403))
+
+
+
+
+
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* tezos errors ([b794e37](https://github.com/rarible/sdk/commit/b794e37266e1870b062d5dfc90a18b4596b511bf))
+
+
+
+
+
+# [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
 ## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
 
 

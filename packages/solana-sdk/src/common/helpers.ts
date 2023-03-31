@@ -121,7 +121,16 @@ export async function getPriceWithMantissa(
 
 	const mantissa = 10 ** mintInfo.decimals
 
-	return price.multipliedBy(mantissa).integerValue(BigNumber.ROUND_CEIL)
+	const totalValue = price.multipliedBy(mantissa).integerValue(BigNumber.ROUND_CEIL)
+
+	if (totalValue.gt(2**64)) {
+		throw new Error(
+			`Total price with mantissa for lot ${totalValue.toString()} ` +
+			`is lager than maximum allowed value ${2 ** 64}. Try to split lot, or reduce item price.`
+		)
+	}
+
+	return totalValue
 }
 
 export async function getAccountInfo(

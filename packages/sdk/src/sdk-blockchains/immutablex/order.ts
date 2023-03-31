@@ -14,6 +14,8 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
+import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { calcBuyerBaseFee, getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
 
@@ -46,6 +48,7 @@ export class ImxOrderService {
 		const submit = Action.create({
 			id: "send-tx" as const,
 			run: async (request: OrderCommon.OrderInternalRequest) => {
+				checkPayouts(request.payouts)
 				const [, contract, tokenId] = request.itemId.split(":")
 
 				const res = await this.sdk.order.sell({
@@ -75,6 +78,13 @@ export class ImxOrderService {
 		}
 	}
 
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: 200,
+		}
+	}
+
 	async buy(prepare: PrepareFillRequest): Promise<PrepareFillResponse> {
 		const order = await getPreparedOrder(prepare, this.apis)
 
@@ -100,6 +110,7 @@ export class ImxOrderService {
 			.create({
 				id: "send-tx" as const,
 				run: async (request: FillRequest) => {
+					checkPayouts(request.payouts)
 					const [, orderId] = order.id.split(":")
 					const res = await this.sdk.order.buy({
 						orderId: orderId,

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.10.1",
+  "version": "0.13.16",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,12 +16,12 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
-    "@rarible/api-client": "0.0.14-beta1",
-    "@rarible/ethereum-provider": "~0.12.109",
-    "@rarible/flow-sdk": "~0.5.48-alpha.5",
-    "@rarible/protocol-ethereum-sdk": "~0.12.114",
-    "@rarible/solana-sdk": "^0.10.0",
-    "@rarible/tezos-sdk": "~0.1.40",
+    "@rarible/api-client": "0.0.15-beta1",
+    "@rarible/ethereum-provider": "^0.13.14",
+    "@rarible/flow-sdk": "~0.5.54",
+    "@rarible/protocol-ethereum-sdk": "^0.13.14",
+    "@rarible/solana-sdk": "~0.13.4",
+    "@rarible/tezos-sdk": "0.1.45",
     "@rarible/types": "~0.9.6"
   },
   "devDependencies": {
@@ -36,8 +36,9 @@
     "@babel/preset-typescript": "^7.14.5",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.4",
+    "jest-junit": "^15.0.0",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.6.3"
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

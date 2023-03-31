@@ -1,8 +1,9 @@
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toItemId } from "@rarible/types"
 import { getWallet } from "../common/test/test-wallets"
 import { retry } from "../../../common/retry"
 import { mintToken } from "../common/test/mint"
 import { createSdk } from "../common/test/create-sdk"
+import { OriginFeeSupport } from "../../../types/order/fill/domain"
 
 describe("Solana sell", () => {
 	const wallet = getWallet(0)
@@ -65,5 +66,13 @@ describe("Solana sell", () => {
 
 		expect(tx.hash()).toBeTruthy()
 		await tx.wait()
+	})
+
+	test("get future order fees", async () => {
+		const fees = await sdk.restriction.getFutureOrderFees(
+			toItemId("SOLANA:Ev9n3xAfCrxPrUSUN4mLorwfaknjj4QMcyLUnbPymSmJ:1")
+		)
+		expect(fees.originFeeSupport).toBe(OriginFeeSupport.NONE)
+		expect(fees.baseFee).toBe(0)
 	})
 })

@@ -4,6 +4,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import { retry } from "@rarible/sdk/build/common/retry"
 import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import {
 	getEthereumWallet,
@@ -62,7 +63,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
@@ -100,7 +101,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 1,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
@@ -138,7 +139,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
@@ -176,7 +177,7 @@ function suites(): {
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
@@ -206,12 +207,16 @@ describe.each(suites())("$blockchain mint => floorBid => cancel", (suite) => {
 
 		const bidOrder = await bid(buyerSdk, buyerWallet, { collectionId: collection.id }, bidRequest)
 
-		const collection1 = await getCollection(sellerSdk, address)
-		expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+		await retry(40, 3000, async () => {
+			const collection1 = await getCollection(sellerSdk, address)
+			expect(collection1.bestBidOrder?.takePrice).toBe(bidRequest.price)
+		})
 
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 
-		const collection2 = await getCollection(sellerSdk, address)
-		expect(collection2.bestBidOrder).toBe(undefined)
+		await retry(40, 3000, async () => {
+			const collection2 = await getCollection(sellerSdk, address)
+			expect(collection2.bestBidOrder).toBe(undefined)
+		})
 	})
 })

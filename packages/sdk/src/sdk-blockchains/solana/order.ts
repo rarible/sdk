@@ -29,6 +29,8 @@ import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
+import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
@@ -80,6 +82,7 @@ export class SolanaOrder {
 		const mint = extractPublicKey(request.itemId)
 		const amount = request.amount !== undefined ? request.amount: 1
 
+		checkPayouts(request.payouts)
 		await (await this.sdk.order.sell({
 			auctionHouse: auctionHouse,
 			signer: this.wallet!.provider,
@@ -174,7 +177,7 @@ export class SolanaOrder {
 			id: "send-tx" as const,
 			run: async (request: OrderRequest) => {
 				const mint = extractPublicKey(prepare.itemId)
-
+				checkPayouts(request.payouts)
 				const amount = request.amount !== undefined ? request.amount: 1
 
 				await (await this.sdk.order.buy({
@@ -280,5 +283,13 @@ export class SolanaOrder {
 
 	async cancelBasic(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
 		return this.cancel(request)
+	}
+
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		const auctionHouse = getAuctionHouse({ "@type": "SOLANA_SOL" }, this.config?.auctionHouseMapping)
+		return {
+			originFeeSupport: OriginFeeSupport.NONE,
+			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
+		}
 	}
 }

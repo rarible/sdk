@@ -2,6 +2,7 @@ import { FlowWallet } from "@rarible/sdk-wallet"
 import * as fcl from "@onflow/fcl"
 import { toContractAddress, toCurrencyId } from "@rarible/types"
 import { createApisSdk } from "../../common/apis"
+import { createRaribleSdk } from "../../index"
 import { convertFlowUnionAddress } from "./common/converters"
 import { createFlowSdk } from "./index"
 
@@ -13,6 +14,23 @@ describe("Test flow balance function", () => {
 	const address = convertFlowUnionAddress("0x324c4173e0175672")
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
+	const unionSdk = createRaribleSdk(wallet, "prod")
+
+	test("flow balance", async () => {
+		let error: any
+		try {
+			await unionSdk.balances.getBalance(
+				address,
+				{
+					"@type": "FLOW_FT",
+					contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
+				}
+			)
+		} catch (e) {
+			error = e
+		}
+		expect(error.message).toBe("Flow blockchain is no longer supported")
+	})
 
 	test.skip("Should get FT balance for account", async () => {
 		const balance1 = await sdk.balances.getBalance(address, {

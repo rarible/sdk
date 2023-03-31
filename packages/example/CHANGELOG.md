@@ -3,6 +3,181 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.15](https://github.com/rarible/sdk/compare/v0.13.14...v0.13.15) (2023-03-29)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* cancel seaport order ([#449](https://github.com/rarible/sdk/issues/449)) ([95b4af0](https://github.com/rarible/sdk/commit/95b4af03dae0a09fad3c02a04c1027047c1acb02))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* example navigation ([#443](https://github.com/rarible/sdk/issues/443)) ([e53374e](https://github.com/rarible/sdk/commit/e53374e73fe09c118abff592e9d3a6208614b06b))
+
+
+### Features
+
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+
+
+
+
+
+## [0.13.10](https://github.com/rarible/sdk/compare/v0.13.9...v0.13.10) (2023-02-17)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.9](https://github.com/rarible/sdk/compare/v0.13.8...v0.13.9) (2023-02-17)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+
+### Bug Fixes
+
+* example app process error ([#419](https://github.com/rarible/sdk/issues/419)) ([60ece81](https://github.com/rarible/sdk/commit/60ece81b8773ee10e7499d9f0eb6a7bdbe5c883a))
+
+
+### Features
+
+* tezos migrates to union ([#412](https://github.com/rarible/sdk/issues/412)) ([e2c677c](https://github.com/rarible/sdk/commit/e2c677c3eac2ab152a15afacbc50fc3c12b03f38))
+
+
+
+
+
+## [0.13.6](https://github.com/rarible/sdk/compare/v0.13.5...v0.13.6) (2023-01-19)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.5](https://github.com/rarible/sdk/compare/v0.13.4...v0.13.5) (2023-01-17)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
+
+
+### Bug Fixes
+
+* add log wallet address err description ([#410](https://github.com/rarible/sdk/issues/410)) ([625ea78](https://github.com/rarible/sdk/commit/625ea78583e6c5005d7c6b5a80c954c8cb6db403))
+
+
+
+
+
+## [0.13.3](https://github.com/rarible/sdk/compare/v0.13.2...v0.13.3) (2022-12-20)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* tezos errors ([b794e37](https://github.com/rarible/sdk/commit/b794e37266e1870b062d5dfc90a18b4596b511bf))
+
+
+### Features
+
+* add currency selector for bid/sell in example app ([96d423a](https://github.com/rarible/sdk/commit/96d423a74b3843f6ca2fec7662096752a8b46fdc))
+* ethereum sdk directAcceptBid support ([90cef3b](https://github.com/rarible/sdk/commit/90cef3b314f8871a3f69531e2f23581ca591d960))
+
+
+
+
+
+## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+# [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
+
+
+### Features
+
+* example app sign page ([#386](https://github.com/rarible/sdk/issues/386)) ([51448ed](https://github.com/rarible/sdk/commit/51448ed1e70c00dd18d5a98e48a4505a17c77bba))
+
+
+
+
+
 ## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
 
 

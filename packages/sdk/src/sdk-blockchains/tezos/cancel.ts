@@ -1,6 +1,9 @@
 import { Action } from "@rarible/action"
 // eslint-disable-next-line camelcase
-import { cancel } from "@rarible/tezos-sdk/dist/main"
+import { cancel, versum_cancel_swap, hen_cancel_swap, teia_cancel_swap, objkt_retract_ask_v1,
+// eslint-disable-next-line camelcase
+	objkt_retract_ask_v2, fxhash_v1_cancel_offer, fxhash_v2_cancel_listing,
+} from "@rarible/tezos-sdk/dist/main"
 import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
@@ -8,9 +11,10 @@ import BigNumber from "bignumber.js"
 import type { CancelV2OrderRequest } from "@rarible/tezos-sdk/dist/sales/cancel"
 import { cancelV2 } from "@rarible/tezos-sdk/dist/sales/cancel"
 import type { Order, TezosMTAssetType, TezosNFTAssetType } from "@rarible/api-client"
-// eslint-disable-next-line camelcase
-import { get_legacy_orders, order_of_json } from "@rarible/tezos-sdk"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
+// eslint-disable-next-line camelcase
+import { cancel_bid } from "@rarible/tezos-sdk/dist/bids"
+import type { CancelBid } from "@rarible/tezos-sdk/bids/index"
 import type { CancelOrderRequest, ICancelAction } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"
 import type { MaybeProvider } from "./common"
@@ -18,7 +22,8 @@ import {
 	checkChainId,
 	convertFromContractAddress,
 	getRequiredProvider,
-	getTezosAssetTypeV2, getTezosOrderId,
+	getTezosAssetTypeV2,
+	getTezosOrderLegacyForm,
 	isMTAssetType,
 	isNftAssetType,
 } from "./common"
@@ -41,26 +46,87 @@ export class TezosCancel {
 			if (!order) {
 				throw new Error("Order has not been found")
 			}
-			if (isNftAssetType(order.make.type) || isMTAssetType(order.make.type)) {
-				if (order.data["@type"] === "TEZOS_RARIBLE_V3") {
+			const provider = getRequiredProvider(this.provider)
+
+			const makeIsNft = isNftAssetType(order.make.type) || isMTAssetType(order.make.type)
+
+			if (order.data["@type"] === "TEZOS_RARIBLE_V3") {
+			  if (makeIsNft) {
 					return this.cancelV2SellOrder(order)
+				}
+				if (isNftAssetType(order.take.type) || isMTAssetType(order.take.type)) {
+					const asset = await getTezosAssetTypeV2(provider.config, order.make.type)
+					const bidData: CancelBid = {
+						asset_contract: convertFromContractAddress(order.take.type.contract),
+						asset_token_id: new BigNumber(order.take.type.tokenId),
+						bid_type: asset.type,
+						bid_asset_contract: asset.asset_contract,
+						bid_asset_token_id: asset.asset_token_id,
+					}
+					const tx = await cancel_bid(provider, bidData)
+					return new BlockchainTezosTransaction(tx, this.network)
 				}
 			}
 
-			const legacyOrders = await get_legacy_orders(
-				this.provider.config, {
-					data: true,
-				}, {
-					order_id: [getTezosOrderId(order.id)],
-				})
+			if (makeIsNft) {
+				if (order.data["@type"] === "TEZOS_HEN") {
+					const op = await hen_cancel_swap(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
 
-			if (!legacyOrders.length) {
-				throw new Error("Tezos v1 orders has not been found")
+				if (order.data["@type"] === "TEZOS_VERSUM_V1") {
+					const op = await versum_cancel_swap(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_TEIA_V1") {
+					const op = await teia_cancel_swap(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_OBJKT_V1") {
+					const op = await objkt_retract_ask_v1(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_OBJKT_V2") {
+					const op = await objkt_retract_ask_v2(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_FXHASH_V1") {
+					const op = await fxhash_v1_cancel_offer(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
+
+				if (order.data["@type"] === "TEZOS_FXHASH_V2") {
+					const op = await fxhash_v2_cancel_listing(provider, request.orderId)
+					if (!op) {
+						throw new Error("Operation is undefined")
+					}
+					return new BlockchainTezosTransaction(op, this.network)
+				}
 			}
-			if (!legacyOrders[0] || !legacyOrders[0].data) {
-				throw new Error("Tezos v1 order data is empty")
-			}
-			const orderForm = order_of_json(legacyOrders[0].data)
+
+			const orderForm = getTezosOrderLegacyForm(order)
 			const tx = await cancel(
 				getRequiredProvider(this.provider),
 				orderForm as OrderForm

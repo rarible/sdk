@@ -7,6 +7,7 @@ import { LogsLevel } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MethodWithPrepare } from "../../types/common"
 import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { ImxNftService } from "./nft"
 import { ImxOrderService } from "./order"
 import { ImxBalanceService } from "./balance"
@@ -60,6 +61,9 @@ export function createImmutablexSdk(
 		},
 		restriction: {
 			canTransfer: notImplemented,
+			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+				return orderService.getFutureOrderFees()
+			},
 		},
 	}
 }

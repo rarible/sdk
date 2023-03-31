@@ -42,3 +42,23 @@ describe("canTransfer", () => {
 		})
 	})
 })
+
+describe.skip("canTransfer for quartz prod contract", () => {
+	const env: RaribleSdkEnvironment = "prod"
+	const wallet = createTestWallet(
+		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
+    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+		env
+	)
+	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+
+	test("not whitelisted quartz wallet should restricted", async () => {
+		const me = toUnionAddress("TEZOS:tz2CqFpz7ZpMtr9UfigLtoRcTqMsPFRxCA9h")
+		const otherMe = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")
+		const result = await sdk.restriction.canTransfer(toItemId("TEZOS:KT1TnVQhjxeNvLutGvzwZvYtC7vKRpwPWhc6:800020"), me, otherMe)
+		expect(result).toStrictEqual({
+			success: false,
+			reason: "You can't trade this Digit at the moment, please visit [quartz.ubisoft.com](https://quartz.ubisoft.com) for more information.",
+		})
+	})
+})

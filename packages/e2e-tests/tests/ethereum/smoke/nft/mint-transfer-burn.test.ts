@@ -7,7 +7,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
 import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
 import {
-	getEthereumWallet,
+	getEthereumWallet, getEthereumWalletBuyer,
 	getWalletAddressFull,
 } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
@@ -38,7 +38,7 @@ function suites(): {
 			description: "ERC721",
 			wallets: {
 				creator: getEthereumWallet(),
-				recipient: getEthereumWallet(),
+				recipient: getEthereumWalletBuyer(),
 			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
@@ -72,7 +72,7 @@ function suites(): {
 			description: "ERC721_lazy",
 			wallets: {
 				creator: getEthereumWallet(),
-				recipient: getEthereumWallet(),
+				recipient: getEthereumWalletBuyer(),
 			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
@@ -106,7 +106,7 @@ function suites(): {
 			description: "ERC1155",
 			wallets: {
 				creator: getEthereumWallet(),
-				recipient: getEthereumWallet(),
+				recipient: getEthereumWalletBuyer(),
 			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
@@ -140,7 +140,7 @@ function suites(): {
 			description: "ERC1155_lazy",
 			wallets: {
 				creator: getEthereumWallet(),
-				recipient: getEthereumWallet(),
+				recipient: getEthereumWalletBuyer(),
 			},
 			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
@@ -189,7 +189,7 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
 			suite.mintRequest(creatorWalletAddress.unionAddress))
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const allItems = await getAllItems(creatorSdk, [suite.blockchain], 50)
 			await verifyItemsByBlockchain(allItems, suite.blockchain)
 			await verifyItemsContainsItem(allItems, nft.id)

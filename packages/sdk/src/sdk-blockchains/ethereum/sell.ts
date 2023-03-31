@@ -7,6 +7,9 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
+import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { checkPayouts } from "../../common/check-payouts"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -52,16 +55,20 @@ export class EthereumSell {
 		return prepare.submit(request)
 	}
 
+	async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+		return {
+			originFeeSupport: OriginFeeSupport.FULL,
+			baseFee: await this.sdk.order.getBaseOrderFee(),
+		}
+	}
+
 	private async sellDataV2(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
+				checkPayouts(sellFormRequest.payouts)
 				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
-				const expirationDate = sellFormRequest.expirationDate instanceof Date
-					? Math.floor(sellFormRequest.expirationDate.getTime() / 1000)
-					: undefined
+				const expirationDate = convertDateToTimestamp(sellFormRequest.expirationDate)
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
-
-				console.log("before")
 				return {
 					type: "DATA_V2",
 					makeAssetType: {
@@ -77,7 +84,6 @@ export class EthereumSell {
 				}
 			})
 			.after(order => {
-				console.log("after")
 				return common.convertEthereumOrderHash(order.hash, this.blockchain)
 			})
 
@@ -98,9 +104,8 @@ export class EthereumSell {
 				validateOrderDataV3Request(sellFormRequest, { shouldProvideMaxFeesBasePoint: true })
 
 				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
-				const expirationDate = sellFormRequest.expirationDate instanceof Date
-					? Math.floor(sellFormRequest.expirationDate.getTime() / 1000)
-					: undefined
+				const expirationDate = convertDateToTimestamp(sellFormRequest.expirationDate)
+
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 
 				const payouts = common.toEthereumParts(sellFormRequest.payouts)
@@ -116,7 +121,6 @@ export class EthereumSell {
 					originFeeFirst: originFees[0],
 					originFeeSecond: originFees[1],
 					maxFeesBasePoint: sellFormRequest.maxFeesBasePoint ?? 0,
-					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
 					amount: sellFormRequest.amount ?? 1,
 					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
 					priceDecimal: sellFormRequest.price,

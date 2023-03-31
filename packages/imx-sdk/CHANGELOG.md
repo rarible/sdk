@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+
+### Features
+
+* tezos marker ([55f19e9](https://github.com/rarible/sdk/commit/55f19e934df1a2dc04acfcc03f18ffb2d98d8433))
+
+
+
+
+
+## [0.13.15](https://github.com/rarible/sdk/compare/v0.13.14...v0.13.15) (2023-03-29)
+
+
+### Bug Fixes
+
+* eth-client version ([71ae8bb](https://github.com/rarible/sdk/commit/71ae8bbeb92247c98be71fc8066aa9e34100f451))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+
+### Features
+
+* opensea orders ([#448](https://github.com/rarible/sdk/issues/448)) ([858e716](https://github.com/rarible/sdk/commit/858e716aac3cdf4af44184e01f0d813c0f058ed9))
+
+
+
+
+
+# [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
+
+
+### Bug Fixes
+
+* imx burn, transfer error ([#387](https://github.com/rarible/sdk/issues/387)) ([8003d4a](https://github.com/rarible/sdk/commit/8003d4a19d27a405d58a40f9d8b68e25f11f2e4a))
+
+
+
+
+
 ## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
 
 

@@ -26,6 +26,7 @@ Rarible Multichain SDK enables applications to easily interact with Rarible Prot
   - [Burn](#burn)
   - [Sell](#sell)
   - [Buy](#buy)
+  - [Batch purchase](#batch-purchase)
   - [Bid](#bid)
   - [Accept bid](#accept-bid)
   - [Update sell order](#update-sell-order)
@@ -391,7 +392,7 @@ Buy NFT using sell order
 
 ```typescript
 const tx = await sdk.order.buy({
-    order: toOrderId("..."),
+    orderId: toOrderId("..."),
     amount: 1,
 })
 await tx.wait()
@@ -405,7 +406,23 @@ const {
   originFeeSupport,
   payoutsSupport,
   supportsPartialFill
-} = await sdk.order.buy.prepare({ order: toOrderId("...") })
+} = await sdk.order.buy.prepare({ orderId: toOrderId("...") })
+await tx.wait()
+```
+
+### Batch purchase
+
+Batch purchase NFT 
+
+```typescript
+const tx = await sdk.order.batchBuy([
+  {
+    orderId: toOrderId("..."),
+    amount: 1,
+    originFees?: [...]
+  },
+  //...
+])
 await tx.wait()
 ```
 
@@ -616,6 +633,13 @@ The SDK was designed for use on the frontend side. To use the SDK on the server 
 ## API (Querying)
 
 Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: [https://multichain.redoc.ly/](https://multichain.redoc.ly/) or right in the typescript typings.
+
+For using API with api key you should pass:
+```ts
+const raribleSdk = createRaribleSdk(provider, "testnet", {
+  apiKey: "$API_KEY"
+}) //"prod" | "testnet" | "development"
+```
 
 ```ts
 //Fetch items by creator

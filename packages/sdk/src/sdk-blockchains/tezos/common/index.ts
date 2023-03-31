@@ -9,6 +9,7 @@ import type {
 	TezosNFTAssetType,
 	TezosXTZAssetType,
 	UnionAddress,
+	TezosOrderDataLegacy,
 } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type {
@@ -18,41 +19,30 @@ import type {
 	Provider,
 	TezosNetwork,
 	TezosProvider,
+	Platform,
 } from "@rarible/tezos-sdk"
-// eslint-disable-next-line camelcase
-import { AssetTypeV2, get_public_key, pk_to_pkh } from "@rarible/tezos-sdk"
+import {
+	AssetTypeV2,
+	// eslint-disable-next-line camelcase
+	get_public_key,
+	// eslint-disable-next-line camelcase
+	order_of_json,
+} from "@rarible/tezos-sdk"
 import type { Part } from "@rarible/tezos-common"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
-import type {
-	NftCollectionControllerApi,
-	NftItemControllerApi,
-	NftOwnershipControllerApi,
-	OrderControllerApi,
-} from "tezos-api-client/build"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ContractAddress, OrderId } from "@rarible/types"
 import { toCollectionId, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
 import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
-// import type { Part as TezosPart } from "@rarible/tezos-sdk/dist/order/utils"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
-import axios from "axios"
-import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type { UnionPart } from "../../../types/order/common"
 import type { CurrencyType } from "../../../common/domain"
 import type { RaribleSdkConfig } from "../../../config/domain"
-import { NetworkErrorCode } from "../../../common/apis"
-
-export interface ITezosAPI {
-	collection: NftCollectionControllerApi,
-	item: NftItemControllerApi,
-	ownership: NftOwnershipControllerApi,
-	order: OrderControllerApi,
-}
 
 export type MaybeProvider<P extends TezosProvider> = {
 	tezos: Maybe<P>
@@ -94,6 +84,27 @@ export type TezosMetaAttribute = {
 	value?: string
 	type?: string
 }
+
+export interface OrderDataRequest {
+	// eslint-disable-next-line camelcase
+	order_id?: string[],
+	maker?: string,
+	// eslint-disable-next-line camelcase
+	make_contract?: string,
+	// eslint-disable-next-line camelcase
+	make_token_id?: BigNumber,
+	// eslint-disable-next-line camelcase
+	take_contract?: string,
+	// eslint-disable-next-line camelcase
+	take_token_id?: BigNumber
+	platform?: Platform,
+	status?: string,
+	// eslint-disable-next-line camelcase
+	activity_id?: string,
+	// eslint-disable-next-line camelcase
+	op_hash?: string,
+}
+
 
 export const XTZ_DECIMALS = 6
 
@@ -139,7 +150,7 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid: "KT1FiEi3Mrh31vJy39CD4hkiHq1AfRpTxNpF",
 					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
 					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
 					tzkt: "https://api.ghostnet.tzkt.io",
@@ -157,6 +168,8 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
 					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
 					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
+					aggregator_tracker: "KT1DajvCNVScudRm3kCHPfUjsRCtmPnm375s",
+					aggregator_tracker_id: "09616c6c64617461",
 				},
 			}
 		}
@@ -176,7 +189,7 @@ export function getMaybeTezosProvider(
 					sales: "KT1NcKyhPnomH9PKGeDfvMiGH2PDgKCd5YuM",
 					sales_storage: "KT1GDUG3AQpaKmFjFHVn6PYT4Tprf7ccwPa3",
 					transfer_manager: "KT1LQPAi4w2h9GQ61S8NkENcNe3aH5vYEzjP",
-					bid: "KT1MwKGYWWbXtfYdnQfwspwz5ZGfqGwiJuQF",
+					bid: "KT1FiEi3Mrh31vJy39CD4hkiHq1AfRpTxNpF",
 					bid_storage: "KT1ENB6j6uMJn7MtDV4VBE1AAAwCXmMtzjUd",
 					sig_checker: "KT1Fbvkq4sMawS4rdNXswoN7ELgkNV1ooLB7",
 					tzkt: "https://api.ghostnet.tzkt.io",
@@ -194,6 +207,8 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GCLoBSwUaNjaGXq5RtiP8CXTL3cEeMNDs",
 					fxhash_nfts_v1: "KT1VEXkw6rw6pJDP9APGsMneFafArijmM96j",
 					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
+					aggregator_tracker: "KT1DajvCNVScudRm3kCHPfUjsRCtmPnm375s",
+					aggregator_tracker_id: "09616c6c64617461",
 				},
 			}
 		}
@@ -231,6 +246,8 @@ export function getMaybeTezosProvider(
 					fxhash_sales_v2: "KT1GbyoDi7H1sfXmimXpptZJuCdHMh66WS9u",
 					fxhash_nfts_v1: "KT1KEa8z6vWXDJrVqtMrAeDVzsvxat3kHaCE",
 					fxhash_nfts_v2: "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi",
+					aggregator_tracker: "KT1Gv1tPJ3nU5T6VmFc12M6NKc5i51MYVPjG",
+					aggregator_tracker_id: "09616c6c64617461",
 				},
 			}
 		}
@@ -287,7 +304,7 @@ export function getTezosItemData(itemId: ItemId) {
 export function getTezosAddress(address: UnionAddress): string {
 	const [blockchain, tezosAddress] = address.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
-		throw new Error(`Not an tezos item: ${address}`)
+		throw new Error(`Not an tezos address: ${address}`)
 	}
 	return tezosAddress
 }
@@ -301,16 +318,7 @@ export async function getMakerPublicKey(provider: Provider): Promise<string> {
 }
 
 export async function getPayouts(provider: Provider, requestPayouts?: UnionPart[]): Promise<Part[]> {
-	let payouts = requestPayouts || []
-
-	if (!Array.isArray(payouts) || payouts.length === 0) {
-		return [{
-			account: pk_to_pkh(await getMakerPublicKey(provider)),
-			value: new BigNumber(10000),
-		}]
-	}
-
-	return convertUnionParts(payouts)
+	return convertUnionParts(requestPayouts) || []
 }
 
 export function getRoyalties(royalties: Royalty[] | undefined): { [key: string]: BigNumber } {
@@ -486,7 +494,7 @@ export function convertFromContractAddress(contract: ContractAddress): string {
 	return tezosAddress
 }
 
-export function convertUnionAddress(address: UnionAddress): string {
+export function convertUnionAddress(address: UnionAddress | CollectionId): string {
 	const [blockchain, tezosAddress] = address.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Not a tezos address: ${address}`)
@@ -580,6 +588,9 @@ export function isXtzAssetType(assetType: AssetType): assetType is TezosXTZAsset
 export function isFTAssetType(assetType: AssetType): assetType is TezosFTAssetType {
 	return assetType["@type"] === "TEZOS_FT"
 }
+export function isNftOrMTAssetType(assetType: AssetType): assetType is (TezosNFTAssetType | TezosMTAssetType) {
+	return isNftAssetType(assetType) || isMTAssetType(assetType)
+}
 
 export function getRequestAmount(
 	orderAmount: number | undefined, collectionType: CollectionType.TEZOS_NFT | CollectionType.TEZOS_MT
@@ -593,25 +604,19 @@ export function getRequestAmount(
 	return undefined
 }
 
-export async function getCollectionType(
-	provider: MaybeProvider<TezosProvider>, collection: string
-): Promise<CollectionType.TEZOS_NFT | CollectionType.TEZOS_MT> {
-	let response
+export function getTezosOrderLegacyForm(order: Order): OrderForm {
+	if (order.data["@type"] !== "TEZOS_RARIBLE_V2") {
+		throw new Error(`Tezos order is not legacy (orderId=${order.id})`)
+	}
+	const orderData = order.data as TezosOrderDataLegacy
+	if (!orderData.legacyData) {
+		throw new Error(`Tezos legacy order have to include legacyData (orderId=${order.id})`)
+	}
+	let parsedLegacyData
 	try {
-		const { data } = await axios.get(`${provider.config.tzkt}/v1/contracts/${collection}/storage/schema`)
-		response = data
+		parsedLegacyData = JSON.parse(orderData.legacyData)
 	} catch (e) {
-		console.error(e)
-		handleAxiosErrorResponse(e, { code: NetworkErrorCode.TEZOS_EXTERNAL_ERR })
-		throw new Error("Getting tezos collection data error")
+		throw new Error("Tezos legacy order parse data error")
 	}
-
-	const schema = response["schema:object"]
-	if ("ledger:big_map:object:nat" in schema) {
-		return CollectionType.TEZOS_MT
-	} else if ("ledger:big_map_flat:nat:address" in schema) {
-		return CollectionType.TEZOS_NFT
-	} else {
-		throw new Error("Unrecognized tezos collection")
-	}
+	return order_of_json(parsedLegacyData)
 }

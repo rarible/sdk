@@ -9,6 +9,7 @@ import { Middlewarer } from "../../common/middleware/middleware"
 import { MetaUploader } from "../union/meta/upload-meta"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
+import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { ISolanaSdkConfig } from "./domain"
 import { SolanaNft } from "./nft"
 import { SolanaFill } from "./fill"
@@ -69,6 +70,9 @@ export function createSolanaSdk(
 		},
 		restriction: {
 			canTransfer: nonImplementedAction,
+			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+				return orderService.getFutureOrderFees()
+			},
 		},
 	}
 }

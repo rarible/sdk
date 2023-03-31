@@ -17,6 +17,7 @@ import { addFee } from "@rarible/protocol-ethereum-sdk/build/order/add-fee"
 import { getDecimals } from "@rarible/protocol-ethereum-sdk/build/common/get-decimals"
 import { getPrice } from "@rarible/protocol-ethereum-sdk/build/common/get-price"
 import type { BigNumberValue } from "@rarible/utils"
+import { Warning } from "@rarible/logger/build"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
@@ -31,6 +32,8 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
+import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { checkPayouts } from "../../common/check-payouts"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -195,7 +198,7 @@ export class EthereumBid {
 				contract: contractAddress,
 			}
 		} else {
-			throw new Error("ItemId or CollectionId must be assigned")
+			throw new Warning("ItemId or CollectionId must be assigned")
 		}
 
 		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
@@ -204,9 +207,7 @@ export class EthereumBid {
 
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
-				const expirationDate = request.expirationDate instanceof Date
-					? Math.floor(request.expirationDate.getTime() / 1000)
-					: undefined
+				const expirationDate = convertDateToTimestamp(request.expirationDate)
 				const currencyAssetType = getCurrencyAssetType(request.currency)
 				return {
 					type: "DATA_V2",
@@ -238,6 +239,7 @@ export class EthereumBid {
 						originFeesSum
 					)
 					await this.convertCurrency(value)
+					console.log("after convert")
 				}
 				return request
 			},
@@ -289,9 +291,7 @@ export class EthereumBid {
 			.before(async (request: OrderCommon.OrderRequest) => {
 				validateOrderDataV3Request(request, { shouldProvideMaxFeesBasePoint: false })
 
-				const expirationDate = request.expirationDate instanceof Date
-					? Math.floor(request.expirationDate.getTime() / 1000)
-					: undefined
+				const expirationDate = convertDateToTimestamp(request.expirationDate)
 				const currencyAssetType = getCurrencyAssetType(request.currency)
 
 				const payouts = common.toEthereumParts(request.payouts)
@@ -306,7 +306,6 @@ export class EthereumBid {
 					payout: payouts[0],
 					originFeeFirst: originFees[0],
 					originFeeSecond: originFees[1],
-					marketplaceMarker: this.config?.marketplaceMarker ? toWord(this.config?.marketplaceMarker) : undefined,
 					end: expirationDate,
 				}
 			})
@@ -318,6 +317,7 @@ export class EthereumBid {
 		const submit = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderRequest) => {
+				checkPayouts(request.payouts)
 				const wethContractAddress = this.getWethContractAddress()
 				const currency = getCurrencyAssetType(request.currency)
 				if (currency["@type"] === "ERC20" && currency.contract.toLowerCase() === wethContractAddress.toLowerCase()) {

@@ -8,8 +8,9 @@ import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { getCurrency } from "../../common/get-currency"
-
+import { getCurrency, getCurrencyOptions } from "../../common/currency-helpers"
+import { parseCurrencyType, PriceForm } from "../../components/common/sdk-forms/price-form"
+import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 
 interface IBidFormProps {
 	prepare: PrepareBidResponse
@@ -18,6 +19,7 @@ interface IBidFormProps {
 }
 
 export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
+	const {environment} = useContext(EnvironmentContext)
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
@@ -31,10 +33,12 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 				}
 
 				try {
+					const currency = parseCurrencyType(formData.currencyType)
+
 					onComplete(await prepare.submit({
 						price: toBigNumber(formData.price),
 						amount: parseInt(formData.amount),
-						currency: getCurrency(prepare.supportedCurrencies[0])
+						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract)
 					}))
 				} catch (e) {
 					setError(e)
@@ -42,15 +46,9 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput
-						type="number"
-						inputProps={{ min: 0, step: "any" }}
+					<PriceForm
 						form={form}
-						options={{
-							min: 0
-						}}
-						name="price"
-						label="Price"
+						currencyOptions={getCurrencyOptions(prepare.supportedCurrencies, environment)}
 					/>
 					<FormTextInput
 						type="number"

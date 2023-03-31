@@ -68,14 +68,14 @@ function suites(): {
 			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 3,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
 				return {
 					amount: 5,
-					price: "0.0000000000000001",
+					price: "10",
 					currency: currency,
 				}
 			},
@@ -141,12 +141,12 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 		const bidRequest = await suite.bidRequest(requestCurrency)
 		await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
 			expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
 		})
 
-		await retry(10, 2000, async () => {
+		await retry(40, 3000, async () => {
 			const orderBidsByItemRaw =
 				await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
 			expect(orderBidsByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)

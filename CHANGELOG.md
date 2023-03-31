@@ -3,6 +3,266 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
+
+
+### Features
+
+* tezos marker ([55f19e9](https://github.com/rarible/sdk/commit/55f19e934df1a2dc04acfcc03f18ffb2d98d8433))
+
+
+
+
+
+## [0.13.15](https://github.com/rarible/sdk/compare/v0.13.14...v0.13.15) (2023-03-29)
+
+
+### Bug Fixes
+
+* eth-client version ([71ae8bb](https://github.com/rarible/sdk/commit/71ae8bbeb92247c98be71fc8066aa9e34100f451))
+
+
+
+
+
+## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
+
+
+### Bug Fixes
+
+* cancel seaport order ([#449](https://github.com/rarible/sdk/issues/449)) ([95b4af0](https://github.com/rarible/sdk/commit/95b4af03dae0a09fad3c02a04c1027047c1acb02))
+* flow change price comission ([9fd8470](https://github.com/rarible/sdk/commit/9fd8470cfa3262f44b237e1f73371accd8854dcd))
+* flow storefront contracts ([0beabeb](https://github.com/rarible/sdk/commit/0beabeb5ea901e5fe68f48bdb89eb033e6eb1b0c))
+
+
+### Features
+
+* flow init operation optimization, example flow balance ([e6d9277](https://github.com/rarible/sdk/commit/e6d9277adec815c69fca04bdc44c1f32456a2453))
+* flow storefront v2 support ([5094dd9](https://github.com/rarible/sdk/commit/5094dd9907c78efec5c7defc028856c503868722))
+
+
+
+
+
+## [0.13.13](https://github.com/rarible/sdk/compare/v0.13.12...v0.13.13) (2023-03-17)
+
+
+### Features
+
+* opensea orders ([#448](https://github.com/rarible/sdk/issues/448)) ([858e716](https://github.com/rarible/sdk/commit/858e716aac3cdf4af44184e01f0d813c0f058ed9))
+
+
+
+
+
+## [0.13.12](https://github.com/rarible/sdk/compare/v0.13.11...v0.13.12) (2023-03-16)
+
+
+### Bug Fixes
+
+* marketplace marker ([#445](https://github.com/rarible/sdk/issues/445)) ([cb8ba5a](https://github.com/rarible/sdk/commit/cb8ba5aedc53b6efc56eecb3c0ec787a668d1d57))
+* no send method defined ([#446](https://github.com/rarible/sdk/issues/446)) ([05099d8](https://github.com/rarible/sdk/commit/05099d8e46fd9d20d13b1e4b52a0f48307bcfcba))
+
+
+
+
+
+## [0.13.11](https://github.com/rarible/sdk/compare/v0.13.10...v0.13.11) (2023-03-10)
+
+
+### Bug Fixes
+
+* e2e flow tests ([a295e68](https://github.com/rarible/sdk/commit/a295e6811eab3da44face39c4e507cd3c9db893f))
+* example navigation ([#443](https://github.com/rarible/sdk/issues/443)) ([e53374e](https://github.com/rarible/sdk/commit/e53374e73fe09c118abff592e9d3a6208614b06b))
+
+
+### Features
+
+* batch buy readme ([#442](https://github.com/rarible/sdk/issues/442)) ([239d34d](https://github.com/rarible/sdk/commit/239d34d922d91f4d3a665b05af287a171d263134))
+* handle wallet http errors ([#440](https://github.com/rarible/sdk/issues/440)) ([3a45e1a](https://github.com/rarible/sdk/commit/3a45e1a9640e7ec37952d8a5a80aac8789adb711))
+* mattel auth integration ([#441](https://github.com/rarible/sdk/issues/441)) ([a107005](https://github.com/rarible/sdk/commit/a1070054f9577e90a40cc767435c6af7df41edc8))
+* seaport v1.4 update ([#444](https://github.com/rarible/sdk/issues/444)) ([bafa1fe](https://github.com/rarible/sdk/commit/bafa1feb91b3454a0c537f5c3bbf1f8889012edd))
+
+
+
+
+
+## [0.13.10](https://github.com/rarible/sdk/compare/v0.13.9...v0.13.10) (2023-02-17)
+
+
+### Bug Fixes
+
+* fix yarn ([7ba45d1](https://github.com/rarible/sdk/commit/7ba45d17ff9e6380c9bf501436a77d7fb67c652e))
+* flow test env ([#439](https://github.com/rarible/sdk/issues/439)) ([c32febf](https://github.com/rarible/sdk/commit/c32febf0783336c6d66a166994e0a89251391a06))
+
+
+
+
+
+## [0.13.9](https://github.com/rarible/sdk/compare/v0.13.8...v0.13.9) (2023-02-17)
+
+
+### Bug Fixes
+
+* log improvement ([#434](https://github.com/rarible/sdk/issues/434)) ([51e0b29](https://github.com/rarible/sdk/commit/51e0b293027ae0e562a2dd660c129a18ea222d5f))
+
+
+### Features
+
+* flow enabling ([#438](https://github.com/rarible/sdk/issues/438)) ([52553de](https://github.com/rarible/sdk/commit/52553de276c6239ea6122401f30734c43b342380))
+* Improve e2e tests ([f4b6d63](https://github.com/rarible/sdk/commit/f4b6d6349defc67fe0be36b70c967c8b2b47afd9))
+
+
+
+
+
+## [0.13.8](https://github.com/rarible/sdk/compare/v0.13.7...v0.13.8) (2023-01-31)
+
+
+### Features
+
+* api keys ([#430](https://github.com/rarible/sdk/issues/430)) ([38cbd76](https://github.com/rarible/sdk/commit/38cbd7693ba54681d74af701c377b95a6f0ae1f7))
+* api keys using readme ([1848853](https://github.com/rarible/sdk/commit/184885391b1de18d773d77de892db2ed8bf6cfed))
+* new types of tezos orders ([#432](https://github.com/rarible/sdk/issues/432)) ([55f482f](https://github.com/rarible/sdk/commit/55f482f97ae80e8f2000ab9ee1e78f014d2d4dd4))
+* qa tests ([#429](https://github.com/rarible/sdk/issues/429)) ([88a94f2](https://github.com/rarible/sdk/commit/88a94f28c78f46ef2a8ea2a0eb437e9756b4a7df))
+
+
+
+
+
+## [0.13.7](https://github.com/rarible/sdk/compare/v0.13.6...v0.13.7) (2023-01-23)
+
+
+### Bug Fixes
+
+* example app process error ([#419](https://github.com/rarible/sdk/issues/419)) ([60ece81](https://github.com/rarible/sdk/commit/60ece81b8773ee10e7499d9f0eb6a7bdbe5c883a))
+* handle checking approvals ([#426](https://github.com/rarible/sdk/issues/426)) ([13ae517](https://github.com/rarible/sdk/commit/13ae517eb72f43b8b5a9c88eec72fae9780f4126))
+* logger warn override ([#427](https://github.com/rarible/sdk/issues/427)) ([d3a891c](https://github.com/rarible/sdk/commit/d3a891cb6de660e1c1057d6bed2ada854460ed34))
+
+
+### Features
+
+* tezos migrates to union ([#412](https://github.com/rarible/sdk/issues/412)) ([e2c677c](https://github.com/rarible/sdk/commit/e2c677c3eac2ab152a15afacbc50fc3c12b03f38))
+
+
+
+
+
+## [0.13.6](https://github.com/rarible/sdk/compare/v0.13.5...v0.13.6) (2023-01-19)
+
+
+### Bug Fixes
+
+* ethereum tests update ([#422](https://github.com/rarible/sdk/issues/422)) ([3ef5923](https://github.com/rarible/sdk/commit/3ef59233ff3ae0bf963138e40204570ed2f2430a))
+
+
+### Features
+
+* direct seaport tx ([#425](https://github.com/rarible/sdk/issues/425)) ([32d1faa](https://github.com/rarible/sdk/commit/32d1faa6064c7923d7abd790e0da61c49370c995))
+
+
+
+
+
+## [0.13.5](https://github.com/rarible/sdk/compare/v0.13.4...v0.13.5) (2023-01-17)
+
+
+### Bug Fixes
+
+* batch buy error ([#421](https://github.com/rarible/sdk/issues/421)) ([8da4dc8](https://github.com/rarible/sdk/commit/8da4dc8985874cee3868aebb5151b7ae5ba8020e))
+
+
+
+
+
+## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
+
+
+### Bug Fixes
+
+* add log wallet address err description ([#410](https://github.com/rarible/sdk/issues/410)) ([625ea78](https://github.com/rarible/sdk/commit/625ea78583e6c5005d7c6b5a80c954c8cb6db403))
+* disable flow lint fix ([#417](https://github.com/rarible/sdk/issues/417)) ([2ebfe90](https://github.com/rarible/sdk/commit/2ebfe90565ca2db3765ca8962fd178c37d0481f6))
+* ledger blind signing warn ([#409](https://github.com/rarible/sdk/issues/409)) ([9bcfc82](https://github.com/rarible/sdk/commit/9bcfc82d9cc7369a2d927eb91d6cdffc9712c0ef))
+
+
+### Features
+
+* disable flow blockchain ([#416](https://github.com/rarible/sdk/issues/416)) ([4abb54c](https://github.com/rarible/sdk/commit/4abb54cbbbed109d9a0e257755b050f5ad29d662))
+* remove creating pending logs ([#415](https://github.com/rarible/sdk/issues/415)) ([34d3eb4](https://github.com/rarible/sdk/commit/34d3eb46624e1c3183ee82e975245ea06282d2a4))
+* warn coinbase wallet ([#414](https://github.com/rarible/sdk/issues/414)) ([82554f6](https://github.com/rarible/sdk/commit/82554f65e9cdafed5c905c947712860046733203))
+* wrapper on mumbai ([#418](https://github.com/rarible/sdk/issues/418)) ([be71064](https://github.com/rarible/sdk/commit/be710644a5121e2ba4c0ddfda27fa81f6d28ce34))
+
+
+
+
+
+## [0.13.3](https://github.com/rarible/sdk/compare/v0.13.2...v0.13.3) (2022-12-20)
+
+
+### Features
+
+* funds warn ([#406](https://github.com/rarible/sdk/issues/406)) ([793baaa](https://github.com/rarible/sdk/commit/793baaaf80d5dbb4d5190c8f37b8533aab9650da))
+* get future order fees ([#408](https://github.com/rarible/sdk/issues/408)) ([7019c16](https://github.com/rarible/sdk/commit/7019c16eac0775fd32ccb91d29766dde61e339b8))
+
+
+
+
+
+## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
+
+
+### Bug Fixes
+
+* checking payouts ([#404](https://github.com/rarible/sdk/issues/404)) ([eb55f3b](https://github.com/rarible/sdk/commit/eb55f3bffb434a704941990623230564680d3632))
+* ethereum provider error codes ([b1bf76d](https://github.com/rarible/sdk/commit/b1bf76d05fe7217e6582557f434d1b55daf6e3a2))
+* improve logging ([#394](https://github.com/rarible/sdk/issues/394)) ([141bbff](https://github.com/rarible/sdk/commit/141bbff30f6ba19f963b16eb8b2f3814f2ab1a28))
+* tezos errors ([b794e37](https://github.com/rarible/sdk/commit/b794e37266e1870b062d5dfc90a18b4596b511bf))
+
+
+### Features
+
+* add check when total price in solana instructions larger than u64 ([#401](https://github.com/rarible/sdk/issues/401)) ([b4d38f3](https://github.com/rarible/sdk/commit/b4d38f382f187dbc7cc5315e93a54ef4f4fb5d4d))
+* add currency selector for bid/sell in example app ([96d423a](https://github.com/rarible/sdk/commit/96d423a74b3843f6ca2fec7662096752a8b46fdc))
+* catch contracts errors messages ([#405](https://github.com/rarible/sdk/issues/405)) ([d20cd5b](https://github.com/rarible/sdk/commit/d20cd5b17c94581ac34884ed3e74d2fde1886d45))
+* change log level for some type of errors ([#393](https://github.com/rarible/sdk/issues/393)) ([2a3364c](https://github.com/rarible/sdk/commit/2a3364cb1820305e01dd7175fbd1a4ea84aaf68c))
+* change some log levels to network_error ([#398](https://github.com/rarible/sdk/issues/398)) ([31a370e](https://github.com/rarible/sdk/commit/31a370e132bc6e39152b394a75cd7496173fc818))
+* ethereum sdk directAcceptBid support ([7eee004](https://github.com/rarible/sdk/commit/7eee004b07e8f369fcb2d9c83c06d2002659997e))
+* ethereum sdk directAcceptBid support ([90cef3b](https://github.com/rarible/sdk/commit/90cef3b314f8871a3f69531e2f23581ca591d960))
+* ethereum sdk directAcceptBid support ([3376c1c](https://github.com/rarible/sdk/commit/3376c1c24ca82e9fa0b570c5a05b29b003343475))
+* show error then amount of items in order greater than amount of wei's ([#399](https://github.com/rarible/sdk/issues/399)) ([c1eb51f](https://github.com/rarible/sdk/commit/c1eb51f80298645cbbb6a3dfa60216135ec7e3fd))
+* tezos v2 bids ([#384](https://github.com/rarible/sdk/issues/384)) ([716088a](https://github.com/rarible/sdk/commit/716088abeb22036a504062748821b6380541c2a0))
+
+
+
+
+
+## [0.13.1](https://github.com/rarible/sdk/compare/v0.13.0...v0.13.1) (2022-11-22)
+
+
+### Features
+
+* looksrare royalties ([#390](https://github.com/rarible/sdk/issues/390)) ([4df48db](https://github.com/rarible/sdk/commit/4df48db39dafe0e9746bfa01efb999f324651f08))
+
+
+
+
+
+# [0.13.0](https://github.com/rarible/sdk/compare/v0.10.1...v0.13.0) (2022-11-18)
+
+
+### Bug Fixes
+
+* imx burn, transfer error ([#387](https://github.com/rarible/sdk/issues/387)) ([8003d4a](https://github.com/rarible/sdk/commit/8003d4a19d27a405d58a40f9d8b68e25f11f2e4a))
+
+
+### Features
+
+* example app sign page ([#386](https://github.com/rarible/sdk/issues/386)) ([51448ed](https://github.com/rarible/sdk/commit/51448ed1e70c00dd18d5a98e48a4505a17c77bba))
+
+
+
+
+
 ## [0.10.1](https://github.com/rarible/sdk/compare/v0.10.0...v0.10.1) (2022-11-10)
 
 

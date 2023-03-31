@@ -23,6 +23,7 @@ import {
 	mapTezosWallet,
 } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
+import { MattelConnectionProvider } from "@rarible/connector-mattel"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
@@ -84,13 +85,13 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 			}
 		case "development":
 			return {
-				accessNode: "tezos-node.dev.rarible.int",
+				accessNode: "https://rpc.tzkt.io/ghostnet",
 				network: TezosNetwork.CUSTOM
 			}
 		case "testnet":
 		default:
 			return {
-				accessNode: "https://rpc.tzkt.io/ithacanet",
+				accessNode: "https://rpc.tzkt.io/ghostnet",
 				network: TezosNetwork.CUSTOM
 			}
 	}
@@ -143,6 +144,16 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		applicationIcon: "https://rarible.com/favicon.png?2d8af2455958e7f0c812"
 	}))
 
+  const magic = mapFlowWallet(new MattelConnectionProvider({
+    magicProviderId: "-A2JxDIS1zwr5ceLy5HKwxiNL7uWFQPBsKmmkyfmB3s=",
+    magicAPIKey: "pk_live_63A5A557D1D4882D",
+    auth0Domain: "login-test.mattel.com",
+    auth0ClientId: "E9oV8wVCB89jcaThWny7STYHcm59REke",
+    auth0RedirectUrl: "https://marketplace-test.mattel.com",
+    accessNode: flowNetwork.accessNode,
+    network: flowNetwork.network,
+  }) as any) as any
+
 	let torus = undefined
 	if (isEthNetwork) {
 		torus = mapEthereumWallet(new TorusConnectionProvider({
@@ -191,6 +202,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(phantomConnect)
 		.add(solflareConnect)
 		.add(imxConnector)
+		.add(magic)
 	// .add(portis)
 	// .add(fortmatic)
 

@@ -21,7 +21,6 @@ import type { MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-a
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import { createEthereumSdk } from "./sdk-blockchains/ethereum"
-import { createFlowSdk } from "./sdk-blockchains/flow"
 import { createTezosSdk } from "./sdk-blockchains/tezos"
 import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
@@ -32,6 +31,7 @@ import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 import { getSdkContext } from "./common/get-sdk-context"
+import { createFlowSdk } from "./sdk-blockchains/flow"
 
 /**
  * @module
@@ -60,7 +60,13 @@ export function createRaribleSdk(
 	const wallet = provider && getRaribleWallet(provider)
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
-	const apis = createApisSdk(env, config?.apiClientParams, config?.logs)
+	const apis = createApisSdk(
+		env,
+		{
+			...(config?.apiClientParams || {}),
+			apiKey: config?.apiKey,
+		},
+		config?.logs)
 
 	const ethConfig = {
 		...config?.blockchain?.ETHEREUM,
