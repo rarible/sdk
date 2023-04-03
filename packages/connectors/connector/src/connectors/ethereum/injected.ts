@@ -36,7 +36,6 @@ export class InjectedWeb3ConnectionProvider extends
 	constructor() {
 		super()
 		this.connection = defer(() => {
-			console.debug("InjectedWeb3ConnectionProvider calling connect")
 			return connect()
 		}).pipe(
 			mergeMap(() => promiseToObservable(getWalletAsync())),
@@ -106,8 +105,6 @@ async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionRe
 	return combineLatest([getAddress(provider), getChainId(provider)]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
-				console.log(">> getWalletAsync", { address, chainId })
-
 				return {
 					chainId,
 					address,
