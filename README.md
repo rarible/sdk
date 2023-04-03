@@ -42,6 +42,8 @@ See our example how it works:
 1. Clone repository
 2. Install dependencies and build sdk. Execute in the root folder:
 
+> **Note:** on Apple silicon, you have to run NodeJS in `x64` mode. You'll see [this issue otherwise](https://github.com/rarible/sdk/issues/402). Follow [these steps to solve](https://stackoverflow.com/a/67907214/861773).
+
     ```shell
     yarn && yarn bootstrap && yarn build-all
     ```

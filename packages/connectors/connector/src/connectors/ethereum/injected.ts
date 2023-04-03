@@ -35,7 +35,9 @@ export class InjectedWeb3ConnectionProvider extends
 
 	constructor() {
 		super()
-		this.connection = defer(() => connect()).pipe(
+		this.connection = defer(() => {
+			return connect()
+		}).pipe(
 			mergeMap(() => promiseToObservable(getWalletAsync())),
 			map((wallet) => {
 				if (wallet) {
@@ -136,6 +138,7 @@ async function enableProvider(provider: any) {
 
 function getInjectedProvider(): any | undefined {
 	let provider: any = undefined
+
 	const global: any = typeof window !== "undefined" ? window : undefined
 	if (!global) {
 		return provider

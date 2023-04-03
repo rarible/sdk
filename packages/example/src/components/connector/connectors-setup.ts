@@ -8,6 +8,7 @@ import {
 } from "@rarible/connector"
 import { FclConnectionProvider } from "@rarible/connector-fcl"
 import { MEWConnectionProvider } from "@rarible/connector-mew"
+import { NFIDConnectionProvider } from "@rarible/connector-nfid"
 import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
@@ -26,7 +27,6 @@ import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
-
 
 const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
@@ -130,6 +130,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		rpcUrl: ethereumRpcMap[ethChainId]
 	}))
 
+	const nfid = mapEthereumWallet(new NFIDConnectionProvider({
+		origin: process.env.REACT_APP_NFID_ORIGIN || "https://nfid.one",
+	}))
+
 	const beacon: ConnectionProvider<"beacon", IWalletAndAddress> = mapTezosWallet(new BeaconConnectionProvider({
 		appName: "Rarible Test",
 		accessNode: tezosNetwork.accessNode,
@@ -194,6 +198,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 
 	const connector = Connector
 		.create(injected, state)
+		.add(nfid)
 		.add(walletLink)
 		.add(mew)
 		.add(beacon)
