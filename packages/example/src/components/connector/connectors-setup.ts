@@ -117,8 +117,6 @@ const state: IConnectorStateProvider = {
 }
 
 export function getConnector(environment: RaribleSdkEnvironment) {
-	console.log('>> getConnector', { environment });
-	
 	const ethChainId = environmentToEthereumChainId(environment)
 	const ethNetworkName = ethereumNetworkMap[ethChainId]
 	const isEthNetwork = ["mainnet", "ropsten", "rinkeby"].includes(ethNetworkName)
@@ -126,8 +124,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	const tezosNetwork = environmentToTezosNetwork(environment)
 
 	const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
-	console.log('>> getConnector', { injected });
-	
 
 	const mew = mapEthereumWallet(new MEWConnectionProvider({
 		networkId: ethChainId,

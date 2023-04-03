@@ -61,31 +61,25 @@ export class InjectedWeb3ConnectionProvider extends
 	}
 
 	getId(): string {
-		console.log(">> InjectedWeb3ConnectionProvider.getId")
 		return PROVIDER_ID
 	}
 
 	getConnection(): Observable<ConnectionState<EthereumProviderConnectionResult>> {
-		console.log(">> InjectedWeb3ConnectionProvider.getConnection")
 		return this.connection
 	}
 
 	getOption(): Promise<Maybe<DappType>> {
-		console.log(">> InjectedWeb3ConnectionProvider.getOption")
 		const provider = getInjectedProvider()
 		return Promise.resolve(getDappType(provider))
 	}
 
 	isAutoConnected(): Promise<boolean> {
-		console.log(">> InjectedWeb3ConnectionProvider.isAutoConnected")
 		const provider = getInjectedProvider()
 		const dapp = getDappType(provider)
 		return Promise.resolve(isDappSupportAutoConnect(dapp))
 	}
 
 	async isConnected(): Promise<boolean> {
-		console.log(">> InjectedWeb3ConnectionProvider.isConnected")
-
 		const provider = getInjectedProvider()
 		if (provider !== undefined) {
 			return ethAccounts(provider)
@@ -108,10 +102,7 @@ async function connect(): Promise<void> {
 }
 
 async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionResult | undefined>> {
-	console.log(">> getWalletAsync")
-
 	const provider = getInjectedProvider()
-	console.log(">> getWalletAsync", { provider })
 	return combineLatest([getAddress(provider), getChainId(provider)]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
@@ -130,18 +121,14 @@ async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionRe
 }
 
 async function enableProvider(provider: any) {
-	console.log(">> enableProvider provider.request", { provider })
-
 	if (typeof provider.request === "function") {
 		try {
-			const accounts = await provider.request({
+			await provider.request({
 				method: "eth_requestAccounts",
 			})
-			console.log(">> enableProvider provider.request", { accounts })
 		} catch (e) {
 			if (typeof provider.enable === "function") {
-				const response = await provider.enable()
-				console.log(">> enableProvider provider.enable()", { response })
+				await provider.enable()
 			}
 		}
 	} else {
@@ -153,20 +140,15 @@ async function enableProvider(provider: any) {
 }
 
 function getInjectedProvider(): any | undefined {
-	console.log(">> getInjectedProvider")
-
 	let provider: any = undefined
 
 	const global: any = typeof window !== "undefined" ? window : undefined
 	if (!global) {
-		console.log(">> getInjectedProvider", { global: undefined })
 		return provider
 	} else if (global.ethereum) {
-		console.log(">> getInjectedProvider", { ethereum: global.ethereum })
 		provider = global.ethereum;
 		(provider as any).autoRefreshOnNetworkChange = false
 	} else if (global.web3?.currentProvider) {
-		console.log(">> getInjectedProvider", { web3CurrentProvider: global.web3.currentProvider })
 		provider = global.web3.currentProvider
 	}
 	return provider

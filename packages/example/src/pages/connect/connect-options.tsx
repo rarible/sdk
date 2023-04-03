@@ -26,7 +26,6 @@ export function ConnectOptions() {
   const { environment, setEnvironment } = useContext(EnvironmentContext);
   const connection = useContext(ConnectorContext);
   const { connector, state } = connection;
-  console.log(">> ConnectOptions", { connection, connector });
 
   const options$ = useMemo(
     () => (connector ? from(connector.getOptions()) : from([])),
@@ -77,8 +76,6 @@ export function ConnectOptions() {
             </TextField>
             {options.map((o) => {
               const walletInfo = getWalletInfo(o.option);
-              console.log(">> ", { o });
-
               return (
                 <LoadingButton
                   key={o.option}
