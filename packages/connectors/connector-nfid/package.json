@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-nfid",
-  "version": "0.0.0",
+  "version": "0.13.17",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -14,9 +14,9 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "~0.13.2",
-    "ethers": "^5.7.2",
     "@nfid/embed": "0.0.5-alpha.0",
+    "@rarible/connector": "^0.13.17",
+    "ethers": "^5.7.2",
     "rollup": "^2.0.0"
   },
   "devDependencies": {
