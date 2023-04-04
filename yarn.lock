@@ -5014,10 +5014,10 @@
     npmlog "^6.0.2"
     write-file-atomic "^4.0.1"
 
-"@magic-ext/flow@~8.4.0":
-  version "8.4.0"
-  resolved "https://registry.yarnpkg.com/@magic-ext/flow/-/flow-8.4.0.tgz#bd4845936291dedb7cac9f3dae2ed0ada97e84df"
-  integrity sha512-bYPss2t2vzslXK7HHxF/iNB4ZWnxUcKtDfa4730r2qmLjT+5jAZ2qDjlbfI9y3jUYlaKiJJsUse+fjmrsaHQyQ==
+"@magic-ext/flow@~11.0.2":
+  version "11.0.2"
+  resolved "https://registry.yarnpkg.com/@magic-ext/flow/-/flow-11.0.2.tgz#df9f24d40d289a9d159d0c20d787e5840b6b5ffe"
+  integrity sha512-vDBSb8x+Fg9/ypUSYVMl3329dIhKNfitZxcO6r4q2GT710KR51v3Y980KUWrqEdglvlWf42YLtUiXpS8QIhzQw==
 
 "@magic-ext/oidc@1.0.1":
   version "1.0.1"
@@ -5030,16 +5030,16 @@
   integrity sha512-vNoR7b2r+lRBJTbhCXxO3KCPA6CGsvmqNj8Kbkk1M9qixGOFhNsYTrOzxp5AK8vggIIOrVjvqP9y2ryemkhckg==
 
 "@magic-sdk/commons@^9.4.0":
-  version "9.6.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-9.6.0.tgz#28d4c33d91a5933b965f606d4e4ed5e82e46c720"
-  integrity sha512-J8Ys3vYrgeBG2eYH2/SemthIH50KmqGZ5ieTmoZ13EJNMn8MzzGAdu0jh3GYMkw1UYPnFxiWGJA9dcdQJtVj2Q==
+  version "9.6.2"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-9.6.2.tgz#db03f98efb771481f4045a3877b6285600f0e96e"
+  integrity sha512-PgYznuO9GV5wiKgzP3bEQJTnAbvfHmAPTBmwbP/ESag3FrOyXxuk7PIWpeGmnFa/i6SSQUsmKp8sr/BN0dU5vg==
 
 "@magic-sdk/provider@^13.4.0":
-  version "13.6.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-13.6.0.tgz#f0a61eeee4d4ac57f447bbe511f0462bb416fc4a"
-  integrity sha512-2LV8cSSQ5BfG5JphmIVYwOW6vBij+eysAGD89QPxvoLYyf8TJ/HJrdD+ijVpjxF0QR2F4Cri2Uxsknkmm8JLYQ==
+  version "13.6.2"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-13.6.2.tgz#ae0772205952f65b32466396c81bfd695d23554f"
+  integrity sha512-ecrTyL4NaploZ/cX1b+NGiWYMSAWVseE7xa7tvmkejZgQCrcJQd8UXb3LPVPmF7kQPKGutJSdkeGJCDKwsGKIA==
   dependencies:
-    "@magic-sdk/types" "^11.6.0"
+    "@magic-sdk/types" "^11.6.2"
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
@@ -5052,10 +5052,10 @@
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
-"@magic-sdk/types@^11.4.0", "@magic-sdk/types@^11.6.0":
-  version "11.6.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-11.6.0.tgz#0087db0464a02fe9eeb763dc6e92a05974a16f7f"
-  integrity sha512-r+sjmhGjJ9AaHnMvbNY2Wj+FL8o2V2FyPOXAZNtgC0Uv8oniJ7zaDx06SULOozoyAVHuzizs27riT4F6SLIaFA==
+"@magic-sdk/types@^11.4.0", "@magic-sdk/types@^11.6.2":
+  version "11.6.2"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-11.6.2.tgz#1fb6205b516c3f0c5787e82aecd0e667d2de1cd2"
+  integrity sha512-+Emd+9HeeVi2E0bktJ33YleA/ozEuKYCBfmSbGRxlntdyUvaojeC+WPf2jN1WH8FjUEiljAjrEJTTZyRGCL8SQ==
 
 "@magic-sdk/types@^6.0.0":
   version "6.0.0"
