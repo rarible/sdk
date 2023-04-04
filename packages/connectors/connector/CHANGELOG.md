@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.18](https://github.com/rarible/sdk/compare/v0.13.17...v0.13.18) (2023-04-04)
+
+
+### Bug Fixes
+
+* metamask wallet connect ([#455](https://github.com/rarible/sdk/issues/455)) ([f06e59a](https://github.com/rarible/sdk/commit/f06e59a0ff3b334989c31d78c1c8c61923c15714))
+
+
+
+
+
 ## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
 
 **Note:** Version bump only for package @rarible/connector

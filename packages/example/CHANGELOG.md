@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.18](https://github.com/rarible/sdk/compare/v0.13.17...v0.13.18) (2023-04-04)
+
+
+### Bug Fixes
+
+* mattel purchase ([#454](https://github.com/rarible/sdk/issues/454)) ([d8d81a4](https://github.com/rarible/sdk/commit/d8d81a458d6964e1f27f5539ba813a00155de688))
+
+
+
+
+
 ## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
 
 **Note:** Version bump only for package example
