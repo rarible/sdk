@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.18",
+  "version": "0.13.19",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -26,7 +26,7 @@
     "@rarible/connector-iframe": "^0.13.18",
     "@rarible/connector-mattel": "^0.13.18",
     "@rarible/connector-mew": "^0.13.18",
-    "@rarible/connector-nfid": "^0.13.18",
+    "@rarible/connector-nfid": "^0.13.19",
     "@rarible/connector-portis": "^0.13.18",
     "@rarible/connector-torus": "^0.13.18",
     "@rarible/connector-walletconnect": "^0.13.18",
