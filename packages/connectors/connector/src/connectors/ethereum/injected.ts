@@ -31,62 +31,62 @@ const PROVIDER_ID = "injected" as const
 
 export class InjectedWeb3ConnectionProvider extends
 	AbstractConnectionProvider<DappType, EthereumProviderConnectionResult> {
-	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
+  private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
-	constructor() {
-		super()
-		this.connection = defer(() => {
-			return connect()
-		}).pipe(
-			mergeMap(() => promiseToObservable(getWalletAsync())),
-			map((wallet) => {
-				if (wallet) {
-					const disconnect = () => {
-						if ("close" in wallet.provider) {
-							return wallet.provider.close()
-						}
-						if ("disconnect" in wallet.provider) {
-							return wallet.provider.disconnect()
-						}
-						return Promise.resolve()
-					}
-					return getStateConnected({ connection: wallet, disconnect })
-				} else {
-					return getStateDisconnected()
-				}
-			}),
-			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
-		)
-	}
+  constructor() {
+  	super()
+  	this.connection = defer(() => {
+  		return connect()
+  	}).pipe(
+  		mergeMap(() => promiseToObservable(getWalletAsync())),
+  		map((wallet) => {
+  			if (wallet) {
+  				const disconnect = () => {
+  					if ("close" in wallet.provider) {
+  						return wallet.provider.close()
+  					}
+  					if ("disconnect" in wallet.provider) {
+  						return wallet.provider.disconnect()
+  					}
+  					return Promise.resolve()
+  				}
+  				return getStateConnected({ connection: wallet, disconnect })
+  			} else {
+  				return getStateDisconnected()
+  			}
+  		}),
+  		startWith(getStateConnecting({ providerId: PROVIDER_ID })),
+  	)
+  }
 
-	getId(): string {
-		return PROVIDER_ID
-	}
+  getId(): string {
+  	return PROVIDER_ID
+  }
 
-	getConnection(): Observable<ConnectionState<EthereumProviderConnectionResult>> {
-		return this.connection
-	}
+  getConnection(): Observable<ConnectionState<EthereumProviderConnectionResult>> {
+  	return this.connection
+  }
 
-	getOption(): Promise<Maybe<DappType>> {
-		const provider = getInjectedProvider()
-		return Promise.resolve(getDappType(provider))
-	}
+  getOption(): Promise<Maybe<DappType>> {
+  	const provider = getInjectedProvider()
+  	return Promise.resolve(getDappType(provider))
+  }
 
-	isAutoConnected(): Promise<boolean> {
-		const provider = getInjectedProvider()
-		const dapp = getDappType(provider)
-		return Promise.resolve(isDappSupportAutoConnect(dapp))
-	}
+  isAutoConnected(): Promise<boolean> {
+  	const provider = getInjectedProvider()
+  	const dapp = getDappType(provider)
+  	return Promise.resolve(isDappSupportAutoConnect(dapp))
+  }
 
-	async isConnected(): Promise<boolean> {
-		const provider = getInjectedProvider()
-		if (provider !== undefined) {
-			return ethAccounts(provider)
-				.then(([account]) => account !== undefined)
-		} else {
-			return Promise.resolve(false)
-		}
-	}
+  async isConnected(): Promise<boolean> {
+  	const provider = getInjectedProvider()
+  	if (provider !== undefined) {
+  		return ethAccounts(provider)
+  			.then(([account]) => account !== undefined)
+  	} else {
+  		return Promise.resolve(false)
+  	}
+  }
 }
 
 async function connect(): Promise<void> {
@@ -98,6 +98,12 @@ async function connect(): Promise<void> {
 	if (!accounts || accounts.length === 0) {
 		await enableProvider(provider)
 	}
+	provider.on("disconnect", async (rpcError: unknown) => {
+		if (detectErrorCode(1013, rpcError)) {
+			const [primary] = await provider.request({ method: "eth_accounts" })
+			if (primary) return
+		}
+	})
 }
 
 async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionResult | undefined>> {
@@ -143,7 +149,7 @@ function getInjectedProvider(): any | undefined {
 	if (!global) {
 		return provider
 	} else if (global.ethereum) {
-		provider = global.ethereum;
+		provider = Array.isArray(global.ethereum.providers) ? global.ethereum.providers[0] : global.ethereum;
 		(provider as any).autoRefreshOnNetworkChange = false
 	} else if (global.web3?.currentProvider) {
 		provider = global.web3.currentProvider
@@ -183,4 +189,9 @@ function isDappSupportAutoConnect(dapp: Maybe<DappType>): boolean {
 	const disabledAutoLogin = new Set([DappType.Generic, DappType.Metamask])
 
 	return !(unsupportedDappTypes.has(dapp) || disabledAutoLogin.has(dapp))
+}
+
+export function detectErrorCode(code: number, error: unknown) {
+	const parsedCode = typeof error === "object" && error !== null && "code" in error ? (error as any).code : undefined
+	return parsedCode === code
 }
