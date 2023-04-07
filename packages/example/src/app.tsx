@@ -22,6 +22,7 @@ import { BalancePage } from "./pages/balance/balance-page"
 import { CancelPage } from "./pages/cancel/cancel-page"
 import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 import { SignPage } from "./pages/sign/sign-page"
+import { SellUpdatePage } from "./pages/sell-update/sell-update-page";
 
 export function App() {
 	return (
@@ -53,6 +54,9 @@ export function App() {
 									</Route>
 									<Route path="buy" element={<BuyPage/>}>
 										<Route path=":orderId" element={<BuyPage/>}/>
+									</Route>
+                  <Route path="sell-update" element={<SellUpdatePage/>}>
+										<Route path=":orderId" element={<SellUpdatePage/>}/>
 									</Route>
 									<Route path="batch-buy" element={<BatchBuyPage/>}/>
 									<Route path="bid" element={<BidPage/>}>

@@ -1,7 +1,5 @@
 import React, { useState } from "react"
-import {
-	Blockchain,
-} from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import { Grid, MenuItem, Stack } from "@mui/material"
 import { FormTextInput } from "../form/form-text-input"
 import { UseFormReturn } from "react-hook-form"
@@ -11,7 +9,8 @@ import { ContractAddress, toContractAddress } from "@rarible/types"
 
 interface IPriceFormProps {
 	form: UseFormReturn
-	currencyOptions: CurrencyOption[]
+	currencyOptions?: CurrencyOption[],
+  max?: string | number
 }
 
 function getCurrencyOptionValue(option: CurrencyOption): string {
@@ -36,7 +35,9 @@ function getCurrencyOptionByValue(value: string, currencyOptions: CurrencyOption
 }
 
 export function PriceForm(props: IPriceFormProps) {
-	const { form, currencyOptions } = props
+	const { form, currencyOptions: currencyOptionsOriginal, max } = props
+  const currencyOptions = currencyOptionsOriginal || []
+  const isEmptyCurrency = currencyOptions !== undefined
 	const [currencyType, setCurrencyType] = useState(getCurrencyOptionValue(currencyOptions[0]))
 	const selectedOption = getCurrencyOptionByValue(currencyType, currencyOptions)
 
@@ -45,40 +46,45 @@ export function PriceForm(props: IPriceFormProps) {
 			<Grid item xs={8}>
 				<FormTextInput
 					type="number"
-					inputProps={{ min: 0, step: "any" }}
+					inputProps={{ min: 0, step: "any", max: max || undefined }}
 					form={form}
 					options={{
 						min: 0,
+            max: max || undefined
 					}}
 					name="price"
 					label="Price"
 				/>
 			</Grid>
-			<Grid item xs={4}>
-				<FormSelect
-					form={form}
-					value={currencyType}
-					onChange={(e) => {
-						setCurrencyType(e.target.value)
-						const selectedOption = getCurrencyOptionByValue(e.target.value, currencyOptions)
-						form.setValue("contract", selectedOption?.type === "TOKEN" ? selectedOption.contract ?? "" : "")
-					}}
-					name="currencyType"
-					label="Currency"
-				>
-					{
-						currencyOptions.map((option, index) => {
-							const value = getCurrencyOptionValue(option)
-							return <MenuItem key={value} value={value}>
-								{option.label}
-							</MenuItem>
-						})
-					}
-				</FormSelect>
-			</Grid>
+      {
+        isEmptyCurrency ?
+          <Grid item xs={4}>
+            <FormSelect
+              form={form}
+              value={currencyType}
+              onChange={(e) => {
+                setCurrencyType(e.target.value)
+                const selectedOption = getCurrencyOptionByValue(e.target.value, currencyOptions)
+                form.setValue("contract", selectedOption?.type === "TOKEN" ? selectedOption.contract ?? "" : "")
+              }}
+              name="currencyType"
+              label="Currency"
+            >
+              {
+                currencyOptions.map((option, index) => {
+                  const value = getCurrencyOptionValue(option)
+                  return <MenuItem key={value} value={value}>
+                    {option.label}
+                  </MenuItem>
+                })
+              }
+            </FormSelect>
+          </Grid>
+          : null
+      }
 		</Grid>
 		{
-			selectedOption?.type === "TOKEN" ?
+			selectedOption?.type === "TOKEN" && isEmptyCurrency ?
 				<FormTextInput
 					type="text"
 					form={form}
