@@ -8,7 +8,7 @@ import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
 import { SellUpdatePrepareForm } from "./sell-update-prepare-form"
 import { SellUpdateForm } from "./sell-update-form"
-import { BuyComment } from "./comments/buy-comment"
+import { SellUpdateComment } from "./comments/sell-update-comment"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { InlineCode } from "../../components/common/inline-code";
@@ -32,7 +32,7 @@ export function SellUpdatePage() {
 					</CommentedBlock>
 				)
 			}
-			<CommentedBlock sx={{ my: 2 }} comment={<BuyComment/>}>
+			<CommentedBlock sx={{ my: 2 }} comment={<SellUpdateComment/>}>
 				<FormStepper
 					steps={[
 						{

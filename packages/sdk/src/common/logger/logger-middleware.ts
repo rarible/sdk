@@ -4,6 +4,7 @@ import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
+import { getStringifiedError } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -92,20 +93,6 @@ export function getErrorMessageString(err: any): string {
 		}
 	} catch (e: any) {
 		return `getErrorMessageString parse error: ${e?.message}`
-	}
-}
-
-
-function getStringifiedError(error: any): string | undefined {
-	try {
-		const errorObject = Object.getOwnPropertyNames(error)
-			.reduce((acc, key) => {
-				acc[key] = error[key]
-				return acc
-			}, {} as Record<any, any>)
-		return JSON.stringify(errorObject, null, "  ")
-	} catch (e) {
-		return undefined
 	}
 }
 
