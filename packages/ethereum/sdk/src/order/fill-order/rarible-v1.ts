@@ -80,13 +80,6 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 			options,
 		}
 	}
-
-	async sendTransaction(
-		initial: SimpleLegacyOrder, inverted: SimpleLegacyOrder, request: LegacyOrderFillRequest
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(initial, inverted, request)
-		return this.send(functionCall, options)
-	}
 }
 
 function getMatchV1Options(order: SimpleLegacyOrder): EthereumSendOptions {

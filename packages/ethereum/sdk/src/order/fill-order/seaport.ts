@@ -36,16 +36,6 @@ export class SeaportOrderHandler {
 	) {
 	}
 
-	async sendTransaction(
-		request: SeaportV1OrderFillRequest,
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(request)
-		return this.send(
-			functionCall,
-			options,
-		)
-	}
-
 	async getTransactionData(
 		request: SeaportV1OrderFillRequest,
 	): Promise<OrderFillSendData> {

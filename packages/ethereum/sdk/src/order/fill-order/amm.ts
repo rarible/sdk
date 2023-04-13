@@ -86,11 +86,6 @@ export class AmmOrderHandler {
 		}
 	}
 
-	async sendTransaction(request: AmmOrderFillRequest): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(request)
-		return this.send(functionCall, options)
-	}
-
 	async getTransactionDataForExchangeWrapper(
 		request: AmmOrderFillRequest,
 		feeValue: BigNumber,

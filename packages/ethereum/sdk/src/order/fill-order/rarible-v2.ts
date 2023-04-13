@@ -236,13 +236,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		}
 	}
 
-	async sendTransaction(
-		initial: SimpleRaribleV2Order, inverted: SimpleRaribleV2Order,
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(initial, inverted)
-		return this.send(functionCall, options)
-	}
-
 	async fixForTx(order: SimpleRaribleV2Order): Promise<any> {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")

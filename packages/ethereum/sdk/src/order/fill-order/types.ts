@@ -114,7 +114,8 @@ export enum ExchangeWrapperOrderType {
 	X2Y2 = 3,
 	LOOKSRARE_ORDERS = 4,
 	AAM = 5,
-	SEAPORT_V14 = 6
+	SEAPORT_V14 = 6,
+	LOOKSRARE_V2_ORDERS = 7
 }
 
 export type PreparedOrderRequestDataForExchangeWrapper = {
@@ -138,7 +139,6 @@ export type FillBatchOrderAction = Action<FillOrderStageId, FillBatchOrderReques
 export interface OrderHandler<T extends FillOrderRequest> {
 	invert: (request: T, maker: Address) => T["order"] | Promise<T["order"]>
 	approve: (order: T["order"], infinite: boolean) => Promise<void>
-	sendTransaction: (initial: T["order"], inverted: T["order"], request: T) => Promise<EthereumTransaction>
 	getTransactionData: (order: T["order"], inverted: T["order"], request: T) => Promise<OrderFillSendData>
 
 	getBaseOrderFee(order: T["order"]): Promise<number> | number

@@ -47,13 +47,6 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 		}
 	}
 
-	async sendTransaction(
-		initial: SimpleCryptoPunkOrder, inverted: SimpleCryptoPunkOrder,
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(initial, inverted)
-		return this.send(functionCall, options)
-	}
-
 	getPunkOrderCallMethod(initial: SimpleCryptoPunkOrder): EthereumFunctionCall {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
