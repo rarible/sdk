@@ -6,6 +6,8 @@ import { UnionAddress } from "@rarible/types/build/union-address"
 import { useGetBalance } from "./hooks/use-get-balance"
 import { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider";
+import { ConvertForm, isAvailableWethConvert } from "./convert-form";
+import { ConnectorContext } from "../../components/connector/sdk-connection-provider";
 
 interface INativeBalanceProps {
 	sdk: IRaribleSdk,
@@ -15,12 +17,14 @@ interface INativeBalanceProps {
 
 export function NativeBalance({sdk, wallet, walletAddress}: INativeBalanceProps) {
   const {environment} = useContext(EnvironmentContext)
-  const currencies = getCurrenciesForBlockchain(wallet.walletType, environment)
+	const connection = useContext(ConnectorContext)
+	const currencies = getCurrenciesForBlockchain(wallet.walletType, environment, connection)
 	const { balance, fetching, error } = useGetBalance(
 		sdk,
 		walletAddress,
 		currencies.find((c) => c.isNative)?.getAssetType()!
 	)
+	const isAvailableConvert = isAvailableWethConvert(wallet.walletType, environment)
 
 	const content = () => {
 		if (fetching) {
@@ -33,8 +37,14 @@ export function NativeBalance({sdk, wallet, walletAddress}: INativeBalanceProps)
 	}
 
 	return (
-		<div>
-			Native Balance: {content()}
-		</div>
+		<>
+			<div style={{marginBottom: 20}}>
+				Native Balance: {content()}
+			</div>
+			{
+				isAvailableConvert && <ConvertForm sdk={sdk} walletAddress={walletAddress} />
+			}
+		</>
+
 	)
 }

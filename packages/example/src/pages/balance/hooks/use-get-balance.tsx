@@ -33,7 +33,7 @@ export function useGetBalance(sdk: IRaribleSdk, walletAddress: UnionAddress, ass
 			fetchItems().catch((e) => setError(e))
 		}
 		//eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [walletAddress])
+	}, [walletAddress, assetType["@type"]])
 
 	return { balance, fetching, error }
 }
