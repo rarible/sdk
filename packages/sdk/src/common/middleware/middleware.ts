@@ -105,8 +105,6 @@ export class Middlewarer {
 	}
 
 	wrapFunction<T extends (...args: any) => any>(callable: T, fnName: string): T {
-		console.log("wrapFunction", fnName)
-		console.dir(callable)
 		Object.defineProperty(callable, "name", { value: fnName, writable: false })
 		return <T>((...args: Parameters<T>) => this.call(callable, ...args))
 	}
@@ -175,11 +173,11 @@ export class Middlewarer {
 }
 
 function isAction(fn: any): fn is Action<any, any, any> {
-	return fn instanceof Action || ("after" in fn && "before" in fn && "start" in fn)
+	return fn instanceof Action || (fn && "after" in fn && "before" in fn && "start" in fn)
 }
 
 function isMethodWithPrepare(
 	fn: any
 ): fn is MethodWithPrepare<any, any> {
-	return fn instanceof MethodWithPrepare || ("simplifiedMethod" in fn && "prepare" in fn)
+	return fn instanceof MethodWithPrepare || (fn && "simplifiedMethod" in fn && "prepare" in fn)
 }
