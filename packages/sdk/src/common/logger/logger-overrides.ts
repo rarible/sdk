@@ -2,8 +2,8 @@ import { NetworkError, Warning } from "@rarible/logger/build"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
+import { isEVMWarning, isSolanaWarning, isTezosWarning } from "@rarible/sdk-common"
 import { NetworkErrorCode } from "../apis"
-import { isEVMWarning, isSolanaWarning, isTezosWarning } from "../../../../sdk-common/src"
 
 const COMMON_NETWORK_ERROR_MESSAGES = [
 	"Network request failed",
