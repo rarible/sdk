@@ -63,7 +63,7 @@ export class MattelConnectionProvider extends
 		}
 		return defer(async () => {
 			try {
-				if (await result.magic.user.isLoggedIn()) {
+				if (await isLoggedInPromise(result.magic)) {
 					const user = await result.magic.user.getMetadata()
 
 					return {
@@ -89,14 +89,18 @@ export class MattelConnectionProvider extends
 					auth: result.magic.flow.authorization,
 					fcl: result.fcl,
 				}
-			} catch (e) {}
-			return null
+			} catch (e) {
+				return { error: e }
+			}
 		}).pipe(
 			map((data: {
 				user: MagicUserMetadata,
 				auth: typeof result.magic.flow.authorization,
 				fcl: Fcl
-			} | null) => {
+			} | { error: any } | null) => {
+				if (data && "error" in data) {
+					return getStateDisconnected({ error: data.error.toString() })
+				}
 				if (!data?.user?.publicAddress) {
 					return getStateDisconnected()
 				}
@@ -183,4 +187,16 @@ export const auth0Login = async (options: {auth0Domain: string, auth0ClientId: s
 	}
 	const claims = await auth0.getIdTokenClaims()
 	return claims?.__raw
+}
+
+async function isLoggedInPromise(magic: InstanceWithExtensions<SDKBase, (FlowExtension | OpenIdExtension)[]>) {
+	let handleTimeout: ReturnType<typeof setTimeout>
+	const timeoutPromise = new Promise((_resolve, reject) => {
+		handleTimeout = setTimeout(() => reject(new Error("Request Timed Out")), 10000)
+	})
+
+	return Promise.race([magic.user.isLoggedIn(), timeoutPromise]).then(result => {
+		clearTimeout(handleTimeout)
+		return result
+	})
 }
