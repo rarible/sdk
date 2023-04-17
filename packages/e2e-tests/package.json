@@ -10,7 +10,6 @@
     "e2e-tests-all": "jest --runInBand --testPathPattern=tests",
     "e2e-tests-ethereum": "jest --runInBand --testPathPattern=tests/ethereum/smoke",
     "e2e-tests-tezos": "jest --runInBand --testPathPattern=tests/tezos/smoke",
-    "e2e-tests-solana": "jest --runInBand --testPathPattern=tests/solana/smoke",
     "e2e-tests-flow": "jest --runInBand --testPathPattern=tests/flow/smoke",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "verify": "tsc --noEmit"
