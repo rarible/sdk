@@ -82,25 +82,26 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 				distinctUntilChanged(),
 				switchMap(provider => {
 					if (provider) {
-						const connection = provider.getConnection()
-						return concat(connection, NEVER).pipe(
+						return concat(provider.getConnection(), NEVER).pipe(
 							catchError(error => {
-								provider.getOption()
-									.then(option => {
-
-										this.logger.raw({
-											level: getErrorLogLevel(error, provider.getId()),
-											method: "connect",
-											message: error?.message,
-											error: getStringifiedError(error),
-											providerId: provider.getId(),
-											providerOption: option || undefined,
-											provider: getStringifiedError(provider),
-										})
-									})
 								return concat(of(getStateDisconnected({ error })), NEVER)
 							}),
 							map(res => {
+								console.log("res", res)
+								if (res.status === "disconnected") {
+									provider.getOption()
+										.then(option => {
+											this.logger.raw({
+												level: getErrorLogLevel(res.error, provider.getId()),
+												method: "connect",
+												message: res.error?.message,
+												error: getStringifiedError(res.error),
+												providerId: provider.getId(),
+												providerOption: option || undefined,
+												provider: getStringifiedError(provider),
+											})
+										})
+								}
 								if (res.status === "connected") {
 									provider.getOption()
 										.then(option => {

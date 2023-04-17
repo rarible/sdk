@@ -65,6 +65,7 @@ const EVM_WARN_MESSAGES = [
 	"Транзакция отменена",
 	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 	"Link Window Closed",
+	"Popup closed",
 	"User cancelled login",
 	"User denied account authorization",
 ]
