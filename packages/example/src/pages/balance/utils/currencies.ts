@@ -3,6 +3,7 @@ import { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
 import { WalletType } from "@rarible/sdk-wallet"
 import { ContractAddress, toContractAddress } from "@rarible/types";
 import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain";
+import { IConnectorContext } from "../../../components/connector/sdk-connection-provider";
 
 interface ISupportedCurrency {
 	isNative: boolean
@@ -10,7 +11,11 @@ interface ISupportedCurrency {
 	getAssetType(contract?: string): RequestCurrencyAssetType
 }
 
-export function getCurrenciesForBlockchain(blockchain: WalletType, env?: RaribleSdkEnvironment): ISupportedCurrency[] {
+export function getCurrenciesForBlockchain(
+	blockchain: WalletType,
+	env?: RaribleSdkEnvironment,
+	conn?: IConnectorContext
+): ISupportedCurrency[] {
   switch (blockchain) {
 		case WalletType.ETHEREUM:
 			return [{
@@ -18,7 +23,7 @@ export function getCurrenciesForBlockchain(blockchain: WalletType, env?: Rarible
 				requireContract: false,
 				getAssetType: (contract?: string) => ({
 					"@type": "ETH",
-					blockchain: Blockchain.ETHEREUM,
+					blockchain: conn?.state?.status === "connected" ? conn.state.connection.blockchain : Blockchain.ETHEREUM,
 				}),
 			}]
 		case WalletType.IMMUTABLEX:
