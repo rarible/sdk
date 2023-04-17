@@ -97,9 +97,9 @@ export class MattelConnectionProvider extends
 				user: MagicUserMetadata,
 				auth: typeof result.magic.flow.authorization,
 				fcl: Fcl
-			} | { error: any } | null) => {
+			} | { error: unknown } | null) => {
 				if (data && "error" in data) {
-					return getStateDisconnected({ error: data.error.toString() })
+					return getStateDisconnected({ error: data.error?.toString() })
 				}
 				if (!data?.user?.publicAddress) {
 					return getStateDisconnected()
