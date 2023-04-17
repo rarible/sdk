@@ -3,6 +3,7 @@ set -e
 start=$(date +%s)
 scripts_dir="$(dirname "$0")"
 
+yarn run build-sdk-common
 source $scripts_dir/build-ethereum.sh &
 source $scripts_dir/build-imx.sh &
 source $scripts_dir/build-solana.sh

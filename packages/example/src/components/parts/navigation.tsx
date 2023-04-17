@@ -26,6 +26,9 @@ export function Navigation() {
 	},{
 		label: "Sell",
 		path: "/sell"
+	},{
+		label: "Sell update",
+		path: "/sell-update"
 	}, {
 		label: "Buy",
 		path: "/buy"

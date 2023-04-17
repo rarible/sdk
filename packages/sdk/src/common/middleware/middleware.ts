@@ -173,11 +173,11 @@ export class Middlewarer {
 }
 
 function isAction(fn: any): fn is Action<any, any, any> {
-	return fn instanceof Action
+	return fn instanceof Action || (fn && "after" in fn && "before" in fn && "start" in fn)
 }
 
 function isMethodWithPrepare(
 	fn: any
 ): fn is MethodWithPrepare<any, any> {
-	return fn instanceof MethodWithPrepare
+	return fn instanceof MethodWithPrepare || (fn && "simplifiedMethod" in fn && "prepare" in fn)
 }

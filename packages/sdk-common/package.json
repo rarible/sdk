@@ -1,0 +1,25 @@
+{
+  "name": "@rarible/sdk-common",
+  "version": "0.13.18",
+  "homepage": "",
+  "license": "ISC",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build",
+    "umd"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "test": "jest --runInBand",
+    "verify": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rarible/api-client": "0.0.15-beta1"
+  },
+  "devDependencies": {},
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  }
+}
