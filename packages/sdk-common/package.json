@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-common",
-  "version": "0.13.18",
+  "version": "0.13.20",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -18,7 +18,6 @@
   "dependencies": {
     "@rarible/api-client": "0.0.15-beta1"
   },
-  "devDependencies": {},
   "peerDependencies": {
     "tslib": "^2.3.1"
   }

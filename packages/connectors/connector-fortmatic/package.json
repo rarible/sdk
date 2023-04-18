@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-fortmatic",
-  "version": "0.13.18",
+  "version": "0.13.20",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.18",
+    "@rarible/connector": "^0.13.20",
     "fortmatic": "^2.2.1"
   },
   "devDependencies": {
