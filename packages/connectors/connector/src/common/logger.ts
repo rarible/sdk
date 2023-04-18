@@ -13,7 +13,7 @@ export const loggerConfig = {
 export function createLogger() {
 	return new RemoteLogger(
 		async (msg: LoggableValue) => {
-			await fetch(loggerConfig.elkUrl, {
+			await window.fetch(loggerConfig.elkUrl, {
 				method: "POST",
 				headers: {
 					"Accept": "application/json",
