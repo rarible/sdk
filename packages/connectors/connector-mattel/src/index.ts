@@ -166,7 +166,9 @@ export class MattelConnectionProvider extends
 				}),
 			],
 		})
-		fcl.config().put("accessNode.api", this.config.accessNode)
+		fcl.config()
+			.put("accessNode.api", this.config.accessNode)
+			.put("env", this.config.network)
 
 		const auth0 = await auth0JS.createAuth0Client({
 			domain: this.config.auth0Domain,

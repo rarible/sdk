@@ -4,7 +4,7 @@ import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
-import { getStringifiedError } from "@rarible/sdk-common"
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -30,7 +30,7 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 				})
 				.catch((err) => {
 					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
+					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
 		case WalletType.FLOW:
@@ -41,7 +41,7 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 				})
 				.catch((err) => {
 					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
+					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
 		case WalletType.TEZOS:
@@ -53,7 +53,7 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 				})
 				.catch((err) => {
 					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
+					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
 		case WalletType.SOLANA:
@@ -142,7 +142,7 @@ export function getInternalLoggerMiddleware(
 							level: getErrorLevel(callable?.name, err, sdkContext?.wallet),
 							method: callable?.name,
 							message: getErrorMessageString(err),
-							error: getStringifiedError(err),
+							error: getStringifiedData(err),
 							duration: (Date.now() - time) / 1000,
 							args: parsedArgs,
 							requestAddress: undefined as undefined | string,
@@ -155,7 +155,7 @@ export function getInternalLoggerMiddleware(
 							level: "LOGGING_ERROR",
 							method: callable?.name,
 							message: getErrorMessageString(e),
-							error: getStringifiedError(e),
+							error: getStringifiedData(e),
 						}
 					}
 					remoteLogger.raw(data)

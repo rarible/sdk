@@ -6,6 +6,7 @@ const EVM_WARN_MESSAGES = [
 	"User rejected the transaction",
 	"User rejected the request",
 	"Request rejected",
+	"Request cancelled by user",
 	"Sign transaction cancelled",
 	"Link iFrame Closed",
 	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",

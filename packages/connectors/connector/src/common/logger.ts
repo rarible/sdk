@@ -26,7 +26,7 @@ export function createLogger() {
 			initialContext: Promise.resolve({
 				service: loggerConfig.service,
 				"@version": packageJson.version,
-				environment: "testnet",
+				environment: "prod",
 			}),
 			dropBatchInterval: 1000,
 			maxByteSize: 3 * 10240,

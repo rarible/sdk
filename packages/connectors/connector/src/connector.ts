@@ -2,7 +2,7 @@ import type { Observable } from "rxjs"
 import { BehaviorSubject, concat, defer, NEVER, of } from "rxjs"
 import { catchError, distinctUntilChanged, first, map, shareReplay, switchMap, tap } from "rxjs/operators"
 import type { RemoteLogger } from "@rarible/logger/build"
-import { getStringifiedError } from "@rarible/sdk-common"
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { ConnectionProvider } from "./provider"
 import type { ConnectionState } from "./connection-state"
 import { getStateConnecting, getStateDisconnected, STATE_INITIALIZING } from "./connection-state"
@@ -87,7 +87,6 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 								return concat(of(getStateDisconnected({ error })), NEVER)
 							}),
 							map(res => {
-								console.log("res", res)
 								if (res.status === "disconnected") {
 									provider.getOption()
 										.then(option => {
@@ -95,10 +94,10 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 												level: getErrorLogLevel(res.error, provider.getId()),
 												method: "connect",
 												message: res.error?.message,
-												error: getStringifiedError(res.error),
+												error: getStringifiedData(res.error),
 												providerId: provider.getId(),
 												providerOption: option || undefined,
-												provider: getStringifiedError(provider),
+												provider: getStringifiedData(provider),
 											})
 										})
 								}
@@ -232,10 +231,10 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 				level: getErrorLogLevel(err, currentProvider?.getId()),
 				method: "checkAutoConnect",
 				message: err?.message,
-				error: getStringifiedError(err),
+				error: getStringifiedData(err),
 				providerId: currentProvider?.getId(),
 				providerOption: await currentProvider?.getOption() || undefined,
-				provider: getStringifiedError(currentProvider),
+				provider: getStringifiedData(currentProvider),
 			})
 			return getStateDisconnected({ error: err.toString() })
 		}
