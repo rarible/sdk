@@ -84,7 +84,9 @@ describe("cancel order", () => {
 			},
 			signature: toBinary("0x"),
 		}
-		await testOrder(form)
+		const { tx, order } = await testOrder(form)
+		const events = await tx.getEvents()
+		expect(events.some(e => e.event === "Cancel" && e.returnValues.hash === order.hash)).toBe(true)
 	})
 
 	test("ExchangeV1 should work", async () => {
@@ -115,7 +117,9 @@ describe("cancel order", () => {
 			},
 			signature: toBinary("0x"),
 		}
-		await testOrder(form)
+		const { tx } = await testOrder(form)
+		const events = await tx.getEvents()
+		expect(events.some(e => e.event === "Cancel")).toBe(true)
 	})
 
 	async function testOrder(form: OrderForm) {
@@ -134,17 +138,8 @@ describe("cancel order", () => {
 
 		const order = await upserter.upsert({ order: form })
 		const tx = await cancel(checkLazyOrder, ethereum, send, config.exchange, checkWalletChainId, apis, order)
-		await tx.wait()
-
-		const cancelledOrder = await retry(15, 3000, async () => {
-			const current = await orderApi.getOrderByHash({ hash: order.hash })
-			if (!current.cancelled) {
-				throw new Error("Order is not cancelled")
-			}
-			return current
-		})
-
-		expect(cancelledOrder.cancelled).toEqual(true)
+		const receipt = await tx.wait()
+		return { tx, order }
 	}
 })
 

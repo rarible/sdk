@@ -18,7 +18,6 @@
   },
   "dependencies": {
     "@imtbl/imx-sdk": "^1.24.0",
-    "@rarible/api-client": "0.0.15-beta1",
     "@rarible/connector": "^0.13.18",
     "@rarible/connector-beacon": "^0.13.18",
     "@rarible/connector-fcl": "^0.13.18",
@@ -37,6 +36,7 @@
   },
   "peerDependencies": {
     "rxjs": ">= 6.6.7 < 8.0.0",
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "@rarible/api-client": ">=0.0.15 <0.0.16"
   }
 }
