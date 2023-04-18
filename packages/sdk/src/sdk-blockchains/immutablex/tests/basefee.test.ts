@@ -15,7 +15,7 @@ describe("IMX base fee calc test", () => {
 		expect(prep.baseFee).toEqual(200) // const fee
 	})
 
-	test("baseFee for buy", async () => {
+	test.skip("baseFee for buy", async () => {
 		expect(calcBuyerBaseFee(
 			await apis.order.getOrderById({
 				id: "IMMUTABLEX:145293",

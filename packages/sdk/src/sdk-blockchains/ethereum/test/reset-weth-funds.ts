@@ -14,7 +14,7 @@ export async function resetWethFunds(wallet: EthereumWallet, sdk: RaribleSdk, co
 	const wethBidderBalance = new BigNumber(await wethContract.methods.balanceOf(walletAddress).call())
 		.div(new BigNumber(10).pow(18))
 
-	console.log("wethBidderBalance", wethBidderBalance.toString())
+	// console.log("wethBidderBalance", wethBidderBalance.toString())
 	if (wethBidderBalance.gt("0")) {
 		const tx = await sdk.balances.convert(
 			wethAsset,

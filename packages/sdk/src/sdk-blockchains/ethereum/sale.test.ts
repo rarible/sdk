@@ -1,11 +1,11 @@
 import { awaitAll, createE2eProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { toAddress, toContractAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
+import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/send-transaction"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
@@ -41,7 +41,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 
-		await sentTx(
+		await sentTxConfirm(
 			conf.testErc20.methods.mint(wallet2Address, "1000000000"),
 			{ from: wallet1Address, gas: 200000 }
 		)
@@ -87,7 +87,6 @@ describe("sale", () => {
 		const fillAction = await sdk2.order.buy.prepare({ orderId })
 
 		const tx = await fillAction.submit({ amount: 1 })
-		console.log("tx.transaction.data", tx.transaction.data)
 		// expect()
 		await tx.wait()
 
@@ -100,7 +99,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
 
-		await sentTx(
+		await sentTxConfirm(
 			conf.testErc20.methods.mint(wallet2Address, "1000000000"),
 			{ from: wallet1Address, gas: 200000 }
 		)
@@ -169,7 +168,7 @@ describe("sale", () => {
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()
 		}
-		await sentTx(
+		await sentTxConfirm(
 			conf.testErc20.methods.mint(wallet2Address, 100),
 			{ from: wallet1Address, gas: 200000 }
 		)
@@ -203,7 +202,7 @@ describe("sale", () => {
 	test.skip("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
-		await sentTx(
+		await sentTxConfirm(
 			conf.testErc20.methods.mint(wallet2Address, 100),
 			{ from: wallet1Address, gas: 200000 }
 		)
@@ -256,7 +255,7 @@ describe("sale", () => {
 	test("erc721 sell/buy using erc-20 with CurrencyId", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
-		await sentTx(
+		await sentTxConfirm(
 			conf.testErc20.methods.mint(wallet2Address, 100),
 			{ from: wallet1Address, gas: 200000 }
 		)
@@ -303,7 +302,7 @@ describe("sale", () => {
 	test("erc721 sell/buy using erc-20 with CurrencyId with basic functions", async () => {
 		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
-		await sentTx(
+		await sentTxConfirm(
 			conf.testErc20.methods.mint(wallet2Address, 100),
 			{ from: wallet1Address, gas: 200000 }
 		)

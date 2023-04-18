@@ -6149,7 +6149,7 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.5.3.tgz#7d341eba51cb05927b7744cbfb08d7cd68ebcb6e"
   integrity sha512-ZjrJvg4iVIxatBRnUPcwWzaQRf7XN4hgjrRHqmjXv2Q+8/2vYyPL1TBFlfGunPPDMUB3hwBELaL5ZQaJsSE6oQ==
 
-"@rarible/types@>=0.9.0 <0.10.0", "@rarible/types@^0.9.6":
+"@rarible/types@^0.9.6", "@rarible/types@~0.9.6":
   version "0.9.6"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.6.tgz#a88d40d6ef58f53d61fafb2ef992c123068b1427"
   integrity sha512-yzbJIcOCdoMMmycRSGZKdt8AdAIcHOPPUes2biJioMHYalGk+8jzP6xB1dqtW7jqv9Wg5Ur5V/DtqVhuajlj+w==

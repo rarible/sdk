@@ -11,7 +11,7 @@ import BigNumber from "bignumber.js"
 import type { EthErc20AssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum-sdk"
-import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
+import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
 import { LogsLevel } from "../../domain"
@@ -71,7 +71,7 @@ describe("bid", () => {
 	beforeAll(async () => {
 		console.log("eth 1 address", await ethereum1.getFrom())
 		console.log("eth 2 address", await ethereum2.getFrom())
-		await sentTx(testErc20.methods.mint(await ethereum2.getFrom(), "99999000000000000000000"), {
+		await sentTxConfirm(testErc20.methods.mint(await ethereum2.getFrom(), "99999000000000000000000"), {
 			from: await ethereum2.getFrom(),
 			gas: 2000000,
 		})
@@ -305,7 +305,7 @@ describe("bid", () => {
 
 		const tokenId = "4"
 		const itemId = convertEthereumItemId(`${it.testErc1155.options.address}:${tokenId}`, Blockchain.ETHEREUM)
-		await sentTx(it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123"), {
+		await sentTxConfirm(it.testErc1155.methods.mint(senderRaw, tokenId, 100, "123"), {
 			from: senderRaw,
 			gas: 500000,
 		})
@@ -487,14 +487,14 @@ describe("bid", () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
-		await sentTx(testErc20.methods.mint(bidderAddress, "10000000000000"), {
+		await sentTxConfirm(testErc20.methods.mint(bidderAddress, "10000000000000"), {
 			from: ownerCollectionAddress,
 			gas: 500000,
 		})
 		const tokenId = "6"
 		const itemId = convertEthereumItemId(`${it.testErc721.options.address}:${tokenId}`, Blockchain.ETHEREUM)
 
-		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "1"), {
+		await sentTxConfirm(it.testErc721.methods.mint(ownerCollectionAddress, tokenId, "1"), {
 			from: ownerCollectionAddress,
 			gas: 500000,
 		})
@@ -537,7 +537,7 @@ describe("bid", () => {
 		const ownerCollectionAddress = await ethereum1.getFrom()
 		const bidderAddress = await ethereum2.getFrom()
 
-		await sentTx(testErc20.methods.mint(bidderAddress, "10000000000000"), {
+		await sentTxConfirm(testErc20.methods.mint(bidderAddress, "10000000000000"), {
 			from: ownerCollectionAddress,
 			gas: 500000,
 		})

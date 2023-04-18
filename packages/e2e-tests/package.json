@@ -20,6 +20,7 @@
     "@rarible/ethereum-sdk-test-common": "^0.13.17",
     "@rarible/flow-test-common": "~0.5.50",
     "@rarible/sdk-wallet": "^0.13.17",
+    "@rarible/types": "~0.9.6",
     "bignumber.js": "^9.0.1",
     "jest-jasmine2": "^29.4.1"
   },
@@ -31,8 +32,5 @@
     "npm-run-all": "^4.1.5",
     "ts-jest": "^29.0.5",
     "typescript": "^4.8.4"
-  },
-  "peerDependencies": {
-    "@rarible/types": ">=0.9.0 <0.10.0"
   }
 }

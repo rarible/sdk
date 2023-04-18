@@ -35,6 +35,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 		return {
 			blockchain: this.blockchain,
 			hash: this.transaction.hash,
+			events: await this.transaction.getEvents(),
 			result: await this.resultExtractor?.(this.transaction.getEvents.bind(this.transaction)),
 		}
 	}
