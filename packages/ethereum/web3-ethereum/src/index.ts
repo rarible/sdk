@@ -32,15 +32,19 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		try {
 		  return await providerRequest(this.config.web3.currentProvider, method, params)
 		} catch (e: any) {
-			let signer: string | undefined
+			let signer: string | undefined, chainId
 			try {
-				signer = await this.getFrom()
+				[signer, chainId] = await Promise.all([
+					this.getFrom(),
+					this.getChainId(),
+				])
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				error: e,
 				code: e?.code,
 				method: "Web3Ethereum.send",
+				chainId,
 				data: {
 					method,
 					params,
@@ -77,6 +81,10 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			signer = await this.getFrom()
 			return await signTypedData(this.send, signer, data)
 		} catch (e: any) {
+			let chainId
+			try {
+				chainId = await this.getChainId()
+			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3Ethereum.signTypedData",
@@ -84,6 +92,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 				code: e.code,
 				data,
 				signer,
+				chainId,
 			})
 		}
 	}
@@ -246,16 +255,20 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				gasPrice: options.gasPrice?.toString(),
 			})
 		} catch (e: any) {
-			let callInfo = null, callData = null
+			let callInfo = null, callData = null, chainId
 			try {
-				callInfo = await this.getCallInfo()
-				callData = await this.getData()
+				[callInfo, callData, chainId] = await Promise.all([
+					this.getCallInfo(),
+					this.getData(),
+					this.config.web3.eth.getChainId(),
+				])
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3FunctionCall.call",
 				error: e,
 				code: e?.code,
+				chainId,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -315,22 +328,26 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				toAddress(this.contract.options.address)
 			)
 		} catch (e: any) {
-			let callInfo = null, callData = null
+			let callInfo = null, callData = null, chainId
 			try {
-				callInfo = await this.getCallInfo()
-				callData = await this.getData()
+				[callInfo, callData, chainId] = await Promise.all([
+					this.getCallInfo(),
+					this.getData(),
+					this.config.web3.eth.getChainId(),
+				])
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3FunctionCall.send",
 				error: e,
 				code: e?.code,
+				chainId,
 				data: {
 					...(callInfo || {}),
+					options,
 					data: callData,
 					hash: hashValue,
 					gas: this.config.gas || options.gas,
-					options,
 				},
 			})
 		}

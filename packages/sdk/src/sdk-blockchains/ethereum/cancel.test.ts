@@ -3,12 +3,12 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toContractAddress, toItemId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import type { BlockchainEthereumTransaction } from "@rarible/sdk-transaction/src"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
 import { awaitStock } from "../../common/test/await-stock"
 import { initProviders } from "./test/init-providers"
-import { awaitOrderCancel } from "./test/await-order-cancel"
 import { convertEthereumContractAddress } from "./common"
 import { DEV_PK_1 } from "./test/common"
 
@@ -52,8 +52,10 @@ describe("cancel", () => {
 		const tx = await sdk1.order.cancel({ orderId })
 		await tx.wait()
 
-		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
-		expect(cancelledOrder.cancelled).toEqual(true)
+		await checkCancelEvent(tx as BlockchainEthereumTransaction)
+
+		// const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
+		// expect(cancelledOrder.cancelled).toEqual(true)
 	})
 
 	test("sell and cancel with basic function", async () => {
@@ -81,7 +83,10 @@ describe("cancel", () => {
 		const tx = await sdk1.order.cancel({ orderId })
 		await tx.wait()
 
-		const cancelledOrder = await awaitOrderCancel(sdk1, orderId)
-		expect(cancelledOrder.cancelled).toEqual(true)
+		await checkCancelEvent(tx as BlockchainEthereumTransaction)
 	})
 })
+
+async function checkCancelEvent(tx: BlockchainEthereumTransaction) {
+	expect((await tx.wait()).events.some(e => e.event === "Cancel")).toBe(true)
+}

@@ -6,6 +6,7 @@ const EVM_WARN_MESSAGES = [
 	"User rejected the transaction",
 	"User rejected the request",
 	"Request rejected",
+	"Request cancelled by user",
 	"Sign transaction cancelled",
 	"Link iFrame Closed",
 	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
@@ -65,6 +66,7 @@ const EVM_WARN_MESSAGES = [
 	"Транзакция отменена",
 	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 	"Link Window Closed",
+	"Popup closed",
 	"User cancelled login",
 	"User denied account authorization",
 ]

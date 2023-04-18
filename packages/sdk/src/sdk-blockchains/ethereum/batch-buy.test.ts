@@ -26,7 +26,9 @@ describe("Batch buy", () => {
 	})
 
 	test("batch buy rarible orders", async () => {
-		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const token1 = await mint(sdkSeller)
+		const token2 = await mint(sdkSeller)
+		const tokens = [token1, token2]
 		const orders = await Promise.all(tokens.map(async (token) => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
@@ -46,14 +48,16 @@ describe("Batch buy", () => {
 				value: 100,
 			}],
 		})))
-		console.log(tx)
 		expect(tx.transaction.data.endsWith("000009616c6c64617461")).toEqual(true)
 		await tx.wait()
 	})
 
 	test("batch buy rarible orders with simplified function", async () => {
-		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const token1 = await mint(sdkSeller)
+		const token2 = await mint(sdkSeller)
+		const tokens = [token1, token2]
 		const orders = await Promise.all(tokens.map(async (token) => {
+			await awaitItem(sdkSeller, token.id)
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
@@ -71,7 +75,6 @@ describe("Batch buy", () => {
 			}],
 		}))
 		const tx = await sdkBuyer.order.batchBuy(ordersRequests)
-		console.log(tx)
 		await tx.wait()
 	})
 

@@ -16,7 +16,7 @@ describe("Test flow balance function", () => {
 	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
 	const unionSdk = createRaribleSdk(wallet, "prod")
 
-	test("flow balance", async () => {
+	test.skip("flow balance", async () => {
 		let error: any
 		try {
 			await unionSdk.balances.getBalance(

@@ -54,7 +54,7 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 			return 1
 		case "testnet":
 		default:
-			return 4
+			return 5
 	}
 }
 
@@ -119,7 +119,7 @@ const state: IConnectorStateProvider = {
 export function getConnector(environment: RaribleSdkEnvironment) {
 	const ethChainId = environmentToEthereumChainId(environment)
 	const ethNetworkName = ethereumNetworkMap[ethChainId]
-	const isEthNetwork = ["mainnet", "ropsten", "rinkeby"].includes(ethNetworkName)
+	const isEthNetwork = ["mainnet", "goerli"].includes(ethNetworkName)
 	const flowNetwork = environmentToFlowNetwork(environment)
 	const tezosNetwork = environmentToTezosNetwork(environment)
 

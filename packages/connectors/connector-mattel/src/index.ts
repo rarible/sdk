@@ -15,8 +15,10 @@ import type { InstanceWithExtensions, SDKBase } from "@magic-sdk/provider"
 import type { MagicUserMetadata } from "@magic-sdk/types"
 import type { FlowExtension } from "@magic-ext/flow"
 import type { OpenIdExtension } from "@magic-ext/oidc"
+import type { Auth0Client } from "@auth0/auth0-spa-js"
+import type { Auth0ClientOptions, PopupConfigOptions, LogoutOptions } from "@auth0/auth0-spa-js/dist/typings/global"
 
-export type FclConfig = {
+export type MattelConnectorConfig = {
 	accessNode: string
 	network: string
 	magicAPIKey: string
@@ -24,6 +26,11 @@ export type FclConfig = {
 	auth0Domain: string
 	auth0ClientId: string
 	auth0RedirectUrl: string
+	options?: {
+		auth0ClientOptions?: Auth0ClientOptions
+		auth0PopupOptions?: PopupConfigOptions
+		auth0LogoutOptions?: LogoutOptions
+	}
 }
 
 const PROVIDER_ID = "mattel" as const
@@ -36,6 +43,8 @@ export interface MattelProviderConnectionResult extends ProviderConnectionResult
 export interface ConnectionResult {
 	fcl: Fcl,
 	magic: InstanceWithExtensions<SDKBase, (FlowExtension | OpenIdExtension)[]>
+	auth0: Auth0Client
+
 }
 
 export class MattelConnectionProvider extends
@@ -44,7 +53,7 @@ export class MattelConnectionProvider extends
 	private readonly connection: Observable<ConnectionState<MattelProviderConnectionResult>>
 
 	constructor(
-		private readonly config: FclConfig
+		private config: MattelConnectorConfig
 	) {
 		super()
 		this.instance = cache(() => this._connect())
@@ -54,40 +63,61 @@ export class MattelConnectionProvider extends
 		)
 	}
 
-	private toConnectState(result: ConnectionResult): Observable<ConnectionState<MattelProviderConnectionResult>> {
+	public setPopupConfig(config: PopupConfigOptions) {
+		this.config.options = {
+			...this.config.options,
+			auth0PopupOptions: {
+				...(this.config.options?.auth0PopupOptions || {}),
+				...(config || {}),
+			},
+		}
+	}
+
+	private toConnectState(
+		{ magic, fcl, auth0 }: ConnectionResult
+	): Observable<ConnectionState<MattelProviderConnectionResult>> {
 		const disconnect = async () => {
 			await Promise.all([
-				result.magic.user.logout(),
-  			result.magic.wallet.disconnect(),
+				magic.user.logout(),
+  			magic.wallet.disconnect(),
+				auth0.logout({
+					clientId: this.config.auth0ClientId,
+					logoutParams: {
+						returnTo: window.location.href,
+					},
+					...(this.config.options?.auth0LogoutOptions || {}),
+				}),
 			])
 		}
 		return defer(async () => {
 			try {
-				if (await isLoggedInPromise(result.magic)) {
-					const user = await result.magic.user.getMetadata()
+				if (await isLoggedInPromise(magic)) {
+					const user = await magic.user.getMetadata()
 
 					return {
 						user,
-						auth: result.magic.flow.authorization,
-						fcl: result.fcl,
+						fcl,
+						auth: magic.flow.authorization,
 					}
 				}
 				const jwt = await auth0Login({
 					auth0ClientId: this.config.auth0ClientId,
 					auth0Domain: this.config.auth0Domain,
 					auth0RedirectUrl: this.config.auth0RedirectUrl,
+					auth0,
+					auth0PopupOptions: this.config.options?.auth0PopupOptions,
 				})
 				if (jwt) {
-					await result.magic.openid.loginWithOIDC({
+					await magic.openid.loginWithOIDC({
 						jwt,
 						providerId: this.config.magicProviderId,
 					})
 				}
-				const user = await result.magic.user.getMetadata()
+				const user = await magic.user.getMetadata()
 				return {
 					user,
-					auth: result.magic.flow.authorization,
-					fcl: result.fcl,
+					fcl,
+					auth: magic.flow.authorization,
 				}
 			} catch (e) {
 				return { error: e }
@@ -95,11 +125,11 @@ export class MattelConnectionProvider extends
 		}).pipe(
 			map((data: {
 				user: MagicUserMetadata,
-				auth: typeof result.magic.flow.authorization,
+				auth: typeof magic.flow.authorization,
 				fcl: Fcl
 			} | { error: unknown } | null) => {
 				if (data && "error" in data) {
-					return getStateDisconnected({ error: data.error?.toString() })
+					return getStateDisconnected({ error: data.error })
 				}
 				if (!data?.user?.publicAddress) {
 					return getStateDisconnected()
@@ -113,10 +143,19 @@ export class MattelConnectionProvider extends
 	}
 
 	private async _connect(): Promise<ConnectionResult> {
-		const { Magic } = await import("magic-sdk")
-		const { FlowExtension } = await import("@magic-ext/flow")
-		const { OpenIdExtension } = await import("@magic-ext/oidc")
-		const fcl = await import("@onflow/fcl")
+		const [
+			{ Magic },
+			{ FlowExtension },
+			{ OpenIdExtension },
+			fcl,
+			auth0JS,
+		] = await Promise.all([
+			import("magic-sdk"),
+			import("@magic-ext/flow"),
+			import("@magic-ext/oidc"),
+			import("@onflow/fcl"),
+			import("@auth0/auth0-spa-js"),
+		])
 
 		const magic = new Magic(this.config.magicAPIKey, {
 			extensions: [
@@ -127,9 +166,16 @@ export class MattelConnectionProvider extends
 				}),
 			],
 		})
-		fcl.config().put("accessNode.api", this.config.accessNode)
+		fcl.config()
+			.put("accessNode.api", this.config.accessNode)
+			.put("env", this.config.network)
 
-		return { fcl, magic }
+		const auth0 = await auth0JS.createAuth0Client({
+			domain: this.config.auth0Domain,
+			clientId: this.config.auth0ClientId,
+			...(this.config.options?.auth0ClientOptions || {}),
+		})
+		return { fcl, magic, auth0 }
 	}
 
 	getId(): string {
@@ -154,14 +200,13 @@ export class MattelConnectionProvider extends
 	}
 }
 
-export const auth0Login = async (options: {auth0Domain: string, auth0ClientId: string, auth0RedirectUrl: string}) => {
-	const { createAuth0Client, PopupTimeoutError } = await import("@auth0/auth0-spa-js")
-
-	const auth0 = await createAuth0Client({
-		domain: options.auth0Domain,
-		clientId: options.auth0ClientId,
-	})
-
+export const auth0Login = async ({ auth0, auth0RedirectUrl, auth0ClientId, auth0Domain, auth0PopupOptions }: {
+	auth0Domain: string,
+	auth0ClientId: string,
+	auth0RedirectUrl: string,
+	auth0: Auth0Client,
+	auth0PopupOptions?: PopupConfigOptions
+}) => {
 	let isAuthenticated
 	try {
 		isAuthenticated = await auth0.isAuthenticated()
@@ -173,12 +218,15 @@ export const auth0Login = async (options: {auth0Domain: string, auth0ClientId: s
 		try {
 			  await auth0.loginWithPopup({
 				authorizationParams: {
-					domain: options.auth0Domain,
-					clientId: options.auth0ClientId,
-					redirect_uri: options.auth0RedirectUrl,
+					domain: auth0Domain,
+					clientId: auth0ClientId,
+					redirect_uri: auth0RedirectUrl,
 				},
+				timeoutInSeconds: 180,
+				...(auth0PopupOptions || {}),
 			})
 		} catch (e) {
+			const { PopupTimeoutError } = await import("@auth0/auth0-spa-js")
 			if (e instanceof PopupTimeoutError) {
 				e.popup.close()
 			}
@@ -192,9 +240,8 @@ export const auth0Login = async (options: {auth0Domain: string, auth0ClientId: s
 async function isLoggedInPromise(magic: InstanceWithExtensions<SDKBase, (FlowExtension | OpenIdExtension)[]>) {
 	let handleTimeout: ReturnType<typeof setTimeout>
 	const timeoutPromise = new Promise((_resolve, reject) => {
-		handleTimeout = setTimeout(() => reject(new Error("Request Timed Out")), 10000)
+		handleTimeout = setTimeout(() => reject(new Error("Session Checking Timed Out")), 10000)
 	})
-
 	return Promise.race([magic.user.isLoggedIn(), timeoutPromise]).then(result => {
 		clearTimeout(handleTimeout)
 		return result
