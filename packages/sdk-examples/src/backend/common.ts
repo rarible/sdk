@@ -3,16 +3,17 @@ import fetch from "node-fetch"
 import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
-import type { provider as Web3Provider } from "web3-core"
 // @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { ethers } from "ethers"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import Web3 from "web3"
+import type Web3Types from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import HDWalletProvider from "@truffle/hdwallet-provider"
 
+export type Web3Provider = InstanceType<typeof Web3Types>["currentProvider"]
 
 export function updateNodeGlobalVars() {
 	(global as any).FormData = FormData;
