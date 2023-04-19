@@ -15,7 +15,6 @@
     "clean": "rimraf ./build",
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
-    "test": "jest --runInBand --silent",
     "verify": "tsc --noEmit"
   },
   "dependencies": {

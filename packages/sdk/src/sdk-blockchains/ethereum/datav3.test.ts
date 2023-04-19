@@ -72,7 +72,6 @@ describe("Create & fill orders with order data v3", () => {
 			maxFeesBasePoint: 500,
 		})
 
-		console.log("orderid > ", orderId)
 
 		const nextStock = "1"
 		await awaitStock(sdk1, orderId, nextStock)
@@ -127,8 +126,7 @@ describe("Create & fill orders with order data v3", () => {
 		expect(fillAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const tx = await fillAction.submit({ amount: 1 })
 		expect(tx.transaction.data.endsWith("dead09616c6c64617461")).toEqual(true)
-		const receipt = await tx.wait()
-		console.log("receipt", JSON.stringify(receipt, null, "	"))
+		await tx.wait()
 
 		const nextStock2 = "0"
 		await awaitStock(sdk1, orderId, nextStock2)

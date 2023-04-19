@@ -40,6 +40,6 @@ describe("test signPersonalMessage", () => {
 
 	test("solana signPersonalMessage", async () => {
 		const wallet = new SolanaWallet(getSolanaTestWallet())
-		console.log(await wallet.signPersonalMessage("Hello"))
+		await wallet.signPersonalMessage("Hello")
 	})
 })
