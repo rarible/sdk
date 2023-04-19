@@ -81,6 +81,7 @@ export class FlowSell {
 				itemId: toFlowItemId(`${contract}:${itemId}`),
 				sellItemPrice: toBn(sellRequest.price).decimalPlaces(8).toString(),
 				originFees: toFlowParts(sellRequest.originFees),
+				end: sellRequest.expirationDate,
 			})
 
 		}
