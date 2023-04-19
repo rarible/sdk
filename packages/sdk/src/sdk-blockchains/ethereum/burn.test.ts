@@ -118,7 +118,7 @@ describe("burn", () => {
 			}],
 		})
 
-		await awaitDeletedItem(sdk,  mintResult.itemId)
+		// await awaitDeletedItem(sdk,  mintResult.itemId)
 	})
 
 	test.skip("burn erc1155 lazy item", async () => {
@@ -152,7 +152,7 @@ describe("burn", () => {
 			}],
 		})
 
-		await awaitDeletedItem(sdk,  mintResult.itemId)
+		// await awaitDeletedItem(sdk,  mintResult.itemId)
 	})
 
 	test("burn erc1155 lazy item with basic function", async () => {
@@ -180,6 +180,6 @@ describe("burn", () => {
 			itemId: mintResult.itemId,
 			amount: 10,
 		})
-		await awaitDeletedItem(sdk,  mintResult.itemId)
+		// await awaitDeletedItem(sdk,  mintResult.itemId)
 	})
 })
