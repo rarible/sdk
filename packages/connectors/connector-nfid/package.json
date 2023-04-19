@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-nfid",
-  "version": "0.13.21",
+  "version": "0.13.22",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",

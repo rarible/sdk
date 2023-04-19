@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.13.17",
+  "version": "0.13.22",
   "keywords": [
     "solana",
     "web3"
@@ -28,7 +28,7 @@
     "@project-serum/anchor": "^0.22.1",
     "@rarible/logger": "^0.9.12",
     "@rarible/solana-common": "^0.13.17",
-    "@rarible/solana-wallet": "^0.13.17",
+    "@rarible/solana-wallet": "^0.13.22",
     "@rarible/utils": "~0.9.10",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.36.0",
