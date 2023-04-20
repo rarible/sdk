@@ -5,8 +5,8 @@ import type { VersumSwapForm, HENSwapForm, TEIASwapForm, ObjktAskV1Form, ObjktAs
 // eslint-disable-next-line camelcase
 import { versum_swap, hen_swap, teia_swap, ask_v1, ask_v2, fxhash_v1_offer, fxhash_v2_listing } from "@rarible/tezos-sdk"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { LogsLevel } from "../../common/logger/common"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosToUnionAddress, getMaybeTezosProvider } from "./common"

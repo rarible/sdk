@@ -89,22 +89,6 @@ function isEVMWalletType(walletType: WalletType | undefined) {
 	return walletType === WalletType.ETHEREUM || walletType === WalletType.IMMUTABLEX
 }
 
-const execRevertedRegexp = /execution reverted:(.*[^\\])/
-const ethersSig = "Error while gas estimation with message cannot estimate gas"
-const ethersRevertedRegexp = /"execution reverted[:]?(.*?)"/
-
 function isContractError(error: any): boolean {
 	return error?.message?.includes("execution reverted")
-}
-
-export function getExecRevertedMessage(msg: string) {
-	if (!msg) return msg
-	try {
-		const result = msg.includes(ethersSig) ? msg.match(ethersRevertedRegexp): msg.match(execRevertedRegexp)
-		if (result && result[1]) {
-			return result[1].trim()
-		}
-	} catch (e) {}
-
-	return msg
 }

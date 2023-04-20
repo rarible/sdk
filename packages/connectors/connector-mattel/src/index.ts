@@ -83,7 +83,7 @@ export class MattelConnectionProvider extends
 				auth0.logout({
 					clientId: this.config.auth0ClientId,
 					logoutParams: {
-						returnTo: window.location.href,
+						returnTo: window.location.origin,
 					},
 					...(this.config.options?.auth0LogoutOptions || {}),
 				}),

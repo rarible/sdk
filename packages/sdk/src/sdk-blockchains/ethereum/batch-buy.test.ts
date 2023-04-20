@@ -5,8 +5,8 @@ import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/type
 import Web3 from "web3"
 import type { IRaribleSdk } from "../../index"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
+import { LogsLevel } from "../../common/logger/common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("Batch buy", () => {

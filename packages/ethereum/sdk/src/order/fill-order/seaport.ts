@@ -179,28 +179,6 @@ function getUnitsToFill(request: SeaportV1OrderFillRequest): {
 	}
 }
 
-export function convertOrderType(type: SeaportOrderType): OrderType {
-	switch (type) {
-		case SeaportOrderType.FULL_OPEN: return OrderType.FULL_OPEN
-		case SeaportOrderType.PARTIAL_OPEN: return OrderType.PARTIAL_OPEN
-		case SeaportOrderType.FULL_RESTRICTED: return OrderType.FULL_RESTRICTED
-		case SeaportOrderType.PARTIAL_RESTRICTED: return OrderType.PARTIAL_RESTRICTED
-		default: throw new Error(`Unrecognized order type=${type}`)
-	}
-}
-
-export function convertItemType(type: SeaportItemType): ItemType {
-	switch (type) {
-		case SeaportItemType.NATIVE: return ItemType.NATIVE
-		case SeaportItemType.ERC20: return ItemType.ERC20
-		case SeaportItemType.ERC721: return ItemType.ERC721
-		case SeaportItemType.ERC721_WITH_CRITERIA: return ItemType.ERC721_WITH_CRITERIA
-		case SeaportItemType.ERC1155: return ItemType.ERC1155
-		case SeaportItemType.ERC1155_WITH_CRITERIA: return ItemType.ERC1155_WITH_CRITERIA
-		default: throw new Error(`Unrecognized item type=${type}`)
-	}
-}
-
 export function getSeaportToken(assetType: AssetType): string {
 	switch (assetType.assetClass) {
 		case "ETH": return ZERO_ADDRESS

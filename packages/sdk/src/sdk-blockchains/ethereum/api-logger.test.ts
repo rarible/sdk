@@ -13,7 +13,7 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
+import { LogsLevel } from "../../common/logger/common"
 import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
 import { convertEthereumContractAddress } from "./common"
 

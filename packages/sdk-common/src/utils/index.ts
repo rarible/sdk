@@ -1,5 +1,6 @@
 export function getStringifiedData(data: any): string | undefined {
 	try {
+		if (typeof data === "string") return data
 		const errorObject = Object.getOwnPropertyNames(data)
 			.reduce((acc, key) => {
 				acc[key] = data[key]

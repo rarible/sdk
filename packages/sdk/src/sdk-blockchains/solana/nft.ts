@@ -13,7 +13,11 @@ import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-reque
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
-import type { CommonTokenContent, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type {
+	CommonTokenContent,
+	ISolanaMetadataResponse,
+	PreprocessMetaRequest,
+} from "../../types/nft/mint/preprocess-meta"
 import type {
 	MintSimplifiedRequest,
 	MintSimplifiedRequestOffChain,
@@ -24,7 +28,6 @@ import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { BurnResponse } from "../../types/nft/burn/domain"
 import { extractPublicKey } from "./common/address-converters"
 import type { ISolanaSdkConfig } from "./domain"
-import type { ISolanaMetadataResponse } from "./domain"
 
 export class SolanaNft {
 	constructor(

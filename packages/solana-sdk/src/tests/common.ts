@@ -59,14 +59,6 @@ export async function requestSol(connection: Connection, publicKey: PublicKey, s
 	return await connection.getBalance(publicKey)
 }
 
-export async function getTokenAccounts(
-	connection: Connection,
-	owner: PublicKey,
-	mint: PublicKey,
-): Promise<Awaited<ReturnType<typeof connection.getTokenAccountsByOwner>>> {
-	return await connection.getTokenAccountsByOwner(owner, { mint })
-}
-
 export async function mintToken(
 	{
 		sdk,

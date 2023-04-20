@@ -2,7 +2,6 @@ import type { Connection, PublicKey } from "@solana/web3.js"
 import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { PreparedTransaction } from "../prepared-transaction"
-import { getTokenAccounts } from "../../tests/common"
 import { getAccountInfo } from "../../common/helpers"
 import { getAccountRevokeDelegateInstructions } from "./methods/revoke"
 
@@ -57,4 +56,12 @@ export class SolanaAccountSdk implements ISolanaAccountSdk {
 			}
 		)
 	}
+}
+
+export async function getTokenAccounts(
+	connection: Connection,
+	owner: PublicKey,
+	mint: PublicKey,
+): Promise<Awaited<ReturnType<typeof connection.getTokenAccountsByOwner>>> {
+	return await connection.getTokenAccountsByOwner(owner, { mint })
 }

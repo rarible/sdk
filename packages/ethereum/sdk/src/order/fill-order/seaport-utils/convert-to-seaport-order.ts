@@ -1,6 +1,7 @@
 import type { SimpleSeaportV1Order } from "../../types"
-import { convertItemType, convertOrderType } from "../seaport"
 import type { OrderWithCounter } from "./types"
+import { convertOrderType } from "./convert-order-type"
+import { convertItemType } from "./convert-item-type"
 
 export function convertAPIOrderToSeaport(order: SimpleSeaportV1Order): OrderWithCounter {
 	if (!order.signature) {

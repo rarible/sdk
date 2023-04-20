@@ -149,13 +149,20 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	}))
 
   const magic = mapFlowWallet(new MattelConnectionProvider({
-    magicProviderId: "-A2JxDIS1zwr5ceLy5HKwxiNL7uWFQPBsKmmkyfmB3s=",
+    magicProviderId: "JeTIUJ7GJNnfwnxMwtPRa7JzbzRVxA4p3TdQsXryggM=",
     magicAPIKey: "pk_live_63A5A557D1D4882D",
     auth0Domain: "login-test.mattel.com",
-    auth0ClientId: "E9oV8wVCB89jcaThWny7STYHcm59REke",
+    auth0ClientId: "nXpDI0BnWhxB5DIhQVGOrB2LwgOvKIhd",
     auth0RedirectUrl: "https://test-virtual.mattel.com",
     accessNode: flowNetwork.accessNode,
     network: flowNetwork.network,
+		options: {
+			auth0LogoutOptions: {
+				logoutParams: {
+					returnTo: window.location.origin
+				}
+			}
+		}
   }) as any) as any
 
 	let torus = undefined

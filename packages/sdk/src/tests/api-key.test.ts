@@ -1,6 +1,6 @@
 import { toItemId } from "@rarible/types"
 import { createRaribleSdk } from "../index"
-import { LogsLevel } from "../domain"
+import { LogsLevel } from "../common/logger/common"
 
 describe("server api keys", () => {
 	test("get item without API key should be succeed", async () => {

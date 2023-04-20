@@ -7,8 +7,8 @@ import type { Collection } from "@rarible/api-client"
 import { Blockchain, CollectionFeatures, CollectionType, OrderStatus, Platform } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/prepare"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
+import { LogsLevel } from "../../common/logger/common"
 import { DEV_PK_1 } from "./test/common"
 
 describe("mintAndSell", () => {

@@ -1,7 +1,7 @@
 import { Blockchain } from "@rarible/api-client"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { LogsLevel } from "../../common/logger/common"
 import { awaitForCollection } from "./test/await-for-collection"
 import { createTestWallet } from "./test/test-wallet"
 

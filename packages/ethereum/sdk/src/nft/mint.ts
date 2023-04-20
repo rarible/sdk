@@ -1,91 +1,25 @@
 import type {
-	Address,
-	BigNumber,
 	Binary,
 	NftCollectionControllerApi,
-	NftItem,
 	NftLazyMintControllerApi,
-	NftTokenId,
-	Part,
 } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
 import type { SendFunction } from "../common/send-transaction"
-import type { CommonNftCollection } from "../common/mint"
+import type {
+	CommonNftCollection, ERC1155RequestV1, ERC1155RequestV2,
+	ERC721RequestV2, ERC721RequestV3, ERC721CollectionV2,
+	ERC721RequestV1, ERC721CollectionV1, ERC1155CollectionV2,
+	ERC1155CollectionV1,
+	MintOffChainResponse,
+	MintOnChainResponse,
+	MintRequest, ERC721CollectionV3,
+} from "../common/mint"
 import { mintOffChain } from "./mint-off-chain"
 import { mintErc1155v1, mintErc1155v2, mintErc721v1, mintErc721v2, mintErc721v3 } from "./mint-on-chain"
 import type { SimpleLazyNft } from "./sign-nft"
-import type { ERC1155VersionEnum, ERC721VersionEnum, NFTContractVersion } from "./contracts/domain"
-
-type Collection<V extends NFTContractVersion> = CommonNftCollection & { version: V }
-type ERC721CollectionV1 = Collection<ERC721VersionEnum.ERC721V1>
-type ERC721CollectionV2 = Collection<ERC721VersionEnum.ERC721V2>
-type ERC721CollectionV3 = Collection<ERC721VersionEnum.ERC721V3>
-type ERC1155CollectionV1 = Collection<ERC1155VersionEnum.ERC1155V1>
-type ERC1155CollectionV2 = Collection<ERC1155VersionEnum.ERC1155V2>
-
-type CommonMintRequest = {
-	uri: string
-	nftTokenId?: NftTokenId
-}
-
-export type ERC721RequestV1 = {
-	collection: ERC721CollectionV1
-} & CommonMintRequest
-
-export type ERC721RequestV2 = {
-	collection: ERC721CollectionV2
-	royalties?: Array<Part>
-} & CommonMintRequest
-
-export type ERC721RequestV3 = {
-	collection: ERC721CollectionV3
-	lazy: boolean
-	creators?: Array<Part>
-	royalties?: Array<Part>
-} & CommonMintRequest
-
-export type ERC1155RequestV1 = {
-	collection: ERC1155CollectionV1
-	supply: number
-	royalties?: Array<Part>
-} & CommonMintRequest
-
-export type ERC1155RequestV2 = {
-	collection: ERC1155CollectionV2
-	supply: number
-	lazy: boolean
-	creators?: Array<Part>
-	royalties?: Array<Part>
-} & CommonMintRequest
-
-export type MintRequestERC721 = ERC721RequestV1 | ERC721RequestV2 | ERC721RequestV3
-export type MintRequestERC1155 = ERC1155RequestV1 | ERC1155RequestV2
-export type MintRequest = MintRequestERC721 | MintRequestERC1155
-
-export type MintResponseCommon = {
-	contract: Address
-	tokenId: BigNumber
-	owner: Address
-	itemId: string
-}
-
-export enum MintResponseTypeEnum {
-	OFF_CHAIN = "off-chain",
-	ON_CHAIN = "on-chain"
-}
-
-export type MintOffChainResponse = MintResponseCommon & {
-	type: MintResponseTypeEnum.OFF_CHAIN
-	item: NftItem
-}
-
-export type MintOnChainResponse = MintResponseCommon & {
-	type: MintResponseTypeEnum.ON_CHAIN
-	transaction: EthereumTransaction
-}
 
 export async function mint(
 	ethereum: Maybe<Ethereum>,

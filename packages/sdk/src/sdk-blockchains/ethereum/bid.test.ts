@@ -14,10 +14,10 @@ import { createRaribleSdk as createEtherumSdk } from "@rarible/protocol-ethereum
 import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
 import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
-import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitItem } from "../../common/test/await-item"
 import { awaitStock } from "../../common/test/await-stock"
+import { LogsLevel } from "../../common/logger/common"
 import { initProvider, initProviders } from "./test/init-providers"
 import {
 	convertEthereumCollectionId,

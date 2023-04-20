@@ -4,11 +4,11 @@ import type { LoggableValue } from "@rarible/logger/build/domain"
 import { Blockchain } from "@rarible/api-client"
 import { toCollectionId, toItemId, toOrderId } from "@rarible/types"
 import { createRaribleSdk } from "../index"
-import { LogsLevel } from "../domain"
 import { initProvider } from "../sdk-blockchains/ethereum/test/init-providers"
 import { MintType } from "../types/nft/mint/prepare"
 import { retry } from "../common/retry"
 import { ETH_DEV_SETTINGS } from "../sdk-blockchains/ethereum/test/common"
+import { LogsLevel } from "../common/logger/common"
 
 describe("Logging", () => {
 	const { web3, wallet: ethWallet } = initProvider(

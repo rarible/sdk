@@ -1,8 +1,8 @@
 import { Blockchain } from "@rarible/api-client"
 import { toUnionAddress } from "@rarible/types"
 import { getWallet } from "../common/test/test-wallets"
-import type { ISolanaMetadataResponse } from "../domain"
 import { createSdk } from "../common/test/create-sdk"
+import type { ISolanaMetadataResponse } from "../../../types/nft/mint/preprocess-meta"
 
 describe("Solana metadata", () => {
 	const wallet = getWallet()

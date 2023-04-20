@@ -12,11 +12,12 @@ import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-t
 import { getSendWithInjects } from "../common/send-transaction"
 import { getApiConfig } from "../config/api-config"
 import { createTestProviders } from "../common/create-test-providers"
+import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV2, ERC721RequestV3 } from "../common/mint"
 import {
 	createErc1155V1Collection,
 	createErc1155V2Collection,
 	createErc721V2Collection,
-	createErc721V3Collection,
+	createErc721V3Collection, MintResponseTypeEnum,
 } from "../common/mint"
 import { createEthereumApis } from "../common/apis"
 import { getEthereumConfig } from "../config"
@@ -24,8 +25,7 @@ import { checkChainId as checkChainIdTemplate } from "../order/check-chain-id"
 import { retry } from "../common/retry"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
-import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV2, ERC721RequestV3 } from "./mint"
-import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
+import { mint as mintTemplate } from "./mint"
 import { signNft } from "./sign-nft"
 import { burn as burnTemplate } from "./burn"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"

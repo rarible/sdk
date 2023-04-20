@@ -1,6 +1,5 @@
-import { Side } from "./constants"
+import { ItemType, Side } from "./constants"
 import type { InputCriteria, Item, Order } from "./types"
-import { isCriteriaItem } from "./item"
 
 export const generateCriteriaResolvers = ({
 	orders,
@@ -82,3 +81,8 @@ export const getItemToCriteriaMap = (
 		return map
 	}, new Map<Item, InputCriteria>())
 }
+
+export const isCriteriaItem = (itemType: Item["itemType"]) =>
+	[ItemType.ERC721_WITH_CRITERIA, ItemType.ERC1155_WITH_CRITERIA].includes(
+		itemType
+	)

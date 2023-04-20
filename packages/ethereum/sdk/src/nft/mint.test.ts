@@ -15,14 +15,23 @@ import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethe
 import Web3 from "web3"
 import { getSendWithInjects } from "../common/send-transaction"
 import { getApiConfig } from "../config/api-config"
-import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
+import type {
+	ERC1155RequestV1, ERC1155RequestV2,
+	ERC721RequestV1, ERC721RequestV2, ERC721RequestV3,
+} from "../common/mint"
+import {
+	createErc1155V1Collection,
+	createErc1155V2Collection,
+	createErc721V1Collection,
+	createErc721V2Collection,
+	createErc721V3Collection, MintResponseTypeEnum,
+} from "../common/mint"
 import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { signNft } from "./sign-nft"
-import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV1, ERC721RequestV2, ERC721RequestV3 } from "./mint"
-import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
+import { mint as mintTemplate } from "./mint"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"
 import { getErc721Contract } from "./contracts/erc721"
 import { getErc1155Contract } from "./contracts/erc1155"

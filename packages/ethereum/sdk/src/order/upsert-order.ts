@@ -23,13 +23,13 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
+import type { HasOrder, HasPrice } from "../common/order"
 import type { SimpleCryptoPunkOrder, SimpleOrder, UpsertSimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
 import type { OrderFiller } from "./fill-order"
 import type { CheckLazyOrderPart } from "./check-lazy-order"
 import { createErc20Contract } from "./contracts/erc20"
-import type { SellUpdateRequest } from "./sell"
 
 const ZERO = toWord("0x0000000000000000000000000000000000000000000000000000000000000000")
 
@@ -39,9 +39,6 @@ export type UpsertOrderActionArg = {
 	infinite?: boolean
 }
 export type UpsertOrderAction = Action<UpsertOrderStageId, UpsertOrderActionArg, Order>
-
-export type HasOrder = { orderHash: Word } | { order: SimpleOrder }
-export type HasPrice = { price: BigNumberValue } | { priceDecimal: BigNumberValue }
 
 export type OrderRequestV2 = {
 	type: "DATA_V2"
@@ -222,7 +219,7 @@ export class UpsertOrder {
 		}
 	}
 
-	async updateCryptoPunkOrder(request: SellUpdateRequest): Promise<Order> {
+	async updateCryptoPunkOrder(request: HasOrder & HasPrice): Promise<Order> {
 		const order = await this.getOrder(request)
 		if (order.type !== "CRYPTO_PUNK") {
 			throw new Error(`can't update punk order with type: ${order.type}`)
@@ -232,7 +229,7 @@ export class UpsertOrder {
 	}
 
 	private async updateCryptoPunkOrderByContract(
-		ethereum: Ethereum, order: SimpleCryptoPunkOrder, request: SellUpdateRequest
+		ethereum: Ethereum, order: SimpleCryptoPunkOrder, request: HasOrder & HasPrice
 	) {
 		const price = await this.getPrice(request, <EthAssetType>{})
 		if (order.make.assetType.assetClass === "CRYPTO_PUNKS") {

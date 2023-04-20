@@ -5,9 +5,9 @@ import { BlockchainGroup } from "@rarible/api-client/build/models/BlockchainGrou
 import * as fcl from "@onflow/fcl"
 import { createRaribleSdk } from "../index"
 import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
-import { LogsLevel } from "../domain"
 import { getWallet } from "../sdk-blockchains/solana/common/test/test-wallets"
 import { createTestWallet } from "../sdk-blockchains/tezos/test/test-wallet"
+import { LogsLevel } from "../common/logger/common"
 
 const providers = [{
 	name: "Ethereum Wallet",

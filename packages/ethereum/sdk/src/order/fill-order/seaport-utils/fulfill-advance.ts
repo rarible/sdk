@@ -8,11 +8,11 @@ import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./typ
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import type { TimeBasedItemParams } from "./item"
 import { mapOrderAmountsFromFilledStatus, mapOrderAmountsFromUnitsToFill } from "./order"
-import { getSummedTokenAndIdentifierAmounts, isCriteriaItem } from "./item"
+import { getSummedTokenAndIdentifierAmounts } from "./item"
 import { validateStandardFulfillBalancesAndApprovals } from "./balance-and-approval-check"
 import { getApprovalActions } from "./approval"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
-import { generateCriteriaResolvers } from "./criteria"
+import { generateCriteriaResolvers, isCriteriaItem } from "./criteria"
 
 export async function getFulfillAdvancedOrderData({
 	ethereum,

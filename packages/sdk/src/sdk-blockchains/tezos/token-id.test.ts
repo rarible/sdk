@@ -1,7 +1,7 @@
 import { toContractAddress, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { LogsLevel } from "../../common/logger/common"
 import { createTestWallet } from "./test/test-wallet"
 
 describe.skip("test getting token id", () => {

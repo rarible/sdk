@@ -1,112 +1,19 @@
-import { NetworkError, RemoteLogger } from "@rarible/logger/build"
-import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain"
+import { NetworkError } from "@rarible/logger/build"
+import type { AbstractLogger } from "@rarible/logger/build/domain"
 import { LogLevel } from "@rarible/logger/build/domain"
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { WalletType } from "@rarible/sdk-wallet"
-import axios from "axios"
 import { getStringifiedData } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
-import type { ISdkContext } from "../../domain"
-import { LogsLevel } from "../../domain"
-import { getSdkContext } from "../get-sdk-context"
-import { getErrorLevel, getExecRevertedMessage } from "./logger-overrides"
-
-export const loggerConfig = {
-	service: "union-sdk",
-	elkUrl: "https://logging.rarible.com/",
-}
-
-export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<string, string>> {
-	const info: Record<string, any> = {
-		"wallet.blockchain": wallet.walletType,
-	}
-
-	switch (wallet.walletType) {
-		case WalletType.ETHEREUM:
-			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address && address.toLowerCase()
-					info["wallet.chainId"] = chainId
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedData(err)
-				})
-			break
-		case WalletType.FLOW:
-			await wallet.fcl.currentUser().snapshot()
-				.then((userData) => {
-					info["wallet.address"] = userData.addr
-					info["wallet.flow.chainId"] = userData.cid
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedData(err)
-				})
-			break
-		case WalletType.TEZOS:
-			info["wallet.tezos.kind"] = wallet.provider.kind
-			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address
-					info["wallet.tezos.chainId"] = chainId
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedData(err)
-				})
-			break
-		case WalletType.SOLANA:
-			info["wallet.address"] = wallet.provider.publicKey?.toString()
-			break
-		case WalletType.IMMUTABLEX:
-			const data = wallet.wallet.getConnectionData()
-			info["wallet.address"] = data.address
-			info["wallet.network"] = data.ethNetwork
-			info["wallet.starkPubkey"] = data.starkPublicKey
-			break
-		default:
-			info["wallet.address"] = "unknown"
-	}
-
-	return info
-}
-
-export function getErrorMessageString(err: any): string {
-	try {
-		if (!err) {
-			return "not defined"
-		} else if (typeof err === "string") {
-			return err
-		} else if (err instanceof Error) {
-			return getExecRevertedMessage(err.message)
-		} else if (err.message) {
-			return typeof err.message === "string" ? getExecRevertedMessage(err.message) : JSON.stringify(err.message)
-		} else if (err.status !== undefined && err.statusText !== undefined) {
-			return JSON.stringify({
-				url: err.url,
-				status: err.status,
-				statusText: err.statusText,
-			})
-		} else {
-			return JSON.stringify(err)
-		}
-	} catch (e: any) {
-		return `getErrorMessageString parse error: ${e?.message}`
-	}
-}
+import type { ISdkContext } from "../get-sdk-context"
+import { getRemoteLogger } from "../get-sdk-context"
+import { getErrorLevel } from "./logger-overrides"
+import { getErrorMessageString, LogsLevel } from "./common"
 
 export function getInternalLoggerMiddleware(
 	logsLevel: LogsLevel,
 	sdkContext: ISdkContext,
 	externalLogger?: AbstractLogger
 ): Middleware {
-	const remoteLogger = externalLogger ?? new RemoteLogger(
-		(msg: LoggableValue) => axios.post(loggerConfig.elkUrl, msg), {
-			initialContext: getSdkContext(sdkContext),
-			dropBatchInterval: 1000,
-			maxByteSize: 3 * 10240,
-		})
+	const remoteLogger = externalLogger ?? getRemoteLogger(sdkContext)
 
 	return async (callable, args) => {
 		const time = Date.now()

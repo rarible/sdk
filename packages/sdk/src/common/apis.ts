@@ -4,8 +4,8 @@ import type { Middleware, ResponseContext } from "@rarible/api-client/build/runt
 import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
 import type { RaribleSdkEnvironment } from "../config/domain"
 import type { IApisSdk } from "../domain"
-import { LogsLevel } from "../domain"
 import { getSdkConfig } from "../config"
+import { LogsLevel } from "./logger/common"
 
 /**
  * @ignore

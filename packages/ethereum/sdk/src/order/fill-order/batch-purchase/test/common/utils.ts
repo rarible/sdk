@@ -4,17 +4,15 @@ import type { Address, Asset, Part } from "@rarible/ethereum-api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { RaribleSdk } from "../../../../../index"
 import { delay, retry } from "../../../../../common/retry"
-import { createErc721V3Collection } from "../../../../../common/mint"
-import { MintResponseTypeEnum } from "../../../../../nft/mint"
+import { createErc721V3Collection, MintResponseTypeEnum } from "../../../../../common/mint"
 import type { FillBatchSingleOrderRequest } from "../../../types"
-import type { SimpleAmmOrder, SimpleOrder } from "../../../../types"
+import type { SimpleOrder } from "../../../../types"
 import { ItemType } from "../../../seaport-utils/constants"
 import { getOpenseaEthTakeData } from "../../../../test/get-opensea-take-data"
 import { createSeaportOrder } from "../../../../test/order-opensea"
 import type { SendFunction } from "../../../../../common/send-transaction"
 import { makeRaribleSellOrder } from "../../../looksrare-utils/create-order"
 import type { EthereumConfig } from "../../../../../config/type"
-import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
 import { getTestContract } from "../../../../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../../../../types"
 
@@ -119,19 +117,6 @@ export async function makeLooksrareOrder(
 	return sellOrder
 }
 
-export async function makeAmmOrder(
-	sdk: RaribleSdk,
-	env: EthereumNetwork,
-	ethereum: Ethereum,
-	send: SendFunction,
-	config: EthereumConfig
-): Promise<SimpleAmmOrder> {
-	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, env, ethereum, send, config.sudoswap.pairFactory, 2)
-	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
-	return await retry(20, 2000, async () => {
-		return await sdk.apis.order.getOrderByHash({ hash: orderHash })
-	}) as SimpleAmmOrder
-}
 
 export function ordersToRequests(
 	orders: SimpleOrder[],

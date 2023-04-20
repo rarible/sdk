@@ -12,10 +12,9 @@ import type {
 import type {
 	BalancesAndApprovals,
 } from "./balance-and-approval-check"
-import { getItemToCriteriaMap } from "./criteria"
+import { getItemToCriteriaMap, isCriteriaItem } from "./criteria"
 import {
 	getMaximumSizeForOrder,
-	isCriteriaItem,
 	isCurrencyItem,
 	isErc721Item,
 	isNativeCurrencyItem,

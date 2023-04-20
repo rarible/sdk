@@ -5,7 +5,7 @@ import { versum_swap, hen_swap, teia_swap, ask_v1, ask_v2, fxhash_v1_offer, fxha
 import { toOrderId } from "@rarible/types"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
+import { LogsLevel } from "../../common/logger/common"
 import { createTestWallet } from "./test/test-wallet"
 import { getMaybeTezosProvider } from "./common"
 import { awaitCancelledOrder } from "./test/await-cancelled-order"

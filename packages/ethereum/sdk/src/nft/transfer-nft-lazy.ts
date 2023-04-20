@@ -2,7 +2,7 @@ import type { Address, NftItemControllerApi } from "@rarible/ethereum-api-client
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
-import type { TransferAsset } from "./transfer"
+import type { TransferAsset } from "../common/transfer"
 import { getErc721Contract } from "./contracts/erc721"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"

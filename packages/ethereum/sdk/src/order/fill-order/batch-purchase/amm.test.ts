@@ -2,7 +2,7 @@ import { toAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
+import { makeAmmOrder, mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
 import type { NftAssetType } from "../../check-asset-type"
@@ -13,7 +13,7 @@ import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { checkChainId } from "../../check-chain-id"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
-import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
+import { ordersToRequests } from "./test/common/utils"
 
 describe("amm batch buy tests", () => {
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)

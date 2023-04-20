@@ -1,6 +1,7 @@
 import { EthereumProviderError } from "@rarible/ethereum-provider"
 import { WalletType } from "../../index"
-import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
+import { isErrorWarning } from "./logger-overrides"
+import { getExecRevertedMessage } from "./common"
 
 describe("logger overrides", () => {
 	test("isErrorWarning", async () => {

@@ -1,8 +1,8 @@
 import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
 import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { createTestWallet } from "../test/test-wallet"
 import type { RaribleSdkEnvironment } from "../../../config/domain"
+import { LogsLevel } from "../../../common/logger/common"
 
 describe("canTransfer", () => {
 	const env: RaribleSdkEnvironment = "testnet"

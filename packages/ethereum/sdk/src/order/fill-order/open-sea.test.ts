@@ -38,9 +38,8 @@ import type { SimpleOpenSeaV1Order } from "../types"
 import { createEthereumApis } from "../../common/apis"
 import { checkChainId } from "../check-chain-id"
 import { createRaribleSdk } from "../../index"
-import { createErc721V3Collection } from "../../common/mint"
-import type { ERC721RequestV3 } from "../../nft/mint"
-import { MintResponseTypeEnum } from "../../nft/mint"
+import type { ERC721RequestV3 } from "../../common/mint"
+import { createErc721V3Collection, MintResponseTypeEnum } from "../../common/mint"
 import {
 	getAtomicMatchArgAddresses,
 	getAtomicMatchArgCommonData,

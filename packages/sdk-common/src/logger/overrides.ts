@@ -69,10 +69,12 @@ const EVM_WARN_MESSAGES = [
 	"Popup closed",
 	"User cancelled login",
 	"User denied account authorization",
+	"Reject by the user",
 ]
 
 export function isEVMWarning(error: any): boolean {
-	return error.error?.code === 4001 || EVM_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
+	console.log("isEVMWarning", error)
+	return (error?.code || error?.error?.code) === 4001 || EVM_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
 }
 
 export function isTezosWarning(err: any): boolean {

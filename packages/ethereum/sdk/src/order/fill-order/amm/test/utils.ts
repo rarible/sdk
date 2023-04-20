@@ -9,6 +9,9 @@ import { mintTestToken } from "../../batch-purchase/test/common/utils"
 import type { RaribleSdk } from "../../../../index"
 import type { SendFunction } from "../../../../common/send-transaction"
 import type { EthereumNetwork } from "../../../../types"
+import type { EthereumConfig } from "../../../../config/type"
+import type { SimpleAmmOrder } from "../../../types"
+import { retry } from "../../../../common/retry"
 
 async function createSudoswapPool(
 	sellerWeb3: Ethereum,
@@ -76,4 +79,18 @@ export async function mintTokensToNewSudoswapPool(
 		contract,
 		items: tokensIds,
 	}
+}
+
+export async function makeAmmOrder(
+	sdk: RaribleSdk,
+	env: EthereumNetwork,
+	ethereum: Ethereum,
+	send: SendFunction,
+	config: EthereumConfig
+): Promise<SimpleAmmOrder> {
+	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, env, ethereum, send, config.sudoswap.pairFactory, 2)
+	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
+	return await retry(20, 2000, async () => {
+		return await sdk.apis.order.getOrderByHash({ hash: orderHash })
+	}) as SimpleAmmOrder
 }

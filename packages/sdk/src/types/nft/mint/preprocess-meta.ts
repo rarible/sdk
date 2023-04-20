@@ -1,6 +1,6 @@
 import type { Blockchain } from "@rarible/api-client"
 import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
-import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk-blockchains/solana/domain"
+import type { UnionPart } from "../../order/common"
 
 /**
  * Prepare meta data before upload to ipfs storage
@@ -76,4 +76,33 @@ export type CommonTokenMetadataResponse = {
 	"animation_url": string | undefined
 	"external_url": string | undefined
 	attributes: TokenMetadataAttribute[]
+}
+
+export interface ISolanaTokenMetadata extends CommonTokenMetadata {
+	symbol: string
+	image: CommonTokenContent
+	royalties?: UnionPart
+}
+
+
+export interface ISolanaMetadataResponse {
+	name: string
+	symbol?: string
+	description?: string
+	"seller_fee_basis_points"?: number
+	image?: string
+	"animation_url"?: string
+	"external_url"?: string
+	attributes?: {"trait_type": string, value: string}[]
+	properties: {
+		files?: {
+			uri: string,
+			type: string,
+			// cdn?: boolean
+		}[]
+		creators?: {
+			address: string,
+			share: number
+		}[]
+	}
 }
