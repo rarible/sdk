@@ -1,3 +1,4 @@
+import type { DappType } from "@rarible/sdk-common"
 import type { Provider } from "./domain"
 
 export type EthereumProviderErrorData = {
@@ -8,13 +9,14 @@ export type EthereumProviderErrorData = {
 	code?: string | number
 	signer?: string
 	chainId?: number
-
+	providerId?: DappType
 }
 
 export class EthereumProviderError extends Error {
   data: any
   error: any
   provider?: Provider
+	providerId?: DappType
   method: string
   code?: string | number
   signer?: string
@@ -31,5 +33,6 @@ export class EthereumProviderError extends Error {
   	this.code = data?.code
   	this.signer = data?.signer
 		this.chainId = data?.chainId
+		this.providerId = data?.providerId
 	}
 }

@@ -10,6 +10,7 @@ import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { AbiItem } from "web3-utils"
 import { EthereumProviderError } from "@rarible/ethereum-provider"
 import { filterErrors } from "@rarible/ethereum-provider"
+import { getDappType } from "@rarible/sdk-common/src"
 import type { Web3EthereumConfig } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
@@ -41,6 +42,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				error: e,
 				code: e?.code,
 				method: "Web3Ethereum.send",
@@ -64,6 +66,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				error: e,
 				code: e?.code,
 				method: "Web3Ethereum.personalSign",
@@ -87,6 +90,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3Ethereum.signTypedData",
 				error: e,
 				code: e.code,
@@ -103,6 +107,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3Ethereum.getFrom",
 				error: e,
 				data: null,
@@ -116,6 +121,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3Ethereum.encodeParameter",
 				code: e?.code,
 				error: e,
@@ -130,6 +136,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3Ethereum.decodeParameter",
 				error: e,
 				code: e?.code,
@@ -144,6 +151,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3Ethereum.getBalance",
 				error: e,
 				code: e?.code,
@@ -158,6 +166,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3Ethereum.getChainId",
 				error: e,
 				data: null,
@@ -195,6 +204,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3FunctionCall.constructor",
 				error: e,
 				code: e?.code,
@@ -223,6 +233,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3FunctionCall.getData",
 				error: e,
 				data: {
@@ -240,6 +251,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3FunctionCall.estimateGas",
 				error: e,
 				data: { options },
@@ -265,6 +277,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3FunctionCall.call",
 				error: e,
 				code: e?.code,
@@ -338,6 +351,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
+				providerId: getDappType(this.config.web3.currentProvider),
 				method: "Web3FunctionCall.send",
 				error: e,
 				code: e?.code,
