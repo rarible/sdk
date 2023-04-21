@@ -1,7 +1,7 @@
 import type { Observable } from "rxjs"
 import { combineLatest, defer } from "rxjs"
 import { map, mergeMap, startWith } from "rxjs/operators"
-import { DappType } from "@rarible/sdk-common"
+import { DappType, getDappType } from "@rarible/sdk-common"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { promiseToObservable } from "../../common/utils"
@@ -157,3 +157,5 @@ export function detectErrorCode(code: number, error: unknown) {
 	const parsedCode = typeof error === "object" && error !== null && "code" in error ? (error as any).code : undefined
 	return parsedCode === code
 }
+
+export { DappType }
