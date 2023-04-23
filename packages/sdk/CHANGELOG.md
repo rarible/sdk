@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+
+### Bug Fixes
+
+* duration of flow listing ([#466](https://github.com/rarible/sdk/issues/466)) ([74006e6](https://github.com/rarible/sdk/commit/74006e688be729928e135340f744195ea33199fa))
+
+
+
+
+
+## [0.13.21](https://github.com/rarible/sdk/compare/v0.13.20...v0.13.21) (2023-04-18)
+
+**Note:** Version bump only for package @rarible/sdk
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+
+### Bug Fixes
+
+* flow storefront change method ([#457](https://github.com/rarible/sdk/issues/457)) ([af95887](https://github.com/rarible/sdk/commit/af95887e414dbe5e54dbb62d7eebda01a370853b))
+* middleware log wrap ([#461](https://github.com/rarible/sdk/issues/461)) ([ecbb6f8](https://github.com/rarible/sdk/commit/ecbb6f864963f82f5c96f5e2b02f5772464c33cf))
+* second mattel login ([#464](https://github.com/rarible/sdk/issues/464)) ([9978732](https://github.com/rarible/sdk/commit/9978732537e70cfc692446552b2e0bb341a5b919))
+
+
+
+
+
 ## [0.13.18](https://github.com/rarible/sdk/compare/v0.13.17...v0.13.18) (2023-04-04)
 
 

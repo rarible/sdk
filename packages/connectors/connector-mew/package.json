@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-mew",
-  "version": "0.13.18",
+  "version": "0.13.22",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -14,12 +14,11 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@myetherwallet/mewconnect-web-client": "^2.2.0-beta.18",
-    "@rarible/connector": "^0.13.18",
+    "@rarible/connector": "^0.13.21",
     "rollup": "^2.0.0"
   },
   "devDependencies": {

@@ -32,7 +32,7 @@ export function getFlowCollection(collection: ContractAddress | CollectionId): F
 	throw new Error("Invalid collection")
 }
 
-const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}:[0-9]{1,}/
+const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z0-9]{3,}:[0-9]{1,}/
 
 /**
  * Parse union item id

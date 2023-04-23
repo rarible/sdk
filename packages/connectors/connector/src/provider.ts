@@ -98,6 +98,10 @@ export class MappedConnectionProvider<O, Connection, NewConnection>
 		return this.source.getId()
 	}
 
+	getProvider(): ConnectionProvider<O, Connection> {
+		return this.source
+	}
+
 	getConnection(): Observable<ConnectionState<NewConnection>> {
 		return this.source.getConnection().pipe(
 			switchMap(async state => {

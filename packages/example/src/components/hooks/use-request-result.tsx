@@ -14,20 +14,33 @@ export interface IRequestResult<T> {
 	}
 	setComplete: (data: T) => void
 	setError: (error: any) => void
+	startFetching: () => void
+	stopFetching: () => void
+	isFetching: boolean
 }
 
 export function useRequestResult<T>(): IRequestResult<T> {
+	const [isFetching, setFetching] = useState(false)
 	const [result, setResult] = useState<IRequestResult<T>["result"]>({type: "empty"})
 
 	return {
 		result,
+		isFetching,
+		startFetching: () => {
+			setFetching(true)
+		},
+		stopFetching: () => {
+			setFetching(false)
+		},
 		setComplete: (data: T) => {
+			setFetching(false)
 			setResult({
 				type: "complete",
 				data
 			})
 		},
 		setError: (error: any) => {
+			setFetching(false)
 			setResult({
 				type: "error",
 				error: !error ? "Unknown error" : (isString(error) ? error : (error.message ? error.message : JSON.stringify(error)))

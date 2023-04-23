@@ -1,9 +1,13 @@
 import type { Observable } from "rxjs"
 import { BehaviorSubject, concat, defer, NEVER, of } from "rxjs"
 import { catchError, distinctUntilChanged, first, map, shareReplay, switchMap, tap } from "rxjs/operators"
+import type { RemoteLogger } from "@rarible/logger/build"
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { ConnectionProvider } from "./provider"
 import type { ConnectionState } from "./connection-state"
 import { getStateConnecting, getStateDisconnected, STATE_INITIALIZING } from "./connection-state"
+import { createLogger, getErrorLogLevel, LogLevelConnector } from "./common/logger"
+
 
 export type ProviderOption<Option, Connection> = {
 	provider: ConnectionProvider<Option, Connection>
@@ -15,10 +19,12 @@ export interface IConnector<Option, Connection> {
 	 * Get all available connection options (Metamask, Fortmatic, Blocto, Temple etc)
 	 */
 	getOptions(): Promise<ProviderOption<Option, Connection>[]>
+
 	/**
 	 * Connect using specific option
 	 */
 	connect(option: ProviderOption<Option, Connection>): void
+
 	/**
 	 * Subscribe to this observable to get current connection state
 	 */
@@ -56,6 +62,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	static pageUnloading: boolean | undefined
 	private readonly provider = new BehaviorSubject<ConnectionProvider<Option, Connection> | undefined>(undefined)
 	public connection: Observable<ConnectionState<Connection>>
+	private logger: RemoteLogger
 
 	constructor(
 		private readonly providers: ConnectionProvider<Option, Connection>[],
@@ -66,6 +73,8 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 		this.add = this.add.bind(this)
 		this.connect = this.connect.bind(this)
 
+		this.logger = createLogger()
+
 		this.connection = concat(
 			of(STATE_INITIALIZING),
 			defer(() => this.checkAutoConnect()),
@@ -74,7 +83,38 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 				switchMap(provider => {
 					if (provider) {
 						return concat(provider.getConnection(), NEVER).pipe(
-							catchError(error => concat(of(getStateDisconnected({ error })), NEVER)),
+							catchError(error => {
+								return concat(of(getStateDisconnected({ error })), NEVER)
+							}),
+							map(res => {
+								if (res.status === "disconnected") {
+									provider.getOption()
+										.then(option => {
+											this.logger.raw({
+												level: getErrorLogLevel(res.error, provider.getId()),
+												method: "connect",
+												message: res.error?.message,
+												error: getStringifiedData(res.error),
+												providerId: provider.getId(),
+												providerOption: option || undefined,
+												provider: getStringifiedData(provider),
+											})
+										})
+								}
+								if (res.status === "connected") {
+									provider.getOption()
+										.then(option => {
+											this.logger.raw({
+												level: LogLevelConnector.SUCCESS,
+												method: "connect",
+												message: "trace of connect",
+												providerId: provider?.getId(),
+												providerOption: option || undefined,
+											})
+										})
+								}
+								return res
+							})
 						)
 					} else {
 						return concat(of(getStateDisconnected()), NEVER)
@@ -160,6 +200,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	}
 
 	private async checkAutoConnect(): Promise<ConnectionState<Connection>> {
+		let currentProvider: ConnectionProvider<Option, Connection> | undefined
 		try {
 			const promises = this.providers.map(it => ({ provider: it, autoConnected: it.isAutoConnected() }))
 			for (const { provider, autoConnected } of promises) {
@@ -173,6 +214,7 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 			const selected = await this.stateProvider?.getValue()
 			if (selected !== undefined) {
 				for (const provider of this.providers) {
+					currentProvider = provider
 					if (selected === provider.getId()) {
 						if (await provider.isConnected()) {
 							this.provider.next(provider)
@@ -185,6 +227,15 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 				}
 			}
 		} catch (err: any) {
+			this.logger.raw({
+				level: getErrorLogLevel(err, currentProvider?.getId()),
+				method: "checkAutoConnect",
+				message: err?.message,
+				error: getStringifiedData(err),
+				providerId: currentProvider?.getId(),
+				providerOption: await currentProvider?.getOption() || undefined,
+				provider: getStringifiedData(currentProvider),
+			})
 			return getStateDisconnected({ error: err.toString() })
 		}
 		return getStateDisconnected()

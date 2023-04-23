@@ -3,6 +3,8 @@ import { from } from "rxjs";
 import { Rx } from "@rixio/react";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button, MenuItem, Stack, TextField } from "@mui/material";
+import { MappedConnectionProvider, ConnectionProvider } from "@rarible/connector";
+import { MattelConnectionProvider } from "@rarible/connector-mattel";
 import { faChevronRight, faLinkSlash } from "@fortawesome/free-solid-svg-icons";
 import { StateConnected } from "@rarible/connector/build/connection-state";
 import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain";
@@ -79,7 +81,17 @@ export function ConnectOptions() {
               return (
                 <LoadingButton
                   key={o.option}
-                  onClick={() => connector.connect(o)}
+                  onClick={() => {
+										if (o.provider.getId() === "mattel" && state?.status !== "connected") {
+											if (isMappedProvider(o.provider)) {
+												const provider = o.provider.getProvider() as MattelConnectionProvider
+												provider.setPopupConfig({
+														popup: openPopup("")
+												})
+											}
+										}
+										connector.connect(o)
+									}}
                   loading={
                     state.status === "connecting" &&
                     state.providerId === o.provider.getId()
@@ -111,4 +123,21 @@ export function ConnectOptions() {
       </Rx>
     </Box>
   );
+}
+
+function isMappedProvider<O, C>(x: ConnectionProvider<O, C>): x is MappedConnectionProvider<O, C, any> {
+	return (x && x instanceof MappedConnectionProvider) || ("source" in x && "mapper" in x)
+}
+
+function openPopup(url: string) {
+	const width = 400;
+	const height = 600;
+	const left = window.screenX + (window.innerWidth - width) / 2;
+	const top = window.screenY + (window.innerHeight - height) / 2;
+
+	return window.open(
+		url,
+		'auth0:authorize:popup',
+		`left=${left},top=${top},width=${width},height=${height},resizable,scrollbars=yes,status=1`
+	);
 }

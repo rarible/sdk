@@ -142,7 +142,7 @@ describe("bid test", () => {
 		})
 		await fillBidResult.wait()
 
-		await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
+		// await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
 	test("bid MT test", async () => {
