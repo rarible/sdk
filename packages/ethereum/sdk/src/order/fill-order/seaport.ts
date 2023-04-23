@@ -1,5 +1,5 @@
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import type { BigNumber } from "@rarible/types"

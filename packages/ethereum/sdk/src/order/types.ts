@@ -8,6 +8,7 @@ import type {
 	SeaportV1Order,
 	AmmOrder,
 } from "@rarible/ethereum-api-client"
+import type { LooksRareV2Order } from "@rarible/ethereum-api-client/build/models/Order"
 
 export type SimpleLegacyOrder =
 	Pick<LegacyOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
@@ -27,6 +28,9 @@ export type SimpleSeaportV1Order =
 export type SimpleLooksrareOrder =
 	Pick<LooksRareOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
 
+export type SimpleLooksrareV2Order =
+	Pick<LooksRareV2Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
+
 export type SimpleX2Y2Order =
 	Pick<X2Y2Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
 
@@ -40,6 +44,7 @@ export type SimpleOrder =
 	SimpleCryptoPunkOrder |
 	SimpleSeaportV1Order |
 	SimpleLooksrareOrder |
+	SimpleLooksrareV2Order |
 	SimpleX2Y2Order |
 	SimpleAmmOrder
 

@@ -3,7 +3,6 @@ import type {
 	Ethereum,
 	EthereumFunctionCall,
 	EthereumSendOptions,
-	EthereumTransaction,
 } from "@rarible/ethereum-provider"
 import { ZERO_ADDRESS, ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"

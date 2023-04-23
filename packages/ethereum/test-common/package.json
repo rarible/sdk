@@ -16,6 +16,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
+    "@truffle/hdwallet-provider": "latest",
     "@rarible/ethereum-provider": "^0.13.17",
     "@rarible/test-provider": "~0.5.0",
     "@rarible/types": "~0.9.6",

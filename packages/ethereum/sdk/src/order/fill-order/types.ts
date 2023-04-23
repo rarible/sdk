@@ -12,7 +12,7 @@ import type {
 	SimpleRaribleV2Order,
 	SimpleSeaportV1Order,
 	SimpleX2Y2Order,
-	SimpleAmmOrder,
+	SimpleAmmOrder, SimpleLooksrareV2Order,
 } from "../types"
 import type { NftAssetType } from "../check-asset-type"
 
@@ -61,6 +61,11 @@ export type LooksrareOrderFillRequest = CommonFillRequest<SimpleLooksrareOrder> 
 	addRoyalty?: boolean
 }
 
+export type LooksrareOrderV2FillRequest = CommonFillRequest<SimpleLooksrareV2Order> & {
+	originFees?: Part[],
+	addRoyalty?: boolean
+}
+
 export type AmmOrderFillRequest = CommonFillRequest<SimpleAmmOrder> & {
 	originFees?: Part[],
 	addRoyalty?: boolean
@@ -78,6 +83,7 @@ export type SellOrderRequest =
 	SeaportV1OrderFillRequest |
 	CryptoPunksOrderFillRequest |
 	LooksrareOrderFillRequest |
+	LooksrareOrderV2FillRequest |
 	X2Y2OrderFillRequest |
 	AmmOrderFillRequest
 
@@ -89,6 +95,7 @@ export type BuyOrderRequest =
 	SeaportV1OrderFillRequest |
 	CryptoPunksOrderFillRequest |
 	LooksrareOrderFillRequest |
+	LooksrareOrderV2FillRequest |
 	X2Y2OrderFillRequest |
 	AmmOrderFillRequest
 
@@ -101,6 +108,7 @@ export type FillBatchSingleOrderRequest =
 	// RaribleV2OrderFillRequestV3Buy |
 	OpenSeaV1OrderFillRequest |
 	LooksrareOrderFillRequest |
+	LooksrareOrderV2FillRequest |
 	SeaportV1OrderFillRequest |
 	X2Y2OrderFillRequest |
 	AmmOrderFillRequest

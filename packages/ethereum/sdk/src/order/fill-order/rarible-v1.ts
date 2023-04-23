@@ -1,5 +1,5 @@
 import type { Address, LegacyOrderForm, OrderControllerApi } from "@rarible/ethereum-api-client"
-import type { Ethereum, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
 import { toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { Maybe } from "@rarible/types/build/maybe"

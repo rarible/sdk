@@ -6,7 +6,7 @@ export function createLooksrareV2Exchange(ethereum: Ethereum, address?: Address)
 	return ethereum.createContract(LOOKSRARE_V2_ABI, address)
 }
 
-export const LOOKSRARE_V2_ABI: any[] = [
+export const LOOKSRARE_V2_ABI: AbiItem[] = [
 	{
 		"inputs": [
 			{
@@ -36,36 +36,43 @@ export const LOOKSRARE_V2_ABI: any[] = [
 	{
 		"inputs": [],
 		"name": "CallerInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "ChainIdInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "CreatorFeeBpTooHigh",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "CurrencyInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "ERC20TransferFromFail",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "LengthsInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "MerkleProofInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
@@ -77,96 +84,115 @@ export const LOOKSRARE_V2_ABI: any[] = [
 			},
 		],
 		"name": "MerkleProofTooLarge",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NewGasLimitETHTransferTooLow",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NewProtocolFeeRecipientCannotBeNullAddress",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NoOngoingTransferInProgress",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NoSelectorForStrategy",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NoncesInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NotAContract",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NotAffiliateController",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NotOwner",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NotV2Strategy",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "NullSignerAddress",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "OutsideOfTimeRange",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "PercentageTooHigh",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "QuoteTypeInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "ReentrancyFail",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "RenouncementNotInProgress",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "SameDomainSeparator",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "SignatureEOAInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "SignatureERC1271Invalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
@@ -178,11 +204,13 @@ export const LOOKSRARE_V2_ABI: any[] = [
 			},
 		],
 		"name": "SignatureLengthInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "SignatureParameterSInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
@@ -194,11 +222,13 @@ export const LOOKSRARE_V2_ABI: any[] = [
 			},
 		],
 		"name": "SignatureParameterVInvalid",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "StrategyHasNoSelector",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
@@ -210,31 +240,37 @@ export const LOOKSRARE_V2_ABI: any[] = [
 			},
 		],
 		"name": "StrategyNotAvailable",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "StrategyNotUsed",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "StrategyProtocolFeeTooHigh",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "TransferAlreadyInProgress",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "TransferNotInProgress",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
 		"inputs": [],
 		"name": "WrongPotentialOwner",
+		// @ts-ignore
 		"type": "error",
 	},
 	{
