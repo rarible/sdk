@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+
+### Bug Fixes
+
+* yarn lock fix ([61c05e2](https://github.com/rarible/sdk/commit/61c05e277649d65bb5440bca3e3b0d754c451c36))
+
+
+
+
+
 ## [0.13.23](https://github.com/rarible/sdk/compare/v0.13.22...v0.13.23) (2023-04-24)
 
 
