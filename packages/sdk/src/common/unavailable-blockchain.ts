@@ -30,6 +30,7 @@ export function createUnavailableBlockchain(msg?: string): IRaribleInternalSdk {
 		balances: {
 			getBalance: nonAvailableFn,
 			convert: nonAvailableFn,
+			transfer: nonAvailableFn,
 			getBiddingBalance: nonAvailableAction,
 			depositBiddingBalance: nonAvailableAction,
 			withdrawBiddingBalance: nonAvailableAction,

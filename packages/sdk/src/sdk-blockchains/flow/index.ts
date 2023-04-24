@@ -48,6 +48,7 @@ export function createFlowSdk(
 	const transferService = new FlowTransfer(sdk, blockchainNetwork)
 	const fillService = new FlowBuy(sdk, apis, blockchainNetwork)
 	const cancelService = new FlowCancel(sdk, apis, blockchainNetwork)
+	const balanceService = new FlowBalance(sdk, network, blockchainNetwork, wallet)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
@@ -74,7 +75,8 @@ export function createFlowSdk(
 			cancel: cancelService.cancel,
 		},
 		balances: {
-			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
+			getBalance: balanceService.getBalance,
+			transfer: balanceService.transfer,
 			convert: notImplemented,
 			getBiddingBalance: nonImplementedAction,
 			depositBiddingBalance: nonImplementedAction,
