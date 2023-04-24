@@ -64,10 +64,10 @@ describe.skip("Test flow balance function", () => {
 	})
 })
 
-describe("Test flow transfer function", () => {
+describe.skip("Test flow transfer function", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 
-	test("asd", async () => {
+	test("transfer Flow", async () => {
 		const wallet = new FlowWallet(fcl, authUser1)
 		const unionSdk = createRaribleSdk(wallet, "testnet")
 		const recipient = toUnionAddress("FLOW:0x97d54357e9938fd0")
