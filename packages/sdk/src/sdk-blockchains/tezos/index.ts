@@ -66,6 +66,7 @@ export function createTezosSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: notImplemented,
+			transfer: notImplemented,
 			getBiddingBalance: nonImplementedAction,
 			depositBiddingBalance: nonImplementedAction,
 			withdrawBiddingBalance: nonImplementedAction,
