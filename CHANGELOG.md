@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.25](https://github.com/rarible/sdk/compare/v0.13.24...v0.13.25) (2023-04-25)
+
+
+### Bug Fixes
+
+* bignumber value in seaport orders ([fb62197](https://github.com/rarible/sdk/commit/fb62197c696b38de1a16c5f94075c4fd5c11a052))
+
+
+
+
+
 ## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
 
 
