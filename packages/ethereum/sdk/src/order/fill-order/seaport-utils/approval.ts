@@ -57,7 +57,7 @@ export function getApprovalActions(
 					return send(erc1155.functionCall("setApprovalForAll", operator, true))
 				} else {
 					const erc20 = createErc20Contract(ethereum, toAddress(token))
-					return send(erc20.functionCall("approve", operator, MAX_INT))
+					return send(erc20.functionCall("approve", operator, MAX_INT.toString()))
 				}
 			})
 	)
