@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.26](https://github.com/rarible/sdk/compare/v0.13.25...v0.13.26) (2023-04-25)
+
+
+### Bug Fixes
+
+* bignumber fixed value ([ae8056e](https://github.com/rarible/sdk/commit/ae8056ec24a1f01165e7f86b2f454aca47161744))
+
+
+
+
+
 ## [0.13.25](https://github.com/rarible/sdk/compare/v0.13.24...v0.13.25) (2023-04-25)
 
 
