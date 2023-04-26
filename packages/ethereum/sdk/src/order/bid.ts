@@ -106,11 +106,11 @@ export class OrderBid {
 			...form,
 			make: {
 				assetType: request.makeAssetType,
-				value: toBigNumber(toBn(price).multipliedBy(request.amount).toString()),
+				value: toBigNumber(toBn(price).multipliedBy(request.amount).toFixed()),
 			},
 			take: {
 				assetType: await this.checkAssetType(request.takeAssetType),
-				value: toBigNumber(request.amount.toString()),
+				value: toBigNumber(request.amount.toFixed()),
 			},
 		}
 	}
@@ -119,7 +119,7 @@ export class OrderBid {
 		if (order.type === "RARIBLE_V1" || order.type === "RARIBLE_V2") {
 			return this.upserter.getOrderFormFromOrder(order, {
 				assetType: order.make.assetType,
-				value: toBigNumber(toBn(price).multipliedBy(order.take.value).toString()),
+				value: toBigNumber(toBn(price).multipliedBy(order.take.value).toFixed()),
 			}, order.take)
 		}
 		throw new Error(`Unsupported order type: ${order.type}`)

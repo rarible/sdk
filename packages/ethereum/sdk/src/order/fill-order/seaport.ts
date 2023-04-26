@@ -102,7 +102,7 @@ export class SeaportOrderHandler {
 				.multipliedBy(toBn(fee.value))
 				.dividedBy(10000)
 				.integerValue(BigNumberUtils.ROUND_FLOOR)
-				.toString(),
+				.toFixed(),
 			recipient: fee.account,
 		}))
 	}
@@ -162,9 +162,9 @@ function getUnitsToFill(request: SeaportV1OrderFillRequest): {
 
 	let isPartialFill: boolean
 	if (takeIsNft) {
-		isPartialFill = unitsToFill ? unitsToFill.toString() !== request.order.take.value.toString() : false
+		isPartialFill = unitsToFill ? unitsToFill.toFixed() !== request.order.take.value.toString() : false
 	} else if (makeIsNft) {
-		isPartialFill = unitsToFill ? unitsToFill.toString() !== request.order.make.value.toString() : false
+		isPartialFill = unitsToFill ? unitsToFill.toFixed() !== request.order.make.value.toString() : false
 	} else {
 		throw new Error("Make/take asset in order is non-nft asset")
 	}

@@ -1,3 +1,4 @@
+require("mock-local-storage")
 global.FormData = require("form-data")
 global.window = {
 	fetch: require("node-fetch"),
@@ -8,3 +9,4 @@ global.CustomEvent = function CustomEvent() {
 	return
 }
 jest.setTimeout(290000)
+// window.localStorage = global.localStorage

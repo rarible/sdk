@@ -1,5 +1,5 @@
 import { randomAddress, toAddress } from "@rarible/types"
-import { awaitAll, deployTestErc20, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc20, createGanacheProvider, createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
 import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
@@ -13,6 +13,7 @@ import { getEthereumConfig } from "../config"
 import { approveErc20 as approveErc20Template } from "./approve-erc20"
 import { checkChainId } from "./check-chain-id"
 import { prependProviderName } from "./test/prepend-provider-name"
+import { createErc721Contract } from "./contracts/erc721"
 
 const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 const { provider, addresses } = createGanacheProvider(pk)
@@ -77,5 +78,25 @@ describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 		)
 
 		expect(result === undefined).toBeTruthy()
+	})
+})
+
+describe("as", () => {
+	const { provider: provider1 } = createE2eProvider(pk, {
+		networkId: 137,
+		rpcUrl: "https://node-mainnet-polygon.rarible.com",
+	})
+	const web3 = new Web3(provider1 as any)
+	const wallet = new Web3Ethereum({ web3 })
+	// const approveErc20 = approveErc20Template.bind(null, wallet, send)
+
+	test("asdasd", async () => {
+		const erc721 = createErc721Contract(wallet, toAddress("0x0ad52bfd0ddd09f581f0f790fe4f7369e9097712"))
+		const isappr = await erc721.functionCall(
+			"isApprovedForAll",
+			toAddress("0x7032670e8bc7a7433e64a8631e6525a79cb14dca"),
+			toAddress("0xd47e14DD9b98411754f722B4c4074e14752Ada7C")
+		).call()
+		console.log("is", isappr)
 	})
 })

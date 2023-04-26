@@ -19,7 +19,7 @@ import { createOrder } from "../fill-order/seaport-utils/create-order"
 import type { SendFunction } from "../../common/send-transaction"
 
 function getRandomTokenId(): string {
-	return Math.floor(Math.random() * 300000000).toString()
+	return Math.floor(Math.random() * 300000000).toFixed()
 }
 
 export function getAssetTypeBlank(assetClass: string): Asset {

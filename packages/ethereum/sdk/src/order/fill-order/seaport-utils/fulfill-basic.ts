@@ -89,7 +89,7 @@ export async function getfulfillBasicOrderData({
 
 	return {
 		functionCall,
-		options: { value: totalNativeAmount?.toString() },
+		options: { value: totalNativeAmount?.toFixed() },
 	}
 }
 

@@ -169,7 +169,7 @@ export class LooksrareOrderHandler {
 					royalties,
 					makerOrder.price.toString() ?? 0
 				)
-				valueWithOriginFees = toBn(valueWithOriginFees.plus(royaltiesAmount).toString())
+				valueWithOriginFees = toBn(valueWithOriginFees.plus(royaltiesAmount).toFixed())
 
 				data.fees = addFeeDependsOnExternalFee(request.originFees, encodedFeesValue)
 			}
@@ -178,7 +178,7 @@ export class LooksrareOrderHandler {
 		return {
 			requestData: {
 				data: data,
-				options: { value: valueWithOriginFees.toString() },
+				options: { value: valueWithOriginFees.toFixed() },
 			},
 			feeAddresses,
 		}

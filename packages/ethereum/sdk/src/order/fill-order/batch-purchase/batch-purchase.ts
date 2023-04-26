@@ -219,7 +219,7 @@ export class BatchOrderFiller {
 			feeAddresses[1],
 			false // allowFail
 		).estimateGas({
-			value: totalValue.toString(),
+			value: totalValue.toFixed(),
 			from: await getRequiredWallet(this.ethereum).getFrom(),
 		})
 		const gasLimitWithTheshold = toBn(gasLimit)
@@ -230,7 +230,7 @@ export class BatchOrderFiller {
 		return {
 			functionCall,
 			options: {
-				value: totalValue.toString(),
+				value: totalValue.toFixed(),
 				gas: gasLimitWithTheshold,
 				additionalData: getUpdatedCalldata(this.sdkConfig),
 			},

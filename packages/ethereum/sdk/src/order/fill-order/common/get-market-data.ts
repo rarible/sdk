@@ -59,13 +59,12 @@ export async function getMarketData(
 				royalties,
 				fillData.options.value?.toString() ?? 0
 			)
-			valueWithOriginFees = toBn(valueWithOriginFees.plus(royaltiesAmount).toString())
+			valueWithOriginFees = toBn(valueWithOriginFees.plus(royaltiesAmount).toFixed())
 
 			data.fees = addFeeDependsOnExternalFee(request.originFees, feeValue)
 		}
 	}
 
-	console.log("getMarket data", data, valueWithOriginFees.toString())
 	return {
 		originFees: {
 			totalFeeBasisPoints,
@@ -75,7 +74,7 @@ export async function getMarketData(
 		data,
 		options: {
 			...fillData.options,
-			value: valueWithOriginFees.toString(),
+			value: valueWithOriginFees.toFixed(),
 		},
 	}
 }

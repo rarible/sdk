@@ -33,7 +33,7 @@ export async function createOrder(
 		conduitKey = OPENSEA_CONDUIT_KEY,
 		zone = ZERO_ADDRESS,
 		startTime = Math.floor(Date.now() / 1000).toString(),
-		endTime = MAX_INT.toString(),
+		endTime = MAX_INT.toFixed(),
 		offer,
 		consideration,
 		counter,

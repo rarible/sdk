@@ -24,7 +24,7 @@ export function getOrderHash(orderComponents: OrderComponents): string {
     		const stringForHashing = "0x" +
           [
           	offerItemTypeHash.slice(2),
-          	offerItem.itemType.toString().padStart(64, "0"),
+          	offerItem.itemType.toFixed().padStart(64, "0"),
           	offerItem.token.slice(2).padStart(64, "0"),
           	toBn(offerItem.identifierOrCriteria)
           		.toString(16)
@@ -49,7 +49,7 @@ export function getOrderHash(orderComponents: OrderComponents): string {
     				"0x" +
             [
             	considerationItemTypeHash.slice(2),
-            	considerationItem.itemType.toString().padStart(64, "0"),
+            	considerationItem.itemType.toFixed().padStart(64, "0"),
             	considerationItem.token.slice(2).padStart(64, "0"),
             	toBn(
             		considerationItem.identifierOrCriteria
@@ -77,7 +77,7 @@ export function getOrderHash(orderComponents: OrderComponents): string {
     	orderComponents.zone.slice(2).padStart(64, "0"),
     	offerHash.slice(2),
     	considerationHash.slice(2),
-    	orderComponents.orderType.toString().padStart(64, "0"),
+    	orderComponents.orderType.toFixed().padStart(64, "0"),
     	toBn(orderComponents.startTime)
     		.toString(16)
     		.padStart(64, "0"),

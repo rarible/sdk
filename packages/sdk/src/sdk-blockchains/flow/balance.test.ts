@@ -79,11 +79,12 @@ describe.skip("Test flow transfer function", () => {
 
 		const startBalance = await unionSdk.balances.getBalance(recipient, flowAssetType)
 
-		await unionSdk.balances.transfer({
+		const tx = await unionSdk.balances.transfer({
 			recipient,
 			amount: "0.001",
 			currency: flowAssetType,
 		})
+		await tx.wait()
 		const finishBalance = await unionSdk.balances.getBalance(recipient, flowAssetType)
 		expect(toBn(finishBalance).minus(startBalance).toString()).toBe("0.001")
 	})

@@ -62,7 +62,7 @@ function getMintOffChainData(
 	if ("supply" in data) {
 		return Object.assign({}, base, {
 			"@type": "ERC1155" as const,
-			supply: toBigNumber(data.supply.toString()),
+			supply: toBigNumber(data.supply.toFixed()),
 		})
 	}
 	return Object.assign({}, base, {

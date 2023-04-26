@@ -54,7 +54,7 @@ export class X2Y2OrderHandler {
 		const data = await this.getWrapperData(
 			request,
 			encodedFeesValue,
-			valueForSending.toString()
+			valueForSending.toFixed()
 		)
 
 		const functionCall = wrapper.functionCall("singlePurchase", data.data, feeAddresses[0], feeAddresses[1])
@@ -76,7 +76,7 @@ export class X2Y2OrderHandler {
 		return this.getWrapperData(
 			request,
 			feeValue,
-			valueForSending.toString()
+			valueForSending.toFixed()
 		)
 	}
 

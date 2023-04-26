@@ -157,6 +157,6 @@ export async function getFulfillAdvancedOrderData({
 
 	return {
 		data: await seaportContract.functionCall("fulfillAdvancedOrder", ...fulfillAdvancedOrderArgs).getData(),
-		value: totalNativeAmount.toString(),
+		value: totalNativeAmount?.toFixed(),
 	}
 }

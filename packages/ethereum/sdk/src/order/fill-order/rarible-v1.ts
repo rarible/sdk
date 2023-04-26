@@ -126,7 +126,7 @@ export function toStructLegacyOrderKey(order: SimpleLegacyOrder) {
 function fromSimpleOrderToOrderForm(order: SimpleLegacyOrder): LegacyOrderForm {
 	return {
 		...order,
-		salt: toBigNumber(toBn(order.salt).toString()),
+		salt: toBigNumber(toBn(order.salt).toFixed()),
 		signature: order.signature || toBinary("0x"),
 	}
 }

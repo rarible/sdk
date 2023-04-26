@@ -169,7 +169,7 @@ export async function prepareSeaportExchangeData(
 			data: fulfillOrdersData.data,
 		},
 		options: {
-			value: valueForSending.toString(),
+			value: valueForSending.toFixed(),
 		},
 	}
 }

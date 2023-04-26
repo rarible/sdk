@@ -34,7 +34,7 @@ export class ConvertWeth {
 			{
 				value: new BigNumber(value)
 					.multipliedBy(new BigNumber(10).pow(Number(decimals)))
-					.toString(),
+					.toFixed(),
 			}
 		)
 	}
@@ -45,7 +45,7 @@ export class ConvertWeth {
 		}
 		const contract = createWethContract(this.ethereum, this.config.weth)
 		const decimals = await contract.functionCall("decimals").call()
-		const rawValue = new BigNumber(value).multipliedBy(new BigNumber(10).pow(Number(decimals))).toString()
+		const rawValue = new BigNumber(value).multipliedBy(new BigNumber(10).pow(Number(decimals))).toFixed()
 		return this.send(
 			contract.functionCall("withdraw", rawValue)
 		)

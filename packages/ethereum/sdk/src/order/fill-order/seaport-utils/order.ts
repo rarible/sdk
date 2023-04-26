@@ -35,8 +35,8 @@ export const feeToConsiderationItem = ({
       token === ZERO_ADDRESS ? ItemType.NATIVE : ItemType.ERC20,
 		token,
 		identifierOrCriteria: "0",
-		startAmount: multiplyBasisPoints(baseAmount, fee.basisPoints).toString(),
-		endAmount: multiplyBasisPoints(baseEndAmount, fee.basisPoints).toString(),
+		startAmount: multiplyBasisPoints(baseAmount, fee.basisPoints).toFixed(),
+		endAmount: multiplyBasisPoints(baseEndAmount, fee.basisPoints).toFixed(),
 		recipient: fee.recipient,
 	}
 }
@@ -59,12 +59,12 @@ export const deductFees = <T extends Item>(
 		startAmount: isCurrencyItem(item)
 			? toBn(item.startAmount)
 				.minus(multiplyBasisPoints(item.startAmount, totalBasisPoints))
-				.toString()
+				.toFixed()
 			: item.startAmount,
 		endAmount: isCurrencyItem(item)
 			? toBn(item.endAmount)
 				.minus(multiplyBasisPoints(item.endAmount, totalBasisPoints))
-				.toString()
+				.toFixed()
 			: item.endAmount,
 	}))
 }
@@ -187,16 +187,16 @@ export const mapOrderAmountsFromFilledStatus = (
 				startAmount: multiplyBasisPoints(
 					item.startAmount,
 					basisPoints
-				).toString(),
-				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toString(),
+				).toFixed(),
+				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toFixed(),
 			})),
 			consideration: order.parameters.consideration.map((item) => ({
 				...item,
 				startAmount: multiplyBasisPoints(
 					item.startAmount,
 					basisPoints
-				).toString(),
-				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toString(),
+				).toFixed(),
+				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toFixed(),
 			})),
 		},
 		signature: order.signature,
@@ -254,16 +254,16 @@ export const mapOrderAmountsFromUnitsToFill = (
 				startAmount: multiplyBasisPoints(
 					item.startAmount,
 					basisPoints
-				).toString(),
-				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toString(),
+				).toFixed(),
+				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toFixed(),
 			})),
 			consideration: order.parameters.consideration.map((item) => ({
 				...item,
 				startAmount: multiplyBasisPoints(
 					item.startAmount,
 					basisPoints
-				).toString(),
-				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toString(),
+				).toFixed(),
+				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toFixed(),
 			})),
 		},
 		signature: order.signature,

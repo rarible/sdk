@@ -141,7 +141,7 @@ export async function getFulfillStandardOrderData({
 		recipientAddress], null, "  "))
 		return {
 			functionCall,
-			options: { value: totalNativeAmount?.toString() },
+			options: { value: totalNativeAmount?.toFixed() },
 		}
 	}
 
@@ -151,6 +151,6 @@ export async function getFulfillStandardOrderData({
 	)
 	return {
 		functionCall,
-		options: { value: totalNativeAmount?.toString() },
+		options: { value: totalNativeAmount?.toFixed() },
 	}
 }
