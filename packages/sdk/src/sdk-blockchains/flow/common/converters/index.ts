@@ -125,7 +125,7 @@ export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
 	return parts?.map(p => {
 		return {
 			account: convertToFlowAddress(p.account),
-			value: toBigNumber(toBn(p.value).dividedBy(10000).toString()),
+			value: toBigNumber(p.value.toString()),
 		}
 	}) || []
 }
