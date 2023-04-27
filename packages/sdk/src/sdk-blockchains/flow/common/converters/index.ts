@@ -14,7 +14,6 @@ import {
 } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { FlowFee } from "@rarible/flow-sdk/build/types"
-import { toBn } from "@rarible/utils/build/bn"
 import type { UnionPart } from "../../../../types/order/common"
 import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
 
@@ -125,7 +124,7 @@ export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
 	return parts?.map(p => {
 		return {
 			account: convertToFlowAddress(p.account),
-			value: toBigNumber(toBn(p.value).dividedBy(10000).toString()),
+			value: toBigNumber(p.value.toString()),
 		}
 	}) || []
 }
