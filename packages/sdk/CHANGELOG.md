@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.27](https://github.com/rarible/sdk/compare/v0.13.26...v0.13.27) (2023-04-27)
+
+
+### Bug Fixes
+
+* flow origin fees ([#468](https://github.com/rarible/sdk/issues/468)) ([964be24](https://github.com/rarible/sdk/commit/964be2430fe96413358ace3c95ce88c11c313117))
+
+
+
+
+
 ## [0.13.26](https://github.com/rarible/sdk/compare/v0.13.25...v0.13.26) (2023-04-25)
 
 **Note:** Version bump only for package @rarible/sdk
