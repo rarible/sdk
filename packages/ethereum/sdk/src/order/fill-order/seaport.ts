@@ -1,5 +1,5 @@
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import type { BigNumber } from "@rarible/types"
@@ -34,16 +34,6 @@ export class SeaportOrderHandler {
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
 	) {
-	}
-
-	async sendTransaction(
-		request: SeaportV1OrderFillRequest,
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(request)
-		return this.send(
-			functionCall,
-			options,
-		)
 	}
 
 	async getTransactionData(
