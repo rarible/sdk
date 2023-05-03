@@ -13,20 +13,13 @@ import { awaitForOrderStatus } from "./test/await-for-order-status"
 import { convertTezosToCollectionAddress, convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
+import { TEST_PK_1, TEST_PK_3 } from "./test/credentials"
 
 describe("bid test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
-	const itemOwner = createTestWallet(
-		"edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
-		env
-	)
+	const itemOwner = createTestWallet(TEST_PK_3, env)
 	const itemOwnerSdk = createRaribleSdk(itemOwner, env, { logs: LogsLevel.DISABLED })
-
-	const bidderWallet = createTestWallet(
-		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-		env
-	)
+	const bidderWallet = createTestWallet(TEST_PK_1, env)
 
 	const bidderSdk = createRaribleSdk(bidderWallet, env, { logs: LogsLevel.DISABLED })
 

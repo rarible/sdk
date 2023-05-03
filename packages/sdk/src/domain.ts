@@ -35,6 +35,7 @@ import type { IBatchBuy } from "./types/order/fill"
 import type { IGetBuyAmmInfo } from "./types/balances"
 import type { IGetSdkContext } from "./common/get-sdk-context"
 import type { IBalanceTransfer } from "./types/balances"
+import type { IFlowSetupAccount } from "./types/nft/collection"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -119,6 +120,7 @@ export interface IRaribleSdk {
 	 */
 	wallet: Maybe<BlockchainWallet>
 	ethereum?: IEthereumSdk
+	flow?: IFlowSdk
 	getSdkContext: IGetSdkContext
 }
 
@@ -373,6 +375,11 @@ export interface IEthereumSdk {
 	unwrapCryptoPunk: ICryptopunkUnwrap,
 	getBatchBuyAmmInfo: IGetBuyAmmInfo,
 }
+
+export interface IFlowSdk {
+	setupAccount: IFlowSetupAccount
+}
+
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet" | "getSdkContext"> & {
 	nft: INftInternalSdk

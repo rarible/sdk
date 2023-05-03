@@ -14,7 +14,7 @@ export function getOpenseaEthTakeData(amount: BigNumberValue) {
 			"token": "0x0000000000000000000000000000000000000000",
 			"amount": feeRecipientAmount.toString(),
 			"endAmount": feeRecipientAmount.toString(),
-			"recipient": "0x8de9c5a032463c561423387a9648c5c7bcc5bc90",
+			"recipient": "0x0000a26b00c1f0df003000390027140000faa719",
 		},
 	]
 }

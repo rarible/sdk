@@ -42,7 +42,6 @@ export async function getFulfillStandardOrderData({
 	const orderWithAdjustedFills = unitsToFill
 		? mapOrderAmountsFromUnitsToFill(order, {
 			unitsToFill,
-			totalFilled,
 			totalSize,
 		})
 		: // Else, we adjust the order by the remaining order left to be fulfilled

@@ -29,7 +29,7 @@ import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
 	getConduitByKey,
-	NO_CONDUIT,
+	OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
@@ -49,20 +49,14 @@ export async function fulfillOrder(
 	simpleOrder: SimpleSeaportV1Order,
 	{ tips, unitsToFill }: {tips?: TipInputItem[], unitsToFill?: BigNumberValue}
 ) {
-	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
-	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
-
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
-	const fulfillerAddress = await ethereum.getFrom()
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
-
-	// const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const fulfillerAddress = await ethereum.getFrom()
+	const conduitKey = OPENSEA_CONDUIT_KEY
 	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
-
-	const conduitKey = NO_CONDUIT
-	// const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
 	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
 	const extraData = "0x"
@@ -118,6 +112,13 @@ export async function fulfillOrder(
 
 	// We use basic fulfills as they are more optimal for simple and "hot" use cases
 	// We cannot use basic fulfill if user is trying to partially fill though.
+	console.log("!unitsToFill", !unitsToFill)
+	console.log("isRecipientSelf", isRecipientSelf)
+	console.log("fn", shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
+
+	console.log("condition", 	!unitsToFill &&
+		isRecipientSelf &&
+		shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
 	if (
 		!unitsToFill &&
     isRecipientSelf &&
@@ -259,7 +260,6 @@ export async function approveBeforeStandardFulfillOrder(
 	const orderWithAdjustedFills = unitsToFill
 		? mapOrderAmountsFromUnitsToFill(order, {
 			unitsToFill,
-			totalFilled,
 			totalSize,
 		})
 		: // Else, we adjust the order by the remaining order left to be fulfilled

@@ -25,7 +25,7 @@ describe("get balance", () => {
 	})
 	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "development", { logs: LogsLevel.DISABLED })
 
-	test("should be the same balance", async () => {
+	test.concurrent("should be the same balance", async () => {
 		const ethWalletAddess = toAddress("0x00a329c0648769A73afAc7F9381E08FB43dBEA72")
 		const walletAddress = toUnionAddress(`ETHEREUM:${ethWalletAddess}`)
 		const balance = await sdk.balances.getBalance(walletAddress, {
@@ -38,7 +38,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual(wethBalance.toString())
 	})
 
-	test("get ETH balance without wallet", async () => {
+	test.concurrent("get ETH balance without wallet", async () => {
 		const sdk = createRaribleSdk(undefined, "development", { logs: LogsLevel.DISABLED })
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const balance = await sdk.balances.getBalance(walletAddress, {
@@ -47,7 +47,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.9355")
 	})
 
-	test("get ETH balance without wallet with CurrencyId", async () => {
+	test.concurrent("get ETH balance without wallet with CurrencyId", async () => {
 		const sdk = createRaribleSdk(undefined, "development", { logs: LogsLevel.DISABLED })
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const currency = toCurrencyId(`ETHEREUM:${ZERO_ADDRESS}`)
@@ -55,7 +55,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.9355")
 	})
 
-	test("get balance erc-20", async () => {
+	test.concurrent("get balance erc-20", async () => {
 		const sender = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 
 		const contract = toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
@@ -67,7 +67,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual(nextBalance)
 	})
 
-	test("get balance erc-20 with CurrencyId", async () => {
+	test.concurrent("get balance erc-20 with CurrencyId", async () => {
 		const sender = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const contract = toCurrencyId("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
 		const nextBalance = "0.00035"
@@ -152,7 +152,7 @@ describe("get polygon balance", () => {
 
 	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "testnet", { logs: LogsLevel.DISABLED })
 
-	test("get Matic balance", async () => {
+	test.concurrent("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
 		const balance = await sdk.balances.getBalance(walletAddress, {
 			"@type": "ETH",
@@ -161,7 +161,7 @@ describe("get polygon balance", () => {
 		expect(balance.toString()).toEqual("0.009145")
 	})
 
-	test("get Matic balance with CurrencyId", async () => {
+	test.concurrent("get Matic balance with CurrencyId", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
 		const currency = toCurrencyId(`POLYGON:${ZERO_ADDRESS}`)
 		const balance = await sdk.balances.getBalance(walletAddress, currency)

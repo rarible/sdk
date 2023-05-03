@@ -181,7 +181,7 @@ describe.skip("seaport", () => {
 			amount: "10",
 		} as const
 		const take = getOpenseaEthTakeData("10000000000")
-		const orderHash = await createSeaportOrder(ethereumSeller, send, make, take, { allowPartialFills: false })
+		const orderHash = await createSeaportOrder(ethereumSeller, send, make, take)
 
 		const order = await awaitOrder(sdkBuyer, orderHash)
 		const buyResponse = sdkBuyer.order.buy({

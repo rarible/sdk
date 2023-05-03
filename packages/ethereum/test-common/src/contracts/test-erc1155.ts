@@ -368,6 +368,6 @@ export async function deployTestErc1155(web3: Web3, name: string) {
 		.send({ from: address, gas: 4000000, gasPrice: "0" })
 }
 
-function createTestErc1155(web3: Web3, address?: Address): Contract {
+export function createTestErc1155(web3: Web3, address?: Address): Contract {
 	return new web3.eth.Contract(testErc1155Abi, address)
 }

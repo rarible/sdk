@@ -16,7 +16,7 @@ import type { InputCriteria } from "./types"
 import {
 	CROSS_CHAIN_SEAPORT_ADDRESS,
 	getConduitByKey,
-	NO_CONDUIT,
+	OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 import { getBalancesAndApprovals } from "./balance-and-approval-check"
@@ -74,21 +74,15 @@ export async function prepareSeaportExchangeData(
 		totalFeeBasisPoints: number
 	}
 ): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
-	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
-
+	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
 	const fulfillerAddress = await ethereum.getFrom()
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 
-	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
-	// const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const conduitKey = OPENSEA_CONDUIT_KEY
 	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
-
-	const conduitKey = NO_CONDUIT
-	// const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
 	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
 	const extraData = "0x"

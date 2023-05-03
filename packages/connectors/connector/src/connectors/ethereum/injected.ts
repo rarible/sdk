@@ -1,6 +1,7 @@
 import type { Observable } from "rxjs"
 import { combineLatest, defer } from "rxjs"
 import { map, mergeMap, startWith } from "rxjs/operators"
+import { DappType, getDappType } from "@rarible/sdk-common"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { promiseToObservable } from "../../common/utils"
@@ -9,24 +10,6 @@ import { getStateConnecting, getStateDisconnected, getStateConnected } from "../
 import { ethAccounts, getAddress } from "./common/get-address"
 import { getChainId } from "./common/get-chain-id"
 import type { EthereumProviderConnectionResult } from "./domain"
-
-export enum DappType {
-	Metamask = "Metamask",
-	Trust = "Trust",
-	GoWallet = "GoWallet",
-	AlphaWallet = "AlphaWallet",
-	Status = "Status",
-	Coinbase = "Coinbase",
-	Cipher = "Cipher",
-	Mist = "Mist",
-	Parity = "Parity",
-	ImToken = "ImToken",
-	Dapper = "Dapper",
-	Mock = "Mock",
-	Generic = "Web3",
-	LedgerConnect = "LedgerConnect",
-}
-
 const PROVIDER_ID = "injected" as const
 
 export class InjectedWeb3ConnectionProvider extends
@@ -157,29 +140,6 @@ function getInjectedProvider(): any | undefined {
 	return provider
 }
 
-function getDappType(provider: any): Maybe<DappType> {
-	if (provider !== undefined) {
-		if (provider) {
-			if (provider.isImToken) return DappType.ImToken
-			if (provider.isDapper) return DappType.Dapper
-			if (provider.isMetaMask) return DappType.Metamask
-			if (provider.isTrust) return DappType.Trust
-			if (provider.isGoWallet) return DappType.GoWallet
-			if (provider.isAlphaWallet) return DappType.AlphaWallet
-			if (provider.isStatus) return DappType.Status
-			if (provider.isToshi) return DappType.Coinbase
-			if (provider.isLedgerConnect) return DappType.LedgerConnect
-			if (typeof (window as any).__CIPHER__ !== "undefined") return DappType.Cipher
-			if (provider.constructor.name === "EthereumProvider") return DappType.Mist
-			if (provider.constructor.name === "Web3FrameProvider") return DappType.Parity
-			if (provider.constructor.name === "Web3ProviderEngine") return DappType.Mock
-			return DappType.Generic
-		}
-	}
-
-	return undefined
-}
-
 function isDappSupportAutoConnect(dapp: Maybe<DappType>): boolean {
 	if (!dapp) {
 		return false
@@ -195,3 +155,5 @@ export function detectErrorCode(code: number, error: unknown) {
 	const parsedCode = typeof error === "object" && error !== null && "code" in error ? (error as any).code : undefined
 	return parsedCode === code
 }
+
+export { DappType }

@@ -8,6 +8,8 @@ import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { TypedDataSigner } from "@ethersproject/abstract-signer"
 import { BigNumber as EthersBN } from "ethers/lib/ethers"
+import type { Web3Provider } from "@ethersproject/providers"
+import { getDappType, promiseSettledRequest } from "@rarible/sdk-common"
 import { decodeParameters, encodeParameters } from "./abi-coder"
 import { getTxEvents } from "./utils/parse-logs"
 
@@ -35,10 +37,10 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 				signer = await this.getFrom()
 			} catch (e) {}
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.send",
 				error: e,
-				code: e?.code,
 				data: {
 					method,
 					params,
@@ -57,10 +59,10 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 				signer = await this.getFrom()
 			} catch (e) {}
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.personalSign",
 				error: e,
-				code: e?.code,
 				data: {
 					message,
 					from: signer,
@@ -76,10 +78,10 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 			return await signTypedData(this.send, signer, data)
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.signTypedData",
 				error: e,
-				code: e?.code,
 				data,
 				signer,
 			})
@@ -95,6 +97,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 			return this.from
 		} catch (e) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.getFrom",
 				error: e,
@@ -108,10 +111,10 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 		  return encodeParameters([type], [parameter])
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.encodeParameter",
 				error: e,
-				code: e?.code,
 				data: { type, parameter },
 			})
 		}
@@ -122,10 +125,10 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 		  return decodeParameters([type], data)
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.decodeParameter",
 				error: e,
-				code: e?.code,
 				data: { type, data },
 			})
 		}
@@ -137,10 +140,10 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 			return toBigNumber(balance.toString())
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.getBalance",
 				error: e,
-				code: e?.code,
 				data: { address },
 			})
 		}
@@ -152,6 +155,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 			return chainId
 		} catch (e) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersWeb3ProviderEthereum.getChainId",
 				error: e,
@@ -159,10 +163,18 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 			})
 		}
 	}
+
+	getCurrentProvider(): any  {
+		return this.web3Provider.provider
+	}
 }
 
 export class EthersEthereum implements EthereumProvider.Ethereum {
 	constructor(readonly signer: TypedDataSigner & ethers.Signer) {}
+
+	getCurrentProvider(): any {
+		return getCurrentProviderFromSigner(this.signer)
+	}
 
 	createContract(abi: any, address?: string): EthereumProvider.EthereumContract {
 		if (!address) {
@@ -180,10 +192,10 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 				signer = await this.getFrom()
 			} catch (e) {}
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.personalSign",
 				error: e,
-				code: e?.code,
 				data: {
 					message,
 					from: signer,
@@ -199,10 +211,10 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 			return await this.signer._signTypedData(data.domain, types, data.message)
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.signTypedData",
 				error: e,
-				code: e?.code,
 				data,
 			})
 		}
@@ -213,6 +225,7 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		  return await this.signer.getAddress()
 		} catch (e) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.getFrom",
 				error: e,
@@ -226,10 +239,10 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		  return encodeParameters([type], [parameter])
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.encodeParameter",
 				error: e,
-				code: e?.code,
 				data: { type, parameter },
 			})
 		}
@@ -240,10 +253,10 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		  return decodeParameters([type], data)
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.decodeParameter",
 				error: e,
-				code: e?.code,
 				data: { type, data },
 			})
 		}
@@ -258,10 +271,10 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 			return toBigNumber(balance.toString())
 		} catch (e: any) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.getBalance",
 				error: e,
-				code: e?.code,
 				data: { address },
 			})
 		}
@@ -272,6 +285,7 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 		  return await this.signer.getChainId()
 		} catch (e) {
 			throw new EthereumProviderError({
+				providerId: getDappType(this.getCurrentProvider()),
 				provider: Provider.ETHERS,
 				method: "EthersEthereum.getChainId",
 				error: e,
@@ -302,11 +316,17 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 	) {}
 
 	async getCallInfo(): Promise<EthereumProvider.EthereumFunctionCallInfo> {
+		let from: string | undefined
+		try {
+			from = await this.signer.getAddress()
+		} catch (e) {
+			from = ""
+		}
 		return {
+			from,
 			method: this.name,
 			args: this.args,
 			contract: this.contract.address,
-			from: await this.signer.getAddress(),
 			provider: Provider.ETHERS,
 		}
 	}
@@ -317,14 +337,10 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 		} catch (e: any) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
+				providerId: getCurrentProviderFromSigner(this.signer),
 				method: "EthersFunctionCall.getData",
 				error: e,
-				code: e?.code,
-				data: {
-					args: this.args,
-					name: this.name,
-					contract: this.contract.address,
-				},
+				data: await this.getCallInfo(),
 			})
 		}
 	}
@@ -337,9 +353,13 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 		} catch (e) {
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
+				providerId: getCurrentProviderFromSigner(this.signer),
 				method: "EthersFunctionCall.estimateGas",
 				error: e,
-				data: { options },
+				data: {
+					...(await this.getCallInfo()),
+					options,
+				},
 			})
 		}
 	}
@@ -355,14 +375,16 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
-				callInfo = await this.getCallInfo()
-				callData = await this.getData()
+				[callInfo, callData] = await promiseSettledRequest([
+					this.getCallInfo(),
+					this.getData(),
+				])
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
+				providerId: getCurrentProviderFromSigner(this.signer),
 				method: "EthersFunctionCall.call",
 				error: e,
-				code: e?.code,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -407,14 +429,16 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
-				callInfo = await this.getCallInfo()
-				callData = await this.getData()
+				[callInfo, callData] = await promiseSettledRequest([
+					this.getCallInfo(),
+					this.getData(),
+				])
 			} catch (e) {}
 			throw new EthereumProviderError({
 				provider: Provider.ETHERS,
+				providerId: getCurrentProviderFromSigner(this.signer),
 				method: "EthersFunctionCall.send",
 				error: e,
-				code: e?.code,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -450,7 +474,6 @@ export class EthersTransaction implements EthereumProvider.EthereumTransaction {
 				provider: Provider.ETHERS,
 				method: "EthersTransaction.wait",
 				error: e,
-				code: e?.code,
 				data: {
 					hash: this.hash,
 					data: this.data,
@@ -476,7 +499,6 @@ export class EthersTransaction implements EthereumProvider.EthereumTransaction {
 				provider: Provider.ETHERS,
 				method: "EthersTransaction.getEvents",
 				error: e,
-				code: e?.code,
 				data: {
 					hash: this.hash,
 					data: this.data,
@@ -503,4 +525,11 @@ export class EthersTransaction implements EthereumProvider.EthereumTransaction {
 	get nonce(): number {
 		return this.tx.nonce
 	}
+}
+
+function getCurrentProviderFromSigner(signer: TypedDataSigner & ethers.Signer): any {
+	if (signer.provider && "provider" in signer.provider) {
+		return (signer.provider as Web3Provider).provider
+	}
+	return null
 }

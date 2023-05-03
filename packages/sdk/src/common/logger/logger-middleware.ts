@@ -23,13 +23,13 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 
 	switch (wallet.walletType) {
 		case WalletType.ETHEREUM:
-			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address && address.toLowerCase()
-					info["wallet.chainId"] = chainId
+			await Promise.allSettled([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
+				.then(([chainIdResult, addressResult]) => {
+					info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult?.value?.toLowerCase() : formatDefaultError(addressResult.reason)
+					info["wallet.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult?.value : formatDefaultError(chainIdResult.reason)
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
+					info["wallet.address"] = formatDefaultError(err)
 					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
@@ -40,20 +40,16 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 					info["wallet.flow.chainId"] = userData.cid
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
+					info["wallet.address"] = formatDefaultError(err)
 					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
 		case WalletType.TEZOS:
 			info["wallet.tezos.kind"] = wallet.provider.kind
-			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address
-					info["wallet.tezos.chainId"] = chainId
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedData(err)
+			await Promise.allSettled([wallet.provider.chain_id(), wallet.provider.address()])
+				.then(([chainIdResult, addressResult]) => {
+					info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult.value : formatDefaultError(addressResult.reason)
+					info["wallet.tezos.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult.value : formatDefaultError(chainIdResult.reason)
 				})
 			break
 		case WalletType.SOLANA:
@@ -70,6 +66,10 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 	}
 
 	return info
+}
+
+export function formatDefaultError(err: any) {
+	return `unknown (${getErrorMessageString(err)})`
 }
 
 export function getErrorMessageString(err: any): string {

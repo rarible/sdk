@@ -7,16 +7,15 @@ import {
 } from "@rarible/ethereum-api-client"
 import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { ethers } from "ethers"
-// import { Seaport } from "@opensea/seaport-js"
-// import type { ConsiderationInputItem, CreateInputItem } from "@opensea/seaport-js/lib/types"
 import axios from "axios"
+import { keccak256 } from "ethereumjs-util"
 import type { OpenSeaOrderDTO } from "../fill-order/open-sea-types"
 import type { SimpleOpenSeaV1Order } from "../types"
 import { convertOpenSeaOrderToDTO } from "../fill-order/open-sea-converter"
 import type { ConsiderationInputItem, CreateInputItem } from "../fill-order/seaport-utils/types"
 import { createOrder } from "../fill-order/seaport-utils/create-order"
 import type { SendFunction } from "../../common/send-transaction"
+import { CROSS_CHAIN_SEAPORT_V1_5_ADDRESS } from "../fill-order/seaport-utils/constants"
 
 function getRandomTokenId(): string {
 	return Math.floor(Math.random() * 300000000).toString()
@@ -121,69 +120,118 @@ export async function getOrderSignature(ethereum: Ethereum, order: SimpleOpenSea
 }
 
 
-const hashOrderType = [
-	"address",
-	"address",
-	"address",
-	"uint",
-	"uint",
-	"uint",
-	"uint",
-	"address",
-	"uint8",
-	"uint8",
-	"uint8",
-	"address",
-	"uint8",
-	"bytes",
-	"bytes",
-	"address",
-	"bytes",
-	"address",
-	"uint",
-	"uint",
-	"uint",
-	"uint",
-	"uint",
-]
-
-export function hashOrder(order: OpenSeaOrderDTO): string {
-	return ethers.utils.solidityKeccak256(hashOrderType, [
-		order.exchange,
-		order.maker,
-		order.taker,
-		order.makerRelayerFee,
-		order.takerRelayerFee,
-		order.makerProtocolFee,
-		order.takerProtocolFee,
-		order.feeRecipient,
-		order.feeMethod,
-		order.side,
-		order.saleKind,
-		order.target,
-		order.howToCall,
-		order.calldata,
-		order.replacementPattern,
-		order.staticTarget,
-		order.staticExtradata,
-		order.paymentToken,
-		order.basePrice,
-		order.extra,
-		order.listingTime,
-		order.expirationTime,
-		order.salt,
-	])
+export function hashOrder(ethereum: Ethereum, order: OpenSeaOrderDTO): string {
+	const dataForEncoding = [{
+		value: order.exchange,
+		type: "address",
+	},
+	{
+		value: order.maker,
+		type: "address",
+	},
+	{
+		value: order.taker,
+		type: "address",
+	},
+	{
+		value: order.makerRelayerFee,
+		type: "uint",
+	},
+	{
+		value: order.takerRelayerFee,
+		type: "uint",
+	},
+	{
+		value: order.makerProtocolFee,
+		type: "uint",
+	},
+	{
+		value: order.takerProtocolFee,
+		type: "uint",
+	},
+	{
+		value: order.feeRecipient,
+		type: "address",
+	},
+	{
+		value: order.feeMethod,
+		type: "uint8",
+	},
+	{
+		value: order.side,
+		type: "uint8",
+	},
+	{
+		value: order.saleKind,
+		type: "uint8",
+	},
+	{
+		value: order.target,
+		type: "address",
+	},
+	{
+		value: order.howToCall,
+		type: "uint8",
+	},
+	{
+		value: order.calldata,
+		type: "bytes",
+	},
+	{
+		value: order.replacementPattern,
+		type: "bytes",
+	},
+	{
+		value: order.staticTarget,
+		type: "address",
+	},
+	{
+		value: order.staticExtradata,
+		type: "bytes",
+	},
+	{
+		value: order.paymentToken,
+		type: "address",
+	},
+	{
+		value: order.basePrice,
+		type: "uint",
+	},
+	{
+		value: order.extra,
+		type: "uint",
+	},
+	{
+		value: order.listingTime,
+		type: "uint",
+	},
+	{
+		value: order.expirationTime,
+		type: "uint",
+	},
+	{
+		value: order.salt,
+		type: "uint",
+	}]
+	const web3 = (ethereum as any)["config"].web3
+	const packed = web3.utils.encodePacked(...dataForEncoding)
+	return `0x${keccak256(Buffer.from(packed.substring(2), "hex")).toString("hex")}`
 }
 
-export function hashToSign(hash: string): string {
-	return ethers.utils.solidityKeccak256(
-		["string", "bytes32"],
-		["\x19Ethereum Signed Message:\n32", hash],
-	)
+export function hashToSign(ethereum: Ethereum, hash: string): string {
+	const web3 = (ethereum as any)["config"].web3
+	const packed = web3.utils.encodePacked({
+		type: "string",
+		value: "\x19Ethereum Signed Message:\n32",
+	}, {
+		type: "bytes32",
+		value: hash,
+	})
+	return `0x${keccak256(Buffer.from(packed.substring(2), "hex")).toString("hex")}`
 }
 
 export function hashOpenSeaV1Order(ethereum: Ethereum, order: SimpleOpenSeaV1Order): string {
-	return hashOrder(convertOpenSeaOrderToDTO(ethereum, order))
+	return hashOrder(ethereum, convertOpenSeaOrderToDTO(ethereum, order))
 }
 
 export async function createSeaportOrder(
@@ -191,12 +239,7 @@ export async function createSeaportOrder(
 	send: SendFunction,
 	make: CreateInputItem,
 	take: ConsiderationInputItem[],
-	options?: {allowPartialFills: boolean}
 ) {
-
-	const o = {
-		...(options || {}),
-	}
 
 	const endTime = getMaxOrderExpirationTimestamp().toString()
 	 const createdOrder = await createOrder(
@@ -207,17 +250,24 @@ export async function createSeaportOrder(
 			"consideration": take,
 			startTime: undefined,
 			endTime,
-			//rinkeby
-			zone: "0x00000000e88fe2628ebc5da81d2b3cead633e89e",
-			restrictedByZone: true,
-			allowPartialFills: o.allowPartialFills !== undefined ? o.allowPartialFills : true,
+			//goerli
+			zone: "0x0000000000000000000000000000000000000000",
+			restrictedByZone: false,
+			allowPartialFills: true,
 		})
 
 	let orderHash = ""
 	try {
-		const { data } = await axios.post("https://testnets-api.opensea.io/v2/orders/rinkeby/seaport/listings", createdOrder)
+		const { data } = await axios.post(
+			"https://testnets-api.opensea.io/v2/orders/goerli/seaport/listings",
+			{
+				...createdOrder,
+				protocol_address: CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
+			}
+		)
 		orderHash = data.order.order_hash
 	} catch (e: any) {
+		console.log(JSON.stringify(e?.response?.data, null, "	"))
 		throw e
 	}
 	return orderHash

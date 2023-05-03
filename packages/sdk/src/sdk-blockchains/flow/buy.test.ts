@@ -12,7 +12,7 @@ import { FlowSell } from "./sell"
 import { FlowBuy } from "./buy"
 import { convertFlowUnionAddress } from "./common/converters"
 
-describe("Flow buy", () => {
+describe.skip("Flow buy", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)

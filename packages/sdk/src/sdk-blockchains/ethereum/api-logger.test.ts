@@ -13,8 +13,7 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
-import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
+import { ETH_DEV_SETTINGS } from "./test/common"
 import { convertEthereumContractAddress } from "./common"
 
 describe("ethereum api logger", () => {
@@ -22,7 +21,7 @@ describe("ethereum api logger", () => {
 
 	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
 
-	test("request url in error.value.url", async () => {
+	test.concurrent("request url in error.value.url", async () => {
 		let error: any = null
 		try {
 			await sdk.apis.collection.getCollectionById({ collection: erc721Address })
@@ -32,7 +31,7 @@ describe("ethereum api logger", () => {
 		expect(error?.url).toBe("https://testnet-api.rarible.org/v0.1/collections/0x64f088254d7ede5dd6208639aabf3614c80d396d")
 	})
 
-	test("request url in EthereumSDK.apis.* returns error with error.url", async () => {
+	test.concurrent("request url in EthereumSDK.apis.* returns error with error.url", async () => {
 		let error: any = null
 		try {
 			const prepare = await sdk.nft.transfer.prepare({
@@ -43,12 +42,11 @@ describe("ethereum api logger", () => {
 			})
 		} catch (e) {
 			error = e
-			console.log(e)
 		}
 		expect(error?.url).toBe("https://testnet-ethereum-api.rarible.org/v0.1/nft/items/0x64F088254d7EDE5dd6208639aaBf3614C80D396d:0")
 	})
 
-	test("request url in FlowSDK.apis.* returns error with error.url", async () => {
+	test.concurrent("request url in FlowSDK.apis.* returns error with error.url", async () => {
 		let error: any = null
 		try {
 			await sdk.order.bidUpdate.prepare({
@@ -56,18 +54,17 @@ describe("ethereum api logger", () => {
 			})
 		} catch (e) {
 			error = e
-			console.log(e)
 		}
 		expect(error?.url).toBe("https://testnet-flow-api.rarible.org/v0.1/orders/106746924000000000000")
 	})
 })
 
 describe("ethereum api logger with tx ethereum errors", () => {
-	const { provider } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
+	const { provider } = createE2eProvider(undefined, ETH_DEV_SETTINGS)
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.ERROR })
+	const sdk = createRaribleSdk(ethereumWallet, "development")
 
 	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
 

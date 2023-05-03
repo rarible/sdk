@@ -3,7 +3,7 @@ import { createRaribleSdk } from "../index"
 import { LogsLevel } from "../domain"
 
 describe("server api keys", () => {
-	test("get item without API key should be succeed", async () => {
+	test.concurrent("get item without API key should be succeed", async () => {
 		const sdk = createRaribleSdk(undefined, "development", {
 			logs: LogsLevel.DISABLED,
 		})
@@ -13,7 +13,7 @@ describe("server api keys", () => {
 		})
 	})
 
-	test("get item with valid API key should be succeed", async () => {
+	test.concurrent("get item with valid API key should be succeed", async () => {
 		const sdk = createRaribleSdk(undefined, "development", {
 			logs: LogsLevel.DISABLED,
 			apiKey: "eb0e4c76-b662-4c3d-8121-3643a7eb75bb",
@@ -24,7 +24,7 @@ describe("server api keys", () => {
 		})
 	})
 
-	test("get item with invalid API key should be failed", async () => {
+	test.concurrent("get item with invalid API key should be failed", async () => {
 		const sdk = createRaribleSdk(undefined, "development", {
 			logs: LogsLevel.DISABLED,
 			apiKey: "eb0e4c76-b662-4c3d-8121-3643a7eb75ba",

@@ -9,10 +9,11 @@ import { LogsLevel } from "../domain"
 import { getWallet } from "../sdk-blockchains/solana/common/test/test-wallets"
 import { createTestWallet } from "../sdk-blockchains/tezos/test/test-wallet"
 
+const { web31, web32 } = initProviders()
+
 const providers = [{
 	name: "Ethereum Wallet",
 	getProvider: () => {
-		const { web31 } = initProviders()
 		const ethereum1 = new Web3Ethereum({ web3: web31 })
 		return new EthereumWallet(ethereum1)
 	},
@@ -20,21 +21,19 @@ const providers = [{
 }, {
 	name: "Ethereum Provider",
 	getProvider: () => {
-		const { web31 } = initProviders()
-		return new Web3Ethereum({ web3: web31 })
+		return new Web3Ethereum({ web3: web32 })
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,
 }, {
 	name: "Web3",
 	getProvider: () => {
-		const { web31 } = initProviders()
 		return web31
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,
 }, {
 	name: "Ethers",
 	getProvider: () => {
-		const provider = new ethers.providers.JsonRpcProvider("https://node-e2e.rarible.com")
+		const provider = new ethers.providers.JsonRpcProvider("https://dev-ethereum-node.rarible.com")
 		return new ethers.Wallet("ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9", provider)
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,

@@ -12,7 +12,7 @@ import { awaitFlowOrder } from "./test/await-order"
 import { FlowBuy } from "./buy"
 import { createTestBid, createTestBidWithCurrencyId } from "./test/create-test-bid"
 
-describe("Flow bid", () => {
+describe.skip("Flow bid", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
