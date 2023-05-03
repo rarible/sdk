@@ -1,6 +1,6 @@
 {
   "name": "@rarible/protocol-ethereum-sdk",
-  "version": "0.13.20",
+  "version": "0.13.26",
   "keywords": [
     "axios",
     "typescript",
@@ -27,7 +27,7 @@
   "dependencies": {
     "@rarible/action": "~0.9.1",
     "@rarible/ethereum-api-client": "^0.1.26-beta1",
-    "@rarible/ethereum-provider": "^0.13.20",
+    "@rarible/ethereum-provider": "^0.13.22",
     "@rarible/logger": "^0.9.12",
     "@rarible/utils": "~0.9.10",
     "axios": "^0.25.0",
@@ -38,10 +38,10 @@
     "merkletreejs": "^0.2.31"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.20",
-    "@rarible/ethers-ethereum": "^0.13.20",
+    "@rarible/ethereum-sdk-test-common": "^0.13.24",
+    "@rarible/ethers-ethereum": "^0.13.24",
     "@rarible/test-provider": "~0.5.0",
-    "@rarible/web3-ethereum": "^0.13.20",
+    "@rarible/web3-ethereum": "^0.13.24",
     "@types/jest": "27.0.2",
     "@types/node-fetch": "^2.5.11",
     "buffer": "^6.0.3",

@@ -64,6 +64,7 @@ export function createSolanaSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: nonImplementedAction,
+			transfer: notImplemented,
 			getBiddingBalance: balanceService.getBiddingBalance,
 			depositBiddingBalance: balanceService.depositBiddingBalance,
 			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,

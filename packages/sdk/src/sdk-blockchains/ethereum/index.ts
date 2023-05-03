@@ -14,6 +14,7 @@ import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -92,6 +93,7 @@ export function createEthereumSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
+			transfer: notImplemented,
 			getBiddingBalance: balanceService.getBiddingBalance,
 			depositBiddingBalance: balanceService.depositBiddingBalance,
 			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,

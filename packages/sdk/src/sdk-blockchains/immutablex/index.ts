@@ -55,6 +55,7 @@ export function createImmutablexSdk(
 		balances: {
 			getBalance: balancesService.getBalance,
 			convert: notImplemented,
+			transfer: notImplemented,
 			getBiddingBalance: nonImplementedAction,
 			depositBiddingBalance: nonImplementedAction,
 			withdrawBiddingBalance: nonImplementedAction,

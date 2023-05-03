@@ -72,7 +72,9 @@ const EVM_WARN_MESSAGES = [
 ]
 
 export function isEVMWarning(error: any): boolean {
-	return error.error?.code === 4001 || EVM_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
+	return error.error?.code === 4001
+		|| error?.error?.code === 4100
+		|| EVM_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
 }
 
 export function isTezosWarning(err: any): boolean {

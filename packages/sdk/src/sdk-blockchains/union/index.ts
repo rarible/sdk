@@ -21,7 +21,7 @@ import { Middlewarer } from "../../common/middleware/middleware"
 import type {
 	ConvertRequest,
 	CurrencyOrOrder,
-	GetBiddingBalanceRequest,
+	GetBiddingBalanceRequest, IBalanceTransferRequest,
 	IDepositBiddingBalance, IGetBuyAmmInfo,
 	IWithdrawBiddingBalance,
 } from "../../types/balances"
@@ -233,6 +233,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
 		this.getBiddingBalance = this.getBiddingBalance.bind(this)
+		this.transfer = this.transfer.bind(this)
 	}
 
 	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
@@ -241,6 +242,10 @@ class UnionBalanceSdk implements IBalanceSdk {
 
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		return this.instances[request.blockchain].convert(request)
+	}
+
+	transfer(request: IBalanceTransferRequest): Promise<IBlockchainTransaction> {
+		return this.instances[getBalanceBlockchain(request.recipient, request.currency)].transfer(request)
 	}
 
 	getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {

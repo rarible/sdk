@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-wallet",
-  "version": "0.13.22",
+  "version": "0.13.24",
   "keywords": [
     "solana",
     "web3"
@@ -18,7 +18,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/solana-common": "^0.13.17",
+    "@rarible/solana-common": "^0.13.24",
     "@solana/web3.js": "^1.35.0",
     "@types/bs58": "^4.0.1",
     "bs58": "^5.0.0",
