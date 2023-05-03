@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"lib": ["es6", "dom", "esnext"],
-		"module": "commonjs",
-		"target": "es5",
+		"module": "ESNEXT",
+		"target": "es2015",
 		"incremental": true,
 		"skipLibCheck": true,
 		"importHelpers": true,

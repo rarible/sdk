@@ -13,6 +13,7 @@ coverage/
 
 # Build
 build/
+esm/
 umd/
 esm/
 test-reports/
