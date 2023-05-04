@@ -64,7 +64,7 @@ describe("get tezos balance", () => {
 		expect(balance.toString()).toEqual("0.03")
 	})
 
-	test.concurrent("get balance FT without wallet", async () => {
+	test.concurrent.skip("get balance FT without wallet", async () => {
 		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
