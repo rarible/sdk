@@ -15,7 +15,7 @@
     "build:umd": "webpack",
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
-    "test": "sh ./scripts/test.sh",
+    "test": "jest --runInBand",
     "verify": "tsc --noEmit",
     "docs": "typedoc"
   },
