@@ -1,8 +1,8 @@
 #!/bin/sh
 set -e
 start=$(date +%s)
-scripts_dir="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"
-
+scripts_dir="$(dirname -- "$( readlink -f -- "$0"; )")"
+echo "scripts dir: $scripts_dir"
 cd "${scripts_dir}/.."
 #ethereum
 jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum --forceExit &

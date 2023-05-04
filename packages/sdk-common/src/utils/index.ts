@@ -89,7 +89,6 @@ export function getDappType(provider: any): DappType | undefined {
 	if (provider.isMetaMask) return DappType.Metamask
 	if (provider.isGamestop) return DappType.GameStop
 	if (provider.constructor.name === "Web3ProviderEngine") return DappType.Mock
-	if (typeof (window as any)?.__CIPHER__ !== "undefined") return DappType.Cipher
 	if (provider.constructor.name === "EthereumProvider") return DappType.Mist
 	if (provider.constructor.name === "Web3FrameProvider") return DappType.Parity
 	if (provider.constructor.name === "Web3ProviderEngine") return DappType.Mock
