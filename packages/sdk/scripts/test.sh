@@ -5,14 +5,14 @@ scripts_dir="$(dirname -- "$( readlink -f -- "$0"; )")"
 echo "scripts dir: $scripts_dir"
 cd "${scripts_dir}/.."
 #ethereum
-jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum --forceExit &
-jest --runInBand --testPathPattern=src/sdk-blockchains/flow --forceExit &
-jest --runInBand --testPathPattern=src/sdk-blockchains/immutablex --forceExit &
-jest --runInBand --testPathPattern=src/sdk-blockchains/tezos --forceExit
+jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum &
+jest --runInBand --testPathPattern=src/sdk-blockchains/flow &
+jest --runInBand --testPathPattern=src/sdk-blockchains/immutablex &
+jest --runInBand --testPathPattern=src/sdk-blockchains/tezos
 wait
 echo "REST OF TESTS:"
 #rest of tests
-jest --runInBand --testPathIgnorePatterns "src/sdk-blockchains/ethereum" "src/sdk-blockchains/immutablex" "src/sdk-blockchains/tezos" "src/sdk-blockchains/flow" --forceExit
+jest --runInBand --testPathIgnorePatterns "src/sdk-blockchains/ethereum" "src/sdk-blockchains/immutablex" "src/sdk-blockchains/tezos" "src/sdk-blockchains/flow"
 
 
 end=$(date +%s)
