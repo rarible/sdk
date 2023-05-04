@@ -28,15 +28,22 @@ import { getfulfillBasicOrderData } from "./fulfill-basic"
 import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
+	CROSS_CHAIN_SEAPORT_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	getConduitByKey,
 	OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
 export function getSeaportContract(ethereum: Ethereum, protocol: string): EthereumContract {
-	if (protocol === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+	const protocolAddress = protocol.toLowerCase()
+	if (
+		protocolAddress === CROSS_CHAIN_SEAPORT_V1_4_ADDRESS.toLowerCase()
+		|| protocolAddress === CROSS_CHAIN_SEAPORT_V1_5_ADDRESS.toLowerCase()
+	) {
 	  return createSeaportV14Contract(ethereum, toAddress(protocol))
-	} else if (protocol === "0x00000000006c3852cbef3e08e8df289169ede581") {
+	} else if (protocolAddress === CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase()) {
 		return createSeaportContract(ethereum, toAddress(protocol))
 	} else {
 		throw new Error("Unrecognized Seaport protocol")

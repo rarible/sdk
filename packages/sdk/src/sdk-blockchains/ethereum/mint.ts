@@ -15,7 +15,7 @@ import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { CollectionMeta } from "@rarible/api-client/build/models/CollectionMeta"
-import type { NftCollectionMeta } from "@rarible/ethereum-api-client/build/models/NftCollectionMeta"
+import type { EthCollectionMeta } from "@rarible/ethereum-api-client/build/models/EthCollectionMeta"
 import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -225,7 +225,7 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 	}
 }
 
-function convertCollectionMeta(meta?: CollectionMeta): NftCollectionMeta | undefined {
+function convertCollectionMeta(meta?: CollectionMeta): EthCollectionMeta | undefined {
 	if (!meta) {
 		return undefined
 	}

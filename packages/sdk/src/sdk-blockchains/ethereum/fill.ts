@@ -142,6 +142,14 @@ export class EthereumFill {
 				}
 				break
 			}
+			case "LOOKSRARE_V2": {
+				request = {
+					order,
+					originFees: toEthereumParts(fillRequest.originFees),
+					amount: fillRequest.amount,
+				}
+				break
+			}
 			case "X2Y2": {
 				request = {
 					order,
@@ -239,6 +247,14 @@ export class EthereumFill {
 				}
 			}
 			case "LOOKSRARE": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.NONE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
+				}
+			}
+			case "LOOKSRARE_V2": {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
@@ -447,6 +463,7 @@ export class EthereumFill {
 				ethOrder.type !== "RARIBLE_V2" &&
 				ethOrder.type !== "SEAPORT_V1" &&
 				ethOrder.type !== "LOOKSRARE" &&
+				ethOrder.type !== "LOOKSRARE_V2" &&
 				ethOrder.type !== "AMM" &&
 				ethOrder.type !== "X2Y2"
 			) {

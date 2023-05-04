@@ -76,6 +76,18 @@ describe.skip("seaport", () => {
 		"testnet"
 	)
 
+	test.skip("get signature", async () => {
+		try {
+			await seaportBuyerOrderHandler.getSignature({
+				hash: "0xc3fb0c2ce34d2758ccd163ecea11a4809a22374d1f13f1105d8161d09f67195f",
+				protocol: "0x00000000000001ad428e4906ae43d8f9852d0dd6",
+			})
+		} catch (e: any) {
+			expect(e.message).toBe("Order is not active or cancelled")
+		}
+		// Error when generating fulfillment data
+	})
+
 	test("fill order ERC-721 <-> ETH", async () => {
 		const accountAddressBuyer = toAddress(await ethereum.getFrom())
 		console.log("accountAddressBuyer", accountAddressBuyer)

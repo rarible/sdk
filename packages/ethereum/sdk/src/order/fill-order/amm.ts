@@ -1,5 +1,5 @@
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
@@ -84,11 +84,6 @@ export class AmmOrderHandler {
 			functionCall: fillData.functionCall,
 			options: fillData.options,
 		}
-	}
-
-	async sendTransaction(request: AmmOrderFillRequest): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(request)
-		return this.send(functionCall, options)
 	}
 
 	async getTransactionDataForExchangeWrapper(

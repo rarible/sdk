@@ -27,6 +27,7 @@ import { convertAPIOrderToSeaport } from "./fill-order/seaport-utils/convert-to-
 import { createLooksrareExchange } from "./contracts/looksrare-exchange"
 import { createX2Y2Contract } from "./contracts/exchange-x2y2-v1"
 import { getSeaportContract } from "./fill-order/seaport-utils/seaport-utils"
+import { createLooksrareV2Exchange } from "./contracts/looksrare-v2"
 
 export async function cancel(
 	checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
@@ -51,6 +52,9 @@ export async function cancel(
 				return cancelSeaportOrder(ethereum, send, apis, order)
 			case "LOOKSRARE":
 				return cancelLooksRareOrder(ethereum, send, config, order)
+			//@ts-ignore
+			case "LOOKSRAREV2":
+				return cancelLooksRareV2Order(ethereum, send, config, order)
 			case "CRYPTO_PUNK":
 				return cancelCryptoPunksOrder(ethereum, send, order)
 			case "X2Y2":
@@ -213,5 +217,24 @@ export async function cancelLooksRareOrder(
 
 	return send(
 		contract.functionCall("cancelMultipleMakerOrders", [order.data.nonce])
+	)
+}
+
+export async function cancelLooksRareV2Order(
+	ethereum: Ethereum,
+	send: SendFunction,
+	config: ExchangeAddresses,
+	order: SimpleLooksrareOrder,
+) {
+	const provider = getRequiredWallet(ethereum)
+
+	if (!config.looksrareV2) {
+		throw new Error("Looksrare contract did not specified")
+	}
+
+	const contract = createLooksrareV2Exchange(provider, config.looksrareV2)
+
+	return send(
+		contract.functionCall("cancelOrderNonces", [order.data.nonce])
 	)
 }

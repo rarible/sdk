@@ -1,4 +1,4 @@
-import type { ApiResponse, HTTPHeaders, HTTPQuery } from "@rarible/ethereum-api-client"
+import type { ApiResponse, HTTPHeaders, HTTPQuery, Configuration } from "@rarible/ethereum-api-client"
 import { BaseAPI, JSONApiResponse } from "@rarible/ethereum-api-client"
 
 export interface GetTradesRequest {
@@ -30,6 +30,9 @@ export interface GetTradesResponse {
 
 export class ImxTradesControllerApi extends BaseAPI {
 
+	constructor(configuration?: Configuration) {
+		super(configuration)
+	}
 	async getTradesRaw(
 		requestParameters: GetTradesRequest,
 	): Promise<ApiResponse<GetTradesResponse>> {

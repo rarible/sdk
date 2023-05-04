@@ -3,7 +3,6 @@ import type {
 	Ethereum,
 	EthereumFunctionCall,
 	EthereumSendOptions,
-	EthereumTransaction,
 } from "@rarible/ethereum-provider"
 import { ZERO_ADDRESS, ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -234,13 +233,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 			},
 			options,
 		}
-	}
-
-	async sendTransaction(
-		initial: SimpleRaribleV2Order, inverted: SimpleRaribleV2Order,
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(initial, inverted)
-		return this.send(functionCall, options)
 	}
 
 	async fixForTx(order: SimpleRaribleV2Order): Promise<any> {

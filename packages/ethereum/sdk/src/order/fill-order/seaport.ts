@@ -3,12 +3,13 @@ import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { BigNumber as BigNumberUtils } from "@rarible/utils"
 import axios from "axios"
+import { Warning } from "@rarible/logger/build"
 import { isNft } from "../is-nft"
 import type { SimpleOrder } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
@@ -21,9 +22,10 @@ import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
 import { prepareSeaportExchangeData } from "./seaport-utils/seaport-wrapper-utils"
-import { fulfillOrder } from "./seaport-utils/seaport-utils"
+import { fulfillOrder, getSeaportContract } from "./seaport-utils/seaport-utils"
 import type { OrderFillSendData } from "./types"
 import { originFeeValueConvert } from "./common/origin-fees-utils"
+import { getOrderHash } from "./seaport-utils/get-order-hash"
 
 export class SeaportOrderHandler {
 	constructor(
@@ -54,25 +56,31 @@ export class SeaportOrderHandler {
 			})
 			return signature
 		} catch (e: any) {
-			try {
-				const orderData = {
-					listing: {
-						hash: hash,
-						chain: "goerli",
-						protocol_address: protocol,
-					},
-					fulfiller: {
-						address: await this.ethereum?.getFrom(),
-					},
+			const inactiveMsg = "Error when generating fulfillment data"
+			if (typeof e?.value?.message === "string" && e?.value?.message.includes(inactiveMsg)) {
+				throw new Warning("Order is not active or cancelled")
+			}
+			if (this.env === "testnet") {
+				try {
+					const orderData = {
+						listing: {
+							hash: hash,
+							chain: "goerli",
+							protocol_address: protocol,
+						},
+						fulfiller: {
+							address: await this.ethereum?.getFrom(),
+						},
+					}
+					const { data } = await axios.post("https://testnets-api.opensea.io/v2/listings/fulfillment_data", orderData)
+					return data.fulfillment_data.orders[0].signature
+				} catch (e) {
+					console.error(e)
+					throw e
 				}
-				const { data } = await axios.post("https://testnets-api.opensea.io/v2/listings/fulfillment_data", orderData)
-				console.log("sig data", data)
-				return data.fulfillment_data.orders[0].signature
-			} catch (e) {
-				console.error(e)
 			}
 
-			throw new Error(`api.getSeaportOrderSignature error: ${e?.message}, hash=${hash}`)
+			throw new Error(`api.getSeaportOrderSignature error: ${e}, hash=${hash}`)
 		}
 	}
 	async getTransactionData(
@@ -157,10 +165,13 @@ export class SeaportOrderHandler {
 		const { totalFeeBasisPoints } = originFeeValueConvert(originFees)
 
 		if (!request.order.signature || request.order.signature === "0x") {
-			const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
+			request.order.signature = await this.getSignature({
 				hash: request.order.hash,
+				protocol: request.order.data.protocol,
 			})
-			request.order.signature = signature
+			if (!request.order.signature) {
+				throw new Error("Can't fetch Seaport order signature")
+			}
 		}
 
 		return prepareSeaportExchangeData(

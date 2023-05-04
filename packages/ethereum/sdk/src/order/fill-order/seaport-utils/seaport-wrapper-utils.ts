@@ -14,7 +14,7 @@ import { createExchangeWrapperContract } from "../../contracts/exchange-wrapper"
 import { calcValueWithFees, originFeeValueConvert } from "../common/origin-fees-utils"
 import type { InputCriteria } from "./types"
 import {
-	CROSS_CHAIN_SEAPORT_ADDRESS,
+	CROSS_CHAIN_SEAPORT_ADDRESS, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	getConduitByKey,
 	OPENSEA_CONDUIT_KEY,
 } from "./constants"
@@ -169,10 +169,12 @@ export async function prepareSeaportExchangeData(
 }
 
 export function getMarketIdByOpenseaContract(contract: Address) {
-	if (contract === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+	if (contract.toLowerCase() === CROSS_CHAIN_SEAPORT_V1_4_ADDRESS.toLowerCase()) {
 		return ExchangeWrapperOrderType.SEAPORT_V14
-	} else if (contract === "0x00000000006c3852cbef3e08e8df289169ede581") {
+	} else if (contract.toLowerCase() === CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase()) {
 		return ExchangeWrapperOrderType.SEAPORT_ADVANCED_ORDERS
+	} else if (contract.toLowerCase() === CROSS_CHAIN_SEAPORT_V1_5_ADDRESS.toLowerCase()) {
+		return ExchangeWrapperOrderType.SEAPORT_V15
 	}
 	throw new Error("Unrecognized opensea protocol contract")
 }
