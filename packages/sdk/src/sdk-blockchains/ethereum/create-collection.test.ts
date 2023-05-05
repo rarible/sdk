@@ -32,6 +32,7 @@ describe.each(providers)("create collection", ({ blockchain, providers: { web31,
 			isPublic: true,
 		})
 		await tx.wait()
+		console.log("public 721", address)
 		await retry(5, 2000, async () => {
 			return sdk1.apis.collection.getCollectionById({
 				collection: address,
@@ -74,6 +75,7 @@ describe.each(providers)("create collection", ({ blockchain, providers: { web31,
 			contractURI: "https://ipfs.rarible.com",
 			isPublic: true,
 		})
+		console.log("1155 piblic address", address)
 		await tx.wait()
 		await retry(5, 2000, async () => {
 			return sdk1.apis.collection.getCollectionById({

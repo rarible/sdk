@@ -13,7 +13,7 @@ export const loggerConfig = {
 export function createLogger() {
 	return new RemoteLogger(
 		async (msg: LoggableValue) => {
-			await fetch(loggerConfig.elkUrl, {
+			await window.fetch(loggerConfig.elkUrl, {
 				method: "POST",
 				headers: {
 					"Accept": "application/json",
@@ -26,6 +26,7 @@ export function createLogger() {
 			initialContext: Promise.resolve({
 				service: loggerConfig.service,
 				"@version": packageJson.version,
+				environment: "prod",
 			}),
 			dropBatchInterval: 1000,
 			maxByteSize: 3 * 10240,

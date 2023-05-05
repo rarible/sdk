@@ -54,7 +54,7 @@ function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
 			return 1
 		case "testnet":
 		default:
-			return 4
+			return 5
 	}
 }
 
@@ -119,7 +119,7 @@ const state: IConnectorStateProvider = {
 export function getConnector(environment: RaribleSdkEnvironment) {
 	const ethChainId = environmentToEthereumChainId(environment)
 	const ethNetworkName = ethereumNetworkMap[ethChainId]
-	const isEthNetwork = ["mainnet", "ropsten", "rinkeby"].includes(ethNetworkName)
+	const isEthNetwork = ["mainnet", "goerli"].includes(ethNetworkName)
 	const flowNetwork = environmentToFlowNetwork(environment)
 	const tezosNetwork = environmentToTezosNetwork(environment)
 
@@ -149,10 +149,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	}))
 
   const magic = mapFlowWallet(new MattelConnectionProvider({
-    magicProviderId: "-A2JxDIS1zwr5ceLy5HKwxiNL7uWFQPBsKmmkyfmB3s=",
+    magicProviderId: "JeTIUJ7GJNnfwnxMwtPRa7JzbzRVxA4p3TdQsXryggM=",
     magicAPIKey: "pk_live_63A5A557D1D4882D",
     auth0Domain: "login-test.mattel.com",
-    auth0ClientId: "E9oV8wVCB89jcaThWny7STYHcm59REke",
+    auth0ClientId: "nXpDI0BnWhxB5DIhQVGOrB2LwgOvKIhd",
     auth0RedirectUrl: "https://test-virtual.mattel.com",
     accessNode: flowNetwork.accessNode,
     network: flowNetwork.network,

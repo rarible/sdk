@@ -29,7 +29,7 @@ export async function signTypedData<T extends MessageTypes>(
 			}
 		} catch (e) {
 			throw new SignTypedDataError({
-				message: isError(error) ? error.message : "Can't sign typed data by V4/V3/Default methods",
+				message: getErrorMessage(error) || "Can't sign typed data by V4/V3/Default methods",
 				error: e,
 				data: {
 					signer,
@@ -37,6 +37,13 @@ export async function signTypedData<T extends MessageTypes>(
 				},
 			})
 		}
+	}
+}
+
+function getErrorMessage(e: unknown) {
+	if (isError(e)) return e.message
+	if (hasCode(e) && e.code === 4001) {
+		return "Request rejected"
 	}
 }
 
@@ -83,12 +90,19 @@ function toBuffer(hex: string) {
 export class SignTypedDataError extends Error {
   data: any
   error: any
+	code?: string | number
 
-  constructor(data: { error: any, data: any, message?: string }) {
-  	super(data.message || data?.error?.message || "SignTypedDataError")
+	constructor(data: { error: any, data: any, message?: string }) {
+  	super(SignTypedDataError.getErrorMessage(data))
   	Object.setPrototypeOf(this, SignTypedDataError.prototype)
   	this.name = "SignTypedDataError"
   	this.error = data?.error
   	this.data = data?.data
-  }
+		this.code = data?.error?.code || undefined
+	}
+
+	static getErrorMessage(data: any) {
+		if (typeof data.error === "string") return data.error
+		return data.message || data?.error?.message || "SignTypedDataError"
+	}
 }

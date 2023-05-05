@@ -20,7 +20,7 @@ import type {
 	FillBatchOrderAction,
 	FillBatchOrderRequest,
 	FillBatchSingleOrderRequest,
-	FillOrderStageId, LooksrareOrderFillRequest,
+	FillOrderStageId, LooksrareOrderFillRequest, LooksrareOrderV2FillRequest,
 	OpenSeaV1OrderFillRequest,
 	OrderFillSendData,
 	PreparedOrderRequestDataForExchangeWrapper,
@@ -38,12 +38,14 @@ import type { SeaportV1OrderFillRequest } from "../types"
 import type { X2Y2OrderFillRequest } from "../types"
 import { getUpdatedCalldata } from "../common/get-updated-call"
 import { getRequiredWallet } from "../../../common/get-required-wallet"
+import { LooksrareV2OrderHandler } from "../looksrare-v2"
 
 export class BatchOrderFiller {
 	v2Handler: RaribleV2OrderHandler
 	openSeaHandler: OpenSeaOrderHandler
 	seaportHandler: SeaportOrderHandler
 	looksrareHandler: LooksrareOrderHandler
+	looksrareV2Handler: LooksrareV2OrderHandler
 	x2Y2Handler: X2Y2OrderHandler
 	ammHandler: AmmOrderHandler
 	private checkAssetType: CheckAssetTypeFunction
@@ -63,6 +65,14 @@ export class BatchOrderFiller {
 		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
 		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, apis, getBaseOrderFee, env)
 		this.looksrareHandler = new LooksrareOrderHandler(ethereum, send, config, getBaseOrderFee, env, apis)
+		this.looksrareV2Handler = new LooksrareV2OrderHandler(
+			ethereum,
+			send,
+			config,
+			getBaseOrderFee,
+			env,
+			apis,
+		)
 		this.x2Y2Handler = new X2Y2OrderHandler(ethereum, send, config, getBaseOrderFee, apis)
 		this.ammHandler = new AmmOrderHandler(ethereum, send, config, getBaseOrderFee, apis, env)
 		this.checkAssetType = checkAssetType.bind(this, apis.nftCollection)
@@ -135,6 +145,7 @@ export class BatchOrderFiller {
 				request.order.type !== "RARIBLE_V2" &&
 				request.order.type !== "OPEN_SEA_V1" &&
 				request.order.type !== "LOOKSRARE" &&
+				request.order.type !== "LOOKSRARE_V2" &&
 				request.order.type !== "SEAPORT_V1" &&
 				request.order.type !== "X2Y2" &&
 				request.order.type !== "AMM"
@@ -262,6 +273,12 @@ export class BatchOrderFiller {
 			case "LOOKSRARE":
 				return this.looksrareHandler.getTransactionDataForExchangeWrapper(
 					<LooksrareOrderFillRequest>preparedOrder.request,
+					preparedOrder.request.originFees,
+					preparedOrder.fees
+				)
+			case "LOOKSRARE_V2":
+				return this.looksrareV2Handler.getTransactionDataForExchangeWrapper(
+					<LooksrareOrderV2FillRequest>preparedOrder.request,
 					preparedOrder.request.originFees,
 					preparedOrder.fees
 				)

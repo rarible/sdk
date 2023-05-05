@@ -6,6 +6,8 @@ const EVM_WARN_MESSAGES = [
 	"User rejected the transaction",
 	"User rejected the request",
 	"Request rejected",
+	"Request cancelled by user",
+	"Cancelled by User",
 	"Sign transaction cancelled",
 	"Link iFrame Closed",
 	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
@@ -23,6 +25,7 @@ const EVM_WARN_MESSAGES = [
 	"Signing transaction was cancelled",
 	"Transação de assinatura cancelada",
 	"Transaction rejected",
+	"Transaction declined",
 	"User Canceled",
 	"User canceled",
 	"User declined transaction",
@@ -45,6 +48,7 @@ const EVM_WARN_MESSAGES = [
 	"gas required exceeds allowance",
 	"Insufficient fee balance",
 	"insufficient funds for gas * price + value",
+	"insufficient funds for intrinsic transaction cost",
 	"intrinsic gas too low",
 	"max fee per gas less than block base fee",
 	"maxFeePerGas cannot be less than maxPriorityFeePerGas",
@@ -65,12 +69,16 @@ const EVM_WARN_MESSAGES = [
 	"Транзакция отменена",
 	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 	"Link Window Closed",
+	"Popup closed",
 	"User cancelled login",
 	"User denied account authorization",
 ]
 
 export function isEVMWarning(error: any): boolean {
-	return error.error?.code === 4001 || EVM_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
+	return error.error?.code === 4001
+		|| error?.error?.code === 4100
+		|| error?.error?.code === "ACTION_REJECTED"
+		|| EVM_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
 }
 
 export function isTezosWarning(err: any): boolean {

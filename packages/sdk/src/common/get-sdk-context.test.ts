@@ -21,7 +21,7 @@ describe("get sdk context", () => {
 		expect(context.sessionId).toBeTruthy()
 		expect(context.apiKey).toEqual("API_KEY")
 		expect(context["wallet.blockchain"]).toEqual("ETHEREUM")
-		expect(context["wallet.address"]).toEqual("0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b")
+		expect(context["wallet.address"]).toEqual("0x22d491bde2303f2f43325b2108d26f1eaba1e32b")
 		expect(context["wallet.chainId"]).toEqual(300500)
 	})
 })

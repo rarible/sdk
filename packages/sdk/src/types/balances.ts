@@ -4,6 +4,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import type { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
+import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import type { RequestCurrency } from "../common/domain"
 
 /**
@@ -44,6 +45,16 @@ export type ConvertRequest = {
 	value: BigNumberValue
 }
 
+export type IBalanceTransfer = (
+	request: IBalanceTransferRequest
+) => Promise<IBlockchainTransaction>
+
+export type IBalanceTransferRequest = {
+	recipient: UnionAddress
+	currency: IBalanceTransferCurrency
+	amount: BigNumberValue
+}
+export type IBalanceTransferCurrency = FlowAssetTypeFt
 
 export type CurrencyOrOrder = {
 	currency: RequestCurrency

@@ -11,7 +11,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
 import { getApiConfig } from "../config/api-config"
-import { createTestProviders } from "../common/create-test-providers"
+import { createTestProviders } from "../common/test/create-test-providers"
 import {
 	createErc1155V1Collection,
 	createErc1155V2Collection,

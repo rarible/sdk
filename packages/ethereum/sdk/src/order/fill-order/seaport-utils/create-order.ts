@@ -2,14 +2,14 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { randomWord, toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { NFT_DOMAIN_TYPE } from "../../../nft/eip712-lazy"
+import { toVrs } from "../../../common/to-vrs"
 import type { OrderComponents } from "./types"
 import {
-	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	EIP_712_ORDER_TYPE,
 	KNOWN_CONDUIT_KEYS_TO_CONDUIT, OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import {
-	CROSS_CHAIN_SEAPORT_ADDRESS,
 	MAX_INT, OrderType,
 	SEAPORT_CONTRACT_NAME,
 	SEAPORT_CONTRACT_VERSION,
@@ -71,7 +71,7 @@ export async function createOrder(
 
 	const operator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[conduitKey]
 
-	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_5_ADDRESS))
 
 	const [resolvedCounter, balancesAndApprovals] = await Promise.all([
 		counter ?? seaportContract.functionCall("getCounter", offerer).call(),
@@ -103,10 +103,10 @@ export async function createOrder(
 			: []),
 	]
 
-	const orderParameters: OrderParameters = {
+	const orderParameters: OrderComponents = {
 		offerer,
 		zone,
-		zoneHash: "0x" + resolvedCounter.toString().padEnd(32, "0"),
+		zoneHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
 		// zoneHash: formatBytes32String(resolvedCounter.toString()),
 		startTime,
 		endTime,
@@ -116,6 +116,7 @@ export async function createOrder(
 		totalOriginalConsiderationItems: considerationItemsWithFees.length,
 		salt,
 		conduitKey,
+		counter: (counter ?? seaportContract.functionCall("getCounter", offerer).call()).toString(),
 	}
 
 	const checkBalancesAndApprovals = true
@@ -182,7 +183,7 @@ export async function signOrder(
 		name: SEAPORT_CONTRACT_NAME,
 		version: SEAPORT_CONTRACT_VERSION,
 		chainId,
-		verifyingContract: CROSS_CHAIN_SEAPORT_ADDRESS,
+		verifyingContract: CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	}
 
 	const signatureNew = await ethereum.signTypedData({
@@ -198,5 +199,5 @@ export async function signOrder(
 		},
 	})
 
-	return signatureNew.substring(2)
+	return toVrs(signatureNew).compact
 }

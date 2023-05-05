@@ -50,13 +50,16 @@ export async function burn(
 			const creators = !request.creators || !request.creators.length
 				? [from]
 				: request.creators?.map(creator => creator.account)
-
+			const signature = await ethereum.personalSign(`I would like to burn my ${request.assetType.tokenId} item.`)
+			if (!signature) {
+				throw new Error(`burn error: personal signature is empty (${signature})`)
+			}
 			return apis.nftItem.deleteLazyMintNftAsset({
 				itemId: createItemId(request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`)),
 				burnLazyNftForm: {
 					creators,
 					signatures: [
-						toBinary(await ethereum.personalSign(`I would like to burn my ${request.assetType.tokenId} item.`)),
+						toBinary(signature),
 					],
 				},
 			})

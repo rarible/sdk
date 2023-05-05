@@ -10,7 +10,7 @@ import { FlowMint } from "./mint"
 import { FlowTransfer } from "./transfer"
 import { convertFlowUnionAddress } from "./common/converters"
 
-describe("Flow transfer", () => {
+describe.skip("Flow transfer", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)

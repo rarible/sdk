@@ -5,6 +5,7 @@ import type { Address, AssetType } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
+import { Warning } from "@rarible/logger/build"
 import type {
 	SimpleCryptoPunkOrder,
 	SimpleLegacyOrder,
@@ -51,6 +52,8 @@ import { X2Y2OrderHandler } from "./x2y2"
 import { LooksrareOrderHandler } from "./looksrare"
 import { AmmOrderHandler } from "./amm"
 import { getUpdatedCalldata } from "./common/get-updated-call"
+import { LooksrareV2OrderHandler } from "./looksrare-v2"
+import type { LooksrareOrderV2FillRequest } from "./types"
 
 export class OrderFiller {
 	v1Handler: RaribleV1OrderHandler
@@ -59,6 +62,7 @@ export class OrderFiller {
 	punkHandler: CryptoPunksOrderHandler
 	seaportHandler: SeaportOrderHandler
 	looksrareHandler: LooksrareOrderHandler
+	looksrareV2Handler: LooksrareV2OrderHandler
 	x2y2Handler: X2Y2OrderHandler
 	ammHandler: AmmOrderHandler
 	private checkAssetType: CheckAssetTypeFunction
@@ -98,6 +102,14 @@ export class OrderFiller {
 			apis,
 			sdkConfig,
 		)
+		this.looksrareV2Handler = new LooksrareV2OrderHandler(
+			ethereum,
+			send,
+			config,
+			getBaseOrderFee,
+			env,
+			apis,
+		)
 		this.x2y2Handler = new X2Y2OrderHandler(ethereum, send, config, getBaseOrderFee, apis)
 		this.ammHandler = new AmmOrderHandler(
 			ethereum,
@@ -124,6 +136,7 @@ export class OrderFiller {
 					if (
 						request.order.type === "SEAPORT_V1" ||
 						request.order.type === "LOOKSRARE" ||
+						request.order.type === "LOOKSRARE_V2" ||
 						request.order.type === "X2Y2" ||
 						request.order.type === "AMM"
 					) {
@@ -260,6 +273,8 @@ export class OrderFiller {
 				return this.seaportHandler.getTransactionData(<SeaportV1OrderFillRequest>request)
 			case "LOOKSRARE":
 				return this.looksrareHandler.getTransactionData(<LooksrareOrderFillRequest>request)
+			case "LOOKSRARE_V2":
+				return this.looksrareV2Handler.getTransactionData(<LooksrareOrderV2FillRequest>request)
 			case "AMM":
 				return this.ammHandler.getTransactionData(<AmmOrderFillRequest>request)
 			case "X2Y2":
@@ -329,6 +344,8 @@ export class OrderFiller {
 				return this.seaportHandler.getBaseOrderFee()
 			case "LOOKSRARE":
 				return this.looksrareHandler.getBaseOrderFee()
+			case "LOOKSRARE_V2":
+				return this.looksrareV2Handler.getBaseOrderFee()
 			case "CRYPTO_PUNK":
 				return this.punkHandler.getBaseOrderFee()
 			case "AMM":
@@ -343,10 +360,10 @@ export class OrderFiller {
 	checkStartEndDates(order: SimpleOrder) {
 		const now = Date.now()
 		if (order.start !== undefined && new Date(order.start * 1000).getTime() > now) {
-			throw new Error(`Order will be actual since ${new Date(order.start * 1000)}, now ${new Date()}`)
+			throw new Warning(`Order will be actual since ${new Date(order.start * 1000)}, now ${new Date()}`)
 		}
 		if (order.end !== undefined && new Date(order.end * 1000).getTime() < now) {
-			throw new Error(`Order was actual until ${new Date(order.end * 1000)}, now ${new Date()}`)
+			throw new Warning(`Order was actual until ${new Date(order.end * 1000)}, now ${new Date()}`)
 		}
 	}
 

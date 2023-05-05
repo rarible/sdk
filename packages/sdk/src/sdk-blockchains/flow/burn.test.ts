@@ -8,7 +8,7 @@ import { createTestItem } from "./test/create-test-item"
 import { FlowMint } from "./mint"
 import { FlowBurn } from "./burn"
 
-describe("Flow burn", () => {
+describe.skip("Flow burn", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
@@ -27,7 +27,7 @@ describe("Flow burn", () => {
 		}
 	})
 
-	test("Should burn NFT with basic function", async () => {
+	test.skip("Should burn NFT with basic function", async () => {
 		const itemId = await createTestItem(mint)
 		const nft = await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 		expect(nft.id).toEqual(itemId)

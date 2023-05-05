@@ -56,6 +56,9 @@ export function Navigation() {
 	}, {
 		label: "My Items",
 		path: "/items"
+	}, {
+		label: "Utils",
+		path: "/utils"
 	}]
 
 	return (

@@ -13,6 +13,7 @@ import type {
 	SimpleSeaportV1Order,
 	SimpleX2Y2Order,
 	SimpleAmmOrder,
+	SimpleLooksrareV2Order,
 } from "../types"
 import type { NftAssetType } from "../check-asset-type"
 
@@ -61,6 +62,11 @@ export type LooksrareOrderFillRequest = CommonFillRequest<SimpleLooksrareOrder> 
 	addRoyalty?: boolean
 }
 
+export type LooksrareOrderV2FillRequest = CommonFillRequest<SimpleLooksrareV2Order> & {
+	originFees?: Part[],
+	addRoyalty?: boolean
+}
+
 export type AmmOrderFillRequest = CommonFillRequest<SimpleAmmOrder> & {
 	originFees?: Part[],
 	addRoyalty?: boolean
@@ -78,6 +84,7 @@ export type SellOrderRequest =
 	SeaportV1OrderFillRequest |
 	CryptoPunksOrderFillRequest |
 	LooksrareOrderFillRequest |
+	LooksrareOrderV2FillRequest |
 	X2Y2OrderFillRequest |
 	AmmOrderFillRequest
 
@@ -89,6 +96,7 @@ export type BuyOrderRequest =
 	SeaportV1OrderFillRequest |
 	CryptoPunksOrderFillRequest |
 	LooksrareOrderFillRequest |
+	LooksrareOrderV2FillRequest |
 	X2Y2OrderFillRequest |
 	AmmOrderFillRequest
 
@@ -101,6 +109,7 @@ export type FillBatchSingleOrderRequest =
 	// RaribleV2OrderFillRequestV3Buy |
 	OpenSeaV1OrderFillRequest |
 	LooksrareOrderFillRequest |
+	LooksrareOrderV2FillRequest |
 	SeaportV1OrderFillRequest |
 	X2Y2OrderFillRequest |
 	AmmOrderFillRequest
@@ -114,7 +123,9 @@ export enum ExchangeWrapperOrderType {
 	X2Y2 = 3,
 	LOOKSRARE_ORDERS = 4,
 	AAM = 5,
-	SEAPORT_V14 = 6
+	SEAPORT_V14 = 6,
+	LOOKSRARE_V2_ORDERS = 7,
+	SEAPORT_V15 = 9
 }
 
 export type PreparedOrderRequestDataForExchangeWrapper = {
@@ -138,7 +149,6 @@ export type FillBatchOrderAction = Action<FillOrderStageId, FillBatchOrderReques
 export interface OrderHandler<T extends FillOrderRequest> {
 	invert: (request: T, maker: Address) => T["order"] | Promise<T["order"]>
 	approve: (order: T["order"], infinite: boolean) => Promise<void>
-	sendTransaction: (initial: T["order"], inverted: T["order"], request: T) => Promise<EthereumTransaction>
 	getTransactionData: (order: T["order"], inverted: T["order"], request: T) => Promise<OrderFillSendData>
 
 	getBaseOrderFee(order: T["order"]): Promise<number> | number

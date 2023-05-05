@@ -28,15 +28,22 @@ import { getfulfillBasicOrderData } from "./fulfill-basic"
 import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
+	CROSS_CHAIN_SEAPORT_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	getConduitByKey,
-	NO_CONDUIT,
+	OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
 export function getSeaportContract(ethereum: Ethereum, protocol: string): EthereumContract {
-	if (protocol === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+	const protocolAddress = protocol.toLowerCase()
+	if (
+		protocolAddress === CROSS_CHAIN_SEAPORT_V1_4_ADDRESS.toLowerCase()
+		|| protocolAddress === CROSS_CHAIN_SEAPORT_V1_5_ADDRESS.toLowerCase()
+	) {
 	  return createSeaportV14Contract(ethereum, toAddress(protocol))
-	} else if (protocol === "0x00000000006c3852cbef3e08e8df289169ede581") {
+	} else if (protocolAddress === CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase()) {
 		return createSeaportContract(ethereum, toAddress(protocol))
 	} else {
 		throw new Error("Unrecognized Seaport protocol")
@@ -49,20 +56,14 @@ export async function fulfillOrder(
 	simpleOrder: SimpleSeaportV1Order,
 	{ tips, unitsToFill }: {tips?: TipInputItem[], unitsToFill?: BigNumberValue}
 ) {
-	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
-	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
-
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
-	const fulfillerAddress = await ethereum.getFrom()
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
-
-	// const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const fulfillerAddress = await ethereum.getFrom()
+	const conduitKey = OPENSEA_CONDUIT_KEY
 	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
-
-	const conduitKey = NO_CONDUIT
-	// const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
 	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
 	const extraData = "0x"
@@ -118,6 +119,13 @@ export async function fulfillOrder(
 
 	// We use basic fulfills as they are more optimal for simple and "hot" use cases
 	// We cannot use basic fulfill if user is trying to partially fill though.
+	console.log("!unitsToFill", !unitsToFill)
+	console.log("isRecipientSelf", isRecipientSelf)
+	console.log("fn", shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
+
+	console.log("condition", 	!unitsToFill &&
+		isRecipientSelf &&
+		shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
 	if (
 		!unitsToFill &&
     isRecipientSelf &&
@@ -259,7 +267,6 @@ export async function approveBeforeStandardFulfillOrder(
 	const orderWithAdjustedFills = unitsToFill
 		? mapOrderAmountsFromUnitsToFill(order, {
 			unitsToFill,
-			totalFilled,
 			totalSize,
 		})
 		: // Else, we adjust the order by the remaining order left to be fulfilled

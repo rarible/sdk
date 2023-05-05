@@ -23,6 +23,7 @@ import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
 import { FlowBid } from "./bid"
+import { FlowSetupAccount } from "./setup-account"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
@@ -48,6 +49,7 @@ export function createFlowSdk(
 	const transferService = new FlowTransfer(sdk, blockchainNetwork)
 	const fillService = new FlowBuy(sdk, apis, blockchainNetwork)
 	const cancelService = new FlowCancel(sdk, apis, blockchainNetwork)
+	const balanceService = new FlowBalance(sdk, network, blockchainNetwork, wallet)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
@@ -74,7 +76,8 @@ export function createFlowSdk(
 			cancel: cancelService.cancel,
 		},
 		balances: {
-			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
+			getBalance: balanceService.getBalance,
+			transfer: balanceService.transfer,
 			convert: notImplemented,
 			getBiddingBalance: nonImplementedAction,
 			depositBiddingBalance: nonImplementedAction,
@@ -87,6 +90,9 @@ export function createFlowSdk(
 			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
 				return sellService.getFutureOrderFees()
 			},
+		},
+		flow: {
+			setupAccount: new FlowSetupAccount(sdk, blockchainNetwork).setupAccount,
 		},
 	}
 }

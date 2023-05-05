@@ -23,6 +23,7 @@ import { CancelPage } from "./pages/cancel/cancel-page"
 import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 import { SignPage } from "./pages/sign/sign-page"
 import { SellUpdatePage } from "./pages/sell-update/sell-update-page";
+import { UtilsPage } from "./pages/utils/utils-page";
 
 export function App() {
 	return (
@@ -74,6 +75,7 @@ export function App() {
 									</Route>
 									<Route path="items" element={<ItemsPage/>}/>
 									<Route path="sign" element={<SignPage/>}/>
+									<Route path="utils" element={<UtilsPage/>}/>
 									<Route path="*" element={<NotFoundPage/>}/>
 								</Routes>
 							</Box>

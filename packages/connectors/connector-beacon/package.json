@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-beacon",
-  "version": "0.13.18",
+  "version": "0.13.25",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -14,11 +14,10 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.18",
+    "@rarible/connector": "^0.13.25",
     "@taquito/beacon-wallet": "^12.0.3",
     "@taquito/taquito": "^12.0.0"
   },

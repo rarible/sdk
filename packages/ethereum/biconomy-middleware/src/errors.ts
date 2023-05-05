@@ -3,7 +3,7 @@ export class BiconomyMiddlewareError extends Error {
   error: any
 
   constructor(data: { error: any, data: any, message?: string }) {
-  	super(data.message || data?.error?.message || "SignTypedDataError")
+  	super(data.message || data?.error?.message || "BiconomyMiddlewareError")
   	Object.setPrototypeOf(this, BiconomyMiddlewareError.prototype)
   	this.name = "BiconomyMiddlewareError"
   	this.error = data?.error

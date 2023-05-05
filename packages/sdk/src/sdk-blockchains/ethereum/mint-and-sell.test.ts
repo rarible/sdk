@@ -1,30 +1,21 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toCollectionId, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toCollectionId, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
 import type { Collection } from "@rarible/api-client"
 import { Blockchain, CollectionFeatures, CollectionType, OrderStatus, Platform } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/prepare"
 import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
-import { DEV_PK_1 } from "./test/common"
+import { createEthWallets } from "./test/common"
+import { convertEthereumContractAddress } from "./common"
 
 describe("mintAndSell", () => {
-	const {
-		provider,
-		wallet,
-	} = createE2eProvider(DEV_PK_1)
-	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
-	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
-	const erc721Address = toAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E")
+	const [eth1, eth2] = createEthWallets(2)
 
-	test("prepare should work even if wallet is undefined", async () => {
-		// const collection = await sdk.apis.collection.getCollectionById({
-		// 	collection: `ETHEREUM:${erc721Address}`,
-		// })
+	const erc721Address = convertEthereumContractAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E", Blockchain.ETHEREUM)
+	const erc1155Address = convertEthereumContractAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a", Blockchain.ETHEREUM)
+
+	test.concurrent("prepare should work even if wallet is undefined", async () => {
+		const sdk = createRaribleSdk(eth1, "development", { logs: LogsLevel.DISABLED })
 		const collection: Collection = {
 			id: toCollectionId("ETHEREUM:0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E"),
 			blockchain: Blockchain.ETHEREUM,
@@ -84,20 +75,17 @@ describe("mintAndSell", () => {
 		expect(action.originFeeSupport).toBe("FULL")
 	})
 
-	test("should mint and put on sale ERC721 token", async () => {
-		const senderRaw = wallet.getAddressString()
-		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
-		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
-		const collection = await sdk.apis.collection.getCollectionById({
-			collection: contract,
-		})
+	test.concurrent("should mint and put on sale ERC721 token", async () => {
+		const wallet = eth1
+		const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
+		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
 		const tokenId = await sdk.nft.generateTokenId({
-			collection: contract,
+			collection: erc721Address,
 			minter: sender,
 		})
 		const action = await sdk.nft.mintAndSell.prepare({
-			collection,
+			collectionId: toCollectionId(erc721Address),
 			tokenId,
 		})
 
@@ -137,20 +125,17 @@ describe("mintAndSell", () => {
 		})
 	})
 
-	test("should mint and put on sale ERC721 token with basic function", async () => {
-		const senderRaw = wallet.getAddressString()
-		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
-		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
-		const collection = await sdk.apis.collection.getCollectionById({
-			collection: contract,
-		})
+	test("should mint and put on sale ERC1155 token with basic function", async () => {
+		const wallet = eth2
+		const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
+		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
 		const tokenId = await sdk.nft.generateTokenId({
-			collection: contract,
+			collection: erc1155Address,
 			minter: sender,
 		})
 		const result = await sdk.nft.mintAndSell({
-			collection: collection,
+			collectionId: toCollectionId(erc1155Address),
 			tokenId,
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -183,20 +168,17 @@ describe("mintAndSell", () => {
 		})
 	})
 
-	test("should lazy mint and put on sale ERC721 token with basic function", async () => {
-		const senderRaw = wallet.getAddressString()
-		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
-		const contract = toContractAddress(`ETHEREUM:${erc721Address}`)
-		const collection = await sdk.apis.collection.getCollectionById({
-			collection: contract,
-		})
+	test("should lazy mint and put on sale ERC1155 token with basic function", async () => {
+		const wallet = eth2
+		const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
+		const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
 
 		const tokenId = await sdk.nft.generateTokenId({
-			collection: contract,
+			collection: erc1155Address,
 			minter: sender,
 		})
 		const result = await sdk.nft.mintAndSell({
-			collection: collection,
+			collectionId: toCollectionId(erc1155Address),
 			tokenId,
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
@@ -224,4 +206,5 @@ describe("mintAndSell", () => {
 			}
 		})
 	})
+
 })

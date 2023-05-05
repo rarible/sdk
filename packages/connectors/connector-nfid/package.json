@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-nfid",
-  "version": "0.13.19",
+  "version": "0.13.25",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -13,12 +13,11 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@nfid/embed": "0.0.5-alpha.0",
-    "@rarible/connector": "^0.13.18",
+    "@rarible/connector": "^0.13.25",
     "ethers": "^5.7.2",
     "rollup": "^2.0.0"
   },

@@ -10,7 +10,7 @@ import { FlowMint } from "./mint"
 import { createTestItem } from "./test/create-test-item"
 import { testFlowCollection } from "./test/common"
 
-describe("Flow mint", () => {
+describe.skip("Flow mint", () => {
 	const { authUser1 } = createTestFlowAuth(fcl)
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)

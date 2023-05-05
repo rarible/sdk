@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-iframe",
-  "version": "0.13.18",
+  "version": "0.13.25",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -14,12 +14,11 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@ledgerhq/iframe-provider": "^0.4.2",
-    "@rarible/connector": "^0.13.18"
+    "@rarible/connector": "^0.13.25"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

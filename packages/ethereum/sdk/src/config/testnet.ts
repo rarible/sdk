@@ -10,8 +10,9 @@ export const testnetEthereumConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x02afbD43cAD367fcB71305a2dfB9A3928218f0c1"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0x50228781567975d18f01c61133D091ae358D0819"),
+		wrapper: toAddress("0x89Ee42D532438BB70a0aF196729aE2B22744c3db"),
 		looksrare: toAddress("0xD112466471b5438C1ca2D218694200e49d81D047"),
+		looksrareV2: toAddress("0x35C2215F2FFe8917B06454eEEaba189877F200cf"),
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
@@ -42,4 +43,5 @@ export const testnetEthereumConfig: EthereumConfig = {
 	},
 	weth: toAddress("0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"),
 	auction: ZERO_ADDRESS,
+	looksrareOrderValidatorV2: toAddress("0x7454Cc9AEB024bcE6A2CDC49ad4733B4D8215fb8"),
 }

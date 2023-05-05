@@ -322,6 +322,57 @@ describe.skip("fillOrder: Opensea orders", function () {
 		expect(buyDTO.basePrice).toBe(orderMatchPrice)
 	})
 
+	test("get order signature", async () => {
+		const order = {
+			"maker": "0xe9b692278f7daf652db7eb092e9dedb13128c889",
+			"salt": "0x000000000000000000000000000000000000000000000000000000000000000a",
+			"type": "OPEN_SEA_V1",
+			"start": 0,
+			"end": 0,
+			"data": {
+				"dataType": "OPEN_SEA_V1_DATA_V1",
+				"exchange": "0x82ad8b02c5380ce044da7ced96dc38c26154c56f",
+				"makerRelayerFee": "0",
+				"takerRelayerFee": "0",
+				"makerProtocolFee": "0",
+				"takerProtocolFee": "0",
+				"feeRecipient": "0x0000000000000000000000000000000000000000",
+				"feeMethod": "SPLIT_FEE",
+				"side": "SELL",
+				"saleKind": "FIXED_PRICE",
+				"howToCall": "CALL",
+				"callData": "0x",
+				"replacementPattern": "0x",
+				"staticTarget": "0x0000000000000000000000000000000000000000",
+				"staticExtraData": "0x",
+				"extra": "0",
+			},
+			"make": {
+				"assetType": {
+					"assetClass": "ERC721",
+					"contract": "0x40807ff505f622a5d527e334608e706571c329a2",
+					"tokenId": "77306650",
+				},
+				"value": "1",
+			},
+			"take": {
+				"assetType": {
+					"assetClass": "ETH",
+				},
+				"value": "100",
+			},
+		} as any
+		console.log("JSON", JSON.stringify(order, null, "	"))
+
+		const signature = toBinary(await getOrderSignature(ethereum1, order))
+		const orderHash = hashOpenSeaV1Order(ethereum1, order)
+		const signedHash = hashToSign(ethereum1, orderHash)
+		console.log("sig", signature)
+		console.log("signedHash", signedHash)
+		expect(signature).toBe("0xa52af7ce5428c6b0ac183401849db6aea1e1d27ec26fb05dc2fb8d657c4fdd6e5002e8578fd8fee8d1647995a0f99cfbda44e22650c56d7f936feb7dcad709211b")
+		expect(signedHash).toBe("0x45af7db9a0626744c737284e4c461516a31a7c7b5b7812a6047dfe9d09da25dc")
+	})
+
 	test("should cancel order", async () => {
 		const order: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
@@ -343,7 +394,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const signature = toBinary(await getOrderSignature(ethereum1, order))
 
 		const orderHash = hashOpenSeaV1Order(ethereum2, order)
-		const signedHash = hashToSign(orderHash)
+		const signedHash = hashToSign(ethereum2, orderHash)
 
 		const checkLazyOrder: any = async (form: any) => Promise.resolve(form)
 		const cancelledOrder = await cancel(

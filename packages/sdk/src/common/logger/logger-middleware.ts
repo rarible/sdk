@@ -4,7 +4,7 @@ import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
-import { getStringifiedError } from "@rarible/sdk-common"
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -23,14 +23,14 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 
 	switch (wallet.walletType) {
 		case WalletType.ETHEREUM:
-			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address && address.toLowerCase()
-					info["wallet.chainId"] = chainId
+			await Promise.allSettled([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
+				.then(([chainIdResult, addressResult]) => {
+					info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult?.value?.toLowerCase() : formatDefaultError(addressResult.reason)
+					info["wallet.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult?.value : formatDefaultError(chainIdResult.reason)
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
+					info["wallet.address"] = formatDefaultError(err)
+					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
 		case WalletType.FLOW:
@@ -40,20 +40,16 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 					info["wallet.flow.chainId"] = userData.cid
 				})
 				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
+					info["wallet.address"] = formatDefaultError(err)
+					info["wallet.address.error"] = getStringifiedData(err)
 				})
 			break
 		case WalletType.TEZOS:
 			info["wallet.tezos.kind"] = wallet.provider.kind
-			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address
-					info["wallet.tezos.chainId"] = chainId
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
+			await Promise.allSettled([wallet.provider.chain_id(), wallet.provider.address()])
+				.then(([chainIdResult, addressResult]) => {
+					info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult.value : formatDefaultError(addressResult.reason)
+					info["wallet.tezos.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult.value : formatDefaultError(chainIdResult.reason)
 				})
 			break
 		case WalletType.SOLANA:
@@ -70,6 +66,10 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 	}
 
 	return info
+}
+
+export function formatDefaultError(err: any) {
+	return `unknown (${getErrorMessageString(err)})`
 }
 
 export function getErrorMessageString(err: any): string {
@@ -142,7 +142,7 @@ export function getInternalLoggerMiddleware(
 							level: getErrorLevel(callable?.name, err, sdkContext?.wallet),
 							method: callable?.name,
 							message: getErrorMessageString(err),
-							error: getStringifiedError(err),
+							error: getStringifiedData(err),
 							duration: (Date.now() - time) / 1000,
 							args: parsedArgs,
 							requestAddress: undefined as undefined | string,
@@ -155,7 +155,7 @@ export function getInternalLoggerMiddleware(
 							level: "LOGGING_ERROR",
 							method: callable?.name,
 							message: getErrorMessageString(e),
-							error: getStringifiedError(e),
+							error: getStringifiedData(e),
 						}
 					}
 					remoteLogger.raw(data)
