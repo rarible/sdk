@@ -85,6 +85,11 @@ describe.each(data)("ethers.js Ethereum", (eth: Ethereum) => {
 			expect(decoded["data"][field]).toEqual(data[field].toString())
 		}
 	})
+
+	test(`${eth.constructor.name} getCurrentProvider`, async () => {
+		const currentProvider = eth.getCurrentProvider()
+		expect(currentProvider).toBe(provider)
+	})
 })
 
 describe("get transaction receipt events", () => {

@@ -60,6 +60,7 @@ export interface Ethereum {
 	decodeParameter(type: any, data: string): any
 	getBalance(address: Address): Promise<BigNumber>
 	getChainId(): Promise<number>
+	getCurrentProvider(): any
 }
 
 export * from "./domain"

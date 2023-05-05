@@ -1,6 +1,5 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toUnionAddress } from "@rarible/types"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
@@ -47,9 +46,9 @@ describe("Create & fill orders with order data v3", () => {
 		},
 	})
 
-	const it = awaitAll({
-		testErc20: deployTestErc20(web31, "Test1", "TST1"),
-	})
+	const erc20 = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const erc20ContractAddress = convertEthereumContractAddress(erc20, Blockchain.ETHEREUM)
+	// const testErc20 = getTestErc20Contract(web32, erc20)
 
 	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
 
@@ -136,23 +135,21 @@ describe("Create & fill orders with order data v3", () => {
 		// })
 	})
 
-	test.skip("erc721 bid/acceptBid", async () => {
+	test("erc721 bid/acceptBid", async () => {
 		const itemId = await mint()
 
 		const bidAction = await sdk2.order.bid.prepare({ itemId: itemId })
 		expect(bidAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 		const orderId = await bidAction.submit({
 			amount: 1,
-			price: "0.0002",
+			price: "0.000000002",
 			currency: {
 				"@type": "ERC20",
-				contract: convertEthereumContractAddress(it.testErc20.options.address, Blockchain.ETHEREUM),
+				contract: erc20ContractAddress,
 			},
 		})
 
-		console.log("orderid > ", orderId)
-
-		await awaitStock(sdk1, orderId, 0.0002)
+		await awaitStock(sdk1, orderId, "0.000000002")
 
 		const updateAction = await sdk2.order.bidUpdate.prepare({ orderId })
 		await updateAction.submit({ price: "0.0003" })

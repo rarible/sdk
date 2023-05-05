@@ -5,7 +5,7 @@ import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
 import { getApiConfig } from "../config/api-config"
-import { createTestProviders } from "../common/create-test-providers"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { createEthereumApis } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { TEST_ORDER_TEMPLATE } from "./test/order"

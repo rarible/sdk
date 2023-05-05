@@ -409,6 +409,7 @@ const {
   payoutsSupport,
   supportsPartialFill
 } = await sdk.order.buy.prepare({ orderId: toOrderId("...") })
+const tx = await submit({ amount: 1 })
 await tx.wait()
 ```
 

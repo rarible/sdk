@@ -78,7 +78,7 @@ describe("Batch buy", () => {
 		await tx.wait()
 	})
 
-	test("get buy amm info", async () => {
+	test.concurrent("get buy amm info", async () => {
 		if (!sdkBuyer.ethereum) {
 			throw new Error("Sdk was initialized without ethereum provider")
 		}

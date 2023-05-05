@@ -2,7 +2,7 @@ import { toBn } from "@rarible/utils"
 import type { Address } from "@rarible/ethereum-api-client"
 
 export const SEAPORT_CONTRACT_NAME = "Seaport"
-export const SEAPORT_CONTRACT_VERSION = "1.1"
+export const SEAPORT_CONTRACT_VERSION = "1.5"
 export const SEAPORT_CONTRACT_VERSION_V1_4 = "1.4"
 export const OPENSEA_CONDUIT_KEY =
   "0x0000007b02230091a7ed01230072f7006a004d60a8d4e71d599b8104250f0000"
@@ -119,13 +119,16 @@ export const CROSS_CHAIN_SEAPORT_ADDRESS =
 export const CROSS_CHAIN_SEAPORT_V1_4_ADDRESS =
   "0x00000000000001ad428e4906aE43D8F9852d0dD6"
 
+export const CROSS_CHAIN_SEAPORT_V1_5_ADDRESS =
+	"0x00000000000000ADc04C56Bf30aC9d3c0aAF14dC"
+
 export const DOMAIN_REGISTRY_ADDRESS =
   "0x000000000DaD0DE04D2B2D4a5A74581EBA94124A"
 
 // Supply here any known conduit keys as well as their conduits
-export const KNOWN_CONDUIT_KEYS_TO_CONDUIT = {
+export const KNOWN_CONDUIT_KEYS_TO_CONDUIT: Record<string, string> = {
 	[OPENSEA_CONDUIT_KEY]: OPENSEA_CONDUIT_ADDRESS,
-	[NO_CONDUIT]: CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	[NO_CONDUIT]: CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 }
 
 export function getConduitByKey(key: string = NO_CONDUIT, contractAddress: Address): string {

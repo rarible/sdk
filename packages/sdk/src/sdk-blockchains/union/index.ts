@@ -44,6 +44,8 @@ import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/s
 import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { IBatchBuy } from "../../types/order/fill"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import type { IFlowSdk } from "../../domain"
+import type { IFlowSetupAccount } from "../../types/nft/collection"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -88,6 +90,7 @@ export function createUnionSdk(
 			IMMUTABLEX: immutablex.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
+		flow: new UnionFlowSpecificSdk(flow.flow!),
 	}
 }
 
@@ -292,6 +295,12 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
 	wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
 	unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
   getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
+}
+
+class UnionFlowSpecificSdk implements IFlowSdk {
+	constructor(private readonly flowSdk: IFlowSdk) {}
+
+  setupAccount: IFlowSetupAccount = this.flowSdk.setupAccount
 }
 
 

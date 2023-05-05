@@ -12,7 +12,8 @@ import type {
 	SimpleRaribleV2Order,
 	SimpleSeaportV1Order,
 	SimpleX2Y2Order,
-	SimpleAmmOrder, SimpleLooksrareV2Order,
+	SimpleAmmOrder,
+	SimpleLooksrareV2Order,
 } from "../types"
 import type { NftAssetType } from "../check-asset-type"
 
@@ -123,7 +124,8 @@ export enum ExchangeWrapperOrderType {
 	LOOKSRARE_ORDERS = 4,
 	AAM = 5,
 	SEAPORT_V14 = 6,
-	LOOKSRARE_V2_ORDERS = 7
+	LOOKSRARE_V2_ORDERS = 7,
+	SEAPORT_V15 = 9
 }
 
 export type PreparedOrderRequestDataForExchangeWrapper = {

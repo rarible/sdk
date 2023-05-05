@@ -23,6 +23,7 @@ import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
 import { FlowBid } from "./bid"
+import { FlowSetupAccount } from "./setup-account"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
@@ -89,6 +90,9 @@ export function createFlowSdk(
 			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
 				return sellService.getFutureOrderFees()
 			},
+		},
+		flow: {
+			setupAccount: new FlowSetupAccount(sdk, blockchainNetwork).setupAccount,
 		},
 	}
 }
