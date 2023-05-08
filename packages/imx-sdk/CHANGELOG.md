@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Features
+
+* looksrare v2 orders ([#456](https://github.com/rarible/sdk/issues/456)) ([af36a0b](https://github.com/rarible/sdk/commit/af36a0b02e431a4536ba93112c502a2c01768aba))
+
+
+
+
+
 ## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
 
 **Note:** Version bump only for package @rarible/immutable-sdk

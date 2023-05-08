@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Bug Fixes
+
+* seaport 1.5, logging improvements, example flow setup ([#471](https://github.com/rarible/sdk/issues/471)) ([123d5c3](https://github.com/rarible/sdk/commit/123d5c39ce654a008dec9dd8a04086254b1227ca))
+
+
+### Features
+
+* looksrare v2 orders ([#456](https://github.com/rarible/sdk/issues/456)) ([af36a0b](https://github.com/rarible/sdk/commit/af36a0b02e431a4536ba93112c502a2c01768aba))
+
+
+
+
+
 ## [0.13.26](https://github.com/rarible/sdk/compare/v0.13.25...v0.13.26) (2023-04-25)
 
 
