@@ -1,6 +1,6 @@
-import type { Contract, ContractSendMethod } from "web3-eth-contract"
+import type { Contract, ContractSendMethod, SendOptions } from "web3-eth-contract"
 import type Web3 from "web3"
-import type { PromiEvent, TransactionReceipt } from "web3-core"
+import type { PromiEvent, TransactionReceipt, TransactionConfig } from "web3-core"
 import { Provider, signTypedData } from "@rarible/ethereum-provider"
 import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
@@ -305,14 +305,22 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				const additionalData = toBinary(options.additionalData).slice(2)
 				const sourceData = toBinary(txData).slice(2)
 				const data = `0x${sourceData}${additionalData}`
-				const promiEvent = this.config.web3.eth.sendTransaction({
+				const txConfig: TransactionConfig = {
 					from,
 					to: this.contract.options.address,
 					data,
-					gas: this.config.gas || options.gas,
 					value: options.value,
-					gasPrice: options.gasPrice?.toString(),
-				})
+					// @ts-ignore
+					gas: this.config.gas || options.gas || null,
+					//@ts-ignore
+					gasPrice: options.gasPrice?.toString() || null,
+					//@ts-ignore
+					maxFeePerGas: null,
+					//@ts-ignore
+					maxPriorityFeePerGas: null,
+				}
+
+				const promiEvent = this.config.web3.eth.sendTransaction(txConfig)
 				const { hash, receipt } = toPromises(promiEvent)
 				hashValue = await hash
 				const tx = await this.getTransaction(hashValue)
@@ -328,12 +336,26 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				)
 			}
 
-			const promiEvent: PromiEvent<Contract> = this.sendMethod.send({
+			const txConfig: SendOptions = {
 				from,
-				gas: this.config.gas || options.gas,
 				value: options.value,
-				gasPrice: options.gasPrice?.toString(),
-			})
+				// @ts-ignore
+				gas: this.config.gas || options.gas || null,
+				//@ts-ignore
+				gasPrice: options.gasPrice?.toString() || null,
+				//@ts-ignore
+				maxFeePerGas: null,
+				//@ts-ignore
+				maxPriorityFeePerGas: null,
+			}
+			if (this.config.gas !== undefined || options.gas !== undefined) {
+				txConfig.gas = this.config.gas || options.gas
+			}
+			if (options.gasPrice !== undefined) {
+				txConfig.gasPrice = options.gasPrice?.toString()
+			}
+			const promiEvent: PromiEvent<Contract> = this.sendMethod.send(txConfig)
+
 			const { hash, receipt } = toPromises(promiEvent)
 			hashValue = await hash
 			const tx = await this.getTransaction(hashValue)

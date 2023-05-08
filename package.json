@@ -22,7 +22,6 @@
     "build-solana-sdk": "yarn workspace @rarible/solana-sdk run build",
     "build-sdk-common": "yarn workspace @rarible/sdk-common run build",
     "build-sdk": "yarn workspace @rarible/sdk run build",
-    "build-sdk-common": "yarn workspace @rarible/sdk-common run build",
     "build-sdk-transaction": "yarn workspace @rarible/sdk-transaction run build",
     "build-sdk-transaction-backend": "yarn workspace @rarible/sdk-transaction-backend run build",
     "build-sdk-wallet": "yarn workspace @rarible/sdk-wallet run build",
