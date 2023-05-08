@@ -26,12 +26,12 @@ import { createUnionSdk } from "./sdk-blockchains/union"
 import { createApisSdk } from "./common/apis"
 import { Middlewarer } from "./common/middleware/middleware"
 import { getInternalLoggerMiddleware } from "./common/logger/logger-middleware"
-import { createSolanaSdk } from "./sdk-blockchains/solana"
 import { createImmutablexSdk } from "./sdk-blockchains/immutablex"
 import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 import { getSdkContext } from "./common/get-sdk-context"
 import { createFlowSdk } from "./sdk-blockchains/flow"
+import { createUnavailableBlockchain } from "./common/unavailable-blockchain"
 
 /**
  * @module
@@ -101,12 +101,7 @@ export function createRaribleSdk(
 			blockchainConfig.polygonNetwork,
 			ethConfig
 		),
-		createSolanaSdk(
-			filterWallet(wallet, WalletType.SOLANA),
-			apis,
-			blockchainConfig.solanaNetwork,
-			config?.blockchain?.SOLANA
-		),
+		createUnavailableBlockchain("Solana blockchain is no longer supported"),
 		createImmutablexSdk(
 			filterWallet(wallet, WalletType.IMMUTABLEX),
 			apis,

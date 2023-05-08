@@ -36,7 +36,6 @@
     "@rarible/tezos-sdk": "0.1.45",
     "@rarible/types": "~0.9.6",
     "@rarible/utils": "~0.9.10",
-    "@solana/web3.js": "^1.35.1",
     "axios": "^0.26.1",
     "bignumber.js": "^9.0.1",
     "callable-instance": "^2.0.0",

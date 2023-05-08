@@ -1,6 +1,6 @@
 import type { Contract } from "ethers"
 import { ethers } from "ethers"
-import type { TransactionResponse } from "@ethersproject/abstract-provider"
+import type { TransactionResponse, TransactionRequest } from "@ethersproject/abstract-provider"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { EthereumTransactionEvent, MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
 import { EthereumProviderError, Provider, signTypedData } from "@rarible/ethereum-provider"
@@ -401,14 +401,19 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 				const additionalData = toBinary(options.additionalData).slice(2)
 				const sourceData = toBinary(await this.getData()).slice(2)
 
-				const tx = await this.signer.sendTransaction({
+				const txConfig: TransactionRequest = {
 					from: await this.signer.getAddress(),
 					to: this.contract.address,
 					data: `0x${sourceData}${additionalData}`,
-					gasLimit: options.gas,
-					gasPrice: options.gasPrice,
 					value: options.value !== undefined ? ethers.utils.hexValue(EthersBN.from(options.value)) : undefined,
-				})
+				}
+				if (options.gas !== undefined) {
+					txConfig.gasLimit = options.gas
+				}
+				if (options.gasPrice !== undefined) {
+					txConfig.gasPrice = options.gasPrice
+				}
+				const tx = await this.signer.sendTransaction(txConfig)
 
 				return new EthersTransaction(
 					tx,
