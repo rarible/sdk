@@ -10,7 +10,7 @@ export const polygonConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x12b3897a36fDB436ddE2788C06Eff0ffD997066e"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: ZERO_ADDRESS,
+		wrapper: toAddress("0xf7DD32c761D61624dCAAe61d0d50Efc6E3E1F65c"),
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
