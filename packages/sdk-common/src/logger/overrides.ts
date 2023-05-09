@@ -72,6 +72,7 @@ const EVM_WARN_MESSAGES = [
 	"Popup closed",
 	"User cancelled login",
 	"User denied account authorization",
+	"User rejected methods",
 ]
 
 export function isEVMWarning(error: any): boolean {
