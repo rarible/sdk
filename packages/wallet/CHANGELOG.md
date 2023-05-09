@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.30](https://github.com/rarible/sdk/compare/v0.13.29...v0.13.30) (2023-05-09)
+
+
+### Bug Fixes
+
+* list barbie item ([#472](https://github.com/rarible/sdk/issues/472)) ([df75955](https://github.com/rarible/sdk/commit/df759557797e5af59c13399c6d346c0ed0faa208))
+
+
+
+
+
 ## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
 
 
