@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.31](https://github.com/rarible/sdk/compare/v0.13.30...v0.13.31) (2023-05-09)
+
+
+### Features
+
+* mainnet wrapper supports looksrare, seaport 1.5 orders ([#473](https://github.com/rarible/sdk/issues/473)) ([410f5aa](https://github.com/rarible/sdk/commit/410f5aa0523e21553a8035517ff436c9cf21c8bf))
+
+
+
+
+
 ## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
 
 
