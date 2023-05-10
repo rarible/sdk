@@ -311,7 +311,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 					data,
 					value: options.value,
 					// @ts-ignore
-					gas: this.config.gas || options.gas || null,
+					gas: this.config.gas || options.gas,
 					//@ts-ignore
 					gasPrice: options.gasPrice?.toString() || null,
 					//@ts-ignore
@@ -340,19 +340,13 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				from,
 				value: options.value,
 				// @ts-ignore
-				gas: this.config.gas || options.gas || null,
+				gas: this.config.gas || options.gas,
 				//@ts-ignore
 				gasPrice: options.gasPrice?.toString() || null,
 				//@ts-ignore
 				maxFeePerGas: null,
 				//@ts-ignore
 				maxPriorityFeePerGas: null,
-			}
-			if (this.config.gas !== undefined || options.gas !== undefined) {
-				txConfig.gas = this.config.gas || options.gas
-			}
-			if (options.gasPrice !== undefined) {
-				txConfig.gasPrice = options.gasPrice?.toString()
 			}
 			const promiEvent: PromiEvent<Contract> = this.sendMethod.send(txConfig)
 
