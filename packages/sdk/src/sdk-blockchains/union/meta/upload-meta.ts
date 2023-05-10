@@ -3,6 +3,7 @@ import mimeTypes from "mime-types"
 import { v4 } from "uuid"
 import { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
+import { toUnionAddress } from "@rarible/types"
 import { handleAxiosErrorResponse } from "@rarible/logger/build"
 import type {
 	CommonTokenContent,
@@ -42,7 +43,7 @@ export class MetaUploader {
 	}
 
 	async uploadMeta(request: MetaUploadRequest): Promise<UploadMetaResponse> {
-		const { nftStorageApiKey, properties, accountAddress } = request
+		const { nftStorageApiKey, properties, royalty, accountAddress } = request
 
 		const { files } = await this.uploadFolder( nftStorageApiKey, {
 			image: properties.image,
@@ -66,6 +67,11 @@ export class MetaUploader {
 				value: prop.value,
 			})),
 		} as PreprocessMetaRequest
+		if (metadataRequest.blockchain === "SOLANA") {
+			if (royalty) {
+				metadataRequest.royalties = this.getRoyalties(royalty, toUnionAddress(accountAddress))
+			}
+		}
 
 		const metadata = this.preprocessMeta(metadataRequest)
 		const file = createJson("properties.json", metadata)

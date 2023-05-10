@@ -17,6 +17,7 @@ import type { IPreprocessMeta } from "./types/nft/mint/preprocess-meta"
 import type { Middleware } from "./common/middleware/middleware"
 import type { RaribleSdkEnvironment } from "./config/domain"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "./types/ethereum/domain"
+import type { ISolanaSdkConfig } from "./sdk-blockchains/solana/domain"
 import type { IMint } from "./types/nft/mint"
 import type { IMintAndSell } from "./types/nft/mint-and-sell"
 import type { ITransfer } from "./types/nft/transfer"
@@ -63,6 +64,7 @@ export interface IRaribleSdkConfig {
 	 * Blockchain settings
 	 */
 	blockchain?: {
+		[WalletType.SOLANA]?: ISolanaSdkConfig
 		[WalletType.ETHEREUM]?: IEthereumSdkConfig
 		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
 	}
