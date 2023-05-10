@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.33](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.33) (2023-05-10)
+
+
+### Bug Fixes
+
+* web3 ethereum gas limit ([a2d7afe](https://github.com/rarible/sdk/commit/a2d7afea630a61f02ec84ec1e8979248436ea6b2))
+
+
+
+
+
 ## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
 
 
