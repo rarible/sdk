@@ -1,5 +1,6 @@
 import type { Blockchain } from "@rarible/api-client"
 import type { TezosMetadataResponse } from "../../../sdk-blockchains/tezos/common"
+import type { ISolanaMetadataResponse, ISolanaTokenMetadata } from "../../../sdk-blockchains/solana/domain"
 
 /**
  * Prepare meta data before upload to ipfs storage
@@ -30,8 +31,11 @@ export type PreprocessMetaRequest =
 	({
 		blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.TEZOS | Blockchain.FLOW
 	} & CommonTokenMetadata)
+	| ({
+		blockchain: Blockchain.SOLANA
+	} & ISolanaTokenMetadata)
 
-export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse
+export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse | ISolanaMetadataResponse
 
 export type TokenMetadataAttribute = {
 	key: string

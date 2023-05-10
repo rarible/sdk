@@ -1,11 +1,12 @@
 import { ethers } from "ethers"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet, FlowWallet } from "@rarible/sdk-wallet"
+import { EthereumWallet, FlowWallet, SolanaWallet } from "@rarible/sdk-wallet"
 import { BlockchainGroup } from "@rarible/api-client/build/models/BlockchainGroup"
 import * as fcl from "@onflow/fcl"
 import { createRaribleSdk } from "../index"
 import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
 import { LogsLevel } from "../domain"
+import { getWallet } from "../sdk-blockchains/solana/common/test/test-wallets"
 import { createTestWallet } from "../sdk-blockchains/tezos/test/test-wallet"
 
 const { web31, web32 } = initProviders()
@@ -36,6 +37,18 @@ const providers = [{
 		return new ethers.Wallet("ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9", provider)
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,
+}, {
+	name: "Solana Wallet",
+	getProvider: () => {
+		return new SolanaWallet(getWallet())
+	},
+	expectedBlockchain: BlockchainGroup.SOLANA,
+}, {
+	name: "Solana Provider",
+	getProvider: () => {
+		return getWallet()
+	},
+	expectedBlockchain: BlockchainGroup.SOLANA,
 }, {
 	name: "Tezos Wallet",
 	getProvider: () => {
