@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
+
+
+### Bug Fixes
+
+* revert solana support ([#474](https://github.com/rarible/sdk/issues/474)) ([6767c84](https://github.com/rarible/sdk/commit/6767c84c38d08af7411e9a60770b0646d8a50a02))
+
+
+
+
+
 ## [0.13.31](https://github.com/rarible/sdk/compare/v0.13.30...v0.13.31) (2023-05-09)
 
 **Note:** Version bump only for package @rarible/sdk
