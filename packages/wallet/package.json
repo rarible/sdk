@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-wallet",
-  "version": "0.13.32",
+  "version": "0.13.34",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -29,7 +29,7 @@
     "@rarible/solana-wallet": "^0.13.24",
     "@rarible/tezos-sdk": "0.1.45",
     "@rarible/types": "~0.9.6",
-    "@rarible/web3-ethereum": "^0.13.29"
+    "@rarible/web3-ethereum": "^0.13.34"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",

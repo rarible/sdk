@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.32",
+  "version": "0.13.34",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -22,7 +22,7 @@
     "@rarible/connector-beacon": "^0.13.30",
     "@rarible/connector-fcl": "^0.13.30",
     "@rarible/connector-fortmatic": "^0.13.30",
-    "@rarible/connector-helper": "^0.13.32",
+    "@rarible/connector-helper": "^0.13.34",
     "@rarible/connector-iframe": "^0.13.30",
     "@rarible/connector-mattel": "^0.13.30",
     "@rarible/connector-mew": "^0.13.30",
@@ -31,8 +31,8 @@
     "@rarible/connector-torus": "^0.13.30",
     "@rarible/connector-walletconnect": "^0.13.30",
     "@rarible/connector-walletlink": "^0.13.30",
-    "@rarible/sdk": "^0.13.32",
-    "@rarible/web3-ethereum": "^0.13.29",
+    "@rarible/sdk": "^0.13.34",
+    "@rarible/web3-ethereum": "^0.13.34",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
     "@testing-library/dom": "^7.21.4",

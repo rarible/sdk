@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
+
+**Note:** Version bump only for package @rarible/connector-helper
+
+
+
+
+
 ## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
 
 **Note:** Version bump only for package @rarible/connector-helper

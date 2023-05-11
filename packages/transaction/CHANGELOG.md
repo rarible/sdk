@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
+
+
+### Bug Fixes
+
+* change barbie testnet contracts ([#476](https://github.com/rarible/sdk/issues/476)) ([0656165](https://github.com/rarible/sdk/commit/0656165751064ee6fc442c1e7691b7ff06984dc5))
+
+
+
+
+
 ## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
 
 
