@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.34-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.34-hotfix.0) (2023-05-12)
+
+
+### Bug Fixes
+
+* remove barbie support ([f66de44](https://github.com/rarible/sdk/commit/f66de44f475c26a6e296641a473656933c349f69))
+
+
+
+
+
 ## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
 
 
