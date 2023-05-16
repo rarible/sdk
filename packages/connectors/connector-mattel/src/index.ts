@@ -80,14 +80,14 @@ export class MattelConnectionProvider extends
 			await Promise.all([
 				magic.user.logout(),
   			magic.wallet.disconnect(),
-				auth0.logout({
-					clientId: this.config.auth0ClientId,
-					logoutParams: {
-						returnTo: window.location.href,
-					},
-					...(this.config.options?.auth0LogoutOptions || {}),
-				}),
 			])
+			await auth0.logout({
+				clientId: this.config.auth0ClientId,
+				logoutParams: {
+					returnTo: window.location.href,
+				},
+				...(this.config.options?.auth0LogoutOptions || {}),
+			})
 		}
 		return defer(async () => {
 			try {
