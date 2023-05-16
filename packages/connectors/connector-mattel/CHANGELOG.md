@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
+
+
+### Bug Fixes
+
+* mattel prod contracts ([#477](https://github.com/rarible/sdk/issues/477)) ([f72583b](https://github.com/rarible/sdk/commit/f72583bc97cb71840130ca0772c995203ae42019))
+
+
+
+
+
 ## [0.13.30](https://github.com/rarible/sdk/compare/v0.13.29...v0.13.30) (2023-05-09)
 
 **Note:** Version bump only for package @rarible/connector-mattel
