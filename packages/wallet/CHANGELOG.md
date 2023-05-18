@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.36](https://github.com/rarible/sdk/compare/v0.13.35...v0.13.36) (2023-05-18)
+
+
+### Bug Fixes
+
+* garage card list ([#479](https://github.com/rarible/sdk/issues/479)) ([3248f8a](https://github.com/rarible/sdk/commit/3248f8ae2ee27374a96c9005e8e7039249055270))
+
+
+
+
+
 ## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
 
 

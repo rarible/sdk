@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.36](https://github.com/rarible/sdk/compare/v0.13.35...v0.13.36) (2023-05-18)
+
+
+### Bug Fixes
+
+* add wallet address for flow ([#478](https://github.com/rarible/sdk/issues/478)) ([8bef855](https://github.com/rarible/sdk/commit/8bef855ef10f58781201c404e5ff8bbc4a0ce031))
+* garage card list ([#479](https://github.com/rarible/sdk/issues/479)) ([3248f8a](https://github.com/rarible/sdk/commit/3248f8ae2ee27374a96c9005e8e7039249055270))
+
+
+
+
+
 ## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
 
 
