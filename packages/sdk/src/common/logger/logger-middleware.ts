@@ -4,7 +4,7 @@ import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
-import { getStringifiedData } from "@rarible/sdk-common"
+import { getStringifiedData, promiseSettledRequest } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -22,45 +22,45 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 	}
 
 	switch (wallet.walletType) {
-		case WalletType.ETHEREUM:
-			await Promise.allSettled([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
-				.then(([chainIdResult, addressResult]) => {
-					info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult?.value?.toLowerCase() : formatDefaultError(addressResult.reason)
-					info["wallet.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult?.value : formatDefaultError(chainIdResult.reason)
-				})
-				.catch((err) => {
-					info["wallet.address"] = formatDefaultError(err)
-					info["wallet.address.error"] = getStringifiedData(err)
-				})
+		case WalletType.ETHEREUM: {
+			const [chainIdResult, addressResult] = await Promise.allSettled([
+				wallet.ethereum.getChainId(),
+				wallet.ethereum.getFrom(),
+			])
+			info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult?.value?.toLowerCase() : formatDefaultError(addressResult.reason)
+			info["wallet.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult?.value : formatDefaultError(chainIdResult.reason)
 			break
-		case WalletType.FLOW:
-			await wallet.fcl.currentUser().snapshot()
-				.then((userData) => {
-					info["wallet.address"] = userData.addr
-					info["wallet.flow.chainId"] = userData.cid
-				})
-				.catch((err) => {
-					info["wallet.address"] = formatDefaultError(err)
-					info["wallet.address.error"] = getStringifiedData(err)
-				})
+		}
+		case WalletType.FLOW: {
+			const [userData, authResult] = await promiseSettledRequest([
+				wallet.fcl.currentUser().snapshot(),
+				typeof wallet.auth === "function" ? wallet.auth() : undefined,
+			])
+			info["wallet.address"] = userData?.addr || authResult?.addr
+			info["wallet.flow.chainId"] = userData?.cid
 			break
-		case WalletType.TEZOS:
+		}
+		case WalletType.TEZOS: {
 			info["wallet.tezos.kind"] = wallet.provider.kind
-			await Promise.allSettled([wallet.provider.chain_id(), wallet.provider.address()])
-				.then(([chainIdResult, addressResult]) => {
-					info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult.value : formatDefaultError(addressResult.reason)
-					info["wallet.tezos.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult.value : formatDefaultError(chainIdResult.reason)
-				})
+			const [chainIdResult, addressResult] = await Promise.allSettled([
+				wallet.provider.chain_id(),
+				wallet.provider.address(),
+			])
+			info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult.value : formatDefaultError(addressResult.reason)
+			info["wallet.tezos.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult.value : formatDefaultError(chainIdResult.reason)
 			break
-		case WalletType.SOLANA:
+		}
+		case WalletType.SOLANA: {
 			info["wallet.address"] = wallet.provider.publicKey?.toString()
 			break
-		case WalletType.IMMUTABLEX:
+		}
+		case WalletType.IMMUTABLEX: {
 			const data = wallet.wallet.getConnectionData()
 			info["wallet.address"] = data.address
 			info["wallet.network"] = data.ethNetwork
 			info["wallet.starkPubkey"] = data.starkPublicKey
 			break
+		}
 		default:
 			info["wallet.address"] = "unknown"
 	}
@@ -117,7 +117,7 @@ export function getInternalLoggerMiddleware(
 				parsedArgs = JSON.stringify(args)
 			} catch (e) {
 				try {
-				  parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
+					parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
 				} catch (err) {
 					parsedArgs = "unknown"
 				}
