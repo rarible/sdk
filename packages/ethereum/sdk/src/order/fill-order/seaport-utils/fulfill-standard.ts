@@ -140,7 +140,7 @@ export async function getFulfillStandardOrderData({
 		recipientAddress], null, "  "))
 		return {
 			functionCall,
-			options: { value: totalNativeAmount?.toString() },
+			options: { value: totalNativeAmount?.toFixed() || "0" },
 		}
 	}
 
@@ -148,8 +148,9 @@ export async function getFulfillStandardOrderData({
 		"fulfillOrder",
 		orderAccountingForTips, conduitKey
 	)
+	console.log("fulfillOrder", JSON.stringify(orderAccountingForTips), "conduitKey", conduitKey)
 	return {
 		functionCall,
-		options: { value: totalNativeAmount?.toString() },
+		options: { value: totalNativeAmount?.toFixed() || "0" },
 	}
 }

@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:esm": "tsc --project tsconfig-build.json",
+    "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "clean": "rimraf ./build",
     "test": "jest --testTimeout=10000",

@@ -66,6 +66,73 @@ describe("bid", () => {
 		})
 	})
 
+	test("bid on erc1155 <-> erc20 and update bid", async () => {
+		const itemOwner = await ethwallet1.ethereum.getFrom()
+
+		const bidderAddress = await ethwallet2.ethereum.getFrom()
+		const bidderUnionAddress = convertEthereumToUnionAddress(bidderAddress, Blockchain.ETHEREUM)
+
+		const action = await sdk1.nft.mint.prepare({
+			collectionId: convertEthereumCollectionId(erc1155Address, Blockchain.ETHEREUM),
+		})
+		const result = await action.submit({
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(itemOwner, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: true,
+			supply: 1,
+		})
+		if (result.type === MintType.ON_CHAIN) {
+			await result.transaction.wait()
+		}
+
+		await awaitItem(sdk1, result.itemId)
+
+		console.log("created item", result.itemId)
+		// await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
+
+		const response = await sdk2.order.bid.prepare({ itemId: result.itemId })
+		const price = "0.00002"
+		const orderId = await response.submit({
+			amount: 1,
+			price,
+			currency: {
+				"@type": "ERC20",
+				contract: erc20ContractAddress,
+			},
+			originFees: [{
+				account: bidderUnionAddress,
+				value: 1000,
+			}],
+		})
+		console.log("orderid", orderId)
+		const order = await awaitStock(sdk1, orderId, price)
+		expect(order.makeStock.toString()).toEqual(price)
+
+		console.log("created order", order.id)
+
+		const updateAction = await sdk2.order.bidUpdate.prepare({
+			orderId,
+		})
+		const updatedOrder = await updateAction.submit({ price: "0.00004" })
+
+		console.log("updated order", updatedOrder)
+
+		const acceptBidResponse = await sdk1.order.acceptBid.prepare({ orderId: updatedOrder })
+		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
+		await acceptBidTx.wait()
+		console.log("accept order", acceptBidTx)
+
+		await retry(10, 1000, async () => {
+			return sdk1.apis.ownership.getOwnershipById({
+				ownershipId: `${result.itemId}:${bidderAddress}`,
+			})
+		})
+	})
+
 	test("bid on erc721 <-> erc20 and update bid", async () => {
 		const itemOwner = await ethwallet1.ethereum.getFrom()
 

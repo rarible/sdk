@@ -153,7 +153,7 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
 								blockchain: Blockchain.POLYGON,
-								contract: "ETHEREUM:0xf4520E73A0212166C07279428527b9d300295203",
+								contract: "POLYGON:0xf4520E73A0212166C07279428527b9d300295203",
 							})
 							break
 						case"testnet":
@@ -161,7 +161,12 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
 								blockchain: Blockchain.POLYGON,
-								contract: "ETHEREUM:0xd6e804e7EDB5B2AecB31D9cCC9d9F3940a7b4cE2",
+								contract: "POLYGON:0xd6e804e7EDB5B2AecB31D9cCC9d9F3940a7b4cE2",
+							}, {
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.POLYGON,
+								contract: "POLYGON:0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa",
 							})
 							break
 						case "staging":
@@ -169,7 +174,7 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
 								blockchain: Blockchain.ETHEREUM,
-								contract: "ETHEREUM:0x32CcA2bB34B36409b29166FbEC9b617CdA1E0410",
+								contract: "POLYGON:0x32CcA2bB34B36409b29166FbEC9b617CdA1E0410",
 							})
 							break
 						case"prod":
@@ -177,7 +182,7 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "WETH",
 								blockchain: Blockchain.POLYGON,
-								contract: "ETHEREUM:0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+								contract: "POLYGON:0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
 							})
 							break
 						default:

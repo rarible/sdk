@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Box, Container } from "@mui/material"
 import { Route, Routes } from "react-router-dom"
 import { AboutPage } from "./pages/about/about-page"

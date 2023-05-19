@@ -41,7 +41,12 @@ export function MintForm({ prepare, disabled, onComplete }: IMintFormProps) {
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput form={form} name="metadataUri" label="Metadata URI"/>
+					<FormTextInput
+						form={form}
+						name="metadataUri"
+						label="Metadata URI"
+						defaultValue={"ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5"}
+					/>
 					<FormTextInput
 						type="number"
 						form={form}

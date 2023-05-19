@@ -3,28 +3,38 @@ import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
-import type { Part } from "@rarible/ethereum-api-client"
+import { toAddress, toBigNumber, ZERO_ADDRESS } from "@rarible/types"
+import type { Address, Asset, Erc20AssetType, Part, SeaportV1Order } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { BigNumber as BigNumberUtils } from "@rarible/utils"
 import axios from "axios"
 import { Warning } from "@rarible/logger/build"
 import { isNft } from "../is-nft"
-import type { SimpleOrder } from "../types"
+import type { SimpleOrder, SimpleSeaportV1Order } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import type { RaribleEthereumApis } from "../../common/apis"
+import { SimpleLegacyOrder, SimpleOpenSeaV1Order } from "../types"
+import { getAssetWithFee } from "../get-asset-with-fee"
+import { waitTx } from "../../common/wait-tx"
+import { approve } from "../approve"
+import { createErc20Contract } from "../contracts/erc20"
+import { approveErc20 } from "../approve-erc20"
+import { isErc20, isETH, isWeth } from "../../nft/common"
 import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
 import { prepareSeaportExchangeData } from "./seaport-utils/seaport-wrapper-utils"
 import { fulfillOrder } from "./seaport-utils/seaport-utils"
 import type { OrderFillSendData } from "./types"
-import { originFeeValueConvert } from "./common/origin-fees-utils"
+import { calcValueWithFees, originFeeValueConvert, setFeesCurrency } from "./common/origin-fees-utils"
+import { OpenSeaV1OrderFillRequest } from "./types"
+import { invertOrder } from "./invert-order"
+import type { ComplexFeesReducedData } from "./common/origin-fee-reducer"
 
 export class SeaportOrderHandler {
 	constructor(
@@ -56,15 +66,16 @@ export class SeaportOrderHandler {
 			return signature
 		} catch (e: any) {
 			const inactiveMsg = "Error when generating fulfillment data"
-			if (typeof e?.value?.message === "string" && e?.value?.message.includes(inactiveMsg)) {
+			const msg = e?.value?.message || e?.data?.message
+			if (typeof msg === "string" && msg.includes(inactiveMsg)) {
 				throw new Warning("Order is not active or cancelled")
 			}
-			if (this.env === "testnet") {
+			if (this.env === "testnet" || this.env === "mumbai") {
 				try {
 					const orderData = {
 						listing: {
 							hash: hash,
-							chain: "goerli",
+							chain: this.env === "testnet" ? "goerli" : "mumbai",
 							protocol_address: protocol,
 						},
 						fulfiller: {
@@ -73,8 +84,11 @@ export class SeaportOrderHandler {
 					}
 					const { data } = await axios.post("https://testnets-api.opensea.io/v2/listings/fulfillment_data", orderData)
 					return data.fulfillment_data.orders[0].signature
-				} catch (e) {
+				} catch (e: any) {
 					console.error(e)
+					if (Array.isArray(e?.response?.data?.errors)) {
+						throw new Error(e?.response?.data?.errors.join(","))
+					}
 					throw e
 				}
 			}
@@ -87,9 +101,6 @@ export class SeaportOrderHandler {
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
-		// if (!order.signature) {
-		// 	throw new Error("Signature should exists")
-		// }
 		if (order.start === undefined || order.end === undefined) {
 			throw new Error("Order should includes start/end fields")
 		}
@@ -145,7 +156,7 @@ export class SeaportOrderHandler {
 				.multipliedBy(toBn(fee.value))
 				.dividedBy(10000)
 				.integerValue(BigNumberUtils.ROUND_FLOOR)
-				.toString(),
+				.toFixed(),
 			recipient: fee.account,
 		}))
 	}
@@ -173,16 +184,43 @@ export class SeaportOrderHandler {
 			}
 		}
 
+		if (!this.config.exchange.wrapper) {
+			throw new Error("Exchange wrapper is not defined for Seaport tx")
+		}
+
+		const takeAssetType = request.order.take.assetType
+		let feeValueWithCurrency = feeValue
+		if (isWeth(takeAssetType, this.config.weth)) {
+			feeValueWithCurrency = setFeesCurrency(feeValueWithCurrency, true)
+		}
+
 		return prepareSeaportExchangeData(
 			this.ethereum,
 			this.send.bind(this),
 			request.order,
 			{
 				unitsToFill: unitsToFill,
-				encodedFeesValue: feeValue,
+				encodedFeesValue: feeValueWithCurrency,
 				totalFeeBasisPoints: totalFeeBasisPoints,
+				wrapperAddress: this.config.exchange.wrapper,
 			},
 		)
+	}
+
+	getAssetToApprove(
+		request: SeaportV1OrderFillRequest, feesData: ComplexFeesReducedData
+	): Asset {
+		const { make, take } = request.order
+		const totalPrice = toBn(take.value)
+			.div(make.value)
+			.multipliedBy(request.amount)
+
+		let valueWithOriginFees = calcValueWithFees(totalPrice, feesData.totalFeeBasisPoints)
+
+		return {
+			assetType: take.assetType,
+			value: toBigNumber(valueWithOriginFees.toFixed()),
+		}
 	}
 
 	getBaseOrderFee() {
@@ -253,4 +291,10 @@ export function getSeaportToken(assetType: AssetType): string {
 		case "ERC20": return assetType.contract
 		default: throw new Error("Asset type should be currency token")
 	}
+}
+
+function replaceCharAt(str: string, index: number, char: string) {
+	var strArray = str.split("")
+	strArray[index] = char
+	return strArray.join("")
 }

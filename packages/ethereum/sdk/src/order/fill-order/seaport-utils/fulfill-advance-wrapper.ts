@@ -4,6 +4,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/ethereum-api-client"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import type { SendFunction } from "../../../common/send-transaction"
+import { waitTx } from "../../../common/wait-tx"
 import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./types"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import type { TimeBasedItemParams } from "./item"
@@ -14,7 +15,7 @@ import { getApprovalActions } from "./approval"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
 import { generateCriteriaResolvers } from "./criteria"
 
-export async function getFulfillAdvancedOrderData({
+export async function getFulfillAdvancedOrderWrapperData({
 	ethereum,
 	send,
 	order,
@@ -33,6 +34,7 @@ export async function getFulfillAdvancedOrderData({
 	conduitKey,
 	recipientAddress,
 	seaportContract,
+	wrapperAddress,
 }: {
 	ethereum: Ethereum,
 	send: SendFunction
@@ -53,6 +55,7 @@ export async function getFulfillAdvancedOrderData({
 	recipientAddress: string;
 	timeBasedItemParams: TimeBasedItemParams;
 	seaportContract: EthereumContract,
+	wrapperAddress?: Address,
 }) {
 	// const seaportContract = createSeaportV14Contract(ethereum, seaportAddress)
 
@@ -104,6 +107,7 @@ export async function getFulfillAdvancedOrderData({
 		},
 	})[ZERO_ADDRESS]?.["0"]
 
+	console.log("totalNativeAmount", totalNativeAmount)
 	const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
 		offer,
 		consideration: considerationIncludingTips,
@@ -116,11 +120,16 @@ export async function getFulfillAdvancedOrderData({
 		fulfillerOperator,
 	})
 
-	await getApprovalActions(
-		ethereum,
-		send,
-		insufficientApprovals,
-	)
+	// console.log("before approval actions", insufficientApprovals)
+
+	// await waitTx(approve(this.ethereum, this.send, this.config.transferProxies, order.maker, withFee, infinite))
+
+	// await getApprovalActions(
+	// 	ethereum,
+	// 	send,
+	// 	insufficientApprovals,
+	// 	wrapperAddress,
+	// )
 
 	const orderAccountingForTips: OrderStruct = {
 		...order,
@@ -154,8 +163,11 @@ export async function getFulfillAdvancedOrderData({
 		recipientAddress,
 	]
 
+	console.log("fulfillAdvancedOrderArgs", fulfillAdvancedOrderArgs)
+	debugger
+
 	return {
 		data: await seaportContract.functionCall("fulfillAdvancedOrder", ...fulfillAdvancedOrderArgs).getData(),
-		value: totalNativeAmount.toString(),
+		value: totalNativeAmount?.toFixed() || "0",
 	}
 }

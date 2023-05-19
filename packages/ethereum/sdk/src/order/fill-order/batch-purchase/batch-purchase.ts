@@ -1,10 +1,10 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Action } from "@rarible/action"
-import type { Address, AssetType } from "@rarible/ethereum-api-client"
+import type { Address, Asset, AssetType, Erc20AssetType } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { BigNumber as BigNum, toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
-import { toAddress } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import type { SimpleOpenSeaV1Order, SimpleOrder, SimpleRaribleV2Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
 import type { EthereumConfig } from "../../../config/type"
@@ -30,6 +30,7 @@ import { RaribleV2OrderHandler } from "../rarible-v2"
 import { OpenSeaOrderHandler } from "../open-sea"
 import { SeaportOrderHandler } from "../seaport"
 import { LooksrareOrderHandler } from "../looksrare"
+import type { ComplexFeesReducedData } from "../common/origin-fee-reducer"
 import { OriginFeeReducer } from "../common/origin-fee-reducer"
 import { X2Y2OrderHandler } from "../x2y2"
 import { AmmOrderHandler } from "../amm"
@@ -39,6 +40,8 @@ import type { X2Y2OrderFillRequest } from "../types"
 import { getUpdatedCalldata } from "../common/get-updated-call"
 import { getRequiredWallet } from "../../../common/get-required-wallet"
 import { LooksrareV2OrderHandler } from "../looksrare-v2"
+import { isErc20, isETH, isWeth } from "../../../nft/common"
+import { pureApproveFn } from "../../approve"
 
 export class BatchOrderFiller {
 	v2Handler: RaribleV2OrderHandler
@@ -130,16 +133,13 @@ export class BatchOrderFiller {
 		requests: FillBatchOrderRequest,
 		feesReducer: OriginFeeReducer
 	): Promise<PreparedOrder[]> {
-		if (!this.ethereum) {
-			throw new Error("Wallet undefined")
-		}
+		const from = toAddress(await getRequiredWallet(this.ethereum).getFrom())
 
-		const from = toAddress(await this.ethereum.getFrom())
-
-		return await Promise.all(requests.map(async (request) => {
-			if (request.order.take.assetType.assetClass !== "ETH") {
-				throw new Error("Batch purchase only available for ETH currency")
+		const preparedOrders = await Promise.all(requests.map(async (request) => {
+			if (!isWeth(request.order.take.assetType, this.config.weth) && !isETH(request.order.take.assetType)) {
+				throw new Error("Batch purchase is available only for ETH/WETH currencies")
 			}
+			let approveAsset: Asset | undefined
 
 			if (
 				request.order.type !== "RARIBLE_V2" &&
@@ -153,27 +153,64 @@ export class BatchOrderFiller {
 				throw new Error("Unsupported order type for batch purchase")
 			}
 
-			const fees = feesReducer.reduce(request.originFees)
+			const feesData = feesReducer.getComplexReducedFeesData(request.originFees)
 
 			let inverted: SimpleOrder | undefined = undefined
 			if (
-				request.order.type === "RARIBLE_V2" ||
-				request.order.type === "OPEN_SEA_V1"
+				request.order.type === "RARIBLE_V2"
+				// || request.order.type === "OPEN_SEA_V1"
 			) {
 				inverted = await this.invertOrder(request, from)
 				if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
 					inverted.make.assetType = await this.checkAssetType(request.assetType)
 					inverted.make.assetType = await this.checkLazyAssetType(inverted.make.assetType)
 				}
-				await this.approveOrder(inverted, Boolean(request.infinite))
+				approveAsset = await this.getApproveAsset(request, feesData, inverted)
+			}
+
+			if (request.order.type === "SEAPORT_V1") {
+				approveAsset = await this.getApproveAsset(request, feesData, inverted)
 			}
 
 			return {
 				request,
 				inverted,
-				fees,
+				fees: feesData.encodedFeesValue,
+				approveAsset,
 			}
 		}))
+
+		const totalInfiniteApproval = requests.every(request => !!request.infinite)
+
+		//group erc-20 assets for approving by order.type
+		const approveAssetsByOrderType = groupAssetsByOrderType(preparedOrders)
+		//sum erc-20 assets
+		for (const [orderType, assets] of approveAssetsByOrderType) {
+			const erc20Assets = groupErc20AssetsByContract(assets)
+
+			for (const [, erc20Asset] of erc20Assets) {
+				//approve erc-20 tokens
+				await this.approveErc20Asset(orderType, erc20Asset, totalInfiniteApproval)
+			}
+		}
+		return preparedOrders
+	}
+
+	private async getApproveAsset(
+		request: FillBatchSingleOrderRequest,
+		feesData: ComplexFeesReducedData,
+		inverted?: SimpleOrder
+	) {
+		switch (request.order.type) {
+			case "RARIBLE_V2":
+				return this.v2Handler.getAssetToApprove(inverted as SimpleRaribleV2Order)
+			case "SEAPORT_V1":
+				return this.seaportHandler.getAssetToApprove(request as SeaportV1OrderFillRequest, feesData)
+			// case "OPEN_SEA_V1":
+			// 	return this.openSeaHandler.getAssetToApprove(inverted)
+			default:
+				throw new Error(`Unsupported order: ${request.order.type}`)
+		}
 	}
 
 	private async invertOrder(request: FillBatchSingleOrderRequest, from: Address) {
@@ -187,14 +224,33 @@ export class BatchOrderFiller {
 		}
 	}
 
-	private async approveOrder(inverted: SimpleOrder, isInfinite: boolean) {
-		switch (inverted.type) {
+	private async approveErc20Asset(
+		orderType: FillBatchSingleOrderRequest["order"]["type"],
+		asset: Asset,
+		isInfinite: boolean
+	) {
+		const wallet = getRequiredWallet(this.ethereum)
+		const approveInput = {
+			ethereum: wallet,
+			send: this.send,
+			owner: toAddress(await wallet.getFrom()),
+			asset,
+			infinite: isInfinite,
+		}
+
+		switch (orderType) {
 			case "RARIBLE_V2":
-				return this.v2Handler.approve(inverted, isInfinite)
-			case "OPEN_SEA_V1":
-				return this.openSeaHandler.approve(inverted, isInfinite)
+				return pureApproveFn({
+					...approveInput,
+					operator: this.config.transferProxies.erc20,
+				})
+			case "SEAPORT_V1":
+				return pureApproveFn({
+					...approveInput,
+					operator: this.config.exchange.wrapper,
+				})
 			default:
-				throw new Error(`Unsupported order: ${inverted.type}`)
+				throw new Error(`Unsupported order: ${orderType}`)
 		}
 	}
 
@@ -215,6 +271,8 @@ export class BatchOrderFiller {
 			})
 		)
 
+		console.log("ordersCallData", ordersCallData, this.config.exchange.wrapper, "value", totalValue.toFixed())
+
 		const wrapperContract = createExchangeWrapperContract(this.ethereum!, this.config.exchange.wrapper)
 		const functionCall = wrapperContract.functionCall(
 			"bulkPurchase",
@@ -223,6 +281,7 @@ export class BatchOrderFiller {
 			feeAddresses[1],
 			true // allowFail
 		)
+		console.log("callinfo", await functionCall.getCallInfo(), await functionCall.getData())
 		let gasLimit = await wrapperContract.functionCall(
 			"bulkPurchase",
 			ordersCallData,
@@ -230,7 +289,7 @@ export class BatchOrderFiller {
 			feeAddresses[1],
 			false // allowFail
 		).estimateGas({
-			value: totalValue.toString(),
+			value: totalValue.toFixed(),
 			from: await getRequiredWallet(this.ethereum).getFrom(),
 		})
 		const gasLimitWithTheshold = toBn(gasLimit)
@@ -241,7 +300,7 @@ export class BatchOrderFiller {
 		return {
 			functionCall,
 			options: {
-				value: totalValue.toString(),
+				value: totalValue.toFixed(),
 				gas: gasLimitWithTheshold,
 				additionalData: getUpdatedCalldata(this.sdkConfig),
 			},
@@ -305,4 +364,42 @@ type PreparedOrder = {
 	request: FillBatchSingleOrderRequest
 	inverted?: SimpleOrder
 	fees: BigNumber
+	approveAsset?: Asset
+}
+
+
+function groupAssetsByOrderType<T extends PreparedOrder[]>(preparedOrders: T) {
+	return preparedOrders.reduce((acc, { approveAsset, request }) => {
+		if (approveAsset) {
+			if (acc.has(request.order.type)) {
+				const oldArray = acc.get(request.order.type) || []
+				oldArray.push(approveAsset)
+			} else {
+				acc.set(request.order.type, [approveAsset])
+			}
+		}
+		return acc
+	}, new Map() as Map<FillBatchSingleOrderRequest["order"]["type"], Array<Asset>>)
+}
+
+function groupErc20AssetsByContract(assets: Asset[]) {
+	return assets.reduce((acc, asset) => {
+		if (isErc20(asset.assetType)) {
+			const sumAsset = acc.get(asset.assetType.contract)
+			if (sumAsset) {
+				acc.set(
+					asset.assetType.contract,
+					{
+						...sumAsset,
+						value: toBigNumber(toBn(sumAsset.value).plus(asset.value).toFixed()),
+					}
+				)
+			} else {
+				acc.set(asset.assetType.contract, asset)
+			}
+		} else {
+			throw new Error("Can't group non-erc20 assets")
+		}
+		return acc
+	}, new Map() as Map<Address, Asset>)
 }

@@ -57,7 +57,7 @@ export enum DappType {
 }
 
 export function getDappType(provider: any): DappType | undefined {
-	if (provider === undefined) return undefined
+	if (!provider) return undefined
 	if (provider.isAlphaWallet) return DappType.AlphaWallet
 	if (provider.isAToken) return DappType.AToken
 	if (provider.bbcSignTx) return DappType.Binance
@@ -88,9 +88,9 @@ export function getDappType(provider: any): DappType | undefined {
 	if (provider.isLedgerConnect) return DappType.LedgerConnect
 	if (provider.isMetaMask) return DappType.Metamask
 	if (provider.isGamestop) return DappType.GameStop
-	if (provider.constructor.name === "Web3ProviderEngine") return DappType.Mock
-	if (provider.constructor.name === "EthereumProvider") return DappType.Mist
-	if (provider.constructor.name === "Web3FrameProvider") return DappType.Parity
-	if (provider.constructor.name === "Web3ProviderEngine") return DappType.Mock
+	if (provider?.constructor?.name === "Web3ProviderEngine") return DappType.Mock
+	if (provider?.constructor?.name === "EthereumProvider") return DappType.Mist
+	if (provider?.constructor?.name === "Web3FrameProvider") return DappType.Parity
+	if (provider?.constructor?.name === "Web3ProviderEngine") return DappType.Mock
 	return DappType.Unknown
 }

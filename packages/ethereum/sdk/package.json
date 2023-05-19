@@ -19,7 +19,7 @@
   "scripts": {
     "clean": "rimraf ./build ./umd",
     "build": "run-s build:*",
-    "build:esm": "tsc --project tsconfig-build.json",
+    "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "verify": "tsc --noEmit",
     "test": "jest --runInBand --silent"
