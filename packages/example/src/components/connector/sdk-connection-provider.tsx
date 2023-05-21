@@ -7,7 +7,7 @@ import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { UnionAddress } from "@rarible/types/build/union-address"
 import { toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { IRaribleSdk, LogsLevel } from "@rarible/sdk/build/domain"
+import { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { EnvironmentContext } from "./environment-selector-provider"
 
 export interface IConnectorContext {

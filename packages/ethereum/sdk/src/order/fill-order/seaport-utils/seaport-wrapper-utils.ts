@@ -1,24 +1,21 @@
-import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
 import { toAddress } from "@rarible/types"
-import type { Address, Part } from "@rarible/ethereum-api-client"
+import type { Address } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { SendFunction } from "../../../common/send-transaction"
 import type { SimpleSeaportV1Order } from "../../types"
-import type { OrderFillSendData } from "../types"
 import { ExchangeWrapperOrderType } from "../types"
 import type { PreparedOrderRequestDataForExchangeWrapper } from "../types"
-import { createExchangeWrapperContract } from "../../contracts/exchange-wrapper"
-import { calcValueWithFees, originFeeValueConvert } from "../common/origin-fees-utils"
+import { calcValueWithFees } from "../common/origin-fees-utils"
 import { compareCaseInsensitive } from "../../../common/compare-case-insensitive"
 import { isETH } from "../../../nft/common"
 import type { InputCriteria } from "./types"
 import {
 	CROSS_CHAIN_SEAPORT_ADDRESS, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	getConduitByKey, NO_CONDUIT,
-	OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 import { getBalancesAndApprovals } from "./balance-and-approval-check"
@@ -37,16 +34,13 @@ export async function prepareSeaportExchangeData(
 		unitsToFill,
 		encodedFeesValue,
 		totalFeeBasisPoints,
-		wrapperAddress,
 	}: {
 		unitsToFill?: BigNumberValue
 		// converted to single uint fee value, values should be in right order in case of use for batch purchase
 		encodedFeesValue: BigNumber,
 		totalFeeBasisPoints: number,
-		wrapperAddress: Address,
 	}
 ): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-	console.log("prepareSeaportExchangeData")
 	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
@@ -54,7 +48,6 @@ export async function prepareSeaportExchangeData(
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 
-	console.log("order", order)
 	// const conduitKey = OPENSEA_CONDUIT_KEY
 	const conduitKey = NO_CONDUIT
 	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
@@ -122,8 +115,6 @@ export async function prepareSeaportExchangeData(
 	}
 
 	const fulfillOrdersData = await getFulfillAdvancedOrderWrapperData({
-		ethereum,
-		send,
 		order: sanitizedOrder,
 		unitsToFill,
 		totalSize: orderStatus.totalSize,
@@ -141,7 +132,6 @@ export async function prepareSeaportExchangeData(
 		conduitKey,
 		recipientAddress,
 		seaportContract,
-		wrapperAddress,
 	})
 
 	const valueForSending = calcValueWithFees(toBigNumber(fulfillOrdersData.value), totalFeeBasisPoints)
@@ -150,7 +140,6 @@ export async function prepareSeaportExchangeData(
 		.multipliedBy(unitsToFill || 1)
 		.toFixed()
 
-	debugger
 	return {
 		data: {
 			marketId: getMarketIdByOpenseaContract(simpleOrder.data.protocol),

@@ -33,7 +33,6 @@ import {
 	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
 	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 	getConduitByKey, NO_CONDUIT,
-	OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 

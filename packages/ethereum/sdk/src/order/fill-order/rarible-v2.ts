@@ -19,7 +19,7 @@ import { fixSignature } from "../../common/fix-signature"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { assetTypeToStruct } from "../asset-type-to-struct"
 import { encodeRaribleV2OrderData } from "../encode-rarible-v2-order-data"
-import { isErc20, isETH, isWeth } from "../../nft/common"
+import { isETH, isWeth } from "../../nft/common"
 import { encodeRaribleV2OrderPurchaseStruct } from "./rarible-v2/encode-rarible-v2-order"
 import { invertOrder } from "./invert-order"
 import type {

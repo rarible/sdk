@@ -1,6 +1,6 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Action } from "@rarible/action"
-import type { Address, Asset, AssetType, Erc20AssetType } from "@rarible/ethereum-api-client"
+import type { Address, Asset, AssetType } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { BigNumber as BigNum, toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
@@ -397,8 +397,6 @@ function groupErc20AssetsByContract(assets: Asset[]) {
 			} else {
 				acc.set(asset.assetType.contract, asset)
 			}
-		} else {
-			throw new Error("Can't group non-erc20 assets")
 		}
 		return acc
 	}, new Map() as Map<Address, Asset>)
