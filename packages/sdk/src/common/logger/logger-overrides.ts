@@ -3,6 +3,7 @@ import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import { isEVMWarning, isSolanaWarning, isTezosWarning } from "@rarible/sdk-common"
+import { isFlowWarning } from "@rarible/sdk-common/src"
 import { NetworkErrorCode } from "../apis"
 
 const COMMON_NETWORK_ERROR_MESSAGES = [
@@ -29,6 +30,10 @@ export function isErrorWarning(err: any, blockchain: WalletType | undefined): bo
 
 		if (blockchain === WalletType.TEZOS) {
 			return isTezosWarning(err)
+		}
+
+		if (blockchain === WalletType.FLOW) {
+			return isFlowWarning(err)
 		}
 
 		if (blockchain === WalletType.SOLANA) {
