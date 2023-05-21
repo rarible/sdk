@@ -17,7 +17,6 @@ describe("Test flow balance function", () => {
 	const address = convertFlowUnionAddress("0x324c4173e0175672")
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
-	const unionSdk = createRaribleSdk(wallet, "prod")
 
 	test("Should get FT balance for account", async () => {
 		const balance1 = await sdk.balances.getBalance(address, {
