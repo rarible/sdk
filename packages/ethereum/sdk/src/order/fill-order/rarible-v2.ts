@@ -192,9 +192,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		// if (initial.take.assetType.assetClass !== "ETH") {
-		// 	throw new Error("Batch purchase only available for ETH currency")
-		// }
 		if (!initial.signature) {
 			initial.signature = await signOrder(this.ethereum, this.config, initial)
 		}

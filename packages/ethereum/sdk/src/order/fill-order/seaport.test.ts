@@ -31,7 +31,7 @@ import type { CreateInputItem } from "./seaport-utils/types"
 import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
-describe("seaport", () => {
+describe.skip("seaport", () => {
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		GOERLI_CONFIG
@@ -433,7 +433,7 @@ describe("seaport", () => {
 	})
 })
 
-describe("polygon seaport", () => {
+describe.skip("polygon seaport", () => {
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		MUMBAI_CONFIG

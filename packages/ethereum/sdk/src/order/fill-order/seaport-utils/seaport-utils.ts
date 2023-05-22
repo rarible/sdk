@@ -32,7 +32,7 @@ import {
 	CROSS_CHAIN_SEAPORT_ADDRESS,
 	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
 	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
-	getConduitByKey, NO_CONDUIT,
+	getConduitByKey, OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
@@ -61,8 +61,7 @@ export async function fulfillOrder(
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
 	const fulfillerAddress = await ethereum.getFrom()
-	// const conduitKey = OPENSEA_CONDUIT_KEY
-	const conduitKey = NO_CONDUIT
+	const conduitKey = OPENSEA_CONDUIT_KEY
 	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
 	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
@@ -119,13 +118,6 @@ export async function fulfillOrder(
 
 	// We use basic fulfills as they are more optimal for simple and "hot" use cases
 	// We cannot use basic fulfill if user is trying to partially fill though.
-	console.log("!unitsToFill", !unitsToFill)
-	console.log("isRecipientSelf", isRecipientSelf)
-	console.log("fn", shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
-
-	console.log("condition", 	!unitsToFill &&
-		isRecipientSelf &&
-		shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
 	if (
 		!unitsToFill &&
     isRecipientSelf &&

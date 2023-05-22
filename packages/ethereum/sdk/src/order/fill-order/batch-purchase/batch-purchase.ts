@@ -271,8 +271,6 @@ export class BatchOrderFiller {
 			})
 		)
 
-		console.log("ordersCallData", ordersCallData, this.config.exchange.wrapper, "value", totalValue.toFixed())
-
 		const wrapperContract = createExchangeWrapperContract(this.ethereum!, this.config.exchange.wrapper)
 		const functionCall = wrapperContract.functionCall(
 			"bulkPurchase",
@@ -281,7 +279,6 @@ export class BatchOrderFiller {
 			feeAddresses[1],
 			true // allowFail
 		)
-		console.log("callinfo", await functionCall.getCallInfo(), await functionCall.getData())
 		let gasLimit = await wrapperContract.functionCall(
 			"bulkPurchase",
 			ordersCallData,

@@ -84,16 +84,6 @@ export async function prepareSeaportExchangeData(
 		}),
 		seaportContract.functionCall("getOrderStatus", getOrderHash(orderParameters)).call(),
 	])
-	console.log(
-		"offererBalancesAndApprovals",
-		JSON.stringify(offererBalancesAndApprovals, null, "	"),
-		offererBalancesAndApprovals
-	)
-	console.log(
-		"fulfillerBalancesAndApprovals",
-		JSON.stringify(fulfillerBalancesAndApprovals, null, "	"),
-		fulfillerBalancesAndApprovals
-	)
 
 	const orderStatus: OrderStatus = {
 		totalFilled: toBn(orderStatusRaw.totalFilled),
