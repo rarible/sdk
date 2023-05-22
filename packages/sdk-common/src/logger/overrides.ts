@@ -99,6 +99,14 @@ export function isSolanaWarning(error: any): boolean {
 	return error?.name === "User rejected the request." || error?.error?.code === 4001
 }
 
+export const FLOW_WARN_MESSAGES = [
+	"[Error Code: 1007] invalid proposal key",
+]
+
+export function isFlowWarning(error: any): boolean {
+	return FLOW_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
+}
+
 export function getBlockchainByConnectorId(providerId: string): BlockchainGroup | undefined {
 	switch (providerId) {
 		case "beacon": return BlockchainGroup.TEZOS

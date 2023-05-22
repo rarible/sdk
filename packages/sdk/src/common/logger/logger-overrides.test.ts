@@ -44,4 +44,9 @@ describe("logger overrides", () => {
 		const error = "execution reverted: AssetContractShared#creatorOnly: ONLY_CREATOR_ALLOWED"
 		expect(getExecRevertedMessage(error)).toEqual("AssetContractShared#creatorOnly: ONLY_CREATOR_ALLOWED")
 	})
+
+	test("flow proposal key error error", () => {
+		const error = new Error("[Error Code: 1007] error caused by: 1 error occurred:\\n\\t* checking sequence number failed: [Error Code: 1007] invalid proposal key: public key 0 on account 201362ac764cf16f has sequence number 284, but given 283\\n\\n")
+		expect(isErrorWarning(error, WalletType.FLOW)).toBeTruthy()
+	})
 })
