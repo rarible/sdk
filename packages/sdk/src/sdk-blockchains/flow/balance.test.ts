@@ -9,33 +9,31 @@ import { convertFlowUnionAddress } from "./common/converters"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { createFlowSdk } from "./index"
 
-describe.skip("Test flow balance function", () => {
+describe("Test flow balance function", () => {
 	beforeAll(() => {
-		fcl.config().put("accessNode.api", "https://flow-access-mainnet.portto.io")
+		fcl.config().put("accessNode.api", "https://access-mainnet-beta.onflow.org")
 	})
 
 	const address = convertFlowUnionAddress("0x324c4173e0175672")
 	const wallet = new FlowWallet(fcl)
 	const sdk = createFlowSdk(wallet, createApisSdk("prod"), "mainnet")
-	const unionSdk = createRaribleSdk(wallet, "prod")
 
-	test.skip("flow balance", async () => {
-		let error: any
-		try {
-			await unionSdk.balances.getBalance(
-				address,
-				{
-					"@type": "FLOW_FT",
-					contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
-				}
-			)
-		} catch (e) {
-			error = e
-		}
-		expect(error.message).toBe("Flow blockchain is no longer supported")
+	test("Should get FT balance for account", async () => {
+		const balance1 = await sdk.balances.getBalance(address, {
+			"@type": "FLOW_FT",
+			contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
+		})
+		expect(balance1.toString()).toEqual("0.001")
+
+		const balance2 = await sdk.balances.getBalance(address, {
+			"@type": "FLOW_FT",
+			contract: toContractAddress("FLOW:A.0x3c5959b568896393.FUSD"),
+		})
+		expect(balance2.toString()).toEqual("0")
 	})
 
-	test.skip("Should get FT balance for account", async () => {
+	test("Should get FT balance for account without SDK wallet", async () => {
+		const sdk = createFlowSdk(undefined, createApisSdk("prod"), "mainnet")
 		const balance1 = await sdk.balances.getBalance(address, {
 			"@type": "FLOW_FT",
 			contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),

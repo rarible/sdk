@@ -10,6 +10,7 @@ import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
 import type { IBalanceTransferRequest } from "../../types/balances"
+import { retry } from "../../common/retry"
 import { parseFlowAddressFromUnionAddress } from "./common/converters"
 import { getFlowCurrencyFromAssetType } from "./common/get-flow-currency-from-asset-type"
 import { getSimpleFlowFungibleBalance } from "./balance-simple"
@@ -30,10 +31,15 @@ export class FlowBalance {
 		if (this.wallet) {
 			const flowAddress = parseFlowAddressFromUnionAddress(address)
 			const flowAsset = getFlowCurrencyFromAssetType(assetType)
-		  const balance = await this.sdk.wallet.getFungibleBalance(flowAddress, flowAsset)
+
+			const balance = await retry(10, 1000, async () => {
+				return await this.sdk.wallet.getFungibleBalance(flowAddress, flowAsset)
+			})
 			return toBn(balance)
 		}
-		return getSimpleFlowFungibleBalance(this.env, address, assetType)
+		return await retry(10, 1000, async () => {
+			return await getSimpleFlowFungibleBalance(this.env, address, assetType)
+		})
 	}
 
 	async transfer(request: IBalanceTransferRequest) {
