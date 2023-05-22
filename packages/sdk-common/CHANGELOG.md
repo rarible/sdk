@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.38](https://github.com/rarible/sdk/compare/v0.13.37...v0.13.38) (2023-05-22)
+
+
+### Bug Fixes
+
+* move proposal key error to warning ([#483](https://github.com/rarible/sdk/issues/483)) ([0bcd25f](https://github.com/rarible/sdk/commit/0bcd25fb8b15d6a0c3047d98c39b64ee7ff5de1d))
+
+
+
+
+
 ## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
 
 **Note:** Version bump only for package @rarible/sdk-common
