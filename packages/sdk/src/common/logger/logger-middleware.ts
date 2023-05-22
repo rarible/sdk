@@ -9,6 +9,13 @@ import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
 import { getSdkContext } from "../get-sdk-context"
+import { WrappedAdvancedFn } from "../middleware/middleware"
+import type { PrepareFillRequest } from "../../types/order/fill/domain"
+import { getOrderIdFromFillRequest } from "../utils"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
+import type { PrepareOrderUpdateRequest } from "../../types/order/common"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
+import type { PrepareOrderRequest } from "../../types/order/common"
 import { getErrorLevel, getExecRevertedMessage } from "./logger-overrides"
 
 export const loggerConfig = {
@@ -122,6 +129,7 @@ export function getInternalLoggerMiddleware(
 					parsedArgs = "unknown"
 				}
 			}
+			const logDataExtraFields = getCallableExtraFields(callable)
 			try {
 				const res = await responsePromise
 				if (logsLevel >= LogsLevel.TRACE) {
@@ -132,6 +140,7 @@ export function getInternalLoggerMiddleware(
 						duration: (Date.now() - time) / 1000,
 						args: parsedArgs,
 						resp: JSON.stringify(res),
+						...(logDataExtraFields || {}),
 					})
 				}
 			} catch (err: any) {
@@ -146,6 +155,7 @@ export function getInternalLoggerMiddleware(
 							duration: (Date.now() - time) / 1000,
 							args: parsedArgs,
 							requestAddress: undefined as undefined | string,
+							...(logDataExtraFields || {}),
 						}
 						if (err instanceof NetworkError || err?.name === "NetworkError") {
 							data.requestAddress = err?.url
@@ -164,4 +174,67 @@ export function getInternalLoggerMiddleware(
 			return responsePromise
 		}]
 	}
+}
+
+export function getCallableExtraFields(callable: any): Record<string, string | undefined> {
+	try {
+		if (typeof callable?.name !== "string") return {}
+		if (callable instanceof WrappedAdvancedFn || callable?.constructor?.name === "WrappedAdvancedFn") {
+
+			if (callable?.name.startsWith("order.buy.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareFillRequest
+				const orderId = getOrderIdFromFillRequest(request)
+				return {
+					orderId,
+				}
+			}
+			if (callable?.name.startsWith("order.batchBuy.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareFillRequest[]
+				const orderIds = Array.isArray(request)
+					? request.map(req => getOrderIdFromFillRequest(req))
+						.join(",")
+					: null
+				return {
+					orderId: `[${orderIds}]`,
+				}
+			}
+
+			if (callable?.name.startsWith("order.bid.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareBidRequest
+				if ("collectionId" in request) {
+					return { collectionId: request.collectionId }
+				} else if ("itemId" in request) {
+					return { itemId: request.itemId }
+				}
+			}
+
+			if (callable?.name.startsWith("order.bidUpdate.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareOrderUpdateRequest
+				return { orderId: request.orderId }
+			}
+
+			if (callable?.name.startsWith("order.cancel")) {
+				const request = callable.parent?.args[0] as CancelOrderRequest
+				return { orderId: request.orderId }
+			}
+
+			if (callable?.name.startsWith("order.sell.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareOrderRequest
+				return { itemId: request.itemId }
+			}
+			if (callable?.name.startsWith("order.sellUpdate.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareOrderUpdateRequest
+				return { orderId: request.orderId }
+			}
+
+			if (callable?.name.startsWith("order.acceptBid.prepare.submit")) {
+				const request = callable.parent?.args[0] as PrepareFillRequest
+				let orderId = getOrderIdFromFillRequest(request)
+				return { orderId }
+			}
+		}
+	} catch (e) {
+
+	}
+	return {}
 }

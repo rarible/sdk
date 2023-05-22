@@ -26,7 +26,7 @@ describe("SDK Middleware", () => {
 
 	test("Should use middleware", async () => {
 		middlewarer.use(getMiddleware("mid", checks))
-		await middlewarer.call(handler, "2", "3")
+		await middlewarer.call(handler, { args: ["2", "3"] })
 
 		expect(handler).toBeCalled()
 		expect(checks).toEqual(["mid_1", "mid_args_[2,3]", "mid_23", "mid_4"])
