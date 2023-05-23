@@ -8,6 +8,9 @@ import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { EnvironmentContext } from "../../components/connector/environment-selector-provider";
+import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain";
+import { Blockchain } from "@rarible/api-client";
 
 interface IMintPrepareFormProps {
 	disabled?: boolean,
@@ -16,6 +19,8 @@ interface IMintPrepareFormProps {
 
 export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps) {
 	const connection = useContext(ConnectorContext)
+	const {environment} = useContext(EnvironmentContext)
+
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -37,7 +42,7 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput form={form} name="collectionId" label="Collection ID"/>
+					<FormTextInput form={form} name="collectionId" label="Collection ID" defaultValue={connection.state.status === "connected" ? getDefaultCollection(environment, connection.state?.connection?.blockchain): ""}/>
 					<Box>
 						<FormSubmit
 							form={form}
@@ -54,4 +59,26 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 			</Box>
 		</>
 	)
+}
+
+function getDefaultCollection(env: RaribleSdkEnvironment, blockchain: Blockchain) {
+	console.log('env', env, blockchain, getDefaultETHCollection(env))
+	switch (blockchain) {
+		case Blockchain.ETHEREUM: return `${blockchain}:${getDefaultETHCollection(env)}`
+		default: return ""
+	}
+}
+function getDefaultETHCollection(env: RaribleSdkEnvironment) {
+	switch (env) {
+		case "development":
+			return "0x6972347e66A32F40ef3c012615C13cB88Bf681cc"
+		case "testnet":
+			return "0xD8560C88D1DC85f9ED05b25878E366c49B68bEf9"
+		case "staging":
+			return "0xBf558E78CfdE95AfbF17a4ABe394Cb2cC42E6270"
+		case "prod":
+			return "0xc9154424B823b10579895cCBE442d41b9Abd96Ed"
+		default:
+			return ""
+	}
 }

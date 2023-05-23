@@ -17,6 +17,15 @@ export function packFeesToUint(fees: [number | undefined, number | undefined]): 
 	return toBigNumber("0x" + "0".repeat(64 - 8) + firstFee + secondFee)
 }
 
+export function setFeesCurrency(value: string, isWeth: boolean): BigNumber {
+	const wethCurrencyPosition = 13
+	const rawHex = value.startsWith("0x") ? value.slice(2) : value
+	const normalizedPackedFees = rawHex.padStart(wethCurrencyPosition, "0")
+	const arrFees = normalizedPackedFees.split("")
+	arrFees[arrFees.length - wethCurrencyPosition] = Number(isWeth).toString()
+	return toBigNumber("0x" + arrFees.join(""))
+}
+
 export function getPackedFeeValue(fee: number | undefined) {
 	return fee?.toString(16).padStart(4, "0") ?? "0000"
 }

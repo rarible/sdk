@@ -4,6 +4,7 @@ import { App } from "./app"
 import { BrowserRouter } from "react-router-dom"
 import { CssBaseline, ThemeProvider } from "@mui/material"
 import { appTheme } from "./theme"
+require('dotenv').config()
 
 ReactDOM.render(
   <React.StrictMode>

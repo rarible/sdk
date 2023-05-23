@@ -40,6 +40,7 @@ export function useRequestResult<T>(): IRequestResult<T> {
 			})
 		},
 		setError: (error: any) => {
+			console.error(error);
 			setFetching(false)
 			setResult({
 				type: "error",

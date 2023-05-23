@@ -72,11 +72,17 @@ export function filterErrors(original: unknown) {
 		if ([4900, 4001, 4901, 4100].includes(original.code)) {
 			throw original
 		}
+		if (hasMessage(original) && original.message?.includes("User denied message signature.")) {
+			throw original
+		}
 	}
 }
 
 function hasCode(error: unknown): error is { code: number } {
 	return typeof error === "object" && error !== null && "code" in error
+}
+function hasMessage(error: unknown): error is { message: string } {
+	return typeof error === "object" && error !== null && "message" in error
 }
 
 function toBuffer(hex: string) {

@@ -1,23 +1,18 @@
 import type { Contract, ContractSendMethod, SendOptions } from "web3-eth-contract"
 import type Web3 from "web3"
-import type { PromiEvent, TransactionReceipt, TransactionConfig } from "web3-core"
-import { Provider, signTypedData } from "@rarible/ethereum-provider"
+import type { PromiEvent, TransactionConfig, TransactionReceipt } from "web3-core"
+import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
+import { EthereumProviderError, filterErrors, Provider, signTypedData } from "@rarible/ethereum-provider"
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import { backOff } from "exponential-backoff"
-import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { AbiItem } from "web3-utils"
-import { EthereumProviderError } from "@rarible/ethereum-provider"
-import { filterErrors } from "@rarible/ethereum-provider"
-import { getDappType, promiseSettledRequest } from "@rarible/sdk-common"
+import { DappType, getDappType, promiseSettledRequest } from "@rarible/sdk-common"
 import type { Web3EthereumConfig } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
-import {
-	getContractMethodReceiptEvents,
-	getTransactionReceiptEvents,
-} from "./utils/log-parser"
+import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./utils/log-parser"
 
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
@@ -33,23 +28,13 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		try {
 		  return await providerRequest(this.config.web3.currentProvider, method, params)
 		} catch (e: any) {
-			let signer: string | undefined, chainId
-			try {
-				[signer, chainId] = await promiseSettledRequest([
-					this.getFrom(),
-					this.getChainId(),
-				])
-			} catch (e) {}
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
-				providerId: getDappType(this.getCurrentProvider()),
+				...await getCommonErrorData(this.config),
 				error: e,
 				method: "Web3Ethereum.send",
-				chainId,
 				data: {
 					method,
 					params,
-					from: signer,
 				},
 			})
 		}
@@ -64,14 +49,10 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			return signature
 		} catch (e: any) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
-				providerId: getDappType(this.getCurrentProvider()),
+				...await getCommonErrorData(this.config),
 				error: e,
 				method: "Web3Ethereum.personalSign",
-				data: {
-					message,
-					signer,
-				},
+				data: { message },
 			})
 		}
 	}
@@ -82,18 +63,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			signer = await this.getFrom()
 			return await signTypedData(this.send, signer, data)
 		} catch (e: any) {
-			let chainId
-			try {
-				chainId = await this.getChainId()
-			} catch (e) {}
 			throw new EthereumProviderError({
-				providerId: getDappType(this.getCurrentProvider()),
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3Ethereum.signTypedData",
 				error: e,
 				data,
-				signer,
-				chainId,
 			})
 		}
 	}
@@ -103,8 +77,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 			return await getFrom(this.config.web3, this.config.from)
 		} catch (e) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.getCurrentProvider()),
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3Ethereum.getFrom",
 				error: e,
 				data: null,
@@ -117,8 +90,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		  return this.config.web3.eth.abi.encodeParameter(type, parameter)
 		} catch (e: any) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.getCurrentProvider()),
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3Ethereum.encodeParameter",
 				error: e,
 				data: { type, parameter },
@@ -131,8 +103,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		  return this.config.web3.eth.abi.decodeParameters([type], data)
 		} catch (e: any) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.getCurrentProvider()),
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3Ethereum.decodeParameter",
 				error: e,
 				data: { type, data },
@@ -145,8 +116,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		  return toBigNumber(await this.config.web3.eth.getBalance(address))
 		} catch (e: any) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.getCurrentProvider()),
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3Ethereum.getBalance",
 				error: e,
 				data: { address },
@@ -159,8 +129,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		  return await this.config.web3.eth.getChainId()
 		} catch (e) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.getCurrentProvider()),
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3Ethereum.getChainId",
 				error: e,
 				data: null,
@@ -172,8 +141,8 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		return this.config.web3
 	}
 
-	getCurrentProvider(): Web3 {
-		return this.config.web3
+	getCurrentProvider(): any {
+		return this.config.web3.currentProvider
 	}
 }
 
@@ -201,8 +170,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		  this.sendMethod = this.contract.methods[this.methodName](...this.args)
 		} catch (e: any) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.config?.web3?.currentProvider),
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3FunctionCall.constructor",
 				error: e,
 				data: {
@@ -229,8 +197,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		  return await this.sendMethod.encodeABI()
 		} catch (e) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
-				providerId: getDappType(this.config?.web3?.currentProvider),
+				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.getData",
 				error: e,
 				data: {
@@ -247,8 +214,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		  return await this.sendMethod.estimateGas(options)
 		} catch (e) {
 			throw new EthereumProviderError({
-				providerId: getDappType(this.config?.web3?.currentProvider),
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.estimateGas",
 				error: e,
 				data: { options },
@@ -264,20 +230,17 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				gasPrice: options.gasPrice?.toString(),
 			})
 		} catch (e: any) {
-			let callInfo = null, callData = null, chainId
+			let callInfo = null, callData = null
 			try {
-				[callInfo, callData, chainId] = await promiseSettledRequest([
+				[callInfo, callData] = await promiseSettledRequest([
 					this.getCallInfo(),
 					this.getData(),
-					this.config.web3.eth.getChainId(),
 				])
 			} catch (e) {}
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
-				providerId: getDappType(this.config?.web3?.currentProvider),
+				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.call",
 				error: e,
-				chainId,
 				data: {
 					...(callInfo || {}),
 					data: callData,
@@ -363,11 +326,10 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			)
 		} catch (e: any) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3FunctionCall.send",
 				error: e,
 				chainId,
-				providerId: getDappType(this.config?.web3?.currentProvider),
 				data: {
 					...(callInfo || {}),
 					options,
@@ -452,4 +414,27 @@ async function getFrom(web3: Web3, from: string | undefined): Promise<string> {
 		throw new Error("Wallet is not connected")
 	}
 	return first
+}
+
+async function getCommonErrorData(config: Web3EthereumConfig) {
+	const [signer, chainId] = await promiseSettledRequest([
+		getFrom(config.web3, config.from),
+		config.web3.eth.getChainId(),
+	])
+	return {
+		...getProvidersData(config),
+		chainId,
+		signer,
+	}
+}
+
+function getProvidersData(config: Web3EthereumConfig) {
+	return {
+		provider: Provider.WEB3,
+		providerId: getCurrentProviderId(config.web3),
+	}
+}
+
+export function getCurrentProviderId(web3?: Web3): DappType {
+	return getDappType(web3?.currentProvider) || DappType.Unknown
 }

@@ -10,6 +10,11 @@ export const MUMBAI_CONFIG = {
 	networkId: 80001,
 }
 
+export const POLYGON_CONFIG = {
+	rpcUrl: "https://node-mainnet-polygon.rarible.com",
+	networkId: 137,
+}
+
 export const GOERLI_CONFIG = {
 	rpcUrl: "https://goerli-ethereum-node.rarible.com",
 	networkId: 5,

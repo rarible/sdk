@@ -7,6 +7,7 @@ import type { SimpleSeaportV1Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { createSeaportContract } from "../../contracts/seaport"
+import { compareCaseInsensitive } from "../../../common/compare-case-insensitive"
 import { getOrderHash } from "./get-order-hash"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import {
@@ -31,19 +32,17 @@ import {
 	CROSS_CHAIN_SEAPORT_ADDRESS,
 	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
 	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
-	getConduitByKey,
-	OPENSEA_CONDUIT_KEY,
+	getConduitByKey, OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
 export function getSeaportContract(ethereum: Ethereum, protocol: string): EthereumContract {
-	const protocolAddress = protocol.toLowerCase()
 	if (
-		protocolAddress === CROSS_CHAIN_SEAPORT_V1_4_ADDRESS.toLowerCase()
-		|| protocolAddress === CROSS_CHAIN_SEAPORT_V1_5_ADDRESS.toLowerCase()
+		compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS)
+		|| compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS)
 	) {
 	  return createSeaportV14Contract(ethereum, toAddress(protocol))
-	} else if (protocolAddress === CROSS_CHAIN_SEAPORT_ADDRESS.toLowerCase()) {
+	} else if (compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_ADDRESS)) {
 		return createSeaportContract(ethereum, toAddress(protocol))
 	} else {
 		throw new Error("Unrecognized Seaport protocol")
@@ -119,13 +118,6 @@ export async function fulfillOrder(
 
 	// We use basic fulfills as they are more optimal for simple and "hot" use cases
 	// We cannot use basic fulfill if user is trying to partially fill though.
-	console.log("!unitsToFill", !unitsToFill)
-	console.log("isRecipientSelf", isRecipientSelf)
-	console.log("fn", shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
-
-	console.log("condition", 	!unitsToFill &&
-		isRecipientSelf &&
-		shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled))
 	if (
 		!unitsToFill &&
     isRecipientSelf &&

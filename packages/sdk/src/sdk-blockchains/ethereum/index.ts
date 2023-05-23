@@ -27,11 +27,12 @@ import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
 import { EthereumCryptopunk } from "./cryptopunk"
 import type { IEthereumSdkConfig } from "./domain"
+import type { EVMBlockchain } from "./common"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
-	blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON,
+	blockchain: EVMBlockchain,
 	network: EthereumNetwork,
 	config: {
 		params?: ConfigurationParameters,

@@ -73,6 +73,8 @@ const EVM_WARN_MESSAGES = [
 	"User cancelled login",
 	"User denied account authorization",
 	"User rejected methods",
+	"membatalkan",
+	"La transaction de signature a été annulée",
 ]
 
 export function isEVMWarning(error: any): boolean {

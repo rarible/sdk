@@ -123,24 +123,9 @@ export async function getFulfillStandardOrderData({
 			conduitKey,
 			recipientAddress,
 		)
-		console.log("fulfillAdvancedOrder", JSON.stringify([{
-			...orderAccountingForTips,
-			numerator,
-			denominator,
-			extraData: extraData ?? "0x",
-		},
-		hasCriteriaItems
-			? generateCriteriaResolvers({
-				orders: [order],
-				offerCriterias: [offerCriteria],
-				considerationCriterias: [considerationCriteria],
-			})
-			: [],
-		conduitKey,
-		recipientAddress], null, "  "))
 		return {
 			functionCall,
-			options: { value: totalNativeAmount?.toString() },
+			options: { value: totalNativeAmount?.toFixed() || "0" },
 		}
 	}
 
@@ -150,6 +135,6 @@ export async function getFulfillStandardOrderData({
 	)
 	return {
 		functionCall,
-		options: { value: totalNativeAmount?.toString() },
+		options: { value: totalNativeAmount?.toFixed() || "0" },
 	}
 }

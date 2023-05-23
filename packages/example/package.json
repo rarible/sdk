@@ -44,6 +44,7 @@
     "@types/react": "^17.0.40",
     "@types/react-dom": "^17.0.13",
     "@types/react-syntax-highlighter": "^13.5.2",
+    "dotenv": "^16.0.3",
     "jest": "26.6.0",
     "lodash": "^4.17.21",
     "node-sass": "^7.0.1",

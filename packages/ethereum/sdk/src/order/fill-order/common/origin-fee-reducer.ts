@@ -22,18 +22,34 @@ export class OriginFeeReducer {
 			return ZERO_FEE_VALUE
 		}
 
+		const reducedArray = this.getReducedFeesArray(originFees)
+
+		return packFeesToUint(reducedArray)
+	}
+
+	getReducedFeesArray(originFees: Part[] | undefined): [number, number] {
+		if (!originFees?.length) {
+			return [0, 0]
+		}
+
 		if (originFees.length > 2) {
 			throw new Error("Supports max up to 2 different origin fee address per request")
 		}
 
-		const fees = originFees.reduce<[number, number]>((acc, originFee: Part) => {
+		return originFees.reduce<[number, number]>((acc, originFee: Part) => {
 			const res = this.reducePart(originFee)
 			acc[0] += res[0]
 			acc[1] += res[1]
 			return acc
 		}, [0, 0])
+	}
 
-		return packFeesToUint(fees)
+	getComplexReducedFeesData(originFees: Part[] | undefined): ComplexFeesReducedData {
+		const reducedArray = this.getReducedFeesArray(originFees)
+		return {
+			encodedFeesValue: packFeesToUint(reducedArray),
+			totalFeeBasisPoints: reducedArray[0] + reducedArray[1],
+		}
 	}
 
 	/**
@@ -64,4 +80,9 @@ export class OriginFeeReducer {
 		return [firstFee, secondFee]
 	}
 
+}
+
+export type ComplexFeesReducedData = {
+	encodedFeesValue: BigNumber
+	totalFeeBasisPoints: number
 }

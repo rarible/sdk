@@ -239,7 +239,6 @@ export class EthereumBid {
 						originFeesSum
 					)
 					await this.convertCurrency(value)
-					// console.log("after convert")
 				}
 				return request
 			},
@@ -338,7 +337,7 @@ export class EthereumBid {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
+			supportedCurrencies: common.getSupportedCurrencies(this.blockchain, true),
 			multiple: collection.type === "ERC1155",
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
