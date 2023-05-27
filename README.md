@@ -652,8 +652,8 @@ sdk.apis.item.getItemsByCreator({ creator: someAddress })
 sdk.apis.activity.getActivitiesByItem({ type: ["TRANSFER"], contract, tokenId })
 
 //etc. Please explore SDK APIs and openAPI docs
-```
-**NOTE:** Our indexer can scanning blockchains with a slight delay. If your code depends on API data you should awaiting that until it appears.     
+```   
+**NOTE:** Our indexer may scan blockchains with a slight delay. If your code depends on API data, you should await it until it appears.
 ```ts
 //Don't do like that!
 const { address, tx } = await sdk.nft.createCollection({...})
