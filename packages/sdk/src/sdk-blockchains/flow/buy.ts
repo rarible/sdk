@@ -62,12 +62,21 @@ export class FlowBuy {
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
-				run: (buyRequest: FillRequest) => {
+				run: (buyRequest: FillRequest & { order: Order }) => {
+					console.log("send tx fill", buyRequest)
 					return this.buyCommon({
 						...buyRequest,
 						...request,
 					})
 				},
+			})
+			.before(async (buyRequest: FillRequest) => {
+				const order = await this.getPreparedOrder(request)
+				console.log("before fill", buyRequest)
+				return {
+					...buyRequest,
+					order,
+				}
 			})
 
 		return {

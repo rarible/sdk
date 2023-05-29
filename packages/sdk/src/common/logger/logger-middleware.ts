@@ -184,8 +184,10 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 			if (callable?.name.startsWith("order.buy.prepare.submit")) {
 				const request = callable.parent?.args[0] as PrepareFillRequest
 				const orderId = getOrderIdFromFillRequest(request)
+				console.log("callable", callable)
 				return {
 					orderId,
+					platform: (request as any).platform,
 				}
 			}
 			if (callable?.name.startsWith("order.batchBuy.prepare.submit")) {

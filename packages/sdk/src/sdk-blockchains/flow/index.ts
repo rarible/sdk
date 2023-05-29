@@ -32,8 +32,10 @@ export function createFlowSdk(
 	params?: ConfigurationParameters,
 	config?: IRaribleSdkConfig
 ): IRaribleInternalSdk {
+	console.log("flow", { apiKey: config?.apiKey })
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, {
 		...(params || {}),
+		apiKey: config?.apiKey,
 		middleware: [
 			...(config?.logs !== LogsLevel.DISABLED
 				? [getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR)]
