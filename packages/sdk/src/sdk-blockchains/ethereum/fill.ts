@@ -34,7 +34,6 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
-import { getNftContractAddress } from "../../common/utils"
 import {
 	convertEthereumContractAddress,
 	convertOrderIdToEthereumHash,
