@@ -2,11 +2,12 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber } from "@rarible/types"
 import type {
+	AmmOrderFillRequest,
 	FillBatchSingleOrderRequest,
 	FillOrderAction,
 	FillOrderRequest,
 	RaribleV2OrderFillRequestV3Sell,
-	AmmOrderFillRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+} from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
@@ -16,10 +17,10 @@ import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { OrderId } from "@rarible/api-client"
+import type { Blockchain, OrderId } from "@rarible/api-client"
+import { Platform } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
-import type { Blockchain } from "@rarible/api-client"
 import { Warning } from "@rarible/logger/build"
 import type {
 	BatchFillRequest,
@@ -283,6 +284,28 @@ export class EthereumFill {
 		}
 	}
 
+	getPlatform(order: SimpleOrder): Platform {
+		switch (order.type) {
+			case "RARIBLE_V1":
+			case "RARIBLE_V2":
+				return Platform.RARIBLE
+			case "OPEN_SEA_V1":
+			case "SEAPORT_V1":
+				return Platform.OPEN_SEA
+			case "LOOKSRARE":
+			case "LOOKSRARE_V2":
+				return Platform.LOOKSRARE
+			case "AMM":
+				return Platform.SUDOSWAP
+			case "X2Y2":
+				return Platform.X2Y2
+			case "CRYPTO_PUNK":
+				return Platform.CRYPTO_PUNKS
+			default:
+				return Platform.RARIBLE
+		}
+	}
+
 	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber | null> {
 		if (order.take.assetType.assetClass === "COLLECTION") {
 			return null
@@ -360,6 +383,9 @@ export class EthereumFill {
 			maxAmount: await this.getMaxAmount(order),
 			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
 			submit,
+			orderData: {
+				platform: this.getPlatform(order),
+			},
 		}
 	}
 
@@ -483,6 +509,9 @@ export class EthereumFill {
 				multiple: await this.isMultiple(ethOrder),
 				maxAmount: await this.getMaxAmount(ethOrder),
 				baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
+				orderData: {
+					platform: this.getPlatform(ethOrder),
+				},
 			}
 		}))
 

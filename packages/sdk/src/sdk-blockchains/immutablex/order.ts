@@ -131,6 +131,9 @@ export class ImxOrderService {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,
+			orderData: {
+				platform: order.platform,
+			},
 		}
 	}
 

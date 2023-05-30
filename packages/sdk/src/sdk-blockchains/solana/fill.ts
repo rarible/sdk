@@ -112,6 +112,9 @@ export class SolanaFill {
 			payoutsSupport: PayoutsSupport.NONE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
+			orderData: {
+				platform: order.platform,
+			},
 		}
 	}
 
@@ -163,6 +166,9 @@ export class SolanaFill {
 			payoutsSupport: PayoutsSupport.NONE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
+			orderData: {
+				platform: order.platform,
+			},
 		}
 	}
 

@@ -155,6 +155,9 @@ export class TezosFill {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportsPartialFill: true,
 			submit,
+			orderData: {
+				platform: preparedOrder.platform,
+			},
 		}
 	}
 
@@ -236,6 +239,9 @@ export class TezosFill {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportsPartialFill: false,
 			submit,
+			orderData: {
+				platform: preparedOrder.platform,
+			},
 		}
 	}
 
@@ -366,6 +372,9 @@ export class TezosFill {
 					payoutsSupport: PayoutsSupport.MULTIPLE,
 					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: true,
+					orderData: {
+						platform: preparedOrder.platform,
+					},
 				}
 			}))
 

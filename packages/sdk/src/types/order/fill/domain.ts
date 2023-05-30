@@ -2,6 +2,7 @@ import type { ItemId, Order, OrderId } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import type { Platform } from "@rarible/api-client/build/models/Platform"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -14,6 +15,10 @@ export type PrepareFillRequest = {
 	/**
 	 * Order to fill
 	 */
+	order: Order
+}
+
+export type PrepareFillInternalRequest = {
 	order: Order
 }
 
@@ -101,6 +106,12 @@ export interface PreparedFillInfo {
 	 * Whether the underlying exchange contract supports partial fill
 	 */
 	supportsPartialFill: boolean
+	/**
+	 * Order data
+	 */
+	orderData: {
+		platform: Platform
+	}
 }
 
 export interface PrepareFillResponse

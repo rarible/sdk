@@ -118,6 +118,7 @@ export function getInternalLoggerMiddleware(
 	return async (callable, args) => {
 		const time = Date.now()
 
+		console.log("args", args)
 		return [callable, async (responsePromise) => {
 			let parsedArgs
 			try {
@@ -180,11 +181,12 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 	try {
 		if (typeof callable?.name !== "string") return {}
 		if (callable instanceof WrappedAdvancedFn || callable?.constructor?.name === "WrappedAdvancedFn") {
+			console.log("getCallableExtraFields")
+			console.dir(callable)
 
 			if (callable?.name.startsWith("order.buy.prepare.submit")) {
 				const request = callable.parent?.args[0] as PrepareFillRequest
 				const orderId = getOrderIdFromFillRequest(request)
-				console.log("callable", callable)
 				return {
 					orderId,
 					platform: (request as any).platform,
