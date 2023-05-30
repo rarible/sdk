@@ -11,6 +11,7 @@ import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../..
 import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { getNftContractAddress } from "../../common/utils"
 import * as converters from "./common/converters"
 import { toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
@@ -58,7 +59,7 @@ export class FlowBuy {
 
 	}
 
-	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+	async fillCommon(request: PrepareFillRequest, isBid = false): Promise<PrepareFillResponse> {
 		const order = await this.getPreparedOrder(request)
 		const submit = Action
 			.create({
@@ -83,8 +84,17 @@ export class FlowBuy {
 			submit,
 			orderData: {
 				platform: order.platform,
+				nftCollection: getNftContractAddress(isBid ? order.take.type : order.make.type),
 			},
 		}
+	}
+
+	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.fillCommon(request)
+	}
+
+	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.fillCommon(request, true)
 	}
 
 	async buyCommon(buyRequest: FillRequest & PrepareFillRequest & { order: Order }) {

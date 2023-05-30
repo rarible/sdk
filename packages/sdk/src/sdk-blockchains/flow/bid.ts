@@ -5,6 +5,7 @@ import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
+import { toContractAddress } from "@rarible/types"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type * as OrderCommon from "../../types/order/common"
 import type { CurrencyType } from "../../common/domain"
@@ -17,6 +18,8 @@ import type {
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
+import { getNftContractAddress } from "../../common/utils"
+import { convertEthereumContractAddress } from "../ethereum/common"
 import { convertFlowContractAddress, convertFlowOrderId, getFungibleTokenName, toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
 
@@ -128,6 +131,11 @@ export class FlowBid {
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,
 			submit: bidUpdateAction,
+			orderData: {
+				nftCollection: "contract" in order.take
+					? convertFlowContractAddress(order.take.contract)
+					: undefined,
+			},
 		}
 	}
 

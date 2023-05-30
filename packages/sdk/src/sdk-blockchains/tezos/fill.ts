@@ -43,6 +43,7 @@ import type {
 import type { IApisSdk } from "../../domain"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import { getNftContractAddress } from "../../common/utils"
 import type { MaybeProvider, OrderDataRequest } from "./common"
 import {
 	checkChainId,
@@ -61,7 +62,7 @@ export class TezosFill {
 		private unionAPI: IApisSdk,
 		private network: TezosNetwork,
 	) {
-		this.fill = this.fill.bind(this)
+		this.buy = this.buy.bind(this)
 		this.batchBuy = this.batchBuy.bind(this)
 		this.batchBuyBasic = this.batchBuyBasic.bind(this)
 		this.buyBasic = this.buyBasic.bind(this)
@@ -136,7 +137,7 @@ export class TezosFill {
 
 	}
 
-	async fill(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
 		let preparedOrder = await this.getPreparedOrder(request)
 
 		const submit = Action.create({
@@ -157,6 +158,7 @@ export class TezosFill {
 			submit,
 			orderData: {
 				platform: preparedOrder.platform,
+				nftCollection: getNftContractAddress(preparedOrder.make.type),
 			},
 		}
 	}
@@ -241,6 +243,7 @@ export class TezosFill {
 			submit,
 			orderData: {
 				platform: preparedOrder.platform,
+				nftCollection: getNftContractAddress(preparedOrder.take.type),
 			},
 		}
 	}
@@ -374,6 +377,7 @@ export class TezosFill {
 					supportsPartialFill: true,
 					orderData: {
 						platform: preparedOrder.platform,
+						nftCollection: getNftContractAddress(preparedOrder.make.type),
 					},
 				}
 			}))

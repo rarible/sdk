@@ -34,11 +34,13 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import { getNftContractAddress } from "../../common/utils"
 import {
+	convertEthereumContractAddress,
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
 	getAssetTypeFromFillRequest,
-	getEthereumItemId,
+	getEthereumItemId, getEVMBlockchain,
 	getOrderId,
 	toEthereumParts,
 	validateOrderDataV3Request,
@@ -360,7 +362,11 @@ export class EthereumFill {
 		return order.take.assetType.assetClass === "COLLECTION" || order.make.assetType.assetClass === "COLLECTION"
 	}
 
-	private async commonFill(action: FillOrderAction, request: PrepareFillRequest): Promise<PrepareFillResponse> {
+	private async commonFill(
+		action: FillOrderAction,
+		request: PrepareFillRequest,
+		isBid = false
+	): Promise<PrepareFillResponse> {
 		const orderHash = this.getOrderHashFromRequest(request)
 		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
 
@@ -377,6 +383,8 @@ export class EthereumFill {
 			})
 			.after((tx => new BlockchainEthereumTransaction(tx, this.network)))
 
+		const blockchain = getEVMBlockchain(this.network)
+		const nftAssetType = isBid ? order.take.assetType : order.make.assetType
 		return {
 			...this.getSupportFlags(order),
 			multiple: await this.isMultiple(order),
@@ -385,6 +393,9 @@ export class EthereumFill {
 			submit,
 			orderData: {
 				platform: this.getPlatform(order),
+				nftCollection: "contract" in nftAssetType
+					? convertEthereumContractAddress(nftAssetType.contract, blockchain)
+					: undefined,
 			},
 		}
 	}
@@ -402,7 +413,7 @@ export class EthereumFill {
 	}
 
 	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
-		return this.commonFill(this.sdk.order.acceptBid, request)
+		return this.commonFill(this.sdk.order.acceptBid, request, true)
 	}
 
 	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
@@ -474,6 +485,7 @@ export class EthereumFill {
 			},
 		)
 
+		const blockchain = getEVMBlockchain(this.network)
 		const prepared = await Promise.all(prepareRequest.map(async (req) => {
 			const orderHash = this.getOrderHashFromRequest(req)
 			const ethOrder = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
@@ -511,6 +523,9 @@ export class EthereumFill {
 				baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
 				orderData: {
 					platform: this.getPlatform(ethOrder),
+					nftCollection: "contract" in ethOrder.make.assetType
+						? convertEthereumContractAddress(ethOrder.make.assetType.contract, blockchain)
+						: undefined,
 				},
 			}
 		}))

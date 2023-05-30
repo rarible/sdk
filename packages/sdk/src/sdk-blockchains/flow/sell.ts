@@ -14,6 +14,7 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { getNftContractAddress } from "../../common/utils"
 import {
 	convertFlowOrderId,
 	getFlowCollection,
@@ -121,6 +122,9 @@ export class FlowSell {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.make.type),
+			},
 		}
 	}
 

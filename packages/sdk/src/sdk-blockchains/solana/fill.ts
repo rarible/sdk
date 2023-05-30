@@ -12,6 +12,7 @@ import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { checkPayouts } from "../../common/check-payouts"
+import { getNftContractAddress } from "../../common/utils"
 import { extractPublicKey } from "./common/address-converters"
 import { getItemId, getMintId, getOrderData, getPreparedOrder, getPrice } from "./common/order"
 import { getAuctionHouseFee } from "./common/auction-house"
@@ -114,6 +115,7 @@ export class SolanaFill {
 			submit,
 			orderData: {
 				platform: order.platform,
+				nftCollection: getNftContractAddress(order.make.type),
 			},
 		}
 	}
@@ -168,6 +170,7 @@ export class SolanaFill {
 			submit,
 			orderData: {
 				platform: order.platform,
+				nftCollection: getNftContractAddress(order.take.type),
 			},
 		}
 	}

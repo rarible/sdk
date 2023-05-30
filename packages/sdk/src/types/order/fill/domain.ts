@@ -3,6 +3,7 @@ import type { BigNumber } from "@rarible/types/build/big-number"
 import type { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { Platform } from "@rarible/api-client/build/models/Platform"
+import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -109,8 +110,9 @@ export interface PreparedFillInfo {
 	/**
 	 * Order data
 	 */
-	orderData: {
+	orderData?: {
 		platform: Platform
+		nftCollection: ContractAddress | undefined
 	}
 }
 

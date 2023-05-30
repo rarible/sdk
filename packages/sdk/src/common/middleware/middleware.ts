@@ -126,7 +126,7 @@ export class Middlewarer {
 	 */
 	wrap<Fun extends (...args: any[]) => Promise<any> | MethodWithPrepare<any, any>>(
 		callable: Fun,
-		meta: { methodName?: string, parent?: WrappedAdvancedFn, prepareContext?: PreparedFillInfo } = {}
+		meta: { methodName?: string, parent?: WrappedAdvancedFn } = {}
 	): ((...args: Parameters<Fun>) => ReturnType<Fun>) | Fun {
 		if (callable.hasOwnProperty(SKIP_MIDDLEWARE)) {
 			return callable
