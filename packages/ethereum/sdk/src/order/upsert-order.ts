@@ -23,6 +23,7 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
+import { waitTx } from "../common/wait-tx"
 import type { SimpleCryptoPunkOrder, SimpleOrder, UpsertSimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
@@ -139,7 +140,11 @@ export class UpsertOrder {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checkedOrder)
 		const fee = await this.orderFiller.getOrderFee(simple)
 		const make = addFee(checkedOrder.make, fee)
-		return await this.approveFn(checkedOrder.maker, make, infinite)
+		const approveTx = this.approveFn(checkedOrder.maker, make, infinite)
+		if (approveTx) {
+			await waitTx(approveTx)
+		}
+		return approveTx
 	}
 
 	async upsertRequest(checked: OrderForm): Promise<Order> {
