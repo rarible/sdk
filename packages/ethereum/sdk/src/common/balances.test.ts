@@ -14,7 +14,8 @@ describe("getBalance test", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 
-	const apis = createEthereumApis("dev-ethereum")
+	const env: EthereumNetwork = "dev-ethereum"
+	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
 
 	const balances = new Balances(apis)
 
@@ -53,10 +54,21 @@ const envs = Object.keys(configDictionary) as EthereumNetwork[]
 
 describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
 	const senderAddress = toAddress("0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
-	const sdk = createRaribleSdk(undefined, env)
+	const sdk = createRaribleSdk(undefined, env, {
+		apiKey: getAPIKey(env),
+	})
 
 	test(`get balance on ${env}`, async () => {
-		const balance = await sdk.balances.getBalance(senderAddress, { assetClass: "ETH" })
-		console.log("balance", env, balance.toString())
+		await sdk.balances.getBalance(senderAddress, { assetClass: "ETH" })
 	})
 })
+console.log("process", process.env.SDK_API_KEY_PROD, process.env.SDK_API_KEY_TESTNET)
+export function getAPIKey(env:  EthereumNetwork) {
+	switch (env) {
+		case "mainnet":
+		case "polygon":
+			return process.env.SDK_API_KEY_PROD
+		default:
+			return process.env.SDK_API_KEY_TESTNET
+	}
+}
