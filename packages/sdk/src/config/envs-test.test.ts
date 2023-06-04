@@ -15,6 +15,7 @@ describe.each(envs)("test all ", (env) => {
 	})
 })
 
+console.log("process.env keys", process.env.SDK_API_KEY_PROD, process.env.SDK_API_KEY_TESTNET)
 export function getAPIKey(env:  RaribleSdkEnvironment) {
 	switch (env) {
 		case "prod":
