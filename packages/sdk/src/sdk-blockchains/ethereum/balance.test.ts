@@ -7,12 +7,11 @@ import type { BigNumberValue } from "@rarible/utils"
 import { Blockchain } from "@rarible/api-client"
 import BigNumber from "bignumber.js"
 import { createWethContract } from "@rarible/ethereum-sdk-test-common"
-import { createRaribleSdk } from "../../index"
 import { retry } from "../../common/retry"
-import { LogsLevel } from "../../domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { POLYGON_TESTNET_SETTINGS } from "./test/common"
+import { createSdk } from "./test/create-sdk"
 
 describe("get balance", () => {
 	const { web31, wallet1 } = initProviders({
@@ -23,7 +22,7 @@ describe("get balance", () => {
 		web3: web31,
 		from: wallet1.getAddressString(),
 	})
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(new EthereumWallet(ethereum), "development")
 
 	test.concurrent("should be the same balance", async () => {
 		const ethWalletAddess = toAddress("0x00a329c0648769A73afAc7F9381E08FB43dBEA72")
@@ -39,7 +38,7 @@ describe("get balance", () => {
 	})
 
 	test.concurrent("get ETH balance without wallet", async () => {
-		const sdk = createRaribleSdk(undefined, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(undefined, "development")
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const balance = await sdk.balances.getBalance(walletAddress, {
 			"@type": "ETH",
@@ -48,7 +47,7 @@ describe("get balance", () => {
 	})
 
 	test.concurrent("get ETH balance without wallet with CurrencyId", async () => {
-		const sdk = createRaribleSdk(undefined, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(undefined, "development")
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
 		const currency = toCurrencyId(`ETHEREUM:${ZERO_ADDRESS}`)
 		const balance = await sdk.balances.getBalance(walletAddress, currency)
@@ -150,7 +149,7 @@ describe("get polygon balance", () => {
 		from: wallet1.getAddressString(),
 	})
 
-	const sdk = createRaribleSdk(new EthereumWallet(ethereum), "testnet", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(new EthereumWallet(ethereum), "testnet")
 
 	test.concurrent("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
@@ -176,7 +175,7 @@ describe.skip("Bidding balance", () => {
 
 	const ethereum = new Web3Ethereum({ web3: web31 })
 	const wallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(wallet, "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet, "development")
 
 	test("Should check bidding balance & deposit & withdraw", async () => {
 		const checkBalance = async (expecting: BigNumberValue | null) => {

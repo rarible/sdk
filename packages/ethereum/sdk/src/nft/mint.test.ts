@@ -20,6 +20,7 @@ import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { delay } from "../common/retry"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV1, ERC721RequestV2, ERC721RequestV3 } from "./mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
@@ -67,6 +68,10 @@ describe.each(providers)("mint test", ethereum => {
 	const mint = mintTemplate
 		.bind(null, ethereum, send, sign, nftCollectionApi)
 		.bind(null, nftLazyMintApi, checkWalletChainId)
+
+	beforeEach(async () => {
+		await delay(2000)
+	})
 
 	test("mint ERC-721 v1", async () => {
 		const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")

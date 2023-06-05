@@ -3,6 +3,7 @@ import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createRemoteLogger } from "./logger"
 
+jest.useFakeTimers()
 describe("logger test", () => {
 	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 	const { provider } = createE2eProvider(pk)
