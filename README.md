@@ -643,6 +643,8 @@ const raribleSdk = createRaribleSdk(provider, "testnet", {
   apiKey: "$API_KEY"
 }) //"prod" | "testnet" | "development"
 ```
+To run tests you can set environment variables by `export SDK_API_KEY_PROD=...` and `export SDK_API_KEY_TESTNET=...`. 
+For IDEA set it "Edit configurations" -> "Edit configuration templates..." (in the bottom of left column) -> "Jest" -> "Environment variables" and the same for "npm" -> "Environment variables"
 
 ```ts
 //Fetch items by creator
@@ -653,7 +655,7 @@ sdk.apis.activity.getActivitiesByItem({ type: ["TRANSFER"], contract, tokenId })
 
 //etc. Please explore SDK APIs and openAPI docs
 ```
-**NOTE:** Our indexer can scanning blockchains with a slight delay. If your code depends on API data you should awaiting that until it appears.     
+**NOTE:** Our indexer may scan blockchains with a slight delay. If your code depends on API data you should await it until it appears.     
 ```ts
 //Don't do like that!
 const { address, tx } = await sdk.nft.createCollection({...})

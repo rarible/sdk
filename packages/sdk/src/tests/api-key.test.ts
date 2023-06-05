@@ -9,7 +9,7 @@ describe("server api keys", () => {
 		})
 
 		await sdk.apis.item.getItemById({
-			itemId: toItemId("TEZOS:KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj:640"),
+			itemId: toItemId("ETHEREUM:0x6972347e66a32f40ef3c012615c13cb88bf681cc:53721905486644660545161939638297855196812841812653174796223513003283747704177"),
 		})
 	})
 
@@ -20,7 +20,7 @@ describe("server api keys", () => {
 		})
 
 		await sdk.apis.item.getItemById({
-			itemId: toItemId("TEZOS:KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj:640"),
+			itemId: toItemId("ETHEREUM:0x6972347e66a32f40ef3c012615c13cb88bf681cc:53721905486644660545161939638297855196812841812653174796223513003283747704177"),
 		})
 	})
 
@@ -33,7 +33,7 @@ describe("server api keys", () => {
 		let responseError
 		try {
 			await sdk.apis.item.getItemById({
-				itemId: toItemId("TEZOS:KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj:640"),
+				itemId: toItemId("ETHEREUM:0x6972347e66a32f40ef3c012615c13cb88bf681cc:53721905486644660545161939638297855196812841812653174796223513003283747704177"),
 			})
 		} catch (e: any) {
 			responseError = await e.json()

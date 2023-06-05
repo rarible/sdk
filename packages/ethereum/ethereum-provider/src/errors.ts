@@ -27,6 +27,9 @@ export class EthereumProviderError extends Error {
   	Object.setPrototypeOf(this, EthereumProviderError.prototype)
   	this.name = "EthereumProviderError"
   	this.error = data?.error
+		if (data?.error?.stack) {
+			this.stack = this.getNewStack(data?.error)
+		}
   	this.provider = data?.provider
   	this.data = data?.data
   	this.method = data?.method
@@ -39,5 +42,13 @@ export class EthereumProviderError extends Error {
 	static getErrorMessage(error: any) {
 		if (typeof error === "string") return error
 		return error?.message || "EthereumProviderError"
+	}
+
+	getNewStack(error: any) {
+		try {
+			return (this.stack?.split("\n").slice(0, 2).join("\n") + "\n" + error.stack) || this.stack
+		} catch (e) {
+			return this.stack || error.stack
+		}
 	}
 }

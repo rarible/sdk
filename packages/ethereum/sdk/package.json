@@ -22,7 +22,7 @@
     "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "verify": "tsc --noEmit",
-    "test": "jest --runInBand --silent"
+    "test": "jest --runInBand --silent --forceExit"
   },
   "dependencies": {
     "@rarible/action": "~0.9.1",
