@@ -128,6 +128,11 @@ export class FlowBid {
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,
 			submit: bidUpdateAction,
+			orderData: {
+				nftCollection: "contract" in order.take
+					? convertFlowContractAddress(order.take.contract)
+					: undefined,
+			},
 		}
 	}
 

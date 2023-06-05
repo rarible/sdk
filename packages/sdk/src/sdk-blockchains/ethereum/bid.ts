@@ -481,6 +481,11 @@ export class EthereumBid {
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			getConvertableValue: this.getConvertableValue,
 			submit: sellUpdateAction,
+			orderData: {
+				nftCollection: "contract" in order.take.assetType
+					? convertEthereumContractAddress(order.take.assetType.contract, blockchain)
+					: undefined,
+			},
 		}
 	}
 }

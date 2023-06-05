@@ -34,6 +34,7 @@ export function createFlowSdk(
 ): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, {
 		...(params || {}),
+		apiKey: config?.apiKey,
 		middleware: [
 			...(config?.logs !== LogsLevel.DISABLED
 				? [getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR)]
@@ -70,7 +71,7 @@ export function createFlowSdk(
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
 			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
-			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.buy),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
 			cancel: cancelService.cancel,

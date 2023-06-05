@@ -4,7 +4,6 @@ import type { TezosNetwork, TezosProvider } from "@rarible/tezos-sdk"
 import { get_address, mint } from "@rarible/tezos-sdk"
 import { toBn } from "@rarible/utils/build/bn"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
-import type { CollectionId } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { HasCollection, HasCollectionId, PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareMintResponse, MintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
@@ -14,6 +13,7 @@ import type { PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { IApisSdk } from "../../domain"
+import { getContractFromMintRequest } from "../../common/utils"
 import type { MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
 import {
 	checkChainId,
@@ -138,7 +138,7 @@ export async function getCollectionData(
 	unionAPI: IApisSdk,
 	prepareRequest: HasCollection | HasCollectionId,
 ) {
-	const contractAddress = getContractFromRequest(prepareRequest)
+	const contractAddress = getContractFromMintRequest(prepareRequest)
 	const [blockchain, contract] = contractAddress.split(":")
 	if (blockchain !== Blockchain.TEZOS) {
 		throw new Error(`Unsupported blockchain of collection: ${blockchain}`)
@@ -154,12 +154,6 @@ export async function getCollectionData(
 		owner: collection.owner,
 		type: collection.type,
 	}
-}
-
-export function getContractFromRequest(request: HasCollection | HasCollectionId): CollectionId {
-	if ("collection" in request) return request.collection.id
-	if ("collectionId" in request) return request.collectionId
-	throw new Error("Wrong request: collection or collectionId has not been found")
 }
 
 function fixIpfs(link: string): string {

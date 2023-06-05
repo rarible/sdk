@@ -3,6 +3,7 @@ import CallableInstance from "callable-instance"
 import {
 	MethodWithPrepare,
 } from "../../types/common"
+import type { PreparedFillInfo } from "../../types/order/fill/domain"
 import { toPromise } from "./utils"
 
 const SKIP_MIDDLEWARE = Symbol("SKIP_MIDDLEWARE")
@@ -27,6 +28,7 @@ export class WrappedAdvancedFn<T extends (...args: any) => any = (...args: any[]
 	extends CallableInstance<Parameters<T>, ReturnType<T>>{
 	parent?: WrappedAdvancedFn<T>
 	name?: string
+	context?: PreparedFillInfo
 	constructor(public fn: T, public args: Parameters<T>, o: { parent?: WrappedAdvancedFn<T>, name?: string } = {}) {
 		super("fnCallable")
 		this.parent = o?.parent
@@ -36,6 +38,10 @@ export class WrappedAdvancedFn<T extends (...args: any) => any = (...args: any[]
 
 	private fnCallable(...args: Parameters<T>): ReturnType<T> {
 		return this.fn(...(args as []))
+	}
+
+	setContext(context: PreparedFillInfo) {
+		this.context = context
 	}
 	static isWrappedAdvancedFn(instance: any): instance is WrappedAdvancedFn {
 		return instance instanceof WrappedAdvancedFn
@@ -98,6 +104,7 @@ export class Middlewarer {
 		const result = await res
 		// wrapping submit methods
 		if (typeof result?.submit === "function") {
+			wrappedCallable.setContext(result)
 			result.submit = this.wrap(result.submit, {
 				methodName: callable.name + ".submit",
 				parent: WrappedAdvancedFn.isWrappedAdvancedFn(wrappedCallable) ? wrappedCallable : undefined,

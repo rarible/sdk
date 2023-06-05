@@ -31,6 +31,7 @@ import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplif
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { getNftContractAddress } from "../../common/utils"
 import type { MaybeProvider, OrderDataRequest } from "./common"
 import {
 	convertFromContractAddress,
@@ -221,6 +222,9 @@ export class TezosSell {
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			submit: updateAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.make.type),
+			},
 		}
 	}
 }

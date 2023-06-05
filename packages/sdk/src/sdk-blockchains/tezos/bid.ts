@@ -28,6 +28,7 @@ import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import type { IApisSdk } from "../../domain"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
+import { getNftContractAddress } from "../../common/utils"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -216,6 +217,9 @@ export class TezosBid {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			getConvertableValue: notImplemented,
 			submit: updateAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.take.type),
+			},
 		}
 	}
 

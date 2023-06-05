@@ -13,6 +13,7 @@ import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
+	convertEthereumContractAddress,
 	getEthereumItemId,
 	getEVMBlockchain,
 	getOriginFeeSupport,
@@ -168,6 +169,9 @@ export class EthereumSell {
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
+			orderData: {
+				nftCollection: "contract" in order.make.assetType ? convertEthereumContractAddress(order.make.assetType.contract, this.blockchain) : undefined,
+			},
 		}
 	}
 }

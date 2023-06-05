@@ -16,6 +16,7 @@ import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../typ
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { getOrderNftContractAddress } from "../../common/utils"
 import { calcBuyerBaseFee, getPreparedOrder, getTakeAssetType, unionPartsToParts } from "./common/utils"
 import { getCurrencies } from "./common/currencies"
 
@@ -131,6 +132,10 @@ export class ImxOrderService {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.NONE,
 			submit,
+			orderData: {
+				platform: order.platform,
+				nftCollection: getOrderNftContractAddress(order),
+			},
 		}
 	}
 

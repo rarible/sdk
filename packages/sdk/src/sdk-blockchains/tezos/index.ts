@@ -53,8 +53,8 @@ export function createTezosSdk(
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			fill: { prepare: fillService.fill },
-			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			fill: { prepare: fillService.buy },
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
 			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),

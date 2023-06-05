@@ -2,6 +2,7 @@ import type { ItemId, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { UnionAddress } from "@rarible/types"
+import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
 import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 import type { MaxFeesBasePointSupport } from "../fill/domain"
@@ -160,6 +161,10 @@ export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"con
 	 * Whether the underlying exchange contract supports specifying max fees value
 	 */
 	maxFeesBasePointSupport: MaxFeesBasePointSupport
+
+	orderData: {
+		nftCollection: ContractAddress | undefined
+	}
 }
 
 /**
