@@ -4,10 +4,9 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
 import Web3 from "web3"
 import type { IRaribleSdk } from "../../index"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { createSdk } from "./test/create-sdk"
 
 describe("Batch buy", () => {
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_1)
@@ -15,15 +14,11 @@ describe("Batch buy", () => {
 
 	const web31 = new Web3(providerSeller)
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const sdkSeller = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
-		logs: LogsLevel.DISABLED,
-	})
+	const sdkSeller = createSdk(new EthereumWallet(ethereum1), "development")
 
 	const web32 = new Web3(providerBuyer)
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdkBuyer = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
-		logs: LogsLevel.DISABLED,
-	})
+	const sdkBuyer = createSdk(new EthereumWallet(ethereum2), "development")
 
 	test("batch buy rarible orders", async () => {
 		const token1 = await mint(sdkSeller)

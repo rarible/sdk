@@ -33,6 +33,7 @@ import { approve as approveTemplate } from "./approve"
 import { checkLazyOrder as checkLazyOrderTemplate } from "./check-lazy-order"
 import { checkLazyAsset as checkLazyAssetTemplate } from "./check-lazy-asset"
 import { checkLazyAssetType as checkLazyAssetTypeTemplate } from "./check-lazy-asset-type"
+import { getEndDateAfterMonth } from "./test/utils"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
@@ -117,6 +118,7 @@ describe.each(providers)("bid", (ethereum) => {
 				assetClass: "ERC20",
 				contract: erc20Contract,
 			},
+			end: getEndDateAfterMonth(),
 			amount: 1,
 			payouts: [],
 			originFees: [{
@@ -135,7 +137,6 @@ describe.each(providers)("bid", (ethereum) => {
 
 			expect(updatedOrder.make.value.toString()).toBe(nextPrice)
 		})
-
 	})
 
 	test("create and update of v1 works", async () => {
@@ -172,6 +173,7 @@ describe.each(providers)("bid", (ethereum) => {
 				},
 				value: toBigNumber("20000"),
 			},
+			end: getEndDateAfterMonth(),
 			salt: toBigNumber("10"),
 			type: "RARIBLE_V1",
 			data: {

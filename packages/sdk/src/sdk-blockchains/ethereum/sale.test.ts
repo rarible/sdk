@@ -192,7 +192,7 @@ describe("sale", () => {
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
-	test.skip("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
+	test("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({

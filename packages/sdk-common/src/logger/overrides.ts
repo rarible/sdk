@@ -103,6 +103,7 @@ export function isSolanaWarning(error: any): boolean {
 
 export const FLOW_WARN_MESSAGES = [
 	"[Error Code: 1007] invalid proposal key",
+	"User rejected signature",
 ]
 
 export function isFlowWarning(error: any): boolean {
