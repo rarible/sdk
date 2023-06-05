@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+
+### Bug Fixes
+
+* **MPX-1945:** fix tests with api key ([#489](https://github.com/rarible/sdk/issues/489)) ([105f470](https://github.com/rarible/sdk/commit/105f470feb9c19bf93504296d6d790ac4c598300))
+
+
+
+
+
 ## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
 
 

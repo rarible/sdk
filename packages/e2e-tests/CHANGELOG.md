@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+
+### Features
+
+* **PT-2935:** staging configuration ([593d62c](https://github.com/rarible/sdk/commit/593d62cdcf7756f03b8d785558db31850acc85ba))
+
+
+
+
+
 ## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
