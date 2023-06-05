@@ -58,8 +58,6 @@ describe("bid", () => {
 	const testErc20 = getTestErc20Contract(web32, erc20)
 
 	beforeAll(async () => {
-		console.log("eth 1 address", await ethereum1.getFrom())
-		console.log("eth 2 address", await ethereum2.getFrom())
 		await sentTxConfirm(testErc20.methods.mint(await ethereum2.getFrom(), "99999000000000000000000"), {
 			from: await ethereum2.getFrom(),
 			gas: 2000000,
@@ -91,7 +89,6 @@ describe("bid", () => {
 
 		await awaitItem(sdk1, result.itemId)
 
-		console.log("created item", result.itemId)
 		// await resetWethFunds(ethwallet2, ethSdk2, wethContractEthereum)
 
 		const response = await sdk2.order.bid.prepare({ itemId: result.itemId })
@@ -108,23 +105,17 @@ describe("bid", () => {
 				value: 1000,
 			}],
 		})
-		console.log("orderid", orderId)
 		const order = await awaitStock(sdk1, orderId, price)
 		expect(order.makeStock.toString()).toEqual(price)
-
-		console.log("created order", order.id)
 
 		const updateAction = await sdk2.order.bidUpdate.prepare({
 			orderId,
 		})
 		const updatedOrder = await updateAction.submit({ price: "0.00004" })
 
-		console.log("updated order", updatedOrder)
-
 		const acceptBidResponse = await sdk1.order.acceptBid.prepare({ orderId: updatedOrder })
 		const acceptBidTx = await acceptBidResponse.submit({ amount: 1, infiniteApproval: true })
 		await acceptBidTx.wait()
-		console.log("accept order", acceptBidTx)
 
 		await retry(10, 1000, async () => {
 			return sdk1.apis.ownership.getOwnershipById({
