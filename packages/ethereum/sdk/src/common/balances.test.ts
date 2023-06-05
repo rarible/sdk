@@ -62,7 +62,6 @@ describe.each(envs)("get balances each of environments", (env: EthereumNetwork) 
 		await sdk.balances.getBalance(senderAddress, { assetClass: "ETH" })
 	})
 })
-console.log("process", process.env.SDK_API_KEY_PROD, process.env.SDK_API_KEY_TESTNET)
 export function getAPIKey(env:  EthereumNetwork) {
 	switch (env) {
 		case "mainnet":
