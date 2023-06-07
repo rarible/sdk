@@ -90,6 +90,7 @@ export class MattelConnectionProvider extends
 			})
 		}
 		return defer(async () => {
+
 			try {
 				if (await isLoggedInPromise(magic)) {
 					const user = await magic.user.getMetadata()
@@ -197,6 +198,11 @@ export class MattelConnectionProvider extends
 	async isConnected(): Promise<boolean> {
 		const sdk = await this.instance.pipe(first()).toPromise()
 		return !!(await sdk?.fcl.currentUser())
+	}
+
+	async isAuth0Authenticated(): Promise<boolean> {
+		const { auth0 } = await this.instance.pipe(first()).toPromise()
+		return auth0.isAuthenticated()
 	}
 }
 
