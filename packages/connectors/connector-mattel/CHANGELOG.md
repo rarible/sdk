@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.41](https://github.com/rarible/sdk/compare/v0.13.40...v0.13.41) (2023-06-08)
+
+
+### Features
+
+* **MPX-1964:** expose auth0 status method ([#491](https://github.com/rarible/sdk/issues/491)) ([b8a7372](https://github.com/rarible/sdk/commit/b8a7372b712fb4bfe274456d5c9ec947a41d9d82))
+
+
+
+
+
 ## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
 
 **Note:** Version bump only for package @rarible/connector-mattel
