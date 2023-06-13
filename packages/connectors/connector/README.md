@@ -7,7 +7,7 @@ Yarn
     yarn add @rarible/connector
     yarn add @rarible/connector-helper
     # optional: add additional connectors
-    yarn add @rarible/connector-walletconnect
+    yarn add @rarible/connector-walletconnect-v2
     yarn add @rarible/connector-fortmatic
     # check other @rarible/connector-* packages to see what's supported 
 ```
@@ -17,7 +17,7 @@ NPM
     npm i @rarible/connector
     npm i @rarible/connector-helper
     # optional: add additional connectors
-    npm i @rarible/connector-walletconnect
+    npm i @rarible/connector-walletconnect-v2
     npm i @rarible/connector-fortmatic
     # check other @rarible/connector-* packages to see what's supported 
 ```
@@ -28,7 +28,7 @@ NPM
 
 ```ts
 import { Connector, InjectedWeb3ConnectionProvider, DappType } from "@rarible/connector"
-import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
+import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect-v2"
 import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
 
 // create providers with the required options
@@ -69,7 +69,7 @@ import { MEWConnectionProvider } from "@rarible/connector-mew"
 import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
-import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
+import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect-v2"
 import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 import { PortisConnectionProvider } from "@rarible/connector-portis"
 import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"

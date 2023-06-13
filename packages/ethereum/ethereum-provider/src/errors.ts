@@ -13,13 +13,13 @@ export type EthereumProviderErrorData = {
 }
 
 export class EthereumProviderError extends Error {
-  data: any
-  error: any
-  provider?: Provider
+	data: any
+	error: any
+	provider?: Provider
 	providerId?: any
-  method: string
-  code?: string | number
-  signer?: string
+	method: string
+	code?: string | number
+	signer?: string
 	chainId?: number
 
 	constructor(data: EthereumProviderErrorData) {

@@ -94,8 +94,8 @@ function toBuffer(hex: string) {
 }
 
 export class SignTypedDataError extends Error {
-  data: any
-  error: any
+	data: any
+	error: any
 	code?: string | number
 
 	constructor(data: { error: any, data: any, message?: string }) {

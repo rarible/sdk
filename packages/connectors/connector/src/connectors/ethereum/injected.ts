@@ -14,9 +14,9 @@ const PROVIDER_ID = "injected" as const
 
 export class InjectedWeb3ConnectionProvider extends
 	AbstractConnectionProvider<DappType, EthereumProviderConnectionResult> {
-  private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
+	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
-  constructor() {
+	constructor() {
   	super()
   	this.connection = defer(() => {
   		return connect()
@@ -40,28 +40,28 @@ export class InjectedWeb3ConnectionProvider extends
   		}),
   		startWith(getStateConnecting({ providerId: PROVIDER_ID })),
   	)
-  }
+	}
 
-  getId(): string {
+	getId(): string {
   	return PROVIDER_ID
-  }
+	}
 
-  getConnection(): Observable<ConnectionState<EthereumProviderConnectionResult>> {
+	getConnection(): Observable<ConnectionState<EthereumProviderConnectionResult>> {
   	return this.connection
-  }
+	}
 
-  getOption(): Promise<Maybe<DappType>> {
+	getOption(): Promise<Maybe<DappType>> {
   	const provider = getInjectedProvider()
   	return Promise.resolve(getDappType(provider))
-  }
+	}
 
-  isAutoConnected(): Promise<boolean> {
+	isAutoConnected(): Promise<boolean> {
   	const provider = getInjectedProvider()
   	const dapp = getDappType(provider)
   	return Promise.resolve(isDappSupportAutoConnect(dapp))
-  }
+	}
 
-  async isConnected(): Promise<boolean> {
+	async isConnected(): Promise<boolean> {
   	const provider = getInjectedProvider()
   	if (provider !== undefined) {
   		return ethAccounts(provider)
@@ -69,7 +69,7 @@ export class InjectedWeb3ConnectionProvider extends
   	} else {
   		return Promise.resolve(false)
   	}
-  }
+	}
 }
 
 async function connect(): Promise<void> {

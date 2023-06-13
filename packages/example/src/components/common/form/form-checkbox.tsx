@@ -1,8 +1,8 @@
 import React from "react"
-import { useForm } from "react-hook-form"
+import type { useForm } from "react-hook-form"
 import { Checkbox, FormControlLabel } from "@mui/material"
-import { RegisterOptions } from "react-hook-form/dist/types/validator"
-import { FormControlLabelProps } from "@mui/material/FormControlLabel/FormControlLabel"
+import type { RegisterOptions } from "react-hook-form/dist/types/validator"
+import type { FormControlLabelProps } from "@mui/material/FormControlLabel/FormControlLabel"
 
 interface IFormCheckboxProps extends Omit<FormControlLabelProps, "control" | "form">  {
 	form: ReturnType<typeof useForm>
@@ -14,7 +14,7 @@ export function FormCheckbox({ form, name, options, ...rest }: React.PropsWithCh
 	const { register } = form
 
 	return <FormControlLabel
-		control={<Checkbox {...register(name, {...options})} />}
+		control={<Checkbox {...register(name, { ...options })} />}
 		{...rest}
 	/>
 }

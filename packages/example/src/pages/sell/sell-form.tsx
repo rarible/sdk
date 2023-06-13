@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { PrepareOrderResponse } from "@rarible/sdk/build/types/order/common"
+import type { PrepareOrderResponse } from "@rarible/sdk/build/types/order/common"
 import { MaxFeesBasePointSupport } from "@rarible/sdk/build/types/order/fill/domain"
 import { toBigNumber } from "@rarible/types"
 import { FormTextInput } from "../../components/common/form/form-text-input"
@@ -20,7 +20,7 @@ interface ISellFormProps {
 }
 
 export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
-	const {environment} = useContext(EnvironmentContext)
+	const { environment } = useContext(EnvironmentContext)
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
@@ -63,7 +63,7 @@ export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 						form={form}
 						options={{
 							min: 1,
-							max: Number(prepare.maxAmount)
+							max: Number(prepare.maxAmount),
 						}}
 						defaultValue={Math.min(1, Number(prepare.maxAmount))}
 						name="amount"

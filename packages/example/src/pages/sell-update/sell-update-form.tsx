@@ -2,12 +2,12 @@ import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import type { Order } from "@rarible/api-client"
 import { Box, Stack } from "@mui/material"
+import type { PrepareOrderUpdateResponse } from "@rarible/sdk/build/types/order/common"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { PrepareOrderUpdateResponse } from "@rarible/sdk/build/types/order/common";
-import { PriceForm } from "../../components/common/sdk-forms/price-form";
+import { PriceForm } from "../../components/common/sdk-forms/price-form"
 
 interface ISellUpdateFormProps {
 	prepare: PrepareOrderUpdateResponse
@@ -19,7 +19,6 @@ interface ISellUpdateFormProps {
 export function SellUpdateForm(
 	{
 		prepare,
-		order,
 		disabled,
 		onComplete,
 	}: ISellUpdateFormProps,
@@ -41,7 +40,7 @@ export function SellUpdateForm(
 
 				try {
 					onComplete(await prepare.submit({
-            price: formData.price
+						price: formData.price,
 						// amount: parseInt(formData.amount),
 						// itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
 					}))

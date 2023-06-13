@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form"
+import type { useForm } from "react-hook-form"
 
 export function useFormInputError(form: ReturnType<typeof useForm>, field: string) {
 	const { formState: { errors } } = form
@@ -20,5 +20,5 @@ export function useFormInputError(form: ReturnType<typeof useForm>, field: strin
 		}
 	}
 
-	return {message, hasError}
+	return { message, hasError }
 }
