@@ -1,7 +1,8 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { MaxFeesBasePointSupport, PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import type { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import { MaxFeesBasePointSupport } from "@rarible/sdk/build/types/order/fill/domain"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
@@ -49,7 +50,7 @@ export function AcceptBidForm({ prepare, disabled, onComplete }: IAcceptBidFormP
 						form={form}
 						options={{
 							min: 1,
-							max: Number(prepare.maxAmount)
+							max: Number(prepare.maxAmount),
 						}}
 						name="amount"
 						label="Amount"

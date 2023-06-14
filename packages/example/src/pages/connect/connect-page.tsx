@@ -1,8 +1,8 @@
 import React from "react"
 import { Typography } from "@mui/material"
 import { Page } from "../../components/page"
-import { ConnectOptions } from "./connect-options"
 import { CommentedBlock } from "../../components/common/commented-block"
+import { ConnectOptions } from "./connect-options"
 import { ConnectorUsageComment } from "./comments/connector-usage-comment"
 import { ConnectionStatus } from "./connection-status"
 

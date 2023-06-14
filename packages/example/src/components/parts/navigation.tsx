@@ -7,58 +7,58 @@ export function Navigation() {
 	const links = [{
 		label: "About",
 		path: "/about",
-		default: true
+		default: true,
 	}, {
 		label: "Connect",
-		path: "/connect"
+		path: "/connect",
 	},  {
 		label: "Balance",
-		path: "/balance"
+		path: "/balance",
 	}, {
 		label: "Deploy Collection",
-		path: "/deploy"
+		path: "/deploy",
 	}, {
 		label: "Upload metadata",
-		path: "/upload-meta"
+		path: "/upload-meta",
 	}, {
 		label: "Mint Token",
-		path: "/mint"
-	},{
+		path: "/mint",
+	}, {
 		label: "Sell",
-		path: "/sell"
-	},{
+		path: "/sell",
+	}, {
 		label: "Sell update",
-		path: "/sell-update"
+		path: "/sell-update",
 	}, {
 		label: "Buy",
-		path: "/buy"
+		path: "/buy",
 	}, {
 		label: "Batch Buy",
-		path: "/batch-buy"
+		path: "/batch-buy",
 	}, {
 		label: "Bid",
-		path: "/bid"
+		path: "/bid",
 	}, {
 		label: "Accept Bid",
-		path: "/accept-bid"
+		path: "/accept-bid",
 	}, {
 		label: "Cancel Order",
-		path: "/cancel"
+		path: "/cancel",
 	}, {
 		label: "Transfer Token",
-		path: "/transfer"
+		path: "/transfer",
 	}, {
 		label: "Burn Token",
-		path: "/burn"
+		path: "/burn",
 	}, {
 		label: "Sign Message",
-		path: "/sign"
+		path: "/sign",
 	}, {
 		label: "My Items",
-		path: "/items"
+		path: "/items",
 	}, {
 		label: "Utils",
-		path: "/utils"
+		path: "/utils",
 	}]
 
 	return (

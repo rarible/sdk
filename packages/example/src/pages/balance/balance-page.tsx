@@ -1,12 +1,12 @@
 import React, { useContext } from "react"
-import { WalletType } from "@rarible/sdk-wallet"
+import type { WalletType } from "@rarible/sdk-wallet"
 import { Box } from "@mui/material"
 import { Page } from "../../components/page"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
+import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { GetBalanceComment } from "./comments/getbalance-comment"
 import { NativeBalance } from "./native-balance"
-import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
 	return !!blockchain
@@ -26,7 +26,7 @@ export function BalancePage() {
 				)
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<GetBalanceComment/>}>
-				<Box sx={{my: 2}}>
+				<Box sx={{ my: 2 }}>
 					{
 						connection.sdk && connection.sdk.wallet && connection.walletAddress ?
 							<NativeBalance

@@ -1,16 +1,16 @@
-import React, { useContext } from "react";
-import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider";
-import { WalletType } from "@rarible/sdk-wallet";
-import { Box, Grid, Typography } from "@mui/material";
-import { TransactionInfo } from "../../components/common/transaction-info";
-import { RequestResult } from "../../components/common/request-result";
-import { useRequestResult } from "../../components/hooks/use-request-result";
+import React, { useContext } from "react"
+import { WalletType } from "@rarible/sdk-wallet"
+import { Box, Grid, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { FormTextInput } from "../../components/common/form/form-text-input";
-import { FormSubmit } from "../../components/common/form/form-submit";
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider";
-import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain";
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import { Page } from "../../components/page"
+import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { TransactionInfo } from "../../components/common/transaction-info"
+import { RequestResult } from "../../components/common/request-result"
+import { useRequestResult } from "../../components/hooks/use-request-result"
+import { FormTextInput } from "../../components/common/form/form-text-input"
+import { FormSubmit } from "../../components/common/form/form-submit"
+import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 
 export function UtilsPage() {
 	const connection = useContext(ConnectorContext)
@@ -23,7 +23,7 @@ export function UtilsPage() {
 				isFlowActive && <FlowUtils/>
 			}
 		</Page>
-		)
+	)
 
 }
 
@@ -44,7 +44,7 @@ export function FlowUtils() {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(async (formData) => {
+			<form onSubmit={handleSubmit(async () => {
 				try {
 					const tx = await connection?.sdk?.flow?.setupAccount(form.getValues("collection"))
 					setComplete(tx)
@@ -53,7 +53,7 @@ export function FlowUtils() {
 				}
 			})}>
 
-				<Typography sx={{my: 2}} variant="h6" component="h2" gutterBottom>
+				<Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
 					Setup Flow collection
 				</Typography>
 				<Grid container spacing={2}>

@@ -1,18 +1,18 @@
 import React, { useContext } from "react"
 import { useParams } from "react-router-dom"
 import { Box, Typography } from "@mui/material"
-import { WalletType } from "@rarible/sdk-wallet"
+import type { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
+import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
+import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { SellPrepareForm } from "./sell-prepare-form"
 import { SellForm } from "./sell-form"
 import { SellComment } from "./comments/sell-comment"
-import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
 	return !!blockchain
@@ -43,7 +43,7 @@ export function SellPage() {
 									disabled={!validateConditions(blockchain)}
 									itemId={params.itemId}
 								/>
-							}
+							},
 						},
 						{
 							label: "Send Transaction",
@@ -53,7 +53,7 @@ export function SellPage() {
 									prepare={lastResponse}
 									disabled={!validateConditions(blockchain)}
 								/>
-							}
+							},
 						},
 						{
 							label: "Done",
@@ -71,8 +71,8 @@ export function SellPage() {
 										</>
 									}
 								/>
-							}
-						}
+							},
+						},
 					]}
 				/>
 			</CommentedBlock>

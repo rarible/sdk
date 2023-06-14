@@ -1,6 +1,6 @@
-import { IRaribleSdk } from "@rarible/sdk"
-import { UnionAddress } from "@rarible/types/build/union-address"
-import { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
+import type { IRaribleSdk } from "@rarible/sdk"
+import type { UnionAddress } from "@rarible/types/build/union-address"
+import type { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
 import { useEffect, useState } from "react"
 
 export function useGetBalance(sdk: IRaribleSdk, walletAddress: UnionAddress, assetType: RequestCurrencyAssetType) {
@@ -32,7 +32,6 @@ export function useGetBalance(sdk: IRaribleSdk, walletAddress: UnionAddress, ass
 		} else {
 			fetchItems().catch((e) => setError(e))
 		}
-		//eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [walletAddress, assetType["@type"]])
 
 	return { balance, fetching, error }

@@ -1,15 +1,15 @@
 import React, { useContext } from "react"
 import { Box } from "@mui/material"
 import { useParams } from "react-router-dom"
-import { WalletType } from "@rarible/sdk-wallet"
+import type { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
-import { BurnForm } from "./burn-form"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { BurnForm } from "./burn-form"
 import { BurnComment } from "./comments/burn-comment"
 import { BurnPrepareForm } from "./burn-prepare-form"
 
@@ -42,7 +42,7 @@ export function BurnPage() {
 									disabled={!validateConditions(blockchain)}
 									itemId={params.itemId}
 								/>
-							}
+							},
 						},
 						{
 							label: "Send Transaction",
@@ -52,7 +52,7 @@ export function BurnPage() {
 									prepare={lastResponse}
 									disabled={!validateConditions(blockchain)}
 								/>
-							}
+							},
 						},
 						{
 							label: "Done",
@@ -65,8 +65,8 @@ export function BurnPage() {
 										</Box>
 									}
 								/>
-							}
-						}
+							},
+						},
 					]}
 				/>
 			</CommentedBlock>

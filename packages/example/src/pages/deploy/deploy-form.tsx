@@ -1,5 +1,6 @@
 import React, { useContext } from "react"
-import { useForm, useWatch } from "react-hook-form"
+import type { useForm } from "react-hook-form"
+import { useWatch } from "react-hook-form"
 import { Box } from "@mui/material"
 import { WalletType } from "@rarible/sdk-wallet"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
@@ -26,6 +27,6 @@ export function DeployForm({ form }: IDeployFormProps) {
 		case WalletType.SOLANA:
 			return <SolanaDeployForm form={form}/>
 		default:
-			return <Box sx={{my: 2}}>Deploy not available for selected blockchain</Box>
+			return <Box sx={{ my: 2 }}>Deploy not available for selected blockchain</Box>
 	}
 }

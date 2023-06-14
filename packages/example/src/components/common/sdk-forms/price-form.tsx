@@ -1,11 +1,12 @@
 import React, { useState } from "react"
-import { Blockchain } from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 import { Grid, MenuItem, Stack } from "@mui/material"
+import type { UseFormReturn } from "react-hook-form"
+import type { ContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
 import { FormTextInput } from "../form/form-text-input"
-import { UseFormReturn } from "react-hook-form"
 import { FormSelect } from "../form/form-select"
-import { CurrencyOption } from "../../../common/currency-helpers"
-import { ContractAddress, toContractAddress } from "@rarible/types"
+import type { CurrencyOption } from "../../../common/currency-helpers"
 
 interface IPriceFormProps {
 	form: UseFormReturn
@@ -79,7 +80,7 @@ export function PriceForm(props: IPriceFormProps) {
 							label="Currency"
 						>
 							{
-								currencyOptions.map((option, index) => {
+								currencyOptions.map((option) => {
 									const value = getCurrencyOptionValue(option)
 									return <MenuItem key={value} value={value}>
 										{option.label}

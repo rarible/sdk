@@ -39,7 +39,6 @@ function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string) {
 		} else {
 			fetchItems().catch((e) => setError(e))
 		}
-		//eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [walletAddress])
 
 	return { items, fetching, error }
@@ -63,11 +62,11 @@ export function ItemsPage() {
 				{
 					fetching ? <Box sx={{
 						my: 4,
-						display: 'flex',
+						display: "flex",
 						justifyContent: "center",
 					}}>
 						<CircularProgress/>
-					</Box> : ( items && <Box sx={{my: 2}}>
+					</Box> : ( items && <Box sx={{ my: 2 }}>
 						<ItemsList items={items}/>
 					</Box> )
 				}

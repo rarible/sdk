@@ -1,11 +1,11 @@
 import React from "react"
-import { useForm } from "react-hook-form"
+import type { useForm } from "react-hook-form"
 import { faCheckDouble, faExclamationTriangle, faCheck } from "@fortawesome/free-solid-svg-icons"
 import { LoadingButton } from "@mui/lab"
-import { IconDefinition } from "@fortawesome/fontawesome-common-types"
+import type { IconDefinition } from "@fortawesome/fontawesome-common-types"
 import { size } from "lodash"
 import { Icon } from "../icon"
-import { FormState } from "./types"
+import type { FormState } from "./types"
 
 interface IFormSubmitProps  {
 	form: ReturnType<typeof useForm>

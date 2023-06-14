@@ -1,9 +1,10 @@
 import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
-import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import {
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import type {
 	ConnectionProvider,
+	IConnectorStateProvider } from "@rarible/connector"
+import {
 	Connector,
-	IConnectorStateProvider,
 	InjectedWeb3ConnectionProvider,
 } from "@rarible/connector"
 import { FclConnectionProvider } from "@rarible/connector-fcl"
@@ -35,7 +36,7 @@ const ethereumRpcMap: Record<number, string> = {
 	5: "https://goerli-ethereum-node.rarible.com",
 	17: "https://node-e2e.rarible.com",
 	137: "https://polygon-rpc.com",
-	80001: "https://rpc-mumbai.matic.today"
+	80001: "https://rpc-mumbai.matic.today",
 }
 
 const ethereumNetworkMap: Record<number, string> = {
@@ -45,7 +46,7 @@ const ethereumNetworkMap: Record<number, string> = {
 	5: "goerli",
 	17: "e2e",
 	137: "polygon",
-	80001: "mumbai"
+	80001: "mumbai",
 }
 
 function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
@@ -81,18 +82,18 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 		case "prod":
 			return {
 				accessNode: "https://rpc.tzkt.io/mainnet",
-				network: TezosNetwork.MAINNET
+				network: TezosNetwork.MAINNET,
 			}
 		case "development":
 			return {
 				accessNode: "https://rpc.tzkt.io/ghostnet",
-				network: TezosNetwork.CUSTOM
+				network: TezosNetwork.CUSTOM,
 			}
 		case "testnet":
 		default:
 			return {
 				accessNode: "https://rpc.tzkt.io/ghostnet",
-				network: TezosNetwork.CUSTOM
+				network: TezosNetwork.CUSTOM,
 			}
 	}
 }
@@ -127,7 +128,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 
 	const mew = mapEthereumWallet(new MEWConnectionProvider({
 		networkId: ethChainId,
-		rpcUrl: ethereumRpcMap[ethChainId]
+		rpcUrl: ethereumRpcMap[ethChainId],
 	}))
 
 	const nfid = mapEthereumWallet(new NFIDConnectionProvider({
@@ -137,7 +138,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	const beacon: ConnectionProvider<"beacon", IWalletAndAddress> = mapTezosWallet(new BeaconConnectionProvider({
 		appName: "Rarible Test",
 		accessNode: tezosNetwork.accessNode,
-		network: tezosNetwork.network
+		network: tezosNetwork.network,
 	}))
 
 	const fcl = mapFlowWallet(new FclConnectionProvider({
@@ -145,32 +146,32 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		walletDiscovery: flowNetwork.walletDiscovery,
 		network: flowNetwork.network,
 		applicationTitle: "Rari Test",
-		applicationIcon: "https://rarible.com/favicon.png?2d8af2455958e7f0c812"
+		applicationIcon: "https://rarible.com/favicon.png?2d8af2455958e7f0c812",
 	}))
 
-  const magic = mapFlowWallet(new MattelConnectionProvider({
-    magicProviderId: "JeTIUJ7GJNnfwnxMwtPRa7JzbzRVxA4p3TdQsXryggM=",
-    magicAPIKey: "pk_live_63A5A557D1D4882D",
-    auth0Domain: "login-test.mattel.com",
-    auth0ClientId: "nXpDI0BnWhxB5DIhQVGOrB2LwgOvKIhd",
-    auth0RedirectUrl: "https://test-virtual.mattel.com",
-    accessNode: flowNetwork.accessNode,
-    network: flowNetwork.network,
-  }) as any) as any
+	const magic = mapFlowWallet(new MattelConnectionProvider({
+		magicProviderId: "JeTIUJ7GJNnfwnxMwtPRa7JzbzRVxA4p3TdQsXryggM=",
+		magicAPIKey: "pk_live_63A5A557D1D4882D",
+		auth0Domain: "login-test.mattel.com",
+		auth0ClientId: "nXpDI0BnWhxB5DIhQVGOrB2LwgOvKIhd",
+		auth0RedirectUrl: "https://test-virtual.mattel.com",
+		accessNode: flowNetwork.accessNode,
+		network: flowNetwork.network,
+	}) as any) as any
 
 	let torus = undefined
 	if (isEthNetwork) {
 		torus = mapEthereumWallet(new TorusConnectionProvider({
 			network: {
-				host: ethNetworkName
-			}
+				host: ethNetworkName,
+			},
 		}))
 	}
 
 	const walletLink = mapEthereumWallet(new WalletLinkConnectionProvider({
 		networkId: ethChainId,
 		estimationUrl: ethereumRpcMap[ethChainId],
-		url: ethereumRpcMap[ethChainId]
+		url: ethereumRpcMap[ethChainId],
 	}, {
 		appName: "Rarible",
 		appLogoUrl: "https://rarible.com/static/logo-500.static.png",
@@ -184,7 +185,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 
 	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
 	const solflareConnect = mapSolanaWallet(new SolflareConnectionProvider({
-		network: environment === "prod" ? "mainnet-beta" : "devnet"
+		network: environment === "prod" ? "mainnet-beta" : "devnet",
 	}))
 
 	const imxConnector = mapImmutableXWallet(new ImmutableXLinkConnectionProvider({

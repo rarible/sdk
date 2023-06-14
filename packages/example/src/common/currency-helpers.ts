@@ -1,14 +1,16 @@
-import {
-	Blockchain,
+import type {
 	EthErc20AssetType,
 	EthEthereumAssetType,
 	TezosXTZAssetType,
-	FlowAssetTypeFt,
+	FlowAssetTypeFt } from "@rarible/api-client"
+import {
+	Blockchain,
 } from "@rarible/api-client"
-import { toContractAddress, ContractAddress } from "@rarible/types"
-import { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
-import { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
-import { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
+import type { ContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
+import type { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
+import type { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -20,7 +22,7 @@ function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 function getERC20(contract: ContractAddress): EthErc20AssetType {
 	return {
 		"@type": "ERC20",
-		contract
+		contract,
 	}
 }
 
@@ -89,7 +91,9 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 	}
 }
 
-export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environment: RaribleSdkEnvironment): CurrencyOption[] {
+export function getCurrencyOptions(
+	supportedCurrencies: CurrencyType[], environment: RaribleSdkEnvironment
+): CurrencyOption[] {
 	return supportedCurrencies.flatMap((currency) => {
 		switch (currency.blockchain) {
 			case Blockchain.ETHEREUM:

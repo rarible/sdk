@@ -4,12 +4,12 @@ import type { PrepareTransferResponse } from "@rarible/sdk/build/types/nft/trans
 import { useForm } from "react-hook-form"
 import { toItemId } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { useNavigate } from "react-router-dom"
 
 interface ITransferPrepareFormProps {
 	disabled?: boolean
@@ -32,7 +32,7 @@ export function TransferPrepareForm({ itemId, disabled, onComplete }: ITransferP
 				}
 				try {
 					onComplete(await connection.sdk.nft.transfer.prepare({
-						itemId: toItemId(formData.itemId)
+						itemId: toItemId(formData.itemId),
 					}))
 					navigate(`/transfer/${formData.itemId}`, {})
 				} catch (e) {

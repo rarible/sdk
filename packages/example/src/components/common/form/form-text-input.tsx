@@ -1,8 +1,8 @@
 import React from "react"
-import { useForm } from "react-hook-form"
+import type { useForm } from "react-hook-form"
 import { TextField } from "@mui/material"
-import { RegisterOptions } from "react-hook-form/dist/types/validator"
-import { StandardTextFieldProps } from "@mui/material/TextField/TextField"
+import type { RegisterOptions } from "react-hook-form/dist/types/validator"
+import type { StandardTextFieldProps } from "@mui/material/TextField/TextField"
 import { useFormInputError } from "./form-hooks"
 
 interface IFormTextInputProps extends StandardTextFieldProps {

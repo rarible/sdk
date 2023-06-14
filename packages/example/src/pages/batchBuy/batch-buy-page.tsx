@@ -6,12 +6,12 @@ import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
-import { BatchBuyPrepareForm } from "./batch-buy-prepare-form"
-import { BatchBuyForm } from "./batch-buy-form"
-import { BatchBuyComment } from "./comments/batch-buy-comment"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { BatchBuyPrepareForm } from "./batch-buy-prepare-form"
+import { BatchBuyForm } from "./batch-buy-form"
+import { BatchBuyComment } from "./comments/batch-buy-comment"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
 	return !!blockchain && [WalletType.ETHEREUM, WalletType.TEZOS].includes(blockchain)
@@ -42,7 +42,7 @@ export function BatchBuyPage() {
 									disabled={!validateConditions(blockchain)}
 									orderId={params.orderId}
 								/>
-							}
+							},
 						},
 						{
 							label: "Send Transaction",
@@ -53,7 +53,7 @@ export function BatchBuyPage() {
 									orders={lastResponse.orders}
 									disabled={!validateConditions(blockchain)}
 								/>
-							}
+							},
 						},
 						{
 							label: "Done",
@@ -66,8 +66,8 @@ export function BatchBuyPage() {
 										</Box>
 									}
 								/>
-							}
-						}
+							},
+						},
 					]}
 				/>
 			</CommentedBlock>

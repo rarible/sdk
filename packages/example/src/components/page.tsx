@@ -11,7 +11,7 @@ export function Page({ header, children }: React.PropsWithChildren<IPageProps>) 
 			{
 				header && <Typography variant="h4" component="h1" gutterBottom>
 					{header}
-                </Typography>
+				</Typography>
 			}
 			{children}
 		</div>

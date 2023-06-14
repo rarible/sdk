@@ -4,13 +4,13 @@ import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toOrderId } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
+import type { PrepareOrderUpdateResponse } from "@rarible/sdk/build/types/order/common"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { useNavigate } from "react-router-dom"
-import { PrepareOrderUpdateResponse } from "@rarible/sdk/build/types/order/common";
 
 interface ISellUpdatePrepareFormProps {
 	disabled?: boolean
@@ -32,13 +32,13 @@ export function SellUpdatePrepareForm({ orderId, disabled, onComplete }: ISellUp
 					return
 				}
 				try {
-          const orderId = toOrderId(formData.orderId)
-          onComplete({
-            prepare: await connection.sdk.order.sellUpdate.prepare({
-              orderId,
-            }),
-            order: await connection.sdk.apis.order.getOrderById({id: orderId})
-          })
+					const orderId = toOrderId(formData.orderId)
+					onComplete({
+						prepare: await connection.sdk.order.sellUpdate.prepare({
+							orderId,
+						}),
+						order: await connection.sdk.apis.order.getOrderById({ id: orderId }),
+					})
 					navigate(`/sell-update/${formData.orderId}`, {})
 				} catch (e) {
 					setError(e)

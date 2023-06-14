@@ -14,7 +14,7 @@ export function Code({ children, theme, language, wrap }: ICodeProps) {
 		style={theme === "light" ? materialLight : darcula}
 		wrapLongLines
 		wrapLines={wrap}
-		lineProps={wrap ? {style: {wordBreak: 'break-all', whiteSpace: 'pre-wrap'}} : undefined}
+		lineProps={wrap ? { style: { wordBreak: "break-all", whiteSpace: "pre-wrap" } } : undefined}
 	>
 		{children?.trim() ?? ""}
 	</SyntaxHighlighter>

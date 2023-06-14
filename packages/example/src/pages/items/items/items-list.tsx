@@ -1,7 +1,7 @@
 import React from "react"
 import type { Items } from "@rarible/api-client"
-import { ItemCard } from "./item-card"
 import { Box, Typography } from "@mui/material"
+import { ItemCard } from "./item-card"
 
 interface IItemsListProps {
 	items: Items
@@ -9,7 +9,7 @@ interface IItemsListProps {
 
 export function ItemsList({ items }: IItemsListProps) {
 	if (!items?.items?.length) {
-		return <Box sx={{my: 2}}>
+		return <Box sx={{ my: 2 }}>
 			<Typography variant="h5" color="text.secondary" sx={{ textAlign: "center" }}>
 				No Items found
 			</Typography>

@@ -1,13 +1,13 @@
 import React, { useContext } from "react"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { CircularProgress } from "@mui/material"
-import { getCurrenciesForBlockchain } from "./utils/currencies"
-import { UnionAddress } from "@rarible/types/build/union-address"
+import type { UnionAddress } from "@rarible/types/build/union-address"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
+import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { ConvertForm, isAvailableWethConvert } from "./convert-form"
 import { useGetBalance } from "./hooks/use-get-balance"
-import { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider";
-import { ConvertForm, isAvailableWethConvert } from "./convert-form";
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider";
+import { getCurrenciesForBlockchain } from "./utils/currencies"
 
 interface INativeBalanceProps {
 	sdk: IRaribleSdk,
@@ -15,8 +15,8 @@ interface INativeBalanceProps {
 	walletAddress: UnionAddress,
 }
 
-export function NativeBalance({sdk, wallet, walletAddress}: INativeBalanceProps) {
-  const {environment} = useContext(EnvironmentContext)
+export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProps) {
+	const { environment } = useContext(EnvironmentContext)
 	const connection = useContext(ConnectorContext)
 	const currencies = getCurrenciesForBlockchain(wallet.walletType, environment, connection)
 	const { balance, fetching, error } = useGetBalance(
@@ -38,7 +38,7 @@ export function NativeBalance({sdk, wallet, walletAddress}: INativeBalanceProps)
 
 	return (
 		<>
-			<div style={{marginBottom: 20}}>
+			<div style={{ marginBottom: 20 }}>
 				Native Balance: {content()}
 			</div>
 			{

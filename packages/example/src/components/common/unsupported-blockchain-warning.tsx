@@ -1,6 +1,6 @@
 import React from "react"
 import { Alert, AlertTitle } from "@mui/material"
-import { WalletType } from "@rarible/sdk-wallet"
+import type { WalletType } from "@rarible/sdk-wallet"
 
 interface IUnsupportedBlockchainWarningProps {
 	blockchain: WalletType | undefined
