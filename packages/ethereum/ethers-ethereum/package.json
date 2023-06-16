@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethers-ethereum",
-  "version": "0.13.40",
+  "version": "0.13.42-hotfix.0",
   "description": "Ethereum interface with ethers.js",
   "keywords": [
     "ethereum",
