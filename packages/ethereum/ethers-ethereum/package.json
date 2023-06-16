@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.40",
+    "@rarible/sdk-common": "^0.13.40",
     "ethereumjs-util": "^7.1.0",
     "ethers": "~5.4.4"
   },

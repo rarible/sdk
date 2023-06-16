@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.40",
+    "@rarible/sdk-common": "^0.13.40",
     "eth-rpc-errors": "^4.0.3",
     "exponential-backoff": "^3.1.0",
     "web3-eth-abi": ">=1.5.0 <1.9.0",
