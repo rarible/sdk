@@ -439,7 +439,7 @@ export class EthereumBid {
 			throw new Error("Not an ethereum order")
 		}
 
-		const order = await this.sdk.apis.order.getOrderByHash({ hash })
+		const order = await this.sdk.apis.order.getValidatedOrderByHash({ hash })
 		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
 			throw new Error(`Unable to update bid ${JSON.stringify(order)}`)
 		}

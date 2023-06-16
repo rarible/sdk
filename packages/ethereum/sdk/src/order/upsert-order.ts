@@ -111,7 +111,7 @@ export class UpsertOrder {
 		if ("order" in hasOrder) {
 			return hasOrder.order
 		} else {
-			return this.orderApi.getOrderByHash({ hash: hasOrder.orderHash })
+			return this.orderApi.getValidatedOrderByHash({ hash: hasOrder.orderHash })
 		}
 	}
 

@@ -189,7 +189,7 @@ describe.skip("test of cancelling seaport rinkeby order", () => {
 		await cancelTx.wait()
 
 		await retry(10, 3000, async () => {
-			const order = await sdkSeller.apis.order.getOrderByHash({ hash: orderHash })
+			const order = await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 			if (order.status !== "CANCELLED") {
 				throw new Error("Order has not been cancelled")
 			}
@@ -213,7 +213,7 @@ describe.skip("test of cancelling looksrare rinkeby order", () => {
 		await cancelTx.wait()
 
 		await retry(10, 3000, async () => {
-			const order = await sdkSeller.apis.order.getOrderByHash({ hash: orderHash })
+			const order = await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 			if (order.status !== "CANCELLED") {
 				throw new Error("Order has not been cancelled")
 			}

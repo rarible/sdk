@@ -52,7 +52,7 @@ async function ethereumPostFillAction(from: string, request: any, res: Response)
 				.json({ message: "body.request.orderId should be in union format" })
 		}
 
-		request.order = await sdk.apis.order.getOrderByHash({
+		request.order = await sdk.apis.order.getValidatedOrderByHash({
 			hash: orderId,
 		})
 	}

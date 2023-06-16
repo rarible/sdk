@@ -129,7 +129,7 @@ export async function makeAmmOrder(
 	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, env, ethereum, send, config.sudoswap.pairFactory, 2)
 	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
 	return await retry(20, 2000, async () => {
-		return await sdk.apis.order.getOrderByHash({ hash: orderHash })
+		return await sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
 	}) as SimpleAmmOrder
 }
 
@@ -160,7 +160,7 @@ export function ordersToRequests(
 
 export function waitUntilOrderActive(sdk: RaribleSdk, orderHash: string) {
 	return retry(30, 2000, async () => {
-		const order = await sdk.apis.order.getOrderByHash({ hash: orderHash })
+		const order = await sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		expect(order.status).toBe("ACTIVE")
 		return order
 	})
