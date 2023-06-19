@@ -22,8 +22,8 @@ import { BalancePage } from "./pages/balance/balance-page"
 import { CancelPage } from "./pages/cancel/cancel-page"
 import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 import { SignPage } from "./pages/sign/sign-page"
-import { SellUpdatePage } from "./pages/sell-update/sell-update-page";
-import { UtilsPage } from "./pages/utils/utils-page";
+import { SellUpdatePage } from "./pages/sell-update/sell-update-page"
+import { UtilsPage } from "./pages/utils/utils-page"
 
 export function App() {
 	return (
@@ -34,9 +34,9 @@ export function App() {
 						<Header/>
 						<Container maxWidth="xl" sx={{
 							mt: 2,
-							display: 'grid',
-							gridTemplateColumns: 'minmax(250px, 20%)  1fr',
-							gap: "20px"
+							display: "grid",
+							gridTemplateColumns: "minmax(250px, 20%)  1fr",
+							gap: "20px",
 						}}>
 							<Box component="nav">
 								<Navigation/>
@@ -56,7 +56,7 @@ export function App() {
 									<Route path="buy" element={<BuyPage/>}>
 										<Route path=":orderId" element={<BuyPage/>}/>
 									</Route>
-                  <Route path="sell-update" element={<SellUpdatePage/>}>
+									<Route path="sell-update" element={<SellUpdatePage/>}>
 										<Route path=":orderId" element={<SellUpdatePage/>}/>
 									</Route>
 									<Route path="batch-buy" element={<BatchBuyPage/>}/>
@@ -84,5 +84,5 @@ export function App() {
 				</SdkConnectionProvider>
 			)}
 		</EnvironmentSelectorProvider>
-	);
+	)
 }

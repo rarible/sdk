@@ -28,9 +28,9 @@ export function ConnectionStatus() {
 			return <Alert severity="success" icon={<Icon icon={faLink}/>}>
 				<AlertTitle>Current Status: connected</AlertTitle>
 				Application is connected to wallet <Address
-				address={connection.state.connection.address}
-				trim={false}
-			/>
+					address={connection.state.connection.address}
+					trim={false}
+				/>
 			</Alert>
 		case "disconnected":
 			const error = connectionErrorMessage(connection?.state.error)

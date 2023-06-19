@@ -2,14 +2,14 @@ import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toItemId } from "@rarible/types"
-import { PrepareSellResponse } from "@rarible/sdk/build/types/order/sell/domain"
+import type { PrepareSellResponse } from "@rarible/sdk/build/types/order/sell/domain"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { useNavigate } from "react-router-dom"
 
 interface ISellPrepareFormProps {
 	onComplete: (response: PrepareSellResponse) => void
@@ -32,7 +32,7 @@ export function SellPrepareForm({ disabled, onComplete, itemId }: ISellPrepareFo
 				}
 				try {
 					onComplete(await connection.sdk.order.sell.prepare({
-						itemId: toItemId(formData.itemId)
+						itemId: toItemId(formData.itemId),
 					}))
 					navigate(`/sell/${formData.itemId}`, {})
 				} catch (e) {

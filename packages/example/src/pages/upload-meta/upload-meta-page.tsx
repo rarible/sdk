@@ -22,7 +22,7 @@ export function UploadMetaPage() {
 								return <UploadMetaForm
 									onComplete={onComplete}
 								/>
-							}
+							},
 						},
 						{
 							label: "Done",
@@ -35,8 +35,8 @@ export function UploadMetaPage() {
 										</Box>
 									}
 								/>
-							}
-						}
+							},
+						},
 					]}
 				/>
 			</CommentedBlock>

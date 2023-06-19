@@ -1,10 +1,10 @@
 import React, { useContext } from "react"
 import { Box, Chip, IconButton, Stack, Tooltip, Typography } from "@mui/material"
-import { StateConnected } from "@rarible/connector/build/connection-state"
+import type { StateConnected } from "@rarible/connector/build/connection-state"
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons"
+import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { Address } from "../../../common/address"
 import { Icon } from "../../../common/icon"
-import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { EnvironmentContext } from "../../../connector/environment-selector-provider"
 import { getEnvironmentName } from "../../../connector/environments"
 
@@ -13,7 +13,7 @@ export interface IConnectedStatusProps {
 }
 
 export function ConnectedStatus({ state }: IConnectedStatusProps) {
-	const {environment} = useContext(EnvironmentContext)
+	const { environment } = useContext(EnvironmentContext)
 	return (
 		<Stack direction="row" alignItems="center" spacing={2}>
 			<Tooltip title="SDK Connection Environment" placement="bottom">
@@ -24,7 +24,7 @@ export function ConnectedStatus({ state }: IConnectedStatusProps) {
 					sx={{
 						lineHeight: 1.1,
 						height: "20px",
-						fontSize: "0.8125rem"
+						fontSize: "0.8125rem",
 					}}
 				/>
 			</Tooltip>

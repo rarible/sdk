@@ -30,6 +30,7 @@
     "@rarible/connector-portis": "^0.13.40",
     "@rarible/connector-torus": "^0.13.40",
     "@rarible/connector-walletconnect": "^0.13.40",
+    "@rarible/connector-walletconnect-v2": "^0.13.40",
     "@rarible/connector-walletlink": "^0.13.40",
     "@rarible/sdk": "^0.13.42-hotfix.0",
     "@rarible/web3-ethereum": "^0.13.42-hotfix.0",
@@ -64,16 +65,14 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
     "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "eject": "SKIP_PREFLIGHT_CHECK=true react-scripts eject",
     "verify": "tsc --noEmit"
   },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1",
+    "customize-cra": "1.0.0"
   },
   "browserslist": {
     "production": [

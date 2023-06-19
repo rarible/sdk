@@ -1,7 +1,7 @@
 import React from "react"
-import { Code } from "../../components/common/code"
 import { Typography } from "@mui/material"
-import { UploadMetaResponse } from "@rarible/sdk/src/sdk-blockchains/union/meta/domain"
+import type { UploadMetaResponse } from "@rarible/sdk/src/sdk-blockchains/union/meta/domain"
+import { Code } from "../../components/common/code"
 
 interface IUploadResultProps {
 	result: UploadMetaResponse

@@ -1,16 +1,16 @@
 import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
+import type { PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import { Blockchain } from "@rarible/api-client"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider";
-import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain";
-import { Blockchain } from "@rarible/api-client";
+import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 
 interface IMintPrepareFormProps {
 	disabled?: boolean,
@@ -19,7 +19,7 @@ interface IMintPrepareFormProps {
 
 export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps) {
 	const connection = useContext(ConnectorContext)
-	const {environment} = useContext(EnvironmentContext)
+	const { environment } = useContext(EnvironmentContext)
 
 	const form = useForm()
 	const { handleSubmit } = form
@@ -33,7 +33,7 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 				}
 				try {
 					const collection = await connection.sdk.apis.collection.getCollectionById({
-						collection: formData.collectionId
+						collection: formData.collectionId,
 					})
 					onComplete(await connection.sdk.nft.mint.prepare({ collection }))
 				} catch (e) {
@@ -62,7 +62,7 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 }
 
 function getDefaultCollection(env: RaribleSdkEnvironment, blockchain: Blockchain) {
-	console.log('env', env, blockchain, getDefaultETHCollection(env))
+	console.log("env", env, blockchain, getDefaultETHCollection(env))
 	switch (blockchain) {
 		case Blockchain.ETHEREUM: return `${blockchain}:${getDefaultETHCollection(env)}`
 		default: return ""

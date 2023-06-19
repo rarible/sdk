@@ -25,12 +25,12 @@ export function Header() {
 	return (
 		<AppBar position={"static"}>
 			<Container maxWidth={"xl"} disableGutters>
-			<Toolbar>
+				<Toolbar>
 					<Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
 						Rarible SDK Example
 					</Typography>
 					<ConnectionStatus/>
-			</Toolbar>
+				</Toolbar>
 			</Container>
 		</AppBar>
 	)

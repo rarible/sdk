@@ -30,10 +30,11 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 			case "prev":
 				state.currentStep = Math.max(state.currentStep - 1, 0)
 				return state
+			default: return undefined
 		}
 	}, {
 		currentStep: 0,
-		responses: []
+		responses: [],
 	})
 
 	console.log(state)
@@ -51,8 +52,8 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 							index={index}
 							sx={{
 								".Mui-completed": {
-									color: lastCompleted ? "green" : "primary"
-								}
+									color: lastCompleted ? "green" : "primary",
+								},
 							}}
 							completed={lastCompleted ? true : undefined}
 						>
@@ -75,14 +76,14 @@ export function FormStepper({ steps, onComplete }: IFormStepperProps) {
 			{
 				state.currentStep > 0 &&
                 <Box sx={{ mt: 2 }}>
-                    <Button
-                        startIcon={<Icon icon={faAngleLeft}/>}
-                        color={"inherit"}
-                        variant="text"
-                        onClick={() => setFormResponse({ type: "prev" })}
-                    >
+                	<Button
+                		startIcon={<Icon icon={faAngleLeft}/>}
+                		color={"inherit"}
+                		variant="text"
+                		onClick={() => setFormResponse({ type: "prev" })}
+                	>
                         Back
-                    </Button>
+                	</Button>
                 </Box>
 			}
 		</>

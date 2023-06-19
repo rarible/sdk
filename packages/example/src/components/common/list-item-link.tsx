@@ -14,7 +14,7 @@ interface IListItemLinkProps {
 
 export function ListItemLink(props: IListItemLinkProps) {
 	const { icon, primary, to } = props
-	const location = useLocation();
+	const location = useLocation()
 
 	const renderLink = React.useMemo(
 		() =>

@@ -1,6 +1,6 @@
 import React, { useState } from "react"
-import { Connector } from "@rarible/connector"
-import { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import type { Connector } from "@rarible/connector"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { getConnector } from "./connectors-setup"
 
@@ -11,7 +11,7 @@ export interface IEnvironmentContext {
 
 export const EnvironmentContext = React.createContext<IEnvironmentContext>({
 	environment: "prod",
-	setEnvironment: undefined
+	setEnvironment: undefined,
 })
 
 export interface IConnectorComponentProps {
@@ -35,7 +35,7 @@ export function EnvironmentSelectorProvider({ children }: React.PropsWithChildre
 		setEnvironment: (env: RaribleSdkEnvironment) => {
 			localStorage.setItem(LOCALSTORAGE_KEY, env)
 			setEnvironment(env)
-		}
+		},
 	}
 
 	return <EnvironmentContext.Provider value={context}>

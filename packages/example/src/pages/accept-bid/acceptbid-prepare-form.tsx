@@ -1,15 +1,15 @@
 import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
-import { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import type { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
 import { toOrderId } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { useNavigate } from "react-router-dom"
 
 interface IAcceptBidPrepareFormProps {
 	disabled?: boolean
@@ -32,7 +32,7 @@ export function AcceptBidPrepareForm({ orderId, disabled, onComplete }: IAcceptB
 				}
 				try {
 					onComplete(await connection.sdk.order.acceptBid.prepare({
-						orderId: toOrderId(formData.orderId)
+						orderId: toOrderId(formData.orderId),
 					}))
 					navigate(`/accept-bid/${formData.orderId}`, {})
 				} catch (e) {
