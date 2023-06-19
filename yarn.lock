@@ -6978,10 +6978,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.64.tgz#27ec532b17acf77b5bf132b7a7b9f291829a0027"
   integrity sha512-noAi2Teqfn1ipX8ZJBJcT34sYvGbYCJtHBXca1CO0CzlLPYaGsrg+qgSOdTx8hCQYORl6e9WiKd+dNeD7b5z2w==
 
-"@rarible/flow-sdk@~0.5.64":
-  version "0.5.64"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.64.tgz#f0d3f390a15ff5b585fb55b739e6091133ce79e2"
-  integrity sha512-3FyqPVsDDJqk3SVyCymVpfdzK82HCr/R8lJZHe7maEuf4CX9+cfdfSGQZQLuvMPnlt7R2bWUbl0/72jygaZyIA==
+"@rarible/flow-sdk@~0.5.65":
+  version "0.5.65"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.65.tgz#f9b47e5cef6c3e6994123a19a1724d67d96ff6e2"
+  integrity sha512-62jWCWOJMyAJhOqVNoYsO+4HzsjyFH+xKM0Hvf3iWl29UCgmOK1AzvR7hIQCuV9H+qaDFnYex16zLlCfrdO18Q==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"

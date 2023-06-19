@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.42-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.42...v0.13.42-hotfix.0) (2023-06-16)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.42](https://github.com/rarible/sdk/compare/v0.13.41...v0.13.42) (2023-06-16)
+
+
+### Features
+
+* new mattel contracts ([#494](https://github.com/rarible/sdk/issues/494)) ([73273e2](https://github.com/rarible/sdk/commit/73273e2aa3f180cc1718796b7b7d4da5f5978675))
+
+
+
+
+
 ## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
 
 **Note:** Version bump only for package @rarible/sdk-transaction
