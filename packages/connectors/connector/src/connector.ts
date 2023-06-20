@@ -164,6 +164,9 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 		)
 	}
 
+	getProviders(): ConnectionProvider<Option, Connection>[] {
+		return this.providers
+	}
 	/**
 	 * Add flag when page unload to avoid disconnect events from connectors
 	 */
