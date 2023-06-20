@@ -8,7 +8,6 @@ import type {
 } from "@walletconnect/ethereum-provider/dist/types/EthereumProvider"
 
 const PROVIDER_ID = "walletconnect_v2" as const
-
 export class WalletConnectConnectionProviderV2 extends
 	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
 	private readonly instance: Observable<EthereumProvider>
