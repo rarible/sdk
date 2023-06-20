@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-mattel",
-  "version": "0.13.41",
+  "version": "0.13.43",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -21,7 +21,7 @@
     "@magic-ext/flow": "~11.0.2",
     "@magic-ext/oidc": "~1.0.1",
     "@onflow/fcl": "~1.3.2",
-    "@rarible/connector": "^0.13.40",
+    "@rarible/connector": "^0.13.43",
     "magic-sdk": "~13.4.1"
   },
   "devDependencies": {

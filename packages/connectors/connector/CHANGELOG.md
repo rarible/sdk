@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+
+### Features
+
+* **MPX-1957:** walletconnect v2 migration ([#493](https://github.com/rarible/sdk/issues/493)) ([6d2be66](https://github.com/rarible/sdk/commit/6d2be66c3df8d5dc284490e866ca6a6718c6ea53))
+* **MPX-2041:** expose get providers method for connector ([#497](https://github.com/rarible/sdk/issues/497)) ([a8d4067](https://github.com/rarible/sdk/commit/a8d4067618cc8e07220604fa35e705549a15a4e3))
+
+
+
+
+
 ## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
 
 **Note:** Version bump only for package @rarible/connector
