@@ -150,7 +150,7 @@ export class EthereumSell {
 			throw new Error("Not an ethereum order")
 		}
 
-		const order = await this.sdk.apis.order.getOrderByHash({ hash })
+		const order = await this.sdk.apis.order.getValidatedOrderByHash({ hash })
 		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
 			throw new Error(`You can't update non-Rarible orders. Unable to update sell ${JSON.stringify(order)}`)
 		}

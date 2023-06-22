@@ -221,7 +221,7 @@ describe.skip("looksrare fill", () => {
 	})
 
 	test.skip("fill API order", async () => {
-		const order = await sdkBuyer.apis.order.getOrderByHash({
+		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
 			hash: "0x3a7ff5ea8769b18d220f962d215bca2d2667131c2dde5593bb7302a12cd2dda4",
 		}) as LooksRareOrder
 

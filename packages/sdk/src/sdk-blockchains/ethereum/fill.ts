@@ -367,7 +367,7 @@ export class EthereumFill {
 		isBid = false
 	): Promise<PrepareFillResponse> {
 		const orderHash = this.getOrderHashFromRequest(request)
-		const order = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+		const order = await this.sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
 
 		const submit = action
 			.before((fillRequest: FillRequest) => {
@@ -487,7 +487,7 @@ export class EthereumFill {
 		const blockchain = getEVMBlockchain(this.network)
 		const prepared = await Promise.all(prepareRequest.map(async (req) => {
 			const orderHash = this.getOrderHashFromRequest(req)
-			const ethOrder = await this.sdk.apis.order.getOrderByHash({ hash: orderHash })
+			const ethOrder = await this.sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
 			const orderId = getOrderId(req)
 			orders[orderId] = ethOrder
 

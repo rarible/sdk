@@ -51,7 +51,7 @@ describe.skip("amm", () => {
 		const orderHash = "0x" + pair.poolAddress.slice(2).padStart(64, "0")
 		console.log("order:", orderHash)
 		const singleOrder: SimpleOrder = await retry(20, 2000, async () => {
-			return await sdkBuyer.apis.order.getOrderByHash({ hash: orderHash })
+			return await sdkBuyer.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		})
 		console.log("single order", singleOrder)
 
@@ -81,7 +81,7 @@ describe.skip("amm", () => {
 		const orderHash = "0x" + pair.poolAddress.slice(2).padStart(64, "0")
 		console.log("order:", orderHash)
 		const singleOrder: SimpleOrder = await retry(20, 2000, async () => {
-			return await sdkBuyer.apis.order.getOrderByHash({ hash: orderHash })
+			return await sdkBuyer.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		})
 
 		const [

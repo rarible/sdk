@@ -59,7 +59,7 @@ describe("amm batch buy tests", () => {
 		)
 		const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
 		const order = await retry(20, 2000, async () => {
-			return await sdkSeller.apis.order.getOrderByHash({ hash: orderHash })
+			return await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		}) as SimpleAmmOrder
 
 		const requests: NftAssetType[] = items.map(item => ({

@@ -4,12 +4,12 @@ start=$(date +%s)
 scripts_dir="$(dirname "$0")"
 
 yarn run build-sdk-common
-source $scripts_dir/build-ethereum.sh &
-source $scripts_dir/build-imx.sh &
-source $scripts_dir/build-solana.sh
+. $scripts_dir/build-ethereum.sh &
+. $scripts_dir/build-imx.sh &
+. $scripts_dir/build-solana.sh
 wait
 yarn run build-sdk-wallet
-source $scripts_dir/build-connectors.sh
+. $scripts_dir/build-connectors.sh
 
 yarn run build-sdk-transaction
 yarn run build-sdk

@@ -7065,6 +7065,13 @@
   dependencies:
     "@rarible/types" "~0.9.2"
 
+"@rarible/ethereum-api-client@^0.1.26-beta2":
+  version "0.1.26-beta2"
+  resolved "http://nexus.rarible.int/repository/npm-all/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.26-beta2.tgz#63366576a58a6f8c77c19e3acef5b3917079655f"
+  integrity sha512-C12fdPLrrlGFy2KnnCnSPtI4SkQ+YQmG54NBTn71eo8gXF7MgJU71gHK0sPSu8Y1ZBa7B1p2I7NbifJc/Hm7Ag==
+  dependencies:
+    "@rarible/types" "~0.9.2"
+
 "@rarible/fcl-types@^0.5.56", "@rarible/fcl-types@~0.5.56":
   version "0.5.56"
   resolved "https://registry.yarnpkg.com/@rarible/fcl-types/-/fcl-types-0.5.56.tgz#2e796a0170458a645f39cab4bcd6d79aa83373ec"
