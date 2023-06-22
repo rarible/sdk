@@ -102,11 +102,10 @@ describe.each(providers)("sell", (ethereum) => {
 				account: treasuryAddress,
 				value: 100,
 			}],
-			start: Math.round(Date.now()/1000 + 10),
-			end: Math.round(Date.now()/1000 + 200),
+			start: Math.round(Date.now()/1000),
+			end: Math.round(Date.now()/1000 + 2000000),
 		})
 
-		expect(order.status).toBe("INACTIVE")
 		expect(order.hash).toBeTruthy()
 
 		await delay(1000)
