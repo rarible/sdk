@@ -213,7 +213,6 @@ describe("sale", () => {
 		}
 
 		await awaitItem(sdk1, result.itemId)
-
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
@@ -229,10 +228,9 @@ describe("sale", () => {
 		const order = await awaitStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
-		const fillAction = await sdk2.order.buy.prepare({ orderId })
-
 		let errorMessage
 		try {
+			const fillAction = await sdk2.order.buy.prepare({ orderId })
 			const tx = await fillAction.submit({ amount: 1 })
 			await tx.wait()
 		} catch (e: any) {
