@@ -22,9 +22,8 @@
     "@magic-ext/oidc": "~1.0.1",
     "@onflow/fcl": "~1.3.2",
     "@rarible/connector": "^0.13.43",
-    "magic-sdk": "^18.0.1",
+    "magic-sdk": "~18.0.1",
     "@rarible/api-client": "0.0.15-beta1"
-
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

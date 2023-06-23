@@ -138,7 +138,6 @@ export class MattelConnectionProvider extends
 				if (!data?.user?.publicAddress) {
 					return getStateDisconnected()
 				}
-				console.log("magic", magic)
 				return getStateConnected<MattelProviderConnectionResult>({
 					connection: {
 						fcl: data.fcl,
@@ -206,7 +205,6 @@ export class MattelConnectionProvider extends
 
 	async isConnected(): Promise<boolean> {
 		const sdk = await this.instance.pipe(first()).toPromise()
-		console.log("isconnected", sdk)
 		return !!(await sdk?.fcl.currentUser())
 	}
 
@@ -233,6 +231,8 @@ export class MattelConnectionProvider extends
 				},
 				identityPrefill: data.purchaseOptions.identityPrefill,
 			})
+		} else {
+			throw new Error("Context is not prepared")
 		}
 	}
 }
