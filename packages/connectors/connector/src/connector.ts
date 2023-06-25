@@ -29,6 +29,16 @@ export interface IConnector<Option, Connection> {
 	 * Subscribe to this observable to get current connection state
 	 */
 	connection: Observable<ConnectionState<Connection>>
+
+	/**
+   * Get added providers
+   */
+	getProviders(): ConnectionProvider<Option, Connection>[]
+
+	/**
+   * Get connected provider
+   */
+	getCurrentProvider(): ConnectionProvider<Option, Connection> | undefined
 }
 
 /**
@@ -167,6 +177,11 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 	getProviders(): ConnectionProvider<Option, Connection>[] {
 		return this.providers
 	}
+
+	getCurrentProvider(): ConnectionProvider<Option, Connection> | undefined {
+		return this.provider.getValue()
+	}
+
 	/**
 	 * Add flag when page unload to avoid disconnect events from connectors
 	 */

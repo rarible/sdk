@@ -25,7 +25,7 @@
     "@rarible/ethereum-provider": "^0.13.40",
     "@rarible/ethers-ethereum": "^0.13.43",
     "@rarible/fcl-types": "~0.5.56",
-    "@rarible/flow-sdk": "~0.5.66",
+    "@rarible/flow-sdk": "~0.5.68",
     "@rarible/solana-wallet": "^0.13.40",
     "@rarible/tezos-sdk": "0.1.45",
     "@rarible/types": "~0.9.6",

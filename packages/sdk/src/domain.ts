@@ -35,7 +35,11 @@ import type { IBatchBuy } from "./types/order/fill"
 import type { IGetBuyAmmInfo } from "./types/balances"
 import type { IGetSdkContext } from "./common/get-sdk-context"
 import type { IBalanceTransfer } from "./types/balances"
-import type { IFlowSetupAccount } from "./types/nft/collection"
+import type {
+	IFlowSetupAccount,
+	IFlowCheckInitMattelCollections,
+	IFlowSetupMattelCollections,
+} from "./types/nft/collection"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -378,6 +382,8 @@ export interface IEthereumSdk {
 
 export interface IFlowSdk {
 	setupAccount: IFlowSetupAccount
+	setupMattelCollections: IFlowSetupMattelCollections
+	checkInitMattelCollections: IFlowCheckInitMattelCollections
 }
 
 

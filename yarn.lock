@@ -5956,32 +5956,32 @@
   dependencies:
     "@lit-labs/ssr-dom-shim" "^1.0.0"
 
-"@magic-ext/flow@~13.0.1":
-  version "13.0.1"
-  resolved "https://registry.yarnpkg.com/@magic-ext/flow/-/flow-13.0.1.tgz#222720b8c86c55cccfe922ab1b8c1a1a8a2f9b59"
-  integrity sha512-rnNdZWiTI94Fwkevkr2C6Yvx4ozARum6mQUo4oLCIKN67Wptk+q4YZNuazJqYOpOVUfSzHuBdxBPKaU/9RBmGg==
+"@magic-ext/flow@~13.2.0":
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/flow/-/flow-13.2.0.tgz#64a03c2d5bca7ec1a884c2910ec597abd860fc41"
+  integrity sha512-JSsv4xAXKLrGNQJgtofnsx5pKzpdVULbfGDvY31iHWhRFiKdKDQ2seMASjxnV86DK7a3w0ZcOYkr37RwEU7Khw==
 
-"@magic-ext/oidc@~1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@magic-ext/oidc/-/oidc-1.0.1.tgz#0109bd56b7dec8c17040270e8f9f66a142f015f4"
-  integrity sha512-S52d/WGBKrL3HgNOHaKq83aEGm1iu8SGyDcXzXHu5rY5FG7SrHEJh7k70Fd+TdPwxjKYIieYs3q9CDVhID8sOA==
+"@magic-ext/oidc@~1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@magic-ext/oidc/-/oidc-1.1.0.tgz#d33fbef65f877712a8669ab1e12ba9a849f31f66"
+  integrity sha512-eb5Fl+j548AA+UEW/5jJ/JXUDeXf2c7DZrSDYKWSpuVpVgf7mWL1mhc5nhYLVTwJ0PhRXYOltHqzT/iJ2caBvQ==
 
-"@magic-sdk/commons@^14.0.1":
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-14.0.1.tgz#c86d0bd3812dc0d3f881d3218df67663ce79e00e"
-  integrity sha512-LppH3vUmTAOtab6v/+uavAQMG6iyHFhTqodzpKQKqoQcxPQDZPhHX3VxwZqHkzLm8lZwEtWXxWRpqfG2riITsw==
+"@magic-sdk/commons@^14.2.0":
+  version "14.2.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-14.2.0.tgz#4fa57c97786c4c277a54582c5547a50e44f9dc1e"
+  integrity sha512-KC7pw0FWJxBmMFq9NFo6L+M1PLwiPwKCyGoV+wYa+zTzR95/jgAOpJ8siXGzR4mDGlj9GxcYd24xayKUSawbrw==
 
 "@magic-sdk/commons@^3.0.0":
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/@magic-sdk/commons/-/commons-3.0.0.tgz#6c26d4dec3c92604b06e24494e41aef11d227230"
   integrity sha512-vNoR7b2r+lRBJTbhCXxO3KCPA6CGsvmqNj8Kbkk1M9qixGOFhNsYTrOzxp5AK8vggIIOrVjvqP9y2ryemkhckg==
 
-"@magic-sdk/provider@^18.0.1":
-  version "18.0.1"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-18.0.1.tgz#e7c26ab79930b1f5fbdfaf48968d932037b20292"
-  integrity sha512-Y9gIyLBXDm+BnI4dVi0vbP/sp610NTHTUybqeNxsb+QT5iMC1UbodDYth15T85GE4uSbGyzbbnkZ+vFuut123A==
+"@magic-sdk/provider@^18.2.0":
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/provider/-/provider-18.2.0.tgz#4a676683dea98ba2c63e9ba87239247e0938cfb0"
+  integrity sha512-6sokDZG4sBDAJZEmu7mwuU8PmOML8QdBpgJwv/I9lqeXVwhepNoIMl9UuftStW3PLFKPkrUa7CldHK7rf6WNXg==
   dependencies:
-    "@magic-sdk/types" "^15.4.0"
+    "@magic-sdk/types" "^15.6.0"
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
@@ -5994,10 +5994,10 @@
     eventemitter3 "^4.0.4"
     web3-core "1.5.2"
 
-"@magic-sdk/types@^15.4.0":
-  version "15.4.0"
-  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-15.4.0.tgz#ce9bdca28f414344075b3e2e0a1b05b15cd98867"
-  integrity sha512-gnkSCOrVcZ1vPbB5wdCKAbfe1EGWPfMFW9PpjwJet9B9EGkcksv+/irknBcSMBqx8tDJU/+nXt1B8AE4Iq+2RQ==
+"@magic-sdk/types@^15.6.0":
+  version "15.6.0"
+  resolved "https://registry.yarnpkg.com/@magic-sdk/types/-/types-15.6.0.tgz#cd583cc3ba9d7f3eaf6ab235da40cd6baa2975a9"
+  integrity sha512-Ca2Qf/C/zi0CW/S7kTxwKCPd/BaaTRpp65gF2r+FdnNY0Ut7bu3ImfkJLo6qxa/f2HZtrewijBcekoxK5KtTdQ==
 
 "@magic-sdk/types@^6.0.0":
   version "6.0.0"
@@ -7059,10 +7059,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.66.tgz#8753815dd0ff97b91a1e240d5ca1dc6a66f6b8e9"
   integrity sha512-SA7K1He1aHWmOl788Tsd54k3iqbBTbmnbE9ceuUTofGz5VeZAeZ5JJcbZFx1Ib+JfKd7pSwKjd7xvFEESFK4NA==
 
-"@rarible/flow-sdk@~0.5.66":
-  version "0.5.66"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.66.tgz#4d4f2c912e29abed9810a0c846d9b5285a349c61"
-  integrity sha512-RgpVIn7vZtzM/3JwaYvbYeyMWL0J2GfvDQRuUROhYrZWkb64kbPRNnkx8Ova68OjtZkE/bvetyf4RntRXVVnJQ==
+"@rarible/flow-sdk@~0.5.68":
+  version "0.5.68"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.68.tgz#d2d491ae9238bcb727709a0b79969b20a35343f3"
+  integrity sha512-bOBSPr387PGXgeVBReXGlCysjK5Gix1WYv3nCnEj2QVZGHCelQKHZZsajjFycTSfTbu8aKKUi35Zq2OAm5WG7A==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
@@ -20295,16 +20295,6 @@ lz-string@^1.4.4:
   resolved "https://registry.yarnpkg.com/lz-string/-/lz-string-1.4.4.tgz#c0d8eaf36059f705796e1e344811cf4c498d3a26"
   integrity sha1-wNjq82BZ9wV5bh40SBHPTEmNOiY=
 
-magic-sdk@^18.0.1:
-  version "18.0.1"
-  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-18.0.1.tgz#6d664c005b33e015beb438e22b4a25b1b2e6ad09"
-  integrity sha512-THG6BtNziEJ11DdllXDnWE2o8vqeYd6uPeoIxwApwXxV0EUeNfHUXQrNXpGWBoUgEzD2i1KyCeAdAj//VRW7UQ==
-  dependencies:
-    "@magic-sdk/commons" "^14.0.1"
-    "@magic-sdk/provider" "^18.0.1"
-    "@magic-sdk/types" "^15.4.0"
-    localforage "^1.7.4"
-
 magic-sdk@^7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-7.0.0.tgz#65139b8107a7bceb32016f84cefbef0c7c99b808"
@@ -20313,6 +20303,16 @@ magic-sdk@^7.0.0:
     "@magic-sdk/commons" "^3.0.0"
     "@magic-sdk/provider" "^7.0.0"
     "@magic-sdk/types" "^6.0.0"
+    localforage "^1.7.4"
+
+magic-sdk@~18.2.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/magic-sdk/-/magic-sdk-18.2.0.tgz#2aa1f29403f02c28fde25d21164ae162536640a7"
+  integrity sha512-Mr5dkPzOSbcSzCS8dy/ujve86AmAKfBFRsSwuWOYWlLCH1XLYGhYG9CwAZLkZcZsmpUWA3xpgHkPkHAB3Cpwug==
+  dependencies:
+    "@magic-sdk/commons" "^14.2.0"
+    "@magic-sdk/provider" "^18.2.0"
+    "@magic-sdk/types" "^15.6.0"
     localforage "^1.7.4"
 
 magic-string@^0.25.0, magic-string@^0.25.7:
