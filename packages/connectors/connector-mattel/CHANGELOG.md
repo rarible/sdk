@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
+
+
+### Features
+
+* **MPX-1994:** sardine checkout ([#500](https://github.com/rarible/sdk/issues/500)) ([ce5193e](https://github.com/rarible/sdk/commit/ce5193e6e04de9d25e569156b68b1217b667a933))
+
+
+
+
+
 ## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
 
 **Note:** Version bump only for package @rarible/connector-mattel
