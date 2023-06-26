@@ -54,6 +54,7 @@ export function createFlowSdk(
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
+	const setupAccount = new FlowSetupAccount(sdk, blockchainNetwork)
 
 	return {
 		nft: {
@@ -93,7 +94,9 @@ export function createFlowSdk(
 			},
 		},
 		flow: {
-			setupAccount: new FlowSetupAccount(sdk, blockchainNetwork).setupAccount,
+			setupAccount: setupAccount.setupAccount,
+			checkInitMattelCollections: setupAccount.checkInitMattelCollections,
+			setupMattelCollections: setupAccount.setupMattelCollections,
 		},
 	}
 }

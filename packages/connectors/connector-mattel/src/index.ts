@@ -17,6 +17,9 @@ import type { FlowExtension } from "@magic-ext/flow"
 import type { OpenIdExtension } from "@magic-ext/oidc"
 import type { Auth0Client } from "@auth0/auth0-spa-js"
 import type { Auth0ClientOptions, PopupConfigOptions, LogoutOptions } from "@auth0/auth0-spa-js/dist/typings/global"
+import type { OrderId, UnionAddress } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
+import type { NFTPurchaseRequest } from "magic-sdk"
 
 export type MattelConnectorConfig = {
 	accessNode: string
@@ -38,13 +41,13 @@ const PROVIDER_ID = "mattel" as const
 export interface MattelProviderConnectionResult extends ProviderConnectionResult {
 	fcl: Fcl
 	auth: FlowExtension["authorization"]
+	magic: InstanceWithExtensions<SDKBase, (FlowExtension | OpenIdExtension)[]>
 }
 
 export interface ConnectionResult {
 	fcl: Fcl,
 	magic: InstanceWithExtensions<SDKBase, (FlowExtension | OpenIdExtension)[]>
 	auth0: Auth0Client
-
 }
 
 export class MattelConnectionProvider extends
@@ -127,7 +130,7 @@ export class MattelConnectionProvider extends
 			map((data: {
 				user: MagicUserMetadata,
 				auth: typeof magic.flow.authorization,
-				fcl: Fcl
+				fcl: Fcl,
 			} | { error: unknown } | null) => {
 				if (data && "error" in data) {
 					return getStateDisconnected({ error: data.error })
@@ -136,7 +139,12 @@ export class MattelConnectionProvider extends
 					return getStateDisconnected()
 				}
 				return getStateConnected<MattelProviderConnectionResult>({
-					connection: { fcl: data.fcl, address: data.user.publicAddress, auth: data.auth },
+					connection: {
+						fcl: data.fcl,
+						address: data.user.publicAddress,
+						auth: data.auth,
+						magic,
+					},
 					disconnect,
 				})
 			}),
@@ -204,8 +212,37 @@ export class MattelConnectionProvider extends
 		const { auth0 } = await this.instance.pipe(first()).toPromise()
 		return auth0.isAuthenticated()
 	}
-}
 
+	async sardinePurchase(data: {
+		orderId: OrderId
+		orderMaker: UnionAddress
+		purchaseOptions: SardinePurchaseOptions
+	}) {
+		const context = await this.instance.pipe(first()).toPromise() as MattelProviderConnectionResult
+		if (context) {
+			return context.magic.nft.purchase({
+				nft: {
+					blockchainNftId: convertUnionEntityToFlow(data.orderId),
+					contractAddress: convertUnionEntityToFlow(data.orderMaker),
+					network: "flow",
+					platform: "mattel",
+					type: "nft_secondary",
+					...data.purchaseOptions.nft,
+				},
+				identityPrefill: (data.purchaseOptions.identityPrefill || {}) as any,
+			})
+		} else {
+			throw new Error("Context is not prepared")
+		}
+	}
+}
+export type SardinePurchaseOptions = {
+	nft: Omit<
+	NFTPurchaseRequest["nft"],
+	"blockchainNftId" | "contractAddress" | "network" | "platform" | "type"
+	>
+	identityPrefill?: NFTPurchaseRequest["identityPrefill"]
+}
 export const auth0Login = async ({ auth0, auth0RedirectUrl, auth0ClientId, auth0Domain, auth0PopupOptions }: {
 	auth0Domain: string,
 	auth0ClientId: string,
@@ -252,4 +289,12 @@ async function isLoggedInPromise(magic: InstanceWithExtensions<SDKBase, (FlowExt
 		clearTimeout(handleTimeout)
 		return result
 	})
+}
+
+function convertUnionEntityToFlow(unionEntity: OrderId | UnionAddress): string {
+	const [blockchain, entity] = unionEntity.split(":")
+	if (blockchain !== Blockchain.FLOW) {
+		throw new Error(`Not Flow entity ${entity}`)
+	}
+	return entity
 }

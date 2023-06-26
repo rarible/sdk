@@ -45,7 +45,11 @@ import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
 import type { IBatchBuy } from "../../types/order/fill"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import type { IFlowSdk } from "../../domain"
-import type { IFlowSetupAccount } from "../../types/nft/collection"
+import type {
+	IFlowSetupAccount,
+	IFlowSetupMattelCollections,
+	IFlowCheckInitMattelCollections,
+} from "../../types/nft/collection"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -301,6 +305,8 @@ class UnionFlowSpecificSdk implements IFlowSdk {
 	constructor(private readonly flowSdk: IFlowSdk) {}
 
   setupAccount: IFlowSetupAccount = this.flowSdk.setupAccount
+  setupMattelCollections: IFlowSetupMattelCollections = this.flowSdk.setupMattelCollections
+  checkInitMattelCollections: IFlowCheckInitMattelCollections = this.flowSdk.checkInitMattelCollections
 }
 
 
