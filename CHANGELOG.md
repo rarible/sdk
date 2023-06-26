@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.44...v0.13.44-hotfix.0) (2023-06-26)
+
+
+### Bug Fixes
+
+* transfer usdc fix ([1254a5a](https://github.com/rarible/sdk/commit/1254a5a0f87bfe9c64f4b55c836a78c8d8aa663e))
+
+
+
+
+
 ## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
 
 
