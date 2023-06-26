@@ -153,21 +153,6 @@ export function SardineCheckout() {
 								name: "test nft",
 								imageUrl: img ? img.url : "https://cdn.shopify.com/s/files/1/0568/1132/3597/files/HWNFT_S4_modular-grid_584x800b.jpg?v=1669157307",
 							},
-							identityPrefill: {
-								firstName: "John",
-								lastName: "Don",
-								dateOfBirth: "1990-01-01",
-								emailAddress: "john.doe+4@gmail.com",
-								phone: "+11234567890",
-								address: {
-									street1: "123 Main St",
-									street2: "Apt 1",
-									city: "San Francisco",
-									regionCode: "CA",
-									postalCode: "94103",
-									countryCode: "US",
-								},
-							},
 						},
 					})
 					setComplete(result)

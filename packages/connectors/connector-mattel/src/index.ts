@@ -229,7 +229,7 @@ export class MattelConnectionProvider extends
 					type: "nft_secondary",
 					...data.purchaseOptions.nft,
 				},
-				identityPrefill: data.purchaseOptions.identityPrefill,
+				identityPrefill: (data.purchaseOptions.identityPrefill || {}) as any,
 			})
 		} else {
 			throw new Error("Context is not prepared")
@@ -241,7 +241,7 @@ export type SardinePurchaseOptions = {
 	NFTPurchaseRequest["nft"],
 	"blockchainNftId" | "contractAddress" | "network" | "platform" | "type"
 	>
-	identityPrefill: NFTPurchaseRequest["identityPrefill"]
+	identityPrefill?: NFTPurchaseRequest["identityPrefill"]
 }
 export const auth0Login = async ({ auth0, auth0RedirectUrl, auth0ClientId, auth0Domain, auth0PopupOptions }: {
 	auth0Domain: string,
