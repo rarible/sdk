@@ -99,6 +99,8 @@ export function getFungibleTokenName(contract: ContractAddress): FlowCurrency {
 				return "FLOW"
 			case "FUSD":
 				return "FUSD"
+			case "FiatToken":
+				return "USDC"
 			default:
 				throw new Error(`Unsupported contract ID: ${contract}`)
 		}
