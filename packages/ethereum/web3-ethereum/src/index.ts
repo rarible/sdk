@@ -44,7 +44,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		let signer: string | undefined
 		try {
 			signer = await this.getFrom()
-			const signature = await (this.config.web3.eth.personal as any).sign(message, signer)
+			const signature = await (this.config.web3.eth.personal as any).sign(message, signer, "")
 			filterErrors(signature)
 			return signature
 		} catch (e: any) {
