@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.0...v0.13.44-hotfix.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **MPX-2103:** error listing on new mattel collections ([#502](https://github.com/rarible/sdk/issues/502)) ([d5a4707](https://github.com/rarible/sdk/commit/d5a4707a2385eb3967eca1eb0f6e76b443e65bd9))
+* sign personal msg, sign typed data request ([#501](https://github.com/rarible/sdk/issues/501)) ([01599d0](https://github.com/rarible/sdk/commit/01599d014f0f8d3707df07a28a828e0e02e7e2e1))
+
+
+
+
+
 ## [0.13.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.44...v0.13.44-hotfix.0) (2023-06-26)
 
 

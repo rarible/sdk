@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.0...v0.13.44-hotfix.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* sign personal msg, sign typed data request ([#501](https://github.com/rarible/sdk/issues/501)) ([01599d0](https://github.com/rarible/sdk/commit/01599d014f0f8d3707df07a28a828e0e02e7e2e1))
+
+
+
+
+
 ## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
 
 **Note:** Version bump only for package @rarible/web3-ethereum
