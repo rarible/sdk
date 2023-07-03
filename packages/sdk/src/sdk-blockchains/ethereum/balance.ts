@@ -1,13 +1,12 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { UnionAddress } from "@rarible/types"
-import type { BigNumberValue } from "@rarible/utils"
+import type { BigNumber } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client"
 import { Blockchain } from "@rarible/api-client"
 import { Action } from "@rarible/action"
-import { toContractAddress } from "@rarible/types"
 import type { ConvertRequest } from "../../types/balances"
 import type {
 	DepositBiddingBalanceRequest,
@@ -17,7 +16,8 @@ import type {
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
 import type { IApisSdk } from "../../domain"
-import { convertToEthereumAddress, convertToEthereumAssetType } from "./common"
+import { extractBlockchain } from "../../common/extract-blockchain"
+import { convertEthereumContractAddress, convertToEthereumAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
 
 export class EthereumBalance {
 	constructor(
@@ -30,72 +30,66 @@ export class EthereumBalance {
 		this.getBiddingBalance = this.getBiddingBalance.bind(this)
 	}
 
-	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
-		const assetType = getCurrencyAssetType(currency)
-		const convertedAssetType = convertToEthereumAssetType(assetType)
-		if (convertedAssetType.assetClass !== "ETH" && convertedAssetType.assetClass !== "ERC20") {
+	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumber> {
+		const assetType = convertToEthereumAssetType(getCurrencyAssetType(currency))
+		if (assetType.assetClass !== "ETH" && assetType.assetClass !== "ERC20") {
 			throw new Error("Unsupported asset type for getting balance")
 		}
-		const ethAddress = convertToEthereumAddress(address)
-		return this.sdk.balances.getBalance(ethAddress, convertedAssetType)
+		const addressRaw = convertToEthereumAddress(address)
+		const value = await this.sdk.balances.getBalance(addressRaw, assetType)
+		return toBn(value)
 	}
 
 	async convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
-		const wethContract = this.sdk.balances.getWethContractAddress()
-		let from: EthereumAssetType
-		let to: EthereumAssetType
-
-		if (request.isWrap) {
-			from = { assetClass: "ETH" }
-			to = {
-				assetClass: "ERC20",
-				contract: wethContract,
-			}
-		} else {
-			from = {
-				assetClass: "ERC20",
-				contract: wethContract,
-			}
-			to = { assetClass: "ETH" }
-		}
-		const tx = await this.sdk.balances.convert(from, to, request.value)
+		const tx = await this.send(request)
 		return new BlockchainEthereumTransaction(tx, this.network)
 	}
 
-	async getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
-		if ("currency" in request) {
-			return this.getBalance(request.walletAddress, request.currency)
-		} else {
-			const wethContract = this.sdk.balances.getWethContractAddress()
+	private send(request: ConvertRequest) {
+		if (request.isWrap) return this.sdk.balances.deposit(request.value)
+		return this.sdk.balances.withdraw(request.value)
+	}
 
-			return this.getBalance(request.walletAddress, {
-				"@type": "ERC20",
-				contract: toContractAddress("ETHEREUM:" + wethContract),
-			})
+	async getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumber> {
+		const currency = this.getBiddingCurrency(request)
+		return this.getBalance(request.walletAddress, currency)
+	}
+
+	private getBiddingCurrency(request: GetBiddingBalanceRequest): RequestCurrency {
+		if ("currency" in request) {
+			return request.currency
+		} else {
+			const wrappedContract = this.sdk.balances.getWethContractAddress()
+			const blockchain = extractBlockchain(request.walletAddress)
+			if (isEVMBlockchain(blockchain)) {
+				return {
+					"@type": "ERC20",
+					contract: convertEthereumContractAddress(wrappedContract, blockchain),
+				}
+			}
+			throw new Error(`Bidding balance is not supported for ${blockchain}`)
 		}
 	}
 
-	depositBiddingBalance = Action
+	readonly depositBiddingBalance = Action
 		.create({
 			id: "send-tx" as const,
-			run: async (request: DepositBiddingBalanceRequest) => {
-				return this.convert({
+			run: (request: DepositBiddingBalanceRequest) =>
+				this.convert({
 					blockchain: Blockchain.ETHEREUM,
 					isWrap: true,
 					value: request.amount,
-				})
-			},
+				}),
 		})
 
-	withdrawBiddingBalance = Action
+	readonly withdrawBiddingBalance = Action
 		.create({
 			id: "send-tx" as const,
-			run: async (request: WithdrawBiddingBalanceRequest) => {
-				return this.convert({
+			run: (request: WithdrawBiddingBalanceRequest) =>
+				this.convert({
 					blockchain: Blockchain.ETHEREUM,
 					isWrap: false,
 					value: request.amount,
-				})
-			},
+				}),
 		})
 }

@@ -38,6 +38,6 @@ export const stagingPolygonConfig: EthereumConfig = {
 		pairFactory: toAddress("0x31C827f06E10e4999eb88c193669d408eF597B3D"),
 		pairRouter: toAddress("0xbDC9d365aD6131D1078409521e2432b154439F05"),
 	},
-	weth: toAddress("0x85de069e16a42880c57b0D6451D6C770EC1D3Bf7"),
+	weth: toAddress("0x48fAF37c8b1B8A8C735aB25c039Cc00E8f95a435"),
 	auction: ZERO_ADDRESS,
 }

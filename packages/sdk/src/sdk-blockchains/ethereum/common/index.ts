@@ -1,4 +1,4 @@
-import type { Address, UnionAddress, Word } from "@rarible/types"
+import type { Address, Maybe, UnionAddress, Word } from "@rarible/types"
 import {
 	toAddress,
 	toBigNumber,
@@ -21,6 +21,8 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
+import type { EthereumWallet } from "@rarible/sdk-wallet/build"
+import { WalletIsUndefinedError } from "@rarible/sdk-common/build"
 import type { OrderRequest } from "../../../types/order/common"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
@@ -138,7 +140,7 @@ export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Par
 }
 
 export function getOriginFeesSum(originFees: Array<Part>): number {
-	return originFees.reduce((acc, fee) => fee.value, 0)
+	return originFees.reduce((prev, curr) => prev + curr.value, 0)
 }
 
 export function getOrderFeesSum(order: Order): number {
@@ -179,19 +181,13 @@ export function getPayoutsSupport(type: "RARIBLE_V1" | "RARIBLE_V2"): PayoutsSup
 export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 	switch (network) {
 		case "testnet":
-			return Blockchain.ETHEREUM
 		case "dev-ethereum":
-			return Blockchain.ETHEREUM
-		case "dev-polygon":
-			return Blockchain.POLYGON
 		case "mainnet":
-			return Blockchain.ETHEREUM
-		case "mumbai":
-			return Blockchain.POLYGON
-		case "polygon":
-			return Blockchain.POLYGON
 		case "staging":
 			return Blockchain.ETHEREUM
+		case "dev-polygon":
+		case "mumbai":
+		case "polygon":
 		case "staging-polygon":
 			return Blockchain.POLYGON
 		default:
@@ -324,6 +320,11 @@ export function getAssetTypeFromFillRequest(
 	}
 
 	return getAssetTypeFromItemId(itemId)
+}
+
+export function assertWallet(wallet: Maybe<EthereumWallet>) {
+	if (!wallet) throw new WalletIsUndefinedError()
+	return wallet
 }
 
 export * from "./validators"

@@ -9,10 +9,21 @@ import { getRequiredWallet } from "../common/get-required-wallet"
  * @param ethereum Wallet
  * @param config EthereumConfig
  */
-export async function checkChainId(ethereum: Maybe<Ethereum>, config: EthereumConfig): Promise<boolean> {
-	const networkId = await getRequiredWallet(ethereum).getChainId()
-	if (config.chainId !== networkId) {
-		throw new Warning(`Change network of your wallet. Config chainId=${config.chainId}, but wallet chainId=${networkId}`)
-	}
+
+export async function checkChainId(
+	ethereum: Maybe<Ethereum>,
+	config: EthereumConfig
+): Promise<boolean> {
+	const provider = getRequiredWallet(ethereum)
+	const activeChainId = await provider.getChainId()
+	if (config.chainId !== activeChainId) throw new WrongNetworkWarning(activeChainId, config.chainId)
 	return true
+}
+
+export class WrongNetworkWarning extends Warning {
+	constructor(active: number, required: number) {
+		super(`Change network of your wallet. Required chainId ${required}, but active is ${active}`)
+		this.name = "WrongNetworkWarning"
+		Object.setPrototypeOf(this, WrongNetworkWarning.prototype)
+	}
 }

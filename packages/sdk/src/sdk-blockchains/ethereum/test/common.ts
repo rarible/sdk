@@ -1,15 +1,19 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
+import { Blockchain } from "@rarible/api-client"
+import type { EVMBlockchain } from "../common"
 import { initProvider } from "./init-providers"
 
 export const ETH_DEV_SETTINGS = {
 	rpcUrl: "https://dev-ethereum-node.rarible.com",
 	networkId: 300500,
 }
+
 export const ETH_GOERLI_SETTINGS = {
 	rpcUrl: "https://goerli-ethereum-node.rarible.com",
 	networkId: 5,
 }
+
 export const ETH_STAGING_SETTINGS = {
 	rpcUrl: "https://staging-ethereum-node.rarible.com",
 	networkId: 200500,
@@ -47,14 +51,11 @@ export function createEthWallet(pk: string): EthereumWallet {
 }
 
 export function createEthWallets(num: number) {
-	const wallets = [
-		DEV_PK_1,
-		DEV_PK_2,
-		DEV_PK_3,
-		DEV_PK_4,
-		DEV_PK_5,
-		DEV_PK_6,
-	]
-	return wallets.slice(0, num)
-		.map(pk => createEthWallet(pk))
+	const wallets = [DEV_PK_1, DEV_PK_2, DEV_PK_3, DEV_PK_4, DEV_PK_5, DEV_PK_6]
+	return wallets.slice(0, num).map(x => createEthWallet(x))
+}
+
+export const devNetworkByBlockchain: Record<EVMBlockchain, any> = {
+	[Blockchain.ETHEREUM]: ETH_DEV_SETTINGS,
+	[Blockchain.POLYGON]: POLYGON_DEV_SETTINGS,
 }

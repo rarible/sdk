@@ -1,28 +1,30 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
+import type { CollectionId } from "@rarible/types"
 import { toCollectionId } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
-import { retry } from "../../common/retry"
-import { initProviders } from "./test/init-providers"
-import { DEV_PK_1, DEV_PK_2, POLYGON_DEV_SETTINGS } from "./test/common"
+import { waitFor } from "../../common/wait-for"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import type { EVMTestSuite } from "./test/suite"
+import { EVMTestSuiteFactory } from "./test/suite"
 
-const providers: {blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON, providers: any }[] = [
-	{ blockchain: Blockchain.ETHEREUM, providers: initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 }) },
-	{ blockchain: Blockchain.POLYGON, providers: initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 }, POLYGON_DEV_SETTINGS) },
-]
+const blockchains = [Blockchain.ETHEREUM, Blockchain.POLYGON] as const
 
-describe.each(providers)("create collection", ({ blockchain, providers: { web31, web32 } }) => {
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const ethereumWallet1 = new EthereumWallet(ethereum1)
-	const ethereumWallet2 = new EthereumWallet(ethereum2)
-	const sdk1 = createRaribleSdk(ethereumWallet1, "development", { logs: LogsLevel.DISABLED })
-	const sdk2 = createRaribleSdk(ethereumWallet2, "development", { logs: LogsLevel.DISABLED })
+describe.each(blockchains)("create collection", (blockchain) => {
+	const suiteFactory = new EVMTestSuiteFactory(blockchain)
+	let suiteDev1: EVMTestSuite<typeof blockchain>
+	let suiteDev2: EVMTestSuite<typeof blockchain>
+
+	beforeAll(async () => {
+		suiteDev1 = await suiteFactory.create(DEV_PK_1)
+		suiteDev2 = await suiteFactory.create(DEV_PK_2)
+	})
+
+	afterAll(() => {
+		suiteDev1.destroy()
+		suiteDev2.destroy()
+	})
 
 	test(`${blockchain} create erc-721 collection`, async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await suiteDev1.sdk.nft.createCollection({
 			blockchain,
 			type: "ERC721",
 			name: "name",
@@ -32,22 +34,14 @@ describe.each(providers)("create collection", ({ blockchain, providers: { web31,
 			isPublic: true,
 		})
 		await tx.wait()
-		console.log("public 721", address)
-		await retry(5, 2000, async () => {
-			return sdk1.apis.collection.getCollectionById({
-				collection: address,
-			})
-		})
-		//check if collection is public
-		const mintTx = await sdk2.nft.mint({
-			collectionId: toCollectionId(address),
-			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-		})
-		await mintTx.transaction.wait()
+
+		const collection = toCollectionId(address)
+		await waitForCollection(collection)
+		await suiteDev2.items.mintAndWait(collection)
 	})
 
 	test(`${blockchain} create erc-721 private collection`, async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await suiteDev1.sdk.nft.createCollection({
 			blockchain,
 			type: "ERC721",
 			name: "name",
@@ -58,15 +52,13 @@ describe.each(providers)("create collection", ({ blockchain, providers: { web31,
 			operators: [],
 		})
 		await tx.wait()
-		await retry(5, 2000, async () => {
-			return sdk1.apis.collection.getCollectionById({
-				collection: address,
-			})
-		})
+
+		const collection = toCollectionId(address)
+		await waitForCollection(collection)
 	})
 
 	test(`${blockchain} create erc-1155 public collection`, async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address, tx } = await suiteDev1.sdk.nft.createCollection({
 			blockchain,
 			type: "ERC1155",
 			name: "name",
@@ -75,17 +67,15 @@ describe.each(providers)("create collection", ({ blockchain, providers: { web31,
 			contractURI: "https://ipfs.rarible.com",
 			isPublic: true,
 		})
-		console.log("1155 piblic address", address)
 		await tx.wait()
-		await retry(5, 2000, async () => {
-			return sdk1.apis.collection.getCollectionById({
-				collection: address,
-			})
-		})
+
+		const collection = toCollectionId(address)
+		await waitForCollection(collection)
+		await suiteDev2.items.mintAndWait(collection)
 	})
 
 	test(`${blockchain} create erc-1155 private collection`, async () => {
-		const { address, tx } = await sdk1.nft.createCollection({
+		const { address } = await suiteDev1.sdk.nft.createCollection({
 			blockchain,
 			type: "ERC1155",
 			name: "name",
@@ -95,12 +85,16 @@ describe.each(providers)("create collection", ({ blockchain, providers: { web31,
 			isPublic: false,
 			operators: [],
 		})
-		await tx.wait()
-		await retry(5, 2000, async () => {
-			return sdk1.apis.collection.getCollectionById({
-				collection: address,
-			})
-		})
+
+		const collection = toCollectionId(address)
+		await waitForCollection(collection)
 	})
 
+
+	async function waitForCollection(collectionId: CollectionId) {
+		await waitFor(
+			() => suiteDev1.sdk.apis.collection.getCollectionById({ collection: collectionId }),
+			x => Boolean(x)
+		)
+	}
 })

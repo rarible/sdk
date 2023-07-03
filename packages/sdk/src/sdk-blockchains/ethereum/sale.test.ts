@@ -11,7 +11,7 @@ import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
-import { awaitStock } from "../../common/test/await-stock"
+import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
@@ -80,7 +80,7 @@ describe("sale", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
@@ -94,7 +94,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
@@ -132,7 +132,7 @@ describe("sale", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const fillAction = await sdk2.order.buy.prepare({ orderId })
@@ -141,7 +141,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 		expect(tx.transaction.data.endsWith("00000000000000000000000000000000000000000000000909616c6c64617461")).toBe(true)
 	})
@@ -179,7 +179,7 @@ describe("sale", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const fillAction = await sdk2.order.buy.prepare({ order })
@@ -188,7 +188,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
@@ -225,7 +225,7 @@ describe("sale", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		let errorMessage
@@ -269,7 +269,7 @@ describe("sale", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const fillAction = await sdk2.order.buy.prepare({ order })
@@ -278,7 +278,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
@@ -306,7 +306,7 @@ describe("sale", () => {
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const tx = await sdk2.order.buy({
@@ -317,7 +317,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
