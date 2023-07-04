@@ -92,7 +92,8 @@ export function createRaribleSdk(
 		createTezosSdk(
 			filterWallet(wallet, WalletType.TEZOS),
 			apis,
-			blockchainConfig
+			blockchainConfig,
+			config,
 		),
 		createEthereumSdk(
 			filterWallet(wallet, WalletType.ETHEREUM),

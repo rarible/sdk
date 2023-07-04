@@ -25,10 +25,12 @@ import { TezosBid } from "./bid"
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
 	_apis: IApisSdk,
-	config: RaribleSdkConfig,
+	blockchainConfig: RaribleSdkConfig,
+	config?: { apiKey?: string}
 ): IRaribleInternalSdk {
-	const network = config.tezosNetwork
-	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network, config)
+	const network = blockchainConfig.tezosNetwork
+	const maybeProvider =
+    getMaybeTezosProvider(wallet?.provider, network, { ...blockchainConfig, apiKey: config?.apiKey })
 	const sellService = new TezosSell(maybeProvider, _apis)
 	const mintService = new TezosMint(maybeProvider, _apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
