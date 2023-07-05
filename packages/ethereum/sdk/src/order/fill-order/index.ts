@@ -5,7 +5,6 @@ import type { Address, AssetType } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
-import { Warning } from "@rarible/logger/build"
 import type {
 	SimpleCryptoPunkOrder,
 	SimpleLegacyOrder,
@@ -360,10 +359,10 @@ export class OrderFiller {
 	checkStartEndDates(order: SimpleOrder) {
 		const now = Date.now()
 		if (order.start !== undefined && new Date(order.start * 1000).getTime() > now) {
-			throw new Warning(`Order will be actual since ${new Date(order.start * 1000)}, now ${new Date()}`)
+			throw new Error(`Order will be actual since ${new Date(order.start * 1000)}, now ${new Date()}`)
 		}
 		if (order.end !== undefined && new Date(order.end * 1000).getTime() < now) {
-			throw new Warning(`Order was actual until ${new Date(order.end * 1000)}, now ${new Date()}`)
+			throw new Error(`Order was actual until ${new Date(order.end * 1000)}, now ${new Date()}`)
 		}
 	}
 

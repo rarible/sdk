@@ -1,21 +1,7 @@
 import { BlockchainGroup } from "@rarible/api-client"
 
 const EVM_WARN_MESSAGES = [
-	"User denied transaction signature",
-	"User denied message signature",
 	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
-	"Firma transazione annullata",
-	"İşlem imzalama iptal edildi",
-	"Nutzer hat die Transaktion abgelehnt",
-	"Signature de transaction annulée",
-	"Signiervorgang abgebrochen",
-	"User denied message signature",
-	"User denied transaction signature",
-	"Подписание транзакции отменено",
-	"การลงนามธุรกรรมถูกยกเลิก",
-	"ยกเลิกแล้ว",
-	"用户取消了操作",
-	"签署交易已取消",
 	"underlying network changed",
 	"Balance not enough to cover gas fee. Please deposit at least",
 	"Biaya gas telah diperbarui dan Anda memerlukan",
@@ -25,7 +11,9 @@ const EVM_WARN_MESSAGES = [
 	"gas limit",
 	"gas required exceeds allowance",
 	"Insufficient fee balance",
+	"Insufficient ETH to pay the network fees",
 	"insufficient funds for gas * price + value",
+	"max priority fee per gas higher than max fee per gas",
 	"insufficient funds for intrinsic transaction cost",
 	"intrinsic gas too low",
 	"max fee per gas less than block base fee",
@@ -40,21 +28,14 @@ const EVM_WARN_MESSAGES = [
 	"Комиссия за газ обновлена, и вам необходимо",
 	"Insufficient ETH funds",
 	"Please enable Blind signing or Contract data in the Ethereum app Settings",
-	"Failed to sign transaction",
-	"Permission not given for signing message",
-	"Транзакция отменена",
 	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 	"Link Window Closed",
 	"Popup closed",
-	"User denied account authorization",
-	"membatalkan",
-	"La transaction de signature a été annulée",
+	"nonce too low",
+	"transaction would cause overdraft",
 ].map(msg => msg.toLowerCase())
 
 export const COMMON_INFO_MESSAGES = [
-	"cancel",
-	"canceled",
-	"cancelled",
 	"Transaction canceled",
 	"Request canceled by user",
 	"User canceled",
@@ -82,16 +63,41 @@ export const COMMON_INFO_MESSAGES = [
 	"Transaction rejected",
 	"User refused to sign the transaction",
 	"Please enable Blind Signing or Contract Data in Ethereum Application Settings",
-	"The user rejected the request.",
+	"user rejected the request",
 	"PocketUniverse Tx Signature: The user rejected the transaction signature.",
-	"Rejected",
-	"User rejected the request",
 	"iFrame link is closed",
 	"Link iFrame Closed",
 	"The gas fee has been updated and you need",
 	"rejected request from DeFi Wallet",
 	"User rejected methods",
+	"Транзакция отменена",
+	"Failed to sign transaction",
+	"Permission not given for signing message",
+	"User denied message signature",
+	"User denied transaction signature",
+	"Подписание транзакции отменено",
+	"การลงนามธุรกรรมถูกยกเลิก",
+	"ยกเลิกแล้ว",
+	"用户取消了操作",
+	"签署交易已取消",
+	"membatalkan",
+	"La transaction de signature a été annulée",
+	"User denied account authorization",
+	"Firma transazione annullata",
+	"İşlem imzalama iptal edildi",
+	"Nutzer hat die Transaktion abgelehnt",
+	"Signature de transaction annulée",
+	"Signiervorgang abgebrochen",
+	"The action was aborted by the user",
+	"Reject by the user",
+	"User closed modal",
+	"Permission denied",
+	"The requested account and/or method has not been authorized by the user",
+	"user did not approve",
+	"User denied requested chains",
 ].map(msg => msg.toLowerCase())
+
+const shortInfoMessages = ["cancel", "canceled", "cancelled", "rejected"]
 
 export function isInfoLevel(error: any): boolean {
 	if (error?.error?.code === 4001
@@ -99,10 +105,13 @@ export function isInfoLevel(error: any): boolean {
     || error?.error?.code === "ACTION_REJECTED") {
 		return true
 	}
-	if (typeof error?.message !== "string" || !error?.message) {
+	if (!error?.message || typeof error?.message !== "string") {
 		return false
 	}
 	const msgLowerCase = error?.message.toLowerCase()
+	if (shortInfoMessages.includes(msgLowerCase)) {
+		return true
+	}
 	return COMMON_INFO_MESSAGES.some(msg => msgLowerCase?.includes(msg))
 }
 

@@ -1,4 +1,5 @@
 import { EthereumProviderError } from "@rarible/ethereum-provider"
+import { isInfoLevel } from "@rarible/sdk-common"
 import { WalletType } from "../../index"
 import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
@@ -14,6 +15,18 @@ describe("logger overrides", () => {
 		})
 		const isError = isErrorWarning(err, WalletType.ETHEREUM)
 		expect(isError).toBeTruthy()
+	})
+
+	test("isInfoLevel returns true", async () => {
+		const err = new EthereumProviderError({
+			data: null,
+			error: {
+				message: "Cancelled",
+			},
+			method: "any",
+		})
+		const isInfoLvl = isInfoLevel(err)
+		expect(isInfoLvl).toBeTruthy()
 	})
 
 	test("simple message", () => {

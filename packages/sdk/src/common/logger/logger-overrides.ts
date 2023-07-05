@@ -75,7 +75,7 @@ export function getErrorLevel(callableName: string, error: any, wallet: Blockcha
 	}
 
 	if (isInfoLevel(error)) {
-		return LogLevel.WARN
+		return LogLevel.INFO
 	}
 
 	if (

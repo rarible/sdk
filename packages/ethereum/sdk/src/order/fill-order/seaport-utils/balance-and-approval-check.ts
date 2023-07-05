@@ -254,7 +254,7 @@ export const validateBasicFulfillBalancesAndApprovals = ({
     })
 
 	if (insufficientBalances.length > 0) {
-		throw new Warning(
+		throw new Error(
 			"The fulfiller does not have the balances needed to fulfill."
 		)
 	}
@@ -314,7 +314,7 @@ export const validateStandardFulfillBalancesAndApprovals = ({
     })
 
 	if (insufficientBalances.length > 0) {
-		throw new Warning(
+		throw new Error(
 			"The fulfiller does not have the balances needed to fulfill."
 		)
 	}
