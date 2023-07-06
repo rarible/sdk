@@ -82,6 +82,7 @@ describe.skip("cancel test", () => {
 		const orderId = await sdk.order.sell({
 			itemId: mintResult.itemId,
 			price: "0.000001",
+			amount: 1,
 			currency: {
 				"@type": "XTZ",
 			},

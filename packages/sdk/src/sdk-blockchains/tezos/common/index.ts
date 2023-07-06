@@ -130,7 +130,7 @@ export function isExistedTezosProvider(provider: MaybeProvider<TezosProvider>): 
 }
 
 export function getMaybeTezosProvider(
-	provider: Maybe<TezosProvider>, network: TezosNetwork, config: RaribleSdkConfig
+	provider: Maybe<TezosProvider>, network: TezosNetwork, config: RaribleSdkConfig & { apiKey?: string }
 ): MaybeProvider<TezosProvider> {
 	const unionApiBaseUrl = `${config.basePath}/v0.1`
 	switch (network) {
@@ -170,6 +170,7 @@ export function getMaybeTezosProvider(
 					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
 					aggregator_tracker: "KT1DajvCNVScudRm3kCHPfUjsRCtmPnm375s",
 					aggregator_tracker_id: "09616c6c64617461",
+					api_key: config.apiKey,
 				},
 			}
 		}
@@ -209,6 +210,7 @@ export function getMaybeTezosProvider(
 					fxhash_nfts_v2: "KT1WSwXCWPPAxAy4ibPmFyCm4NhmSJT9UuxQ",
 					aggregator_tracker: "KT1DajvCNVScudRm3kCHPfUjsRCtmPnm375s",
 					aggregator_tracker_id: "09616c6c64617461",
+					api_key: config.apiKey,
 				},
 			}
 		}
@@ -248,6 +250,7 @@ export function getMaybeTezosProvider(
 					fxhash_nfts_v2: "KT1U6EHmNxJTkvaWJ4ThczG4FSDaHC21ssvi",
 					aggregator_tracker: "KT1Gv1tPJ3nU5T6VmFc12M6NKc5i51MYVPjG",
 					aggregator_tracker_id: "09616c6c64617461",
+					api_key: config.apiKey,
 				},
 			}
 		}

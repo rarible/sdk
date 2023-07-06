@@ -46,6 +46,7 @@ export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 						amount: parseInt(formData.amount),
 						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract),
 						maxFeesBasePoint,
+						originFees: [],
 					}))
 				} catch (e) {
 					setError(e)
