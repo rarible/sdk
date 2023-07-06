@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+
+### Features
+
+* **MPX-2093:** move logs from warn to info ([#506](https://github.com/rarible/sdk/issues/506)) ([e19da2c](https://github.com/rarible/sdk/commit/e19da2c3f86ae835d13e84609426d0ff03d30b5e))
+
+
+
+
+
 ## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
 
 

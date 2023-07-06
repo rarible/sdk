@@ -2,7 +2,7 @@
   "packages": [
     "packages/**/*"
   ],
-  "version": "0.13.44-hotfix.2",
+  "version": "0.13.45",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {

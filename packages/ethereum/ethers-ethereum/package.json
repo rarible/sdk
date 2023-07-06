@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethers-ethereum",
-  "version": "0.13.43",
+  "version": "0.13.45",
   "description": "Ethereum interface with ethers.js",
   "keywords": [
     "ethereum",
@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.40",
-    "@rarible/sdk-common": "^0.13.40",
+    "@rarible/sdk-common": "^0.13.45",
     "ethereumjs-util": "^7.1.0",
     "ethers": "~5.4.4"
   },

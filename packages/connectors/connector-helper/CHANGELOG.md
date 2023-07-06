@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+
+### Bug Fixes
+
+* **MPX-2118:** tezos queries with api key ([#505](https://github.com/rarible/sdk/issues/505)) ([c53e178](https://github.com/rarible/sdk/commit/c53e17817b28ab95a0355105c081387ffcc9bcad))
+
+
+
+
+
 ## [0.13.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.1...v0.13.44-hotfix.2) (2023-06-30)
 
 **Note:** Version bump only for package @rarible/connector-helper
