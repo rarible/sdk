@@ -9,7 +9,6 @@ import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { BigNumber as BigNumberUtils } from "@rarible/utils"
 import axios from "axios"
-import { Warning } from "@rarible/logger/build"
 import { isNft } from "../is-nft"
 import type { SimpleOrder } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
@@ -60,7 +59,7 @@ export class SeaportOrderHandler {
 			const inactiveMsg = "Error when generating fulfillment data"
 			const msg = e?.value?.message || e?.data?.message
 			if (typeof msg === "string" && msg.includes(inactiveMsg)) {
-				throw new Warning("Order is not active or cancelled")
+				throw new Error("Order is not active or cancelled")
 			}
 			if (this.env === "testnet" || this.env === "mumbai") {
 				try {

@@ -2,7 +2,7 @@ import { NetworkError, Warning } from "@rarible/logger/build"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
-import { isEVMWarning, isSolanaWarning, isTezosWarning, isFlowWarning } from "@rarible/sdk-common"
+import { isEVMWarning, isFlowWarning, isInfoLevel, isSolanaWarning, isTezosWarning } from "@rarible/sdk-common"
 import { NetworkErrorCode } from "../apis"
 
 const COMMON_NETWORK_ERROR_MESSAGES = [
@@ -72,6 +72,10 @@ export function getErrorLevel(callableName: string, error: any, wallet: Blockcha
 
 	if (isNetworkError(callableName, error)) {
 		return NetworkErrorCode.NETWORK_ERR
+	}
+
+	if (isInfoLevel(error)) {
+		return LogLevel.INFO
 	}
 
 	if (

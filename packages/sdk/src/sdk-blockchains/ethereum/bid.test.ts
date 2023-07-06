@@ -104,6 +104,7 @@ describe("bid", () => {
 				account: bidderUnionAddress,
 				value: 1000,
 			}],
+			expirationDate: new Date(Date.now() + 60 * 60 * 1000),
 		})
 		const order = await awaitStock(sdk1, orderId, price)
 		expect(order.makeStock.toString()).toEqual(price)
@@ -164,6 +165,7 @@ describe("bid", () => {
 				account: bidderUnionAddress,
 				value: 1000,
 			}],
+			expirationDate: new Date(Date.now() + 60 * 60 * 1000),
 		})
 
 		const order = await awaitStock(sdk1, orderId, price)
@@ -225,6 +227,7 @@ describe("bid", () => {
 				account: bidderUnionAddress,
 				value: 1000,
 			}],
+			expirationDate: new Date(Date.now() + 60 * 60 * 1000),
 		})
 
 		const order = await awaitStock(sdk1, orderId, price)
@@ -288,6 +291,7 @@ describe("bid", () => {
 				account: bidderUnionAddress,
 				value: 1000,
 			}],
+			expirationDate: new Date(Date.now() + 60 * 60 * 1000),
 		})
 
 		const order = await awaitStock(sdk1, orderId, price)
@@ -340,6 +344,7 @@ describe("bid", () => {
 				account: bidderUnionAddress,
 				value: 1000,
 			}],
+			expirationDate: new Date(Date.now() + 60 * 60 * 1000),
 		})
 
 		await awaitStock(sdk1, orderId, "1200")
@@ -567,6 +572,7 @@ describe("bid", () => {
 				account: bidderUnionAddress,
 				value: 1000,
 			}],
+			expirationDate: new Date(Date.now() + 60 * 60 * 1000),
 		})
 
 		const order = await awaitStock(sdk1, orderId, price)

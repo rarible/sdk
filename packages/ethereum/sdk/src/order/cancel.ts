@@ -15,7 +15,7 @@ import { toStructLegacyOrderKey } from "./fill-order/rarible-v1"
 import { getAtomicMatchArgAddresses, getAtomicMatchArgUints } from "./fill-order/open-sea"
 import type {
 	SimpleCryptoPunkOrder,
-	SimpleLegacyOrder, SimpleLooksrareOrder,
+	SimpleLegacyOrder, SimpleLooksrareOrder, SimpleLooksrareV2Order,
 	SimpleOpenSeaV1Order,
 	SimpleOrder,
 	SimpleRaribleV2Order, SimpleSeaportV1Order, SimpleX2Y2Order,
@@ -52,8 +52,7 @@ export async function cancel(
 				return cancelSeaportOrder(ethereum, send, apis, order)
 			case "LOOKSRARE":
 				return cancelLooksRareOrder(ethereum, send, config, order)
-			//@ts-ignore
-			case "LOOKSRAREV2":
+			case "LOOKSRARE_V2":
 				return cancelLooksRareV2Order(ethereum, send, config, order)
 			case "CRYPTO_PUNK":
 				return cancelCryptoPunksOrder(ethereum, send, order)
@@ -224,7 +223,7 @@ export async function cancelLooksRareV2Order(
 	ethereum: Ethereum,
 	send: SendFunction,
 	config: ExchangeAddresses,
-	order: SimpleLooksrareOrder,
+	order: SimpleLooksrareV2Order,
 ) {
 	const provider = getRequiredWallet(ethereum)
 
@@ -235,6 +234,6 @@ export async function cancelLooksRareV2Order(
 	const contract = createLooksrareV2Exchange(provider, config.looksrareV2)
 
 	return send(
-		contract.functionCall("cancelOrderNonces", [order.data.nonce])
+		contract.functionCall("cancelOrderNonces", [order.data.orderNonce])
 	)
 }

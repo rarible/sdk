@@ -1,6 +1,12 @@
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { RemoteLogger } from "@rarible/logger/build"
-import { getBlockchainByConnectorId, isEVMWarning, isSolanaWarning, isTezosWarning } from "@rarible/sdk-common"
+import {
+	getBlockchainByConnectorId,
+	isEVMWarning,
+	isInfoLevel,
+	isSolanaWarning,
+	isTezosWarning,
+} from "@rarible/sdk-common"
 import { BlockchainGroup } from "@rarible/api-client"
 
 const packageJson = require("../../package.json")
@@ -36,6 +42,7 @@ export function createLogger() {
 export enum LogLevelConnector {
 	ERROR = "CONNECTOR_ERROR",
 	WARNING = "CONNECTOR_WARNING",
+	INFO = "CONNECTOR_INFO",
 	SUCCESS = "CONNECTOR_SUCCESS"
 }
 
@@ -45,6 +52,7 @@ export function getErrorLogLevel(
 ) {
 	if (!providerId) return LogLevelConnector.ERROR
 	const blockchain = getBlockchainByConnectorId(providerId)
+	if (isInfoLevel(error)) return LogLevelConnector.INFO
 	if (blockchain === BlockchainGroup.ETHEREUM && isEVMWarning(error)) return LogLevelConnector.WARNING
 	if (blockchain === BlockchainGroup.TEZOS && isTezosWarning(error)) return LogLevelConnector.WARNING
 	if (blockchain === BlockchainGroup.SOLANA && isSolanaWarning(error)) return LogLevelConnector.WARNING

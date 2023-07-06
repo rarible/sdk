@@ -117,6 +117,7 @@ describe("bid", () => {
 			amount: 1,
 			payouts: [],
 			originFees: [],
+			end: Date.now() + 60 * 60 * 1000,
 		})
 
 		const acceptBidTx = await filler1.acceptBid({
@@ -159,6 +160,7 @@ describe("bid", () => {
 			amount: 1,
 			payouts: [],
 			originFees: [],
+			end: Date.now() + 60 * 60 * 1000,
 		})
 
 		const acceptBidTx = await filler1.acceptBid({
