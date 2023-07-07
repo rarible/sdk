@@ -28,6 +28,7 @@
     "@rarible/action": "~0.9.1",
     "@rarible/ethereum-api-client": "^0.1.26-beta2",
     "@rarible/ethereum-provider": "^0.13.40",
+    "@rarible/sdk-common": "^0.13.40",
     "@rarible/logger": "^0.9.12",
     "@rarible/utils": "~0.9.10",
     "axios": "^0.25.0",

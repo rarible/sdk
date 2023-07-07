@@ -99,12 +99,12 @@ describe("bid", () => {
 
 		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 0, "0x"), { from: ownerCollectionAddress })
 		await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 1, "0x"), { from: ownerCollectionAddress })
-
 		await delay(5000)
 
 		const { order } = await orderBid.bid({
 			type: "DATA_V2",
 			maker: bidderAddress,
+			end: generateExpirationTimestamp(),
 			makeAssetType: {
 				assetClass: "ERC20",
 				contract: erc20Contract,
@@ -117,7 +117,6 @@ describe("bid", () => {
 			amount: 1,
 			payouts: [],
 			originFees: [],
-			end: Date.now() + 60 * 60 * 1000,
 		})
 
 		const acceptBidTx = await filler1.acceptBid({
@@ -133,7 +132,7 @@ describe("bid", () => {
 		await acceptBidTx.wait()
 	})
 
-	test.skip("create bid for erc-721 collection and accept bid with lazy-item", async () => {
+	test("create bid for erc-721 collection and accept bid with lazy-item", async () => {
 		const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
 		const bidderAddress = toAddress(await ethereum2.getFrom())
 
@@ -148,6 +147,7 @@ describe("bid", () => {
 		const { order } = await orderBid.bid({
 			type: "DATA_V2",
 			maker: bidderAddress,
+			end: generateExpirationTimestamp(),
 			makeAssetType: {
 				assetClass: "ERC20",
 				contract: erc20Contract,
@@ -160,7 +160,6 @@ describe("bid", () => {
 			amount: 1,
 			payouts: [],
 			originFees: [],
-			end: Date.now() + 60 * 60 * 1000,
 		})
 
 		const acceptBidTx = await filler1.acceptBid({
@@ -176,3 +175,9 @@ describe("bid", () => {
 	})
 
 })
+
+
+function generateExpirationTimestamp() {
+	const expirationAt = new Date(Date.now() + 1000 * 60 * 60)
+	return Math.floor(expirationAt.getTime() / 1000)
+}

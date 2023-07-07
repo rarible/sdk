@@ -244,7 +244,8 @@ class UnionBalanceSdk implements IBalanceSdk {
 	}
 
 	getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
-		return this.instances[getBalanceBlockchain(address, currency)].getBalance(address, currency)
+		const blockchain = getBalanceBlockchain(address, currency)
+		return this.instances[blockchain].getBalance(address, currency)
 	}
 
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
@@ -252,19 +253,21 @@ class UnionBalanceSdk implements IBalanceSdk {
 	}
 
 	transfer(request: IBalanceTransferRequest): Promise<IBlockchainTransaction> {
-		return this.instances[getBalanceBlockchain(request.recipient, request.currency)].transfer(request)
+		const blockchain = getBalanceBlockchain(request.recipient, request.currency)
+		return this.instances[blockchain].transfer(request)
 	}
 
 	getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumberValue> {
-		return this.instances[getBiddingBlockchain(request)].getBiddingBalance(request)
+		const blockchain = getBiddingBlockchain(request)
+		return this.instances[blockchain].getBiddingBalance(request)
 	}
 
-	depositBiddingBalance: IDepositBiddingBalance = Action.create({
+	readonly depositBiddingBalance: IDepositBiddingBalance = Action.create({
 		id: "send-tx",
 		run: request => this.instances[getBiddingBlockchain(request)].depositBiddingBalance(request),
 	})
 
-	withdrawBiddingBalance: IWithdrawBiddingBalance = Action.create({
+	readonly withdrawBiddingBalance: IWithdrawBiddingBalance = Action.create({
 		id: "send-tx",
 		run: request => this.instances[getBiddingBlockchain(request)].withdrawBiddingBalance(request),
 	})

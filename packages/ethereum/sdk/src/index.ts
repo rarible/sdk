@@ -179,22 +179,64 @@ export interface RaribleNftSdk {
 
 export interface RaribleBalancesSdk {
 	/**
-	 * Return balance of user
+	 * Returns balance of user, it can return balances for ERC20 and native ETH
+	 *
 	 * @param address balance owner
 	 * @param assetType type of asset. Supports ERC20 and ETH
+	 * @returns balance of user
 	 */
 	getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumberValue>
 
 	/**
 	 * Convert ETH balance from/to the Wrapped Ether (ERC-20) token
+	 * @depreacted please use `deposit` or `withdraw`
+	 *
 	 * @param from ETH or ERC20 Wrapped Ether asset type
 	 * @param to ERC20 Wrapped Ether or ETH asset type
 	 * @param value Value to convert
+	 * @returns `EthereumTransaction`
 	 */
 	convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<EthereumTransaction>
 
 	/**
-	 * Return address of Wrapped Ether contract (ERC-20)
+	 * Adds balance to wrapped currency
+	 * Works for Polygon (Wrapped Matic) and Ethereum (Wrapped Eth)
+	 *
+	 * @param value - amount of tokens
+	 * @returns `EthereumTransaction`
+	 */
+	deposit(value: BigNumberValue): Promise<EthereumTransaction>
+
+	/**
+	 * Adds balance to wrapped currency
+	 * Works for Polygon (Wrapped Matic) and Ethereum (Wrapped Eth)
+	 *
+	 * @param valueInWei - amount of tokens in wei
+	 * @returns `EthereumTransaction`
+	 */
+	depositWei(valueInWei: BigNumberValue): Promise<EthereumTransaction>
+
+	/**
+	 * Withdraw wrapped balance to native currency
+	 * Works for Polygon (Wrapped matic) and Ethereum (Wrapped Eth)
+	 *
+	 * @param value - amount of tokens
+	 * @returns `EthereumTransaction`
+	 */
+	withdraw(value: BigNumberValue): Promise<EthereumTransaction>
+
+	/**
+	 * Withdraw wrapped balance to native currency
+	 * Works for Polygon (Wrapped matic) and Ethereum (Wrapped Eth)
+	 *
+	 * @param valueInWei - amount of tokens in wei
+	 * @returns `EthereumTransaction`
+	 */
+	withdrawWei(valueInWei: BigNumberValue): Promise<EthereumTransaction>
+
+	/**
+	 * @returns address of Wrapped currency (ERC-20)
+	 * Works for polygon (wrapped Matic) and ethereum (wrapped Eth)
 	 */
 	getWethContractAddress(): Address
 }
@@ -387,6 +429,10 @@ export function createRaribleSdk(
 		balances: {
 			getBalance: new Balances(apis).getBalance,
 			convert: wethConverter.convert,
+			deposit: wethConverter.deposit,
+			depositWei: wethConverter.depositWei,
+			withdraw: wethConverter.withdraw,
+			withdrawWei: wethConverter.withdrawWei,
 			getWethContractAddress: wethConverter.getWethContractAddress,
 		},
 	}

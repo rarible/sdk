@@ -1,8 +1,8 @@
-import { awaitAll, createGanacheProvider, deployWethContract } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
+import { awaitAll, createGanacheProvider, deployWethContract } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
-import { BigNumber } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { ConvertWeth } from "./convert-weth"
@@ -35,15 +35,15 @@ describe("convert weth test", () => {
 		const tx = await converter.convert(
 			{ assetClass: "ETH" },
 			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },
-			new BigNumber("0.1"),
+			toBn("0.1"),
 		)
 		await tx.wait()
 
 		const finishBalance = await contract.functionCall("balanceOf", sender1Address).call()
 		const finishEthBalance = await web3.eth.getBalance(sender1Address)
 
-		const diff = new BigNumber(finishBalance).minus(startBalance)
-		const diffInEth = new BigNumber(startEthBalance).minus(finishEthBalance)
+		const diff = toBn(finishBalance).minus(startBalance)
+		const diffInEth = toBn(startEthBalance).minus(finishEthBalance)
 
 		expect(diff.toString()).toBe("100000000000000000")
 		expect(diffInEth.gte("100000000000000000")).toBeTruthy()
@@ -55,7 +55,7 @@ describe("convert weth test", () => {
 		const tx = await converter.convert(
 			{ assetClass: "ETH" },
 			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },
-			new BigNumber("0.2")
+			toBn("0.2")
 		)
 		await tx.wait()
 
@@ -63,14 +63,21 @@ describe("convert weth test", () => {
 		const tx1 = await converter.convert(
 			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },
 			{ assetClass: "ETH" },
-			new BigNumber("0.1")
+			toBn("0.1")
 		)
 		await tx1.wait()
 
 		const finishWethBalance = await contract.functionCall("balanceOf", sender1Address).call()
-
-		const diff = new BigNumber(initWethBalance).minus(finishWethBalance)
-
+		const diff = toBn(initWethBalance).minus(finishWethBalance)
 		expect(diff.toString()).toBe("100000000000000000")
+	})
+
+	test("should throw error in case of unsupported contract", async () => {
+		const fakeAddress = toAddress("0x0000000000000000000000000000000000000000")
+		expect(() => converter.convert(
+			{ assetClass: "ETH" },
+			{ assetClass: "ERC20", contract: fakeAddress },
+			toBn("0.1")
+		)).rejects.toThrowError(`Contract is not supported - ${fakeAddress}`)
 	})
 })

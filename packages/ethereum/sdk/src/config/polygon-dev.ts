@@ -38,6 +38,6 @@ export const devPolygonConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0xb24740adECB71fEb7d66AA4EBD5F5c334E5bE922"),
+	weth: toAddress("0x328823f69a0915c9BEc366Eb09ccdfB964f91Ad5"),
 	auction: ZERO_ADDRESS,
 }

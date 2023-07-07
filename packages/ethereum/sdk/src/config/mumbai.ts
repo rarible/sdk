@@ -38,6 +38,6 @@ export const mumbaiConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa"),
+	weth: toAddress("0x9c3c9283d3e44854697cd22d3faa240cfb032889"),
 	auction: ZERO_ADDRESS,
 }
