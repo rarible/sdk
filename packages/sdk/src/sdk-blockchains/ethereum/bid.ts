@@ -381,7 +381,7 @@ export class EthereumBid {
 			wallet.ethereum.getFrom(),
 		])
 
-		const fromUnion = convertEthereumToUnionAddress(from, this.blockchain)
+		const fromUnion = convertEthereumToUnionAddress(from, Blockchain.ETHEREUM)
 		const asset: AssetType = { "@type": "ETH", blockchain: this.blockchain }
 		const value = toBn(valueWithFee.value).integerValue().div(toBn(10).pow(assetDecimals))
 

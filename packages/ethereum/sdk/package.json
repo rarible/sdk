@@ -35,8 +35,7 @@
     "eth-sig-util": "^3.0.0",
     "ethereumjs-util": "^7.1.0",
     "exponential-backoff": "^3.1.0",
-    "merkletreejs": "^0.2.31",
-    "p-lazy": "^3.1.0"
+    "merkletreejs": "^0.2.31"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.40",

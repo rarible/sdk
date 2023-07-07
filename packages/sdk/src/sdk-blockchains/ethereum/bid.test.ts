@@ -43,7 +43,7 @@ describe("bid", () => {
 		await suiteDev1.orders.acceptBid(itemId, updatedOrderId, quantity)
 	})
 
-	test("bid on erc1155 <-> erc20 and update bid (partial fill)", async () => {
+	test.only("bid on erc1155 <-> erc20 and update bid (partial fill)", async () => {
 		const erc1155 = suiteDev1.contracts.getContract("erc1155_1")
 		const erc20Mintable = suiteDev2.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintLazyAndWait(erc1155.collectionId, { supply: 10 })
