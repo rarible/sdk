@@ -302,7 +302,10 @@ export class OrderFiller {
 		}
 		const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
 
+		const { contract } = await functionCall.getCallInfo()
 		return {
+			from,
+			contract: toAddress(contract),
 			data: await functionCall.getData(),
 			options,
 		}

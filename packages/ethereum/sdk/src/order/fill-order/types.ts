@@ -162,7 +162,9 @@ export type GetOrderBuyBatchTxData =
 
 export type OrderFillTransactionData = {
 	data: string
+	contract: Address
 	options: EthereumSendOptions
+	from: Address
 }
 
 export type OrderFillSendData = {

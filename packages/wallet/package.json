@@ -14,7 +14,7 @@
     "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "clean": "rimraf ./build",
-    "test": "jest --runInBand",
+    "test": "jest --runInBand --forceExit",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
