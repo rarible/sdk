@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.46-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.46...v0.13.46-hotfix.0) (2023-07-10)
+
+
+### Bug Fixes
+
+* check order status ([#509](https://github.com/rarible/sdk/issues/509)) ([bff8400](https://github.com/rarible/sdk/commit/bff840018c810ea21280e2d4c30b09db8e7ca996))
+
+
+
+
+
 ## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.46",
+  "version": "0.13.46-hotfix.0",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -32,7 +32,7 @@
     "@rarible/connector-walletconnect": "^0.13.46",
     "@rarible/connector-walletconnect-v2": "^0.13.46",
     "@rarible/connector-walletlink": "^0.13.46",
-    "@rarible/sdk": "^0.13.46",
+    "@rarible/sdk": "^0.13.46-hotfix.0",
     "@rarible/web3-ethereum": "^0.13.46",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
