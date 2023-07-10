@@ -18,7 +18,7 @@
     "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "clean": "rimraf ./build",
-    "test": "jest --testTimeout=10000",
+    "test": "jest --testTimeout=10000 --forceExit",
     "verify": "tsc --noEmit"
   },
   "dependencies": {

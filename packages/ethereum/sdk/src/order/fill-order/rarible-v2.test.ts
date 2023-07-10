@@ -29,6 +29,7 @@ import { checkChainId } from "../check-chain-id"
 import { createRaribleSdk } from "../../index"
 import { FILL_CALLDATA_TAG } from "../../config/common"
 import type { EthereumNetwork } from "../../types"
+import type { BuyOrderRequest } from "./types"
 import { OrderFiller } from "./index"
 
 describe("buy & acceptBid orders", () => {
@@ -169,7 +170,9 @@ describe("buy & acceptBid orders", () => {
 		const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call())
 
 		const filler = new OrderFiller(buyerEthereum, send, config, apis, getBaseOrderFee, env)
-		const tx = await filler.buy({ order: finalOrder, amount: 1, payouts: [], originFees: [] })
+		const buyRequest = { order: finalOrder, amount: 1, payouts: [], originFees: [] } as BuyOrderRequest
+		await filler.getTransactionData(buyRequest)
+		const tx = await filler.buy(buyRequest)
 		await tx.wait()
 
 		const finishErc20Balance = toBn(await it.testErc20.methods.balanceOf(sellerAddress).call())
