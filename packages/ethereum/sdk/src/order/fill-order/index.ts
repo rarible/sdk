@@ -156,9 +156,6 @@ export class OrderFiller {
 				id: "send-tx" as const,
 				run: async ({ inverted, request }: { inverted: SimpleOrder, request: Request }) => {
 					this.checkStartEndDates(request.order)
-					if (!request.order.signature || request.order.signature === "0x") {
-						throw new Error(`Order does not have a signature (signature=${request.order.signature}), check status of order`)
-					}
 					return this.sendTransaction(request, inverted)
 				},
 			})
