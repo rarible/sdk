@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* tests ([#510](https://github.com/rarible/sdk/issues/510)) ([2cc43c5](https://github.com/rarible/sdk/commit/2cc43c5716e1a5521dfdbfd7cff5cc209bee0f5d))
+
+
+
+
+
 ## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
 
 **Note:** Version bump only for package @rarible/connector
