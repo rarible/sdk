@@ -17,3 +17,7 @@ export async function getSdkContext(sdkContext: ISdkContext): Promise<Record<str
 }
 
 export type IGetSdkContext = () => Promise<Record<string, string>>
+
+export type ExternalContext = {
+	providerId?: string
+}

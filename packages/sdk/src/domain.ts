@@ -40,6 +40,7 @@ import type {
 	IFlowCheckInitMattelCollections,
 	IFlowSetupMattelCollections,
 } from "./types/nft/collection"
+import type { ExternalContext } from "./common/get-sdk-context"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -73,11 +74,15 @@ export interface IRaribleSdkConfig {
 		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
 	}
 	/**
-	 * Meddlewares
+	 * Middlewares
 	 */
 	middlewares?: Middleware[]
 	apiKey?: string
+	/**
+   * @deprecated
+   */
 	logger?: AbstractLogger
+	context?: ExternalContext
 }
 
 /**

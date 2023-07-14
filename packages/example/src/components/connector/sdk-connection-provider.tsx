@@ -9,6 +9,7 @@ import { toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { LogsLevel } from "@rarible/sdk/build/domain"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import { EnvironmentContext } from "./environment-selector-provider"
 
 export interface IConnectorContext {
@@ -49,7 +50,7 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 	const conn = useRxOrThrow(connector.connection)
 	const sdk = conn.status === "connected" ? createRaribleSdk(conn.connection.wallet, environment, {
 		logs: LogsLevel.DISABLED,
-		apiKey: process.env.REACT_APP_API_KEY ?? undefined,
+		apiKey: getApiKey(environment),
 		blockchain: {
 			[WalletType.ETHEREUM]: {
 				useDataV3: true,
@@ -70,4 +71,9 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 	return <ConnectorContext.Provider value={context}>
 		{children}
 	</ConnectorContext.Provider>
+}
+
+function getApiKey(env: RaribleSdkEnvironment) {
+	if (env === "prod") return process.env.REACT_APP_PROD_API_KEY
+	return process.env.REACT_APP_TESTNETS_API_KEY ?? undefined
 }

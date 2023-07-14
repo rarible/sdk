@@ -9,6 +9,8 @@ import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import { backOff } from "exponential-backoff"
 import type { AbiItem } from "web3-utils"
 import { DappType, getDappType, promiseSettledRequest } from "@rarible/sdk-common"
+import type { EthereumProviderErrorData } from "@rarible/ethereum-provider/src"
+import { IncorrectABIError } from "@rarible/ethereum-provider/src"
 import type { Web3EthereumConfig } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
@@ -237,7 +239,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 					this.getData(),
 				])
 			} catch (e) {}
-			throw new EthereumProviderError({
+			const errorData: EthereumProviderErrorData = {
 				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.call",
 				error: e,
@@ -246,7 +248,11 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 					data: callData,
 					options,
 				},
-			})
+			}
+			if (e?.message?.includes("Returned values aren't valid, did it run Out of Gas")) {
+				throw new IncorrectABIError(errorData)
+			}
+			throw new EthereumProviderError(errorData)
 		}
 	}
 
