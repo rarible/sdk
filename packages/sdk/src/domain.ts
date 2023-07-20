@@ -54,6 +54,7 @@ export interface ISdkContext {
 	config?: IRaribleSdkConfig
 	sessionId: string
 	apiKey?: string
+	providerId?: string
 }
 
 export interface IRaribleSdkConfig {

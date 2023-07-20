@@ -10,6 +10,9 @@ export async function getSdkContext(sdkContext: ISdkContext): Promise<Record<str
 		"@version": packageJson.version,
 		...(sdkContext.wallet ? await getWalletInfo(sdkContext.wallet) : { }),
 	}
+	if (sdkContext.providerId) {
+		data.providerId = sdkContext.providerId
+	}
 	if (sdkContext.apiKey !== undefined) {
 		data.apiKey = sdkContext.apiKey
 	}
