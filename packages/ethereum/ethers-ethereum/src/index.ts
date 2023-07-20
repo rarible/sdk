@@ -152,7 +152,7 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
 	async getChainId(): Promise<number> {
 		try {
 			const { chainId } = await this.web3Provider.getNetwork()
-			return chainId
+			return +chainId
 		} catch (e) {
 			throw new EthereumProviderError({
 				providerId: getDappType(this.getCurrentProvider()),
@@ -282,7 +282,7 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
 
 	async getChainId(): Promise<number> {
 		try {
-		  return await this.signer.getChainId()
+		  return +(await this.signer.getChainId())
 		} catch (e) {
 			throw new EthereumProviderError({
 				providerId: getDappType(this.getCurrentProvider()),

@@ -9,6 +9,7 @@ export type EthereumProviderErrorData = {
 	code?: string | number
 	signer?: string
 	chainId?: number
+
 }
 
 export class EthereumProviderError extends Error {
@@ -50,15 +51,4 @@ export class EthereumProviderError extends Error {
 			return this.stack || error.stack
 		}
 	}
-}
-
-export type IncorrectABIErrorData = EthereumProviderErrorData & { data: { contract: string, method: string }}
-export class IncorrectABIError extends EthereumProviderError {
-	constructor(data: IncorrectABIErrorData) {
-		super(data)
-		Object.setPrototypeOf(this, IncorrectABIError.prototype)
-		this.name = "IncorrectABIError"
-		this.message = `Callable method of contract does not exist (${data.data.contract}.${data.data.method}}) or network of your wallet is wrong. Reload your wallet and try again.`
-	}
-
 }

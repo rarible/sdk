@@ -16,7 +16,7 @@ export async function checkChainId(
 ): Promise<boolean> {
 	const provider = getRequiredWallet(ethereum)
 	const activeChainId = await provider.getChainId()
-	if (config.chainId !== +activeChainId) throw new WrongNetworkWarning(activeChainId, config.chainId)
+	if (config.chainId !== activeChainId) throw new WrongNetworkWarning(activeChainId, config.chainId)
 	return true
 }
 
