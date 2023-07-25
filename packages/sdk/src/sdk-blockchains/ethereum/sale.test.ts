@@ -13,6 +13,7 @@ import { awaitItem } from "../../common/test/await-item"
 import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { createSdk } from "../../common/test/create-sdk"
+import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
@@ -76,7 +77,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -128,7 +129,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -176,7 +177,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -222,7 +223,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now()),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -267,7 +268,7 @@ describe("sale", () => {
 			amount: 1,
 			price: "0.000000000000000002",
 			currency: toCurrencyId(erc20ContractAddress),
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -305,7 +306,7 @@ describe("sale", () => {
 			amount: 1,
 			price: "0.000000000000000002",
 			currency: toCurrencyId(erc20ContractAddress),
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
