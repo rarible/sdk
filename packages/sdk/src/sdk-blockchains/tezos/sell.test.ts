@@ -1,12 +1,11 @@
 import { toCollectionId, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/prepare"
-import { LogsLevel } from "../../domain"
 import { retry } from "../../common/retry"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { awaitForOrder } from "./test/await-for-order"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
@@ -18,7 +17,7 @@ describe.skip("sell test", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+	const sellerSdk = createSdk(sellerWallet, env)
 
 	const nftContract: string = getTestContract(env, "nftContract")
 	const mtContract: string = getTestContract(env, "mtContract")

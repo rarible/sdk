@@ -27,6 +27,7 @@ import { createSeaportOrder } from "./test/order-opensea"
 import { awaitOrder } from "./test/await-order"
 import { getOpenseaEthTakeData } from "./test/get-opensea-take-data"
 import { approve as approveTemplate } from "./approve"
+import { getEndDateAfterMonth } from "./test/utils"
 
 describe("cancel order", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1)
@@ -83,6 +84,7 @@ describe("cancel order", () => {
 				originFees: [],
 			},
 			signature: toBinary("0x"),
+			end: getEndDateAfterMonth(),
 		}
 		const { tx, order } = await testOrder(form)
 		const events = await tx.getEvents()
@@ -116,6 +118,7 @@ describe("cancel order", () => {
 				fee: 0,
 			},
 			signature: toBinary("0x"),
+			end: getEndDateAfterMonth(),
 		}
 		const { tx } = await testOrder(form)
 		const events = await tx.getEvents()

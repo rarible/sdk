@@ -1,13 +1,13 @@
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { Blockchain } from "@rarible/api-client"
 import { toCollectionId, toItemId, toOrderId } from "@rarible/types"
-import { createRaribleSdk } from "../index"
 import { LogsLevel } from "../domain"
 import { MintType } from "../types/nft/mint/prepare"
 import { retry } from "../common/retry"
 import {
 	createEthWallets,
 } from "../sdk-blockchains/ethereum/test/common"
+import { createSdk } from "../common/test/create-sdk"
 
 describe("Logging", () => {
 	const [eth1, eth2, eth3, eth4, eth5, eth6] = createEthWallets(6)
@@ -34,7 +34,7 @@ describe("Logging", () => {
 
 	test("Should log simple blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(eth1, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(eth1, "development", { logs: LogsLevel.TRACE, logger })
 		const collection = await sdk.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			baseURI: "1",
@@ -65,7 +65,7 @@ describe("Logging", () => {
 
 	test.concurrent("Should log simple api call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(eth2, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(eth2, "development", { logs: LogsLevel.TRACE, logger })
 		const collectionAddress = toCollectionId("ETHEREUM:0x3aEb3b6d820dd90B79886537F008f2c36E38beAE")
 		await sdk.apis.collection.getCollectionById({
 			collection: collectionAddress,
@@ -80,7 +80,7 @@ describe("Logging", () => {
 	let nftId: string | undefined = undefined
 	test("Should log prepared blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(eth3, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(eth3, "development", { logs: LogsLevel.TRACE, logger })
 		const collectionAddress = toCollectionId("ETHEREUM:0x3aEb3b6d820dd90B79886537F008f2c36E38beAE")
 		const prepare = await sdk.nft.mint.prepare({
 			collectionId: collectionAddress,
@@ -107,7 +107,7 @@ describe("Logging", () => {
 
 	test("Should log simplified blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(eth4, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(eth4, "development", { logs: LogsLevel.TRACE, logger })
 		await sdk.order.sell({ itemId: toItemId(nftId!), currency: { "@type": "ETH" }, amount: 1, price: 0.000001 })
 		expect(logger.raw.mock.calls[0][0]).toMatchObject({
 			level: "TRACE",
@@ -117,7 +117,7 @@ describe("Logging", () => {
 
 	test.concurrent("Should log error api call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(eth5, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(eth5, "development", { logs: LogsLevel.TRACE, logger })
 		try {
 			await sdk.apis.collection.getCollectionById({
 				collection: "unknown",
@@ -134,7 +134,7 @@ describe("Logging", () => {
 
 	test.skip("Should handle error simplified blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createRaribleSdk(eth6, "development", { logs: LogsLevel.DISABLED, logger })
+		const sdk = createSdk(eth6, "development", { logs: LogsLevel.DISABLED, logger })
 		try {
 			const tx = await sdk.order.buy({ orderId: toOrderId("ETHEREUM:0x78dafa455051f8b7a1abcab8d028a7ef0a9e5c8db053176f826ba12e81b87292"), amount: 1 })
 			await tx.wait()

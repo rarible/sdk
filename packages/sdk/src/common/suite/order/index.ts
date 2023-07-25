@@ -213,6 +213,6 @@ export class OrderTestSuite<T extends SuiteSupportedBlockchain> {
 	}
 }
 
-function generateExpirationDate(seconds = 3600) {
+export function generateExpirationDate(seconds = 3600) {
 	return new Date(Date.now() + seconds * 1000)
 }

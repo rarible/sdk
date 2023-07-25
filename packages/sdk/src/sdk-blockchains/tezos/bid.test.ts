@@ -1,12 +1,11 @@
 import { toBigNumber, toCollectionId, toCurrencyId, toItemId } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import type { TezosFTAssetType } from "@rarible/api-client"
-import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/prepare"
 import { retry } from "../../common/retry"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForOrderStatus } from "./test/await-for-order-status"
@@ -18,10 +17,10 @@ import { TEST_PK_1, TEST_PK_3 } from "./test/credentials"
 describe("bid test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const itemOwner = createTestWallet(TEST_PK_3, env)
-	const itemOwnerSdk = createRaribleSdk(itemOwner, env, { logs: LogsLevel.DISABLED })
+	const itemOwnerSdk = createSdk(itemOwner, env)
 	const bidderWallet = createTestWallet(TEST_PK_1, env)
 
-	const bidderSdk = createRaribleSdk(bidderWallet, env, { logs: LogsLevel.DISABLED })
+	const bidderSdk = createSdk(bidderWallet, env)
 
 	const nullFundsWallet = createTestWallet(
 		"edskS2YAR6wms6ZWckr7wJYW1cFaEgy9mk1FbnjABsDMyh" +
@@ -29,7 +28,7 @@ describe("bid test", () => {
 		env
 	)
 
-	const nullFundsWalletSdk = createRaribleSdk(nullFundsWallet, env, { logs: LogsLevel.DISABLED })
+	const nullFundsWalletSdk = createSdk(nullFundsWallet, env)
 
 	const eurTzContract = getTestContract(env, "eurTzContract")
 	const nftContract = getTestContract(env, "nftContract")

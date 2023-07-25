@@ -1,6 +1,6 @@
 import { toAddress, toBigNumber, toItemId, toOrderId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { createSdk } from "./test/create-sdk"
+import { createSdk } from "../../common/test/create-sdk"
 import type { EVMTestSuite } from "./test/suite"
 import { EVMTestSuiteFactory } from "./test/suite"
 

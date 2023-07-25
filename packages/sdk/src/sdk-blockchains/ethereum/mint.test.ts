@@ -5,10 +5,9 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toCollectionId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/prepare"
-import { createRaribleSdk } from "../../index"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
-import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
+import { createSdk } from "../../common/test/create-sdk"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
 
@@ -17,7 +16,7 @@ describe("mint", () => {
 	const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createRaribleSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(ethereumWallet, "development")
 
 	const erc1155Address = convertEthereumContractAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a", Blockchain.ETHEREUM)
 	const erc721Address = convertEthereumContractAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d", Blockchain.ETHEREUM)

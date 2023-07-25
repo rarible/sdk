@@ -4,9 +4,8 @@ import BigNumber from "bignumber.js"
 import type { VersumSwapForm, HENSwapForm, TEIASwapForm, ObjktAskV1Form, ObjktAskV2Form, FXHashV1OfferForm, FXHashV2ListingForm } from "@rarible/tezos-sdk"
 // eslint-disable-next-line camelcase
 import { versum_swap, hen_swap, teia_swap, ask_v1, ask_v2, fxhash_v1_offer, fxhash_v2_listing } from "@rarible/tezos-sdk"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosToUnionAddress, getMaybeTezosProvider } from "./common"
@@ -20,7 +19,7 @@ describe.skip("fill markets orders test", () => {
 	const sellerProvider = getMaybeTezosProvider((sellerWallet as any).provider,  env, {
 		basePath: `https://${env}-api.rarible.org`,
 	} as any)
-	const buyerSdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const buyerSdk = createSdk(wallet, env)
 	let buyerAddress: string
 
 	beforeAll(async () => {
