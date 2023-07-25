@@ -60,7 +60,6 @@ export function createRaribleSdk(
 	const wallet = provider && getRaribleWallet(provider)
 	const sessionId = getRandomId("union")
 	const blockchainConfig = getSdkConfig(env)
-	console.log("apikey", config?.apiKey?.split("-"))
 	const apis = createApisSdk(
 		env,
 		{

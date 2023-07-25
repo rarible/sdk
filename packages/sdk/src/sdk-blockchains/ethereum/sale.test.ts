@@ -223,7 +223,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: generateExpirationDate(),
+			expirationDate: new Date(),
 		})
 
 		const nextStock = "1"
