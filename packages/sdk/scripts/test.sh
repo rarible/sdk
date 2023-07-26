@@ -14,5 +14,5 @@ jest --runInBand --forceExit --testPathIgnorePatterns "src/sdk-blockchains/ether
 
 
 end=$(date +%s)
-seconds=$(echo "$end - $start" | bc)
+seconds=$(echo $((end-start)) | awk '{print int($1%60)}')
 echo 'TESTS DURATION: '$seconds' sec'
