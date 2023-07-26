@@ -1,12 +1,11 @@
 import { toBigNumber, toCollectionId, toCurrencyId, toItemId, toUnionAddress } from "@rarible/types"
 import BigNumber from "bignumber.js"
 import type { TezosXTZAssetType } from "@rarible/api-client"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { awaitItem } from "../../common/test/await-item"
 // import { awaitItemSupply } from "../ethereum/test/await-item-supply"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { awaitForOrder } from "./test/await-for-order"
@@ -16,13 +15,13 @@ describe.skip("test tezos mint and sell", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 
 	const sellerWallet = createTestWallet("edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw", env)
-	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+	const sellerSdk = createSdk(sellerWallet, env)
 
 	const buyerWallet = createTestWallet("edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj", env)
-	const buyerSdk = createRaribleSdk(buyerWallet, env, { logs: LogsLevel.DISABLED })
+	const buyerSdk = createSdk(buyerWallet, env)
 
 	const nextBuyerWallet = createTestWallet("edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3", env)
-	const nextBuyerSdk = createRaribleSdk(nextBuyerWallet, env, { logs: LogsLevel.DISABLED })
+	const nextBuyerSdk = createSdk(nextBuyerWallet, env)
 
 	const eurTzContract = getTestContract(env, "eurTzContract")
 	const fa12Contract = getTestContract(env, "fa12Contract")

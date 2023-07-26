@@ -3,11 +3,10 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet, FlowWallet, SolanaWallet } from "@rarible/sdk-wallet"
 import { BlockchainGroup } from "@rarible/api-client/build/models/BlockchainGroup"
 import * as fcl from "@onflow/fcl"
-import { createRaribleSdk } from "../index"
 import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
-import { LogsLevel } from "../domain"
 import { getWallet } from "../sdk-blockchains/solana/common/test/test-wallets"
 import { createTestWallet } from "../sdk-blockchains/tezos/test/test-wallet"
+import { createSdk } from "../common/test/create-sdk"
 
 const { web31, web32 } = initProviders()
 
@@ -72,7 +71,7 @@ const providers = [{
 describe.each(providers)("Create Union SDK via $name", (suite) => {
 	const provider = suite.getProvider()
 	test("Should create SDK", () => {
-		const sdk = createRaribleSdk(provider, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(provider, "development")
 		expect(sdk.wallet).toBeTruthy()
 		expect(sdk.wallet?.walletType).toEqual(suite.expectedBlockchain)
 	})

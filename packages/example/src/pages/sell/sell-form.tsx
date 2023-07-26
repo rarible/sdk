@@ -4,6 +4,7 @@ import { Box, Stack } from "@mui/material"
 import type { PrepareOrderResponse } from "@rarible/sdk/build/types/order/common"
 import { MaxFeesBasePointSupport } from "@rarible/sdk/build/types/order/fill/domain"
 import { toBigNumber } from "@rarible/types"
+import { generateExpirationDate } from "@rarible/sdk/build/common/suite/order"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
@@ -47,6 +48,7 @@ export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract),
 						maxFeesBasePoint,
 						originFees: [],
+						expirationDate: generateExpirationDate(),
 					}))
 				} catch (e) {
 					setError(e)

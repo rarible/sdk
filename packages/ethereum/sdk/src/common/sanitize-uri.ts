@@ -1,6 +1,9 @@
 
 export function sanitizeUri(contractPrefix: string, uriRaw: string): string {
 	const fixedContractPrefix = fixContractPrefix(contractPrefix)
+	if (!uriRaw) {
+		throw new Error("uri is not defined")
+	}
 	if (!uriRaw.startsWith(fixedContractPrefix)) {
 		throw new Error(`uri must start with: ${fixedContractPrefix}`)
 	}

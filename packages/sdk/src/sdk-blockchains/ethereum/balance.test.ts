@@ -8,10 +8,10 @@ import { Blockchain } from "@rarible/api-client"
 import BigNumber from "bignumber.js"
 import { createWethContract } from "@rarible/ethereum-sdk-test-common"
 import { retry } from "../../common/retry"
+import { createSdk } from "../../common/test/create-sdk"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { POLYGON_TESTNET_SETTINGS } from "./test/common"
-import { createSdk } from "./test/create-sdk"
 
 describe("get balance", () => {
 	const { web31, wallet1 } = initProviders({

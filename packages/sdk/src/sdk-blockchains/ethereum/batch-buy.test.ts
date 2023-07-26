@@ -5,8 +5,9 @@ import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/type
 import Web3 from "web3"
 import type { IRaribleSdk } from "../../index"
 import { awaitItem } from "../../common/test/await-item"
+import { generateExpirationDate } from "../../common/suite/order"
+import { createSdk } from "../../common/test/create-sdk"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
-import { createSdk } from "./test/create-sdk"
 
 describe("Batch buy", () => {
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_1)
@@ -30,6 +31,7 @@ describe("Batch buy", () => {
 				amount: 1,
 				price: "0.00000000001",
 				currency: { "@type": "ETH" },
+				expirationDate: generateExpirationDate(),
 			})
 		}))
 
@@ -58,6 +60,7 @@ describe("Batch buy", () => {
 				amount: 1,
 				price: "0.00000000001",
 				currency: { "@type": "ETH" },
+				expirationDate: generateExpirationDate(),
 			})
 		}))
 

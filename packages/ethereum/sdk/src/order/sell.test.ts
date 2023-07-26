@@ -28,6 +28,7 @@ import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { checkChainId } from "./check-chain-id"
+import { getEndDateAfterMonth } from "./test/utils"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
@@ -162,6 +163,7 @@ describe.each(providers)("sell", (ethereum) => {
 				fee: 250,
 			},
 			signature: toBinary("0x"),
+			end: getEndDateAfterMonth(),
 		}
 		const order = await upserter.upsert({ order: form })
 

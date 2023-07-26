@@ -1,20 +1,37 @@
 import { EthereumProviderError } from "@rarible/ethereum-provider"
 import { isInfoLevel } from "@rarible/sdk-common"
+import { WrongNetworkWarning } from "@rarible/protocol-ethereum-sdk/src/order/check-chain-id"
 import { WalletType } from "../../index"
+import { InsufficientFundsError } from "../../sdk-blockchains/ethereum/bid"
 import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
 describe("logger overrides", () => {
-	test("isErrorWarning", async () => {
-		const err = new EthereumProviderError({
-			data: null,
-			error: {
-				code: -32603,
-				message: '[ethjs-query] while formatting outputs from RPC \'{"value":{"code":-32603,"data":{"code":-32000,"message":"transaction underpriced"}}}',
-			},
-			method: "any",
+	describe("isErrorWarning", () => {
+
+		test("EthereumProviderError (transaction underpriced)", async () => {
+			const err = new EthereumProviderError({
+				data: null,
+				error: {
+					code: -32603,
+					message: '[ethjs-query] while formatting outputs from RPC \'{"value":{"code":-32603,"data":{"code":-32000,"message":"transaction underpriced"}}}',
+				},
+				method: "any",
+			})
+			const isError = isErrorWarning(err, WalletType.ETHEREUM)
+			expect(isError).toBeTruthy()
 		})
-		const isError = isErrorWarning(err, WalletType.ETHEREUM)
-		expect(isError).toBeTruthy()
+
+		test("WrongNetworkWarning", async () => {
+			const err = new WrongNetworkWarning(1, 2)
+			const isError = isErrorWarning(err, WalletType.ETHEREUM)
+			expect(isError).toBeTruthy()
+		})
+
+		test("InsufficientFundsError", async () => {
+			const err = new InsufficientFundsError()
+			const isError = isErrorWarning(err, WalletType.ETHEREUM)
+			expect(isError).toBeTruthy()
+		})
 	})
 
 	test("isInfoLevel returns true", async () => {

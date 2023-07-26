@@ -6,13 +6,14 @@ import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/send-transaction"
-import { createRaribleSdk } from "../../index"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
 import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
+import { createSdk } from "../../common/test/create-sdk"
+import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
@@ -21,8 +22,8 @@ describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", { logs: LogsLevel.DISABLED })
-	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
+	const sdk1 = createSdk(new EthereumWallet(ethereum1), "development")
+	const sdk2 = createSdk(new EthereumWallet(ethereum2), "development", {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {
@@ -76,7 +77,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -128,7 +129,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -176,6 +177,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -221,7 +223,7 @@ describe("sale", () => {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now()),
+			expirationDate: new Date(),
 		})
 
 		const nextStock = "1"
@@ -266,6 +268,7 @@ describe("sale", () => {
 			amount: 1,
 			price: "0.000000000000000002",
 			currency: toCurrencyId(erc20ContractAddress),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -303,6 +306,7 @@ describe("sale", () => {
 			amount: 1,
 			price: "0.000000000000000002",
 			currency: toCurrencyId(erc20ContractAddress),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
@@ -339,7 +343,7 @@ describe.skip("buy item with opensea order", () => {
 	const web3 = new Web3(provider)
 	const ethereum1 = new Web3Ethereum({ web3 })
 	const meta = toWord(id32("CUSTOM_META"))
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "testnet", {
+	const sdk1 = createSdk(new EthereumWallet(ethereum1), "testnet", {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {

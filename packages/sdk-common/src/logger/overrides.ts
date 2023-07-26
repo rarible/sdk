@@ -42,6 +42,7 @@ export const COMMON_INFO_MESSAGES = [
 	"Request cancelled by user",
 	"Cancelled by User",
 	"Request has been cancelled by the user",
+	"transaction was cancelled",
 	"transaction was canceled",
 	"Sign transaction cancelled",
 	"Firma de transacción cancelada",
@@ -116,6 +117,7 @@ export function isInfoLevel(error: any): boolean {
 }
 
 export function isEVMWarning(error: any): boolean {
+	if (error?.name && ["WrongNetworkWarning", "InsufficientFundsError"].includes(error?.name)) return true
 	const msgLowerCase = error?.message.toLowerCase()
 	return EVM_WARN_MESSAGES.some(msg => msgLowerCase?.includes(msg))
 }

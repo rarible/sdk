@@ -1,8 +1,7 @@
 import { toCollectionId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
+import { createSdk } from "../../common/test/create-sdk"
 import { initProvider } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
 import { awaitOwnership } from "./test/await-ownership"
@@ -20,7 +19,7 @@ describe("transfer", () => {
 
 	test("transfer erc721", async () => {
 		const erc721Address = convertEthereumContractAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E", Blockchain.ETHEREUM)
-		const sdk = createRaribleSdk(eth1, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(eth1, "development")
 		const receipent = toUnionAddress(`ETHEREUM:${receipentRaw}`)
 
 		const mintResult = await sdk.nft.mint({
@@ -40,7 +39,7 @@ describe("transfer", () => {
 
 	test("transfer erc721 with basic function", async () => {
 		const erc721Address = convertEthereumContractAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc", Blockchain.ETHEREUM)
-		const sdk = createRaribleSdk(eth1, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(eth1, "development")
 
 		const mintResult = await sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -60,7 +59,7 @@ describe("transfer", () => {
 	})
 
 	test("transfer erc1155", async () => {
-		const sdk = createRaribleSdk(eth1, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(eth1, "development")
 
 		const mintResult = await sdk.nft.mint({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -79,7 +78,7 @@ describe("transfer", () => {
 	})
 
 	test("transfer erc1155 with basic function", async () => {
-		const sdk = createRaribleSdk(eth1, "development", { logs: LogsLevel.DISABLED })
+		const sdk = createSdk(eth1, "development")
 
 		const { itemId, transaction } = await sdk.nft.mint({
 			collectionId: toCollectionId(erc1155Address),
