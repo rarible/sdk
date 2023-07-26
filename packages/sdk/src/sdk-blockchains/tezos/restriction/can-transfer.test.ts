@@ -1,8 +1,7 @@
 import { toContractAddress, toItemId, toUnionAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../../index"
-import { LogsLevel } from "../../../domain"
 import { createTestWallet } from "../test/test-wallet"
 import type { RaribleSdkEnvironment } from "../../../config/domain"
+import { createSdk } from "../../../common/test/create-sdk"
 
 describe("canTransfer", () => {
 	const env: RaribleSdkEnvironment = "testnet"
@@ -11,7 +10,7 @@ describe("canTransfer", () => {
 		"D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet, env)
 
 	test.skip("returns false and reason for whitelisted collection", async () => {
 		const me = toUnionAddress("TEZOS:tz1Vek4VpsDWDHrbi26gWT7GGcw7BvhE9DjQ")
@@ -50,7 +49,7 @@ describe.skip("canTransfer for quartz prod contract", () => {
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet, env)
 
 	test("not whitelisted quartz wallet should restricted", async () => {
 		const me = toUnionAddress("TEZOS:tz2CqFpz7ZpMtr9UfigLtoRcTqMsPFRxCA9h")

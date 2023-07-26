@@ -4,8 +4,7 @@ import type { VersumSwapForm, TezosNetwork, HENSwapForm, TEIASwapForm, ObjktAskV
 import { versum_swap, hen_swap, teia_swap, ask_v1, ask_v2, fxhash_v1_offer, fxhash_v2_listing } from "@rarible/tezos-sdk"
 import { toOrderId } from "@rarible/types"
 import type { RaribleSdkEnvironment } from "../../config/domain"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { getMaybeTezosProvider } from "./common"
 import { awaitCancelledOrder } from "./test/await-cancelled-order"
@@ -18,7 +17,7 @@ describe.skip("cancel markets orders", () => {
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(sellerWallet, env)
 
 	const sellerProvider = getMaybeTezosProvider((sellerWallet as any).provider, tezosEnv, {
 		basePath: `https://${env}-api.rarible.org`,

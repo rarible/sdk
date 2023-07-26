@@ -9,6 +9,8 @@ import type { IRaribleSdk } from "../../domain"
 import type { RequestCurrencyAssetType } from "../domain"
 import { waitFor } from "../wait-for"
 import { toBlockchainGroup } from "../extract-blockchain"
+import { getAPIKey } from "../test/create-sdk"
+import type { RaribleSdkEnvironment } from "../../config/domain"
 import type { TestSuiteHookedProvider, SuiteSupportedBlockchain, TestSuiteSDKConfig } from "./domain"
 import { ItemTestSuite } from "./item"
 import { OrderTestSuite } from "./order"
@@ -21,8 +23,10 @@ export class SDKBaseTestSuite {
     	config: TestSuiteSDKConfig = {},
     	provider: RaribleSdkProvider | undefined = undefined
     ) {
-    	this.sdk = createRaribleSdk(provider, "development", {
+    	const env: RaribleSdkEnvironment = "development"
+    	this.sdk = createRaribleSdk(provider, env, {
     		logs: LogsLevel.DISABLED,
+    		apiKey: getAPIKey(env),
     		...config,
     	})
 

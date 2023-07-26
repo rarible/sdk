@@ -1,11 +1,10 @@
 // eslint-disable-next-line camelcase
 import { toCollectionId } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
 import { MintType } from "../../types/nft/mint/prepare"
 import { delay, retry } from "../../common/retry"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 import { awaitCancelledOrder } from "./test/await-cancelled-order"
@@ -13,7 +12,7 @@ import { awaitCancelledOrder } from "./test/await-cancelled-order"
 describe.skip("cancel test", () => {
 	const env: RaribleSdkEnvironment = "development"
 	const wallet = createTestWallet("edsk3UUamwmemNBJgDvS8jXCgKsvjL2NoTwYRFpGSRPut4Hmfs6dG8", env)
-	const sdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const sdk = createSdk(wallet, env)
 
 	const mtContract: string = getTestContract(env, "mtContract")
 

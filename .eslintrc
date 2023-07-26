@@ -1,7 +1,8 @@
 {
 	"extends": ["@rarible/ts"],
 	"rules": {
-		"object-curly-spacing": ["error", "always"]
+		"object-curly-spacing": ["error", "always"],
+        "unicorn/custom-error-definition": "off"
 	},
     "globals":{
       "BigInt": true

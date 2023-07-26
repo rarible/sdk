@@ -126,7 +126,7 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 
 	async getChainId(): Promise<number> {
 		try {
-		  return await this.config.web3.eth.getChainId()
+		  return +(await this.config.web3.eth.getChainId())
 		} catch (error) {
 			throw new EthereumProviderError({
 				...getProvidersData(this.config),

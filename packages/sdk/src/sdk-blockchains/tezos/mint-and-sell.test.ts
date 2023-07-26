@@ -1,8 +1,7 @@
 import { toCollectionId } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 import { TEST_PK_1, TEST_PK_2, TEST_PK_3 } from "./test/credentials"
@@ -12,7 +11,7 @@ describe("test tezos mint and sell", () => {
 
 	test.concurrent("mint and sell nft with prepare", async () => {
 		const sellerWallet = createTestWallet(TEST_PK_1, env)
-		const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+		const sellerSdk = createSdk(sellerWallet, env)
 		const nftContract: string = getTestContract(env, "nftContract")
 
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
@@ -29,7 +28,7 @@ describe("test tezos mint and sell", () => {
 
 	test.concurrent("mint and sell nft with basic function", async () => {
 		const sellerWallet = createTestWallet(TEST_PK_2, env)
-		const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+		const sellerSdk = createSdk(sellerWallet, env)
 
 		const nftContract: string = getTestContract(env, "nftContract1")
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
@@ -43,7 +42,7 @@ describe("test tezos mint and sell", () => {
 
 	test.concurrent("mint and sell mt with prepare", async () => {
 		const sellerWallet = createTestWallet(TEST_PK_3, env)
-		const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+		const sellerSdk = createSdk(sellerWallet, env)
 
 		const mtContract: string = getTestContract(env, "mtContract")
 

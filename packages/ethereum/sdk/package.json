@@ -31,7 +31,6 @@
     "@rarible/logger": "^0.9.12",
     "@rarible/sdk-common": "^0.13.46",
     "@rarible/utils": "~0.9.10",
-    "axios": "^0.25.0",
     "eth-sig-util": "^3.0.0",
     "ethereumjs-util": "^7.1.0",
     "exponential-backoff": "^3.1.0",
@@ -61,7 +60,8 @@
     "webpack-cli": "^4.9.2"
   },
   "peerDependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "axios": "^0.26.1"
   },
   "publishConfig": {
     "access": "public",

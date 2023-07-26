@@ -4,7 +4,7 @@ import { toContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import { toBn } from "@rarible/utils/build/bn"
 import { createApisSdk } from "../../common/apis"
-import { createRaribleSdk } from "../../index"
+import { createSdk } from "../../common/test/create-sdk"
 import { convertFlowUnionAddress } from "./common/converters"
 import { createTestFlowAuth } from "./test/create-test-flow-auth"
 import { createFlowSdk } from "./index"
@@ -67,7 +67,7 @@ describe.skip("Test flow transfer function", () => {
 
 	test("transfer Flow", async () => {
 		const wallet = new FlowWallet(fcl, authUser1)
-		const unionSdk = createRaribleSdk(wallet, "testnet")
+		const unionSdk = createSdk(wallet, "testnet")
 		const recipient = toUnionAddress("FLOW:0x97d54357e9938fd0")
 
 		const flowAssetType = {

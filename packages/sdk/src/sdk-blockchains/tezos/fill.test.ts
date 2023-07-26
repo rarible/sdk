@@ -1,7 +1,6 @@
 import { toItemId } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { createTestWallet } from "./test/test-wallet"
 import { convertTezosItemId, convertTezosOrderId } from "./common"
@@ -12,7 +11,7 @@ describe.skip("fill test", () => {
 		"edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3",
 		env
 	)
-	const buyerSdk = createRaribleSdk(wallet, env, { logs: LogsLevel.DISABLED })
+	const buyerSdk = createSdk(wallet, env)
 
 	test("buy NFT test", async () => {
 		const buyerAddress = await wallet.provider.address()

@@ -33,6 +33,7 @@ export function createLogger() {
 				service: loggerConfig.service,
 				"@version": packageJson.version,
 				environment: "prod",
+				domain: window.location.host,
 			}),
 			dropBatchInterval: 1000,
 			maxByteSize: 3 * 10240,

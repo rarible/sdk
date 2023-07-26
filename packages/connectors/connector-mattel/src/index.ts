@@ -96,7 +96,7 @@ export class MattelConnectionProvider extends
 
 			try {
 				if (await isLoggedInPromise(magic)) {
-					const user = await magic.user.getMetadata()
+					const user = await magic.user.getInfo()
 
 					return {
 						user,
@@ -117,7 +117,7 @@ export class MattelConnectionProvider extends
 						providerId: this.config.magicProviderId,
 					})
 				}
-				const user = await magic.user.getMetadata()
+				const user = await magic.user.getInfo()
 				return {
 					user,
 					fcl,

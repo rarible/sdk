@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { PrepareBidResponse } from "@rarible/sdk/build/types/order/bid/domain"
 import { toBigNumber } from "@rarible/types"
+import { generateExpirationDate } from "@rarible/sdk/build/common/suite/order"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
@@ -39,6 +40,7 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 						price: toBigNumber(formData.price),
 						amount: parseInt(formData.amount),
 						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract),
+						expirationDate: generateExpirationDate(),
 					}))
 				} catch (e) {
 					setError(e)
