@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+
+### Bug Fixes
+
+* **MPX-2073:** properly setup gas options in Web3Ethereum ([#512](https://github.com/rarible/sdk/issues/512)) ([db8ad99](https://github.com/rarible/sdk/commit/db8ad9904137177e16668b8e3f4b1bcf06cbc9a1))
+
+
+### Features
+
+* **MPX-2089:** change magic getmetadata method ([#514](https://github.com/rarible/sdk/issues/514)) ([71e37b9](https://github.com/rarible/sdk/commit/71e37b9a75aa7937214b6e56749c4ebd7f880a89))
+
+
+
+
+
 ## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
 
 

@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+
+### Bug Fixes
+
+* **MPX-2073:** properly setup gas options in Web3Ethereum ([#512](https://github.com/rarible/sdk/issues/512)) ([db8ad99](https://github.com/rarible/sdk/commit/db8ad9904137177e16668b8e3f4b1bcf06cbc9a1))
+
+
+### Features
+
+* add domain to connector logs ([#508](https://github.com/rarible/sdk/issues/508)) ([a6f24eb](https://github.com/rarible/sdk/commit/a6f24eb560f40b3701102b06cd11a43ec9a13a1d))
+
+
+
+
+
 ## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
 
 
