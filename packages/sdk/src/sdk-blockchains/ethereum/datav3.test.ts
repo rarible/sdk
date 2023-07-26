@@ -101,7 +101,7 @@ describe("Create & fill orders with order data v3", () => {
 			const bidAction = await buyer.sdk.order.bid.prepare({ itemId: itemId })
 			expect(bidAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)
 
-			const price = toBn(0.00001)
+			const price = toBn("0.0000001")
 			const orderId = await bidAction.submit({
 				amount: toBn(1).toNumber(),
 				price: price.toString(),
@@ -123,7 +123,7 @@ describe("Create & fill orders with order data v3", () => {
 			expect(tx.transaction.data.endsWith(buyMarker)).toEqual(true)
 			await tx.wait()
 
-			seller.orders.waitOrderSubset(orderId, {
+			await seller.orders.waitOrderSubset(orderId, {
 				status: OrderStatus.FILLED,
 				makeStock: toBigNumber("0"),
 			})

@@ -8,6 +8,7 @@ import {
 	createEthWallets,
 } from "../sdk-blockchains/ethereum/test/common"
 import { createSdk } from "../common/test/create-sdk"
+import { generateExpirationDate } from "../common/suite/order"
 
 describe("Logging", () => {
 	const [eth1, eth2, eth3, eth4, eth5, eth6] = createEthWallets(6)
@@ -108,7 +109,13 @@ describe("Logging", () => {
 	test("Should log simplified blockchain call", async () => {
 		const logger = getLogger()
 		const sdk = createSdk(eth4, "development", { logs: LogsLevel.TRACE, logger })
-		await sdk.order.sell({ itemId: toItemId(nftId!), currency: { "@type": "ETH" }, amount: 1, price: 0.000001 })
+		await sdk.order.sell({
+			itemId: toItemId(nftId!),
+			currency: { "@type": "ETH" },
+			amount: 1,
+			price: 0.000001,
+			expirationDate: generateExpirationDate(),
+		})
 		expect(logger.raw.mock.calls[0][0]).toMatchObject({
 			level: "TRACE",
 			method: "order.sell",
