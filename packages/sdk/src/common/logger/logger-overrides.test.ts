@@ -1,9 +1,11 @@
 import { EthereumProviderError } from "@rarible/ethereum-provider"
 import { isInfoLevel } from "@rarible/sdk-common"
 import { WrongNetworkWarning } from "@rarible/protocol-ethereum-sdk/src/order/check-chain-id"
+import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk/src"
+import { LogsLevel } from "@rarible/protocol-ethereum-sdk/src/types"
 import { WalletType } from "../../index"
 import { InsufficientFundsError } from "../../sdk-blockchains/ethereum/bid"
-import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
+import { getErrorLevel, getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
 describe("logger overrides", () => {
 	describe("isErrorWarning", () => {
@@ -78,5 +80,24 @@ describe("logger overrides", () => {
 	test("flow proposal key error error", () => {
 		const error = new Error("[Error Code: 1007] error caused by: 1 error occurred:\\n\\t* checking sequence number failed: [Error Code: 1007] invalid proposal key: public key 0 on account 201362ac764cf16f has sequence number 284, but given 283\\n\\n")
 		expect(isErrorWarning(error, WalletType.FLOW)).toBeTruthy()
+	})
+
+	test("get level=ERROR during getValidatedOrderByHash", async () => {
+		const sdk = createRaribleSdk(undefined, "mainnet", {
+			logs: {
+				level: LogsLevel.DISABLED,
+			},
+			apiKey: process.env.SDK_API_KEY_PROD || undefined,
+		})
+		let responseError
+		try {
+			await sdk.apis.order.getValidatedOrderByHash({
+				hash: "0xa7dade8642acc83dc60d50bef30af7f2951cd454e1c35cdc71a14db6452759e5",
+			})
+		} catch (e: any) {
+			responseError = e
+		}
+		const errorLevel = getErrorLevel("any", responseError, undefined)
+		expect(errorLevel).toBe("ERROR")
 	})
 })

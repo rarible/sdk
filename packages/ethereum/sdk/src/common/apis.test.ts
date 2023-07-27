@@ -49,6 +49,7 @@ describe("api keys", () => {
 			logs: {
 				level: LogsLevel.DISABLED,
 			},
+			apiKey: process.env.SDK_API_KEY_PROD || undefined,
 		})
 		let responseError
 		try {
@@ -56,9 +57,9 @@ describe("api keys", () => {
 				hash: "0xa7dade8642acc83dc60d50bef30af7f2951cd454e1c35cdc71a14db6452759e5",
 			})
 		} catch (e: any) {
-			console.log(e)
+			responseError = e
 		}
-		// expect(responseError.status).toBe(403)
-		// expect(responseError.message).toBe("API key not found")
+		expect(responseError?.status).toBe(undefined)
+		expect(responseError?.value?.code).toBe("VALIDATION")
 	})
 })
