@@ -1,5 +1,7 @@
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import { NetworkError } from "@rarible/logger/build"
+import type { GetValidatedOrderByHashRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
+import type { Order } from "@rarible/ethereum-api-client/build/models"
 import { getApiConfig } from "../config/api-config"
 import type { EthereumNetwork } from "../types"
 
@@ -34,10 +36,18 @@ export function createEthereumApis(
 		...params,
 	})
 	const configuration = new EthereumApiClient.Configuration(config)
+	const orderApi = new EthereumApiClient.OrderControllerApi(configuration)
+	orderApi.getValidatedOrderByHash = async (req: GetValidatedOrderByHashRequest): Promise<Order> => {
+		const response = await orderApi.getValidatedOrderByHashRaw(req)
+		if (response.status === 200) {
+			return response.value
+		}
+		throw new Error("Validation error")
+	}
 	return {
 		nftItem: new EthereumApiClient.NftItemControllerApi(configuration),
 		nftOwnership: new EthereumApiClient.NftOwnershipControllerApi(configuration),
-		order: new EthereumApiClient.OrderControllerApi(configuration),
+		order: orderApi,
 		orderActivity: new EthereumApiClient.OrderActivityControllerApi(configuration),
 		orderSignature: new EthereumApiClient.OrderSignatureControllerApi(configuration),
 		nftCollection: new EthereumApiClient.NftCollectionControllerApi(configuration),
