@@ -55,6 +55,7 @@ export interface ISdkContext {
 	sessionId: string
 	apiKey?: string
 	providerId?: string
+	providerMeta?: Record<string, string>
 }
 
 export interface IRaribleSdkConfig {
@@ -83,6 +84,9 @@ export interface IRaribleSdkConfig {
    * @deprecated
    */
 	logger?: AbstractLogger
+	/**
+   * Pass extra fields to logs
+   */
 	context?: ExternalContext
 }
 
