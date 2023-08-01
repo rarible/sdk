@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.49-beta.0](https://github.com/rarible/sdk/compare/v0.13.48...v0.13.49-beta.0) (2023-08-01)
+
+
+### Features
+
+* **MPX-1870:** passing provider data to sdk ([#515](https://github.com/rarible/sdk/issues/515)) ([a52b023](https://github.com/rarible/sdk/commit/a52b0234da345eec9c3e7bcb37e0c0e8ef47b182))
+
+
+
+
+
 ## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
 
 

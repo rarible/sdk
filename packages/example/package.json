@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.48",
+  "version": "0.13.49-beta.0",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -33,7 +33,7 @@
     "@rarible/connector-walletconnect-v2": "^0.13.48",
     "@rarible/connector-walletlink": "^0.13.48",
     "@rarible/flow-sdk": "~0.5.70",
-    "@rarible/sdk": "^0.13.48",
+    "@rarible/sdk": "^0.13.49-beta.0",
     "@rarible/web3-ethereum": "^0.13.48",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
