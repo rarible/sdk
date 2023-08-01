@@ -123,6 +123,7 @@ export function createRaribleSdk(
 		sessionId,
 		apiKey: config?.apiKey,
 		providerId: config?.context?.providerId,
+		providerMeta: config?.context?.providerMeta,
 	}
 	setupMiddleware({
 		apis,
