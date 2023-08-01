@@ -14,7 +14,7 @@ export async function getSdkContext(sdkContext: ISdkContext): Promise<IGetSdkCon
 		data.providerId = sdkContext.providerId
 	}
 	if (sdkContext.providerMeta !== undefined) {
-		data.providerMeta = sdkContext.providerMeta
+		data.providerMeta = JSON.stringify(sdkContext.providerMeta)
 	}
 	if (sdkContext.apiKey !== undefined) {
 		data.apiKey = sdkContext.apiKey
@@ -26,5 +26,5 @@ export type ExternalContext = {
 	providerId?: string
 	providerMeta?: Record<string, string>
 }
-export type IGetSdkContextResult = Record<string, string> & ExternalContext
+export type IGetSdkContextResult = Record<string, string>
 export type IGetSdkContext = () => Promise<IGetSdkContextResult>

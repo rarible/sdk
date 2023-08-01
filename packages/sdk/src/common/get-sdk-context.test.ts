@@ -22,7 +22,7 @@ describe("get sdk context", () => {
 		expect(context.sessionId).toBeTruthy()
 		expect(context.apiKey).toEqual("API_KEY")
 		expect(context.providerId).toEqual("WalletConnect")
-		expect(context.providerMeta?.connectorName).toEqual("metamask")
+		expect(context.providerMeta).toEqual("{\"connectorName\":\"metamask\"}")
 		expect(context["wallet.blockchain"]).toEqual("ETHEREUM")
 		expect(context["wallet.address"]).toEqual("0x22d491bde2303f2f43325b2108d26f1eaba1e32b")
 		expect(context["wallet.chainId"]).toEqual(300500)
