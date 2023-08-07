@@ -29,12 +29,14 @@ export function mapEthereumWallet<O>(
 	})
 }
 
-function getEvmBlockchain(chainId: number): Blockchain.POLYGON | Blockchain.ETHEREUM {
+function getEvmBlockchain(chainId: number): Blockchain.POLYGON | Blockchain.ETHEREUM | Blockchain.MANTLE {
 	switch (chainId) {
 		case 137: return Blockchain.POLYGON
 		case 80001: return Blockchain.POLYGON
 		case 300501: return Blockchain.POLYGON
 		case 200501: return Blockchain.POLYGON
+		case 5000: return Blockchain.MANTLE
+		case 5001: return Blockchain.MANTLE
 		default: return Blockchain.ETHEREUM
 	}
 }

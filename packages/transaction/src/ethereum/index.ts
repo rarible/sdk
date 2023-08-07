@@ -20,6 +20,9 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 			case "mumbai":
 			case "polygon":
 				return Blockchain.POLYGON
+			case "mantle":
+			case "testnet-mantle":
+				return Blockchain.MANTLE
 			default:
 				return Blockchain.ETHEREUM
 		}
@@ -50,6 +53,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://polygonscan.com/tx/${this.hash()}`
 			case "testnet":
 				return `https://goerli.etherscan.io/tx/${this.hash()}`
+			case "mantle":
+				return `https://explorer.mantle.xyz/tx/${this.hash()}`
+			case "testnet-mantle":
+				return `https://explorer.testnet.mantle.xyz/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

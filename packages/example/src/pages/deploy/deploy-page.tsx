@@ -23,6 +23,7 @@ import { DeployForm } from "./deploy-form"
 function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
 		case Blockchain.POLYGON:
+		case Blockchain.MANTLE:
 		case WalletType.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
@@ -81,12 +82,15 @@ export function DeployPage() {
 			<CommentedBlock sx={{ my: 2 }} comment={<CollectionDeployComment/>}>
 				<form
 					onSubmit={handleSubmit(async (formData) => {
+
 						try {
-							if (
-								formData["blockchain"] === Blockchain.ETHEREUM
-                && (connection.state as any)?.connection.blockchain === Blockchain.POLYGON
-							) {
-								formData.blockchain = Blockchain.POLYGON
+							if (formData["blockchain"] === Blockchain.ETHEREUM) {
+								if ((connection.state as any)?.connection.blockchain === Blockchain.POLYGON) {
+									formData.blockchain = Blockchain.POLYGON
+								}
+								if ((connection.state as any)?.connection.blockchain === Blockchain.MANTLE) {
+									formData.blockchain = Blockchain.MANTLE
+								}
 							}
 							setComplete(await connection.sdk?.nft.createCollection(getDeployRequest(formData)))
 						} catch (e) {
@@ -104,7 +108,7 @@ export function DeployPage() {
 								label="Blockchain"
 							>
 								<MenuItem value={WalletType.ETHEREUM}>
-									{Blockchain.ETHEREUM} / {Blockchain.POLYGON}
+									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE}
 								</MenuItem>
 								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>

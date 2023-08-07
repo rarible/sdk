@@ -81,7 +81,9 @@ export class EthereumCreateCollection {
 	}
 
 	async createCollectionSimplified(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {
-		if (request.blockchain !== Blockchain.ETHEREUM && request.blockchain !== Blockchain.POLYGON) {
+		if (request.blockchain !== Blockchain.ETHEREUM
+			&& request.blockchain !== Blockchain.POLYGON
+			&& request.blockchain !== Blockchain.MANTLE) {
 			throw new Error("Wrong blockchain")
 		}
 

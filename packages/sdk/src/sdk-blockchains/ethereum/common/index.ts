@@ -29,10 +29,11 @@ import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/doma
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import type { UnionPart } from "../../../types/order/common"
 
-export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
+export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
 export const EVMBlockchains: EVMBlockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.POLYGON,
+	Blockchain.MANTLE,
 ]
 
 export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
@@ -190,6 +191,9 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 		case "polygon":
 		case "staging-polygon":
 			return Blockchain.POLYGON
+		case "mantle":
+		case "testnet-mantle":
+			return Blockchain.MANTLE
 		default:
 			throw new Error(`Unsupported network: ${network}`)
 	}

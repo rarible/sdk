@@ -23,13 +23,13 @@ export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBl
  * Ethereum create collection argument types
  */
 export interface EthereumCreatePublicCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.ETHEREUM | Blockchain.POLYGON>,
+	AbstractCreateCollectionSimplified<Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE>,
 	EthereumCreateCollectionSimplifiedCommon {
 	isPublic: true
 }
 
 export interface EthereumCreatePrivateCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.ETHEREUM | Blockchain.POLYGON>,
+	AbstractCreateCollectionSimplified<Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE>,
 	EthereumCreateCollectionSimplifiedCommon {
 	isPublic: false
 	operators: UnionAddress[]

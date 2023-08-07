@@ -507,6 +507,7 @@ function getEthereumNetworkConfig(
 	switch (blockchain) {
 		case "ETHEREUM": return sdkConfig.ethereum
 		case "POLYGON": return sdkConfig.polygon
+		case "MANTLE": return sdkConfig.mantle
 		default: return
 	}
 }

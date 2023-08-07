@@ -1,11 +1,5 @@
-import type {
-	EthErc20AssetType,
-	EthEthereumAssetType,
-	TezosXTZAssetType,
-	FlowAssetTypeFt } from "@rarible/api-client"
-import {
-	Blockchain,
-} from "@rarible/api-client"
+import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetTypeFt, TezosXTZAssetType } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
 import type { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
@@ -68,6 +62,11 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 			if (type === "NATIVE") {
 				return getEthNative(blockchain)
 			} else if (type === "TOKEN") {
+				return getERC20(contract)
+			}
+			throw new Error("Unsupported option subtype")
+		case Blockchain.MANTLE:
+			if (type === "TOKEN") {
 				return getERC20(contract)
 			}
 			throw new Error("Unsupported option subtype")
@@ -201,6 +200,31 @@ export function getCurrencyOptions(
 					}
 					res.push({ type: "TOKEN", label: "Custom ERC20", blockchain: Blockchain.POLYGON, contract: null })
 					return res
+				}
+				return []
+			case Blockchain.MANTLE:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.MANTLE,
+								contract: "MANTLE:0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "MANTLE",
+								blockchain: Blockchain.MANTLE,
+								contract: "MANTLE:0x0000000000000000000000000000000000000000",
+							})
+							break
+						default:
+					}
+					 return res
 				}
 				return []
 			case Blockchain.IMMUTABLEX:
