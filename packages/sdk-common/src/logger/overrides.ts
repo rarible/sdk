@@ -30,7 +30,6 @@ const EVM_WARN_MESSAGES = [
 	"Please enable Blind signing or Contract data in the Ethereum app Settings",
 	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 	"Link Window Closed",
-	"Popup closed",
 	"nonce too low",
 	"transaction would cause overdraft",
 ].map(msg => msg.toLowerCase())
@@ -96,6 +95,17 @@ export const COMMON_INFO_MESSAGES = [
 	"The requested account and/or method has not been authorized by the user",
 	"user did not approve",
 	"User denied requested chains",
+	"Popup closed",
+	"Please verify email address",
+	"User denied account access",
+	"Der Nutzer hat die Anfrage abgelehnt",
+	"The user rejected the request",
+	"El usuario rechazó la solicitud",
+	"L'utilisateur a rejeté la demande",
+	"O usuário rejeitou a solicitação",
+	"The user rejected the request through Exodus",
+	"Permission denied, denied",
+	"user closed popup",
 ].map(msg => msg.toLowerCase())
 
 const shortInfoMessages = ["cancel", "canceled", "cancelled", "rejected"]
