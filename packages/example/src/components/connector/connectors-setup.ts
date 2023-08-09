@@ -26,6 +26,7 @@ import {
 } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
+import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
@@ -183,6 +184,34 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		chainId: ethChainId,
 	}))
 
+	const walletConnectV2 = mapEthereumWallet(new WalletConnectConnectionProviderV2({
+		projectId: "4f9fb88799dfa8d3654bdd130be840f2",
+		chains: [ethChainId],
+		optionalChains: Object.keys(ethereumRpcMap)
+			.map(x => +x)
+			.filter(x => x !== ethChainId),
+		showQrModal: true,
+		methods: [
+			"eth_sendTransaction",
+			"personal_sign",
+		],
+		optionalMethods: [
+			"message",
+			"disconnect",
+			"connect",
+		],
+		events: [
+			"chainChanged",
+			"accountsChanged",
+		],
+		optionalEvents: [
+			"message",
+			"disconnect",
+			"connect",
+		],
+		rpcMap: ethereumRpcMap,
+	}))
+
 	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
 	const solflareConnect = mapSolanaWallet(new SolflareConnectionProvider({
 		network: environment === "prod" ? "mainnet-beta" : "devnet",
@@ -205,6 +234,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(beacon)
 		.add(fcl)
 		.add(walletConnect)
+		.add(walletConnectV2)
 		.add(phantomConnect)
 		.add(solflareConnect)
 		.add(imxConnector)
