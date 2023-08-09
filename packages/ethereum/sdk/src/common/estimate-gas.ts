@@ -22,16 +22,19 @@ export async function estimateGas(
 					console.error("Unable to get tx data for log", e)
 				}
 
-				console.error({
-					method: callInfo.method,
-					provider: callInfo.provider,
+				const logData = {
+					level: "ESTIMATE_GAS_ERRORS",
+					method: `${callInfo.method}.estimateGas`,
 					message: getErrorMessageString(err),
 					from: callInfo.from,
+					provider: callInfo.provider,
 					args: JSON.stringify(callInfo.args),
 					to: callInfo.contract,
 					value: options?.value,
 					data,
-				})
+				}
+				console.error(logData)
+				logger.instance.raw(logData)
 			}
 		} catch (e) {
 			console.error("Error while sending logs", e, err)
