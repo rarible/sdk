@@ -106,6 +106,7 @@ export const COMMON_INFO_MESSAGES = [
 	"The user rejected the request through Exodus",
 	"Permission denied, denied",
 	"user closed popup",
+	"Connection request reset. Please try again",
 ].map(msg => msg.toLowerCase())
 
 const shortInfoMessages = ["cancel", "canceled", "cancelled", "rejected"]
