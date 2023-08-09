@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+
+### Bug Fixes
+
+* **MPX-2292:** log estimate gas errors ([#516](https://github.com/rarible/sdk/issues/516)) ([6d593cf](https://github.com/rarible/sdk/commit/6d593cfc83593ae85b0ee22aab280e8de1dab596))
+
+
+
+
+
 ## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
 
 **Note:** Version bump only for package @rarible/connector-walletconnect-v2

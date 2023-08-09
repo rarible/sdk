@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+
+### Bug Fixes
+
+* **MPX-2043:** fix wallet connect logs ([#517](https://github.com/rarible/sdk/issues/517)) ([63024f6](https://github.com/rarible/sdk/commit/63024f6af348ee0469c9a90ad14b77c065a016a7))
+* **MPX-2292:** log estimate gas errors ([#516](https://github.com/rarible/sdk/issues/516)) ([6d593cf](https://github.com/rarible/sdk/commit/6d593cfc83593ae85b0ee22aab280e8de1dab596))
+
+
+
+
+
 ## [0.13.49-beta.0](https://github.com/rarible/sdk/compare/v0.13.48...v0.13.49-beta.0) (2023-08-01)
 
 
