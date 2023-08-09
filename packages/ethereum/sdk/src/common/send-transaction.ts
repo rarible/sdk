@@ -34,28 +34,7 @@ export function getSendWithInjects(injects: {
 
 		try {
 			await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-		} catch (err) {
-			if (logger?.level && logger.level >= LogsLevel.ERROR) {
-				let data = undefined
-				try {
-					data = await functionCall.getData()
-				} catch (e: any) {
-					console.error("Unable to get tx data for log", e)
-				}
-
-				logger.instance.raw({
-					level: "ERROR",
-					method: `${callInfo.method}.estimateGas`,
-					message: getErrorMessageString(err),
-					from: callInfo.from,
-					provider: callInfo.provider,
-					args: JSON.stringify(callInfo.args),
-					to: callInfo.contract,
-					value: options?.value,
-					data,
-				})
-			}
-		}
+		} catch (err) {}
 
 		try {
 			const tx = await functionCall.send(options)
@@ -125,28 +104,7 @@ export function getSimpleSendWithInjects(injects: {
 
 		try {
 			await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-		} catch (err) {
-			if (logger?.level && logger.level >= LogsLevel.ERROR) {
-				let data = undefined
-				try {
-					data = await functionCall.getData()
-				} catch (e: any) {
-					console.error("Unable to get tx data for log", e)
-				}
-
-				logger.instance.raw({
-					level: "ERROR",
-					method: `${callInfo.method}.estimateGas`,
-					message: getErrorMessageString(err),
-					from: callInfo.from,
-					provider: callInfo.provider,
-					args: JSON.stringify(callInfo.args),
-					to: callInfo.contract,
-					value: options?.value,
-					data,
-				})
-			}
-		}
+		} catch (err) {}
 
 		try {
 			const tx = await functionCall.send(options)
