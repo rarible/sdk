@@ -342,7 +342,9 @@ export class EthereumBid {
 		const assetType = this.getAssetTypeForConvert(request)
 		if (assetType["@type"] === "ERC20") {
 			const wrappedCurrency = this.getWrappedCurrencyAddress()
-			if (compareCaseInsensitive(assetType.contract, wrappedCurrency)) {
+			const blockchain = wrappedCurrency.split(":")[0]
+
+			if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(assetType.contract, wrappedCurrency)) {
 				const feeBp = request.originFees.reduce((prev, curr) => prev + curr.value, 0)
 				return this.getConvertableValueCommon(assetType, request.price, request.amount, feeBp)
 			}
