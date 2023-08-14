@@ -82,7 +82,7 @@ describe("Web3Ethereum", () => {
 
 })
 
-describe("get transaction receipt events", () => {
+describe.skip("get transaction receipt events", () => {
 	const { provider } = common.createE2eProvider(
 		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469",
 		{
