@@ -34,6 +34,7 @@ import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
+import { extractBlockchain } from "../../common/extract-blockchain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -220,7 +221,7 @@ export class EthereumBid {
 				const currency = getCurrencyAssetType(request.currency)
 				if (currency["@type"] === "ERC20") {
 					const wrappedContract = this.getWrappedCurrencyAddress()
-					const blockchain = wrappedContract.split(":")[0]
+					const blockchain = extractBlockchain(wrappedContract)
 					if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(currency.contract, wrappedContract)) {
 						const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
 						const quantity = getOrderAmount(request.amount, collection)
@@ -307,7 +308,7 @@ export class EthereumBid {
 				checkPayouts(request.payouts)
 				const wrappedAddress = this.getWrappedCurrencyAddress()
 				const currency = getCurrencyAssetType(request.currency)
-				const blockchain = wrappedAddress.split(":")[0]
+				const blockchain = extractBlockchain(wrappedAddress)
 
 				if (blockchain !== Blockchain.MANTLE && currency["@type"] === "ERC20" && compareCaseInsensitive(currency.contract, wrappedAddress)) {
 					const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
@@ -342,7 +343,7 @@ export class EthereumBid {
 		const assetType = this.getAssetTypeForConvert(request)
 		if (assetType["@type"] === "ERC20") {
 			const wrappedCurrency = this.getWrappedCurrencyAddress()
-			const blockchain = wrappedCurrency.split(":")[0]
+			const blockchain = extractBlockchain(wrappedCurrency)
 
 			if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(assetType.contract, wrappedCurrency)) {
 				const feeBp = request.originFees.reduce((prev, curr) => prev + curr.value, 0)
