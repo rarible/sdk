@@ -34,6 +34,7 @@ function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress
 	switch (blockchain) {
 		case Blockchain.ETHEREUM:
 		case Blockchain.POLYGON:
+		case Blockchain.MANTLE:
 		case Blockchain.IMMUTABLEX:
 			return toUnionAddress("ETHEREUM:" + address)
 		case Blockchain.FLOW:

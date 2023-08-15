@@ -31,10 +31,10 @@ import type {
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
-import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
-import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
+import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
+import { extractBlockchain } from "../../common/extract-blockchain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -43,7 +43,8 @@ import {
 	convertToEthereumAddress,
 	convertToEthereumAssetType,
 	getEthereumItemId,
-	getEVMBlockchain, getOrderAmount,
+	getEVMBlockchain,
+	getOrderAmount,
 	getOrderFeesSum,
 	getOriginFeeSupport,
 	getPayoutsSupport,
@@ -220,7 +221,8 @@ export class EthereumBid {
 				const currency = getCurrencyAssetType(request.currency)
 				if (currency["@type"] === "ERC20") {
 					const wrappedContract = this.getWrappedCurrencyAddress()
-					if (compareCaseInsensitive(currency.contract, wrappedContract)) {
+					const blockchain = extractBlockchain(wrappedContract)
+					if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(currency.contract, wrappedContract)) {
 						const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
 						const quantity = getOrderAmount(request.amount, collection)
 						const value = await this.getConvertableValueCommon(currency, request.price, quantity, feeBp)
@@ -306,8 +308,9 @@ export class EthereumBid {
 				checkPayouts(request.payouts)
 				const wrappedAddress = this.getWrappedCurrencyAddress()
 				const currency = getCurrencyAssetType(request.currency)
+				const blockchain = extractBlockchain(wrappedAddress)
 
-				if (currency["@type"] === "ERC20" && compareCaseInsensitive(currency.contract, wrappedAddress)) {
+				if (blockchain !== Blockchain.MANTLE && currency["@type"] === "ERC20" && compareCaseInsensitive(currency.contract, wrappedAddress)) {
 					const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
 					const quantity = getOrderAmount(request.amount, collection)
 					const value = await this.getConvertableValueCommon(currency, request.price, quantity, feeBp)
@@ -340,7 +343,9 @@ export class EthereumBid {
 		const assetType = this.getAssetTypeForConvert(request)
 		if (assetType["@type"] === "ERC20") {
 			const wrappedCurrency = this.getWrappedCurrencyAddress()
-			if (compareCaseInsensitive(assetType.contract, wrappedCurrency)) {
+			const blockchain = extractBlockchain(wrappedCurrency)
+
+			if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(assetType.contract, wrappedCurrency)) {
 				const feeBp = request.originFees.reduce((prev, curr) => prev + curr.value, 0)
 				return this.getConvertableValueCommon(assetType, request.price, request.amount, feeBp)
 			}
@@ -426,6 +431,10 @@ export class EthereumBid {
 			.create({
 				id: "convert" as const,
 				run: async (request: OrderCommon.OrderUpdateRequest) => {
+					if (blockchain === Blockchain.MANTLE) {
+						return request
+					}
+
 					const wethContractAddress = this.getWrappedCurrencyAddress()
 					if (order.make.assetType.assetClass === "ERC20" && order.make.assetType.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
 						const asset = this.convertAssetType(order.make.assetType) as RequestCurrencyAssetType

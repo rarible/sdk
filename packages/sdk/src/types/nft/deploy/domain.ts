@@ -17,6 +17,7 @@ export interface CreateCollectionAsset extends Record<CreateCollectionBlockchain
 export type CreateCollectionBlockchains =
 	ApiClient.Blockchain.ETHEREUM |
 	ApiClient.Blockchain.POLYGON |
+	ApiClient.Blockchain.MANTLE |
 	ApiClient.Blockchain.TEZOS |
 	ApiClient.Blockchain.SOLANA
 

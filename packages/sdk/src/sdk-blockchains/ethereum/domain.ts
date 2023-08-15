@@ -6,4 +6,5 @@ export interface IEthereumSdkConfig {
 	marketplaceMarker?: string
 	[Blockchain.ETHEREUM]?: EthereumNetworkConfig
 	[Blockchain.POLYGON]?: EthereumNetworkConfig
+	[Blockchain.MANTLE]?: EthereumNetworkConfig
 }

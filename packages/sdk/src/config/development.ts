@@ -8,4 +8,5 @@ export const developmentConfig: RaribleSdkConfig = {
 	polygonNetwork: "dev-polygon",
 	solanaNetwork: "devnet",
 	immutablexNetwork: "testnet",
+	mantleNetwork: "testnet-mantle",
 }

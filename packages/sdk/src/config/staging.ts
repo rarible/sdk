@@ -8,4 +8,5 @@ export const stagingConfig: RaribleSdkConfig = {
 	polygonNetwork: "staging-polygon",
 	solanaNetwork: "devnet",
 	immutablexNetwork: "testnet",
+	mantleNetwork: "testnet-mantle",
 }
