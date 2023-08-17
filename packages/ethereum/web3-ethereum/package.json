@@ -26,9 +26,10 @@
     "@rarible/sdk-common": "^0.13.49",
     "eth-rpc-errors": "^4.0.3",
     "exponential-backoff": "^3.1.0",
-    "web3-eth-abi": ">=1.5.0 <1.9.0",
-    "web3-eth-contract": ">=1.5.0 <1.9.0",
-    "web3-utils": ">=1.5.0 <1.9.0"
+    "web3-core": "^4.1.0",
+    "web3-eth-abi": "^4.1.0",
+    "web3-eth-contract": "^4.0.4",
+    "web3-utils": "^4.0.4"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.46",
@@ -43,9 +44,12 @@
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2"
   },
+  "resolutions": {
+    "web3-core": "4.1.0"
+  },
   "peerDependencies": {
     "tslib": "^2.3.1",
-    "web3": ">=1.5.0 <1.9.0"
+    "web3": "^4.1.0"
   },
   "publishConfig": {
     "access": "public",

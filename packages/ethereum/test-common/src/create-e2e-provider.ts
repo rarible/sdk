@@ -3,8 +3,10 @@ import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
+//@ts-ignore
+import HDWalletProvider from "@truffle/hdwallet-provider"
 import { randomWord } from "@rarible/types"
-import type { provider as Web3Provider } from "web3-core"
+
 
 export function createE2eWallet(pk: string = randomWord()): Wallet {
 	return new Wallet(Buffer.from(fixPK(pk), "hex"))
@@ -19,7 +21,8 @@ export type E2EProviderConfig = {
 }
 
 export class E2EProvider {
-	readonly provider: Web3ProviderEngine
+	// readonly provider: Web3ProviderEngine
+	readonly provider: any
 	readonly config: E2EProviderConfig
 	readonly wallet: Wallet
 	readonly web3: Web3
@@ -30,9 +33,12 @@ export class E2EProvider {
 	) {
 		this.config = this.createConfig(configOverride)
 		this.wallet = createE2eWallet(pk)
-		const provider = this.config.customEngine || this.createEngine(this.config.pollingInterval)
-		provider.addProvider(this.createWalletProvider())
-		provider.addProvider(this.createRpcProvider())
+		const provider = new HDWalletProvider({
+			privateKeys: [pk],
+			providerOrUrl: this.config.rpcUrl,
+			pollingInterval: 8000,
+			chainId: configOverride.chainId,
+		})
 		this.provider = provider
 		this.web3 = new Web3(provider as any)
 	}
@@ -65,9 +71,9 @@ export class E2EProvider {
 		return new RpcSubprovider({ rpcUrl: this.config.rpcUrl })
 	}
 
-	start = () => this.provider.start()
+	start = () => this.provider.engine.start()
 
-	stop = () => this.provider.stop()
+	stop = () => this.provider.engine.stop()
 }
 
 function fixPK(pk: string) {
@@ -81,7 +87,7 @@ export function createE2eProvider(pk?: string, config?: Partial<E2EProviderConfi
 	afterAll(() => provider.stop())
 
 	return {
-		provider: provider.provider as Web3Provider,
+		provider: provider.provider as any,
 		wallet: provider.wallet,
 	}
 }

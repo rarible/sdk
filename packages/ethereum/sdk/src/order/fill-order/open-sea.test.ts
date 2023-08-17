@@ -19,6 +19,7 @@ import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
+import type { OPENSEA_EXCHANGE_ABI, proxyRegistryAbi, tokenTransferProxyAbi } from "@rarible/ethereum-sdk-test-common/src"
 import { getSimpleSendWithInjects, sentTx } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getEthereumConfig } from "../../config"
@@ -91,9 +92,9 @@ describe.skip("fillOrder: Opensea orders", function () {
 		exchangeWrapper: deployTestExchangeWrapper(web3),
 	})
 
-	let wyvernExchange: Contract
-	let wyvernProxyRegistry: Contract
-	let wyvernTokenTransferProxy: Contract
+	let wyvernExchange: Contract<typeof OPENSEA_EXCHANGE_ABI>
+	let wyvernProxyRegistry: Contract<typeof proxyRegistryAbi>
+	let wyvernTokenTransferProxy: Contract<typeof tokenTransferProxyAbi>
 	let proxyRegistryEthContract: EthereumContract
 
 	beforeAll(async () => {
@@ -103,13 +104,13 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 		wyvernProxyRegistry = await deployOpenseaProxyRegistry(web3)
 		console.log("deployed wyvernProxyRegistry", wyvernProxyRegistry.options.address)
-		wyvernTokenTransferProxy = await deployOpenseaTokenTransferProxy(web3, wyvernProxyRegistry.options.address)
+		wyvernTokenTransferProxy = await deployOpenseaTokenTransferProxy(web3, wyvernProxyRegistry.options.address!)
 		console.log("deployed wyvernTokenTransferProxy", wyvernTokenTransferProxy.options.address)
 
 		wyvernExchange = await deployOpenSeaExchangeV1(
 			web3,
-			wyvernProxyRegistry.options.address,
-			wyvernTokenTransferProxy.options.address,
+			wyvernProxyRegistry.options.address!,
+			wyvernTokenTransferProxy.options.address!,
 			ZERO_ADDRESS, //ETH
 			feeRecipient
 		)
@@ -117,20 +118,20 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 		await sentTx(
 			it.exchangeWrapper.methods.__ExchangeWrapper_init(
-				wyvernExchange.options.address,
+				wyvernExchange.options.address!,
 				ZERO_ADDRESS,
 			),
 			{ from: sender1Address }
 		)
-		config.exchange.openseaV1 = toAddress(wyvernExchange.options.address)
-		config.openSea.proxyRegistry = toAddress(wyvernProxyRegistry.options.address)
-		config.transferProxies.openseaV1 = toAddress(wyvernTokenTransferProxy.options.address)
-		config.openSea.merkleValidator = toAddress(it.merkleValidator.options.address)
-		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
+		config.exchange.openseaV1 = toAddress(wyvernExchange.options.address!)
+		config.openSea.proxyRegistry = toAddress(wyvernProxyRegistry.options.address!)
+		config.transferProxies.openseaV1 = toAddress(wyvernTokenTransferProxy.options.address!)
+		config.openSea.merkleValidator = toAddress(it.merkleValidator.options.address!)
+		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address!)
 
 		proxyRegistryEthContract = await createOpenseaProxyRegistryEthContract(
 			ethereum1,
-			toAddress(wyvernProxyRegistry.options.address)
+			toAddress(wyvernProxyRegistry.options.address!)
 		)
 
 
@@ -152,13 +153,15 @@ describe.skip("fillOrder: Opensea orders", function () {
 	async function mintTestAsset(asset: Asset, sender: Address): Promise<any> {
 		switch (asset.assetType.assetClass) {
 			case "ERC20": {
-				return await sentTx(it.testErc20.methods.mint(sender, toBn(asset.value).multipliedBy(10)), { from: sender })
+				return await sentTx(
+					it.testErc20.methods.mint(sender, toBn(asset.value).multipliedBy(10).toFixed()), { from: sender }
+				)
 			}
 			case "ERC721": {
 				return await sentTx(it.testErc721.methods.mint(sender, asset.assetType.tokenId, "0x"), { from: sender })
 			}
 			case "ERC1155": {
-				return await sentTx(it.testErc1155.methods.mint(sender, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10), "0x"), { from: sender })
+				return await sentTx(it.testErc1155.methods.mint(sender, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10).toFixed(), "0x"), { from: sender })
 			}
 			default:
 		}
@@ -167,7 +170,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 	async function getBalance(asset: Asset, sender: Address): Promise<string> {
 		switch (asset.assetType.assetClass) {
 			case "ETH": {
-				return toBn(await web3.eth.getBalance(sender)).toString()
+				return toBn(await ethereum1.getBalance(sender)).toString()
 			}
 			case "ERC20": {
 				return toBn(await it.testErc20.methods.balanceOf(sender).call()).toString()
@@ -189,7 +192,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 					...side,
 					assetType: {
 						...side.assetType,
-						contract: toAddress(it.testErc20.options.address),
+						contract: toAddress(it.testErc20.options.address!),
 					},
 				}
 			}
@@ -198,7 +201,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 					...side,
 					assetType: {
 						...side.assetType,
-						contract: toAddress(it.testErc721.options.address),
+						contract: toAddress(it.testErc721.options.address!),
 					},
 				}
 			}
@@ -207,7 +210,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 					...side,
 					assetType: {
 						...side.assetType,
-						contract: toAddress(it.testErc1155.options.address),
+						contract: toAddress(it.testErc1155.options.address!),
 					},
 				}
 			}
@@ -245,7 +248,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 	})
 
 	test("should calculate valid hash", async () => {
-		const exchangeContract = createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address))
+		const exchangeContract = createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address!))
 
 		const order: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
@@ -254,7 +257,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
@@ -381,7 +384,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
@@ -402,10 +405,10 @@ describe.skip("fillOrder: Opensea orders", function () {
 			ethereum1,
 			send1,
 			{
-				openseaV1: toAddress(wyvernExchange.options.address),
+				openseaV1: toAddress(wyvernExchange.options.address!),
 				v1: ZERO_ADDRESS,
 				v2: ZERO_ADDRESS,
-				wrapper: toAddress(it.exchangeWrapper.options.address),
+				wrapper: toAddress(it.exchangeWrapper.options.address!),
 				x2y2: ZERO_ADDRESS,
 			},
 			checkChainId.bind(null, ethereum1, config),
@@ -430,7 +433,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 				feeRecipient: toAddress(sender2Address),
 			},
@@ -527,7 +530,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 				order.data.takerProtocolFee = toBigNumber("500")
 				order.data.makerRelayerFee = toBigNumber("500")
 				order.data.makerProtocolFee = toBigNumber("500")
-				order.data.exchange = toAddress(wyvernExchange.options.address)
+				order.data.exchange = toAddress(wyvernExchange.options.address!)
 				order.data.feeRecipient = toAddress(feeRecipient)
 				order.maker = toAddress(nftOwner)
 
@@ -566,7 +569,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			const nftBuyerEthereum = ethereum1
 
 			beforeEach(async () => {
-				order.data.exchange = toAddress(wyvernExchange.options.address)
+				order.data.exchange = toAddress(wyvernExchange.options.address!)
 				order.data.makerRelayerFee = toBigNumber("500")
 				order.data.makerProtocolFee = toBigNumber("500")
 				order.data.takerRelayerFee = toBigNumber("500")
@@ -598,7 +601,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 		})
 
 	async function prepareSimpleOrdersForTest() {
-		const exchangeContract = await createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address))
+		const exchangeContract = await createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address!))
 
 		const sell: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
@@ -607,7 +610,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 				feeRecipient,
 			},

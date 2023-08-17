@@ -1,12 +1,16 @@
-import type { ContractSendMethod, SendOptions } from "web3-eth-contract"
-import type { PromiEvent, TransactionReceipt } from "web3-core"
 import type { GatewayControllerApi } from "@rarible/ethereum-api-client"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
+import {
+	getPromiEventConfirmationPromise,
+	getPromiEventHashPromise,
+} from "@rarible/web3-ethereum/src/utils/to-promises"
+import type { NonPayableMethodObject, PayableMethodObject } from "web3-eth-contract"
+import type { AbiFunctionFragment, ContractMethod } from "web3-types"
+import type { PayableTxOptions } from "web3-eth-contract/src/types"
 import { LogsLevel } from "../types"
 import type { ILoggerConfig } from "./logger/logger"
 import { getErrorMessageString } from "./logger/logger"
 import { estimateGas } from "./estimate-gas"
-
 export type SendFunction = (
 	functionCall: EthereumFunctionCall, options?: EthereumSendOptions,
 ) => Promise<EthereumTransaction>
@@ -157,32 +161,22 @@ function getTxData(tx: EthereumTransaction) {
 	}
 }
 
-export async function sentTx(source: ContractSendMethod, options: SendOptions): Promise<string> {
-	const event = source.send({ ...options, gas: 3000000 })
-	return waitForHash(event)
+export async function sentTx(source: BoundType, options: PayableTxOptions): Promise<string> {
+	const event = source.send({ ...options, gas: "3000000" })
+	return getPromiEventHashPromise(event)
 }
 
-export async function sentTxConfirm(source: ContractSendMethod, options: SendOptions): Promise<string> {
-	const event = source.send({ ...options, gas: 3000000 })
-	return waitForConfirmation(event)
-}
+export type ContractBoundMethod<
+	Abi extends AbiFunctionFragment,
+	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
+> = (
+	...args: Method["Inputs"]
+) => Method["Abi"]["stateMutability"] extends "payable" | "pure"
+	? PayableMethodObject<Method["Inputs"], Method["Outputs"]>
+	: NonPayableMethodObject<Method["Inputs"], Method["Outputs"]>
 
-export async function waitForHash<T>(promiEvent: PromiEvent<T>): Promise<string> {
-	return new Promise((resolve, reject) => {
-		promiEvent.once("transactionHash", hash => resolve(hash))
-		promiEvent.once("error", error => reject(error))
-	})
-}
-
-export async function waitForConfirmation<T>(promiEvent: PromiEvent<T>): Promise<string> {
-	return new Promise((resolve, reject) => {
-		promiEvent.once("confirmation", (confNumber: number, receipt: TransactionReceipt) => resolve(receipt.transactionHash))
-		promiEvent.once("error", error => reject(error))
-	})
-}
-export async function waitForReceipt<T>(promiEvent: PromiEvent<T>): Promise<TransactionReceipt> {
-	return new Promise((resolve, reject) => {
-		promiEvent.once("receipt", receipt => resolve(receipt))
-		promiEvent.once("error", error => reject(error))
-	})
+export type BoundType = ReturnType<ContractBoundMethod<any, any>>
+export async function sentTxConfirm(source: BoundType, options: PayableTxOptions): Promise<string> {
+	const event = source.send({ ...options, gas: "3000000" })
+	return getPromiEventConfirmationPromise(event)
 }

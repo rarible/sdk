@@ -64,7 +64,7 @@ describe("cancel order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber("10"),
 				},
 				value: toBigNumber("10"),
@@ -98,7 +98,7 @@ describe("cancel order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("11"),
 				},
 				value: toBigNumber("1"),
@@ -106,7 +106,7 @@ describe("cancel order", () => {
 			take: {
 				assetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				value: toBigNumber("10"),
 			},

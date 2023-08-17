@@ -21,6 +21,9 @@
     "@rarible/connector": "^0.13.49",
     "rollup": "^2.0.0"
   },
+  "resolutions": {
+    "web3-core": "1.5.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@types/jest": "^27.0.2",

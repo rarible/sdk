@@ -111,7 +111,7 @@ describe("bid", () => {
 			},
 			takeAssetType: {
 				assetClass: "COLLECTION",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 			},
 			price: toBn("1000000000000000000"),
 			amount: 1,
@@ -125,7 +125,7 @@ describe("bid", () => {
 			originFees: [],
 			assetType: {
 				assetClass: "ERC721",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 				tokenId: toBigNumber("1"),
 			},
 		})

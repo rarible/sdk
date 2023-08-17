@@ -1,12 +1,11 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { AbiItem } from "../../common/abi-item"
 
 export function createOpenseaContract(ethereum: Ethereum, address?: Address): EthereumContract {
 	return ethereum.createContract(OPENSEA_EXCHANGE_ABI, address)
 }
 
-export const OPENSEA_EXCHANGE_ABI: AbiItem[] = [
+export const OPENSEA_EXCHANGE_ABI = [
 	{
 		"constant": true,
 		"inputs": [],

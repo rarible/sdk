@@ -1,12 +1,12 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { AbiItem } from "../../common/abi-item"
+import type { types } from "web3"
 
 export function createSudoswapFactoryV1Contract(ethereum: Ethereum, address?: Address): EthereumContract {
 	return ethereum.createContract(SUDOSWAP_FACTORY_V1_ABI, address)
 }
 
-export const SUDOSWAP_FACTORY_V1_ABI: AbiItem[] = [
+export const SUDOSWAP_FACTORY_V1_ABI: types.ContractAbi = [
 	{
 		"inputs": [
 			{

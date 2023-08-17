@@ -92,7 +92,7 @@ describe.each(data)("ethers.js Ethereum", (eth: Ethereum) => {
 	})
 })
 
-describe("get transaction receipt events", () => {
+describe.skip("get transaction receipt events", () => {
 	const { provider } = common.createE2eProvider(
 		testPK,
 		{

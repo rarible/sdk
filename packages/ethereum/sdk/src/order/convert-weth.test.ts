@@ -25,11 +25,11 @@ describe("convert weth test", () => {
 	})
 
 	test("convert eth to weth test", async () => {
-		config.weth = toAddress(it.deployWeth.options.address)
+		config.weth = toAddress(it.deployWeth.options.address!)
 
-		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
+		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address!))
 
-		const startEthBalance = await web3.eth.getBalance(sender1Address)
+		const startEthBalance = await ethereum.getBalance(sender1Address)
 		const startBalance = await contract.functionCall("balanceOf", sender1Address).call()
 
 		const tx = await converter.convert(
@@ -40,7 +40,7 @@ describe("convert weth test", () => {
 		await tx.wait()
 
 		const finishBalance = await contract.functionCall("balanceOf", sender1Address).call()
-		const finishEthBalance = await web3.eth.getBalance(sender1Address)
+		const finishEthBalance = await ethereum.getBalance(sender1Address)
 
 		const diff = toBn(finishBalance).minus(startBalance)
 		const diffInEth = toBn(startEthBalance).minus(finishEthBalance)
@@ -50,8 +50,8 @@ describe("convert weth test", () => {
 	})
 
 	test("convert weth to eth test", async () => {
-		config.weth = toAddress(it.deployWeth.options.address)
-		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
+		config.weth = toAddress(it.deployWeth.options.address!)
+		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address!))
 		const tx = await converter.convert(
 			{ assetClass: "ETH" },
 			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },

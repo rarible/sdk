@@ -11,4 +11,9 @@ module.exports = {
 			outputDirectory: "reports",
 		}],
 	],
+	globals: {
+		crypto: {
+			getRandomValues: (arr) => require("crypto").randomBytes(arr.length),
+		},
+	},
 }

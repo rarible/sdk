@@ -1,3 +1,4 @@
+const crypto = require("crypto")
 module.exports = {
 	roots: ["<rootDir>/src"],
 	setupFiles: ["<rootDir>/jest.setup.js"],
@@ -19,4 +20,10 @@ module.exports = {
 			outputDirectory: "reports",
 		}],
 	],
+	globals: {
+		crypto: {
+			getRandomValues: (arr) => crypto.randomBytes(arr.length),
+		},
+		...crypto,
+	},
 }

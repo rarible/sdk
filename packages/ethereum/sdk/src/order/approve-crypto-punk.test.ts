@@ -39,7 +39,7 @@ describe("approve crypto punks", () => {
 		const operator = randomAddress()
 
 		const tx = await approve(
-			toAddress(it.punksMarket.options.address),
+			toAddress(it.punksMarket.options.address!),
 			sellerAddress,
 			operator,
 			0

@@ -1,10 +1,10 @@
 import { randomAddress, toAddress } from "@rarible/types"
 import type { Contract } from "web3-eth-contract"
-import { toBn } from "@rarible/utils/build/bn"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { createGanacheProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
+import type { testErc1155Abi } from "@rarible/ethereum-sdk-test-common/src"
 import { getApiConfig } from "../config/api-config"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
@@ -25,20 +25,20 @@ describe("approveErc1155", () => {
 	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
 	const approveErc1155 = approveErc1155Template.bind(null, ethereum, send)
 
-	let testErc1155: Contract
+	let testErc1155: Contract<typeof testErc1155Abi>
 	beforeAll(async () => {
 		testErc1155 = await deployTestErc1155(web3, "TST")
 	})
 
 	test("should approve", async () => {
 		const tokenId = testAddress + "b00000000000000000000003"
-		await sentTx(testErc1155.methods.mint(testAddress, tokenId, toBn(1), "123"), { from: testAddress, gas: 200000 })
+		await sentTx(testErc1155.methods.mint(testAddress, tokenId, 1, "123"), { from: testAddress, gas: "200000" })
 
 		const balance = await testErc1155.methods.balanceOf(testAddress, tokenId).call()
 		expect(balance).toEqual("1")
 
 		const operator = randomAddress()
-		await approveErc1155(toAddress(testErc1155.options.address), testAddress, operator)
+		await approveErc1155(toAddress(testErc1155.options.address!), testAddress, operator)
 
 		const result: boolean = await testErc1155.methods.isApprovedForAll(testAddress, operator).call()
 		expect(result).toBeTruthy()
@@ -46,14 +46,14 @@ describe("approveErc1155", () => {
 
 	test("should not approve if already approved", async () => {
 		const tokenId = testAddress + "b00000000000000000000002"
-		await testErc1155.methods.mint(testAddress, tokenId, toBn(5), "123").send({ from: testAddress, gas: 200000 })
+		await testErc1155.methods.mint(testAddress, tokenId, 5, "123").send({ from: testAddress, gas: "200000" })
 
 		const balance = await testErc1155.methods.balanceOf(testAddress, tokenId).call()
 		expect(balance).toEqual("5")
 
 		const operator = randomAddress()
 		await sentTx(testErc1155.methods.setApprovalForAll(operator, true), { from: testAddress })
-		const result = await approveErc1155(toAddress(testErc1155.options.address), testAddress, operator)
+		const result = await approveErc1155(toAddress(testErc1155.options.address!), testAddress, operator)
 
 		expect(result === undefined).toBeTruthy()
 	})

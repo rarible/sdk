@@ -1,27 +1,14 @@
 import type * as EthereumProvider from "@rarible/ethereum-provider"
-import type { AbiItem } from "web3-utils"
-import type { TransactionReceipt } from "web3-core"
-// @ts-ignore
-import web3EthAbi from "web3-eth-abi"
-import web3Utils from "web3-utils"
 import type { Address } from "@rarible/types"
+import { utils, eth } from "web3"
+import type { ContractAbi } from "web3"
+import type { TxReceiptNumberFormatted } from "../domain"
 
-export async function getContractMethodReceiptEvents(
-	receiptPromise: Promise<TransactionReceipt>
-): Promise<EthereumProvider.EthereumTransactionEvent[]> {
-	const receipt = await receiptPromise
-	return receipt.events ? Object.keys(receipt.events!)
-		.map(ev => receipt.events![ev])
-		.map(ev => ({
-			...ev,
-			args: ev.returnValues,
-		})) : []
-}
 
 export async function getTransactionReceiptEvents(
-	receiptPromise: Promise<TransactionReceipt>,
+	receiptPromise: Promise<TxReceiptNumberFormatted>,
 	address: Address,
-	abi: AbiItem[],
+	abi: ContractAbi,
 ): Promise<EthereumProvider.EthereumTransactionEvent[]> {
 	const eventsResponse = parseReceiptEvents(
 		abi,
@@ -39,21 +26,21 @@ export async function getTransactionReceiptEvents(
  * the execution of the transaction, those will not be parsed automatically. For
  * those cases, additional parsing effort is required.
  *
- * @param {AbiItem[]} abi The ABI of the contract.
+ * @param {ContractAbi} abi The ABI of the contract.
  * @param {string} address The address of the contract.
- * @param {TransactionReceipt} receipt The receipt to parse.
- * @returns {TransactionReceipt} The patched receipt.
+ * @param {TxReceiptNumberFormatted} receipt The receipt to parse.
+ * @returns {TxReceiptNumberFormatted} The patched receipt.
  */
 export function parseReceiptEvents(
-	abi: AbiItem[], address: Address, receipt: TransactionReceipt
+	abi: ContractAbi, address: Address, receipt: TxReceiptNumberFormatted
 ): EthereumProvider.EthereumTransactionEvent[] {
 	// @ts-ignore
 	const events = []
 
+	const eventsMap = {}
 	if (receipt.logs) {
 
-		receipt.events = {}
-
+		debugger
 		receipt.logs.forEach(function (log) {
 			// @ts-ignore
 			log.returnValues = {}
@@ -64,14 +51,10 @@ export function parseReceiptEvents(
 				data: log.data,
 				topics: log.topics,
 			}
-			// @ts-ignore
-			delete log.data
-			// @ts-ignore
-			delete log.topics
 
 			const eventNumber = log.logIndex
 			// @ts-ignore
-			receipt.events[eventNumber] = log
+			eventsMap[eventNumber] = log
 		})
 
 		// @ts-ignore
@@ -79,13 +62,13 @@ export function parseReceiptEvents(
 	}
 
 	// @ts-ignore
-	Object.keys(receipt.events).forEach(function (n) {
+	Object.keys(eventsMap).forEach(function (n) {
 		// @ts-ignore
-		const event = receipt.events[n]
+		const event = eventsMap[n]
 
-		if (web3Utils.toChecksumAddress(event.address)
+		if (utils.toChecksumAddress(event.address)
       // @ts-ignore
-      !== web3Utils.toChecksumAddress(address) || event.signature) {
+      !== utils.toChecksumAddress(address) || event.signature) {
 			return
 		}
 
@@ -94,7 +77,7 @@ export function parseReceiptEvents(
 			.map(desc => ({
 				...desc,
 				// @ts-ignore
-				signature: desc.signature || web3EthAbi.encodeEventSignature(desc),
+				signature: desc.signature || eth.abi.encodeEventSignature(desc),
 			}))
 		// @ts-ignore
 			.find(desc => desc.signature === event.raw.topics[0])
@@ -103,7 +86,7 @@ export function parseReceiptEvents(
 		event.event = descriptor.name
 		// @ts-ignore
 		event.signature = descriptor.signature
-		event.returnValues = web3EthAbi.decodeLog(
+		const decodedLogs = eth.abi.decodeLog(
 			// @ts-ignore
 			descriptor.inputs,
 			// @ts-ignore
@@ -111,12 +94,15 @@ export function parseReceiptEvents(
 			// @ts-ignore
 			event.raw.topics.slice(1)
 		)
+
+		event.returnValues = deepReplaceBigInt(decodedLogs)
+		event.args = event.returnValues
 		events.push(event)
 
 
 		delete event.returnValues.__length__
 		// @ts-ignore
-		delete receipt.events[n]
+		delete eventsMap[n]
 	})
 
 	let count = 0
@@ -124,26 +110,41 @@ export function parseReceiptEvents(
 	events.forEach(function (ev) {
 		if (ev.event) {
 			// @ts-ignore
-			if (receipt.events[ev.event]) {
+			if (eventsMap[ev.event]) {
 				// @ts-ignore
-				if (Array.isArray(receipt.events[ev.event])) {
+				if (Array.isArray(eventsMap[ev.event])) {
 					// @ts-ignore
-					receipt.events[ev.event].push(ev)
+					eventsMap[ev.event].push(ev)
 				} else {
 					// @ts-ignore
-					receipt.events[ev.event] = [receipt.events[ev.event], ev]
+					eventsMap[ev.event] = [eventsMap[ev.event], ev]
 				}
 			} else {
 				// @ts-ignore
-				receipt.events[ev.event] = ev
+				eventsMap[ev.event] = ev
 			}
 		} else {
 			// @ts-ignore
-			receipt.events[count] = ev
+			eventsMap[count] = ev
 			// @ts-ignore
 			count += 1
 		}
 	})
 
-	return receipt?.events as any
+	return eventsMap as any
+}
+
+export function deepReplaceBigInt(o: unknown): any {
+	if (Array.isArray(o)) {
+		return o.map(item => deepReplaceBigInt(item))
+	}
+	if (typeof o === "object") {
+		const clonedObject = { ...o } as Record<string, unknown>
+		return Object.keys(clonedObject).reduce((acc, key) => {
+			acc[key] = deepReplaceBigInt(acc[key])
+			return acc
+		}, clonedObject)
+	}
+	if (typeof o === "bigint") return o.toString()
+	return o
 }

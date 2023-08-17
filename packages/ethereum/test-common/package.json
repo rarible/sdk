@@ -23,8 +23,7 @@
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",
     "ganache": "^7.0.2",
-    "web3-core": ">=1.5.0 <1.9.0",
-    "web3-eth-contract": ">=1.5.0 <1.9.0",
+    "@truffle/hdwallet-provider": "^2.1.13",
     "web3-provider-engine": "^16.0.4"
   },
   "devDependencies": {
@@ -32,7 +31,7 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1",
-    "web3": ">=1.5.0 <1.9.0"
+    "web3": "^4.1.0"
   },
   "publishConfig": {
     "access": "public",

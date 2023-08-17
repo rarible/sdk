@@ -5,4 +5,9 @@ module.exports = {
 	transform: {
 		"^.+\\.ts?$": "ts-jest",
 	},
+	globals: {
+		crypto: {
+			getRandomValues: (arr) => require("crypto").randomBytes(arr.length),
+		},
+	},
 }
