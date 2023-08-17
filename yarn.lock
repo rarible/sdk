@@ -7052,21 +7052,21 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.69":
-  version "0.5.69"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.69.tgz#c024dd6272d43fd14b9c24c7a7a1d037724f4441"
-  integrity sha512-uubG0JU3o9w04if37imiJr9oZS2bvxiN7LBJYksTRe2G9TDTHasrNhZv7cNcZOHgjFv0SpKluVBT55FMZCIqPQ==
+"@rarible/flow-sdk-scripts@^0.5.71":
+  version "0.5.71"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.71.tgz#03de1e3cf83fcbdf64c329b5bb6867bc5b8bebc8"
+  integrity sha512-53k3zvXLxSDYO6Uf/uZ1Bt4aaWJtL9Fh6PT+BV/0sk02V/HuctSXD+od+TC9xV7nXIDk7ZYiWSTgugEN9wmUhg==
 
-"@rarible/flow-sdk@~0.5.70":
-  version "0.5.70"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.70.tgz#0c0900379a2b9cfe9ec03b24568bed05c786a70e"
-  integrity sha512-XlpcbFuNBbjNC3LfSZ+EHYj9hoHrPoTVV/EZc9q6DHosbu4m4rc5dCle5cSaZ/odaTalbXg5n7Owy3kHG+xd+g==
+"@rarible/flow-sdk@~0.5.71":
+  version "0.5.71"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.71.tgz#6352224c58dee0480505b9946331da8df6289789"
+  integrity sha512-nJr++Fq6x+yiqTEtnqonFeS+ctxDsfBwQldCWD0fAjSDB66iIzwJV1rezHqchaFk/9FsN4Ka5Drzh+MzeI2j9g==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "^0.5.56"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.69"
+    "@rarible/flow-sdk-scripts" "^0.5.71"
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
