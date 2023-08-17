@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+
+### Features
+
+* **MPX-2327,MPX-2305:** safe checking balance and removing fusd init ([#520](https://github.com/rarible/sdk/issues/520)) ([40aa14e](https://github.com/rarible/sdk/commit/40aa14e66098336fa00f63bdf8770df4880c4aa3))
+
+
+
+
+
 ## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
 
 
