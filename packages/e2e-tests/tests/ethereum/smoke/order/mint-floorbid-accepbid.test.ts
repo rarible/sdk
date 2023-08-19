@@ -20,6 +20,7 @@ import { acceptBid } from "../../../common/atoms-tests/accept-bid"
 import { getCurrency } from "../../../common/currency"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -65,6 +66,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -102,6 +104,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -139,6 +142,7 @@ function suites(): {
 					amount: 5,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -176,6 +180,7 @@ function suites(): {
 					amount: 5,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},

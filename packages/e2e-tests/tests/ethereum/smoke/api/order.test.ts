@@ -34,6 +34,7 @@ import {
 	getSellOrdersRaw,
 } from "../../../common/api-helpers/order-helper"
 import { bid } from "../../../common/atoms-tests/bid"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -70,6 +71,7 @@ function suites(): {
 					amount: 3,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
@@ -77,6 +79,7 @@ function suites(): {
 					amount: 5,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},

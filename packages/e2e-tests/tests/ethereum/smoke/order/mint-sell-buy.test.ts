@@ -19,6 +19,7 @@ import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -56,6 +57,7 @@ function suites(): {
 					amount: 1,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -85,6 +87,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -114,6 +117,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -143,6 +147,7 @@ function suites(): {
 					amount: 1,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -172,6 +177,7 @@ function suites(): {
 					amount: 3,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -201,6 +207,7 @@ function suites(): {
 					amount: 3,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -230,6 +237,7 @@ function suites(): {
 					amount: 3,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -259,6 +267,7 @@ function suites(): {
 					amount: 3,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},

@@ -14,6 +14,7 @@ import { getCollection } from "../../../common/helpers"
 import { mintAndSell } from "../../../common/atoms-tests/mint-and-sell"
 import { buy } from "../../../common/atoms-tests/buy"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -48,6 +49,7 @@ function suites(): {
 					currency: {
 						"@type": "ETH",
 					},
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			buyAmount: 1,
@@ -76,6 +78,7 @@ function suites(): {
 					currency: {
 						"@type": "ETH",
 					},
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			buyAmount: 1,
@@ -104,6 +107,7 @@ function suites(): {
 					currency: {
 						"@type": "ETH",
 					},
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			buyAmount: 11,
@@ -132,6 +136,7 @@ function suites(): {
 					currency: {
 						"@type": "ETH",
 					},
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			buyAmount: 11,
