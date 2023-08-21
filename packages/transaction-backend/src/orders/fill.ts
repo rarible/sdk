@@ -1,10 +1,6 @@
 import type { Request, Response } from "express"
-import fetch from "node-fetch"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toAddress } from "@rarible/types/build/address"
-import { getAddressParts, web3Provider } from "../utils"
+import { getAddressParts, getRaribleSDK } from "../utils"
 
 export async function postFillAction(req: Request, res: Response) {
 	try {
@@ -37,27 +33,29 @@ export async function postFillAction(req: Request, res: Response) {
 }
 
 async function ethereumPostFillAction(from: string, request: any, res: Response) {
-	const web3Ethereum = new Web3Ethereum({ web3: web3Provider, from })
-	const sdk = createRaribleSdk(web3Ethereum, process.env.SDK_ENV as EthereumNetwork, {
-		apiClientParams: {
-			fetchApi: fetch,
-		},
-		apiKey: process.env.RARIBLE_API_KEY,
-	})
-
 	if (request.orderId) {
-		const { address: orderId } = getAddressParts(request.orderId)
+
+		const { blockchain, address: orderId } = getAddressParts(request.orderId)
 
 		if (!orderId) {
 			return res.status(400)
 				.json({ message: "body.request.orderId should be in union format" })
 		}
 
-		request.order = await sdk.apis.order.getValidatedOrderByHash({
-			hash: orderId,
-		})
+		const sdk = getRaribleSDK(blockchain, from)
+		try {
+			request.order = await sdk.apis.order.getValidatedOrderByHash({
+				hash: orderId,
+			})
+		} catch (e) {
+			console.log(e.value)
+			return res.status(e.status)
+				.json(e.value)
+		}
+		const txData = await sdk.order.getBuyTxData({ from: toAddress(from), request })
+		return res.json(txData)
 	}
 
-	const txData = await sdk.order.getBuyTxData({ from: toAddress(from), request })
-	return res.json(txData)
+	return res.status(400)
+		.json({ message: "body.request.orderId has been missed" })
 }
