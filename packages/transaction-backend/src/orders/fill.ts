@@ -4,26 +4,24 @@ import { getAddressParts, getRaribleSDK } from "../utils"
 
 export async function postFillAction(req: Request, res: Response) {
 	try {
-		if (!req.body.request || !req.body.from) {
+		if (!req.body.request || !req.body.from || !req.body.to) {
 			return res.status(400)
-				.json({ message: "body.request or body.from has been missed" })
+				.json({ message: "body.request or body.from or body.to has been missed" })
 		}
 
-		const { blockchain, address: from } = getAddressParts(req.body.from)
-
+		const from = req.body.from
 		if (from === undefined) {
 			return res.status(400)
-				.json({ message: "body.from should be in union format" })
+				.json({ message: "body.from should be in request" })
 		}
 
-		switch (blockchain) {
-			case "ETHEREUM":
-				return ethereumPostFillAction(from, req.body.request, res)
-			default:
-				return res.status(400)
-					.json({ message: "Unsupported blockchain " + blockchain })
+		const to = req.body.to
+		if (to === undefined) {
+			return res.status(400)
+				.json({ message: "body.to should be in request" })
 		}
 
+		return ethereumPostFillAction(from, to, req.body.request, res)
 	} catch (e) {
 		console.error(e)
 		return res.status(500)
@@ -32,10 +30,15 @@ export async function postFillAction(req: Request, res: Response) {
 
 }
 
-async function ethereumPostFillAction(from: string, request: any, res: Response) {
+async function ethereumPostFillAction(from: string, to: string, request: any, res: Response) {
 	if (request.orderId) {
 
 		const { blockchain, address: orderId } = getAddressParts(request.orderId)
+
+		if(blockchain !== "ETHEREUM" && blockchain !== "POLYGON" && blockchain !== "MANTLE") {
+			return res.status(400)
+				.json({ message: "Unsupported blockchain " + blockchain })
+		}
 
 		if (!orderId) {
 			return res.status(400)
@@ -43,10 +46,12 @@ async function ethereumPostFillAction(from: string, request: any, res: Response)
 		}
 
 		const sdk = getRaribleSDK(blockchain, from)
+
 		try {
 			request.order = await sdk.apis.order.getValidatedOrderByHash({
 				hash: orderId,
 			})
+			request.order.taker = to
 		} catch (e) {
 			console.log(e.value)
 			return res.status(e.status)

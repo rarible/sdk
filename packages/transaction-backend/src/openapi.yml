@@ -38,9 +38,12 @@ components:
       required:
         - request
         - from
+        - to
       properties:
         from:
-          $ref: "#/components/schemas/UnionAddress"
+          $ref: "#/components/schemas/EthereumAddress"
+        to:
+          $ref: "#/components/schemas/EthereumAddress"
         request:
           type: object
           required:
