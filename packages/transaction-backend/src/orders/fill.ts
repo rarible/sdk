@@ -42,6 +42,7 @@ async function ethereumPostFillAction(from: string, request: any, res: Response)
 		apiClientParams: {
 			fetchApi: fetch,
 		},
+		apiKey: process.env.RARIBLE_API_KEY,
 	})
 
 	if (request.orderId) {

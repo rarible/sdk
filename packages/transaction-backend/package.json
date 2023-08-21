@@ -16,11 +16,14 @@
     "copy-files": "cp ./src/openapi.yml ./build/",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit",
-    "serve": "nodemon"
+    "serve": "nodemon",
+    "get-buy-tx": "npx ts-node scripts/gettxbuy.ts",
+    "get-orders": "npx ts-node scripts/getorders.ts"
   },
   "dependencies": {
     "@rarible/protocol-ethereum-sdk": "^0.13.50-beta.1",
     "@rarible/web3-ethereum": "^0.13.50-beta.1",
+    "axios": "^1.4.0",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
