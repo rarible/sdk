@@ -1,5 +1,6 @@
-FROM node:alpine
+FROM node:16.20.0-alpine
 
+RUN apk add --update python3 py3-pip make
 RUN mkdir -p /app && chown -R node:node /app
 
 ADD ./package.json /app
