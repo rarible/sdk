@@ -60,7 +60,8 @@ describe.skip("get buy transaction", () => {
 		const response = await supertest(app)
 			.post("/v0.1/orders/fill-tx")
 			.send({
-				from: "ETHEREUM:" + buyerAddress,
+				from: buyerAddress,
+				to: buyerAddress,
 				request: {
 					order: sellOrder,
 					amount: 1,

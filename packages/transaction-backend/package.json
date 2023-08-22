@@ -16,9 +16,7 @@
     "copy-files": "cp ./src/openapi.yml ./build/",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit",
-    "serve": "nodemon",
-    "get-buy-tx": "npx ts-node scripts/gettxbuy.ts",
-    "get-orders": "npx ts-node scripts/getorders.ts"
+    "serve": "nodemon"
   },
   "dependencies": {
     "@rarible/protocol-ethereum-sdk": "^0.13.50-beta.1",
