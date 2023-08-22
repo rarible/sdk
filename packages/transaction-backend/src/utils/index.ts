@@ -13,14 +13,19 @@ export function getSdkEnv(blockchain: string) {
 	return process.env[blockchain.toUpperCase() + "_SDK_ENV"]
 }
 
+export function getBasePath(blockchain: string) {
+	return process.env[blockchain.toUpperCase() + "_API_URL"]
+}
+
 export function getRaribleSDK(blockchain: string, from: string): RaribleSdk {
 	const web3Provider = new Web3(new Web3.providers.HttpProvider(getRpcUrl(blockchain)))
 	const web3Ethereum = new Web3Ethereum({ web3: web3Provider, from })
-	if(process.env.RARIBLE_BASE_PATH) {
+	const basePath = getBasePath(blockchain)
+	if(basePath) {
 		return createRaribleSdk(web3Ethereum, getSdkEnv(blockchain) as EthereumNetwork, {
 			apiClientParams: {
 				fetchApi: fetch,
-				basePath: process.env.RARIBLE_BASE_PATH,
+				basePath: basePath,
 			},
 			apiKey: process.env.RARIBLE_API_KEY,
 		})
