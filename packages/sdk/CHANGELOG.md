@@ -8,6 +8,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
+* **wl-1780:** listing issue - series 5 redemption token ([9349e06](https://github.com/rarible/sdk/commit/9349e063ee2fe668615f53275b4c1faf631b1020))
+
+
+
+
+
+## [0.13.50-beta.2](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.2) (2023-08-23)
+
+
+### Features
+
 * **wl-1780:** Listing Issue - Series 5 Redemption Token ([3cea440](https://github.com/rarible/sdk/commit/3cea4404edab4ec185f637ad5cb619d933a0a8fb))
 
 
