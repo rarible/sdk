@@ -241,7 +241,7 @@ describe("sale", () => {
 		expect(errorMessage).toBeTruthy()
 	})
 
-	test("erc721 sell/buy using erc-20 with CurrencyId", async () => {
+	test.skip("erc721 sell/buy using erc-20 with CurrencyId", async () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({

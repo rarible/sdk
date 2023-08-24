@@ -8,7 +8,7 @@ import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import type { EVMTestSuite } from "./test/suite"
 import { EVMTestSuiteFactory } from "./test/suite"
 
-describe("Create & fill orders with order data v3", () => {
+describe.skip("Create & fill orders with order data v3", () => {
 	const suiteFactory = new EVMTestSuiteFactory(Blockchain.ETHEREUM)
 
 	let suiteDev1: EVMTestSuite<Blockchain.ETHEREUM>

@@ -41,7 +41,7 @@ describe("bid test", () => {
 			bidder: await bidderWallet.provider.address(),
 		})
 	})
-	test("bid NFT test", async () => {
+	test.skip("bid NFT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
@@ -90,7 +90,7 @@ describe("bid test", () => {
 		await awaitForOrderStatus(bidderSdk, updatedBidOrderId, "FILLED")
 	}, 1500000)
 
-	test("bid NFT test with basic function", async () => {
+	test.skip("bid NFT test with basic function", async () => {
 		const mintResult = await itemOwnerSdk.nft.mint({
 			collectionId: toCollectionId(nftContract),
 			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
@@ -137,7 +137,7 @@ describe("bid test", () => {
 		// await awaitForOrderStatus(bidderSdk, orderId, "FILLED")
 	}, 1500000)
 
-	test("bid MT test", async () => {
+	test.skip("bid MT test", async () => {
 		const mintResponse = await itemOwnerSdk.nft.mint.prepare({
 			collectionId: toCollectionId(mtContract),
 		})

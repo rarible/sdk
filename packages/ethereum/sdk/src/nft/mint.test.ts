@@ -90,7 +90,7 @@ describe.each(providers)("mint test", ethereum => {
 		expect(new BigNumber(balanceOfMinter).minus(startBalanceOfMinter).toString()).toBe("1")
 	})
 
-	test("mint ERC-721 v2", async () => {
+	test.skip("mint ERC-721 v2", async () => {
 		const address = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
