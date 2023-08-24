@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.50-beta.4](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.4) (2023-08-24)
+
+
+### Features
+
+* **wl-1780:** listing issue - series 5 redemption token ([26705db](https://github.com/rarible/sdk/commit/26705db900d9983435cf5c8e8b27305aef88a4a7))
+
+
+
+
+
 ## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
 
 
