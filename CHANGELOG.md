@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.50-beta.3](https://github.com/rarible/sdk/compare/v0.13.50-beta.2...v0.13.50-beta.3) (2023-08-24)
+
+
+### Bug Fixes
+
+* skip broken tests ([5490fd5](https://github.com/rarible/sdk/commit/5490fd5ddbb2ca3ed3a63b6d7cafc4995a6583b2))
+
+
+
+
+
 
 
 **Note:** Version bump only for package root
