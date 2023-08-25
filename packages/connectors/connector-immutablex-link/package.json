@@ -17,7 +17,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@imtbl/imx-sdk": "^1.24.0",
+    "@imtbl/imx-sdk": "^2.1.1",
     "@rarible/connector": "^0.13.50-beta.1",
     "@rarible/connector-helper": "^0.13.50-beta.1",
     "@rarible/immutable-wallet": "^0.13.37"
