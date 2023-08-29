@@ -10,7 +10,8 @@
       "allowBranch": [
         "master",
         "fix/*",
-        "beta/*"
+        "beta/*",
+        "release/*"
       ],
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
