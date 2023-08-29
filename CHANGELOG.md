@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+
+### Bug Fixes
+
+* update lerna json ([08746bc](https://github.com/rarible/sdk/commit/08746bcd429ed74a0c717c33c63255a511061614))
+
+
+### Features
+
+* bump imx sdk version ([3c7b50f](https://github.com/rarible/sdk/commit/3c7b50f3a90a98eaaa2b6053fa43ca69b848b524))
+* support new version of imx sdk ([8d8eea3](https://github.com/rarible/sdk/commit/8d8eea3b7470ede5dc0e54ae53ddb05ae7feab32))
+
+
+
+
+
 ## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
 
 
