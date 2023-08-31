@@ -217,9 +217,9 @@ export function getCurrencyOptions(
 						case"prod":
 							res.push({
 								type: "TOKEN",
-								label: "MANTLE",
+								label: "WETH",
 								blockchain: Blockchain.MANTLE,
-								contract: "MANTLE:0x0000000000000000000000000000000000000000",
+								contract: "MANTLE:0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111",
 							})
 							break
 						default:
