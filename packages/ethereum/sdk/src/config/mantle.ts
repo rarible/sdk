@@ -8,9 +8,9 @@ export const mantleConfig: EthereumConfig = {
 	chainId: 5000,
 	exchange: {
 		v1: ZERO_ADDRESS,
-		v2: toAddress("0x41407B447Fb5425187A9BCA3a062644EF2410F8D"),
+		v2: toAddress("0x0e7B24d73e45B639A5cF674C5f2Bb02930716f87"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0x0141aC79eFD8e4305cE7785B4483C54d5E968995"),
+		wrapper: ZERO_ADDRESS,
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
