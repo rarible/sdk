@@ -4,7 +4,6 @@ import { getSolanaTestWallet } from "@rarible/solana-wallet/src/tests/wallet.tes
 import * as fcl from "@onflow/fcl"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import type { provider as Web3Provider } from "web3-core"
 import Web3 from "web3"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./index"
 
@@ -12,7 +11,7 @@ describe("test signPersonalMessage", () => {
 	const { provider } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
 
 	test("ethereum signPersonalMessage", async () => {
-		const web3 = new Web3(provider as Web3Provider)
+		const web3 = new Web3(provider as any)
 		const ethereum = new Web3Ethereum({ web3 })
 		const wallet = new EthereumWallet(ethereum)
 		const msg = await wallet.signPersonalMessage("Dude, Where Is My Beer?")

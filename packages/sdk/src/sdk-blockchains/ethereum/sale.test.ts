@@ -43,7 +43,7 @@ describe("sale", () => {
 		const wallet2Address = wallet2.getAddressString()
 		await sentTxConfirm(
 			testErc20.methods.mint(wallet2Address, "10000000000000000"),
-			{ from: wallet1Address, gas: 200000 }
+			{ from: wallet1Address, gas: "200000" }
 		)
 	})
 

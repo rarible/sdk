@@ -32,10 +32,10 @@ describe.each(providers)("isSigner", (ethereum) => {
 		const signature = personalSign(pk, { data: randomWord() })
 
 		await test.methods.setReturnSuccessfulValidSignature(false).send({ from })
-		expect(await isSigner(ethereum, test.options.address, hash, signature)).toBe(false)
+		expect(await isSigner(ethereum, test.options.address!, hash, signature)).toBe(false)
 
 		await test.methods.setReturnSuccessfulValidSignature(true).send({ from })
-		expect(await isSigner(ethereum, test.options.address, hash, signature)).toBe(true)
+		expect(await isSigner(ethereum, test.options.address!, hash, signature)).toBe(true)
 	})
 })
 
@@ -44,11 +44,12 @@ function toRpcSig(v: number, r: Buffer, s: Buffer) {
 }
 
 async function deployTestErc1271(web3: Web3) {
-	const empty = new web3.eth.Contract(testABI as any)
+	const empty = new web3.eth.Contract(testABI)
 	const [address] = await web3.eth.getAccounts()
 	return empty
+	// @ts-ignore
 		.deploy({ data: bytecode, arguments: [] })
-		.send({ from: address, gas: 1000000, gasPrice: "0" })
+		.send({ from: address, gas: "1000000", gasPrice: "0" })
 }
 
 const bytecode = "0x608060405234801561001057600080fd5b506102db806100206000396000f3fe608060405234801561001057600080fd5b50600436106100575760003560e01c806311a5e4091461005c5780631626ba7e146100995780631ce30181146101915780639890cdca146101ce578063a85a89f81461020b575b600080fd5b61006461023b565b60405180827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200191505060405180910390f35b61015c600480360360408110156100af57600080fd5b8101908080359060200190929190803590602001906401000000008111156100d657600080fd5b8201836020820111156100e857600080fd5b8035906020019184600183028401116401000000008311171561010a57600080fd5b91908080601f016020809104026020016040519081016040528093929190818152602001838380828437600081840152601f19601f820116905080830192505050505050509192919290505050610246565b60405180827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200191505060405180910390f35b610199610276565b60405180827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200191505060405180910390f35b6101d661027e565b60405180827bffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916815260200191505060405180910390f35b6102396004803603602081101561022157600080fd5b81019080803515159060200190929190505050610289565b005b63fb855dc960e01b81565b60008060009054906101000a900460ff1661026557600060e01b61026e565b631626ba7e60e01b5b905092915050565b600060e01b81565b631626ba7e60e01b81565b806000806101000a81548160ff0219169083151502179055505056fea264697066735822122042b07029b7a1f3062d62f3340aea67ba4152306106e84f9322f8258d9fba0cde64736f6c63430007060033"
@@ -129,4 +130,4 @@ const testABI = [
 		"stateMutability": "view",
 		"type": "function",
 	},
-]
+] as const

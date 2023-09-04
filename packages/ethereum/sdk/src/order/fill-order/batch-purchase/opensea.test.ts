@@ -61,33 +61,33 @@ describe.skip("fillOrder: Opensea orders", function () {
 	beforeAll(async () => {
 		await sentTx(
 			it.exchangeV2.methods.__ExchangeV2_init(
-				toAddress(it.transferProxy.options.address),
-				toAddress(it.erc20TransferProxy.options.address),
+				toAddress(it.transferProxy.options.address!),
+				toAddress(it.erc20TransferProxy.options.address!),
 				toBigNumber("100"),
 				sender1Address,
-				toAddress(it.royaltiesProvider.options.address)
+				toAddress(it.royaltiesProvider.options.address!)
 			),
 			{ from: sender1Address }
 		)
 
-		await sentTx(it.transferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+		await sentTx(it.transferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address!)), {
 			from: sender1Address,
 		})
-		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address!)), {
 			from: sender1Address,
 		})
 		await sentTx(
 			it.exchangeWrapper.methods.__ExchangeWrapper_init(
 				ZERO_ADDRESS,
-				it.exchangeV2.options.address,
+				it.exchangeV2.options.address!,
 			),
 			{ from: sender1Address }
 		)
-		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
-		config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-		config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-		config.transferProxies.erc20 = toAddress(it.erc20TransferProxy.options.address)
-		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
+		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address!)
+		config.exchange.v1 = toAddress(it.exchangeV2.options.address!)
+		config.exchange.v2 = toAddress(it.exchangeV2.options.address!)
+		config.transferProxies.erc20 = toAddress(it.erc20TransferProxy.options.address!)
+		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address!)
 		// config.chainId = 17
 	})
 
@@ -128,14 +128,14 @@ describe.skip("fillOrder: Opensea orders", function () {
 		switch (asset.assetType.assetClass) {
 			case "ERC721": {
 				await sentTx(it.testErc721.methods.mint(receiver, asset.assetType.tokenId, "0x"), { from: sender })
-				await sentTx(it.testErc721.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+				await sentTx(it.testErc721.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 					from: receiver,
 				})
 				break
 			}
 			case "ERC1155": {
-				await sentTx(it.testErc1155.methods.mint(receiver, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10), "0x"), { from: sender })
-				await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+				await sentTx(it.testErc1155.methods.mint(receiver, asset.assetType.tokenId, "0x" + toBn(asset.value).multipliedBy(10).toString(16), "0x"), { from: sender })
+				await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 					from: receiver,
 				})
 				break
@@ -152,9 +152,10 @@ describe.skip("fillOrder: Opensea orders", function () {
 				return toBn(await it.testErc721.methods.balanceOf(userAddress).call())
 			}
 			case "ERC1155": {
-				return toBn(await it.testErc1155.methods.balanceOf(userAddress, tokenId).call())
+				if (!tokenId) throw new Error("getBalance: tokenId")
+				return toBn(await it.testErc1155.methods.balanceOf(userAddress, toBn(tokenId).toString(16)).call())
 			}
-			default: throw new Error("Should never heppen")
+			default: throw new Error("Should never happen")
 		}
 	}
 
@@ -164,7 +165,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const order1 = await mintTestAssetAndReturnOrder({
 			assetType: {
 				assetClass: "ERC1155",
-				contract: toAddress(it.testErc1155.options.address),
+				contract: toAddress(it.testErc1155.options.address!),
 				tokenId: toBigNumber(tokenIds[0]),
 			},
 			value: toBigNumber("2"),
@@ -173,7 +174,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const order2 = await mintTestAssetAndReturnOrder({
 			assetType: {
 				assetClass: "ERC1155",
-				contract: toAddress(it.testErc1155.options.address),
+				contract: toAddress(it.testErc1155.options.address!),
 				tokenId: toBigNumber(tokenIds[1]),
 			},
 			value: toBigNumber("2"),
@@ -182,7 +183,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const order3 = await mintTestAssetAndReturnOrder({
 			assetType: {
 				assetClass: "ERC721",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 				tokenId: toBigNumber(tokenIds[2]),
 			},
 			value: toBigNumber("1"),

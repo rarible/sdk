@@ -6,7 +6,7 @@ export function createSudoswapFactoryV1Contract(ethereum: Ethereum, address?: Ad
 	return ethereum.createContract(SUDOSWAP_FACTORY_V1_ABI, address)
 }
 
-export const SUDOSWAP_FACTORY_V1_ABI: types.ContractAbi = [
+export const SUDOSWAP_FACTORY_V1_ABI = [
 	{
 		"inputs": [
 			{
@@ -662,4 +662,4 @@ export const SUDOSWAP_FACTORY_V1_ABI: types.ContractAbi = [
 		//@ts-ignore
 		"type": "receive",
 	},
-]
+] as const

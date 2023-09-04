@@ -2,6 +2,7 @@ import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
+import { FMT_BYTES, FMT_NUMBER } from "web3-types/lib/types"
 import type { SimpleLazyNft } from "./sign-nft"
 import { signNft } from "./sign-nft"
 
@@ -22,7 +23,11 @@ describe("mint-lazy test", () => {
 			creators: [{ account: address, value: 10000 }],
 			royalties: [],
 		}
-		const signature = await signNft(new Web3Ethereum({ web3 }), await web3.eth.getChainId(), nftTemplate)
+		const signature = await signNft(
+			new Web3Ethereum({ web3 }),
+			await web3.eth.getChainId({ number: FMT_NUMBER.NUMBER, bytes: FMT_BYTES.HEX }),
+			nftTemplate
+		)
 		expect(signature).toEqual(
 			"0xc0630ed85471ebfcd191b4ef45676520164be53689dd2bc88e9936a6352f653d7e641d5b1777aaef7e48366ab4e4436963fb0149ae9652b899551799cb02486f1b"
 		)

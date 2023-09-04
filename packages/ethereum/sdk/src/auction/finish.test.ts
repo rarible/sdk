@@ -53,15 +53,15 @@ describe.skip("finish auction auction", () => {
 
 	test("finish auction erc-1155 <-> erc-20", async () => {
 		const tokenId = "1"
-		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: 1000000 })
+		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: "1000000" })
 		const erc20Supply = toBn("30000000")
 		await sentTx(
 			it.testErc20.methods.mint(sender2Address, erc20Supply.toString()),
-			{ from: sender1Address, gas: 1000000 }
+			{ from: sender1Address, gas: "1000000" }
 		)
 		await sentTx(
 			it.testErc20.methods.mint(sender1Address, "10000000000000000000000000000"),
-			{ from: sender1Address, gas: 1000000 }
+			{ from: sender1Address, gas: "1000000" }
 		)
 		console.log("erc20", it.testErc20.options.address)
 
@@ -69,13 +69,13 @@ describe.skip("finish auction auction", () => {
 			{
 				makeAssetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				amount: toBigNumber("1"),
 				takeAssetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				minimalStepDecimal: toBigNumber("0.00000000000000001"),
 				minimalPriceDecimal: toBigNumber("0.00000000000000005"),
@@ -123,18 +123,18 @@ describe.skip("finish auction auction", () => {
 
 	test("finish auction erc-1155 <-> eth", async () => {
 		const tokenId = "2"
-		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: 1000000 })
+		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: "1000000" })
 		const erc20Supply = toBn("30000000")
 		await sentTx(
 			it.testErc20.methods.mint(sender2Address, erc20Supply.toString()),
-			{ from: sender1Address, gas: 1000000 }
+			{ from: sender1Address, gas: "1000000" }
 		)
 
 		const auction = await auctionService.start(
 			{
 				makeAssetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				amount: toBigNumber("1"),

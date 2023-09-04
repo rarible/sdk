@@ -1,9 +1,6 @@
 import Web3 from "web3"
-import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
-import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
-//@ts-ignore
 import HDWalletProvider from "@truffle/hdwallet-provider"
 import { randomWord } from "@rarible/types"
 
@@ -17,7 +14,6 @@ export type E2EProviderConfig = {
 	chainId: number
 	rpcUrl: string
 	pollingInterval: number
-	customEngine?: Web3ProviderEngine
 }
 
 export class E2EProvider {
@@ -54,21 +50,11 @@ export class E2EProvider {
 		}
 	}
 
-	private createEngine(pollingInterval: number) {
-		return new Web3ProviderEngine({
-			pollingInterval,
-		})
-	}
-
 	private createWalletProvider() {
 		return new TestSubprovider(this.wallet, {
 			networkId: this.config.networkId,
 			chainId: this.config.chainId,
 		})
-	}
-
-	private createRpcProvider() {
-		return new RpcSubprovider({ rpcUrl: this.config.rpcUrl })
 	}
 
 	start = () => this.provider.engine.start()

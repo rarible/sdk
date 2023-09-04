@@ -51,7 +51,7 @@ describe.skip("test exchange v1 order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("1"),
@@ -97,7 +97,7 @@ describe.skip("test exchange v1 order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("1"),

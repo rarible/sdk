@@ -27,10 +27,10 @@ export async function getCurrency(
 				.mint(addressBuyer.address, "1000000000000000000000000")
 				.send({
 					from: addressSeller.address,
-					gas: 200000,
+					gas: "200000",
 				})
 			await new Promise((resolve, reject) => {
-				promiEvent.once("confirmation", (confNumber: number, receipt: EthereumTransactionReceipt) => resolve(receipt.transactionHash))
+				promiEvent.once("confirmation", ({ receipt }) => resolve(receipt.transactionHash))
 				promiEvent.once("error", (error: any) => reject(error))
 			})
 			return {

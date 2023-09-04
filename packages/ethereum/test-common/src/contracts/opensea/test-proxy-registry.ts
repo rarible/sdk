@@ -2,7 +2,7 @@ import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Contract, types } from "web3"
 
-export function createOpenseaProxyRegistryContract(web3: Web3, address?: Address): Contract<types.ContractAbi> {
+export function createOpenseaProxyRegistryContract(web3: Web3, address?: Address) {
 	return new web3.eth.Contract(proxyRegistryAbi, address)
 }
 

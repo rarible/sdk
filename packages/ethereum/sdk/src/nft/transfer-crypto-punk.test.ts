@@ -38,7 +38,7 @@ describe("transfer crypto punks", () => {
 		const tx = await transferCryptoPunk(
 			ethereumSeller,
 			send,
-			toAddress(it.punksMarket.options.address),
+			toAddress(it.punksMarket.options.address!),
 			toAddress(receipentAddress),
 			0
 		)

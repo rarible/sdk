@@ -34,7 +34,7 @@ describe.skip("cancel auction", () => {
 		const auction = await auctionService.start({
 			makeAssetType: {
 				assetClass: "ERC1155",
-				contract: toAddress(it.testErc1155.options.address),
+				contract: toAddress(it.testErc1155.options.address!),
 				tokenId: toBigNumber("1"),
 			},
 			amount: toBigNumber("1"),

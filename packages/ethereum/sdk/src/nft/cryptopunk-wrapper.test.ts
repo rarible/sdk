@@ -33,8 +33,8 @@ describe.skip("wrap crypto punk", () => {
 	})
 
 	beforeAll(async () => {
-		config.cryptoPunks.marketContract = toAddress(it.punksMarket.options.address)
-		config.cryptoPunks.wrapperContract = toAddress(it.punksWrapper.options.address)
+		config.cryptoPunks.marketContract = toAddress(it.punksMarket.options.address!)
+		config.cryptoPunks.wrapperContract = toAddress(it.punksWrapper.options.address!)
 	})
 
 	const punkId = 3490

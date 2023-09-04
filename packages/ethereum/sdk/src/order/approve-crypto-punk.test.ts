@@ -1,3 +1,4 @@
+import { off } from "process"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { awaitAll, createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
@@ -63,7 +64,7 @@ describe("approve crypto punks", () => {
 		)
 
 		const approveResult = await approve(
-			toAddress(it.punksMarket.options.address),
+			toAddress(it.punksMarket.options.address!),
 			sellerAddress,
 			operator,
 			0

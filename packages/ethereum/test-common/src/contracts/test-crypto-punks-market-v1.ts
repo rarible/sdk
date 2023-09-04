@@ -13,7 +13,6 @@ export async function deployCryptoPunksMarketV1(web3: Web3, address?: Address) {
 }
 
 function createCryptoPunks(web3: Web3, address?: Address) {
-	// @ts-ignore
 	return new web3.eth.Contract(cryptoPunksMarketV1Abi, address)
 }
 
@@ -355,6 +354,7 @@ export const cryptoPunksMarketV1Abi = [
 	{
 		"inputs": [],
 		"payable": true,
+		"stateMutability": "payable",
 		"type": "constructor",
 	},
 	{

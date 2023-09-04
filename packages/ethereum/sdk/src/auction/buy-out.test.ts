@@ -55,13 +55,13 @@ describe.skip("buy out auction", () => {
 			{
 				makeAssetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				amount: toBigNumber("1"),
 				takeAssetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				minimalStepDecimal: toBigNumber("0.00000000000000001"),
 				minimalPriceDecimal: toBigNumber("0.00000000000000005"),
@@ -94,13 +94,13 @@ describe.skip("buy out auction", () => {
 			{
 				makeAssetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				amount: toBigNumber("1"),
 				takeAssetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				minimalStepDecimal: toBigNumber("0.00000000000000001"),
 				minimalPriceDecimal: toBigNumber("0.00000000000000005"),
@@ -132,7 +132,7 @@ describe.skip("buy out auction", () => {
 		const auction = await auctionService1.start({
 			makeAssetType: {
 				assetClass: "ERC1155",
-				contract: toAddress(it.testErc1155.options.address),
+				contract: toAddress(it.testErc1155.options.address!),
 				tokenId: toBigNumber("2"),
 			},
 			amount: toBigNumber("1"),
