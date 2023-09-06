@@ -26,8 +26,8 @@ export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProp
 		currencies.find((c) => c.isNative)?.getAssetType()!
 	)
 
-	const isMantleTestnetNetwork = (connection.state as any)?.connection.blockchain === Blockchain.MANTLE
-	const isAvailableConvert = !isMantleTestnetNetwork && isAvailableWethConvert(wallet.walletType, environment)
+	const isMantleNetwork = (connection.state as any)?.connection.blockchain === Blockchain.MANTLE
+	const isAvailableConvert = !isMantleNetwork && isAvailableWethConvert(wallet.walletType, environment)
 
 	const content = () => {
 		if (fetching) {
