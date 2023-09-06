@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+
+### Features
+
+* add mantle prod config ([59a22cb](https://github.com/rarible/sdk/commit/59a22cbe6835676846bda39abc18a41498ed1ca3))
+* update contract ([a37c9f3](https://github.com/rarible/sdk/commit/a37c9f3ca13a88db8c0f8c08f13e993d14f7a71f))
+
+
+
+
+
 ## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk

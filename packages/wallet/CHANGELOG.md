@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+
+### Features
+
+* support new version of imx sdk ([43c4ec0](https://github.com/rarible/sdk/commit/43c4ec030c5f0c914bcec337524b395c16a385be))
+
+
+
+
+
 ## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
 
 

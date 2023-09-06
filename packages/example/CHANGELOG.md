@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+
+### Features
+
+* add mantle prod config ([59a22cb](https://github.com/rarible/sdk/commit/59a22cbe6835676846bda39abc18a41498ed1ca3))
+* add mantle prod config ([b2569af](https://github.com/rarible/sdk/commit/b2569af0506824fc0ec934cdf249c11547af5ee6))
+* support new version of imx sdk ([43c4ec0](https://github.com/rarible/sdk/commit/43c4ec030c5f0c914bcec337524b395c16a385be))
+
+
+
+
+
 ## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
 
 
