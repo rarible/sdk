@@ -4,7 +4,13 @@ import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
-import { getStringifiedData, promiseSettledRequest } from "@rarible/sdk-common"
+import {
+	UserCancelError,
+	getStringifiedData,
+	promiseSettledRequest,
+	isCancelCode,
+	isCancelMessage,
+} from "@rarible/sdk-common/build"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -123,7 +129,7 @@ export function getInternalLoggerMiddleware(
 		const time = Date.now()
 
 		return [callable, async (responsePromise) => {
-			let parsedArgs
+			let parsedArgs, wrappedError: Error | undefined
 			try {
 				parsedArgs = JSON.stringify(args)
 			} catch (e) {
@@ -148,6 +154,8 @@ export function getInternalLoggerMiddleware(
 					})
 				}
 			} catch (err: any) {
+				wrappedError = wrapSpecialErrors(err)
+
 				if (logsLevel >= LogsLevel.ERROR) {
 					let data
 					try {
@@ -155,7 +163,7 @@ export function getInternalLoggerMiddleware(
 							level: getErrorLevel(callable?.name, err, sdkContext?.wallet),
 							method: callable?.name,
 							message: getErrorMessageString(err),
-							error: getStringifiedData(err),
+							error: getStringifiedData(wrappedError || err),
 							duration: (Date.now() - time) / 1000,
 							args: parsedArgs,
 							requestAddress: undefined as undefined | string,
@@ -175,7 +183,9 @@ export function getInternalLoggerMiddleware(
 					remoteLogger.raw(data)
 				}
 			}
-			return responsePromise
+			return wrappedError ? responsePromise.catch(() => { throw wrappedError })
+				: responsePromise
+
 		}]
 	}
 }
@@ -306,4 +316,10 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 		}
 	} catch (e) {}
 	return {}
+}
+
+function wrapSpecialErrors(err: any): Error | undefined {
+	if (isCancelMessage(err?.message) || isCancelCode(err?.error?.code)) {
+		return new UserCancelError(err)
+	}
 }

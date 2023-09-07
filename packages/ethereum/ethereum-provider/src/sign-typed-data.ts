@@ -29,7 +29,6 @@ export async function signTypedData<T extends MessageTypes>(
 			}
 		} catch (e) {
 			throw new SignTypedDataError({
-				message: getErrorMessage(error) || "Can't sign typed data by V4/V3/Default methods",
 				error: e,
 				data: {
 					signer,
@@ -37,13 +36,6 @@ export async function signTypedData<T extends MessageTypes>(
 				},
 			})
 		}
-	}
-}
-
-function getErrorMessage(e: unknown) {
-	if (isError(e)) return e.message
-	if (hasCode(e) && e.code === 4001) {
-		return "Request rejected"
 	}
 }
 
@@ -109,6 +101,6 @@ export class SignTypedDataError extends Error {
 
 	static getErrorMessage(data: any) {
 		if (typeof data.error === "string") return data.error
-		return data.message || data?.error?.message || "SignTypedDataError"
+		return data?.error?.message || data?.message || "SignTypedDataError"
 	}
 }
