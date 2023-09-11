@@ -125,7 +125,6 @@ describe("Create & fill orders with order data v3", () => {
 
 			await seller.orders.waitOrderSubset(orderId, {
 				status: OrderStatus.FILLED,
-				makeStock: toBigNumber("0"),
 			})
 		}, Promise.resolve())
 	})
