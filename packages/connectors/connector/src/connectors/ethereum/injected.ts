@@ -112,7 +112,10 @@ async function enableProvider(provider: any) {
 			await provider.request({
 				method: "eth_requestAccounts",
 			})
-		} catch (e) {
+		} catch (e: any) {
+			if (e && "code" in e && e.code === 4001) {
+				return
+			}
 			if (typeof provider.enable === "function") {
 				await provider.enable()
 			}
@@ -146,7 +149,7 @@ function isDappSupportAutoConnect(dapp: Maybe<DappType>): boolean {
 	}
 
 	const unsupportedDappTypes: Set<DappType> = new Set([DappType.Dapper])
-	const disabledAutoLogin = new Set([DappType.Generic, DappType.Metamask])
+	const disabledAutoLogin = new Set([DappType.Generic, DappType.Metamask, DappType.Coinbase])
 
 	return !(unsupportedDappTypes.has(dapp) || disabledAutoLogin.has(dapp))
 }
