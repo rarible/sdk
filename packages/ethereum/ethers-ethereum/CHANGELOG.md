@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+
+### Features
+
+* **MPX-2077:** batch purchase error if item was purchased ([#534](https://github.com/rarible/sdk/issues/534)) ([74fc55d](https://github.com/rarible/sdk/commit/74fc55def6beda25019a36de13dc426456d521f3))
+
+
+
+
+
 ## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
 
 **Note:** Version bump only for package @rarible/ethers-ethereum

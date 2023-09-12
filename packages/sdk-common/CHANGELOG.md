@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+
+### Features
+
+* **MPX-2146:** handle user cancellations ([#533](https://github.com/rarible/sdk/issues/533)) ([0808b30](https://github.com/rarible/sdk/commit/0808b300b3e662ac4a93c31537e9098ba5880a4b))
+
+
+
+
+
 ## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
 
 **Note:** Version bump only for package @rarible/sdk-common

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/web3-ethereum",
-  "version": "0.13.51-hotfix.0",
+  "version": "0.13.52",
   "description": "Ethereum interface with web3.js",
   "keywords": [
     "ethereum",
@@ -22,8 +22,8 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.51-hotfix.0",
-    "@rarible/sdk-common": "^0.13.51-hotfix.0",
+    "@rarible/ethereum-provider": "^0.13.52",
+    "@rarible/sdk-common": "^0.13.52",
     "eth-rpc-errors": "^4.0.3",
     "exponential-backoff": "^3.1.0",
     "web3-eth-abi": ">=1.5.0 <1.9.0",
@@ -31,7 +31,7 @@
     "web3-utils": ">=1.5.0 <1.9.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.51-hotfix.0",
+    "@rarible/ethereum-sdk-test-common": "^0.13.52",
     "@types/jest": "^27.0.2",
     "buffer": "^6.0.3",
     "jest": "^27.3.1",
