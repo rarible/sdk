@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+
+### Bug Fixes
+
+* update lockfile ([#532](https://github.com/rarible/sdk/issues/532)) ([a577796](https://github.com/rarible/sdk/commit/a57779652f8b21b4f82dada768428c41924c3bf7))
+
+
+
+
+
 ## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
 
 

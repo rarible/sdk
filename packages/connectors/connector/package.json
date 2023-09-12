@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector",
-  "version": "0.13.51",
+  "version": "0.13.51-hotfix.0",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@rarible/logger": "~0.9.12",
-    "@rarible/sdk-common": "^0.13.51"
+    "@rarible/sdk-common": "^0.13.51-hotfix.0"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
