@@ -34,16 +34,22 @@ describe("logger overrides", () => {
 		})
 	})
 
-	test("isInfoLevel returns true", async () => {
-		const err = new EthereumProviderError({
-			data: null,
-			error: {
-				message: "Cancelled",
-			},
-			method: "any",
+	describe("isInfoLevel tests", () => {
+		const errors = [
+			{ message: "Cancelled" },
+			{ message: "User did not approve" },
+			{ message: "Popup closed" },
+			{ code: 4001 },
+		]
+		test.each(errors)("isInfoLevel test with message=$message and code=$code", (error) => {
+			const err = new EthereumProviderError({
+				data: null,
+				error,
+				method: "any",
+			})
+			const isInfoLvl = isInfoLevel(err)
+			expect(isInfoLvl).toBeTruthy()
 		})
-		const isInfoLvl = isInfoLevel(err)
-		expect(isInfoLvl).toBeTruthy()
 	})
 
 	test("simple message", () => {

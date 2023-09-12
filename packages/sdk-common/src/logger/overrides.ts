@@ -34,7 +34,7 @@ const EVM_WARN_MESSAGES = [
 	"transaction would cause overdraft",
 ].map(msg => msg.toLowerCase())
 
-export const COMMON_INFO_MESSAGES = [
+export const CANCEL_MESSAGES = [
 	"Transaction canceled",
 	"Request canceled by user",
 	"User canceled",
@@ -67,7 +67,6 @@ export const COMMON_INFO_MESSAGES = [
 	"PocketUniverse Tx Signature: The user rejected the transaction signature.",
 	"iFrame link is closed",
 	"Link iFrame Closed",
-	"The gas fee has been updated and you need",
 	"rejected request from DeFi Wallet",
 	"User rejected methods",
 	"Транзакция отменена",
@@ -88,16 +87,11 @@ export const COMMON_INFO_MESSAGES = [
 	"Nutzer hat die Transaktion abgelehnt",
 	"Signature de transaction annulée",
 	"Signiervorgang abgebrochen",
-	"The action was aborted by the user",
 	"Reject by the user",
 	"User closed modal",
 	"Permission denied",
 	"The requested account and/or method has not been authorized by the user",
 	"user did not approve",
-	"User denied requested chains",
-	"Popup closed",
-	"Please verify email address",
-	"User denied account access",
 	"Der Nutzer hat die Anfrage abgelehnt",
 	"The user rejected the request",
 	"El usuario rechazó la solicitud",
@@ -106,22 +100,40 @@ export const COMMON_INFO_MESSAGES = [
 	"The user rejected the request through Exodus",
 	"Permission denied, denied",
 	"user closed popup",
+].map(msg => msg.toLowerCase())
+
+export const COMMON_INFO_MESSAGES = [
+	"The gas fee has been updated and you need",
+	"The action was aborted by the user",
+	"User denied requested chains",
+	"Popup closed",
+	"Please verify email address",
+	"User denied account access",
 	"Connection request reset. Please try again",
 ].map(msg => msg.toLowerCase())
 
-const shortInfoMessages = ["cancel", "canceled", "cancelled", "rejected"]
+const shortCancelMessages = ["cancel", "canceled", "cancelled", "rejected"]
 
-export function isInfoLevel(error: any): boolean {
-	if (error?.error?.code === 4001
-    || error?.error?.code === 4100
-    || error?.error?.code === "ACTION_REJECTED") {
+export function isCancelCode(code?: unknown) {
+	return code === 4001 || code === 4100 || code === "ACTION_REJECTED"
+}
+export function isCancelMessage(msg: unknown, isLowerCase: boolean = false) {
+	if (!msg || typeof msg !== "string") {
+		return false
+	}
+	let msgLowerCase: string = isLowerCase ? msg : msg.toLowerCase()
+	if (shortCancelMessages.includes(msgLowerCase)) {
 		return true
 	}
+	return CANCEL_MESSAGES.some(msg => msgLowerCase?.includes(msg))
+}
+
+export function isInfoLevel(error: any): boolean {
 	if (!error?.message || typeof error?.message !== "string") {
 		return false
 	}
 	const msgLowerCase = error?.message.toLowerCase()
-	if (shortInfoMessages.includes(msgLowerCase)) {
+	if (isCancelCode(error?.error?.code) || isCancelMessage(msgLowerCase, true)) {
 		return true
 	}
 	return COMMON_INFO_MESSAGES.some(msg => msgLowerCase?.includes(msg))
