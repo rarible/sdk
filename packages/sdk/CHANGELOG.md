@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.52-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.52...v0.13.52-hotfix.0) (2023-09-18)
+
+
+### Bug Fixes
+
+* **MPX-2461:** garage token contract supporting ([#535](https://github.com/rarible/sdk/issues/535)) ([f087b30](https://github.com/rarible/sdk/commit/f087b3018c0fa5ae3ed9f74eaca6c95a1473a17b))
+
+
+
+
+
 ## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
 
 
