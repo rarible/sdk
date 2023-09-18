@@ -7078,21 +7078,21 @@
   dependencies:
     "@rarible/types" "0.5.3"
 
-"@rarible/flow-sdk-scripts@^0.5.71":
-  version "0.5.71"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.71.tgz#03de1e3cf83fcbdf64c329b5bb6867bc5b8bebc8"
-  integrity sha512-53k3zvXLxSDYO6Uf/uZ1Bt4aaWJtL9Fh6PT+BV/0sk02V/HuctSXD+od+TC9xV7nXIDk7ZYiWSTgugEN9wmUhg==
+"@rarible/flow-sdk-scripts@^0.5.71-HWGarageTokenV2":
+  version "0.5.71-HWGarageTokenV2"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.71-HWGarageTokenV2.tgz#bf070f9341120fabdea15a2f43efb3c7100cdfb0"
+  integrity sha512-n0jBMleX29foUTCTvbaWIrv8Df4oz8ISbqEJrCjJSQuBtnMyd2tJU3rm+/CSj8oNfwjCEwHVsyB5NutiqeMiKw==
 
-"@rarible/flow-sdk@~0.5.71":
-  version "0.5.71"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.71.tgz#6352224c58dee0480505b9946331da8df6289789"
-  integrity sha512-nJr++Fq6x+yiqTEtnqonFeS+ctxDsfBwQldCWD0fAjSDB66iIzwJV1rezHqchaFk/9FsN4Ka5Drzh+MzeI2j9g==
+"@rarible/flow-sdk@~0.5.71-HWGarageTokenV2":
+  version "0.5.71-HWGarageTokenV2"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.71-HWGarageTokenV2.tgz#fc57dc185d65dcef89978c0f63978a25cc2e9898"
+  integrity sha512-4dpH4/GgrDMNFMf0nD+DyVk3KCmK5kUJgRk2t7VQuFrxMNGoy7B3g8MM+x5Z5J32snXHq30zvphLP6HFgKwJSQ==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "^0.5.56"
     "@rarible/flow-api-client" "~0.0.3"
-    "@rarible/flow-sdk-scripts" "^0.5.71"
+    "@rarible/flow-sdk-scripts" "^0.5.71-HWGarageTokenV2"
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
