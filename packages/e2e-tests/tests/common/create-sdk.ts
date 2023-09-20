@@ -21,11 +21,11 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 			break
 		default:
 	}
-
 	return createRaribleSdk(
 		wallet,
 		env,
 		{
+			apiKey: process.env.SDK_API_KEY_TESTNET,
 			logs: LogsLevel.DISABLED,
 			...(flowAuth ? {
 				blockchain: {
@@ -33,7 +33,7 @@ export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRa
 						auth: flowAuth,
 					},
 				},
-			} : {}),
+			} : { apiKey: process.env.SDK_API_KEY_TESTNET }),
 		},
 	)
 }
