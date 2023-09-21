@@ -68,12 +68,28 @@ export function filterErrors(original: unknown) {
 			throw original
 		}
 	}
+	if (hasMessage(original)) {
+		const jsonMsg = getJSONFromMessage(original.message)
+		if (jsonMsg) {
+			filterErrors(jsonMsg)
+		}
+	}
 }
 
+function getJSONFromMessage(message: unknown) {
+	if (!message || typeof message !== "string") {
+		return
+	}
+	try {
+		return JSON.parse(message)
+	} catch (e) {
+		return
+	}
+}
 function hasCode(error: unknown): error is { code: number } {
 	return typeof error === "object" && error !== null && "code" in error
 }
-function hasMessage(error: unknown): error is { message: string } {
+export function hasMessage(error: unknown): error is { message: string } {
 	return typeof error === "object" && error !== null && "message" in error
 }
 

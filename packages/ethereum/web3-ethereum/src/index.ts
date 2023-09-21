@@ -9,6 +9,7 @@ import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import { backOff } from "exponential-backoff"
 import type { AbiItem } from "web3-utils"
 import { DappType, getDappType, promiseSettledRequest } from "@rarible/sdk-common"
+import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
@@ -254,15 +255,16 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		}
 	}
 
-	async send(options: EthereumProvider.EthereumSendOptions = {}): Promise<EthereumProvider.EthereumTransaction> {
+	private async _send(
+		options: EthereumProvider.EthereumSendOptions = {},
+		gasOptions = this.getGasOptions(options)
+	): Promise<EthereumProvider.EthereumTransaction> {
 		const [callInfo, chainId] = await Promise.all([this.getCallInfo(), this.config.web3.eth.getChainId()])
 		let hash: string | undefined
-		let gasOptions: Web3EthereumGasOptions | undefined
 		let data: string | undefined
 
 		try {
 			data = await this.getData()
-			gasOptions = this.getGasOptions(options)
 			const from = toAddress(callInfo.from)
 
 			if (options.additionalData) {
@@ -323,6 +325,18 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			})
 		}
 
+	}
+
+	async send(options: EthereumProvider.EthereumSendOptions = {}): Promise<EthereumProvider.EthereumTransaction> {
+		try {
+			return await this._send(options)
+		} catch (e) {
+			//todo remove this hack for Phantom wallet after fixing issue with gasPrice=null for web3/Metamask
+			if (hasMessage(e) && e?.message.toLowerCase().includes("missing or invalid parameters")) {
+				return await this._send(options, {})
+			}
+			throw e
+		}
 	}
 
 	private getGasOptions(options: EthereumProvider.EthereumSendOptions) {

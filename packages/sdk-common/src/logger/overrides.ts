@@ -50,6 +50,8 @@ export const CANCEL_MESSAGES = [
 	"Transação de assinatura cancelada",
 	"You canceled",
 	"User cancelled login",
+	"User cancelled the request",
+	"user reject this request",
 	"MetaMask Tx Signature: User refused to sign the transaction.",
 	"Request rejected",
 	"User rejected the transaction",
