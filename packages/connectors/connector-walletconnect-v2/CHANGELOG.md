@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+
+### Features
+
+* **MPX-2458:** phantom wallet fix ([#536](https://github.com/rarible/sdk/issues/536)) ([64f6015](https://github.com/rarible/sdk/commit/64f60155bcbac4512d97c6dfb13ba57621c39c7d))
+
+
+
+
+
 ## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
 
 **Note:** Version bump only for package @rarible/connector-walletconnect-v2
