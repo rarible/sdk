@@ -1,19 +1,15 @@
 import { WalletType } from "@rarible/sdk-wallet"
-import { Box, Button, Grid, TextField, Typography } from "@mui/material"
+import { Box, Grid, TextField, Typography } from "@mui/material"
 import React, { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
-import { EnvironmentContext } from "../../../components/connector/environment-selector-provider"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
-import { TransactionInfo } from "../../../components/common/transaction-info"
 
 export function SignTypedDataUtil() {
-	const { environment: env } = useContext(EnvironmentContext)
 	const { result, isFetching, setError, setComplete } = useRequestResult()
 	const connection = useContext(ConnectorContext)
-	console.log("connection", connection)
 	const [json, setJson] = useState("")
 	const form = useForm()
 	const { handleSubmit } = form
@@ -27,7 +23,6 @@ export function SignTypedDataUtil() {
 						const wallet = connection.sdk.wallet
 						const jsonObject = JSON.parse(json)
 						const signature = await wallet.ethereum.signTypedData(jsonObject)
-						console.log("signature", signature)
 						setComplete(signature)
 					}
 				} catch (e) {

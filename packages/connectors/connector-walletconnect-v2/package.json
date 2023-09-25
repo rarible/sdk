@@ -18,8 +18,8 @@
   },
   "dependencies": {
     "@rarible/connector": "^0.13.52",
-    "@walletconnect/ethereum-provider": "^2.9.2",
-    "@walletconnect/modal": "^2.6.1"
+    "@walletconnect/ethereum-provider": "^2.10.1",
+    "@walletconnect/modal": "^2.6.2"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

@@ -14,7 +14,6 @@ export function UtilsPage() {
 	const blockchain = connection.sdk?.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const isEVMActive = blockchain === WalletType.ETHEREUM
-	console.log("isEVMActive", isEVMActive)
 	return (
 		<Page header="Utils page">
 			{
