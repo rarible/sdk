@@ -59,6 +59,9 @@ export function Navigation() {
 	}, {
 		label: "Utils",
 		path: "/utils",
+	}, {
+		label: "Hackaton",
+		path: "/hackaton",
 	}]
 
 	return (

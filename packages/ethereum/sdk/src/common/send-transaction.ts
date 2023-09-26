@@ -100,9 +100,7 @@ export function getSimpleSendWithInjects(injects: {
 	) {
 		const callInfo = await functionCall.getCallInfo()
 
-		try {
-			await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-		} catch (err) {}
+		await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
 
 		try {
 			const tx = await functionCall.send(options)

@@ -44,4 +44,5 @@ export const testnetEthereumConfig: EthereumConfig = {
 	weth: toAddress("0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"),
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: toAddress("0x7454Cc9AEB024bcE6A2CDC49ad4733B4D8215fb8"),
+	lottery: toAddress("0x4f9795a4CCee4f3E4Eb4a5111a5EF298e7a5fbc6"),
 }

@@ -54,4 +54,5 @@ export type EthereumConfig = {
 	cryptoPunks: CryptoPunksConfig
 	sudoswap: SudoswapConfig
 	looksrareOrderValidatorV2?: Address
+	lottery?: Address
 }

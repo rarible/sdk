@@ -24,6 +24,9 @@ import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 import { SignPage } from "./pages/sign/sign-page"
 import { SellUpdatePage } from "./pages/sell-update/sell-update-page"
 import { UtilsPage } from "./pages/utils/utils-page"
+import { BuyerPage } from "./pages/hackaton/buyer"
+import { SellerPage } from "./pages/hackaton/seller"
+import { HackatonPage } from "./pages/hackaton/hackaton"
 
 export function App() {
 	return (
@@ -76,6 +79,11 @@ export function App() {
 									<Route path="items" element={<ItemsPage/>}/>
 									<Route path="sign" element={<SignPage/>}/>
 									<Route path="utils" element={<UtilsPage/>}/>
+									<Route path="hackaton">
+									  <Route index={true} element={<HackatonPage/>}/>
+										<Route path="seller" element={<SellerPage/>}/>
+										<Route path="buyer" element={<BuyerPage/>}/>
+									</Route>
 									<Route path="*" element={<NotFoundPage/>}/>
 								</Routes>
 							</Box>

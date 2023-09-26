@@ -9,6 +9,7 @@ import { toWord } from "@rarible/types"
 import { getEthereumConfig } from "./config"
 import type { UpsertOrderAction } from "./order/upsert-order"
 import { UpsertOrder } from "./order/upsert-order"
+import type { ApproveFunction } from "./order/approve"
 import { approve as approveTemplate } from "./order/approve"
 import type { SellOrderAction, SellOrderUpdateAction } from "./order/sell"
 import { OrderSell } from "./order/sell"
@@ -16,6 +17,7 @@ import { signOrder as signOrderTemplate } from "./order/sign-order"
 import type { BidOrderAction, BidUpdateOrderAction } from "./order/bid"
 import { OrderBid } from "./order/bid"
 import * as order from "./order"
+import type { AssetTypeRequest } from "./order/check-asset-type"
 import { checkAssetType as checkAssetTypeTemplate } from "./order/check-asset-type"
 import type { MintOffChainResponse, MintOnChainResponse, MintRequest } from "./nft/mint"
 import { mint as mintTemplate } from "./nft/mint"
@@ -60,8 +62,11 @@ import type { CryptoPunksWrapper } from "./common/crypto-punks"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./nft/cryptopunk-wrapper"
 import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purchase"
 import { getUpdatedCalldata } from "./order/fill-order/common/get-updated-call"
+import { Lottery } from "./auction/lottery"
 
 export interface RaribleOrderSdk {
+	approve: ApproveFunction
+
 	/**
 	 * Sell asset (create off-chain order and check if approval is needed)
 	 */
@@ -284,6 +289,33 @@ export interface RaribleSdk {
 	auction: RaribleAuctionSdk
 	apis: RaribleEthereumApis
 	balances: RaribleBalancesSdk
+	hackaton: {
+		startLottery: (request: {
+			makeAssetType: AssetTypeRequest,
+			price: BigNumber,
+			tickets: BigNumber,
+		}) => Promise<{tx: EthereumTransaction, lotteryId: Promise<BigNumber>}>
+		buyTickets: (request: {
+			lotteryId: BigNumber,
+			amount: BigNumber,
+		}) => Promise<EthereumTransaction>
+		finaliseLottery: (request: {
+			lotteryId: BigNumber,
+		}) => Promise<EthereumTransaction>
+		getLotteryData: (lotteryId: BigNumber) => Promise<{
+			isFinalized: boolean
+			ticketsLeft: BigNumber
+			buyers: Address[]
+			details: {
+				token: Address
+				tokenId: BigNumber
+				price: BigNumber
+				amountOfTicketsNeeded: BigNumber
+				amountOfTicketsBought: BigNumber
+				seller: Address
+			}
+		}>
+	}
 }
 
 // noinspection JSUnusedGlobalSymbols
@@ -350,9 +382,12 @@ export function createRaribleSdk(
 	const putAuctionBidService = new PutAuctionBid(ethereum, send, config, env, approveFn, apis)
 	const buyOutAuctionService = new BuyoutAuction(ethereum, send, config, env, approveFn, apis)
 
+	const lottery = new Lottery(ethereum, send, config, env, checkAssetType)
+
 	return {
 		apis,
 		order: {
+			approve: approveFn,
 			sell: sellService.sell,
 			sellUpdate: sellService.update,
 			fill: filler.fill,
@@ -434,6 +469,12 @@ export function createRaribleSdk(
 			withdraw: wethConverter.withdraw,
 			withdrawWei: wethConverter.withdrawWei,
 			getWethContractAddress: wethConverter.getWethContractAddress,
+		},
+		hackaton: {
+			startLottery: lottery.startLottery,
+			buyTickets: lottery.buyTickets,
+			finaliseLottery: lottery.finaliseLottery,
+			getLotteryData: lottery.getLotteryData,
 		},
 	}
 }
