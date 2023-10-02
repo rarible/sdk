@@ -116,8 +116,18 @@ async function enableProvider(provider: any) {
 			if (e && "code" in e && e.code === 4001) {
 				return
 			}
-			if (typeof provider.enable === "function") {
-				await provider.enable()
+
+			try {
+				// Attempt wallet_requestPermissions if eth_requestAccounts fails
+				// https://github.com/MetaMask/metamask-extension/issues/10085#issuecomment-1244107244
+				await provider.request({
+					method: "wallet_requestPermissions",
+					params: [{ eth_accounts: {} }],
+				})
+			} catch (e: any) {
+				if (typeof provider.enable === "function") {
+					await provider.enable()
+				}
 			}
 		}
 	} else {
