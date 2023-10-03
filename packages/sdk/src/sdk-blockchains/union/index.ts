@@ -4,7 +4,7 @@ import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { extractBlockchainFromAssetType } from "@rarible/sdk-common/src"
+import { extractBlockchainFromAssetType } from "@rarible/sdk-common"
 import type {
 	IBalanceSdk,
 	IEthereumSdk,
