@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Button } from "@mui/material"
-import { OffRampClient } from "@rarible/connector-mattel/src/off-ramp"
+import { OffRampClient } from "@rarible/connector-mattel/build/off-ramp"
+import { Blockchain } from "@rarible/api-client"
 import { Page } from "../../components/page"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { SetupCollection } from "./components/setup-collection"
@@ -40,23 +41,43 @@ export function UtilsPage() {
 	const isFlowActive = blockchain === WalletType.FLOW
 	const isEVMActive = blockchain === WalletType.ETHEREUM
 	const [iframeUrl, setIframeUrl] = useState("")
+	const [quotesResult, setQuotesResult] = useState("")
+	const [supportedTokens, setSupportedTokens] = useState("")
 
 	async function renderIframe() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
-
-			const from = await connection.sdk?.wallet.ethereum.getFrom()
+		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
 
 			const url = await clientTokenStorage.getSellLink({
-				address: from,
+				address: connection.walletAddress,
 				cryptoAmount: "0.04",
 				fiatCurrency: "USD",
-				assetType: "ETH",
-				network: "ethereum",
+				assetType: { "@type": "ETH" },
 			})
 			setIframeUrl(url)
 		} else {
 			throw new Error("Available only for ETH")
 		}
+	}
+
+	async function getQuotes() {
+		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
+
+			const quotes = await clientTokenStorage.getQuotes({
+				cryptoAmount: "0.04",
+				fiatCurrency: "USD",
+				assetType: { "@type": "ETH", blockchain: Blockchain.POLYGON },
+				paymentType: "credit",
+				address: connection.walletAddress,
+			})
+			setQuotesResult(JSON.stringify(quotes, null, "  "))
+		} else {
+			throw new Error("Available only for ETH")
+		}
+	}
+
+	async function getSupportedTokens() {
+		const tokens = await clientTokenStorage.getSupportedTokens()
+		setSupportedTokens(JSON.stringify(tokens, null, "  "))
 	}
 
 	return (
@@ -70,15 +91,60 @@ export function UtilsPage() {
 
 			<Box sx={{ my: 2 }}>
 				<Button
+					style={{marginRight: 10}}
+					variant="outlined"
+					component="span"
+					onClick={() => getQuotes()}
+				>
+          Get Offramp Quotes
+				</Button>
+        for wallet: {connection?.walletAddress}
+			</Box>
+
+			{
+				quotesResult &&
+        <Box sx={{my: 2}}>
+        	<pre>{quotesResult}</pre>
+        </Box>
+			}
+
+			<Box sx={{ my: 2 }}>
+				<Button
+					style={{marginRight: 10}}
+					variant="outlined"
+					component="span"
+					onClick={() => getSupportedTokens()}
+				>
+          Get supported tokens
+				</Button>
+			</Box>
+
+			{
+				supportedTokens &&
+        <Box sx={{my: 2}}>
+        	<pre>{supportedTokens}</pre>
+        </Box>
+			}
+
+			<Box sx={{ my: 2 }}>
+				<Button
 					variant="outlined"
 					component="span"
 					onClick={() => renderIframe()}
 				>
-          Get token
+          Render Offramp Iframe
 				</Button>
 			</Box>
 
-			{ iframeUrl && <iframe src={iframeUrl} onLoad={attachListener} width={500} height={700} allow="camera *;geolocation *" id="sardine_iframe" /> }
+			{ iframeUrl &&
+        <iframe
+        	style={{border: 0}}
+        	src={iframeUrl}
+        	onLoad={attachListener}
+        	width={500}
+        	height={700}
+        	id="sardine_iframe"
+        /> }
 		</Page>
 	)
 

@@ -1,4 +1,6 @@
 export * from "./promise-settled"
+export * from "./address"
+export * from "./retry"
 
 export function getStringifiedData(data: any): string | undefined {
 	try {
