@@ -4,6 +4,7 @@ import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import { extractBlockchainFromAssetType } from "@rarible/sdk-common/src"
 import type {
 	IBalanceSdk,
 	IEthereumSdk,
@@ -330,13 +331,7 @@ function getBidEntity(request: PrepareBidRequest) {
 
 function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency): Blockchain {
 	if (isAssetType(currency)) {
-		if ("blockchain" in currency && currency.blockchain) {
-			return currency.blockchain
-		}
-		if ("contract" in currency && currency.contract) {
-			return extractBlockchain(currency.contract)
-		}
-		return extractBlockchain(address)
+		return extractBlockchainFromAssetType(currency) || extractBlockchain(address)
 	} else if (isRequestCurrencyAssetType(currency)) {
 		const { blockchain } = getDataFromCurrencyId(currency)
 		return blockchain

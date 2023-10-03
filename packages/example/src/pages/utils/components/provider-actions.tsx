@@ -55,53 +55,45 @@ export function ProviderActions() {
 
 			<Grid container spacing={2}>
 
-				<Grid container spacing={2}>
+				<Grid item xs={6}>
+					<Box sx={{ my: 2 }}>
+						<TextField
+							fullWidth={true}
+							label="Switch to chain id"
+							value={chainId}
+							onChange={(e) => setChainId(e.target.value)}
+						/>
+					</Box>
 
-					<Grid item xs={6}>
-						<Box sx={{ my: 2 }}>
-							<TextField
-								fullWidth={true}
-								label="Switch to chain id"
-								value={chainId}
-								onChange={(e) => setChainId(e.target.value)}
-							/>
-						</Box>
-
-						<Box sx={{ my: 2 }}>
-							<Button
-								variant="outlined"
-								component="span"
-								onClick={() => switchToChain()}
-							>
+					<Box sx={{ my: 2 }}>
+						<Button
+							variant="outlined"
+							component="span"
+							onClick={() => switchToChain()}
+						>
               Switch to chain
-							</Button>
-						</Box>
-					</Grid>
-				</Grid>
+						</Button>
+					</Box>
 
-				<Grid container spacing={2}>
-
-					<Grid item xs={6}>
-						<Box sx={{ my: 2 }}>
-							<Button
-								variant="outlined"
-								component="span"
-								onClick={() => sendTransaction()}
-							>
+					<Box sx={{ my: 2 }}>
+						<Button
+							variant="outlined"
+							component="span"
+							onClick={() => sendTransaction()}
+						>
               Send transaction
-							</Button>
-						</Box>
+						</Button>
+					</Box>
 
-						<Box sx={{ my: 2 }}>
-							<Button
-								variant="outlined"
-								component="span"
-								onClick={() => getFrom()}
-							>
+					<Box sx={{ my: 2 }}>
+						<Button
+							variant="outlined"
+							component="span"
+							onClick={() => getFrom()}
+						>
               Get from
-							</Button>
-						</Box>
-					</Grid>
+						</Button>
+					</Box>
 				</Grid>
 
 				<div style={{marginTop: 20, maxWidth: 500, wordBreak: "break-all"}}>
