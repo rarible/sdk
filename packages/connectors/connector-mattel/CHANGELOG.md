@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+
+### Features
+
+* **MPX-2425:** sardine off ramp ([#537](https://github.com/rarible/sdk/issues/537)) ([adca48d](https://github.com/rarible/sdk/commit/adca48d05d5c417e4b2a1d3757930f44910dfc59))
+
+
+
+
+
 ## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
 
 **Note:** Version bump only for package @rarible/connector-mattel
