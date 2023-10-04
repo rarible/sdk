@@ -17,3 +17,4 @@ scripts
 packages
 !packages/transaction-backend
 packages/transaction-backend/node_modules
+packages/e2e-tests/allure-results

@@ -22,3 +22,4 @@ storybook-static
 yarn-error.log
 lerna-debug.log
 .env
+packages/e2e-tests/allure-results

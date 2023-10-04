@@ -17,6 +17,7 @@ import { cancel } from "../../../common/atoms-tests/cancel"
 import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -56,6 +57,7 @@ function suites(): {
 					amount: 1,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -86,6 +88,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -116,6 +119,7 @@ function suites(): {
 					amount: 1,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -146,6 +150,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -176,6 +181,7 @@ function suites(): {
 					amount: 20,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -206,6 +212,7 @@ function suites(): {
 					amount: 20,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -236,6 +243,7 @@ function suites(): {
 					amount: 20,
 					price: "0.0000000000000001",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -266,6 +274,7 @@ function suites(): {
 					amount: 20,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},

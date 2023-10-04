@@ -18,6 +18,7 @@ import { bid } from "../../../common/atoms-tests/bid"
 import { getCurrency } from "../../../common/currency"
 import { cancel } from "../../../common/atoms-tests/cancel"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -65,6 +66,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -103,6 +105,7 @@ function suites(): {
 					amount: 1,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -141,6 +144,7 @@ function suites(): {
 					amount: 5,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},
@@ -179,6 +183,7 @@ function suites(): {
 					amount: 5,
 					price: "10",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 		},

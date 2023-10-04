@@ -20,6 +20,7 @@ import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { sellUpdate } from "../../../common/atoms-tests/sell-update"
+import { getEndDateAfterMonthAsDate } from "../../../common/utils"
 
 function suites(): {
 	blockchain: Blockchain,
@@ -58,6 +59,7 @@ function suites(): {
 					amount: 1,
 					price: "12",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -90,6 +92,7 @@ function suites(): {
 					amount: 1,
 					price: "0.0000000000000002",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -122,6 +125,7 @@ function suites(): {
 					amount: 1,
 					price: "12",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -154,6 +158,7 @@ function suites(): {
 					amount: 1,
 					price: "0.0000000000000002",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -186,6 +191,7 @@ function suites(): {
 					amount: 3,
 					price: "12",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -218,6 +224,7 @@ function suites(): {
 					amount: 3,
 					price: "0.0000000000000002",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -250,6 +257,7 @@ function suites(): {
 					amount: 3,
 					price: "12",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
@@ -282,6 +290,7 @@ function suites(): {
 					amount: 3,
 					price: "0.0000000000000002",
 					currency: currency,
+					expirationDate: getEndDateAfterMonthAsDate(),
 				}
 			},
 			updateSellRequest: {
