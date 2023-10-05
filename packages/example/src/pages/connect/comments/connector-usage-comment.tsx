@@ -16,7 +16,7 @@ import { MEWConnectionProvider } from "@rarible/connector-mew"
 
 // 1. Configure providers			
 const injected = new InjectedWeb3ConnectionProvider({
-	// optional, order of dapps preferred to connect 
+  // optional, order of dapps preferred to connect 
   prefer: [DappType.Metamask, DappType.Coinbase],
 })
 const mew = new MEWConnectionProvider({
