@@ -33,7 +33,7 @@ export class EthereumProviderError extends Error {
   	this.provider = data?.provider
   	this.data = data?.data
   	this.method = data?.method
-		this.code = data?.error?.code || data?.code
+		this.code = data?.error?.code || data?.error?.error?.code || data?.code
 		this.signer = data?.signer
 		this.chainId = data?.chainId
 		this.providerId = data?.providerId

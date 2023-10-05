@@ -35,6 +35,7 @@ export async function signTypedData<T extends MessageTypes>(
 				data: {
 					signer,
 					data,
+					errorsStack,
 				},
 			})
 		}
@@ -114,7 +115,7 @@ export class SignTypedDataError extends Error {
   	this.name = "SignTypedDataError"
   	this.error = data?.error
   	this.data = data?.data
-		this.code = data?.error?.code || undefined
+		this.code = data?.error?.code || data?.error?.error?.code || undefined
 	}
 
 	static getErrorMessage(data: any) {

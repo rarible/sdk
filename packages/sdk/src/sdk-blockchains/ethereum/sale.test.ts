@@ -16,7 +16,7 @@ import { createSdk } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
-import { DEV_PK_1, DEV_PK_2, ETH_MAINNET_SETTINGS } from "./test/common"
+import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
@@ -379,28 +379,5 @@ describe.skip("buy item with opensea order", () => {
 		const tx = await fillAction.submit({ amount: 1 })
 		await tx.wait()
 		await awaitForOwnership(sdk1, itemId, await ethereum1.getFrom())
-	})
-})
-
-describe("buy item with opensea order", () => {
-	const { provider } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", ETH_MAINNET_SETTINGS)
-
-	const web3 = new Web3(provider)
-	const ethereum1 = new Web3Ethereum({ web3 })
-	const meta = toWord(id32("CUSTOM_META"))
-	const sdk1 = createSdk(new EthereumWallet(ethereum1), "prod", {
-		logs: LogsLevel.DISABLED,
-	})
-
-	test("asd", async () => {
-
-		// const order = await sdk1.apis.order.getOrderById( {
-		// 	id: "ETHEREUM:0x112132b08df21701508f5192bce736fefb53e32da71851b7dc03b87fa0b4525d" as any,
-		// })
-
-		const tx = await sdk1.order.acceptBid({
-			orderId: "ETHEREUM:0x112132b08df21701508f5192bce736fefb53e32da71851b7dc03b87fa0b4525d" as any,
-			amount: 1,
-		})
 	})
 })

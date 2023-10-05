@@ -2,8 +2,6 @@ import type { Observable } from "rxjs"
 import { combineLatest, defer } from "rxjs"
 import { map, mergeMap, startWith } from "rxjs/operators"
 import { DappType, getDappType } from "@rarible/sdk-common"
-import { createAsyncMiddleware, JsonRpcEngine } from "json-rpc-engine"
-import { providerAsMiddleware, providerFromEngine } from "eth-json-rpc-middleware"
 import { AbstractConnectionProvider } from "../../provider"
 import type { Maybe } from "../../common/utils"
 import { promiseToObservable } from "../../common/utils"
@@ -12,7 +10,6 @@ import { getStateConnecting, getStateDisconnected, getStateConnected } from "../
 import { ethAccounts, getAddress } from "./common/get-address"
 import { getChainId } from "./common/get-chain-id"
 import type { EthereumProviderConnectionResult } from "./domain"
-
 const PROVIDER_ID = "injected" as const
 
 export class InjectedWeb3ConnectionProvider extends
@@ -97,37 +94,6 @@ async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionRe
 	return combineLatest([getAddress(provider), getChainId(provider)]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
-
-				// let updateProvider = provider
-				if (typeof provider === "object" && "send" in provider && "sendAsync" in provider) {
-					console.log("JsonRpcEngine")
-					const engine = new JsonRpcEngine()
-					engine.push(providerAsMiddleware(provider as any))
-
-					engine.push(
-						async (req, res, next) => {
-							console.log("err msg", JSON.stringify(res, null, "  "))
-							// if (res.error) {
-							// 	res.error.message = "err"
-							// }
-							console.log("req", req, "res", res)
-							// if (req && req.method === "eth_sendTransaction" && req.params && req.params[0]) {
-							//@ts-ignore
-							// 	delete req.params[0].gasPrice
-							// 	console.log("type - ok")
-							// }
-							return await next()
-						}
-					)
-					console.log("providerAsMiddleware", providerAsMiddleware)
-					return {
-						chainId,
-						address,
-						provider: providerFromEngine(engine),
-					}
-				}
-
-
 				return {
 					chainId,
 					address,
