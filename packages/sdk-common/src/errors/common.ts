@@ -15,3 +15,5 @@ export class UserCancelError extends Error {
   	Object.setPrototypeOf(this, UserCancelError.prototype)
   }
 }
+
+export const FAILED_TO_FETCH_ERROR = "Failed to fetch"

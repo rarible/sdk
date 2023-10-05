@@ -7,22 +7,24 @@ export type SendFunction = (method: string, params: any) => Promise<any>
 export async function signTypedData<T extends MessageTypes>(
 	send: SendFunction, signer: string, data: TypedMessage<T>,
 ): Promise<string> {
+	const errorsStack = []
 	try {
 		const signature = await send(SignTypedDataMethodEnum.V4, [signer, JSON.stringify(data)])
 		filterErrors(signature)
 		return signature
 	} catch (error) {
+		errorsStack.push(error)
 		filterErrors(error)
 		try {
 			console.error("got error while executing sign typed data v4", error)
 			if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
 				return await signWithHardwareWallets(send, signer, data)
 			} else {
-				filterErrors(error)
 				try {
 					return await send(SignTypedDataMethodEnum.V3, [signer, JSON.stringify(data)])
 				} catch (error) {
 					console.error("got error while executing sign typed data v3", error)
+					errorsStack.push(error)
 					filterErrors(error)
 					return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
 				}

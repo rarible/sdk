@@ -12,10 +12,27 @@ export function getStringifiedData(data: any): string | undefined {
 				acc[key] = data[key]
 				return acc
 			}, {} as Record<any, any>)
-		return JSON.stringify(errorObject, null, "  ")
+		return JSON.stringify(errorObject, replaceErrors, "  ")
 	} catch (e) {
 		return undefined
 	}
+}
+
+function replaceErrors(key: string, value: unknown) {
+	try {
+		if (value instanceof Error) {
+			const error: Record<string | number | symbol, unknown> = {}
+
+			Object.getOwnPropertyNames(value).forEach(function (propName) {
+				// @ts-ignore
+				error[propName] = value[propName]
+			})
+
+			return error
+		}
+	} catch (_) {}
+
+	return value
 }
 
 export enum DappType {

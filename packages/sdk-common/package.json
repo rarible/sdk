@@ -18,6 +18,13 @@
   "dependencies": {
     "@rarible/api-client": "0.16.2-beta1"
   },
+  "devDependencies": {
+    "ts-jest": "^27.0.3",
+    "dotenv": "16.0.0",
+    "node-fetch": "2.6.7",
+    "jest": "^27.2.7",
+    "jest-junit": "^15.0.0"
+  },
   "peerDependencies": {
     "tslib": "^2.3.1"
   },

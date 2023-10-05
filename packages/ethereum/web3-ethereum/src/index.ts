@@ -8,7 +8,7 @@ import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import { backOff } from "exponential-backoff"
 import type { AbiItem } from "web3-utils"
-import { DappType, getDappType, promiseSettledRequest } from "@rarible/sdk-common"
+import { DappType, getDappType, promiseSettledRequest, conditionalRetry, FAILED_TO_FETCH_ERROR } from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
@@ -114,7 +114,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 
 	async getBalance(address: Address): Promise<BigNumber> {
 		try {
-		  return toBigNumber(await this.config.web3.eth.getBalance(address))
+			const amount = await conditionalRetry(5, 3000, () =>
+				this.config.web3.eth.getBalance(address),
+			error => error?.message === FAILED_TO_FETCH_ERROR
+			)
+		  return toBigNumber(amount)
 		} catch (error) {
 			throw new EthereumProviderError({
 				...await getCommonErrorData(this.config),
@@ -213,13 +217,28 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 
 	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
 		try {
-		  return await this.sendMethod.estimateGas(options)
+			return conditionalRetry(5, 3000, () =>
+				this.sendMethod.estimateGas(options),
+			(error) => error?.message === FAILED_TO_FETCH_ERROR)
 		} catch (error) {
+			let callInfo = null, data = null, chainId = undefined
+			try {
+				[callInfo, chainId, data] = await promiseSettledRequest([
+					this.getCallInfo(),
+					this.config.web3.eth.getChainId(),
+					await this.getData(),
+				])
+			} catch (_) {}
 			throw new EthereumProviderError({
 				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.estimateGas",
+				chainId,
 				error,
-				data: { options },
+				data: {
+					...callInfo,
+					options,
+					data,
+				},
 			})
 		}
 	}
@@ -228,10 +247,13 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		let gasOptions: Web3EthereumGasOptions | undefined
 		try {
 			gasOptions = this.getGasOptions(options)
-			return await this.sendMethod.call({
-				from: this.config.from,
-				...gasOptions,
-			})
+			return conditionalRetry(5, 3000, () =>
+				this.sendMethod.call({
+					from: this.config.from,
+					...gasOptions,
+				}),
+			(error) => error?.message === FAILED_TO_FETCH_ERROR
+			)
 		} catch (error) {
 			let info = null
 			let data = null
@@ -360,7 +382,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			return value
 		}, {
 			maxDelay: 5000,
-			numOfAttempts: 10,
+			numOfAttempts: 20,
 			delayFirstAttempt: true,
 			startingDelay: 300,
 		})

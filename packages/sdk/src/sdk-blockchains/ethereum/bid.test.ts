@@ -61,6 +61,7 @@ describe("bid", () => {
 
 		const acceptQuantity = toBn(2)
 		const updatedOrderId = await suiteDev2.orders.updateBidByPrepare(orderId, nextPrice)
+
 		await suiteDev1.orders.acceptBid(itemId, updatedOrderId, acceptQuantity)
 	})
 
