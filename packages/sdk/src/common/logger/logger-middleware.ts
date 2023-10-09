@@ -1,16 +1,15 @@
-import { NetworkError, RemoteLogger } from "@rarible/logger/build"
+import { RemoteLogger } from "@rarible/logger/build"
 import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain"
-import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
 import {
 	UserCancelError,
-	getStringifiedData,
 	promiseSettledRequest,
 	isCancelCode,
 	isCancelMessage,
-} from "@rarible/sdk-common/build"
+} from "@rarible/sdk-common"
+import type { WrappedError } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -26,7 +25,7 @@ import type { PrepareBatchBuyResponse } from "../../types/order/fill/domain"
 import type { PrepareTransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareBurnRequest } from "../../types/nft/burn/domain"
-import { getErrorLevel, getExecRevertedMessage } from "./logger-overrides"
+import { getExecRevertedMessage, LoggerDataContainer } from "./logger-overrides"
 
 export const loggerConfig = {
 	service: "union-sdk",
@@ -129,58 +128,25 @@ export function getInternalLoggerMiddleware(
 		const time = Date.now()
 
 		return [callable, async (responsePromise) => {
-			let parsedArgs, wrappedError: Error | undefined
+			let wrappedError: Error | undefined
+
+			const dataContainer = new LoggerDataContainer({
+				args,
+				callable,
+				responsePromise,
+				sdkContext,
+				startTime: time,
+			})
 			try {
-				parsedArgs = JSON.stringify(args)
-			} catch (e) {
-				try {
-					parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
-				} catch (err) {
-					parsedArgs = "unknown"
-				}
-			}
-			const logDataExtraFields = getCallableExtraFields(callable)
-			try {
-				const res = await responsePromise
+				await responsePromise
 				if (logsLevel >= LogsLevel.TRACE) {
-					remoteLogger.raw({
-						level: LogLevel.TRACE,
-						method: callable.name,
-						message: "trace of " + callable.name,
-						duration: (Date.now() - time) / 1000,
-						args: parsedArgs,
-						resp: JSON.stringify(res),
-						...(logDataExtraFields || {}),
-					})
+					remoteLogger.raw(await dataContainer.getTraceData())
 				}
 			} catch (err: any) {
 				wrappedError = wrapSpecialErrors(err)
 
 				if (logsLevel >= LogsLevel.ERROR) {
-					let data
-					try {
-						data = {
-							level: getErrorLevel(callable?.name, err, sdkContext?.wallet),
-							method: callable?.name,
-							message: getErrorMessageString(err),
-							error: getStringifiedData(wrappedError || err),
-							duration: (Date.now() - time) / 1000,
-							args: parsedArgs,
-							requestAddress: undefined as undefined | string,
-							...(logDataExtraFields || {}),
-						}
-						if (err instanceof NetworkError || err?.name === "NetworkError") {
-							data.requestAddress = err?.url
-						}
-					} catch (e) {
-						data = {
-							level: "LOGGING_ERROR",
-							method: callable?.name,
-							message: getErrorMessageString(e),
-							error: getStringifiedData(e),
-						}
-					}
-					remoteLogger.raw(data)
+					remoteLogger.raw(dataContainer.getErrorData(wrappedError || err))
 				}
 			}
 			return wrappedError ? responsePromise.catch(() => { throw wrappedError })
@@ -318,7 +284,7 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 	return {}
 }
 
-function wrapSpecialErrors(err: any): Error | undefined {
+function wrapSpecialErrors(err: any): WrappedError | undefined {
 	if (isCancelMessage(err?.message) || isCancelCode(err?.error?.code)) {
 		return new UserCancelError(err)
 	}

@@ -217,7 +217,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 
 	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
 		try {
-			return conditionalRetry(5, 3000, () =>
+			return await conditionalRetry(5, 3000, () =>
 				this.sendMethod.estimateGas(options),
 			(error) => error?.message === FAILED_TO_FETCH_ERROR)
 		} catch (error) {
@@ -247,7 +247,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		let gasOptions: Web3EthereumGasOptions | undefined
 		try {
 			gasOptions = this.getGasOptions(options)
-			return conditionalRetry(5, 3000, () =>
+			return await conditionalRetry(5, 3000, () =>
 				this.sendMethod.call({
 					from: this.config.from,
 					...gasOptions,
@@ -444,14 +444,16 @@ async function getFrom(web3: Web3, from: string | undefined): Promise<string> {
 }
 
 async function getCommonErrorData(config: Web3EthereumConfig) {
-	const [signer, chainId] = await promiseSettledRequest([
+	const [signer, chainId, blockNumber] = await promiseSettledRequest([
 		getFrom(config.web3, config.from),
 		config.web3.eth.getChainId(),
+		config.web3.eth.getBlockNumber(),
 	])
 	return {
 		...getProvidersData(config),
 		chainId,
 		signer,
+		blockNumber,
 	}
 }
 
