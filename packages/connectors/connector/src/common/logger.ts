@@ -2,13 +2,13 @@ import type { LoggableValue } from "@rarible/logger/build/domain"
 import { RemoteLogger } from "@rarible/logger/build"
 import {
 	getBlockchainByConnectorId,
-	getFingerprint,
 	isEVMWarning,
 	isInfoLevel,
 	isSolanaWarning,
 	isTezosWarning,
 } from "@rarible/sdk-common"
 import { BlockchainGroup } from "@rarible/api-client"
+import { getFingerprint } from "./fingerprint"
 
 const packageJson = require("../../package.json")
 
