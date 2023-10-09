@@ -23,6 +23,11 @@ export const POLYGON_MAINNET_SETTINGS = {
 	networkId: 137,
 }
 
+export const ETH_MAINNET_SETTINGS = {
+	rpcUrl: "https://rarible.com/nodes/ethereum-node",
+	networkId: 1,
+}
+
 export const POLYGON_TESTNET_SETTINGS = {
 	rpcUrl: "https://node-mumbai.rarible.com",
 	networkId: 80001,
@@ -55,6 +60,6 @@ export function createEthWallets(num: number) {
 }
 
 export const devNetworkByBlockchain: Record<Blockchain.ETHEREUM | Blockchain.POLYGON, any> = {
-	[Blockchain.ETHEREUM]: ETH_DEV_SETTINGS,
+	[Blockchain.ETHEREUM]: ETH_MAINNET_SETTINGS,
 	[Blockchain.POLYGON]: POLYGON_DEV_SETTINGS,
 }

@@ -13,7 +13,7 @@ import type { EthereumProviderConnectionResult } from "./domain"
 const PROVIDER_ID = "injected" as const
 
 export type InjectedWeb3ConnectionConfig = {
-	prefer: DappType[]
+	prefer?: DappType[]
 }
 
 export class InjectedWeb3ConnectionProvider extends
@@ -152,12 +152,16 @@ function getInjectedProvider({ prefer }: InjectedWeb3ConnectionConfig): any | un
 		return provider
 	} else if (global.ethereum) {
 		if (Array.isArray(global.ethereum.providers)) {
-			for (const preferredDaap of prefer) {
-				const found = global.ethereum.providers.find((p: any) => getDappType(p) === preferredDaap)
-				if (found) {
-					provider = found
-					break
+			if (Array.isArray(prefer) && prefer.length) {
+				for (const preferredDapp of prefer) {
+					const found = global.ethereum.providers.find((p: any) => getDappType(p) === preferredDapp)
+					if (found) {
+						provider = found
+						break
+					}
 				}
+			} else {
+				provider = global.ethereum.providers[0]
 			}
 		}
 

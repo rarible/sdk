@@ -2,7 +2,6 @@ import React, { useContext, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Button } from "@mui/material"
 import { OffRampClient } from "@rarible/connector-mattel/build/off-ramp"
-import { Blockchain } from "@rarible/api-client"
 import { Page } from "../../components/page"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { SetupCollection } from "./components/setup-collection"
@@ -65,8 +64,8 @@ export function UtilsPage() {
 			const quotes = await clientTokenStorage.getQuotes({
 				cryptoAmount: "0.04",
 				fiatCurrency: "USD",
-				assetType: { "@type": "ETH", blockchain: Blockchain.POLYGON },
-				paymentType: "credit",
+				assetType: { "@type": "ETH"},
+				// paymentType: "credit",
 				address: connection.walletAddress,
 			})
 			setQuotesResult(JSON.stringify(quotes, null, "  "))

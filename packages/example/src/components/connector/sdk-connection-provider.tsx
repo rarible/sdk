@@ -50,7 +50,7 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 	const { environment } = useContext(EnvironmentContext)
 	const conn = useRxOrThrow(connector.connection)
 	const sdk = conn.status === "connected" ? createRaribleSdk(conn.connection.wallet, environment, {
-		logs: LogsLevel.DISABLED,
+		logs: LogsLevel.ERROR,
 		apiKey: getApiKey(environment),
 		blockchain: {
 			[WalletType.ETHEREUM]: {

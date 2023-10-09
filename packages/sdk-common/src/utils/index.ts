@@ -12,10 +12,27 @@ export function getStringifiedData(data: any): string | undefined {
 				acc[key] = data[key]
 				return acc
 			}, {} as Record<any, any>)
-		return JSON.stringify(errorObject, null, "  ")
+		return JSON.stringify(errorObject, replaceErrors, "  ")
 	} catch (e) {
 		return undefined
 	}
+}
+
+function replaceErrors(key: string, value: unknown) {
+	try {
+		if (value instanceof Error) {
+			const error: Record<string | number | symbol, unknown> = {}
+
+			Object.getOwnPropertyNames(value).forEach(function (propName) {
+				// @ts-ignore
+				error[propName] = value[propName]
+			})
+
+			return error
+		}
+	} catch (_) {}
+
+	return value
 }
 
 export enum DappType {
@@ -93,6 +110,13 @@ export function getDappType(provider: any): DappType | undefined {
 	if (provider?.constructor?.name === "Web3ProviderEngine") return DappType.Mock
 	if (provider?.constructor?.name === "EthereumProvider") return DappType.Mist
 	if (provider?.constructor?.name === "Web3FrameProvider") return DappType.Parity
-	if (provider?.constructor?.name === "Web3ProviderEngine") return DappType.Mock
 	return DappType.Unknown
+}
+
+export function isObjectLike(x: unknown): x is object {
+	return typeof x === "object" && x !== null
+}
+
+export function hasName(x: unknown): x is Error {
+	return typeof x === "object" && x !== null && "name" in x
 }
