@@ -1,7 +1,7 @@
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { RemoteLogger } from "@rarible/logger/build"
 import {
-	getBlockchainByConnectorId,
+	getBlockchainByConnectorId, getFingerprint,
 	isEVMWarning,
 	isInfoLevel,
 	isSolanaWarning,
@@ -29,12 +29,7 @@ export function createLogger() {
 			})
 		},
 		{
-			initialContext: Promise.resolve({
-				service: loggerConfig.service,
-				"@version": packageJson.version,
-				environment: "prod",
-				domain: window?.location?.host,
-			}),
+			initialContext: createLoggerContext(),
 			dropBatchInterval: 1000,
 			maxByteSize: 3 * 10240,
 		})
@@ -58,4 +53,16 @@ export function getErrorLogLevel(
 	if (blockchain === BlockchainGroup.TEZOS && isTezosWarning(error)) return LogLevelConnector.WARNING
 	if (blockchain === BlockchainGroup.SOLANA && isSolanaWarning(error)) return LogLevelConnector.WARNING
 	return LogLevelConnector.ERROR
+}
+
+async function createLoggerContext(): Promise<Record<string, string>> {
+	const fingerprint = await getFingerprint()
+
+	return {
+		service: loggerConfig.service,
+		"@version": packageJson.version,
+		environment: "prod",
+		domain: window?.location?.host,
+		fingerprint,
+	}
 }
