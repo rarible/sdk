@@ -20,9 +20,7 @@
   "dependencies": {
     "@rarible/logger": "~0.9.12",
     "@rarible/sdk-common": "^0.13.54-beta.1",
-    "eth-json-rpc-middleware": "^7.0.1",
-    "json-rpc-engine": "^6.1.0"
-
+    "@fingerprintjs/fingerprintjs": "^3.3.6"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
