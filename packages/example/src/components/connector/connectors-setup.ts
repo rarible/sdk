@@ -1,12 +1,7 @@
 import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import type {
-	ConnectionProvider,
-	IConnectorStateProvider } from "@rarible/connector"
-import {
-	Connector,
-	InjectedWeb3ConnectionProvider,
-} from "@rarible/connector"
+import type { ConnectionProvider, IConnectorStateProvider } from "@rarible/connector"
+import { Connector, DappType, InjectedWeb3ConnectionProvider } from "@rarible/connector"
 import { FclConnectionProvider } from "@rarible/connector-fcl"
 import { MEWConnectionProvider } from "@rarible/connector-mew"
 import { NFIDConnectionProvider } from "@rarible/connector-nfid"
@@ -125,7 +120,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	const flowNetwork = environmentToFlowNetwork(environment)
 	const tezosNetwork = environmentToTezosNetwork(environment)
 
-	const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
+	const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider({
+		prefer: [DappType.Metamask],
+	}))
 
 	const mew = mapEthereumWallet(new MEWConnectionProvider({
 		networkId: ethChainId,
