@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-sdk-test-common",
-  "version": "0.13.53",
+  "version": "0.13.55",
   "description": "",
   "keywords": [
     "ethereum",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.53",
+    "@rarible/ethereum-provider": "^0.13.55",
     "@rarible/test-provider": "~0.5.0",
     "@rarible/types": "~0.9.16",
     "@types/web3-provider-engine": "^14.0.1",

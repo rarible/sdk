@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+
+### Bug Fixes
+
+* **MPX-2252:** provider errors ([#540](https://github.com/rarible/sdk/issues/540)) ([cba995d](https://github.com/rarible/sdk/commit/cba995dd506acc35fadd039c0ddf2c41eda28fc9))
+* **MPX-2264:** fallback to wallet_requestPermissions, when eth_requestAccounts fails ([#538](https://github.com/rarible/sdk/issues/538)) ([67a8b80](https://github.com/rarible/sdk/commit/67a8b8086d57c01842aab8699b5ae9ab0453cd6e))
+
+
+### Features
+
+* **MPX-2448:** pass fingerprint to rarible logger ([#541](https://github.com/rarible/sdk/issues/541)) ([9a18e6f](https://github.com/rarible/sdk/commit/9a18e6facdd9f7a365d633bec4d2743953466cc9))
+* **MPX-2460:** add prefer option to injected web3 provider ([#539](https://github.com/rarible/sdk/issues/539)) ([f2ed99f](https://github.com/rarible/sdk/commit/f2ed99f9202b3235f0b8b721a64e0c98e322a42b))
+
+
+
+
+
 ## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
 
 
