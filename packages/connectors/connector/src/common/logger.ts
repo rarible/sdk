@@ -1,7 +1,8 @@
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { RemoteLogger } from "@rarible/logger/build"
 import {
-	getBlockchainByConnectorId, getFingerprint,
+	getBlockchainByConnectorId,
+	getFingerprint,
 	isEVMWarning,
 	isInfoLevel,
 	isSolanaWarning,
