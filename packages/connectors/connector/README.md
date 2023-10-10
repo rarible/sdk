@@ -123,11 +123,10 @@ const walletLink = mapEthereumWallet(new WalletLinkConnectionProvider({
 	darkMode: false
 }))
 
-const walletConnect = mapEthereumWallet(new WalletConnectConnectionProviderV2({
-	rpc: {
-		4: "https://node-rinkeby.rarible.com"
-	},
-	chainId: 4
+const walletConnectV2 = mapEthereumWallet(new WalletConnectConnectionProviderV2({
+	projectId: "4f9fb88799dfa8d3654bdd130be840f2",
+	chains: [1, 5],
+	showQrModal: true,
 }))
 
 // Providers required secrets
