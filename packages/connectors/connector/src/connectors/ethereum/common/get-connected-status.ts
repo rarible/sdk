@@ -1,9 +1,13 @@
-import type WalletConnectProvider from "@walletconnect/web3-provider"
 import { concat, NEVER, Observable, of } from "rxjs"
 
 type ConnectStatus = "connected" | "disconnected"
 
-export function getConnectedStatus(provider: WalletConnectProvider): Observable<ConnectStatus> {
+interface ProviderInterface {
+	on: (event: string, handler: () => void) => void
+	removeListener: (event: string, handler: () => void) => void
+}
+
+export function getConnectedStatus(provider: ProviderInterface): Observable<ConnectStatus> {
 	if ("on" in provider) {
 		return new Observable<ConnectStatus>(subscriber => {
 			subscriber.next("connected")

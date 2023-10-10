@@ -8,7 +8,6 @@ import { NFIDConnectionProvider } from "@rarible/connector-nfid"
 import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
-import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
@@ -176,11 +175,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		darkMode: false,
 	}))
 
-	const walletConnect = mapEthereumWallet(new WalletConnectConnectionProvider({
-		rpc: ethereumRpcMap,
-		chainId: ethChainId,
-	}))
-
 	const walletConnectV2 = mapEthereumWallet(new WalletConnectConnectionProviderV2({
 		projectId: "4f9fb88799dfa8d3654bdd130be840f2",
 		chains: [ethChainId],
@@ -243,7 +237,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(mew)
 		.add(beacon)
 		.add(fcl)
-		.add(walletConnect)
 		.add(walletConnectV2)
 		.add(phantomConnect)
 		.add(solflareConnect)
