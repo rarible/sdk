@@ -60,6 +60,6 @@ export function createEthWallets(num: number) {
 }
 
 export const devNetworkByBlockchain: Record<Blockchain.ETHEREUM | Blockchain.POLYGON, any> = {
-	[Blockchain.ETHEREUM]: ETH_MAINNET_SETTINGS,
+	[Blockchain.ETHEREUM]: ETH_DEV_SETTINGS,
 	[Blockchain.POLYGON]: POLYGON_DEV_SETTINGS,
 }
