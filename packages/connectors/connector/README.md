@@ -69,7 +69,7 @@ import { MEWConnectionProvider } from "@rarible/connector-mew"
 import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
-import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect-v2"
+import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
 import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 import { PortisConnectionProvider } from "@rarible/connector-portis"
 import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
@@ -123,11 +123,10 @@ const walletLink = mapEthereumWallet(new WalletLinkConnectionProvider({
 	darkMode: false
 }))
 
-const walletConnect = mapEthereumWallet(new WalletConnectConnectionProvider({
-	rpc: {
-		4: "https://node-rinkeby.rarible.com"
-	},
-	chainId: 4
+const walletConnectV2 = mapEthereumWallet(new WalletConnectConnectionProviderV2({
+	projectId: "4f9fb88799dfa8d3654bdd130be840f2",
+	chains: [1, 5],
+	showQrModal: true,
 }))
 
 // Providers required secrets
@@ -151,7 +150,7 @@ const connector = Connector
 	.add(mew)
 	.add(beacon)
 	.add(fcl)
-	.add(walletConnect)
+	.add(walletConnectV2)
     // .add(portis)
     // .add(fortmatic)
 
@@ -180,7 +179,7 @@ TorusConnectionProvider
 WalletLinkConnectionProvider
 MEWConnectionProvider
 IframeConnectionProvider
-WalletConnectConnectionProvider
+WalletConnectConnectionProviderV2
 ```
 
 Tezos providers
