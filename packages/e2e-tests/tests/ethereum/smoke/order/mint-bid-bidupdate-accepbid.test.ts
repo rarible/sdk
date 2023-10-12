@@ -7,6 +7,8 @@ import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
 import type { OrderUpdateRequest } from "@rarible/sdk/build/types/order/common"
 import { delay } from "@rarible/sdk/build/common/retry"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
+import { retry } from "@rarible/sdk/build/common/retry"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -17,17 +19,17 @@ import { mint } from "../../../common/atoms-tests/mint"
 import { getCollection } from "../../../common/helpers"
 import { bid } from "../../../common/atoms-tests/bid"
 import { acceptBid } from "../../../common/atoms-tests/accept-bid"
-import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { bidUpdate } from "../../../common/atoms-tests/bid-update"
 import { getEndDateAfterMonthAsDate } from "../../../common/utils"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
 	currency: string,
 	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>,
@@ -41,7 +43,15 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				type: "ERC721",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -74,7 +84,15 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				type: "ERC721",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -107,7 +125,15 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				type: "ERC1155",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -140,7 +166,15 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: {
+				blockchain: Blockchain.ETHEREUM,
+				type: "ERC1155",
+				name: "name",
+				symbol: "RARI",
+				baseURI: "https://ipfs.rarible.com",
+				contractURI: "https://ipfs.rarible.com",
+				isPublic: true,
+			} as CreateCollectionRequestSimplified,
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -181,7 +215,8 @@ describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (su
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
-		const collection = await getCollection(sellerSdk, suite.collectionId)
+		const { address } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
+		const collection = await getCollection(sellerSdk, address)
 
 		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
@@ -194,8 +229,9 @@ describe.each(suites())("$blockchain mint => bid => bidUpdate => acceptBid", (su
 		const order = await bidUpdate(buyerSdk, buyerWallet, { orderId: bidOrder.id }, suite.updateBidRequest)
 
 		await delay(3000)
-
-		await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount || 1 })
+		await retry(40, 3000, async () => {
+			await acceptBid(sellerSdk, sellerWallet, { orderId: order.id }, { amount: bidRequest.amount || 1 })
+		})
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 		//toDo add balance verification

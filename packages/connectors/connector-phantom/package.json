@@ -3,9 +3,6 @@
   "version": "0.13.50-beta.1",
   "homepage": "",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
@@ -30,5 +27,8 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

@@ -218,3 +218,7 @@ export async function verifyItemsContainsItem(items: Items, itemId: ItemId): Pro
 	const ids = items.items.map(c => c.id)
 	expect(ids).toContain(itemId)
 }
+
+export function sleep(ms: number): Promise<void> {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}

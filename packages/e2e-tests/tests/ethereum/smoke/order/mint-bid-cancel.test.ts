@@ -4,6 +4,7 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RequestCurrency } from "@rarible/sdk/src/common/domain"
 import type { OrderRequest } from "@rarible/sdk/src/types/order/common"
+import { retry } from "@rarible/sdk/build/common/retry"
 import {
 	getEthereumWallet,
 	getEthereumWalletBuyer,
@@ -13,7 +14,6 @@ import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
 import { getCollection } from "../../../common/helpers"
 import { bid } from "../../../common/atoms-tests/bid"
-import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import { cancel } from "../../../common/atoms-tests/cancel"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
@@ -38,7 +38,7 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			collectionId: "ETHEREUM:0x74FeD9e7c29907313F987dff0BF13edfd884c5a9",
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -69,7 +69,7 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			collectionId: "ETHEREUM:0x1E5D1745E688a20cBa7d52B6CD1b9Ca7e8297BD6",
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -100,7 +100,7 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			collectionId: "ETHEREUM:0x75295818ed5CC95F4d430ed314Ad04aF6Da5628b",
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -131,7 +131,7 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			collectionId: "ETHEREUM:0x7Fe23b1f19B4590869B9EDFfb857aFe3834b6941",
 			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -169,7 +169,6 @@ describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
 		const collection = await getCollection(sellerSdk, suite.collectionId)
-
 		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
 
@@ -178,9 +177,11 @@ describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
 
 		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
-		await getActivitiesByItem(buyerSdk, nft.id,
-			[ActivityType.BID],
-			[ActivityType.BID])
+		await retry(40, 3000, async () => {
+			await getActivitiesByItem(buyerSdk, nft.id,
+				[ActivityType.BID],
+				[ActivityType.BID])
+		})
 
 		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 

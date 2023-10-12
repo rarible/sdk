@@ -13,7 +13,7 @@ export async function awaitOrderStock(
 	id: OrderId,
 	awaitingValue: BigNumber | string,
 ): Promise<Order> {
-	return retry(20, 2000, async () => {
+	return retry(20, 3000, async () => {
 		const order = await sdk.apis.order.getOrderById({ id })
 		expect(order.makeStock.toString()).toEqual(awaitingValue.toString())
 		return order

@@ -9,11 +9,11 @@ import type {
 	GetAllActivities200,
 } from "@rarible/api-client/build/apis/ActivityControllerApi"
 import { UserActivityType } from "@rarible/api-client/build/models"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { getEthereumWallet, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
 import { awaitExpected, getCollection } from "../../../common/helpers"
-import { testsConfig } from "../../../common/config"
 import {
 	getActivitiesByCollection,
 	getActivitiesByCollectionRaw,
@@ -25,17 +25,20 @@ import {
 	getAllActivitiesRaw,
 } from "../../../common/api-helpers/activity-helper"
 
+import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { ERC_1155_REQUEST } from "../../../common/config/settings-factory"
+
 function suites(): {
 	blockchain: Blockchain,
 	wallets: { seller: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (address: UnionAddress) => MintRequest
 }[] {
 	return [
 		{
 			blockchain: Blockchain.ETHEREUM,
 			wallets: { seller: getEthereumWallet() },
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: ERC_1155_REQUEST,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -59,19 +62,20 @@ describe.each(suites())("$blockchain api => activity", (suite) => {
 	test("activity controller", async () => {
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
-		const collection = await getCollection(sellerSdk, suite.collectionId)
+		const { address } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
+		const collection = await getCollection(sellerSdk, address)
 
 		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
 
 		await awaitExpected(async () => {
 			const activitiesByCollection = await getActivitiesByCollection(sellerSdk,
-				suite.collectionId, [ActivityType.MINT])
+				collection.id, [ActivityType.MINT])
 			expect(activitiesByCollection.activities.length).toBeGreaterThanOrEqual(1)
 		})
 		await awaitExpected(async () => {
 			const activitiesByCollectionRaw = await getActivitiesByCollectionRaw(sellerSdk,
-				suite.collectionId, [ActivityType.MINT]) as GetActivitiesByCollection200
+				collection.id, [ActivityType.MINT]) as GetActivitiesByCollection200
 			expect(activitiesByCollectionRaw.value.activities.length).toBeGreaterThanOrEqual(1)
 		})
 		await awaitExpected(async () => {

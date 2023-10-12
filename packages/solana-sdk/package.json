@@ -12,9 +12,9 @@
     "build"
   ],
   "scripts": {
-    "clean": "rimraf ./build",
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
     "verify": "tsc --noEmit"
   },
   "dependencies": {

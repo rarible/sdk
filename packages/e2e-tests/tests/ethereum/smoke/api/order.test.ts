@@ -12,12 +12,12 @@ import type {
 	GetSellOrdersByItem200,
 	GetSellOrdersByMaker200,
 } from "@rarible/api-client/build/apis/OrderControllerApi"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { sell } from "../../../common/atoms-tests/sell"
 import { getEthereumWallet, getEthereumWalletBuyer, getWalletAddressFull } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
 import { getCollection } from "../../../common/helpers"
-import { testsConfig } from "../../../common/config"
 import { getCurrency } from "../../../common/currency"
 import {
 	getOrderBidsByItem,
@@ -35,11 +35,14 @@ import {
 } from "../../../common/api-helpers/order-helper"
 import { bid } from "../../../common/atoms-tests/bid"
 import { getEndDateAfterMonthAsDate } from "../../../common/utils"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { ERC_1155_REQUEST } from "../../../common/config/settings-factory"
+import { sleep } from "../../../common/api-helpers/item-helper"
 
 function suites(): {
 	blockchain: Blockchain,
 	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	currency: string,
 	sellRequest: (currency: RequestCurrency) => Promise<OrderRequest>,
@@ -52,7 +55,7 @@ function suites(): {
 				seller: getEthereumWallet(),
 				buyer: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: ERC_1155_REQUEST,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -97,8 +100,9 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 	test("order controller", async () => {
 		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
-		const collection = await getCollection(sellerSdk, suite.collectionId)
-
+		const { address } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
+		const collection = await getCollection(sellerSdk, address)
+		await sleep(5000)
 		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
 			suite.mintRequest(walletAddressSeller.unionAddress))
 
@@ -113,7 +117,7 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 		const ordersAllRaw =
             await getOrdersAllRaw(sellerSdk, [suite.blockchain], 2) as GetOrdersAll200
 		expect(ordersAllRaw.value.orders.length).toBeGreaterThanOrEqual(1)
-
+		await sleep(1000)
 		const ordersByIds = await getOrdersByIds(sellerSdk, sellOrder.id)
 		expect(ordersByIds.orders.length).toBeGreaterThanOrEqual(1)
 
@@ -142,17 +146,21 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 		expect(sellOrdersByMakerRaw.value.orders.length).toBeGreaterThanOrEqual(1)
 
 		const bidRequest = await suite.bidRequest(requestCurrency)
-		await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
-
+		await sleep(5000)
+		await retry(40, 3000, async () => {
+			await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
+		})
 		await retry(40, 3000, async () => {
 			const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
 			expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
 		})
-
+		await sleep(1000)
+		console.log("await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!")
 		await retry(40, 3000, async () => {
 			const orderBidsByItemRaw =
 				await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
 			expect(orderBidsByItemRaw.value.orders.length).toBeGreaterThanOrEqual(1)
 		})
+		await sleep(1000)
 	})
 })

@@ -3,6 +3,7 @@ import type { UnionAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { MintAndSellRequest } from "@rarible/sdk"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import {
 	getEthereumWallet,
 	getWalletAddressFull,
@@ -15,12 +16,14 @@ import { mintAndSell } from "../../../common/atoms-tests/mint-and-sell"
 import { buy } from "../../../common/atoms-tests/buy"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
 import { getEndDateAfterMonthAsDate } from "../../../common/utils"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { ERC_1155_REQUEST, ERC_721_REQUEST } from "../../../common/config/settings-factory"
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { creator: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintAndSellRequest: (address: UnionAddress) => MintAndSellRequest,
 	buyAmount: number,
 	creatorBalance: number,
@@ -34,7 +37,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: ERC_721_REQUEST,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -63,7 +66,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: ERC_721_REQUEST,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -92,7 +95,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: ERC_1155_REQUEST,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -121,7 +124,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				buyer: getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: ERC_1155_REQUEST,
 			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -157,7 +160,8 @@ describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
 	test(suite.description, async () => {
 		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
 		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
-		const collection = await getCollection(creatorSdk, suite.collectionId)
+		const { address } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
+		const collection = await getCollection(creatorSdk, address)
 
 		const mintAndSellResponse = await mintAndSell(creatorSdk, creatorWallet, { collection },
 			suite.mintAndSellRequest(walletAddressCreator.unionAddress))

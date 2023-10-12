@@ -6,25 +6,27 @@ import type { MintRequest } from "@rarible/sdk/build/types/nft/mint/mint-request
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { BurnRequest } from "@rarible/sdk/build/types/nft/burn/domain"
 import type { TransferRequest } from "@rarible/sdk/build/types/nft/transfer/domain"
+import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import {
 	getEthereumWallet, getEthereumWalletBuyer,
 	getWalletAddressFull,
 } from "../../../common/wallet"
 import { createSdk } from "../../../common/create-sdk"
 import { mint } from "../../../common/atoms-tests/mint"
-import { testsConfig } from "../../../common/config"
 import { burn } from "../../../common/atoms-tests/burn"
 import { transfer } from "../../../common/atoms-tests/transfer"
 import { getCollectionById } from "../../../common/api-helpers/collection-helper"
 import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-helper"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
 import { getAllItems, verifyItemsByBlockchain, verifyItemsContainsItem } from "../../../common/api-helpers/item-helper"
+import { createCollection } from "../../../common/atoms-tests/create-collection"
+import { ERC_1155_REQUEST, ERC_721_REQUEST } from "../../../common/config/settings-factory"
 
 function suites(): {
 	blockchain: Blockchain,
 	description: string,
 	wallets: { creator: BlockchainWallet, recipient: BlockchainWallet },
-	collectionId: string,
+	deployRequest: CreateCollectionRequestSimplified,
 	mintRequest: (address: UnionAddress) => MintRequest,
 	transferRequest: (address: UnionAddress) => TransferRequest,
 	creatorBalanceAfterTransfer: string,
@@ -40,7 +42,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				recipient: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: ERC_721_REQUEST,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
@@ -74,7 +76,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				recipient: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_721,
+			deployRequest: ERC_721_REQUEST,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
@@ -108,7 +110,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				recipient: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: ERC_1155_REQUEST,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
@@ -142,7 +144,7 @@ function suites(): {
 				creator: getEthereumWallet(),
 				recipient: getEthereumWalletBuyer(),
 			},
-			collectionId: testsConfig.variables.ETHEREUM_COLLECTION_ERC_1155,
+			deployRequest: ERC_1155_REQUEST,
 			mintRequest: (walletAddress: UnionAddress): MintRequest => {
 				return {
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG1",
@@ -184,7 +186,8 @@ describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
 		const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
 		const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
 
-		const collection = await getCollectionById(creatorSdk, suite.collectionId)
+		const { address } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
+		const collection = await getCollectionById(creatorSdk, address)
 
 		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
 			suite.mintRequest(creatorWalletAddress.unionAddress))

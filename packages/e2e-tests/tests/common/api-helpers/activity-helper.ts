@@ -49,7 +49,7 @@ export async function getActivitiesByItem(sdk: IRaribleSdk, itemId: string,
 		})
 		expect(activities).not.toBe(null)
 		if (typeof shouldPresent !== "undefined") {
-			Logger.log(activities.activities)
+		   Logger.log(activities.activities)
 			expect(activities.activities.map(a => a["@type"]).sort()).toEqual(shouldPresent.sort())
 		}
 		return activities

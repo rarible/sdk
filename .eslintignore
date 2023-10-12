@@ -5,3 +5,4 @@
 **/esm
 **/docs
 packages/sdk/example
+packages/e2e-tests/allure-results

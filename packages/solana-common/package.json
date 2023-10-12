@@ -1,17 +1,17 @@
 {
   "name": "@rarible/solana-common",
-  "description": "Common code",
   "version": "0.13.37",
+  "description": "Common code",
   "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
   "files": [
     "build"
   ],
-  "main": "build/index.js",
-  "types": "build/index.d.ts",
   "scripts": {
-    "clean": "rimraf ./build",
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
