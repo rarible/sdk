@@ -154,8 +154,8 @@ describe.each(suites())("$blockchain api => order", (suite) => {
 			const orderBidsByItem = await getOrderBidsByItem(sellerSdk, nft.contract!, nft.tokenId!, 2)
 			expect(orderBidsByItem.orders.length).toBeGreaterThanOrEqual(1)
 		})
+
 		await sleep(1000)
-		console.log("await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!")
 		await retry(40, 3000, async () => {
 			const orderBidsByItemRaw =
 				await getOrderBidsByItemRaw(sellerSdk, nft.contract!, nft.tokenId!, 2) as GetOrderBidsByItem200
