@@ -236,12 +236,13 @@ describe.each(suites())("$blockchain mint => floorBid => bidUpdate => acceptBid"
 			const collection2 = await getCollection(sellerSdk, address)
 			expect(collection2.bestBidOrder?.takePrice).toBe(suite.updateBidRequest.price)
 		})
-
-		await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id },
-			{
-				amount: bidRequest.amount || 1,
-				itemId: nft.id,
-			})
+		await retry(40, 3000, async () => {
+			await acceptBid(sellerSdk, sellerWallet, { orderId: bidOrder.id },
+				{
+					amount: bidRequest.amount || 1,
+					itemId: nft.id,
+				})
+		})
 
 		await awaitForOwnershipValue(buyerSdk, nft.id, walletAddressBuyer.address, toBigNumber(String(bidRequest.amount)))
 
