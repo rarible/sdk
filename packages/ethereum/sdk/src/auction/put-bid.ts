@@ -37,7 +37,7 @@ export class PutAuctionBid {
 		private readonly approve: ApproveFunction,
 		private readonly apis: RaribleEthereumApis,
 	) {
-		this.getBaseFee = getBaseFee.bind(null, config, env, "AUCTION")
+		this.getBaseFee = getBaseFee.bind(null, config, env, apis, "AUCTION")
 	}
 
 	readonly putBid: PutAuctionBidAction = Action.create({
