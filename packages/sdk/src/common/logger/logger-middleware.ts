@@ -9,8 +9,7 @@ import {
 	isCancelCode,
 	isCancelMessage,
 } from "@rarible/sdk-common"
-import { WrappedError } from "@rarible/sdk-common"
-import { INVALID_TX_PARAMS_EIP_1559_ERROR } from "@rarible/sdk-common/src"
+import { WrappedError, INVALID_TX_PARAMS_EIP_1559_ERROR } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
