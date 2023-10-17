@@ -71,8 +71,8 @@
   },
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
-    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
-    "eject": "SKIP_PREFLIGHT_CHECK=true react-scripts eject",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
+    "eject": "SKIP_PREFLIGHT_CHECK=true react-app-rewired eject",
     "verify": "tsc --noEmit"
   },
   "browserslist": {
