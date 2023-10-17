@@ -9,7 +9,8 @@ import {
 	isCancelCode,
 	isCancelMessage,
 } from "@rarible/sdk-common"
-import type { WrappedError } from "@rarible/sdk-common"
+import { WrappedError } from "@rarible/sdk-common"
+import { INVALID_TX_PARAMS_EIP_1559_ERROR } from "@rarible/sdk-common/src"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -288,4 +289,11 @@ function wrapSpecialErrors(err: any): WrappedError | undefined {
 	if (isCancelMessage(err?.message) || isCancelCode(err?.error?.code)) {
 		return new UserCancelError(err)
 	}
+	if (err?.message?.includes(INVALID_TX_PARAMS_EIP_1559_ERROR)) {
+		return new WrappedError(HUMAN_READABLE_MSG_LIST[INVALID_TX_PARAMS_EIP_1559_ERROR], err)
+	}
+}
+
+export const HUMAN_READABLE_MSG_LIST: Record<string, string> = {
+	[INVALID_TX_PARAMS_EIP_1559_ERROR]: "The problem is with the selected network of your wallet provider, try switching the network or re-entering the wallet. You can read more about this error [here](https://github.com/MetaMask/metamask-extension/issues/13341)",
 }
