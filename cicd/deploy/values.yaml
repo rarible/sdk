@@ -6,7 +6,6 @@ example-sdk:
     - -c
     - |-
       cd packages/example
-      exec yarn build
       exec yarn serve-static -l 8080
   replicas: 1
   environments:

@@ -7,7 +7,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel --stream",
-    "build": "yarn bootstrap && yarn clean && yarn build:lerna",
+    "build": "yarn bootstrap && yarn clean && yarn build:lerna && cd packages/example && yarn build",
     "build:lerna": "lerna run build --stream --ignore example --ignore @rarible/sdk-examples",
     "build-ethereum-test-common": "yarn workspace @rarible/ethereum-sdk-test-common run build",
     "build-ethereum-biconomy-middleware": "yarn workspace @rarible/biconomy-middleware run build",
