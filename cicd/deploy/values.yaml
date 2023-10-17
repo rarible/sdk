@@ -1,14 +1,24 @@
-transaction-backend:
+example-sdk:
   image:
     repository: sdk
+  command: 
+    - /bin/sh
+    - -c
+    - |-
+      cd packages/example
+      exec yarn start
   replicas: 1
-  service:
-    enabled: true
-  nodeSelector:
-    node.labels.transaction.service: true
-  readinessProbe: false
-  livenessProbe: false
   environments:
-    SDK_ENV: '{{ include "service.env" $ }}'
+    PORT: 8080
+    DISABLE_ESLINT_PLUGIN: 'true'
+    REACT_APP_TESTNETS_API_KEY: 2cadd8fe-5e34-4fe8-bc59-d9dbafc30ef5
+    REACT_APP_PROD_API_KEY: 666ad781-aa60-4000-9e3e-cf5ae2d41bd3
+    REACT_APP_WALLET_CONNECT_V2_PROJECT_ID: 27c21e9982ee7b6e3f22764ab806719b
   updateConfig:
     order: start-first
+  podAnnotations:
+    prometheus.io/scrape: 'false'
+  readinessProbe: false
+  livenessProbe: false
+  service:
+    enabled: true
