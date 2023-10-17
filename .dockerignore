@@ -10,8 +10,10 @@ lerna.json
 cicd
 Jenkinsfile*
 README.md
-**/node_modules
 scripts
+
+node_modules
+!node_modules/react-app-rewired
 
 packages
 !packages/example
