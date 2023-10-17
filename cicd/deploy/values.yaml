@@ -1,12 +1,13 @@
 example-sdk:
   image:
     repository: sdk
-  command: 
+  command:
     - /bin/sh
     - -c
     - |-
       cd packages/example
-      exec yarn start
+      exec yarn build
+      exec yarn serve-static -l 8080
   replicas: 1
   environments:
     PORT: 8080
