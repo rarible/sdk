@@ -60,9 +60,9 @@ pipeline {
         }
         steps {
           sh """
-              pwd
               yarn add -W gh-pages
               export PATH=$PATH:./node_modules/.bin
+              git config credential.helper '!f() { echo "username=${GIT_USER}\\npassword=${GIT_PASS}"; }; f'
               if [ "${pipelineConfig.get('ghPagesRepoUrl','')}" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
