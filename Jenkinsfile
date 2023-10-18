@@ -1,6 +1,5 @@
 @Library('shared-library') _
 
-
 def pipelineConfig = [
     "buildCommand": "yarn && yarn build-example",
     "buildResultDirPath": "packages/example/build"
@@ -15,7 +14,7 @@ pipeline {
     }
 
     stages {
-      stage('prepare pipeline') {
+      stage('prepare') {
         steps {
           script {
             utils.enrinchMissedPipelineConfigs(pipelineConfig)
@@ -38,9 +37,13 @@ pipeline {
         when {
           anyOf { branch 'main'; branch 'master'; branch 'develop'; branch 'release/*'; branch 'cicd' }
         }
-        steps {
-          sh "${pipelineConfig['buildCommand']}"
-        }
+        steps { script {
+          if (pipelineConfig.containsKey('buildCommand') {
+            sh(pipelineConfig['buildCommand'])
+          } else {
+            utils.runStage(pipelineConfig, 'build')
+          }
+        }}
       }
 
       stage('deploy') {
@@ -56,17 +59,19 @@ pipeline {
           anyOf { branch 'main'; branch 'master'; branch 'develop'; branch 'release/*'; branch 'cicd' }
         }
         steps {
-          sh """
+          sh '''
               npm install gh-pages
-              gh-pages --message "deploy ${env.GIT_COMMIT}" --dist ${pipelineConfig['buildResultDirPath']}
-          """
+              if [ "${pipelineconfig.get('ghPagesRepoUrl','')" = "" ]; then
+                gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
+              else
+                gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']} -r ${pipelineconfig['ghPagesRepoUrl']}
+              fi
+          '''
         }
       }
     }
+
     post {
-      always {
-        cleanWs(deleteDirs: true, disableDeferredWipeout: true)
-      }
+      always { cleanWs(deleteDirs: true, disableDeferredWipeout: true) }
     }
 }
-
