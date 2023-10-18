@@ -59,17 +59,19 @@ pipeline {
           anyOf { branch 'main'; branch 'master'; branch 'develop'; branch 'release/*'; branch 'cicd' }
         }
         steps {
-          sh """
+          withCredentials([usernamePassword(credentialsId: 'jenkins-rarible-ci', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+            sh """
               yarn add -W gh-pages
               export PATH=$PATH:./node_modules/.bin
-              git config credential.helper '!f() { echo "username=${GIT_USER}\\npassword=${GIT_PASS}"; }; f'
+              git config credential.helper '!f() { echo "username=$GIT_USER\\npassword=$GIT_PASS"; }; f'
               if [ "${pipelineConfig.get('ghPagesRepoUrl','')}" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']} -r ${pipelineConfig['ghPagesRepoUrl']}
               fi
-          """
-        }
+            """
+          }
+        } 
       }
     }
 }
