@@ -1,7 +1,7 @@
 @Library('shared-library') _
 
 def pipelineConfig = [
-    "buildCommand": "yarn && yarn build-example",
+    "buildCommand": "mkdir packages/example/build && echo Hi > packages/example/build/index.html",
     "buildResultDirPath": "packages/example/build"
 ]
 
@@ -60,7 +60,7 @@ pipeline {
         }
         steps {
           sh '''
-              npm install gh-pages
+              yarn add gh-pages
               if [ "${pipelineconfig.get('ghPagesRepoUrl','')" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
