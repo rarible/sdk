@@ -40,5 +40,6 @@ export const stagingEthereumConfig: EthereumConfig = {
 		pairRouter: toAddress("0xE27A07e9B293dC677e34aB5fF726073ECbeCA842"),
 	},
 	weth: toAddress("0xecd2728000E21aA49aA1F823242dc8C8bc5BB4aB"),
+	rari: toAddress("0xc3994c5cbddf7ce38b8a2ec2830335fa8f3eea6a"),
 	auction: ZERO_ADDRESS,
 }

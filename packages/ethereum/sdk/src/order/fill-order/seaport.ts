@@ -181,7 +181,7 @@ export class SeaportOrderHandler {
 
 		const takeAssetType = request.order.take.assetType
 		let feeValueWithCurrency = feeValue
-		if (isWeth(takeAssetType, this.config.weth)) {
+		if (isWeth(takeAssetType, this.config)) {
 			feeValueWithCurrency = setFeesCurrency(feeValueWithCurrency, true)
 		}
 

@@ -56,6 +56,7 @@ describe.each(providers)("sell", (ethereum) => {
 	const upserter = new UpsertOrder(
 		orderService,
 		send,
+		config,
 		(x) => Promise.resolve(x),
 		() => Promise.resolve(undefined),
 		signOrder,

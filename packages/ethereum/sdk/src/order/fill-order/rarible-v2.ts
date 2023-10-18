@@ -229,7 +229,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		let fees = ZERO_FEE_VALUE
 		// let amount
 		const paymentAsset = await this.getMakeAssetWithFee(inverted)
-		if (isWeth(initial.take.assetType, this.config.weth)) {
+		if (isWeth(initial.take.assetType, this.config)) {
 			fees = setFeesCurrency(fees, true)
 		}
 

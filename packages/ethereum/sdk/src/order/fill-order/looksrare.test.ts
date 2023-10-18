@@ -17,6 +17,7 @@ import { FILL_CALLDATA_TAG } from "../../config/common"
 import { DEV_PK_1, DEV_PK_2, getTestContract, GOERLI_CONFIG } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
 import { delay } from "../../common/retry"
+import { ETHER_IN_WEI } from "../../common"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
@@ -299,7 +300,7 @@ describe.skip("looksrare fill", () => {
 	async function getEthBalances(addresses: string[]) {
 		return Promise.all(
 			addresses.map(async address => {
-				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
 			})
 		)
 	}

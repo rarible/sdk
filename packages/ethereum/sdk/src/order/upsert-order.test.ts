@@ -53,6 +53,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -85,6 +86,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -118,6 +120,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -130,4 +133,48 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const price = await upserter.getPrice(request, request.takeAssetType)
 		expect(price.valueOf()).toBe("1")
 	})
+
+	test("throw error if sell order has less than minimal payment value", async () => {
+		const orderApi = new OrderControllerApi(configuration)
+		orderApi.upsertOrder = async () => ({} as any)
+		const upserter = new UpsertOrder(
+			orderService,
+			send,
+			config,
+			checkLazyOrder,
+			approve,
+			sign,
+			orderApi,
+			ethereum,
+			checkWalletChainId,
+			ZERO_WORD
+		)
+		const request = {
+			maker: toAddress(wallet.getAddressString()),
+			make: {
+				assetType: {
+					assetClass: "ERC721",
+					contract: "ETHEREUM:0xd2bdd497db05622576b6cb8082fb08de042987ca",
+					tokenId: "7135",
+				},
+				value: "1",
+			},
+			take: {
+				assetType: {
+					assetClass: "ETH",
+				},
+				value: "10",
+			},
+		} as any
+
+		let err: any
+		try {
+		  await upserter.upsertRequest(request)
+		} catch (e) {
+			err = e
+		}
+		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+
+	})
+
 })

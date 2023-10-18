@@ -13,8 +13,8 @@ export async function signTypedData<T extends MessageTypes>(
 		filterErrors(signature)
 		return signature
 	} catch (error) {
-		errorsStack.push(error)
 		filterErrors(error)
+		errorsStack.push(error)
 		try {
 			console.error("got error while executing sign typed data v4", error)
 			if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
@@ -24,14 +24,15 @@ export async function signTypedData<T extends MessageTypes>(
 					return await send(SignTypedDataMethodEnum.V3, [signer, JSON.stringify(data)])
 				} catch (error) {
 					console.error("got error while executing sign typed data v3", error)
-					errorsStack.push(error)
 					filterErrors(error)
+					errorsStack.push(error)
 					return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
 				}
 			}
 		} catch (e) {
+			errorsStack.push(e)
 			throw new SignTypedDataError({
-				error: e,
+				error,
 				data: {
 					signer,
 					data,

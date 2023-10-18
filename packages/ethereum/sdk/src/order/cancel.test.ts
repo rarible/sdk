@@ -130,6 +130,7 @@ describe("cancel order", () => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,

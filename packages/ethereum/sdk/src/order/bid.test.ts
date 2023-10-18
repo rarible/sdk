@@ -67,6 +67,7 @@ describe.each(providers)("bid", (ethereum) => {
 	const upserter = new UpsertOrder(
 		orderService,
 		send,
+		config,
 		checkLazyOrder,
 		approve,
 		signOrder,

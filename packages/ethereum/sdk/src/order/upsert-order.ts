@@ -24,6 +24,9 @@ import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
 import { waitTx } from "../common/wait-tx"
+import { checkMinPaymentValue } from "../common/check-min-payment-value"
+import { ETHER_IN_WEI } from "../common"
+import type { EthereumConfig } from "../config/type"
 import type { SimpleCryptoPunkOrder, SimpleOrder, UpsertSimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
@@ -80,6 +83,7 @@ export class UpsertOrder {
 	constructor(
 		private readonly orderFiller: OrderFiller,
 		private readonly send: SendFunction,
+		private readonly config: EthereumConfig,
 		public readonly checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
 		private readonly approveFn: ApproveFunction,
 		private readonly signOrder: (order: SimpleOrder) => Promise<Binary>,
@@ -121,7 +125,7 @@ export class UpsertOrder {
 		} else {
 			switch (assetType.assetClass) {
 				case "ETH":
-					return toBn(hasPrice.priceDecimal).multipliedBy(toBn(10).pow(18))
+					return toBn(hasPrice.priceDecimal).multipliedBy(ETHER_IN_WEI)
 				case "ERC20":
 					const decimals = await createErc20Contract(
 						getRequiredWallet(this.ethereum),
@@ -136,7 +140,7 @@ export class UpsertOrder {
 		}
 	}
 
-	async approve(checkedOrder: OrderForm, infinite: boolean = false): Promise<EthereumTransaction | undefined>  {
+	async approve(checkedOrder: OrderForm, infinite: boolean = false): Promise<EthereumTransaction | undefined> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checkedOrder)
 		const fee = await this.orderFiller.getOrderFee(simple)
 		const make = addFee(checkedOrder.make, fee)
@@ -149,6 +153,7 @@ export class UpsertOrder {
 
 	async upsertRequest(checked: OrderForm): Promise<Order> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checked)
+		checkMinPaymentValue(checked, this.config)
 		return this.orderApi.upsertOrder({
 			orderForm: {
 				...checked,
