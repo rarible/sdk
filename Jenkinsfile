@@ -63,7 +63,7 @@ pipeline {
             sh """
               yarn add -W gh-pages
               export PATH=$PATH:./node_modules/.bin
-              git config credential.helper '!f() { echo "username=$GIT_USER\\npassword=$GIT_PASS"; }; f'
+              git remote set-url origin `echo -n ${env.GIT_URL} | sed s/github/$GIT_USER:$GIT_PASS@github/`
               if [ "${pipelineConfig.get('ghPagesRepoUrl','')}" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
