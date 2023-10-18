@@ -1,7 +1,7 @@
 @Library('shared-library') _
 
 def pipelineConfig = [
-    "buildCommand": "mkdir -p packages/example/build && echo Hi > packages/example/build/index.html",
+    "buildCommand": "yarn && yarn build-example",
     "buildResultDirPath": "packages/example/build"
 ]
 
