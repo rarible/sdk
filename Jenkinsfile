@@ -60,7 +60,8 @@ pipeline {
         }
         steps {
           sh '''
-              yarn add gh-pages
+              yarn add -W gh-pages
+              export PATH=$PATH:./node_modules/.bin
               if [ "${pipelineconfig.get('ghPagesRepoUrl','')" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
