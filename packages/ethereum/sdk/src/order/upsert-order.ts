@@ -27,7 +27,7 @@ import { waitTx } from "../common/wait-tx"
 import { checkMinPaymentValue } from "../common/check-min-payment-value"
 import { ETHER_IN_WEI } from "../common"
 import type { EthereumConfig } from "../config/type"
-import type { SimpleCryptoPunkOrder, SimpleOrder, UpsertSimpleOrder } from "./types"
+import type { SimpleCryptoPunkOrder, SimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
 import type { OrderFiller } from "./fill-order"
@@ -53,7 +53,7 @@ export type OrderRequestV2 = {
 	payouts: Part[]
 	originFees: Part[]
 	start?: number
-	end?: number
+	end: number
 }
 
 export type OrderRequestV3Sell = {
@@ -64,7 +64,7 @@ export type OrderRequestV3Sell = {
 	originFeeSecond?: Part
 	maxFeesBasePoint: number
 	start?: number
-	end?: number
+	end: number
 }
 
 export type OrderRequestV3Buy = {
@@ -74,7 +74,7 @@ export type OrderRequestV3Buy = {
 	originFeeFirst?: Part
 	originFeeSecond?: Part
 	start?: number
-	end?: number
+	end: number
 }
 
 export type OrderRequest = OrderRequestV2 | OrderRequestV3Buy | OrderRequestV3Sell
@@ -219,16 +219,6 @@ export class UpsertOrder {
 		return {
 			...form,
 			salt: toBinary(toBn(form.salt).toString(16)) as any,
-		}
-	}
-
-	getOrderFormFromOrder<T extends UpsertSimpleOrder>(order: T, make: T["make"], take: T["take"]): OrderForm {
-		return {
-			...order,
-			make,
-			take,
-			salt: toBigNumber(toBn(order.salt, 16).toString(10)),
-			signature: order.signature || toBinary("0x"),
 		}
 	}
 

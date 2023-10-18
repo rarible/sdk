@@ -49,6 +49,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 				originFees: [],
 			},
 			signature: toBinary("0x"),
+			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
 		}
 		const upserter = new UpsertOrder(
 			orderService,

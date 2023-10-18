@@ -1,14 +1,32 @@
 import { configDictionary, getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
-import type { EnvFeeType } from "./get-base-fee"
 import { getBaseFee } from "./get-base-fee"
+import { createEthereumApis } from "./apis"
+import { getAPIKey } from "./balances.test"
+import { delay } from "./retry"
 
 describe("get base fee", () => {
 	const config = getEthereumConfig("testnet")
 
 	test("get base fee from mainnet", async () => {
-	  const fee = await getBaseFee(config, "mainnet")
+		const env: EthereumNetwork = "mainnet"
+		const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
+	  const fee = await getBaseFee(config, env, apis)
 		expect(fee).not.toBeNaN()
+	})
+
+	test.concurrent("get base fee with error", async () => {
+		const env: EthereumNetwork = "mainnet"
+		const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
+		apis.orderSettings.getFees = () => { throw new Error("wow") }
+	  let feeError: any
+		try {
+			await getBaseFee(config, env, apis)
+		} catch (e) {
+			feeError = e
+		}
+		expect(feeError).toBeTruthy()
+		expect(feeError?.message.startsWith("Getting fee error")).toBe(true)
 	})
 
 	test("check fees.json config", async () => {
@@ -21,27 +39,11 @@ const envs = Object.keys(configDictionary) as EthereumNetwork[]
 
 describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
 	const config = getEthereumConfig(env)
-	const configFile = require("../config/fees.json")
+	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
 
-	test(`get base fee from ${env} with master branch`, async () => {
-		const fee = await getBaseFee(config, env)
+	afterAll(async () => delay(1000))
+	test(`get base fee from ${env}`, async () => {
+		const fee = await getBaseFee(config, env, apis)
 		expect(fee).not.toBeNaN()
-	})
-
-	const orderTypes: EnvFeeType[] = [
-		"RARIBLE_V1",
-		"RARIBLE_V2",
-		"OPEN_SEA_V1",
-		"SEAPORT_V1",
-		"LOOKSRARE",
-		"CRYPTO_PUNK",
-		"AMM",
-		"X2Y2",
-		"AUCTION",
-	]
-	test.each(orderTypes)(`get base fee with env=${env} for type=%s`, async () => {
-		for (let type of orderTypes) {
-			expect(configFile[env][type]).not.toBeNaN()
-		}
 	})
 })

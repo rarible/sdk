@@ -28,7 +28,7 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { IApisSdk } from "../../domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
-import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { getNftContractAddress } from "../../common/utils"
@@ -125,7 +125,9 @@ export class TezosSell {
 
 		const requestCurrency = getCurrencyAssetType(request.currency)
 
-		const expirationDate = convertDateToTimestamp(request.expirationDate)
+		const expirationDate = request.expirationDate
+			? convertDateToTimestamp(request.expirationDate)
+			: getDefaultExpirationDateTimestamp()
 		const collectionType = await getCollectionType(this.provider, contract)
 
 		const asset = await getTezosAssetTypeV2(provider.config, requestCurrency)

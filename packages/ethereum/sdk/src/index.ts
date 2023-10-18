@@ -317,7 +317,7 @@ export function createRaribleSdk(
 	const checkLazyOrder = order.checkLazyOrder.bind(null, checkLazyAsset)
 	const checkAssetType = partialCall(checkAssetTypeTemplate, apis.nftCollection)
 
-	const getBaseOrderFee = getBaseFee.bind(null, config, env)
+	const getBaseOrderFee = getBaseFee.bind(null, config, env, apis)
 	const filler = new OrderFiller(ethereum, send, config, apis, getBaseOrderFee, env, sdkConfig)
 	const buyBatchService = new BatchOrderFiller(
 		ethereum,

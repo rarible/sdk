@@ -24,7 +24,7 @@ import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconn
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
-const ethereumRpcMap: Record<number, string> = {
+export const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
 	3: "https://node-ropsten.rarible.com",
 	4: "https://node-rinkeby.rarible.com",
