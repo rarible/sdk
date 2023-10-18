@@ -49,7 +49,7 @@ pipeline {
       stage('deploy') {
         agent {
           docker {
-            image "${env.DOCKER_REGISTRY}/node:16-bullseye-slim"
+            image "${env.DOCKER_REGISTRY}/node:16-bullseye-slim-dev"
             registryCredentialsId env.DOCKER_REGISTRY_CREDS
             args utils.dockerAgentArgs()
             reuseNode true
