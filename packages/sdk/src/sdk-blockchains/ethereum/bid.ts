@@ -19,6 +19,7 @@ import { compareCaseInsensitive } from "@rarible/protocol-ethereum-sdk/build/com
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import { Warning } from "@rarible/logger/build"
+import { extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
@@ -32,9 +33,8 @@ import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
-import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
-import { extractBlockchain } from "../../common/extract-blockchain"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -197,7 +197,9 @@ export class EthereumBid {
 
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
-				const expirationDate = convertDateToTimestamp(request.expirationDate)
+				const expirationDate = request.expirationDate
+					? convertDateToTimestamp(request.expirationDate)
+					: getDefaultExpirationDateTimestamp()
 				const currencyAssetType = getCurrencyAssetType(request.currency)
 				return {
 					type: "DATA_V2",
@@ -279,7 +281,9 @@ export class EthereumBid {
 			.before(async (request: OrderCommon.OrderRequest) => {
 				validateOrderDataV3Request(request, { shouldProvideMaxFeesBasePoint: false })
 
-				const expirationDate = convertDateToTimestamp(request.expirationDate)
+				const expirationDate = request.expirationDate
+					? convertDateToTimestamp(request.expirationDate)
+					: getDefaultExpirationDateTimestamp()
 				const currencyAssetType = getCurrencyAssetType(request.currency)
 
 				const payouts = common.toEthereumParts(request.payouts)

@@ -5,7 +5,7 @@ import type {
 	OrderForm,
 	RaribleV2OrderForm,
 } from "@rarible/ethereum-api-client"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toBinary } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { toBn } from "@rarible/utils/build/bn"
 import { Action } from "@rarible/action"
@@ -21,7 +21,7 @@ export type SellRequest = {
 } & HasPrice & OrderRequest
 export type SellOrderStageId = "approve" | "sign"
 export type SellOrderAction = Action<SellOrderStageId, SellRequest, Order>
-export type SellUpdateRequest = HasOrder & HasPrice
+export type SellUpdateRequest = HasOrder & HasPrice & { end?: number }
 
 export type SellOrderUpdateAction = Action<SellOrderStageId, SellUpdateRequest, Order>
 
@@ -79,7 +79,7 @@ export class OrderSell {
 					return request
 				} else {
 					const price = await this.upserter.getPrice(request, order.take.assetType)
-					const form = await this.prepareOrderUpdateForm(order, price)
+					const form = await this.prepareOrderUpdateForm(order, request, price)
 					const checked = await this.upserter.checkLazyOrder(form) as OrderForm
 					await this.upserter.approve(checked, false)
 					return checked
@@ -100,12 +100,23 @@ export class OrderSell {
 			return input
 		})
 
-	async prepareOrderUpdateForm(order: SimpleOrder, price: BigNumberValue): Promise<OrderForm> {
+	async prepareOrderUpdateForm(
+		order: SimpleOrder, request: SellUpdateRequest, price: BigNumberValue
+	): Promise<OrderForm> {
 		if (order.type === "RARIBLE_V1" || order.type === "RARIBLE_V2") {
-			return this.upserter.getOrderFormFromOrder(order, order.make, {
-				assetType: order.take.assetType,
-				value: toBigNumber(toBn(price).multipliedBy(order.make.value).toString()),
-			})
+			if (!request.end && !order.end) {
+				throw new Error("Order should contains 'end' field")
+			}
+			return {
+				...order,
+				take: {
+					assetType: order.take.assetType,
+					value: toBigNumber(toBn(price).multipliedBy(order.make.value).toString()),
+				},
+				salt: toBigNumber(toBn(order.salt, 16).toString(10)),
+				signature: order.signature || toBinary("0x"),
+				end: (request.end || order.end)!,
+			}
 		}
 		throw new Error(`Unsupported order type: ${order.type}`)
 	}

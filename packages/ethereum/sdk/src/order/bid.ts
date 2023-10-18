@@ -3,7 +3,7 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { toBn } from "@rarible/utils/build/bn"
 import { Action } from "@rarible/action"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toBinary } from "@rarible/types"
 import type { HasOrder, HasPrice, OrderRequest, UpsertOrder } from "./upsert-order"
 import type { AssetTypeRequest, AssetTypeResponse } from "./check-asset-type"
 import type { SimpleOrder } from "./types"
@@ -23,7 +23,7 @@ export interface IBidResult {
 
 export type BidOrderAction = Action<BidOrderOrderStageId, BidRequest, IBidResult>
 
-export type BidUpdateRequest = HasOrder & HasPrice
+export type BidUpdateRequest = HasOrder & HasPrice & { end?: number }
 
 export type BidUpdateOrderAction = Action<BidOrderOrderStageId, BidUpdateRequest, IBidResult>
 
@@ -73,7 +73,7 @@ export class OrderBid {
 					throw new Error(`Make asset type should be ERC-20, received=${order.make.assetType.assetClass}`)
 				}
 				const price = await this.upserter.getPrice(request, order.make.assetType)
-				const form = await this.prepareOrderUpdateForm(order, price)
+				const form = await this.prepareOrderUpdateForm(order, request, price)
 				const checked = await this.upserter.checkLazyOrder(form) as OrderForm
 				const approveTx = await this.upserter.approve(checked, true)
 				return { form: checked, approveTx }
@@ -115,12 +115,23 @@ export class OrderBid {
 		}
 	}
 
-	async prepareOrderUpdateForm(order: SimpleOrder, price: BigNumberValue): Promise<OrderForm> {
+	async prepareOrderUpdateForm(
+		order: SimpleOrder, request: BidUpdateRequest, price: BigNumberValue
+	): Promise<OrderForm> {
 		if (order.type === "RARIBLE_V1" || order.type === "RARIBLE_V2") {
-			return this.upserter.getOrderFormFromOrder(order, {
-				assetType: order.make.assetType,
-				value: toBigNumber(toBn(price).multipliedBy(order.take.value).toString()),
-			}, order.take)
+			if (!request.end && !order.end) {
+				throw new Error("Order should contains 'end' field")
+			}
+			return {
+				...order,
+				make: {
+					assetType: order.make.assetType,
+					value: toBigNumber(toBn(price).multipliedBy(order.take.value).toString()),
+				},
+				salt: toBigNumber(toBn(order.salt, 16).toString(10)),
+				signature: order.signature || toBinary("0x"),
+				end: (request.end || order.end)!,
+			}
 		}
 		throw new Error(`Unsupported order type: ${order.type}`)
 	}
