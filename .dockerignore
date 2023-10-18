@@ -11,10 +11,4 @@ cicd
 Jenkinsfile*
 README.md
 scripts
-
 node_modules
-!node_modules/react-app-rewired
-!node_modules/react-scripts
-
-packages
-!packages/example
