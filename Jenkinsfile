@@ -63,10 +63,10 @@ pipeline {
               pwd
               yarn add -W gh-pages
               export PATH=$PATH:./node_modules/.bin
-              if [ "${pipelineconfig.get('ghPagesRepoUrl','')}" = "" ]; then
+              if [ "${pipelineConfig.get('ghPagesRepoUrl','')}" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
-                gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']} -r ${pipelineconfig['ghPagesRepoUrl']}
+                gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']} -r ${pipelineConfig['ghPagesRepoUrl']}
               fi
           """
         }
