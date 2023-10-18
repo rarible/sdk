@@ -2,7 +2,7 @@
 
 
 def pipelineConfig = [
-    "buildCommand": "yarn build-example"
+    "buildCommand": "yarn && yarn build-example"
 ]
 
 pipeline {
@@ -50,6 +50,9 @@ pipeline {
             args utils.dockerAgentArgs()
             reuseNode true
           }
+        }
+        when {
+          anyOf { branch 'main'; branch 'master'; branch 'develop'; branch 'release/*'; branch 'cicd' }
         }
         steps {
           sh """
