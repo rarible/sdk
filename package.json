@@ -48,7 +48,7 @@
     "build-ethereum": "sh ./scripts/build-ethereum.sh",
     "build-imx": "sh ./scripts/build-imx.sh",
     "build-solana": "sh ./scripts/build-solana.sh",
-    "build-example": "yarn build && cd packages/example && mv common.env .env && yarn build",
+    "build-example": "yarn build && cd packages/example && mv common.env .env && yarn build && rm -f build/static/js/*.js.map",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
