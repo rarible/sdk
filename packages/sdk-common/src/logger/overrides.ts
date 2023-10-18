@@ -1,7 +1,10 @@
 import { BlockchainGroup } from "@rarible/api-client"
 
+export const INVALID_TX_PARAMS_EIP_1559_ERROR =
+  "Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559"
+
 const EVM_WARN_MESSAGES = [
-	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
+	INVALID_TX_PARAMS_EIP_1559_ERROR,
 	"underlying network changed",
 	"Balance not enough to cover gas fee. Please deposit at least",
 	"Biaya gas telah diperbarui dan Anda memerlukan",
