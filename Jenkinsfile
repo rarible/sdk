@@ -2,7 +2,8 @@
 
 
 def pipelineConfig = [
-    "buildCommand": "yarn && yarn build-example"
+    "buildCommand": "yarn && yarn build-example",
+    "buildResultDirPath": "packages/example/build"
 ]
 
 pipeline {
@@ -57,7 +58,7 @@ pipeline {
         steps {
           sh """
               npm install gh-pages
-              gh-pages --message "deploy ${env.GIT_COMMIT}" --dist packages/example/build
+              gh-pages --message "deploy ${env.GIT_COMMIT}" --dist ${pipelineConfig['buildResultDirPath']}
           """
         }
       }
