@@ -1,21 +1,20 @@
-import type { ContractAddress } from "@rarible/types"
-import type { Maybe } from "@rarible/types"
+import type { ContractAddress, Maybe } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
+import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
 import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
-import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
 import type { ISell, ISellInternal } from "./types/order/sell"
 import type { OrderRequest } from "./types/order/common"
 import type { MintResponse, OnChainMintResponse } from "./types/nft/mint/prepare"
-import type { IMint } from "./types/nft/mint"
 import { MintType } from "./types/nft/mint/prepare"
+import type { IMint } from "./types/nft/mint"
 import type { IMintAndSell } from "./types/nft/mint-and-sell"
 import type { MintAndSellRequest, MintAndSellResponse } from "./types/nft/mint-and-sell/domain"
 import type { HasCollection, HasCollectionId } from "./types/nft/mint/prepare-mint-request.type"
@@ -32,6 +31,8 @@ import { MethodWithPrepare } from "./types/common"
 import { extractBlockchain } from "./common/extract-blockchain"
 import { getSdkContext } from "./common/get-sdk-context"
 import { createFlowSdk } from "./sdk-blockchains/flow"
+import { checkRoyalties } from "./common/check-royalties"
+import { getCollectionFromItemId } from "./common/utils"
 
 /**
  * @module
@@ -207,7 +208,15 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 	return new MethodWithPrepare(
 		 (request) => sell(request),
 		async (request) => {
-			const item = await apis.item.getItemById({ itemId: request.itemId })
+			const [item, collection] = await Promise.all([
+				apis.item.getItemById({ itemId: request.itemId }),
+				apis.collection.getCollectionById({ collection: getCollectionFromItemId(request.itemId) }),
+			])
+
+			if (collection.self) {
+				await checkRoyalties(request.itemId, apis)
+			}
+
 			const response = await sell.prepare({ ...request, blockchain: extractBlockchain(request.itemId) })
 			return {
 				...response,

@@ -35,6 +35,9 @@ import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
+import type { IApisSdk } from "../../domain"
+import { checkRoyalties } from "../../common/check-royalties"
+import { getCollectionFromItemId } from "../../common/utils"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -59,6 +62,7 @@ export class EthereumBid {
 
 	constructor(
 		private sdk: RaribleSdk,
+		private apis: IApisSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private balanceService: EthereumBalance,
 		private network: EthereumNetwork,
@@ -160,6 +164,15 @@ export class EthereumBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		if ("itemId" in prepare) {
+			const collectionId = getCollectionFromItemId(prepare.itemId)
+			const collection = await this.apis.collection.getCollectionById({ collection: collectionId })
+
+			if (collection.self) {
+				await checkRoyalties(prepare.itemId, this.apis)
+			}
+		}
+
 		if (this.config?.useDataV3) {
 			return this.bidDataV3(prepare)
 		} else {
