@@ -59,15 +59,16 @@ pipeline {
           anyOf { branch 'main'; branch 'master'; branch 'develop'; branch 'release/*'; branch 'cicd' }
         }
         steps {
-          sh '''
+          sh """
+              pwd
               yarn add -W gh-pages
               export PATH=$PATH:./node_modules/.bin
-              if [ "${pipelineconfig.get('ghPagesRepoUrl','')" = "" ]; then
+              if [ "${pipelineconfig.get('ghPagesRepoUrl','')}" = "" ]; then
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']}
               else
                 gh-pages -m "deploy ${env.GIT_COMMIT}" -d ${pipelineConfig['buildResultDirPath']} -r ${pipelineconfig['ghPagesRepoUrl']}
               fi
-          '''
+          """
         }
       }
     }
