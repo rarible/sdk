@@ -1,7 +1,7 @@
 @Library('shared-library') _
 
 def pipelineConfig = [
-    "buildCommand": "mkdir packages/example/build && echo Hi > packages/example/build/index.html",
+    "buildCommand": "mkdir -p packages/example/build && echo Hi > packages/example/build/index.html",
     "buildResultDirPath": "packages/example/build"
 ]
 
