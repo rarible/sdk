@@ -38,7 +38,7 @@ pipeline {
           anyOf { branch 'main'; branch 'master'; branch 'develop'; branch 'release/*'; branch 'cicd' }
         }
         steps { script {
-          if (pipelineConfig.containsKey('buildCommand') {
+          if (pipelineConfig.containsKey('buildCommand')) {
             sh(pipelineConfig['buildCommand'])
           } else {
             utils.runStage(pipelineConfig, 'build')
