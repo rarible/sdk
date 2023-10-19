@@ -71,7 +71,7 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "start": "mv common.env .env && SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
     "serve-static": "serve ./build",
     "build": "mv common.env .env && CI=false NODE_OPTIONS=--max-old-space-size=6096 SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
     "eject": "SKIP_PREFLIGHT_CHECK=true react-app-rewired eject",
