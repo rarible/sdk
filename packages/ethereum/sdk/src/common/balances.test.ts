@@ -67,6 +67,7 @@ describe.each(envs)("get balances each of environments", (env: EthereumNetwork) 
 export function getAPIKey(env:  EthereumNetwork) {
 	switch (env) {
 		case "mainnet":
+		case "mantle":
 		case "polygon":
 			return process.env.SDK_API_KEY_PROD
 		default:

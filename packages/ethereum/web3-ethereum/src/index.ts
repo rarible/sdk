@@ -6,7 +6,6 @@ import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
 import { EthereumProviderError, filterErrors, Provider, signTypedData } from "@rarible/ethereum-provider"
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
-import { backOff } from "exponential-backoff"
 import type { AbiItem } from "web3-utils"
 import { DappType, getDappType, promiseSettledRequest, conditionalRetry, FAILED_TO_FETCH_ERROR } from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
@@ -14,6 +13,7 @@ import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
 import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./utils/log-parser"
+import { getTransaction } from "./utils/get-transaction"
 
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
@@ -302,7 +302,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				}
 				const promiEvent = this.config.web3.eth.sendTransaction(transactionOptions)
 				const promises = toPromises(promiEvent)
-				const transaction = await this.getTransaction(await promises.hash)
+				const transaction = await getTransaction(await promises.hash, this.config)
 
 				return new Web3Transaction(
 					promises.receipt,
@@ -322,7 +322,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			}
 			const promiEvent: PromiEvent<Contract> = this.sendMethod.send(sendMethodConfig)
 			const promises = toPromises(promiEvent)
-			const transaction = await this.getTransaction(await promises.hash)
+			const transaction = await getTransaction(await promises.hash, this.config)
 			return new Web3Transaction(
 				promises.receipt,
 				toWord(transaction.hash),
@@ -354,7 +354,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			return await this._send(options)
 		} catch (e) {
 			//todo remove this hack for Phantom wallet after fixing issue with gasPrice=null for web3/Metamask
-			if (hasMessage(e) && e?.message.toLowerCase().includes("missing or invalid parameters")) {
+			if (hasMessage(e) && e?.message?.toLowerCase().includes("missing or invalid parameters")) {
 				return await this._send(options, {})
 			}
 			throw e
@@ -373,19 +373,6 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		const gas = options.gas || this.config.gas
 		if (typeof gas !== "undefined") gasOptions.gas = gas
 		return gasOptions
-	}
-
-	private getTransaction(hash: string) {
-		return backOff(async () => {
-			const value = await this.config.web3.eth.getTransaction(hash)
-			if (!value) throw new Error("No transaction found")
-			return value
-		}, {
-			maxDelay: 5000,
-			numOfAttempts: 20,
-			delayFirstAttempt: true,
-			startingDelay: 300,
-		})
 	}
 
 	async getFrom(): Promise<string> {

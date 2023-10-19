@@ -132,13 +132,7 @@ export class OrderFiller {
 					if (!this.ethereum) {
 						throw new Error("Wallet undefined")
 					}
-					if (
-						request.order.type === "SEAPORT_V1" ||
-						request.order.type === "LOOKSRARE" ||
-						request.order.type === "LOOKSRARE_V2" ||
-						request.order.type === "X2Y2" ||
-						request.order.type === "AMM"
-					) {
+					if (this.isNonInvertableOrder(request.order)) {
 						return { request, inverted: request.order }
 					}
 					const from = toAddress(await this.ethereum.getFrom())
@@ -181,7 +175,7 @@ export class OrderFiller {
 	public acceptBid: SellOrderAction = this.getFillAction<SellOrderRequest>()
 
 	async getBuyTx({ request, from }: GetOrderBuyTxRequest): Promise<TransactionData> {
-		const inverted = await this.invertOrder(request, from)
+		const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
 		if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
 			inverted.make.assetType = await this.checkAssetType(request.assetType)
 		}
@@ -296,7 +290,7 @@ export class OrderFiller {
 		}
 		await checkChainId(this.ethereum, this.config)
 		const from = toAddress(await this.ethereum.getFrom())
-		const inverted = await this.invertOrder(request, from)
+		const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
 		if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
 			inverted.make.assetType = await this.checkAssetType(request.assetType)
 		}
@@ -371,5 +365,13 @@ export class OrderFiller {
 
 	getBuyAmmInfo(request: GetAmmBuyInfoRequest): Promise<AmmTradeInfo> {
 		return this.apis.order.getAmmBuyInfo(request)
+	}
+
+	isNonInvertableOrder(order: SimpleOrder): boolean {
+		return order.type === "SEAPORT_V1" ||
+      order.type === "LOOKSRARE" ||
+      order.type === "LOOKSRARE_V2" ||
+      order.type === "X2Y2" ||
+      order.type === "AMM"
 	}
 }

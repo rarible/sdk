@@ -55,6 +55,7 @@ describe.skip("get buy transaction", () => {
 			priceDecimal: "0.000000000000000002",
 			payouts: [],
 			originFees: [],
+			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
 		})
 
 		const response = await supertest(app)
@@ -125,6 +126,7 @@ describe.skip("get buy transaction", () => {
 			priceDecimal: "0.000000000000000002",
 			payouts: [],
 			originFees: [],
+			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
 		})
 
 		const response = await supertest(app)

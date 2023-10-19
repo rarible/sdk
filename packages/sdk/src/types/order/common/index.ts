@@ -128,7 +128,7 @@ export type OrderRequest = {
 	 */
 	maxFeesBasePoint?: number
 	/**
-	 * Order expiration date
+	 * Order expiration date. By default, 30 days
 	 */
 	expirationDate?: Date
 }
