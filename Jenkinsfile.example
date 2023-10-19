@@ -1,0 +1,9 @@
+@Library('shared-library') _
+
+def pipelineConfig = [
+    "buildCommand": "yarn && yarn build-example",
+    "buildResultDirPath": "packages/example/build",
+    "ghPagesDomain": "example.rarible.org"
+]
+
+pipelineGHPages(pipelineConfig)
