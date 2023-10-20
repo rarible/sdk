@@ -59,7 +59,7 @@ export function createEthereumSdk(
 
 	const sellService = new EthereumSell(sdk, network, config)
 	const balanceService = new EthereumBalance(sdk, apis, network)
-	const bidService = new EthereumBid(sdk, wallet, balanceService, network, config)
+	const bidService = new EthereumBid(sdk, apis, wallet, balanceService, network, config)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillService = new EthereumFill(sdk, wallet, network, config)
 	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
