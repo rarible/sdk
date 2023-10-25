@@ -54,3 +54,8 @@ export function validateBlockchain(blockchain: string): Blockchain {
 	}
 	return blockchain as Blockchain
 }
+
+export const FLOW_TOKEN_MAP = {
+	testnet: "A.7e60df042a9c0868.FlowToken",
+	prod: "A.1654653399040a61.FlowToken",
+}
