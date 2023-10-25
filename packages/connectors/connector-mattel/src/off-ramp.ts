@@ -8,7 +8,7 @@ import {
 	validateBlockchain,
 	FLOW_TOKEN_MAP,
 } from "@rarible/sdk-common"
-import { ContractAddress, toContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
 
 const OFFRAMP_URLS = {
 	PROD: "https://crypto.sardine.ai",
