@@ -29,7 +29,7 @@ describe("Batch buy", () => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
-				price: "0.00000000001",
+				price: "0.0001",
 				currency: { "@type": "ETH" },
 				expirationDate: generateExpirationDate(),
 			})
@@ -58,7 +58,7 @@ describe("Batch buy", () => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
-				price: "0.00000000001",
+				price: "0.0001",
 				currency: { "@type": "ETH" },
 				expirationDate: generateExpirationDate(),
 			})

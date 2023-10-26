@@ -18,7 +18,7 @@
     "test": "sh ./scripts/test.sh",
     "verify": "tsc --noEmit",
     "docs": "typedoc",
-    "test:only": "jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum/bid --silent=false --detectOpenHandles"
+    "test:only": "jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum --silent=false --detectOpenHandles"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",

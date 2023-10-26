@@ -27,7 +27,7 @@ describe("bid", () => {
 		const erc1155 = suiteDev1.contracts.getContract("erc1155_1")
 		const erc20Mintable = suiteDev2.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintLazyAndWait(erc1155.collectionId, { supply: 10 })
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const quantity = toBn(5)
 		const nextPrice = price.multipliedBy(2)
 
@@ -47,7 +47,7 @@ describe("bid", () => {
 		const erc1155 = suiteDev1.contracts.getContract("erc1155_1")
 		const erc20Mintable = suiteDev2.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintLazyAndWait(erc1155.collectionId, { supply: 10 })
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const quantity = toBn(5)
 		const nextPrice = price.multipliedBy(2)
 
@@ -70,7 +70,7 @@ describe("bid", () => {
 		const erc20Mintable = suiteDev1.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintAndWait(erc721.collectionId)
 
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const orderId = await suiteDev2.orders.bidWithPrepare({
 			itemId,
 			price,
@@ -85,7 +85,7 @@ describe("bid", () => {
 		const erc1155 = suiteDev1.contracts.getContract("erc1155_1")
 		const erc20 = suiteDev1.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintLazyAndWait(erc1155.collectionId, { supply: 10 })
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const quantity = toBn(5)
 
 		const orderId = await suiteDev2.orders.bidWithPrepare({
@@ -104,7 +104,7 @@ describe("bid", () => {
 		const erc1155 = suiteDev1.contracts.getContract("erc1155_1")
 		const erc20 = suiteDev1.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintLazyAndWait(erc1155.collectionId, { supply: 10 })
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const quantity = toBn(5)
 
 		const orderId = await suiteDev2.orders.bidWithPrepare({
@@ -126,7 +126,7 @@ describe("bid", () => {
 		const wrappedEth = suiteDev2.contracts.getContract("wrapped_eth")
 		const { itemId } = await suiteDev1.items.mintAndWait(erc721.collectionId)
 
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const feeBp = toBn(1000)
 		const originFees = [createPart(suiteDev1.addressUnion, feeBp)]
 		const total = price.multipliedBy(toBn(1).plus(feeBp.dividedBy(10000)))
@@ -163,7 +163,7 @@ describe("bid", () => {
 		const wrappedEth = suiteDev2.contracts.getContract("wrapped_eth")
 		const { itemId } = await suiteDev1.items.mintAndWait(erc1155.collectionId, { supply: quantity.toNumber() })
 
-		const price = toBn(0.00002)
+		const price = toBn(0.0002)
 		const feeBp = toBn(1000)
 		const acceptQuantity = toBn(2)
 		const originFees = [createPart(suiteDev1.addressUnion, feeBp)]
@@ -203,7 +203,7 @@ describe("bid", () => {
 		const response = await suiteCustom.sdk.order.bid.prepare({ itemId })
 		const convertable = await response.getConvertableValue({
 			assetType: erc20.asset,
-			price: toBn(0.00001).toString(),
+			price: toBn(0.0001).toString(),
 			amount: 5,
 			originFees: [],
 		})
@@ -217,7 +217,7 @@ describe("bid", () => {
 		const erc1155 = suiteDev1.contracts.getContract("erc1155_1")
 		const { itemId } = await suiteDev1.items.mintAndWait(erc1155.collectionId)
 		const response = await suiteCustom.sdk.order.bid.prepare({ itemId })
-		const price = toBn(0.00001)
+		const price = toBn(0.0001)
 		const feeBp = toBn(1000)
 		const amount = toBn(5)
 
@@ -243,7 +243,7 @@ describe("bid", () => {
 
 		const orderId = await suiteDev2.orders.bidByCollection({
 			collectionId: erc721.collectionId,
-			price: toBn(0.00001).toString(),
+			price: toBn(0.0001).toString(),
 			currency: erc20.asset,
 		})
 
@@ -257,7 +257,7 @@ describe("bid", () => {
 
 		const orderId = await suiteDev2.orders.bidByCollection({
 			collectionId: erc721.collectionId,
-			price: toBn(0.00001).toString(),
+			price: toBn(0.0001).toString(),
 			currency: erc20.asset,
 		})
 
@@ -271,7 +271,7 @@ describe("bid", () => {
 		const expirationDate = new Date(Date.now() + 1000 * 10)
 		const orderId = await suiteDev2.orders.bidByCollection({
 			collectionId: erc721.collectionId,
-			price: toBn(0.00001).toString(),
+			price: toBn(0.0001).toString(),
 			currency: erc20.asset,
 			expiration: expirationDate,
 		})
