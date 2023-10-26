@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Bug Fixes
+
+* example build ([6705a0a](https://github.com/rarible/sdk/commit/6705a0a1d93a672054af9ef01908feb0b02a6c2e))
+* example dev deps ([0573f1b](https://github.com/rarible/sdk/commit/0573f1b3597f6ebb020d487aa10f8a07ac5894df))
+
+
+### Features
+
+* **MPX-2453:** remove walletconnect-v1 provider ([#542](https://github.com/rarible/sdk/issues/542)) ([25fff1d](https://github.com/rarible/sdk/commit/25fff1d5d4bf70a85c68c7c72e270f1153405d37))
+* **MPX-2520:** add calls to alternative rpc ([#543](https://github.com/rarible/sdk/issues/543)) ([49e3f71](https://github.com/rarible/sdk/commit/49e3f71287630cea72bb10c9392211e1e2db8a04))
+* **MPX-2551:** support flow in offramp ([#553](https://github.com/rarible/sdk/issues/553)) ([4fb79c2](https://github.com/rarible/sdk/commit/4fb79c2704e6de729c73083291234790eef64854))
+* **PLTF-43:** check collection init ([#552](https://github.com/rarible/sdk/issues/552)) ([7e2b477](https://github.com/rarible/sdk/commit/7e2b4778e4dd1b867eaf614d39d123a7b09feccc))
+
+
+### BREAKING CHANGES
+
+* **MPX-2453:** @rarible/connector-walletconnect was removed
+
+* fix: update README.md
+
+
+
+
+
 ## [0.13.55-fix.0](https://github.com/rarible/sdk/compare/v0.13.55...v0.13.55-fix.0) (2023-10-10)
 
 **Note:** Version bump only for package example

@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **MPX-2453:** remove walletconnect-v1 provider ([#542](https://github.com/rarible/sdk/issues/542)) ([25fff1d](https://github.com/rarible/sdk/commit/25fff1d5d4bf70a85c68c7c72e270f1153405d37))
+
+
+### BREAKING CHANGES
+
+* **MPX-2453:** @rarible/connector-walletconnect was removed
+
+* fix: update README.md
+
+
+
+
+
 ## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
 
 

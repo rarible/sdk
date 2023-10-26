@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Bug Fixes
+
+* example build ([6705a0a](https://github.com/rarible/sdk/commit/6705a0a1d93a672054af9ef01908feb0b02a6c2e))
+* example dev deps ([0573f1b](https://github.com/rarible/sdk/commit/0573f1b3597f6ebb020d487aa10f8a07ac5894df))
+* **MPX-2044:** wallet connector error handling ([#550](https://github.com/rarible/sdk/issues/550)) ([90b9bc4](https://github.com/rarible/sdk/commit/90b9bc44acf9e9c6d8373e8f7ad61b30e053f5df))
+
+
+### Features
+
+* **MPS-2487:** disallow creating orders for items with royalties gt 50% ([#546](https://github.com/rarible/sdk/issues/546)) ([a212954](https://github.com/rarible/sdk/commit/a212954d848f2c7ed2f79b9bbcba3a846058dc26))
+* **MPX-1809:** add human-readable description of the errors ([#545](https://github.com/rarible/sdk/issues/545)) ([b3485d8](https://github.com/rarible/sdk/commit/b3485d8203e1cb3eca8b51086fe2138972dfbfb7))
+* **MPX-1826:** move json configs to backend ([#544](https://github.com/rarible/sdk/issues/544)) ([42cc005](https://github.com/rarible/sdk/commit/42cc005795dfec5b7704ca0b187d4aa43be06c5f))
+* **MPX-2453:** remove walletconnect-v1 provider ([#542](https://github.com/rarible/sdk/issues/542)) ([25fff1d](https://github.com/rarible/sdk/commit/25fff1d5d4bf70a85c68c7c72e270f1153405d37))
+* **MPX-2463:** add checking payment value ([#547](https://github.com/rarible/sdk/issues/547)) ([97cc8fc](https://github.com/rarible/sdk/commit/97cc8fc47670633267242f26a7de3122e3466214))
+* **MPX-2520:** add calls to alternative rpc ([#543](https://github.com/rarible/sdk/issues/543)) ([49e3f71](https://github.com/rarible/sdk/commit/49e3f71287630cea72bb10c9392211e1e2db8a04))
+* **MPX-2551:** support flow in offramp ([#553](https://github.com/rarible/sdk/issues/553)) ([4fb79c2](https://github.com/rarible/sdk/commit/4fb79c2704e6de729c73083291234790eef64854))
+* **PLTF-43:** check collection init ([#552](https://github.com/rarible/sdk/issues/552)) ([7e2b477](https://github.com/rarible/sdk/commit/7e2b4778e4dd1b867eaf614d39d123a7b09feccc))
+
+
+### BREAKING CHANGES
+
+* **MPX-2453:** @rarible/connector-walletconnect was removed
+
+* fix: update README.md
+
+
+
+
+
 ## [0.13.55-fix.0](https://github.com/rarible/sdk/compare/v0.13.55...v0.13.55-fix.0) (2023-10-10)
 
 

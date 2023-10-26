@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **MPX-2463:** add checking payment value ([#547](https://github.com/rarible/sdk/issues/547)) ([97cc8fc](https://github.com/rarible/sdk/commit/97cc8fc47670633267242f26a7de3122e3466214))
+
+
+
+
+
 ## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
 
 

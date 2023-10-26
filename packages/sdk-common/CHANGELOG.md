@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Bug Fixes
+
+* **MPX-2044:** wallet connector error handling ([#550](https://github.com/rarible/sdk/issues/550)) ([90b9bc4](https://github.com/rarible/sdk/commit/90b9bc44acf9e9c6d8373e8f7ad61b30e053f5df))
+
+
+### Features
+
+* **MPX-1809:** add human-readable description of the errors ([#545](https://github.com/rarible/sdk/issues/545)) ([b3485d8](https://github.com/rarible/sdk/commit/b3485d8203e1cb3eca8b51086fe2138972dfbfb7))
+* **MPX-2551:** support flow in offramp ([#553](https://github.com/rarible/sdk/issues/553)) ([4fb79c2](https://github.com/rarible/sdk/commit/4fb79c2704e6de729c73083291234790eef64854))
+
+
+
+
+
 ## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
 
 
