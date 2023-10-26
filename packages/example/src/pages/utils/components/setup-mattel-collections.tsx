@@ -20,7 +20,7 @@ export function SetupMattelCollections() {
 	const { handleSubmit } = form
 	function getCollectionsStatus() {
 		if (connection?.sdk?.flow) {
-			connection.sdk.flow.checkInitMattelCollections(toUnionAddress("FLOW:0x9ac8a33be0ca9cb8"))
+			connection.sdk.flow.checkInitMattelCollections()
 				.then(status => setCollections(JSON.stringify(status, null, " ")))
 				.catch(console.error)
 		}
