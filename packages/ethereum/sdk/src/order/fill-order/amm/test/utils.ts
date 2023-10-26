@@ -3,7 +3,7 @@ import { toAddress } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import {
 	createSudoswapFactoryV1Contract,
-} from "@rarible/ethereum-sdk-test-common/src/contracts/sudoswap/sudoswap-factory-v1"
+} from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
 import { approveErc721 } from "../../../approve-erc721"
 import { mintTestToken } from "../../batch-purchase/test/common/utils"
 import type { RaribleSdk } from "../../../../index"

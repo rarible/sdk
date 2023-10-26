@@ -58,6 +58,7 @@ describe("bid", () => {
 	const upserter = new UpsertOrder(
 		orderService,
 		send2,
+		config,
 		(x) => Promise.resolve(x),
 		approve2,
 		signOrder2,

@@ -16,6 +16,7 @@ import { createErc721V3Collection } from "../common/mint"
 import { MintResponseTypeEnum } from "../nft/mint"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { cancel } from "./cancel"
 import { signOrder } from "./sign-order"
 import { UpsertOrder } from "./upsert-order"
@@ -73,7 +74,7 @@ describe("cancel order", () => {
 				assetType: {
 					assetClass: "ETH",
 				},
-				value: toBigNumber("10"),
+				value: toBigNumber(MIN_PAYMENT_VALUE.toFixed()),
 			},
 			salt: toBigNumber("10") as any,
 			maker: toAddress(wallet.getAddressString()),
@@ -130,6 +131,7 @@ describe("cancel order", () => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
