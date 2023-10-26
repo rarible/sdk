@@ -2,7 +2,13 @@ import type { AxiosInstance } from "axios"
 import axios from "axios"
 import type { AssetType, BigNumberLike, UnionAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { extractBlockchainFromAssetType, getEntityData, validateBlockchain } from "@rarible/sdk-common"
+import {
+	extractBlockchainFromAssetType,
+	getEntityData,
+	validateBlockchain,
+	FLOW_TOKEN_MAP,
+} from "@rarible/sdk-common"
+import { toContractAddress } from "@rarible/types"
 
 const OFFRAMP_URLS = {
 	PROD: "https://crypto.sardine.ai",
@@ -17,8 +23,13 @@ export class OffRampClient {
   private availableBlockchains = [
   	Blockchain.ETHEREUM,
   	Blockchain.POLYGON,
+  	Blockchain.FLOW,
   ].map(blockchain => blockchain.toLowerCase())
-  constructor(private readonly clientId: string, private readonly clientSecret: string, env: "prod" | "sandbox") {
+  constructor(
+  	private readonly clientId: string,
+  	private readonly clientSecret: string,
+  	private readonly env: "prod" | "sandbox"
+  ) {
   	const isProd = env === "prod"
   	this.offrampUrl = isProd ? OFFRAMP_URLS.PROD : OFFRAMP_URLS.SANDBOX
   	this.client = axios.create({
@@ -56,29 +67,43 @@ export class OffRampClient {
   	}
   }
 
-  async getSupportedTokens(): Promise<Array<SupportedToken & { assetType: AssetType}>> {
+  async getSupportedTokens(): Promise<Array<ExtendedSupportedToken>> {
   	const { data } = await this.client.get("/supported-tokens")
   	return (data.data as SupportedToken[])
   		.filter(token => this.availableBlockchains.includes(token.network))
-  		.map(token => {
-  			if (token.tokenAddress) {
-  				return {
-  					...token,
-  					assetType: {
-  						"@type": "ERC20",
-  						contract: `${token.network.toUpperCase()}:${token.tokenAddress}`,
-  					} as AssetType,
-  				}
-  			} else {
-  				return {
-  					...token,
-  					assetType: {
-  						"@type": "ETH",
-  						blockchain: validateBlockchain(token.network.toUpperCase()),
-  					} as AssetType,
+  		.reduce((acc, token) => {
+  			if (["ethereum", "polygon"].includes(token.network)) {
+  				if (token.tokenAddress) {
+  					acc.push({
+  						...token,
+  						assetType: {
+  							"@type": "ERC20",
+  							contract: toContractAddress(`${token.network.toUpperCase()}:${token.tokenAddress}`),
+  						} as AssetType,
+  					})
+  				} else {
+  					acc.push({
+  						...token,
+  						assetType: {
+  							"@type": "ETH",
+  							blockchain: validateBlockchain(token.network.toUpperCase()),
+  						} as AssetType,
+  					})
   				}
   			}
-  		})
+  			if (token.network === "flow") {
+  				const contract = token.tokenAddress
+          ?? this.env === "prod" ? FLOW_TOKEN_MAP["prod"] : FLOW_TOKEN_MAP["testnet"]
+  				acc.push({
+  					...token,
+  					assetType: {
+  						"@type": "FLOW_FT",
+  						contract: toContractAddress(`FLOW:${contract}`),
+  					},
+  				})
+  			}
+  			return acc
+  		}, [] as ExtendedSupportedToken[])
   }
 
   async getGeoCoverage() {
@@ -145,6 +170,12 @@ export function getAssetType(
 	const blockchain = extractBlockchainFromAssetType(assetType) || userBlockchain || Blockchain.ETHEREUM
 	const network = blockchain.toLowerCase()
 	const contract = "contract" in assetType ? getEntityData(assetType.contract).address : ""
+	if (blockchain === Blockchain.FLOW && isFlowToken(contract)) {
+		return {
+			network,
+			symbol: "FLOW",
+		}
+	}
 	const token = availableTokens.find(token => {
 		return token.network === network && token.tokenAddress === contract
 	})
@@ -157,6 +188,9 @@ export function getAssetType(
 		symbol: token.assetSymbol,
 	}
 }
+function isFlowToken(contract: string) {
+	return !!contract && [FLOW_TOKEN_MAP["testnet"], FLOW_TOKEN_MAP["prod"]].includes(contract)
+}
 
 export type SupportedToken = {
 	network: string
@@ -167,6 +201,8 @@ export type SupportedToken = {
 	token: string
 	tokenAddress: string
 }
+
+export type ExtendedSupportedToken = SupportedToken & { assetType: AssetType }
 
 export type GetQuotesResponse = {
 	quantity: number

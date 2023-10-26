@@ -3,6 +3,7 @@ import React, { useContext, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { OffRampClient } from "@rarible/connector-mattel/build/off-ramp"
 import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { getFlowTokenAddressByEnv } from "../../balance/utils/currencies"
 
 export function SardineOfframp() {
 	const connection = useContext(ConnectorContext)
@@ -12,12 +13,22 @@ export function SardineOfframp() {
 
 	async function renderIframe() {
 		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
-
 			const url = await clientTokenStorage.getSellLink({
 				address: connection.walletAddress,
 				cryptoAmount: "0.04",
 				fiatCurrency: "USD",
 				assetType: { "@type": "ETH" },
+			})
+			setIframeUrl(url)
+		} else if (connection.sdk?.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
+			const url = await clientTokenStorage.getSellLink({
+				address: connection.walletAddress,
+				cryptoAmount: "110",
+				fiatCurrency: "USD",
+				assetType: {
+					"@type": "FLOW_FT",
+					contract: getFlowTokenAddressByEnv("testnet")
+				},
 			})
 			setIframeUrl(url)
 		} else {
@@ -33,6 +44,17 @@ export function SardineOfframp() {
 				fiatCurrency: "USD",
 				assetType: { "@type": "ETH"},
 				address: connection.walletAddress,
+			})
+			setQuotesResult(JSON.stringify(quotes, null, "  "))
+		} else if (connection.sdk?.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
+			const quotes = await clientTokenStorage.getQuotes({
+				cryptoAmount: "3",
+				fiatCurrency: "USD",
+				address: connection.walletAddress,
+				assetType: {
+					"@type": "FLOW_FT",
+					contract: getFlowTokenAddressByEnv("testnet")
+				},
 			})
 			setQuotesResult(JSON.stringify(quotes, null, "  "))
 		} else {
