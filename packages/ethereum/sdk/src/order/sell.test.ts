@@ -21,6 +21,7 @@ import { delay, retry } from "../common/retry"
 import { createEthereumApis } from "../common/apis"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { OrderSell } from "./sell"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -94,7 +95,7 @@ describe.each(providers)("sell", (ethereum) => {
 				contract: minted.contract,
 				tokenId: minted.tokenId,
 			},
-			price: toBn("2"),
+			price: toBn(MIN_PAYMENT_VALUE.multipliedBy(2).toFixed()),
 			takeAssetType: {
 				assetClass: "ETH",
 			},
@@ -112,7 +113,7 @@ describe.each(providers)("sell", (ethereum) => {
 
 		await delay(1000)
 
-		const nextPrice = toBigNumber("1")
+		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
 		await retry(5, 500, async () => {
 			const updatedOrder = await orderSell.update({
@@ -155,7 +156,7 @@ describe.each(providers)("sell", (ethereum) => {
 				assetType: {
 					assetClass: "ETH",
 				},
-				value: toBigNumber("2"),
+				value: toBigNumber(MIN_PAYMENT_VALUE.plus(1).toFixed()),
 			},
 			salt: toBigNumber("10"),
 			type: "RARIBLE_V1",
@@ -170,7 +171,7 @@ describe.each(providers)("sell", (ethereum) => {
 
 		await delay(1000)
 
-		const nextPrice = toBigNumber("1")
+		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
 		await retry(5, 500, async () => {
 			const updatedOrder = await orderSell.update({

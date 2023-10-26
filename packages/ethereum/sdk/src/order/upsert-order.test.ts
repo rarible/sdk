@@ -8,6 +8,7 @@ import { getApiConfig } from "../config/api-config"
 import { createTestProviders } from "../common/test/create-test-providers"
 import { createEthereumApis } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
+import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../common/check-min-payment-value"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
@@ -76,7 +77,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 				contract: toAddress("0x0000000000000000000000000000000000000001"),
 				tokenId: toBigNumber("1"),
 			},
-			priceDecimal: toBn("0.000000000000000001"),
+			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
 			takeAssetType: {
 				assetClass: "ETH" as const,
 			},
@@ -98,7 +99,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		)
 
 		const price = await upserter.getPrice(request, request.takeAssetType)
-		expect(price.valueOf()).toBe("1")
+		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
 
 	test("getPrice should work with ERC20", async () => {
@@ -109,7 +110,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 				contract: toAddress("0x0000000000000000000000000000000000000001"),
 				tokenId: toBigNumber("1"),
 			},
-			priceDecimal: toBn("0.000000000000000001"),
+			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
 			takeAssetType: {
 				assetClass: "ERC20" as const,
 				contract: toAddress(it.testErc20.options.address),
@@ -132,7 +133,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		)
 
 		const price = await upserter.getPrice(request, request.takeAssetType)
-		expect(price.valueOf()).toBe("1")
+		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
 
 	test("throw error if sell order has less than minimal payment value", async () => {
