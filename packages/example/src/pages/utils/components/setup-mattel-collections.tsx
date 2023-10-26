@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Grid, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
+import { toUnionAddress } from "@rarible/types"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { FormSubmit } from "../../../components/common/form/form-submit"
@@ -19,7 +20,7 @@ export function SetupMattelCollections() {
 	const { handleSubmit } = form
 	function getCollectionsStatus() {
 		if (connection?.sdk?.flow) {
-			connection.sdk.flow.checkInitMattelCollections()
+			connection.sdk.flow.checkInitMattelCollections(toUnionAddress("FLOW:0x9ac8a33be0ca9cb8"))
 				.then(status => setCollections(JSON.stringify(status, null, " ")))
 				.catch(console.error)
 		}
