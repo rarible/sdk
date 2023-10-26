@@ -18,7 +18,7 @@ import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
 import { getTestContract } from "../../../../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../../../../types"
 import { getEndDateAfterMonth } from "../../../../test/utils"
-import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../../../../../common/check-min-payment-value"
+import { MIN_PAYMENT_VALUE_DECIMAL } from "../../../../../common/check-min-payment-value"
 
 // const goerliErc721V3ContractAddress = toAddress("0x1723017329a804564bC8d215496C89eaBf1F3211")
 // const devErc721V3ContractAddress = toAddress("0xf9864189fe52456345DD0055D210fD160694Dd08")

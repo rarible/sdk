@@ -98,7 +98,7 @@ describe("mint and sell", () => {
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-			price: "0.000000000000000001",
+			price: "0.0001",
 			currency: {
 				"@type": "ETH",
 			},
@@ -146,7 +146,7 @@ describe("mint and sell", () => {
 			royalties: [],
 			lazyMint: false,
 			supply: 1,
-			price: "0.000000000000000001",
+			price: "0.0001",
 			currency: {
 				"@type": "ETH",
 			},
@@ -190,7 +190,7 @@ describe("mint and sell", () => {
 			royalties: [],
 			lazyMint: true,
 			supply: 1,
-			price: "0.000000000000000001",
+			price: "0.0001",
 			currency: {
 				"@type": "ETH",
 			},
