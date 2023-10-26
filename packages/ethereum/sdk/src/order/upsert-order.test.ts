@@ -8,6 +8,7 @@ import { getApiConfig } from "../config/api-config"
 import { createTestProviders } from "../common/test/create-test-providers"
 import { createEthereumApis } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
+import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../common/check-min-payment-value"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
@@ -54,6 +55,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -75,7 +77,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 				contract: toAddress("0x0000000000000000000000000000000000000001"),
 				tokenId: toBigNumber("1"),
 			},
-			priceDecimal: toBn("0.000000000000000001"),
+			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
 			takeAssetType: {
 				assetClass: "ETH" as const,
 			},
@@ -86,6 +88,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -96,7 +99,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		)
 
 		const price = await upserter.getPrice(request, request.takeAssetType)
-		expect(price.valueOf()).toBe("1")
+		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
 
 	test("getPrice should work with ERC20", async () => {
@@ -107,7 +110,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 				contract: toAddress("0x0000000000000000000000000000000000000001"),
 				tokenId: toBigNumber("1"),
 			},
-			priceDecimal: toBn("0.000000000000000001"),
+			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
 			takeAssetType: {
 				assetClass: "ERC20" as const,
 				contract: toAddress(it.testErc20.options.address),
@@ -119,6 +122,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -129,6 +133,50 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		)
 
 		const price = await upserter.getPrice(request, request.takeAssetType)
-		expect(price.valueOf()).toBe("1")
+		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
+
+	test("throw error if sell order has less than minimal payment value", async () => {
+		const orderApi = new OrderControllerApi(configuration)
+		orderApi.upsertOrder = async () => ({} as any)
+		const upserter = new UpsertOrder(
+			orderService,
+			send,
+			config,
+			checkLazyOrder,
+			approve,
+			sign,
+			orderApi,
+			ethereum,
+			checkWalletChainId,
+			ZERO_WORD
+		)
+		const request = {
+			maker: toAddress(wallet.getAddressString()),
+			make: {
+				assetType: {
+					assetClass: "ERC721",
+					contract: "ETHEREUM:0xd2bdd497db05622576b6cb8082fb08de042987ca",
+					tokenId: "7135",
+				},
+				value: "1",
+			},
+			take: {
+				assetType: {
+					assetClass: "ETH",
+				},
+				value: "10",
+			},
+		} as any
+
+		let err: any
+		try {
+		  await upserter.upsertRequest(request)
+		} catch (e) {
+			err = e
+		}
+		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+
+	})
+
 })

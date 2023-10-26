@@ -39,5 +39,6 @@ export const devEthereumConfig: EthereumConfig = {
 		pairRouter: toAddress("0xc64E5D291CaEdF42b77fa9E50d5Fd46113227857"),
 	},
 	weth: toAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
+	rari: toAddress("0xfca59cd816ab1ead66534d82bc21e7515ce441cf"),
 	auction: ZERO_ADDRESS,
 }

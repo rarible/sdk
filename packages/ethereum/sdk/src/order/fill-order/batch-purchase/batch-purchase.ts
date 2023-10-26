@@ -136,7 +136,7 @@ export class BatchOrderFiller {
 		const from = toAddress(await getRequiredWallet(this.ethereum).getFrom())
 
 		const preparedOrders = await Promise.all(requests.map(async (request) => {
-			if (!isWeth(request.order.take.assetType, this.config.weth) && !isETH(request.order.take.assetType)) {
+			if (!isWeth(request.order.take.assetType, this.config) && !isETH(request.order.take.assetType)) {
 				throw new Error("Batch purchase is available only for ETH/WETH currencies")
 			}
 			let approveAsset: Asset | undefined

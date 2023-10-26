@@ -334,6 +334,7 @@ export function createRaribleSdk(
 	const upsertService = new UpsertOrder(
 		filler,
 		send,
+		config,
 		checkLazyOrder,
 		partialCall(approveTemplate, ethereum, send, config.transferProxies),
 		partialCall(signOrderTemplate, ethereum, config),

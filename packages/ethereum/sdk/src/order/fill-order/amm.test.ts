@@ -11,6 +11,7 @@ import { retry } from "../../common/retry"
 import type { SimpleOrder } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
+import { ETHER_IN_WEI } from "../../common"
 import { mintTokensToNewSudoswapPool } from "./amm/test/utils"
 
 describe.skip("amm", () => {
@@ -123,14 +124,14 @@ describe.skip("amm", () => {
 
 	async function checkEthBalance(address: string, value: string) {
 		return retry(10, 3000, async () => {
-			const balance = toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+			const balance = toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
 			expect(balance.toString()).toBe(value)
 		})
 	}
 	async function getEthBalances(addresses: string[]) {
 		return Promise.all(
 			addresses.map(async address => {
-				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
 			})
 		)
 	}
