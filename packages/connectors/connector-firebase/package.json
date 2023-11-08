@@ -1,5 +1,5 @@
 {
-  "name": "@rarible/connector-web3auth",
+  "name": "@rarible/connector-firebase",
   "version": "0.13.16",
   "homepage": "",
   "license": "ISC",

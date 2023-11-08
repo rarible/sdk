@@ -24,9 +24,9 @@ import {
 	getIdToken,
 } from "@firebase/auth"
 
-const PROVIDER_ID = "web3auth" as const
+const PROVIDER_ID = "firebase" as const
 
-export class Web3AuthConnectionProvider extends AbstractConnectionProvider<
+export class FirebaseConnectionProvider extends AbstractConnectionProvider<
   typeof PROVIDER_ID,
 EthereumProviderConnectionResult
 > {
@@ -121,7 +121,7 @@ EthereumProviderConnectionResult
   		return web3auth
   	} catch (error) {
   		console.error("Error signing in with Firebase", error)
-  		throw error // Handle the error appropriately in your application
+  		throw error
   	}
   }
 

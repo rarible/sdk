@@ -13,7 +13,7 @@ import { TorusConnectionProvider } from "@rarible/connector-torus";
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink";
 import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect";
 import { PhantomConnectionProvider } from "@rarible/connector-phantom";
-import { Web3AuthConnectionProvider } from "@rarible/connector-web3auth";
+import { FirebaseConnectionProvider } from "@rarible/connector-firebase";
 import { SolflareConnectionProvider } from "@rarible/connector-solflare";
 import type { IWalletAndAddress } from "@rarible/connector-helper";
 import {
@@ -176,10 +176,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     );
   }
 
-  let web3auth = undefined;
+  let firebase = undefined;
 
   if (isEthNetwork) {
-    web3auth = mapEthereumWallet(new Web3AuthConnectionProvider());
+    firebase = mapEthereumWallet(new FirebaseConnectionProvider());
   }
 
   const walletLink = mapEthereumWallet(
@@ -235,13 +235,11 @@ export function getConnector(environment: RaribleSdkEnvironment) {
   // .add(fortmatic)
 
   if (torus) {
-    console.log("torus", torus);
     connector = connector.add(torus);
   }
 
-  if (web3auth) {
-    console.log("web3auth", web3auth);
-    connector = connector.add(web3auth);
+  if (firebase) {
+    connector = connector.add(firebase);
   }
 
   console.log(connector);
