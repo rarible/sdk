@@ -210,7 +210,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 					messagingSenderId: "741349520212",
 					appId: "1:741349520212:web:8acb236f44ddd005adcec1",
 				},
-				"testnet"
+				"testnet",
+				"http://localhost:3000",
+				"firebase-dog-dev"
 			)
 		)
 	}

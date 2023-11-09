@@ -56,7 +56,9 @@ EthereumProviderConnectionResult
   		messagingSenderId: string;
   		appId: string;
   	},
-  	private readonly network: OPENLOGIN_NETWORK_TYPE | undefined
+  	private readonly network: OPENLOGIN_NETWORK_TYPE | undefined,
+  	private readonly openLoginDomain: string,
+  	private readonly jwtVerifier: string
   ) {
   	super()
   	this.instance = cache(() => this._connect())
@@ -87,7 +89,7 @@ EthereumProviderConnectionResult
   			uxMode: "popup",
   			loginConfig: {
   				jwt: {
-  					verifier: "firebase-dog-dev",
+  					verifier: this.jwtVerifier,
   					typeOfLogin: "jwt",
   					clientId: this.clientId,
   				},
@@ -119,7 +121,7 @@ EthereumProviderConnectionResult
   				extraLoginOptions: {
   					id_token: idToken,
   					verifierIdField: "sub",
-  					domain: "http://localhost:3000",
+  					domain: this.openLoginDomain,
   				},
   			}
   		)
