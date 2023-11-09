@@ -35,7 +35,7 @@ const EVM_WARN_MESSAGES = [
 	"Link Window Closed",
 	"nonce too low",
 	"transaction would cause overdraft",
-].map(msg => msg.toLowerCase())
+].map((msg) => msg.toLowerCase())
 
 export const CANCEL_MESSAGES = [
 	"Transaction canceled",
@@ -105,7 +105,7 @@ export const CANCEL_MESSAGES = [
 	"The user rejected the request through Exodus",
 	"Permission denied, denied",
 	"user closed popup",
-].map(msg => msg.toLowerCase())
+].map((msg) => msg.toLowerCase())
 
 export const COMMON_INFO_MESSAGES = [
 	"The gas fee has been updated and you need",
@@ -141,7 +141,7 @@ export const COMMON_INFO_MESSAGES = [
 	"زبانه فعال نیست",
 	"发生了一个内部的错误",
 	"發生內部錯誤",
-].map(msg => msg.toLowerCase())
+].map((msg) => msg.toLowerCase())
 
 const shortCancelMessages = ["cancel", "canceled", "cancelled", "rejected"]
 
@@ -156,7 +156,7 @@ export function isCancelMessage(msg: unknown, isLowerCase: boolean = false) {
 	if (shortCancelMessages.includes(msgLowerCase)) {
 		return true
 	}
-	return CANCEL_MESSAGES.some(msg => msgLowerCase?.includes(msg))
+	return CANCEL_MESSAGES.some((msg) => msgLowerCase?.includes(msg))
 }
 
 export function isInfoLevel(error: any): boolean {
@@ -167,30 +167,39 @@ export function isInfoLevel(error: any): boolean {
 	if (isCancelCode(error?.error?.code) || isCancelMessage(msgLowerCase, true)) {
 		return true
 	}
-	return COMMON_INFO_MESSAGES.some(msg => msgLowerCase?.includes(msg))
+	return COMMON_INFO_MESSAGES.some((msg) => msgLowerCase?.includes(msg))
 }
 
 export function isEVMWarning(error: any): boolean {
-	if (error?.name && ["WrongNetworkWarning", "InsufficientFundsError"].includes(error?.name)) return true
+	if (
+		error?.name &&
+    ["WrongNetworkWarning", "InsufficientFundsError"].includes(error?.name)
+	)
+		return true
 	const msgLowerCase = error?.message.toLowerCase()
-	return EVM_WARN_MESSAGES.some(msg => msgLowerCase?.includes(msg))
+	return EVM_WARN_MESSAGES.some((msg) => msgLowerCase?.includes(msg))
 }
 
 export function isTezosWarning(err: any): boolean {
 	const isWrappedError = err.name === "TezosProviderError"
 	const originalError = isWrappedError ? err.error : err
-	return (originalError?.name === "UnknownBeaconError" && originalError?.title === "Aborted")
-		|| originalError?.name === "NotGrantedTempleWalletError"
-		|| originalError?.name === "NoAddressBeaconError"
-		|| originalError?.name === "NoPrivateKeyBeaconError"
-		|| originalError?.name === "BroadcastBeaconError"
-		|| originalError?.name === "MissedBlockDuringConfirmationError"
-		|| originalError?.message === "Error: timeout of 30000ms exceeded"
-		|| err?.message?.endsWith("does not have enough funds for transaction")
+	return (
+		(originalError?.name === "UnknownBeaconError" &&
+      originalError?.title === "Aborted") ||
+    originalError?.name === "NotGrantedTempleWalletError" ||
+    originalError?.name === "NoAddressBeaconError" ||
+    originalError?.name === "NoPrivateKeyBeaconError" ||
+    originalError?.name === "BroadcastBeaconError" ||
+    originalError?.name === "MissedBlockDuringConfirmationError" ||
+    originalError?.message === "Error: timeout of 30000ms exceeded" ||
+    err?.message?.endsWith("does not have enough funds for transaction")
+	)
 }
 
 export function isSolanaWarning(error: any): boolean {
-	return error?.name === "User rejected the request." || error?.error?.code === 4001
+	return (
+		error?.name === "User rejected the request." || error?.error?.code === 4001
+	)
 }
 
 export const FLOW_WARN_MESSAGES = [
@@ -199,16 +208,21 @@ export const FLOW_WARN_MESSAGES = [
 ]
 
 export function isFlowWarning(error: any): boolean {
-	return FLOW_WARN_MESSAGES.some(msg => error?.message?.includes(msg))
+	return FLOW_WARN_MESSAGES.some((msg) => error?.message?.includes(msg))
 }
 
-export function getBlockchainByConnectorId(providerId: string): BlockchainGroup | undefined {
+export function getBlockchainByConnectorId(
+	providerId: string
+): BlockchainGroup | undefined {
 	switch (providerId) {
-		case "beacon": return BlockchainGroup.TEZOS
+		case "beacon":
+			return BlockchainGroup.TEZOS
 		case "fcl":
-		case "mattel": return BlockchainGroup.FLOW
+		case "mattel":
+			return BlockchainGroup.FLOW
 		case "phantom":
-		case "solflare": return BlockchainGroup.SOLANA
+		case "solflare":
+			return BlockchainGroup.SOLANA
 		case "injected":
 		case "fortmatic":
 		case "iframe":
@@ -216,8 +230,11 @@ export function getBlockchainByConnectorId(providerId: string): BlockchainGroup 
 		case "mew":
 		case "portis":
 		case "torus":
+		case "firebase":
 		case "walletconnect":
-		case "walletlink": return BlockchainGroup.ETHEREUM
-		default: return undefined
+		case "walletlink":
+			return BlockchainGroup.ETHEREUM
+		default:
+			return undefined
 	}
 }
