@@ -78,9 +78,9 @@ const FLOW_ORDER_ID_REGEXP = /^FLOW:[0-9]{1,}/
  *
  * @param id - "FLOW:{any count of digits}"
  */
-export function parseOrderId(id: string): number {
+export function parseOrderId(id: string): string {
 	if (FLOW_ORDER_ID_REGEXP.test(id)) {
-		return parseInt(id.split(":")[1])
+		return id.split(":")[1]
 	}
 	throw new Error("Invalid order ID")
 }
@@ -131,7 +131,7 @@ export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
 	}) || []
 }
 
-export function convertFlowOrderId(orderId: number): OrderId {
+export function convertFlowOrderId(orderId: string): OrderId {
 	return toOrderId(`${Blockchain.FLOW}:${orderId}`)
 }
 
