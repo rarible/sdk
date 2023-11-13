@@ -18,12 +18,8 @@ import type { OPENLOGIN_NETWORK_TYPE } from "@web3auth/openlogin-adapter"
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter"
 import type { ChainNamespaceType } from "@web3auth/base"
 import type { UserCredential } from "@firebase/auth"
-import {
-	GoogleAuthProvider,
-	getAuth,
-	signInWithPopup,
-	getIdToken,
-} from "@firebase/auth"
+import { signOut } from "@firebase/auth"
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "@firebase/auth"
 import { initializeApp } from "@firebase/app"
 
 const PROVIDER_ID = "firebase" as const
@@ -77,8 +73,8 @@ EthereumProviderConnectionResult
   		clientId: this.clientId,
   		web3AuthNetwork: this.network,
   		chainConfig: this.chainConfig,
+  		useCoreKitKey: false,
   	})
-  	debugger
 
   	const privateKeyProvider = new EthereumPrivateKeyProvider({
   		config: { chainConfig: this.chainConfig },
@@ -110,9 +106,7 @@ EthereumProviderConnectionResult
   		provider
   	)
   	try {
-  		const idToken = await getIdToken(userCredential.user)
-  		console.log("Firebase ID token", idToken)
-
+  		const idToken = await userCredential.user.getIdToken(true)
   		const web3authProvider = await web3auth.connectTo(
   			WALLET_ADAPTERS.OPENLOGIN,
   			{
@@ -162,6 +156,12 @@ EthereumProviderConnectionResult
   }
 
   private async disconnect(): Promise<void> {
+  	const app = initializeApp(this.firebaseConfig)
+  	const auth = getAuth(app)
+  	if (app && auth) {
+  		await signOut(auth)
+  	}
+
   	const sdk = await this.instance.pipe(first()).toPromise()
   	if (sdk) {
   		await sdk.logout({ cleanup: true })
