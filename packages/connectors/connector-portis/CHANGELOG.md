@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/connector-portis
+
+
+
+
+
 ## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
 
 **Note:** Version bump only for package @rarible/connector-portis

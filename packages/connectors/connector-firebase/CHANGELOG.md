@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+
+### Features
+
+* **WL-2132:** add Firebase Connector to SDK ([#558](https://github.com/rarible/sdk/issues/558)) ([cab12f3](https://github.com/rarible/sdk/commit/cab12f3a2a6ecacf4b0a87d230132b39c8e4b141))
+
+
+
+
+
 ## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
 
 **Note:** Version bump only for package @rarible/connector-torus

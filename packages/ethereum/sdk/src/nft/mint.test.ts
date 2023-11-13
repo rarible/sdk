@@ -73,7 +73,7 @@ describe.each(providers)("mint test", ethereum => {
 		await delay(2000)
 	})
 
-	test.skip("mint ERC-721 v1", async () => {
+	test("mint ERC-721 v1", async () => {
 		const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
@@ -90,7 +90,7 @@ describe.each(providers)("mint test", ethereum => {
 		expect(new BigNumber(balanceOfMinter).minus(startBalanceOfMinter).toString()).toBe("1")
 	})
 
-	test.skip("mint ERC-721 v2", async () => {
+	test("mint ERC-721 v2", async () => {
 		const address = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
@@ -129,7 +129,7 @@ describe.each(providers)("mint test", ethereum => {
 		expect(result.tokenId).toBe(nftTokenId.tokenId)
 	})
 
-	test.skip("mint ERC-1155 v1", async () => {
+	test("mint ERC-1155 v1", async () => {
 		const address = toAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
 		const uri = "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5"
 		const supply = 101
