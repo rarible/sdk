@@ -124,7 +124,6 @@ EthereumProviderConnectionResult
   		const address = (await web3authProvider.request({
   			method: "eth_accounts",
   		})) as Array<string>
-  		console.log("User wallet address", address)
   		return web3auth
   	} catch (error) {
   		console.error("Error signing in with Firebase", error)
