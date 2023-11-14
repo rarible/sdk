@@ -43,6 +43,7 @@ export class AmmOrderHandler {
 
 			const { data, options, originFees: { feeAddresses } } = await getMarketData(
 				this.ethereum,
+				this.config,
 				this.apis,
 				{
 					marketId: ExchangeWrapperOrderType.AAM,
@@ -98,6 +99,7 @@ export class AmmOrderHandler {
 		// const {data, options} = await this.getMarketData(request, fillData, feeValue)
 		const { data, options } = await getMarketData(
 			this.ethereum,
+			this.config,
 			this.apis,
 			{
 				marketId: ExchangeWrapperOrderType.AAM,

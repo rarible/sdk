@@ -5,21 +5,24 @@ import type {
 	CryptoPunkOrder,
 	Erc20AssetType,
 	EthAssetType,
-	Order,
-	OrderControllerApi,
-	OrderForm,
 	Part,
 	RaribleV2OrderForm,
 } from "@rarible/ethereum-api-client"
+import type {
+	OrderControllerApi,
+	Order,
+	OrderForm,
+} from "@rarible/api-client"
 import { Action } from "@rarible/action"
 import type { Address, Word } from "@rarible/types"
-import { randomWord, toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
+import { randomWord, toAddress, toBigNumber, toBinary, toUnionAddress, toWord } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { OrderRaribleV2Data } from "@rarible/ethereum-api-client/build/models/OrderData"
 import { toBn } from "@rarible/utils/build/bn"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import { convertToEVMAddress } from "@rarible/sdk-common/src"
 import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
@@ -27,6 +30,7 @@ import { waitTx } from "../common/wait-tx"
 import { checkMinPaymentValue } from "../common/check-min-payment-value"
 import { ETHER_IN_WEI } from "../common"
 import type { EthereumConfig } from "../config/type"
+import { getUnionBlockchainFromChainId } from "../common/get-blockchain-from-chain-id"
 import type { SimpleCryptoPunkOrder, SimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
@@ -144,7 +148,11 @@ export class UpsertOrder {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checkedOrder)
 		const fee = await this.orderFiller.getOrderFee(simple)
 		const make = addFee(checkedOrder.make, fee)
-		const approveTx = this.approveFn(checkedOrder.maker, make, infinite)
+		const approveTx = this.approveFn(
+			convertToEVMAddress(checkedOrder.maker),
+			make,
+			infinite
+		)
 		if (approveTx) {
 			await waitTx(approveTx)
 		}

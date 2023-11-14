@@ -22,19 +22,14 @@ import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type { EthereumWallet } from "@rarible/sdk-wallet/build"
-import { WalletIsUndefinedError } from "@rarible/sdk-common/build"
+import type { EVMBlockchain } from "@rarible/sdk-common"
+import { WalletIsUndefinedError, convertToEVMAddress, isEVMBlockchain } from "@rarible/sdk-common"
 import type { OrderRequest } from "../../../types/order/common"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import type { UnionPart } from "../../../types/order/common"
 
-export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
-export const EVMBlockchains: EVMBlockchain[] = [
-	Blockchain.ETHEREUM,
-	Blockchain.POLYGON,
-	Blockchain.MANTLE,
-]
 
 export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
 
@@ -43,7 +38,7 @@ export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 		case "ERC20":
 			return {
 				assetClass: currency["@type"],
-				contract: convertToEthereumAddress(currency.contract),
+				contract: convertToEVMAddress(currency.contract),
 			}
 		case "ETH":
 			return {
@@ -62,28 +57,28 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		case "ERC20": {
 			return {
 				assetClass: "ERC20",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 			}
 		}
 		case "ERC721": {
 			return {
 				assetClass: "ERC721",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 			}
 		}
 		case "ERC721_Lazy": {
 			return {
 				assetClass: "ERC721_LAZY",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 				uri: assetType.uri,
 				creators: assetType.creators.map(c => ({
-					account: convertToEthereumAddress(c.account),
+					account: convertToEVMAddress(c.account),
 					value: toBn(c.value).toNumber(),
 				})),
 				royalties: assetType.royalties.map(r => ({
-					account: convertToEthereumAddress(r.account),
+					account: convertToEVMAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 				signatures: assetType.signatures.map(str => toBinary(str)),
@@ -92,23 +87,23 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		case "ERC1155": {
 			return {
 				assetClass: "ERC1155",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 			}
 		}
 		case "ERC1155_Lazy": {
 			return {
 				assetClass: "ERC1155_LAZY",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 				uri: assetType.uri,
 				supply: assetType.supply !== undefined ? toBigNumber(assetType.supply) : toBigNumber("1"),
 				creators: assetType.creators.map(c => ({
-					account: convertToEthereumAddress(c.account),
+					account: convertToEVMAddress(c.account),
 					value: toBn(c.value).toNumber(),
 				})),
 				royalties: assetType.royalties.map(r => ({
-					account: convertToEthereumAddress(r.account),
+					account: convertToEVMAddress(r.account),
 					value: toBn(r.value).toNumber(),
 				})),
 				signatures: assetType.signatures.map(str => toBinary(str)),
@@ -117,14 +112,14 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		case "CRYPTO_PUNKS": {
 			return {
 				assetClass: "CRYPTO_PUNKS",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 				tokenId: assetType.tokenId,
 			}
 		}
 		case "GEN_ART": {
 			return {
 				assetClass: "GEN_ART",
-				contract: convertToEthereumAddress(assetType.contract),
+				contract: convertToEVMAddress(assetType.contract),
 			}
 		}
 		default: {
@@ -135,7 +130,7 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 
 export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
 	return parts?.map((part) => ({
-		account: convertToEthereumAddress(part.account),
+		account: convertToEVMAddress(part.account),
 		value: part.value,
 	})) || []
 }
@@ -212,32 +207,6 @@ export function getSupportedCurrencies(
 	]
 }
 
-/**
- * Return true if blockchain works like ethereum blockchain
- * @param blockchain
- */
-export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
-	for (const b of EVMBlockchains) {
-		if (b === blockchain) {
-			return true
-		}
-	}
-	return false
-}
-
-export function convertToEthereumAddress(
-	contractAddress: UnionAddress | ContractAddress | CollectionId,
-): Address {
-	if (!isRealBlockchainSpecified(contractAddress)) {
-		throw new Error("Not a union or contract address: " + contractAddress)
-	}
-
-	const [blockchain, address] = contractAddress.split(":")
-	if (!isEVMBlockchain(blockchain)) {
-		throw new Error("Not an Ethereum address")
-	}
-	return toAddress(address)
-}
 
 export function convertEthereumOrderHash(hash: Word, blockchain: EVMBlockchain): OrderId {
 	return toOrderId(`${blockchain}:${hash}`)
@@ -332,3 +301,4 @@ export function assertWallet(wallet: Maybe<EthereumWallet>) {
 }
 
 export * from "./validators"
+export { convertToEVMAddress, isEVMBlockchain, EVMBlockchain } from "@rarible/sdk-common"

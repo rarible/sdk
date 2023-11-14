@@ -42,7 +42,6 @@ export type SudoswapConfig = {
 }
 
 export type EthereumConfig = {
-	basePath: string
 	chainId: number
 	exchange: ExchangeAddresses
 	transferProxies: TransferProxies

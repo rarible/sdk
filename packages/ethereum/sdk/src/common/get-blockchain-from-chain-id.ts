@@ -1,3 +1,5 @@
+import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
+
 export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
 	switch (chainId) {
 		case 1:
@@ -21,3 +23,14 @@ export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
 }
 
 export type EVMBlockchain = "ETHEREUM" | "POLYGON" | "MANTLE"
+
+export function convertEVMBlockchainToUnionBlockchain(blockchain: EVMBlockchain): Blockchain {
+	if (Blockchain[blockchain]) {
+		return Blockchain[blockchain]
+	}
+	throw new Error(`convertEVMBlockchainToUnionBlockchain: unrecognized blockchain ${blockchain}`)
+}
+
+export function getUnionBlockchainFromChainId(chainId: number): Blockchain {
+	return convertEVMBlockchainToUnionBlockchain(getBlockchainFromChainId(chainId))
+}

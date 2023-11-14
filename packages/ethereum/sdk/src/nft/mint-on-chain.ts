@@ -1,6 +1,7 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { NftCollectionControllerApi, Part } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
+import type * as ApiClient from "@rarible/api-client"
 import type { SendFunction } from "../common/send-transaction"
 import { createItemId } from "../common/create-item-id"
 import { sanitizeUri } from "../common/sanitize-uri"
@@ -14,7 +15,7 @@ import { getErc1155Contract } from "./contracts/erc1155"
 export async function mintErc721v1(
 	ethereum: Ethereum,
 	send: SendFunction,
-	nftCollectionApi: NftCollectionControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
 	data: ERC721RequestV1
 ): Promise<MintOnChainResponse> {
 	const owner = toAddress(await ethereum.getFrom())
@@ -38,7 +39,7 @@ export async function mintErc721v1(
 export async function mintErc721v2(
 	ethereum: Ethereum,
 	send: SendFunction,
-	nftCollectionApi: NftCollectionControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
 	data: ERC721RequestV2
 ): Promise<MintOnChainResponse> {
 	const owner = toAddress(await ethereum.getFrom())
@@ -63,7 +64,7 @@ export async function mintErc721v2(
 export async function mintErc721v3(
 	ethereum: Ethereum,
 	send: SendFunction,
-	nftCollectionApi: NftCollectionControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
 	data: ERC721RequestV3
 ): Promise<MintOnChainResponse> {
 	const creators = await getCreators(data, ethereum)
@@ -94,7 +95,7 @@ export async function mintErc721v3(
 export async function mintErc1155v1(
 	ethereum: Ethereum,
 	send: SendFunction,
-	nftCollectionApi: NftCollectionControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
 	data: ERC1155RequestV1
 ): Promise<MintOnChainResponse> {
 	const owner = toAddress(await ethereum.getFrom())
@@ -119,7 +120,7 @@ export async function mintErc1155v1(
 export async function mintErc1155v2(
 	ethereum: Ethereum,
 	send: SendFunction,
-	nftCollectionApi: NftCollectionControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
 	data: ERC1155RequestV2
 ): Promise<MintOnChainResponse> {
 	const creators = await getCreators(data, ethereum)

@@ -1,20 +1,18 @@
-import * as EthereumApiClient from "@rarible/ethereum-api-client"
+import type * as EthereumApiClient from "@rarible/ethereum-api-client"
+import * as ApiClient from "@rarible/api-client"
 import { NetworkError } from "@rarible/logger/build"
 import { getApiConfig } from "../config/api-config"
 import type { EthereumNetwork } from "../types"
 
 export type RaribleEthereumApis = {
-	nftItem: EthereumApiClient.NftItemControllerApi;
-	nftOwnership: EthereumApiClient.NftOwnershipControllerApi;
-	order: EthereumApiClient.OrderControllerApi;
-	orderActivity: EthereumApiClient.OrderActivityControllerApi;
-	orderSignature: EthereumApiClient.OrderSignatureControllerApi;
-	orderSettings: EthereumApiClient.OrderSettingsControllerApi;
-	nftCollection: EthereumApiClient.NftCollectionControllerApi;
-	balances: EthereumApiClient.BalanceControllerApi;
-	gateway: EthereumApiClient.GatewayControllerApi;
-	nftLazyMint: EthereumApiClient.NftLazyMintControllerApi;
-	auction: EthereumApiClient.AuctionControllerApi;
+	nftItem: ApiClient.ItemControllerApi;
+	nftOwnership: ApiClient.OwnershipControllerApi;
+	order: ApiClient.OrderControllerApi;
+	orderActivity: ApiClient.ActivityControllerApi;
+	orderSignature: ApiClient.SignatureControllerApi;
+	nftCollection: ApiClient.CollectionControllerApi;
+	balances: ApiClient.BalanceControllerApi;
+	auction: ApiClient.AuctionControllerApi;
 }
 
 export function createEthereumApis(
@@ -34,18 +32,29 @@ export function createEthereumApis(
 		},
 		...params,
 	})
-	const configuration = new EthereumApiClient.Configuration(config)
+
+	const configuration = new ApiClient.Configuration({
+		basePath: config.basePath,
+		headers: typeof params.apiKey === "string" ? { "X-API-KEY": params.apiKey } : {},
+		exceptionHandler: async (error, url, init) => {
+			throw new NetworkError({
+				status: -1,
+				url: decodeURIComponent(url),
+				formData: init?.body?.toString(),
+				method: init?.method,
+				data: { message: error.message },
+			})
+		},
+		...params,
+	})
 	return {
-		nftItem: new EthereumApiClient.NftItemControllerApi(configuration),
-		nftOwnership: new EthereumApiClient.NftOwnershipControllerApi(configuration),
-		order: new EthereumApiClient.OrderControllerApi(configuration),
-		orderActivity: new EthereumApiClient.OrderActivityControllerApi(configuration),
-		orderSignature: new EthereumApiClient.OrderSignatureControllerApi(configuration),
-		orderSettings: new EthereumApiClient.OrderSettingsControllerApi(configuration),
-		nftCollection: new EthereumApiClient.NftCollectionControllerApi(configuration),
-		balances: new EthereumApiClient.BalanceControllerApi(configuration),
-		gateway: new EthereumApiClient.GatewayControllerApi(configuration),
-		nftLazyMint: new EthereumApiClient.NftLazyMintControllerApi(configuration),
-		auction: new EthereumApiClient.AuctionControllerApi(configuration),
+		nftItem: new ApiClient.ItemControllerApi(configuration),
+		nftOwnership: new ApiClient.OwnershipControllerApi(configuration),
+		order: new ApiClient.OrderControllerApi(configuration),
+		orderActivity: new ApiClient.ActivityControllerApi(configuration),
+		orderSignature: new ApiClient.SignatureControllerApi(configuration),
+		nftCollection: new ApiClient.CollectionControllerApi(configuration),
+		balances: new ApiClient.BalanceControllerApi(configuration),
+		auction: new ApiClient.AuctionControllerApi(configuration),
 	}
 }

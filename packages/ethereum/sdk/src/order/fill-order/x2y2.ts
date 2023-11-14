@@ -9,10 +9,12 @@ import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import type { RaribleEthereumApis } from "../../common/apis"
+import {
+	getUnionBlockchainFromChainId,
+} from "../../common/get-blockchain-from-chain-id"
 import type { PreparedOrderRequestDataForExchangeWrapper, X2Y2OrderFillRequest } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import type { OrderFillSendData } from "./types"
-import { X2Y2Utils } from "./x2y2-utils/get-order-sign"
 import { calcValueWithFees, originFeeValueConvert } from "./common/origin-fees-utils"
 
 export class X2Y2OrderHandler {
@@ -89,12 +91,18 @@ export class X2Y2OrderHandler {
 			throw new Error("Wallet undefined")
 		}
 
-		const x2y2Input = await X2Y2Utils.getOrderSign(this.apis, {
-			sender: this.config.exchange.wrapper,
-			orderId: request.order.data.orderId,
-			currency: ZERO_ADDRESS,
-			price: request.order.take.value,
+		const res = await this.apis.orderSignature.getInput({
+			signatureInputForm: {
+				"@type": "X2Y2_ORDER_FILL",
+				caller: this.config.exchange.wrapper,
+				op: toBigNumber("1"),
+				orderId: request.order.data.orderId,
+				currency: ZERO_ADDRESS,
+				price: request.order.take.value,
+				blockchain: getUnionBlockchainFromChainId(this.config.chainId),
+			},
 		})
+		const x2y2Input = res.input
 
 		return {
 			data: {

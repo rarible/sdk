@@ -1,9 +1,10 @@
-import type { Address, Asset, AssetType, Erc1155LazyAssetType, Erc721LazyAssetType, OrderForm } from "@rarible/ethereum-api-client"
+import type { UnionAddress, AssetType, EthErc1155LazyAssetType, EthErc721LazyAssetType, OrderForm } from "@rarible/api-client"
+import type { EthOrderFormAsset } from "@rarible/api-client/build/models/EthOrderFormAsset"
 
-export type CheckLazyOrderPart = Pick<OrderForm, "make" | "take" | "maker">
+export type CheckLazyOrderPart = Pick<OrderForm, "make" | "take" | "maker" | "data">
 
 export async function checkLazyOrder(
-	checkLazyAsset: (asset: Asset) => Promise<Asset>,
+	checkLazyAsset: (asset: EthOrderFormAsset) => Promise<EthOrderFormAsset>,
 	form: CheckLazyOrderPart,
 ): Promise<CheckLazyOrderPart> {
 	const make = await checkLazyMakeAsset(checkLazyAsset, form.make, form.maker)
@@ -16,10 +17,10 @@ export async function checkLazyOrder(
 }
 
 async function checkLazyMakeAsset(
-	checkLazyAsset: (asset: Asset) => Promise<Asset>,
-	asset: Asset,
-	maker: Address
-): Promise<Asset> {
+	checkLazyAsset: (asset: EthOrderFormAsset) => Promise<EthOrderFormAsset>,
+	asset: EthOrderFormAsset,
+	maker: UnionAddress
+): Promise<EthOrderFormAsset> {
 	const make = await checkLazyAsset(asset)
 	if (isLazyAsset(make.assetType) && make.assetType.creators[0].account === maker) {
 		return make
@@ -27,6 +28,6 @@ async function checkLazyMakeAsset(
 	return asset
 }
 
-function isLazyAsset(x: AssetType): x is Erc721LazyAssetType | Erc1155LazyAssetType {
-	return x.assetClass === "ERC1155_LAZY" || x.assetClass === "ERC721_LAZY"
+function isLazyAsset(x: AssetType): x is EthErc721LazyAssetType | EthErc1155LazyAssetType {
+	return x["@type"] === "ERC1155_Lazy" || x["@type"] === "ERC721_Lazy"
 }

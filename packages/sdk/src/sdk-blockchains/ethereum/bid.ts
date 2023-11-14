@@ -19,7 +19,7 @@ import { compareCaseInsensitive } from "@rarible/protocol-ethereum-sdk/build/com
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import { Warning } from "@rarible/logger/build"
-import { extractBlockchain } from "@rarible/sdk-common"
+import { convertToEVMAddress, extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
@@ -43,7 +43,6 @@ import * as common from "./common"
 import {
 	convertEthereumContractAddress,
 	convertEthereumToUnionAddress,
-	convertToEthereumAddress,
 	convertToEthereumAssetType,
 	getEthereumItemId,
 	getEVMBlockchain,
@@ -195,7 +194,7 @@ export class EthereumBid {
 				contract: item.contract,
 			}
 		} else if ("collectionId" in prepare) {
-			contractAddress = convertToEthereumAddress(prepare.collectionId)
+			contractAddress = convertToEVMAddress(prepare.collectionId)
 			takeAssetType = {
 				assetClass: "COLLECTION",
 				contract: contractAddress,
@@ -277,7 +276,7 @@ export class EthereumBid {
 				contract: item.contract,
 			}
 		} else if ("collectionId" in prepare) {
-			contractAddress = convertToEthereumAddress(prepare.collectionId)
+			contractAddress = convertToEVMAddress(prepare.collectionId)
 			takeAssetType = {
 				assetClass: "COLLECTION",
 				contract: contractAddress,

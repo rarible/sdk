@@ -1,41 +1,23 @@
+import type { Order } from "@rarible/api-client/build/models/Order"
+import type { OrderData } from "@rarible/api-client/build/models/OrderData"
 import type {
-	CryptoPunkOrder,
-	LegacyOrder,
-	OpenSeaV1Order,
-	RaribleV2Order,
-	X2Y2Order,
-	LooksRareOrder,
-	SeaportV1Order,
-	AmmOrder,
-} from "@rarible/ethereum-api-client"
-import type { LooksRareV2Order } from "@rarible/ethereum-api-client/build/models/Order"
+	EthLooksRareOrderDataV1, EthLooksRareOrderDataV2,
+	EthOrderCryptoPunksData,
+	EthOrderDataLegacy,
+	EthOrderOpenSeaV1DataV1, EthOrderSeaportDataV1,
+	EthRaribleV2OrderData, EthSudoSwapAmmDataV1, EthX2Y2OrderDataV1,
+} from "@rarible/api-client/build/models/OrderData"
+export type SimpleGenericOrder<T extends OrderData> = Pick<Order, "maker" | "taker" | "make" | "take" | "salt" | "startedAt" | "endedAt" | "signature"> & { data: T }
 
-export type SimpleLegacyOrder =
-	Pick<LegacyOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleRaribleV2Order =
-	Pick<RaribleV2Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleOpenSeaV1Order =
-	Pick<OpenSeaV1Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleCryptoPunkOrder =
-	Pick<CryptoPunkOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleSeaportV1Order =
-	Pick<SeaportV1Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature" | "hash">
-
-export type SimpleLooksrareOrder =
-	Pick<LooksRareOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleLooksrareV2Order =
-	Pick<LooksRareV2Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleX2Y2Order =
-	Pick<X2Y2Order, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
-
-export type SimpleAmmOrder =
-	Pick<AmmOrder, "data" | "maker" | "taker" | "make" | "take" | "salt" | "start" | "end" | "type" | "signature">
+export type SimpleLegacyOrder = SimpleGenericOrder<EthOrderDataLegacy>
+export type SimpleRaribleV2Order = SimpleGenericOrder<EthRaribleV2OrderData>
+export type SimpleOpenSeaV1Order = SimpleGenericOrder<EthOrderOpenSeaV1DataV1>
+export type SimpleCryptoPunkOrder = SimpleGenericOrder<EthOrderCryptoPunksData>
+export type SimpleSeaportV1Order = SimpleGenericOrder<EthOrderSeaportDataV1>
+export type SimpleLooksrareOrder = SimpleGenericOrder<EthLooksRareOrderDataV1>
+export type SimpleLooksrareV2Order = SimpleGenericOrder<EthLooksRareOrderDataV2>
+export type SimpleX2Y2Order = SimpleGenericOrder<EthX2Y2OrderDataV1>
+export type SimpleAmmOrder = SimpleGenericOrder<EthSudoSwapAmmDataV1>
 
 export type SimpleOrder =
 	SimpleLegacyOrder |

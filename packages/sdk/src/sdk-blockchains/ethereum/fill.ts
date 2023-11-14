@@ -37,7 +37,7 @@ import { checkPayouts } from "../../common/check-payouts"
 import {
 	convertEthereumContractAddress,
 	convertOrderIdToEthereumHash,
-	convertToEthereumAddress,
+	convertToEVMAddress,
 	getAssetTypeFromFillRequest,
 	getEthereumItemId, getEVMBlockchain,
 	getOrderId,
@@ -93,7 +93,7 @@ export class EthereumFill {
 					infinite: fillRequest.infiniteApproval,
 					originFee: fillRequest.originFees?.[0]?.value ? fillRequest.originFees[0].value : 0,
 					payout: fillRequest.payouts?.[0]?.account
-						? convertToEthereumAddress(fillRequest.payouts[0].account)
+						? convertToEVMAddress(fillRequest.payouts[0].account)
 						: undefined,
 				}
 				break

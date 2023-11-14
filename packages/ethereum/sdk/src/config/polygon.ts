@@ -4,7 +4,6 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const polygonConfig: EthereumConfig = {
-	basePath: "https://polygon-api.rarible.org",
 	chainId: 137,
 	exchange: {
 		v1: ZERO_ADDRESS,

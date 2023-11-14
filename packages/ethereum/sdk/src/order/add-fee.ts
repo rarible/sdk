@@ -1,8 +1,8 @@
-import type { Asset } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types"
 import { BigNumber, toBn } from "@rarible/utils"
+import type { EthOrderFormAsset } from "@rarible/api-client/build/models/EthOrderFormAsset"
 
-export function addFee(asset: Asset, fee: number | BigNumber): Asset {
+export function addFee(asset: EthOrderFormAsset, fee: number | BigNumber): EthOrderFormAsset {
 	const value = toBn(asset.value)
 		.multipliedBy(toBn(fee).plus(10000))
 		.dividedBy(10000)

@@ -17,7 +17,7 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
 import type { IApisSdk } from "../../domain"
 import { extractBlockchain } from "../../common/extract-blockchain"
-import { convertEthereumContractAddress, convertToEthereumAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
+import { convertEthereumContractAddress, convertToEVMAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
 
 export class EthereumBalance {
 	constructor(
@@ -35,7 +35,7 @@ export class EthereumBalance {
 		if (assetType.assetClass !== "ETH" && assetType.assetClass !== "ERC20") {
 			throw new Error("Unsupported asset type for getting balance")
 		}
-		const addressRaw = convertToEthereumAddress(address)
+		const addressRaw = convertToEVMAddress(address)
 		const value = await this.sdk.balances.getBalance(addressRaw, assetType)
 		return toBn(value)
 	}

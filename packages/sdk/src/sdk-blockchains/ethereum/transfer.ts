@@ -6,7 +6,7 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
-import { convertToEthereumAddress, isEVMBlockchain } from "./common"
+import { convertToEVMAddress, isEVMBlockchain } from "./common"
 
 export class EthereumTransfer {
 	constructor(
@@ -43,7 +43,7 @@ export class EthereumTransfer {
 						  contract: item.contract,
 						  tokenId: item.tokenId,
 					  },
-						convertToEthereumAddress(request.to),
+						convertToEVMAddress(request.to),
 						amount
 					)
 

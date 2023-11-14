@@ -1,6 +1,8 @@
 import type { AssetType, CollectionId, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
+import type { ContractAddress, UnionAddress, Address } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import { toAddress } from "@rarible/types"
+import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
 
 export function extractBlockchainFromAssetType(assetType: AssetType): Blockchain | undefined {
 	if (!assetType) {
@@ -58,4 +60,37 @@ export function validateBlockchain(blockchain: string): Blockchain {
 export const FLOW_TOKEN_MAP = {
 	testnet: "A.7e60df042a9c0868.FlowToken",
 	prod: "A.1654653399040a61.FlowToken",
+}
+export function convertToEVMAddress(
+	contractAddress: UnionAddress | ContractAddress | CollectionId,
+): Address {
+	if (!isRealBlockchainSpecified(contractAddress)) {
+		throw new Error("Not a union or contract address: " + contractAddress)
+	}
+
+	const [blockchain, address] = contractAddress.split(":")
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error("Not an Ethereum address")
+	}
+	return toAddress(address)
+}
+
+export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
+export const EVMBlockchains: EVMBlockchain[] = [
+	Blockchain.ETHEREUM,
+	Blockchain.POLYGON,
+	Blockchain.MANTLE,
+]
+
+/**
+ * Return true if blockchain works like ethereum blockchain
+ * @param blockchain
+ */
+export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
+	for (const b of EVMBlockchains) {
+		if (b === blockchain) {
+			return true
+		}
+	}
+	return false
 }

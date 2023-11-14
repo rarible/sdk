@@ -50,192 +50,194 @@ export interface ConnectionResult {
 	auth0: Auth0Client
 }
 
-export class MattelConnectionProvider extends
-	AbstractConnectionProvider<typeof PROVIDER_ID, MattelProviderConnectionResult> {
-	private readonly instance: Observable<any>
-	private readonly connection: Observable<ConnectionState<MattelProviderConnectionResult>>
+export class MattelConnectionProvider extends AbstractConnectionProvider<typeof PROVIDER_ID, MattelProviderConnectionResult> {
+  private readonly instance: Observable<any>
+  private readonly connection: Observable<ConnectionState<MattelProviderConnectionResult>>
 
-	constructor(
-		private config: MattelConnectorConfig
-	) {
-		super()
-		this.instance = cache(() => this._connect())
-		this.connection = this.instance.pipe(
-			mergeMap((instance) => this.toConnectState(instance)),
-			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
-		)
-	}
+  constructor(
+  	private config: MattelConnectorConfig
+  ) {
+  	super()
+  	this.instance = cache(() => this._connect())
+  	this.connection = this.instance.pipe(
+  		mergeMap((instance) => this.toConnectState(instance)),
+  		startWith(getStateConnecting({ providerId: PROVIDER_ID })),
+  	)
+  }
 
-	public setPopupConfig(config: PopupConfigOptions) {
-		this.config.options = {
-			...this.config.options,
-			auth0PopupOptions: {
-				...(this.config.options?.auth0PopupOptions || {}),
-				...(config || {}),
-			},
-		}
-	}
+  public setPopupConfig(config: PopupConfigOptions) {
+  	this.config.options = {
+  		...this.config.options,
+  		auth0PopupOptions: {
+  			...(this.config.options?.auth0PopupOptions || {}),
+  			...(config || {}),
+  		},
+  	}
+  }
 
-	private toConnectState(
-		{ magic, fcl, auth0 }: ConnectionResult
-	): Observable<ConnectionState<MattelProviderConnectionResult>> {
-		const disconnect = async () => {
-			await Promise.all([
-				magic.user.logout(),
+  private toConnectState(
+  	{ magic, fcl, auth0 }: ConnectionResult
+  ): Observable<ConnectionState<MattelProviderConnectionResult>> {
+  	const disconnect = async () => {
+  		await Promise.all([
+  			magic.user.logout(),
   			magic.wallet.disconnect(),
-			])
-			await auth0.logout({
-				clientId: this.config.auth0ClientId,
-				logoutParams: {
-					returnTo: window.location.href,
-				},
-				...(this.config.options?.auth0LogoutOptions || {}),
-			})
-		}
-		return defer(async () => {
+  		])
+  		await auth0.logout({
+  			clientId: this.config.auth0ClientId,
+  			logoutParams: {
+  				returnTo: window.location.href,
+  			},
+  			...(this.config.options?.auth0LogoutOptions || {}),
+  		})
+  	}
+  	return defer(async () => {
 
-			try {
-				if (await isLoggedInPromise(magic)) {
-					const user = await magic.user.getInfo()
+  		try {
+  			if (await isLoggedInPromise(magic)) {
+  				const user = await magic.user.getInfo()
 
-					return {
-						user,
-						fcl,
-						auth: magic.flow.authorization,
-					}
-				}
-				const jwt = await auth0Login({
-					auth0ClientId: this.config.auth0ClientId,
-					auth0Domain: this.config.auth0Domain,
-					auth0RedirectUrl: this.config.auth0RedirectUrl,
-					auth0,
-					auth0PopupOptions: this.config.options?.auth0PopupOptions,
-				})
-				if (jwt) {
-					await magic.openid.loginWithOIDC({
-						jwt,
-						providerId: this.config.magicProviderId,
-					})
-				}
-				const user = await magic.user.getInfo()
-				return {
-					user,
-					fcl,
-					auth: magic.flow.authorization,
-				}
-			} catch (e) {
-				return { error: e }
-			}
-		}).pipe(
-			map((data: {
-				user: MagicUserMetadata,
-				auth: typeof magic.flow.authorization,
-				fcl: Fcl,
-			} | { error: unknown } | null) => {
-				if (data && "error" in data) {
-					return getStateDisconnected({ error: data.error })
-				}
-				if (!data?.user?.publicAddress) {
-					return getStateDisconnected()
-				}
-				return getStateConnected<MattelProviderConnectionResult>({
-					connection: {
-						fcl: data.fcl,
-						address: data.user.publicAddress,
-						auth: data.auth,
-						magic,
-					},
-					disconnect,
-				})
-			}),
-		)
-	}
+  				return {
+  					user,
+  					fcl,
+  					auth: magic.flow.authorization,
+  				}
+  			}
+  			const jwt = await auth0Login({
+  				auth0ClientId: this.config.auth0ClientId,
+  				auth0Domain: this.config.auth0Domain,
+  				auth0RedirectUrl: this.config.auth0RedirectUrl,
+  				auth0,
+  				auth0PopupOptions: this.config.options?.auth0PopupOptions,
+  			})
+  			console.log("jwt", jwt)
+  			if (jwt) {
+  				await magic.openid.loginWithOIDC({
+  					jwt,
+  					providerId: this.config.magicProviderId,
+  				})
+  			}
+  			const user = await magic.user.getInfo()
+  			return {
+  				user,
+  				fcl,
+  				auth: magic.flow.authorization,
+  			}
+  		} catch (e) {
+  			return { error: e }
+  		}
+  	}).pipe(
+  		map((data: {
+  			user: MagicUserMetadata,
+  			auth: typeof magic.flow.authorization,
+  			fcl: Fcl,
+  		} | { error: unknown } | null) => {
+  			if (data && "error" in data) {
+  				return getStateDisconnected({ error: data.error })
+  			}
+  			if (!data?.user?.publicAddress) {
+  				return getStateDisconnected()
+  			}
+  			console.log("fc", data)
+  			return getStateConnected<MattelProviderConnectionResult>({
+  				connection: {
+  					fcl: data.fcl,
+  					address: data.user.publicAddress,
+  					auth: data.auth,
+  					magic,
+  				},
+  				disconnect,
+  			})
+  		}),
+  	)
+  }
 
-	private async _connect(): Promise<ConnectionResult> {
-		const [
-			{ Magic },
-			{ FlowExtension },
-			{ OpenIdExtension },
-			fcl,
-			auth0JS,
-		] = await Promise.all([
-			import("magic-sdk"),
-			import("@magic-ext/flow"),
-			import("@magic-ext/oidc"),
-			import("@onflow/fcl"),
-			import("@auth0/auth0-spa-js"),
-		])
+  private async _connect(): Promise<ConnectionResult> {
+  	const [
+  		{ Magic },
+  		{ FlowExtension },
+  		{ OpenIdExtension },
+  		fcl,
+  		auth0JS,
+  	] = await Promise.all([
+  		import("magic-sdk"),
+  		import("@magic-ext/flow"),
+  		import("@magic-ext/oidc"),
+  		import("@onflow/fcl"),
+  		import("@auth0/auth0-spa-js"),
+  	])
 
-		const magic = new Magic(this.config.magicAPIKey, {
-			extensions: [
-				new OpenIdExtension(),
-				new FlowExtension({
-					rpcUrl: this.config.accessNode,
-					network: this.config.network,
-				}),
-			],
-		})
-		fcl.config()
-			.put("accessNode.api", this.config.accessNode)
-			.put("env", this.config.network)
+  	const magic = new Magic(this.config.magicAPIKey, {
+  		extensions: [
+  			new OpenIdExtension(),
+  			new FlowExtension({
+  				rpcUrl: this.config.accessNode,
+  				network: this.config.network,
+  			}),
+  		],
+  	})
+  	fcl.config()
+  		.put("accessNode.api", this.config.accessNode)
+  		.put("env", this.config.network)
 
-		const auth0 = await auth0JS.createAuth0Client({
-			domain: this.config.auth0Domain,
-			clientId: this.config.auth0ClientId,
-			...(this.config.options?.auth0ClientOptions || {}),
-		})
-		return { fcl, magic, auth0 }
-	}
+  	const auth0 = await auth0JS.createAuth0Client({
+  		domain: this.config.auth0Domain,
+  		clientId: this.config.auth0ClientId,
+  		...(this.config.options?.auth0ClientOptions || {}),
+  	})
+  	return { fcl, magic, auth0 }
+  }
 
-	getId(): string {
-		return PROVIDER_ID
-	}
+  getId(): string {
+  	return PROVIDER_ID
+  }
 
-	getConnection() {
-		return this.connection
-	}
+  getConnection() {
+  	return this.connection
+  }
 
-	getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
-		return Promise.resolve(PROVIDER_ID)
-	}
+  getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
+  	return Promise.resolve(PROVIDER_ID)
+  }
 
-	async isAutoConnected(): Promise<boolean> {
-		return false
-	}
+  async isAutoConnected(): Promise<boolean> {
+  	return false
+  }
 
-	async isConnected(): Promise<boolean> {
-		const sdk = await this.instance.pipe(first()).toPromise()
-		return !!(await sdk?.fcl.currentUser())
-	}
+  async isConnected(): Promise<boolean> {
+  	const sdk = await this.instance.pipe(first()).toPromise()
+  	return !!(await sdk?.fcl.currentUser())
+  }
 
-	async isAuth0Authenticated(): Promise<boolean> {
-		const { auth0 } = await this.instance.pipe(first()).toPromise()
-		return auth0.isAuthenticated()
-	}
+  async isAuth0Authenticated(): Promise<boolean> {
+  	const { auth0 } = await this.instance.pipe(first()).toPromise()
+  	return auth0.isAuthenticated()
+  }
 
-	async sardinePurchase(data: {
-		orderId: OrderId
-		orderMaker: UnionAddress
-		purchaseOptions: SardinePurchaseOptions
-	}) {
-		const context = await this.instance.pipe(first()).toPromise() as MattelProviderConnectionResult
-		if (context) {
-			return context.magic.nft.purchase({
-				nft: {
-					blockchainNftId: convertUnionEntityToFlow(data.orderId),
-					contractAddress: convertUnionEntityToFlow(data.orderMaker),
-					network: "flow",
-					platform: "mattel",
-					type: "nft_secondary",
-					...data.purchaseOptions.nft,
-				},
-				identityPrefill: (data.purchaseOptions.identityPrefill || {}) as any,
-			})
-		} else {
-			throw new Error("Context is not prepared")
-		}
-	}
+  async sardinePurchase(data: {
+  	orderId: OrderId
+  	orderMaker: UnionAddress
+  	purchaseOptions: SardinePurchaseOptions
+  }) {
+  	const context = await this.instance.pipe(first()).toPromise() as MattelProviderConnectionResult
+  	if (context) {
+  		return context.magic.nft.purchase({
+  			nft: {
+  				blockchainNftId: convertUnionEntityToFlow(data.orderId),
+  				contractAddress: convertUnionEntityToFlow(data.orderMaker),
+  				network: "flow",
+  				platform: "mattel",
+  				type: "nft_secondary",
+  				...data.purchaseOptions.nft,
+  			},
+  			identityPrefill: (data.purchaseOptions.identityPrefill || {}) as any,
+  		})
+  	} else {
+  		throw new Error("Context is not prepared")
+  	}
+  }
 }
+
 export type SardinePurchaseOptions = {
 	nft: Omit<
 	NFTPurchaseRequest["nft"],
@@ -259,7 +261,7 @@ export const auth0Login = async ({ auth0, auth0RedirectUrl, auth0ClientId, auth0
 
 	if (!isAuthenticated) {
 		try {
-			  await auth0.loginWithPopup({
+			await auth0.loginWithPopup({
 				authorizationParams: {
 					domain: auth0Domain,
 					clientId: auth0ClientId,

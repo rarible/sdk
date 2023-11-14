@@ -1,13 +1,12 @@
-import type { Asset } from "@rarible/ethereum-api-client"
 import { BigNumber, toBn } from "@rarible/utils"
-import type { OrderForm } from "@rarible/ethereum-api-client"
+import type { OrderForm, EthOrderFormAsset } from "@rarible/api-client"
 import { Warning } from "@rarible/logger/build"
 import { isETH, isRari, isWeth } from "../nft/common"
 import type { EthereumConfig } from "../config/type"
 import { isNft } from "../order/is-nft"
 import { ETHER_IN_WEI } from "./index"
 
-export function checkGreaterThanMinPaymentValue({ assetType, value }: Asset, config: EthereumConfig): void {
+export function checkGreaterThanMinPaymentValue({ assetType, value }: EthOrderFormAsset, config: EthereumConfig): void {
 	if ((isETH(assetType) || isWeth(assetType, config) || isRari(assetType, config))
     && !toBn(value).gte(MIN_PAYMENT_VALUE)) {
 		throw new Warning(`Asset value must be less or equal to ${MIN_PAYMENT_VALUE.div(ETHER_IN_WEI).toFixed()}`)

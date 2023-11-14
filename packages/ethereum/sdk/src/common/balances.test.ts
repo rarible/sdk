@@ -2,7 +2,7 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
-import { configDictionary } from "../config"
+import { configDictionary, getEthereumConfig } from "../config"
 import { createRaribleSdk } from "../index"
 import type { EthereumNetwork } from "../types"
 import { Balances } from "./balances"
@@ -16,8 +16,9 @@ describe("getBalance test", () => {
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
+	const config = getEthereumConfig(env)
 
-	const balances = new Balances(apis)
+	const balances = new Balances(apis, config)
 
 	const testErc20Address = toAddress("0xa03C1eCaEB1D8A7581FC38d28f67c3d42a8B9b76")
 

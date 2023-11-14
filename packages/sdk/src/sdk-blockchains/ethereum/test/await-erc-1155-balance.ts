@@ -6,7 +6,7 @@ import { toAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
 import { retry } from "../../../common/retry"
-import { convertToEthereumAddress, getEthereumItemId } from "../common"
+import { convertToEVMAddress, getEthereumItemId } from "../common"
 
 export async function awaitErc1155Balance(
 	eth: EthereumWallet,
@@ -17,7 +17,7 @@ export async function awaitErc1155Balance(
 	const { contract, tokenId } = getEthereumItemId(itemId)
 	let rawRecipient: Address
 	if (isRealBlockchainSpecified(recipient)) {
-		rawRecipient = convertToEthereumAddress(recipient as UnionAddress)
+		rawRecipient = convertToEVMAddress(recipient as UnionAddress)
 	} else if (recipient.startsWith("0x")) {
 		rawRecipient = recipient as Address
 	}

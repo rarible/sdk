@@ -4,6 +4,7 @@ import { toBinary } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { TypedMessage } from "eth-sig-util"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthLazyItemErc1155, EthLazyItemErc721 } from "@rarible/api-client/build/models/LazyItem"
 import {
 	EIP1155_DOMAIN_NFT_TEMPLATE,
 	EIP1155_NFT_TYPE,
@@ -13,14 +14,15 @@ import {
 	EIP721_NFT_TYPES,
 } from "./eip712"
 
-export type SimpleLazyNft<K extends keyof any> = Omit<LazyErc721, K> | Omit<LazyErc1155, K>
+// export type SimpleLazyNft<K extends keyof any> = LazyItem
+export type SimpleLazyNft<K extends keyof any> = Omit<EthLazyItemErc721, K> | Omit<EthLazyItemErc1155, K>
 
 export async function signNft(ethereum: Maybe<Ethereum>, chainId: number, nft: SimpleLazyNft<"signatures">): Promise<Binary> {
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
 	switch (nft["@type"]) {
-		case "ERC721": {
+		case "ETH_ERC721": {
 			const domain = createEIP712NftDomain(chainId, nft.contract, "ERC721")
 
 			const data: TypedMessage<typeof EIP721_NFT_TYPES> = {
@@ -38,7 +40,7 @@ export async function signNft(ethereum: Maybe<Ethereum>, chainId: number, nft: S
 			}
 			return toBinary(signedData)
 		}
-		case "ERC1155": {
+		case "ETH_ERC1155": {
 			const domain = createEIP712NftDomain(chainId, nft.contract, "ERC1155")
 
 			const data: TypedMessage<typeof EIP1155_NFT_TYPES> = {

@@ -22,8 +22,7 @@ describe("estimate gas before send tx", () => {
 		},
 	}
 	const sendTemplate = getSendWithInjects({ logger: logConfig })
-	const api = { createGatewayPendingTransactions: () => {} }
-	const send = sendTemplate.bind(null, api as any, () => true as any)
+	const send = sendTemplate.bind(null, () => true as any)
 
 	test("estimate gas should pass to logger 'to' and 'value' fields", async () => {
 		const contract = ethereum.createContract(erc1155v2Abi, erc1155Address)

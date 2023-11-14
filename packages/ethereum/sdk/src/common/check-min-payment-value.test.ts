@@ -1,27 +1,27 @@
-import type { Asset } from "@rarible/ethereum-api-client"
 import type { Address } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress } from "@rarible/types"
+import type { EthOrderFormAsset } from "@rarible/api-client/build/models/EthOrderFormAsset"
 import { devEthereumConfig } from "../config/dev"
 import { checkGreaterThanMinPaymentValue, checkMinPaymentValue } from "./check-min-payment-value"
 
 describe("check min payment value fn", function () {
 	const config = devEthereumConfig
-	const enoughEthAsset: Asset = {
+	const enoughEthAsset: EthOrderFormAsset = {
 		assetType: {
-			assetClass: "ETH",
+			"@type": "ETH",
 		},
 		value: toBigNumber("100000000000000"),
 	}
-	const notEnoughEthAsset: Asset = {
+	const notEnoughEthAsset: EthOrderFormAsset = {
 		assetType: {
-			assetClass: "ETH",
+			"@type": "ETH",
 		},
 		value: toBigNumber("10"),
 	}
-	const erc721Asset: Asset = {
+	const erc721Asset: EthOrderFormAsset = {
 		assetType: {
-			assetClass: "ERC721",
+			"@type": "ERC721",
 			contract: toAddress("0x0000000000000000000000000000000000000001"),
 			tokenId: toBigNumber("1"),
 		},
@@ -31,9 +31,9 @@ describe("check min payment value fn", function () {
 	test("checkGreaterThanMinPaymentValue throws error with rari token", async () => {
 		let err: any
 		try {
-			const rariAsset: Asset = {
+			const rariAsset: EthOrderFormAsset = {
 				assetType: {
-					assetClass: "ERC20",
+					"@type": "ERC20",
 					contract: config.rari as Address,
 				},
 				value: toBigNumber("10"),
@@ -48,9 +48,9 @@ describe("check min payment value fn", function () {
 	test("checkGreaterThanMinPaymentValue throws error with weth token", async () => {
 		let err: any
 		try {
-			const wethAsset: Asset = {
+			const wethAsset: EthOrderFormAsset = {
 				assetType: {
-					assetClass: "ERC20",
+					"@type": "ERC20",
 					contract: config.weth as Address,
 				},
 				value: toBigNumber("10"),

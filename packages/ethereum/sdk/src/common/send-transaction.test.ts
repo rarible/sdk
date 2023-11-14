@@ -26,11 +26,9 @@ describe("sendTransaction", () => {
 	test("throw error if config.chainId is make a difference with chainId of wallet", async () => {
 		const testErc721 = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, collectionId)
 		const config = getEthereumConfig("testnet")
-		const configuration = new Configuration(getApiConfig("testnet"))
-		const gatewayApi = new GatewayControllerApi(configuration)
 		const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 
-		const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+		const send = getSendWithInjects().bind(null, checkWalletChainId)
 		const minter = toAddress(wallet.getAddressString())
 		const { tokenId, signature: { v, r, s } } = await getTokenId(collectionId, minter)
 		const functionCall = testErc721.functionCall("mint", tokenId, v, r, s, [], "uri")

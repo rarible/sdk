@@ -1,8 +1,8 @@
-import type { Asset } from "@rarible/ethereum-api-client"
+import type { EthOrderFormAsset } from "@rarible/api-client/build/models/EthOrderFormAsset"
 import { addFee } from "./add-fee"
 
-export function getAssetWithFee(asset: Asset, fee: number) {
-	if (asset.assetType.assetClass === "ETH" || asset.assetType.assetClass === "ERC20") {
+export function getAssetWithFee(asset: EthOrderFormAsset, fee: number) {
+	if (asset.assetType["@type"] === "ETH" || asset.assetType["@type"] === "ERC20") {
 		return addFee(asset, fee)
 	} else {
 		return asset

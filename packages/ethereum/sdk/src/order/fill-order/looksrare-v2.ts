@@ -1,15 +1,15 @@
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { Binary, Part } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toBn } from "@rarible/utils/build/bn"
 import type { NftItemRoyalty } from "@rarible/ethereum-api-client/build/models/NftItemRoyalty"
 import type { Address } from "@rarible/ethereum-api-client"
-import { OrderLooksRareDataV2QuoteType } from "@rarible/ethereum-api-client/build/models/OrderData"
-import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import { EthLooksRareOrderDataV2QuoteType } from "@rarible/api-client/build/models/OrderData"
+import type { AssetType } from "@rarible/api-client/build/models/AssetType"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import type { SimpleOrder } from "../types"
@@ -21,6 +21,7 @@ import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import { isNft } from "../is-nft"
 import type { SimpleLooksrareV2Order } from "../types"
 import { createLooksrareV2Validator } from "../contracts/looksrare-v2-validator"
+import { convertUnionRoyalties, createUnionItemId } from "../../common/union-converters"
 import type { PreparedOrderRequestDataForExchangeWrapper, OrderFillSendData, LooksrareOrderV2FillRequest } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { calcValueWithFees, originFeeValueConvert } from "./common/origin-fees-utils"
@@ -47,18 +48,18 @@ export class LooksrareV2OrderHandler {
 		}
 		let contract: Address
 		let tokenId: string
-		if (isNft(make.assetType)) {
-			contract = make.assetType.contract
-			tokenId = make.assetType.tokenId.toString()
+		if (isNft(make.type)) {
+			contract = make.type.contract
+			tokenId = make.type.tokenId.toString()
 		} else {
-			throw new Error(`Only sell orders are supported. Make=${make.assetType.assetClass} is not NFT`)
+			throw new Error(`Only sell orders are supported. Make=${make.type["@type"]} is not NFT`)
 		}
 
 		let currency: Address
-		if (take.assetType.assetClass === "ETH") {
+		if (take.type["@type"] === "ETH") {
 			currency = ZERO_ADDRESS
-		} else if (take.assetType.assetClass === "ERC20") {
-			currency = take.assetType.contract
+		} else if (take.type["@type"] === "ERC20") {
+			currency = take.type.contract
 		} else {
 			throw new Error("Take asset should be ETH or ERC-20 contract")
 		}
@@ -76,11 +77,11 @@ export class LooksrareV2OrderHandler {
 			currency: currency,
 			signer: makerOrder.maker,
 			strategyId: makerOrder.data.strategyId,
-			collectionType: getCollectionType(makerOrder.make.assetType),
+			collectionType: getCollectionType(makerOrder.make.type),
 			startTime: makerOrder.start || 0,
 			endTime: makerOrder.end || 0,
 			price: take.value,
-			additionalParameters: makerOrder.data.additionalParameters,
+			additionalParameters: toBinary(makerOrder.data.additionalParameters),
 			amounts: [amount.toString()],
 			itemIds: [tokenId],
 		}
@@ -198,9 +199,10 @@ export class LooksrareV2OrderHandler {
 			let royaltyList: NftItemRoyalty[] = []
 
 			for (const itemId of rawOrder.itemIds) {
-				const royalty = (await this.apis.nftItem.getNftItemRoyaltyById({
-					itemId: `${rawOrder.collection}:${itemId}`,
-				})).royalty
+				const royalty = (await this.apis.nftItem.getItemRoyaltiesById({
+					itemId: createUnionItemId(this.config.chainId, toAddress(rawOrder.collection), itemId),
+				})).royalties.map(royalty => convertUnionRoyalties(royalty))
+
 				if (royalty?.length) {
 					royaltyList = royaltyList.concat(royalty)
 				}
@@ -283,10 +285,10 @@ export const getTakerParamsTypes = (strategy: StrategyType): string[] => {
 	return []
 }
 
-function getQuoteType(quoteType: OrderLooksRareDataV2QuoteType): QuoteType {
-	if (quoteType === OrderLooksRareDataV2QuoteType.BID) {
+function getQuoteType(quoteType: EthLooksRareOrderDataV2QuoteType): QuoteType {
+	if (quoteType === EthLooksRareOrderDataV2QuoteType.BID) {
 		return QuoteType.Bid
-	} else if (quoteType === OrderLooksRareDataV2QuoteType.ASK) {
+	} else if (quoteType === EthLooksRareOrderDataV2QuoteType.ASK) {
 		return QuoteType.Ask
 	} else {
 		throw new Error(`Unexpected QuoteType=${quoteType}`)
@@ -294,12 +296,12 @@ function getQuoteType(quoteType: OrderLooksRareDataV2QuoteType): QuoteType {
 }
 
 function getCollectionType(asset: AssetType): CollectionType {
-	if (asset.assetClass === "ERC721") {
+	if (asset["@type"] === "ERC721") {
 		return CollectionType.ERC721
-	} else if (asset.assetClass === "ERC1155") {
+	} else if (asset["@type"] === "ERC1155") {
 		return CollectionType.ERC1155
 	} else {
-		throw new Error(`Wrong collection type: ${asset.assetClass}, expected ERC721 or ERC1155`)
+		throw new Error(`Wrong collection type: ${asset["@type"]}, expected ERC721 or ERC1155`)
 	}
 }
 

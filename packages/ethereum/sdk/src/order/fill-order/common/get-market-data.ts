@@ -12,6 +12,9 @@ import type { ExchangeWrapperOrderType } from "../types"
 import { getRequiredWallet } from "../../../common/get-required-wallet"
 import { ADDITIONAL_DATA_STRUCT } from "../../contracts/exchange-wrapper"
 import type { RaribleEthereumApis } from "../../../common/apis"
+import { convertUnionRoyalties, createUnionItemId } from "../../../common/union-converters"
+import type { EthereumConfig } from "../../../config/type"
+import type { CommonFillRequestAssetType } from "../types"
 import {
 	calcValueWithFees,
 	encodeBasisPointsPlusAccount,
@@ -31,6 +34,7 @@ export type GetMarketDataRequest = {
 
 export async function getMarketData(
 	ethereum: Maybe<Ethereum>,
+	config: EthereumConfig,
 	apis: RaribleEthereumApis,
 	{ request, fillData, marketId, feeValue }: GetMarketDataRequest
 ) {
@@ -40,14 +44,13 @@ export async function getMarketData(
 	let valueWithOriginFees = calcValueWithFees(toBigNumber(fillData.options.value?.toString() ?? "0"), totalFeeBasisPoints)
 
 	const data = {
-		// marketId: ExchangeWrapperOrderType.AAM,
 		marketId,
 		amount: fillData.options.value ?? "0",
 		fees: feeValue ?? encodedFeesValue,
 		data: fillData.data,
 	}
 	if (request.addRoyalty && request.assetType) {
-		let royalties = await getAmmItemsRoyalties(apis, request)
+		let royalties = await getAmmItemsRoyalties(apis, config, request)
 
 		if (royalties?.length) {
 			data.data = encodeDataWithRoyalties({
@@ -65,7 +68,6 @@ export async function getMarketData(
 		}
 	}
 
-	console.log("getMarket data", data, valueWithOriginFees.toString())
 	return {
 		originFees: {
 			totalFeeBasisPoints,
@@ -115,13 +117,13 @@ export function encodeDataWithRoyalties({ royalties, data, provider }: {
 			royalty => encodeBasisPointsPlusAccount(royalty.value, royalty.account)
 		),
 	}
-	console.log("dataForEncoding", JSON.stringify(dataForEncoding, null, "  "))
 	return provider.encodeParameter(ADDITIONAL_DATA_STRUCT, dataForEncoding)
 }
 
 export async function getAmmItemsRoyalties(
 	apis: RaribleEthereumApis,
-	request: AmmOrderFillRequest
+	config: EthereumConfig,
+	request: { assetType?: CommonFillRequestAssetType | CommonFillRequestAssetType[] }
 ): Promise<NftItemRoyalty[]> {
 	if (!request.assetType) {
 		return []
@@ -130,16 +132,16 @@ export async function getAmmItemsRoyalties(
 		//bulk getting royalties
 		const itemsRoyalties = await Promise.all(
 			request.assetType.map(async asset => {
-				const royaltyList = await apis.nftItem.getNftItemRoyaltyById({
-					itemId: `${asset.contract}:${asset.tokenId}`,
-				})
-				return royaltyList.royalty || []
+
+				return (await apis.nftItem.getItemRoyaltiesById({
+					itemId: createUnionItemId(config.chainId, asset.contract, asset.tokenId),
+				})).royalties.map(royalty => convertUnionRoyalties(royalty))
 			})
 		)
 		return itemsRoyalties.flat()
 	} else {
-		return (await apis.nftItem.getNftItemRoyaltyById({
-			itemId: `${request.assetType.contract}:${request.assetType.tokenId}`,
-		})).royalty || []
+		return (await apis.nftItem.getItemRoyaltiesById({
+			itemId: createUnionItemId(config.chainId, request.assetType.contract, request.assetType.tokenId),
+		})).royalties.map(royalty => convertUnionRoyalties(royalty))
 	}
 }

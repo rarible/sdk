@@ -18,6 +18,9 @@ import type { IRaribleEthereumSdkConfig } from "../../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import type { RaribleEthereumApis } from "../../common/apis"
 import { isWeth } from "../../nft/common"
+import {
+	getUnionBlockchainFromChainId,
+} from "../../common/get-blockchain-from-chain-id"
 import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
@@ -51,10 +54,17 @@ export class SeaportOrderHandler {
 
 	async getSignature({ hash, protocol } : {hash: string, protocol: string}): Promise<any> {
 		try {
-			const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
-				hash: hash,
+			// const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
+			// 	hash: hash,
+			// })
+			const { input } = await this.apis.orderSignature.getInput({
+				signatureInputForm: {
+					"@type": "OPEN_SEA_ORDER_FILL",
+					signature: hash,
+					blockchain: getUnionBlockchainFromChainId(this.config.chainId),
+				},
 			})
-			return signature
+			return input
 		} catch (e: any) {
 			const inactiveMsg = "Error when generating fulfillment data"
 			const msg = e?.value?.message || e?.data?.message

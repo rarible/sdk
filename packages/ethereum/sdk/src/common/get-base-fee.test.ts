@@ -18,7 +18,7 @@ describe("get base fee", () => {
 	test.concurrent("get base fee with error", async () => {
 		const env: EthereumNetwork = "mainnet"
 		const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
-		apis.orderSettings.getFees = () => { throw new Error("wow") }
+		apis.order.getOrderFees = () => { throw new Error("wow") }
 	  let feeError: any
 		try {
 			await getBaseFee(config, env, apis)

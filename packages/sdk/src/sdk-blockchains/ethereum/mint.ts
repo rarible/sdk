@@ -25,7 +25,7 @@ import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { EVMBlockchain } from "./common"
 import { isEVMBlockchain } from "./common"
-import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
+import { convertEthereumItemId, convertToEVMAddress, getEVMBlockchain } from "./common"
 
 export class EthereumMint {
 	private readonly blockchain: EVMBlockchain
@@ -97,7 +97,7 @@ export class EthereumMint {
 
 	private toPart(royalties: Royalty[] | Creator[] = []): Part[] {
 		return royalties.map(r => ({
-			account: convertToEthereumAddress(r.account),
+			account: convertToEVMAddress(r.account),
 			value: toBn(r.value).toNumber(),
 		}))
 	}
@@ -196,11 +196,11 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 	return {
 		...collection,
 		status: toCollectionStatus(collection.status),
-		id: toAddress(convertToEthereumAddress(collection.id)),
+		id: toAddress(convertToEVMAddress(collection.id)),
 		type: NftCollectionType[collection.type],
-		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
+		owner: collection.owner ? convertToEVMAddress(collection.owner) : undefined,
 		features: collection.features?.map(x => NftCollectionFeatures[x]),
-		minters: collection.minters?.map(x => convertToEthereumAddress(x)),
+		minters: collection.minters?.map(x => convertToEVMAddress(x)),
 	}
 }
 

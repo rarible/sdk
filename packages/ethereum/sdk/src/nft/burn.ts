@@ -8,9 +8,9 @@ import type { Erc1155LazyAssetType, Erc721LazyAssetType } from "@rarible/ethereu
 import type { Part } from "@rarible/ethereum-api-client"
 import type { CheckAssetTypeFunction, NftAssetType } from "../order/check-asset-type"
 import type { SendFunction } from "../common/send-transaction"
-import { getOwnershipId } from "../common/get-ownership-id"
 import type { RaribleEthereumApis } from "../common/apis"
-import { createItemId } from "../common/create-item-id"
+import type { EthereumConfig } from "../config/type"
+import { createUnionAddress, createUnionItemId, createUnionOwnership } from "../common/union-converters"
 import { getErc721Contract } from "./contracts/erc721"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"
@@ -25,6 +25,7 @@ export type BurnAsset = Erc721AssetType | Erc1155AssetType | NftAssetType | Erc7
 export async function burn(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
+	config: EthereumConfig,
 	checkAssetType: CheckAssetTypeFunction,
 	apis: RaribleEthereumApis,
 	checkWalletChainId: () => Promise<boolean>,
@@ -36,8 +37,8 @@ export async function burn(
 	}
 	const checked = await checkAssetType(request.assetType)
 	const from = toAddress(await ethereum.getFrom())
-	const ownership = await apis.nftOwnership.getNftOwnershipByIdRaw({
-		ownershipId: getOwnershipId(request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`), from),
+	const ownership = await apis.nftOwnership.getOwnershipByIdRaw({
+		ownershipId: createUnionOwnership(config.chainId, request.assetType.contract, request.assetType.tokenId, from),
 	})
 	if (ownership.status === 200) {
 		const lazyValueBn = toBn(ownership.value.lazyValue)
@@ -54,10 +55,10 @@ export async function burn(
 			if (!signature) {
 				throw new Error(`burn error: personal signature is empty (${signature})`)
 			}
-			return apis.nftItem.deleteLazyMintNftAsset({
-				itemId: createItemId(request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`)),
-				burnLazyNftForm: {
-					creators,
+			return apis.nftItem.burnLazyItem({
+				lazyItemBurnForm: {
+				  id: createUnionItemId(config.chainId, request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`)),
+					creators: creators.map(creator => createUnionAddress(creator)),
 					signatures: [
 						toBinary(signature),
 					],

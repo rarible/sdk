@@ -2,6 +2,7 @@ import type * as EthereumApi from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Part } from "@rarible/ethereum-api-client"
+import type * as ApiClient from "@rarible/api-client"
 import { sanitizeUri } from "../common/sanitize-uri"
 import { getBlockchainFromChainId } from "../common/get-blockchain-from-chain-id"
 import type { SimpleLazyNft } from "./sign-nft"
@@ -16,8 +17,8 @@ import { getErc1155Contract } from "./contracts/erc1155"
 export async function mintOffChain(
 	ethereum: Ethereum,
 	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<EthereumApi.Binary>,
-	nftCollectionApi: EthereumApi.NftCollectionControllerApi,
-	nftLazyMintApi: EthereumApi.NftLazyMintControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
+	nftLazyMintApi: ApiClient.ItemControllerApi,
 	data: ERC721RequestV3 | ERC1155RequestV2
 ): Promise<MintOffChainResponse> {
 	if (getBlockchainFromChainId(await ethereum.getChainId()) === "POLYGON") {
@@ -31,11 +32,13 @@ export async function mintOffChain(
 		...data,
 		uri: await getRequestURI(ethereum, data),
 	}, creators, tokenId)
-	const minted = await nftLazyMintApi.mintNftAsset({
-		lazyNft: Object.assign({}, mintData, {
-			tokenId,
-			signatures: [await signNft(mintData)],
-		}),
+	const minted = await nftLazyMintApi.mintLazyItem({
+		lazyItemMintForm: {
+			item: Object.assign({}, mintData, {
+				tokenId,
+				signatures: [await signNft(mintData)],
+			}),
+		},
 	})
 	return {
 		type: MintResponseTypeEnum.OFF_CHAIN,
@@ -61,12 +64,12 @@ function getMintOffChainData(
 	}
 	if ("supply" in data) {
 		return Object.assign({}, base, {
-			"@type": "ERC1155" as const,
+			"@type": "ETH_ERC1155" as const,
 			supply: toBigNumber(data.supply.toString()),
 		})
 	}
 	return Object.assign({}, base, {
-		"@type": "ERC721" as const,
+		"@type": "ETH_ERC721" as const,
 	})
 }
 

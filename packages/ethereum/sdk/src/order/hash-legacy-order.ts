@@ -4,15 +4,12 @@ import { toLegacyAssetType } from "./to-legacy-asset-type"
 import type { SimpleOrder } from "./types"
 
 export function hashLegacyOrder(ethereum: Ethereum, order: SimpleOrder): string {
-	if (order.type !== "RARIBLE_V1") {
-		throw new Error(`Not supported type: ${order.type}`)
-	}
 	const data = order.data
-	if (data.dataType !== "LEGACY") {
-		throw new Error(`Not supported data type: ${data.dataType}`)
+	if (data["@type"] !== "ETH_RARIBLE_V1") {
+		throw new Error(`Not supported data type: ${data["@type"]}`)
 	}
 
-	const makeType = toLegacyAssetType(order.make.assetType)
+	const makeType = toLegacyAssetType(order.make.type["@type"])
 	const takeType = toLegacyAssetType(order.take.assetType)
 
 	const struct = {

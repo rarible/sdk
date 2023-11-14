@@ -12,6 +12,7 @@ import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
+import type * as ApiClient from "@rarible/api-client"
 import type { SendFunction } from "../common/send-transaction"
 import type { CommonNftCollection } from "../common/mint"
 import { mintOffChain } from "./mint-off-chain"
@@ -91,8 +92,8 @@ export async function mint(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<Binary>,
-	nftCollectionApi: NftCollectionControllerApi,
-	nftLazyMintApi: NftLazyMintControllerApi,
+	nftCollectionApi: ApiClient.CollectionControllerApi,
+	nftMintApi: ApiClient.ItemControllerApi,
 	checkWalletChainId: () => Promise<boolean>,
 	data: MintRequest
 ): Promise<MintOffChainResponse | MintOnChainResponse> {
@@ -105,14 +106,14 @@ export async function mint(
 	}
 	if (isERC1155Request(data)) {
 		if (isERC1155v2Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, nftCollectionApi, nftLazyMintApi, data)
+			if (data.lazy) return mintOffChain(ethereum, signNft, nftCollectionApi, nftMintApi, data)
 			return mintErc1155v2(ethereum, send, nftCollectionApi, data)
 		}
 		return mintErc1155v1(ethereum, send, nftCollectionApi, data)
 	}
 	if (isERC721Request(data)) {
 		if (isERC721v3Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, nftCollectionApi, nftLazyMintApi, data)
+			if (data.lazy) return mintOffChain(ethereum, signNft, nftCollectionApi, nftMintApi, data)
 			return mintErc721v3(ethereum, send, nftCollectionApi, data)
 		}
 		if (isERC721v2Request(data)) {

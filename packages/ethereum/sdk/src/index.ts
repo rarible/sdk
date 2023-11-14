@@ -309,7 +309,7 @@ export function createRaribleSdk(
 			}),
 			level: sdkConfig?.logs?.level ?? LogsLevel.DISABLED,
 		},
-	}), apis.gateway)
+	}))
 
 	const send = partialCall(sendWithInjects, checkWalletChainId)
 	const checkLazyAssetType = partialCall(order.checkLazyAssetType, apis.nftItem)
@@ -365,7 +365,7 @@ export function createRaribleSdk(
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			upsert: upsertService.upsert,
-			cancel: partialCall(cancelTemplate, checkLazyOrder, ethereum, send, config.exchange, checkWalletChainId, apis),
+			cancel: partialCall(cancelTemplate, checkLazyOrder, ethereum, send, config, checkWalletChainId, apis),
 			getBaseOrderFee: getBaseOrderFee,
 			getBaseOrderFillFee: filler.getBaseOrderFillFee,
 			getBuyAmmInfo: filler.getBuyAmmInfo,
@@ -397,7 +397,7 @@ export function createRaribleSdk(
 				apis.nftOwnership,
 				checkWalletChainId,
 			),
-			burn: partialCall(burnTemplate, ethereum, send, checkAssetType, apis, checkWalletChainId),
+			burn: partialCall(burnTemplate, ethereum, send, config, checkAssetType, apis, checkWalletChainId),
 			deploy: {
 				erc721: new DeployErc721(ethereum, send, config),
 				erc1155: new DeployErc1155(ethereum, send, config),
@@ -428,7 +428,7 @@ export function createRaribleSdk(
 			},
 		},
 		balances: {
-			getBalance: new Balances(apis).getBalance,
+			getBalance: new Balances(apis, config).getBalance,
 			convert: wethConverter.convert,
 			deposit: wethConverter.deposit,
 			depositWei: wethConverter.depositWei,

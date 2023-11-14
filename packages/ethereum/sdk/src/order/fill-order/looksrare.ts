@@ -3,7 +3,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils/build/bn"
 import type { Address, AssetType } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { BigNumberValue } from "@rarible/utils"
@@ -18,6 +18,7 @@ import { isNft } from "../is-nft"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import type { RaribleEthereumApis } from "../../common/apis"
+import { convertUnionRoyalties, createUnionItemId } from "../../common/union-converters"
 import type { MakerOrderWithVRS, TakerOrderWithEncodedParams } from "./looksrare-utils/types"
 import type { LooksrareOrderFillRequest, OrderFillSendData } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
@@ -150,9 +151,9 @@ export class LooksrareOrderHandler {
 		}
 
 		if (request.addRoyalty) {
-			const royalties = (await this.apis.nftItem.getNftItemRoyaltyById({
-				itemId: `${makerOrder.collection}:${makerOrder.tokenId}`,
-			})).royalty
+			const royalties = (await this.apis.nftItem.getItemRoyaltiesById({
+				itemId: createUnionItemId(this.config.chainId, toAddress(makerOrder.collection), makerOrder.tokenId.toString()),
+			})).royalties.map(royalty => convertUnionRoyalties(royalty))
 
 			if (royalties?.length) {
 				data.data = encodeDataWithRoyalties({

@@ -4,7 +4,6 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const mantleTestnetConfig: EthereumConfig = {
-	basePath: "https://testnet-mantle-api.rarible.org",
 	chainId: 5001,
 	exchange: {
 		v1: ZERO_ADDRESS,
