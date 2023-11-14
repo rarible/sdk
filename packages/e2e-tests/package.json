@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.13.57",
+  "version": "0.13.58",
   "homepage": "",
   "license": "ISC",
   "private": true,
@@ -19,7 +19,7 @@
     "@rarible/api-client": "0.16.2-beta1",
     "@rarible/ethereum-sdk-test-common": "^0.13.56",
     "@rarible/flow-test-common": "~0.5.66",
-    "@rarible/sdk-wallet": "^0.13.57",
+    "@rarible/sdk-wallet": "^0.13.58",
     "@rarible/types": "~0.9.16",
     "bignumber.js": "^9.0.1",
     "jest-jasmine2": "^29.4.1"

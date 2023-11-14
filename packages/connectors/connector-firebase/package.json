@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-firebase",
-  "version": "0.13.57-fix.0",
+  "version": "0.13.58",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {

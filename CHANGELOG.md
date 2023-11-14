@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.58](https://github.com/rarible/sdk/compare/v0.13.57-fix.0...v0.13.58) (2023-11-14)
+
+
+### Features
+
+* **PLTF-111:** update flow api client ([#561](https://github.com/rarible/sdk/issues/561)) ([e15d622](https://github.com/rarible/sdk/commit/e15d6227abdec6baf92f2c33e36bee919271d7cb))
+
+
+
+
+
 ## [0.13.57-fix.0](https://github.com/rarible/sdk/compare/v0.13.57...v0.13.57-fix.0) (2023-11-14)
 
 **Note:** Version bump only for package root
