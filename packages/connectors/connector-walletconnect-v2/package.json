@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletconnect-v2",
-  "version": "0.13.57",
+  "version": "0.13.58-fix.0",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -17,7 +17,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.57",
+    "@rarible/connector": "^0.13.58-fix.0",
     "@walletconnect/ethereum-provider": "^2.10.1",
     "@walletconnect/modal": "^2.6.2"
   },
