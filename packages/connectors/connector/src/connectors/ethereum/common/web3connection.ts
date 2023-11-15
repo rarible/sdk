@@ -3,7 +3,10 @@ import { combineLatest } from "rxjs"
 import { distinctUntilChanged, map } from "rxjs/operators"
 import type { EthereumProviderConnectionResult } from "../domain"
 import type { ConnectionState } from "../../../connection-state"
-import { getStateConnected, getStateDisconnected } from "../../../connection-state"
+import {
+	getStateConnected,
+	getStateDisconnected,
+} from "../../../connection-state"
 import { getAddress } from "./get-address"
 import { getChainId } from "./get-chain-id"
 import { getConnectedStatus } from "./get-connected-status"
@@ -11,7 +14,7 @@ import { getConnectedStatus } from "./get-connected-status"
 export function connectToWeb3(
 	provider: any,
 	options: {
-		disconnect?: () => Promise<void>
+		disconnect?: () => Promise<void>;
 	} = {}
 ): Observable<ConnectionState<EthereumProviderConnectionResult>> {
 	return combineLatest([
@@ -30,10 +33,13 @@ export function connectToWeb3(
 					provider,
 					disconnect: options.disconnect,
 				}
-				return getStateConnected({ connection: wallet })
+				return getStateConnected({
+					connection: wallet,
+					disconnect: options?.disconnect,
+				})
 			} else {
 				return getStateDisconnected()
 			}
-		}),
+		})
 	)
 }
