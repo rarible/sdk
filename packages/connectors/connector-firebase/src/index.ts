@@ -61,7 +61,7 @@ EthereumProviderConnectionResult
   	this.connection = this.instance.pipe(
   		mergeMap((instance) => {
   			return connectToWeb3(instance.provider, {
-  				disconnect: this.disconnect.bind(this),
+  				disconnect: () => this.disconnect(instance),
   			})
   		}),
   		startWith(getStateConnecting({ providerId: PROVIDER_ID }))
@@ -107,23 +107,15 @@ EthereumProviderConnectionResult
   	)
   	try {
   		const idToken = await userCredential.user.getIdToken(true)
-  		const web3authProvider = await web3auth.connectTo(
-  			WALLET_ADAPTERS.OPENLOGIN,
-  			{
-  				loginProvider: "jwt",
-  				mfaLevel: "none",
-  				extraLoginOptions: {
-  					id_token: idToken,
-  					verifierIdField: "sub",
-  					domain: this.openLoginDomain,
-  				},
-  			}
-  		)
-
-  		// @ts-ignore
-  		const address = (await web3authProvider.request({
-  			method: "eth_accounts",
-  		})) as Array<string>
+  		await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
+  			loginProvider: "jwt",
+  			mfaLevel: "none",
+  			extraLoginOptions: {
+  				id_token: idToken,
+  				verifierIdField: "sub",
+  				domain: this.openLoginDomain,
+  			},
+  		})
   		return web3auth
   	} catch (error) {
   		console.error("Error signing in with Firebase", error)
@@ -154,16 +146,15 @@ EthereumProviderConnectionResult
   	return sdk ? sdk.connected : false
   }
 
-  private async disconnect(): Promise<void> {
+  private async disconnect(instance: Web3AuthNoModal): Promise<void> {
   	const app = initializeApp(this.firebaseConfig)
   	const auth = getAuth(app)
   	if (app && auth) {
   		await signOut(auth)
   	}
 
-  	const sdk = await this.instance.pipe(first()).toPromise()
-  	if (sdk) {
-  		await sdk.logout({ cleanup: true })
+  	if (instance) {
+  		instance.logout({ cleanup: true })
   	}
   }
 }
