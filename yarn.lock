@@ -7228,28 +7228,28 @@
   dependencies:
     "@rarible/types" "^0.9.16"
 
-"@rarible/flow-sdk-scripts@^0.5.74":
-  version "0.5.74"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.74.tgz#49d7b95af2647a9ceeb8380a209e9d1a8815bf81"
-  integrity sha512-bOvzaoyhlN0Tvd/bJV8SVX0jXTWpee6tQMG2XoPHGoNb/noXXslwUpYFnxFn2OHKFXzF3JPisqn9HvaRzJ6xcQ==
+"@rarible/flow-sdk-scripts@^0.5.74-fix.0":
+  version "0.5.74-fix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.74-fix.0.tgz#ac2bf4eb7ebd527a0c565eb55b1b379bb4abbf23"
+  integrity sha512-ghqBoKCtMBurOntfEEtVTZU+vfbve65KbBjCFK4Aiv8QCOWMXMNz5Ff56YPPRQqRWNLIB09NMMLieLU4h/y7Dw==
 
-"@rarible/flow-sdk@~0.5.74":
-  version "0.5.74"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.74.tgz#fb03c6279016bcde6f629d04c64c16ed6c99efc4"
-  integrity sha512-L0K3H6+UrOBrKkAS8pAMYrQDnl60OR+VP/8/AkfAUsPrAYKMIvr51XjmhESt4MG7vw2ZqNLyL9F0H2TOxH8Ahg==
+"@rarible/flow-sdk@~0.5.74-fix.0":
+  version "0.5.74-fix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.74-fix.0.tgz#3ff7ca01fd46bb49f101d1f3ad5663cc20111100"
+  integrity sha512-8FgptLIgs5XnYspTegtIGeC4acPPFu2XXOM0IBtbEG69xD3VKQc5ZUafJ9x4VLkK4UHEGmqyW9pcX6ktCbQubA==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "^0.5.56"
     "@rarible/flow-api-client" "~0.0.5-fix.2"
-    "@rarible/flow-sdk-scripts" "^0.5.74"
+    "@rarible/flow-sdk-scripts" "^0.5.74-fix.0"
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.74":
-  version "0.5.74"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.74.tgz#3529dafa08e8d0baddc6a2ff3bc4b86f28d41acc"
-  integrity sha512-i2GmYgOlOgUvsUC67HzWkOoRulTK5Wt3xvBNq5LZDKUTpm2KxIpgygnzR+UVFrUoGIUEyt+9Itp6EueU8mDv7g==
+"@rarible/flow-test-common@~0.5.74-fix.0":
+  version "0.5.74-fix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.74-fix.0.tgz#f22d18819edb8d03da898ccfed25d3d0cc132fb9"
+  integrity sha512-iO0S0uYWTT/SI/fsSvItMnsJBN/3ZAd/4hS/5RtZh7oQ1B7DX1W4LYivAk16/V122lTd2vtt5fFgdElFFP8iqg==
   dependencies:
     "@onflow/config" "^1.0.5"
     elliptic "^6.5.4"
