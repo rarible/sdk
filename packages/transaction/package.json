@@ -18,7 +18,7 @@
     "@babel/runtime": "^7.15.4",
     "@rarible/api-client": "0.16.2-beta1",
     "@rarible/ethereum-provider": "^0.13.56",
-    "@rarible/flow-sdk": "~0.5.74-fix.0",
+    "@rarible/flow-sdk": "~0.5.74-fix.1",
     "@rarible/protocol-ethereum-sdk": "^0.13.57",
     "@rarible/solana-sdk": "^0.13.52",
     "@rarible/tezos-sdk": "0.1.46",
