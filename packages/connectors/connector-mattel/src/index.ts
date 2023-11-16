@@ -66,6 +66,11 @@ export class MattelConnectionProvider extends
 		)
 	}
 
+	public async getAuth0Client(): Promise<Auth0Client | undefined> {
+		const { auth0 } = await this.instance.pipe(first()).toPromise()
+		return auth0
+	}
+
 	public setPopupConfig(config: PopupConfigOptions) {
 		this.config.options = {
 			...this.config.options,
