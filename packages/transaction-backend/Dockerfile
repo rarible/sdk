@@ -8,7 +8,7 @@ ADD ./package.json /app
 WORKDIR /app
 
 RUN apk add --no-cache git
-RUN yarn install --ignore-engines
+RUN yarn install
 
 COPY ./ /app
 
