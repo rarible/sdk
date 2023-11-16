@@ -7228,28 +7228,28 @@
   dependencies:
     "@rarible/types" "^0.9.16"
 
-"@rarible/flow-sdk-scripts@^0.5.72":
-  version "0.5.72"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.72.tgz#3a03558865c18ba4627a74a7e58c14718b634033"
-  integrity sha512-Ownp+ouNI8ARox8k3njBKY5AHnJaMvGqnepp6s5iX+bK2OLk94Vg2LYBIOvYLy2gdxYFB1h5I8ICuP1VzsKllQ==
+"@rarible/flow-sdk-scripts@^0.5.74":
+  version "0.5.74"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk-scripts/-/flow-sdk-scripts-0.5.74.tgz#49d7b95af2647a9ceeb8380a209e9d1a8815bf81"
+  integrity sha512-bOvzaoyhlN0Tvd/bJV8SVX0jXTWpee6tQMG2XoPHGoNb/noXXslwUpYFnxFn2OHKFXzF3JPisqn9HvaRzJ6xcQ==
 
-"@rarible/flow-sdk@~0.5.73-fix.0":
-  version "0.5.73-fix.0"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.73-fix.0.tgz#4e264d1d8fc450e08a06cb9a66bac4f7e68602be"
-  integrity sha512-yfGSs41RVIVadGiKatZHz839hscZULI8LkudJYVGZHWWx3Su/v+mylz7HkWSXJ5eEGysNIEq16DMyqojlxW0ow==
+"@rarible/flow-sdk@~0.5.74":
+  version "0.5.74"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.74.tgz#fb03c6279016bcde6f629d04c64c16ed6c99efc4"
+  integrity sha512-L0K3H6+UrOBrKkAS8pAMYrQDnl60OR+VP/8/AkfAUsPrAYKMIvr51XjmhESt4MG7vw2ZqNLyL9F0H2TOxH8Ahg==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
     "@rarible/fcl-types" "^0.5.56"
     "@rarible/flow-api-client" "~0.0.5-fix.2"
-    "@rarible/flow-sdk-scripts" "^0.5.72"
+    "@rarible/flow-sdk-scripts" "^0.5.74"
     "@rarible/types" "~0.9.3"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.66":
-  version "0.5.66"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.66.tgz#09bafe2410635ef59bb9968f21d54f58c12da525"
-  integrity sha512-TUKcerr9/tqwEUdMt/Rxm5HUJCtFriFtQ3MkJDxqWAlEd7kHu1NosgObDTVlArUQcKLf//s5GEbHdV77YDrTBA==
+"@rarible/flow-test-common@~0.5.74":
+  version "0.5.74"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.74.tgz#3529dafa08e8d0baddc6a2ff3bc4b86f28d41acc"
+  integrity sha512-i2GmYgOlOgUvsUC67HzWkOoRulTK5Wt3xvBNq5LZDKUTpm2KxIpgygnzR+UVFrUoGIUEyt+9Itp6EueU8mDv7g==
   dependencies:
     "@onflow/config" "^1.0.5"
     elliptic "^6.5.4"
