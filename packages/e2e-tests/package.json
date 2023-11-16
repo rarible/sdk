@@ -18,7 +18,7 @@
   "dependencies": {
     "@rarible/api-client": "0.16.2-beta1",
     "@rarible/ethereum-sdk-test-common": "^0.13.56",
-    "@rarible/flow-test-common": "~0.5.66",
+    "@rarible/flow-test-common": "~0.5.74",
     "@rarible/sdk-wallet": "^0.13.58",
     "@rarible/types": "~0.9.16",
     "bignumber.js": "^9.0.1",
