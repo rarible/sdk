@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.59-fix.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.0...v0.13.59-fix.1) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes sell fix ([26da778](https://github.com/rarible/sdk/commit/26da778ca8aa3992f2e665612ca6f46ddf0f4fe0))
+
+
+
+
+
 ## [0.13.59-fix.0](https://github.com/rarible/sdk/compare/v0.13.59...v0.13.59-fix.0) (2023-11-16)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests
