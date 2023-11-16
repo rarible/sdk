@@ -29,6 +29,7 @@ import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import type { UnionPart } from "../../../types/order/common"
+import { getEthereumItemId } from "../../../../build/sdk-blockchains/ethereum/common"
 
 
 export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
@@ -240,22 +241,6 @@ export function convertEthereumItemId(itemId: string, blockchain: EVMBlockchain)
 	return toItemId(`${blockchain}:${itemId}`)
 }
 
-export function getEthereumItemId(itemId: ItemId) {
-	if (!itemId) {
-		throw new Error("ItemId has not been specified")
-	}
-	const [domain, contract, tokenId] = itemId.split(":")
-	if (!isEVMBlockchain(domain)) {
-		throw new Error(`Not an ethereum item: ${itemId}`)
-	}
-	return {
-		itemId: `${contract}:${tokenId}`,
-		contract,
-		tokenId,
-		domain,
-	}
-}
-
 export function getOrderAmount(orderAmount: OrderRequest["amount"], collection: NftCollection): number {
 	let amount = collection.type === "ERC721" ? 1 : orderAmount
 	if (amount === undefined) {
@@ -301,4 +286,4 @@ export function assertWallet(wallet: Maybe<EthereumWallet>) {
 }
 
 export * from "./validators"
-export { convertToEVMAddress, isEVMBlockchain, EVMBlockchain } from "@rarible/sdk-common"
+export { convertToEVMAddress, isEVMBlockchain, EVMBlockchain, getEVMItemIdData as getEthereumItemId } from "@rarible/sdk-common"

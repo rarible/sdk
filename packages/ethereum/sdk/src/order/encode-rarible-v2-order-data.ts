@@ -1,7 +1,8 @@
-import type { OrderData, Part } from "@rarible/ethereum-api-client"
+import type { OrderData, Payout } from "@rarible/api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import { toBigNumber, toWord } from "@rarible/types"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 
 const ZERO_WORD = toWord("0x0000000000000000000000000000000000000000000000000000000000000000")
 
@@ -9,13 +10,13 @@ const ZERO_WORD = toWord("0x0000000000000000000000000000000000000000000000000000
  * Function encoded Part struct to single uint256
  * @param part
  */
-export function encodePartToBuffer(part: Part | undefined): BigNumber {
+export function encodePartToBuffer(part: Payout | undefined): BigNumber {
 	if (!part) {
 		return toBigNumber(ZERO_WORD)
 	}
 
 	const value = part.value.toString(16)
-	let account: string = part.account
+	let account: string = convertToEVMAddress(part.account)
 	if (account.startsWith("0x")) {
 		account = account.substring(2)
 	}
@@ -27,8 +28,8 @@ export function encodeRaribleV2OrderData(
 	data: OrderData,
 	wrongEncode: Boolean = false
 ): [string, string] {
-	switch (data.dataType) {
-		case "RARIBLE_V2_DATA_V3_BUY": {
+	switch (data["@type"]) {
+		case "ETH_RARIBLE_V2_DATA_V3_BUY": {
 			const encoded = ethereum.encodeParameter(DATA_V3_BUY_TYPE, {
 				payouts: encodePartToBuffer(data.payout),
 				originFeeFirst: encodePartToBuffer(data.originFeeFirst),
@@ -37,7 +38,7 @@ export function encodeRaribleV2OrderData(
 			})
 			return ["0x1b18cdf6", encoded]
 		}
-		case "RARIBLE_V2_DATA_V3_SELL": {
+		case "ETH_RARIBLE_V2_DATA_V3_SELL": {
 			const encoded = ethereum.encodeParameter(DATA_V3_SELL_TYPE, {
 				payouts: encodePartToBuffer(data.payout),
 				originFeeFirst: encodePartToBuffer(data.originFeeFirst),
@@ -47,7 +48,7 @@ export function encodeRaribleV2OrderData(
 			})
 			return ["0x2fa3cfd3", encoded]
 		}
-		case "RARIBLE_V2_DATA_V2": {
+		case "ETH_RARIBLE_V2_2": {
 			const encoded = ethereum.encodeParameter(DATA_V2_TYPE, {
 				payouts: data.payouts,
 				originFees: data.originFees,
@@ -55,7 +56,7 @@ export function encodeRaribleV2OrderData(
 			})
 			return ["0x23d235ef", encoded]
 		}
-		case "RARIBLE_V2_DATA_V1": {
+		case "ETH_RARIBLE_V2": {
 			const encoded = ethereum.encodeParameter(DATA_V1_TYPE, {
 				payouts: data.payouts,
 				originFees: data.originFees,
@@ -66,7 +67,7 @@ export function encodeRaribleV2OrderData(
 			return ["0x4c234266", encoded]
 		}
 		default: {
-			throw new Error(`Data type not supported: ${data.dataType}`)
+			throw new Error(`Data type not supported: ${data["@type"]}`)
 		}
 	}
 }

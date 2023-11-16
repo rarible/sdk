@@ -1,33 +1,34 @@
+import type { BigNumber, ContractAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type {
-	Address, CollectionAssetType,
-	CryptoPunksAssetType,
-	Erc1155AssetType,
-	Erc721AssetType,
-} from "@rarible/ethereum-api-client"
-import type { Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
-import type { Erc1155LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+	EthCollectionAssetType,
+	EthCryptoPunksAssetType,
+	EthErc1155AssetType,
+	EthErc721AssetType,
+	EthErc1155LazyAssetType,
+	EthErc721LazyAssetType,
+} from "@rarible/api-client"
 import type { CollectionControllerApi } from "@rarible/api-client"
 
 export type NftAssetType = {
-	contract: Address
-	tokenId: string | number
+	contract: ContractAddress
+	tokenId: string | number | BigNumber
 }
 
 export type AssetTypeRequest =
-  Erc721AssetType | Erc721LazyAssetType | Erc1155AssetType | Erc1155LazyAssetType
-  | NftAssetType | CryptoPunksAssetType | CollectionAssetType
+  EthErc721AssetType | EthErc721LazyAssetType | EthErc1155AssetType | EthErc1155LazyAssetType
+  | NftAssetType | EthCryptoPunksAssetType | EthCollectionAssetType
 
 export type AssetTypeResponse =
-  Erc721AssetType | Erc721LazyAssetType | Erc1155AssetType | Erc1155LazyAssetType
-  | CryptoPunksAssetType | CollectionAssetType
+  EthErc721AssetType | EthErc721LazyAssetType | EthErc1155AssetType | EthErc1155LazyAssetType
+  | EthCryptoPunksAssetType | EthCollectionAssetType
 
 export type CheckAssetTypeFunction = (asset: AssetTypeRequest) => Promise<AssetTypeResponse>
 
 export async function checkAssetType(
 	collectionApi: CollectionControllerApi, asset: AssetTypeRequest
 ): Promise<AssetTypeResponse> {
-	if ("assetClass" in asset) {
+	if ("@type" in asset) {
 		return asset
 	} else {
 		const collectionResponse = await collectionApi.getCollectionByIdRaw({ collection: asset.contract })
@@ -38,12 +39,12 @@ export async function checkAssetType(
 					return {
 						...asset,
 						tokenId: toBigNumber(`${asset.tokenId}`),
-						assetClass: collectionResponse.value.type,
+						"@type": collectionResponse.value.type,
 					}
 				}
 				case "CRYPTO_PUNKS": {
 					return {
-						assetClass: "CRYPTO_PUNKS",
+						"@type": "CRYPTO_PUNKS",
 						contract: asset.contract,
 						tokenId: parseInt(`${asset.tokenId}`),
 					}

@@ -1,3 +1,7 @@
+import type { ItemId } from "@rarible/api-client"
+import { toAddress, toUnionAddress } from "@rarible/types"
+import { isEVMBlockchain } from "./address"
+
 export * from "./promise-settled"
 export * from "./address"
 export * from "./retry"
@@ -119,4 +123,35 @@ export function isObjectLike(x: unknown): x is object {
 
 export function hasName(x: unknown): x is Error {
 	return typeof x === "object" && x !== null && "name" in x
+}
+
+export function getEVMItemIdData(itemId: ItemId) {
+	if (!itemId) {
+		throw new Error("ItemId has not been specified")
+	}
+	const [domain, contract, tokenId] = itemId.split(":")
+	if (!isEVMBlockchain(domain)) {
+		throw new Error(`Not an ethereum item: ${itemId}`)
+	}
+	return {
+		itemId: `${contract}:${tokenId}`,
+		contract: toAddress(contract),
+		tokenId,
+		domain,
+	}
+}
+
+export function getItemIdData(itemId: ItemId) {
+	if (!itemId) {
+		throw new Error("ItemId has not been specified")
+	}
+	const [domain, contract, tokenId] = itemId.split(":")
+	if (!isEVMBlockchain(domain)) {
+		throw new Error(`Not an ethereum item: ${itemId}`)
+	}
+	return {
+		contract: toUnionAddress(`${domain}:${contract}`),
+		tokenId,
+		domain,
+	}
 }

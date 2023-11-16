@@ -2,11 +2,9 @@ import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, deployTestErc1155, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { ethers } from "ethers"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { getApiConfig } from "../config/api-config"
 import { isError } from "../common/is-error"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
@@ -31,12 +29,10 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	const to = randomAddress()
 
 	const env: EthereumNetwork = "dev-ethereum"
-	const configuration = new Configuration(getApiConfig(env))
-	const gatewayApi = new GatewayControllerApi(configuration)
 
 	const config = getEthereumConfig(env)
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects().bind(null, checkWalletChainId)
 
 	const it = awaitAll({
 		testErc1155: deployTestErc1155(web3, "TST"),

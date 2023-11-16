@@ -1,10 +1,12 @@
-import type { Asset, Binary, EIP712Domain } from "@rarible/ethereum-api-client"
+import type { Asset, Binary } from "@rarible/api-client"
 import type { Address } from "@rarible/types"
 import { toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { TypedDataUtils } from "eth-sig-util"
 import type { EthereumConfig } from "../config/type"
+import { convertDateStringToNumber } from "../common"
+import type { EIP712Domain } from "../types"
 import { hashLegacyOrder } from "./hash-legacy-order"
 import { assetTypeToStruct } from "./asset-type-to-struct"
 import { EIP712_DOMAIN_TEMPLATE, EIP712_ORDER_TYPE, EIP712_ORDER_TYPES } from "./eip712"
@@ -19,14 +21,17 @@ export async function signOrder(
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
-	switch (order.type) {
-		case "RARIBLE_V1": {
+	switch (order.data["@type"]) {
+		case "ETH_RARIBLE_V1": {
 			const legacyHash = hashLegacyOrder(ethereum, order)
 			return toBinary(await ethereum.personalSign(legacyHash.substring(2)))
 		}
-		case "RARIBLE_V2": {
+		case "ETH_RARIBLE_V2":
+		case "ETH_RARIBLE_V2_2":
+		case "ETH_RARIBLE_V2_DATA_V3_SELL":
+		case "ETH_RARIBLE_V2_DATA_V3_BUY": {
 			const domain = createEIP712Domain(config.chainId, config.exchange.v2)
-			const structMessage = orderToStruct(ethereum, order)
+			const structMessage = orderToStruct(ethereum, order as SimpleRaribleV2Order)
 			const signature = await ethereum.signTypedData({
 				primaryType: EIP712_ORDER_TYPE,
 				domain,
@@ -70,8 +75,8 @@ export function orderToStruct(ethereum: Ethereum, order: SimpleRaribleV2Order, w
 		taker: order.taker ?? ZERO_ADDRESS,
 		takeAsset: assetToStruct(ethereum, order.take),
 		salt: order.salt,
-		start: order.start ?? 0,
-		end: order.end ?? 0,
+		start: convertDateStringToNumber(order.startedAt) ?? 0,
+		end: convertDateStringToNumber(order.endedAt) ?? 0,
 		dataType,
 		data,
 	}
@@ -79,7 +84,7 @@ export function orderToStruct(ethereum: Ethereum, order: SimpleRaribleV2Order, w
 
 function assetToStruct(ethereum: Ethereum, asset: Asset) {
 	return {
-		assetType: assetTypeToStruct(ethereum, asset.assetType),
+		assetType: assetTypeToStruct(ethereum, asset.type),
 		value: asset.value,
 	}
 }

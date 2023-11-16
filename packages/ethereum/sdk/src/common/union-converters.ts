@@ -3,6 +3,7 @@ import { toItemId } from "@rarible/types/build/item-id"
 import { toOwnershipId, toUnionAddress } from "@rarible/types"
 import type { Royalty } from "@rarible/api-client/build/models/Royalty"
 import { convertToEVMAddress } from "@rarible/sdk-common"
+import type { Creator } from "@rarible/api-client/build/models/Creator"
 import { getUnionBlockchainFromChainId } from "./get-blockchain-from-chain-id"
 
 export function createUnionItemId(chainId: number, contract: Address, tokenId: number | string | BigNumber): ItemId {
@@ -22,11 +23,12 @@ export function createUnionOwnership(
 	return toOwnershipId(`${getUnionBlockchainFromChainId(chainId)}:${contract}:${tokenId}:${owner}`)
 }
 
-export function convertUnionRoyaltiesToEVM(royalties: Royalty[]) {
-	return royalties.map(royalty => ({
+export function convertUnionPartsToEVM(royalties?: Royalty[] | Creator[]): Array<{ account: Address, value: number }> {
+	debugger
+	return royalties?.map(royalty => ({
 		value: royalty.value,
-		account: royalty.account,
-	}))
+		account: convertToEVMAddress(royalty.account),
+	})) || []
 }
 
 export function convertUnionRoyalties(royalty: Royalty): { value: number, account: Address } {

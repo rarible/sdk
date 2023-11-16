@@ -2,9 +2,9 @@ import type {
 	Address,
 	Erc1155AssetType,
 	Erc721AssetType,
-	NftItemControllerApi,
-	NftOwnershipControllerApi,
-} from "@rarible/ethereum-api-client"
+	ItemControllerApi,
+	OwnershipControllerApi,
+} from "@rarible/api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber } from "@rarible/types"
@@ -24,8 +24,8 @@ export async function transfer(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	checkAssetType: CheckAssetTypeFunction,
-	nftItemApi: NftItemControllerApi,
-	nftOwnershipApi: NftOwnershipControllerApi,
+	nftItemApi: ItemControllerApi,
+	nftOwnershipApi: OwnershipControllerApi,
 	checkWalletChainId: () => Promise<boolean>,
 	initialAsset: TransferAsset,
 	to: Address,
@@ -36,16 +36,16 @@ export async function transfer(
 		throw new Error("Wallet undefined")
 	}
 	const from = toAddress(await ethereum.getFrom())
-	const ownership = await nftOwnershipApi.getNftOwnershipByIdRaw({
+	const ownership = await nftOwnershipApi.getOwnershipByIdRaw({
 		ownershipId: getOwnershipId(initialAsset.contract, toBigNumber(`${initialAsset.tokenId}`), from),
 	})
 	if (ownership.status === 200) {
 		const asset = await checkAssetType(initialAsset)
 		if (toBn(ownership.value.lazyValue).gt(0)) {
-			if (asset.assetClass === "CRYPTO_PUNKS") {
+			if (asset["@type"] === "CRYPTO_PUNKS") {
 				throw new Error("CRYPTO_PUNKS can't be lazy")
 			}
-			if (asset.assetClass === "COLLECTION") {
+			if (asset["@type"] === "COLLECTION") {
 				throw new Error("Transfer asset class cannot be as collection")
 			}
 			return transferNftLazy(
@@ -56,7 +56,7 @@ export async function transfer(
 				toAddress(from), to, amount
 			)
 		}
-		switch (asset.assetClass) {
+		switch (asset["@type"]) {
 			case "ERC721": return transferErc721(ethereum, send, asset.contract, from, to, asset.tokenId)
 			case "ERC1155": return transferErc1155(ethereum, send, asset.contract, from, to, asset.tokenId, amount || "1")
 			case "CRYPTO_PUNKS": return transferCryptoPunk(ethereum, send, asset.contract, to, asset.tokenId)

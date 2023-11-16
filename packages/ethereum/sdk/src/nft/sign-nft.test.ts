@@ -1,7 +1,7 @@
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
+import { getEthUnionAddr, getEthUnionItemId } from "../common/test"
 import type { SimpleLazyNft } from "./sign-nft"
 import { signNft } from "./sign-nft"
 
@@ -15,11 +15,10 @@ describe("mint-lazy test", () => {
 
 	test("should sign ERC721 nft", async () => {
 		const nftTemplate: SimpleLazyNft<"signatures"> = {
-			"@type": "ERC721",
-			contract: toAddress("0x2547760120aED692EB19d22A5d9CCfE0f7872fcE"),
-			tokenId: toBigNumber("1"),
+			"@type": "ETH_ERC721",
+			id: getEthUnionItemId("0x2547760120aED692EB19d22A5d9CCfE0f7872fcE", "1"),
 			uri: "ipfs://ipfs/hash",
-			creators: [{ account: address, value: 10000 }],
+			creators: [{ account: getEthUnionAddr(address), value: 10000 }],
 			royalties: [],
 		}
 		const signature = await signNft(new Web3Ethereum({ web3 }), await web3.eth.getChainId(), nftTemplate)

@@ -1,9 +1,11 @@
-import type { AssetType } from "@rarible/ethereum-api-client"
+import type { AssetType } from "@rarible/api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import { id } from "../common/id"
+import { convertUnionPartsToEVM } from "../common/union-converters"
 
 export function assetTypeToStruct(ethereum: Ethereum, assetType: AssetType) {
-	switch (assetType.assetClass) {
+	switch (assetType["@type"]) {
 		case "ETH":
 			return {
 				assetClass: id("ETH"),
@@ -12,24 +14,24 @@ export function assetTypeToStruct(ethereum: Ethereum, assetType: AssetType) {
 		case "ERC20":
 			return {
 				assetClass: id("ERC20"),
-				data: ethereum.encodeParameter("address", assetType.contract),
+				data: ethereum.encodeParameter("address", convertToEVMAddress(assetType.contract)),
 			}
 		case "GEN_ART":
 			return {
 				assetClass: id("GEN_ART"),
-				data: ethereum.encodeParameter("address", assetType.contract),
+				data: ethereum.encodeParameter("address", convertToEVMAddress(assetType.contract)),
 			}
 		case "COLLECTION":
 			return {
 				assetClass: id("COLLECTION"),
-				data: ethereum.encodeParameter("address", assetType.contract),
+				data: ethereum.encodeParameter("address", convertToEVMAddress(assetType.contract)),
 			}
 		case "CRYPTO_PUNKS":
 			return {
 				assetClass: id("CRYPTO_PUNKS"),
 				data: ethereum.encodeParameter(
 					{ root: CONTRACT_TOKEN_ID },
-					{ contract: assetType.contract, tokenId: assetType.tokenId }
+					{ contract: convertToEVMAddress(assetType.contract), tokenId: assetType.tokenId }
 				),
 			}
 		case "ERC721":
@@ -37,7 +39,7 @@ export function assetTypeToStruct(ethereum: Ethereum, assetType: AssetType) {
 				assetClass: id("ERC721"),
 				data: ethereum.encodeParameter(
 					{ root: CONTRACT_TOKEN_ID },
-					{ contract: assetType.contract, tokenId: assetType.tokenId }
+					{ contract: convertToEVMAddress(assetType.contract), tokenId: assetType.tokenId }
 				),
 			}
 		case "ERC1155":
@@ -45,17 +47,17 @@ export function assetTypeToStruct(ethereum: Ethereum, assetType: AssetType) {
 				assetClass: id("ERC1155"),
 				data: ethereum.encodeParameter(
 					{ root: CONTRACT_TOKEN_ID },
-					{ contract: assetType.contract, tokenId: assetType.tokenId }
+					{ contract: convertToEVMAddress(assetType.contract), tokenId: assetType.tokenId }
 				),
 			}
-		case "ERC721_LAZY": {
+		case "ERC721_Lazy": {
 			const encoded = ethereum.encodeParameter(ERC721_LAZY_TYPE, {
-				contract: assetType.contract,
+				contract: convertToEVMAddress(assetType.contract),
 				data: {
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
-					creators: assetType.creators,
-					royalties: assetType.royalties,
+					creators: convertUnionPartsToEVM(assetType.creators),
+					royalties: convertUnionPartsToEVM(assetType.royalties),
 					signatures: assetType.signatures,
 				},
 			})
@@ -64,15 +66,15 @@ export function assetTypeToStruct(ethereum: Ethereum, assetType: AssetType) {
 				data: `0x${encoded.substring(66)}`,
 			}
 		}
-		case "ERC1155_LAZY": {
+		case "ERC1155_Lazy": {
 			const encoded = ethereum.encodeParameter(ERC1155_LAZY_TYPE, {
-				contract: assetType.contract,
+				contract: convertToEVMAddress(assetType.contract),
 				data: {
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					supply: assetType.supply,
-					creators: assetType.creators,
-					royalties: assetType.royalties,
+					creators: convertUnionPartsToEVM(assetType.creators),
+					royalties: convertUnionPartsToEVM(assetType.royalties),
 					signatures: assetType.signatures,
 				},
 			})

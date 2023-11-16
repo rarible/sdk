@@ -1,5 +1,6 @@
 import type { Binary, ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { Word } from "@rarible/types"
+import type { Address } from "@rarible/types"
 
 export type EthereumNetwork =
   | "mainnet"
@@ -36,4 +37,11 @@ export interface IRaribleEthereumSdkConfig {
 
 export interface EthereumNetworkConfig {
 	openseaOrdersMetadata?: Word
+}
+
+export type EIP712Domain = {
+	name: string;
+	version: string;
+	chainId: number;
+	verifyingContract: Address;
 }

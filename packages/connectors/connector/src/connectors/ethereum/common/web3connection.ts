@@ -30,7 +30,7 @@ export function connectToWeb3(
 					provider,
 					disconnect: options.disconnect,
 				}
-				return getStateConnected({ connection: wallet })
+				return getStateConnected({ connection: wallet, disconnect: options?.disconnect })
 			} else {
 				return getStateDisconnected()
 			}

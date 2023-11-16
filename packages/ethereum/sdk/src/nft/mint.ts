@@ -1,13 +1,10 @@
 import type {
-	Address,
-	BigNumber,
+	UnionAddress,
 	Binary,
-	NftCollectionControllerApi,
-	NftItem,
-	NftLazyMintControllerApi,
-	NftTokenId,
-	Part,
-} from "@rarible/ethereum-api-client"
+	CollectionControllerApi,
+	ItemId,
+	ItemControllerApi,
+} from "@rarible/api-client"
 import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"

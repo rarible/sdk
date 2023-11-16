@@ -61,7 +61,7 @@ EthereumProviderConnectionResult
   	this.connection = this.instance.pipe(
   		mergeMap((instance) => {
   			return connectToWeb3(instance.provider, {
-  				disconnect: this.disconnect.bind(this),
+  				// disconnect: this.disconnect.bind(this),
   			})
   		}),
   		startWith(getStateConnecting({ providerId: PROVIDER_ID }))

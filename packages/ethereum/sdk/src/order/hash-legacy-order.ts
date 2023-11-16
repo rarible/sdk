@@ -1,5 +1,6 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { keccak256 } from "ethereumjs-util"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import { toLegacyAssetType } from "./to-legacy-asset-type"
 import type { SimpleOrder } from "./types"
 
@@ -9,12 +10,12 @@ export function hashLegacyOrder(ethereum: Ethereum, order: SimpleOrder): string 
 		throw new Error(`Not supported data type: ${data["@type"]}`)
 	}
 
-	const makeType = toLegacyAssetType(order.make.type["@type"])
-	const takeType = toLegacyAssetType(order.take.assetType)
+	const makeType = toLegacyAssetType(order.make.type)
+	const takeType = toLegacyAssetType(order.take.type)
 
 	const struct = {
 		key: {
-			owner: order.maker,
+			owner: convertToEVMAddress(order.maker),
 			salt: order.salt,
 			sellAsset: makeType,
 			buyAsset: takeType,

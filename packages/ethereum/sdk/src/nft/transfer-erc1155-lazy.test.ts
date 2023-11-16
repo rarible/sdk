@@ -2,12 +2,10 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import {
 	Configuration,
-	GatewayControllerApi,
-	NftCollectionControllerApi,
-	NftItemControllerApi,
-	NftLazyMintControllerApi,
-	NftOwnershipControllerApi,
-} from "@rarible/ethereum-api-client"
+	CollectionControllerApi,
+	ItemControllerApi,
+	OwnershipControllerApi,
+} from "@rarible/api-client"
 import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
@@ -30,16 +28,14 @@ describe("transfer Erc721 lazy", () => {
 	const ethereum = new Web3Ethereum({ web3 })
 
 	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const nftOwnershipApi = new NftOwnershipControllerApi(configuration)
-	const nftCollectionApi = new NftCollectionControllerApi(configuration)
-	const nftLazyMintControllerApi = new NftLazyMintControllerApi(configuration)
-	const nftItemApi = new NftItemControllerApi(configuration)
-	const gatewayApi = new GatewayControllerApi(configuration)
+	const nftOwnershipApi = new OwnershipControllerApi(configuration)
+	const nftCollectionApi = new CollectionControllerApi(configuration)
+	const nftItemApi = new ItemControllerApi(configuration)
 	const checkAssetType = checkAssetTypeTemplate.bind(null, nftCollectionApi)
 	const sign = signNft.bind(null, ethereum, 300500)
 	const config = getEthereumConfig("dev-ethereum")
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects().bind(null, checkWalletChainId)
 
 	test("should transfer erc1155 lazy token", async () => {
 		const recipient = randomAddress()
@@ -59,7 +55,7 @@ describe("transfer Erc721 lazy", () => {
 			send,
 			sign,
 			nftCollectionApi,
-			nftLazyMintControllerApi,
+			nftItemApi,
 			checkWalletChainId,
 			request
 		)

@@ -46,16 +46,7 @@ import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "./types"
 import { LogsLevel } from "./types"
 import { ConvertWeth } from "./order/convert-weth"
 import { checkChainId } from "./order/check-chain-id"
-import type { AuctionStartAction } from "./auction/start"
-import { StartAuction } from "./auction/start"
-import { cancelAuction } from "./auction/cancel"
-import { finishAuction } from "./auction/finish"
-import type { PutAuctionBidAction } from "./auction/put-bid"
-import { PutAuctionBid } from "./auction/put-bid"
-import type { BuyoutAuctionAction } from "./auction/buy-out"
-import { BuyoutAuction } from "./auction/buy-out"
 import { createRemoteLogger, getEnvironment } from "./common/logger/logger"
-import { getAuctionHash } from "./auction/common"
 import type { CryptoPunksWrapper } from "./common/crypto-punks"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./nft/cryptopunk-wrapper"
 import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purchase"
@@ -241,47 +232,9 @@ export interface RaribleBalancesSdk {
 	getWethContractAddress(): Address
 }
 
-export interface RaribleAuctionSdk {
-	/**
-   * Start new auction
-   * @param request start auction request
-   */
-	start: AuctionStartAction
-
-	/**
-   * Cancel started auction
-   * @param hash Auction hash
-   */
-	cancel(hash: string): Promise<EthereumTransaction>
-
-	/**
-   * Finish auction with at least one bid
-   * @param hash Auction hash
-   */
-	finish(hash: string): Promise<EthereumTransaction>
-
-	/**
-   * Put bid
-   * @param request Put bid request
-   */
-	putBid: PutAuctionBidAction
-
-	/**
-   * Buy out auction if it possible
-   * @param request Buy out request
-   */
-	buyOut: BuyoutAuctionAction
-	/**
-   * Generate hash of auction by id
-   * @param auctionId Auction ID
-   */
-	getHash: (auctionId: BigNumber) => string
-}
-
 export interface RaribleSdk {
 	order: RaribleOrderSdk
 	nft: RaribleNftSdk
-	auction: RaribleAuctionSdk
 	apis: RaribleEthereumApis
 	balances: RaribleBalancesSdk
 }
