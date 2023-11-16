@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
+
+
+### Features
+
+* **PLTF-104:** gamisodes collection support ([#564](https://github.com/rarible/sdk/issues/564)) ([a6b3f53](https://github.com/rarible/sdk/commit/a6b3f53aa978ac943dd772b7b2a0285bb27ac19a))
+
+
+
+
+
 ## [0.13.58-fix.0](https://github.com/rarible/sdk/compare/v0.13.58...v0.13.58-fix.0) (2023-11-15)
 
 **Note:** Version bump only for package example
