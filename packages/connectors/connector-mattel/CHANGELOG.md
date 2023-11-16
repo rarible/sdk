@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.59-fix.0](https://github.com/rarible/sdk/compare/v0.13.59...v0.13.59-fix.0) (2023-11-16)
+
+
+### Bug Fixes
+
+* **PLTF-127:** fix mattel sign personal message ([#566](https://github.com/rarible/sdk/issues/566)) ([ea068aa](https://github.com/rarible/sdk/commit/ea068aa377bbb2b170c31b1814662c4c2337a766))
+
+
+
+
+
 ## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
 
 **Note:** Version bump only for package @rarible/connector-mattel
