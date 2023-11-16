@@ -40,7 +40,7 @@ pipeline {
                 chmod +x ./allurectl
                 ''')
             sh(label: 'Build sdk and e2e-tests', script: '''
-                yarn install --network-timeout=40000
+                yarn install --ignore-engines --network-timeout=40000
                 yarn build
                 ''')
             returnCode = sh(label: 'Run e2e-tests with reporting Allure TestOps', returnStatus: true, script: './allurectl watch --launch-name "E2E SDK #$BUILD_NUMBER" --launch-tags "$BLOCKCHAIN, $TEST_ENV" --results ./packages/e2e-tests/allure-results -- yarn e2e-tests')
