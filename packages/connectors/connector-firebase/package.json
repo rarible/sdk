@@ -17,6 +17,9 @@
     "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit"
   },
+  "resolutions": {
+    "@metamask/utils": "8.1.0"
+  },
   "dependencies": {
     "@firebase/app": "^0.9.22",
     "@firebase/auth": "^1.3.2",
