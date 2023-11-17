@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.59-fix.4](https://github.com/rarible/sdk/compare/v0.13.59-fix.3...v0.13.59-fix.4) (2023-11-17)
+
+
+### Bug Fixes
+
+* **WL-2215:** add cicd build script ([1571850](https://github.com/rarible/sdk/commit/1571850ff1710268fc6194722e31c5eab4d7c174))
+* **WL-2215:** add new release overrides ([0d698fa](https://github.com/rarible/sdk/commit/0d698fa88e710f821074eb261bbe205fcdaa4c53))
+* **WL-2215:** delete yarnrc ([ade112b](https://github.com/rarible/sdk/commit/ade112b5bf5e0eaf2156950f6dadacd3e07132f4))
+* **WL-2215:** ignore engines for firebase connector ([8235e27](https://github.com/rarible/sdk/commit/8235e27bd95b231619580861f2b51182efc22d95))
+* **WL-2215:** move cicd build location ([a9eee97](https://github.com/rarible/sdk/commit/a9eee9770e6af420f6f8e126ddde9d5c0e52b7a9))
+* **WL-2215:** remove firebase connector ignore ([86e9834](https://github.com/rarible/sdk/commit/86e9834a1e31b045598a4ff9f10ec14733b2b4a9))
+
+
+
+
+
 ## [0.13.59-fix.3](https://github.com/rarible/sdk/compare/v0.13.59-fix.2...v0.13.59-fix.3) (2023-11-17)
 
 **Note:** Version bump only for package root
