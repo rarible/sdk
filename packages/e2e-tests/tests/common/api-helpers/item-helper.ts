@@ -1,14 +1,12 @@
 import type { IRaribleSdk } from "@rarible/sdk/src/domain"
-import type { BigNumber, ContractAddress, ItemId, UnionAddress } from "@rarible/types"
+import type { BigNumber, ContractAddress, ItemId } from "@rarible/types"
 import { retry } from "@rarible/sdk/src/common/retry"
 import type {
-	CheckItemRestrictionResponse,
 	GetAllItemsResponse,
 	GetItemByIdResponse, GetItemRoyaltiesByIdResponse,
 	GetItemsByCollectionResponse, GetItemsByCreatorResponse, GetItemsByOwnerResponse,
 } from "@rarible/api-client/build/apis/ItemControllerApi"
 import type { Blockchain, Items, Royalties } from "@rarible/api-client"
-import type { RestrictionCheckResult } from "@rarible/api-client/build/models"
 
 export async function awaitForItemSupply(sdk: IRaribleSdk, itemId: ItemId,
 																				 supply: string | number | BigNumber
@@ -170,42 +168,6 @@ export async function getItemRoyaltiesByIdRaw(sdk: IRaribleSdk, contract: Contra
 	})
 	expect(royalties).not.toBe(null)
 	return royalties
-}
-
-
-export async function checkItemRestriction(sdk: IRaribleSdk, contract: ContractAddress,
-																					 tokenId: BigNumber,
-																					 user: UnionAddress): Promise<RestrictionCheckResult> {
-	const itemId = `${contract}:${tokenId}`
-	const restrictionCheckResult = await retry(10, 2000, async () => {
-		return await sdk.apis.item.checkItemRestriction({
-			itemId: itemId,
-			restrictionCheckForm: {
-				"@type": "OWNERSHIP",
-				user: user,
-			},
-		})
-	})
-	expect(restrictionCheckResult).not.toBe(null)
-	return restrictionCheckResult
-}
-
-
-export async function checkItemRestrictionRaw(sdk: IRaribleSdk, contract: ContractAddress,
-	tokenId: BigNumber,
-	user: UnionAddress): Promise<CheckItemRestrictionResponse> {
-	const itemId = `${contract}:${tokenId}`
-	const restrictionCheckResult = await retry(10, 2000, async () => {
-		return await sdk.apis.item.checkItemRestrictionRaw({
-			itemId: itemId,
-			restrictionCheckForm: {
-				"@type": "OWNERSHIP",
-				user: user,
-			},
-		})
-	})
-	expect(restrictionCheckResult).not.toBe(null)
-	return restrictionCheckResult
 }
 
 export async function verifyItemsByBlockchain(items: Items, blockchain: Blockchain): Promise<void> {

@@ -29,11 +29,29 @@ import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/doma
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import type { UnionPart } from "../../../types/order/common"
 
-export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
+export type EVMBlockchain = Blockchain.ETHEREUM |
+Blockchain.POLYGON |
+Blockchain.MANTLE |
+Blockchain.ARBITRUM |
+Blockchain.CHILIZ |
+Blockchain.ASTAR |
+Blockchain.BASE |
+Blockchain.LIGHTLINK |
+Blockchain.ZKEVM |
+Blockchain.ZKSYNC
+
+
 export const EVMBlockchains: EVMBlockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.POLYGON,
 	Blockchain.MANTLE,
+	Blockchain.ARBITRUM,
+	Blockchain.CHILIZ,
+	Blockchain.ASTAR,
+	Blockchain.BASE,
+	Blockchain.LIGHTLINK,
+	Blockchain.ZKEVM,
+	Blockchain.ZKSYNC,
 ]
 
 export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }

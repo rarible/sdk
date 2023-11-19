@@ -122,6 +122,57 @@ export function createRaribleSdk(
 			blockchainConfig.mantleNetwork,
 			ethConfig
 		),
+		// NOTE: blockchains below are not supported yet,
+		// declarations are placed here just to make it fit @rarible/api-client types
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.ARBITRUM,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.CHILIZ,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.LIGHTLINK,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.ZKSYNC,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.ASTAR,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.ZKEVM,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.BASE,
+			blockchainConfig.polygonNetwork,
+			ethConfig
+		),
 	)
 
 	const sdkContext: ISdkContext = {
