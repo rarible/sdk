@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.60-alpha.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.4...v0.13.60-alpha.1) (2023-11-19)
+
+**Note:** Version bump only for package @rarible/connector-torus
+
+
+
+
+
 ## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
 
 **Note:** Version bump only for package @rarible/connector-torus

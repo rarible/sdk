@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.60-alpha.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.4...v0.13.60-alpha.1) (2023-11-19)
+
+**Note:** Version bump only for package root
+
 ## [0.13.59-fix.9](https://github.com/rarible/sdk/compare/v0.13.59-fix.8...v0.13.59-fix.9) (2023-11-20)
 
 **Note:** Version bump only for package root
@@ -41,7 +45,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Bug Fixes
 
 * **WL-2215:** add yarnrc to gitignore ([997dfa3](https://github.com/rarible/sdk/commit/997dfa31e3531349d29addda1bf8880c5dadd6c2))
-
 
 
 
