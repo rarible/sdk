@@ -1,2 +1,2 @@
-yarn --ignore-engines && yarn bootstrap && yarn release
+yarn --ignore-engines && yarn release
 wait
