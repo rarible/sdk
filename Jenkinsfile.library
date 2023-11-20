@@ -10,5 +10,7 @@ withCredentials([
   string(credentialsId: 'sdk-api-key-testnet', variable: 'SDK_API_KEY_TESTNET'),
   string(credentialsId: 'sdk-api-key-prod', variable: 'SDK_API_KEY_PROD')
 ]) {
-  pipelinePackageRelease(pipelineConfig)
+  configFileProvider([configFile(fileId: "npmrc-npmjs-org", variable: 'NPM_CONFIG_USERCONFIG')]) {
+    pipelinePackageRelease(pipelineConfig)
+  }
 }
