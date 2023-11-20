@@ -2,7 +2,8 @@
 
 def pipelineConfig = [
   "JSpublicLibrary": "true",
-  "pkgRepoName": "npmjs-org"
+  "pkgRepoName": "npmjs-org",
+  "ignoreEngines": "true"
 ]
 
 withCredentials([
