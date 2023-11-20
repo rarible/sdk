@@ -1,6 +1,6 @@
 {
   "name": "example",
-  "version": "0.13.59-fix.5",
+  "version": "0.13.59-fix.6",
   "private": true,
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -25,9 +25,9 @@
     "@rarible/connector-beacon": "^0.13.59",
     "@rarible/connector-fcl": "^0.13.59",
     "@rarible/connector-fortmatic": "^0.13.59",
-    "@rarible/connector-helper": "^0.13.59-fix.5",
+    "@rarible/connector-helper": "^0.13.59-fix.6",
     "@rarible/connector-iframe": "^0.13.59",
-    "@rarible/connector-mattel": "^0.13.59-fix.5",
+    "@rarible/connector-mattel": "^0.13.59-fix.6",
     "@rarible/connector-mew": "^0.13.59",
     "@rarible/connector-nfid": "^0.13.59",
     "@rarible/connector-portis": "^0.13.59",
@@ -35,7 +35,7 @@
     "@rarible/connector-walletconnect-v2": "^0.13.59",
     "@rarible/connector-walletlink": "^0.13.59",
     "@rarible/flow-sdk": "~0.5.74-fix.1",
-    "@rarible/sdk": "^0.13.59-fix.5",
+    "@rarible/sdk": "^0.13.59-fix.6",
     "@rarible/web3-ethereum": "^0.13.57",
     "@rixio/atom": "^0.12.1",
     "@rixio/react": "^0.12.1",
