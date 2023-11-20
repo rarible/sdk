@@ -13,7 +13,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
-
 ## [0.13.59-fix.9](https://github.com/rarible/sdk/compare/v0.13.59-fix.8...v0.13.59-fix.9) (2023-11-20)
 
 **Note:** Version bump only for package root
