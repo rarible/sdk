@@ -24,6 +24,7 @@ function getDeployRequest(data: Record<string, any>) {
 	switch (data["blockchain"]) {
 		case Blockchain.POLYGON:
 		case Blockchain.MANTLE:
+		case Blockchain.ARBITRUM:
 		case WalletType.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
@@ -91,7 +92,12 @@ export function DeployPage() {
 								if ((connection.state as any)?.connection.blockchain === Blockchain.MANTLE) {
 									formData.blockchain = Blockchain.MANTLE
 								}
+								if ((connection.state as any)?.connection.blockchain === Blockchain.ARBITRUM) {
+									formData.blockchain = Blockchain.ARBITRUM
+								}
 							}
+							console.log("connection", connection, getDeployRequest(formData))
+
 							setComplete(await connection.sdk?.nft.createCollection(getDeployRequest(formData)))
 						} catch (e) {
 							setError(e)
@@ -108,7 +114,7 @@ export function DeployPage() {
 								label="Blockchain"
 							>
 								<MenuItem value={WalletType.ETHEREUM}>
-									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE}
+									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE} / {Blockchain.ARBITRUM}
 								</MenuItem>
 								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>

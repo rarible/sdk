@@ -10,6 +10,8 @@ import { stagingEthereumConfig } from "./staging"
 import { stagingPolygonConfig } from "./polygon-staging"
 import { mantleTestnetConfig } from "./testnet-mantle"
 import { mantleConfig } from "./mantle"
+import { arbitrumTestnetConfig } from "./testnet-arbitrum"
+import { arbitrumConfig } from "./arbitrum"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -22,6 +24,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-mantle": mantleTestnetConfig,
 	testnet: testnetEthereumConfig,
 	staging: stagingEthereumConfig,
+	"testnet-arbitrum": arbitrumTestnetConfig,
+	"arbitrum": arbitrumConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

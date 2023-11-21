@@ -9,6 +9,7 @@ import { toContractAddress } from "@rarible/types"
 import type { WalletType } from "@rarible/sdk-wallet"
 import type { IRaribleSdk } from "@rarible/sdk"
 import type { UnionAddress } from "@rarible/types/build/union-address"
+import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 import { FormSelect } from "../../components/common/form/form-select"
@@ -58,7 +59,7 @@ export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAd
 				try {
 					if (connection.state.status === "connected") {
 						const res = await sdk?.balances.convert({
-							blockchain: connection.state.connection.blockchain,
+							blockchain: connection.state.connection.blockchain as SupportedBlockchain,
 							value: form.getValues("value"),
 							isWrap: convertSchema.from["@type"] === "ETH",
 						})

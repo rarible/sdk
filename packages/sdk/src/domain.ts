@@ -144,7 +144,6 @@ export interface IRaribleSdk {
 export interface IApisSdk {
 	order: ApiClient.OrderControllerApi
 	currency: ApiClient.CurrencyControllerApi
-	auction: ApiClient.AuctionControllerApi
 	collection: ApiClient.CollectionControllerApi
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi

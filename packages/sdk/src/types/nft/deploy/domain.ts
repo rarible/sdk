@@ -2,6 +2,7 @@ import type * as ApiClient from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
+import type { SupportedBlockchain } from "@rarible/sdk-common"
 
 export type CreateCollectionRequest<T extends CreateCollectionBlockchains = CreateCollectionBlockchains> = {
 	blockchain: T;
@@ -14,12 +15,7 @@ export interface CreateCollectionAsset extends Record<CreateCollectionBlockchain
 	[ApiClient.Blockchain.SOLANA]: SolanaCreateCollectionTokenAsset;
 }
 
-export type CreateCollectionBlockchains =
-	ApiClient.Blockchain.ETHEREUM |
-	ApiClient.Blockchain.POLYGON |
-	ApiClient.Blockchain.MANTLE |
-	ApiClient.Blockchain.TEZOS |
-	ApiClient.Blockchain.SOLANA
+export type CreateCollectionBlockchains = SupportedBlockchain
 
 export type DeployTokenAsset =
 	EthereumCreateCollectionAsset |

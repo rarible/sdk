@@ -1,29 +1,29 @@
 import type { AssetType, CollectionId, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress } from "@rarible/types"
-import { Blockchain } from "@rarible/api-client"
+import type { SupportedBlockchain } from "./blockchain"
+import { SupportedBlockchains } from "./blockchain"
 
-export function extractBlockchainFromAssetType(assetType: AssetType): Blockchain | undefined {
+export function extractBlockchainFromAssetType(assetType: AssetType): SupportedBlockchain | undefined {
 	if (!assetType) {
 		throw new Error("Asset type is expected")
 	}
 	if ("blockchain" in assetType && assetType.blockchain) {
-		return assetType.blockchain
+		return validateBlockchain(assetType.blockchain)
 	}
 	if ("contract" in assetType && assetType.contract) {
 		return extractBlockchain(assetType.contract)
 	}
 }
 
-const knownBlockchains = Object.values(Blockchain)
 export type BlockchainIsh = UnionAddress | ContractAddress | ItemId | OrderId | OwnershipId | CollectionId | CurrencyId
 
-export function extractBlockchain(value: BlockchainIsh): Blockchain {
+export function extractBlockchain(value: BlockchainIsh): SupportedBlockchain {
 	const idx = value.indexOf(":")
 	if (idx === -1) {
 		throw new Error(`Unable to extract blockchain from ${value}`)
 	}
 	const start = value.substring(0, idx)
-	for (const blockchain of knownBlockchains) {
+	for (const blockchain of SupportedBlockchains) {
 		if (blockchain === start) {
 			return blockchain
 		}
@@ -48,11 +48,11 @@ export function getEntityData(entity: UnionAddress | ContractAddress | string) {
 	}
 }
 
-export function validateBlockchain(blockchain: string): Blockchain {
-	if (!(blockchain in Blockchain)) {
+export function validateBlockchain(blockchain: string): SupportedBlockchain {
+	if (!(blockchain in SupportedBlockchains)) {
 		throw new Error(`Value: "${blockchain}" is not a supported blockchain type`)
 	}
-	return blockchain as Blockchain
+	return blockchain as SupportedBlockchain
 }
 
 export const FLOW_TOKEN_MAP = {

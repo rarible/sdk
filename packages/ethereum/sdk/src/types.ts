@@ -12,6 +12,8 @@ export type EthereumNetwork =
   | "staging-polygon"
   | "mantle"
   | "testnet-mantle"
+  | "arbitrum"
+  | "testnet-arbitrum"
 
 export enum LogsLevel {
 	DISABLED = 0,

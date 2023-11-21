@@ -70,6 +70,11 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 				return getERC20(contract)
 			}
 			throw new Error("Unsupported option subtype")
+		case Blockchain.ARBITRUM:
+			if (type === "TOKEN") {
+				return getERC20(contract)
+			}
+			throw new Error("Unsupported option subtype")
 		case Blockchain.IMMUTABLEX:
 			if (type === "NATIVE") {
 				return getEthNative(blockchain)
@@ -220,6 +225,31 @@ export function getCurrencyOptions(
 								label: "WETH",
 								blockchain: Blockchain.MANTLE,
 								contract: "MANTLE:0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111",
+							})
+							break
+						default:
+					}
+					 return res
+				}
+				return []
+			case Blockchain.ARBITRUM:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ARBITRUM,
+								contract: "ARBITRUM:0x980b62da83eff3d4576c647993b0c1d7faf17c73",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ARBITRUM,
+								contract: "ARBITRUM:0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
 							})
 							break
 						default:

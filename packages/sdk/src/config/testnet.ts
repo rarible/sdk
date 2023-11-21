@@ -9,4 +9,5 @@ export const testnetConfig: RaribleSdkConfig = {
 	solanaNetwork: "devnet",
 	immutablexNetwork: "testnet",
 	mantleNetwork: "testnet-mantle",
+	arbitrumNetwork: "testnet-arbitrum",
 }

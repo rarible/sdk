@@ -9,4 +9,5 @@ export const prodConfig: RaribleSdkConfig = {
 	solanaNetwork: "mainnet-beta",
 	immutablexNetwork: "prod",
 	mantleNetwork: "mantle",
+	arbitrumNetwork: "arbitrum",
 }

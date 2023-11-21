@@ -9,4 +9,5 @@ export const stagingConfig: RaribleSdkConfig = {
 	solanaNetwork: "devnet",
 	immutablexNetwork: "testnet",
 	mantleNetwork: "testnet-mantle",
+	arbitrumNetwork: "testnet-arbitrum",
 }

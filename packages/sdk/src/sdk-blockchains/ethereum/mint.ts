@@ -188,6 +188,10 @@ export async function getCollection(
 	return api.getCollectionById({ collection: req.collectionId })
 }
 
+function isNftCollectionFeatures(feature: string): feature is NftCollectionFeatures {
+	return feature in NftCollectionFeatures
+}
+
 function toNftCollection(collection: Collection): CommonNftCollection {
 	if (!isSupportedCollection(collection.type)) {
 		throw new UnsupportedCollectionError(collection.type)
@@ -199,7 +203,12 @@ function toNftCollection(collection: Collection): CommonNftCollection {
 		id: toAddress(convertToEthereumAddress(collection.id)),
 		type: NftCollectionType[collection.type],
 		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
-		features: collection.features?.map(x => NftCollectionFeatures[x]),
+		features: collection.features?.reduce((acc, x) => {
+			if (isNftCollectionFeatures(x)) {
+				acc.push(NftCollectionFeatures[x])
+			}
+			return acc
+		}, [] as NftCollectionFeatures[]),
 		minters: collection.minters?.map(x => convertToEthereumAddress(x)),
 	}
 }

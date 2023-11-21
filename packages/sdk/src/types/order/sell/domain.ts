@@ -1,4 +1,4 @@
-import type { Blockchain } from "@rarible/api-client"
+import type { SupportedBlockchain } from "@rarible/sdk-common"
 import type {
 	BasePrepareOrderResponse,
 	OrderInternalRequest,
@@ -50,5 +50,5 @@ export type PrepareSellInternalRequest = {
 	/**
    * Blockchain of request
    */
-	blockchain: Blockchain
+	blockchain: SupportedBlockchain
 }
