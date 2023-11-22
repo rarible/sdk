@@ -7306,6 +7306,100 @@
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.2.tgz#069ff1d80fb27ed5668d6d44db877d414b76b625"
   integrity sha512-TRZApOVR4O98MSOfxhrdm9iUVQAXOLQaXM9p2k6oqHwwdIW2gIcBdZo78c11OUIOgevyBhbpJB0Cgly/G12VfQ==
 
+"@rarible/connector-beacon@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-beacon/-/connector-beacon-0.13.60-beta.0.tgz#a8367a39ba7862d1c6b1cdf1a7afbfaaa3483a83"
+  integrity sha512-20OsucJi7UZqO8aSRrwQRX+csmcX8hF1F6it00hS7zC2vnDZ7XSlWwSJb2yniHBz6HeY1NwcEmQFRYjF1kVbkg==
+  dependencies:
+    "@rarible/connector" "^0.13.60-beta.0"
+    "@taquito/beacon-wallet" "^12.0.3"
+    "@taquito/taquito" "^12.0.0"
+
+"@rarible/connector-fcl@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-fcl/-/connector-fcl-0.13.60-beta.0.tgz#b6f696dcb9ec843a6f9ad62a72ae3168798280ab"
+  integrity sha512-/pIfF76dDn6s489jfBFrDDj/6UFoH9hY/4RR35dTt/O97YGDC9OuX/xx5Vkji/ZWq7SfnvmytodLChfbqmDJ2g==
+  dependencies:
+    "@onflow/fcl" "~1.3.2"
+    "@rarible/connector" "^0.13.60-beta.0"
+
+"@rarible/connector-fortmatic@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-fortmatic/-/connector-fortmatic-0.13.60-beta.0.tgz#11dc21fc3aeab62a4342b01e01b3953d8eb8d0db"
+  integrity sha512-s/zanHO1i6fLA81F1d++aqf3r6+KfxJIzS8xm67vR1RFhKVkh4b9xnRlXPql3ZCwkJs+wRP4D7Qcq5q8OSTvqQ==
+  dependencies:
+    "@rarible/connector" "^0.13.60-beta.0"
+    fortmatic "^2.2.1"
+
+"@rarible/connector-iframe@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-iframe/-/connector-iframe-0.13.60-beta.0.tgz#d9f60f54277de8f18ab7c36262cfc89a59d653af"
+  integrity sha512-ALrtyCaftvM1TxAl19x+Kv9M4dYVBnhvTp8R+aiSlNtU6tQw0mdmw8EIseG5SLps5gMyfNqDMsQYo8Ppawva9w==
+  dependencies:
+    "@ledgerhq/iframe-provider" "^0.4.2"
+    "@rarible/connector" "^0.13.60-beta.0"
+
+"@rarible/connector-mew@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-mew/-/connector-mew-0.13.60-beta.0.tgz#d3aa13e1652b7ba1ebc78145b65c5fc0a9c6054d"
+  integrity sha512-A5p7gm2yBGjIGtgbx9B0IDZBaKprSscTuwJT//shepszAhspcAosecin1Ifa6nrl6nWls1zKUMqrynHiCZAQAQ==
+  dependencies:
+    "@myetherwallet/mewconnect-web-client" "^2.2.0-beta.18"
+    "@rarible/connector" "^0.13.60-beta.0"
+    rollup "^2.0.0"
+
+"@rarible/connector-nfid@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-nfid/-/connector-nfid-0.13.60-beta.0.tgz#bd67734ec8f3094436c1835d45289b9e14566a50"
+  integrity sha512-Wdh77gQE5pT53p8t+eg1cZqWot5oxnapoVS9aEgg4/AwUTPp4+10IVh8DRAFJ9iCPhh6MYrA8WZGpOkFm8N1Ig==
+  dependencies:
+    "@nfid/embed" "0.0.5-alpha.0"
+    "@rarible/connector" "^0.13.60-beta.0"
+    ethers "^5.7.2"
+    rollup "^2.0.0"
+
+"@rarible/connector-portis@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-portis/-/connector-portis-0.13.60-beta.0.tgz#3bcefdd24395fe887021bb17a06edc89d1ece3c5"
+  integrity sha512-Kp4aW5eD+EIYX1FUJtqZQGByh5AqAdnw8Kju8Zvy8PiwWsy4BznG5dXAa/3VPna3VPVJrvYdcdJcAlOhjqkOaA==
+  dependencies:
+    "@portis/web3" "^4.0.7"
+    "@rarible/connector" "^0.13.60-beta.0"
+
+"@rarible/connector-torus@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-torus/-/connector-torus-0.13.60-beta.0.tgz#523e666e2cdd1707c480184d3e861e4c7f3d8cbc"
+  integrity sha512-vTevez1QGa/78kf4HpIRZvIq6Io1opi4H+RYPBZMIG/Fz1vC+kHhwWQTvIhVE4/aqzTdzx7y6pYTE2DEqrUgcA==
+  dependencies:
+    "@rarible/connector" "^0.13.60-beta.0"
+    "@toruslabs/torus-embed" "^1.19.0"
+
+"@rarible/connector-walletconnect-v2@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-walletconnect-v2/-/connector-walletconnect-v2-0.13.60-beta.0.tgz#1d9c6c4efdb7d581e10e13d854def059f1527a04"
+  integrity sha512-3nktcC+IfjfXPIRHdrM4iwTLPAZxKxigtBHFrWdo97oH/qpAAIMkq0AFMs2dYGtXi1Lrrn0K8t09hMZ9+yCNiQ==
+  dependencies:
+    "@rarible/connector" "^0.13.60-beta.0"
+    "@walletconnect/ethereum-provider" "^2.10.1"
+    "@walletconnect/modal" "^2.6.2"
+
+"@rarible/connector-walletlink@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector-walletlink/-/connector-walletlink-0.13.60-beta.0.tgz#cfa69e52a1a744cbecf5cea4dfedfacbd3e51df5"
+  integrity sha512-5s5HBCfn4Kt4wEYoMb/WTWFQvAD/sjZTSnvdMUOvDHNy62iVzuNDblqALT0+7W8eCk0FME0nhmv8/NybEA1WSQ==
+  dependencies:
+    "@rarible/connector" "^0.13.60-beta.0"
+    walletlink "^2.4.1"
+
+"@rarible/connector@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/connector/-/connector-0.13.60-beta.0.tgz#d7bc645d0c8a6df01e63e251e8ad19c0fd0ad94c"
+  integrity sha512-ljb+NkyTwrKsU/TYosILylyTW23cUVPtg+Pb4A2R9c5toiugMLlLf30NaLXdE7WvF8Mhjtt/6vogcZ5cmXEHCw==
+  dependencies:
+    "@fingerprintjs/fingerprintjs" "^3.3.6"
+    "@rarible/logger" "~0.9.12"
+    "@rarible/sdk-common" "^0.13.60-beta.0"
+
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@rarible/eslint-config-ts/-/eslint-config-ts-0.5.0.tgz#ba6fe1761edd1bf2bfdc8070592d9dc344655c8a"
@@ -7334,6 +7428,16 @@
   integrity sha512-q56uTLieb6utlCV12zRpx08RI/fhP5Tj2VeYxKPUmJcg2VQPr4eH4LTqtZzQj3FMWWsEN9o4MWoUKKUDde9RTQ==
   dependencies:
     "@rarible/types" "~0.9.2"
+
+"@rarible/ethers-ethereum@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/ethers-ethereum/-/ethers-ethereum-0.13.60-beta.0.tgz#8791d4328f105737773b72a753cec48d41d30ecf"
+  integrity sha512-EnE1Q3XoIF6E4AauyTeLJQxnwSOWioqJPst4n5P202K3WmInCmQaV06slyFhAOd7WPhwBvYEc38KbJGcenbwNA==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.13.56"
+    "@rarible/sdk-common" "^0.13.60-beta.0"
+    ethereumjs-util "^7.1.0"
+    ethers "~5.4.4"
 
 "@rarible/fcl-types@^0.5.56", "@rarible/fcl-types@~0.5.56":
   version "0.5.56"
@@ -7395,6 +7499,29 @@
   integrity sha512-42IaMt6bLErydvp1ptUR/1iVmpCWMIfuL6dWFRFUp9p+CFwMS63b6jkGWBL3cMclyoI7P51r/t4Lye+aGdOKDw==
   dependencies:
     json-stringify-safe "^5.0.1"
+
+"@rarible/protocol-ethereum-sdk@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/protocol-ethereum-sdk/-/protocol-ethereum-sdk-0.13.60-beta.0.tgz#dc5f2051ecedc2051cd5adeb9725bc1b0ccc7819"
+  integrity sha512-qTT2uyIbwZvdSXrJQqfYbcuB/RCGfcSr337SebkvXSFd2gu7R70u8samyJ3zNy1pMTCKAtoBiNQN7QzOjdfSog==
+  dependencies:
+    "@rarible/action" "~0.9.1"
+    "@rarible/ethereum-api-client" "^0.1.26-beta3"
+    "@rarible/ethereum-provider" "^0.13.56"
+    "@rarible/logger" "^0.9.12"
+    "@rarible/sdk-common" "^0.13.60-beta.0"
+    "@rarible/utils" "~0.9.10"
+    eth-sig-util "^3.0.0"
+    ethereumjs-util "^7.1.0"
+    exponential-backoff "^3.1.0"
+    merkletreejs "^0.2.31"
+
+"@rarible/sdk-common@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/sdk-common/-/sdk-common-0.13.60-beta.0.tgz#af0ef97c958159de67e7fc6d231c905ae5c95ef6"
+  integrity sha512-QX74kqZAX1mSRbxsq3kJ65D0tcthc7TQh6CdUU+XRm0UzebFGG1waPrJZ2/1DgCthHu42s30YxHI7S90nuPWvw==
+  dependencies:
+    "@rarible/api-client" "0.16.5-alpha.2"
 
 "@rarible/test-provider@~0.5.0", "@rarible/test-provider@~0.5.4":
   version "0.5.4"
@@ -7490,6 +7617,19 @@
   integrity sha512-efq8jxlLsNQAC6iY7jcKYlxeV0SAOfp2F4c7VXQv/JCivoDxkMnMzUWaQuxR/XN6UjV2UjpJ364xmaisiqh82g==
   dependencies:
     bignumber.js "^9.0.0"
+
+"@rarible/web3-ethereum@^0.13.60-beta.0":
+  version "0.13.60-beta.0"
+  resolved "https://registry.yarnpkg.com/@rarible/web3-ethereum/-/web3-ethereum-0.13.60-beta.0.tgz#1044f100a2295227f74009ff0bc855b7bc0fa0f8"
+  integrity sha512-UsGKxG0YMqxVtELJtxHGzb5QBTb6ScneRxWy9WPGBKxtPSdrZxscmykHyIs9IrzSQOqOfXxWKITc8WH0OCRKXQ==
+  dependencies:
+    "@rarible/ethereum-provider" "^0.13.56"
+    "@rarible/sdk-common" "^0.13.60-beta.0"
+    eth-rpc-errors "^4.0.3"
+    exponential-backoff "^3.1.0"
+    web3-eth-abi ">=1.5.0 <1.9.0"
+    web3-eth-contract ">=1.5.0 <1.9.0"
+    web3-utils ">=1.5.0 <1.9.0"
 
 "@rixio/atom@^0.12.1":
   version "0.12.1"
