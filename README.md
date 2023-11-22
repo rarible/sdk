@@ -45,7 +45,7 @@ See our example how it works:
 > **Note:** on Apple silicon, you have to run NodeJS in `x64` mode. You'll see [this issue otherwise](https://github.com/rarible/sdk/issues/402). Follow [these steps to solve](https://stackoverflow.com/a/67907214/861773).
 
     ```shell
-    yarn && yarn bootstrap && yarn build-all
+    yarn install --ignore-engines && yarn bootstrap && yarn build-all
     ```
 
 3. Start the application in development mode:
