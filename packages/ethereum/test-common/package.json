@@ -18,7 +18,7 @@
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.56",
     "@rarible/test-provider": "~0.5.0",
-    "@rarible/types": "~0.9.16",
+    "@rarible/types": "~0.9.18",
     "@types/web3-provider-engine": "^14.0.1",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",

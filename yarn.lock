@@ -7455,7 +7455,12 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@0.9.16", "@rarible/types@^0.9.16", "@rarible/types@~0.9.16":
+"@rarible/types@0.9.18", "@rarible/types@~0.9.18":
+  version "0.9.18"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.18.tgz#2045895e436aaa4422e0ff639946d67729517378"
+  integrity sha512-OUJy2CT0HPii2/9MEhJffcsgbtcN0CFrqvfp8f6zJZhkZJw5e+0sbSapDEN8oh6b0DX1qolSgqL46MqWQs9q8A==
+
+"@rarible/types@^0.9.16":
   version "0.9.16"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.16.tgz#6e9f31fe2f9446e63b63c751c11fac77060663c6"
   integrity sha512-gnhFef8rR2cHvBywL1A2OI/vkC/j+BusJaQ8szcYHOpu0o1E8HFRpkal6i0CtwSprZOOf4RmvC2E80hR5CchTg==
