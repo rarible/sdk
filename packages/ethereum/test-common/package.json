@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-sdk-test-common",
-  "version": "0.13.56",
+  "version": "0.13.60-alpha.3",
   "description": "",
   "keywords": [
     "ethereum",
