@@ -16,7 +16,7 @@ export const arbitrumConfig: EthereumConfig = {
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
-		nft: ZERO_ADDRESS,
+		nft: toAddress("0x49b4e47079d9b733B2227fa15f0762dBF707B263"),
 		erc20: toAddress("0xDD28328257a2Cce3204332C747Cc350153937A1D"),
 		erc721Lazy: toAddress("0x0E63021A7597B254484b7F99dDD9b319591350B6"),
 		erc1155Lazy: toAddress("0x1Bea70C8c949b3b8d1188cb738432B121B83C4b5"),
