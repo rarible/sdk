@@ -7301,10 +7301,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.16.2-beta1":
-  version "0.16.2-beta1"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.2-beta1.tgz#7d679fe70712518de9cb5cbc19630fde32209c10"
-  integrity sha512-zuyw2EzsD5xrvjLAwhw1Ga3+BGStIoNnQOtwKdduAnDLAFAlFKxWyLxQV22ByBppKVFsT5/57qt4n68sMRwrAQ==
+"@rarible/api-client@0.16.5-alpha.2":
+  version "0.16.5-alpha.2"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.2.tgz#069ff1d80fb27ed5668d6d44db877d414b76b625"
+  integrity sha512-TRZApOVR4O98MSOfxhrdm9iUVQAXOLQaXM9p2k6oqHwwdIW2gIcBdZo78c11OUIOgevyBhbpJB0Cgly/G12VfQ==
 
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
@@ -7455,7 +7455,12 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@0.9.16", "@rarible/types@^0.9.16", "@rarible/types@~0.9.16":
+"@rarible/types@0.9.18", "@rarible/types@~0.9.18":
+  version "0.9.18"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.18.tgz#2045895e436aaa4422e0ff639946d67729517378"
+  integrity sha512-OUJy2CT0HPii2/9MEhJffcsgbtcN0CFrqvfp8f6zJZhkZJw5e+0sbSapDEN8oh6b0DX1qolSgqL46MqWQs9q8A==
+
+"@rarible/types@^0.9.16":
   version "0.9.16"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.16.tgz#6e9f31fe2f9446e63b63c751c11fac77060663c6"
   integrity sha512-gnhFef8rR2cHvBywL1A2OI/vkC/j+BusJaQ8szcYHOpu0o1E8HFRpkal6i0CtwSprZOOf4RmvC2E80hR5CchTg==

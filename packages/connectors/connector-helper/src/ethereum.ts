@@ -7,6 +7,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { Blockchain } from "@rarible/api-client"
+import type { EVMBlockchain } from "@rarible/sdk-common"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 export function mapEthereumWallet<O>(
@@ -29,7 +30,7 @@ export function mapEthereumWallet<O>(
 	})
 }
 
-function getEvmBlockchain(chainId: number): Blockchain.POLYGON | Blockchain.ETHEREUM | Blockchain.MANTLE {
+function getEvmBlockchain(chainId: number): EVMBlockchain {
 	switch (chainId) {
 		case 137: return Blockchain.POLYGON
 		case 80001: return Blockchain.POLYGON
@@ -37,6 +38,8 @@ function getEvmBlockchain(chainId: number): Blockchain.POLYGON | Blockchain.ETHE
 		case 200501: return Blockchain.POLYGON
 		case 5000: return Blockchain.MANTLE
 		case 5001: return Blockchain.MANTLE
+		case 42161: return Blockchain.ARBITRUM
+		case 421614: return Blockchain.ARBITRUM
 		default: return Blockchain.ETHEREUM
 	}
 }

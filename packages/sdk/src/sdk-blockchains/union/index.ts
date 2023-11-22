@@ -4,7 +4,9 @@ import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { extractBlockchainFromAssetType } from "@rarible/sdk-common"
+import { extractBlockchainFromAssetType, validateBlockchain } from "@rarible/sdk-common"
+import { extractBlockchain } from "@rarible/sdk-common"
+import type { SupportedBlockchain } from "@rarible/sdk-common/build/utils/blockchain"
 import type {
 	IBalanceSdk,
 	IEthereumSdk,
@@ -39,7 +41,6 @@ import type { IAcceptBid, IBuy, IFill } from "../../types/order/fill"
 import type { IBurn } from "../../types/nft/burn"
 import type { IMint } from "../../types/nft/mint"
 import type { ITransfer } from "../../types/nft/transfer"
-import { extractBlockchain } from "../../common/extract-blockchain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
@@ -58,6 +59,7 @@ export function createUnionSdk(
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
 	polygon: IRaribleInternalSdk,
+	arbitrum: IRaribleInternalSdk,
 	solana: IRaribleInternalSdk,
 	immutablex: IRaribleInternalSdk,
 	mantle: IRaribleInternalSdk,
@@ -71,6 +73,7 @@ export function createUnionSdk(
 			SOLANA: solana.balances,
 			IMMUTABLEX: immutablex.balances,
 			MANTLE: mantle.balances,
+			ARBITRUM: arbitrum.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
@@ -80,6 +83,7 @@ export function createUnionSdk(
 			SOLANA: solana.nft,
 			IMMUTABLEX: immutablex.nft,
 			MANTLE: mantle.nft,
+			ARBITRUM: arbitrum.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
@@ -89,6 +93,7 @@ export function createUnionSdk(
 			SOLANA: solana.order,
 			IMMUTABLEX: immutablex.order,
 			MANTLE: mantle.order,
+			ARBITRUM: arbitrum.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
@@ -98,6 +103,7 @@ export function createUnionSdk(
 			SOLANA: solana.restriction,
 			IMMUTABLEX: immutablex.restriction,
 			MANTLE: mantle.restriction,
+			ARBITRUM: arbitrum.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 		flow: new UnionFlowSpecificSdk(flow.flow!),
@@ -118,7 +124,7 @@ class UnionOrderSdk implements IOrderInternalSdk {
   sell: ISellInternal
   sellUpdate: ISellUpdate
 
-  constructor(private readonly instances: Record<Blockchain, IOrderInternalSdk>) {
+  constructor(private readonly instances: Record<SupportedBlockchain, IOrderInternalSdk>) {
   	this.cancel = this.cancel.bind(this)
 
   	this.bid = new MethodWithPrepare(
@@ -194,7 +200,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
   mint: IMint
   burn: IBurn
 
-  constructor(private readonly instances: Record<Blockchain, Omit<INftSdk, "mintAndSell">>) {
+  constructor(private readonly instances: Record<SupportedBlockchain, Omit<INftSdk, "mintAndSell">>) {
   	this.preprocessMeta = Middlewarer.skipMiddleware(this.preprocessMeta.bind(this))
   	this.generateTokenId = this.generateTokenId.bind(this)
   	this.uploadMeta = this.uploadMeta.bind(this)
@@ -242,7 +248,7 @@ class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {
 }
 
 class UnionBalanceSdk implements IBalanceSdk {
-	constructor(private readonly instances: Record<Blockchain, IBalanceSdk>) {
+	constructor(private readonly instances: Record<SupportedBlockchain, IBalanceSdk>) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
 		this.getBiddingBalance = this.getBiddingBalance.bind(this)
@@ -255,7 +261,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 	}
 
 	convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
-		return this.instances[request.blockchain].convert(request)
+		return this.instances[validateBlockchain(request.blockchain)].convert(request)
 	}
 
 	transfer(request: IBalanceTransferRequest): Promise<IBlockchainTransaction> {
@@ -282,7 +288,7 @@ class UnionBalanceSdk implements IBalanceSdk {
 class UnionRestrictionSdk implements IRestrictionSdk {
   blockchainFeeData: Map<Blockchain, GetFutureOrderFeeData> = new Map()
 
-  constructor(private readonly instances: Record<Blockchain, IRestrictionSdk>) {}
+  constructor(private readonly instances: Record<SupportedBlockchain, IRestrictionSdk>) {}
 
   canTransfer(
   	itemId: ItemId, from: UnionAddress, to: UnionAddress,
@@ -329,26 +335,26 @@ function getBidEntity(request: PrepareBidRequest) {
 	}
 }
 
-function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency): Blockchain {
+function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency): SupportedBlockchain {
 	if (isAssetType(currency)) {
 		return extractBlockchainFromAssetType(currency) || extractBlockchain(address)
 	} else if (isRequestCurrencyAssetType(currency)) {
 		const { blockchain } = getDataFromCurrencyId(currency)
-		return blockchain
+		return validateBlockchain(blockchain)
 	} else {
 		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
 	}
 }
 
 
-function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
+function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): SupportedBlockchain {
 	if ("currency" in currencyOrOrder) {
 		if (isRequestCurrencyAssetType(currencyOrOrder.currency)) {
 			return extractBlockchain(currencyOrOrder.currency)
 		} else {
 			if (isAssetType(currencyOrOrder.currency)) {
 				if ("blockchain" in currencyOrOrder.currency && currencyOrOrder.currency.blockchain) {
-					return currencyOrOrder.currency.blockchain
+					return validateBlockchain(currencyOrOrder.currency.blockchain)
 				}
 				if ("contract" in currencyOrOrder.currency && currencyOrOrder.currency.contract) {
 					return extractBlockchain(currencyOrOrder.currency.contract)
@@ -375,7 +381,7 @@ function getBiddingBlockchain(currencyOrOrder: CurrencyOrOrder): Blockchain {
 
 }
 
-function getBatchRequestBlockchain(requests: BatchFillRequest | PrepareFillRequest[]): Blockchain {
+function getBatchRequestBlockchain(requests: BatchFillRequest | PrepareFillRequest[]): SupportedBlockchain {
 	const blockchain = extractBlockchain(getOrderId(requests[0]))
 	for (let req of requests) {
 		if (extractBlockchain(getOrderId(req)) !== blockchain) {

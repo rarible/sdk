@@ -57,6 +57,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://explorer.mantle.xyz/tx/${this.hash()}`
 			case "testnet-mantle":
 				return `https://explorer.testnet.mantle.xyz/tx/${this.hash()}`
+			case "arbitrum":
+				return `https://arbiscan.io/tx/${this.hash()}`
+			case "testnet-arbitrum":
+				return `https://sepolia.arbiscan.io/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

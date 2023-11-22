@@ -15,4 +15,5 @@ export type RaribleSdkConfig = {
 	solanaNetwork: SolanaCluster
 	immutablexNetwork: ImxEnv
 	mantleNetwork: EthereumNetwork
+	arbitrumNetwork: EthereumNetwork
 }
