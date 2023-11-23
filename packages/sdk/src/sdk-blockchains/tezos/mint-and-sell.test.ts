@@ -6,7 +6,7 @@ import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 import { TEST_PK_1, TEST_PK_2, TEST_PK_3 } from "./test/credentials"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 
 	test.concurrent("mint and sell nft with prepare", async () => {

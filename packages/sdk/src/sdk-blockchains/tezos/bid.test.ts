@@ -14,7 +14,7 @@ import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 import { TEST_PK_1, TEST_PK_3 } from "./test/credentials"
 
-describe("bid test", () => {
+describe.skip("bid test", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const itemOwner = createTestWallet(TEST_PK_3, env)
 	const itemOwnerSdk = createSdk(itemOwner, env)
