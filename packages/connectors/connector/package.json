@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector",
-  "version": "0.13.60-beta.0",
+  "version": "0.13.60-beta.1",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -20,7 +20,7 @@
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.3.6",
     "@rarible/logger": "~0.9.12",
-    "@rarible/sdk-common": "^0.13.60-beta.0"
+    "@rarible/sdk-common": "^0.13.60-beta.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
