@@ -8,7 +8,7 @@ import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build/get-wallet"
 import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
-import { SupportedBlockchains } from "@rarible/sdk-common"
+import { isSupportedBlockchain } from "@rarible/sdk-common"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -306,7 +306,7 @@ export function getCollectionId(req: HasCollectionId | HasCollection): Collectio
 
 function getBlockchainCollectionId(contract: ContractAddress | CollectionId): SupportedBlockchain {
 	const [blockchain] = contract.split(":")
-	if (!(blockchain in SupportedBlockchains)) {
+	if (!isSupportedBlockchain(blockchain)) {
 		throw new Error(`Unrecognized blockchain in contract ${contract}`)
 	}
 	return blockchain as SupportedBlockchain

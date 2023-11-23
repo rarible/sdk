@@ -174,6 +174,13 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 			auth0RedirectUrl: "https://test-virtual.mattel.com",
 			accessNode: flowNetwork.accessNode,
 			network: flowNetwork.network,
+			options: {
+				auth0LogoutOptions: {
+					logoutParams: {
+						returnTo: "https://test-virtual.mattel.com",
+					},
+				}
+			}
 		}) as any
 	) as any
 

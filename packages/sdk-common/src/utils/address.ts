@@ -49,13 +49,17 @@ export function getEntityData(entity: UnionAddress | ContractAddress | string) {
 }
 
 export function validateBlockchain(blockchain: string): SupportedBlockchain {
-	if (!(blockchain in SupportedBlockchains)) {
+	if (!isSupportedBlockchain(blockchain)) {
 		throw new Error(`Value: "${blockchain}" is not a supported blockchain type`)
 	}
-	return blockchain as SupportedBlockchain
+	return blockchain
 }
 
 export const FLOW_TOKEN_MAP = {
 	testnet: "A.7e60df042a9c0868.FlowToken",
 	prod: "A.1654653399040a61.FlowToken",
+}
+
+export function isSupportedBlockchain(blockchain: string): blockchain is SupportedBlockchain {
+	return SupportedBlockchains.includes(blockchain as SupportedBlockchain)
 }
