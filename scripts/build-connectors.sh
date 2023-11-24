@@ -12,6 +12,7 @@ yarn run build-connector-portis &
 yarn run build-connector-fortmatic &
 yarn run build-connector-torus &
 yarn run build-connector-firebase &
+yarn run build-connector-firebase-apple &
 yarn run build-connector-walletlink &
 yarn run build-connector-walletconnect-v2 &
 yarn run build-connector-phantom &
