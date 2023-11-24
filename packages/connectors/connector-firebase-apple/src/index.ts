@@ -127,6 +127,14 @@ EthereumProviderConnectionResult
   		return web3auth
   	} catch (error) {
   		console.error("Error signing in with Apple", error)
+
+  		if (app && auth) {
+  			await signOut(auth)
+  		}
+
+  		if (web3auth) {
+  			web3auth.logout({ cleanup: true })
+  		}
   		throw error
   	}
   }
