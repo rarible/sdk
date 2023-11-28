@@ -4,10 +4,19 @@ import { toOwnershipId, toUnionAddress } from "@rarible/types"
 import type { Royalty } from "@rarible/api-client/build/models/Royalty"
 import { convertToEVMAddress } from "@rarible/sdk-common"
 import type { Creator } from "@rarible/api-client/build/models/Creator"
+import type { CollectionId } from "@rarible/api-client"
 import { getUnionBlockchainFromChainId } from "./get-blockchain-from-chain-id"
 
 export function createUnionItemId(chainId: number, contract: Address, tokenId: number | string | BigNumber): ItemId {
 	return toItemId(`${getUnionBlockchainFromChainId(chainId)}:${contract}:${tokenId}`)
+}
+
+export function createUnionItemIdWithCollectionId(collectionId: CollectionId, tokenId: number | string | BigNumber): ItemId {
+	return toItemId(`${collectionId}:${tokenId}`)
+}
+
+export function createUnionAddressWithChainId(chainId: number, address: string): UnionAddress {
+	return toUnionAddress(`${getUnionBlockchainFromChainId(chainId)}:${address}`)
 }
 
 export function createUnionAddress(address: Address): UnionAddress {

@@ -3,9 +3,7 @@ import type { Contract } from "web3-eth-contract"
 import { toBn } from "@rarible/utils/build/bn"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { createGanacheProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
-import { getApiConfig } from "../config/api-config"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { approveErc1155 as approveErc1155Template } from "./approve-erc1155"
@@ -18,11 +16,9 @@ describe("approveErc1155", () => {
 	const web3 = new Web3(provider as any)
 	const ethereum = new Web3Ethereum({ web3 })
 	const [testAddress] = addresses
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const gatewayApi = new GatewayControllerApi(configuration)
 	const config = getEthereumConfig("dev-ethereum")
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects().bind(null, checkWalletChainId)
 	const approveErc1155 = approveErc1155Template.bind(null, ethereum, send)
 
 	let testErc1155: Contract

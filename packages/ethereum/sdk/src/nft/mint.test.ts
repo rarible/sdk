@@ -3,11 +3,9 @@ import { toAddress } from "@rarible/types"
 import type { Address } from "@rarible/ethereum-api-client"
 import {
 	Configuration,
-	GatewayControllerApi,
-	NftCollectionControllerApi,
-	NftItemControllerApi,
-	NftLazyMintControllerApi,
-} from "@rarible/ethereum-api-client"
+	CollectionControllerApi,
+	ItemControllerApi,
+} from "@rarible/api-client"
 import { BigNumber, toBn } from "@rarible/utils"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { ethers } from "ethers"
@@ -44,10 +42,8 @@ const providers = [
 
 const env: EthereumNetwork = "dev-ethereum"
 const configuration = new Configuration(getApiConfig(env))
-const nftCollectionApi = new NftCollectionControllerApi(configuration)
-const nftLazyMintApi = new NftLazyMintControllerApi(configuration)
-const nftItemApi = new NftItemControllerApi(configuration)
-const gatewayApi = new GatewayControllerApi(configuration)
+const nftCollectionApi = new CollectionControllerApi(configuration)
+const nftItemApi = new ItemControllerApi(configuration)
 
 const erc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 const erc1155V2ContractAddress = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
@@ -63,11 +59,10 @@ describe.each(providers)("mint test", ethereum => {
 
 	const sign = signNft.bind(null, ethereum, config.chainId)
 
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects().bind(null, checkWalletChainId)
 
 	const mint = mintTemplate
-		.bind(null, ethereum, send, sign, nftCollectionApi)
-		.bind(null, nftLazyMintApi, checkWalletChainId)
+		.bind(null, ethereum, send, sign, nftCollectionApi, nftItemApi, checkWalletChainId)
 
 	beforeEach(async () => {
 		await delay(2000)

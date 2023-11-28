@@ -2,10 +2,9 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber } from "@rarible/types"
 import {
 	Configuration,
-	GatewayControllerApi,
-	NftCollectionControllerApi,
-	NftLazyMintControllerApi,
-} from "@rarible/ethereum-api-client"
+	CollectionControllerApi,
+	ItemControllerApi,
+} from "@rarible/api-client"
 import { BigNumber, toBn } from "@rarible/utils"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
@@ -41,16 +40,15 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 	const env: EthereumNetwork = "dev-ethereum"
 	const configuration = new Configuration(getApiConfig(env))
 	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
-	const collectionApi = new NftCollectionControllerApi(configuration)
-	const mintLazyApi = new NftLazyMintControllerApi(configuration)
-	const gatewayApi = new GatewayControllerApi(configuration)
+	const collectionApi = new CollectionControllerApi(configuration)
+	const itemApi = new ItemControllerApi(configuration)
 	const sign = signNft.bind(null, ethereum, 300500)
 	const config = getEthereumConfig(env)
 	const checkChainId = checkChainIdTemplate.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(ethereum, gatewayApi, checkChainId)
+	const send = getSendWithInjects().bind(ethereum, checkChainId)
 	const checkAssetType = checkAssetTypeTemplate.bind(null, collectionApi)
 	const mint = mintTemplate.bind(null, ethereum, send, sign, collectionApi)
-	const burn = burnTemplate.bind(null, ethereum, send, checkAssetType, apis)
+	const burn = burnTemplate.bind(null, ethereum, send, config, checkAssetType, apis)
 
 	const e2eErc721V2ContractAddress = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
@@ -61,7 +59,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 	test.skip("should burn ERC-721 v2 token", async () => {
 		const testErc721 = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, e2eErc721V2ContractAddress)
 		const minted = await mint(
-			mintLazyApi,
+			itemApi,
 			checkChainId,
 			{
 				collection: createErc721V2Collection(e2eErc721V2ContractAddress),

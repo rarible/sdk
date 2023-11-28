@@ -1,11 +1,13 @@
 import type {
 	UnionAddress,
 	Binary,
-	CollectionControllerApi,
 	ItemId,
-	ItemControllerApi,
+	Creator,
+	Royalty,
+	CollectionId,
+	EthCollectionTokenId,
 } from "@rarible/api-client"
-import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
+import { CollectionFeatures } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
@@ -26,7 +28,7 @@ type ERC1155CollectionV2 = Collection<ERC1155VersionEnum.ERC1155V2>
 
 type CommonMintRequest = {
 	uri: string
-	nftTokenId?: NftTokenId
+	nftTokenId?: EthCollectionTokenId
 }
 
 export type ERC721RequestV1 = {
@@ -35,28 +37,28 @@ export type ERC721RequestV1 = {
 
 export type ERC721RequestV2 = {
 	collection: ERC721CollectionV2
-	royalties?: Array<Part>
+	royalties?: Array<Royalty>
 } & CommonMintRequest
 
 export type ERC721RequestV3 = {
 	collection: ERC721CollectionV3
 	lazy: boolean
-	creators?: Array<Part>
-	royalties?: Array<Part>
+	creators?: Array<Creator>
+	royalties?: Array<Royalty>
 } & CommonMintRequest
 
 export type ERC1155RequestV1 = {
 	collection: ERC1155CollectionV1
 	supply: number
-	royalties?: Array<Part>
+	royalties?: Array<Royalty>
 } & CommonMintRequest
 
 export type ERC1155RequestV2 = {
 	collection: ERC1155CollectionV2
 	supply: number
 	lazy: boolean
-	creators?: Array<Part>
-	royalties?: Array<Part>
+	creators?: Array<Creator>
+	royalties?: Array<Royalty>
 } & CommonMintRequest
 
 export type MintRequestERC721 = ERC721RequestV1 | ERC721RequestV2 | ERC721RequestV3
@@ -64,9 +66,9 @@ export type MintRequestERC1155 = ERC1155RequestV1 | ERC1155RequestV2
 export type MintRequest = MintRequestERC721 | MintRequestERC1155
 
 export type MintResponseCommon = {
-	contract: Address
-	tokenId: BigNumber
-	owner: Address
+	contract: CollectionId
+	tokenId: EthCollectionTokenId
+	owner: UnionAddress
 	itemId: string
 }
 
@@ -77,7 +79,7 @@ export enum MintResponseTypeEnum {
 
 export type MintOffChainResponse = MintResponseCommon & {
 	type: MintResponseTypeEnum.OFF_CHAIN
-	item: NftItem
+	item: ItemId
 }
 
 export type MintOnChainResponse = MintResponseCommon & {
@@ -130,13 +132,13 @@ const isERC721Request = (data: MintRequest): data is ERC721RequestV1 | ERC721Req
 	data.collection.type === "ERC721"
 
 export const isErc721v3Collection = (x: CommonNftCollection): x is ERC721CollectionV3 =>
-	x.features.indexOf(NftCollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC721"
+	x.features.indexOf(CollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC721"
 export const isErc721v2Collection = (x: CommonNftCollection): x is ERC721CollectionV2 =>
-	x.features.indexOf(NftCollectionFeatures.SECONDARY_SALE_FEES) !== -1 && x.type === "ERC721"
+	x.features.indexOf(CollectionFeatures.SECONDARY_SALE_FEES) !== -1 && x.type === "ERC721"
 export const isErc721v1Collection = (x: CommonNftCollection): x is ERC721CollectionV1 =>
 	!isErc721v3Collection(x) && !isErc721v2Collection(x) && x.type === "ERC721"
 
 export const isErc1155v2Collection = (x: CommonNftCollection): x is ERC1155CollectionV2 =>
-	x.features.indexOf(NftCollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC1155"
+	x.features.indexOf(CollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC1155"
 export const isErc1155v1Collection = (x: CommonNftCollection): x is ERC1155CollectionV1 =>
 	!isErc1155v2Collection(x) && x.type === "ERC1155"

@@ -265,7 +265,7 @@ export function createRaribleSdk(
 	}))
 
 	const send = partialCall(sendWithInjects, checkWalletChainId)
-	const checkLazyAssetType = partialCall(order.checkLazyAssetType, apis.nftItem)
+	const checkLazyAssetType = partialCall(order.checkLazyAssetType, apis.nftItem, config.chainId)
 	const checkLazyAsset = partialCall(order.checkLazyAsset, checkLazyAssetType)
 	const checkLazyOrder = order.checkLazyOrder.bind(null, checkLazyAsset)
 	const checkAssetType = partialCall(checkAssetTypeTemplate, apis.nftCollection)

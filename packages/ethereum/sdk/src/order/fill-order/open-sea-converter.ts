@@ -1,10 +1,12 @@
 import type { Address, BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
-import type { AssetType, Binary } from "@rarible/ethereum-api-client"
+import type { AssetType } from "@rarible/api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import { isNft } from "../is-nft"
 import type { SimpleOpenSeaV1Order, SimpleOrder } from "../types"
+import { convertDateStringToNumber } from "../../common"
 import type { OpenSeaOrderDTO } from "./open-sea-types"
 import {
 	OrderOpenSeaV1DataV1FeeMethod,
@@ -24,19 +26,19 @@ export function convertOpenSeaOrderToDTO(ethereum: Ethereum, order: SimpleOpenSe
 		throw new Error("Maker or taker should have an NFT asset")
 	}
 
-	const callData: Binary = order.data.callData
-	const replacementPattern: Binary = order.data.replacementPattern
+	const callData = order.data.callData
+	const replacementPattern = order.data.replacementPattern
 	let basePrice: BigNumber
-	const makeAssetType = order.make.assetType
-	const takeAssetType = order.take.assetType
+	const makeAssetType = order.make.type
+	const takeAssetType = order.take.type
 
-	if (makeAssetType.assetClass === "ERC721") {
+	if (makeAssetType["@type"] === "ERC721") {
 		basePrice = toBigNumber(order.take.value)
-	} else if (makeAssetType.assetClass === "ERC1155") {
+	} else if (makeAssetType["@type"] === "ERC1155") {
 		basePrice = toBigNumber(order.take.value)
-	} else if (takeAssetType.assetClass === "ERC721") {
+	} else if (takeAssetType["@type"] === "ERC721") {
 		basePrice = toBigNumber(order.make.value)
-	} else if (takeAssetType.assetClass === "ERC1155") {
+	} else if (takeAssetType["@type"] === "ERC1155") {
 		basePrice = toBigNumber(order.make.value)
 	} else {
 		throw new Error("should never happen")
@@ -50,21 +52,21 @@ export function convertOpenSeaOrderToDTO(ethereum: Ethereum, order: SimpleOpenSe
 		takerRelayerFee: toBigNumber(order.data.takerRelayerFee),
 		makerProtocolFee: toBigNumber(order.data.makerProtocolFee),
 		takerProtocolFee: toBigNumber(order.data.takerProtocolFee),
-		feeRecipient: order.data.feeRecipient,
+		feeRecipient: convertToEVMAddress(order.data.feeRecipient),
 		feeMethod: OrderOpenSeaV1DataV1FeeMethod[order.data.feeMethod],
 		side: OrderOpenSeaV1DataV1Side[order.data.side],
 		saleKind: OrderOpenSeaV1DataV1SaleKind[order.data.saleKind],
-		target: order.data.target || nftAddress,
+		target: nftAddress,
 		howToCall: OrderOpenSeaV1DataV1HowToCall[order.data.howToCall],
-		calldata: callData,
-		replacementPattern,
-		staticTarget: order.data.staticTarget,
-		staticExtradata: order.data.staticExtraData,
+		calldata: toBinary(callData),
+		replacementPattern: toBinary(replacementPattern),
+		staticTarget: convertToEVMAddress(order.data.staticTarget),
+		staticExtradata: toBinary(order.data.staticExtraData),
 		paymentToken,
 		basePrice,
 		extra: toBigNumber(order.data.extra),
-		listingTime: toBigNumber(String(order.start || 0)),
-		expirationTime: toBigNumber(String(order.end || 0)),
+		listingTime: toBigNumber(String(convertDateStringToNumber(order.startedAt))),
+		expirationTime: toBigNumber(String(convertDateStringToNumber(order.endedAt))),
 		salt: toBigNumber(toBn(order.salt).toString(10)),
 	}
 }
@@ -95,11 +97,11 @@ export const ERC1155_VALIDATOR_TAKE_REPLACEMENT =
 
 
 function getPaymentTokenAddress(order: SimpleOrder): Address | undefined {
-	const makePaymentToken = extractPaymentTokenAddress(order.make.assetType)
+	const makePaymentToken = extractPaymentTokenAddress(order.make.type)
 	if (makePaymentToken !== undefined) {
 		return makePaymentToken
 	}
-	const takePaymentToken = extractPaymentTokenAddress(order.take.assetType)
+	const takePaymentToken = extractPaymentTokenAddress(order.take.type)
 	if (takePaymentToken !== undefined) {
 		return takePaymentToken
 	}
@@ -107,19 +109,19 @@ function getPaymentTokenAddress(order: SimpleOrder): Address | undefined {
 }
 
 function extractPaymentTokenAddress(assetType: AssetType): Address | undefined {
-	switch (assetType.assetClass) {
+	switch (assetType["@type"]) {
 		case "ETH": return ZERO_ADDRESS
-		case "ERC20": return assetType.contract
+		case "ERC20": return convertToEVMAddress(assetType.contract)
 		default: return undefined
 	}
 }
 
 function getNftAddress(order: SimpleOrder): Address | undefined {
-	if (isNft(order.make.assetType)) {
-		return order.make.assetType.contract
+	if (isNft(order.make.type)) {
+		return convertToEVMAddress(order.make.type.contract)
 	}
-	if (isNft(order.take.assetType)) {
-		return order.take.assetType.contract
+	if (isNft(order.take.type)) {
+		return convertToEVMAddress(order.take.type.contract)
 	}
 	return undefined
 }

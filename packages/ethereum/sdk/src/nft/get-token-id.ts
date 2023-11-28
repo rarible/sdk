@@ -1,12 +1,21 @@
-import type { Address, NftTokenId } from "@rarible/ethereum-api-client"
-import type * as ApiClient from "@rarible/api-client"
+import type {
+	CollectionControllerApi,
+	CollectionId,
+	EthCollectionTokenId,
+	UnionAddress,
+} from "@rarible/api-client"
 import { wrapInRetry } from "../common/retry"
 
 export async function getTokenId(
-	nftCollectionApi: ApiClient.CollectionControllerApi, collection: Address, minter: Address, nftTokenId?: NftTokenId
-) {
+	nftCollectionApi: CollectionControllerApi,
+	collection: CollectionId,
+	minter: UnionAddress,
+	nftTokenId?: EthCollectionTokenId
+): Promise<EthCollectionTokenId> {
 	if (nftTokenId !== undefined) {
 		return nftTokenId
 	}
-	return wrapInRetry(() => nftCollectionApi.generateTokenId({ collection, minter }))
+	return wrapInRetry(
+		() => nftCollectionApi.generateTokenId({ collection, minter }) as Promise<EthCollectionTokenId>
+	)
 }

@@ -8,7 +8,7 @@ describe("api keys", () => {
 				level: LogsLevel.DISABLED,
 			},
 		})
-		await sdk.apis.nftItem.getNftItemById({
+		await sdk.apis.nftItem.getItemById({
 			itemId: "0x64f088254d7ede5dd6208639aabf3614c80d396d:53721905486644660545161939638297855196812841812653174796223513003283747701450",
 		})
 	})
@@ -20,7 +20,7 @@ describe("api keys", () => {
 			},
 			apiKey: "eb0e4c76-b662-4c3d-8121-3643a7eb75bb",
 		})
-		await sdk.apis.nftItem.getNftItemById({
+		await sdk.apis.nftItem.getItemById({
 			itemId: "0x64f088254d7ede5dd6208639aabf3614c80d396d:53721905486644660545161939638297855196812841812653174796223513003283747701450",
 		})
 	})
@@ -34,7 +34,7 @@ describe("api keys", () => {
 		})
 		let responseError
 		try {
-			await sdk.apis.nftItem.getNftItemById({
+			await sdk.apis.nftItem.getItemById({
 				itemId: "0x64f088254d7ede5dd6208639aabf3614c80d396d:53721905486644660545161939638297855196812841812653174796223513003283747701450",
 			})
 		} catch (e: any) {

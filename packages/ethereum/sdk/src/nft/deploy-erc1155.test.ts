@@ -1,9 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { getSendWithInjects } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
 import { getEthereumConfig } from "../config"
 import { checkChainId } from "../order/check-chain-id"
 import { DEV_PK_1 } from "../common/test/test-credentials"
@@ -17,10 +15,8 @@ describe("deploy token test", () => {
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
-	const configuration = new Configuration(getApiConfig(env))
-	const gatewayApi = new GatewayControllerApi(configuration)
 	const checkWalletChainId = checkChainId.bind(null, ethereum1, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects().bind(null, checkWalletChainId)
 	const deployErc1155 = new DeployErc1155(ethereum1, send, config)
 
 

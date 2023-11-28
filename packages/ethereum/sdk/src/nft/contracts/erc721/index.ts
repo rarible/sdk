@@ -1,10 +1,12 @@
-import type { Address } from "@rarible/types"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider/build"
+import type { CollectionId } from "@rarible/api-client"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import { ERC721VersionEnum } from "../domain"
 
 export async function getErc721Contract(
-	ethereum: Ethereum, version: ERC721VersionEnum, address: Address | undefined
+	ethereum: Ethereum, version: ERC721VersionEnum, collectionId: CollectionId
 ): Promise<EthereumContract> {
+	const address = convertToEVMAddress(collectionId)
 	switch (version) {
 		case ERC721VersionEnum.ERC721V3: {
 			const { erc721v3Abi } = await import("./v3")

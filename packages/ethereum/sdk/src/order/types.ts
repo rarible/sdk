@@ -28,7 +28,8 @@ export type SimpleRaribleV2Order =
 
 export type SimpleOpenSeaV1Order = SimpleGenericOrder & { data: EthOrderOpenSeaV1DataV1 }
 export type SimpleCryptoPunkOrder = SimpleGenericOrder & { data: EthOrderCryptoPunksData }
-export type SimpleSeaportV1Order = SimpleGenericOrder & { data: EthOrderSeaportDataV1 }
+export type SimpleSeaportV1Order =
+  Pick<Order, "maker" | "taker" | "make" | "take" | "salt" | "startedAt" | "endedAt" | "signature" | "id">  & { data: EthOrderSeaportDataV1 }
 export type SimpleLooksrareOrder = SimpleGenericOrder & { data: EthLooksRareOrderDataV1 }
 export type SimpleLooksrareV2Order = SimpleGenericOrder & { data: EthLooksRareOrderDataV2 }
 export type SimpleX2Y2Order = SimpleGenericOrder & { data: EthX2Y2OrderDataV1 }

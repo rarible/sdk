@@ -6,7 +6,7 @@ import {
 	ItemControllerApi,
 	OwnershipControllerApi,
 } from "@rarible/api-client"
-import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
+import { randomAddress, toBigNumber, toCollectionId } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
@@ -14,6 +14,7 @@ import { getApiConfig } from "../config/api-config"
 import { createErc1155V2Collection } from "../common/mint"
 import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
+import { getEthUnionAddr } from "../common/test"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV2 } from "./mint"
 import { mint, MintResponseTypeEnum } from "./mint"
@@ -39,11 +40,11 @@ describe("transfer Erc721 lazy", () => {
 
 	test("should transfer erc1155 lazy token", async () => {
 		const recipient = randomAddress()
-		const contract = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
+		const contract = getEthUnionAddr("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
 
 		const request: ERC1155RequestV2 = {
 			uri: "ipfs://ipfs/hash",
-			creators: [{ account: toAddress(wallet.getAddressString()), value: 10000 }],
+			creators: [{ account: getEthUnionAddr(wallet.getAddressString()), value: 10000 }],
 			collection: createErc1155V2Collection(contract),
 			royalties: [],
 			supply: 100,
@@ -81,7 +82,7 @@ describe("transfer Erc721 lazy", () => {
 		)
 		await transferTx.wait()
 
-		const erc1155Lazy = await getErc1155Contract(ethereum, ERC1155VersionEnum.ERC1155V2, contract)
+		const erc1155Lazy = await getErc1155Contract(ethereum, ERC1155VersionEnum.ERC1155V2, toCollectionId(contract))
 		const recipientBalance = await erc1155Lazy.functionCall("balanceOf", recipient, minted.tokenId).call()
 		expect(recipientBalance).toEqual("50")
 	})

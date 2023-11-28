@@ -1,13 +1,13 @@
-import type { Address } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
+import type { ItemId, UnionAddress } from "@rarible/api-client"
 import { retry } from "../../common/retry"
 import type { RaribleSdk } from "../../index"
 
 export async function awaitOwnership(
-	sdk: RaribleSdk, itemId: string, owner: Address, amount: BigNumberValue
+	sdk: RaribleSdk, itemId: ItemId, owner: UnionAddress, amount: BigNumberValue
 ) {
 	return retry(20, 3000, async () => {
-		const ownership = await sdk.apis.nftOwnership.getNftOwnershipById({
+		const ownership = await sdk.apis.nftOwnership.getOwnershipById({
 			ownershipId: `${itemId}:${owner}`,
 		})
 		if (ownership.value.toString() !== amount.toString()) {

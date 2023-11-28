@@ -1,7 +1,7 @@
-import type { Address } from "@rarible/types"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
-import type { EthOrderFormAsset, AssetType } from "@rarible/api-client"
+import type { Maybe, Address } from "@rarible/types"
+import type { EthOrderFormAsset, AssetType, UnionAddress } from "@rarible/api-client"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import type { TransferProxies } from "../config/type"
 import type { SendFunction } from "../common/send-transaction"
 import { approveErc20 } from "./approve-erc20"
@@ -9,14 +9,15 @@ import { approveErc721 } from "./approve-erc721"
 import { approveErc1155 } from "./approve-erc1155"
 import { approveCryptoPunk } from "./approve-crypto-punk"
 
-export type ApproveFunction =
-	(owner: Address, asset: EthOrderFormAsset, infinite: undefined | boolean) => Promise<EthereumTransaction | undefined>
+export type ApproveFunction = (
+	owner: UnionAddress, asset: EthOrderFormAsset, infinite: undefined | boolean
+) => Promise<EthereumTransaction | undefined>
 
 export async function approve(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	config: TransferProxies,
-	owner: Address,
+	owner: UnionAddress,
 	asset: EthOrderFormAsset,
 	infinite: undefined | boolean = true,
 ): Promise<EthereumTransaction | undefined> {
@@ -24,7 +25,14 @@ export async function approve(
 	if (!operator) {
 		return undefined
 	}
-	return pureApproveFn({ ethereum, send, operator, owner, asset, infinite })
+	return pureApproveFn({
+		ethereum,
+		send,
+		operator,
+		owner: convertToEVMAddress(owner),
+		asset,
+		infinite,
+	})
 }
 
 export async function pureApproveFn({
