@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+
+### Bug Fixes
+
+* **RX-86:** invalidate sessions on error ([8b086e5](https://github.com/rarible/sdk/commit/8b086e5b3115a0b9a53a5c840429300b87756aaf))
+
+
+### Features
+
+* **RX-86:** add firebase apple connector ([e164bb1](https://github.com/rarible/sdk/commit/e164bb11c8769ebc0b26354aedd8d9df359d0020))
+
+
+
+
+
 ## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
 
 **Note:** Version bump only for package @rarible/connector-firebase
