@@ -18,13 +18,13 @@ import type { OPENLOGIN_NETWORK_TYPE } from "@web3auth/openlogin-adapter"
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter"
 import type { ChainNamespaceType } from "@web3auth/base"
 import type { UserCredential } from "@firebase/auth"
-import { signOut } from "@firebase/auth"
-import { GoogleAuthProvider, getAuth, signInWithPopup } from "@firebase/auth"
+import { OAuthProvider, signOut } from "@firebase/auth"
+import { getAuth, signInWithPopup } from "@firebase/auth"
 import { initializeApp } from "@firebase/app"
 
-const PROVIDER_ID = "firebase" as const
+const PROVIDER_ID = "firebase_apple" as const
 
-export class FirebaseConnectionProvider extends AbstractConnectionProvider<
+export class FirebaseAppleConnectionProvider extends AbstractConnectionProvider<
   typeof PROVIDER_ID,
 EthereumProviderConnectionResult
 > {
@@ -98,15 +98,22 @@ EthereumProviderConnectionResult
 
   	await web3auth.init()
   	if (web3auth.connected) return web3auth
+
   	const app = initializeApp(this.firebaseConfig)
   	const auth = getAuth(app)
-  	const provider = new GoogleAuthProvider()
-  	const userCredential: UserCredential = await signInWithPopup(
-  		auth,
-  		provider
-  	)
+
+  	const provider = new OAuthProvider("apple.com")
+
+  	provider.addScope("email")
+  	provider.addScope("name")
+
   	try {
+  		const userCredential: UserCredential = await signInWithPopup(
+  			auth,
+  			provider
+  		)
   		const idToken = await userCredential.user.getIdToken(true)
+
   		await web3auth.connectTo(WALLET_ADAPTERS.OPENLOGIN, {
   			loginProvider: "jwt",
   			mfaLevel: "none",
@@ -116,9 +123,11 @@ EthereumProviderConnectionResult
   				domain: this.openLoginDomain,
   			},
   		})
+
   		return web3auth
   	} catch (error) {
-  		console.error("Error signing in with Firebase", error)
+  		console.error("Error signing in with Apple", error)
+
   		if (app && auth) {
   			await signOut(auth)
   		}

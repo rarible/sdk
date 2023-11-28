@@ -15,6 +15,7 @@ import { NFIDConnectionProvider } from "@rarible/connector-nfid"
 import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { FirebaseConnectionProvider } from "@rarible/connector-firebase"
+import { FirebaseAppleConnectionProvider } from "@rarible/connector-firebase-apple"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
@@ -179,8 +180,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 					logoutParams: {
 						returnTo: "https://test-virtual.mattel.com",
 					},
-				}
-			}
+				},
+			},
 		}) as any
 	) as any
 
@@ -199,6 +200,35 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	if (isEthNetwork) {
 		firebase = mapEthereumWallet(
 			new FirebaseConnectionProvider(
+				"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
+				{
+					chainNamespace: "eip155",
+					chainId: "0x13881",
+					rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+					displayName: "Polygon Mumbai Testnet",
+					blockExplorer: "https://mumbai.polygonscan.com/",
+					ticker: "MATIC",
+					tickerName: "Matic",
+				},
+				{
+					apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
+					authDomain: "dogami-auth.firebaseapp.com",
+					projectId: "dogami-auth",
+					storageBucket: "dogami-auth.appspot.com",
+					messagingSenderId: "741349520212",
+					appId: "1:741349520212:web:8acb236f44ddd005adcec1",
+				},
+				"testnet",
+				"http://localhost:3000",
+				"firebase-dog-dev"
+			)
+		)
+	}
+
+	let firebaseApple = undefined
+	if (isEthNetwork) {
+		firebaseApple = mapEthereumWallet(
+			new FirebaseAppleConnectionProvider(
 				"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
 				{
 					chainNamespace: "eip155",
@@ -308,6 +338,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 
 	if (firebase) {
 		connector = connector.add(firebase)
+	}
+
+	if (firebaseApple) {
+		connector = connector.add(firebaseApple)
 	}
 
 	return connector
