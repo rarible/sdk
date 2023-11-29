@@ -34,9 +34,10 @@ import { createX2Y2Contract } from "./contracts/exchange-x2y2-v1"
 import { getSeaportContract } from "./fill-order/seaport-utils/seaport-utils"
 import { createLooksrareV2Exchange } from "./contracts/looksrare-v2"
 import type { CheckLazyOrderType } from "./check-lazy-order"
+import type { CheckLazyOrderPart } from "./check-lazy-order"
 
 export async function cancel(
-	checkLazyOrder: CheckLazyOrderType<SimpleOrder>,
+	checkLazyOrder: CheckLazyOrderType<CheckLazyOrderPart>,
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	config: EthereumConfig,

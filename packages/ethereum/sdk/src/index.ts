@@ -282,8 +282,6 @@ export function createRaribleSdk(
 		sdkConfig,
 	)
 
-	const approveFn = partialCall(approveTemplate, ethereum, send, config.transferProxies)
-
 	const upsertService = new UpsertOrder(
 		filler,
 		send,
@@ -300,9 +298,6 @@ export function createRaribleSdk(
 	const sellService = new OrderSell(upsertService, checkAssetType, checkWalletChainId)
 	const bidService = new OrderBid(upsertService, checkAssetType, checkWalletChainId)
 	const wethConverter = new ConvertWeth(ethereum, send, config)
-	const startAuctionService = new StartAuction(ethereum, send, config, env, approveFn, apis)
-	const putAuctionBidService = new PutAuctionBid(ethereum, send, config, env, approveFn, apis)
-	const buyOutAuctionService = new BuyoutAuction(ethereum, send, config, env, approveFn, apis)
 
 	return {
 		apis,
@@ -323,14 +318,6 @@ export function createRaribleSdk(
 			getBaseOrderFillFee: filler.getBaseOrderFillFee,
 			getBuyAmmInfo: filler.getBuyAmmInfo,
 		},
-		auction: {
-			start: startAuctionService.start,
-			cancel: cancelAuction.bind(null, ethereum, send, config, apis),
-			finish: finishAuction.bind(null, ethereum, send, config, apis),
-			putBid: putAuctionBidService.putBid,
-			buyOut: buyOutAuctionService.buyout,
-			getHash: getAuctionHash.bind(null, ethereum, config),
-		},
 		nft: {
 			mint: partialCall(
 				mintTemplate,
@@ -338,13 +325,14 @@ export function createRaribleSdk(
 				send,
 				partialCall(signNftTemplate, ethereum, config.chainId),
 				apis.nftCollection,
-				apis.nftLazyMint,
+				apis.nftItem,
 				checkWalletChainId
 			),
 			transfer: partialCall(
 				transferTemplate,
 				ethereum,
 				send,
+				config,
 				checkAssetType,
 				apis.nftItem,
 				apis.nftOwnership,

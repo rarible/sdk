@@ -306,22 +306,26 @@ export class OrderFiller {
 	}
 
 	async getOrderFee(order: SimpleOrder): Promise<number> {
-		switch (order.type) {
-			case "RARIBLE_V1":
-				return this.v1Handler.getOrderFee(order)
-			case "RARIBLE_V2":
-				return this.v2Handler.getOrderFee(order)
-			case "OPEN_SEA_V1":
-				return this.openSeaHandler.getOrderFee(order)
-			case "SEAPORT_V1":
+		switch (order.data["@type"]) {
+			case "ETH_RARIBLE_V1":
+				return this.v1Handler.getOrderFee(order as SimpleLegacyOrder)
+			case "ETH_RARIBLE_V2":
+			case "ETH_RARIBLE_V2_2":
+			case "ETH_RARIBLE_V2_DATA_V3_SELL":
+			case "ETH_RARIBLE_V2_DATA_V3_BUY":
+				return this.v2Handler.getOrderFee(order as SimpleRaribleV2Order)
+			case "ETH_OPEN_SEA_V1":
+				return this.openSeaHandler.getOrderFee(order as SimpleOpenSeaV1Order)
+			case "ETH_BASIC_SEAPORT_DATA_V1":
 				return this.seaportHandler.getOrderFee()
-			case "LOOKSRARE":
+			case "ETH_LOOKSRARE_ORDER_DATA_V1":
+			case "ETH_LOOKSRARE_ORDER_DATA_V2":
 				return this.looksrareHandler.getOrderFee()
-			case "CRYPTO_PUNK":
+			case "ETH_CRYPTO_PUNKS":
 				return this.punkHandler.getOrderFee()
-			case "X2Y2":
+			case "ETH_X2Y2_ORDER_DATA_V1":
 				return this.x2y2Handler.getOrderFee()
-			case "AMM":
+			case "ETH_SUDOSWAP_AMM_DATA_V1":
 				return this.ammHandler.getOrderFee()
 			default:
 				throw new Error(`Unsupported order: ${JSON.stringify(order)}`)
@@ -364,7 +368,7 @@ export class OrderFiller {
 	}
 
 	getBuyAmmInfo(request: GetAmmBuyInfoRequest): Promise<AmmTradeInfo> {
-		return this.apis.order.getAmmBuyInfo(request)
+		return this.apis.order.getAmmOrderTradeInfo(request)
 	}
 
 	isNonInvertableOrder(order: SimpleOrder): boolean {

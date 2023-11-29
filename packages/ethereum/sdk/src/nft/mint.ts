@@ -12,6 +12,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
 import type * as ApiClient from "@rarible/api-client"
+import type { BigNumber } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
 import type { CommonNftCollection } from "../common/mint"
 import { mintOffChain } from "./mint-off-chain"
@@ -67,7 +68,7 @@ export type MintRequest = MintRequestERC721 | MintRequestERC1155
 
 export type MintResponseCommon = {
 	contract: CollectionId
-	tokenId: EthCollectionTokenId
+	tokenId: BigNumber
 	owner: UnionAddress
 	itemId: string
 }

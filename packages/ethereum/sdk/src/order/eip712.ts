@@ -16,12 +16,9 @@ export const EIP712_ORDER_TYPES = {
 		{ type: "uint256", name: "chainId" },
 		{ type: "address", name: "verifyingContract" },
 	],
-	AssetType: [
+	Asset: [
 		{ name: "assetClass", type: "bytes4" },
 		{ name: "data", type: "bytes" },
-	],
-	Asset: [
-		{ name: "assetType", type: "AssetType" },
 		{ name: "value", type: "uint256" },
 	],
 	Order: [

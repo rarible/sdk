@@ -6,7 +6,7 @@ import {
 	ItemControllerApi,
 	OwnershipControllerApi,
 } from "@rarible/api-client"
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomAddress, toContractAddress } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
@@ -40,7 +40,7 @@ describe("transfer Erc721 lazy", () => {
 
 	test("should transfer erc721 lazy token", async () => {
 		const from = getEthUnionAddr(wallet.getAddressString())
-		const recipient = randomAddress()
+		const recipient = getEthUnionAddr(randomAddress())
 		const contract = getEthUnionAddr("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 
 		const request: ERC721RequestV3 = {
@@ -63,12 +63,13 @@ describe("transfer Erc721 lazy", () => {
 
 		const asset: TransferAsset = {
 			tokenId: minted.tokenId,
-			contract: contract,
+			contract: toContractAddress(contract),
 		}
 
 		const transferTx = await transfer(
 			ethereum,
 			send,
+			config,
 			checkAssetType,
 			nftItemApi,
 			nftOwnershipApi,

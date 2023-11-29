@@ -1,10 +1,13 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider/build"
-import type { CollectionId } from "@rarible/api-client"
+import type { CollectionId, UnionAddress } from "@rarible/api-client"
 import { convertToEVMAddress } from "@rarible/sdk-common"
+import type { ContractAddress } from "@rarible/types"
 import { ERC1155VersionEnum } from "../domain"
 
 export async function getErc1155Contract(
-	ethereum: Ethereum, version: ERC1155VersionEnum, collectionId: CollectionId
+	ethereum: Ethereum,
+	version: ERC1155VersionEnum,
+	collectionId: CollectionId | ContractAddress | UnionAddress
 ): Promise<EthereumContract> {
 	const address = convertToEVMAddress(collectionId)
 	switch (version) {

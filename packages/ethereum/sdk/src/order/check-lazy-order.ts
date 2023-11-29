@@ -1,17 +1,15 @@
-import type { UnionAddress, AssetType, EthErc1155LazyAssetType, EthErc721LazyAssetType, OrderForm } from "@rarible/api-client"
+import type { UnionAddress, AssetType, EthErc1155LazyAssetType, EthErc721LazyAssetType } from "@rarible/api-client"
 import type { Asset } from "@rarible/api-client"
+import type { EthOrderFormAsset } from "@rarible/api-client/build/models/EthOrderFormAsset"
+import type { OrderForm } from "@rarible/api-client/build/models/OrderForm"
 import type { SimpleOrder } from "./types"
+import { getAssetType } from "./get-asset-type"
 
-// export type CheckLazyOrder = {
-// 	make: Asset
-// 	take: Asset
-// 	maker: UnionAddress
-// 	data: OrderData
-// }
 export type CheckLazyOrderPart = Pick<SimpleOrder, "make" | "take" | "maker" | "data">
-export type CheckLazyOrderType<T extends CheckLazyOrderPart> = (form: T) => Promise<T>
-export async function checkLazyOrder<T extends CheckLazyOrderPart>(
-	checkLazyAsset: (asset: Asset) => Promise<Asset>,
+export type CheckLazyOrderType<T extends CheckLazyOrderPart | OrderForm> = (form: T) => Promise<T>
+export type CheckLazyAsset<T = Asset | EthOrderFormAsset> = (asset: T) => Promise<T>
+export async function checkLazyOrder<T extends CheckLazyOrderPart | OrderForm>(
+	checkLazyAsset: CheckLazyAsset,
 	form: T,
 ): Promise<T> {
 	const make = await checkLazyMakeAsset(checkLazyAsset, form.make, form.maker)
@@ -23,14 +21,15 @@ export async function checkLazyOrder<T extends CheckLazyOrderPart>(
 	}
 }
 
-async function checkLazyMakeAsset(
-	checkLazyAsset: (asset: Asset) => Promise<Asset>,
-	asset: Asset,
+async function checkLazyMakeAsset<T extends Asset | EthOrderFormAsset>(
+	checkLazyAsset: CheckLazyAsset,
+	asset: T,
 	maker: UnionAddress
-): Promise<Asset> {
+): Promise<T> {
 	const make = await checkLazyAsset(asset)
-	if (isLazyAsset(make.type) && make.type.creators[0].account === maker) {
-		return make
+	const makeAssetType = getAssetType(make)
+	if (isLazyAsset(makeAssetType) && makeAssetType.creators[0].account === maker) {
+		return make as T
 	}
 	return asset
 }

@@ -76,8 +76,8 @@ export async function mintErc721v3(
 	data: ERC721RequestV3
 ): Promise<MintOnChainResponse> {
 	const creators = await getCreators(data, ethereum)
-	const evmOwner = convertToEVMAddress(creators[0].account)
-	const owner = toUnionAddress(creators[0].account)
+	const evmOwner = creators[0].account
+	const owner = createUnionAddressWithChainId(await ethereum.getChainId(), evmOwner)
 	const erc721Contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V3, data.collection.id)
 	const uriPrefix = await erc721Contract.functionCall("baseURI").call()
 	const uri = sanitizeUri(uriPrefix, data.uri)
@@ -139,8 +139,8 @@ export async function mintErc1155v2(
 	data: ERC1155RequestV2
 ): Promise<MintOnChainResponse> {
 	const creators = await getCreators(data, ethereum)
-	const evmOwner = convertToEVMAddress(creators[0].account)
-	const owner = toUnionAddress(creators[0].account)
+	const evmOwner = creators[0].account
+	const owner = createUnionAddressWithChainId(await ethereum.getChainId(), evmOwner)
 	const erc1155Contract = await getErc1155Contract(ethereum, ERC1155VersionEnum.ERC1155V2, data.collection.id)
 	const { tokenId } = await getTokenId(nftCollectionApi, data.collection.id, owner, data.nftTokenId)
 	const uriPrefix = await erc1155Contract.functionCall("baseURI").call()
@@ -171,7 +171,7 @@ export async function getCreators(
 ): Promise<Array<{account: Address, value: number}>> {
 	if (data.creators && data.creators.length > 0) {
 		return data.creators.map(creator => ({
-			account: convertToEVMAddress(creator),
+			account: convertToEVMAddress(creator.account),
 			value: creator.value,
 		}))
 	}

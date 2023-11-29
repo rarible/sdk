@@ -3,14 +3,22 @@ import { toAddress, toBigNumber, toBinary } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Erc1155AssetType, Erc721AssetType } from "@rarible/ethereum-api-client"
-import type { Erc1155LazyAssetType, Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
-import type { Part } from "@rarible/ethereum-api-client"
+import type {
+	Creator,
+	EthErc1155AssetType,
+	EthErc721AssetType,
+	EthErc721LazyAssetType,
+	EthErc1155LazyAssetType,
+} from "@rarible/api-client"
 import type { CheckAssetTypeFunction, NftAssetType } from "../order/check-asset-type"
 import type { SendFunction } from "../common/send-transaction"
 import type { RaribleEthereumApis } from "../common/apis"
 import type { EthereumConfig } from "../config/type"
-import { createUnionAddress, createUnionItemId, createUnionOwnership } from "../common/union-converters"
+import {
+	createUnionAddressWithChainId,
+	createUnionItemId,
+	createUnionOwnership,
+} from "../common/union-converters"
 import { getErc721Contract } from "./contracts/erc721"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"
@@ -18,9 +26,10 @@ import { getErc1155Contract } from "./contracts/erc1155"
 export type BurnRequest = {
 	assetType: BurnAsset
 	amount?: BigNumber
-	creators?: Array<Part>
+	creators?: Creator[]
 }
-export type BurnAsset = Erc721AssetType | Erc1155AssetType | NftAssetType | Erc721LazyAssetType | Erc1155LazyAssetType
+export type BurnAsset = EthErc721AssetType | EthErc1155AssetType
+| NftAssetType | EthErc721LazyAssetType | EthErc1155LazyAssetType
 
 export async function burn(
 	ethereum: Maybe<Ethereum>,
@@ -49,7 +58,7 @@ export async function burn(
 				throw new Error("Unable to burn lazy minted item")
 			}
 			const creators = !request.creators || !request.creators.length
-				? [from]
+				? [createUnionAddressWithChainId(config.chainId, from)]
 				: request.creators?.map(creator => creator.account)
 			const signature = await ethereum.personalSign(`I would like to burn my ${request.assetType.tokenId} item.`)
 			if (!signature) {
@@ -58,7 +67,7 @@ export async function burn(
 			return apis.nftItem.burnLazyItem({
 				lazyItemBurnForm: {
 				  id: createUnionItemId(config.chainId, request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`)),
-					creators: creators.map(creator => createUnionAddress(creator)),
+					creators,
 					signatures: [
 						toBinary(signature),
 					],
@@ -66,7 +75,7 @@ export async function burn(
 			})
 		}
 
-		switch (checked.assetClass) {
+		switch (checked["@type"]) {
 			case "ERC721": {
 				const erc721Contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, checked.contract)
 				return send(erc721Contract.functionCall("burn", checked.tokenId))

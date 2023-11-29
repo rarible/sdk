@@ -1,6 +1,6 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
-import type { OrderForm } from "@rarible/ethereum-api-client"
-import { Configuration, OrderControllerApi } from "@rarible/ethereum-api-client"
+import type { OrderForm } from "@rarible/api-client"
+import { Configuration, OrderControllerApi } from "@rarible/api-client"
 import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
@@ -9,6 +9,7 @@ import { createTestProviders } from "../common/test/create-test-providers"
 import { createEthereumApis } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../common/check-min-payment-value"
+import { getEthUnionAddr } from "../common/test"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
@@ -42,15 +43,14 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const order: OrderForm = {
 			...TEST_ORDER_TEMPLATE,
 			salt: toBigNumber("10") as any,
-			maker: toAddress(wallet.getAddressString()),
-			type: "RARIBLE_V2",
+			maker: getEthUnionAddr(wallet.getAddressString()),
 			data: {
-				dataType: "RARIBLE_V2_DATA_V1",
+				"@type": "ETH_RARIBLE_V2_2",
 				payouts: [],
 				originFees: [],
+				isMakeFill: true,
 			},
 			signature: toBinary("0x"),
-			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
 		}
 		const upserter = new UpsertOrder(
 			orderService,
@@ -66,25 +66,11 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		)
 
 		const result = await upserter.upsert({ order })
-		expect(result.hash).toBeTruthy()
+		expect(result.id).toBeTruthy()
 	})
 
 	test("getPrice should work with ETH", async () => {
-		const request = {
-			maker: toAddress(wallet.getAddressString()),
-			makeAssetType: {
-				assetClass: "ERC721",
-				contract: toAddress("0x0000000000000000000000000000000000000001"),
-				tokenId: toBigNumber("1"),
-			},
-			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
-			takeAssetType: {
-				assetClass: "ETH" as const,
-			},
-			amount: 1,
-			payouts: [],
-			originFees: [],
-		}
+		const request = TEST_ORDER_TEMPLATE
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
@@ -98,22 +84,26 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			ZERO_WORD
 		)
 
-		const price = await upserter.getPrice(request, request.takeAssetType)
+		const price = await upserter.getPrice(request, request.take.assetType)
 		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
 
 	test("getPrice should work with ERC20", async () => {
 		const request = {
 			maker: toAddress(wallet.getAddressString()),
-			makeAssetType: {
-				assetClass: "ERC721",
-				contract: toAddress("0x0000000000000000000000000000000000000001"),
-				tokenId: toBigNumber("1"),
+			make: {
+				assetType: {
+					"@type": "ERC721",
+					contract: toAddress("0x0000000000000000000000000000000000000001"),
+					tokenId: toBigNumber("1"),
+				},
 			},
 			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
-			takeAssetType: {
-				assetClass: "ERC20" as const,
-				contract: toAddress(it.testErc20.options.address),
+			take: {
+				assetType: {
+					"@type": "ERC20" as const,
+					contract: toAddress(it.testErc20.options.address),
+				},
 			},
 			amount: 1,
 			payouts: [],

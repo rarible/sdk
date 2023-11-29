@@ -2,11 +2,10 @@ import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import {
 	Configuration,
-	GatewayControllerApi,
-	NftCollectionControllerApi,
-	NftLazyMintControllerApi,
+	CollectionControllerApi,
+	ItemControllerApi,
 	OrderControllerApi,
-} from "@rarible/ethereum-api-client"
+} from "@rarible/api-client"
 import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
@@ -22,6 +21,7 @@ import { createEthereumApis } from "../common/apis"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
+import { getEthUnionAddr } from "../common/test"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -42,9 +42,8 @@ const { providers } = createTestProviders(provider, wallet)
 describe.each(providers)("bid", (ethereum) => {
 	const env: EthereumNetwork = "dev-ethereum"
 	const configuration = new Configuration(getApiConfig(env))
-	const nftCollectionApi = new NftCollectionControllerApi(configuration)
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const nftLazyMintApi = new NftLazyMintControllerApi(configuration)
+	const nftCollectionApi = new CollectionControllerApi(configuration)
+	const nftMintApi = new ItemControllerApi(configuration)
 	const orderApi = new OrderControllerApi(configuration)
 	const config = getEthereumConfig(env)
 	const signOrder = signOrderTemplate.bind(null, ethereum, config)
@@ -52,16 +51,16 @@ describe.each(providers)("bid", (ethereum) => {
 	const signNft = signNftTemplate.bind(null, ethereum, config.chainId)
 	const apis = createEthereumApis(env)
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects().bind(null, checkWalletChainId)
 	const mint = mintTemplate
 		.bind(null, ethereum, send, signNft, nftCollectionApi)
-		.bind(null, nftLazyMintApi, checkWalletChainId)
+		.bind(null, nftMintApi, checkWalletChainId)
 	const approve = approveTemplate.bind(null, ethereum, send, config.transferProxies)
 	const getBaseOrderFee = async () => 0
 
 	const orderService = new OrderFiller(ethereum, send, config, apis, getBaseOrderFee, env)
 
-	const checkLazyAssetType = checkLazyAssetTypeTemplate.bind(null, apis.nftItem)
+	const checkLazyAssetType = checkLazyAssetTypeTemplate.bind(null, apis.nftItem, config.chainId)
 	const checkLazyAsset = checkLazyAssetTemplate.bind(null, checkLazyAssetType)
 	const checkLazyOrder = checkLazyOrderTemplate.bind(null, checkLazyAsset)
 
@@ -78,9 +77,9 @@ describe.each(providers)("bid", (ethereum) => {
 		ZERO_WORD
 	)
 	const orderSell = new OrderBid(upserter, checkAssetType, checkWalletChainId)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+	const e2eErc721V3ContractAddress = getEthUnionAddr("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 	const treasury = createE2eWallet()
-	const treasuryAddress = toAddress(treasury.getAddressString())
+	const treasuryAddress = getEthUnionAddr(treasury.getAddressString())
 
 	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
 	beforeAll(async () => {
@@ -92,12 +91,12 @@ describe.each(providers)("bid", (ethereum) => {
 	})
 
 	test("create and update of v2 works", async () => {
-		const makerAddress = toAddress(wallet.getAddressString())
+		const makerAddress = getEthUnionAddr(wallet.getAddressString())
 		const minted = await mint({
 			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
 			uri: "ipfs://ipfs/hash",
 			creators: [{
-				account: makerAddress,
+				account: getEthUnionAddr(makerAddress),
 				value: 10000,
 			}],
 			royalties: [],
@@ -124,7 +123,7 @@ describe.each(providers)("bid", (ethereum) => {
 			amount: 1,
 			payouts: [],
 			originFees: [{
-				account: treasuryAddress,
+				account: getEthUnionAddr(treasuryAddress),
 				value: 100,
 			}],
 		})

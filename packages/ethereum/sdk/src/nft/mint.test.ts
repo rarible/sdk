@@ -1,6 +1,5 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { toAddress } from "@rarible/types"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { UnionAddress } from "@rarible/api-client"
 import {
 	Configuration,
 	CollectionControllerApi,
@@ -13,12 +12,19 @@ import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethe
 import Web3 from "web3"
 import { getSendWithInjects } from "../common/send-transaction"
 import { getApiConfig } from "../config/api-config"
-import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
+import {
+	createErc1155V1Collection,
+	createErc1155V2Collection,
+	createErc721V1Collection,
+	createErc721V2Collection,
+	createErc721V3Collection,
+} from "../common/mint"
 import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { delay } from "../common/retry"
+import { getEthUnionAddr } from "../common/test"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV1, ERC721RequestV2, ERC721RequestV3 } from "./mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
@@ -45,16 +51,16 @@ const configuration = new Configuration(getApiConfig(env))
 const nftCollectionApi = new CollectionControllerApi(configuration)
 const nftItemApi = new ItemControllerApi(configuration)
 
-const erc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
-const erc1155V2ContractAddress = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
+const erc721V3ContractAddress = getEthUnionAddr("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+const erc1155V2ContractAddress = getEthUnionAddr("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
 
 describe.each(providers)("mint test", ethereum => {
-	let minter: Address
+	let minter: UnionAddress
 	const config = getEthereumConfig(env)
 	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 
 	beforeAll(async () => {
-		minter = toAddress(await ethereum.getFrom())
+		minter = getEthUnionAddr(await ethereum.getFrom())
 	})
 
 	const sign = signNft.bind(null, ethereum, config.chainId)
@@ -62,14 +68,15 @@ describe.each(providers)("mint test", ethereum => {
 	const send = getSendWithInjects().bind(null, checkWalletChainId)
 
 	const mint = mintTemplate
-		.bind(null, ethereum, send, sign, nftCollectionApi, nftItemApi, checkWalletChainId)
+		.bind(null, ethereum, send, sign, nftCollectionApi)
+		.bind(null, nftItemApi, checkWalletChainId)
 
 	beforeEach(async () => {
 		await delay(2000)
 	})
 
 	test("mint ERC-721 v1", async () => {
-		const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
+		const address = getEthUnionAddr("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
 		const result = await mint({
@@ -86,13 +93,13 @@ describe.each(providers)("mint test", ethereum => {
 	})
 
 	test("mint ERC-721 v2", async () => {
-		const address = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
+		const address = getEthUnionAddr("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
 		const result = await mint({
 			uri: "ipfs://ipfs/hash",
 			royalties: [{
-				account: minter,
+				account: getEthUnionAddr(minter),
 				value: 250,
 			}],
 			collection: createErc721V2Collection(address),
@@ -107,8 +114,8 @@ describe.each(providers)("mint test", ethereum => {
 	})
 
 	test.skip("use provided nftTokenId", async () => {
-		const collection = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
-		const nftTokenId = await nftCollectionApi.generateNftTokenId({ collection, minter })
+		const collection = getEthUnionAddr("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
+		const nftTokenId = await nftCollectionApi.generateTokenId({ collection, minter })
 		const result = await mint({
 			uri: "ipfs://ipfs/hash",
 			royalties: [{
@@ -125,7 +132,7 @@ describe.each(providers)("mint test", ethereum => {
 	})
 
 	test("mint ERC-1155 v1", async () => {
-		const address = toAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
+		const address = getEthUnionAddr("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
 		const uri = "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5"
 		const supply = 101
 		const result = await mint({
@@ -153,7 +160,7 @@ describe.each(providers)("mint test", ethereum => {
 		const result = await mint({
 			collection: createErc721V3Collection(erc721V3ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			creators: [{ account: toAddress(minter), value: 10000 }],
+			creators: [{ account: getEthUnionAddr(minter), value: 10000 }],
 			royalties: [],
 			lazy: false,
 		} as ERC721RequestV3)
@@ -171,7 +178,7 @@ describe.each(providers)("mint test", ethereum => {
 			collection: createErc1155V2Collection(erc1155V2ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			supply: 100,
-			creators: [{ account: toAddress(minter), value: 10000 }],
+			creators: [{ account: getEthUnionAddr(minter), value: 10000 }],
 			royalties: [],
 			lazy: false,
 		} as ERC1155RequestV2)
@@ -189,17 +196,17 @@ describe.each(providers)("mint test", ethereum => {
 		const minted = await mint({
 			collection: createErc721V3Collection(erc721V3ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-			creators: [{ account: toAddress(minter), value: 10000 }],
+			creators: [{ account: getEthUnionAddr(minter), value: 10000 }],
 			royalties: [],
 			lazy: true,
 		} as ERC721RequestV3)
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
-		const resultNft = await nftItemApi.getNftItemById({ itemId: minted.itemId })
+		const resultNft = await nftItemApi.getItemById({ itemId: minted.itemId })
 		expect(resultNft.lazySupply).toEqual("1")
 
-		const lazy = await nftItemApi.getNftLazyItemById({ itemId: resultNft.id })
+		const lazy = await nftItemApi.getLazyItemById({ itemId: resultNft.id })
 		expect(lazy.uri).toBe("/ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
 	})
 
@@ -208,17 +215,17 @@ describe.each(providers)("mint test", ethereum => {
 			collection: createErc1155V2Collection(erc1155V2ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			supply: 100,
-			creators: [{ account: toAddress(minter), value: 10000 }],
+			creators: [{ account: getEthUnionAddr(minter), value: 10000 }],
 			royalties: [],
 			lazy: true,
 		} as ERC1155RequestV2)
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
-		const resultNft = await nftItemApi.getNftItemById({ itemId: minted.itemId })
+		const resultNft = await nftItemApi.getItemById({ itemId: minted.itemId })
 		expect(resultNft.lazySupply).toEqual("100")
 
-		const lazy = await nftItemApi.getNftLazyItemById({ itemId: resultNft.id })
+		const lazy = await nftItemApi.getLazyItemById({ itemId: resultNft.id })
 		expect(lazy.uri).toBe("/ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
 	})
 })

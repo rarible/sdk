@@ -1,10 +1,12 @@
-import type * as EthereumApi from "@rarible/ethereum-api-client"
+import type { BigNumber } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Part } from "@rarible/ethereum-api-client"
 import type * as ApiClient from "@rarible/api-client"
+import { toItemId } from "@rarible/types/build/item-id"
+import type { Binary, Creator } from "@rarible/api-client"
 import { sanitizeUri } from "../common/sanitize-uri"
 import { getBlockchainFromChainId } from "../common/get-blockchain-from-chain-id"
+import { createUnionAddressWithChainId } from "../common/union-converters"
 import type { SimpleLazyNft } from "./sign-nft"
 import { getTokenId } from "./get-token-id"
 import type { ERC1155RequestV2, ERC721RequestV3, MintOffChainResponse } from "./mint"
@@ -16,7 +18,7 @@ import { getErc1155Contract } from "./contracts/erc1155"
 
 export async function mintOffChain(
 	ethereum: Ethereum,
-	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<EthereumApi.Binary>,
+	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<Binary>,
 	nftCollectionApi: ApiClient.CollectionControllerApi,
 	nftLazyMintApi: ApiClient.ItemControllerApi,
 	data: ERC721RequestV3 | ERC1155RequestV2
@@ -26,12 +28,14 @@ export async function mintOffChain(
 	}
 
 	const creators = await getCreators(data, ethereum)
-	const { tokenId } = await getTokenId(nftCollectionApi, data.collection.id, creators[0].account, data.nftTokenId)
+	const evmOwner = creators[0].account
+	const owner = createUnionAddressWithChainId(await ethereum.getChainId(), evmOwner)
+	const { tokenId } = await getTokenId(nftCollectionApi, data.collection.id, owner, data.nftTokenId)
 
 	const mintData = getMintOffChainData({
 		...data,
 		uri: await getRequestURI(ethereum, data),
-	}, creators, tokenId)
+	}, data.creators || [], tokenId)
 	const minted = await nftLazyMintApi.mintLazyItem({
 		lazyItemMintForm: {
 			item: Object.assign({}, mintData, {
@@ -42,8 +46,8 @@ export async function mintOffChain(
 	})
 	return {
 		type: MintResponseTypeEnum.OFF_CHAIN,
-		item: minted,
-		owner: creators[0].account,
+		item: minted.id,
+		owner,
 		tokenId,
 		contract: minted.contract,
 		itemId: `${minted.contract}:${tokenId}`,
@@ -52,15 +56,15 @@ export async function mintOffChain(
 
 function getMintOffChainData(
 	data: ERC721RequestV3 | ERC1155RequestV2,
-	creators: Part[],
-	tokenId: EthereumApi.BigNumber
+	creators: Creator[],
+	tokenId: BigNumber
 ): SimpleLazyNft<"signatures"> {
 	const base = {
 		contract: data.collection.id,
 		uri: data.uri,
 		royalties: data.royalties || [],
 		creators,
-		tokenId,
+		id: toItemId(`${data.collection.id}:${tokenId}`),
 	}
 	if ("supply" in data) {
 		return Object.assign({}, base, {

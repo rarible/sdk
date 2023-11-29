@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toContractAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { retry } from "../common/retry"
 import type { ERC721RequestV3 } from "../nft/mint"
@@ -10,17 +10,17 @@ import { createTestProviders } from "../common/test/create-test-providers"
 import { getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
-import { getTestApis } from "../common/test"
+import { getEthUnionAddr, getTestApis } from "../common/test"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { checkChainId } from "./check-chain-id"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
-const from = toAddress(wallet.getAddressString())
+const from = getEthUnionAddr(wallet.getAddressString())
 
 describe.each(providers)("check-asset-type test", ethereum => {
 	const env: EthereumNetwork = "dev-ethereum"
-	const e2eErc721ContractAddress = toContractAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+	const e2eErc721ContractAddress = getEthUnionAddr("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 	const { nftCollection, nftItem } = getTestApis(env)
 	const sign = signNft.bind(null, ethereum, 300500)
 	const config = getEthereumConfig(env)
@@ -51,7 +51,7 @@ describe.each(providers)("check-asset-type test", ethereum => {
 
 		const assetClass = await retry(10, 4000, async () => {
 			const assetType = await checkAssetType({
-				contract: e2eErc721ContractAddress,
+				contract: toContractAddress(e2eErc721ContractAddress),
 				tokenId: minted.tokenId,
 			})
 			if (assetType["@type"] !== "ERC721") {
