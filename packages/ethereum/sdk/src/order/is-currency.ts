@@ -1,9 +1,9 @@
-import type { AssetType, Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client"
+import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client"
 
 export function isCurrency(
 	type: AssetType,
-): type is (Erc20AssetType | EthAssetType) {
-	switch (type.assetClass) {
+): type is (EthErc20AssetType | EthEthereumAssetType) {
+	switch (type["@type"]) {
 		case "ERC20":
 			return true
 		case "ETH":

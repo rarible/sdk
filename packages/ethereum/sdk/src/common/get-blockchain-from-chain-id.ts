@@ -9,20 +9,20 @@ export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
 		case 17:
 		case 200500:
 		case 300500:
-			return "ETHEREUM"
+			return Blockchain.ETHEREUM
 		case 137:
 		case 80001:
 		case 200501:
 		case 300501:
-			return "POLYGON"
+			return Blockchain.POLYGON
 		case 5000:
 		case 5001:
-			return "MANTLE"
+			return Blockchain.MANTLE
 		default: throw new Error("ChainID from config could not be recognized")
 	}
 }
 
-export type EVMBlockchain = "ETHEREUM" | "POLYGON" | "MANTLE"
+export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
 
 export function convertEVMBlockchainToUnionBlockchain(blockchain: EVMBlockchain): Blockchain {
 	if (Blockchain[blockchain]) {

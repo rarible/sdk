@@ -1,23 +1,30 @@
 import type {
-	Erc20AssetType,
-	EthAssetType,
+	EthEthereumAssetType,
+	EthErc20AssetType,
 	Order,
 	OrderForm,
-	RaribleV2OrderForm,
-} from "@rarible/ethereum-api-client"
+} from "@rarible/api-client"
 import { toBigNumber, toBinary } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { toBn } from "@rarible/utils/build/bn"
 import { Action } from "@rarible/action"
+import type { EthRaribleV2OrderForm } from "@rarible/api-client"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { Ethereum } from "@rarible/ethereum-provider"
+import { isOrderV2 } from "../common/order"
+import { convertDateNumberToISO } from "../common"
+import { getRequiredWallet } from "../common/get-required-wallet"
+import { getBlockchainFromChainId } from "../common/get-blockchain-from-chain-id"
 import type { HasOrder, HasPrice, OrderRequest, UpsertOrder } from "./upsert-order"
 import type { AssetTypeRequest, AssetTypeResponse } from "./check-asset-type"
 import type { SimpleOrder } from "./types"
 import { isCurrency } from "./is-currency"
+import { convertAssetToEthForm } from "./convert-asset"
 
 export type SellRequest = {
 	makeAssetType: AssetTypeRequest
 	amount: number
-	takeAssetType: EthAssetType | Erc20AssetType
+	takeAssetType: EthEthereumAssetType | EthErc20AssetType
 } & HasPrice & OrderRequest
 export type SellOrderStageId = "approve" | "sign"
 export type SellOrderAction = Action<SellOrderStageId, SellRequest, Order>
@@ -28,6 +35,7 @@ export type SellOrderUpdateAction = Action<SellOrderStageId, SellUpdateRequest, 
 export class OrderSell {
 	constructor(
 		private readonly upserter: UpsertOrder,
+		private readonly ethereum: Maybe<Ethereum>,
 		private readonly checkAssetType: (asset: AssetTypeRequest) => Promise<AssetTypeResponse>,
 		private readonly checkWalletChainId: () => Promise<boolean>,
 	) {}
@@ -37,7 +45,7 @@ export class OrderSell {
 			id: "approve" as const,
 			run: async (request: SellRequest) => {
 				const form = await this.getSellForm(request)
-				const checked = await this.upserter.checkLazyOrder(form) as OrderForm
+				const checked = await this.upserter.checkLazyOrder(form)
 				await this.upserter.approve(checked, false)
 				return checked
 			},
@@ -51,7 +59,7 @@ export class OrderSell {
 			return input
 		})
 
-	private async getSellForm(request: SellRequest): Promise<RaribleV2OrderForm> {
+	private async getSellForm(request: SellRequest): Promise<EthRaribleV2OrderForm> {
 		const price = await this.upserter.getPrice(request, request.takeAssetType)
 		const form = await this.upserter.prepareOrderForm(request, true)
 		return {
@@ -72,27 +80,32 @@ export class OrderSell {
 			id: "approve" as const,
 			run: async (request: SellUpdateRequest) => {
 				const order = await this.upserter.getOrder(request)
-				if (!isCurrency(order.take.assetType)) {
-					throw new Error(`Make asset type should be either ETH or ERC-20 asset, received=${order.make.assetType.assetClass}`)
+				if (!isCurrency(order.take.type)) {
+					throw new Error(`Make asset type should be either ETH or ERC-20 asset, received=${order.make.type["@type"]}`)
 				}
-				if (order.type === "CRYPTO_PUNK") {
-					return request
+				if (order.data["@type"] === "ETH_CRYPTO_PUNKS") {
+					return { request, order }
 				} else {
-					const price = await this.upserter.getPrice(request, order.take.assetType)
+					const price = await this.upserter.getPrice(request, order.take.type)
 					const form = await this.prepareOrderUpdateForm(order, request, price)
 					const checked = await this.upserter.checkLazyOrder(form) as OrderForm
 					await this.upserter.approve(checked, false)
-					return checked
+					return { request, form: checked, order }
 				}
 			},
 		})
 		.thenStep({
 			id: "sign" as const,
-			run: (form: OrderForm | SellUpdateRequest) => {
-				if ("type" in form && (form.type === "RARIBLE_V1" || form.type === "RARIBLE_V2")) {
-					return this.upserter.upsertRequest(form)
+			run: ({ request, form, order }) => {
+				if ("data" in order) {
+					if (isOrderV2(order.data) && form) {
+					  return this.upserter.upsertRequest(form)
+					}
+					if (order.data["@type"] === "ETH_CRYPTO_PUNKS") {
+				    return this.upserter.updateCryptoPunkOrder(request, order)
+					}
 				}
-				return this.upserter.updateCryptoPunkOrder(form)
+				throw new Error(`Unrecognized order.data["@type"] = ${order.data["@type"]}`)
 			},
 		})
 		.before(async (input: SellUpdateRequest) => {
@@ -103,21 +116,30 @@ export class OrderSell {
 	async prepareOrderUpdateForm(
 		order: SimpleOrder, request: SellUpdateRequest, price: BigNumberValue
 	): Promise<OrderForm> {
-		if (order.type === "RARIBLE_V1" || order.type === "RARIBLE_V2") {
-			if (!request.end && !order.end) {
+		if (order.data["@type"] === "ETH_RARIBLE_V1" || isOrderV2(order.data)) {
+			if (!request.end && !order.endedAt) {
 				throw new Error("Order should contains 'end' field")
 			}
+			const chainId = await getRequiredWallet(this.ethereum).getChainId()
 			return {
 				...order,
+				make: convertAssetToEthForm(order.make),
 				take: {
-					assetType: order.take.assetType,
+					assetType: order.take.type,
 					value: toBigNumber(toBn(price).multipliedBy(order.make.value).toString()),
 				},
 				salt: toBigNumber(toBn(order.salt, 16).toString(10)),
 				signature: order.signature || toBinary("0x"),
-				end: (request.end || order.end)!,
+				endedAt: (convertDateNumberToISO(request.end) || order.endedAt)!,
+				blockchain: getBlockchainFromChainId(chainId),
+				"@type": "RARIBLE_V2",
+				data: order.data["@type"] === "ETH_RARIBLE_V1" ? {
+					"@type": "ETH_RARIBLE_V2",
+					payouts: [],
+					originFees: [],
+				} : order.data,
 			}
 		}
-		throw new Error(`Unsupported order type: ${order.type}`)
+		throw new Error(`Unsupported order data type: ${order.data["@type"]}`)
 	}
 }

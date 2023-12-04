@@ -9,7 +9,7 @@ export function assetTypeToStruct(ethereum: Ethereum, assetType: AssetType) {
 		case "ETH":
 			return {
 				assetClass: id("ETH"),
-				data: "0x",
+				data: "0x00",
 			}
 		case "ERC20":
 			return {

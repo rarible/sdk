@@ -10,7 +10,7 @@ import { createEthereumApis } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../common/check-min-payment-value"
 import { getEthUnionAddr } from "../common/test"
-import { TEST_ORDER_TEMPLATE } from "./test/order"
+import { TEST_ORDER_FORM_TEMPLATE } from "./test/order"
 import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -41,7 +41,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 	test.skip("sign and upsert works", async () => {
 
 		const order: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
+			...TEST_ORDER_FORM_TEMPLATE,
 			salt: toBigNumber("10") as any,
 			maker: getEthUnionAddr(wallet.getAddressString()),
 			data: {
@@ -70,7 +70,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 	})
 
 	test("getPrice should work with ETH", async () => {
-		const request = TEST_ORDER_TEMPLATE
+		const request = TEST_ORDER_FORM_TEMPLATE
 		const upserter = new UpsertOrder(
 			orderService,
 			send,

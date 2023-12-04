@@ -248,8 +248,7 @@ export class UpsertOrder {
 		} as UpsertSimpleOrder
 	}
 
-	async updateCryptoPunkOrder(request: SellUpdateRequest): Promise<Order> {
-		const order = await this.getOrder(request)
+	async updateCryptoPunkOrder(request: SellUpdateRequest, order: SimpleOrder): Promise<Order> {
 		if (order.data["@type"] !== "ETH_CRYPTO_PUNKS") {
 			throw new Error(`can't update punk order with type: ${order.data["@type"]}`)
 		}

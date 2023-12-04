@@ -27,7 +27,7 @@ import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
 import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
-import { TEST_ORDER_TEMPLATE } from "./test/order"
+import { TEST_ORDER_FORM_TEMPLATE } from "./test/order"
 import { createErc20Contract } from "./contracts/erc20"
 import { checkChainId } from "./check-chain-id"
 import { approve as approveTemplate } from "./approve"
@@ -157,7 +157,7 @@ describe.each(providers)("bid", (ethereum) => {
 		}
 
 		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
+			...TEST_ORDER_FORM_TEMPLATE,
 			maker: makerAddress,
 			take: {
 				assetType: {

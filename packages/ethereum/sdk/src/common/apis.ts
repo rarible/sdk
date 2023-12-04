@@ -12,7 +12,6 @@ export type RaribleEthereumApis = {
 	orderSignature: ApiClient.SignatureControllerApi;
 	nftCollection: ApiClient.CollectionControllerApi;
 	balances: ApiClient.BalanceControllerApi;
-	auction: ApiClient.AuctionControllerApi;
 }
 
 export function createEthereumApis(
@@ -55,6 +54,5 @@ export function createEthereumApis(
 		orderSignature: new ApiClient.SignatureControllerApi(configuration),
 		nftCollection: new ApiClient.CollectionControllerApi(configuration),
 		balances: new ApiClient.BalanceControllerApi(configuration),
-		auction: new ApiClient.AuctionControllerApi(configuration),
 	}
 }

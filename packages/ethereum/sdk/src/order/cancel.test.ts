@@ -17,10 +17,11 @@ import { MintResponseTypeEnum } from "../nft/mint"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
+import { getEthUnionAddr } from "../common/test"
 import { cancel } from "./cancel"
 import { signOrder } from "./sign-order"
 import { UpsertOrder } from "./upsert-order"
-import { TEST_ORDER_TEMPLATE } from "./test/order"
+import { TEST_ORDER_FORM_TEMPLATE } from "./test/order"
 import { OrderFiller } from "./fill-order"
 import { checkChainId } from "./check-chain-id"
 import { ItemType } from "./fill-order/seaport-utils/constants"
@@ -61,7 +62,7 @@ describe("cancel order", () => {
 	test("ExchangeV2 should work", async () => {
 		await sentTxConfirm(it.testErc721.methods.mint(from, "10", "0x"), { from })
 		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
+			...TEST_ORDER_FORM_TEMPLATE,
 			make: {
 				assetType: {
 					assetClass: "ERC721",
@@ -95,7 +96,7 @@ describe("cancel order", () => {
 	test("ExchangeV1 should work", async () => {
 		await sentTx(it.testErc1155.methods.mint(from, "11", 11, "0x"), { from })
 		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
+			...TEST_ORDER_FORM_TEMPLATE,
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
@@ -157,7 +158,7 @@ describe.skip("test of cancelling seaport rinkeby order", () => {
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 1000000 })
 	const sdkSeller = createRaribleSdk(ethereumSeller, "testnet")
 
-	const rinkebyErc721V3ContractAddress = toAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
+	const rinkebyErc721V3ContractAddress = getEthUnionAddr("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
 
 	const config = getEthereumConfig("testnet")
 
@@ -218,7 +219,7 @@ describe.skip("test of cancelling looksrare rinkeby order", () => {
 		await cancelTx.wait()
 
 		await retry(10, 3000, async () => {
-			const order = await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
+			const order = await sdkSeller.apis.order.getValidatedOrderById({ id: orderHash })
 			if (order.status !== "CANCELLED") {
 				throw new Error("Order has not been cancelled")
 			}

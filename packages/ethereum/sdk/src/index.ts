@@ -295,7 +295,7 @@ export function createRaribleSdk(
 		toWord(getUpdatedCalldata(sdkConfig))
 	)
 
-	const sellService = new OrderSell(upsertService, checkAssetType, checkWalletChainId)
+	const sellService = new OrderSell(upsertService, ethereum, checkAssetType, checkWalletChainId)
 	const bidService = new OrderBid(upsertService, checkAssetType, checkWalletChainId)
 	const wethConverter = new ConvertWeth(ethereum, send, config)
 
