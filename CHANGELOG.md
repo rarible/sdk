@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+
+### Features
+
+* **RX-109:** add dogami email connector ([#574](https://github.com/rarible/sdk/issues/574)) ([534f468](https://github.com/rarible/sdk/commit/534f4683566c1851aebf5c7bd9e278c0233c24c6))
+
+
+
+
+
 ## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
 
 
