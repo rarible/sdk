@@ -232,6 +232,7 @@ export function getBlockchainByConnectorId(
 		case "torus":
 		case "firebase":
 		case "firebase-apple":
+		case "firebase-email":
 		case "walletconnect":
 		case "walletlink":
 			return BlockchainGroup.ETHEREUM

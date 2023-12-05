@@ -39,6 +39,7 @@
     "build-connector-torus": "yarn workspace @rarible/connector-torus run build",
     "build-connector-firebase": "yarn workspace @rarible/connector-firebase run build",
     "build-connector-firebase-apple": "yarn workspace @rarible/connector-firebase-apple run build",
+    "build-connector-firebase-email": "yarn workspace @rarible/connector-firebase-email run build",
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
     "build-connector-walletconnect-v2": "yarn workspace @rarible/connector-walletconnect-v2 run build",
     "build-connector-mattel": "yarn workspace @rarible/connector-mattel run build",
