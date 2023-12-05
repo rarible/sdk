@@ -141,14 +141,6 @@ EthereumProviderConnectionResult
   	}
   }
 
-  private async promptUserForEmail(): Promise<string> {
-  	const email = window.prompt("Please enter your email for sign-in:")
-  	if (!email) {
-  		throw new Error("Email is required for sign-in")
-  	}
-  	return email
-  }
-
   getId(): string {
   	return PROVIDER_ID
   }
