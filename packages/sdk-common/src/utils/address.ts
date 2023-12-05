@@ -1,4 +1,4 @@
-import type { AssetType, CollectionId, Creator, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
+import type { AssetType, CollectionId, CurrencyId, ItemId, OrderId, OwnershipId } from "@rarible/api-client"
 import type { ContractAddress, UnionAddress, Address } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { toAddress } from "@rarible/types"

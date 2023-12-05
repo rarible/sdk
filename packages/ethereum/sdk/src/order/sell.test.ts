@@ -29,9 +29,7 @@ import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
 import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
-import { TEST_ORDER_FORM_TEMPLATE } from "./test/order"
 import { checkChainId } from "./check-chain-id"
-import { getEndDateAfterMonth } from "./test/utils"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)

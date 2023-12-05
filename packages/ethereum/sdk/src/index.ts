@@ -296,7 +296,7 @@ export function createRaribleSdk(
 	)
 
 	const sellService = new OrderSell(upsertService, ethereum, checkAssetType, checkWalletChainId)
-	const bidService = new OrderBid(upsertService, checkAssetType, checkWalletChainId)
+	const bidService = new OrderBid(upsertService, ethereum, checkAssetType, checkWalletChainId)
 	const wethConverter = new ConvertWeth(ethereum, send, config)
 
 	return {
