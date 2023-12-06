@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.63-beta.1](https://github.com/rarible/sdk/compare/v0.13.63-beta.0...v0.13.63-beta.1) (2023-12-06)
+
+
+### Features
+
+* **PLTF-157:** update royalty cut formula ([#575](https://github.com/rarible/sdk/issues/575)) ([c77380e](https://github.com/rarible/sdk/commit/c77380ef7fd8fd4995623622c28a86ba31e7afef))
+
+
+
+
+
 ## [0.13.63-beta.0](https://github.com/rarible/sdk/compare/v0.13.62...v0.13.63-beta.0) (2023-12-06)
 
 
