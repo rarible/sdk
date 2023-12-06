@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.63-beta.0](https://github.com/rarible/sdk/compare/v0.13.62...v0.13.63-beta.0) (2023-12-06)
+
+
+### Features
+
+* **RX-90:** webauth native listings ([0f54038](https://github.com/rarible/sdk/commit/0f540380a6669ec51f737a5f67d13326853edbdc))
+
+
+
+
+
 ## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
 
 
