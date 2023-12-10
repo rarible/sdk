@@ -2,6 +2,7 @@ import { toAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
 import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
@@ -13,6 +14,8 @@ import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { checkChainId } from "../../check-chain-id"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
+import { getEthUnionAddr } from "../../../common/test"
+import { awaitOrder } from "../../test/await-order"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 
 describe("amm batch buy tests", () => {
@@ -41,7 +44,7 @@ describe("amm batch buy tests", () => {
 
 		console.log("order", orders[0])
 		const tx = await sdkBuyer.order.buyBatch(ordersToRequests(orders, [{
-			account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+			account: getEthUnionAddr("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 			value: 100,
 		}]))
 		await tx.wait()
@@ -57,13 +60,11 @@ describe("amm batch buy tests", () => {
 			config.sudoswap.pairFactory,
 			3
 		)
-		const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
-		const order = await retry(20, 2000, async () => {
-			return await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
-		}) as SimpleAmmOrder
+		const orderHash = `${Blockchain.ETHEREUM}:0x${poolAddress.slice(2).padStart(64, "0")}`
+		const order = await awaitOrder(sdkSeller, orderHash) as SimpleAmmOrder
 
 		const requests: NftAssetType[] = items.map(item => ({
-			contract,
+			contract: getEthUnionAddr(contract),
 			tokenId: item,
 		}))
 		console.log("reqs", requests)
@@ -71,7 +72,7 @@ describe("amm batch buy tests", () => {
 			order,
 			amount: 1,
 			originFees: [{
-				account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+				account: getEthUnionAddr("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 				value: 100,
 			}],
 			assetType: items.map(item => ({

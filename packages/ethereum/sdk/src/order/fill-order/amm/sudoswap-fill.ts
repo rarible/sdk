@@ -6,6 +6,7 @@ import type { NftItemRoyalty } from "@rarible/ethereum-api-client/build/models/N
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { toBn } from "@rarible/utils/build/bn"
 import { BigNumber as BigNum } from "@rarible/utils"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import type { AmmOrderFillRequest, OrderFillSendData } from "../types"
 import type { EthereumConfig } from "../../../config/type"
 import { createSudoswapRouterV1Contract } from "../../contracts/sudoswap-router-v1"
@@ -22,12 +23,12 @@ export class SudoswapFill {
 
 		let fillData: OrderFillSendData
 
-		switch (order.make.assetType.assetClass) {
+		switch (order.make.type["@type"]) {
 			case "ERC721":
 				if (request.assetType) {
 					throw new Warning("Remove assetType from request, because it must be captured from order")
 				}
-				fillData = await this.buySpecificNFTs(ethereum, request, config, [order.make.assetType.tokenId])
+				fillData = await this.buySpecificNFTs(ethereum, request, config, [order.make.type.tokenId])
 				break
 			case "AMM_NFT":
 				if (request.assetType) {
@@ -41,7 +42,7 @@ export class SudoswapFill {
 				}
 				break
 			default:
-				throw new Error("Unsupported asset type " + order.take.assetType.assetClass)
+				throw new Error("Unsupported asset type " + order.take.type["@type"])
 		}
 
 		return {
@@ -65,21 +66,13 @@ export class SudoswapFill {
 
 	private static getOrder(request: AmmOrderFillRequest) {
 		const order = request.order
-		if (order.data.dataType !== "SUDOSWAP_AMM_DATA_V1") {
-			throw new Error("Wrong order data type " + order.data.dataType)
+		if (order.data["@type"] !== "ETH_SUDOSWAP_AMM_DATA_V1") {
+			throw new Error("Wrong order data type " + order.data["@type"])
 		}
-		if (order.take.assetType.assetClass !== "ETH") {
+		if (order.take.type["@type"] !== "ETH") {
 			throw new Error("Sudoswap supports swaps only for ETH")
 		}
 		return order
-	}
-
-	private static async getNftRecipient(ethereum: Ethereum) {
-		return await ethereum.getFrom()
-	}
-
-	private static async getETHRecipient(ethereum: Ethereum) {
-		return await ethereum.getFrom()
 	}
 
 	private static async buySpecificNFTs(
@@ -90,17 +83,21 @@ export class SudoswapFill {
 	): Promise<OrderFillSendData> {
 		const routerContract = this.getRouterContract(ethereum, config)
 		const order = this.getOrder(request)
-		const poolContract = createSudoswapPairContract(ethereum, order.data.poolAddress)
+		const poolContract = createSudoswapPairContract(
+			ethereum,
+			convertToEVMAddress(order.data.poolAddress)
+		)
+		const from = await ethereum.getFrom()
 		const price = await poolContract.functionCall("getBuyNFTQuote", tokenIds.length).call()
 		return {
 			functionCall: routerContract.functionCall(
 				"swapETHForSpecificNFTs",
 				[{
-					pair: order.data.poolAddress,
+					pair: convertToEVMAddress(order.data.poolAddress),
 					nftIds: tokenIds,
 				}],
-				await this.getETHRecipient(ethereum),
-				await this.getNftRecipient(ethereum),
+				from,
+				from,
 				SudoswapFill.getDeadline()
 			),
 			options: {
@@ -118,17 +115,22 @@ export class SudoswapFill {
 		const routerContract = this.getRouterContract(ethereum, config)
 		const order = this.getOrder(request)
 
-		const poolContract = createSudoswapPairContract(ethereum, order.data.poolAddress)
+		const poolContract = createSudoswapPairContract(
+			ethereum,
+			convertToEVMAddress(order.data.poolAddress)
+		)
 		const price = await poolContract.functionCall("getBuyNFTQuote", amount).call()
+		const from = await ethereum.getFrom()
+
 		return {
 			functionCall: routerContract.functionCall(
 				"swapETHForAnyNFTs",
 				[{
-					pair: order.data.poolAddress,
+					pair: convertToEVMAddress(order.data.poolAddress),
 					numItems: amount,
 				}],
-				await this.getETHRecipient(ethereum),
-				await this.getNftRecipient(ethereum),
+				from,
+				from,
 				SudoswapFill.getDeadline()
 			),
 			options: {
