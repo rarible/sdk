@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-firebase-email",
-  "version": "0.13.63-beta.2",
+  "version": "0.13.63-beta.3",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {

@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.63-beta.3](https://github.com/rarible/sdk/compare/v0.13.63-beta.2...v0.13.63-beta.3) (2023-12-10)
+
+
+### Features
+
+* readme homepage ([092edcf](https://github.com/rarible/sdk/commit/092edcf0f9ff0c54d81b9485e9e5d6221aba9b5b))
+
+
+
+
+
 ## [0.13.63-beta.2](https://github.com/rarible/sdk/compare/v0.13.63-beta.1...v0.13.63-beta.2) (2023-12-10)
 
 
