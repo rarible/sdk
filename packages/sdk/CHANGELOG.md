@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.63-beta.2](https://github.com/rarible/sdk/compare/v0.13.63-beta.1...v0.13.63-beta.2) (2023-12-10)
+
+
+### Features
+
+* npmjs readme ([4d2b157](https://github.com/rarible/sdk/commit/4d2b15717fee3cec1b975f7498b3d056f09665ae))
+
+
+
+
+
 ## [0.13.63-beta.1](https://github.com/rarible/sdk/compare/v0.13.63-beta.0...v0.13.63-beta.1) (2023-12-06)
 
 
