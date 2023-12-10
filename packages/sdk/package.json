@@ -1,7 +1,11 @@
 {
   "name": "@rarible/sdk",
   "version": "0.13.63-beta.1",
-  "homepage": "",
+  "homepage": "https://github.com/rarible/sdk",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rarible/sdk.git"
+  },
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",
