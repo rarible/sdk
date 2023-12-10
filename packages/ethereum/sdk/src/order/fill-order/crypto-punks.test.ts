@@ -22,6 +22,7 @@ import { id } from "../../common/id"
 import { retry } from "../../common/retry"
 import { createEthereumApis } from "../../common/apis"
 import { checkChainId } from "../check-chain-id"
+import { getEthUnionAddr } from "../../common/test"
 import { OrderFiller } from "./index"
 
 describe.skip("fillOrder", () => {
@@ -102,24 +103,23 @@ describe.skip("fillOrder", () => {
 	test("get transaction data", async () => {
 		const left: SimpleOrder = {
 			make: {
-				assetType: {
-					assetClass: "CRYPTO_PUNKS",
+				type: {
+					"@type": "CRYPTO_PUNKS",
 					contract: toAddress(it.punksMarket.options.address),
 					tokenId: 0,
 				},
 				value: toBigNumber("1"),
 			},
-			maker: sender2Address,
+			maker: getEthUnionAddr(sender2Address),
 			take: {
-				assetType: {
-					assetClass: "ETH",
+				type: {
+					"@type": "ETH",
 				},
 				value: toBigNumber("10"),
 			},
 			salt: randomWord(),
-			type: "CRYPTO_PUNK",
 			data: {
-				dataType: "CRYPTO_PUNKS_DATA",
+				"@type": "ETH_CRYPTO_PUNKS",
 			},
 		}
 
@@ -138,24 +138,23 @@ describe.skip("fillOrder", () => {
 
 		const left: SimpleOrder = {
 			make: {
-				assetType: {
-					assetClass: "CRYPTO_PUNKS",
+				type: {
+					"@type": "CRYPTO_PUNKS",
 					contract: toAddress(it.punksMarket.options.address),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
 			},
-			maker: sender2Address,
+			maker: getEthUnionAddr(sender2Address),
 			take: {
-				assetType: {
-					assetClass: "ETH",
+				type: {
+					"@type": "ETH",
 				},
 				value: toBigNumber(punkPrice.toFixed()),
 			},
 			salt: randomWord(),
-			type: "CRYPTO_PUNK",
 			data: {
-				dataType: "CRYPTO_PUNKS_DATA",
+				"@type": "ETH_CRYPTO_PUNKS",
 			},
 		}
 
@@ -180,24 +179,23 @@ describe.skip("fillOrder", () => {
 
 		const left: SimpleOrder = {
 			make: {
-				assetType: {
-					assetClass: "ETH",
+				type: {
+					"@type": "ETH",
 				},
 				value: toBigNumber(punkPrice.toFixed()),
 			},
-			maker: sender2Address,
+			maker: getEthUnionAddr(sender2Address),
 			take: {
-				assetType: {
-					assetClass: "CRYPTO_PUNKS",
+				type: {
+					"@type": "CRYPTO_PUNKS",
 					contract: toAddress(it.punksMarket.options.address),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
 			},
 			salt: randomWord(),
-			type: "CRYPTO_PUNK",
 			data: {
-				dataType: "CRYPTO_PUNKS_DATA",
+				"@type": "ETH_CRYPTO_PUNKS",
 			},
 		}
 

@@ -13,7 +13,7 @@ describe("get maret data", () => {
 	test("getAmmItemsRoyalties", async () => {
 		const royalties = await getAmmItemsRoyalties(apis, config, {
 			assetType: {
-				assetClass: "ERC721",
+				"@type": "ERC721",
 				contract: toAddress("0x6972347e66a32f40ef3c012615c13cb88bf681cc"),
 				tokenId: toBigNumber("89600346181561266007348051519878822320245810738073457278779091149096524709889"),
 			},

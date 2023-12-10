@@ -1,11 +1,13 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { Address } from "@rarible/types"
 import { toAddress } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import {
 	createSudoswapFactoryV1Contract,
 } from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
+import type { UnionAddress } from "@rarible/api-client"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import { approveErc721 } from "../../../approve-erc721"
-import { mintTestToken } from "../../batch-purchase/test/common/utils"
+import { mintTestErc721Token } from "../../batch-purchase/test/common/utils"
 import type { RaribleSdk } from "../../../../index"
 import type { SendFunction } from "../../../../common/send-transaction"
 import type { EthereumNetwork } from "../../../../types"
@@ -58,10 +60,10 @@ export async function mintTokensToNewSudoswapPool(
 ): Promise<{poolAddress: Address, contract: Address, items: string[]}> {
 	const tokensPromises = []
 	for (let i = 0; i < tokensCount; i++) {
-		tokensPromises.push(mintTestToken(sdk, env))
+		tokensPromises.push(mintTestErc721Token(sdk, env))
 	}
 	const tokens = await Promise.all(tokensPromises)
-	const contract = tokens[0].contract
+	const contract = convertToEVMAddress(tokens[0].contract)
 	const tokensIds = tokens.map((t) => t.tokenId)
 	const poolAddress = await createSudoswapPool(
 		sellerWeb3,

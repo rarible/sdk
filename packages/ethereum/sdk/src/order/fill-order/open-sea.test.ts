@@ -14,11 +14,12 @@ import {
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { Address, Asset } from "@rarible/ethereum-api-client"
-import { OrderOpenSeaV1DataV1Side, Platform } from "@rarible/ethereum-api-client"
+import { Platform } from "@rarible/api-client"
 import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
+import { EthOrderOpenSeaV1DataV1Side } from "@rarible/api-client/build/models/OrderData"
 import { getSimpleSendWithInjects, sentTx } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getEthereumConfig } from "../../config"
@@ -223,7 +224,10 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 		const collection = toAddress("0x35f8aee672cdE8e5FD09C93D2BfE4FF5a9cF0756")
 		const minter = toAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
-		const nftTokenId = await sdkBuyer.apis.nftCollection.generateNftTokenId({ collection, minter })
+		const nftTokenId = await sdkBuyer.apis.nftCollection.generateTokenId({
+			collection,
+			minter,
+		})
 
 		const tx = await sdkBuyer.nft.mint({
 			collection: createErc721V3Collection(collection),
@@ -255,7 +259,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
 				exchange: toAddress(wyvernExchange.options.address),
-				side: OrderOpenSeaV1DataV1Side.SELL,
+				side: EthOrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
 
@@ -382,7 +386,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
 				exchange: toAddress(wyvernExchange.options.address),
-				side: OrderOpenSeaV1DataV1Side.SELL,
+				side: EthOrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
 		await mintTestAsset(order.take, sender1Address)
@@ -431,7 +435,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
 				exchange: toAddress(wyvernExchange.options.address),
-				side: OrderOpenSeaV1DataV1Side.SELL,
+				side: EthOrderOpenSeaV1DataV1Side.SELL,
 				feeRecipient: toAddress(sender2Address),
 			},
 		}
@@ -508,10 +512,10 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	// Sell-side orders
 	describe.each([
-		getOrderTemplate("ERC721", "ETH", OrderOpenSeaV1DataV1Side.SELL),
-		getOrderTemplate("ERC721", "ERC20", OrderOpenSeaV1DataV1Side.SELL),
-		getOrderTemplate("ERC1155", "ETH", OrderOpenSeaV1DataV1Side.SELL),
-		getOrderTemplate("ERC1155", "ERC20", OrderOpenSeaV1DataV1Side.SELL),
+		getOrderTemplate("ERC721", "ETH", EthOrderOpenSeaV1DataV1Side.SELL),
+		getOrderTemplate("ERC721", "ERC20", EthOrderOpenSeaV1DataV1Side.SELL),
+		getOrderTemplate("ERC1155", "ETH", EthOrderOpenSeaV1DataV1Side.SELL),
+		getOrderTemplate("ERC1155", "ERC20", EthOrderOpenSeaV1DataV1Side.SELL),
 	])(
 		"side: $data.side $make.assetType.assetClass for $take.assetType.assetClass",
 		(testOrder) => {
@@ -555,8 +559,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	// Buy-side orders
 	describe.each([
-		getOrderTemplate("ERC20", "ERC721", OrderOpenSeaV1DataV1Side.BUY),
-		getOrderTemplate("ERC20", "ERC1155", OrderOpenSeaV1DataV1Side.BUY),
+		getOrderTemplate("ERC20", "ERC721", EthOrderOpenSeaV1DataV1Side.BUY),
+		getOrderTemplate("ERC20", "ERC1155", EthOrderOpenSeaV1DataV1Side.BUY),
 	])(
 		"side: $data.side $make.assetType.assetClass for $take.assetType.assetClass",
 		(testOrder) => {
@@ -608,7 +612,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
 				exchange: toAddress(wyvernExchange.options.address),
-				side: OrderOpenSeaV1DataV1Side.SELL,
+				side: EthOrderOpenSeaV1DataV1Side.SELL,
 				feeRecipient,
 			},
 		}

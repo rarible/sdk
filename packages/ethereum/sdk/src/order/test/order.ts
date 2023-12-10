@@ -1,6 +1,6 @@
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
-import type { OrderForm } from "@rarible/api-client"
+import type { EthEthereumAssetType, OrderForm } from "@rarible/api-client"
 import { getEthUnionAddr } from "../../common/test"
 import type { SimpleOrder } from "../types"
 

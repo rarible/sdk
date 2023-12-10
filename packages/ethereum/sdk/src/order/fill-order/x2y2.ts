@@ -4,6 +4,7 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
+import type { OrderData } from "@rarible/api-client"
 import type { SimpleOrder, SimpleX2Y2Order } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
@@ -22,7 +23,7 @@ export class X2Y2OrderHandler {
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly apis: RaribleEthereumApis,
 	) {}
 

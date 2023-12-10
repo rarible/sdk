@@ -53,6 +53,7 @@ describe("Batch purchase", function () {
 
 		await checkOwnerships(
 			sdkBuyer,
+			config.chainId,
 			orders.map((o) => o.make),
 			toAddress(await buyerWeb3.getFrom())
 		)

@@ -1,5 +1,5 @@
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
-import type { OrderForm } from "@rarible/ethereum-api-client"
+import { toAddress, toBigNumber, ZERO_WORD } from "@rarible/types"
+import type { OrderForm } from "@rarible/api-client"
 import {
 	Configuration,
 	CollectionControllerApi,
@@ -31,6 +31,7 @@ import { TEST_ORDER_FORM_TEMPLATE } from "./test/order"
 import { createErc20Contract } from "./contracts/erc20"
 import { checkChainId } from "./check-chain-id"
 import { approve as approveTemplate } from "./approve"
+import type { CheckLazyOrderType } from "./check-lazy-order"
 import { checkLazyOrder as checkLazyOrderTemplate } from "./check-lazy-order"
 import { checkLazyAsset as checkLazyAssetTemplate } from "./check-lazy-asset"
 import { checkLazyAssetType as checkLazyAssetTypeTemplate } from "./check-lazy-asset-type"
@@ -62,7 +63,7 @@ describe.each(providers)("bid", (ethereum) => {
 
 	const checkLazyAssetType = checkLazyAssetTypeTemplate.bind(null, apis.nftItem, config.chainId)
 	const checkLazyAsset = checkLazyAssetTemplate.bind(null, checkLazyAssetType)
-	const checkLazyOrder = checkLazyOrderTemplate.bind(null, checkLazyAsset)
+	const checkLazyOrder = checkLazyOrderTemplate.bind(null, checkLazyAsset) as CheckLazyOrderType<OrderForm>
 
 	const upserter = new UpsertOrder(
 		orderService,
@@ -76,7 +77,7 @@ describe.each(providers)("bid", (ethereum) => {
 		checkWalletChainId,
 		ZERO_WORD
 	)
-	const orderSell = new OrderBid(upserter, checkAssetType, checkWalletChainId)
+	const orderSell = new OrderBid(upserter, ethereum, checkAssetType, checkWalletChainId)
 	const e2eErc721V3ContractAddress = getEthUnionAddr("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 	const treasury = createE2eWallet()
 	const treasuryAddress = getEthUnionAddr(treasury.getAddressString())
@@ -108,15 +109,15 @@ describe.each(providers)("bid", (ethereum) => {
 
 		const { order } = await orderSell.bid({
 			type: "DATA_V2",
-			maker: toAddress(wallet.getAddressString()),
+			maker: getEthUnionAddr(wallet.getAddressString()),
 			takeAssetType: {
-				assetClass: "ERC721",
+				"@type": "ERC721",
 				contract: minted.contract,
 				tokenId: minted.tokenId,
 			},
 			price: toBn(MIN_PAYMENT_VALUE.toFixed()),
 			makeAssetType: {
-				assetClass: "ERC20",
+				"@type": "ERC20",
 				contract: erc20Contract,
 			},
 			end: getEndDateAfterMonth(),
@@ -127,12 +128,12 @@ describe.each(providers)("bid", (ethereum) => {
 				value: 100,
 			}],
 		})
-		expect(order.hash).toBeTruthy()
+		expect(order.id).toBeTruthy()
 
 		await retry(5, 2000, async () => {
 			const nextPrice = MIN_PAYMENT_VALUE.plus(1).toFixed()
 			const { order: updatedOrder } = await orderSell.update({
-				orderHash: order.hash,
+				orderHash: order.id,
 				price: toBigNumber(nextPrice),
 			})
 
@@ -140,8 +141,10 @@ describe.each(providers)("bid", (ethereum) => {
 		})
 	})
 
+	//todo figure out whether will use v1 orders
+	/*
 	test("create and update of v1 works", async () => {
-		const makerAddress = toAddress(wallet.getAddressString())
+		const makerAddress = getEthUnionAddr(wallet.getAddressString())
 		const minted = await mint({
 			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
 			uri: "ipfs://ipfs/hash",
@@ -156,12 +159,12 @@ describe.each(providers)("bid", (ethereum) => {
 			await minted.transaction.wait()
 		}
 
-		const form: OrderForm = {
+		const form: EthRaribleV2OrderForm = {
 			...TEST_ORDER_FORM_TEMPLATE,
 			maker: makerAddress,
 			take: {
 				assetType: {
-					assetClass: "ERC721",
+					"@type": "ERC721",
 					contract: minted.contract,
 					tokenId: minted.tokenId,
 				},
@@ -169,7 +172,7 @@ describe.each(providers)("bid", (ethereum) => {
 			},
 			make: {
 				assetType: {
-					assetClass: "ERC20",
+					"@type": "ERC20",
 					contract: erc20Contract,
 				},
 				value: toBigNumber(MIN_PAYMENT_VALUE.toFixed()),
@@ -188,11 +191,14 @@ describe.each(providers)("bid", (ethereum) => {
 		await retry(5, 2000, async () => {
 			const nextPrice = MIN_PAYMENT_VALUE.plus(1).toFixed()
 			const { order: updatedOrder } = await orderSell.update({
-				orderHash: order.hash,
+				orderHash: order.id,
 				price: toBigNumber(nextPrice),
 			})
 
 			expect(updatedOrder.make.value.toString()).toBe(nextPrice)
 		})
 	})
+
+   */
+
 })

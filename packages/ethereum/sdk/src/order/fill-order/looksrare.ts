@@ -1,12 +1,13 @@
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils/build/bn"
-import type { Address, AssetType } from "@rarible/ethereum-api-client"
+import type { AssetType } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
-import type { Part } from "@rarible/ethereum-api-client"
+import type { Part } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { BigNumberValue } from "@rarible/utils"
+import type { OrderData } from "@rarible/api-client"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getRequiredWallet } from "../../common/get-required-wallet"
@@ -35,7 +36,7 @@ export class LooksrareOrderHandler {
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly apis: RaribleEthereumApis,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
@@ -49,19 +50,19 @@ export class LooksrareOrderHandler {
 		let isOrderAsk: boolean
 		let contract: Address
 		let tokenId: string
-		if (isNft(make.assetType)) {
+		if (isNft(make.type)) {
 			isOrderAsk = true
-			contract = make.assetType.contract
-			tokenId = make.assetType.tokenId.toString()
+			contract = make.type.contract
+			tokenId = make.type.tokenId.toString()
 		} else {
-			throw new Error(`Only sell orders are supported. Make=${make.assetType.assetClass} is not NFT`)
+			throw new Error(`Only sell orders are supported. Make=${make.type["@type"]} is not NFT`)
 		}
 
 		let currency: Address
-		if (take.assetType.assetClass === "ETH") {
+		if (take.type["@type"] === "ETH") {
 			currency = ZERO_ADDRESS
-		} else if (take.assetType.assetClass === "ERC20") {
-			currency = take.assetType.contract
+		} else if (take.type["@type"] === "ERC20") {
+			currency = take.type.contract
 		} else {
 			throw new Error("Take asset should be ETH or ERC-20 contract")
 		}
@@ -92,7 +93,7 @@ export class LooksrareOrderHandler {
 	getFulfillWrapperData(
 		makerOrder: MakerOrderWithVRS,
 		takerOrderData: TakerOrderWithEncodedParams,
-		assetClass: AssetType["assetClass"]
+		assetClass: AssetType["@type"]
 	) {
 		const provider = getRequiredWallet(this.ethereum)
 
@@ -135,7 +136,7 @@ export class LooksrareOrderHandler {
 		const fulfillData = this.getFulfillWrapperData(
 			makerOrder,
 			takerOrder,
-			request.order.make.assetType.assetClass
+			request.order.make.type["@type"]
 		)
 
 		const { totalFeeBasisPoints, encodedFeesValue: localEncodedFee, feeAddresses } = originFeeValueConvert(originFees)
@@ -209,7 +210,7 @@ export class LooksrareOrderHandler {
 	}
 
 	getBaseOrderFee() {
-		return this.getBaseOrderFeeConfig("LOOKSRARE")
+		return this.getBaseOrderFeeConfig("ETH_LOOKSRARE_ORDER_DATA_V2")
 	}
 
 	getOrderFee(): number {

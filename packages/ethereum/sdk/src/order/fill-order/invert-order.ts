@@ -12,7 +12,7 @@ export function invertOrder<T extends SimpleOrder>(
 	maker: Address,
 	salt: Word = ZERO
 ): T {
-	const isBid = isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION"
+	const isBid = isNft(order.take.type) || order.take.type["@type"] === "COLLECTION"
 
 	const [makeValue, takeValue] = calculateAmounts(
 		toBn(order.make.value),

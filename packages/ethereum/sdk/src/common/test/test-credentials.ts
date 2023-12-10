@@ -1,6 +1,9 @@
 import type { Address } from "@rarible/ethereum-api-client"
-import { toAddress } from "@rarible/types"
+import { toAddress, toUnionAddress } from "@rarible/types"
+import type { UnionAddress } from "@rarible/api-client"
 import type { EthereumNetwork } from "../../types"
+import { createUnionAddressWithChainId } from "../union-converters"
+import { getEthereumConfig } from "../../config"
 
 export const DEV_PK_1 = "0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21"
 export const DEV_PK_2 = "0x4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204c81682cb7"
@@ -41,7 +44,7 @@ const MAP_TEST_CONTRACTS: PartialRecord<EthereumNetwork, Record<TestContractType
 	},
 }
 
-export function getTestContract(env: EthereumNetwork, contract: TestContractType): Address {
+export function getTestContract(env: EthereumNetwork, contract: TestContractType): UnionAddress {
 	const envContracts = MAP_TEST_CONTRACTS[env]
 	if (!envContracts) {
 		throw new Error(`Env ${env} hasn't created`)
@@ -49,5 +52,6 @@ export function getTestContract(env: EthereumNetwork, contract: TestContractType
 	if (!envContracts[contract]) {
 		throw new Error(`Contract ${contract} in ${env} env hasn't created`)
 	}
-	return toAddress(envContracts[contract])
+	const config = getEthereumConfig(env)
+	return createUnionAddressWithChainId(config.chainId, envContracts[contract])
 }

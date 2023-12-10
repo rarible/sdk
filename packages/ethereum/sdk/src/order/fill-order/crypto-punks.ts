@@ -1,6 +1,7 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumFunctionCall, EthereumSendOptions } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { OrderData } from "@rarible/api-client"
 import { getAssetWithFee } from "../get-asset-with-fee"
 import type { EthereumConfig } from "../../config/type"
 import { approve } from "../approve"
@@ -8,7 +9,6 @@ import type { SendFunction } from "../../common/send-transaction"
 import { waitTx } from "../../common/wait-tx"
 import type { SimpleCryptoPunkOrder } from "../types"
 import { createCryptoPunksMarketContract } from "../../nft/contracts/cryptoPunks"
-import type { SimpleOrder } from "../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { invertOrder } from "./invert-order"
 import type { CryptoPunksOrderFillRequest, OrderFillSendData, OrderHandler } from "./types"
@@ -18,14 +18,14 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
 
 	invert(request: CryptoPunksOrderFillRequest, maker: Address): SimpleCryptoPunkOrder {
 		const inverted = invertOrder(request.order, request.amount, maker)
 		inverted.data = {
-			dataType: "CRYPTO_PUNKS_DATA",
+			"@type": "ETH_CRYPTO_PUNKS",
 		}
 		return inverted
 	}
@@ -51,14 +51,14 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		if (initial.make.assetType.assetClass === "CRYPTO_PUNKS") {
+		if (initial.make.type["@type"] === "CRYPTO_PUNKS") {
 			// Call "buyPunk" if makeAsset=cryptoPunk
-			const contract = createCryptoPunksMarketContract(this.ethereum, initial.make.assetType.contract)
-			return contract.functionCall("buyPunk", initial.make.assetType.tokenId)
-		} else if (initial.take.assetType.assetClass === "CRYPTO_PUNKS") {
+			const contract = createCryptoPunksMarketContract(this.ethereum, initial.make.type.contract)
+			return contract.functionCall("buyPunk", initial.make.type.tokenId)
+		} else if (initial.take.type["@type"] === "CRYPTO_PUNKS") {
 			// Call "acceptBid" if takeAsset=cryptoPunk
-			const contract = createCryptoPunksMarketContract(this.ethereum, initial.take.assetType.contract)
-			return contract.functionCall("acceptBidForPunk", initial.take.assetType.tokenId, initial.make.value)
+			const contract = createCryptoPunksMarketContract(this.ethereum, initial.take.type.contract)
+			return contract.functionCall("acceptBidForPunk", initial.take.type.tokenId, initial.make.value)
 		} else {
 			throw new Error("Unsupported punk asset type")
 		}
@@ -67,7 +67,7 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 	getMatchV2Options(
 		left: SimpleCryptoPunkOrder, right: SimpleCryptoPunkOrder,
 	): EthereumSendOptions {
-		if (right.make.assetType.assetClass === "ETH") {
+		if (right.make.type["@type"] === "ETH") {
 			const asset = this.getMakeAssetWithFee(right)
 			return { value: asset.value }
 		} else {
@@ -84,6 +84,6 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 	}
 
 	async getBaseOrderFee(): Promise<number> {
-		return this.getBaseOrderFeeConfig("CRYPTO_PUNK")
+		return this.getBaseOrderFeeConfig("ETH_CRYPTO_PUNKS")
 	}
 }

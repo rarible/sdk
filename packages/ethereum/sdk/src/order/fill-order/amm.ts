@@ -1,10 +1,10 @@
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
+import type { OrderData } from "@rarible/api-client"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getRequiredWallet } from "../../common/get-required-wallet"
-import type { SimpleOrder } from "../types"
 import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "../../types"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import type { RaribleEthereumApis } from "../../common/apis"
@@ -18,7 +18,7 @@ export class AmmOrderHandler {
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly apis: RaribleEthereumApis,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
@@ -73,12 +73,12 @@ export class AmmOrderHandler {
 		const ethereum = getRequiredWallet(this.ethereum)
 
 		let fillData: OrderFillSendData
-		switch (request.order.data.dataType) {
-			case "SUDOSWAP_AMM_DATA_V1":
+		switch (request.order.data["@type"]) {
+			case "ETH_SUDOSWAP_AMM_DATA_V1":
 				fillData = await SudoswapFill.getDirectFillData(ethereum, request, this.config)
 				break
 			default:
-				throw new Error("Unsupported order data type " + request.order.data.dataType)
+				throw new Error("Unsupported order data type " + request.order.data["@type"])
 		}
 
 		return {
@@ -91,8 +91,8 @@ export class AmmOrderHandler {
 		request: AmmOrderFillRequest,
 		feeValue: BigNumber,
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-		if (request.order.take.assetType.assetClass !== "ETH") {
-			throw new Error("Unsupported asset type for take asset " + request.order.take.assetType.assetClass)
+		if (request.order.take.type["@type"] !== "ETH") {
+			throw new Error("Unsupported asset type for take asset " + request.order.take.type["@type"])
 		}
 
 		const fillData = await this.getTransactionDataDirectBuy(request)
@@ -119,7 +119,7 @@ export class AmmOrderHandler {
 	}
 
 	getBaseOrderFee() {
-		return this.getBaseOrderFeeConfig("AMM")
+		return this.getBaseOrderFeeConfig("ETH_SUDOSWAP_AMM_DATA_V1")
 	}
 
 	getOrderFee(): number {

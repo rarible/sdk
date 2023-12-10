@@ -8,10 +8,11 @@ import { getEthereumConfig } from "../../config"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { checkChainId } from "../check-chain-id"
 import { retry } from "../../common/retry"
-import type { SimpleOrder } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
 import { ETHER_IN_WEI } from "../../common"
+import { awaitOrder } from "../test/await-order"
+import { getEthUnionAddr } from "../../common/test"
 import { mintTokensToNewSudoswapPool } from "./amm/test/utils"
 
 describe.skip("amm", () => {
@@ -51,9 +52,7 @@ describe.skip("amm", () => {
 		console.log(pair)
 		const orderHash = "0x" + pair.poolAddress.slice(2).padStart(64, "0")
 		console.log("order:", orderHash)
-		const singleOrder: SimpleOrder = await retry(20, 2000, async () => {
-			return await sdkBuyer.apis.order.getValidatedOrderByHash({ hash: orderHash })
-		})
+		const singleOrder = await awaitOrder(sdkSeller, orderHash)
 		console.log("single order", singleOrder)
 
 		const tx = await sdkBuyer.order.buy({
@@ -61,7 +60,8 @@ describe.skip("amm", () => {
 			amount: 1,
 			originFees: [],
 			assetType: {
-				contract: pair.contract,
+				"@type": "ERC721",
+				contract: getEthUnionAddr(pair.contract),
 				tokenId: pair.items[0],
 			},
 		})
@@ -81,9 +81,7 @@ describe.skip("amm", () => {
 		console.log(pair)
 		const orderHash = "0x" + pair.poolAddress.slice(2).padStart(64, "0")
 		console.log("order:", orderHash)
-		const singleOrder: SimpleOrder = await retry(20, 2000, async () => {
-			return await sdkBuyer.apis.order.getValidatedOrderByHash({ hash: orderHash })
-		})
+		const singleOrder = await awaitOrder(sdkSeller, orderHash)
 
 		const [
 			royalty1Balance,
@@ -96,15 +94,16 @@ describe.skip("amm", () => {
 			amount: 1,
 			originFees: [
 				{
-					account: originFee1Account,
+					account: getEthUnionAddr(originFee1Account),
 					value: 1000,
 				},
 				{
-					account: originFee2Account,
+					account: getEthUnionAddr(originFee2Account),
 					value: 1000,
 				},
 			],
 			assetType: {
+				"@type": "ERC721",
 				contract: pair.contract,
 				tokenId: pair.items[0],
 			},

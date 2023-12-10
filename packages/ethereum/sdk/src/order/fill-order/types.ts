@@ -1,9 +1,15 @@
 import type { Address, BigNumber } from "@rarible/types"
 import type { Word } from "@rarible/types/build/word"
-import type { CryptoPunksAssetType, Erc1155AssetType, Erc721AssetType, Part } from "@rarible/ethereum-api-client"
 import type { Action } from "@rarible/action"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Erc1155LazyAssetType, Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type {
+	EthErc1155LazyAssetType,
+	EthErc721LazyAssetType,
+	EthCryptoPunksAssetType,
+	EthErc1155AssetType,
+	EthErc721AssetType,
+} from "@rarible/api-client"
+import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type {
 	SimpleCryptoPunkOrder,
 	SimpleLegacyOrder,
@@ -18,8 +24,8 @@ import type {
 import type { NftAssetType } from "../check-asset-type"
 
 export type CommonFillRequestAssetType =
-	Erc721AssetType | Erc721LazyAssetType | Erc1155AssetType |
-	Erc1155LazyAssetType | CryptoPunksAssetType | NftAssetType
+  EthErc721AssetType | EthErc721LazyAssetType | EthErc1155AssetType |
+  EthErc1155LazyAssetType | EthCryptoPunksAssetType | NftAssetType
 
 export type CommonFillRequest<T> = {
 	order: T,
@@ -40,11 +46,11 @@ export type RaribleV2OrderFillRequestV2 = CommonFillRequest<SimpleRaribleV2Order
 export type RaribleV2OrderFillRequestV3Sell = CommonFillRequest<SimpleRaribleV2Order> & OrderV2FillDataV3Sell
 export type RaribleV2OrderFillRequestV3Buy = CommonFillRequest<SimpleRaribleV2Order> & OrderV2FillDataV3Buy
 
-export type OrderV2FillDataV2 = { payouts?: Part[], originFees?: Part[] }
+export type OrderV2FillDataV2 = { payouts?: Payout[], originFees?: Payout[] }
 export type OrderV2FillDataV3Buy = {
-	payout?: Part,
-	originFeeFirst?: Part,
-	originFeeSecond?: Part,
+	payout?: Payout,
+	originFeeFirst?: Payout,
+	originFeeSecond?: Payout,
 	marketplaceMarker?: Word,
 }
 export type OrderV2FillDataV3Sell = OrderV2FillDataV3Buy & {
@@ -52,23 +58,23 @@ export type OrderV2FillDataV3Sell = OrderV2FillDataV3Buy & {
 }
 
 export type OpenSeaV1OrderFillRequest =
-  Omit<CommonFillRequest<SimpleOpenSeaV1Order>, "amount"> & { payouts?: Part[], originFees?: Part[] }
+  Omit<CommonFillRequest<SimpleOpenSeaV1Order>, "amount"> & { payouts?: Payout[], originFees?: Payout[] }
 
-export type SeaportV1OrderFillRequest = CommonFillRequest<SimpleSeaportV1Order> & { originFees?: Part[] }
-export type X2Y2OrderFillRequest = CommonFillRequest<SimpleX2Y2Order> & { originFees?: Part[] }
+export type SeaportV1OrderFillRequest = CommonFillRequest<SimpleSeaportV1Order> & { originFees?: Payout[] }
+export type X2Y2OrderFillRequest = CommonFillRequest<SimpleX2Y2Order> & { originFees?: Payout[] }
 
 export type LooksrareOrderFillRequest = CommonFillRequest<SimpleLooksrareOrder> & {
-	originFees?: Part[],
+	originFees?: Payout[],
 	addRoyalty?: boolean
 }
 
 export type LooksrareOrderV2FillRequest = CommonFillRequest<SimpleLooksrareV2Order> & {
-	originFees?: Part[],
+	originFees?: Payout[],
 	addRoyalty?: boolean
 }
 
 export type AmmOrderFillRequest = CommonFillRequest<SimpleAmmOrder> & {
-	originFees?: Part[],
+	originFees?: Payout[],
 	addRoyalty?: boolean
 	assetType?: CommonFillRequestAssetType | CommonFillRequestAssetType[]
 }
@@ -158,7 +164,7 @@ export interface OrderHandler<T extends FillOrderRequest> {
 
 export type GetOrderFillTxData = (request: FillOrderRequest) => Promise<OrderFillTransactionData>
 export type GetOrderBuyBatchTxData =
-	(request: FillBatchSingleOrderRequest[], originFees: Part[] | undefined) => Promise<OrderFillTransactionData>
+	(request: FillBatchSingleOrderRequest[], originFees: Payout[] | undefined) => Promise<OrderFillTransactionData>
 
 export type OrderFillTransactionData = {
 	data: string

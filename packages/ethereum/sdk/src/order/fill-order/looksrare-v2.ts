@@ -10,6 +10,7 @@ import type { NftItemRoyalty } from "@rarible/ethereum-api-client/build/models/N
 import type { Address } from "@rarible/ethereum-api-client"
 import { EthLooksRareOrderDataV2QuoteType } from "@rarible/api-client/build/models/OrderData"
 import type { AssetType } from "@rarible/api-client/build/models/AssetType"
+import type { OrderData } from "@rarible/api-client"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import type { SimpleOrder } from "../types"
@@ -32,7 +33,7 @@ export class LooksrareV2OrderHandler {
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly apis: RaribleEthereumApis,
 	) {

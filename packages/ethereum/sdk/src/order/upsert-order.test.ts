@@ -1,5 +1,5 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
-import type { OrderForm } from "@rarible/api-client"
+import type { OrderForm, EthEthereumAssetType } from "@rarible/api-client"
 import { Configuration, OrderControllerApi } from "@rarible/api-client"
 import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
@@ -70,7 +70,10 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 	})
 
 	test("getPrice should work with ETH", async () => {
-		const request = TEST_ORDER_FORM_TEMPLATE
+		const request = {
+			...TEST_ORDER_FORM_TEMPLATE,
+			price: MIN_PAYMENT_VALUE,
+		}
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
@@ -84,7 +87,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			ZERO_WORD
 		)
 
-		const price = await upserter.getPrice(request, request.take.assetType)
+		const price = await upserter.getPrice(request, request.take.assetType as EthEthereumAssetType)
 		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
 
@@ -122,7 +125,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			ZERO_WORD
 		)
 
-		const price = await upserter.getPrice(request, request.takeAssetType)
+		const price = await upserter.getPrice(request, request.take.assetType)
 		expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
 	})
 

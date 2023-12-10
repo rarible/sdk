@@ -1,8 +1,9 @@
-import type { Address, OrderControllerApi } from "@rarible/ethereum-api-client"
+import type { OrderControllerApi } from "@rarible/api-client"
 import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
 import { toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { Maybe } from "@rarible/types/build/maybe"
+import type { OrderData } from "@rarible/api-client"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
@@ -12,7 +13,6 @@ import { createExchangeV1Contract } from "../contracts/exchange-v1"
 import { toLegacyAssetType } from "../to-legacy-asset-type"
 import { toVrs } from "../../common/to-vrs"
 import { waitTx } from "../../common/wait-tx"
-import type { SimpleOrder } from "../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { invertOrder } from "./invert-order"
 import type { LegacyOrderFillRequest, OrderFillSendData, OrderHandler } from "./types"
@@ -24,7 +24,7 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 		private readonly orderApi: OrderControllerApi,
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
 

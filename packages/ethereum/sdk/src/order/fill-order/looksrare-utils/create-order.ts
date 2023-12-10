@@ -1,21 +1,23 @@
-import type { Address, Erc1155AssetType } from "@rarible/ethereum-api-client"
+import type { Address } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Erc721AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { EthErc721AssetType, EthErc1155AssetType, UnionAddress } from "@rarible/api-client"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import { getRequiredWallet } from "../../../common/get-required-wallet"
 import { waitTx } from "../../../common/wait-tx"
 import { approveErc721 } from "../../approve-erc721"
 import type { SendFunction } from "../../../common/send-transaction"
 import { EIP712_ORDER_TYPES } from "../../eip712"
 import type { SimpleLooksrareOrder } from "../../types"
+import { createUnionAddressWithChainId } from "../../../common/union-converters"
 import type { MakerOrder, SupportedChainId } from "./types"
 import { addressesByNetwork } from "./constants"
 
 export async function makeSellOrder(
 	ethereum: Ethereum,
-	assetType: Erc721AssetType | Erc1155AssetType,
+	assetType: EthErc721AssetType | EthErc1155AssetType,
 	send: SendFunction,
-	exchangeAddress: Address
+	exchangeAddress: UnionAddress
 ) {
 	const provider = getRequiredWallet(ethereum)
 	const signerAddress = toAddress(await provider.getFrom())
@@ -54,37 +56,38 @@ export async function makeSellOrder(
 
 export async function makeRaribleSellOrder(
 	ethereum: Ethereum,
-	assetType: Erc721AssetType | Erc1155AssetType,
+	assetType: EthErc721AssetType | EthErc1155AssetType,
 	send: SendFunction,
-	exchangeAddress: Address
+	exchangeAddress: UnionAddress
 ): Promise<SimpleLooksrareOrder> {
 	const order = await makeSellOrder(ethereum, assetType, send, exchangeAddress)
 
 	return {
-		type: "LOOKSRARE",
-		maker: toAddress(order.signer),
+		maker: createUnionAddressWithChainId(await ethereum.getChainId(), order.signer),
 		make: {
-			assetType,
+			type: assetType,
 			value: toBigNumber(order.amount.toString()),
 		},
 		take: {
-			assetType: { assetClass: "ETH" },
+			type: { "@type": "ETH" },
 			value: toBigNumber(order.price.toString()),
 		},
 		salt: ZERO_WORD,
 		start: parseInt(order.startTime.toString()),
 		end: parseInt(order.endTime.toString()),
 		data: {
-			dataType: "LOOKSRARE_DATA_V1",
+			"@type": "ETH_LOOKSRARE_ORDER_DATA_V1",
 			minPercentageToAsk: parseInt(order.minPercentageToAsk.toString()),
-			strategy: toAddress(order.strategy),
+			strategy: createUnionAddressWithChainId(await ethereum.getChainId(), order.strategy),
 			nonce: parseInt(order.nonce.toString()),
 		},
 		signature: toBinary(order.signature),
 	}
 }
 
-async function getOrderSignature(order: MakerOrder, ethereum: Ethereum, exchangeContract: Address): Promise<string> {
+async function getOrderSignature(
+	order: MakerOrder, ethereum: Ethereum, exchangeContract: UnionAddress
+): Promise<string> {
 	const provider = getRequiredWallet(ethereum)
 
 	if (!exchangeContract) {
@@ -95,7 +98,7 @@ async function getOrderSignature(order: MakerOrder, ethereum: Ethereum, exchange
 		name: "LooksRareExchange",
 		version: "1",
 		chainId: await ethereum.getChainId(),
-		verifyingContract: exchangeContract,
+		verifyingContract: convertToEVMAddress(exchangeContract),
 	}
 
 	const type = {

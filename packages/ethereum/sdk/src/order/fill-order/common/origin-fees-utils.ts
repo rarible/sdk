@@ -1,8 +1,9 @@
-import type { Address, Part } from "@rarible/ethereum-api-client"
-import type { BigNumber } from "@rarible/types"
+import type { Payout } from "@rarible/api-client"
+import type { BigNumber, Address } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { BigNumber as BigNum } from "@rarible/utils"
 import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 
 
 export const ZERO_FEE_VALUE = toBigNumber("0x" + "0".repeat(64))
@@ -34,7 +35,7 @@ export function getPackedFeeValue(fee: number | undefined) {
  * Check requirements for origin fees, converting them to single uint value for fee and list of fee receiver addresses
  * @param originFees
  */
-export function originFeeValueConvert(originFees?: Part[]): {
+export function originFeeValueConvert(originFees?: Array<{account: Address, value: number}>): {
 	encodedFeesValue: BigNumber,
 	totalFeeBasisPoints: number,
 	feeAddresses: readonly [Address, Address]

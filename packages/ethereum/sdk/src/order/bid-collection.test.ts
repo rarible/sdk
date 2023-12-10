@@ -1,10 +1,4 @@
 import { toAddress, toContractAddress, ZERO_WORD } from "@rarible/types"
-import {
-	Configuration,
-	CollectionControllerApi,
-	ItemControllerApi,
-	OrderControllerApi,
-} from "@rarible/api-client"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import Web3 from "web3"
@@ -12,7 +6,6 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toBigNumber } from "@rarible/types"
 import { getItemIdData } from "@rarible/sdk-common/src"
 import { getEthereumConfig } from "../config"
-import { getApiConfig } from "../config/api-config"
 import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
 import { delay } from "../common/retry"
 import { createEthereumApis } from "../common/apis"
@@ -43,7 +36,6 @@ describe("bid", () => {
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 
 	const env: EthereumNetwork = "dev-ethereum"
-	const configuration = new Configuration(getApiConfig(env))
 	const apis = createEthereumApis(env)
 	const config = getEthereumConfig(env)
 	const signOrder2 = signOrderTemplate.bind(null, ethereum2, config)
@@ -124,7 +116,7 @@ describe("bid", () => {
 			amount: 1,
 			originFees: [],
 			assetType: {
-				assetClass: "ERC721",
+				"@type": "ERC721",
 				contract: toAddress(it.testErc721.options.address),
 				tokenId: toBigNumber("1"),
 			},
