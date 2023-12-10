@@ -1,7 +1,7 @@
 {
   "name": "@rarible/sdk",
   "version": "0.13.63-beta.2",
-  "homepage": "https://github.com/rarible/sdk",
+  "homepage": "https://github.com/rarible/sdk#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rarible/sdk.git"
