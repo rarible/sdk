@@ -1,5 +1,10 @@
-import type { Address, Asset, Binary, Erc1155AssetType, Erc721AssetType, Part } from "@rarible/ethereum-api-client"
-import { OrderOpenSeaV1DataV1Side } from "@rarible/ethereum-api-client"
+import type {
+	Asset,
+	Binary,
+	EthErc1155AssetType,
+	EthErc721AssetType,
+	Payout,
+} from "@rarible/api-client"
 import type {
 	Ethereum,
 	EthereumContract,
@@ -8,13 +13,16 @@ import type {
 	EthereumTransaction,
 } from "@rarible/ethereum-provider"
 import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
-import type { BigNumber } from "@rarible/types"
+import type { BigNumber, Address } from "@rarible/types"
 import { backOff } from "exponential-backoff"
 import { BigNumber as BigNum, toBn } from "@rarible/utils"
-import type { OrderOpenSeaV1DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { OrderData } from "@rarible/api-client"
+import type { UnionAddress } from "@rarible/api-client"
+import { convertToEVMAddress } from "@rarible/sdk-common"
+import type { EthOrderOpenSeaV1DataV1 } from "@rarible/api-client/build/models/OrderData"
+import { EthOrderOpenSeaV1DataV1Side } from "@rarible/api-client/build/models/OrderData"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { createOpenseaProxyRegistryEthContract } from "../contracts/proxy-registry-opensea"
@@ -25,7 +33,7 @@ import { getAssetWithFee } from "../get-asset-with-fee"
 import { createOpenseaContract } from "../contracts/exchange-opensea-v1"
 import { toVrs } from "../../common/to-vrs"
 import { waitTx } from "../../common/wait-tx"
-import type { SimpleOpenSeaV1Order, SimpleOrder } from "../types"
+import type { SimpleOpenSeaV1Order } from "../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import { getErc721Contract } from "../../nft/contracts/erc721"
 import { ERC721VersionEnum } from "../../nft/contracts/domain"
@@ -37,6 +45,7 @@ import { getBlockchainFromChainId } from "../../common/get-blockchain-from-chain
 import type { EthereumNetworkConfig, IRaribleEthereumSdkConfig } from "../../types"
 import { id32 } from "../../common/id"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
+import { convertUnionPartsToEVM, createUnionAddressWithChainId } from "../../common/union-converters"
 import type { OpenSeaOrderDTO } from "./open-sea-types"
 import type {
 	OpenSeaV1OrderFillRequest,
@@ -80,19 +89,22 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		return this.config.openSea.metadata || id32("RARIBLE")
 	}
 
-	async invert({ order, payouts }: OpenSeaV1OrderFillRequest, maker: Address): Promise<SimpleOpenSeaV1Order> {
+	async invert({ order, payouts }: OpenSeaV1OrderFillRequest, maker: UnionAddress): Promise<SimpleOpenSeaV1Order> {
 		if (order.data.side === "BUY") {
 			throw new Error("Bid opensea orders is not supported yet")
 		}
 
-		if (order.data.feeRecipient === ZERO_ADDRESS) {
+		if (convertToEVMAddress(order.data.feeRecipient) === ZERO_ADDRESS) {
 			throw new Error("feeRecipient should be specified")
 		}
 
-		const data: OrderOpenSeaV1DataV1 = {
+		const data: EthOrderOpenSeaV1DataV1 = {
 			...order.data,
-			feeRecipient: ZERO_ADDRESS,
-			side: OrderOpenSeaV1DataV1Side.BUY,
+			feeRecipient: createUnionAddressWithChainId(
+				await getRequiredWallet(this.ethereum).getChainId(),
+				ZERO_ADDRESS
+			),
+			side: EthOrderOpenSeaV1DataV1Side.BUY,
 		}
 		const invertedOrder: SimpleOpenSeaV1Order = {
 			...order,
@@ -111,9 +123,11 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 			signature: undefined,
 			data,
 		}
+		const encodedOrder = await this.encodeOrder(invertedOrder)
 		invertedOrder.data = {
 			...invertedOrder.data,
-			...(await this.encodeOrder(invertedOrder)),
+			callData: encodedOrder.callData,
+			replacementPattern: encodedOrder.replacementPattern,
 		}
 
 		return invertedOrder
@@ -121,28 +135,30 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 
 
 	async encodeOrder(order: SimpleOpenSeaV1Order): Promise<EncodedOrderCallData> {
-		const makeAssetType = order.make.assetType
-		const takeAssetType = order.take.assetType
+		const makeAssetType = order.make.type
+		const takeAssetType = order.take.type
 
-		const validatorAddress = order.data.target && order.data.target === this.config.openSea.merkleValidator
-			? order.data.target
+		const validatorAddress = order.data.exchange
+    && convertToEVMAddress(order.data.exchange) === this.config.openSea.merkleValidator
+			? convertToEVMAddress(order.data.exchange)
 			: undefined
 
-		if (makeAssetType.assetClass === "ERC721") {
-			return this.getErc721EncodedData(makeAssetType, order.maker, true, validatorAddress, order.data.callData)
-		} else if (makeAssetType.assetClass === "ERC1155") {
-			return this.getErc1155EncodedData(makeAssetType, order.make.value, order.maker, true, validatorAddress)
-		} else if (takeAssetType.assetClass === "ERC721") {
-			return this.getErc721EncodedData(takeAssetType, order.maker, false, validatorAddress, order.data.callData)
-		} else if (takeAssetType.assetClass === "ERC1155") {
-			return this.getErc1155EncodedData(takeAssetType, order.take.value, order.maker, false, validatorAddress)
+		const evmMaker = convertToEVMAddress(order.maker)
+		if (makeAssetType["@type"] === "ERC721") {
+			return this.getErc721EncodedData(makeAssetType, evmMaker, true, validatorAddress, toBinary(order.data.callData))
+		} else if (makeAssetType["@type"] === "ERC1155") {
+			return this.getErc1155EncodedData(makeAssetType, order.make.value, evmMaker, true, validatorAddress)
+		} else if (takeAssetType["@type"] === "ERC721") {
+			return this.getErc721EncodedData(takeAssetType, evmMaker, false, validatorAddress, toBinary(order.data.callData))
+		} else if (takeAssetType["@type"] === "ERC1155") {
+			return this.getErc1155EncodedData(takeAssetType, order.take.value, evmMaker, false, validatorAddress)
 		} else {
 			throw new Error("should never happen")
 		}
 	}
 
 	async getErc721EncodedData(
-		assetType: Erc721AssetType, maker: Address, isSellSide: boolean,
+		assetType: EthErc721AssetType, maker: Address, isSellSide: boolean,
 		validatorAddress: Address | undefined,  initialCalldata: Binary
 	): Promise<EncodedOrderCallData> {
 		const ethereum = getRequiredWallet(this.ethereum)
@@ -183,7 +199,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 	}
 
 	async getErc1155EncodedData(
-		assetType: Erc1155AssetType, value: BigNumberValue, maker: Address,
+		assetType: EthErc1155AssetType, value: BigNumberValue, maker: Address,
 		isSellSide: boolean, validatorAddress: Address | undefined
 	): Promise<EncodedOrderCallData> {
 		const ethereum = getRequiredWallet(this.ethereum)
@@ -211,11 +227,11 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 	}
 
 	async getBaseOrderFee(): Promise<number> {
-		return this.getBaseOrderFeeConfig("OPEN_SEA_V1")
+		return this.getBaseOrderFeeConfig("ETH_OPEN_SEA_V1")
 	}
 
 	getOrderFee(order: SimpleOpenSeaV1Order): number {
-		if (order.data.feeRecipient === ZERO_ADDRESS) {
+		if (convertToEVMAddress(order.data.feeRecipient) === ZERO_ADDRESS) {
 			return toBn(order.data.takerProtocolFee).plus(order.data.takerRelayerFee).toNumber()
 		} else {
 			return toBn(order.data.makerProtocolFee).plus(order.data.makerRelayerFee).toNumber()
@@ -224,11 +240,12 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 
 	async approve(order: SimpleOpenSeaV1Order, infinite: boolean) {
 		const fee = this.getOrderFee(order)
+		const maker = convertToEVMAddress(order.maker)
 		if (order.data.side === "BUY") {
 			const assetWithFee = getAssetWithFee(order.make, fee)
-			await waitTx(this.approveSingle(order.maker, assetWithFee, infinite))
+			await waitTx(this.approveSingle(maker, assetWithFee, infinite))
 		} else {
-			await waitTx(this.approveSingle(order.maker, order.make, infinite))
+			await waitTx(this.approveSingle(maker, order.make, infinite))
 			const value = toBn(order.take.value)
 				.multipliedBy(fee)
 				.dividedBy(10000)
@@ -238,7 +255,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 				...order.take,
 				value: toBigNumber(value),
 			}
-			await waitTx(this.approveSingle(order.maker, feeOnly, infinite))
+			await waitTx(this.approveSingle(maker, feeOnly, infinite))
 		}
 	}
 
@@ -248,7 +265,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		const isTakeEth = initial.take.assetType.assetClass === "ETH"
+		const isTakeEth = initial.take.type["@type"] === "ETH"
 
 		const atomicMatchFunctionCall = await this.getAtomicMatchFunctionCall(initial, inverted)
 
@@ -256,7 +273,9 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 
 		if (isTakeEth) {
 			const openseaWrapperContract = createExchangeWrapperContract(this.ethereum, this.config.exchange.wrapper)
-			const { encodedFeesValue, feeAddresses } = originFeeValueConvert(request.originFees)
+			const { encodedFeesValue, feeAddresses } = originFeeValueConvert(
+				convertUnionPartsToEVM(request.originFees)
+			)
 			const { data, options } = await this.getTransactionDataForExchangeWrapper(
 				initial,
 				inverted,
@@ -286,7 +305,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 	async getTransactionDataForExchangeWrapper(
 		initial: SimpleOpenSeaV1Order,
 		inverted: SimpleOpenSeaV1Order,
-		originFees: Part[] | undefined,
+		originFees: Payout[] | undefined,
 		feeValue: BigNumber,
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
 		const atomicMatchFunctionCall = await this.getAtomicMatchFunctionCall(initial, inverted)
@@ -309,12 +328,15 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		const isTakeEth = initial.take.assetType.assetClass === "ETH"
+		const isTakeEth = initial.take.type["@type"] === "ETH"
 		const { buy, sell } = getBuySellOrders(initial, inverted)
 		const sellOrderToSignDTO = convertOpenSeaOrderToDTO(this.ethereum, sell)
 		const buyOrderToSignDTO = convertOpenSeaOrderToDTO(this.ethereum, buy)
 
-		const exchangeContract = createOpenseaContract(this.ethereum, initial.data.exchange)
+		const exchangeContract = createOpenseaContract(
+			this.ethereum,
+			convertToEVMAddress(initial.data.exchange)
+		)
 
 		const buyVRS = toVrs(buy.signature || "")
 		const sellVRS = toVrs(sell.signature || "")
@@ -382,19 +404,19 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		switch (asset.assetType.assetClass) {
+		switch (asset.type["@type"]) {
 			case "ERC20": {
-				const contract = asset.assetType.contract
+				const contract = asset.type.contract
 				const operator = this.config.transferProxies.openseaV1
 				return approveErc20(this.ethereum, this.send, contract, maker, operator, asset.value, infinite)
 			}
 			case "ERC721": {
-				const contract = asset.assetType.contract
+				const contract = asset.type.contract
 				const proxyAddress = await this.getRegisteredProxy(maker)
 				return approveErc721(this.ethereum, this.send, contract, maker, proxyAddress)
 			}
 			case "ERC1155": {
-				const contract = asset.assetType.contract
+				const contract = asset.type.contract
 				const proxyAddress = await this.getRegisteredProxy(maker)
 				return approveErc1155(this.ethereum, this.send, contract, maker, proxyAddress)
 			}
@@ -434,9 +456,9 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 }
 
 export async function getMatchOpenseaOptions(
-	buy: SimpleOpenSeaV1Order, originFees?: Part[]
+	buy: SimpleOpenSeaV1Order, originFees?: Payout[]
 ): Promise<EthereumSendOptions> {
-	if (buy.make.assetType.assetClass === "ETH") {
+	if (buy.make.type["@type"] === "ETH") {
 		const origin = originFees?.map(f => f.value).reduce((v, acc) => v + acc, 0)
 		const fee = toBn(buy.data.takerProtocolFee).plus(buy.data.takerRelayerFee).plus(origin || 0).toNumber()
 		const assetWithFee = getAssetWithFee(buy.make, fee)

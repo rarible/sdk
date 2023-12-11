@@ -6,7 +6,7 @@ import type {
 } from "@rarible/ethereum-provider"
 import { ZERO_ADDRESS, ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { OrderData } from "@rarible/api-client"
+import type { OrderData, UnionAddress } from "@rarible/api-client"
 import { hashToSign, orderToStruct, signOrder } from "../sign-order"
 import { getAssetWithFee } from "../get-asset-with-fee"
 import type { EthereumConfig } from "../../config/type"
@@ -45,9 +45,9 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) { }
 
-	invert(request: RaribleV2OrderFillRequest, maker: Address): SimpleRaribleV2Order {
+	invert(request: RaribleV2OrderFillRequest, maker: UnionAddress): SimpleRaribleV2Order {
 		const inverted = invertOrder(request.order, request.amount, maker)
-		switch (request.order.data.dataType) {
+		switch (request.order.data["@type"]) {
 			case "RARIBLE_V2_DATA_V1": {
 				inverted.data = {
 					dataType: "RARIBLE_V2_DATA_V1",

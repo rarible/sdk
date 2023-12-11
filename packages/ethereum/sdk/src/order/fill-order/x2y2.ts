@@ -5,7 +5,7 @@ import type { BigNumber } from "@rarible/types"
 import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
 import type { OrderData } from "@rarible/api-client"
-import type { SimpleOrder, SimpleX2Y2Order } from "../types"
+import type { SimpleX2Y2Order } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
@@ -13,6 +13,7 @@ import type { RaribleEthereumApis } from "../../common/apis"
 import {
 	getUnionBlockchainFromChainId,
 } from "../../common/get-blockchain-from-chain-id"
+import { convertUnionPartsToEVM } from "../../common/union-converters"
 import type { PreparedOrderRequestDataForExchangeWrapper, X2Y2OrderFillRequest } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import type { OrderFillSendData } from "./types"
@@ -51,7 +52,9 @@ export class X2Y2OrderHandler {
 			throw new Error("x2y2 supports max up to 2 origin fee value")
 		}
 
-		const { totalFeeBasisPoints, encodedFeesValue, feeAddresses } = originFeeValueConvert(request.originFees)
+		const { totalFeeBasisPoints, encodedFeesValue, feeAddresses } = originFeeValueConvert(
+			convertUnionPartsToEVM(request.originFees)
+		)
 		const valueForSending = calcValueWithFees(toBigNumber(request.order.take.value), totalFeeBasisPoints)
 
 		const data = await this.getWrapperData(
@@ -117,7 +120,7 @@ export class X2Y2OrderHandler {
 	}
 
 	getBaseOrderFee() {
-		return this.getBaseOrderFeeConfig("X2Y2")
+		return this.getBaseOrderFeeConfig("ETH_X2Y2_ORDER_DATA_V1")
 	}
 
 	getOrderFee(): number {

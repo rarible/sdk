@@ -7,7 +7,7 @@ import type {
 	EthErc721LazyAssetType,
 	EthCryptoPunksAssetType,
 	EthErc1155AssetType,
-	EthErc721AssetType,
+	EthErc721AssetType, UnionAddress,
 } from "@rarible/api-client"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type {
@@ -153,7 +153,7 @@ export type FillOrderStageId = "approve" | "send-tx"
 export type FillBatchOrderAction = Action<FillOrderStageId, FillBatchOrderRequest, EthereumTransaction>
 
 export interface OrderHandler<T extends FillOrderRequest> {
-	invert: (request: T, maker: Address) => T["order"] | Promise<T["order"]>
+	invert: (request: T, maker: UnionAddress) => T["order"] | Promise<T["order"]>
 	approve: (order: T["order"], infinite: boolean) => Promise<void>
 	getTransactionData: (order: T["order"], inverted: T["order"], request: T) => Promise<OrderFillSendData>
 
@@ -182,7 +182,7 @@ export type GetOrderBuyTxData = (request: GetOrderBuyTxRequest) => Promise<Trans
 
 export type GetOrderBuyTxRequest = {
 	request: FillOrderRequest
-	from: Address
+	from: UnionAddress
 }
 
 export type TransactionData = {

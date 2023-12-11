@@ -5,6 +5,7 @@ import type { BigNumber } from "@rarible/types"
 import { toAddress } from "@rarible/types"
 import type { Address } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import type { SendFunction } from "../../../common/send-transaction"
 import type { SimpleSeaportV1Order } from "../../types"
 import { ExchangeWrapperOrderType } from "../types"
@@ -50,9 +51,9 @@ export async function prepareSeaportExchangeData(
 
 	// const conduitKey = OPENSEA_CONDUIT_KEY
 	const conduitKey = NO_CONDUIT
-	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
+	const offererOperator = getConduitByKey(orderParameters.conduitKey, convertToEVMAddress(simpleOrder.data.protocol))
 	// const offererOperator = wrapperAddress
-	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
+	const fulfillerOperator = getConduitByKey(conduitKey, convertToEVMAddress(simpleOrder.data.protocol))
 	// const fulfillerOperator = wrapperAddress
 
 	const extraData = "0x"
@@ -132,13 +133,13 @@ export async function prepareSeaportExchangeData(
 
 	return {
 		data: {
-			marketId: getMarketIdByOpenseaContract(simpleOrder.data.protocol),
+			marketId: getMarketIdByOpenseaContract(convertToEVMAddress(simpleOrder.data.protocol)),
 			amount: toBn(totalPrice).toFixed(),
 			fees: encodedFeesValue,
 			data: fulfillOrdersData.data,
 		},
 		options: {
-			value: isETH(simpleOrder.take.assetType) ? valueForSending.toString() : "0",
+			value: isETH(simpleOrder.take.type) ? valueForSending.toString() : "0",
 		},
 	}
 }

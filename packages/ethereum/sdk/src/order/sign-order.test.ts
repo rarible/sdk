@@ -6,7 +6,6 @@ import { getEthUnionAddr } from "../common/test"
 import { signOrder } from "./sign-order"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import type { SimpleRaribleV2DataV1Order } from "./types"
-import type { SimpleLegacyOrder } from "./types"
 
 describe("signOrder", () => {
 	const { provider } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
@@ -14,24 +13,6 @@ describe("signOrder", () => {
 	const ethereum = new Web3Ethereum({ web3 })
 	const config = getEthereumConfig("dev-ethereum")
 	const signOrderE2e = signOrder.bind(null, ethereum, config)
-
-	test("should sign legacy orders", async () => {
-		const signer = await ethereum.getFrom()
-		const order: SimpleLegacyOrder = {
-			...TEST_ORDER_TEMPLATE,
-			data: {
-				"@type": "ETH_RARIBLE_V1",
-				fee: 100,
-			},
-			maker: getEthUnionAddr(signer),
-		}
-
-		const signature = await signOrderE2e(order)
-
-		expect(signature).toEqual(
-			"0x5fec2e13b0ad828fd4bd8908ca695518ecf8256218cf6d0c1fb3ecb460c8510222a2d52b9946c761217fcadfa88f7e120707c4fa1c441fb6c34f5bf5df821b741b"
-		)
-	})
 
 	test("should sign v2 orders", async () => {
 		const signer = await ethereum.getFrom()

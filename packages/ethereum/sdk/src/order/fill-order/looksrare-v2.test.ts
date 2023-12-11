@@ -1,12 +1,13 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import type { LooksRareOrder } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "../../types"
 import { createRaribleSdk } from "../../index"
 import { DEV_PK_2, GOERLI_CONFIG } from "../../common/test/test-credentials"
+import { awaitOrder } from "../test/await-order"
+import type { SimpleLooksrareV2Order } from "../types"
 
-describe.skip("looksrare v2 fill tests", () => {
+describe("looksrare v2 fill tests", () => {
 	const { provider: providerBuyer } = createE2eProvider(
 		DEV_PK_2,
 		GOERLI_CONFIG
@@ -21,11 +22,10 @@ describe.skip("looksrare v2 fill tests", () => {
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 
 	test("buy", async () => {
-		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
-			hash: "0x8e6c6f9acc448a3f736d31ca2dce2b32918d4c33c92e285a2c9095309f5e38d6",
-		})
+		const hash = "0x8e6c6f9acc448a3f736d31ca2dce2b32918d4c33c92e285a2c9095309f5e38d6"
+		const order = await awaitOrder(sdkBuyer, hash) as SimpleLooksrareV2Order
 		const tx = await sdkBuyer.order.buy({
-			order: order as LooksRareOrder,
+			order: order,
 			amount: 1,
 			originFees: [],
 		})

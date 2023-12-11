@@ -2,7 +2,6 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
-import type { Erc1155AssetType, LooksRareOrder } from "@rarible/ethereum-api-client"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import { ethers } from "ethers"
 import { toBn } from "@rarible/utils/build/bn"
@@ -12,12 +11,12 @@ import { checkChainId } from "../check-chain-id"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { createErc1155V2Collection, createErc721V3Collection } from "../../common/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
-import { awaitOwnership } from "../test/await-ownership"
 import { FILL_CALLDATA_TAG } from "../../config/common"
 import { DEV_PK_1, DEV_PK_2, getTestContract, GOERLI_CONFIG } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
 import { delay } from "../../common/retry"
 import { ETHER_IN_WEI } from "../../common"
+import { getEthUnionAddr } from "../../common/test"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
@@ -90,12 +89,12 @@ describe.skip("looksrare fill", () => {
 		const sellOrder = await makeRaribleSellOrder(
 			ethereumSeller,
 			{
-				assetClass: "ERC721",
+				"@type": "ERC721",
 				contract: sellItem.contract,
 				tokenId: sellItem.tokenId,
 			},
 			send,
-			toAddress(config.exchange.looksrare)
+			getEthUnionAddr(config.exchange.looksrare)
 		)
 		console.log("sellOrder", sellOrder)
 
@@ -103,10 +102,10 @@ describe.skip("looksrare fill", () => {
 			order: sellOrder,
 			amount: 1,
 			originFees: [{
-				account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+				account: getEthUnionAddr("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 				value: 100,
 			}, {
-				account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+				account: getEthUnionAddr("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
 				value: 50,
 			}],
 		})
@@ -123,10 +122,10 @@ describe.skip("looksrare fill", () => {
 			collection: createErc721V3Collection(goerliErc721V3ContractAddress),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			royalties: [{
-				account: toAddress("0xf6a21e471E07793C06D285CEa7AabA8B72029435"),
+				account: getEthUnionAddr("0xf6a21e471E07793C06D285CEa7AabA8B72029435"),
 				value: 300,
 			}, {
-				account: toAddress("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE"),
+				account: getEthUnionAddr("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE"),
 				value: 400,
 			}],
 			lazy: false,
@@ -144,12 +143,12 @@ describe.skip("looksrare fill", () => {
 		const sellOrder = await makeRaribleSellOrder(
 			ethereumSeller,
 			{
-				assetClass: "ERC721",
+				"@type": "ERC721",
 				contract: sellItem.contract,
 				tokenId: sellItem.tokenId,
 			},
 			send,
-			toAddress(config.exchange.looksrare)
+			getEthUnionAddr(config.exchange.looksrare)
 		)
 		console.log("sellOrder", sellOrder)
 
@@ -158,10 +157,10 @@ describe.skip("looksrare fill", () => {
 			amount: 1,
 			addRoyalty: true,
 			originFees: [{
-				account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+				account: getEthUnionAddr("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 				value: 1000,
 			}, {
-				account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+				account: getEthUnionAddr("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
 				value: 2000,
 			}],
 		})
@@ -195,12 +194,12 @@ describe.skip("looksrare fill", () => {
 		const sellOrder = await makeRaribleSellOrder(
 			ethereumSeller,
 			{
-				assetClass: "ERC1155",
+				"@type": "ERC1155",
 				contract: sellItem.contract,
 				tokenId: sellItem.tokenId,
 			},
 			send,
-			toAddress(config.exchange.looksrare)
+			getEthUnionAddr(config.exchange.looksrare)
 		)
 
 		const seller = toAddress(await ethereumSeller.getFrom())
@@ -209,41 +208,17 @@ describe.skip("looksrare fill", () => {
 			amount: 1,
 			originFees: [
 				{
-					account: seller,
+					account: getEthUnionAddr(seller),
 					value: 1000,
 				},
 				{
-					account: seller,
+					account: getEthUnionAddr(seller),
 					value: 1000,
 				},
 			],
 		})
 		await tx.wait()
 	})
-
-	test.skip("fill API order", async () => {
-		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
-			hash: "0x3a7ff5ea8769b18d220f962d215bca2d2667131c2dde5593bb7302a12cd2dda4",
-		}) as LooksRareOrder
-
-		const tx = await sdkBuyer.order.buy({
-			order,
-			amount: 1,
-			originFees: [
-				{
-					account: originFeeAddress,
-					value: 1000,
-				},
-			],
-		})
-		console.log("tx", tx)
-		await tx.wait()
-
-		const assetType = order.make.assetType as Erc1155AssetType
-		const itemId = `${assetType.contract}:${assetType.tokenId}`
-		await awaitOwnership(sdkBuyer, itemId, toAddress(await buyerWeb3.getFrom()), "1")
-	})
-
 
 	test.each([
 		{ provider: buyerWeb3, name: "web3" },
@@ -266,12 +241,12 @@ describe.skip("looksrare fill", () => {
 		const sellOrder = await makeRaribleSellOrder(
 			ethereumSeller,
 			{
-				assetClass: "ERC721",
+				"@type": "ERC721",
 				contract: sellItem.contract,
 				tokenId: sellItem.tokenId,
 			},
 			send,
-			toAddress(config.exchange.looksrare)
+			getEthUnionAddr(config.exchange.looksrare)
 		)
 		console.log("sellOrder", sellOrder)
 
@@ -283,10 +258,10 @@ describe.skip("looksrare fill", () => {
 			order: sellOrder,
 			amount: 1,
 			originFees: [{
-				account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+				account: getEthUnionAddr("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 				value: 100,
 			}, {
-				account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+				account: getEthUnionAddr("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
 				value: 50,
 			}],
 		})

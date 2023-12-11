@@ -136,7 +136,7 @@ export class OrderBid {
 	async prepareOrderUpdateForm(
 		order: SimpleOrder, request: BidUpdateRequest, price: BigNumberValue
 	): Promise<OrderForm> {
-		if (order.data["@type"] === "ETH_RARIBLE_V1" || isOrderV2(order.data)) {
+		if (isOrderV2(order.data)) {
 			if (!request.end && !order.endedAt) {
 				throw new Error("Order should contains 'end' field")
 			}
@@ -153,11 +153,7 @@ export class OrderBid {
 				endedAt: (convertDateNumberToISO(request.end) || order.endedAt)!,
 				blockchain: getBlockchainFromChainId(chainId),
 				"@type": "RARIBLE_V2",
-				data: order.data["@type"] === "ETH_RARIBLE_V1" ? {
-					"@type": "ETH_RARIBLE_V2",
-					payouts: [],
-					originFees: [],
-				} : order.data,
+				data: order.data,
 			}
 		}
 		throw new Error(`Unsupported order type: ${order.data["@type"]}`)

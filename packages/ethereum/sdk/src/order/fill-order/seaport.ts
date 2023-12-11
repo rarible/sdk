@@ -1,16 +1,15 @@
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
-import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
+import { EthSeaportOrderType, EthSeaportItemType } from "@rarible/api-client"
 import type { BigNumber } from "@rarible/types"
 import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
-import type { Asset, Part } from "@rarible/ethereum-api-client"
+import type { Asset, Payout } from "@rarible/api-client"
 import { toBn } from "@rarible/utils/build/bn"
-import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { AssetType } from "@rarible/api-client"
 import { BigNumber as BigNumberUtils } from "@rarible/utils"
 import axios from "axios"
+import type { OrderData } from "@rarible/api-client"
 import { isNft } from "../is-nft"
-import type { SimpleOrder } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import type { EthereumNetwork } from "../../types"
@@ -21,6 +20,7 @@ import { isWeth } from "../../nft/common"
 import {
 	getUnionBlockchainFromChainId,
 } from "../../common/get-blockchain-from-chain-id"
+import { convertUnionPartsToEVM } from "../../common/union-converters"
 import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
@@ -36,7 +36,7 @@ export class SeaportOrderHandler {
 		private readonly send: SendFunction,
 		private readonly config: EthereumConfig,
 		private readonly apis: RaribleEthereumApis,
-		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly getBaseOrderFeeConfig: (type: OrderData["@type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
 	) {
@@ -102,7 +102,7 @@ export class SeaportOrderHandler {
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
-		if (order.start === undefined || order.end === undefined) {
+		if (order.startedAt === undefined || order.endedAt === undefined) {
 			throw new Error("Order should includes start/end fields")
 		}
 
@@ -118,12 +118,12 @@ export class SeaportOrderHandler {
 		}
 
 		if (!order.signature || order.signature === "0x") {
-			if (!request.order.hash) {
-				throw new Error("getSeaportOrderSignature error: order.hash does not exist")
+			if (!request.order.id) {
+				throw new Error("getSeaportOrderSignature error: order.id does not exist")
 			}
 
 			order.signature = await this.getSignature({
-				hash: request.order.hash,
+				hash: request.order.id,
 				protocol: request.order.data.protocol,
 			})
 			if (!order.signature) {
@@ -148,11 +148,11 @@ export class SeaportOrderHandler {
 
 	convertOriginFeesToTips(request: SeaportV1OrderFillRequest): TipInputItem[] | undefined {
 		const { make } = request.order
-		const feeBase = make.assetType.assetClass === "ERC1155" && !toBn(request.amount).isEqualTo(make.value)
+		const feeBase = make.type["@type"] === "ERC1155" && !toBn(request.amount).isEqualTo(make.value)
 			? toBn(request.order.take.value).div(make.value).multipliedBy(request.amount)
 			: toBn(request.order.take.value)
 		return request.originFees?.map(fee => ({
-			token: getSeaportToken(request.order.take.assetType),
+			token: getSeaportToken(request.order.take.type),
 			amount: feeBase
 				.multipliedBy(toBn(fee.value))
 				.dividedBy(10000)
@@ -164,7 +164,7 @@ export class SeaportOrderHandler {
 
 	async getTransactionDataForExchangeWrapper(
 		request: SeaportV1OrderFillRequest,
-		originFees: Part[] | undefined,
+		originFees: Payout[] | undefined,
 		feeValue: BigNumber,
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
 		if (!this.ethereum) {
@@ -173,11 +173,13 @@ export class SeaportOrderHandler {
 
 		const { unitsToFill } = getUnitsToFill(request)
 
-		const { totalFeeBasisPoints } = originFeeValueConvert(originFees)
+		const { totalFeeBasisPoints } = originFeeValueConvert(
+			convertUnionPartsToEVM(originFees)
+		)
 
 		if (!request.order.signature || request.order.signature === "0x") {
 			request.order.signature = await this.getSignature({
-				hash: request.order.hash,
+				hash: request.order.id,
 				protocol: request.order.data.protocol,
 			})
 			if (!request.order.signature) {
@@ -189,7 +191,7 @@ export class SeaportOrderHandler {
 			throw new Error("Exchange wrapper is not defined for Seaport tx")
 		}
 
-		const takeAssetType = request.order.take.assetType
+		const takeAssetType = request.order.take.type
 		let feeValueWithCurrency = feeValue
 		if (isWeth(takeAssetType, this.config)) {
 			feeValueWithCurrency = setFeesCurrency(feeValueWithCurrency, true)
@@ -218,13 +220,13 @@ export class SeaportOrderHandler {
 		let valueWithOriginFees = calcValueWithFees(totalPrice, feesData.totalFeeBasisPoints)
 
 		return {
-			assetType: take.assetType,
+			type: take.type,
 			value: toBigNumber(valueWithOriginFees.toFixed()),
 		}
 	}
 
 	getBaseOrderFee() {
-		return this.getBaseOrderFeeConfig("SEAPORT_V1")
+		return this.getBaseOrderFeeConfig("ETH_BASIC_SEAPORT_DATA_V1")
 	}
 
 	getOrderFee(): number {
@@ -236,10 +238,10 @@ function getUnitsToFill(request: SeaportV1OrderFillRequest): {
 	unitsToFill: number | undefined,
 	takeIsNft: boolean,
 } {
-	const takeIsNft = isNft(request.order.take.assetType)
-	const makeIsNft = isNft(request.order.make.assetType)
+	const takeIsNft = isNft(request.order.take.type)
+	const makeIsNft = isNft(request.order.make.type)
 	const unitsToFill =
-		request.order.make.assetType.assetClass === "ERC1155" || request.order.take.assetType.assetClass === "ERC1155" ?
+		request.order.make.type["@type"] === "ERC1155" || request.order.take.type["@type"] === "ERC1155" ?
 			request.amount : undefined
 	const isSupportedPartialFill = request.order.data.orderType === "PARTIAL_RESTRICTED" ||
 		request.order.data.orderType === "PARTIAL_OPEN"
@@ -263,30 +265,30 @@ function getUnitsToFill(request: SeaportV1OrderFillRequest): {
 	}
 }
 
-export function convertOrderType(type: SeaportOrderType): OrderType {
+export function convertOrderType(type: EthSeaportOrderType): OrderType {
 	switch (type) {
-		case SeaportOrderType.FULL_OPEN: return OrderType.FULL_OPEN
-		case SeaportOrderType.PARTIAL_OPEN: return OrderType.PARTIAL_OPEN
-		case SeaportOrderType.FULL_RESTRICTED: return OrderType.FULL_RESTRICTED
-		case SeaportOrderType.PARTIAL_RESTRICTED: return OrderType.PARTIAL_RESTRICTED
+		case EthSeaportOrderType.FULL_OPEN: return OrderType.FULL_OPEN
+		case EthSeaportOrderType.PARTIAL_OPEN: return OrderType.PARTIAL_OPEN
+		case EthSeaportOrderType.FULL_RESTRICTED: return OrderType.FULL_RESTRICTED
+		case EthSeaportOrderType.PARTIAL_RESTRICTED: return OrderType.PARTIAL_RESTRICTED
 		default: throw new Error(`Unrecognized order type=${type}`)
 	}
 }
 
-export function convertItemType(type: SeaportItemType): ItemType {
+export function convertItemType(type: EthSeaportItemType): ItemType {
 	switch (type) {
-		case SeaportItemType.NATIVE: return ItemType.NATIVE
-		case SeaportItemType.ERC20: return ItemType.ERC20
-		case SeaportItemType.ERC721: return ItemType.ERC721
-		case SeaportItemType.ERC721_WITH_CRITERIA: return ItemType.ERC721_WITH_CRITERIA
-		case SeaportItemType.ERC1155: return ItemType.ERC1155
-		case SeaportItemType.ERC1155_WITH_CRITERIA: return ItemType.ERC1155_WITH_CRITERIA
+		case EthSeaportItemType.NATIVE: return ItemType.NATIVE
+		case EthSeaportItemType.ERC20: return ItemType.ERC20
+		case EthSeaportItemType.ERC721: return ItemType.ERC721
+		case EthSeaportItemType.ERC721_WITH_CRITERIA: return ItemType.ERC721_WITH_CRITERIA
+		case EthSeaportItemType.ERC1155: return ItemType.ERC1155
+		case EthSeaportItemType.ERC1155_WITH_CRITERIA: return ItemType.ERC1155_WITH_CRITERIA
 		default: throw new Error(`Unrecognized item type=${type}`)
 	}
 }
 
 export function getSeaportToken(assetType: AssetType): string {
-	switch (assetType.assetClass) {
+	switch (assetType["@type"]) {
 		case "ETH": return ZERO_ADDRESS
 		case "ERC20": return assetType.contract
 		default: throw new Error("Asset type should be currency token")

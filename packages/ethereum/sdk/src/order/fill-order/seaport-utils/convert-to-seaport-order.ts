@@ -1,12 +1,13 @@
 import type { SimpleSeaportV1Order } from "../../types"
 import { convertItemType, convertOrderType } from "../seaport"
+import { convertISOStringToNumber } from "../../../common"
 import type { OrderWithCounter } from "./types"
 
 export function convertAPIOrderToSeaport(order: SimpleSeaportV1Order): OrderWithCounter {
 	if (!order.signature) {
 		throw new Error("Signature should exists")
 	}
-	if (order.start === undefined || order.end === undefined) {
+	if (order.startedAt === undefined || order.endedAt === undefined) {
 		throw new Error("Order should includes start/end fields")
 	}
 
@@ -20,8 +21,8 @@ export function convertAPIOrderToSeaport(order: SimpleSeaportV1Order): OrderWith
 			offerer: order.maker,
 			zone: order.data.zone,
 			orderType: convertOrderType(order.data.orderType),
-			startTime: order.start.toString(),
-			endTime: order.end.toString(),
+			startTime: convertISOStringToNumber(order.startedAt)!.toString(),
+			endTime: convertISOStringToNumber(order.endedAt)!.toString(),
 			zoneHash: order.data.zoneHash,
 			salt: order.salt,
 			offer: order.data.offer.map(offerItem => ({

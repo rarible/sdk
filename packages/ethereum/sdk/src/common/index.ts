@@ -11,3 +11,8 @@ export function convertDateNumberToISO(time: number | undefined): string | undef
 	if (time === undefined) return undefined
 	return new Date(time * 1000).toISOString()
 }
+
+export function convertISOStringToNumber(time: string | undefined): number | undefined {
+	if (time === undefined) return undefined
+	return new Date(time).getTime()
+}

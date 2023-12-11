@@ -3,6 +3,7 @@ import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
+import { convertToEVMAddress } from "@rarible/sdk-common"
 import type { SimpleSeaportV1Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
@@ -62,8 +63,14 @@ export async function fulfillOrder(
 	const { offerer, offer, consideration } = orderParameters
 	const fulfillerAddress = await ethereum.getFrom()
 	const conduitKey = OPENSEA_CONDUIT_KEY
-	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
-	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
+	const offererOperator = getConduitByKey(
+		orderParameters.conduitKey,
+		convertToEVMAddress(simpleOrder.data.protocol)
+	)
+	const fulfillerOperator = getConduitByKey(
+		conduitKey,
+		convertToEVMAddress(simpleOrder.data.protocol)
+	)
 
 	const extraData = "0x"
 	const recipientAddress = ZERO_ADDRESS

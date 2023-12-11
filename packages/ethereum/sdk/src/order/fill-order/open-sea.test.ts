@@ -13,13 +13,15 @@ import {
 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import type { Address, Asset } from "@rarible/ethereum-api-client"
+import type { Asset } from "@rarible/api-client"
 import { Platform } from "@rarible/api-client"
 import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
-import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
+import type { Address } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary, toUnionAddress, toWord, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
 import { EthOrderOpenSeaV1DataV1Side } from "@rarible/api-client/build/models/OrderData"
+import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
 import { getSimpleSendWithInjects, sentTx } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getEthereumConfig } from "../../config"
@@ -42,6 +44,7 @@ import { createRaribleSdk } from "../../index"
 import { createErc721V3Collection } from "../../common/mint"
 import type { ERC721RequestV3 } from "../../nft/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
+import { getEthUnionAddr } from "../../common/test"
 import {
 	getAtomicMatchArgAddresses,
 	getAtomicMatchArgCommonData,
@@ -151,22 +154,22 @@ describe.skip("fillOrder: Opensea orders", function () {
 	})
 
 	async function mintTestAsset(asset: Asset, sender: Address): Promise<any> {
-		switch (asset.assetType.assetClass) {
+		switch (asset.type["@type"]) {
 			case "ERC20": {
 				return await sentTx(it.testErc20.methods.mint(sender, toBn(asset.value).multipliedBy(10)), { from: sender })
 			}
 			case "ERC721": {
-				return await sentTx(it.testErc721.methods.mint(sender, asset.assetType.tokenId, "0x"), { from: sender })
+				return await sentTx(it.testErc721.methods.mint(sender, asset.type.tokenId, "0x"), { from: sender })
 			}
 			case "ERC1155": {
-				return await sentTx(it.testErc1155.methods.mint(sender, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10), "0x"), { from: sender })
+				return await sentTx(it.testErc1155.methods.mint(sender, asset.type.tokenId, toBn(asset.value).multipliedBy(10), "0x"), { from: sender })
 			}
 			default:
 		}
 	}
 
 	async function getBalance(asset: Asset, sender: Address): Promise<string> {
-		switch (asset.assetType.assetClass) {
+		switch (asset.type["@type"]) {
 			case "ETH": {
 				return toBn(await web3.eth.getBalance(sender)).toString()
 			}
@@ -177,38 +180,38 @@ describe.skip("fillOrder: Opensea orders", function () {
 				return toBn(await it.testErc721.methods.balanceOf(sender).call()).toString()
 			}
 			case "ERC1155": {
-				return toBn(await it.testErc1155.methods.balanceOf(sender, asset.assetType.tokenId).call()).toString()
+				return toBn(await it.testErc1155.methods.balanceOf(sender, asset.type.tokenId).call()).toString()
 			}
 			default: throw new Error("Should specify the ERC asset")
 		}
 	}
 
 	function setTestContract(side: Asset): Asset {
-		switch (side.assetType.assetClass) {
+		switch (side.type["@type"]) {
 			case "ERC20": {
 				return {
 					...side,
-					assetType: {
-						...side.assetType,
-						contract: toAddress(it.testErc20.options.address),
+					type: {
+						...side.type,
+						contract: getEthUnionAddr(it.testErc20.options.address),
 					},
 				}
 			}
 			case "ERC721": {
 				return {
 					...side,
-					assetType: {
-						...side.assetType,
-						contract: toAddress(it.testErc721.options.address),
+					type: {
+						...side.type,
+						contract: getEthUnionAddr(it.testErc721.options.address),
 					},
 				}
 			}
 			case "ERC1155": {
 				return {
 					...side,
-					assetType: {
-						...side.assetType,
-						contract: toAddress(it.testErc1155.options.address),
+					type: {
+						...side.type,
+						contract: getEthUnionAddr(it.testErc1155.options.address),
 					},
 				}
 			}
@@ -222,8 +225,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 		const sdkBuyer = createRaribleSdk(buyerWeb3, "polygon")
 
-		const collection = toAddress("0x35f8aee672cdE8e5FD09C93D2BfE4FF5a9cF0756")
-		const minter = toAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
+		const collection = toUnionAddress(`${Blockchain.POLYGON}:0x35f8aee672cdE8e5FD09C93D2BfE4FF5a9cF0756`)
+		const minter = toUnionAddress(`${Blockchain.POLYGON}:0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC`)
 		const nftTokenId = await sdkBuyer.apis.nftCollection.generateTokenId({
 			collection,
 			minter,
@@ -254,11 +257,11 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const order: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
 			make: getAssetTypeBlank("ERC721"),
-			maker: toAddress(sender1Address),
+			maker: getEthUnionAddr(sender1Address),
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: getEthUnionAddr(wyvernExchange.options.address),
 				side: EthOrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
@@ -381,11 +384,11 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const order: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
 			make: getAssetTypeBlank("ERC721"),
-			maker: toAddress(sender1Address),
+			maker: getEthUnionAddr(sender1Address),
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: getEthUnionAddr(wyvernExchange.options.address),
 				side: EthOrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
@@ -406,12 +409,15 @@ describe.skip("fillOrder: Opensea orders", function () {
 			ethereum1,
 			send1,
 			{
-				openseaV1: toAddress(wyvernExchange.options.address),
+				openSea: {
+					proxyRegistry: getEthUnionAddr(wyvernExchange.options.address) as any,
+					metadata: toWord("0x"),
+				},
 				v1: ZERO_ADDRESS,
 				v2: ZERO_ADDRESS,
 				wrapper: toAddress(it.exchangeWrapper.options.address),
 				x2y2: ZERO_ADDRESS,
-			},
+			} as any,
 			checkChainId.bind(null, ethereum1, config),
 			apis,
 			{
@@ -430,13 +436,13 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const order: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
 			make: getAssetTypeBlank("ERC721"),
-			maker: toAddress(sender1Address),
+			maker: getEthUnionAddr(sender1Address),
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: getEthUnionAddr(wyvernExchange.options.address),
 				side: EthOrderOpenSeaV1DataV1Side.SELL,
-				feeRecipient: toAddress(sender2Address),
+				feeRecipient: getEthUnionAddr(sender2Address),
 			},
 		}
 		await mintTestAsset(order.take, sender1Address)
@@ -531,9 +537,9 @@ describe.skip("fillOrder: Opensea orders", function () {
 				order.data.takerProtocolFee = toBigNumber("500")
 				order.data.makerRelayerFee = toBigNumber("500")
 				order.data.makerProtocolFee = toBigNumber("500")
-				order.data.exchange = toAddress(wyvernExchange.options.address)
-				order.data.feeRecipient = toAddress(feeRecipient)
-				order.maker = toAddress(nftOwner)
+				order.data.exchange = getEthUnionAddr(wyvernExchange.options.address)
+				order.data.feeRecipient = getEthUnionAddr(feeRecipient)
+				order.maker = getEthUnionAddr(nftOwner)
 
 				await mintTestAsset(order.make, nftOwner)
 				await mintTestAsset(order.take, nftBuyer)
@@ -570,13 +576,13 @@ describe.skip("fillOrder: Opensea orders", function () {
 			const nftBuyerEthereum = ethereum1
 
 			beforeEach(async () => {
-				order.data.exchange = toAddress(wyvernExchange.options.address)
+				order.data.exchange = getEthUnionAddr(wyvernExchange.options.address)
 				order.data.makerRelayerFee = toBigNumber("500")
 				order.data.makerProtocolFee = toBigNumber("500")
 				order.data.takerRelayerFee = toBigNumber("500")
 				order.data.takerProtocolFee = toBigNumber("500")
-				order.data.feeRecipient = feeRecipient
-				order.maker = toAddress(nftBuyer)
+				order.data.feeRecipient = getEthUnionAddr(feeRecipient)
+				order.maker = getEthUnionAddr(nftBuyer)
 				order.make = setTestContract(order.make)
 				order.take = setTestContract(order.take)
 
@@ -607,16 +613,19 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const sell: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
 			make: getAssetTypeBlank("ERC721"),
-			maker: toAddress(sender1Address),
+			maker: getEthUnionAddr(sender1Address),
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: getEthUnionAddr(wyvernExchange.options.address),
 				side: EthOrderOpenSeaV1DataV1Side.SELL,
-				feeRecipient,
+				feeRecipient: getEthUnionAddr(feeRecipient),
 			},
 		}
-		const buy = await openSeaFillHandler1.invert({ order: sell }, sender1Address)
+		const buy = await openSeaFillHandler1.invert(
+			{ order: sell },
+			getEthUnionAddr(sender1Address)
+		)
 		const buyDTO = convertOpenSeaOrderToDTO(ethereum1, buy)
 		const sellDTO = convertOpenSeaOrderToDTO(ethereum1, sell)
 

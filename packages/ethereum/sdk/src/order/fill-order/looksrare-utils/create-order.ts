@@ -1,4 +1,3 @@
-import type { Address } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { EthErc721AssetType, EthErc1155AssetType, UnionAddress } from "@rarible/api-client"
@@ -10,6 +9,7 @@ import type { SendFunction } from "../../../common/send-transaction"
 import { EIP712_ORDER_TYPES } from "../../eip712"
 import type { SimpleLooksrareOrder } from "../../types"
 import { createUnionAddressWithChainId } from "../../../common/union-converters"
+import { convertDateNumberToISO } from "../../../common"
 import type { MakerOrder, SupportedChainId } from "./types"
 import { addressesByNetwork } from "./constants"
 
@@ -73,8 +73,8 @@ export async function makeRaribleSellOrder(
 			value: toBigNumber(order.price.toString()),
 		},
 		salt: ZERO_WORD,
-		start: parseInt(order.startTime.toString()),
-		end: parseInt(order.endTime.toString()),
+		startedAt: convertDateNumberToISO(+order.startTime.toString()),
+		endedAt: convertDateNumberToISO(+order.endTime.toString()),
 		data: {
 			"@type": "ETH_LOOKSRARE_ORDER_DATA_V1",
 			minPercentageToAsk: parseInt(order.minPercentageToAsk.toString()),

@@ -13,7 +13,6 @@ import type { AssetType } from "@rarible/api-client/build/models/AssetType"
 import type { OrderData } from "@rarible/api-client"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
-import type { SimpleOrder } from "../types"
 import type { EthereumNetwork } from "../../types"
 import type { RaribleEthereumApis } from "../../common/apis"
 import { createLooksrareV2Exchange } from "../contracts/looksrare-v2"
@@ -22,7 +21,8 @@ import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import { isNft } from "../is-nft"
 import type { SimpleLooksrareV2Order } from "../types"
 import { createLooksrareV2Validator } from "../contracts/looksrare-v2-validator"
-import { convertUnionRoyalties, createUnionItemId } from "../../common/union-converters"
+import { convertUnionPartsToEVM, convertUnionRoyalties, createUnionItemId } from "../../common/union-converters"
+import { convertISOStringToNumber } from "../../common"
 import type { PreparedOrderRequestDataForExchangeWrapper, OrderFillSendData, LooksrareOrderV2FillRequest } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { calcValueWithFees, originFeeValueConvert } from "./common/origin-fees-utils"
@@ -79,8 +79,8 @@ export class LooksrareV2OrderHandler {
 			signer: makerOrder.maker,
 			strategyId: makerOrder.data.strategyId,
 			collectionType: getCollectionType(makerOrder.make.type),
-			startTime: makerOrder.start || 0,
-			endTime: makerOrder.end || 0,
+			startTime: convertISOStringToNumber(makerOrder.startedAt) || 0,
+			endTime: convertISOStringToNumber(makerOrder.endedAt) || 0,
 			price: take.value,
 			additionalParameters: toBinary(makerOrder.data.additionalParameters),
 			amounts: [amount.toString()],
@@ -156,7 +156,11 @@ export class LooksrareV2OrderHandler {
 	}
 
 	async getTransactionData(request: LooksrareOrderV2FillRequest): Promise<OrderFillSendData> {
-		const { requestData, feeAddresses } = await this.prepareTransactionData(request, request.originFees, undefined)
+		const { requestData, feeAddresses } = await this.prepareTransactionData(
+			request,
+			convertUnionPartsToEVM(request.originFees),
+			undefined
+		)
 
 		const provider = getRequiredWallet(this.ethereum)
 		const wrapperContract = createExchangeWrapperContract(provider, this.config.exchange.wrapper)
@@ -235,7 +239,7 @@ export class LooksrareV2OrderHandler {
 	}
 
 	getBaseOrderFee() {
-		return this.getBaseOrderFeeConfig("LOOKSRARE")
+		return this.getBaseOrderFeeConfig("ETH_LOOKSRARE_ORDER_DATA_V2")
 	}
 
 }

@@ -1,14 +1,13 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { toAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
-import type { AssetType } from "@rarible/api-client"
+import type { AssetType, UnionAddress } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type { OrderData } from "@rarible/api-client"
+import type { GetAmmOrderTradeInfoRequest } from "@rarible/api-client/build/apis/OrderControllerApi"
 import type {
 	SimpleCryptoPunkOrder,
-	SimpleLegacyOrder,
 	SimpleOpenSeaV1Order,
 	SimpleOrder,
 	SimpleRaribleV2Order,
@@ -22,13 +21,13 @@ import { checkLazyAssetType } from "../check-lazy-asset-type"
 import { checkChainId } from "../check-chain-id"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import type { EthereumNetwork } from "../../types"
+import { createUnionAddressWithChainId } from "../../common/union-converters"
 import type {
 	CryptoPunksOrderFillRequest,
 	FillOrderAction,
 	FillOrderRequest,
 	FillOrderStageId,
 	GetOrderBuyTxRequest,
-	LegacyOrderFillRequest,
 	OpenSeaV1OrderFillRequest,
 	OrderFillSendData,
 	OrderFillTransactionData,
@@ -43,7 +42,6 @@ import type {
 	X2Y2OrderFillRequest,
 	AmmOrderFillRequest,
 } from "./types"
-import { RaribleV1OrderHandler } from "./rarible-v1"
 import { RaribleV2OrderHandler } from "./rarible-v2"
 import { OpenSeaOrderHandler } from "./open-sea"
 import { CryptoPunksOrderHandler } from "./crypto-punks"
@@ -56,7 +54,6 @@ import { LooksrareV2OrderHandler } from "./looksrare-v2"
 import type { LooksrareOrderV2FillRequest } from "./types"
 
 export class OrderFiller {
-	v1Handler: RaribleV1OrderHandler
 	v2Handler: RaribleV2OrderHandler
 	openSeaHandler: OpenSeaOrderHandler
 	punkHandler: CryptoPunksOrderHandler
@@ -81,14 +78,6 @@ export class OrderFiller {
 		this.getBaseOrderFillFee = this.getBaseOrderFillFee.bind(this)
 		this.getTransactionData = this.getTransactionData.bind(this)
 		this.getBuyTx = this.getBuyTx.bind(this)
-		this.v1Handler = new RaribleV1OrderHandler(
-			ethereum,
-			apis.order,
-			send,
-			config,
-			getBaseOrderFee,
-			sdkConfig,
-		)
 		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
 		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
 		this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
@@ -136,7 +125,7 @@ export class OrderFiller {
 					if (this.isNonInvertableOrder(request.order)) {
 						return { request, inverted: request.order }
 					}
-					const from = toAddress(await this.ethereum.getFrom())
+					const from = createUnionAddressWithChainId(await this.ethereum.getChainId(), await this.ethereum.getFrom())
 					const inverted = await this.invertOrder(request, from)
 
 					if (request.assetType && inverted.make.type["@type"] === "COLLECTION") {
@@ -191,10 +180,8 @@ export class OrderFiller {
 		}
 	}
 
-	private async invertOrder(request: FillOrderRequest, from: Address) {
+	private async invertOrder(request: FillOrderRequest, from: UnionAddress) {
 		switch (request.order.data["@type"]) {
-			case "ETH_RARIBLE_V1":
-				return this.v1Handler.invert(<LegacyOrderFillRequest>request, from)
 			case "ETH_RARIBLE_V2":
 			case "ETH_RARIBLE_V2_2":
 			case "ETH_RARIBLE_V2_DATA_V3_SELL":
@@ -217,15 +204,13 @@ export class OrderFiller {
 
 	private async approveOrder(inverted: SimpleOrder, isInfinite: boolean) {
 		switch (inverted.data["@type"]) {
-			case "ETH_RARIBLE_V1":
-				return this.v1Handler.approve(inverted, isInfinite)
 			case "ETH_RARIBLE_V2":
 			case "ETH_RARIBLE_V2_2":
 			case "ETH_RARIBLE_V2_DATA_V3_SELL":
 			case "ETH_RARIBLE_V2_DATA_V3_BUY":
-				return this.v2Handler.approve(inverted, isInfinite)
+				return this.v2Handler.approve(inverted as SimpleRaribleV2Order, isInfinite)
 			case "ETH_OPEN_SEA_V1":
-				return this.openSeaHandler.approve(inverted, isInfinite)
+				return this.openSeaHandler.approve(inverted as SimpleOpenSeaV1Order, isInfinite)
 			case "ETH_BASIC_SEAPORT_DATA_V1":
 				throw new Error("Approve for Seaport orders is not implemented yet")
 			case "ETH_X2Y2_ORDER_DATA_V1":
@@ -233,7 +218,7 @@ export class OrderFiller {
 			case "ETH_SUDOSWAP_AMM_DATA_V1":
 				throw new Error("Approve for AMM orders is not implemented yet")
 			case "ETH_CRYPTO_PUNKS":
-				return this.punkHandler.approve(inverted, isInfinite)
+				return this.punkHandler.approve(inverted as SimpleCryptoPunkOrder, isInfinite)
 			default:
 				throw new Error(`Unsupported order: ${JSON.stringify(inverted)}`)
 		}
@@ -252,12 +237,6 @@ export class OrderFiller {
 		request: FillOrderRequest, inverted: SimpleOrder
 	): Promise<OrderFillSendData> {
 		switch (request.order.data["@type"]) {
-			case "ETH_RARIBLE_V1":
-				return this.v1Handler.getTransactionData(
-          <SimpleLegacyOrder>request.order,
-          <SimpleLegacyOrder>inverted,
-          <LegacyOrderFillRequest>request
-				)
 			case "ETH_RARIBLE_V2":
 			case "ETH_RARIBLE_V2_2":
 			case "ETH_RARIBLE_V2_DATA_V3_SELL":
@@ -300,7 +279,13 @@ export class OrderFiller {
 		}
 		await checkChainId(this.ethereum, this.config)
 		const from = toAddress(await this.ethereum.getFrom())
-		const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
+		const unionFromAddr = createUnionAddressWithChainId(
+			await this.ethereum.getChainId(),
+			await this.ethereum.getFrom()
+		)
+		const inverted = this.isNonInvertableOrder(request.order)
+			? request.order
+			: await this.invertOrder(request, unionFromAddr)
 		if (request.assetType && inverted.make.type["@type"] === "COLLECTION") {
 			inverted.make.type = await this.checkAssetType(request.assetType)
 		}
@@ -317,8 +302,6 @@ export class OrderFiller {
 
 	async getOrderFee(order: SimpleOrder): Promise<number> {
 		switch (order.data["@type"]) {
-			case "ETH_RARIBLE_V1":
-				return this.v1Handler.getOrderFee(order as SimpleLegacyOrder)
 			case "ETH_RARIBLE_V2":
 			case "ETH_RARIBLE_V2_2":
 			case "ETH_RARIBLE_V2_DATA_V3_SELL":
@@ -344,8 +327,6 @@ export class OrderFiller {
 
 	async getBaseOrderFillFee(order: SimpleOrder): Promise<number> {
 		switch (order.data["@type"]) {
-			case "ETH_RARIBLE_V1":
-				return this.v1Handler.getBaseOrderFee()
 			case "ETH_RARIBLE_V2":
 			case "ETH_RARIBLE_V2_2":
 			case "ETH_RARIBLE_V2_DATA_V3_SELL":
@@ -372,15 +353,15 @@ export class OrderFiller {
 
 	checkStartEndDates(order: SimpleOrder) {
 		const now = Date.now()
-		if (order.start !== undefined && new Date(order.start * 1000).getTime() > now) {
-			throw new Error(`Order will be actual since ${new Date(order.start * 1000)}, now ${new Date()}`)
+		if (order.startedAt !== undefined && new Date(order.startedAt).getTime() > now) {
+			throw new Error(`Order will be actual since ${new Date(order.startedAt)}, now ${new Date()}`)
 		}
-		if (order.end !== undefined && new Date(order.end * 1000).getTime() < now) {
-			throw new Error(`Order was actual until ${new Date(order.end * 1000)}, now ${new Date()}`)
+		if (order.endedAt !== undefined && new Date(order.endedAt).getTime() < now) {
+			throw new Error(`Order was actual until ${new Date(order.endedAt)}, now ${new Date()}`)
 		}
 	}
 
-	getBuyAmmInfo(request: GetAmmBuyInfoRequest): Promise<AmmTradeInfo> {
+	getBuyAmmInfo(request: GetAmmOrderTradeInfoRequest): Promise<AmmTradeInfo> {
 		return this.apis.order.getAmmOrderTradeInfo(request)
 	}
 

@@ -2,24 +2,25 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType } from "@rarible/api-client"
-import type { BigNumber } from "@rarible/types"
+import type { Address, BigNumber, ContractAddress } from "@rarible/types"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
-import type { Part } from "@rarible/api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { BigNumberValue } from "@rarible/utils"
 import type { OrderData } from "@rarible/api-client"
+import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import { toVrs } from "../../common/to-vrs"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import { id32 } from "../../common/id"
-import type { SimpleLooksrareOrder, SimpleOrder } from "../types"
+import type { SimpleLooksrareOrder } from "../types"
 import { isNft } from "../is-nft"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import type { RaribleEthereumApis } from "../../common/apis"
-import { convertUnionRoyalties, createUnionItemId } from "../../common/union-converters"
+import { convertUnionPartsToEVM, convertUnionRoyalties, createUnionItemId } from "../../common/union-converters"
+import { convertISOStringToNumber } from "../../common"
 import type { MakerOrderWithVRS, TakerOrderWithEncodedParams } from "./looksrare-utils/types"
 import type { LooksrareOrderFillRequest, OrderFillSendData } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
@@ -48,7 +49,7 @@ export class LooksrareOrderHandler {
 			throw new Error(`Amount should be less or equal to ${make.value.toString()}`)
 		}
 		let isOrderAsk: boolean
-		let contract: Address
+		let contract: ContractAddress
 		let tokenId: string
 		if (isNft(make.type)) {
 			isOrderAsk = true
@@ -82,8 +83,8 @@ export class LooksrareOrderHandler {
 			strategy: makerOrder.data.strategy,
 			currency,
 			nonce: makerOrder.data.nonce,
-			startTime: makerOrder.start || 0,
-			endTime: makerOrder.end || 0,
+			startTime: convertISOStringToNumber(makerOrder.startedAt) || 0,
+			endTime: convertISOStringToNumber(makerOrder.endedAt) || 0,
 			minPercentageToAsk: makerOrder.data.minPercentageToAsk,
 			params: makerOrder.data.params || "0x",
 			...vrs,
@@ -109,7 +110,7 @@ export class LooksrareOrderHandler {
 
 	private async prepareTransactionData(
 		request: LooksrareOrderFillRequest,
-		originFees: Part[] | undefined,
+		originFees: Payout[] | undefined,
 		encodedFeesValue?: BigNumber,
 	) {
 		if (!this.ethereum) {
@@ -139,7 +140,9 @@ export class LooksrareOrderHandler {
 			request.order.make.type["@type"]
 		)
 
-		const { totalFeeBasisPoints, encodedFeesValue: localEncodedFee, feeAddresses } = originFeeValueConvert(originFees)
+		const { totalFeeBasisPoints, encodedFeesValue: localEncodedFee, feeAddresses } = originFeeValueConvert(
+			convertUnionPartsToEVM(originFees)
+		)
 		let valueWithOriginFees = calcValueWithFees(toBigNumber(makerOrder.price.toString()), totalFeeBasisPoints)
 
 		const feeEncodedValue = encodedFeesValue ?? localEncodedFee
@@ -183,7 +186,7 @@ export class LooksrareOrderHandler {
 
 	async getTransactionDataForExchangeWrapper(
 		request: LooksrareOrderFillRequest,
-		originFees: Part[] | undefined,
+		originFees: Payout[] | undefined,
 		encodedFeesValue: BigNumber,
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
 		return (await this.prepareTransactionData(request, originFees, encodedFeesValue)).requestData
@@ -210,7 +213,7 @@ export class LooksrareOrderHandler {
 	}
 
 	getBaseOrderFee() {
-		return this.getBaseOrderFeeConfig("ETH_LOOKSRARE_ORDER_DATA_V2")
+		return this.getBaseOrderFeeConfig("ETH_LOOKSRARE_ORDER_DATA_V1")
 	}
 
 	getOrderFee(): number {
