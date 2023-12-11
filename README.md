@@ -38,26 +38,14 @@ Rarible Multichain SDK enables applications to easily interact with Rarible Prot
 - [Troubleshooting](#troubleshooting)
 
 ## Example frontend application 
-See our example how it works:
-1. Clone repository
-2. Install dependencies and build sdk. Execute in the root folder:
 
-> **Note:** on Apple silicon, you have to run NodeJS in `x64` mode. You'll see [this issue otherwise](https://github.com/rarible/sdk/issues/402). Follow [these steps to solve](https://stackoverflow.com/a/67907214/861773).
+You can find documentation about example app [here](https://docs.rarible.org/reference/example-application) Example app shows how to do basic NFT actions:
 
-    ```shell
-    yarn install --ignore-engines && yarn bootstrap && yarn build-all
-    ```
-
-3. Start the application in development mode:
-
-    ```shell
-    cd packages/example
-    yarn start
-    ```
-
-The application is available at [http://localhost:3000](http://localhost:3000)
-4. Click on "Connect" in left menu and choose your wallet (in selected environment).
-5. Check SDK methods!
+- Create collection
+- Mint an NFT
+- List an NFT for sale
+- Buy an NFT
+- etc
 
 You also can find **Typescript (.ts)** [`examples in that folder`](https://github.com/rarible/sdk/tree/master/packages/sdk-examples/src) for the frontend and backend side
 
