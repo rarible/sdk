@@ -9,14 +9,7 @@ We use different environments for blockchain networks. See actual information on
 Rarible Multichain SDK enables applications to easily interact with Rarible Protocol: query, transfer and trade NFTs on any blockchain supported. See more information on our documentation [Reference](https://docs.rarible.org/reference/getting-started) section.
 
 - [Example frontend app](#example-frontend-application)
-- [Installation](#installation)
-  - [Creating SDK with Ethereum providers](#ethereum-providers) 
-    - [Web3](#web3) 
-    - [Ethers.js](#ethers)
-  - [Creating SDK with Flow provider](#flow-providers) 
-  - [Creating SDK with Solana provider](#solana-provider) 
-  - [Creating SDK with Tezos providers](#tezos-providers)
-  - [Creating SDK with ImmutableX provider](#immutablex-provider)
+- [Installation and getting started](##installation--getting-started)
   - [Creating SDK with connectors](#use-rarible-sdk-wallet-connector)
 - [Methods](#methods)
   - [About advanced methods calls](#about-advanced-methods-calls)
