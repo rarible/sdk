@@ -49,65 +49,9 @@ You can find documentation about example app [here](https://docs.rarible.org/ref
 
 You also can find **Typescript (.ts)** [`examples in that folder`](https://github.com/rarible/sdk/tree/master/packages/sdk-examples/src) for the frontend and backend side
 
-## Installation
+## Installation & Getting started
 
-Install Protocol SDK:
-
-```shell
-yarn add @rarible/sdk
-yarn add tslib@2.3.1
-yarn add web3@1.5.0 //or ethers@5.6.2
-```
-
-### Ethereum providers
-#### Web3
-Example of using Metamask provider ([read more about using provider](https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider))
-```ts
-const blockchainProvider = new Web3(window.ethereum)
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet") //"prod" | "testnet" | "development"
-```
-
-#### Ethers
-```ts
-//read-only provider, not for sending transactions!
-const blockchainProvider = new ethers.Wallet(pk, new ethers.providers.JsonRpcProvider("https://NODE_URL"))
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
-```
-
-### Flow providers
-Fcl provider for Flow
-```ts
-import * as fcl from "@onflow/fcl"
-fcl.config({
-  "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
-  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
-})
-const raribleSdk = createRaribleSdk(fcl, "testnet")
-```
-
-### Solana provider
-* Solana provider interface with `publicKey` field and `signTransaction`, `signAllTransactions` methods
-```ts
-import { SolanaKeypairWallet } from "@rarible/solana-wallet"
-const blockchainProvider = SolanaKeypairWallet.createFrom(pk)
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
-```
-
-### Tezos providers
-* Tezos provider like in_memory_provider (@rarible/tezos-sdk), Beacon ([source](https://github.com/rarible/tezos-sdk/blob/master/packages/sdk/providers/beacon/beacon_provider.ts)) or etc.
-```ts
-import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-const blockchainProvider = in_memory_provider(edsk, "https://TEZOS_NODE_URL")
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
-```
-
-### ImmutableX provider
-```ts
-import { ImxWallet } from "@rarible/immutable-wallet"
-const imxConnectorWallet = new ImxWallet("prod")
-await imxConnectorWallet.connect()
-const raribleSdk = createRaribleSdk(imxConnectorWallet, "prod")
-```
+You can find this information on our [Getting Started with SDK](https://docs.rarible.org/reference/getting-started) Reference page
 
 ### Use Rarible SDK Wallet Connector
 
