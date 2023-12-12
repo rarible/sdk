@@ -526,45 +526,8 @@ You can find more information in our [docs](https://docs.rarible.org/reference/s
 
 ## API (Querying)
 
-Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: [https://multichain.redoc.ly/](https://multichain.redoc.ly/) or right in the typescript typings.
+Check our [Using API](https://docs.rarible.org/reference/using-api) page in the docs
 
-For using API with api key you should pass:
-```ts
-const raribleSdk = createRaribleSdk(provider, "testnet", {
-  apiKey: "$API_KEY"
-}) //"prod" | "testnet" | "development"
-```
-To run tests you can set environment variables by `export SDK_API_KEY_PROD=...` and `export SDK_API_KEY_TESTNET=...`. 
-For IDEA set it "Edit configurations" -> "Edit configuration templates..." (in the bottom of left column) -> "Jest" -> "Environment variables" and the same for "npm" -> "Environment variables"
-
-```ts
-//Fetch items by creator
-sdk.apis.item.getItemsByCreator({ creator: someAddress })
-
-//Fetch activity (events) by the Item
-sdk.apis.activity.getActivitiesByItem({ type: ["TRANSFER"], contract, tokenId })
-
-//etc. Please explore SDK APIs and openAPI docs
-```
-**NOTE:** Our indexer may scan blockchains with a slight delay. If your code depends on API data you should await it until it appears.     
-```ts
-//Don't do like that!
-const { address, tx } = await sdk.nft.createCollection({...})
-//If collection still not indexed you will get error
-const collection = await sdk.apis.collection.getCollectionById({collection: address })
-console.log('collection name', collection.name)
-```
-Wrap calls in any "retry" function.
-```ts
-//To do like that
-const { address, tx } = await sdk.nft.createCollection({...})
-const attempts = 10;
-const timeout = 3000;
-const collection = await retry(attempts, timeout, async () => {
-  return sdk.apis.collection.getCollectionById({collection: address })
-})
-console.log('collection name', collection.name)
-```
 ## Executing actions
 
 You can use SDK to create (mint), trade, transfer, and burn NFTs. All actions are handled in the same manner:
