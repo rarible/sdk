@@ -28,7 +28,6 @@
     "@rarible/connector-helper": "^0.13.63-beta.3",
     "@rarible/connector-iframe": "^0.13.62",
     "@rarible/connector-mattel": "^0.13.62",
-    "@rarible/connector-mew": "^0.13.62",
     "@rarible/connector-nfid": "^0.13.62",
     "@rarible/connector-portis": "^0.13.62",
     "@rarible/connector-torus": "^0.13.62",

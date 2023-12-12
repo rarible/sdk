@@ -10,7 +10,6 @@ import {
 	InjectedWeb3ConnectionProvider,
 } from "@rarible/connector"
 import { FclConnectionProvider } from "@rarible/connector-fcl"
-import { MEWConnectionProvider } from "@rarible/connector-mew"
 import { NFIDConnectionProvider } from "@rarible/connector-nfid"
 import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
@@ -132,13 +131,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	const injected = mapEthereumWallet(
 		new InjectedWeb3ConnectionProvider({
 			prefer: [DappType.Metamask],
-		})
-	)
-
-	const mew = mapEthereumWallet(
-		new MEWConnectionProvider({
-			networkId: ethChainId,
-			rpcUrl: ethereumRpcMap[ethChainId],
 		})
 	)
 
@@ -351,7 +343,6 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	let connector = Connector.create(injected, state)
 		.add(nfid)
 		.add(walletLink)
-		.add(mew)
 		.add(beacon)
 		.add(fcl)
 		.add(walletConnectV2)
