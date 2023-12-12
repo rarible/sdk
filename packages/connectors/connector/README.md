@@ -65,7 +65,6 @@ import {
 	EthereumProviderConnectionResult,
 } from "@rarible/connector"
 import { FclConnectionProvider, FlowProviderConnectionResult } from "@rarible/connector-fcl"
-import { MEWConnectionProvider } from "@rarible/connector-mew"
 import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
@@ -87,11 +86,6 @@ export type WalletAndAddress = {
 }
 
 const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
-
-const mew = mapEthereumWallet(new MEWConnectionProvider({
-	networkId: 4,
-	rpcUrl: ethereumRpcMap[4]
-}))
 
 const beacon = mapTezosWallet(new BeaconConnectionProvider({
 	appName: "Rarible Test",
@@ -147,7 +141,6 @@ const connector = Connector
     .create(injected, state) // use ConnectionState for store connector data (last connected provider, etc)
 	.add(torus)
 	.add(walletLink)
-	.add(mew)
 	.add(beacon)
 	.add(fcl)
 	.add(walletConnectV2)
@@ -177,7 +170,6 @@ FortmaticConnectionProvider
 PortisConnectionProvider
 TorusConnectionProvider
 WalletLinkConnectionProvider
-MEWConnectionProvider
 IframeConnectionProvider
 WalletConnectConnectionProviderV2
 ```

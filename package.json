@@ -32,7 +32,6 @@
     "build-connector-iframe": "yarn workspace @rarible/connector-iframe run build",
     "build-connector-fcl": "yarn workspace @rarible/connector-fcl run build",
     "build-connector-beacon": "yarn workspace @rarible/connector-beacon run build",
-    "build-connector-mew": "yarn workspace @rarible/connector-mew run build",
     "build-connector-nfid": "yarn workspace @rarible/connector-nfid run build",
     "build-connector-fortmatic": "yarn workspace @rarible/connector-fortmatic run build",
     "build-connector-portis": "yarn workspace @rarible/connector-portis run build",

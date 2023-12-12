@@ -7,7 +7,6 @@ yarn run build-connector-fcl
 yarn run build-connector-mattel
 yarn run build-connector-helper
 yarn run build-connector-iframe &
-yarn run build-connector-mew &
 yarn run build-connector-portis &
 yarn run build-connector-fortmatic &
 yarn run build-connector-torus &
