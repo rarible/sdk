@@ -3,7 +3,7 @@ import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } f
 import {
 	getPromiEventConfirmationPromise,
 	getPromiEventHashPromise,
-} from "@rarible/web3-ethereum/src/utils/to-promises"
+} from "@rarible/web3-ethereum/build/utils/to-promises"
 import type { NonPayableMethodObject, PayableMethodObject } from "web3-eth-contract"
 import type { AbiFunctionFragment, ContractMethod } from "web3-types"
 import type { PayableTxOptions } from "web3-eth-contract/src/types"

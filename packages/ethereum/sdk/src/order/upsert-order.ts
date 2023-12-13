@@ -140,7 +140,9 @@ export class UpsertOrder {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checkedOrder)
 		const fee = await this.orderFiller.getOrderFee(simple)
 		const make = addFee(checkedOrder.make, fee)
+		console.log("checkedOrder.maker, make", checkedOrder.maker, make)
 		const approveTx = this.approveFn(checkedOrder.maker, make, infinite)
+		console.log("approveTx", await approveTx)
 		if (approveTx) {
 			await waitTx(approveTx)
 		}

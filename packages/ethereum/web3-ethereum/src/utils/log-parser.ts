@@ -40,7 +40,6 @@ export function parseReceiptEvents(
 	const eventsMap = {}
 	if (receipt.logs) {
 
-		debugger
 		receipt.logs.forEach(function (log) {
 			// @ts-ignore
 			log.returnValues = {}

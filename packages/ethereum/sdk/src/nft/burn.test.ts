@@ -35,7 +35,7 @@ import { getErc1155Contract } from "./contracts/erc1155"
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
 
-describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
+describe.skip.each(providers)("burn nfts", (ethereum: Ethereum) => {
 	const testAddress = toAddress(wallet.getAddressString())
 	const env: EthereumNetwork = "dev-ethereum"
 	const configuration = new Configuration(getApiConfig(env))

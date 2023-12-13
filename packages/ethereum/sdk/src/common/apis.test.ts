@@ -43,4 +43,23 @@ describe("api keys", () => {
 		expect(responseError.status).toBe(403)
 		expect(responseError.message).toBe("API key not found")
 	})
+
+	test("throw custom error on getValidatedOrderByHash method", async () => {
+		const sdk = createRaribleSdk(undefined, "mainnet", {
+			logs: {
+				level: LogsLevel.DISABLED,
+			},
+			apiKey: process.env.SDK_API_KEY_PROD || undefined,
+		})
+		let responseError
+		try {
+			await sdk.apis.order.getValidatedOrderByHash({
+				hash: "0xa7dade8642acc83dc60d50bef30af7f2951cd454e1c35cdc71a14db6452759e5",
+			})
+		} catch (e: any) {
+			responseError = e
+		}
+		expect(responseError?.status).toBe(undefined)
+		expect(responseError?.value?.code).toBe("VALIDATION")
+	})
 })

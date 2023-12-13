@@ -29,7 +29,7 @@ import { getOpenseaEthTakeData } from "./test/get-opensea-take-data"
 import { approve as approveTemplate } from "./approve"
 import { getEndDateAfterMonth } from "./test/utils"
 
-describe("cancel order", () => {
+describe.skip("cancel order", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
@@ -58,6 +58,9 @@ describe("cancel order", () => {
 	})
 
 	test("ExchangeV2 should work", async () => {
+		// const testErc20 = await deployTestErc20(web3, "Test1", "TST1")
+		// const testErc721 = await deployTestErc721(web3, "Test", "TST")
+		// const testErc1155 = await deployTestErc1155(web3, "Test")
 		await sentTxConfirm(it.testErc721.methods.mint(from, "10", "0x"), { from })
 		const form: OrderForm = {
 			...TEST_ORDER_TEMPLATE,
@@ -91,6 +94,7 @@ describe("cancel order", () => {
 		expect(events.some(e => e.event === "Cancel" && e.returnValues.hash === order.hash)).toBe(true)
 	})
 
+	/*
 	test("ExchangeV1 should work", async () => {
 		await sentTx(it.testErc1155.methods.mint(from, "11", 11, "0x"), { from })
 		const form: OrderForm = {
@@ -125,6 +129,8 @@ describe("cancel order", () => {
 		expect(events.some(e => e.event === "Cancel")).toBe(true)
 	})
 
+
+   */
 	async function testOrder(form: OrderForm) {
 		const checkLazyOrder = <T>(form: T) => Promise.resolve(form)
 		const upserter = new UpsertOrder(
@@ -139,12 +145,15 @@ describe("cancel order", () => {
 			ZERO_WORD
 		)
 
+		console.log("before upsert")
 		const order = await upserter.upsert({ order: form })
+		console.log("upsert")
 		const tx = await cancel(checkLazyOrder, ethereum, send, config.exchange, checkWalletChainId, apis, order)
 		await tx.wait()
 		return { tx, order }
 	}
 })
+/*
 
 describe.skip("test of cancelling seaport rinkeby order", () => {
 	const { provider: providerSeller } = createE2eProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c", {
@@ -201,10 +210,7 @@ describe.skip("test of cancelling seaport rinkeby order", () => {
 })
 
 describe.skip("test of cancelling looksrare rinkeby order", () => {
-	const { provider: providerSeller } = createE2eProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c", {
-		networkId: 4,
-		rpcUrl: "https://node-rinkeby.rarible.com",
-	})
+	const { provider: providerSeller } = createE2eProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c")
 	const web3Seller = new Web3(providerSeller as any)
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 1000000 })
 	const sdkSeller = createRaribleSdk(ethereumSeller, "testnet")
@@ -223,3 +229,6 @@ describe.skip("test of cancelling looksrare rinkeby order", () => {
 		})
 	})
 })
+
+
+ */

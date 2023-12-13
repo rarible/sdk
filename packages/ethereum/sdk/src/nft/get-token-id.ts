@@ -6,5 +6,10 @@ export async function getTokenId(
 	if (nftTokenId !== undefined) {
 		return nftTokenId
 	}
-	return await nftCollectionApi.generateNftTokenId({ collection, minter })
+	try {
+	  return await nftCollectionApi.generateNftTokenId({ collection, minter })
+	} catch (e) {
+		console.log("e", e, collection, minter, nftTokenId)
+		throw e
+	}
 }

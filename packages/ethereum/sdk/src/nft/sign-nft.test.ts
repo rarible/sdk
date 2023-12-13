@@ -2,7 +2,7 @@ import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
-import { FMT_BYTES, FMT_NUMBER } from "web3-types/lib/types"
+import { FMT_BYTES, FMT_NUMBER } from "web3-types"
 import type { SimpleLazyNft } from "./sign-nft"
 import { signNft } from "./sign-nft"
 

@@ -189,6 +189,7 @@ implements EthereumProvider.EthereumFunctionCall {
 	) {
 		try {
 			this.sendMethod = this.contract.methods[this.methodName].apply(null, args)
+			// console.log("this.sendMethod", this.sendMethod)
 			if (!this.contract.options.address) {
 				throw new Error("Contract address is undefined")
 			}

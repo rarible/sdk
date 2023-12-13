@@ -26,7 +26,7 @@ export const MAINNET_CONFIG = {
 	networkId: 1,
 }
 
-export type TestContractType = "erc721V3" | "erc1155V2"
+export type TestContractType = "erc721V3" | "erc1155V2" | "erc20Mintable"
 
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>
 
@@ -34,10 +34,17 @@ const MAP_TEST_CONTRACTS: PartialRecord<EthereumNetwork, Record<TestContractType
 	"dev-ethereum": {
 		erc721V3: "0xf9864189fe52456345DD0055D210fD160694Dd08",
 		erc1155V2: "0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1",
+		erc20Mintable: "0xA4A70E8627e858567a9f1F08748Fe30691f72b9e",
 	},
 	"testnet": {
 		erc721V3: "0x1723017329a804564bC8d215496C89eaBf1F3211",
 		erc1155V2: "0xe46D6235f3488B8Ce8AA054e8E5bc0aE86146145",
+		erc20Mintable: "",
+	},
+	"staging": {
+		erc721V3: "0x2BCCacA812c8FF9003b2bEA778421551f58Ed11b",
+		erc1155V2: "0xf33F626ca16cE18eF0052ECa6Ed6fC97Cedf031D",
+		erc20Mintable: "0x31C827f06E10e4999eb88c193669d408eF597B3D",
 	},
 }
 

@@ -29,7 +29,7 @@
     "@rarible/types": "~0.9.6",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.2",
-    "web3": "^4.1.0",
+    "web3": "^4.2.0",
     "web3-provider-engine": "^16.0.4"
   },
   "devDependencies": {

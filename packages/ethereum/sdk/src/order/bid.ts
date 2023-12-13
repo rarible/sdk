@@ -41,9 +41,12 @@ export class OrderBid {
 				if (request.makeAssetType.assetClass !== "ERC20") {
 					throw new Error(`Make asset type should be ERC-20, received=${request.makeAssetType.assetClass}`)
 				}
+				debugger
 				const form = await this.getBidForm(request)
 				const checked = await this.upserter.checkLazyOrder(form) as OrderForm
+				debugger
 				const approveTx = await this.upserter.approve(checked, true)
+				debugger
 				return { checked, approveTx }
 			},
 		})
