@@ -10,4 +10,5 @@ export const prodConfig: RaribleSdkConfig = {
 	immutablexNetwork: "prod",
 	mantleNetwork: "mantle",
 	arbitrumNetwork: "arbitrum",
+	zksync: "zksync",
 }

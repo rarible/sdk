@@ -1,11 +1,13 @@
 import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
 
-export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE | Blockchain.ARBITRUM
+export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
+| Blockchain.ARBITRUM | Blockchain.ZKSYNC
 export const EVMBlockchains: EVMBlockchain[] = [
 	Blockchain.ETHEREUM,
 	Blockchain.POLYGON,
 	Blockchain.MANTLE,
 	Blockchain.ARBITRUM,
+	Blockchain.ZKSYNC,
 ]
 
 /**

@@ -16,4 +16,5 @@ export type RaribleSdkConfig = {
 	immutablexNetwork: ImxEnv
 	mantleNetwork: EthereumNetwork
 	arbitrumNetwork: EthereumNetwork
+	zksync: EthereumNetwork
 }

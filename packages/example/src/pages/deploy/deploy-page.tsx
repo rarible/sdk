@@ -25,6 +25,7 @@ function getDeployRequest(data: Record<string, any>) {
 		case Blockchain.POLYGON:
 		case Blockchain.MANTLE:
 		case Blockchain.ARBITRUM:
+		case Blockchain.ZKSYNC:
 		case WalletType.ETHEREUM:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
@@ -95,6 +96,9 @@ export function DeployPage() {
 								if ((connection.state as any)?.connection.blockchain === Blockchain.ARBITRUM) {
 									formData.blockchain = Blockchain.ARBITRUM
 								}
+								if ((connection.state as any)?.connection.blockchain === Blockchain.ZKSYNC) {
+									formData.blockchain = Blockchain.ZKSYNC
+								}
 							}
 							console.log("connection", connection, getDeployRequest(formData))
 
@@ -114,7 +118,8 @@ export function DeployPage() {
 								label="Blockchain"
 							>
 								<MenuItem value={WalletType.ETHEREUM}>
-									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE} / {Blockchain.ARBITRUM}
+									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE}
+                  / {Blockchain.ARBITRUM} / {Blockchain.ZKSYNC}
 								</MenuItem>
 								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>

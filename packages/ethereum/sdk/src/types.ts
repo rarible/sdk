@@ -14,6 +14,8 @@ export type EthereumNetwork =
   | "testnet-mantle"
   | "arbitrum"
   | "testnet-arbitrum"
+  | "zksync"
+  | "testnet-zksync"
 
 export enum LogsLevel {
 	DISABLED = 0,

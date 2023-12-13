@@ -61,6 +61,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://arbiscan.io/tx/${this.hash()}`
 			case "testnet-arbitrum":
 				return `https://sepolia.arbiscan.io/tx/${this.hash()}`
+			case "zksync":
+				return `https://explorer.zksync.io/tx/${this.hash()}`
+			case "testnet-zksync":
+				return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

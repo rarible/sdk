@@ -187,6 +187,9 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 		case "arbitrum":
 		case "testnet-arbitrum":
 			return Blockchain.ARBITRUM
+		case "zksync":
+		case "testnet-zksync":
+			return Blockchain.ZKSYNC
 		default:
 			throw new Error(`Unsupported network: ${network}`)
 	}

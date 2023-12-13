@@ -131,6 +131,13 @@ export function createRaribleSdk(
 			blockchainConfig.mantleNetwork,
 			ethConfig
 		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.ZKSYNC,
+			blockchainConfig.zksync,
+			ethConfig
+		),
 	)
 
 	const sdkContext: ISdkContext = {

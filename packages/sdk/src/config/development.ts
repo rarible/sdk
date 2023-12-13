@@ -10,4 +10,5 @@ export const developmentConfig: RaribleSdkConfig = {
 	immutablexNetwork: "testnet",
 	mantleNetwork: "testnet-mantle",
 	arbitrumNetwork: "testnet-arbitrum",
+	zksync: "testnet-zksync",
 }
