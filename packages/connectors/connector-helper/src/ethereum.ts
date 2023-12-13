@@ -32,14 +32,16 @@ export function mapEthereumWallet<O>(
 
 function getEvmBlockchain(chainId: number): EVMBlockchain {
 	switch (chainId) {
-		case 137: return Blockchain.POLYGON
-		case 80001: return Blockchain.POLYGON
-		case 300501: return Blockchain.POLYGON
+		case 137:
+		case 80001:
+		case 300501:
 		case 200501: return Blockchain.POLYGON
-		case 5000: return Blockchain.MANTLE
+		case 5000:
 		case 5001: return Blockchain.MANTLE
-		case 42161: return Blockchain.ARBITRUM
+		case 42161:
 		case 421614: return Blockchain.ARBITRUM
+		case 280:
+		case 324: return Blockchain.ZKSYNC
 		default: return Blockchain.ETHEREUM
 	}
 }

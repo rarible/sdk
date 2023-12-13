@@ -7409,10 +7409,10 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@0.9.18", "@rarible/types@~0.9.18":
-  version "0.9.18"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.18.tgz#2045895e436aaa4422e0ff639946d67729517378"
-  integrity sha512-OUJy2CT0HPii2/9MEhJffcsgbtcN0CFrqvfp8f6zJZhkZJw5e+0sbSapDEN8oh6b0DX1qolSgqL46MqWQs9q8A==
+"@rarible/types@0.9.19", "@rarible/types@~0.9.19":
+  version "0.9.19"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.19.tgz#0cf8a90cb8f7f7d7d36859cbe0a975916cdbd481"
+  integrity sha512-aAJxmuAsPQJSSmMTf+0m6uV6gxvWHgvKzS6MfubJhL/dhHW9sBIJ9vyDDB5oaQQxI3xWVxXMxSAyawzX1bD/kg==
 
 "@rarible/types@^0.9.16":
   version "0.9.16"

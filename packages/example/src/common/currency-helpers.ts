@@ -75,6 +75,11 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 				return getERC20(contract)
 			}
 			throw new Error("Unsupported option subtype")
+		case Blockchain.ZKSYNC:
+			if (type === "TOKEN") {
+				return getERC20(contract)
+			}
+			throw new Error("Unsupported option subtype")
 		case Blockchain.IMMUTABLEX:
 			if (type === "NATIVE") {
 				return getEthNative(blockchain)
@@ -250,6 +255,31 @@ export function getCurrencyOptions(
 								label: "WETH",
 								blockchain: Blockchain.ARBITRUM,
 								contract: "ARBITRUM:0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+							})
+							break
+						default:
+					}
+					 return res
+				}
+				return []
+			case Blockchain.ZKSYNC:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ZKSYNC,
+								contract: "ZKSYNC:0x20b28B1e4665FFf290650586ad76E977EAb90c5D",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ZKSYNC,
+								contract: "ZKSYNC:0x8Ebe4A94740515945ad826238Fc4D56c6B8b0e60",
 							})
 							break
 						default:

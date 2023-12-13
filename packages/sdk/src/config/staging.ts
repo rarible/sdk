@@ -10,4 +10,5 @@ export const stagingConfig: RaribleSdkConfig = {
 	immutablexNetwork: "testnet",
 	mantleNetwork: "testnet-mantle",
 	arbitrumNetwork: "testnet-arbitrum",
+	zksync: "testnet-zksync",
 }
