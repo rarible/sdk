@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* **PLTF-182:** zksync support ([#579](https://github.com/rarible/sdk/issues/579)) ([3b90055](https://github.com/rarible/sdk/commit/3b90055eb6e15743286b622b3bf787431f7ce7ac))
+
+
+
+
+
 ## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk

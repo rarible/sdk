@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* **PLTF-182:** zksync support ([#579](https://github.com/rarible/sdk/issues/579)) ([3b90055](https://github.com/rarible/sdk/commit/3b90055eb6e15743286b622b3bf787431f7ce7ac))
+* remove mew connector as it's abandoned and not supported anymore ([#578](https://github.com/rarible/sdk/issues/578)) ([a58e6a4](https://github.com/rarible/sdk/commit/a58e6a4feb923506dae52393248b3120aadb7f8e))
+
+
+
+
+
 ## [0.13.63-beta.3](https://github.com/rarible/sdk/compare/v0.13.63-beta.2...v0.13.63-beta.3) (2023-12-10)
 
 **Note:** Version bump only for package example
