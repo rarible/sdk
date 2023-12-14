@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+
+### Features
+
+* **PLTF-191:** add mainnet zksync contracts, updated testnet contracts ([#580](https://github.com/rarible/sdk/issues/580)) ([c5143a1](https://github.com/rarible/sdk/commit/c5143a19b72ce035cc648201e268042b523d7c4d))
+
+
+
+
+
 ## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
 
 
