@@ -40,7 +40,7 @@ function getEvmBlockchain(chainId: number): EVMBlockchain {
 		case 5001: return Blockchain.MANTLE
 		case 42161:
 		case 421614: return Blockchain.ARBITRUM
-		case 280:
+		case 300:
 		case 324: return Blockchain.ZKSYNC
 		default: return Blockchain.ETHEREUM
 	}

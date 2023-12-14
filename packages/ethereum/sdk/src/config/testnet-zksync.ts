@@ -5,21 +5,21 @@ import { FEE_CONFIG_URL } from "./common"
 
 export const zkSyncTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-zksync-api.rarible.org",
-	chainId: 280,
+	chainId: 300,
 	exchange: {
 		v1: ZERO_ADDRESS,
-		v2: toAddress("0x1d2c207419A7dC6c1a59760f61B16Bbc76F486FE"),
+		v2: toAddress("0x99bD7BA01f9872f034a35DC4bC737cFaaaC11D63"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: ZERO_ADDRESS,
+		wrapper: toAddress("0x0148b11891C0E30Fb36a6D646E04C7bebE7969c8"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
-		nft: toAddress("0xb0B38eAD18Ad31C5CDaf27Bd96628290F0A542b4"),
-		erc20: toAddress("0x5CA0A4CBfFdB62F2e9BF2Ae077Faa87F94a89e5f"),
-		erc721Lazy: toAddress("0x27EE300098DB6cb21637739e94E733127ff5a066"),
-		erc1155Lazy: toAddress("0xB3FA3bC0C5Ea0BDA5298c94103682B34070590ce"),
+		nft: toAddress("0x85a26E6D52239817570Ff643bA09E3AA5393A805"),
+		erc20: toAddress("0x43b9B5221F513031acC62dc8B9788E608B293baD"),
+		erc721Lazy: toAddress("0x11983886da3c379E507A874649C96D7EEd086c32"),
+		erc1155Lazy: toAddress("0x117c152C992e8c344Ce5a84100130cd87eF6bAE6"),
 		openseaV1: ZERO_ADDRESS,
 		cryptoPunks: ZERO_ADDRESS,
 	},
@@ -30,8 +30,8 @@ export const zkSyncTestnetConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: toAddress("0xde44BF92f848ca334E131e196e3EDa1a3dDfD6A4"),
-		erc1155: toAddress("0xb2E38fe7025EF5f0597A0420aAfD1DA7D40c8a32"),
+		erc721: ZERO_ADDRESS,
+		erc1155: ZERO_ADDRESS,
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,
@@ -41,7 +41,7 @@ export const zkSyncTestnetConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0x20b28B1e4665FFf290650586ad76E977EAb90c5D"),
+	weth: toAddress("0xdf09a97A1CF809C335616c21c3a0EA4780F96514"),
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: ZERO_ADDRESS,
 }
