@@ -11,4 +11,5 @@ export const prodConfig: RaribleSdkConfig = {
 	mantleNetwork: "mantle",
 	arbitrumNetwork: "arbitrum",
 	zksync: "zksync",
+	chiliz: "chiliz",
 }

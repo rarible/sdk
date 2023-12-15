@@ -23,7 +23,7 @@
     "@onflow/fcl": "~1.3.2",
     "@rarible/api-client": "0.16.5-alpha.2",
     "@rarible/connector": "^0.13.64-beta.2",
-    "@rarible/types": "~0.9.19",
+    "@rarible/types": "~0.9.20",
     "magic-sdk": "~18.4.1"
   },
   "devDependencies": {

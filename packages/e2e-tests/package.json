@@ -20,7 +20,7 @@
     "@rarible/ethereum-sdk-test-common": "^0.13.64-beta.2",
     "@rarible/flow-test-common": "~0.5.75-fix.1",
     "@rarible/sdk-wallet": "^0.13.64-beta.2",
-    "@rarible/types": "~0.9.19",
+    "@rarible/types": "~0.9.20",
     "bignumber.js": "^9.0.1",
     "jest-jasmine2": "^29.4.1"
   },

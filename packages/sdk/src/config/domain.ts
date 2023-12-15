@@ -17,4 +17,5 @@ export type RaribleSdkConfig = {
 	mantleNetwork: EthereumNetwork
 	arbitrumNetwork: EthereumNetwork
 	zksync: EthereumNetwork
+	chiliz: EthereumNetwork
 }

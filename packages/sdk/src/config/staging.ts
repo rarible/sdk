@@ -11,4 +11,5 @@ export const stagingConfig: RaribleSdkConfig = {
 	mantleNetwork: "testnet-mantle",
 	arbitrumNetwork: "testnet-arbitrum",
 	zksync: "testnet-zksync",
+	chiliz: "testnet-chiliz",
 }

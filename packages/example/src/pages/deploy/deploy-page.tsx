@@ -5,6 +5,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { CreateCollectionBlockchains } from "@rarible/sdk/build/types/nft/deploy/domain"
 import type { CreateCollectionRequestSimplified } from "@rarible/sdk/build/types/nft/deploy/simplified"
 import { WalletType } from "@rarible/sdk-wallet"
+import { isEVMBlockchain } from "@rarible/sdk-common"
 import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormSubmit } from "../../components/common/form/form-submit"
@@ -21,22 +22,19 @@ import { CollectionDeployComment } from "./comments/collection-deploy-comment"
 import { DeployForm } from "./deploy-form"
 
 function getDeployRequest(data: Record<string, any>) {
+	if (isEVMBlockchain(data["blockchain"])) {
+		return {
+			blockchain: data["blockchain"] as CreateCollectionBlockchains,
+			type: data["contract"],
+			name: data["name"],
+			symbol: data["symbol"],
+			baseURI: data["baseURI"],
+			contractURI: data["contractURI"],
+			isPublic: !!data["private"],
+			operators: [],
+		} as CreateCollectionRequestSimplified
+	}
 	switch (data["blockchain"]) {
-		case Blockchain.POLYGON:
-		case Blockchain.MANTLE:
-		case Blockchain.ARBITRUM:
-		case Blockchain.ZKSYNC:
-		case WalletType.ETHEREUM:
-			return {
-				blockchain: data["blockchain"] as CreateCollectionBlockchains,
-				type: data["contract"],
-				name: data["name"],
-				symbol: data["symbol"],
-				baseURI: data["baseURI"],
-				contractURI: data["contractURI"],
-				isPublic: !!data["private"],
-				operators: [],
-			} as CreateCollectionRequestSimplified
 		case Blockchain.TEZOS:
 			return {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
@@ -87,18 +85,7 @@ export function DeployPage() {
 
 						try {
 							if (formData["blockchain"] === Blockchain.ETHEREUM) {
-								if ((connection.state as any)?.connection.blockchain === Blockchain.POLYGON) {
-									formData.blockchain = Blockchain.POLYGON
-								}
-								if ((connection.state as any)?.connection.blockchain === Blockchain.MANTLE) {
-									formData.blockchain = Blockchain.MANTLE
-								}
-								if ((connection.state as any)?.connection.blockchain === Blockchain.ARBITRUM) {
-									formData.blockchain = Blockchain.ARBITRUM
-								}
-								if ((connection.state as any)?.connection.blockchain === Blockchain.ZKSYNC) {
-									formData.blockchain = Blockchain.ZKSYNC
-								}
+								formData.blockchain = (connection.state as any)?.connection.blockchain
 							}
 							console.log("connection", connection, getDeployRequest(formData))
 

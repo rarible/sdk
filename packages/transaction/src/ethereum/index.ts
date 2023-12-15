@@ -65,6 +65,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://explorer.zksync.io/tx/${this.hash()}`
 			case "testnet-zksync":
 				return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
+			case "chiliz":
+				return `https://scan.chiliz.com/tx/${this.hash()}`
+			case "testnet-chiliz":
+				return `https://spicy-explorer.chiliz.com/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}
