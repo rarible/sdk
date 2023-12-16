@@ -14,7 +14,7 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@portis/web3": "^4.0.7",

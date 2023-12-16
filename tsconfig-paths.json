@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@rarible/connector": ["./packages/connectors/connector/src"],
+      "@rarible/connector-helper": ["./packages/connectors/connector-helper/src"],
+      "@rarible/sdk-common": ["./packages/sdk-common/src"],
+      "@rarible/web3-ethereum": ["./packages/ethereum/web3-ethereum/src"],
+      "@rarible/sdk-wallet": ["./packages/wallet/src"]
+    }
+  }
+}

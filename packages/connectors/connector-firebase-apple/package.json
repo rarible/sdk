@@ -15,7 +15,7 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand --passWithNoTests",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "resolutions": {
     "@metamask/utils": "8.1.0"
