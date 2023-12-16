@@ -14,7 +14,7 @@
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "~2.1.1",

@@ -15,7 +15,7 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand --forceExit",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.3.6",
