@@ -19,7 +19,7 @@
     "build:umd": "webpack",
     "clean": "rimraf ./build",
     "test": "jest --testTimeout=10000 --forceExit",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.56",
