@@ -77,8 +77,8 @@ export class FclConnectionProvider extends
 		return fcl
 	}
 
-	getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
-		return Promise.resolve(PROVIDER_ID)
+	getOption(): Maybe<typeof PROVIDER_ID> {
+		return PROVIDER_ID
 	}
 
 	isAutoConnected() {

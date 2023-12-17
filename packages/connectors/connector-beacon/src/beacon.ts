@@ -104,7 +104,7 @@ export class BeaconConnectionProvider extends
 		}
 	}
 
-	async getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
+	getOption(): Maybe<typeof PROVIDER_ID> {
 		return PROVIDER_ID
 	}
 

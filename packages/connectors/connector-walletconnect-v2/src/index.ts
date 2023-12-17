@@ -42,8 +42,8 @@ export class WalletConnectConnectionProviderV2 extends
 		return this.connection
 	}
 
-	getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
-		return Promise.resolve(PROVIDER_ID)
+	getOption() {
+		return PROVIDER_ID
 	}
 
 	async isAutoConnected(): Promise<boolean> {

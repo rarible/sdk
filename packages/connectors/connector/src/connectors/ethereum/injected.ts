@@ -54,9 +54,9 @@ export class InjectedWeb3ConnectionProvider extends
   	return this.connection
   }
 
-  getOption(): Promise<Maybe<DappType>> {
+  getOption() {
   	const provider = getInjectedProvider(this.config)
-  	return Promise.resolve(getDappType(provider))
+  	return getDappType(provider)
   }
 
   isAutoConnected(): Promise<boolean> {

@@ -98,30 +98,26 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 							}),
 							map(res => {
 								if (res.status === "disconnected") {
-									provider.getOption()
-										.then(option => {
-											this.logger.raw({
-												level: getErrorLogLevel(res.error, provider.getId()),
-												method: "connect",
-												message: res.error?.message,
-												error: getStringifiedData(res.error),
-												providerId: provider.getId(),
-												providerOption: option || undefined,
-												provider: getStringifiedData(provider),
-											})
-										})
+									const option = provider.getOption()
+									this.logger.raw({
+										level: getErrorLogLevel(res.error, provider.getId()),
+										method: "connect",
+										message: res.error?.message,
+										error: getStringifiedData(res.error),
+										providerId: provider.getId(),
+										providerOption: option || undefined,
+										provider: getStringifiedData(provider),
+									})
 								}
 								if (res.status === "connected") {
-									provider.getOption()
-										.then(option => {
-											this.logger.raw({
-												level: LogLevelConnector.SUCCESS,
-												method: "connect",
-												message: "trace of connect",
-												providerId: provider?.getId(),
-												providerOption: option || undefined,
-											})
-										})
+									const option = provider.getOption()
+									this.logger.raw({
+										level: LogLevelConnector.SUCCESS,
+										method: "connect",
+										message: "trace of connect",
+										providerId: provider?.getId(),
+										providerOption: option || undefined,
+									})
 								}
 								return res
 							})
