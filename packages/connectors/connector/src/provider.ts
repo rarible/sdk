@@ -21,7 +21,7 @@ export type ConnectionProvider<Option, Connection> = {
 	/**
 	 * List of available connection options: injected web3 can find out what option is available (Metamask, Trust etc.)
 	 */
-	getOption(): Promise<Maybe<Option>>
+	getOption(): Maybe<Option>
 	/**
 	 * Current connection state. If value is undefined, then provider is considered disconnected.
 	 */
@@ -37,7 +37,7 @@ export abstract class AbstractConnectionProvider<O, C> implements ConnectionProv
 
 	abstract getConnection(): Observable<ConnectionState<C>>
 
-	abstract getOption(): Promise<Maybe<O>>
+	abstract getOption(): Maybe<O>
 
 	abstract isAutoConnected(): Promise<boolean>
 
@@ -74,8 +74,8 @@ export class MappedOptionConnectionProvider<O, C, NewO> extends AbstractConnecti
 		return this.source.isAutoConnected()
 	}
 
-	async getOption() {
-		const sourceOption = await this.source.getOption()
+	getOption() {
+		const sourceOption = this.source.getOption()
 		return sourceOption ? this.mapper(sourceOption) : undefined
 	}
 
