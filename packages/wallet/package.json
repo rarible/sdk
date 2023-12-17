@@ -15,7 +15,7 @@
     "build:umd": "webpack",
     "clean": "rimraf ./build",
     "test": "jest --runInBand --forceExit",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",

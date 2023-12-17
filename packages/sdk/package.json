@@ -20,7 +20,7 @@
     "analyze": "webpack --config webpack-analyze.config.js",
     "clean": "rimraf ./build",
     "test": "sh ./scripts/test.sh",
-    "verify": "tsc --noEmit",
+    "verify": "tsc --noEmit --project tsconfig-build.json",
     "docs": "typedoc",
     "test:only": "jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum --silent=false --detectOpenHandles"
   },
