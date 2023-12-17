@@ -17,9 +17,6 @@
   "dependencies": {
     "@solana/web3.js": "^1.35.0"
   },
-  "devDependencies": {
-    "typescript": "^4.8.4"
-  },
   "peerDependencies": {
     "tslib": "^2.3.1"
   },
