@@ -30,8 +30,8 @@ export const zkSyncTestnetConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: ZERO_ADDRESS,
-		erc1155: ZERO_ADDRESS,
+		erc721: toAddress("0x2abC8bD09c681702e2297F11fd759d9014664B33"),
+		erc1155: toAddress("0xEda115D72EF1Dc96d0297278D1D241821F999927"),
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,
