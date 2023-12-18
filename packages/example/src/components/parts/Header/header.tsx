@@ -1,16 +1,16 @@
-import React, { useContext } from "react"
+import React from "react"
 import { AppBar, Container, Toolbar, Typography } from "@mui/material"
-import { ConnectorContext } from "../../connector/sdk-connection-provider"
+import { useConnect } from "../../../connector/context"
 import { ConnectedStatus } from "./Statuses/connected-status"
 import { DisconnectedStatus } from "./Statuses/disconnected-status"
 import { ConnectStatus } from "./Statuses/connection-status"
 
 function ConnectionStatus() {
-	const connection = useContext(ConnectorContext)
+	const connect = useConnect()
 
-	switch (connection?.state.status) {
+	switch (connect.status) {
 		case "connected":
-			return <ConnectedStatus state={connection.state}/>
+			return <ConnectedStatus address={connect.address} disconnect={connect.disconnect}/>
 		case "disconnected":
 			return <DisconnectedStatus/>
 		case "connecting":

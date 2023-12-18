@@ -1,18 +1,17 @@
 import React, { useContext } from "react"
 import { Box, Chip, IconButton, Stack, Tooltip, Typography } from "@mui/material"
-import type { StateConnected } from "@rarible/connector/build/connection-state"
 import { faLinkSlash } from "@fortawesome/free-solid-svg-icons"
-import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { Address } from "../../../common/address"
 import { Icon } from "../../../common/icon"
 import { EnvironmentContext } from "../../../connector/environment-selector-provider"
 import { getEnvironmentName } from "../../../connector/environments"
 
 export interface IConnectedStatusProps {
-	state: StateConnected<IWalletAndAddress>
+	disconnect?: () => Promise<void>
+	address: string
 }
 
-export function ConnectedStatus({ state }: IConnectedStatusProps) {
+export function ConnectedStatus({ disconnect, address }: IConnectedStatusProps) {
 	const { environment } = useContext(EnvironmentContext)
 	return (
 		<Stack direction="row" alignItems="center" spacing={2}>
@@ -31,13 +30,13 @@ export function ConnectedStatus({ state }: IConnectedStatusProps) {
 			<Box sx={{ display: "inline" }}>
 				<Typography variant="subtitle1" >Connected </Typography>
 				<Typography variant="subtitle2">
-					<Address address={state.connection.address}/>
+					<Address address={address}/>
 				</Typography>
 			</Box>
 			<IconButton
 				color="inherit"
 				title="Disconnect"
-				onClick={state.disconnect}
+				onClick={disconnect}
 			>
 				<Icon icon={faLinkSlash}/>
 			</IconButton>

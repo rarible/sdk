@@ -1,18 +1,15 @@
-import React, { useCallback, useContext, useMemo } from "react"
-import { from } from "rxjs"
-import { Rx } from "@rixio/react"
+import React, { useCallback, useContext } from "react"
 import { LoadingButton } from "@mui/lab"
 import { Box, Button, MenuItem, Stack, TextField } from "@mui/material"
 import type { ConnectionProvider } from "@rarible/connector"
 import { MappedConnectionProvider } from "@rarible/connector"
 import type { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { faChevronRight, faLinkSlash } from "@fortawesome/free-solid-svg-icons"
-import type { StateConnected } from "@rarible/connector/build/connection-state"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { Icon } from "../../components/common/icon"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 import { ENVIRONMENTS } from "../../components/connector/environments"
+import { useConnect } from "../../connector/context"
 
 function getWalletInfo(option: string): { label: string } {
 	switch (option) {
@@ -27,13 +24,10 @@ function getWalletInfo(option: string): { label: string } {
 
 export function ConnectOptions() {
 	const { environment, setEnvironment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
-	const { connector, state } = connection
+	const connect = useConnect()
+	const { connector, status } = connect
 
-	const options$ = useMemo(
-		() => (connector ? from(connector.getOptions()) : from([])),
-		[connector]
-	)
+	const options = connector.getOptions()
 	const envSelectHandler = useCallback(
 		(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
 			setEnvironment?.(e.target.value as RaribleSdkEnvironment)
@@ -60,68 +54,64 @@ export function ConnectOptions() {
 				maxWidth: 300,
 			}}
 		>
-			<Rx value$={options$}>
-				{(options) => (
-					<Stack spacing={1}>
-						<TextField
-							select
-							size="small"
-							label="Environment"
-							disabled={state?.status === "connected"}
-							value={environment}
-							onChange={envSelectHandler}
-						>
-							{ENVIRONMENTS.map((option) => (
-								<MenuItem key={option.value} value={option.value}>
-									{option.label}
-								</MenuItem>
-							))}
-						</TextField>
-						{options.map((o) => {
-							const walletInfo = getWalletInfo(o.option)
-							return (
-								<LoadingButton
-									key={o.option}
-									onClick={() => {
-										if (o.provider.getId() === "mattel" && state?.status !== "connected") {
-											if (isMappedProvider(o.provider)) {
-												const provider = o.provider.getProvider() as MattelConnectionProvider
-												provider.setPopupConfig({
-													popup: openPopup(""),
-												})
-											}
-										}
-										connector.connect(o)
-									}}
-									loading={
-										state.status === "connecting" &&
-                    state.providerId === o.provider.getId()
+			<Stack spacing={1}>
+				<TextField
+					select
+					size="small"
+					label="Environment"
+					disabled={status === "connected"}
+					value={environment}
+					onChange={envSelectHandler}
+				>
+					{ENVIRONMENTS.map((option) => (
+						<MenuItem key={option.value} value={option.value}>
+							{option.label}
+						</MenuItem>
+					))}
+				</TextField>
+				{options.map((o) => {
+					const walletInfo = getWalletInfo(o.option)
+					return (
+						<LoadingButton
+							key={o.option}
+							onClick={() => {
+								if (o.provider.getId() === "mattel" && status !== "connected") {
+									if (isMappedProvider(o.provider)) {
+										const provider = o.provider.getProvider() as MattelConnectionProvider
+										provider.setPopupConfig({
+											popup: openPopup(""),
+										})
 									}
-									loadingPosition="start"
-									startIcon={<Icon icon={faChevronRight} />}
-									sx={style}
-									variant="outlined"
-									disabled={state?.status === "connected"}
-									fullWidth
-								>
-									{walletInfo.label}
-								</LoadingButton>
-							)
-						})}
-						<Button
-							onClick={(state as StateConnected<any>).disconnect}
-							startIcon={<Icon icon={faLinkSlash} />}
-							color="error"
+								}
+								connector.connect(o)
+							}}
+							loading={
+								connect.status === "connecting" &&
+								connect.option === o.provider.getId()
+							}
+							loadingPosition="start"
+							startIcon={<Icon icon={faChevronRight} />}
 							sx={style}
 							variant="outlined"
-							disabled={state?.status !== "connected"}
+							disabled={status === "connected"}
 							fullWidth
 						>
-              Disconnect
-						</Button>
-					</Stack>
-				)}
-			</Rx>
+							{walletInfo.label}
+						</LoadingButton>
+					)
+				})}
+				<Button
+					onClick={(connect.status === "connected" ? connect.disconnect : undefined)}
+					startIcon={<Icon icon={faLinkSlash} />}
+					color="error"
+					sx={style}
+					variant="outlined"
+					disabled={status !== "connected"}
+					fullWidth
+				>
+					Disconnect
+				</Button>
+			</Stack>
 		</Box>
 	)
 }

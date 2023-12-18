@@ -1,8 +1,7 @@
-import React, { useContext } from "react"
+import React, { useContext, useMemo } from "react"
 import { useRxOrThrow } from "@rixio/react"
 import { createRaribleSdk, WalletType } from "@rarible/sdk"
 import type { ConnectionState, Connector, IConnector } from "@rarible/connector"
-import { getStateDisconnected } from "@rarible/connector"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
 import type { UnionAddress } from "@rarible/types/build/union-address"
 import { toUnionAddress } from "@rarible/types"
@@ -19,12 +18,7 @@ export interface IConnectorContext {
 	walletAddress?: UnionAddress
 }
 
-export const ConnectorContext = React.createContext<IConnectorContext>({
-	connector: undefined,
-	state: getStateDisconnected(),
-	sdk: undefined,
-	walletAddress: undefined,
-})
+export const SdkContext = React.createContext<IRaribleSdk | undefined>(undefined)
 
 export interface ISdkConnectionProviderProps {
 	connector: Connector<string, IWalletAndAddress>
@@ -62,18 +56,9 @@ export function SdkConnectionProvider({ connector, children }: React.PropsWithCh
 		},
 	}) : undefined
 
-	const context: IConnectorContext = {
-		connector,
-		state: conn,
-		sdk,
-		walletAddress: conn.status === "connected" ?
-			getWalletAddress(conn.connection.address, conn.connection.blockchain) :
-			undefined,
-	}
-
-	return <ConnectorContext.Provider value={context}>
+	return <SdkContext.Provider value={sdk}>
 		{children}
-	</ConnectorContext.Provider>
+	</SdkContext.Provider>
 }
 
 function getApiKey(env: RaribleSdkEnvironment) {
