@@ -1,25 +1,25 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Grid, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../../components/connector/sdk-connection-provider"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
 import { TransactionInfo } from "../../../components/common/transaction-info"
 
 export function SetupMattelCollections() {
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const [collectionsState, setCollections] = useState("")
 
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = sdk?.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
 	const { handleSubmit } = form
 	function getCollectionsStatus() {
-		if (connection?.sdk?.flow) {
-			connection.sdk.flow.checkInitMattelCollections()
+		if (sdk?.flow) {
+			sdk.flow.checkInitMattelCollections()
 				.then(status => setCollections(JSON.stringify(status, null, " ")))
 				.catch(console.error)
 		}
@@ -32,7 +32,7 @@ export function SetupMattelCollections() {
 
 			<form onSubmit={handleSubmit(async () => {
 				try {
-					const tx = await connection?.sdk?.flow?.setupMattelCollections()
+					const tx = await sdk?.flow?.setupMattelCollections()
 					setComplete(tx)
 					getCollectionsStatus()
 				} catch (e) {

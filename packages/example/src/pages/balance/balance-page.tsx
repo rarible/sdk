@@ -1,20 +1,23 @@
-import React, { useContext } from "react"
+import React from "react"
 import type { WalletType } from "@rarible/sdk-wallet"
 import { Box } from "@mui/material"
 import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { GetBalanceComment } from "./comments/getbalance-comment"
 import { NativeBalance } from "./native-balance"
+import { useConnect } from "../../connector/context"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
 	return !!blockchain
 }
 
 export function BalancePage() {
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const sdk = useSdk()
+	const blockchain = sdk?.wallet?.walletType
+	const connect = useConnect()
+	const walletAddress = connect.status === "connected" ? connect.address : undefined
 
 	return (
 		<Page header="Balances">
@@ -28,11 +31,11 @@ export function BalancePage() {
 			<CommentedBlock sx={{ my: 2 }} comment={<GetBalanceComment/>}>
 				<Box sx={{ my: 2 }}>
 					{
-						connection.sdk && connection.sdk.wallet && connection.walletAddress ?
+						sdk && sdk.wallet && walletAddress ?
 							<NativeBalance
-								sdk={connection.sdk}
-								walletAddress={connection.walletAddress }
-								wallet={connection.sdk.wallet}
+								sdk={sdk}
+								walletAddress={walletAddress }
+								wallet={sdk.wallet}
 							/> : null
 					}
 				</Box>

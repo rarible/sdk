@@ -9,18 +9,19 @@ import type { Fcl } from "@rarible/fcl-types"
 import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk/build/types"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../../components/connector/sdk-connection-provider"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
 import { TransactionInfo } from "../../../components/common/transaction-info"
 import { EnvironmentContext } from "../../../components/connector/environment-selector-provider"
+
 export function ExecuteRawTransaction() {
 	const { environment: env } = useContext(EnvironmentContext)
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const [code, setCode] = useState("")
 
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = sdk?.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
 	const { handleSubmit } = form
@@ -39,8 +40,8 @@ export function ExecuteRawTransaction() {
 
 			<form onSubmit={handleSubmit(async () => {
 				try {
-					if (connection.sdk?.wallet?.walletType === WalletType.FLOW) {
-						const { fcl, auth } = connection.sdk.wallet
+					if (sdk?.wallet?.walletType === WalletType.FLOW) {
+						const { fcl, auth } = sdk.wallet
 						const txId = await runRawTransaction(
 							fcl,
 							{

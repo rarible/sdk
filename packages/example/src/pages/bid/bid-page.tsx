@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Box, Typography } from "@mui/material"
 import { useParams } from "react-router-dom"
 import type { WalletType } from "@rarible/sdk-wallet"
@@ -9,7 +9,7 @@ import { RequestResult } from "../../components/common/request-result"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { BidPrepareForm } from "./bid-prepare-form"
 import { BidForm } from "./bid-form"
 import { BidComment } from "./comments/bid-comment"
@@ -20,8 +20,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 
 export function BidPage() {
 	const params = useParams()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const sdk = useSdk()
+	const blockchain = sdk?.wallet?.walletType
 
 	return (
 		<Page header="Make Bid">

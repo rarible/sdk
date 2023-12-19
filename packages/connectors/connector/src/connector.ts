@@ -18,7 +18,7 @@ export interface IConnector<Option, Connection> {
 	/**
 	 * Get all available connection options (Metamask, Fortmatic, Blocto, Temple etc)
 	 */
-	getOptions(): Promise<ProviderOption<Option, Connection>[]>
+	getOptions(): ProviderOption<Option, Connection>[]
 
 	/**
 	 * Connect using specific option
@@ -255,11 +255,11 @@ export class Connector<Option, Connection> implements IConnector<Option, Connect
 		return getStateDisconnected()
 	}
 
-	public async getOptions(): Promise<ProviderOption<Option, Connection>[]> {
+	public getOptions() {
 		const result: ProviderOption<Option, Connection>[] = []
 		for (const pair of this.providers.map(it => ({ provider: it, option: it.getOption() }))) {
 			const { provider, option } = pair
-			const opt = await option
+			const opt = option
 			if (opt) {
 				result.push({ provider, option: opt })
 			}

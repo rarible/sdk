@@ -5,7 +5,7 @@ import type { UnionAddress } from "@rarible/types/build/union-address"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useConnect } from "../../connector/context"
 import { ConvertForm, isAvailableWethConvert } from "./convert-form"
 import { useGetBalance } from "./hooks/use-get-balance"
 import { getCurrenciesForBlockchain } from "./utils/currencies"
@@ -18,15 +18,15 @@ interface INativeBalanceProps {
 
 export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProps) {
 	const { environment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
-	const currencies = getCurrenciesForBlockchain(wallet.walletType, environment, connection)
+	const connect = useConnect()
+	const currencies = getCurrenciesForBlockchain(wallet.walletType, environment, connect.status === "connected" ? connect.blockchain : undefined)
 	const { balance, fetching, error } = useGetBalance(
 		sdk,
 		walletAddress,
 		currencies.find((c) => c.isNative)?.getAssetType()!
 	)
 
-	const isMantleNetwork = (connection.state as any)?.connection.blockchain === Blockchain.MANTLE
+	const isMantleNetwork = connect.status === "connected" && connect.blockchain === Blockchain.MANTLE
 	const isAvailableConvert = !isMantleNetwork && isAvailableWethConvert(wallet.walletType, environment)
 
 	const content = () => {

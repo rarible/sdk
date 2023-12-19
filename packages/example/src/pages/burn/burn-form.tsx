@@ -1,11 +1,11 @@
-import React, { useContext } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 import type { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/domain"
 import { Alert, AlertTitle, Box, Stack } from "@mui/material"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 
 interface IBurnFormProps {
@@ -21,7 +21,7 @@ export function BurnForm(
 		prepare,
 	}: IBurnFormProps,
 ) {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const {
@@ -36,7 +36,7 @@ export function BurnForm(
 				Submitting this form will destroy token
 			</Alert>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 

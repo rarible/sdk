@@ -8,9 +8,10 @@ import { Blockchain } from "@rarible/api-client"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
+import { useConnect } from "../../connector/context"
 
 interface IMintPrepareFormProps {
 	disabled?: boolean,
@@ -18,7 +19,8 @@ interface IMintPrepareFormProps {
 }
 
 export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps) {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
+	const connect = useConnect()
 	const { environment } = useContext(EnvironmentContext)
 
 	const form = useForm()
@@ -28,21 +30,21 @@ export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps)
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 				try {
-					const collection = await connection.sdk.apis.collection.getCollectionById({
+					const collection = await sdk.apis.collection.getCollectionById({
 						collection: formData.collectionId,
 					})
-					onComplete(await connection.sdk.nft.mint.prepare({ collection }))
+					onComplete(await sdk.nft.mint.prepare({ collection }))
 				} catch (e) {
 					setError(e)
 				}
 			})}
 			>
 				<Stack spacing={2}>
-					<FormTextInput form={form} name="collectionId" label="Collection ID" defaultValue={connection.state.status === "connected" ? getDefaultCollection(environment, connection.state?.connection?.blockchain): ""}/>
+					<FormTextInput form={form} name="collectionId" label="Collection ID" defaultValue={connect.status === "connected" ? getDefaultCollection(environment, connect.blockchain): ""}/>
 					<Box>
 						<FormSubmit
 							form={form}

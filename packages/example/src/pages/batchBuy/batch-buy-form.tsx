@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { Order } from "@rarible/api-client"
@@ -6,7 +6,7 @@ import { toItemId } from "@rarible/types"
 import type { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { FillRequestForm } from "../../components/common/sdk-forms/fill-request-form"
 
@@ -25,7 +25,7 @@ export function BatchBuyForm(
 		onComplete,
 	}: IBatchBuyFormProps,
 ) {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const {
@@ -36,7 +36,7 @@ export function BatchBuyForm(
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 

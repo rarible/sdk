@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Box, Stack } from "@mui/material"
 import type { PrepareTransferResponse } from "@rarible/sdk/build/types/nft/transfer/domain"
 import { useForm } from "react-hook-form"
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 
 interface ITransferPrepareFormProps {
@@ -19,7 +19,7 @@ interface ITransferPrepareFormProps {
 
 export function TransferPrepareForm({ itemId, disabled, onComplete }: ITransferPrepareFormProps) {
 	const navigate = useNavigate()
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -27,11 +27,11 @@ export function TransferPrepareForm({ itemId, disabled, onComplete }: ITransferP
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 				try {
-					onComplete(await connection.sdk.nft.transfer.prepare({
+					onComplete(await sdk.nft.transfer.prepare({
 						itemId: toItemId(formData.itemId),
 					}))
 					navigate(`/transfer/${formData.itemId}`, {})

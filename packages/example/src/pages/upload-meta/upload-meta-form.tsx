@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toUnionAddress } from "@rarible/types"
@@ -7,7 +7,7 @@ import type { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/unio
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { FormFileInput } from "../../components/common/form/form-file-input"
 
@@ -16,11 +16,11 @@ interface IUploadMEtaFormProps {
 }
 
 export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result } = useRequestResult()
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = sdk?.wallet?.walletType
 	const [disabled, setDisabled] = useState(true)
 
 	useEffect(() => {
@@ -33,13 +33,13 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 
 				const { name, description, image, animationUrl, nftStorageApiKey, accountAddress } = formData
 				// try {
-				onComplete(await connection.sdk.nft.uploadMeta({
+				onComplete(await sdk.nft.uploadMeta({
 					accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
 					nftStorageApiKey,
 					properties: {

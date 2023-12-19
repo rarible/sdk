@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { toItemId } from "@rarible/types"
 import { Grid, Typography } from "@mui/material"
@@ -9,13 +9,14 @@ import { useForm } from "react-hook-form"
 import { FormTextInput } from "../../../components/common/form/form-text-input"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../../components/connector/sdk-connection-provider"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
+import { useConnect } from "../../../connector/context"
 
 export function SardineCheckout() {
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const sdk = useSdk()
+	const blockchain = sdk?.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
 	const { handleSubmit } = form
@@ -28,25 +29,25 @@ export function SardineCheckout() {
 
 			<form onSubmit={handleSubmit(async () => {
 				try {
-					if (!connection.sdk) {
+					if (!sdk) {
 						return
 					}
 					try {
-						const accountInitStatus = await connection.sdk.flow?.checkInitMattelCollections()
+						const accountInitStatus = await sdk.flow?.checkInitMattelCollections()
 						console.log("accountInitStatus", accountInitStatus)
 						if (!accountInitStatus?.initCollections) {
-							const tx = await connection.sdk.flow?.setupMattelCollections()
+							const tx = await sdk.flow?.setupMattelCollections()
 							await tx?.wait()
 						}
 					} catch (e) {
 						console.log("err init status", e)
 					}
 					const orderId = form.getValues("orderId")
-					const order = await connection.sdk.apis.order.getOrderById({ id: orderId })
+					const order = await sdk.apis.order.getOrderById({ id: orderId })
 					if (order.make.type["@type"] !== "FLOW_NFT") {
 						throw new Error("Is not a sell order")
 					}
-					const itemId = await connection.sdk.apis.item.getItemById({
+					const itemId = await sdk.apis.item.getItemById({
 						itemId: toItemId(`${order.make.type.contract}:${order.make.type.tokenId}`),
 					})
 					const img = itemId.meta?.content.find(item => item["@type"] === "IMAGE")
@@ -108,7 +109,7 @@ function isMattelProvider(x: ConnectionProvider<any, any> | undefined): x is Mat
 }
 
 function getConnectorFromContext() {
-	const connection = useContext(ConnectorContext)
+	const connection = useConnect()
 	const currentProvider = connection.connector?.getCurrentProvider()
 
 	if (currentProvider) {

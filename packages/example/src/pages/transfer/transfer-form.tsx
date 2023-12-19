@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { useForm } from "react-hook-form"
 import type { PrepareTransferResponse } from "@rarible/sdk/build/types/nft/transfer/domain"
 import { Box, Stack } from "@mui/material"
@@ -6,7 +6,7 @@ import { toUnionAddress } from "@rarible/types"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 
 interface ITransferFormProps {
@@ -22,7 +22,7 @@ export function TransferForm(
 		prepare,
 	}: ITransferFormProps,
 ) {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const {
@@ -33,7 +33,7 @@ export function TransferForm(
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 

@@ -6,7 +6,6 @@ import { ConnectPage } from "./pages/connect/connect-page"
 import { NotFoundPage } from "./pages/404/404-page"
 import { Header } from "./components/parts/Header/header"
 import { Navigation } from "./components/parts/navigation"
-import { SdkConnectionProvider } from "./components/connector/sdk-connection-provider"
 import { EnvironmentSelectorProvider } from "./components/connector/environment-selector-provider"
 import { DeployPage } from "./pages/deploy/deploy-page"
 import { SellPage } from "./pages/sell/sell-page"
@@ -24,12 +23,13 @@ import { BatchBuyPage } from "./pages/batchBuy/batch-buy-page"
 import { SignPage } from "./pages/sign/sign-page"
 import { SellUpdatePage } from "./pages/sell-update/sell-update-page"
 import { UtilsPage } from "./pages/utils/utils-page"
+import { Connect } from "./connector/context"
 
 export function App() {
 	return (
 		<EnvironmentSelectorProvider>
 			{(connector) => (
-				<SdkConnectionProvider connector={connector}>
+				<Connect connector={connector}>
 					<Box>
 						<Header/>
 						<Container maxWidth="xl" sx={{
@@ -81,7 +81,7 @@ export function App() {
 							</Box>
 						</Container>
 					</Box>
-				</SdkConnectionProvider>
+				</Connect>
 			)}
 		</EnvironmentSelectorProvider>
 	)

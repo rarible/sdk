@@ -1,10 +1,10 @@
-import React, { useContext } from "react"
+import React from "react"
 import { isString } from "lodash"
 import { Alert, AlertTitle, Box } from "@mui/material"
 import { faLink, faLinkSlash } from "@fortawesome/free-solid-svg-icons"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { Icon } from "../../components/common/icon"
 import { Address } from "../../components/common/address"
+import { useConnect } from "../../connector/context"
 
 function connectionErrorMessage(error: any): string | null {
 	if (!error) {
@@ -21,19 +21,19 @@ function connectionErrorMessage(error: any): string | null {
 }
 
 export function ConnectionStatus() {
-	const connection = useContext(ConnectorContext)
+	const connect = useConnect()
 
-	switch (connection?.state.status) {
+	switch (connect.status) {
 		case "connected":
 			return <Alert severity="success" icon={<Icon icon={faLink}/>}>
 				<AlertTitle>Current Status: connected</AlertTitle>
 				Application is connected to wallet <Address
-					address={connection.state.connection.address}
+					address={connect.address}
 					trim={false}
 				/>
 			</Alert>
 		case "disconnected":
-			const error = connectionErrorMessage(connection?.state.error)
+			const error = connectionErrorMessage(connect.error)
 			return <Alert severity="error" icon={<Icon icon={faLinkSlash}/>}>
 				<AlertTitle>Disconnected</AlertTitle>
 				Application currently not connected to any wallet

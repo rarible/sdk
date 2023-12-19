@@ -1,7 +1,7 @@
-import React, { useContext } from "react"
+import React from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { SetupCollection } from "./components/setup-collection"
 import { SetupMattelCollections } from "./components/setup-mattel-collections"
 import { SardineCheckout } from "./components/sardine-checkout"
@@ -13,8 +13,8 @@ import { SardineOfframp } from "./components/sardine-offramp"
 
 
 export function UtilsPage() {
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const sdk = useSdk()
+	const blockchain = sdk?.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const isEVMActive = blockchain === WalletType.ETHEREUM
 

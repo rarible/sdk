@@ -1,28 +1,30 @@
 import { Box, Button, Typography } from "@mui/material"
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { OffRampClient } from "@rarible/connector-mattel/build/off-ramp"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../../components/connector/sdk-connection-provider"
 import { getFlowTokenAddressByEnv } from "../../balance/utils/currencies"
+import { useConnect } from "../../../connector/context"
 
 export function SardineOfframp() {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
+	const connect = useConnect()
 	const [iframeUrl, setIframeUrl] = useState("")
 	const [quotesResult, setQuotesResult] = useState("")
 	const [supportedTokens, setSupportedTokens] = useState("")
 
 	async function renderIframe() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
+		if (sdk?.wallet?.walletType === WalletType.ETHEREUM && "address" in connect) {
 			const url = await clientTokenStorage.getSellLink({
-				address: connection.walletAddress,
+				address: connect.address,
 				cryptoAmount: "0.04",
 				fiatCurrency: "USD",
 				assetType: { "@type": "ETH" },
 			})
 			setIframeUrl(url)
-		} else if (connection.sdk?.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
+		} else if (sdk?.wallet?.walletType === WalletType.FLOW && "address" in connect) {
 			const url = await clientTokenStorage.getSellLink({
-				address: connection.walletAddress,
+				address: connect.address,
 				cryptoAmount: "110",
 				fiatCurrency: "USD",
 				assetType: {
@@ -37,20 +39,20 @@ export function SardineOfframp() {
 	}
 
 	async function getQuotes() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
+		if (sdk?.wallet?.walletType === WalletType.ETHEREUM && "address" in connect) {
 
 			const quotes = await clientTokenStorage.getQuotes({
 				cryptoAmount: "0.04",
 				fiatCurrency: "USD",
 				assetType: { "@type": "ETH"},
-				address: connection.walletAddress,
+				address: connect.address,
 			})
 			setQuotesResult(JSON.stringify(quotes, null, "  "))
-		} else if (connection.sdk?.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
+		} else if (sdk?.wallet?.walletType === WalletType.FLOW && "address" in connect) {
 			const quotes = await clientTokenStorage.getQuotes({
 				cryptoAmount: "3",
 				fiatCurrency: "USD",
-				address: connection.walletAddress,
+				address: connect.address,
 				assetType: {
 					"@type": "FLOW_FT",
 					contract: getFlowTokenAddressByEnv("testnet")
@@ -82,7 +84,7 @@ export function SardineOfframp() {
 				>
           Get Offramp Quotes
 				</Button>
-        for wallet: {connection?.walletAddress}
+        for wallet: {connect.status === "connected" && connect.address}
 			</Box>
 
 			{

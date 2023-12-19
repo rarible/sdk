@@ -8,7 +8,7 @@ import { generateExpirationDate } from "@rarible/sdk/build/common/suite/order"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { getCurrency, getCurrencyOptions } from "../../common/currency-helpers"
 import { parseCurrencyType, PriceForm } from "../../components/common/sdk-forms/price-form"
@@ -22,7 +22,7 @@ interface ISellFormProps {
 
 export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 	const { environment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -30,7 +30,7 @@ export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 

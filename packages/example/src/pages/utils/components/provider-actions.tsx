@@ -1,19 +1,19 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../../components/common/request-result"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
 
 export function ProviderActions() {
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const [chainId, setChainId] = useState("")
 	const { result, setComplete } = useRequestResult()
 
 
 	function switchToChain() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
-			connection.sdk?.wallet.ethereum.getCurrentProvider().request({
+		if (sdk?.wallet?.walletType === WalletType.ETHEREUM) {
+			sdk?.wallet.ethereum.getCurrentProvider().request({
 				method: "wallet_switchEthereumChain",
 				params: [{ chainId: "0x" + parseInt(chainId).toString(16) }],
 			})
@@ -21,11 +21,11 @@ export function ProviderActions() {
 	}
 
 	async function sendTransaction() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
+		if (sdk?.wallet?.walletType === WalletType.ETHEREUM) {
 
-			const from = await connection.sdk?.wallet.ethereum.getFrom()
+			const from = await sdk?.wallet.ethereum.getFrom()
 
-			connection.sdk?.wallet.ethereum.getCurrentProvider().request({
+			sdk?.wallet.ethereum.getCurrentProvider().request({
 				method: "eth_sendTransaction",
 				params: [
 					{
@@ -42,8 +42,8 @@ export function ProviderActions() {
 	}
 
 	async function getFrom() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
-			const from = await connection.sdk?.wallet.ethereum.getFrom()
+		if (sdk?.wallet?.walletType === WalletType.ETHEREUM) {
+			const from = await sdk?.wallet.ethereum.getFrom()
 			setComplete(from)
 		}
 	}

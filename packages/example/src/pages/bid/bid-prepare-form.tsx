@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toItemId } from "@rarible/types"
@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 
 interface IBidPrepareFormProps {
@@ -19,7 +19,7 @@ interface IBidPrepareFormProps {
 
 export function BidPrepareForm({ itemId, disabled, onComplete }: IBidPrepareFormProps) {
 	const navigate = useNavigate()
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -28,11 +28,11 @@ export function BidPrepareForm({ itemId, disabled, onComplete }: IBidPrepareForm
 		<>
 
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 				try {
-					onComplete(await connection.sdk.order.bid.prepare({
+					onComplete(await sdk.order.bid.prepare({
 						itemId: toItemId(formData.itemId),
 					}))
 					navigate(`/bid/${formData.itemId}`, {})

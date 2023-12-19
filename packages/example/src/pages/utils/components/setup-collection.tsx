@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import { EnvironmentContext } from "../../../components/connector/environment-selector-provider"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../../components/connector/sdk-connection-provider"
 import { FormTextInput } from "../../../components/common/form/form-text-input"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
@@ -14,9 +14,9 @@ import { TransactionInfo } from "../../../components/common/transaction-info"
 export function SetupCollection() {
 	const { environment: env } = useContext(EnvironmentContext)
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = sdk?.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
 	const { handleSubmit } = form
@@ -25,7 +25,7 @@ export function SetupCollection() {
 		<>
 			<form onSubmit={handleSubmit(async () => {
 				try {
-					const tx = await connection?.sdk?.flow?.setupAccount(form.getValues("collection"))
+					const tx = await sdk?.flow?.setupAccount(form.getValues("collection"))
 					setComplete(tx)
 				} catch (e) {
 					setError(e)

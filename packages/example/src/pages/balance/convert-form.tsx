@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Grid, MenuItem } from "@mui/material"
-import type { EthEthereumAssetType, EthErc20AssetType } from "@rarible/api-client"
+import type { EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import type { ContractAddress } from "@rarible/types"
@@ -14,19 +14,19 @@ import { FormSubmit } from "../../components/common/form/form-submit"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 import { FormSelect } from "../../components/common/form/form-select"
 import { useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { RequestResult } from "../../components/common/request-result"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { useGetBalance } from "./hooks/use-get-balance"
+import { useConnect } from "../../connector/context"
 
 export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAddress: UnionAddress }) {
-	const connection = useContext(ConnectorContext)
+	const connect = useConnect()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { environment } = useContext(EnvironmentContext)
 
-	const blockchain = connection.state.status === "connected" ? connection.state.connection.blockchain : connection.sdk?.wallet?.walletType
+	const blockchain = connect.status === "connected" ? connect.blockchain : sdk?.wallet?.walletType
 
 	const wethAddress = getWethAddress(blockchain, environment)
 
@@ -57,9 +57,9 @@ export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAd
 		<>
 			<form onSubmit={handleSubmit(async () => {
 				try {
-					if (connection.state.status === "connected") {
+					if (connect.status === "connected") {
 						const res = await sdk?.balances.convert({
-							blockchain: connection.state.connection.blockchain as SupportedBlockchain,
+							blockchain: connect.blockchain as SupportedBlockchain,
 							value: form.getValues("value"),
 							isWrap: convertSchema.from["@type"] === "ETH",
 						})

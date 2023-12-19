@@ -33,6 +33,15 @@ import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconn
 // import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 // import { PortisConnectionProvider } from "@rarible/connector-portis"
 
+/**
+ * проблемы
+ * - типы разные
+ * - блокчейны / wallet type - слишком все одинаково и сложно
+ * - Ethereum абстракция лишняя
+ * - это все как клубок, нельзя распутать пока нормально
+ * - чтобы создать connector нужно умереть примерно
+ * - чтобы создать коннектор зачем-то нужен env. можно ли создать независимо от env'а ?
+ */
 export const ethereumRpcMap: Record<number, string> = {
 	1: "https://node-mainnet.rarible.com",
 	3: "https://node-ropsten.rarible.com",
@@ -121,6 +130,9 @@ const state: IConnectorStateProvider = {
 	},
 }
 
+/**
+ * почему тут environment нужен? можно от него избавиться?
+ */
 export function getConnector(environment: RaribleSdkEnvironment) {
 	const ethChainId = environmentToEthereumChainId(environment)
 	const ethNetworkName = ethereumNetworkMap[ethChainId]

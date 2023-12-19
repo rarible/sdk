@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import { Box } from "@mui/material"
 import type { WalletType } from "@rarible/sdk-wallet"
 import { useParams } from "react-router-dom"
@@ -8,7 +8,7 @@ import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { BuyPrepareForm } from "./buy-prepare-form"
 import { BuyForm } from "./buy-form"
 import { BuyComment } from "./comments/buy-comment"
@@ -19,8 +19,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 
 export function BuyPage() {
 	const params = useParams()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const sdk = useSdk()
+	const blockchain = sdk?.wallet?.walletType
 
 	return (
 		<Page header="Buy Token">

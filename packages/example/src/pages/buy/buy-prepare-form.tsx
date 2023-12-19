@@ -1,4 +1,4 @@
-import React, { useContext } from "react"
+import React from "react"
 import type { Order } from "@rarible/api-client"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 
 interface IBuyPrepareFormProps {
@@ -20,7 +20,7 @@ interface IBuyPrepareFormProps {
 
 export function BuyPrepareForm({ orderId, disabled, onComplete }: IBuyPrepareFormProps) {
 	const navigate = useNavigate()
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -28,16 +28,16 @@ export function BuyPrepareForm({ orderId, disabled, onComplete }: IBuyPrepareFor
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 				try {
 					const orderId = toOrderId(formData.orderId)
 					onComplete({
-						prepare: await connection.sdk.order.buy.prepare({
+						prepare: await sdk.order.buy.prepare({
 							orderId,
 						}),
-						order: await connection.sdk.apis.order.getOrderById({ id: orderId }),
+						order: await sdk.apis.order.getOrderById({ id: orderId }),
 					})
 					navigate(`/buy/${formData.orderId}`, {})
 				} catch (e) {

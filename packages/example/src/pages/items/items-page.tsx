@@ -1,12 +1,13 @@
-import React, { useContext, useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import type { Blockchain, Items } from "@rarible/api-client"
 import { Alert, AlertTitle, Box, CircularProgress } from "@mui/material"
 import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { ItemsList } from "./items/items-list"
 import { GetItemsComment } from "./comments/getitems-comment"
+import { useConnect } from "../../connector/context"
 
 function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string, blockchain?: string) {
 	const [items, setItems] = useState<Items | null>(null)
@@ -47,16 +48,13 @@ function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string, blockchain?: s
 }
 
 export function ItemsPage() {
-	const connection = useContext(ConnectorContext)
-	if (connection.state.status !== "connected") {
+	const connect = useConnect()
+	const sdk = useSdk()
+	if (connect.status !== "connected") {
 		return null
 	}
 
-	const { items, fetching, error } = useFetchItems(
-		connection.sdk,
-		connection.walletAddress,
-		connection.state.connection.blockchain
-	)
+	const { items, fetching, error } = useFetchItems(sdk, connect.address, connect.blockchain)
 	return (
 		<Page header="My Items">
 			<CommentedBlock sx={{ my: 2 }} comment={<GetItemsComment/>}>

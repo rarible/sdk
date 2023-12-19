@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import React, { useState } from "react"
 import { Box, IconButton, Stack } from "@mui/material"
 import type { Order } from "@rarible/api-client"
 import { useForm } from "react-hook-form"
@@ -10,7 +10,7 @@ import type { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fil
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdk } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 
 interface IBatchBuyPrepareFormProps {
@@ -21,7 +21,7 @@ interface IBatchBuyPrepareFormProps {
 
 export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuyPrepareFormProps) {
 	const [inputsCount, setInputsCount] = useState(2)
-	const connection = useContext(ConnectorContext)
+	const sdk = useSdk()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -29,20 +29,20 @@ export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuy
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
+				if (!sdk) {
 					return
 				}
 				try {
 					console.log("formData", formData)
 					onComplete({
-						prepare: await connection.sdk.order.batchBuy.prepare(
+						prepare: await sdk.order.batchBuy.prepare(
 							formData.orderId.filter((id: string) => id).map((id: string) => {
 								return {
 									orderId: toOrderId(id),
 								}
 							})
 						),
-						orders: (await connection.sdk.apis.order.getOrdersByIds({
+						orders: (await sdk.apis.order.getOrdersByIds({
 							orderIds: {
 								ids: formData.orderId.filter((id: string) => id),
 							},
