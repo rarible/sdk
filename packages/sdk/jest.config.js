@@ -17,4 +17,9 @@ module.exports = {
 			outputDirectory: "reports",
 		}],
 	],
+    globals: {
+        "ts-jest": {
+            tsconfig: "tsconfig-build.json",
+        },
+    },
 }
