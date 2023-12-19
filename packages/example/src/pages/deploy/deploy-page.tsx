@@ -87,18 +87,7 @@ export function DeployPage() {
 
 						try {
 							if (formData["blockchain"] === Blockchain.ETHEREUM) {
-								if ((connection.state as any)?.connection.blockchain === Blockchain.POLYGON) {
-									formData.blockchain = Blockchain.POLYGON
-								}
-								if ((connection.state as any)?.connection.blockchain === Blockchain.MANTLE) {
-									formData.blockchain = Blockchain.MANTLE
-								}
-								if ((connection.state as any)?.connection.blockchain === Blockchain.ARBITRUM) {
-									formData.blockchain = Blockchain.ARBITRUM
-								}
-								if ((connection.state as any)?.connection.blockchain === Blockchain.ZKSYNC) {
-									formData.blockchain = Blockchain.ZKSYNC
-								}
+								formData.blockchain = (connection.state as any)?.connection.blockchain
 							}
 							console.log("connection", connection, getDeployRequest(formData))
 
@@ -118,8 +107,7 @@ export function DeployPage() {
 								label="Blockchain"
 							>
 								<MenuItem value={WalletType.ETHEREUM}>
-									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE}
-                  / {Blockchain.ARBITRUM} / {Blockchain.ZKSYNC}
+									EVM Blockchain
 								</MenuItem>
 								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>

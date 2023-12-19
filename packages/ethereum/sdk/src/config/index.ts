@@ -14,6 +14,8 @@ import { arbitrumTestnetConfig } from "./testnet-arbitrum"
 import { arbitrumConfig } from "./arbitrum"
 import { zkSyncTestnetConfig } from "./testnet-zksync"
 import { zkSyncConfig } from "./zksync"
+import { lightlinkConfig } from "./lightlink"
+import { testnetLightlinkConfig } from "./testnet-lightlink"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -30,6 +32,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"arbitrum": arbitrumConfig,
 	"testnet-zksync": zkSyncTestnetConfig,
 	"zksync": zkSyncConfig,
+	lightlink: lightlinkConfig,
+	"testnet-lightlink": testnetLightlinkConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

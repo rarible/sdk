@@ -12,19 +12,35 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 		public network: EthereumNetwork,
 		public resultExtractor?: (getEvents: EthereumTransaction["getEvents"]) => Promise<TransactionResult | undefined>,
 	) {
-		this.blockchain = this.getBlockchain(network)
+		this.blockchain = BlockchainEthereumTransaction.getBlockchain(network)
 	}
 
-	private getBlockchain(network: EthereumNetwork): Blockchain {
+	static getBlockchain(network: EthereumNetwork): Blockchain {
 		switch (network) {
+			case "testnet":
+			case "dev-ethereum":
+			case "mainnet":
+			case "staging":
+				return Blockchain.ETHEREUM
+			case "dev-polygon":
 			case "mumbai":
 			case "polygon":
+			case "staging-polygon":
 				return Blockchain.POLYGON
 			case "mantle":
 			case "testnet-mantle":
 				return Blockchain.MANTLE
+			case "arbitrum":
+			case "testnet-arbitrum":
+				return Blockchain.ARBITRUM
+			case "zksync":
+			case "testnet-zksync":
+				return Blockchain.ZKSYNC
+			case "lightlink":
+			case "testnet-lightlink":
+				return Blockchain.LIGHTLINK
 			default:
-				return Blockchain.ETHEREUM
+				throw new Error(`Unsupported network: ${network}`)
 		}
 	}
 
@@ -65,6 +81,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://explorer.zksync.io/tx/${this.hash()}`
 			case "testnet-zksync":
 				return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
+			case "lightlink":
+				return `https://phoenix.lightlink.io/tx/${this.hash()}`
+			case "testnet-lightlink":
+				return `https://pegasus.lightlink.io/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

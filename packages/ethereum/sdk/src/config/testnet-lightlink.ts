@@ -3,23 +3,23 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const zkSyncConfig: EthereumConfig = {
-	basePath: "https://zksynk-api.rarible.org",
-	chainId: 324,
+export const testnetLightlinkConfig: EthereumConfig = {
+	basePath: "https://testnet-lightlink-api.rarible.org",
+	chainId: 1891,
 	exchange: {
 		v1: ZERO_ADDRESS,
-		v2: toAddress("0x5E0BbEd68e1b47C94a396226D8AC10DDe242e77c"),
+		v2: toAddress("0x2E015B0474364757d2cc8e28897DCBCdEE07e340"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0xEf3b8F0B7EE374F5F79BE4D43E8cbB4A7952f274"),
+		wrapper: ZERO_ADDRESS,
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
-		nft: toAddress("0xaf63698293A4c7d235CCf6F809C348D641C0bd62"),
-		erc20: toAddress("0xb5986bB35a6b53cb4764951Ad83cA12fa5a51C64"),
-		erc721Lazy: toAddress("0x463651f1620E411426E7eB70c3D2029106F2B6E0"),
-		erc1155Lazy: toAddress("0x99e3d07C2fA7d9566bAA34e84B9DD5b8fB98961a"),
+		nft: toAddress("0x166F6180170f438Ddc38050a2B708d38c0890956"),
+		erc20: toAddress("0x7d47126a2600E22eab9eD6CF0e515678727779A6"),
+		erc721Lazy: toAddress("0x98C2d878064dCD20489214cf0866f972f91784D0"),
+		erc1155Lazy: toAddress("0x12B372153249F006F756d0668fCDBD8fbD8b0a15"),
 		openseaV1: ZERO_ADDRESS,
 		cryptoPunks: ZERO_ADDRESS,
 	},
@@ -30,8 +30,8 @@ export const zkSyncConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: toAddress("0xB38F451e6Cc0Ad0e7a31C6Ec5648177Ba248eE9B"),
-		erc1155: toAddress("0x196e1D96e73c805ee39C766435A81fb235510939"),
+		erc721: toAddress("0xfeC0F8d936B9cBa92a332bCB06dC7DF4DdE0c253"),
+		erc1155: toAddress("0x63e3297a90B4101d0a4Bb8EbEFDF3D47C8d4D4Ac"),
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,
@@ -41,7 +41,7 @@ export const zkSyncConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0x8Ebe4A94740515945ad826238Fc4D56c6B8b0e60"),
+	weth: toAddress("0xF42991f02C07AB66cFEa282E7E482382aEB85461"),
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: ZERO_ADDRESS,
 }

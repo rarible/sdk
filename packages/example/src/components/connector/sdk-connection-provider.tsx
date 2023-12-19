@@ -10,6 +10,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { LogsLevel } from "@rarible/sdk/build/domain"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
+import { isEVMBlockchain } from "@rarible/sdk-common"
 import { EnvironmentContext } from "./environment-selector-provider"
 
 export interface IConnectorContext {
@@ -31,14 +32,10 @@ export interface ISdkConnectionProviderProps {
 }
 
 function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress {
+	if (isEVMBlockchain(blockchain) || blockchain === Blockchain.IMMUTABLEX) {
+		return toUnionAddress("ETHEREUM:" + address)
+	}
 	switch (blockchain) {
-		case Blockchain.ETHEREUM:
-		case Blockchain.POLYGON:
-		case Blockchain.MANTLE:
-		case Blockchain.ARBITRUM:
-		case Blockchain.ZKSYNC:
-		case Blockchain.IMMUTABLEX:
-			return toUnionAddress("ETHEREUM:" + address)
 		case Blockchain.FLOW:
 		case Blockchain.SOLANA:
 		case Blockchain.TEZOS:

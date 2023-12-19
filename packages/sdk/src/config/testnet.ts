@@ -11,4 +11,5 @@ export const testnetConfig: RaribleSdkConfig = {
 	mantleNetwork: "testnet-mantle",
 	arbitrumNetwork: "testnet-arbitrum",
 	zksync: "testnet-zksync",
+	lightlink: "testnet-lightlink",
 }

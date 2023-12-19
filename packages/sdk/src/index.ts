@@ -138,6 +138,13 @@ export function createRaribleSdk(
 			blockchainConfig.zksync,
 			ethConfig
 		),
+		createEthereumSdk(
+			filterWallet(wallet, WalletType.ETHEREUM),
+			apis,
+			Blockchain.LIGHTLINK,
+			blockchainConfig.lightlink,
+			ethConfig
+		),
 	)
 
 	const sdkContext: ISdkContext = {
