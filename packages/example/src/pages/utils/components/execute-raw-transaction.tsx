@@ -133,8 +133,6 @@ function getFlowEnv(env: RaribleSdkEnvironment): FlowNetwork {
 	switch (env) {
 		case "development":
 		case "testnet":
-		case "staging":
-			return "testnet"
 		case "prod":
 			return "mainnet"
 		default: throw new Error("Unrecognized env")

@@ -134,14 +134,6 @@ export function getCurrencyOptions(
 								contract: "ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
 							})
 							break
-						case "staging":
-							res.push({
-								type: "TOKEN",
-								label: "Rarible Test ERC20",
-								blockchain: Blockchain.ETHEREUM,
-								contract: "ETHEREUM:0x02cc113a068B643e4f98195935496aaf3E572e86",
-							})
-							break
 						case"prod":
 							res.push({
 								type: "TOKEN",
@@ -181,14 +173,6 @@ export function getCurrencyOptions(
 								label: "WETH",
 								blockchain: Blockchain.POLYGON,
 								contract: "POLYGON:0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa",
-							})
-							break
-						case "staging":
-							res.push({
-								type: "TOKEN",
-								label: "Rarible Test ERC20",
-								blockchain: Blockchain.ETHEREUM,
-								contract: "POLYGON:0x32CcA2bB34B36409b29166FbEC9b617CdA1E0410",
 							})
 							break
 						case"prod":

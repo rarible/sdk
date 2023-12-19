@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.4](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.64-beta.4) (2023-12-19)
+
+
+### Bug Fixes
+
+* zksync mainnet api path, staging has been removed ([e7b36d2](https://github.com/rarible/sdk/commit/e7b36d22852420964a61afa26315da4ecd74516c))
+
+
+
+
+
 ## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
 
 
