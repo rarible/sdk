@@ -4,7 +4,7 @@ import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
 import type { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
 import type { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
-import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
