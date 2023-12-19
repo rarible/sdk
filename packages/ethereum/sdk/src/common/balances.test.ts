@@ -51,7 +51,8 @@ describe("getBalance test", () => {
 })
 
 const envs = (Object.keys(configDictionary) as EthereumNetwork[])
-	.filter(network => network !== "mantle") // mantle production is not supported yet
+	// .filter(network => network !== "mantle") // mantle production is not supported yet
+	.filter(network => !network.includes("staging")) // mantle production is not supported yet
 
 
 describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
@@ -69,6 +70,8 @@ export function getAPIKey(env:  EthereumNetwork) {
 		case "mainnet":
 		case "mantle":
 		case "polygon":
+		case "arbitrum":
+		case "zksync":
 			return process.env.SDK_API_KEY_PROD
 		default:
 			return process.env.SDK_API_KEY_TESTNET

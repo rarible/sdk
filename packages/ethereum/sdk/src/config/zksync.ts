@@ -4,7 +4,7 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const zkSyncConfig: EthereumConfig = {
-	basePath: "https://zksyn-api.rarible.org",
+	basePath: "https://zksync-api.rarible.org",
 	chainId: 324,
 	exchange: {
 		v1: ZERO_ADDRESS,
