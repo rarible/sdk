@@ -1,8 +1,8 @@
 import React from "react"
 import { Alert, AlertTitle, Box } from "@mui/material"
-import { IRequestResult } from "../hooks/use-request-result"
-import { Icon } from "./icon"
 import { faCheck, faExclamationCircle } from "@fortawesome/free-solid-svg-icons"
+import type { IRequestResult } from "../hooks/use-request-result"
+import { Icon } from "./icon"
 
 interface IRequestResultProps<T> {
 	result: IRequestResult<any>["result"]
@@ -25,5 +25,6 @@ export function RequestResult({ result, completeRender }: IRequestResultProps<an
 					{completeRender?.(result.data)}
 				</Alert>
 			</Box>
+		default: return null
 	}
 }

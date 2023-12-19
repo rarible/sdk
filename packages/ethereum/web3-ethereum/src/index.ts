@@ -1,22 +1,19 @@
-import type { Contract, ContractSendMethod } from "web3-eth-contract"
+import type { Contract, ContractSendMethod, SendOptions } from "web3-eth-contract"
 import type Web3 from "web3"
-import type { PromiEvent, TransactionReceipt } from "web3-core"
-import { Provider, signTypedData } from "@rarible/ethereum-provider"
+import type { PromiEvent, TransactionConfig, TransactionReceipt } from "web3-core"
+import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
+import { EthereumProviderError, filterErrors, Provider, signTypedData } from "@rarible/ethereum-provider"
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
-import { backOff } from "exponential-backoff"
-import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { AbiItem } from "web3-utils"
-import { EthereumProviderError } from "@rarible/ethereum-provider"
-import { filterErrors } from "@rarible/ethereum-provider"
-import type { Web3EthereumConfig } from "./domain"
+import { DappType, getDappType, promiseSettledRequest, conditionalRetry, FAILED_TO_FETCH_ERROR } from "@rarible/sdk-common"
+import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
+import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
-import {
-	getContractMethodReceiptEvents,
-	getTransactionReceiptEvents,
-} from "./utils/log-parser"
+import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./utils/log-parser"
+import { getTransaction } from "./utils/get-transaction"
 
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
@@ -31,20 +28,14 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	async send(method: string, params: unknown[]): Promise<any> {
 		try {
 		  return await providerRequest(this.config.web3.currentProvider, method, params)
-		} catch (e: any) {
-			let signer: string | undefined
-			try {
-				signer = await this.getFrom()
-			} catch (e) {}
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
-				error: e,
-				code: e?.code,
+				...await getCommonErrorData(this.config),
+				error,
 				method: "Web3Ethereum.send",
 				data: {
 					method,
 					params,
-					from: signer,
 				},
 			})
 		}
@@ -54,19 +45,15 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		let signer: string | undefined
 		try {
 			signer = await this.getFrom()
-			const signature = await (this.config.web3.eth.personal as any).sign(message, signer)
+			const signature = await (this.config.web3.eth.personal as any).sign(message, signer, "")
 			filterErrors(signature)
 			return signature
-		} catch (e: any) {
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
-				error: e,
-				code: e?.code,
+				...await getCommonErrorData(this.config),
+				error,
 				method: "Web3Ethereum.personalSign",
-				data: {
-					message,
-					signer,
-				},
+				data: { message },
 			})
 		}
 	}
@@ -76,14 +63,12 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 		try {
 			signer = await this.getFrom()
 			return await signTypedData(this.send, signer, data)
-		} catch (e: any) {
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3Ethereum.signTypedData",
-				error: e,
-				code: e.code,
+				error,
 				data,
-				signer,
 			})
 		}
 	}
@@ -91,11 +76,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	async getFrom(): Promise<string> {
 		try {
 			return await getFrom(this.config.web3, this.config.from)
-		} catch (e) {
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3Ethereum.getFrom",
-				error: e,
+				error,
 				data: null,
 			})
 		}
@@ -104,12 +89,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	encodeParameter(type: any, parameter: any): string {
 		try {
 		  return this.config.web3.eth.abi.encodeParameter(type, parameter)
-		} catch (e: any) {
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3Ethereum.encodeParameter",
-				code: e?.code,
-				error: e,
+				error,
 				data: { type, parameter },
 			})
 		}
@@ -118,12 +102,11 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	decodeParameter(type: any, data: string): any {
 		try {
 		  return this.config.web3.eth.abi.decodeParameters([type], data)
-		} catch (e: any) {
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3Ethereum.decodeParameter",
-				error: e,
-				code: e?.code,
+				error,
 				data: { type, data },
 			})
 		}
@@ -131,13 +114,16 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 
 	async getBalance(address: Address): Promise<BigNumber> {
 		try {
-		  return toBigNumber(await this.config.web3.eth.getBalance(address))
-		} catch (e: any) {
+			const amount = await conditionalRetry(5, 3000, () =>
+				this.config.web3.eth.getBalance(address),
+			error => error?.message === FAILED_TO_FETCH_ERROR
+			)
+		  return toBigNumber(amount)
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3Ethereum.getBalance",
-				error: e,
-				code: e?.code,
+				error,
 				data: { address },
 			})
 		}
@@ -145,12 +131,12 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 
 	async getChainId(): Promise<number> {
 		try {
-		  return await this.config.web3.eth.getChainId()
-		} catch (e) {
+		  return +(await this.config.web3.eth.getChainId())
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3Ethereum.getChainId",
-				error: e,
+				error,
 				data: null,
 			})
 		}
@@ -159,11 +145,14 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	getWeb3Instance(): Web3 {
 		return this.config.web3
 	}
+
+	getCurrentProvider(): any {
+		return this.config.web3.currentProvider
+	}
 }
 
 export class Web3Contract implements EthereumProvider.EthereumContract {
-	constructor(private readonly config: Web3EthereumConfig, private readonly contract: Contract) {
-	}
+	constructor(private readonly config: Web3EthereumConfig, private readonly contract: Contract) {}
 
 	functionCall(name: string, ...args: any): EthereumProvider.EthereumFunctionCall {
 		return new Web3FunctionCall(
@@ -174,6 +163,7 @@ export class Web3Contract implements EthereumProvider.EthereumContract {
 
 export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 	private readonly sendMethod: ContractSendMethod
+	private readonly contractAddress: Address
 
 	constructor(
 		private readonly config: Web3EthereumConfig,
@@ -182,13 +172,13 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		private readonly args: any[],
 	) {
 		try {
-		  this.sendMethod = this.contract.methods[this.methodName](...this.args)
-		} catch (e: any) {
+			this.sendMethod = this.contract.methods[this.methodName](...this.args)
+			this.contractAddress = toAddress(this.contract.options.address)
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3FunctionCall.constructor",
-				error: e,
-				code: e?.code,
+				error,
 				data: {
 					contract: this.contract.options.address,
 					methodName: this.methodName,
@@ -211,11 +201,11 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 	async getData(): Promise<string> {
 		try {
 		  return await this.sendMethod.encodeABI()
-		} catch (e) {
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.getData",
-				error: e,
+				error,
 				data: {
 					contract: this.contract.options.address,
 					methodName: this.methodName,
@@ -227,129 +217,162 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 
 	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
 		try {
-		  return await this.sendMethod.estimateGas(options)
-		} catch (e) {
+			return await conditionalRetry(5, 3000, () =>
+				this.sendMethod.estimateGas(options),
+			(error) => error?.message === FAILED_TO_FETCH_ERROR)
+		} catch (error) {
+			let callInfo = null, data = null, chainId = undefined
+			try {
+				[callInfo, chainId, data] = await promiseSettledRequest([
+					this.getCallInfo(),
+					this.config.web3.eth.getChainId(),
+					await this.getData(),
+				])
+			} catch (_) {}
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.estimateGas",
-				error: e,
-				data: { options },
+				chainId,
+				error,
+				data: {
+					...callInfo,
+					options,
+					data,
+				},
 			})
 		}
 	}
 
 	async call(options: EthereumProvider.EthereumSendOptions = {}): Promise<any> {
+		let gasOptions: Web3EthereumGasOptions | undefined
 		try {
-			return await this.sendMethod.call({
-				from: this.config.from,
-				gas: options.gas,
-				gasPrice: options.gasPrice?.toString(),
-			})
-		} catch (e: any) {
-			let callInfo = null, callData = null
+			gasOptions = this.getGasOptions(options)
+			return await conditionalRetry(5, 3000, () =>
+				this.sendMethod.call({
+					from: this.config.from,
+					...gasOptions,
+				}),
+			(error) => error?.message === FAILED_TO_FETCH_ERROR
+			)
+		} catch (error) {
+			let info = null
+			let data = null
 			try {
-				callInfo = await this.getCallInfo()
-				callData = await this.getData()
-			} catch (e) {}
+				[info, data] = await promiseSettledRequest([
+					this.getCallInfo(),
+					this.getData(),
+				])
+			} catch (_) {}
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...await getCommonErrorData(this.config),
 				method: "Web3FunctionCall.call",
-				error: e,
-				code: e?.code,
+				error,
 				data: {
-					...(callInfo || {}),
-					data: callData,
+					...(info || {}),
+					data,
 					options,
+					gasOptions,
 				},
 			})
 		}
 	}
 
-	async send(options: EthereumProvider.EthereumSendOptions = {}): Promise<EthereumProvider.EthereumTransaction> {
-		let hashValue: string | undefined
+	private async _send(
+		options: EthereumProvider.EthereumSendOptions = {},
+		gasOptions = this.getGasOptions(options)
+	): Promise<EthereumProvider.EthereumTransaction> {
+		const [callInfo, chainId] = await Promise.all([this.getCallInfo(), this.config.web3.eth.getChainId()])
+		let hash: string | undefined
+		let data: string | undefined
+
 		try {
-			const from = toAddress(await this.getFrom())
+			data = await this.getData()
+			const from = toAddress(callInfo.from)
+
 			if (options.additionalData) {
 				const additionalData = toBinary(options.additionalData).slice(2)
-				const sourceData = toBinary(await this.getData()).slice(2)
-
-				const data = `0x${sourceData}${additionalData}`
-				const promiEvent = this.config.web3.eth.sendTransaction({
+				const sourceData = toBinary(data).slice(2)
+				const enhancedData = `0x${sourceData}${additionalData}`
+				const transactionOptions: TransactionConfig = {
 					from,
-					to: this.contract.options.address,
-					data,
-					gas: this.config.gas || options.gas,
+					to: this.contractAddress,
+					data: enhancedData,
 					value: options.value,
-					gasPrice: options.gasPrice?.toString(),
-				})
-				const { hash, receipt } = toPromises(promiEvent)
-				hashValue = await hash
-				const tx = await this.getTransaction(hashValue)
+					...gasOptions,
+				}
+				const promiEvent = this.config.web3.eth.sendTransaction(transactionOptions)
+				const promises = toPromises(promiEvent)
+				const transaction = await getTransaction(await promises.hash, this.config)
 
 				return new Web3Transaction(
-					receipt,
-					toWord(hashValue),
-					toBinary(data),
-					tx.nonce,
+					promises.receipt,
+					toWord(transaction.hash),
+					toBinary(enhancedData),
+					transaction.nonce,
 					from,
-					toAddress(this.contract.options.address),
+					this.contractAddress,
 					this.contract.options.jsonInterface
 				)
 			}
 
-			const promiEvent: PromiEvent<Contract> = this.sendMethod.send({
+			const sendMethodConfig: SendOptions = {
 				from,
-				gas: this.config.gas || options.gas,
 				value: options.value,
-				gasPrice: options.gasPrice?.toString(),
-			})
-			const { hash, receipt } = toPromises(promiEvent)
-			hashValue = await hash
-			const tx = await this.getTransaction(hashValue)
+				...gasOptions,
+			}
+			const promiEvent: PromiEvent<Contract> = this.sendMethod.send(sendMethodConfig)
+			const promises = toPromises(promiEvent)
+			const transaction = await getTransaction(await promises.hash, this.config)
 			return new Web3Transaction(
-				receipt,
-				toWord(hashValue),
-				toBinary(await this.getData()),
-				tx.nonce,
+				promises.receipt,
+				toWord(transaction.hash),
+				toBinary(data),
+				transaction.nonce,
 				from,
-				toAddress(this.contract.options.address)
+				this.contractAddress
 			)
-		} catch (e: any) {
-			let callInfo = null, callData = null
-			try {
-				callInfo = await this.getCallInfo()
-				callData = await this.getData()
-			} catch (e) {}
+		} catch (error) {
 			throw new EthereumProviderError({
-				provider: Provider.WEB3,
+				...getProvidersData(this.config),
 				method: "Web3FunctionCall.send",
-				error: e,
-				code: e?.code,
+				error,
+				chainId,
 				data: {
-					...(callInfo || {}),
-					data: callData,
-					hash: hashValue,
-					gas: this.config.gas || options.gas,
+					...callInfo,
 					options,
+					gasOptions,
+					data,
+					hash,
 				},
 			})
 		}
 
 	}
 
-	private getTransaction(hash: string) {
-		return backOff(async () => {
-			const value = await this.config.web3.eth.getTransaction(hash)
-			if (!value) {
-				throw new Error("No transaction found")
+	async send(options: EthereumProvider.EthereumSendOptions = {}): Promise<EthereumProvider.EthereumTransaction> {
+		try {
+			return await this._send(options)
+		} catch (e) {
+			//todo remove this hack for Phantom wallet after fixing issue with gasPrice=null for web3/Metamask
+			if (hasMessage(e) && e?.message?.toLowerCase().includes("missing or invalid parameters")) {
+				return await this._send(options, {})
 			}
-			return value
-		}, {
-			maxDelay: 5000,
-			numOfAttempts: 10,
-			delayFirstAttempt: true,
-			startingDelay: 300,
-		})
+			throw e
+		}
+	}
+
+	private getGasOptions(options: EthereumProvider.EthereumSendOptions) {
+		const gasOptions: Web3EthereumGasOptions = {
+			// If we won't setup null here explicitly sometimes MetaMask
+			// interpret this option as 'suggested by website' in their UI
+			// @see https://stackoverflow.com/questions/68926306/how-to-avoid-this-gas-fee-has-been-suggested-by-message-in-metamask-using-web3
+			gasPrice: null as unknown as Web3EthereumGasOptions["gasPrice"],
+		}
+		const gasPrice = options.gasPrice?.toString() || this.config.gasPrice
+		if (typeof gasPrice !== "undefined") gasOptions.gasPrice = gasPrice
+		const gas = options.gas || this.config.gas
+		if (typeof gas !== "undefined") gasOptions.gas = gas
+		return gasOptions
 	}
 
 	async getFrom(): Promise<string> {
@@ -371,12 +394,11 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 	async wait(): Promise<EthereumProvider.EthereumTransactionReceipt> {
 		try {
 		  return await this.receipt
-		} catch (e: any) {
+		} catch (error) {
 			throw new EthereumProviderError({
 				provider: Provider.WEB3,
 				method: "Web3Transaction.wait",
-				error: e,
-				code: e?.code,
+				error,
 				data: {
 					hash: this.hash,
 					data: this.data,
@@ -402,12 +424,34 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 }
 
 async function getFrom(web3: Web3, from: string | undefined): Promise<string> {
-	if (from) {
-		return from
-	}
+	if (from) return from
 	const [first] = await web3.eth.getAccounts()
-	if (!first) {
-		throw new Error("Wallet is not connected")
-	}
+	if (!first) throw new Error("Wallet is not connected")
 	return first
+}
+
+async function getCommonErrorData(config: Web3EthereumConfig) {
+	const [signer, chainId, blockNumber] = await promiseSettledRequest([
+		getFrom(config.web3, config.from),
+		config.web3.eth.getChainId(),
+		config.web3.eth.getBlockNumber(),
+	])
+	return {
+		...getProvidersData(config),
+		chainId,
+		signer,
+		blockNumber,
+	}
+}
+
+function getProvidersData(config: Web3EthereumConfig) {
+	return {
+		provider: Provider.WEB3,
+		providerId: getCurrentProviderId(config.web3),
+	}
+}
+
+export function getCurrentProviderId(web3: Web3 | undefined): DappType {
+	if (web3) return getDappType(web3.currentProvider) || DappType.Unknown
+	return DappType.Unknown
 }

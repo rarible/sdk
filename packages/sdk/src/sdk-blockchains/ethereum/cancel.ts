@@ -22,7 +22,7 @@ export class EthereumCancel {
 			throw new Error("Not an ethereum order")
 		}
 
-		const order = await this.sdk.apis.order.getOrderByHash({
+		const order = await this.sdk.apis.order.getValidatedOrderByHash({
 			hash: orderId,
 		})
 

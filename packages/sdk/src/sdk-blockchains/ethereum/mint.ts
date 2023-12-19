@@ -14,8 +14,6 @@ import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rar
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { CollectionMeta } from "@rarible/api-client/build/models/CollectionMeta"
-import type { NftCollectionMeta } from "@rarible/ethereum-api-client/build/models/NftCollectionMeta"
 import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -26,6 +24,7 @@ import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../t
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { EVMBlockchain } from "./common"
+import { isEVMBlockchain } from "./common"
 import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
 
 export class EthereumMint {
@@ -42,8 +41,8 @@ export class EthereumMint {
 	}
 
 	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
-		if (this.blockchain === Blockchain.POLYGON && request.lazyMint) {
-			throw new Error("Lazy minting on polygon is not supported")
+		if (request.lazyMint && !this.isSupportsLazyMint(nftCollection)) {
+			throw new LazyMintIsNotSupportedError(nftCollection.type)
 		}
 		const isLazy = request.lazyMint ?? false
 		const supply = request.supply ?? 1
@@ -104,32 +103,26 @@ export class EthereumMint {
 	}
 
 	isSupportsRoyalties(collection: CommonNftCollection): boolean {
-		if (collection.type === "ERC721") {
-			return isErc721v3Collection(collection) || isErc721v2Collection(collection)
-		} else if (collection.type === "ERC1155") {
-			return true
-		} else {
-			throw new Error("Unrecognized collection type")
+		switch (collection.type) {
+			case NftCollectionType.ERC721: return isErc721v3Collection(collection) || isErc721v2Collection(collection)
+			case NftCollectionType.ERC1155: return true
+			default: throw new Error("Unrecognized collection type")
 		}
 	}
 
 	isSupportsLazyMint(collection: CommonNftCollection): boolean {
-		if (this.blockchain === Blockchain.POLYGON) {
-			return false
+		switch (this.blockchain) {
+			case Blockchain.ETHEREUM: return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
+			default: return false
 		}
-		return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
 	}
 
 	async prepare(request: PrepareMintRequest): Promise<PrepareMintResponse> {
 		const collection = await getCollection(this.apis.collection, request)
-		if (!isSupportedCollection(collection.type)) {
-			throw new Error(`Collection with type "${collection}" not supported`)
-		}
-
 		const nftCollection = toNftCollection(collection)
 
 		return {
-			multiple: collection.type === "ERC1155",
+			multiple: collection.type === CollectionType.ERC1155,
 			supportsRoyalties: this.isSupportsRoyalties(nftCollection),
 			supportsLazyMint: this.isSupportsLazyMint(nftCollection),
 			submit: Action.create({
@@ -172,10 +165,9 @@ export class EthereumMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
-		if (meta.blockchain !== Blockchain.ETHEREUM && meta.blockchain !== Blockchain.POLYGON) {
-			throw new Error("Wrong blockchain")
+		if (!isEVMBlockchain(meta.blockchain)) {
+			throw new UnsupportedBlockchainError(meta.blockchain)
 		}
-
 		return {
 			name: meta.name,
 			description: meta.description,
@@ -196,59 +188,46 @@ export async function getCollection(
 	return api.getCollectionById({ collection: req.collectionId })
 }
 
-function toNftCollection(collection: Collection): CommonNftCollection {
-	const contract = convertToEthereumAddress(collection.id)
-	if (!isSupportedCollection(collection.type)) {
-		throw new Error(`Collection with type "${collection}" not supported`)
-	}
+function isNftCollectionFeatures(feature: string): feature is NftCollectionFeatures {
+	return feature in NftCollectionFeatures
+}
 
-	const convertStatus = (collectionStatus: CollectionStatus | undefined): NftCollectionStatus | undefined => {
-		switch (collectionStatus) {
-			case undefined: return undefined
-			case CollectionStatus.ERROR: return NftCollectionStatus.ERROR
-			case CollectionStatus.PENDING: return NftCollectionStatus.PENDING
-			case CollectionStatus.CONFIRMED: return NftCollectionStatus.CONFIRMED
-			default:
-				throw new Error(`Unknown Collection Status (${collectionStatus})`)
-		}
+function toNftCollection(collection: Collection): CommonNftCollection {
+	if (!isSupportedCollection(collection.type)) {
+		throw new UnsupportedCollectionError(collection.type)
 	}
 
 	return {
 		...collection,
-		status: convertStatus(collection.status),
-		id: toAddress(contract),
+		status: toCollectionStatus(collection.status),
+		id: toAddress(convertToEthereumAddress(collection.id)),
 		type: NftCollectionType[collection.type],
 		owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
-		features: collection.features?.map(x => NftCollectionFeatures[x]),
-		minters: collection.minters?.map(minter => convertToEthereumAddress(minter)),
-		meta: convertCollectionMeta(collection.meta),
+		features: collection.features?.reduce((acc, x) => {
+			if (isNftCollectionFeatures(x)) {
+				acc.push(NftCollectionFeatures[x])
+			}
+			return acc
+		}, [] as NftCollectionFeatures[]),
+		minters: collection.minters?.map(x => convertToEthereumAddress(x)),
 	}
 }
 
-function convertCollectionMeta(meta?: CollectionMeta): NftCollectionMeta | undefined {
-	if (!meta) {
-		return undefined
-	}
-	const feeRecipient = meta.feeRecipient !== undefined ? toAddress(meta.feeRecipient): undefined
-	return {
-		name: meta.name,
-		description: meta.description,
-		createdAt: meta.createdAt,
-		tags: meta.tags || [],
-		genres: meta.genres || [],
-		language: meta.language,
-		rights: meta.rights,
-		rightsUri: meta.rightsUri,
-		externalUri: meta.externalUri,
-		originalMetaUri: meta.originalMetaUri,
-		sellerFeeBasisPoints: meta.sellerFeeBasisPoints,
-		content: meta.content,
-		feeRecipient: feeRecipient,
+function toCollectionStatus(status: CollectionStatus | undefined): NftCollectionStatus | undefined {
+	switch (status) {
+		case undefined: return undefined
+		case CollectionStatus.ERROR: return NftCollectionStatus.ERROR
+		case CollectionStatus.PENDING: return NftCollectionStatus.PENDING
+		case CollectionStatus.CONFIRMED: return NftCollectionStatus.CONFIRMED
+		default: throw new Error(`Unknown Collection Status (${status})`)
 	}
 }
 
-function isSupportedCollection(type: Collection["type"]): type is  CollectionType.ERC721 | CollectionType.ERC1155 {
-	return type === CollectionType.ERC721 || type === CollectionType.ERC1155
+const supportedCollectionTypes = [CollectionType.ERC721, CollectionType.ERC1155] as const
+type SupportedCollectionType = typeof supportedCollectionTypes[number]
+
+function isSupportedCollection(type: Collection["type"]): type is SupportedCollectionType {
+	return supportedCollectionTypes.includes(type as SupportedCollectionType)
 }
 
 function toNftTokenId(tokenId: TokenId | undefined): NftTokenId | undefined {
@@ -259,4 +238,28 @@ function toNftTokenId(tokenId: TokenId | undefined): NftTokenId | undefined {
 		}
 	}
 	return undefined
+}
+
+export class LazyMintIsNotSupportedError extends Error {
+	constructor(collectionType: string) {
+		super(`Lazy minting is not supported for ${collectionType}`)
+		this.name = "LazyMintIsNotSupportedError"
+		Object.setPrototypeOf(this, LazyMintIsNotSupportedError.prototype)
+	}
+}
+
+export class UnsupportedCollectionError extends Error {
+	constructor(collectionType: string) {
+		super(`Collection with type "${collectionType}" not supported`)
+		this.name = "UnsupportedCollectionError"
+		Object.setPrototypeOf(this, UnsupportedCollectionError.prototype)
+	}
+}
+
+export class UnsupportedBlockchainError extends Error {
+	constructor(blockchain: string) {
+		super(`${blockchain} is not supported`)
+		this.name = "UnsupportedBlockchainError"
+		Object.setPrototypeOf(this, UnsupportedBlockchainError.prototype)
+	}
 }

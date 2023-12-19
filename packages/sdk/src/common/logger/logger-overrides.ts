@@ -2,77 +2,31 @@ import { NetworkError, Warning } from "@rarible/logger/build"
 import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
+import {
+	getStringifiedData,
+	isEVMWarning,
+	isFlowWarning,
+	isInfoLevel,
+	isSolanaWarning,
+	isTezosWarning,
+	WrappedError,
+} from "@rarible/sdk-common"
 import { NetworkErrorCode } from "../apis"
+import type { ISdkContext } from "../../domain"
+import type { PrepareBatchBuyResponse, PrepareFillRequest } from "../../types/order/fill/domain"
+import { getCollectionFromItemId, getContractFromMintRequest, getOrderIdFromFillRequest } from "../utils"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
+import type { PrepareOrderRequest, PrepareOrderUpdateRequest } from "../../types/order/common"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
+import type { PrepareTransferRequest } from "../../types/nft/transfer/domain"
+import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
+import type { PrepareBurnRequest } from "../../types/nft/burn/domain"
+import { WrappedAdvancedFn } from "../middleware/middleware"
+import { getErrorMessageString } from "./logger-middleware"
 
 const COMMON_NETWORK_ERROR_MESSAGES = [
 	"Network request failed",
 	"Failed to fetch",
-]
-
-const EVM_WARN_MESSAGES = [
-	"User denied transaction signature",
-	"User denied message signature",
-	"User rejected the transaction",
-	"User rejected the request",
-	"Request rejected",
-	"Sign transaction cancelled",
-	"Link iFrame Closed",
-	"Invalid transaction params: params specify an EIP-1559 transaction but the current network does not support EIP-1559",
-	"cancel",
-	"Canceled",
-	"cancelled",
-	"Firma de transacción cancelada",
-	"Firma transazione annullata",
-	"İşlem imzalama iptal edildi",
-	"Nutzer hat die Transaktion abgelehnt",
-	"Rejected",
-	"Sign transaction cancelled",
-	"Signature de transaction annulée",
-	"Signiervorgang abgebrochen",
-	"Signing transaction was cancelled",
-	"Transação de assinatura cancelada",
-	"Transaction rejected",
-	"User Canceled",
-	"User canceled",
-	"User declined transaction",
-	"User denied message signature",
-	"User denied transaction signature",
-	"User rejected the transaction",
-	"You canceled.",
-	"Подписание транзакции отменено",
-	"การลงนามธุรกรรมถูกยกเลิก",
-	"ยกเลิกแล้ว",
-	"用户取消了操作",
-	"签署交易已取消",
-	"underlying network changed",
-	"Balance not enough to cover gas fee. Please deposit at least",
-	"Biaya gas telah diperbarui dan Anda memerlukan",
-	"err: max fee per gas less than block base fee",
-	"Error while gas estimation with message cannot estimate gas",
-	"transaction may fail may require manual",
-	"gas limit",
-	"gas required exceeds allowance",
-	"Insufficient fee balance",
-	"insufficient funds for gas * price + value",
-	"intrinsic gas too low",
-	"max fee per gas less than block base fee",
-	"maxFeePerGas cannot be less than maxPriorityFeePerGas",
-	"Please deposit at least",
-	"replacement transaction underpriced",
-	"Returned error: insufficient funds for gas * price + value",
-	"Returned error: transaction underpriced",
-	"Saldo tidak cukup untuk menutup biaya gas. Harap setor setidaknya",
-	"The gas fee has been updated and you need",
-	"The gas price is low, please increase the gas price try again",
-	"transaction underpriced",
-	"Комиссия за газ обновлена, и вам необходимо",
-	"Insufficient ETH funds",
-	"Please enable Blind signing or Contract data in the Ethereum app Settings",
-	"Failed to sign transaction",
-	"Permission not given for signing message",
-	"rejected request from DeFi Wallet",
-	"Транзакция отменена",
-	"No keyring found for the requested account. Error info: There are keyrings, but none match the address",
 ]
 
 /**
@@ -87,10 +41,7 @@ export function isErrorWarning(err: any, blockchain: WalletType | undefined): bo
 		}
 
 		if (isEVMWalletType(blockchain)) {
-			if (
-				err.error?.code === 4001 ||
-				EVM_WARN_MESSAGES.some(msg => err?.message?.includes(msg))
-			) {
+			if (isEVMWarning(err)) {
 				return true
 			}
 		}
@@ -99,8 +50,12 @@ export function isErrorWarning(err: any, blockchain: WalletType | undefined): bo
 			return isTezosWarning(err)
 		}
 
+		if (blockchain === WalletType.FLOW) {
+			return isFlowWarning(err)
+		}
+
 		if (blockchain === WalletType.SOLANA) {
-			if (err?.name === "User rejected the request.") {
+			if (isSolanaWarning(err)) {
 				return true
 			}
 		}
@@ -117,18 +72,6 @@ function isNetworkError(callableName: string, error: any): boolean {
 	return COMMON_NETWORK_ERROR_MESSAGES.some(msg => error?.message?.includes(msg))
 }
 
-function isTezosWarning(err: any): boolean {
-	const isWrappedError = err.name === "TezosProviderError"
-	const originalError = isWrappedError ? err.error : err
-	return (originalError?.name === "UnknownBeaconError" && originalError?.title === "Aborted")
-    || originalError?.name === "NotGrantedTempleWalletError"
-    || originalError?.name === "NoAddressBeaconError"
-    || originalError?.name === "NoPrivateKeyBeaconError"
-    || originalError?.name === "BroadcastBeaconError"
-    || originalError?.name === "MissedBlockDuringConfirmationError"
-    || originalError?.message === "Error: timeout of 30000ms exceeded"
-    || err?.message?.endsWith("does not have enough funds for transaction")
-}
 
 export type ErrorLevel = LogLevel | NetworkErrorCode | CustomErrorCode | string
 
@@ -148,6 +91,10 @@ export function getErrorLevel(callableName: string, error: any, wallet: Blockcha
 
 	if (isNetworkError(callableName, error)) {
 		return NetworkErrorCode.NETWORK_ERR
+	}
+
+	if (isInfoLevel(error)) {
+		return LogLevel.INFO
 	}
 
 	if (
@@ -187,4 +134,204 @@ export function getExecRevertedMessage(msg: string) {
 	} catch (e) {}
 
 	return msg
+}
+
+export type LoggerDataContainerInput = {
+	callable: (...args: any[]) => any
+	args: any[]
+	responsePromise: Promise<any>
+	startTime: number
+	sdkContext: ISdkContext
+}
+export class LoggerDataContainer {
+	extraFields: Record<string, string | undefined>
+  stringifiedArgs: string
+  constructor(private input: LoggerDataContainerInput) {
+  	this.extraFields = getCallableExtraFields(input.callable)
+  	this.stringifiedArgs = LoggerDataContainer.getParsedArgs(input.args)
+  }
+
+  static getParsedArgs(args: any[]) {
+  	let parsedArgs
+  	try {
+  		parsedArgs = JSON.stringify(args)
+  	} catch (e) {
+  		try {
+  			parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
+  		} catch (err) {
+  			parsedArgs = "unknown"
+  		}
+  	}
+  	return parsedArgs
+  }
+  async getTraceData() {
+  	const res = await this.input.responsePromise
+  	return {
+  		level: LogLevel.TRACE,
+  		method: this.input.callable.name,
+  		message: "trace of " + this.input.callable.name,
+  		duration: (Date.now() - this.input.startTime) / 1000,
+  		args: this.stringifiedArgs,
+  		resp: JSON.stringify(res),
+  		...(this.extraFields || {}),
+  	}
+  }
+
+  getErrorData<T extends Error | WrappedError>(rawError: T) {
+  	let data
+  	const error = WrappedError.isWrappedError(rawError) ? rawError.error as Error : rawError
+  	try {
+  		data = {
+  			level: getErrorLevel(this.input.callable?.name, error, this.input.sdkContext?.wallet),
+  			method: this.input.callable?.name,
+  			message: getErrorMessageString(error),
+  			error: getStringifiedData(error),
+  			duration: (Date.now() - this.input.startTime) / 1000,
+  			args: this.stringifiedArgs,
+  			requestAddress: undefined as undefined | string,
+  			...(this.extraFields || {}),
+  		}
+  		if (error instanceof NetworkError || error?.name === "NetworkError") {
+  			data.requestAddress = (error as NetworkError)?.url
+  		}
+  	} catch (e) {
+  		data = {
+  			level: "LOGGING_ERROR",
+  			method: this.input.callable?.name,
+  			message: getErrorMessageString(e),
+  			error: getStringifiedData(e),
+  		}
+  	}
+
+  	return data
+  }
+}
+
+function isCallable(fn: any): fn is WrappedAdvancedFn {
+	return fn instanceof WrappedAdvancedFn || fn?.constructor?.name === "WrappedAdvancedFn"
+}
+export function getCallableExtraFields(callable: any): Record<string, string | undefined> {
+	try {
+		if (typeof callable?.name !== "string") return {}
+		if (isCallable(callable)) {
+			const parent = callable.parent
+
+			if (callable?.name.startsWith("order.buy.prepare.submit")) {
+				const request: PrepareFillRequest | undefined = parent?.args[0]
+				const orderId = getOrderIdFromFillRequest(request)
+				return {
+					orderId,
+					platform: parent?.context?.orderData?.platform,
+					collectionId: parent?.context?.orderData?.nftCollection,
+				}
+			}
+
+			if (callable?.name.startsWith("order.batchBuy.prepare.submit")) {
+				const request: PrepareFillRequest[] | undefined = parent?.args[0]
+				const orderIds = Array.isArray(request)
+					? request.map(req => getOrderIdFromFillRequest(req))
+						.join(",")
+					: null
+				const contextData = parent?.context as PrepareBatchBuyResponse | undefined
+				const platforms = Array.isArray(contextData?.prepared)
+					? contextData?.prepared.reduce((acc, req) => {
+						if (req?.orderData?.platform && !acc.includes(req?.orderData?.platform)) {
+							acc.push(req.orderData.platform)
+						}
+						return acc
+					}, [] as string[])
+						.join(",")
+					: null
+
+				const collections = Array.isArray(contextData?.prepared)
+					? contextData?.prepared.reduce((acc, req) => {
+						if (req?.orderData?.nftCollection && !acc.includes(req?.orderData?.nftCollection)) {
+							acc.push(req.orderData.nftCollection)
+						}
+						return acc
+					}, [] as string[])
+						.join(",")
+					: null
+				return {
+					orderId: `[${orderIds}]`,
+					platform: `[${platforms}]`,
+					collectionId: `[${collections}]`,
+				}
+			}
+
+			if (callable?.name.startsWith("order.bid.prepare.submit")) {
+				const request: PrepareBidRequest | undefined = parent?.args[0]
+				if (!request) return {}
+				return {
+					itemId: "itemId" in request ? request.itemId : undefined,
+					collectionId: "collectionId" in request ? request.collectionId : getCollectionFromItemId(request.itemId),
+				}
+			}
+
+			if (callable?.name.startsWith("order.bidUpdate.prepare.submit")) {
+				const request: PrepareOrderUpdateRequest | undefined = parent?.args[0]
+				return { orderId: request?.orderId }
+			}
+
+			if (callable?.name.startsWith("order.cancel")) {
+				const request: CancelOrderRequest | undefined = parent?.args[0]
+				return { orderId: request?.orderId }
+			}
+
+			if (callable?.name.startsWith("order.sell.prepare.submit")) {
+				const request: PrepareOrderRequest | undefined = parent?.args[0]
+				return {
+					itemId: request?.itemId,
+					collectionId: request ? getCollectionFromItemId(request.itemId) : undefined,
+				}
+			}
+
+			if (callable?.name.startsWith("order.sellUpdate.prepare.submit")) {
+				const request: PrepareOrderUpdateRequest | undefined = parent?.args[0]
+				return {
+					orderId: request?.orderId,
+					collectionId: parent?.context?.orderData?.nftCollection,
+				}
+			}
+
+			if (callable?.name.startsWith("order.acceptBid.prepare.submit")) {
+				const request: PrepareFillRequest | undefined = parent?.args[0]
+				let orderId = getOrderIdFromFillRequest(request)
+
+				return {
+					orderId,
+					collectionId: parent?.context?.orderData?.nftCollection,
+				}
+			}
+
+			if (callable?.name.startsWith("nft.transfer.prepare.submit")) {
+				const request: PrepareTransferRequest | undefined = parent?.args[0]
+				if (request?.itemId) {
+					return {
+						collectionId: getCollectionFromItemId(request.itemId),
+					}
+				}
+			}
+
+			if (callable?.name.startsWith("nft.mint.prepare.submit")) {
+				const request: PrepareMintRequest | undefined = parent?.args[0]
+				if (request) {
+					return {
+						collectionId: getContractFromMintRequest(request),
+					}
+				}
+			}
+
+			if (callable?.name.startsWith("nft.burn.prepare.submit")) {
+				const request: PrepareBurnRequest | undefined = parent?.args[0]
+				if (request) {
+					return {
+						collectionId: getCollectionFromItemId(request.itemId),
+					}
+				}
+			}
+
+		}
+	} catch (e) {}
+	return {}
 }

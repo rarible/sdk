@@ -55,12 +55,14 @@ describe.skip("get buy transaction", () => {
 			priceDecimal: "0.000000000000000002",
 			payouts: [],
 			originFees: [],
+			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
 		})
 
 		const response = await supertest(app)
 			.post("/v0.1/orders/fill-tx")
 			.send({
-				from: "ETHEREUM:" + buyerAddress,
+				from: buyerAddress,
+				to: buyerAddress,
 				request: {
 					order: sellOrder,
 					amount: 1,
@@ -124,6 +126,7 @@ describe.skip("get buy transaction", () => {
 			priceDecimal: "0.000000000000000002",
 			payouts: [],
 			originFees: [],
+			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
 		})
 
 		const response = await supertest(app)

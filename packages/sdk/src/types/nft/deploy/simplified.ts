@@ -1,5 +1,6 @@
 import type { Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
+import type { EVMBlockchain } from "@rarible/sdk-common"
 import type { CreateCollectionBlockchains } from "./domain"
 import type { CreateCollectionResponse } from "./domain"
 import type { CreatePublicCollectionArguments } from "./domain"
@@ -23,13 +24,13 @@ export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBl
  * Ethereum create collection argument types
  */
 export interface EthereumCreatePublicCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.ETHEREUM | Blockchain.POLYGON>,
+	AbstractCreateCollectionSimplified<EVMBlockchain>,
 	EthereumCreateCollectionSimplifiedCommon {
 	isPublic: true
 }
 
 export interface EthereumCreatePrivateCollectionSimplified extends
-	AbstractCreateCollectionSimplified<Blockchain.ETHEREUM | Blockchain.POLYGON>,
+	AbstractCreateCollectionSimplified<EVMBlockchain>,
 	EthereumCreateCollectionSimplifiedCommon {
 	isPublic: false
 	operators: UnionAddress[]

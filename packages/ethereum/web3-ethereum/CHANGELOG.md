@@ -3,6 +3,362 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **MPX-2520:** add calls to alternative rpc ([#543](https://github.com/rarible/sdk/issues/543)) ([49e3f71](https://github.com/rarible/sdk/commit/49e3f71287630cea72bb10c9392211e1e2db8a04))
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+
+### Bug Fixes
+
+* **MPX-2252:** provider errors ([#540](https://github.com/rarible/sdk/issues/540)) ([cba995d](https://github.com/rarible/sdk/commit/cba995dd506acc35fadd039c0ddf2c41eda28fc9))
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+
+### Features
+
+* **MPX-2458:** phantom wallet fix ([#536](https://github.com/rarible/sdk/issues/536)) ([64f6015](https://github.com/rarible/sdk/commit/64f60155bcbac4512d97c6dfb13ba57621c39c7d))
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+
+### Features
+
+* **MPX-2327,MPX-2305:** safe checking balance and removing fusd init ([#520](https://github.com/rarible/sdk/issues/520)) ([40aa14e](https://github.com/rarible/sdk/commit/40aa14e66098336fa00f63bdf8770df4880c4aa3))
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+
+### Features
+
+* **wl-1656, wl-1657, wl-1658:** add mantle testnet blockchain support ([#518](https://github.com/rarible/sdk/issues/518)) ([76ab8b6](https://github.com/rarible/sdk/commit/76ab8b63cd64307fb71da8a713b5947c3f48cf30))
+
+
+
+
+
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+
+### Bug Fixes
+
+* **MPX-2073:** properly setup gas options in Web3Ethereum ([#512](https://github.com/rarible/sdk/issues/512)) ([db8ad99](https://github.com/rarible/sdk/commit/db8ad9904137177e16668b8e3f4b1bcf06cbc9a1))
+
+
+### Features
+
+* **MPX-2089:** change magic getmetadata method ([#514](https://github.com/rarible/sdk/issues/514)) ([71e37b9](https://github.com/rarible/sdk/commit/71e37b9a75aa7937214b6e56749c4ebd7f880a89))
+
+
+
+
+
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* tests ([#510](https://github.com/rarible/sdk/issues/510)) ([2cc43c5](https://github.com/rarible/sdk/commit/2cc43c5716e1a5521dfdbfd7cff5cc209bee0f5d))
+
+
+
+
+
+## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
+
+
+### Bug Fixes
+
+* **MP-2036:** evm convertation, tests for bids ([#504](https://github.com/rarible/sdk/issues/504)) ([f1f4482](https://github.com/rarible/sdk/commit/f1f44825ca95405ce34793c4b6c3f75952037def))
+
+
+
+
+
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.1...v0.13.44-hotfix.2) (2023-06-30)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.0...v0.13.44-hotfix.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* sign personal msg, sign typed data request ([#501](https://github.com/rarible/sdk/issues/501)) ([01599d0](https://github.com/rarible/sdk/commit/01599d014f0f8d3707df07a28a828e0e02e7e2e1))
+
+
+
+
+
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.42-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.42...v0.13.42-hotfix.0) (2023-06-16)
+
+
+### Bug Fixes
+
+* add sdk common dep ([#495](https://github.com/rarible/sdk/issues/495)) ([63dd4a8](https://github.com/rarible/sdk/commit/63dd4a82453ec32e251d281918766bbfbc48c09a))
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
+
+
+### Features
+
+* support multibuy ([#484](https://github.com/rarible/sdk/issues/484)) ([c319392](https://github.com/rarible/sdk/commit/c319392205768dcb8f7a9376a486d4ee1dd3c939))
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
+
+
+### Bug Fixes
+
+* web3 ethereum gas limit ([#475](https://github.com/rarible/sdk/issues/475)) ([ae6be05](https://github.com/rarible/sdk/commit/ae6be0596737dc9da457b6c1e107026a075262e7))
+
+
+
+
+
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Bug Fixes
+
+* seaport 1.5, logging improvements, example flow setup ([#471](https://github.com/rarible/sdk/issues/471)) ([123d5c3](https://github.com/rarible/sdk/commit/123d5c39ce654a008dec9dd8a04086254b1227ca))
+
+
+### Features
+
+* sunset of solana ([#463](https://github.com/rarible/sdk/issues/463)) ([52b70e7](https://github.com/rarible/sdk/commit/52b70e75a6a897e9f570109fe03a653dde12dc51))
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+
+### Bug Fixes
+
+* second mattel login ([#464](https://github.com/rarible/sdk/issues/464)) ([9978732](https://github.com/rarible/sdk/commit/9978732537e70cfc692446552b2e0bb341a5b919))
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
 ## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
 
 

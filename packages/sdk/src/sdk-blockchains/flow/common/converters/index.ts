@@ -14,7 +14,6 @@ import {
 } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { FlowFee } from "@rarible/flow-sdk/build/types"
-import { toBn } from "@rarible/utils/build/bn"
 import type { UnionPart } from "../../../../types/order/common"
 import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
 
@@ -32,7 +31,7 @@ export function getFlowCollection(collection: ContractAddress | CollectionId): F
 	throw new Error("Invalid collection")
 }
 
-const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}:[0-9]{1,}/
+const FLOW_ITEM_ID_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z0-9]{3,}:[0-9]{1,}/
 
 /**
  * Parse union item id
@@ -79,9 +78,9 @@ const FLOW_ORDER_ID_REGEXP = /^FLOW:[0-9]{1,}/
  *
  * @param id - "FLOW:{any count of digits}"
  */
-export function parseOrderId(id: string): number {
+export function parseOrderId(id: string): string {
 	if (FLOW_ORDER_ID_REGEXP.test(id)) {
-		return parseInt(id.split(":")[1])
+		return id.split(":")[1]
 	}
 	throw new Error("Invalid order ID")
 }
@@ -100,6 +99,8 @@ export function getFungibleTokenName(contract: ContractAddress): FlowCurrency {
 				return "FLOW"
 			case "FUSD":
 				return "FUSD"
+			case "FiatToken":
+				return "USDC"
 			default:
 				throw new Error(`Unsupported contract ID: ${contract}`)
 		}
@@ -125,12 +126,12 @@ export function toFlowParts(parts: UnionPart[] | undefined): FlowFee[] {
 	return parts?.map(p => {
 		return {
 			account: convertToFlowAddress(p.account),
-			value: toBigNumber(toBn(p.value).dividedBy(10000).toString()),
+			value: toBigNumber(p.value.toString()),
 		}
 	}) || []
 }
 
-export function convertFlowOrderId(orderId: number): OrderId {
+export function convertFlowOrderId(orderId: string): OrderId {
 	return toOrderId(`${Blockchain.FLOW}:${orderId}`)
 }
 

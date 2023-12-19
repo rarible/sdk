@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { isString } from "lodash"
-import { FormState } from "../common/form/types"
+import type { FormState } from "../common/form/types"
 
 export interface IRequestResult<T> {
 	result: {
@@ -14,23 +14,47 @@ export interface IRequestResult<T> {
 	}
 	setComplete: (data: T) => void
 	setError: (error: any) => void
+	startFetching: () => void
+	stopFetching: () => void
+	isFetching: boolean
 }
 
 export function useRequestResult<T>(): IRequestResult<T> {
-	const [result, setResult] = useState<IRequestResult<T>["result"]>({type: "empty"})
+	const [isFetching, setFetching] = useState(false)
+	const [result, setResult] = useState<IRequestResult<T>["result"]>({ type: "empty" })
 
 	return {
 		result,
+		isFetching,
+		startFetching: () => {
+			setFetching(true)
+		},
+		stopFetching: () => {
+			setFetching(false)
+		},
 		setComplete: (data: T) => {
+			setFetching(false)
 			setResult({
 				type: "complete",
-				data
+				data,
 			})
 		},
 		setError: (error: any) => {
+			console.error(error)
+			setFetching(false)
+			let errorText
+			if (!error) {
+				errorText = "Unknown error"
+			} else if (isString(error)) {
+				errorText = error
+			} else if (error.message) {
+				errorText = error.message
+			} else {
+				errorText = JSON.stringify(error)
+			}
 			setResult({
 				type: "error",
-				error: !error ? "Unknown error" : (isString(error) ? error : (error.message ? error.message : JSON.stringify(error)))
+				error: errorText,
 			})
 		},
 	}

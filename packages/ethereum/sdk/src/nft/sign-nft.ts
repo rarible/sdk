@@ -34,7 +34,7 @@ export async function signNft(ethereum: Maybe<Ethereum>, chainId: number, nft: S
 			}
 			const signedData = await ethereum.signTypedData(data)
 			if (!signedData) {
-				throw new Error(`signNft error: signedData=${signedData}, data=${JSON.stringify(data)}`)
+				throw new Error(`signNft error: signedData is empty (${signedData}), data=${JSON.stringify(data)}`)
 			}
 			return toBinary(signedData)
 		}

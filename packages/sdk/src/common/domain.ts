@@ -1,9 +1,10 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { Action } from "@rarible/action"
+import type { SupportedBlockchain } from "@rarible/sdk-common"
 
 // @todo draft. probably will be changed in future
 export type CurrencyType = {
-	blockchain: ApiClient.Blockchain
+	blockchain: SupportedBlockchain
 	type: CurrencySubType
 }
 

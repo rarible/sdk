@@ -23,7 +23,7 @@ import { checkChainId } from "../check-chain-id"
 import type { SendFunction } from "../../common/send-transaction"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { FILL_CALLDATA_TAG } from "../../config/common"
-import { GOERLI_CONFIG } from "../../common/test/test-credentials"
+import { GOERLI_CONFIG, MUMBAI_CONFIG } from "../../common/test/test-credentials"
 import { createEthereumApis } from "../../common/apis"
 import type { EthereumNetwork } from "../../types"
 import { ItemType } from "./seaport-utils/constants"
@@ -75,6 +75,18 @@ describe.skip("seaport", () => {
 		async () => 0,
 		"testnet"
 	)
+
+	test("get signature", async () => {
+		try {
+			await seaportBuyerOrderHandler.getSignature({
+				hash: "0xc3fb0c2ce34d2758ccd163ecea11a4809a22374d1f13f1105d8161d09f67195f",
+				protocol: "0x00000000000001ad428e4906ae43d8f9852d0dd6",
+			})
+		} catch (e: any) {
+			expect(e.message).toBe("Order is not active or cancelled")
+		}
+		// Error when generating fulfillment data
+	})
 
 	test("fill order ERC-721 <-> ETH", async () => {
 		const accountAddressBuyer = toAddress(await ethereum.getFrom())
@@ -181,7 +193,7 @@ describe.skip("seaport", () => {
 			amount: "10",
 		} as const
 		const take = getOpenseaEthTakeData("10000000000")
-		const orderHash = await createSeaportOrder(ethereumSeller, send, make, take, { allowPartialFills: false })
+		const orderHash = await createSeaportOrder(ethereumSeller, send, make, take)
 
 		const order = await awaitOrder(sdkBuyer, orderHash)
 		const buyResponse = sdkBuyer.order.buy({
@@ -421,6 +433,47 @@ describe.skip("seaport", () => {
 	})
 })
 
+describe.skip("polygon seaport", () => {
+	const { provider: providerBuyer } = createE2eProvider(
+		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
+		MUMBAI_CONFIG
+	)
+	const web3 = new Web3(providerBuyer as any)
+
+	const ethereum = new Web3Ethereum({ web3, gas: 3000000 })
+
+	const env: EthereumNetwork = "polygon"
+
+	const config = getEthereumConfig(env)
+
+	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
+	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+
+	const apis = createEthereumApis(env)
+
+	const seaportBuyerOrderHandler = new SeaportOrderHandler(
+		ethereum,
+		send,
+		config,
+		apis,
+		async () => 0,
+		env
+	)
+
+
+	test("get signature", async () => {
+		try {
+			await seaportBuyerOrderHandler.getSignature({
+				hash: "0xd92b55e75cc2d0e9f160f9e1e7a0c3146bd9405941d89408f3303844e4b7aff4",
+				protocol: "0x00000000000001ad428e4906ae43d8f9852d0dd6",
+			})
+		} catch (e: any) {
+			expect(e.message).toBe("Order is not active or cancelled")
+		}
+		// Error when generating fulfillment data
+	})
+
+})
 function getOpenseaWethTakeData(amount: BigNumberValue) {
 	const weth = "0xc778417e063141139fce010982780140aa0cd5ab"
 	const sellerAmount = toBn(amount).multipliedBy("0.975")

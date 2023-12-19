@@ -373,15 +373,6 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 			[...getAtomicMatchArgAddresses(buyOrderToSignDTO), ...getAtomicMatchArgAddresses(sellOrderToSignDTO)]
 	}
 
-	async sendTransaction(
-		initial: SimpleOpenSeaV1Order,
-		inverted: SimpleOpenSeaV1Order,
-		request: OpenSeaV1OrderFillRequest
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(initial, inverted, request)
-		return this.send(functionCall, options)
-	}
-
 	async approveSingle(
 		maker: Address,
 		asset: Asset,
@@ -516,6 +507,7 @@ function getEthereumNetworkConfig(
 	switch (blockchain) {
 		case "ETHEREUM": return sdkConfig.ethereum
 		case "POLYGON": return sdkConfig.polygon
+		case "MANTLE": return sdkConfig.mantle
 		default: return
 	}
 }

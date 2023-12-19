@@ -16,6 +16,7 @@ import { createErc721V3Collection } from "../common/mint"
 import { MintResponseTypeEnum } from "../nft/mint"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { cancel } from "./cancel"
 import { signOrder } from "./sign-order"
 import { UpsertOrder } from "./upsert-order"
@@ -27,6 +28,7 @@ import { createSeaportOrder } from "./test/order-opensea"
 import { awaitOrder } from "./test/await-order"
 import { getOpenseaEthTakeData } from "./test/get-opensea-take-data"
 import { approve as approveTemplate } from "./approve"
+import { getEndDateAfterMonth } from "./test/utils"
 
 describe("cancel order", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1)
@@ -72,7 +74,7 @@ describe("cancel order", () => {
 				assetType: {
 					assetClass: "ETH",
 				},
-				value: toBigNumber("10"),
+				value: toBigNumber(MIN_PAYMENT_VALUE.toFixed()),
 			},
 			salt: toBigNumber("10") as any,
 			maker: toAddress(wallet.getAddressString()),
@@ -83,8 +85,11 @@ describe("cancel order", () => {
 				originFees: [],
 			},
 			signature: toBinary("0x"),
+			end: getEndDateAfterMonth(),
 		}
-		await testOrder(form)
+		const { tx, order } = await testOrder(form)
+		const events = await tx.getEvents()
+		expect(events.some(e => e.event === "Cancel" && e.returnValues.hash === order.hash)).toBe(true)
 	})
 
 	test("ExchangeV1 should work", async () => {
@@ -114,8 +119,11 @@ describe("cancel order", () => {
 				fee: 0,
 			},
 			signature: toBinary("0x"),
+			end: getEndDateAfterMonth(),
 		}
-		await testOrder(form)
+		const { tx } = await testOrder(form)
+		const events = await tx.getEvents()
+		expect(events.some(e => e.event === "Cancel")).toBe(true)
 	})
 
 	async function testOrder(form: OrderForm) {
@@ -123,6 +131,7 @@ describe("cancel order", () => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
+			config,
 			checkLazyOrder,
 			approve,
 			sign,
@@ -135,16 +144,7 @@ describe("cancel order", () => {
 		const order = await upserter.upsert({ order: form })
 		const tx = await cancel(checkLazyOrder, ethereum, send, config.exchange, checkWalletChainId, apis, order)
 		await tx.wait()
-
-		const cancelledOrder = await retry(15, 3000, async () => {
-			const current = await orderApi.getOrderByHash({ hash: order.hash })
-			if (!current.cancelled) {
-				throw new Error("Order is not cancelled")
-			}
-			return current
-		})
-
-		expect(cancelledOrder.cancelled).toEqual(true)
+		return { tx, order }
 	}
 })
 
@@ -194,7 +194,7 @@ describe.skip("test of cancelling seaport rinkeby order", () => {
 		await cancelTx.wait()
 
 		await retry(10, 3000, async () => {
-			const order = await sdkSeller.apis.order.getOrderByHash({ hash: orderHash })
+			const order = await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 			if (order.status !== "CANCELLED") {
 				throw new Error("Order has not been cancelled")
 			}
@@ -218,7 +218,7 @@ describe.skip("test of cancelling looksrare rinkeby order", () => {
 		await cancelTx.wait()
 
 		await retry(10, 3000, async () => {
-			const order = await sdkSeller.apis.order.getOrderByHash({ hash: orderHash })
+			const order = await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 			if (order.status !== "CANCELLED") {
 				throw new Error("Order has not been cancelled")
 			}

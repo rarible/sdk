@@ -4,9 +4,9 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
 import Web3 from "web3"
 import type { IRaribleSdk } from "../../index"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import { awaitItem } from "../../common/test/await-item"
+import { generateExpirationDate } from "../../common/suite/order"
+import { createSdk } from "../../common/test/create-sdk"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("Batch buy", () => {
@@ -15,24 +15,23 @@ describe("Batch buy", () => {
 
 	const web31 = new Web3(providerSeller)
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const sdkSeller = createRaribleSdk(new EthereumWallet(ethereum1), "development", {
-		logs: LogsLevel.DISABLED,
-	})
+	const sdkSeller = createSdk(new EthereumWallet(ethereum1), "development")
 
 	const web32 = new Web3(providerBuyer)
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdkBuyer = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
-		logs: LogsLevel.DISABLED,
-	})
+	const sdkBuyer = createSdk(new EthereumWallet(ethereum2), "development")
 
 	test("batch buy rarible orders", async () => {
-		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const token1 = await mint(sdkSeller)
+		const token2 = await mint(sdkSeller)
+		const tokens = [token1, token2]
 		const orders = await Promise.all(tokens.map(async (token) => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
-				price: "0.00000000001",
+				price: "0.0001",
 				currency: { "@type": "ETH" },
+				expirationDate: generateExpirationDate(),
 			})
 		}))
 
@@ -46,19 +45,22 @@ describe("Batch buy", () => {
 				value: 100,
 			}],
 		})))
-		console.log(tx)
 		expect(tx.transaction.data.endsWith("000009616c6c64617461")).toEqual(true)
 		await tx.wait()
 	})
 
 	test("batch buy rarible orders with simplified function", async () => {
-		const tokens = await Promise.all([mint(sdkSeller), mint(sdkSeller)])
+		const token1 = await mint(sdkSeller)
+		const token2 = await mint(sdkSeller)
+		const tokens = [token1, token2]
 		const orders = await Promise.all(tokens.map(async (token) => {
+			await awaitItem(sdkSeller, token.id)
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
-				price: "0.00000000001",
+				price: "0.0001",
 				currency: { "@type": "ETH" },
+				expirationDate: generateExpirationDate(),
 			})
 		}))
 
@@ -71,11 +73,10 @@ describe("Batch buy", () => {
 			}],
 		}))
 		const tx = await sdkBuyer.order.batchBuy(ordersRequests)
-		console.log(tx)
 		await tx.wait()
 	})
 
-	test("get buy amm info", async () => {
+	test.concurrent("get buy amm info", async () => {
 		if (!sdkBuyer.ethereum) {
 			throw new Error("Sdk was initialized without ethereum provider")
 		}

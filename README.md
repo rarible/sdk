@@ -2,21 +2,14 @@
 
 Rarible Multichain Protocol is a decentralized toolset that simplifies the way developers can work with NFTs. The protocol builds an abstraction layer for several blockchains and isolates the developer from their specifics with a Multichain SDK.
 
-Rarible Multichain SDK is fully blockchain-agnostic. You can find a list of supported blockchains on our [Features](https://docs.rarible.org/features/) page.
+Rarible Multichain SDK is fully blockchain-agnostic. You can find a list of supported blockchains on our [Blockchains](https://docs.rarible.org/docs/supported-chains) page.
 
-We use different environments for blockchain networks. See actual information on [API Reference](https://docs.rarible.org/api-reference/) page.
+We use different environments for blockchain networks. See actual information on [Reference](https://docs.rarible.org/reference/) page.
 
-Rarible Multichain SDK enables applications to easily interact with Rarible Protocol: query, issue and trade NFTs on any blockchain supported. See more information on our documentation [Reference](https://docs.rarible.org/reference/reference-overview/) section.
+Rarible Multichain SDK enables applications to easily interact with Rarible Protocol: query, transfer and trade NFTs on any blockchain supported. See more information on our documentation [Reference](https://docs.rarible.org/reference/getting-started) section.
 
 - [Example frontend app](#example-frontend-application)
-- [Installation](#installation)
-  - [Creating SDK with Ethereum providers](#ethereum-providers) 
-    - [Web3](#web3) 
-    - [Ethers.js](#ethers)
-  - [Creating SDK with Flow provider](#flow-providers) 
-  - [Creating SDK with Solana provider](#solana-provider) 
-  - [Creating SDK with Tezos providers](#tezos-providers)
-  - [Creating SDK with ImmutableX provider](#immutablex-provider)
+- [Installation and getting started](##installation--getting-started)
   - [Creating SDK with connectors](#use-rarible-sdk-wallet-connector)
 - [Methods](#methods)
   - [About advanced methods calls](#about-advanced-methods-calls)
@@ -38,86 +31,20 @@ Rarible Multichain SDK enables applications to easily interact with Rarible Prot
 - [Troubleshooting](#troubleshooting)
 
 ## Example frontend application 
-See our example how it works:
-1. Clone repository
-2. Install dependencies and build sdk. Execute in the root folder:
 
-    ```shell
-    yarn && yarn bootstrap && yarn build-all
-    ```
+You can find documentation about example app [here](https://docs.rarible.org/reference/example-application) Example app shows how to do basic NFT actions:
 
-3. Start the application in development mode:
-
-    ```shell
-    cd packages/example
-    yarn start
-    ```
-
-The application is available at [http://localhost:3000](http://localhost:3000)
-4. Click on "Connect" in left menu and choose your wallet (in selected environment).
-5. Check SDK methods!
+- Create collection
+- Mint an NFT
+- List an NFT for sale
+- Buy an NFT
+- etc
 
 You also can find **Typescript (.ts)** [`examples in that folder`](https://github.com/rarible/sdk/tree/master/packages/sdk-examples/src) for the frontend and backend side
 
-## Installation
+## Installation & Getting started
 
-Install Protocol SDK:
-
-```shell
-yarn add @rarible/sdk
-yarn add tslib@2.3.1
-yarn add web3@1.5.0 //or ethers@5.6.2
-```
-
-### Ethereum providers
-#### Web3
-Example of using Metamask provider ([read more about using provider](https://docs.metamask.io/guide/ethereum-provider.html#using-the-provider))
-```ts
-const blockchainProvider = new Web3(window.ethereum)
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet") //"prod" | "testnet" | "development"
-```
-
-#### Ethers
-```ts
-//read-only provider, not for sending transactions!
-const blockchainProvider = new ethers.Wallet(pk, new ethers.providers.JsonRpcProvider("https://NODE_URL"))
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
-```
-
-### Flow providers
-Fcl provider for Flow
-```ts
-import * as fcl from "@onflow/fcl"
-fcl.config({
-  "accessNode.api": "https://access-testnet.onflow.org", // Mainnet: "https://access-mainnet-beta.onflow.org"
-  "discovery.wallet": "https://fcl-discovery.onflow.org/testnet/authn" // Mainnet: "https://fcl-discovery.onflow.org/authn"
-})
-const raribleSdk = createRaribleSdk(fcl, "testnet")
-```
-
-### Solana provider
-* Solana provider interface with `publicKey` field and `signTransaction`, `signAllTransactions` methods
-```ts
-import { SolanaKeypairWallet } from "@rarible/solana-wallet"
-const blockchainProvider = SolanaKeypairWallet.createFrom(pk)
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
-```
-
-### Tezos providers
-* Tezos provider like in_memory_provider (@rarible/tezos-sdk), Beacon ([source](https://github.com/rarible/tezos-sdk/blob/master/packages/sdk/providers/beacon/beacon_provider.ts)) or etc.
-```ts
-import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
-const blockchainProvider = in_memory_provider(edsk, "https://TEZOS_NODE_URL")
-const raribleSdk = createRaribleSdk(blockchainProvider, "testnet")
-```
-
-### ImmutableX provider
-```ts
-import { ImxWallet } from "@rarible/immutable-wallet"
-const imxConnectorWallet = new ImxWallet("prod")
-await imxConnectorWallet.connect()
-const raribleSdk = createRaribleSdk(imxConnectorWallet, "prod")
-```
+You can find this information on our [Getting Started with SDK](https://docs.rarible.org/reference/getting-started) Reference page
 
 ### Use Rarible SDK Wallet Connector
 
@@ -407,6 +334,7 @@ const {
   payoutsSupport,
   supportsPartialFill
 } = await sdk.order.buy.prepare({ orderId: toOrderId("...") })
+const tx = await submit({ amount: 1 })
 await tx.wait()
 ```
 
@@ -594,81 +522,12 @@ const tx = await sdk.balances.withdrawBiddingBalance({
 
 ## Using SDK on server application
 
-The SDK was designed for use on the frontend side. To use the SDK on the server side (backend):
-
-1. Install packages:
-
-    ```shell
-    yarn add tslib@2.3.1
-    yarn add form-data
-    yarn add node-fetch
-    ```
-
-2. Add dependencies:
-
-    ```typescript
-    global.FormData = require("form-data")
-    global.window = {
-      fetch: require("node-fetch"),
-      dispatchEvent: () => {
-      },
-    }
-    global.CustomEvent = function CustomEvent() {
-      return
-    }
-    ```
-
-3. Try our [example](https://github.com/rarible/sdk/blob/master/packages/sdk-examples/src/backend/ethereum/buy.ts) to buy Ethereum NFT item on Rinkeby network:
-
-   Pass private key, node RPC URL, network ID, item ID for buyout and start:
-
-    ```shell
-    ETH_PRIVATE_KEY="0x..." \
-    ETHEREUM_RPC_URL="https://rinkeby.infura.io/..." \
-    ETHEREUM_NETWORK_ID="4" \
-    BUYOUT_ITEM_ID="0x1AF7A7555263F275433c6Bb0b8FdCD231F89B1D7:102581254137174039089845694331937600507918590364933200920056519678660477714440" \
-    ts-node packages/sdk-examples/src/backend/ethereum/buy.ts
-    ```
+You can find more information in our [docs](https://docs.rarible.org/reference/sdk-on-backend)
 
 ## API (Querying)
 
-Here are some basic examples of how to use APIs to query data. You can find much more methods in the doc: [https://multichain.redoc.ly/](https://multichain.redoc.ly/) or right in the typescript typings.
+Check our [Using API](https://docs.rarible.org/reference/using-api) page in the docs
 
-For using API with api key you should pass:
-```ts
-const raribleSdk = createRaribleSdk(provider, "testnet", {
-  apiKey: "$API_KEY"
-}) //"prod" | "testnet" | "development"
-```
-
-```ts
-//Fetch items by creator
-sdk.apis.item.getItemsByCreator({ creator: someAddress })
-
-//Fetch activity (events) by the Item
-sdk.apis.activity.getActivitiesByItem({ type: ["TRANSFER"], contract, tokenId })
-
-//etc. Please explore SDK APIs and openAPI docs
-```
-**NOTE:** Our indexer can scanning blockchains with a slight delay. If your code depends on API data you should awaiting that until it appears.     
-```ts
-//Don't do like that!
-const { address, tx } = await sdk.nft.createCollection({...})
-//If collection still not indexed you will get error
-const collection = await sdk.apis.collection.getCollectionById({collection: address })
-console.log('collection name', collection.name)
-```
-Wrap calls in any "retry" function.
-```ts
-//To do like that
-const { address, tx } = await sdk.nft.createCollection({...})
-const attempts = 10;
-const timeout = 3000;
-const collection = await retry(attempts, timeout, async () => {
-  return sdk.apis.collection.getCollectionById({collection: address })
-})
-console.log('collection name', collection.name)
-```
 ## Executing actions
 
 You can use SDK to create (mint), trade, transfer, and burn NFTs. All actions are handled in the same manner:

@@ -17,6 +17,8 @@ import type { EthereumConfig } from "../../../../../config/type"
 import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
 import { getTestContract } from "../../../../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../../../../types"
+import { getEndDateAfterMonth } from "../../../../test/utils"
+import { MIN_PAYMENT_VALUE_DECIMAL } from "../../../../../common/check-min-payment-value"
 
 // const goerliErc721V3ContractAddress = toAddress("0x1723017329a804564bC8d215496C89eaBf1F3211")
 // const devErc721V3ContractAddress = toAddress("0xf9864189fe52456345DD0055D210fD160694Dd08")
@@ -57,7 +59,7 @@ export async function makeRaribleV2Order(
 	const sellOrder = await sdk.order.sell({
 		type: "DATA_V2",
 		amount: 1,
-		priceDecimal: toBn(request?.price ?? "0.000000000001"),
+		priceDecimal: toBn(request?.price ?? MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
 		takeAssetType: {
 			assetClass: "ETH",
 		},
@@ -68,6 +70,7 @@ export async function makeRaribleV2Order(
 			contract: token.contract,
 			tokenId: token.tokenId,
 		},
+		end: getEndDateAfterMonth(),
 	})
 
 	return await waitUntilOrderActive(sdk, sellOrder.hash)
@@ -129,7 +132,7 @@ export async function makeAmmOrder(
 	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, env, ethereum, send, config.sudoswap.pairFactory, 2)
 	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
 	return await retry(20, 2000, async () => {
-		return await sdk.apis.order.getOrderByHash({ hash: orderHash })
+		return await sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
 	}) as SimpleAmmOrder
 }
 
@@ -160,7 +163,7 @@ export function ordersToRequests(
 
 export function waitUntilOrderActive(sdk: RaribleSdk, orderHash: string) {
 	return retry(30, 2000, async () => {
-		const order = await sdk.apis.order.getOrderByHash({ hash: orderHash })
+		const order = await sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		expect(order.status).toBe("ACTIVE")
 		return order
 	})

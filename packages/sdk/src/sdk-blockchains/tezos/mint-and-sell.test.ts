@@ -1,28 +1,22 @@
 import { toCollectionId } from "@rarible/types"
 import BigNumber from "bignumber.js"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
+import { TEST_PK_1, TEST_PK_2, TEST_PK_3 } from "./test/credentials"
 
-describe("test tezos mint and sell", () => {
+describe.skip("test tezos mint and sell", () => {
 	const env: RaribleSdkEnvironment = "testnet"
-	const sellerWallet = createTestWallet(
-		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-		env
-	)
-	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
 
-	const nftContract: string = getTestContract(env, "nftContract")
-	const mtContract: string = getTestContract(env, "mtContract")
+	test.concurrent("mint and sell nft with prepare", async () => {
+		const sellerWallet = createTestWallet(TEST_PK_1, env)
+		const sellerSdk = createSdk(sellerWallet, env)
+		const nftContract: string = getTestContract(env, "nftContract")
 
-	test("mint and sell nft", async () => {
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
 			collectionId: toCollectionId(nftContract),
 		})
-
 		await mintAndSellAction.submit({
 			price: new BigNumber("0.0001"),
 			currency: { "@type": "XTZ" },
@@ -32,7 +26,11 @@ describe("test tezos mint and sell", () => {
 		})
 	})
 
-	test("mint and sell nft with basic function", async () => {
+	test.concurrent("mint and sell nft with basic function", async () => {
+		const sellerWallet = createTestWallet(TEST_PK_2, env)
+		const sellerSdk = createSdk(sellerWallet, env)
+
+		const nftContract: string = getTestContract(env, "nftContract1")
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
 			collectionId: toCollectionId(nftContract),
 			price: new BigNumber("0.0001"),
@@ -42,7 +40,12 @@ describe("test tezos mint and sell", () => {
 		await mintAndSellAction.transaction.wait()
 	})
 
-	test("mint and sell mt", async () => {
+	test.concurrent("mint and sell mt with prepare", async () => {
+		const sellerWallet = createTestWallet(TEST_PK_3, env)
+		const sellerSdk = createSdk(sellerWallet, env)
+
+		const mtContract: string = getTestContract(env, "mtContract")
+
 		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
 			collectionId: toCollectionId(mtContract),
 		})

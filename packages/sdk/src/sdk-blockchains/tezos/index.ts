@@ -25,10 +25,12 @@ import { TezosBid } from "./bid"
 export function createTezosSdk(
 	wallet: Maybe<TezosWallet>,
 	_apis: IApisSdk,
-	config: RaribleSdkConfig,
+	blockchainConfig: RaribleSdkConfig,
+	config?: { apiKey?: string}
 ): IRaribleInternalSdk {
-	const network = config.tezosNetwork
-	const maybeProvider = getMaybeTezosProvider(wallet?.provider, network, config)
+	const network = blockchainConfig.tezosNetwork
+	const maybeProvider =
+    getMaybeTezosProvider(wallet?.provider, network, { ...blockchainConfig, apiKey: config?.apiKey })
 	const sellService = new TezosSell(maybeProvider, _apis)
 	const mintService = new TezosMint(maybeProvider, _apis, network)
 	const balanceService = new TezosBalance(maybeProvider, network)
@@ -53,8 +55,8 @@ export function createTezosSdk(
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
-			fill: { prepare: fillService.fill },
-			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			fill: { prepare: fillService.buy },
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
 			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
 			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
@@ -66,6 +68,7 @@ export function createTezosSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: notImplemented,
+			transfer: notImplemented,
 			getBiddingBalance: nonImplementedAction,
 			depositBiddingBalance: nonImplementedAction,
 			withdrawBiddingBalance: nonImplementedAction,

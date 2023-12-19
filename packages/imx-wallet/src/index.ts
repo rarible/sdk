@@ -24,7 +24,7 @@ export class ImxWallet {
 		env: this.env,
 	}
 
-	public readonly link = new Link(this.network.linkAddress, this.iframeOptions)
+	public readonly link = new Link(this.network.linkAddress, this.iframeOptions, "v3")
 
 	constructor(
 		private readonly env: ImxEnv,

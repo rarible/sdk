@@ -31,6 +31,7 @@ import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { getNftContractAddress } from "../../common/utils"
 import { getAuctionHouse, getAuctionHouseFee } from "./common/auction-house"
 import { extractPublicKey } from "./common/address-converters"
 import { getMintId, getOrderData, getOrderId, getPreparedOrder, getPrice, getTokensAmount } from "./common/order"
@@ -125,6 +126,9 @@ export class SolanaOrder {
 			supportedCurrencies: getCurrencies(),
 			baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
 			submit: updateAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.make.type),
+			},
 		}
 	}
 
@@ -254,6 +258,9 @@ export class SolanaOrder {
 			baseFee: 0,
 			getConvertableValue: this.getConvertableValue,
 			submit: updateAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.take.type),
+			},
 		}
 	}
 

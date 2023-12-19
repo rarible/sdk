@@ -3,6 +3,607 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* **PLTF-182:** zksync support ([#579](https://github.com/rarible/sdk/issues/579)) ([3b90055](https://github.com/rarible/sdk/commit/3b90055eb6e15743286b622b3bf787431f7ce7ac))
+
+
+
+
+
+## [0.13.63-beta.3](https://github.com/rarible/sdk/compare/v0.13.63-beta.2...v0.13.63-beta.3) (2023-12-10)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.63-beta.2](https://github.com/rarible/sdk/compare/v0.13.63-beta.1...v0.13.63-beta.2) (2023-12-10)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.63-beta.1](https://github.com/rarible/sdk/compare/v0.13.63-beta.0...v0.13.63-beta.1) (2023-12-06)
+
+
+### Features
+
+* **PLTF-157:** update royalty cut formula ([#575](https://github.com/rarible/sdk/issues/575)) ([c77380e](https://github.com/rarible/sdk/commit/c77380ef7fd8fd4995623622c28a86ba31e7afef))
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+
+### Features
+
+* **PLTF-110:** update mattel transfer event ([#572](https://github.com/rarible/sdk/issues/572)) ([fe6590a](https://github.com/rarible/sdk/commit/fe6590ae4a46c6ed42446657671f04a716fa2056))
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+
+### Features
+
+* **PLTF-110:** update mattel transfer event ([#572](https://github.com/rarible/sdk/issues/572)) ([fe6590a](https://github.com/rarible/sdk/commit/fe6590ae4a46c6ed42446657671f04a716fa2056))
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+
+### Features
+
+* **PLTF-44:** support arbitrum ([#571](https://github.com/rarible/sdk/issues/571)) ([978bed5](https://github.com/rarible/sdk/commit/978bed5b1e3fd339450e70fb45e2836ccec3913b))
+
+
+
+
+
+## [0.13.59-fix.9](https://github.com/rarible/sdk/compare/v0.13.59-fix.8...v0.13.59-fix.9) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.8](https://github.com/rarible/sdk/compare/v0.13.59-fix.7...v0.13.59-fix.8) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.7](https://github.com/rarible/sdk/compare/v0.13.59-fix.6...v0.13.59-fix.7) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.6](https://github.com/rarible/sdk/compare/v0.13.59-fix.5...v0.13.59-fix.6) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.5](https://github.com/rarible/sdk/compare/v0.13.59-fix.4...v0.13.59-fix.5) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.4](https://github.com/rarible/sdk/compare/v0.13.59-fix.3...v0.13.59-fix.4) (2023-11-17)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.3](https://github.com/rarible/sdk/compare/v0.13.59-fix.2...v0.13.59-fix.3) (2023-11-17)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.59-fix.2](https://github.com/rarible/sdk/compare/v0.13.59-fix.1...v0.13.59-fix.2) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes init collection ([7b718c2](https://github.com/rarible/sdk/commit/7b718c295737d06da347f31379e3ea63976b503c))
+
+
+
+
+
+## [0.13.59-fix.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.0...v0.13.59-fix.1) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes sell fix ([26da778](https://github.com/rarible/sdk/commit/26da778ca8aa3992f2e665612ca6f46ddf0f4fe0))
+
+
+
+
+
+## [0.13.59-fix.0](https://github.com/rarible/sdk/compare/v0.13.59...v0.13.59-fix.0) (2023-11-16)
+
+
+### Bug Fixes
+
+* **PLTF-127:** fix mattel sign personal message ([#566](https://github.com/rarible/sdk/issues/566)) ([ea068aa](https://github.com/rarible/sdk/commit/ea068aa377bbb2b170c31b1814662c4c2337a766))
+
+
+
+
+
+## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
+
+
+### Features
+
+* **PLTF-104:** gamisodes collection support ([#564](https://github.com/rarible/sdk/issues/564)) ([a6b3f53](https://github.com/rarible/sdk/commit/a6b3f53aa978ac943dd772b7b2a0285bb27ac19a))
+
+
+
+
+
+## [0.13.58](https://github.com/rarible/sdk/compare/v0.13.57-fix.0...v0.13.58) (2023-11-14)
+
+
+### Features
+
+* **PLTF-111:** update flow api client ([#561](https://github.com/rarible/sdk/issues/561)) ([e15d622](https://github.com/rarible/sdk/commit/e15d6227abdec6baf92f2c33e36bee919271d7cb))
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **PLTF-43:** check collection init ([#552](https://github.com/rarible/sdk/issues/552)) ([7e2b477](https://github.com/rarible/sdk/commit/7e2b4778e4dd1b867eaf614d39d123a7b09feccc))
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.52-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.52...v0.13.52-hotfix.0) (2023-09-18)
+
+
+### Bug Fixes
+
+* **MPX-2461:** garage token contract supporting ([#535](https://github.com/rarible/sdk/issues/535)) ([f087b30](https://github.com/rarible/sdk/commit/f087b3018c0fa5ae3ed9f74eaca6c95a1473a17b))
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+
+### Features
+
+* support new version of imx sdk ([43c4ec0](https://github.com/rarible/sdk/commit/43c4ec030c5f0c914bcec337524b395c16a385be))
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+
+### Features
+
+* support new version of imx sdk ([8d8eea3](https://github.com/rarible/sdk/commit/8d8eea3b7470ede5dc0e54ae53ddb05ae7feab32))
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+
+### Features
+
+* **MPX-2327,MPX-2305:** safe checking balance and removing fusd init ([#520](https://github.com/rarible/sdk/issues/520)) ([40aa14e](https://github.com/rarible/sdk/commit/40aa14e66098336fa00f63bdf8770df4880c4aa3))
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+
+### Features
+
+* **wl-1656, wl-1657, wl-1658:** add mantle testnet blockchain support ([#518](https://github.com/rarible/sdk/issues/518)) ([76ab8b6](https://github.com/rarible/sdk/commit/76ab8b63cd64307fb71da8a713b5947c3f48cf30))
+
+
+
+
+
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* tests ([#510](https://github.com/rarible/sdk/issues/510)) ([2cc43c5](https://github.com/rarible/sdk/commit/2cc43c5716e1a5521dfdbfd7cff5cc209bee0f5d))
+
+
+
+
+
+## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+
+### Bug Fixes
+
+* **MPX-2118:** tezos queries with api key ([#505](https://github.com/rarible/sdk/issues/505)) ([c53e178](https://github.com/rarible/sdk/commit/c53e17817b28ab95a0355105c081387ffcc9bcad))
+
+
+
+
+
+## [0.13.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.1...v0.13.44-hotfix.2) (2023-06-30)
+
+
+### Bug Fixes
+
+* flow api key ([#503](https://github.com/rarible/sdk/issues/503)) ([949fc15](https://github.com/rarible/sdk/commit/949fc1595b4b72a0f3c4f2c5d53bca58cf5da0bd))
+
+
+
+
+
+## [0.13.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.0...v0.13.44-hotfix.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **MPX-2103:** error listing on new mattel collections ([#502](https://github.com/rarible/sdk/issues/502)) ([d5a4707](https://github.com/rarible/sdk/commit/d5a4707a2385eb3967eca1eb0f6e76b443e65bd9))
+
+
+
+
+
+## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
+
+
+### Features
+
+* **MPX-1994:** sardine checkout ([#500](https://github.com/rarible/sdk/issues/500)) ([ce5193e](https://github.com/rarible/sdk/commit/ce5193e6e04de9d25e569156b68b1217b667a933))
+
+
+
+
+
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.42-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.42...v0.13.42-hotfix.0) (2023-06-16)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.42](https://github.com/rarible/sdk/compare/v0.13.41...v0.13.42) (2023-06-16)
+
+
+### Features
+
+* new mattel contracts ([#494](https://github.com/rarible/sdk/issues/494)) ([73273e2](https://github.com/rarible/sdk/commit/73273e2aa3f180cc1718796b7b7d4da5f5978675))
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.36](https://github.com/rarible/sdk/compare/v0.13.35...v0.13.36) (2023-05-18)
+
+
+### Bug Fixes
+
+* garage card list ([#479](https://github.com/rarible/sdk/issues/479)) ([3248f8a](https://github.com/rarible/sdk/commit/3248f8ae2ee27374a96c9005e8e7039249055270))
+
+
+
+
+
+## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
+
+
+### Bug Fixes
+
+* mattel prod contracts ([#477](https://github.com/rarible/sdk/issues/477)) ([f72583b](https://github.com/rarible/sdk/commit/f72583bc97cb71840130ca0772c995203ae42019))
+
+
+
+
+
+## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
+
+
+### Bug Fixes
+
+* change barbie testnet contracts ([#476](https://github.com/rarible/sdk/issues/476)) ([0656165](https://github.com/rarible/sdk/commit/0656165751064ee6fc442c1e7691b7ff06984dc5))
+
+
+
+
+
+## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
+
+
+### Bug Fixes
+
+* revert solana support ([#474](https://github.com/rarible/sdk/issues/474)) ([6767c84](https://github.com/rarible/sdk/commit/6767c84c38d08af7411e9a60770b0646d8a50a02))
+
+
+
+
+
+## [0.13.30](https://github.com/rarible/sdk/compare/v0.13.29...v0.13.30) (2023-05-09)
+
+
+### Bug Fixes
+
+* list barbie item ([#472](https://github.com/rarible/sdk/issues/472)) ([df75955](https://github.com/rarible/sdk/commit/df759557797e5af59c13399c6d346c0ed0faa208))
+
+
+
+
+
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Features
+
+* sunset of solana ([#463](https://github.com/rarible/sdk/issues/463)) ([52b70e7](https://github.com/rarible/sdk/commit/52b70e75a6a897e9f570109fe03a653dde12dc51))
+
+
+
+
+
+## [0.13.28](https://github.com/rarible/sdk/compare/v0.13.27...v0.13.28) (2023-05-03)
+
+
+### Bug Fixes
+
+* flow zero address ([#470](https://github.com/rarible/sdk/issues/470)) ([52d0c9c](https://github.com/rarible/sdk/commit/52d0c9cb71c26252ab60b672c6fe835e2e57e99a))
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.23](https://github.com/rarible/sdk/compare/v0.13.22...v0.13.23) (2023-04-24)
+
+
+### Features
+
+* transfer native tokens ([#467](https://github.com/rarible/sdk/issues/467)) ([dcd61f3](https://github.com/rarible/sdk/commit/dcd61f3efae08851aa9467d52d56b02cd223a59c))
+
+
+
+
+
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+
+### Bug Fixes
+
+* duration of flow listing ([#466](https://github.com/rarible/sdk/issues/466)) ([74006e6](https://github.com/rarible/sdk/commit/74006e688be729928e135340f744195ea33199fa))
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+
+### Bug Fixes
+
+* flow storefront change method ([#457](https://github.com/rarible/sdk/issues/457)) ([af95887](https://github.com/rarible/sdk/commit/af95887e414dbe5e54dbb62d7eebda01a370853b))
+* second mattel login ([#464](https://github.com/rarible/sdk/issues/464)) ([9978732](https://github.com/rarible/sdk/commit/9978732537e70cfc692446552b2e0bb341a5b919))
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
 ## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
 
 

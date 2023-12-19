@@ -10,6 +10,12 @@ export type EthereumNetwork =
   | "dev-ethereum"
   | "dev-polygon"
   | "staging-polygon"
+  | "mantle"
+  | "testnet-mantle"
+  | "arbitrum"
+  | "testnet-arbitrum"
+  | "zksync"
+  | "testnet-zksync"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -27,6 +33,7 @@ export interface IRaribleEthereumSdkConfig {
 	logs?: LogsConfig
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
+	mantle?: EthereumNetworkConfig
 	marketplaceMarker?: Binary
 	apiKey?: string
 }

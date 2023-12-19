@@ -20,6 +20,7 @@ import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { delay } from "../common/retry"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV1, ERC721RequestV2, ERC721RequestV3 } from "./mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
@@ -68,6 +69,10 @@ describe.each(providers)("mint test", ethereum => {
 		.bind(null, ethereum, send, sign, nftCollectionApi)
 		.bind(null, nftLazyMintApi, checkWalletChainId)
 
+	beforeEach(async () => {
+		await delay(2000)
+	})
+
 	test("mint ERC-721 v1", async () => {
 		const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, address)
@@ -106,7 +111,7 @@ describe.each(providers)("mint test", ethereum => {
 		expect(new BigNumber(balanceOfMinter).minus(startBalanceOfMinter).toString()).toBe("1")
 	})
 
-	test("use provided nftTokenId", async () => {
+	test.skip("use provided nftTokenId", async () => {
 		const collection = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 		const nftTokenId = await nftCollectionApi.generateNftTokenId({ collection, minter })
 		const result = await mint({

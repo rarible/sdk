@@ -10,8 +10,9 @@ export const testnetEthereumConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x02afbD43cAD367fcB71305a2dfB9A3928218f0c1"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0x50228781567975d18f01c61133D091ae358D0819"),
+		wrapper: toAddress("0x89Ee42D532438BB70a0aF196729aE2B22744c3db"),
 		looksrare: toAddress("0xD112466471b5438C1ca2D218694200e49d81D047"),
+		looksrareV2: toAddress("0x35C2215F2FFe8917B06454eEEaba189877F200cf"),
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
@@ -29,8 +30,8 @@ export const testnetEthereumConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: toAddress("0x66a1037a48b6A2469cF740aD9Ac42BD47eDF9573"),
-		erc1155: toAddress("0xf6dFfCB8E97c7F32f6bb6F0fad60b9D1ED661ba6"),
+		erc721: toAddress("0xf3964B93F0127C9CC2F48752C67dF4b1dB7c9138"),
+		erc1155: toAddress("0x6E8a327181cE6d83A6cE4A58fe6D07f50B0bc0Af"),
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,
@@ -41,5 +42,7 @@ export const testnetEthereumConfig: EthereumConfig = {
 		pairRouter: toAddress("0x25b4EfC43c9dCAe134233CD577fFca7CfAd6748F"),
 	},
 	weth: toAddress("0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"),
+	rari: toAddress("0xbe6dEA792E5D557d71a4cDEf7d22d6dccA133891"),
 	auction: ZERO_ADDRESS,
+	looksrareOrderValidatorV2: toAddress("0x7454Cc9AEB024bcE6A2CDC49ad4733B4D8215fb8"),
 }

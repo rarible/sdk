@@ -1,5 +1,6 @@
 import React from "react"
-import { Box, Grid, GridProps } from "@mui/material"
+import type { GridProps } from "@mui/material"
+import { Box, Grid } from "@mui/material"
 
 interface ICommentedBlockProps extends GridProps {
 	comment?: React.ReactNode
@@ -17,13 +18,13 @@ export function CommentedBlock(props: React.PropsWithChildren<ICommentedBlockPro
 				comment &&
 					<Box sx={(theme) => ({
 						p: 1,
-						[theme.breakpoints.up("lg")] : {
+						[theme.breakpoints.up("lg")]: {
 							borderLeft: "5px solid #eee",
 							height: "100%",
 						},
-						[theme.breakpoints.down("lg")] : {
+						[theme.breakpoints.down("lg")]: {
 							borderTop: "5px solid #eee",
-							borderBottom: "5px solid #eee"
+							borderBottom: "5px solid #eee",
 						},
 					})}>
 						{comment}

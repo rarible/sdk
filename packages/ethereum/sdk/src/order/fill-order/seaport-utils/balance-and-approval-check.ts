@@ -2,6 +2,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
+import { Warning } from "@rarible/logger/build"
 import { createErc721Contract } from "../../contracts/erc721"
 import { createErc20Contract } from "../../contracts/erc20"
 import type { TimeBasedItemParams } from "./item"
@@ -387,7 +388,7 @@ function findBalanceAndApproval(
 	)
 
 	if (!balanceAndApproval) {
-		throw new Error(
+		throw new Warning(
 			"Balances and approvals didn't contain all tokens and identifiers"
 		)
 	}

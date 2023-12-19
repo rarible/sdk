@@ -14,6 +14,7 @@ import { getErrorHandlerMiddleware, NetworkErrorCode } from "../../common/apis"
 import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { notImplemented } from "../../common/not-implemented"
 import { EthereumMint } from "./mint"
 import { EthereumSell } from "./sell"
 import { EthereumFill } from "./fill"
@@ -26,11 +27,12 @@ import { EthereumTokenId } from "./token-id"
 import { EthereumCreateCollection } from "./create-collection"
 import { EthereumCryptopunk } from "./cryptopunk"
 import type { IEthereumSdkConfig } from "./domain"
+import type { EVMBlockchain } from "./common"
 
 export function createEthereumSdk(
 	wallet: Maybe<EthereumWallet>,
 	apis: IApisSdk,
-	blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON,
+	blockchain: EVMBlockchain,
 	network: EthereumNetwork,
 	config: {
 		params?: ConfigurationParameters,
@@ -57,7 +59,7 @@ export function createEthereumSdk(
 
 	const sellService = new EthereumSell(sdk, network, config)
 	const balanceService = new EthereumBalance(sdk, apis, network)
-	const bidService = new EthereumBid(sdk, wallet, balanceService, network, config)
+	const bidService = new EthereumBid(sdk, apis, wallet, balanceService, network, config)
 	const mintService = new EthereumMint(sdk, apis, network)
 	const fillService = new EthereumFill(sdk, wallet, network, config)
 	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
@@ -80,9 +82,9 @@ export function createEthereumSdk(
 		},
 		order: {
 			fill: { prepare: fillService.fill },
-			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
 			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
-			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
@@ -92,6 +94,7 @@ export function createEthereumSdk(
 		balances: {
 			getBalance: balanceService.getBalance,
 			convert: balanceService.convert,
+			transfer: notImplemented,
 			getBiddingBalance: balanceService.getBiddingBalance,
 			depositBiddingBalance: balanceService.depositBiddingBalance,
 			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,

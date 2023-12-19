@@ -1,9 +1,11 @@
 import type { UnionAddress } from "@rarible/types"
-import type { Blockchain, Order, OrderId } from "@rarible/api-client"
+import type { Order, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
+import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
+import type { SupportedBlockchain } from "@rarible/sdk-common/build/utils/blockchain"
 import type { RequestCurrency } from "../common/domain"
 
 /**
@@ -39,11 +41,21 @@ export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => 
 export type IConvert = (request: ConvertRequest) => Promise<IBlockchainTransaction>
 
 export type ConvertRequest = {
-	blockchain: Blockchain
+	blockchain: SupportedBlockchain
 	isWrap: boolean
 	value: BigNumberValue
 }
 
+export type IBalanceTransfer = (
+	request: IBalanceTransferRequest
+) => Promise<IBlockchainTransaction>
+
+export type IBalanceTransferRequest = {
+	recipient: UnionAddress
+	currency: IBalanceTransferCurrency
+	amount: BigNumberValue
+}
+export type IBalanceTransferCurrency = FlowAssetTypeFt
 
 export type CurrencyOrOrder = {
 	currency: RequestCurrency
@@ -52,7 +64,7 @@ export type CurrencyOrOrder = {
 } | {
 	orderId: OrderId
 } | {
-	blockchain: Blockchain
+	blockchain: SupportedBlockchain
 }
 
 export type GetBiddingBalanceRequest = {

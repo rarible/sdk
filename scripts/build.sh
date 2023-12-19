@@ -3,13 +3,14 @@ set -e
 start=$(date +%s)
 scripts_dir="$(dirname "$0")"
 
-source $scripts_dir/build-ethereum.sh &
-source $scripts_dir/build-imx.sh &
-source $scripts_dir/build-solana.sh
+yarn run build-sdk-common
+. $scripts_dir/build-ethereum.sh &
+. $scripts_dir/build-imx.sh &
+. $scripts_dir/build-solana.sh
 wait
-source $scripts_dir/build-connectors.sh
-
 yarn run build-sdk-wallet
+. $scripts_dir/build-connectors.sh
+
 yarn run build-sdk-transaction
 yarn run build-sdk
 yarn run build-sdk-transaction-backend

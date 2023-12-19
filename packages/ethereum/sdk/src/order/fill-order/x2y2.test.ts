@@ -14,7 +14,7 @@ describe.skip("x2y2", () => {
 	const sdkBuyer = createRaribleSdk(buyerWeb3, "mainnet")
 
 	test("try to fill order", async () => {
-		const order = await sdkBuyer.apis.order.getOrderByHash({
+		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
 			hash: "0xc58a775f541930cad235d8eb024c8214d01a782d0dd96b109ecc9e47654dc551",
 		})
 		const tx = await sdkBuyer.order.buy({

@@ -14,6 +14,7 @@ import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import { getNftContractAddress } from "../../common/utils"
 import {
 	convertFlowOrderId,
 	getFlowCollection,
@@ -81,6 +82,7 @@ export class FlowSell {
 				itemId: toFlowItemId(`${contract}:${itemId}`),
 				sellItemPrice: toBn(sellRequest.price).decimalPlaces(8).toString(),
 				originFees: toFlowParts(sellRequest.originFees),
+				end: sellRequest.expirationDate,
 			})
 
 		}
@@ -102,7 +104,7 @@ export class FlowSell {
 						return await this.sdk.order.updateOrder({
 							collection: getFlowCollection(order.make.type.contract),
 							currency,
-							order: parseInt(orderId),
+							order: orderId,
 							sellItemPrice: toBigNumber(toBn(sellRequest.price).decimalPlaces(8).toString()),
 						})
 					}
@@ -120,6 +122,9 @@ export class FlowSell {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			baseFee: getFlowBaseFee(this.sdk),
 			submit: sellAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.make.type),
+			},
 		}
 	}
 
@@ -141,7 +146,7 @@ export class FlowSell {
 				const updateOrderTx = await this.sdk.order.updateOrder({
 					collection: getFlowCollection(order.make.type.contract),
 					currency,
-					order: parseInt(orderId),
+					order: orderId,
 					sellItemPrice: toBigNumber(toBn(request.price).decimalPlaces(8).toString()),
 				})
 				return convertFlowOrderId(updateOrderTx.orderId)

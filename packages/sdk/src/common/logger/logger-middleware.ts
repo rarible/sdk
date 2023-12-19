@@ -1,14 +1,31 @@
-import { NetworkError, RemoteLogger } from "@rarible/logger/build"
+import { RemoteLogger } from "@rarible/logger/build"
 import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain"
-import { LogLevel } from "@rarible/logger/build/domain"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
+import {
+	UserCancelError,
+	promiseSettledRequest,
+	isCancelCode,
+	isCancelMessage,
+} from "@rarible/sdk-common"
+import { WrappedError, INVALID_TX_PARAMS_EIP_1559_ERROR } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
 import { getSdkContext } from "../get-sdk-context"
-import { getErrorLevel, getExecRevertedMessage } from "./logger-overrides"
+import { WrappedAdvancedFn } from "../middleware/middleware"
+import type { PrepareFillRequest } from "../../types/order/fill/domain"
+import { getCollectionFromItemId, getContractFromMintRequest, getOrderIdFromFillRequest } from "../utils"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
+import type { PrepareOrderUpdateRequest } from "../../types/order/common"
+import type { CancelOrderRequest } from "../../types/order/cancel/domain"
+import type { PrepareOrderRequest } from "../../types/order/common"
+import type { PrepareBatchBuyResponse } from "../../types/order/fill/domain"
+import type { PrepareTransferRequest } from "../../types/nft/transfer/domain"
+import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
+import type { PrepareBurnRequest } from "../../types/nft/burn/domain"
+import { getExecRevertedMessage, LoggerDataContainer } from "./logger-overrides"
 
 export const loggerConfig = {
 	service: "union-sdk",
@@ -21,54 +38,54 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
 	}
 
 	switch (wallet.walletType) {
-		case WalletType.ETHEREUM:
-			await Promise.all([wallet.ethereum.getChainId(), wallet.ethereum.getFrom()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address && address.toLowerCase()
-					info["wallet.chainId"] = chainId
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
-				})
+		case WalletType.ETHEREUM: {
+			const [chainIdResult, addressResult] = await Promise.allSettled([
+				wallet.ethereum.getChainId(),
+				wallet.ethereum.getFrom(),
+			])
+			info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult?.value?.toLowerCase() : formatDefaultError(addressResult.reason)
+			info["wallet.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult?.value : formatDefaultError(chainIdResult.reason)
 			break
-		case WalletType.FLOW:
-			await wallet.fcl.currentUser().snapshot()
-				.then((userData) => {
-					info["wallet.address"] = userData.addr
-					info["wallet.flow.chainId"] = userData.cid
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
-				})
+		}
+		case WalletType.FLOW: {
+			const [userData, authResult] = await promiseSettledRequest([
+				wallet.fcl.currentUser().snapshot(),
+				typeof wallet.auth === "function" ? wallet.auth() : undefined,
+			])
+			info["wallet.address"] = userData?.addr || authResult?.addr
+			info["wallet.flow.chainId"] = userData?.cid
 			break
-		case WalletType.TEZOS:
+		}
+		case WalletType.TEZOS: {
 			info["wallet.tezos.kind"] = wallet.provider.kind
-			await Promise.all([wallet.provider.chain_id(), wallet.provider.address()])
-				.then(([chainId, address]) => {
-					info["wallet.address"] = address
-					info["wallet.tezos.chainId"] = chainId
-				})
-				.catch((err) => {
-					info["wallet.address"] = `unknown (${getErrorMessageString(err)})`
-					info["wallet.address.error"] = getStringifiedError(err)
-				})
+			const [chainIdResult, addressResult] = await Promise.allSettled([
+				wallet.provider.chain_id(),
+				wallet.provider.address(),
+			])
+			info["wallet.address"] = addressResult.status === "fulfilled" ? addressResult.value : formatDefaultError(addressResult.reason)
+			info["wallet.tezos.chainId"] = chainIdResult.status === "fulfilled" ? chainIdResult.value : formatDefaultError(chainIdResult.reason)
 			break
-		case WalletType.SOLANA:
+		}
+		case WalletType.SOLANA: {
 			info["wallet.address"] = wallet.provider.publicKey?.toString()
 			break
-		case WalletType.IMMUTABLEX:
+		}
+		case WalletType.IMMUTABLEX: {
 			const data = wallet.wallet.getConnectionData()
 			info["wallet.address"] = data.address
 			info["wallet.network"] = data.ethNetwork
 			info["wallet.starkPubkey"] = data.starkPublicKey
 			break
+		}
 		default:
 			info["wallet.address"] = "unknown"
 	}
 
 	return info
+}
+
+export function formatDefaultError(err: any) {
+	return `unknown (${getErrorMessageString(err)})`
 }
 
 export function getErrorMessageString(err: any): string {
@@ -95,20 +112,6 @@ export function getErrorMessageString(err: any): string {
 	}
 }
 
-
-function getStringifiedError(error: any): string | undefined {
-	try {
-		const errorObject = Object.getOwnPropertyNames(error)
-			.reduce((acc, key) => {
-				acc[key] = error[key]
-				return acc
-			}, {} as Record<any, any>)
-		return JSON.stringify(errorObject, null, "  ")
-	} catch (e) {
-		return undefined
-	}
-}
-
 export function getInternalLoggerMiddleware(
 	logsLevel: LogsLevel,
 	sdkContext: ISdkContext,
@@ -125,56 +128,171 @@ export function getInternalLoggerMiddleware(
 		const time = Date.now()
 
 		return [callable, async (responsePromise) => {
-			let parsedArgs
+			let wrappedError: Error | undefined
+
+			const dataContainer = new LoggerDataContainer({
+				args,
+				callable,
+				responsePromise,
+				sdkContext,
+				startTime: time,
+			})
 			try {
-				parsedArgs = JSON.stringify(args)
-			} catch (e) {
-				try {
-				  parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
-				} catch (err) {
-					parsedArgs = "unknown"
-				}
-			}
-			try {
-				const res = await responsePromise
+				await responsePromise
 				if (logsLevel >= LogsLevel.TRACE) {
-					remoteLogger.raw({
-						level: LogLevel.TRACE,
-						method: callable.name,
-						message: "trace of " + callable.name,
-						duration: (Date.now() - time) / 1000,
-						args: parsedArgs,
-						resp: JSON.stringify(res),
-					})
+					remoteLogger.raw(await dataContainer.getTraceData())
 				}
 			} catch (err: any) {
+				wrappedError = wrapSpecialErrors(err)
+
 				if (logsLevel >= LogsLevel.ERROR) {
-					let data
-					try {
-						data = {
-							level: getErrorLevel(callable?.name, err, sdkContext?.wallet),
-							method: callable?.name,
-							message: getErrorMessageString(err),
-							error: getStringifiedError(err),
-							duration: (Date.now() - time) / 1000,
-							args: parsedArgs,
-							requestAddress: undefined as undefined | string,
-						}
-						if (err instanceof NetworkError || err?.name === "NetworkError") {
-							data.requestAddress = err?.url
-						}
-					} catch (e) {
-						data = {
-							level: "LOGGING_ERROR",
-							method: callable?.name,
-							message: getErrorMessageString(e),
-							error: getStringifiedError(e),
-						}
-					}
-					remoteLogger.raw(data)
+					remoteLogger.raw(dataContainer.getErrorData(wrappedError || err))
 				}
 			}
-			return responsePromise
+			return wrappedError ? responsePromise.catch(() => { throw wrappedError })
+				: responsePromise
+
 		}]
 	}
+}
+function isCallable(fn: any): fn is WrappedAdvancedFn {
+	return fn instanceof WrappedAdvancedFn || fn?.constructor?.name === "WrappedAdvancedFn"
+}
+export function getCallableExtraFields(callable: any): Record<string, string | undefined> {
+	try {
+		if (typeof callable?.name !== "string") return {}
+		if (isCallable(callable)) {
+			const parent = callable.parent
+
+			if (callable?.name.startsWith("order.buy.prepare.submit")) {
+				const request: PrepareFillRequest | undefined = parent?.args[0]
+				const orderId = getOrderIdFromFillRequest(request)
+				return {
+					orderId,
+					platform: parent?.context?.orderData?.platform,
+					collectionId: parent?.context?.orderData?.nftCollection,
+				}
+			}
+
+			if (callable?.name.startsWith("order.batchBuy.prepare.submit")) {
+				const request: PrepareFillRequest[] | undefined = parent?.args[0]
+				const orderIds = Array.isArray(request)
+					? request.map(req => getOrderIdFromFillRequest(req))
+						.join(",")
+					: null
+				const contextData = parent?.context as PrepareBatchBuyResponse | undefined
+				const platforms = Array.isArray(contextData?.prepared)
+					? contextData?.prepared.reduce((acc, req) => {
+						if (req?.orderData?.platform && !acc.includes(req?.orderData?.platform)) {
+							acc.push(req.orderData.platform)
+						}
+						return acc
+					}, [] as string[])
+						.join(",")
+					: null
+
+				const collections = Array.isArray(contextData?.prepared)
+					? contextData?.prepared.reduce((acc, req) => {
+						if (req?.orderData?.nftCollection && !acc.includes(req?.orderData?.nftCollection)) {
+							acc.push(req.orderData.nftCollection)
+						}
+						return acc
+					}, [] as string[])
+						.join(",")
+					: null
+				return {
+					orderId: `[${orderIds}]`,
+					platform: `[${platforms}]`,
+					collectionId: `[${collections}]`,
+				}
+			}
+
+			if (callable?.name.startsWith("order.bid.prepare.submit")) {
+				const request: PrepareBidRequest | undefined = parent?.args[0]
+				if (!request) return {}
+				return {
+					itemId: "itemId" in request ? request.itemId : undefined,
+					collectionId: "collectionId" in request ? request.collectionId : getCollectionFromItemId(request.itemId),
+				}
+			}
+
+			if (callable?.name.startsWith("order.bidUpdate.prepare.submit")) {
+				const request: PrepareOrderUpdateRequest | undefined = parent?.args[0]
+				return { orderId: request?.orderId }
+			}
+
+			if (callable?.name.startsWith("order.cancel")) {
+				const request: CancelOrderRequest | undefined = parent?.args[0]
+				return { orderId: request?.orderId }
+			}
+
+			if (callable?.name.startsWith("order.sell.prepare.submit")) {
+				const request: PrepareOrderRequest | undefined = parent?.args[0]
+				return {
+					itemId: request?.itemId,
+					collectionId: request ? getCollectionFromItemId(request.itemId) : undefined,
+				}
+			}
+
+			if (callable?.name.startsWith("order.sellUpdate.prepare.submit")) {
+				const request: PrepareOrderUpdateRequest | undefined = parent?.args[0]
+				return {
+					orderId: request?.orderId,
+					collectionId: parent?.context?.orderData?.nftCollection,
+				}
+			}
+
+			if (callable?.name.startsWith("order.acceptBid.prepare.submit")) {
+				const request: PrepareFillRequest | undefined = parent?.args[0]
+				let orderId = getOrderIdFromFillRequest(request)
+
+				return {
+					orderId,
+					collectionId: parent?.context?.orderData?.nftCollection,
+				}
+			}
+
+			if (callable?.name.startsWith("nft.transfer.prepare.submit")) {
+				const request: PrepareTransferRequest | undefined = parent?.args[0]
+				if (request?.itemId) {
+					return {
+						collectionId: getCollectionFromItemId(request.itemId),
+					}
+				}
+			}
+
+			if (callable?.name.startsWith("nft.mint.prepare.submit")) {
+				const request: PrepareMintRequest | undefined = parent?.args[0]
+				if (request) {
+					return {
+						collectionId: getContractFromMintRequest(request),
+					}
+				}
+			}
+
+			if (callable?.name.startsWith("nft.burn.prepare.submit")) {
+				const request: PrepareBurnRequest | undefined = parent?.args[0]
+				if (request) {
+					return {
+						collectionId: getCollectionFromItemId(request.itemId),
+					}
+				}
+			}
+
+		}
+	} catch (e) {}
+	return {}
+}
+
+function wrapSpecialErrors(err: any): WrappedError | undefined {
+	if (isCancelMessage(err?.message) || isCancelCode(err?.error?.code)) {
+		return new UserCancelError(err)
+	}
+	if (err?.message?.includes(INVALID_TX_PARAMS_EIP_1559_ERROR)) {
+		return new WrappedError(HUMAN_READABLE_MSG_LIST[INVALID_TX_PARAMS_EIP_1559_ERROR], err)
+	}
+}
+
+export const HUMAN_READABLE_MSG_LIST: Record<string, string> = {
+	[INVALID_TX_PARAMS_EIP_1559_ERROR]: "The problem is with the selected network of your wallet provider, try switching the network or re-entering the wallet. You can read more about this error [here](https://github.com/MetaMask/metamask-extension/issues/13341)",
 }

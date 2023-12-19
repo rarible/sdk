@@ -1,14 +1,10 @@
-import {
-	Blockchain,
-	EthErc20AssetType,
-	EthEthereumAssetType,
-	TezosXTZAssetType,
-	FlowAssetTypeFt,
-} from "@rarible/api-client"
-import { toContractAddress, ContractAddress } from "@rarible/types"
-import { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
-import { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
-import { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
+import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetTypeFt, TezosXTZAssetType } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
+import type { ContractAddress } from "@rarible/types"
+import { toContractAddress } from "@rarible/types"
+import type { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
+import type { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -20,7 +16,7 @@ function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 function getERC20(contract: ContractAddress): EthErc20AssetType {
 	return {
 		"@type": "ERC20",
-		contract
+		contract,
 	}
 }
 
@@ -35,6 +31,11 @@ const solanaNative: SolanaSolAssetType = {
 const flowNative: FlowAssetTypeFt = {
 	"@type": "FLOW_FT",
 	contract: toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken"),
+}
+
+const flowUSDC: FlowAssetTypeFt = {
+	"@type": "FLOW_FT",
+	contract: toContractAddress("FLOW:A.a983fecbed621163.FiatToken"),
 }
 
 export type CurrencyOption = {
@@ -64,6 +65,21 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 				return getERC20(contract)
 			}
 			throw new Error("Unsupported option subtype")
+		case Blockchain.MANTLE:
+			if (type === "TOKEN") {
+				return getERC20(contract)
+			}
+			throw new Error("Unsupported option subtype")
+		case Blockchain.ARBITRUM:
+			if (type === "TOKEN") {
+				return getERC20(contract)
+			}
+			throw new Error("Unsupported option subtype")
+		case Blockchain.ZKSYNC:
+			if (type === "TOKEN") {
+				return getERC20(contract)
+			}
+			throw new Error("Unsupported option subtype")
 		case Blockchain.IMMUTABLEX:
 			if (type === "NATIVE") {
 				return getEthNative(blockchain)
@@ -83,13 +99,18 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 			if (type === "NATIVE") {
 				return flowNative
 			}
+			if (type === "TOKEN" && contract === flowUSDC.contract) {
+				return flowUSDC
+			}
 			throw new Error("Unsupported currency subtype")
 		default:
 			throw new Error("Unsupported blockchain")
 	}
 }
 
-export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environment: RaribleSdkEnvironment): CurrencyOption[] {
+export function getCurrencyOptions(
+	supportedCurrencies: CurrencyType[], environment: RaribleSdkEnvironment
+): CurrencyOption[] {
 	return supportedCurrencies.flatMap((currency) => {
 		switch (currency.blockchain) {
 			case Blockchain.ETHEREUM:
@@ -153,7 +174,7 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
 								blockchain: Blockchain.POLYGON,
-								contract: "ETHEREUM:0xf4520E73A0212166C07279428527b9d300295203",
+								contract: "POLYGON:0xf4520E73A0212166C07279428527b9d300295203",
 							})
 							break
 						case"testnet":
@@ -161,7 +182,12 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
 								blockchain: Blockchain.POLYGON,
-								contract: "ETHEREUM:0xd6e804e7EDB5B2AecB31D9cCC9d9F3940a7b4cE2",
+								contract: "POLYGON:0xd6e804e7EDB5B2AecB31D9cCC9d9F3940a7b4cE2",
+							}, {
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.POLYGON,
+								contract: "POLYGON:0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa",
 							})
 							break
 						case "staging":
@@ -169,7 +195,7 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
 								blockchain: Blockchain.ETHEREUM,
-								contract: "ETHEREUM:0x32CcA2bB34B36409b29166FbEC9b617CdA1E0410",
+								contract: "POLYGON:0x32CcA2bB34B36409b29166FbEC9b617CdA1E0410",
 							})
 							break
 						case"prod":
@@ -177,13 +203,88 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 								type: "TOKEN",
 								label: "WETH",
 								blockchain: Blockchain.POLYGON,
-								contract: "ETHEREUM:0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
+								contract: "POLYGON:0x7ceb23fd6bc0add59e62ac25578270cff1b9f619",
 							})
 							break
 						default:
 					}
 					res.push({ type: "TOKEN", label: "Custom ERC20", blockchain: Blockchain.POLYGON, contract: null })
 					return res
+				}
+				return []
+			case Blockchain.MANTLE:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.MANTLE,
+								contract: "MANTLE:0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.MANTLE,
+								contract: "MANTLE:0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111",
+							})
+							break
+						default:
+					}
+					 return res
+				}
+				return []
+			case Blockchain.ARBITRUM:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ARBITRUM,
+								contract: "ARBITRUM:0x980b62da83eff3d4576c647993b0c1d7faf17c73",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ARBITRUM,
+								contract: "ARBITRUM:0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
+							})
+							break
+						default:
+					}
+					 return res
+				}
+				return []
+			case Blockchain.ZKSYNC:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ZKSYNC,
+								contract: "ZKSYNC:0x20b28B1e4665FFf290650586ad76E977EAb90c5D",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ZKSYNC,
+								contract: "ZKSYNC:0x8Ebe4A94740515945ad826238Fc4D56c6B8b0e60",
+							})
+							break
+						default:
+					}
+					 return res
 				}
 				return []
 			case Blockchain.IMMUTABLEX:
@@ -203,7 +304,10 @@ export function getCurrencyOptions(supportedCurrencies: CurrencyType[], environm
 				return []
 			case Blockchain.FLOW:
 				if (currency.type === "NATIVE") {
-					return { type: "NATIVE", label: "FLOW", blockchain: Blockchain.FLOW }
+					return [
+						{ type: "NATIVE", label: "FLOW", blockchain: Blockchain.FLOW },
+						{ type: "TOKEN", label: "USDC", blockchain: Blockchain.FLOW, contract: "FLOW:A.a983fecbed621163.FiatToken" },
+					]
 				}
 				return []
 			default:

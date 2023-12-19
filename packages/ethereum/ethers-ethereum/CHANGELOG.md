@@ -3,6 +3,309 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+
+### Features
+
+* **MPX-2077:** batch purchase error if item was purchased ([#534](https://github.com/rarible/sdk/issues/534)) ([74fc55d](https://github.com/rarible/sdk/commit/74fc55def6beda25019a36de13dc426456d521f3))
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+
+### Features
+
+* **MPX-2089:** change magic getmetadata method ([#514](https://github.com/rarible/sdk/issues/514)) ([71e37b9](https://github.com/rarible/sdk/commit/71e37b9a75aa7937214b6e56749c4ebd7f880a89))
+
+
+
+
+
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* tests ([#510](https://github.com/rarible/sdk/issues/510)) ([2cc43c5](https://github.com/rarible/sdk/commit/2cc43c5716e1a5521dfdbfd7cff5cc209bee0f5d))
+
+
+
+
+
+## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.42-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.42...v0.13.42-hotfix.0) (2023-06-16)
+
+
+### Bug Fixes
+
+* add sdk common dep ([#495](https://github.com/rarible/sdk/issues/495)) ([63dd4a8](https://github.com/rarible/sdk/commit/63dd4a82453ec32e251d281918766bbfbc48c09a))
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
+
+
+### Features
+
+* support multibuy ([#484](https://github.com/rarible/sdk/issues/484)) ([c319392](https://github.com/rarible/sdk/commit/c319392205768dcb8f7a9376a486d4ee1dd3c939))
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Bug Fixes
+
+* seaport 1.5, logging improvements, example flow setup ([#471](https://github.com/rarible/sdk/issues/471)) ([123d5c3](https://github.com/rarible/sdk/commit/123d5c39ce654a008dec9dd8a04086254b1227ca))
+
+
+### Features
+
+* sunset of solana ([#463](https://github.com/rarible/sdk/issues/463)) ([52b70e7](https://github.com/rarible/sdk/commit/52b70e75a6a897e9f570109fe03a653dde12dc51))
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+**Note:** Version bump only for package @rarible/ethers-ethereum
+
+
+
+
+
 ## [0.13.14](https://github.com/rarible/sdk/compare/v0.13.13...v0.13.14) (2023-03-29)
 
 **Note:** Version bump only for package @rarible/ethers-ethereum

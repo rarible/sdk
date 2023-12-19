@@ -3,6 +3,557 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* **PLTF-182:** zksync support ([#579](https://github.com/rarible/sdk/issues/579)) ([3b90055](https://github.com/rarible/sdk/commit/3b90055eb6e15743286b622b3bf787431f7ce7ac))
+
+
+
+
+
+## [0.13.63-beta.3](https://github.com/rarible/sdk/compare/v0.13.63-beta.2...v0.13.63-beta.3) (2023-12-10)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.63-beta.2](https://github.com/rarible/sdk/compare/v0.13.63-beta.1...v0.13.63-beta.2) (2023-12-10)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.63-beta.1](https://github.com/rarible/sdk/compare/v0.13.63-beta.0...v0.13.63-beta.1) (2023-12-06)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+
+### Features
+
+* **PLTF-110:** update mattel transfer event ([#572](https://github.com/rarible/sdk/issues/572)) ([fe6590a](https://github.com/rarible/sdk/commit/fe6590ae4a46c6ed42446657671f04a716fa2056))
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+
+### Features
+
+* **PLTF-110:** update mattel transfer event ([#572](https://github.com/rarible/sdk/issues/572)) ([fe6590a](https://github.com/rarible/sdk/commit/fe6590ae4a46c6ed42446657671f04a716fa2056))
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+
+### Features
+
+* **PLTF-44:** support arbitrum ([#571](https://github.com/rarible/sdk/issues/571)) ([978bed5](https://github.com/rarible/sdk/commit/978bed5b1e3fd339450e70fb45e2836ccec3913b))
+
+
+
+
+
+## [0.13.59-fix.9](https://github.com/rarible/sdk/compare/v0.13.59-fix.8...v0.13.59-fix.9) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.8](https://github.com/rarible/sdk/compare/v0.13.59-fix.7...v0.13.59-fix.8) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.7](https://github.com/rarible/sdk/compare/v0.13.59-fix.6...v0.13.59-fix.7) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.6](https://github.com/rarible/sdk/compare/v0.13.59-fix.5...v0.13.59-fix.6) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.5](https://github.com/rarible/sdk/compare/v0.13.59-fix.4...v0.13.59-fix.5) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.4](https://github.com/rarible/sdk/compare/v0.13.59-fix.3...v0.13.59-fix.4) (2023-11-17)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.3](https://github.com/rarible/sdk/compare/v0.13.59-fix.2...v0.13.59-fix.3) (2023-11-17)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59-fix.2](https://github.com/rarible/sdk/compare/v0.13.59-fix.1...v0.13.59-fix.2) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes init collection ([7b718c2](https://github.com/rarible/sdk/commit/7b718c295737d06da347f31379e3ea63976b503c))
+
+
+
+
+
+## [0.13.59-fix.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.0...v0.13.59-fix.1) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes sell fix ([26da778](https://github.com/rarible/sdk/commit/26da778ca8aa3992f2e665612ca6f46ddf0f4fe0))
+
+
+
+
+
+## [0.13.59-fix.0](https://github.com/rarible/sdk/compare/v0.13.59...v0.13.59-fix.0) (2023-11-16)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
+
+
+### Features
+
+* **PLTF-104:** gamisodes collection support ([#564](https://github.com/rarible/sdk/issues/564)) ([a6b3f53](https://github.com/rarible/sdk/commit/a6b3f53aa978ac943dd772b7b2a0285bb27ac19a))
+
+
+
+
+
+## [0.13.58](https://github.com/rarible/sdk/compare/v0.13.57-fix.0...v0.13.58) (2023-11-14)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.52-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.52...v0.13.52-hotfix.0) (2023-09-18)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+
+### Features
+
+* **wl-1656, wl-1657, wl-1658:** add mantle testnet blockchain support ([#518](https://github.com/rarible/sdk/issues/518)) ([76ab8b6](https://github.com/rarible/sdk/commit/76ab8b63cd64307fb71da8a713b5947c3f48cf30))
+
+
+
+
+
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* tests ([#510](https://github.com/rarible/sdk/issues/510)) ([2cc43c5](https://github.com/rarible/sdk/commit/2cc43c5716e1a5521dfdbfd7cff5cc209bee0f5d))
+
+
+
+
+
+## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.1...v0.13.44-hotfix.2) (2023-06-30)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.0...v0.13.44-hotfix.1) (2023-06-29)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
+
+
+### Features
+
+* **MPX-1994:** sardine checkout ([#500](https://github.com/rarible/sdk/issues/500)) ([ce5193e](https://github.com/rarible/sdk/commit/ce5193e6e04de9d25e569156b68b1217b667a933))
+
+
+
+
+
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.42-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.42...v0.13.42-hotfix.0) (2023-06-16)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.42](https://github.com/rarible/sdk/compare/v0.13.41...v0.13.42) (2023-06-16)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+
+### Features
+
+* **PT-2935:** staging configuration ([593d62c](https://github.com/rarible/sdk/commit/593d62cdcf7756f03b8d785558db31850acc85ba))
+
+
+
+
+
+## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.36](https://github.com/rarible/sdk/compare/v0.13.35...v0.13.36) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
+
+
+### Bug Fixes
+
+* revert solana support ([#474](https://github.com/rarible/sdk/issues/474)) ([6767c84](https://github.com/rarible/sdk/commit/6767c84c38d08af7411e9a60770b0646d8a50a02))
+
+
+
+
+
+## [0.13.30](https://github.com/rarible/sdk/compare/v0.13.29...v0.13.30) (2023-05-09)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Bug Fixes
+
+* seaport 1.5, logging improvements, example flow setup ([#471](https://github.com/rarible/sdk/issues/471)) ([123d5c3](https://github.com/rarible/sdk/commit/123d5c39ce654a008dec9dd8a04086254b1227ca))
+
+
+### Features
+
+* sunset of solana ([#463](https://github.com/rarible/sdk/issues/463)) ([52b70e7](https://github.com/rarible/sdk/commit/52b70e75a6a897e9f570109fe03a653dde12dc51))
+
+
+
+
+
+## [0.13.28](https://github.com/rarible/sdk/compare/v0.13.27...v0.13.28) (2023-05-03)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.23](https://github.com/rarible/sdk/compare/v0.13.22...v0.13.23) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+
+### Bug Fixes
+
+* e2e tests dev ([#452](https://github.com/rarible/sdk/issues/452)) ([1efd60d](https://github.com/rarible/sdk/commit/1efd60ddaf28257028ba82d0246b19e83bb8af37))
+
+
+
+
+
 ## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

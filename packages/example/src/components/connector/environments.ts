@@ -1,12 +1,12 @@
 export const ENVIRONMENTS = [{
 	value: "prod",
-	label: "Production"
+	label: "Production",
 }, {
 	value: "development",
-	label: "Development"
+	label: "Development",
 }, {
 	value: "testnet",
-	label: "Testnet"
+	label: "Testnet",
 }]
 
 export function getEnvironmentName(key: string): string {

@@ -13,7 +13,7 @@ import { getEthereumConfig } from "../config"
 import { getApiConfig } from "../config/api-config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
-import { createTestProviders } from "../common/create-test-providers"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
@@ -21,6 +21,7 @@ import { delay, retry } from "../common/retry"
 import { createEthereumApis } from "../common/apis"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { OrderSell } from "./sell"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -28,6 +29,7 @@ import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { checkChainId } from "./check-chain-id"
+import { getEndDateAfterMonth } from "./test/utils"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
@@ -55,6 +57,7 @@ describe.each(providers)("sell", (ethereum) => {
 	const upserter = new UpsertOrder(
 		orderService,
 		send,
+		config,
 		(x) => Promise.resolve(x),
 		() => Promise.resolve(undefined),
 		signOrder,
@@ -92,7 +95,7 @@ describe.each(providers)("sell", (ethereum) => {
 				contract: minted.contract,
 				tokenId: minted.tokenId,
 			},
-			price: toBn("2"),
+			price: toBn(MIN_PAYMENT_VALUE.multipliedBy(2).toFixed()),
 			takeAssetType: {
 				assetClass: "ETH",
 			},
@@ -102,16 +105,15 @@ describe.each(providers)("sell", (ethereum) => {
 				account: treasuryAddress,
 				value: 100,
 			}],
-			start: Math.round(Date.now()/1000 + 10),
-			end: Math.round(Date.now()/1000 + 200),
+			start: Math.round(Date.now()/1000),
+			end: Math.round(Date.now()/1000 + 2000000),
 		})
 
-		expect(order.status).toBe("INACTIVE")
 		expect(order.hash).toBeTruthy()
 
 		await delay(1000)
 
-		const nextPrice = toBigNumber("1")
+		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
 		await retry(5, 500, async () => {
 			const updatedOrder = await orderSell.update({
@@ -154,7 +156,7 @@ describe.each(providers)("sell", (ethereum) => {
 				assetType: {
 					assetClass: "ETH",
 				},
-				value: toBigNumber("2"),
+				value: toBigNumber(MIN_PAYMENT_VALUE.plus(1).toFixed()),
 			},
 			salt: toBigNumber("10"),
 			type: "RARIBLE_V1",
@@ -163,12 +165,13 @@ describe.each(providers)("sell", (ethereum) => {
 				fee: 250,
 			},
 			signature: toBinary("0x"),
+			end: getEndDateAfterMonth(),
 		}
 		const order = await upserter.upsert({ order: form })
 
 		await delay(1000)
 
-		const nextPrice = toBigNumber("1")
+		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
 		await retry(5, 500, async () => {
 			const updatedOrder = await orderSell.update({

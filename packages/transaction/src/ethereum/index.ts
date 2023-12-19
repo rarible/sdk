@@ -20,6 +20,9 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 			case "mumbai":
 			case "polygon":
 				return Blockchain.POLYGON
+			case "mantle":
+			case "testnet-mantle":
+				return Blockchain.MANTLE
 			default:
 				return Blockchain.ETHEREUM
 		}
@@ -35,6 +38,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 		return {
 			blockchain: this.blockchain,
 			hash: this.transaction.hash,
+			events: await this.transaction.getEvents(),
 			result: await this.resultExtractor?.(this.transaction.getEvents.bind(this.transaction)),
 		}
 	}
@@ -49,6 +53,18 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://polygonscan.com/tx/${this.hash()}`
 			case "testnet":
 				return `https://goerli.etherscan.io/tx/${this.hash()}`
+			case "mantle":
+				return `https://explorer.mantle.xyz/tx/${this.hash()}`
+			case "testnet-mantle":
+				return `https://explorer.testnet.mantle.xyz/tx/${this.hash()}`
+			case "arbitrum":
+				return `https://arbiscan.io/tx/${this.hash()}`
+			case "testnet-arbitrum":
+				return `https://sepolia.arbiscan.io/tx/${this.hash()}`
+			case "zksync":
+				return `https://explorer.zksync.io/tx/${this.hash()}`
+			case "testnet-zksync":
+				return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

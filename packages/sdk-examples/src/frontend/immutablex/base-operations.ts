@@ -5,10 +5,10 @@
 import { createRaribleSdk } from "@rarible/sdk"
 import { ImxWallet } from "@rarible/immutable-wallet"
 import { ImmutableXWallet } from "@rarible/sdk-wallet"
-import type { IRaribleSdk } from "@rarible/sdk/src"
+import type { IRaribleSdk } from "@rarible/sdk"
 import type { ItemId, OrderId, UnionAddress } from "@rarible/types"
 import { toItemId } from "@rarible/types"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction/src"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 
 async function getSdk() {
 	const imxConnectorWallet = new ImxWallet("testnet")

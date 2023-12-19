@@ -11,6 +11,7 @@ import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../..
 import type { BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
+import { getNftContractAddress } from "../../common/utils"
 import * as converters from "./common/converters"
 import { toFlowParts } from "./common/converters"
 import { getFlowBaseFee } from "./common/get-flow-base-fee"
@@ -58,7 +59,8 @@ export class FlowBuy {
 
 	}
 
-	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+	async fillCommon(request: PrepareFillRequest, isBid = false): Promise<PrepareFillResponse> {
+		const order = await this.getPreparedOrder(request)
 		const submit = Action
 			.create({
 				id: "send-tx" as const,
@@ -66,6 +68,7 @@ export class FlowBuy {
 					return this.buyCommon({
 						...buyRequest,
 						...request,
+						order,
 					})
 				},
 			})
@@ -79,15 +82,26 @@ export class FlowBuy {
 			payoutsSupport: PayoutsSupport.NONE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			submit,
+			orderData: {
+				platform: order.platform,
+				nftCollection: getNftContractAddress(isBid ? order.take.type : order.make.type),
+			},
 		}
 	}
 
-	async buyCommon(buyRequest: FillRequest & PrepareFillRequest) {
-		const order = await this.getPreparedOrder(buyRequest)
-		const currency = this.getFlowCurrency(order)
-		const owner = converters.parseFlowAddressFromUnionAddress(order.maker)
-		const collectionId = converters.getFlowCollection(this.getFlowNftContract(order))
-		const orderId = converters.parseOrderId(order.id)
+	async buy(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.fillCommon(request)
+	}
+
+	async acceptBid(request: PrepareFillRequest): Promise<PrepareFillResponse> {
+		return this.fillCommon(request, true)
+	}
+
+	async buyCommon(buyRequest: FillRequest & PrepareFillRequest & { order: Order }) {
+		const currency = this.getFlowCurrency(buyRequest.order)
+		const owner = converters.parseFlowAddressFromUnionAddress(buyRequest.order.maker)
+		const collectionId = converters.getFlowCollection(this.getFlowNftContract(buyRequest.order))
+		const orderId = converters.parseOrderId(buyRequest.order.id)
 		const tx = await this.sdk.order.fill(
 			collectionId,
 			currency,
@@ -99,10 +113,18 @@ export class FlowBuy {
 	}
 
 	async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
-		return this.buyCommon(request)
+		const order = await this.getPreparedOrder(request)
+		return this.buyCommon({
+			...request,
+			order,
+		})
 	}
 
 	async acceptBidBasic(request: AcceptBidSimplifiedRequest): Promise<IBlockchainTransaction> {
-		return this.buyCommon(request)
+		const order = await this.getPreparedOrder(request)
+		return this.buyCommon({
+			...request,
+			order,
+		})
 	}
 }

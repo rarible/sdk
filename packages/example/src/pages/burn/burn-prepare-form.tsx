@@ -4,12 +4,12 @@ import type { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/doma
 import { useForm } from "react-hook-form"
 import { toItemId } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import { useNavigate } from "react-router-dom"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { useNavigate } from "react-router-dom"
 
 interface IBurnPrepareFormProps {
 	disabled?: boolean
@@ -32,7 +32,7 @@ export function BurnPrepareForm({ itemId, disabled, onComplete }: IBurnPrepareFo
 				}
 				try {
 					onComplete(await connection.sdk.nft.burn.prepare({
-						itemId: toItemId(formData.itemId)
+						itemId: toItemId(formData.itemId),
 					}))
 					navigate(`/burn/${formData.itemId}`, {})
 				} catch (e) {

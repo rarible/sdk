@@ -1,5 +1,5 @@
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils/build/bn"
 import type { Address, AssetType } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
@@ -48,7 +48,7 @@ export class LooksrareOrderHandler {
 		let isOrderAsk: boolean
 		let contract: Address
 		let tokenId: string
-		if (isNft(make.assetType) || isNft(make.assetType)) {
+		if (isNft(make.assetType)) {
 			isOrderAsk = true
 			contract = make.assetType.contract
 			tokenId = make.assetType.tokenId.toString()
@@ -86,11 +86,6 @@ export class LooksrareOrderHandler {
 			params: makerOrder.data.params || "0x",
 			...vrs,
 		}
-	}
-
-	async sendTransaction(request: LooksrareOrderFillRequest): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(request)
-		return this.send(functionCall, options)
 	}
 
 	getFulfillWrapperData(

@@ -32,11 +32,7 @@ export function getSendWithInjects(injects: {
 		await checkChainId()
 		const callInfo = await functionCall.getCallInfo()
 
-		try {
-			await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-		} catch (e) {
-			console.error("EstimateGas failed with error", e)
-		}
+		await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
 
 		try {
 			const tx = await functionCall.send(options)
@@ -106,9 +102,7 @@ export function getSimpleSendWithInjects(injects: {
 
 		try {
 			await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-		} catch (e) {
-			console.error("EstimateGas failed with error", e)
-		}
+		} catch (err) {}
 
 		try {
 			const tx = await functionCall.send(options)

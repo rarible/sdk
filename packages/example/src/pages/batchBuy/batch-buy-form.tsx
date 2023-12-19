@@ -1,9 +1,9 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { Order } from "@rarible/api-client"
+import type { Order } from "@rarible/api-client"
 import { toItemId } from "@rarible/types"
-import { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
+import type { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
@@ -41,21 +41,21 @@ export function BatchBuyForm(
 				}
 
 				try {
-					onComplete(await prepare.submit(prepare.prepared.map((prepare, i) => {
-            const itemsCounter = parseInt(formData[prepare.orderId + "_itemsCounter"] || 1)
+					onComplete(await prepare.submit(prepare.prepared.map((prepare) => {
+						const itemsCounter = parseInt(formData[prepare.orderId + "_itemsCounter"] || 1)
 
-            let itemId: any[] = new Array(itemsCounter)
-              .fill(0)
-              .map((a, i) => {
-                console.log('maps, index', prepare.orderId + `_itemId_${i}`, formData[prepare.orderId + `_itemId_${i}`])
-                return formData[prepare.orderId + `_itemId_${i}`] ? toItemId(formData[prepare.orderId + `_itemId_${i}`]) : undefined
-              })
-            console.log('itemId', itemId, 'itemsCounter', itemsCounter)
-            return {
-              orderId: prepare.orderId,
-              amount: parseInt(formData[prepare.orderId + "_amount"]),
-              itemId: itemId.length === 1 ? itemId[0] : itemId,
-            }
+						let itemId: any[] = new Array(itemsCounter)
+							.fill(0)
+							.map((a, i) => {
+								console.log("maps, index", prepare.orderId + `_itemId_${i}`, formData[prepare.orderId + `_itemId_${i}`])
+								return formData[prepare.orderId + `_itemId_${i}`] ? toItemId(formData[prepare.orderId + `_itemId_${i}`]) : undefined
+							})
+						console.log("itemId", itemId, "itemsCounter", itemsCounter)
+						return {
+							orderId: prepare.orderId,
+							amount: parseInt(formData[prepare.orderId + "_amount"]),
+							itemId: itemId.length === 1 ? itemId[0] : itemId,
+						}
 					})))
 				} catch (e) {
 					setError(e)
@@ -75,7 +75,7 @@ export function BatchBuyForm(
 									prepare={prepare}
 									namePrefix={prepare.orderId}
 									order={orders.find((order) => order.id === prepare.orderId)}
-                  isFillBatch={true}
+									isFillBatch={true}
 								/>
 							</Box>
 						})

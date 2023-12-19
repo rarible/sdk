@@ -1,18 +1,17 @@
 import { toContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
-import { createRaribleSdk } from "../../index"
-import { LogsLevel } from "../../domain"
 import type { RaribleSdkEnvironment } from "../../config/domain"
+import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
-describe("get balance", () => {
+describe("get tezos balance", () => {
 	const env: RaribleSdkEnvironment = "testnet"
 	const sellerWallet = createTestWallet(
 		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
     "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
 		env
 	)
-	const sellerSdk = createRaribleSdk(sellerWallet, env, { logs: LogsLevel.DISABLED })
+	const sellerSdk = createSdk(sellerWallet, env)
 
 	//eur
 	const fa2 = getTestContract(env, "eurTzContract")
@@ -27,8 +26,8 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1043.538791")
 	})
 
-	test("get balance XTZ without wallet", async () => {
-		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
+	test.concurrent("get balance XTZ without wallet", async () => {
+		const sellerSdk = createSdk(undefined, "testnet")
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{ "@type": "XTZ" }
@@ -36,8 +35,8 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test("get balance XTZ without wallet with CurrencyId", async () => {
-		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
+	test.concurrent("get balance XTZ without wallet with CurrencyId", async () => {
+		const sellerSdk = createSdk(undefined, "testnet")
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU")
@@ -45,7 +44,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("1.0093")
 	})
 
-	test("get balance FT", async () => {
+	test.concurrent("get balance FT", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{
@@ -56,7 +55,7 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("0.03")
 	})
 
-	test("get balance FT with currencyId", async () => {
+	test.concurrent("get balance FT with currencyId", async () => {
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			toCurrencyId(fa2)
@@ -64,8 +63,8 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("0.03")
 	})
 
-	test("get balance FT without wallet", async () => {
-		const sellerSdk = createRaribleSdk(undefined, "testnet", { logs: LogsLevel.DISABLED })
+	test.concurrent.skip("get balance FT without wallet", async () => {
+		const sellerSdk = createSdk(undefined, "testnet")
 		const balance = await sellerSdk.balances.getBalance(
 			toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"),
 			{

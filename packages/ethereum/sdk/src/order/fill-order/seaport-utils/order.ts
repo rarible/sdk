@@ -73,8 +73,11 @@ export const mapInputItemToOfferItem = (item: CreateInputItem): OfferItem => {
 	// Item is an NFT
 	if ("itemType" in item) {
 		// Convert this to a criteria based item
-		if ("identifiers" in item) {
-			const tree = new MerkleTree(item.identifiers)
+		if ("identifiers" in item || "criteria" in item) {
+			const root =
+				"criteria" in item
+					? item.criteria
+					: new MerkleTree(item.identifiers).getRoot()
 
 			return {
 				itemType:
@@ -82,7 +85,7 @@ export const mapInputItemToOfferItem = (item: CreateInputItem): OfferItem => {
           	? ItemType.ERC721_WITH_CRITERIA
           	: ItemType.ERC1155_WITH_CRITERIA,
 				token: item.token,
-				identifierOrCriteria: tree.getRoot(),
+				identifierOrCriteria: root,
 				startAmount: item.amount ?? "1",
 				endAmount: item.endAmount ?? item.amount ?? "1",
 			}
@@ -203,6 +206,12 @@ export const mapOrderAmountsFromFilledStatus = (
 	}
 }
 
+const multiplyDivision = (
+	amount: BigNumberValue,
+	numerator: BigNumberValue,
+	denominator: BigNumberValue
+) => toBn(amount).multipliedBy(numerator).div(denominator)
+
 /**
  * Maps order offer and consideration item amounts based on the units needed to fulfill
  * After applying the fraction, we can view this order as the "canonical" order for which we
@@ -213,9 +222,8 @@ export const mapOrderAmountsFromUnitsToFill = (
 	order: Order,
 	{
 		unitsToFill,
-		totalFilled,
 		totalSize,
-	}: { unitsToFill: BigNumberValue; totalFilled: BigNumberValue; totalSize: BigNumberValue }
+	}: { unitsToFill: BigNumberValue; totalSize: BigNumberValue }
 ): Order => {
 	const unitsToFillBn = toBn(unitsToFill)
 
@@ -229,41 +237,34 @@ export const mapOrderAmountsFromUnitsToFill = (
 		totalSize = maxUnits
 	}
 
-	// This is the percentage of the order that is left to be fulfilled, and therefore we can't fill more than that.
-	const remainingOrderPercentageToBeFilled = toBn(totalSize)
-		.minus(totalFilled)
-		.multipliedBy(ONE_HUNDRED_PERCENT_BP)
-		.div(totalSize)
-
-	// i.e if totalSize is 8 and unitsToFill is 3, then we multiply every amount by 3 / 8
-	const unitsToFillBasisPoints = unitsToFillBn
-		.multipliedBy(ONE_HUNDRED_PERCENT_BP)
-		.div(maxUnits)
-
-	const basisPoints = remainingOrderPercentageToBeFilled.gt(
-		unitsToFillBasisPoints
-	)
-		? unitsToFillBasisPoints
-		: remainingOrderPercentageToBeFilled
-
 	return {
 		parameters: {
 			...order.parameters,
 			offer: order.parameters.offer.map((item) => ({
 				...item,
-				startAmount: multiplyBasisPoints(
+				startAmount: multiplyDivision(
 					item.startAmount,
-					basisPoints
+					unitsToFillBn,
+					totalSize
 				).toString(),
-				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toString(),
+				endAmount: multiplyDivision(
+					item.endAmount,
+					unitsToFillBn,
+					totalSize
+				).toString(),
 			})),
 			consideration: order.parameters.consideration.map((item) => ({
 				...item,
-				startAmount: multiplyBasisPoints(
+				startAmount: multiplyDivision(
 					item.startAmount,
-					basisPoints
+					unitsToFillBn,
+					totalSize
 				).toString(),
-				endAmount: multiplyBasisPoints(item.endAmount, basisPoints).toString(),
+				endAmount: multiplyDivision(
+					item.endAmount,
+					unitsToFillBn,
+					totalSize
+				).toString(),
 			})),
 		},
 		signature: order.signature,

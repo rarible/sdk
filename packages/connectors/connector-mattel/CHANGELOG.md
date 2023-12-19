@@ -3,6 +3,486 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* **PLTF-182:** zksync support ([#579](https://github.com/rarible/sdk/issues/579)) ([3b90055](https://github.com/rarible/sdk/commit/3b90055eb6e15743286b622b3bf787431f7ce7ac))
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+
+### Features
+
+* **PLTF-44:** support arbitrum ([#571](https://github.com/rarible/sdk/issues/571)) ([978bed5](https://github.com/rarible/sdk/commit/978bed5b1e3fd339450e70fb45e2836ccec3913b))
+
+
+
+
+
+## [0.13.59-fix.9](https://github.com/rarible/sdk/compare/v0.13.59-fix.8...v0.13.59-fix.9) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.8](https://github.com/rarible/sdk/compare/v0.13.59-fix.7...v0.13.59-fix.8) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.7](https://github.com/rarible/sdk/compare/v0.13.59-fix.6...v0.13.59-fix.7) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.6](https://github.com/rarible/sdk/compare/v0.13.59-fix.5...v0.13.59-fix.6) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.5](https://github.com/rarible/sdk/compare/v0.13.59-fix.4...v0.13.59-fix.5) (2023-11-20)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.4](https://github.com/rarible/sdk/compare/v0.13.59-fix.3...v0.13.59-fix.4) (2023-11-17)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.3](https://github.com/rarible/sdk/compare/v0.13.59-fix.2...v0.13.59-fix.3) (2023-11-17)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.2](https://github.com/rarible/sdk/compare/v0.13.59-fix.1...v0.13.59-fix.2) (2023-11-16)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.0...v0.13.59-fix.1) (2023-11-16)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.59-fix.0](https://github.com/rarible/sdk/compare/v0.13.59...v0.13.59-fix.0) (2023-11-16)
+
+
+### Bug Fixes
+
+* **PLTF-127:** fix mattel sign personal message ([#566](https://github.com/rarible/sdk/issues/566)) ([ea068aa](https://github.com/rarible/sdk/commit/ea068aa377bbb2b170c31b1814662c4c2337a766))
+
+
+
+
+
+## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.58-fix.0](https://github.com/rarible/sdk/compare/v0.13.58...v0.13.58-fix.0) (2023-11-15)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **MPX-2551:** support flow in offramp ([#553](https://github.com/rarible/sdk/issues/553)) ([4fb79c2](https://github.com/rarible/sdk/commit/4fb79c2704e6de729c73083291234790eef64854))
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+
+### Features
+
+* **MPX-2425:** sardine off ramp ([#537](https://github.com/rarible/sdk/issues/537)) ([adca48d](https://github.com/rarible/sdk/commit/adca48d05d5c417e4b2a1d3757930f44910dfc59))
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+
+### Features
+
+* **wl-1656, wl-1657, wl-1658:** add mantle testnet blockchain support ([#518](https://github.com/rarible/sdk/issues/518)) ([76ab8b6](https://github.com/rarible/sdk/commit/76ab8b63cd64307fb71da8a713b5947c3f48cf30))
+
+
+
+
+
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+
+### Features
+
+* **MPX-2089:** change magic getmetadata method ([#514](https://github.com/rarible/sdk/issues/514)) ([71e37b9](https://github.com/rarible/sdk/commit/71e37b9a75aa7937214b6e56749c4ebd7f880a89))
+
+
+
+
+
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
+
+
+### Features
+
+* **MPX-1994:** sardine checkout ([#500](https://github.com/rarible/sdk/issues/500)) ([ce5193e](https://github.com/rarible/sdk/commit/ce5193e6e04de9d25e569156b68b1217b667a933))
+
+
+
+
+
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.41](https://github.com/rarible/sdk/compare/v0.13.40...v0.13.41) (2023-06-08)
+
+
+### Features
+
+* **MPX-1964:** expose auth0 status method ([#491](https://github.com/rarible/sdk/issues/491)) ([b8a7372](https://github.com/rarible/sdk/commit/b8a7372b712fb4bfe274456d5c9ec947a41d9d82))
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.38](https://github.com/rarible/sdk/compare/v0.13.37...v0.13.38) (2023-05-22)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
+
+
+### Bug Fixes
+
+* mattel prod contracts ([#477](https://github.com/rarible/sdk/issues/477)) ([f72583b](https://github.com/rarible/sdk/commit/f72583bc97cb71840130ca0772c995203ae42019))
+
+
+
+
+
+## [0.13.30](https://github.com/rarible/sdk/compare/v0.13.29...v0.13.30) (2023-05-09)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.25](https://github.com/rarible/sdk/compare/v0.13.24...v0.13.25) (2023-04-25)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+
+### Bug Fixes
+
+* duration of flow listing ([#466](https://github.com/rarible/sdk/issues/466)) ([74006e6](https://github.com/rarible/sdk/commit/74006e688be729928e135340f744195ea33199fa))
+
+
+
+
+
+## [0.13.21](https://github.com/rarible/sdk/compare/v0.13.20...v0.13.21) (2023-04-18)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+
+### Bug Fixes
+
+* infinity checking mattel connector ([#462](https://github.com/rarible/sdk/issues/462)) ([7ee69cb](https://github.com/rarible/sdk/commit/7ee69cbf0aff7b161cd82e30e675ca811018de2c))
+* second mattel login ([#464](https://github.com/rarible/sdk/issues/464)) ([9978732](https://github.com/rarible/sdk/commit/9978732537e70cfc692446552b2e0bb341a5b919))
+
+
+
+
+
+## [0.13.18](https://github.com/rarible/sdk/compare/v0.13.17...v0.13.18) (2023-04-04)
+
+
+### Bug Fixes
+
+* mattel purchase ([#454](https://github.com/rarible/sdk/issues/454)) ([d8d81a4](https://github.com/rarible/sdk/commit/d8d81a458d6964e1f27f5539ba813a00155de688))
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+**Note:** Version bump only for package @rarible/connector-mattel
+
+
+
+
+
 ## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
 
 

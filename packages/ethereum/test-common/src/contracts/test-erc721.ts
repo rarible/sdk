@@ -455,6 +455,6 @@ export async function deployTestErc721(web3: Web3, name: string, symbol: string)
 		.send({ from: address, gas: 4000000, gasPrice: "0" })
 }
 
-function createTestErc721(web3: Web3, address?: Address): Contract {
+export function createTestErc721(web3: Web3, address?: Address): Contract {
 	return new web3.eth.Contract(testErc721Abi, address)
 }

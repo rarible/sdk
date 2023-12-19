@@ -1,6 +1,6 @@
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
-import { createTestProviders } from "../common/create-test-providers"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { hashLegacyOrder } from "./hash-legacy-order"
 
 const { provider, wallets } = createGanacheProvider()

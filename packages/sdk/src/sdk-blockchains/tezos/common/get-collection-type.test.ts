@@ -18,24 +18,24 @@ describe("get tezos collection type", () => {
 	test("get mt type", async () => {
 		const collection = "KT18pVpRXKPY2c4U2yFEGSH3ZnhB2kL8kwXS"
 		const type = await getCollectionType(provider, collection)
-		console.log(type)
+		expect(type).toBe("TEZOS_MT")
 	})
 
 	test("get nft type", async () => {
 		const collection = "KT1RHnGekZyfjTjKN4BrhpCUA5UbByW4GWrT"
 		const type = await getCollectionType(provider, collection)
-		console.log(type)
+		expect(type).toBe("TEZOS_NFT")
 	})
 
 	test("get asset-object mt type", async () => {
 		const collection = "KT1AaaBSo5AE6Eo8fpEN5xhCD4w3kHStafxk"
 		const type = await getCollectionType(provider, collection)
-		console.log(type)
+		expect(type).toBe("TEZOS_MT")
 	})
 
 	test("get asset-object nft type", async () => {
 		const collection = "KT1RHnGekZyfjTjKN4BrhpCUA5UbByW4GWrT"
 		const type = await getCollectionType(provider, collection)
-		console.log(type)
+		expect(type).toBe("TEZOS_NFT")
 	})
 })

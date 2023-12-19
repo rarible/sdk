@@ -1,6 +1,6 @@
 {
   "name": "@rarible/biconomy-middleware",
-  "version": "0.13.14",
+  "version": "0.13.64-beta.3",
   "description": "Middleware for biconomy integration",
   "keywords": [
     "ethereum",
@@ -16,7 +16,7 @@
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
-    "test": "jest --testTimeout=10000",
+    "test": "jest --testTimeout=10000 --forceExit",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
@@ -27,7 +27,7 @@
     "json-rpc-engine": "^6.1.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.14",
+    "@rarible/ethereum-sdk-test-common": "^0.13.64-beta.3",
     "@types/eth-sig-util": "^2.1.1",
     "@types/jest": "^27.0.2",
     "form-data": "^4.0.0",
@@ -35,12 +35,12 @@
     "jest": "^27.3.1",
     "jest-junit": "^15.0.0",
     "node-fetch": "^2.6.7",
-    "typescript": "^4.8.4",
-    "web3": "^1.8.1"
+    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "ethers": "^5.0.24",
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "web3": ">=1.5.0 <1.9.0"
   },
   "publishConfig": {
     "access": "public",

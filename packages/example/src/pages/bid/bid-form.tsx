@@ -1,8 +1,9 @@
 import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
-import { PrepareBidResponse } from "@rarible/sdk/build/types/order/bid/domain"
+import type { PrepareBidResponse } from "@rarible/sdk/build/types/order/bid/domain"
 import { toBigNumber } from "@rarible/types"
+import { generateExpirationDate } from "@rarible/sdk/build/common/suite/order"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
@@ -19,7 +20,7 @@ interface IBidFormProps {
 }
 
 export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
-	const {environment} = useContext(EnvironmentContext)
+	const { environment } = useContext(EnvironmentContext)
 	const connection = useContext(ConnectorContext)
 	const form = useForm()
 	const { handleSubmit } = form
@@ -38,7 +39,8 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 					onComplete(await prepare.submit({
 						price: toBigNumber(formData.price),
 						amount: parseInt(formData.amount),
-						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract)
+						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract),
+						expirationDate: generateExpirationDate(),
 					}))
 				} catch (e) {
 					setError(e)
@@ -56,7 +58,7 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 						form={form}
 						options={{
 							min: 1,
-							max: Number(prepare.maxAmount)
+							max: Number(prepare.maxAmount),
 						}}
 						defaultValue={Math.min(1, Number(prepare.maxAmount))}
 						name="amount"

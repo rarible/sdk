@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+
+### Bug Fixes
+
+* **MPX-1945:** fix tests with api key ([#489](https://github.com/rarible/sdk/issues/489)) ([105f470](https://github.com/rarible/sdk/commit/105f470feb9c19bf93504296d6d790ac4c598300))
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+
+### Bug Fixes
+
+* duration of flow listing ([#466](https://github.com/rarible/sdk/issues/466)) ([74006e6](https://github.com/rarible/sdk/commit/74006e688be729928e135340f744195ea33199fa))
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
 ## [0.13.2](https://github.com/rarible/sdk/compare/v0.13.1...v0.13.2) (2022-12-13)
 
 **Note:** Version bump only for package @rarible/solana-wallet

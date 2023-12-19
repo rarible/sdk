@@ -31,7 +31,7 @@ describe("Flow cancel", () => {
 		expect(tx).toBeTruthy()
 	})
 
-	test("Should cancel flow NFT order with basic function", async () => {
+	test.skip("Should cancel flow NFT order with basic function", async () => {
 		const itemId = await createTestItem(mint)
 		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 

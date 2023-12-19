@@ -1,28 +1,29 @@
-import { awaitAll, createE2eProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
+import { createE2eProvider, getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { sentTx } from "@rarible/protocol-ethereum-sdk/build/common/send-transaction"
-import { toAddress, toContractAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
+import { toAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
-import { createRaribleSdk } from "../../index"
+import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/send-transaction"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
-import { awaitStock } from "../../common/test/await-stock"
+import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
+import { createSdk } from "../../common/test/create-sdk"
+import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
-import { convertEthereumCollectionId, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "development", { logs: LogsLevel.DISABLED })
-	const sdk2 = createRaribleSdk(new EthereumWallet(ethereum2), "development", {
+	const sdk1 = createSdk(new EthereumWallet(ethereum1), "development")
+	const sdk2 = createSdk(new EthereumWallet(ethereum2), "development", {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {
@@ -32,19 +33,23 @@ describe("sale", () => {
 	})
 
 	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
+	const erc20 = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const erc20ContractAddress = convertEthereumContractAddress(erc20, Blockchain.ETHEREUM)
 
-	const conf = awaitAll({
-		testErc20: deployTestErc20(web31, "Test1", "TST1"),
+	const testErc20 = getTestErc20Contract(web31, erc20)
+
+	beforeAll(async () => {
+		const wallet1Address = wallet1.getAddressString()
+		const wallet2Address = wallet2.getAddressString()
+		await sentTxConfirm(
+			testErc20.methods.mint(wallet2Address, "10000000000000000"),
+			{ from: wallet1Address, gas: 200000 }
+		)
 	})
 
 	test("erc721 sell/buy using erc-20", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const wallet2Address = wallet2.getAddressString()
 
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, "1000000000"),
-			{ from: wallet1Address, gas: 200000 }
-		)
 		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
@@ -67,43 +72,36 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
-		await updateAction.submit({ price: "0.000000000000000001" })
+		await updateAction.submit({ price: "0.0001" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
 		const fillAction = await sdk2.order.buy.prepare({ orderId })
 
 		const tx = await fillAction.submit({ amount: 1 })
-		console.log("tx.transaction.data", tx.transaction.data)
-		// expect()
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
 	test("erc721 sell/buy using erc-20 with calldata", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const wallet2Address = wallet2.getAddressString()
 
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, "1000000000"),
-			{ from: wallet1Address, gas: 200000 }
-		)
 		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
@@ -126,16 +124,16 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+				contract: erc20ContractAddress,
 			},
-			expirationDate: new Date(Date.now() + 200000),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const fillAction = await sdk2.order.buy.prepare({ orderId })
@@ -144,14 +142,13 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 		expect(tx.transaction.data.endsWith("00000000000000000000000000000000000000000000000909616c6c64617461")).toBe(true)
 	})
 
 	test("erc721 sell/buy using erc-20 with order object", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const wallet2Address = wallet2.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
@@ -169,25 +166,22 @@ describe("sale", () => {
 		if (result.type === MintType.ON_CHAIN) {
 			await result.transaction.wait()
 		}
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, 100),
-			{ from: wallet1Address, gas: 200000 }
-		)
 
 		await awaitItem(sdk1, result.itemId)
 
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+				contract: erc20ContractAddress,
 			},
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const fillAction = await sdk2.order.buy.prepare({ order })
@@ -196,17 +190,13 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
-	test.skip("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
+	test("erc721 sell/buy using erc-20 throw error with outdated expiration date", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const wallet2Address = wallet2.getAddressString()
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, 100),
-			{ from: wallet1Address, gas: 200000 }
-		)
+
 		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
@@ -225,26 +215,24 @@ describe("sale", () => {
 		}
 
 		await awaitItem(sdk1, result.itemId)
-
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
-				contract: toContractAddress(`ETHEREUM:${conf.testErc20.options.address}`),
+				contract: erc20ContractAddress,
 			},
 			expirationDate: new Date(),
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
-
-		const fillAction = await sdk2.order.buy.prepare({ orderId })
 
 		let errorMessage
 		try {
+			const fillAction = await sdk2.order.buy.prepare({ orderId })
 			const tx = await fillAction.submit({ amount: 1 })
 			await tx.wait()
 		} catch (e: any) {
@@ -255,11 +243,7 @@ describe("sale", () => {
 
 	test("erc721 sell/buy using erc-20 with CurrencyId", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const wallet2Address = wallet2.getAddressString()
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, 100),
-			{ from: wallet1Address, gas: 200000 }
-		)
+
 		const action = await sdk1.nft.mint.prepare({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 		})
@@ -282,12 +266,13 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
-			currency: toCurrencyId(`ETHEREUM:${conf.testErc20.options.address}`),
+			price: "0.0002",
+			currency: toCurrencyId(erc20ContractAddress),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const fillAction = await sdk2.order.buy.prepare({ order })
@@ -296,17 +281,13 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
 	test("erc721 sell/buy using erc-20 with CurrencyId with basic functions", async () => {
 		const wallet1Address = wallet1.getAddressString()
-		const wallet2Address = wallet2.getAddressString()
-		await sentTx(
-			conf.testErc20.methods.mint(wallet2Address, 100),
-			{ from: wallet1Address, gas: 200000 }
-		)
+
 		const result = await sdk1.nft.mint({
 			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -323,12 +304,13 @@ describe("sale", () => {
 		const orderId = await sdk1.order.sell({
 			itemId: result.itemId,
 			amount: 1,
-			price: "0.000000000000000002",
-			currency: toCurrencyId(`ETHEREUM:${conf.testErc20.options.address}`),
+			price: "0.0002",
+			currency: toCurrencyId(erc20ContractAddress),
+			expirationDate: generateExpirationDate(),
 		})
 
 		const nextStock = "1"
-		const order = await awaitStock(sdk1, orderId, nextStock)
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const tx = await sdk2.order.buy({
@@ -339,7 +321,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "0"
-		const order2 = await awaitStock(sdk1, orderId, nextStock2)
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
 	})
 
@@ -361,7 +343,7 @@ describe.skip("buy item with opensea order", () => {
 	const web3 = new Web3(provider)
 	const ethereum1 = new Web3Ethereum({ web3 })
 	const meta = toWord(id32("CUSTOM_META"))
-	const sdk1 = createRaribleSdk(new EthereumWallet(ethereum1), "testnet", {
+	const sdk1 = createSdk(new EthereumWallet(ethereum1), "testnet", {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {

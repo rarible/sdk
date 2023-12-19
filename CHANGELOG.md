@@ -3,6 +3,966 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+
+### Features
+
+* add zksync factories ([0eb5ec7](https://github.com/rarible/sdk/commit/0eb5ec720815f9b9c47699cf27a56fa429f69cd6))
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+
+### Bug Fixes
+
+* seaport fix for ethers provider ([52d7fff](https://github.com/rarible/sdk/commit/52d7fff416cc6aa3ed73f20900ad4b7d04657ea1))
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+
+### Features
+
+* **PLTF-191:** add mainnet zksync contracts, updated testnet contracts ([#580](https://github.com/rarible/sdk/issues/580)) ([c5143a1](https://github.com/rarible/sdk/commit/c5143a19b72ce035cc648201e268042b523d7c4d))
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* **PLTF-182:** zksync support ([#579](https://github.com/rarible/sdk/issues/579)) ([3b90055](https://github.com/rarible/sdk/commit/3b90055eb6e15743286b622b3bf787431f7ce7ac))
+* remove mew connector as it's abandoned and not supported anymore ([#578](https://github.com/rarible/sdk/issues/578)) ([a58e6a4](https://github.com/rarible/sdk/commit/a58e6a4feb923506dae52393248b3120aadb7f8e))
+
+
+
+
+
+## [0.13.63-beta.3](https://github.com/rarible/sdk/compare/v0.13.63-beta.2...v0.13.63-beta.3) (2023-12-10)
+
+
+### Features
+
+* readme homepage ([092edcf](https://github.com/rarible/sdk/commit/092edcf0f9ff0c54d81b9485e9e5d6221aba9b5b))
+
+
+
+
+
+## [0.13.63-beta.2](https://github.com/rarible/sdk/compare/v0.13.63-beta.1...v0.13.63-beta.2) (2023-12-10)
+
+
+### Features
+
+* npmjs readme ([4d2b157](https://github.com/rarible/sdk/commit/4d2b15717fee3cec1b975f7498b3d056f09665ae))
+
+
+
+
+
+## [0.13.63-beta.1](https://github.com/rarible/sdk/compare/v0.13.63-beta.0...v0.13.63-beta.1) (2023-12-06)
+
+
+### Features
+
+* **PLTF-157:** update royalty cut formula ([#575](https://github.com/rarible/sdk/issues/575)) ([c77380e](https://github.com/rarible/sdk/commit/c77380ef7fd8fd4995623622c28a86ba31e7afef))
+
+
+
+
+
+## [0.13.63-beta.0](https://github.com/rarible/sdk/compare/v0.13.62...v0.13.63-beta.0) (2023-12-06)
+
+
+### Features
+
+* **RX-90:** webauth native listings ([0f54038](https://github.com/rarible/sdk/commit/0f540380a6669ec51f737a5f67d13326853edbdc))
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+
+### Features
+
+* **RX-109:** add dogami email connector ([#574](https://github.com/rarible/sdk/issues/574)) ([534f468](https://github.com/rarible/sdk/commit/534f4683566c1851aebf5c7bd9e278c0233c24c6))
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+
+### Bug Fixes
+
+* **RX-86:** invalidate sessions on error ([8b086e5](https://github.com/rarible/sdk/commit/8b086e5b3115a0b9a53a5c840429300b87756aaf))
+
+
+### Features
+
+* **RX-86:** add firebase apple connector ([e164bb1](https://github.com/rarible/sdk/commit/e164bb11c8769ebc0b26354aedd8d9df359d0020))
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+
+### Features
+
+* **PLTF-110:** update mattel transfer event ([#572](https://github.com/rarible/sdk/issues/572)) ([fe6590a](https://github.com/rarible/sdk/commit/fe6590ae4a46c6ed42446657671f04a716fa2056))
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+
+### Features
+
+* **PLTF-110:** update mattel transfer event ([#572](https://github.com/rarible/sdk/issues/572)) ([fe6590a](https://github.com/rarible/sdk/commit/fe6590ae4a46c6ed42446657671f04a716fa2056))
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+
+### Features
+
+* **PLTF-44:** support arbitrum ([#571](https://github.com/rarible/sdk/issues/571)) ([978bed5](https://github.com/rarible/sdk/commit/978bed5b1e3fd339450e70fb45e2836ccec3913b))
+
+
+
+
+
+## [0.13.59-fix.9](https://github.com/rarible/sdk/compare/v0.13.59-fix.8...v0.13.59-fix.9) (2023-11-20)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.13.59-fix.8](https://github.com/rarible/sdk/compare/v0.13.59-fix.7...v0.13.59-fix.8) (2023-11-20)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.13.59-fix.7](https://github.com/rarible/sdk/compare/v0.13.59-fix.6...v0.13.59-fix.7) (2023-11-20)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.13.59-fix.6](https://github.com/rarible/sdk/compare/v0.13.59-fix.5...v0.13.59-fix.6) (2023-11-20)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.13.59-fix.5](https://github.com/rarible/sdk/compare/v0.13.59-fix.4...v0.13.59-fix.5) (2023-11-20)
+
+
+### Bug Fixes
+
+* **WL-2215:** add yarnrc to gitignore ([997dfa3](https://github.com/rarible/sdk/commit/997dfa31e3531349d29addda1bf8880c5dadd6c2))
+
+
+
+
+
+## [0.13.59-fix.4](https://github.com/rarible/sdk/compare/v0.13.59-fix.3...v0.13.59-fix.4) (2023-11-17)
+
+
+### Bug Fixes
+
+* **WL-2215:** add cicd build script ([1571850](https://github.com/rarible/sdk/commit/1571850ff1710268fc6194722e31c5eab4d7c174))
+* **WL-2215:** add new release overrides ([0d698fa](https://github.com/rarible/sdk/commit/0d698fa88e710f821074eb261bbe205fcdaa4c53))
+* **WL-2215:** delete yarnrc ([ade112b](https://github.com/rarible/sdk/commit/ade112b5bf5e0eaf2156950f6dadacd3e07132f4))
+* **WL-2215:** ignore engines for firebase connector ([8235e27](https://github.com/rarible/sdk/commit/8235e27bd95b231619580861f2b51182efc22d95))
+* **WL-2215:** move cicd build location ([a9eee97](https://github.com/rarible/sdk/commit/a9eee9770e6af420f6f8e126ddde9d5c0e52b7a9))
+* **WL-2215:** remove firebase connector ignore ([86e9834](https://github.com/rarible/sdk/commit/86e9834a1e31b045598a4ff9f10ec14733b2b4a9))
+
+
+
+
+
+## [0.13.59-fix.3](https://github.com/rarible/sdk/compare/v0.13.59-fix.2...v0.13.59-fix.3) (2023-11-17)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.13.59-fix.2](https://github.com/rarible/sdk/compare/v0.13.59-fix.1...v0.13.59-fix.2) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes init collection ([7b718c2](https://github.com/rarible/sdk/commit/7b718c295737d06da347f31379e3ea63976b503c))
+
+
+
+
+
+## [0.13.59-fix.1](https://github.com/rarible/sdk/compare/v0.13.59-fix.0...v0.13.59-fix.1) (2023-11-16)
+
+
+### Bug Fixes
+
+* gamisodes sell fix ([26da778](https://github.com/rarible/sdk/commit/26da778ca8aa3992f2e665612ca6f46ddf0f4fe0))
+
+
+
+
+
+## [0.13.59-fix.0](https://github.com/rarible/sdk/compare/v0.13.59...v0.13.59-fix.0) (2023-11-16)
+
+
+### Bug Fixes
+
+* **PLTF-127:** fix mattel sign personal message ([#566](https://github.com/rarible/sdk/issues/566)) ([ea068aa](https://github.com/rarible/sdk/commit/ea068aa377bbb2b170c31b1814662c4c2337a766))
+
+
+
+
+
+## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
+
+
+### Features
+
+* **PLTF-104:** gamisodes collection support ([#564](https://github.com/rarible/sdk/issues/564)) ([a6b3f53](https://github.com/rarible/sdk/commit/a6b3f53aa978ac943dd772b7b2a0285bb27ac19a))
+
+
+
+
+
+## [0.13.58-fix.0](https://github.com/rarible/sdk/compare/v0.13.58...v0.13.58-fix.0) (2023-11-15)
+
+
+### Features
+
+* **WL-2208:** add firebase invalidation logic ([#562](https://github.com/rarible/sdk/issues/562)) ([4fa1746](https://github.com/rarible/sdk/commit/4fa1746d8263b9e84dcd785c97cddd8161ef9781))
+
+
+
+
+
+## [0.13.58](https://github.com/rarible/sdk/compare/v0.13.57-fix.0...v0.13.58) (2023-11-14)
+
+
+### Features
+
+* **PLTF-111:** update flow api client ([#561](https://github.com/rarible/sdk/issues/561)) ([e15d622](https://github.com/rarible/sdk/commit/e15d6227abdec6baf92f2c33e36bee919271d7cb))
+
+
+
+
+
+## [0.13.57-fix.0](https://github.com/rarible/sdk/compare/v0.13.57...v0.13.57-fix.0) (2023-11-14)
+
+**Note:** Version bump only for package root
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+
+### Features
+
+* **WL-2132:** add Firebase Connector to SDK ([#558](https://github.com/rarible/sdk/issues/558)) ([cab12f3](https://github.com/rarible/sdk/commit/cab12f3a2a6ecacf4b0a87d230132b39c8e4b141))
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Bug Fixes
+
+* example build ([6705a0a](https://github.com/rarible/sdk/commit/6705a0a1d93a672054af9ef01908feb0b02a6c2e))
+* example dev deps ([0573f1b](https://github.com/rarible/sdk/commit/0573f1b3597f6ebb020d487aa10f8a07ac5894df))
+* **MPX-2044:** wallet connector error handling ([#550](https://github.com/rarible/sdk/issues/550)) ([90b9bc4](https://github.com/rarible/sdk/commit/90b9bc44acf9e9c6d8373e8f7ad61b30e053f5df))
+
+
+### Features
+
+* **MPS-2487:** disallow creating orders for items with royalties gt 50% ([#546](https://github.com/rarible/sdk/issues/546)) ([a212954](https://github.com/rarible/sdk/commit/a212954d848f2c7ed2f79b9bbcba3a846058dc26))
+* **MPX-1809:** add human-readable description of the errors ([#545](https://github.com/rarible/sdk/issues/545)) ([b3485d8](https://github.com/rarible/sdk/commit/b3485d8203e1cb3eca8b51086fe2138972dfbfb7))
+* **MPX-1826:** move json configs to backend ([#544](https://github.com/rarible/sdk/issues/544)) ([42cc005](https://github.com/rarible/sdk/commit/42cc005795dfec5b7704ca0b187d4aa43be06c5f))
+* **MPX-2453:** remove walletconnect-v1 provider ([#542](https://github.com/rarible/sdk/issues/542)) ([25fff1d](https://github.com/rarible/sdk/commit/25fff1d5d4bf70a85c68c7c72e270f1153405d37))
+* **MPX-2463:** add checking payment value ([#547](https://github.com/rarible/sdk/issues/547)) ([97cc8fc](https://github.com/rarible/sdk/commit/97cc8fc47670633267242f26a7de3122e3466214))
+* **MPX-2520:** add calls to alternative rpc ([#543](https://github.com/rarible/sdk/issues/543)) ([49e3f71](https://github.com/rarible/sdk/commit/49e3f71287630cea72bb10c9392211e1e2db8a04))
+* **MPX-2551:** support flow in offramp ([#553](https://github.com/rarible/sdk/issues/553)) ([4fb79c2](https://github.com/rarible/sdk/commit/4fb79c2704e6de729c73083291234790eef64854))
+* **PLTF-43:** check collection init ([#552](https://github.com/rarible/sdk/issues/552)) ([7e2b477](https://github.com/rarible/sdk/commit/7e2b4778e4dd1b867eaf614d39d123a7b09feccc))
+
+
+### BREAKING CHANGES
+
+* **MPX-2453:** @rarible/connector-walletconnect was removed
+
+* fix: update README.md
+
+
+
+
+
+## [0.13.55-fix.0](https://github.com/rarible/sdk/compare/v0.13.55...v0.13.55-fix.0) (2023-10-10)
+
+
+### Bug Fixes
+
+* tests ([51a8d72](https://github.com/rarible/sdk/commit/51a8d72038708a5ab4841eb13e0a298d0f6fd917))
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+
+### Bug Fixes
+
+* **MPX-2252:** provider errors ([#540](https://github.com/rarible/sdk/issues/540)) ([cba995d](https://github.com/rarible/sdk/commit/cba995dd506acc35fadd039c0ddf2c41eda28fc9))
+* **MPX-2264:** fallback to wallet_requestPermissions, when eth_requestAccounts fails ([#538](https://github.com/rarible/sdk/issues/538)) ([67a8b80](https://github.com/rarible/sdk/commit/67a8b8086d57c01842aab8699b5ae9ab0453cd6e))
+
+
+### Features
+
+* **MPX-2448:** pass fingerprint to rarible logger ([#541](https://github.com/rarible/sdk/issues/541)) ([9a18e6f](https://github.com/rarible/sdk/commit/9a18e6facdd9f7a365d633bec4d2743953466cc9))
+* **MPX-2460:** add prefer option to injected web3 provider ([#539](https://github.com/rarible/sdk/issues/539)) ([f2ed99f](https://github.com/rarible/sdk/commit/f2ed99f9202b3235f0b8b721a64e0c98e322a42b))
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+
+### Bug Fixes
+
+* imports ([b7b3c51](https://github.com/rarible/sdk/commit/b7b3c515aacef04ea7ef012d8626a61f69433cad))
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+
+### Features
+
+* **MPX-2425:** sardine off ramp ([#537](https://github.com/rarible/sdk/issues/537)) ([adca48d](https://github.com/rarible/sdk/commit/adca48d05d5c417e4b2a1d3757930f44910dfc59))
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+
+### Features
+
+* **MPX-2458:** phantom wallet fix ([#536](https://github.com/rarible/sdk/issues/536)) ([64f6015](https://github.com/rarible/sdk/commit/64f60155bcbac4512d97c6dfb13ba57621c39c7d))
+
+
+
+
+
+## [0.13.52-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.52...v0.13.52-hotfix.0) (2023-09-18)
+
+
+### Bug Fixes
+
+* **MPX-2461:** garage token contract supporting ([#535](https://github.com/rarible/sdk/issues/535)) ([f087b30](https://github.com/rarible/sdk/commit/f087b3018c0fa5ae3ed9f74eaca6c95a1473a17b))
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+
+### Bug Fixes
+
+* **MPX-2400:** disable autoconnect for coinbase app ([#531](https://github.com/rarible/sdk/issues/531)) ([f0e3453](https://github.com/rarible/sdk/commit/f0e3453fd9cb6acab8c95e8f6f0b782ed94453fb))
+
+
+### Features
+
+* **MPX-2077:** batch purchase error if item was purchased ([#534](https://github.com/rarible/sdk/issues/534)) ([74fc55d](https://github.com/rarible/sdk/commit/74fc55def6beda25019a36de13dc426456d521f3))
+* **MPX-2146:** handle user cancellations ([#533](https://github.com/rarible/sdk/issues/533)) ([0808b30](https://github.com/rarible/sdk/commit/0808b300b3e662ac4a93c31537e9098ba5880a4b))
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+
+### Bug Fixes
+
+* update lockfile ([#532](https://github.com/rarible/sdk/issues/532)) ([a577796](https://github.com/rarible/sdk/commit/a57779652f8b21b4f82dada768428c41924c3bf7))
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+
+### Bug Fixes
+
+* update lerna json ([ff5ab00](https://github.com/rarible/sdk/commit/ff5ab0088efc2f02153691f0845e61c3b258f980))
+
+
+### Features
+
+* add mantle prod config ([59a22cb](https://github.com/rarible/sdk/commit/59a22cbe6835676846bda39abc18a41498ed1ca3))
+* add mantle prod config ([b2569af](https://github.com/rarible/sdk/commit/b2569af0506824fc0ec934cdf249c11547af5ee6))
+* bump imx sdk version ([ea2e52c](https://github.com/rarible/sdk/commit/ea2e52c2940c65e6c99f003279ed0970a57b8321))
+* support new version of imx sdk ([43c4ec0](https://github.com/rarible/sdk/commit/43c4ec030c5f0c914bcec337524b395c16a385be))
+* update contract ([a37c9f3](https://github.com/rarible/sdk/commit/a37c9f3ca13a88db8c0f8c08f13e993d14f7a71f))
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+
+### Bug Fixes
+
+* update lerna json ([08746bc](https://github.com/rarible/sdk/commit/08746bcd429ed74a0c717c33c63255a511061614))
+
+
+### Features
+
+* bump imx sdk version ([3c7b50f](https://github.com/rarible/sdk/commit/3c7b50f3a90a98eaaa2b6053fa43ca69b848b524))
+* support new version of imx sdk ([8d8eea3](https://github.com/rarible/sdk/commit/8d8eea3b7470ede5dc0e54ae53ddb05ae7feab32))
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+
+### Features
+
+* **MPX-2327,MPX-2305:** safe checking balance and removing fusd init ([#520](https://github.com/rarible/sdk/issues/520)) ([40aa14e](https://github.com/rarible/sdk/commit/40aa14e66098336fa00f63bdf8770df4880c4aa3))
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+
+### Features
+
+* **wl-1656, wl-1657, wl-1658:** add mantle testnet blockchain support ([#518](https://github.com/rarible/sdk/issues/518)) ([76ab8b6](https://github.com/rarible/sdk/commit/76ab8b63cd64307fb71da8a713b5947c3f48cf30))
+
+
+
+
+
+## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
+
+
+### Bug Fixes
+
+* **MPX-2043:** fix wallet connect logs ([#517](https://github.com/rarible/sdk/issues/517)) ([63024f6](https://github.com/rarible/sdk/commit/63024f6af348ee0469c9a90ad14b77c065a016a7))
+* **MPX-2292:** log estimate gas errors ([#516](https://github.com/rarible/sdk/issues/516)) ([6d593cf](https://github.com/rarible/sdk/commit/6d593cfc83593ae85b0ee22aab280e8de1dab596))
+
+
+
+
+
+## [0.13.49-beta.0](https://github.com/rarible/sdk/compare/v0.13.48...v0.13.49-beta.0) (2023-08-01)
+
+
+### Features
+
+* **MPX-1870:** passing provider data to sdk ([#515](https://github.com/rarible/sdk/issues/515)) ([a52b023](https://github.com/rarible/sdk/commit/a52b0234da345eec9c3e7bcb37e0c0e8ef47b182))
+
+
+
+
+
+## [0.13.48](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.1...v0.13.48) (2023-07-26)
+
+
+### Bug Fixes
+
+* **MPX-2073:** properly setup gas options in Web3Ethereum ([#512](https://github.com/rarible/sdk/issues/512)) ([db8ad99](https://github.com/rarible/sdk/commit/db8ad9904137177e16668b8e3f4b1bcf06cbc9a1))
+
+
+### Features
+
+* add domain to connector logs ([#508](https://github.com/rarible/sdk/issues/508)) ([a6f24eb](https://github.com/rarible/sdk/commit/a6f24eb560f40b3701102b06cd11a43ec9a13a1d))
+* **MPX-2089:** change magic getmetadata method ([#514](https://github.com/rarible/sdk/issues/514)) ([71e37b9](https://github.com/rarible/sdk/commit/71e37b9a75aa7937214b6e56749c4ebd7f880a89))
+
+
+
+
+
+## [0.13.46-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.46-hotfix.0...v0.13.46-hotfix.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* tests ([#510](https://github.com/rarible/sdk/issues/510)) ([2cc43c5](https://github.com/rarible/sdk/commit/2cc43c5716e1a5521dfdbfd7cff5cc209bee0f5d))
+
+
+
+
+
+## [0.13.46-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.46...v0.13.46-hotfix.0) (2023-07-10)
+
+
+### Bug Fixes
+
+* check order status ([#509](https://github.com/rarible/sdk/issues/509)) ([bff8400](https://github.com/rarible/sdk/commit/bff840018c810ea21280e2d4c30b09db8e7ca996))
+
+
+
+
+
+## [0.13.46](https://github.com/rarible/sdk/compare/v0.13.45...v0.13.46) (2023-07-07)
+
+
+### Bug Fixes
+
+* **MP-2036:** evm convertation, tests for bids ([#504](https://github.com/rarible/sdk/issues/504)) ([f1f4482](https://github.com/rarible/sdk/commit/f1f44825ca95405ce34793c4b6c3f75952037def))
+
+
+
+
+
+## [0.13.45](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.2...v0.13.45) (2023-07-06)
+
+
+### Bug Fixes
+
+* **MPX-2118:** tezos queries with api key ([#505](https://github.com/rarible/sdk/issues/505)) ([c53e178](https://github.com/rarible/sdk/commit/c53e17817b28ab95a0355105c081387ffcc9bcad))
+
+
+### Features
+
+* **MPX-2093:** move logs from warn to info ([#506](https://github.com/rarible/sdk/issues/506)) ([e19da2c](https://github.com/rarible/sdk/commit/e19da2c3f86ae835d13e84609426d0ff03d30b5e))
+
+
+
+
+
+## [0.13.44-hotfix.2](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.1...v0.13.44-hotfix.2) (2023-06-30)
+
+
+### Bug Fixes
+
+* flow api key ([#503](https://github.com/rarible/sdk/issues/503)) ([949fc15](https://github.com/rarible/sdk/commit/949fc1595b4b72a0f3c4f2c5d53bca58cf5da0bd))
+
+
+
+
+
+## [0.13.44-hotfix.1](https://github.com/rarible/sdk/compare/v0.13.44-hotfix.0...v0.13.44-hotfix.1) (2023-06-29)
+
+
+### Bug Fixes
+
+* **MPX-2103:** error listing on new mattel collections ([#502](https://github.com/rarible/sdk/issues/502)) ([d5a4707](https://github.com/rarible/sdk/commit/d5a4707a2385eb3967eca1eb0f6e76b443e65bd9))
+* sign personal msg, sign typed data request ([#501](https://github.com/rarible/sdk/issues/501)) ([01599d0](https://github.com/rarible/sdk/commit/01599d014f0f8d3707df07a28a828e0e02e7e2e1))
+
+
+
+
+
+## [0.13.44-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.44...v0.13.44-hotfix.0) (2023-06-26)
+
+
+### Bug Fixes
+
+* transfer usdc fix ([1254a5a](https://github.com/rarible/sdk/commit/1254a5a0f87bfe9c64f4b55c836a78c8d8aa663e))
+
+
+
+
+
+## [0.13.44](https://github.com/rarible/sdk/compare/v0.13.43...v0.13.44) (2023-06-26)
+
+
+### Features
+
+* **MPX-1994:** sardine checkout ([#500](https://github.com/rarible/sdk/issues/500)) ([ce5193e](https://github.com/rarible/sdk/commit/ce5193e6e04de9d25e569156b68b1217b667a933))
+
+
+
+
+
+## [0.13.43](https://github.com/rarible/sdk/compare/v0.13.42-hotfix.0...v0.13.43) (2023-06-20)
+
+
+### Bug Fixes
+
+* wallet connect update version ([0a883ce](https://github.com/rarible/sdk/commit/0a883ce5aad2581095ab0343f63b982e7d21e05e))
+
+
+### Features
+
+* **MPX-1957:** walletconnect v2 migration ([#493](https://github.com/rarible/sdk/issues/493)) ([6d2be66](https://github.com/rarible/sdk/commit/6d2be66c3df8d5dc284490e866ca6a6718c6ea53))
+* **MPX-2041:** expose get providers method for connector ([#497](https://github.com/rarible/sdk/issues/497)) ([a8d4067](https://github.com/rarible/sdk/commit/a8d4067618cc8e07220604fa35e705549a15a4e3))
+
+
+
+
+
+## [0.13.42-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.42...v0.13.42-hotfix.0) (2023-06-16)
+
+
+### Bug Fixes
+
+* add sdk common dep ([#495](https://github.com/rarible/sdk/issues/495)) ([63dd4a8](https://github.com/rarible/sdk/commit/63dd4a82453ec32e251d281918766bbfbc48c09a))
+
+
+
+
+
+## [0.13.42](https://github.com/rarible/sdk/compare/v0.13.41...v0.13.42) (2023-06-16)
+
+
+### Features
+
+* new mattel contracts ([#494](https://github.com/rarible/sdk/issues/494)) ([73273e2](https://github.com/rarible/sdk/commit/73273e2aa3f180cc1718796b7b7d4da5f5978675))
+
+
+
+
+
+## [0.13.41](https://github.com/rarible/sdk/compare/v0.13.40...v0.13.41) (2023-06-08)
+
+
+### Features
+
+* **MPX-1964:** expose auth0 status method ([#491](https://github.com/rarible/sdk/issues/491)) ([b8a7372](https://github.com/rarible/sdk/commit/b8a7372b712fb4bfe274456d5c9ec947a41d9d82))
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+
+### Bug Fixes
+
+* **MPX-1904:** confirm approval tx for sell method ([#487](https://github.com/rarible/sdk/issues/487)) ([0237ab2](https://github.com/rarible/sdk/commit/0237ab214f8930d4fabb7064bd7182afc39fc090))
+* **MPX-1945:** fix tests with api key ([#489](https://github.com/rarible/sdk/issues/489)) ([105f470](https://github.com/rarible/sdk/commit/105f470feb9c19bf93504296d6d790ac4c598300))
+
+
+### Features
+
+* add platform field to logs ([#486](https://github.com/rarible/sdk/issues/486)) ([bf31af1](https://github.com/rarible/sdk/commit/bf31af15681b79613e395dc224f38359a00fe962))
+* **PT-2935:** staging configuration ([593d62c](https://github.com/rarible/sdk/commit/593d62cdcf7756f03b8d785558db31850acc85ba))
+
+
+
+
+
+## [0.13.39](https://github.com/rarible/sdk/compare/v0.13.38...v0.13.39) (2023-05-23)
+
+
+### Features
+
+* support multibuy ([#484](https://github.com/rarible/sdk/issues/484)) ([c319392](https://github.com/rarible/sdk/commit/c319392205768dcb8f7a9376a486d4ee1dd3c939))
+
+
+
+
+
+## [0.13.38](https://github.com/rarible/sdk/compare/v0.13.37...v0.13.38) (2023-05-22)
+
+
+### Bug Fixes
+
+* move proposal key error to warning ([#483](https://github.com/rarible/sdk/issues/483)) ([0bcd25f](https://github.com/rarible/sdk/commit/0bcd25fb8b15d6a0c3047d98c39b64ee7ff5de1d))
+* retry flow balance ([#482](https://github.com/rarible/sdk/issues/482)) ([5336038](https://github.com/rarible/sdk/commit/533603873f91ad74e0eebbb968e7232e00f5d390))
+
+
+### Features
+
+* add orderId and extra data to logs ([#480](https://github.com/rarible/sdk/issues/480)) ([69ea241](https://github.com/rarible/sdk/commit/69ea241677b3eb99e8fade69b3713b413a0bf998))
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+
+### Bug Fixes
+
+* yarn lock ([068bb05](https://github.com/rarible/sdk/commit/068bb0547e33aa5bb7f7cb4c5f91bd27daa67daa))
+
+
+
+
+
+## [0.13.36](https://github.com/rarible/sdk/compare/v0.13.35...v0.13.36) (2023-05-18)
+
+
+### Bug Fixes
+
+* add wallet address for flow ([#478](https://github.com/rarible/sdk/issues/478)) ([8bef855](https://github.com/rarible/sdk/commit/8bef855ef10f58781201c404e5ff8bbc4a0ce031))
+* garage card list ([#479](https://github.com/rarible/sdk/issues/479)) ([3248f8a](https://github.com/rarible/sdk/commit/3248f8ae2ee27374a96c9005e8e7039249055270))
+
+
+
+
+
+## [0.13.35](https://github.com/rarible/sdk/compare/v0.13.34...v0.13.35) (2023-05-16)
+
+
+### Bug Fixes
+
+* mattel prod contracts ([#477](https://github.com/rarible/sdk/issues/477)) ([f72583b](https://github.com/rarible/sdk/commit/f72583bc97cb71840130ca0772c995203ae42019))
+
+
+
+
+
+## [0.13.34](https://github.com/rarible/sdk/compare/v0.13.32...v0.13.34) (2023-05-11)
+
+
+### Bug Fixes
+
+* change barbie testnet contracts ([#476](https://github.com/rarible/sdk/issues/476)) ([0656165](https://github.com/rarible/sdk/commit/0656165751064ee6fc442c1e7691b7ff06984dc5))
+* web3 ethereum gas limit ([#475](https://github.com/rarible/sdk/issues/475)) ([ae6be05](https://github.com/rarible/sdk/commit/ae6be0596737dc9da457b6c1e107026a075262e7))
+
+
+
+
+
+## [0.13.32](https://github.com/rarible/sdk/compare/v0.13.31...v0.13.32) (2023-05-10)
+
+
+### Bug Fixes
+
+* revert solana support ([#474](https://github.com/rarible/sdk/issues/474)) ([6767c84](https://github.com/rarible/sdk/commit/6767c84c38d08af7411e9a60770b0646d8a50a02))
+
+
+
+
+
+## [0.13.31](https://github.com/rarible/sdk/compare/v0.13.30...v0.13.31) (2023-05-09)
+
+
+### Features
+
+* mainnet wrapper supports looksrare, seaport 1.5 orders ([#473](https://github.com/rarible/sdk/issues/473)) ([410f5aa](https://github.com/rarible/sdk/commit/410f5aa0523e21553a8035517ff436c9cf21c8bf))
+
+
+
+
+
+## [0.13.30](https://github.com/rarible/sdk/compare/v0.13.29...v0.13.30) (2023-05-09)
+
+
+### Bug Fixes
+
+* list barbie item ([#472](https://github.com/rarible/sdk/issues/472)) ([df75955](https://github.com/rarible/sdk/commit/df759557797e5af59c13399c6d346c0ed0faa208))
+
+
+
+
+
+## [0.13.29](https://github.com/rarible/sdk/compare/v0.13.28...v0.13.29) (2023-05-08)
+
+
+### Bug Fixes
+
+* seaport 1.5, logging improvements, example flow setup ([#471](https://github.com/rarible/sdk/issues/471)) ([123d5c3](https://github.com/rarible/sdk/commit/123d5c39ce654a008dec9dd8a04086254b1227ca))
+
+
+### Features
+
+* looksrare v2 orders ([#456](https://github.com/rarible/sdk/issues/456)) ([af36a0b](https://github.com/rarible/sdk/commit/af36a0b02e431a4536ba93112c502a2c01768aba))
+* sunset of solana ([#463](https://github.com/rarible/sdk/issues/463)) ([52b70e7](https://github.com/rarible/sdk/commit/52b70e75a6a897e9f570109fe03a653dde12dc51))
+
+
+
+
+
+## [0.13.28](https://github.com/rarible/sdk/compare/v0.13.27...v0.13.28) (2023-05-03)
+
+
+### Bug Fixes
+
+* flow zero address ([#470](https://github.com/rarible/sdk/issues/470)) ([52d0c9c](https://github.com/rarible/sdk/commit/52d0c9cb71c26252ab60b672c6fe835e2e57e99a))
+
+
+
+
+
+## [0.13.27](https://github.com/rarible/sdk/compare/v0.13.26...v0.13.27) (2023-04-27)
+
+
+### Bug Fixes
+
+* flow origin fees ([#468](https://github.com/rarible/sdk/issues/468)) ([964be24](https://github.com/rarible/sdk/commit/964be2430fe96413358ace3c95ce88c11c313117))
+
+
+
+
+
+## [0.13.26](https://github.com/rarible/sdk/compare/v0.13.25...v0.13.26) (2023-04-25)
+
+
+### Bug Fixes
+
+* bignumber fixed value ([ae8056e](https://github.com/rarible/sdk/commit/ae8056ec24a1f01165e7f86b2f454aca47161744))
+
+
+
+
+
+## [0.13.25](https://github.com/rarible/sdk/compare/v0.13.24...v0.13.25) (2023-04-25)
+
+
+### Bug Fixes
+
+* bignumber value in seaport orders ([fb62197](https://github.com/rarible/sdk/commit/fb62197c696b38de1a16c5f94075c4fd5c11a052))
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+
+### Bug Fixes
+
+* yarn lock fix ([61c05e2](https://github.com/rarible/sdk/commit/61c05e277649d65bb5440bca3e3b0d754c451c36))
+
+
+
+
+
+## [0.13.23](https://github.com/rarible/sdk/compare/v0.13.22...v0.13.23) (2023-04-24)
+
+
+### Bug Fixes
+
+* union flow sell ([d4d79e8](https://github.com/rarible/sdk/commit/d4d79e87b427412a074042383ef5644ef27711ee))
+
+
+### Features
+
+* transfer native tokens ([#467](https://github.com/rarible/sdk/issues/467)) ([dcd61f3](https://github.com/rarible/sdk/commit/dcd61f3efae08851aa9467d52d56b02cd223a59c))
+
+
+
+
+
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+
+### Bug Fixes
+
+* duration of flow listing ([#466](https://github.com/rarible/sdk/issues/466)) ([74006e6](https://github.com/rarible/sdk/commit/74006e688be729928e135340f744195ea33199fa))
+
+
+
+
+
+## [0.13.21](https://github.com/rarible/sdk/compare/v0.13.20...v0.13.21) (2023-04-18)
+
+
+### Bug Fixes
+
+* sdk common package publish config ([#465](https://github.com/rarible/sdk/issues/465)) ([38faa2b](https://github.com/rarible/sdk/commit/38faa2bef0cb2b6c8d6d2c71eacc75226a8e0de7))
+
+
+
+
+
+## [0.13.20](https://github.com/rarible/sdk/compare/v0.13.19...v0.13.20) (2023-04-18)
+
+
+### Bug Fixes
+
+* flow storefront change method ([#457](https://github.com/rarible/sdk/issues/457)) ([af95887](https://github.com/rarible/sdk/commit/af95887e414dbe5e54dbb62d7eebda01a370853b))
+* infinity checking mattel connector ([#462](https://github.com/rarible/sdk/issues/462)) ([7ee69cb](https://github.com/rarible/sdk/commit/7ee69cbf0aff7b161cd82e30e675ca811018de2c))
+* middleware log wrap ([#461](https://github.com/rarible/sdk/issues/461)) ([ecbb6f8](https://github.com/rarible/sdk/commit/ecbb6f864963f82f5c96f5e2b02f5772464c33cf))
+* second mattel login ([#464](https://github.com/rarible/sdk/issues/464)) ([9978732](https://github.com/rarible/sdk/commit/9978732537e70cfc692446552b2e0bb341a5b919))
+
+
+
+
+
+## [0.13.19](https://github.com/rarible/sdk/compare/v0.13.18...v0.13.19) (2023-04-04)
+
+
+### Bug Fixes
+
+* nfid release config ([77e3f8c](https://github.com/rarible/sdk/commit/77e3f8ce4ef2e28bf771c839b88c3c75379df3d5))
+
+
+
+
+
+## [0.13.18](https://github.com/rarible/sdk/compare/v0.13.17...v0.13.18) (2023-04-04)
+
+
+### Bug Fixes
+
+* mattel purchase ([#454](https://github.com/rarible/sdk/issues/454)) ([d8d81a4](https://github.com/rarible/sdk/commit/d8d81a458d6964e1f27f5539ba813a00155de688))
+* metamask wallet connect ([#455](https://github.com/rarible/sdk/issues/455)) ([f06e59a](https://github.com/rarible/sdk/commit/f06e59a0ff3b334989c31d78c1c8c61923c15714))
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+
+### Bug Fixes
+
+* e2e tests dev ([#452](https://github.com/rarible/sdk/issues/452)) ([1efd60d](https://github.com/rarible/sdk/commit/1efd60ddaf28257028ba82d0246b19e83bb8af37))
+
+
+
+
+
 ## [0.13.16](https://github.com/rarible/sdk/compare/v0.13.15...v0.13.16) (2023-03-29)
 
 

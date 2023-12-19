@@ -1,4 +1,4 @@
-import {createRaribleSdk} from "@rarible/sdk/src"
+import {createRaribleSdk} from "@rarible/sdk"
 import {Blockchain} from "@rarible/api-client"
 import {updateNodeGlobalVars} from "../common"
 import {initWalletWeb3WithHDWalletWithEstimate} from "./common"

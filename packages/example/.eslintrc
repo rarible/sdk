@@ -1,0 +1,10 @@
+{
+  "extends": ["@rarible/ts"],
+  "rules": {
+    "unicorn/no-empty-file": "off",
+    "comma-dangle": "off"
+  },
+  "globals":{
+    "BigInt": true
+  }
+}

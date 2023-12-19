@@ -40,6 +40,9 @@ export class FlowWallet implements AbstractWallet {
 			throw new Error("Message can't be empty")
 		}
 		const messageHex = Buffer.from(message).toString("hex")
+		if (this.auth) {
+			return this._getSignatureFromAuth(messageHex)
+		}
 		const currentUser = this.fcl.currentUser()
 		const user = await this.fcl.currentUser().snapshot()
 		const address = user.addr
@@ -67,6 +70,27 @@ export class FlowWallet implements AbstractWallet {
 			}
 		}
 		throw new Error(`Signature of user address "${address}" not found`)
+	}
+
+	async _getSignatureFromAuth(msgHex: string) {
+		if (!this.auth) throw new Error("Auth was not been passed")
+		const authResult = await this.auth()
+		const signResult = await authResult.signingFunction({
+			message: msgHex,
+			addr: authResult.addr,
+		})
+		if (!signResult || !signResult.signature) {
+			throw new Error(`Signature of user address "${authResult.addr}" not found`)
+		}
+		const account = await this.fcl.account(authResult.addr)
+		const pubKey = account.keys.find(k => k.index === signResult.keyId)
+		if (!pubKey) {
+			throw new Error(`Key with index "${signResult.keyId}" not found on account with address ${authResult.addr}`)
+		}
+		return {
+			signature: signResult.signature,
+			publicKey: pubKey.publicKey,
+		}
 	}
 }
 

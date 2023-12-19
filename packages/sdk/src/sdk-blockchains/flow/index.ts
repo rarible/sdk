@@ -23,6 +23,7 @@ import { FlowBurn } from "./burn"
 import { FlowCancel } from "./cancel"
 import { FlowBalance } from "./balance"
 import { FlowBid } from "./bid"
+import { FlowSetupAccount } from "./setup-account"
 
 export function createFlowSdk(
 	wallet: Maybe<FlowWallet>,
@@ -33,13 +34,14 @@ export function createFlowSdk(
 ): IRaribleInternalSdk {
 	const sdk = createFlowSdkInstance(wallet?.fcl, network, {
 		...(params || {}),
+		apiKey: config?.apiKey,
 		middleware: [
 			...(config?.logs !== LogsLevel.DISABLED
 				? [getErrorHandlerMiddleware(NetworkErrorCode.FLOW_NETWORK_ERR)]
 				: []),
 			...(params?.middleware || []),
 		],
-	}, config?.blockchain?.FLOW?.auth)
+	}, config?.blockchain?.FLOW?.auth || wallet?.getAuth())
 	const blockchainNetwork = ENV_CONFIG[network].network
 	const sellService = new FlowSell(sdk, apis)
 	const mintService = new FlowMint(sdk, apis, blockchainNetwork)
@@ -48,9 +50,11 @@ export function createFlowSdk(
 	const transferService = new FlowTransfer(sdk, blockchainNetwork)
 	const fillService = new FlowBuy(sdk, apis, blockchainNetwork)
 	const cancelService = new FlowCancel(sdk, apis, blockchainNetwork)
+	const balanceService = new FlowBalance(sdk, network, blockchainNetwork, wallet)
 
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.FLOW, preprocessMeta)
+	const setupAccount = new FlowSetupAccount(sdk, blockchainNetwork)
 
 	return {
 		nft: {
@@ -68,13 +72,14 @@ export function createFlowSdk(
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
 			batchBuy: new MethodWithPrepare(notImplemented, nonImplementedAction),
-			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.buy),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
 			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
 			cancel: cancelService.cancel,
 		},
 		balances: {
-			getBalance: new FlowBalance(sdk, network, wallet).getBalance,
+			getBalance: balanceService.getBalance,
+			transfer: balanceService.transfer,
 			convert: notImplemented,
 			getBiddingBalance: nonImplementedAction,
 			depositBiddingBalance: nonImplementedAction,
@@ -87,6 +92,11 @@ export function createFlowSdk(
 			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
 				return sellService.getFutureOrderFees()
 			},
+		},
+		flow: {
+			setupAccount: setupAccount.setupAccount,
+			checkInitMattelCollections: setupAccount.checkInitMattelCollections,
+			setupMattelCollections: setupAccount.setupMattelCollections,
 		},
 	}
 }

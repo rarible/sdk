@@ -13,7 +13,7 @@ import {
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import SendIcon from "@mui/icons-material/Send"
-import { MetaContent } from "@rarible/api-client/build/models/MetaContent"
+import type { MetaContent } from "@rarible/api-client/build/models/MetaContent"
 import { Link } from "react-router-dom"
 
 function getMetaImageUrl(metaContent: MetaContent[] | undefined): string | null {
@@ -61,8 +61,8 @@ export function ItemCard({ item }: IItemCardProps) {
 					display: "flex",
 					overflow: "hidden",
 					"& .MuiCardHeader-content": {
-						overflow: "hidden"
-					}
+						overflow: "hidden",
+					},
 				}}
 				title={<Typography noWrap gutterBottom variant="h6" component="h4">
 					{item.meta ? item.meta.name : "No metadata"}

@@ -7,6 +7,7 @@ export type ExchangeAddresses = {
 	openseaV1: Address
 	wrapper: Address
 	looksrare?: Address
+	looksrareV2?: Address
 	x2y2: Address
 }
 
@@ -49,7 +50,9 @@ export type EthereumConfig = {
 	openSea: OpenSeaConfig
 	factories: FactoriesAddresses
 	weth: Address
+	rari?: Address
 	auction: Address
 	cryptoPunks: CryptoPunksConfig
 	sudoswap: SudoswapConfig
+	looksrareOrderValidatorV2?: Address
 }

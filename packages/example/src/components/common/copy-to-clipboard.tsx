@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react"
 import { IconButton, Tooltip } from "@mui/material"
-import { Icon } from "./icon"
 import { faCheck, faCopy, faTimes } from "@fortawesome/free-solid-svg-icons"
+import { Icon } from "./icon"
 
 interface ICopyToClipboardProps {
 	value: string
@@ -18,12 +18,30 @@ export function CopyToClipboard({ value }: ICopyToClipboardProps) {
 		}
 	}, [value])
 
+	let iconButtonColor: "success" | "warning" | "default"
+	if (copied === true) {
+		iconButtonColor = "success"
+	} else if (copied === false) {
+		iconButtonColor = "warning"
+	} else {
+		iconButtonColor = "default"
+	}
+
+	let iconColor: any
+	if (copied === true) {
+		iconColor = faCheck
+	} else if (copied === false) {
+		iconColor = faTimes
+	} else {
+		iconColor = faCopy
+	}
+
 	return <Tooltip title="Copy To Clipboard" placement="top">
 		<IconButton
-			color={copied === true ? "success" : (copied === false ? "warning" : "default")}
+			color={iconButtonColor}
 			onClick={copyHandler}
 		>
-			<Icon icon={copied === true ? faCheck : (copied === false ? faTimes : faCopy)}/>
+			<Icon icon={iconColor}/>
 		</IconButton>
 	</Tooltip>
 }

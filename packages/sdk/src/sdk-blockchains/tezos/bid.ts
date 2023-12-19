@@ -24,10 +24,11 @@ import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import { notImplemented } from "../../common/not-implemented"
-import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import type { IApisSdk } from "../../domain"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
 import type { BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
+import { getNftContractAddress } from "../../common/utils"
 import type { MaybeProvider } from "./common"
 import {
 	convertFromContractAddress,
@@ -151,7 +152,9 @@ export class TezosBid {
 				bid_payouts: await getPayouts(provider, request.payouts),
 				bid_amount: assetTotalAmount,
 				bid_asset_qty: nftAmount,
-				bid_expiry_date: convertDateToTimestamp(request.expirationDate),
+				bid_expiry_date: request.expirationDate
+					? convertDateToTimestamp(request.expirationDate)
+					: getDefaultExpirationDateTimestamp(),
 				bid_data_type: undefined,
 				bid_data: undefined,
 			},
@@ -216,6 +219,9 @@ export class TezosBid {
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			getConvertableValue: notImplemented,
 			submit: updateAction,
+			orderData: {
+				nftCollection: getNftContractAddress(order.take.type),
+			},
 		}
 	}
 

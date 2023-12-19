@@ -2,10 +2,12 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import { toAddress } from "@rarible/types"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
+import type { Address } from "@rarible/ethereum-api-client"
 import { createErc20Contract } from "../../contracts/erc20"
 import { createErc721Contract } from "../../contracts/erc721"
 import type { SendFunction } from "../../../common/send-transaction"
 import { createErc1155Contract } from "../../contracts/erc1155"
+import { waitTx } from "../../../common/wait-tx"
 import type { InsufficientApprovals } from "./balance-and-approval-check"
 import type { Item } from "./types"
 import { isErc1155Item, isErc721Item } from "./item"
@@ -40,6 +42,7 @@ export function getApprovalActions(
 	ethereum: Ethereum,
 	send: SendFunction,
 	insufficientApprovals: InsufficientApprovals,
+	wrapperAddress?: Address
 ): Promise<EthereumTransaction[]> {
 	return Promise.all(
 		insufficientApprovals
@@ -57,8 +60,12 @@ export function getApprovalActions(
 					return send(erc1155.functionCall("setApprovalForAll", operator, true))
 				} else {
 					const erc20 = createErc20Contract(ethereum, toAddress(token))
-					return send(erc20.functionCall("approve", operator, MAX_INT))
+					return send(erc20.functionCall("approve", wrapperAddress ?? operator, MAX_INT.toFixed()))
 				}
+			})
+			.map(async tx => {
+				await waitTx(tx)
+				return tx
 			})
 	)
 }

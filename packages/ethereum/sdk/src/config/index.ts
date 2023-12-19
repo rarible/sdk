@@ -8,6 +8,12 @@ import { devPolygonConfig } from "./polygon-dev"
 import { testnetEthereumConfig } from "./testnet"
 import { stagingEthereumConfig } from "./staging"
 import { stagingPolygonConfig } from "./polygon-staging"
+import { mantleTestnetConfig } from "./testnet-mantle"
+import { mantleConfig } from "./mantle"
+import { arbitrumTestnetConfig } from "./testnet-arbitrum"
+import { arbitrumConfig } from "./arbitrum"
+import { zkSyncTestnetConfig } from "./testnet-zksync"
+import { zkSyncConfig } from "./zksync"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -16,8 +22,14 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"dev-ethereum": devEthereumConfig,
 	"dev-polygon": devPolygonConfig,
 	"staging-polygon": stagingPolygonConfig,
+	mantle: mantleConfig,
+	"testnet-mantle": mantleTestnetConfig,
 	testnet: testnetEthereumConfig,
 	staging: stagingEthereumConfig,
+	"testnet-arbitrum": arbitrumTestnetConfig,
+	"arbitrum": arbitrumConfig,
+	"testnet-zksync": zkSyncTestnetConfig,
+	"zksync": zkSyncConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

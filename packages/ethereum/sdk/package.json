@@ -1,6 +1,6 @@
 {
   "name": "@rarible/protocol-ethereum-sdk",
-  "version": "0.13.14",
+  "version": "0.13.64-beta.3",
   "keywords": [
     "axios",
     "typescript",
@@ -19,32 +19,32 @@
   "scripts": {
     "clean": "rimraf ./build ./umd",
     "build": "run-s build:*",
-    "build:esm": "tsc --project tsconfig-build.json",
+    "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
     "verify": "tsc --noEmit",
-    "test": "jest --runInBand --silent"
+    "test": "jest --runInBand --silent --forceExit"
   },
   "dependencies": {
     "@rarible/action": "~0.9.1",
-    "@rarible/ethereum-api-client": "^0.1.25-beta3",
-    "@rarible/ethereum-provider": "^0.13.14",
+    "@rarible/ethereum-api-client": "^0.1.26-beta3",
+    "@rarible/ethereum-provider": "^0.13.56",
     "@rarible/logger": "^0.9.12",
+    "@rarible/sdk-common": "^0.13.64-beta.3",
     "@rarible/utils": "~0.9.10",
-    "axios": "^0.25.0",
     "eth-sig-util": "^3.0.0",
     "ethereumjs-util": "^7.1.0",
-    "ethers": "~5.4.4",
     "exponential-backoff": "^3.1.0",
     "merkletreejs": "^0.2.31"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.14",
-    "@rarible/ethers-ethereum": "^0.13.14",
+    "@rarible/ethereum-sdk-test-common": "^0.13.64-beta.3",
+    "@rarible/ethers-ethereum": "^0.13.64-beta.3",
     "@rarible/test-provider": "~0.5.0",
-    "@rarible/web3-ethereum": "^0.13.14",
+    "@rarible/web3-ethereum": "^0.13.64-beta.3",
     "@types/jest": "27.0.2",
     "@types/node-fetch": "^2.5.11",
     "buffer": "^6.0.3",
+    "ethers": "~5.4.4",
     "form-data": "^4.0.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.3.1",
@@ -55,11 +55,12 @@
     "stream-browserify": "^3.0.0",
     "ts-jest": "^27.0.7",
     "typescript": "^4.8.4",
-    "web3": "^1.8.1",
+    "web3": ">=1.5.0 <1.9.0",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2"
   },
   "peerDependencies": {
+    "axios": "^0.26.1",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

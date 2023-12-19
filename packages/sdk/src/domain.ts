@@ -34,6 +34,13 @@ import type { IUploadMeta } from "./types/nft/mint/prepare"
 import type { IBatchBuy } from "./types/order/fill"
 import type { IGetBuyAmmInfo } from "./types/balances"
 import type { IGetSdkContext } from "./common/get-sdk-context"
+import type { IBalanceTransfer } from "./types/balances"
+import type {
+	IFlowSetupAccount,
+	IFlowCheckInitMattelCollections,
+	IFlowSetupMattelCollections,
+} from "./types/nft/collection"
+import type { ExternalContext } from "./common/get-sdk-context"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -47,6 +54,8 @@ export interface ISdkContext {
 	config?: IRaribleSdkConfig
 	sessionId: string
 	apiKey?: string
+	providerId?: string
+	providerMeta?: Record<string, string>
 }
 
 export interface IRaribleSdkConfig {
@@ -67,11 +76,18 @@ export interface IRaribleSdkConfig {
 		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
 	}
 	/**
-	 * Meddlewares
+	 * Middlewares
 	 */
 	middlewares?: Middleware[]
 	apiKey?: string
+	/**
+   * @deprecated
+   */
 	logger?: AbstractLogger
+	/**
+   * Pass extra fields to logs
+   */
+	context?: ExternalContext
 }
 
 /**
@@ -118,6 +134,7 @@ export interface IRaribleSdk {
 	 */
 	wallet: Maybe<BlockchainWallet>
 	ethereum?: IEthereumSdk
+	flow?: IFlowSdk
 	getSdkContext: IGetSdkContext
 }
 
@@ -127,7 +144,6 @@ export interface IRaribleSdk {
 export interface IApisSdk {
 	order: ApiClient.OrderControllerApi
 	currency: ApiClient.CurrencyControllerApi
-	auction: ApiClient.AuctionControllerApi
 	collection: ApiClient.CollectionControllerApi
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi
@@ -360,6 +376,7 @@ export interface IOrderSdk {
 export interface IBalanceSdk {
 	getBalance: IGetBalance
 	convert: IConvert
+	transfer: IBalanceTransfer
 
 	getBiddingBalance: IGetBiddingBalance
 	depositBiddingBalance: IDepositBiddingBalance
@@ -371,6 +388,13 @@ export interface IEthereumSdk {
 	unwrapCryptoPunk: ICryptopunkUnwrap,
 	getBatchBuyAmmInfo: IGetBuyAmmInfo,
 }
+
+export interface IFlowSdk {
+	setupAccount: IFlowSetupAccount
+	setupMattelCollections: IFlowSetupMattelCollections
+	checkInitMattelCollections: IFlowCheckInitMattelCollections
+}
+
 
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet" | "getSdkContext"> & {
 	nft: INftInternalSdk

@@ -3,7 +3,6 @@ import type {
 	Ethereum,
 	EthereumFunctionCall,
 	EthereumSendOptions,
-	EthereumTransaction,
 } from "@rarible/ethereum-provider"
 import { ZERO_ADDRESS, ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -20,6 +19,7 @@ import { fixSignature } from "../../common/fix-signature"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { assetTypeToStruct } from "../asset-type-to-struct"
 import { encodeRaribleV2OrderData } from "../encode-rarible-v2-order-data"
+import { isETH, isWeth } from "../../nft/common"
 import { encodeRaribleV2OrderPurchaseStruct } from "./rarible-v2/encode-rarible-v2-order"
 import { invertOrder } from "./invert-order"
 import type {
@@ -32,7 +32,7 @@ import type {
 	RaribleV2OrderFillRequestV3Sell,
 } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
-import { ZERO_FEE_VALUE } from "./common/origin-fees-utils"
+import { setFeesCurrency, ZERO_FEE_VALUE } from "./common/origin-fees-utils"
 
 export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillRequest> {
 
@@ -42,7 +42,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		private readonly config: EthereumConfig,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
-	) {}
+	) { }
 
 	invert(request: RaribleV2OrderFillRequest, maker: Address): SimpleRaribleV2Order {
 		const inverted = invertOrder(request.order, request.amount, maker)
@@ -90,6 +90,9 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		return inverted
 	}
 
+	getAssetToApprove(inverted: SimpleRaribleV2Order) {
+		return this.getMakeAssetWithFee(inverted)
+	}
 	async approve(order: SimpleRaribleV2Order, infinite: boolean): Promise<void> {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
@@ -189,9 +192,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		if (initial.take.assetType.assetClass !== "ETH") {
-			throw new Error("Batch purchase only available for ETH currency")
-		}
 		if (!initial.signature) {
 			initial.signature = await signOrder(this.ethereum, this.config, initial)
 		}
@@ -225,22 +225,23 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 			true
 		)
 		const options = await this.getMatchV2Options(initial, inverted)
+
+		let fees = ZERO_FEE_VALUE
+		// let amount
+		const paymentAsset = await this.getMakeAssetWithFee(inverted)
+		if (isWeth(initial.take.assetType, this.config)) {
+			fees = setFeesCurrency(fees, true)
+		}
+
 		return {
 			data: {
 				marketId: ExchangeWrapperOrderType.RARIBLE_V2,
-				amount: options?.value!,
-				fees: ZERO_FEE_VALUE, // using zero fee because fees already included in callData
+				amount: paymentAsset.value,
+				fees, // using zero fee because fees already included in callData
 				data: callData,
 			},
 			options,
 		}
-	}
-
-	async sendTransaction(
-		initial: SimpleRaribleV2Order, inverted: SimpleRaribleV2Order,
-	): Promise<EthereumTransaction> {
-		const { functionCall, options } = await this.getTransactionData(initial, inverted)
-		return this.send(functionCall, options)
 	}
 
 	async fixForTx(order: SimpleRaribleV2Order): Promise<any> {
@@ -255,14 +256,14 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 	async getMatchV2Options(
 		left: SimpleRaribleV2Order, right: SimpleRaribleV2Order,
 	): Promise<EthereumSendOptions> {
-		if (left.make.assetType.assetClass === "ETH" && left.salt === ZERO_WORD) {
+		if (isETH(left.make.assetType) && left.salt === ZERO_WORD) {
 			const asset = await this.getMakeAssetWithFee(left)
 			return { value: asset.value }
-		} else if (right.make.assetType.assetClass === "ETH" && right.salt === ZERO_WORD) {
+		} else if (isETH(right.make.assetType) && right.salt === ZERO_WORD) {
 			const asset = await this.getMakeAssetWithFee(right)
 			return { value: asset.value }
 		} else {
-			return {}
+			return { value: 0 }
 		}
 	}
 
@@ -294,7 +295,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
  * Check if order selling something for currency
  */
 function isSellOrder(order: SimpleOrder): boolean {
-	return order.take.assetType.assetClass === "ETH" || order.take.assetType.assetClass ==="ERC20"
+	return order.take.assetType.assetClass === "ETH" || order.take.assetType.assetClass === "ERC20"
 }
 
 function isCollectionOrder(order: SimpleOrder): boolean {

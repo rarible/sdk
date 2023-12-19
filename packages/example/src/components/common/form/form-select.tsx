@@ -1,9 +1,9 @@
 import React from "react"
-import { useForm } from "react-hook-form"
+import type { useForm } from "react-hook-form"
 import { TextField } from "@mui/material"
-import { RegisterOptions } from "react-hook-form/dist/types/validator"
+import type { RegisterOptions } from "react-hook-form/dist/types/validator"
+import type { StandardTextFieldProps } from "@mui/material/TextField/TextField"
 import { useFormInputError } from "./form-hooks"
-import { StandardTextFieldProps } from "@mui/material/TextField/TextField"
 
 interface IFormSelectProps extends StandardTextFieldProps  {
 	form: ReturnType<typeof useForm>
@@ -11,7 +11,9 @@ interface IFormSelectProps extends StandardTextFieldProps  {
 	name: string
 }
 
-export function FormSelect({ form, options, name, children, helperText, disabled,  ...rest }: React.PropsWithChildren<IFormSelectProps>) {
+export function FormSelect(
+	{ form, options, name, children, helperText, disabled,  ...rest }: React.PropsWithChildren<IFormSelectProps>
+) {
 	const { register } = form
 	const { hasError, message: errorMessage } = useFormInputError(form, name)
 

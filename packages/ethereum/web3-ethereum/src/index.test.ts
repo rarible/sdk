@@ -6,12 +6,10 @@ import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3Transaction } from "./index"
 
 describe("Web3Ethereum", () => {
-	const { provider } = common.createE2eProvider(
-		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
-	const e2eEthereum = new Web3Ethereum({ web3: new Web3(provider as any) })
-
+	const { provider } = common.createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+	const e2eEthereum = new Web3Ethereum({ web3: new Web3(provider) })
 	const { provider: ganache } = common.createGanacheProvider()
-	const web3 = new Web3(ganache as any)
+	const web3 = new Web3(ganache)
 	const ganacheEthereum = new Web3Ethereum({ web3 })
 
 	test("signs typed data correctly", async () => {
@@ -74,8 +72,8 @@ describe("Web3Ethereum", () => {
 			r: 78,
 		}
 
-		const encoded = e2eEthereum.encodeParameter(type,	data)
-		const decoded = e2eEthereum.decodeParameter(type,	encoded)
+		const encoded = e2eEthereum.encodeParameter(type, data)
+		const decoded = e2eEthereum.decodeParameter(type, encoded)
 		for (const field in data) {
 			//@ts-ignore
 			expect(decoded["data"][field]).toEqual(data[field].toString())
@@ -85,6 +83,7 @@ describe("Web3Ethereum", () => {
 })
 
 describe("get transaction receipt events", () => {
+
 	const { provider } = common.createE2eProvider(
 		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469",
 		{
@@ -92,12 +91,11 @@ describe("get transaction receipt events", () => {
 			rpcUrl: "https://node-mainnet.rarible.com",
 		}
 	)
-	const e2eEthereum = new Web3Ethereum({ web3: new Web3(provider as any) })
+	const e2eEthereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 	test("get Seaport tx events (prod)", async () => {
-
-		const web3 = await e2eEthereum.getWeb3Instance()
-		const receipt = web3.eth.getTransactionReceipt("0x8d7ce93eac45141de762bf29fae4a1c6458e2b2d0b0361432b091a9e29b3c903")
+		const web3 = e2eEthereum.getWeb3Instance()
+		const receipt = web3.eth.getTransactionReceipt("0x2f81b44332228d78eda5ea48e62134fddd2354713d77f4f61588d91cd7a735ff")
 		const seaportAddr = "0x00000000006c3852cbef3e08e8df289169ede581"
 
 		const tx = new Web3Transaction(

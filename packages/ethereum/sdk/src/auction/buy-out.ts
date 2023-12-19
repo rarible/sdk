@@ -39,7 +39,7 @@ export class BuyoutAuction {
 		private readonly approve: ApproveFunction,
 		private readonly apis: RaribleEthereumApis,
 	) {
-		this.getBaseFee = getBaseFee.bind(null, config, env, "AUCTION")
+		this.getBaseFee = getBaseFee.bind(null, config, env, apis, "AUCTION")
 	}
 
 	readonly buyout: BuyoutAuctionAction = Action.create({

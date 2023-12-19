@@ -3,6 +3,68 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.13.24](https://github.com/rarible/sdk/compare/v0.13.23...v0.13.24) (2023-04-24)
+
+**Note:** Version bump only for package @rarible/solana-sdk
+
+
+
+
+
+## [0.13.22](https://github.com/rarible/sdk/compare/v0.13.21...v0.13.22) (2023-04-19)
+
+
+### Bug Fixes
+
+* duration of flow listing ([#466](https://github.com/rarible/sdk/issues/466)) ([74006e6](https://github.com/rarible/sdk/commit/74006e688be729928e135340f744195ea33199fa))
+
+
+
+
+
+## [0.13.17](https://github.com/rarible/sdk/compare/v0.13.16...v0.13.17) (2023-04-03)
+
+
+### Bug Fixes
+
+* e2e tests dev ([#452](https://github.com/rarible/sdk/issues/452)) ([1efd60d](https://github.com/rarible/sdk/commit/1efd60ddaf28257028ba82d0246b19e83bb8af37))
+
+
+
+
+
 ## [0.13.4](https://github.com/rarible/sdk/compare/v0.13.3...v0.13.4) (2023-01-12)
 
 

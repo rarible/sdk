@@ -13,7 +13,7 @@ import { getEthereumConfig } from "../config"
 import { getApiConfig } from "../config/api-config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
-import { createTestProviders } from "../common/create-test-providers"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
@@ -21,6 +21,7 @@ import { retry } from "../common/retry"
 import { createEthereumApis } from "../common/apis"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -33,6 +34,7 @@ import { approve as approveTemplate } from "./approve"
 import { checkLazyOrder as checkLazyOrderTemplate } from "./check-lazy-order"
 import { checkLazyAsset as checkLazyAssetTemplate } from "./check-lazy-asset"
 import { checkLazyAssetType as checkLazyAssetTypeTemplate } from "./check-lazy-asset-type"
+import { getEndDateAfterMonth } from "./test/utils"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
@@ -66,6 +68,7 @@ describe.each(providers)("bid", (ethereum) => {
 	const upserter = new UpsertOrder(
 		orderService,
 		send,
+		config,
 		checkLazyOrder,
 		approve,
 		signOrder,
@@ -112,11 +115,12 @@ describe.each(providers)("bid", (ethereum) => {
 				contract: minted.contract,
 				tokenId: minted.tokenId,
 			},
-			price: toBn("10000"),
+			price: toBn(MIN_PAYMENT_VALUE.toFixed()),
 			makeAssetType: {
 				assetClass: "ERC20",
 				contract: erc20Contract,
 			},
+			end: getEndDateAfterMonth(),
 			amount: 1,
 			payouts: [],
 			originFees: [{
@@ -127,7 +131,7 @@ describe.each(providers)("bid", (ethereum) => {
 		expect(order.hash).toBeTruthy()
 
 		await retry(5, 2000, async () => {
-			const nextPrice = "15000"
+			const nextPrice = MIN_PAYMENT_VALUE.plus(1).toFixed()
 			const { order: updatedOrder } = await orderSell.update({
 				orderHash: order.hash,
 				price: toBigNumber(nextPrice),
@@ -135,7 +139,6 @@ describe.each(providers)("bid", (ethereum) => {
 
 			expect(updatedOrder.make.value.toString()).toBe(nextPrice)
 		})
-
 	})
 
 	test("create and update of v1 works", async () => {
@@ -170,8 +173,9 @@ describe.each(providers)("bid", (ethereum) => {
 					assetClass: "ERC20",
 					contract: erc20Contract,
 				},
-				value: toBigNumber("20000"),
+				value: toBigNumber(MIN_PAYMENT_VALUE.toFixed()),
 			},
+			end: getEndDateAfterMonth(),
 			salt: toBigNumber("10"),
 			type: "RARIBLE_V1",
 			data: {
@@ -183,7 +187,7 @@ describe.each(providers)("bid", (ethereum) => {
 		const order = await upserter.upsert({ order: form })
 
 		await retry(5, 2000, async () => {
-			const nextPrice = "25000"
+			const nextPrice = MIN_PAYMENT_VALUE.plus(1).toFixed()
 			const { order: updatedOrder } = await orderSell.update({
 				orderHash: order.hash,
 				price: toBigNumber(nextPrice),

@@ -1,11 +1,14 @@
 import React, { useContext } from "react"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { CircularProgress } from "@mui/material"
-import { getCurrenciesForBlockchain } from "./utils/currencies"
-import { UnionAddress } from "@rarible/types/build/union-address"
+import type { UnionAddress } from "@rarible/types/build/union-address"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { Blockchain } from "@rarible/api-client"
+import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
+import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { ConvertForm, isAvailableWethConvert } from "./convert-form"
 import { useGetBalance } from "./hooks/use-get-balance"
-import { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider";
+import { getCurrenciesForBlockchain } from "./utils/currencies"
 
 interface INativeBalanceProps {
 	sdk: IRaribleSdk,
@@ -13,14 +16,18 @@ interface INativeBalanceProps {
 	walletAddress: UnionAddress,
 }
 
-export function NativeBalance({sdk, wallet, walletAddress}: INativeBalanceProps) {
-  const {environment} = useContext(EnvironmentContext)
-  const currencies = getCurrenciesForBlockchain(wallet.walletType, environment)
+export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProps) {
+	const { environment } = useContext(EnvironmentContext)
+	const connection = useContext(ConnectorContext)
+	const currencies = getCurrenciesForBlockchain(wallet.walletType, environment, connection)
 	const { balance, fetching, error } = useGetBalance(
 		sdk,
 		walletAddress,
 		currencies.find((c) => c.isNative)?.getAssetType()!
 	)
+
+	const isMantleNetwork = (connection.state as any)?.connection.blockchain === Blockchain.MANTLE
+	const isAvailableConvert = !isMantleNetwork && isAvailableWethConvert(wallet.walletType, environment)
 
 	const content = () => {
 		if (fetching) {
@@ -33,8 +40,14 @@ export function NativeBalance({sdk, wallet, walletAddress}: INativeBalanceProps)
 	}
 
 	return (
-		<div>
-			Native Balance: {content()}
-		</div>
+		<>
+			<div style={{ marginBottom: 20 }}>
+				Native Balance: {content()}
+			</div>
+			{
+				isAvailableConvert && <ConvertForm sdk={sdk} walletAddress={walletAddress} />
+			}
+		</>
+
 	)
 }

@@ -1,9 +1,16 @@
 import { Action } from "@rarible/action"
 
-export function getNotImplementedFn(msg?: string) {
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	return (...args: unknown[]): never => {
-		throw new Error(msg || "Not implemented")
+export function getNotImplementedFn(message = "Not implemented") {
+	return (): never => {
+		throw new NotImplementedError(message)
+	}
+}
+
+class NotImplementedError extends Error {
+	constructor(message: string) {
+		super(message)
+		this.name = "NotImplementedError"
+		Object.setPrototypeOf(this, NotImplementedError.prototype)
 	}
 }
 

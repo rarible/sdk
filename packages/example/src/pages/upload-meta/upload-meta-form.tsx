@@ -3,13 +3,13 @@ import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toUnionAddress } from "@rarible/types"
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons"
+import type { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/union/meta/domain"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { FormFileInput } from "../../components/common/form/form-file-input"
-import { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/union/meta/domain"
 
 interface IUploadMEtaFormProps {
 	onComplete: (response: UploadMetaResponse) => void
@@ -25,7 +25,7 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 
 	useEffect(() => {
 		const subscription = form.watch(({ name, description, image, accountAddress }) => {
-		setDisabled(!(name && description && image.length && accountAddress))
+			setDisabled(!(name && description && image.length && accountAddress))
 		})
 		return () => subscription.unsubscribe()
 	}, [form, form.watch])
@@ -37,20 +37,20 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 					return
 				}
 
-				const {name, description, image, animationUrl, nftStorageApiKey, accountAddress} = formData
+				const { name, description, image, animationUrl, nftStorageApiKey, accountAddress } = formData
 				// try {
-					onComplete(await connection.sdk.nft.uploadMeta({
-						accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
-						nftStorageApiKey,
-						properties: {
-							name,
-							description,
-							image: image[0],
-							animationUrl,
-							attributes: [],
-						},
-						royalty: "",
-					}))
+				onComplete(await connection.sdk.nft.uploadMeta({
+					accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
+					nftStorageApiKey,
+					properties: {
+						name,
+						description,
+						image: image[0],
+						animationUrl,
+						attributes: [],
+					},
+					royalty: "",
+				}))
 				// } catch (e) {
 				// 	setError(e)
 				// }

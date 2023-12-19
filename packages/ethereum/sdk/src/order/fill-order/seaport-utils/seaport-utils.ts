@@ -7,6 +7,7 @@ import type { SimpleSeaportV1Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { createSeaportContract } from "../../contracts/seaport"
+import { compareCaseInsensitive } from "../../../common/compare-case-insensitive"
 import { getOrderHash } from "./get-order-hash"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import {
@@ -28,15 +29,20 @@ import { getfulfillBasicOrderData } from "./fulfill-basic"
 import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
-	getConduitByKey,
-	NO_CONDUIT,
+	CROSS_CHAIN_SEAPORT_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
+	getConduitByKey, OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
 export function getSeaportContract(ethereum: Ethereum, protocol: string): EthereumContract {
-	if (protocol === "0x00000000000001ad428e4906ae43d8f9852d0dd6") {
+	if (
+		compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS)
+		|| compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS)
+	) {
 	  return createSeaportV14Contract(ethereum, toAddress(protocol))
-	} else if (protocol === "0x00000000006c3852cbef3e08e8df289169ede581") {
+	} else if (compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_ADDRESS)) {
 		return createSeaportContract(ethereum, toAddress(protocol))
 	} else {
 		throw new Error("Unrecognized Seaport protocol")
@@ -49,20 +55,14 @@ export async function fulfillOrder(
 	simpleOrder: SimpleSeaportV1Order,
 	{ tips, unitsToFill }: {tips?: TipInputItem[], unitsToFill?: BigNumberValue}
 ) {
-	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_ADDRESS))
-	const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
-
+	const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
 	const order = convertAPIOrderToSeaport(simpleOrder)
 
-	const fulfillerAddress = await ethereum.getFrom()
 	const { parameters: orderParameters } = order
 	const { offerer, offer, consideration } = orderParameters
-
-	// const offererOperator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[orderParameters.conduitKey]
+	const fulfillerAddress = await ethereum.getFrom()
+	const conduitKey = OPENSEA_CONDUIT_KEY
 	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
-
-	const conduitKey = NO_CONDUIT
-	// const fulfillerOperator = KNOWN_CONDUIT_KEYS_TO_CONDUIT[conduitKey]
 	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
 	const extraData = "0x"
@@ -92,14 +92,14 @@ export async function fulfillOrder(
 		seaportContract.functionCall("getOrderStatus", getOrderHash(orderParameters)).call(),
 	])
 
+	const orderStatusData = { ...orderStatus }
+	orderStatusData.totalFilled = toBn(orderStatus.totalFilled)
+	orderStatusData.totalSize = toBn(orderStatus.totalSize)
 
-	orderStatus.totalFilled = toBn(orderStatus.totalFilled)
-	orderStatus.totalSize = toBn(orderStatus.totalSize)
-
-	const { totalFilled, totalSize } = orderStatus
+	const { totalFilled, totalSize } = orderStatusData
 	const sanitizedOrder = validateAndSanitizeFromOrderStatus(
 		order,
-		orderStatus
+		orderStatusData
 	)
 
 	const timeBasedItemParams = {
@@ -259,7 +259,6 @@ export async function approveBeforeStandardFulfillOrder(
 	const orderWithAdjustedFills = unitsToFill
 		? mapOrderAmountsFromUnitsToFill(order, {
 			unitsToFill,
-			totalFilled,
 			totalSize,
 		})
 		: // Else, we adjust the order by the remaining order left to be fulfilled
