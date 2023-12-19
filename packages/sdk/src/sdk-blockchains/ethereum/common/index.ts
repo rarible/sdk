@@ -174,9 +174,11 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 		case "testnet":
 		case "dev-ethereum":
 		case "mainnet":
+			return Blockchain.ETHEREUM
 		case "dev-polygon":
 		case "mumbai":
 		case "polygon":
+			return Blockchain.POLYGON
 		case "mantle":
 		case "testnet-mantle":
 			return Blockchain.MANTLE
