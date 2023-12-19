@@ -37,7 +37,7 @@ describe("get base fee", () => {
 
 const envs = Object.keys(configDictionary) as EthereumNetwork[]
 
-describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
+describe.each(envs)("get base fee each of environments", (env: EthereumNetwork) => {
 	const config = getEthereumConfig(env)
 	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
 
