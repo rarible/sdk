@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "@rarible/connector": ["./packages/connectors/connector/src"],
+      "@rarible/connector-*": ["./packages/connectors/connector-*/src"],
+      "@rarible/ethereum-provider": ["./packages/ethereum/ethereum-provider/src"],
+      "@rarible/protocol-ethereum-sdk": ["./packages/ethereum/sdk/src"],
+      "@rarible/ethers-ethereum": ["./packages/ethereum/ethers-ethereum/src"],
+      "@rarible/web3-ethereum": ["./packages/ethereum/web3-ethereum/src"],
+      "@rarible/ethereum-sdk-test-common": ["./packages/ethereum/test-common/src"],
+      "@rarible/immutable-sdk": ["./packages/imx-sdk/src"],
+      "@rarible/immutable-wallet": ["./packages/imx-wallet/src"],
+      "@rarible/sdk": ["./packages/sdk/src"],
+      "@rarible/sdk-common": ["./packages/sdk-common/src"],
+      "@rarible/solana-common": ["./packages/solana-common/src"],
+      "@rarible/solana-sdk": ["./packages/solana-sdk/src"],
+      "@rarible/solana-wallet": ["./packages/solana-wallet/src"],
+      "@rarible/sdk-transaction": ["./packages/transaction/src"],
+      "@rarible/sdk-wallet": ["./packages/wallet/src"]
+    }
+  }
+}

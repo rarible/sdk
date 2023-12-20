@@ -12,7 +12,7 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
@@ -37,8 +37,7 @@
     "@types/jest": "^27.0.2",
     "jest": "^27.2.4",
     "jest-junit": "^15.0.0",
-    "ts-jest": "^27.0.3",
-    "typescript": "^4.8.4"
+    "ts-jest": "^27.0.3"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

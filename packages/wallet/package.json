@@ -15,7 +15,7 @@
     "build:umd": "webpack",
     "clean": "rimraf ./build",
     "test": "jest --runInBand --forceExit",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@babel/runtime": "^7.15.4",
@@ -51,7 +51,6 @@
     "path-browserify": "^1.0.1",
     "stream-browserify": "^3.0.0",
     "ts-jest": "^27.0.3",
-    "typescript": "^4.8.4",
     "web3": ">=1.5.0 <1.9.0"
   },
   "peerDependencies": {

@@ -12,13 +12,10 @@
     "clean": "rimraf ./build",
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@solana/web3.js": "^1.35.0"
-  },
-  "devDependencies": {
-    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
