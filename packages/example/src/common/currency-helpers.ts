@@ -3,8 +3,8 @@ import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"
 import type { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
-import type { SolanaSolAssetType } from "@rarible/api-client"
-import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
+import type { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 
 function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
 	return {
@@ -66,16 +66,9 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 			}
 			throw new Error("Unsupported option subtype")
 		case Blockchain.MANTLE:
-			if (type === "TOKEN") {
-				return getERC20(contract)
-			}
-			throw new Error("Unsupported option subtype")
 		case Blockchain.ARBITRUM:
-			if (type === "TOKEN") {
-				return getERC20(contract)
-			}
-			throw new Error("Unsupported option subtype")
 		case Blockchain.ZKSYNC:
+		case Blockchain.CHILIZ:
 			if (type === "TOKEN") {
 				return getERC20(contract)
 			}
@@ -141,14 +134,6 @@ export function getCurrencyOptions(
 								contract: "ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
 							})
 							break
-						case "staging":
-							res.push({
-								type: "TOKEN",
-								label: "Rarible Test ERC20",
-								blockchain: Blockchain.ETHEREUM,
-								contract: "ETHEREUM:0x02cc113a068B643e4f98195935496aaf3E572e86",
-							})
-							break
 						case"prod":
 							res.push({
 								type: "TOKEN",
@@ -188,14 +173,6 @@ export function getCurrencyOptions(
 								label: "WETH",
 								blockchain: Blockchain.POLYGON,
 								contract: "POLYGON:0xA6FA4fB5f76172d178d61B04b0ecd319C5d1C0aa",
-							})
-							break
-						case "staging":
-							res.push({
-								type: "TOKEN",
-								label: "Rarible Test ERC20",
-								blockchain: Blockchain.ETHEREUM,
-								contract: "POLYGON:0x32CcA2bB34B36409b29166FbEC9b617CdA1E0410",
 							})
 							break
 						case"prod":
@@ -280,6 +257,31 @@ export function getCurrencyOptions(
 								label: "WETH",
 								blockchain: Blockchain.ZKSYNC,
 								contract: "ZKSYNC:0x8Ebe4A94740515945ad826238Fc4D56c6B8b0e60",
+							})
+							break
+						default:
+					}
+					 return res
+				}
+				return []
+			case Blockchain.CHILIZ:
+				 if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.CHILIZ,
+								contract: "CHILIZ:0x678c34581db0a7808d0aC669d7025f1408C9a3C6",
+							})
+							break
+						case"prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.CHILIZ,
+								contract: "CHILIZ:0x677F7e16C7Dd57be1D4C8aD1244883214953DC47",
 							})
 							break
 						default:

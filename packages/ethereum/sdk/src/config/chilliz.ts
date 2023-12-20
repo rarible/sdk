@@ -3,23 +3,23 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const zkSyncConfig: EthereumConfig = {
-	basePath: "https://zksync-api.rarible.org",
-	chainId: 324,
+export const chilizConfig: EthereumConfig = {
+	basePath: "https://chiliz-api.rarible.org",
+	chainId: 88888,
 	exchange: {
 		v1: ZERO_ADDRESS,
-		v2: toAddress("0x5E0BbEd68e1b47C94a396226D8AC10DDe242e77c"),
+		v2: toAddress("0xdA12E4Ab1d731F29bF4Bff8f971579D95f8DDD07"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0xEf3b8F0B7EE374F5F79BE4D43E8cbB4A7952f274"),
+		wrapper: toAddress("0xEe07D8603F4A8A72B523314D0D473a6Ce93354Fe"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
-		nft: toAddress("0xaf63698293A4c7d235CCf6F809C348D641C0bd62"),
-		erc20: toAddress("0xb5986bB35a6b53cb4764951Ad83cA12fa5a51C64"),
-		erc721Lazy: toAddress("0x463651f1620E411426E7eB70c3D2029106F2B6E0"),
-		erc1155Lazy: toAddress("0x99e3d07C2fA7d9566bAA34e84B9DD5b8fB98961a"),
+		nft: toAddress("0x8d5D3e1e6609A798B84160Ec9CC25198B9e4F177"),
+		erc20: toAddress("0x0B7Acd053BC236fc95537e2aDD37C22968b48C1b"),
+		erc721Lazy: toAddress("0x519D6A81b2894FC5e0F2a8B900F6f5CdE1132dBB"),
+		erc1155Lazy: toAddress("0x726f5DD8a1fFAa349bD57501Ba760AB5A03e91Ff"),
 		openseaV1: ZERO_ADDRESS,
 		cryptoPunks: ZERO_ADDRESS,
 	},
@@ -30,8 +30,8 @@ export const zkSyncConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: toAddress("0xB38F451e6Cc0Ad0e7a31C6Ec5648177Ba248eE9B"),
-		erc1155: toAddress("0x196e1D96e73c805ee39C766435A81fb235510939"),
+		erc721: ZERO_ADDRESS,
+		erc1155: ZERO_ADDRESS,
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,
@@ -41,7 +41,7 @@ export const zkSyncConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0x8Ebe4A94740515945ad826238Fc4D56c6B8b0e60"),
+	weth: toAddress("0x677F7e16C7Dd57be1D4C8aD1244883214953DC47"),
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: ZERO_ADDRESS,
 }

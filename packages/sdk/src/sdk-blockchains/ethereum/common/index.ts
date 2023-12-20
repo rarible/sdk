@@ -174,12 +174,10 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 		case "testnet":
 		case "dev-ethereum":
 		case "mainnet":
-		case "staging":
 			return Blockchain.ETHEREUM
 		case "dev-polygon":
 		case "mumbai":
 		case "polygon":
-		case "staging-polygon":
 			return Blockchain.POLYGON
 		case "mantle":
 		case "testnet-mantle":
@@ -190,6 +188,9 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 		case "zksync":
 		case "testnet-zksync":
 			return Blockchain.ZKSYNC
+		case "chiliz":
+		case "testnet-chiliz":
+			return Blockchain.CHILIZ
 		default:
 			throw new Error(`Unsupported network: ${network}`)
 	}

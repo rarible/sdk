@@ -7,6 +7,7 @@ import { createRaribleSdk } from "../index"
 import type { EthereumNetwork } from "../types"
 import { Balances } from "./balances"
 import { createEthereumApis } from "./apis"
+import { getAPIKey } from "./test/test-credentials"
 
 describe("getBalance test", () => {
 	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
@@ -51,7 +52,6 @@ describe("getBalance test", () => {
 })
 
 const envs = (Object.keys(configDictionary) as EthereumNetwork[])
-	.filter(network => network !== "mantle") // mantle production is not supported yet
 
 
 describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
@@ -64,13 +64,3 @@ describe.each(envs)("get balances each of environments", (env: EthereumNetwork) 
 		await sdk.balances.getBalance(senderAddress, { assetClass: "ETH" })
 	})
 })
-export function getAPIKey(env:  EthereumNetwork) {
-	switch (env) {
-		case "mainnet":
-		case "mantle":
-		case "polygon":
-			return process.env.SDK_API_KEY_PROD
-		default:
-			return process.env.SDK_API_KEY_TESTNET
-	}
-}

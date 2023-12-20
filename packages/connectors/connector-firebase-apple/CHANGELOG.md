@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.64-beta.5](https://github.com/rarible/sdk/compare/v0.13.64-beta.4...v0.13.64-beta.5) (2023-12-19)
+
+**Note:** Version bump only for package @rarible/connector-firebase-apple
+
+
+
+
+
+## [0.13.64-beta.4](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.64-beta.4) (2023-12-19)
+
+**Note:** Version bump only for package @rarible/connector-firebase-apple
+
+
+
+
+
 ## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
 
 **Note:** Version bump only for package @rarible/connector-firebase-apple

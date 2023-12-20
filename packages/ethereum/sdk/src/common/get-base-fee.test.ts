@@ -2,8 +2,8 @@ import { configDictionary, getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 import { getBaseFee } from "./get-base-fee"
 import { createEthereumApis } from "./apis"
-import { getAPIKey } from "./balances.test"
 import { delay } from "./retry"
+import { getAPIKey } from "./test/test-credentials"
 
 describe("get base fee", () => {
 	const config = getEthereumConfig("testnet")
@@ -37,7 +37,7 @@ describe("get base fee", () => {
 
 const envs = Object.keys(configDictionary) as EthereumNetwork[]
 
-describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
+describe.each(envs)("get base fee each of environments", (env: EthereumNetwork) => {
 	const config = getEthereumConfig(env)
 	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
 

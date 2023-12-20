@@ -7409,11 +7409,6 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@0.9.19", "@rarible/types@~0.9.19":
-  version "0.9.19"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.19.tgz#0cf8a90cb8f7f7d7d36859cbe0a975916cdbd481"
-  integrity sha512-aAJxmuAsPQJSSmMTf+0m6uV6gxvWHgvKzS6MfubJhL/dhHW9sBIJ9vyDDB5oaQQxI3xWVxXMxSAyawzX1bD/kg==
-
 "@rarible/types@^0.9.16":
   version "0.9.16"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.16.tgz#6e9f31fe2f9446e63b63c751c11fac77060663c6"
@@ -7423,6 +7418,11 @@
   version "0.9.3"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
+
+"@rarible/types@~0.9.20":
+  version "0.9.20"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.20.tgz#dc73527b759dcb78b40b2ff1042d3a0acc0ea2c7"
+  integrity sha512-Mv0Swkq379YdUcbGxVrGupXyaA8QGynzrCiGMrQo0hCfGdb+/8mL9l0TvFwZm1mIYI4fG0n8yNWcJYX7B25oFw==
 
 "@rarible/utils@^0.9.1":
   version "0.9.1"

@@ -7,13 +7,15 @@ import type {
 	EthereumSendOptions,
 	EthereumTransaction,
 } from "@rarible/ethereum-provider"
-import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumber } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import { backOff } from "exponential-backoff"
 import { BigNumber as BigNum, toBn } from "@rarible/utils"
 import type { OrderOpenSeaV1DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
+import type { EVMBlockchain } from "@rarible/sdk-common"
+import { Blockchain } from "@rarible/api-client"
 import type { SendFunction } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { createOpenseaProxyRegistryEthContract } from "../contracts/proxy-registry-opensea"
@@ -31,11 +33,10 @@ import { ERC721VersionEnum } from "../../nft/contracts/domain"
 import { createMerkleValidatorContract } from "../contracts/merkle-validator"
 import { createErc1155Contract } from "../contracts/erc1155"
 import type { RaribleEthereumApis } from "../../common/apis"
-import type { EVMBlockchain } from "../../common/get-blockchain-from-chain-id"
-import { getBlockchainFromChainId } from "../../common/get-blockchain-from-chain-id"
 import type { EthereumNetworkConfig, IRaribleEthereumSdkConfig } from "../../types"
 import { id32 } from "../../common/id"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
+import { getBlockchainFromChainId } from "../../common"
 import type { OpenSeaOrderDTO } from "./open-sea-types"
 import type {
 	OpenSeaV1OrderFillRequest,
@@ -505,9 +506,9 @@ function getEthereumNetworkConfig(
 		return
 	}
 	switch (blockchain) {
-		case "ETHEREUM": return sdkConfig.ethereum
-		case "POLYGON": return sdkConfig.polygon
-		case "MANTLE": return sdkConfig.mantle
+		case Blockchain.ETHEREUM: return sdkConfig.ethereum
+		case Blockchain.POLYGON: return sdkConfig.polygon
+		case Blockchain.MANTLE: return sdkConfig.mantle
 		default: return
 	}
 }
