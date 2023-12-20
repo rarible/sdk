@@ -35,14 +35,7 @@ function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress
 	if (isEVMBlockchain(blockchain) || blockchain === Blockchain.IMMUTABLEX) {
 		return toUnionAddress("ETHEREUM:" + address)
 	}
-	switch (blockchain) {
-		case Blockchain.FLOW:
-		case Blockchain.SOLANA:
-		case Blockchain.TEZOS:
-			return toUnionAddress(blockchain + ":" + address)
-		default:
-			throw new Error("Unsupported blockchain " + blockchain)
-	}
+	return toUnionAddress(blockchain + ":" + address)
 }
 
 export function SdkConnectionProvider({ connector, children }: React.PropsWithChildren<ISdkConnectionProviderProps>) {

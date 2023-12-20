@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-common",
-  "version": "0.13.64-beta.4",
+  "version": "0.13.64-beta.5",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -13,7 +13,7 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand --passWithNoTests",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@rarible/api-client": "0.16.5-alpha.2"

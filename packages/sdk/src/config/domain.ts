@@ -4,7 +4,7 @@ import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { SolanaCluster } from "@rarible/solana-sdk"
 import type { ImxEnv } from "@rarible/immutable-wallet"
 
-export type RaribleSdkEnvironment = "development" | "testnet" | "staging" | "prod"
+export type RaribleSdkEnvironment = "development" | "testnet" | "prod"
 
 export type RaribleSdkConfig = {
 	basePath: string
@@ -17,5 +17,6 @@ export type RaribleSdkConfig = {
 	mantleNetwork: EthereumNetwork
 	arbitrumNetwork: EthereumNetwork
 	zksync: EthereumNetwork
+	chiliz: EthereumNetwork
 	lightlink: EthereumNetwork
 }

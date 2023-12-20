@@ -1,6 +1,7 @@
-import { Blockchain } from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
 import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainEthereumTransaction<TransactionResult = undefined> implements
@@ -12,36 +13,11 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 		public network: EthereumNetwork,
 		public resultExtractor?: (getEvents: EthereumTransaction["getEvents"]) => Promise<TransactionResult | undefined>,
 	) {
-		this.blockchain = BlockchainEthereumTransaction.getBlockchain(network)
+		this.blockchain = this.getBlockchain(network)
 	}
 
-	static getBlockchain(network: EthereumNetwork): Blockchain {
-		switch (network) {
-			case "testnet":
-			case "dev-ethereum":
-			case "mainnet":
-			case "staging":
-				return Blockchain.ETHEREUM
-			case "dev-polygon":
-			case "mumbai":
-			case "polygon":
-			case "staging-polygon":
-				return Blockchain.POLYGON
-			case "mantle":
-			case "testnet-mantle":
-				return Blockchain.MANTLE
-			case "arbitrum":
-			case "testnet-arbitrum":
-				return Blockchain.ARBITRUM
-			case "zksync":
-			case "testnet-zksync":
-				return Blockchain.ZKSYNC
-			case "lightlink":
-			case "testnet-lightlink":
-				return Blockchain.LIGHTLINK
-			default:
-				throw new Error(`Unsupported network: ${network}`)
-		}
+	private getBlockchain(network: EthereumNetwork): Blockchain {
+		return getBlockchainBySDKNetwork(network)
 	}
 
 	hash() {
@@ -81,6 +57,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://explorer.zksync.io/tx/${this.hash()}`
 			case "testnet-zksync":
 				return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
+			case "chiliz":
+				return `https://scan.chiliz.com/tx/${this.hash()}`
+			case "testnet-chiliz":
+				return `https://spicy-explorer.chiliz.com/tx/${this.hash()}`
 			case "lightlink":
 				return `https://phoenix.lightlink.io/tx/${this.hash()}`
 			case "testnet-lightlink":

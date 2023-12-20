@@ -12,6 +12,8 @@ import { arbitrumTestnetConfig } from "./testnet-arbitrum"
 import { arbitrumConfig } from "./arbitrum"
 import { zkSyncTestnetConfig } from "./testnet-zksync"
 import { zkSyncConfig } from "./zksync"
+import { chilizConfig } from "./chilliz"
+import { chilizTestnetConfig } from "./testnet-chiliz"
 import { lightlinkConfig } from "./lightlink"
 import { testnetLightlinkConfig } from "./testnet-lightlink"
 
@@ -25,9 +27,11 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-mantle": mantleTestnetConfig,
 	testnet: testnetEthereumConfig,
 	"testnet-arbitrum": arbitrumTestnetConfig,
-	"arbitrum": arbitrumConfig,
+	arbitrum: arbitrumConfig,
 	"testnet-zksync": zkSyncTestnetConfig,
-	"zksync": zkSyncConfig,
+	zksync: zkSyncConfig,
+	chiliz: chilizConfig,
+	"testnet-chiliz": chilizTestnetConfig,
 	lightlink: lightlinkConfig,
 	"testnet-lightlink": testnetLightlinkConfig,
 }

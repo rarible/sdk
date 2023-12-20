@@ -15,7 +15,7 @@
     "clean": "rimraf ./build",
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-auction": "^0.0.2",
@@ -46,8 +46,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "jest-junit": "^15.0.0",
-    "ts-jest": "^27.0.7",
-    "typescript": "^4.8.4"
+    "ts-jest": "^27.0.7"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

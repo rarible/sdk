@@ -8,4 +8,9 @@ module.exports = {
 		"<rootDir>/build/",
 		"<rootDir>/node_modules/",
 	],
+	globals: {
+		"ts-jest": {
+			tsconfig: "tsconfig-build.json",
+		},
+	},
 }

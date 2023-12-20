@@ -51,3 +51,18 @@ export function getTestContract(env: EthereumNetwork, contract: TestContractType
 	}
 	return toAddress(envContracts[contract])
 }
+
+export function getAPIKey(env:  EthereumNetwork) {
+	switch (env) {
+		case "mainnet":
+		case "mantle":
+		case "polygon":
+		case "arbitrum":
+		case "zksync":
+		case "chiliz":
+		case "lightlink":
+			return process.env.SDK_API_KEY_PROD
+		default:
+			return process.env.SDK_API_KEY_TESTNET
+	}
+}
