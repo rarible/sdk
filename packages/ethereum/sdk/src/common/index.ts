@@ -41,6 +41,9 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 		case "chiliz":
 		case "testnet-chiliz":
 			return Blockchain.CHILIZ
-		default: throw new Error("Unrecognized ethereum network")
+		case "lightlink":
+		case "testnet-lightlink":
+			return Blockchain.LIGHTLINK
+		default: throw new Error(`Unrecognized ethereum network ${network}`)
 	}
 }

@@ -292,7 +292,6 @@ export function createRaribleSdk(
 	env: EthereumNetwork,
 	sdkConfig?: IRaribleEthereumSdkConfig
 ): RaribleSdk {
-	console.log("evn", env)
 	const config = getEthereumConfig(env)
 	const apis = createEthereumApis(env, {
 		...(sdkConfig?.apiClientParams || {}),
