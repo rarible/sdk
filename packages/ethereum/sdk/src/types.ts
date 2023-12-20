@@ -14,6 +14,10 @@ export type EthereumNetwork =
   | "testnet-arbitrum"
   | "zksync"
   | "testnet-zksync"
+  | "chiliz"
+  | "testnet-chiliz"
+  | "lightlink"
+  | "testnet-lightlink"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -32,6 +36,9 @@ export interface IRaribleEthereumSdkConfig {
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
 	mantle?: EthereumNetworkConfig
+	arbitrum?: EthereumNetworkConfig
+	zksync?: EthereumNetworkConfig
+	chiliz?: EthereumNetworkConfig
 	marketplaceMarker?: Binary
 	apiKey?: string
 }

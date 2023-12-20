@@ -23,6 +23,7 @@ import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/ch
 import type { EthereumWallet } from "@rarible/sdk-wallet/build"
 import type { EVMBlockchain } from "@rarible/sdk-common/build"
 import { WalletIsUndefinedError, EVMBlockchains, isEVMBlockchain } from "@rarible/sdk-common/build"
+import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
 import type { OrderRequest, UnionPart } from "../../../types/order/common"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
@@ -170,29 +171,11 @@ export function getPayoutsSupport(type: "RARIBLE_V1" | "RARIBLE_V2"): PayoutsSup
 }
 
 export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
-	switch (network) {
-		case "testnet":
-		case "dev-ethereum":
-		case "mainnet":
-		case "staging":
-			return Blockchain.ETHEREUM
-		case "dev-polygon":
-		case "mumbai":
-		case "polygon":
-		case "staging-polygon":
-			return Blockchain.POLYGON
-		case "mantle":
-		case "testnet-mantle":
-			return Blockchain.MANTLE
-		case "arbitrum":
-		case "testnet-arbitrum":
-			return Blockchain.ARBITRUM
-		case "zksync":
-		case "testnet-zksync":
-			return Blockchain.ZKSYNC
-		default:
-			throw new Error(`Unsupported network: ${network}`)
+	const blockchain = getBlockchainBySDKNetwork(network)
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error(`Network ${network} is not EVM compatible`)
 	}
+	return blockchain
 }
 
 export function getSupportedCurrencies(

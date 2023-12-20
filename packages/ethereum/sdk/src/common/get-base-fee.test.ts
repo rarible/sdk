@@ -2,8 +2,8 @@ import { configDictionary, getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 import { getBaseFee } from "./get-base-fee"
 import { createEthereumApis } from "./apis"
-import { getAPIKey } from "./balances.test"
 import { delay } from "./retry"
+import { getAPIKey } from "./test/test-credentials"
 
 describe("get base fee", () => {
 	const config = getEthereumConfig("testnet")

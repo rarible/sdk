@@ -141,7 +141,6 @@ const wethMapByBlockchain: PartialRecord<Blockchain, PartialRecord<RaribleSdkEnv
 	[Blockchain.ETHEREUM]: {
 		prod: toContractAddress("ETHEREUM:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
 		testnet: toContractAddress("ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"),
-		staging: toContractAddress("ETHEREUM:0x8618444D5916c52Ef2BA9a64dDE5fE04249F6001"),
 		development: toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
 	},
 	// [Blockchain.POLYGON]: {
