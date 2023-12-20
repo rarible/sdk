@@ -1,6 +1,7 @@
-import { Blockchain } from "@rarible/api-client"
+import type { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
 import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainEthereumTransaction<TransactionResult = undefined> implements
@@ -16,16 +17,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 	}
 
 	private getBlockchain(network: EthereumNetwork): Blockchain {
-		switch (network) {
-			case "mumbai":
-			case "polygon":
-				return Blockchain.POLYGON
-			case "mantle":
-			case "testnet-mantle":
-				return Blockchain.MANTLE
-			default:
-				return Blockchain.ETHEREUM
-		}
+		return getBlockchainBySDKNetwork(network)
 	}
 
 	hash() {

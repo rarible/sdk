@@ -34,6 +34,9 @@ export interface IRaribleEthereumSdkConfig {
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
 	mantle?: EthereumNetworkConfig
+	arbitrum?: EthereumNetworkConfig
+	zksync?: EthereumNetworkConfig
+	chiliz?: EthereumNetworkConfig
 	marketplaceMarker?: Binary
 	apiKey?: string
 }
