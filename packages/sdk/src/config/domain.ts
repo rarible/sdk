@@ -18,4 +18,5 @@ export type RaribleSdkConfig = {
 	arbitrumNetwork: EthereumNetwork
 	zksync: EthereumNetwork
 	chiliz: EthereumNetwork
+	lightlink: EthereumNetwork
 }

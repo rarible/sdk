@@ -14,6 +14,8 @@ import { zkSyncTestnetConfig } from "./testnet-zksync"
 import { zkSyncConfig } from "./zksync"
 import { chilizConfig } from "./chilliz"
 import { chilizTestnetConfig } from "./testnet-chiliz"
+import { lightlinkConfig } from "./lightlink"
+import { testnetLightlinkConfig } from "./testnet-lightlink"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -30,6 +32,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	zksync: zkSyncConfig,
 	chiliz: chilizConfig,
 	"testnet-chiliz": chilizTestnetConfig,
+	lightlink: lightlinkConfig,
+	"testnet-lightlink": testnetLightlinkConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

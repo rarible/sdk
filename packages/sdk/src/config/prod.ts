@@ -12,4 +12,5 @@ export const prodConfig: RaribleSdkConfig = {
 	arbitrumNetwork: "arbitrum",
 	zksync: "zksync",
 	chiliz: "chiliz",
+	lightlink: "lightlink",
 }

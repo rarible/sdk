@@ -12,4 +12,5 @@ export const testnetConfig: RaribleSdkConfig = {
 	arbitrumNetwork: "testnet-arbitrum",
 	zksync: "testnet-zksync",
 	chiliz: "testnet-chiliz",
+	lightlink: "testnet-lightlink",
 }

@@ -65,6 +65,7 @@ export function createUnionSdk(
 	mantle: IRaribleInternalSdk,
 	zksync: IRaribleInternalSdk,
 	chiliz: IRaribleInternalSdk,
+	lightlink: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -78,6 +79,7 @@ export function createUnionSdk(
 			ARBITRUM: arbitrum.balances,
 			ZKSYNC: zksync.balances,
 			CHILIZ: chiliz.balances,
+			LIGHTLINK: lightlink.balances,
 		}),
 		nft: new UnionNftSdk({
 			ETHEREUM: ethereum.nft,
@@ -90,6 +92,7 @@ export function createUnionSdk(
 			ARBITRUM: arbitrum.nft,
 			ZKSYNC: zksync.nft,
 			CHILIZ: chiliz.nft,
+			LIGHTLINK: lightlink.nft,
 		}),
 		order: new UnionOrderSdk({
 			ETHEREUM: ethereum.order,
@@ -102,6 +105,7 @@ export function createUnionSdk(
 			ARBITRUM: arbitrum.order,
 			ZKSYNC: zksync.order,
 			CHILIZ: chiliz.order,
+			LIGHTLINK: lightlink.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			ETHEREUM: ethereum.restriction,
@@ -114,6 +118,7 @@ export function createUnionSdk(
 			ARBITRUM: arbitrum.restriction,
 			ZKSYNC: zksync.restriction,
 			CHILIZ: chiliz.restriction,
+			LIGHTLINK: lightlink.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(ethereum.ethereum!),
 		flow: new UnionFlowSpecificSdk(flow.flow!),

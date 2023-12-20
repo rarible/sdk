@@ -61,6 +61,10 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://scan.chiliz.com/tx/${this.hash()}`
 			case "testnet-chiliz":
 				return `https://spicy-explorer.chiliz.com/tx/${this.hash()}`
+			case "lightlink":
+				return `https://phoenix.lightlink.io/tx/${this.hash()}`
+			case "testnet-lightlink":
+				return `https://pegasus.lightlink.io/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

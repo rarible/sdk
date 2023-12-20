@@ -16,6 +16,8 @@ export type EthereumNetwork =
   | "testnet-zksync"
   | "chiliz"
   | "testnet-chiliz"
+  | "lightlink"
+  | "testnet-lightlink"
 
 export enum LogsLevel {
 	DISABLED = 0,

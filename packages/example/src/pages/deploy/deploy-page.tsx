@@ -105,8 +105,7 @@ export function DeployPage() {
 								label="Blockchain"
 							>
 								<MenuItem value={WalletType.ETHEREUM}>
-									{Blockchain.ETHEREUM} / {Blockchain.POLYGON} / {Blockchain.MANTLE}
-                  / {Blockchain.ARBITRUM} / {Blockchain.ZKSYNC}
+									EVM Blockchain
 								</MenuItem>
 								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>
