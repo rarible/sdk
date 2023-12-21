@@ -88,10 +88,10 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
-    "@rarible/eslint-config-ts": "~0.5.0",
+    "@rarible/eslint-config-ts": "~0.10.0-alpha.18",
     "@solana/web3.js": "~1.54.0",
-    "eslint": "^7.32.0",
-    "husky": "^7.0.4",
+    "eslint": "^8.38.0",
+    "husky": "^8.0.3",
     "lerna": "^6.6.2",
     "lint-staged": "^10.4.0",
     "npm-check-updates": "^11.5.13",
@@ -99,7 +99,7 @@
     "rxjs": "^6.6.7",
     "sort-package-json": "^1.52.0",
     "tslib": "^2.3.1",
-    "typescript": "^5.0.4",
+    "typescript": "^5.4.5",
     "web3": "1.8.2"
   }
 }
