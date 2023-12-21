@@ -1,5 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
-import type { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
+import type { RequestCurrencyAssetType } from "@rarible/sdk"
 import { WalletType } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
 import { toContractAddress } from "@rarible/types"

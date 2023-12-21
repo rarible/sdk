@@ -1,6 +1,6 @@
 import type { IRaribleSdk } from "@rarible/sdk"
 import type { UnionAddress } from "@rarible/types/build/union-address"
-import type { RequestCurrencyAssetType } from "@rarible/sdk/src/common/domain"
+import type { RequestCurrencyAssetType } from "@rarible/sdk"
 import { useEffect, useState } from "react"
 
 export function useGetBalance(sdk: IRaribleSdk, walletAddress: UnionAddress, assetType: RequestCurrencyAssetType) {
