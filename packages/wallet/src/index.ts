@@ -202,3 +202,4 @@ export type WalletByBlockchain = {
 
 export { WalletType }
 export { getRaribleWallet, BlockchainProvider, RaribleSdkProvider } from "./get-wallet"
+export { UserSignature } from "./domain"
