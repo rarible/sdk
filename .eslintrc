@@ -2,7 +2,9 @@
 	"extends": ["@rarible/ts"],
 	"rules": {
 		"object-curly-spacing": ["error", "always"],
-        "unicorn/custom-error-definition": "off"
+        "unicorn/custom-error-definition": "off",
+        "@typescript-eslint/indent": "warn",
+        "@typescript-eslint/semi": "warn"
 	},
     "globals":{
       "BigInt": true

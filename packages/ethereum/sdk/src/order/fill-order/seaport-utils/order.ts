@@ -96,7 +96,9 @@ export const mapInputItemToOfferItem = (item: CreateInputItem): OfferItem => {
 				itemType: item.itemType,
 				token: item.token,
 				identifierOrCriteria: item.identifier,
+				// @ts-ignore
 				startAmount: item.amount,
+				// @ts-ignore
 				endAmount: item.endAmount ?? item.amount ?? "1",
 			}
 		}

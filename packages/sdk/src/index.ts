@@ -341,5 +341,6 @@ type MiddleMintType = {
 export { WalletType }
 export { getSimpleFlowFungibleBalance } from "./sdk-blockchains/flow/balance-simple"
 export { IRaribleSdk, MintAndSellRequest }
-export { RequestCurrency } from "./common/domain"
+export { RequestCurrency, RequestCurrencyAssetType } from "./common/domain"
 export { UnionPart } from "./types/order/common/index"
+export { UploadMetaResponse } from "./sdk-blockchains/union/meta/domain"

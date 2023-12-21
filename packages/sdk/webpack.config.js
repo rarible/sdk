@@ -1,5 +1,4 @@
 const path = require("path")
-const webpack = require("webpack")
 
 module.exports = {
 	entry: "./build/index.js",
@@ -23,14 +22,6 @@ module.exports = {
 			"https": false,
 		},
 	},
-	plugins: [
-		new webpack.ProvidePlugin({
-			Buffer: ["buffer", "Buffer"],
-		}),
-		new webpack.ProvidePlugin({
-			process: "process/browser",
-		}),
-	],
 	mode: "production",
 	module: {
 		rules: [{
