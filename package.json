@@ -65,6 +65,7 @@
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
     "e2e-tests": "sh ./scripts/e2e.sh",
+    "nuke": "rm -rf node_modules; for d in packages/*/node_modules; do echo $d; rm -rf $d; done",
     "docs:sdk": "yarn workspace @rarible/sdk run docs"
   },
   "commitlint": {
@@ -86,9 +87,9 @@
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
-    "@rarible/eslint-config-ts": "~0.5.0",
-    "eslint": "^7.32.0",
-    "husky": "^7.0.4",
+    "@rarible/eslint-config-ts": "~0.10.0-alpha.18",
+    "eslint": "^8.38.0",
+    "husky": "^8.0.3",
     "lerna": "^6.0.3",
     "lint-staged": "^10.4.0",
     "npm-check-updates": "^11.5.13",
