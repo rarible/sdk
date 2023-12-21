@@ -1,7 +1,7 @@
 import { WalletType } from "@rarible/sdk-wallet"
 import { toItemId } from "@rarible/types"
 import { Grid, Typography } from "@mui/material"
-import type { ConnectionProvider } from "@rarible/connector/src"
+import type { ConnectionProvider } from "@rarible/connector"
 import type { MattelConnectionProvider } from "@rarible/connector-mattel"
 import type { MappedConnectionProvider } from "@rarible/connector"
 import { useForm } from "react-hook-form"
