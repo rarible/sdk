@@ -17,7 +17,6 @@ import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { EVMBlockchain } from "@rarible/sdk-common"
 import { Blockchain } from "@rarible/api-client"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import { createOpenseaProxyRegistryEthContract } from "../contracts/proxy-registry-opensea"
 import { approveErc20 } from "../approve-erc20"
 import { approveErc721 } from "../approve-erc721"
@@ -37,6 +36,7 @@ import type { EthereumNetworkConfig, IRaribleEthereumSdkConfig } from "../../typ
 import { id32 } from "../../common/id"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import { getBlockchainFromChainId } from "../../common"
+import type { GetConfigByChainId } from "../../config"
 import type { OpenSeaOrderDTO } from "./open-sea-types"
 import type {
 	OpenSeaV1OrderFillRequest,
@@ -64,20 +64,21 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getConfig: GetConfigByChainId,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
 
-	getOrderMetadata() {
-		const blockchain = getBlockchainFromChainId(this.config.chainId)
+	async getOrderMetadata() {
+		const config = await this.getConfig()
+		const blockchain = getBlockchainFromChainId(config.chainId)
 		const ethereumNetworkConfig = getEthereumNetworkConfig(blockchain, this.sdkConfig)
 
 		if (ethereumNetworkConfig && ethereumNetworkConfig.openseaOrdersMetadata) {
 			return toWord(ethereumNetworkConfig.openseaOrdersMetadata)
 		}
-		return this.config.openSea.metadata || id32("RARIBLE")
+		return config.openSea.metadata || id32("RARIBLE")
 	}
 
 	async invert({ order, payouts }: OpenSeaV1OrderFillRequest, maker: Address): Promise<SimpleOpenSeaV1Order> {
@@ -124,7 +125,9 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		const makeAssetType = order.make.assetType
 		const takeAssetType = order.take.assetType
 
-		const validatorAddress = order.data.target && order.data.target === this.config.openSea.merkleValidator
+		const config = await this.getConfig()
+
+		const validatorAddress = order.data.target && order.data.target === config.openSea.merkleValidator
 			? order.data.target
 			: undefined
 
@@ -254,8 +257,10 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 
 		const { buy } = getBuySellOrders(initial, inverted)
 
+		const config = await this.getConfig()
+
 		if (isTakeEth) {
-			const openseaWrapperContract = createExchangeWrapperContract(this.ethereum, this.config.exchange.wrapper)
+			const openseaWrapperContract = createExchangeWrapperContract(this.ethereum, config.exchange.wrapper)
 			const { encodedFeesValue, feeAddresses } = originFeeValueConvert(request.originFees)
 			const { data, options } = await this.getTransactionDataForExchangeWrapper(
 				initial,
@@ -364,13 +369,15 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		return !!ordersCanMatch
 	}
 
-	private getAddressesArrayForTransaction(
+	private async getAddressesArrayForTransaction(
 		buyOrderToSignDTO: OpenSeaOrderDTO,
 		sellOrderToSignDTO: OpenSeaOrderDTO,
 		isTakeEth: boolean
-	): Address[] {
+	): Promise<Address[]> {
+		const config = await this.getConfig()
+
 		return isTakeEth ?
-			[...getAtomicMatchArgAddressesForOpenseaWrapper(sellOrderToSignDTO, this.config.exchange.wrapper)] :
+			[...getAtomicMatchArgAddressesForOpenseaWrapper(sellOrderToSignDTO, config.exchange.wrapper)] :
 			[...getAtomicMatchArgAddresses(buyOrderToSignDTO), ...getAtomicMatchArgAddresses(sellOrderToSignDTO)]
 	}
 
@@ -382,10 +389,12 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
+		const config = await this.getConfig()
+
 		switch (asset.assetType.assetClass) {
 			case "ERC20": {
 				const contract = asset.assetType.contract
-				const operator = this.config.transferProxies.openseaV1
+				const operator = config.transferProxies.openseaV1
 				return approveErc20(this.ethereum, this.send, contract, maker, operator, asset.value, infinite)
 			}
 			case "ERC721": {
@@ -407,7 +416,8 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		const proxyRegistry = this.config.openSea.proxyRegistry
+		const config = await this.getConfig()
+		const proxyRegistry = config.openSea.proxyRegistry
 		const proxyRegistryContract = createOpenseaProxyRegistryEthContract(this.ethereum, proxyRegistry)
 		const proxyAddress = await getSenderProxy(proxyRegistryContract, maker)
 

@@ -6,17 +6,20 @@ import type { EthereumNetwork } from "../types"
 
 export const ETHER_IN_WEI = toBn(10).pow(18)
 
-export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
+export function getNetworkFromChainId(chainId: number) {
 	const network = Object.keys(configDictionary)
 		.find((network) => {
 			const config = configDictionary[network as EthereumNetwork]
 			return config.chainId === chainId
 		})
-
 	if (!network) {
 		throw new Error(`Config for chainID=${chainId} has not been found`)
 	}
-	return getBlockchainBySDKNetwork(network as EthereumNetwork)
+	return network as EthereumNetwork
+}
+export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
+	const network = getNetworkFromChainId(chainId)
+	return getBlockchainBySDKNetwork(network)
 }
 
 export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockchain {
@@ -46,4 +49,8 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 			return Blockchain.LIGHTLINK
 		default: throw new Error(`Unrecognized ethereum network ${network}`)
 	}
+}
+
+export function getAPIsByNetwork() {
+
 }

@@ -14,6 +14,7 @@ import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
 import type { SendFunction } from "../common/send-transaction"
 import type { CommonNftCollection } from "../common/mint"
+import type { RaribleEthereumApis } from "../common/apis"
 import { mintOffChain } from "./mint-off-chain"
 import { mintErc1155v1, mintErc1155v2, mintErc721v1, mintErc721v2, mintErc721v3 } from "./mint-on-chain"
 import type { SimpleLazyNft } from "./sign-nft"
@@ -91,34 +92,32 @@ export async function mint(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<Binary>,
-	nftCollectionApi: NftCollectionControllerApi,
-	nftLazyMintApi: NftLazyMintControllerApi,
-	checkWalletChainId: () => Promise<boolean>,
+	getApis: () => Promise<RaribleEthereumApis>,
 	data: MintRequest
 ): Promise<MintOffChainResponse | MintOnChainResponse> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
 	if (data.uri === undefined) {
 		throw new Warning("URI should be not undefined")
 	}
+	const apis = await getApis()
 	if (isERC1155Request(data)) {
 		if (isERC1155v2Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, nftCollectionApi, nftLazyMintApi, data)
-			return mintErc1155v2(ethereum, send, nftCollectionApi, data)
+			if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
+			return mintErc1155v2(ethereum, send, apis.nftCollection, data)
 		}
-		return mintErc1155v1(ethereum, send, nftCollectionApi, data)
+		return mintErc1155v1(ethereum, send, apis.nftCollection, data)
 	}
 	if (isERC721Request(data)) {
 		if (isERC721v3Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, nftCollectionApi, nftLazyMintApi, data)
-			return mintErc721v3(ethereum, send, nftCollectionApi, data)
+			if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
+			return mintErc721v3(ethereum, send, apis.nftCollection, data)
 		}
 		if (isERC721v2Request(data)) {
-			return mintErc721v2(ethereum, send, nftCollectionApi, data)
+			return mintErc721v2(ethereum, send, apis.nftCollection, data)
 		}
-		return mintErc721v1(ethereum, send, nftCollectionApi, data)
+		return mintErc721v1(ethereum, send, apis.nftCollection, data)
 	}
 	throw new Error("Unsupported collection")
 }

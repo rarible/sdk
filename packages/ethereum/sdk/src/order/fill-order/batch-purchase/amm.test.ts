@@ -29,8 +29,7 @@ describe("amm batch buy tests", () => {
 	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 
 	test.skip("amm sudoswap few items sell form different pools", async () => {

@@ -9,6 +9,7 @@ import { approve as approveTemplate } from "../order/approve"
 import { getApiConfig } from "../config/api-config"
 import { createEthereumApis } from "../common/apis"
 import { checkChainId } from "../order/check-chain-id"
+import { getNetworkFromChainId } from "../common"
 import { StartAuction } from "./start"
 import { PutAuctionBid } from "./put-bid"
 import { awaitForAuction } from "./test"
@@ -25,26 +26,32 @@ describe.skip("put auction bid", () => {
 
 	const web3 = new Web3(provider as any)
 	const web3Buyer = new Web3(providerBuyer as any)
-	const config = getEthereumConfig("testnet")
+	const getConfig = async () => getEthereumConfig("testnet")
 
 	const configuration = new Configuration(getApiConfig("testnet"))
-	const apis = createEthereumApis("testnet")
 	const auctionApi = new AuctionControllerApi(configuration)
 
 	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
 	const ethereum2 = new Web3Ethereum({ web3: web3Buyer, from: sender2Address, gas: 1000000 })
 
-	const checkWalletChainId1 = checkChainId.bind(null, ethereum1, config)
-	const checkWalletChainId2 = checkChainId.bind(null, ethereum2, config)
+	const send1 = getSimpleSendWithInjects()
+	const send2 = getSimpleSendWithInjects()
+	const approve1 = approveTemplate.bind(null, ethereum1, send1, getConfig)
+	const approve2 = approveTemplate.bind(null, ethereum2, send2, getConfig)
 
-	const send1 = getSimpleSendWithInjects().bind(null, checkWalletChainId1)
-	const send2 = getSimpleSendWithInjects().bind(null, checkWalletChainId2)
-	const approve1 = approveTemplate.bind(null, ethereum1, send1, config.transferProxies)
-	const approve2 = approveTemplate.bind(null, ethereum2, send2, config.transferProxies)
+	const getApis1 = async () => {
+		const chainId = await ethereum1.getChainId()
+		const env = getNetworkFromChainId(chainId)
+		return createEthereumApis(env)
+	}
+	const getApis2 = async () => {
+		const chainId = await ethereum2.getChainId()
+		const env = getNetworkFromChainId(chainId)
+		return createEthereumApis(env)
+	}
+	const bidService = new PutAuctionBid(ethereum2, send2, getConfig, "testnet", approve2, getApis2)
 
-	const bidService = new PutAuctionBid(ethereum2, send2, config, "testnet", approve2, apis)
-
-	const auctionStartService1 = new StartAuction(ethereum1, send1, config, "testnet", approve1, apis)
+	const auctionStartService1 = new StartAuction(ethereum1, send1, getConfig, "testnet", approve1, getApis1)
 
 	const it = awaitAll({
 		testErc1155: deployTestErc1155(web3, "TST"),

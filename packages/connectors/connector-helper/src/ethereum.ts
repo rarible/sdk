@@ -7,7 +7,7 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import type { EVMBlockchain } from "@rarible/sdk-common"
-import { getBlockchainFromChainId } from "@rarible/protocol-ethereum-sdk/src/common"
+import { getBlockchainFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 export function mapEthereumWallet<O>(

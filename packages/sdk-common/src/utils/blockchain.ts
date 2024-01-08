@@ -33,8 +33,4 @@ export const SupportedBlockchains = [
 	Blockchain.IMMUTABLEX,
 ] as const
 
-export type SupportedBlockchain = PickEnum<Blockchain, typeof SupportedBlockchains[number]>
-
-export type PickEnum<T, K extends T> = {
-	[P in keyof K]: P extends K ? P : never;
-}
+export type SupportedBlockchain = Extract<Blockchain, typeof SupportedBlockchains[number]>

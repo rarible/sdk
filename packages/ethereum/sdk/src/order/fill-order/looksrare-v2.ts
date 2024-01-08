@@ -21,6 +21,7 @@ import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import { isNft } from "../is-nft"
 import type { SimpleLooksrareV2Order } from "../types"
 import { createLooksrareV2Validator } from "../contracts/looksrare-v2-validator"
+import type { GetConfigByChainId } from "../../config"
 import type { PreparedOrderRequestDataForExchangeWrapper, OrderFillSendData, LooksrareOrderV2FillRequest } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { calcValueWithFees, originFeeValueConvert } from "./common/origin-fees-utils"
@@ -30,10 +31,10 @@ export class LooksrareV2OrderHandler {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 	) {
 	}
 
@@ -91,23 +92,25 @@ export class LooksrareV2OrderHandler {
 		originFees: Part[] | undefined,
 	) {
 		const wallet = getRequiredWallet(this.ethereum)
-		if (!this.config.exchange.looksrareV2) {
+		const config = await this.getConfig()
+
+		if (!config.exchange.looksrareV2) {
 			throw new Error("Looksrare V2 contract does not exist")
 		}
 		if (originFees && originFees.length > 1) {
 			throw new Error("Origin fees recipients shouldn't be greater than 1")
 		}
-		const contract = createLooksrareV2Exchange(wallet, this.config.exchange.looksrareV2)
+		const contract = createLooksrareV2Exchange(wallet, config.exchange.looksrareV2)
 
 		const order = this.convertMakerOrderToLooksrare(request.order, request.amount)
 
 		const method = order.quoteType === QuoteType.Ask ? "executeTakerBid" : "executeTakerAsk"
 
-		if (!this.config.looksrareOrderValidatorV2) {
+		if (!config.looksrareOrderValidatorV2) {
 			throw new Error("Looksrare order validator V2 does not exist")
 		}
 
-		const validator = createLooksrareV2Validator(wallet, this.config.looksrareOrderValidatorV2)
+		const validator = createLooksrareV2Validator(wallet, config.looksrareOrderValidatorV2)
 		const merkleRoot = request.order.data.merkleRoot
 			? { root: request.order.data.merkleRoot, proof: request.order.data.merkleProof }
 			: { root: "0x0000000000000000000000000000000000000000000000000000000000000000", proof: [] }
@@ -157,7 +160,9 @@ export class LooksrareV2OrderHandler {
 		const { requestData, feeAddresses } = await this.prepareTransactionData(request, request.originFees, undefined)
 
 		const provider = getRequiredWallet(this.ethereum)
-		const wrapperContract = createExchangeWrapperContract(provider, this.config.exchange.wrapper)
+		const config = await this.getConfig()
+
+		const wrapperContract = createExchangeWrapperContract(provider, config.exchange.wrapper)
 
 		const functionCall = wrapperContract.functionCall(
 			"singlePurchase",
@@ -198,7 +203,8 @@ export class LooksrareV2OrderHandler {
 			let royaltyList: NftItemRoyalty[] = []
 
 			for (const itemId of rawOrder.itemIds) {
-				const royalty = (await this.apis.nftItem.getNftItemRoyaltyById({
+				const apis = await this.getApis()
+				const royalty = (await apis.nftItem.getNftItemRoyaltyById({
 					itemId: `${rawOrder.collection}:${itemId}`,
 				})).royalty
 				if (royalty?.length) {

@@ -4,29 +4,29 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/types"
 import { ZERO_ADDRESS } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
+import type { GetConfigByChainId } from "../config"
+import { getNetworkConfigByChainId } from "../config"
 import { createCryptoPunksWrapperContract } from "./contracts/cryptoPunks/cryptopunk-wrapper"
 import { createCryptoPunksMarketContract } from "./contracts/cryptoPunks"
 
 export async function approveForWrapper(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
-	checkWalletChainId: () => Promise<boolean>,
-	marketContractAddress: Address,
-	wrapperContractAddress: Address,
+	getConfig: GetConfigByChainId,
 	punkIndex: number
 ): Promise<EthereumTransaction | null> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
+	const config = await getConfig()
 
-	if (wrapperContractAddress === ZERO_ADDRESS) {
+	if (config.cryptoPunks.wrapperContract === ZERO_ADDRESS) {
 		throw new Error("Wrapper contract address is not defined")
 	}
 
 	const marketContract = createCryptoPunksMarketContract(
 		ethereum,
-		marketContractAddress
+		config.cryptoPunks.marketContract
 	)
 
 	const saleState = await marketContract.functionCall(
@@ -36,14 +36,14 @@ export async function approveForWrapper(
 
 	if (
 		!saleState.isForSale ||
-		saleState.onlySellTo?.toLowerCase() !== wrapperContractAddress.toLowerCase() ||
+		saleState.onlySellTo?.toLowerCase() !== config.cryptoPunks.wrapperContract.toLowerCase() ||
 		saleState.minValue !== "0"
 	) {
 		return send(marketContract.functionCall(
 			"offerPunkForSaleToAddress",
 			punkIndex,
 			0,
-			wrapperContractAddress
+			config.cryptoPunks.wrapperContract
 		))
 	}
 
@@ -53,18 +53,17 @@ export async function approveForWrapper(
 export async function wrapPunk(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
-	checkWalletChainId: () => Promise<boolean>,
-	wrapperContractAddress: Address,
+	getConfig: GetConfigByChainId,
 	punkIndex: number
 ): Promise<EthereumTransaction> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
+	const config = await getConfig()
 
 	const wrapperContract = createCryptoPunksWrapperContract(
 		ethereum,
-		wrapperContractAddress
+		config.cryptoPunks.wrapperContract
 	)
 
 	return send(wrapperContract.functionCall("wrap", punkIndex))
@@ -73,17 +72,16 @@ export async function wrapPunk(
 export async function unwrapPunk(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
-	checkWalletChainId: () => Promise<boolean>,
-	wrapperContractAddress: Address,
+	getConfig: GetConfigByChainId,
 	punkIndex: number
 ): Promise<EthereumTransaction> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
+	const config = await getConfig()
 	const wrapperContract = createCryptoPunksWrapperContract(
 		ethereum,
-		wrapperContractAddress
+		config.cryptoPunks.wrapperContract
 	)
 
 	return send(wrapperContract.functionCall("unwrap", punkIndex))

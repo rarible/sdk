@@ -35,7 +35,7 @@ import { createOpenseaProxyRegistryEthContract } from "../contracts/proxy-regist
 import { createOpenseaContract } from "../contracts/exchange-opensea-v1"
 import { cancel } from "../cancel"
 import type { SimpleOpenSeaV1Order } from "../types"
-import { createEthereumApis } from "../../common/apis"
+import { createEthereumApis, getApis, getApis as getApisTemplate } from "../../common/apis"
 import { checkChainId } from "../check-chain-id"
 import { createRaribleSdk } from "../../index"
 import { createErc721V3Collection } from "../../common/mint"
@@ -69,19 +69,20 @@ describe.skip("fillOrder: Opensea orders", function () {
 			proxyRegistry: ZERO_ADDRESS,
 		},
 	}
+	const getConfig = async () => config
 	const apis = createEthereumApis(env)
 
 	const getBaseOrderFee = async () => 0
-	const checkWalletChainId1 = checkChainId.bind(null, ethereum1, config)
-	const checkWalletChainId2 = checkChainId.bind(null, ethereum2, config)
 
-	const send1 = getSimpleSendWithInjects().bind(null, checkWalletChainId1)
-	const send2 = getSimpleSendWithInjects().bind(null, checkWalletChainId2)
+	const send1 = getSimpleSendWithInjects()
+	const send2 = getSimpleSendWithInjects()
+	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
+	const getApis2 = getApisTemplate.bind(null, ethereum2, env)
 
-	const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee)
-	const openSeaFillHandler2 = new OpenSeaOrderHandler(ethereum2, send2, config, apis, getBaseOrderFee)
-	const orderFiller1 = new OrderFiller(ethereum1, send1, config, apis, getBaseOrderFee, "testnet")
-	const orderFiller2 = new OrderFiller(ethereum2, send2, config, apis, getBaseOrderFee, "testnet")
+	const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee)
+	const openSeaFillHandler2 = new OpenSeaOrderHandler(ethereum2, send2, getConfig, getApis2, getBaseOrderFee)
+	const orderFiller1 = new OrderFiller(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, "testnet")
+	const orderFiller2 = new OrderFiller(ethereum2, send2, getConfig, getApis2, getBaseOrderFee, "testnet")
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),
@@ -401,15 +402,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 			checkLazyOrder,
 			ethereum1,
 			send1,
-			{
-				openseaV1: toAddress(wyvernExchange.options.address),
-				v1: ZERO_ADDRESS,
-				v2: ZERO_ADDRESS,
-				wrapper: toAddress(it.exchangeWrapper.options.address),
-				x2y2: ZERO_ADDRESS,
-			},
-			checkChainId.bind(null, ethereum1, config),
-			apis,
+			getConfig,
+			getApis1,
 			{
 				...order,
 				signature,
@@ -442,13 +436,13 @@ describe.skip("fillOrder: Opensea orders", function () {
 	})
 
 	test("get order origin without sdkConfig", async () => {
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee)
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee)
 		expect(openSeaFillHandler1.getOrderMetadata()).toEqual(id32(Platform.RARIBLE))
 	})
 
 	test("get order origin with sdkConfig and passed ethereum platform", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee, {
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, {
 			ethereum: {
 				openseaOrdersMetadata: meta,
 			},
@@ -458,7 +452,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	test("get order origin with passed polygon platform, but wallet still ethereum", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee, {
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, {
 			polygon: {
 				openseaOrdersMetadata: meta,
 			},
@@ -470,15 +464,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const meta = toWord(id32("CUSTOM_STRING"))
 		const web3 = new Web3(polygonProvider as any)
 		const polygon1 = new Web3Ethereum({ web3 })
-		const config: EthereumConfig = {
-			...getEthereumConfig("polygon"),
-			chainId: 137,
-			openSea: {
-				metadata: id32("RARIBLE"),
-				proxyRegistry: ZERO_ADDRESS,
-			},
-		}
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, config, apis, getBaseOrderFee, {
+		const getApis = getApisTemplate.bind(null, polygon1, env)
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, getConfig, getApis, getBaseOrderFee, {
 			polygon: {
 				openseaOrdersMetadata: meta,
 			},
@@ -490,15 +477,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 		const meta = toWord(id32("CUSTOM_STRING"))
 		const web3 = new Web3(polygonProvider as any)
 		const polygon1 = new Web3Ethereum({ web3 })
-		const config: EthereumConfig = {
-			...getEthereumConfig("polygon"),
-			chainId: 137,
-			openSea: {
-				metadata: id32("RARIBLE"),
-				proxyRegistry: ZERO_ADDRESS,
-			},
-		}
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, config, apis, getBaseOrderFee, {
+		const getApis = getApisTemplate.bind(null, polygon1, env)
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, getConfig, getApis, getBaseOrderFee, {
 			polygon: {
 				openseaOrdersMetadata: meta,
 			},

@@ -98,20 +98,6 @@ export function createRaribleSdk(
 			blockchainConfig,
 			config,
 		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.POLYGON,
-			blockchainConfig.polygonNetwork,
-			ethConfig
-		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.ARBITRUM,
-			blockchainConfig.arbitrumNetwork,
-			ethConfig
-		),
 		createSolanaSdk(
 			filterWallet(wallet, WalletType.SOLANA),
 			apis,
@@ -123,34 +109,6 @@ export function createRaribleSdk(
 			apis,
 			blockchainConfig.immutablexNetwork,
 			config?.logs
-		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.MANTLE,
-			blockchainConfig.mantleNetwork,
-			ethConfig
-		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.ZKSYNC,
-			blockchainConfig.zksync,
-			ethConfig
-		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.CHILIZ,
-			blockchainConfig.chiliz,
-			ethConfig
-		),
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.LIGHTLINK,
-			blockchainConfig.lightlink,
-			ethConfig
 		),
 	)
 

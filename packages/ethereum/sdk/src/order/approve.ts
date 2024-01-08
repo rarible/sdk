@@ -3,6 +3,7 @@ import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { TransferProxies } from "../config/type"
 import type { SendFunction } from "../common/send-transaction"
+import type { GetConfigByChainId } from "../config"
 import { approveErc20 } from "./approve-erc20"
 import { approveErc721 } from "./approve-erc721"
 import { approveErc1155 } from "./approve-erc1155"
@@ -14,12 +15,13 @@ export type ApproveFunction =
 export async function approve(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
-	config: TransferProxies,
+	getConfig: GetConfigByChainId,
 	owner: Address,
 	asset: Asset,
 	infinite: undefined | boolean = true,
 ): Promise<EthereumTransaction | undefined> {
-	const operator = getAssetTransferProxy(asset.assetType.assetClass, config)
+	const config = await getConfig()
+	const operator = getAssetTransferProxy(asset.assetType.assetClass, config.transferProxies)
 	if (!operator) {
 		return undefined
 	}

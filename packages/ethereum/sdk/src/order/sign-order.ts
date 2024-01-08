@@ -5,6 +5,8 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { TypedDataUtils } from "eth-sig-util"
 import type { EthereumConfig } from "../config/type"
+import type { GetConfigByChainId } from "../config"
+import { getNetworkConfigByChainId } from "../config"
 import { hashLegacyOrder } from "./hash-legacy-order"
 import { assetTypeToStruct } from "./asset-type-to-struct"
 import { EIP712_DOMAIN_TEMPLATE, EIP712_ORDER_TYPE, EIP712_ORDER_TYPES } from "./eip712"
@@ -13,12 +15,13 @@ import type { SimpleOrder, SimpleRaribleV2Order } from "./types"
 
 export async function signOrder(
 	ethereum: Maybe<Ethereum>,
-	config: Pick<EthereumConfig, "exchange" | "chainId">,
+	getConfig: GetConfigByChainId,
 	order: SimpleOrder
 ): Promise<Binary> {
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
+	const config = await getConfig()
 	switch (order.type) {
 		case "RARIBLE_V1": {
 			const legacyHash = hashLegacyOrder(ethereum, order)

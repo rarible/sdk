@@ -12,7 +12,8 @@ describe("signOrder", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 	const config = getEthereumConfig("dev-ethereum")
-	const signOrderE2e = signOrder.bind(null, ethereum, config)
+	const getConfig = async () => config
+	const signOrderE2e = signOrder.bind(null, ethereum, getConfig)
 
 	test("should sign legacy orders", async () => {
 		const signer = await ethereum.getFrom()

@@ -24,8 +24,7 @@ import { signOrder } from "../sign-order"
 import type { SimpleOrder } from "../types"
 import { id } from "../../common/id"
 import { approveErc20 } from "../approve-erc20"
-import { createEthereumApis } from "../../common/apis"
-import { checkChainId } from "../check-chain-id"
+import { createEthereumApis, getApis as getApisTemplate } from "../../common/apis"
 import { createRaribleSdk } from "../../index"
 import { FILL_CALLDATA_TAG } from "../../config/common"
 import type { EthereumNetwork } from "../../types"
@@ -48,12 +47,15 @@ describe("buy & acceptBid orders", () => {
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
+	const getConfig = async () => config
+	const getApisBuyer = getApisTemplate.bind(null, buyerEthereum, env)
+	const getApisSeller = getApisTemplate.bind(null, sellerEthereum, env)
+
 	const apis = createEthereumApis(env)
 
-	const checkWalletChainId = checkChainId.bind(null, buyerEthereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 	const getBaseOrderFee = async () => 100
-	const filler = new OrderFiller(buyerEthereum, send, config, apis, getBaseOrderFee, env)
+	const filler = new OrderFiller(buyerEthereum, send, getConfig, getApisBuyer, getBaseOrderFee, env)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),
@@ -162,14 +164,14 @@ describe("buy & acceptBid orders", () => {
 			from: sellerAddress,
 		})
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const finalOrder = { ...left, signature }
 
 		const startErc20Balance = toBn(await it.testErc20.methods.balanceOf(sellerAddress).call())
 		const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call())
 
-		const filler = new OrderFiller(buyerEthereum, send, config, apis, getBaseOrderFee, env)
+		const filler = new OrderFiller(buyerEthereum, send, getConfig, getApisBuyer, getBaseOrderFee, env)
 		const buyRequest = { order: finalOrder, amount: 1, payouts: [], originFees: [] } as BuyOrderRequest
 		await filler.getTransactionData(buyRequest)
 		const tx = await filler.buy(buyRequest)
@@ -224,7 +226,7 @@ describe("buy & acceptBid orders", () => {
 			from: sellerAddress,
 		})
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const finalOrder = { ...left, signature }
 
@@ -232,7 +234,9 @@ describe("buy & acceptBid orders", () => {
 		const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
 
 		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
-		const filler = new OrderFiller(provider, send, config, apis, getBaseOrderFee, env, {
+		const getApis = getApisTemplate.bind(null, provider, env)
+
+		const filler = new OrderFiller(provider, send, getConfig, getApis, getBaseOrderFee, env, {
 			marketplaceMarker,
 		})
 		const tx = await filler.buy({ order: finalOrder, amount: 1, payouts: [], originFees: [] })
@@ -274,7 +278,7 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const finalOrder = { ...left, signature }
 		const originFees = [{
@@ -323,7 +327,7 @@ describe("buy & acceptBid orders", () => {
 			from: sellerAddress,
 		})
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const before1 = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
 		const before2 = toBn(await it.testErc1155.methods.balanceOf(sellerAddress, tokenId).call())
@@ -377,7 +381,7 @@ describe("buy & acceptBid orders", () => {
 			from: sellerAddress,
 		})
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const before1 = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call())
 		const before2 = toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call())
@@ -436,7 +440,7 @@ describe("buy & acceptBid orders", () => {
 			from: sellerAddress,
 		})
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const before1 = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call())
 		const before2 = toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call())
@@ -502,7 +506,7 @@ describe("buy & acceptBid orders", () => {
 			),
 			{ from: sellerAddress }
 		)
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 
 		const finalOrder = { ...left, signature }
@@ -556,11 +560,11 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		const signature = await signOrder(buyerEthereum, config, left)
+		const signature = await signOrder(buyerEthereum, getConfig, left)
 
 		const finalOrder = { ...left, signature }
 
-		const filler = new OrderFiller(sellerEthereum, send, config, apis, getBaseOrderFee, env)
+		const filler = new OrderFiller(sellerEthereum, send, getConfig, getApisSeller, getBaseOrderFee, env)
 
 		await filler.acceptBid({ order: finalOrder, amount: 1, originFees: [] })
 
@@ -598,7 +602,7 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		const signature = await signOrder(sellerEthereum, config, left)
+		const signature = await signOrder(sellerEthereum, getConfig, left)
 
 		const finalOrder = { ...left, signature }
 

@@ -11,21 +11,22 @@ import { wrapInRetry } from "./retry"
 export type BalanceRequestAssetType = EthAssetType | Erc20AssetType
 
 export class Balances {
-	constructor(private readonly apis: RaribleEthereumApis) {
+	constructor(private readonly getApis: () => Promise<RaribleEthereumApis>) {
 		this.getBalance = this.getBalance.bind(this)
 	}
 
 	async getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumberValue> {
+		const apis = await this.getApis()
 		switch (assetType.assetClass) {
 			case "ETH": {
 				const ethBalance = await wrapInRetry(() =>
-					this.apis.balances.getEthBalance({ owner: address })
+					apis.balances.getEthBalance({ owner: address })
 				)
 				return toBn(ethBalance.decimalBalance)
 			}
 			case "ERC20": {
 				const balance = await wrapInRetry(() =>
-					this.apis.balances.getErc20Balance({
+					apis.balances.getErc20Balance({
 						contract: assetType.contract,
 						owner: address,
 					})

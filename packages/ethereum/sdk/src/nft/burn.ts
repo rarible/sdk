@@ -11,6 +11,9 @@ import type { SendFunction } from "../common/send-transaction"
 import { getOwnershipId } from "../common/get-ownership-id"
 import type { RaribleEthereumApis } from "../common/apis"
 import { createItemId } from "../common/create-item-id"
+import { checkChainId } from "../order/check-chain-id"
+import type { EthereumConfig } from "../config/type"
+import type { GetConfigByChainId } from "../config"
 import { getErc721Contract } from "./contracts/erc721"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"
@@ -26,16 +29,16 @@ export async function burn(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	checkAssetType: CheckAssetTypeFunction,
-	apis: RaribleEthereumApis,
-	checkWalletChainId: () => Promise<boolean>,
+	getApis: () => Promise<RaribleEthereumApis>,
 	request: BurnRequest,
 ): Promise<EthereumTransaction | void> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
 	const checked = await checkAssetType(request.assetType)
 	const from = toAddress(await ethereum.getFrom())
+	const apis = await getApis()
+
 	const ownership = await apis.nftOwnership.getNftOwnershipByIdRaw({
 		ownershipId: getOwnershipId(request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`), from),
 	})

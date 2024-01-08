@@ -62,8 +62,7 @@ describe.skip("looksrare fill", () => {
 
 	const config = getEthereumConfig("testnet")
 
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 	beforeAll(async () => {
 		console.log({

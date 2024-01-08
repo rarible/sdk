@@ -15,10 +15,10 @@ describe("convert weth test", () => {
 	const web3 = new Web3(provider as any)
 	const ethereum = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
 	const config = getEthereumConfig("dev-ethereum")
+	const getConfig = async () => config
 
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-	const converter = new ConvertWeth(ethereum, send, config)
+	const send = getSimpleSendWithInjects()
+	const converter = new ConvertWeth(ethereum, send, getConfig)
 
 	const it = awaitAll({
 		deployWeth: deployWethContract(web3),
@@ -34,7 +34,7 @@ describe("convert weth test", () => {
 
 		const tx = await converter.convert(
 			{ assetClass: "ETH" },
-			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },
+			{ assetClass: "ERC20", contract: await converter.getWethContractAddress() },
 			toBn("0.1"),
 		)
 		await tx.wait()
@@ -54,14 +54,14 @@ describe("convert weth test", () => {
 		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
 		const tx = await converter.convert(
 			{ assetClass: "ETH" },
-			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },
+			{ assetClass: "ERC20", contract: await converter.getWethContractAddress() },
 			toBn("0.2")
 		)
 		await tx.wait()
 
 		const initWethBalance = await contract.functionCall("balanceOf", sender1Address).call()
 		const tx1 = await converter.convert(
-			{ assetClass: "ERC20", contract: converter.getWethContractAddress() },
+			{ assetClass: "ERC20", contract: await converter.getWethContractAddress() },
 			{ assetClass: "ETH" },
 			toBn("0.1")
 		)

@@ -34,8 +34,7 @@ describe("Batch purchase", function () {
 	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 	beforeAll(async () => {
 		console.log({
