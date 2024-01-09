@@ -10,7 +10,7 @@ import { ETHER_IN_WEI } from "./index"
 export function checkGreaterThanMinPaymentValue({ assetType, value }: Asset, config: EthereumConfig): void {
 	if ((isETH(assetType) || isWeth(assetType, config) || isRari(assetType, config))
     && !toBn(value).gte(MIN_PAYMENT_VALUE)) {
-		throw new Warning(`Asset value must be less or equal to ${MIN_PAYMENT_VALUE.div(ETHER_IN_WEI).toFixed()}`)
+		throw new Warning(`Asset value must be greater or equal to ${MIN_PAYMENT_VALUE.div(ETHER_IN_WEI).toFixed()}`)
 	}
 }
 

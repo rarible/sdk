@@ -20,7 +20,7 @@
     "@mui/material": "^5.5.0",
     "@nfid/embed": "0.0.5-alpha.0",
     "@nfid/wallet": "^1.1.0",
-    "@rarible/api-client": "0.16.5-alpha.2",
+    "@rarible/api-client": "0.16.5-alpha.6",
     "@rarible/connector": "^0.13.65",
     "@rarible/connector-beacon": "^0.13.65",
     "@rarible/connector-fcl": "^0.13.65",
@@ -69,7 +69,7 @@
     "react-error-overlay": "6.0.9"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-app-rewired start",
     "serve-static": "serve ./build",
     "build": "mv common.env .env && CI=false NODE_OPTIONS=--max-old-space-size=6096 SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
     "eject": "SKIP_PREFLIGHT_CHECK=true react-app-rewired eject",
