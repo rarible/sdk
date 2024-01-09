@@ -65,6 +65,8 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 				return `https://phoenix.lightlink.io/tx/${this.hash()}`
 			case "testnet-lightlink":
 				return `https://pegasus.lightlink.io/tx/${this.hash()}`
+			case "testnet-rari":
+				return `https://explorer.rarichain.org/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

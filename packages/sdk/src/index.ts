@@ -155,8 +155,8 @@ export function createRaribleSdk(
 		createEthereumSdk(
 			filterWallet(wallet, WalletType.ETHEREUM),
 			apis,
-			Blockchain,
-			blockchainConfig.lightlink,
+			Blockchain.RARI,
+			blockchainConfig.rari,
 			ethConfig
 		),
 	)
