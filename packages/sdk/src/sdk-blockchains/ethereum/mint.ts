@@ -16,6 +16,8 @@ import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/c
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
+import { extractBlockchain } from "@rarible/sdk-common"
+import { getBlockchainFromChainId } from "@rarible/protocol-ethereum-sdk/src/common"
 import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -131,6 +133,12 @@ export class EthereumMint {
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (data: MintRequest) => {
+					const requestBlockchain = extractBlockchain(collection.id)
+					const chainId = await this.wallet.ethereum.getChainId()
+					const walletBlockchain = getBlockchainFromChainId(chainId)
+					if (requestBlockchain !== walletBlockchain) {
+						throw new Error(`Request blockchain=${requestBlockchain}, but wallet blockchain=${walletBlockchain}`)
+					}
 					const mintResponse = await this.handleSubmit(
 						data,
 						nftCollection,
