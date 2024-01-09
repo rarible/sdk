@@ -25,12 +25,15 @@ export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain
 	return false
 }
 
-export const SupportedBlockchains = [
-	...EVMBlockchains,
+export const NonEVMBlockchains = [
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.SOLANA,
 	Blockchain.IMMUTABLEX,
+] as const
+export const SupportedBlockchains = [
+	...EVMBlockchains,
+	...NonEVMBlockchains,
 ] as const
 
 export type SupportedBlockchain = Extract<Blockchain, typeof SupportedBlockchains[number]>

@@ -2,6 +2,8 @@ import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type {
 	CryptopunkUnwrapRequest,
 	CryptopunkWrapRequest,
@@ -12,6 +14,7 @@ import type {
 export class EthereumCryptopunk {
 	constructor(
 		private readonly sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
 	) {}
 

@@ -6,6 +6,8 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
 import { isEVMBlockchain } from "@rarible/sdk-common"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { CreateCollectionResponse, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type {
@@ -20,6 +22,7 @@ export class EthereumCreateCollection {
 
 	constructor(
 		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
 	) {
 		this.blockchain = getEVMBlockchain(network)

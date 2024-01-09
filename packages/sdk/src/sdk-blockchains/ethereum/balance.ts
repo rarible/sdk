@@ -7,6 +7,8 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
 import { Action } from "@rarible/action"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { ConvertRequest } from "../../types/balances"
 import type {
 	DepositBiddingBalanceRequest,
@@ -22,6 +24,7 @@ import { convertEthereumContractAddress, convertToEthereumAddress, convertToEthe
 export class EthereumBalance {
 	constructor(
 		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private readonly apis: IApisSdk,
 		private network: EthereumNetwork,
 	) {

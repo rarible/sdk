@@ -14,6 +14,8 @@ import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rar
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -32,6 +34,7 @@ export class EthereumMint {
 
 	constructor(
 		private readonly sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private readonly apis: IApisSdk,
 		private network: EthereumNetwork,
 	) {

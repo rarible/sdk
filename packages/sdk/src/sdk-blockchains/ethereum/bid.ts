@@ -62,8 +62,8 @@ export class EthereumBid {
 
 	constructor(
 		private sdk: RaribleSdk,
-		private apis: IApisSdk,
 		private wallet: Maybe<EthereumWallet>,
+		private apis: IApisSdk,
 		private balanceService: EthereumBalance,
 		private network: EthereumNetwork,
 		private config?: IEthereumSdkConfig

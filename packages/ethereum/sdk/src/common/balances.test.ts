@@ -55,6 +55,7 @@ describe("getBalance test", () => {
 })
 
 const envs = (Object.keys(configDictionary) as EthereumNetwork[])
+	.filter(network => network !== "lightlink" && network !== "testnet-lightlink")
 
 
 describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {

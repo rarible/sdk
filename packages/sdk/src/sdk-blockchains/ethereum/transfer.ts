@@ -4,6 +4,8 @@ import { toBigNumber } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import { convertToEthereumAddress, isEVMBlockchain } from "./common"
@@ -11,6 +13,7 @@ import { convertToEthereumAddress, isEVMBlockchain } from "./common"
 export class EthereumTransfer {
 	constructor(
 		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
 	) {
 		this.transfer = this.transfer.bind(this)
