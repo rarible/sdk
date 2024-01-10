@@ -13,7 +13,6 @@ import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
 import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./utils/log-parser"
-import { getTransaction } from "./utils/get-transaction"
 
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
