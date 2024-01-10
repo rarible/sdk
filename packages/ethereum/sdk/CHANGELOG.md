@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
+
+
+### Features
+
+* **PLTF-106:** slow polygon transactions ([#587](https://github.com/rarible/sdk/issues/587)) ([5530259](https://github.com/rarible/sdk/commit/5530259ce814c2398f930a7d3c461a9f709f748c))
+
+
+
+
+
 ## [0.13.66](https://github.com/rarible/sdk/compare/v0.13.65...v0.13.66) (2024-01-09)
 
 
