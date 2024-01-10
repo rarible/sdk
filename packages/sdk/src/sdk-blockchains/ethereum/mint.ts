@@ -16,8 +16,9 @@ import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/c
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
+import { getCollectionId } from "@rarible/sdk"
+import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain } from "@rarible/sdk-common"
-import { getBlockchainFromChainId } from "@rarible/protocol-ethereum-sdk/src/common"
 import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { MintRequest } from "../../types/nft/mint/mint-request.type"
@@ -28,25 +29,27 @@ import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../t
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { EVMBlockchain } from "./common"
-import { isEVMBlockchain } from "./common"
-import { convertEthereumItemId, convertToEthereumAddress, getEVMBlockchain } from "./common"
+import { checkWalletBlockchain, getWalletNetwork, isEVMBlockchain } from "./common"
+import { convertEthereumItemId, convertToEthereumAddress } from "./common"
 
 export class EthereumMint {
-	private readonly blockchain: EVMBlockchain
-
 	constructor(
 		private readonly sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private readonly apis: IApisSdk,
 		private network: EthereumNetwork,
 	) {
-		this.blockchain = getEVMBlockchain(network)
 		this.prepare = this.prepare.bind(this)
 		this.mintBasic = this.mintBasic.bind(this)
 	}
 
-	handleSubmit(request: MintRequest, nftCollection: CommonNftCollection, nftTokenId?: NftTokenId) {
-		if (request.lazyMint && !this.isSupportsLazyMint(nftCollection)) {
+	handleSubmit(
+		blockchain: SupportedBlockchain,
+		request: MintRequest,
+		nftCollection: CommonNftCollection,
+		nftTokenId?: NftTokenId
+	) {
+		if (request.lazyMint && !this.isSupportsLazyMint(blockchain, nftCollection)) {
 			throw new LazyMintIsNotSupportedError(nftCollection.type)
 		}
 		const isLazy = request.lazyMint ?? false
@@ -115,8 +118,8 @@ export class EthereumMint {
 		}
 	}
 
-	isSupportsLazyMint(collection: CommonNftCollection): boolean {
-		switch (this.blockchain) {
+	isSupportsLazyMint(blockchain: SupportedBlockchain, collection: CommonNftCollection): boolean {
+		switch (blockchain) {
 			case Blockchain.ETHEREUM: return isErc721v3Collection(collection) || isErc1155v2Collection(collection)
 			default: return false
 		}
@@ -125,21 +128,17 @@ export class EthereumMint {
 	async prepare(request: PrepareMintRequest): Promise<PrepareMintResponse> {
 		const collection = await getCollection(this.apis.collection, request)
 		const nftCollection = toNftCollection(collection)
-
+		const blockchain = extractBlockchain(getCollectionId(request))
 		return {
 			multiple: collection.type === CollectionType.ERC1155,
 			supportsRoyalties: this.isSupportsRoyalties(nftCollection),
-			supportsLazyMint: this.isSupportsLazyMint(nftCollection),
+			supportsLazyMint: this.isSupportsLazyMint(blockchain, nftCollection),
 			submit: Action.create({
 				id: "mint" as const,
 				run: async (data: MintRequest) => {
-					const requestBlockchain = extractBlockchain(collection.id)
-					const chainId = await this.wallet.ethereum.getChainId()
-					const walletBlockchain = getBlockchainFromChainId(chainId)
-					if (requestBlockchain !== walletBlockchain) {
-						throw new Error(`Request blockchain=${requestBlockchain}, but wallet blockchain=${walletBlockchain}`)
-					}
+					await checkWalletBlockchain(this.wallet, blockchain)
 					const mintResponse = await this.handleSubmit(
+						blockchain,
 						data,
 						nftCollection,
 						toNftTokenId(request.tokenId),
@@ -149,13 +148,16 @@ export class EthereumMint {
 						case MintResponseTypeEnum.ON_CHAIN:
 							return {
 								type: MintType.ON_CHAIN,
-								itemId: convertEthereumItemId(mintResponse.itemId, this.blockchain),
-								transaction: new BlockchainEthereumTransaction(mintResponse.transaction, this.network),
+								itemId: convertEthereumItemId(mintResponse.itemId, blockchain as EVMBlockchain),
+								transaction: new BlockchainEthereumTransaction(
+									mintResponse.transaction,
+									await getWalletNetwork(this.wallet)
+								),
 							}
 						case MintResponseTypeEnum.OFF_CHAIN:
 							return {
 								type: MintType.OFF_CHAIN,
-								itemId: convertEthereumItemId(mintResponse.itemId, this.blockchain),
+								itemId: convertEthereumItemId(mintResponse.itemId, blockchain as EVMBlockchain),
 							}
 						default:
 							throw new Error("Unrecognized mint response type")

@@ -24,6 +24,14 @@ import type { EthereumWallet } from "@rarible/sdk-wallet/build"
 import type { EVMBlockchain } from "@rarible/sdk-common/build"
 import { WalletIsUndefinedError, EVMBlockchains, isEVMBlockchain } from "@rarible/sdk-common/build"
 import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
+import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/src/common"
+import { WrongNetworkWarning } from "@rarible/protocol-ethereum-sdk/src/order/check-chain-id"
+import type { Collection, Order as UnionOrder } from "@rarible/api-client/build/models"
+import type { OrderData } from "@rarible/api-client/build/models/OrderData"
+import type { EthErc20AssetType } from "@rarible/api-client/build/models/AssetType"
+import type { Payout } from "@rarible/api-client/build/models/Payout"
+import type { BlockchainIsh, SupportedBlockchain } from "@rarible/sdk-common"
+import { extractBlockchain } from "@rarible/sdk-common"
 import type { OrderRequest, UnionPart } from "../../../types/order/common"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
@@ -131,7 +139,7 @@ export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Par
 	})) || []
 }
 
-export function getOriginFeesSum(originFees: Array<Part>): number {
+export function getOriginFeesSum(originFees: Array<Part | Payout>): number {
 	return originFees.reduce((prev, curr) => prev + curr.value, 0)
 }
 
@@ -174,6 +182,15 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 	const blockchain = getBlockchainBySDKNetwork(network)
 	if (!isEVMBlockchain(blockchain)) {
 		throw new Error(`Network ${network} is not EVM compatible`)
+	}
+	return blockchain
+}
+
+
+export function extractEVMBlockchain(value: BlockchainIsh): EVMBlockchain {
+	const blockchain = extractBlockchain(value)
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error(`Blockchain ${blockchain} is not EVM compatible`)
 	}
 	return blockchain
 }
@@ -296,6 +313,36 @@ export function getAssetTypeFromFillRequest(
 export function assertWallet(wallet: Maybe<EthereumWallet>) {
 	if (!wallet) throw new WalletIsUndefinedError()
 	return wallet
+}
+
+export async function getWalletBlockchain(wallet: Maybe<EthereumWallet>) {
+	return getBlockchainFromChainId(await assertWallet(wallet).ethereum.getChainId())
+}
+
+export async function getWalletNetwork(wallet: Maybe<EthereumWallet>) {
+	return getNetworkFromChainId(await assertWallet(wallet).ethereum.getChainId())
+}
+export async function checkWalletBlockchain(wallet: Maybe<EthereumWallet>, blockchain: SupportedBlockchain) {
+	const walletChainId = await assertWallet(wallet).ethereum.getChainId()
+	if (getBlockchainFromChainId(walletChainId) !== blockchain) {
+		throw new Error("Change network of your wallet")
+	}
+}
+
+const RARIBLE_ORDER_TYPES: OrderData["@type"][] = [
+	"ETH_RARIBLE_V1",
+	"ETH_RARIBLE_V2",
+	"ETH_RARIBLE_V2_2",
+	"ETH_RARIBLE_V2_DATA_V3_SELL",
+	"ETH_RARIBLE_V2_DATA_V3_BUY",
+]
+export function isRaribleOrder(data: OrderData) {
+	return RARIBLE_ORDER_TYPES.includes(data["@type"])
+}
+
+export function isWETH(type: AssetType, wethContract: Address): type is EthErc20AssetType {
+	return type["@type"] === "ERC20"
+    && convertToEthereumAddress(type.contract).toLowerCase() === wethContract.toLowerCase()
 }
 
 export * from "./validators"

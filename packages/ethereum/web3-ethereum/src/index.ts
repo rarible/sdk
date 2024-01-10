@@ -306,7 +306,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 
 				return new Web3Transaction(
 					promises.receipt,
-					toWord(transaction.hash),
+					toWord(await promises.hash),
 					toBinary(enhancedData),
 					transaction.nonce,
 					from,

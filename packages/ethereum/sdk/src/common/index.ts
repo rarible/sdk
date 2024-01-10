@@ -50,7 +50,3 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 		default: throw new Error(`Unrecognized ethereum network ${network}`)
 	}
 }
-
-export function getAPIsByNetwork() {
-
-}

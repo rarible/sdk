@@ -5,16 +5,19 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
+import { extractBlockchain } from "@rarible/sdk-common"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { BurnResponse } from "../../types/nft/burn/domain"
-import { getEthereumItemId, toEthereumParts } from "./common"
+import { checkWalletBlockchain, getEthereumItemId, getWalletNetwork, toEthereumParts } from "./common"
 
 export class EthereumBurn {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private network: EthereumNetwork,
+		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 	) {
 		this.burn = this.burn.bind(this)
 		this.burnBasic = this.burnBasic.bind(this)
@@ -23,10 +26,12 @@ export class EthereumBurn {
 	async burn(prepare: PrepareBurnRequest) {
 		const { contract, tokenId } = getEthereumItemId(prepare.itemId)
 
-		const item = await this.sdk.apis.nftItem.getNftItemById({
+		const blockchain = extractBlockchain(prepare.itemId)
+		const ethApi = await this.getEthereumApis()
+		const item = await ethApi.nftItem.getNftItemById({
 			itemId: `${contract}:${tokenId}`,
 		})
-		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+		const collection = await ethApi.nftCollection.getNftCollectionById({
 			collection: item.contract,
 		})
 
@@ -36,6 +41,7 @@ export class EthereumBurn {
 			submit: Action.create({
 				id: "burn" as const,
 				run: async (request: BurnRequest) => {
+					await checkWalletBlockchain(this.wallet, blockchain)
 					const amount = request?.amount !== undefined ? toBigNumber(request.amount.toFixed()) : undefined
 
 					const tx = await this.sdk.nft.burn(
@@ -49,7 +55,7 @@ export class EthereumBurn {
 						},
 					)
 
-					return tx && new BlockchainEthereumTransaction(tx, this.network)
+					return tx && new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
 				},
 			}),
 		}

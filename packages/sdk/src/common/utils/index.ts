@@ -3,8 +3,18 @@ import type { ContractAddress } from "@rarible/types"
 import type { ItemId } from "@rarible/api-client"
 import { toCollectionId } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
+import type {
+	BlockchainIsh,
+	NonEVMBlockchains,
+	SupportedBlockchain,
+} from "@rarible/sdk-common"
+import {
+	extractBlockchain,
+	isEVMBlockchain,
+} from "@rarible/sdk-common"
 import type { PrepareFillRequest } from "../../types/order/fill/domain"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
+import type { PrepareBidRequest } from "../../types/order/bid/domain"
 
 export function getOrderIdFromFillRequest(req?: PrepareFillRequest): OrderId | undefined {
 	if (!req) return undefined
@@ -57,4 +67,26 @@ export function getContractFromMintRequest(request: HasCollection | HasCollectio
 	if ("collection" in request) return request.collection.id
 	if ("collectionId" in request) return request.collectionId
 	throw new Error("Wrong request: collection or collectionId has not been found")
+}
+
+export function getBidEntity(request: PrepareBidRequest) {
+	if ("itemId" in request) {
+		return request.itemId
+	} else if ("collectionId" in request) {
+		return request.collectionId
+	} else {
+		throw new Error("Bit request should contains itemId or collectionId")
+	}
+}
+
+export type UnionSupportedBlockchain = "EVM" | typeof NonEVMBlockchains[number]
+export function extractUnionSupportedBlockchain(value: BlockchainIsh): UnionSupportedBlockchain {
+	const blockchain = extractBlockchain(value)
+	return convertSupportedBlockchainToUnion(blockchain)
+}
+export function convertSupportedBlockchainToUnion(blockchain: SupportedBlockchain): UnionSupportedBlockchain {
+	if (isEVMBlockchain(blockchain)) {
+		return "EVM"
+	}
+	return blockchain
 }

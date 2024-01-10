@@ -5,6 +5,8 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
 import { toBinary } from "@rarible/types"
+import { getApis } from "@rarible/protocol-ethereum-sdk/src/common/apis"
+import type { IRaribleEthereumSdkConfig } from "@rarible/protocol-ethereum-sdk/src/types"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -40,7 +42,7 @@ export function createEthereumSdk(
 		apiKey?: string
 	} & IEthereumSdkConfig
 ): IRaribleInternalSdk {
-	const sdk = createRaribleSdk(wallet?.ethereum, network, {
+	const sdkConfig: IRaribleEthereumSdkConfig = {
 		apiClientParams: {
 			...(config?.params || {}),
 			middleware: [
@@ -55,17 +57,22 @@ export function createEthereumSdk(
 		polygon: config[Blockchain.POLYGON],
 		marketplaceMarker: config.marketplaceMarker ? toBinary(config.marketplaceMarker) : undefined,
 		apiKey: config.apiKey,
-	})
+	}
+	const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
 
-	const sellService = new EthereumSell(sdk, wallet, network, config)
+	const getEthereumApis = async () => {
+		return getApis(wallet?.ethereum, network, sdkConfig)
+	}
+
+	const sellService = new EthereumSell(sdk, wallet, network, getEthereumApis, config)
 	const balanceService = new EthereumBalance(sdk, wallet, apis, network)
-	const bidService = new EthereumBid(sdk, wallet, apis, balanceService, network, config)
+	const bidService = new EthereumBid(sdk, wallet, apis, balanceService, network, getEthereumApis, config)
 	const mintService = new EthereumMint(sdk, wallet, apis, network)
 	const fillService = new EthereumFill(sdk, wallet, network, config)
 	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, wallet, network)
 	const cryptopunkService = new EthereumCryptopunk(sdk, wallet, network)
 	const transferService = new EthereumTransfer(sdk, wallet, network)
-	const burnService = new EthereumBurn(sdk, wallet, network)
+	const burnService = new EthereumBurn(sdk, wallet, network, getEthereumApis)
 	const cancelService = new EthereumCancel(sdk, wallet, network)
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)

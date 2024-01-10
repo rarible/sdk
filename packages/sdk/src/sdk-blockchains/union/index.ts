@@ -4,12 +4,8 @@ import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { Action } from "@rarible/action"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type {
-	NonEVMBlockchains,
-
-	BlockchainIsh } from "@rarible/sdk-common"
 import {
-	extractBlockchainFromAssetType, isEVMBlockchain,
+	extractBlockchainFromAssetType,
 	validateBlockchain,
 } from "@rarible/sdk-common"
 import { extractBlockchain } from "@rarible/sdk-common"
@@ -26,7 +22,6 @@ import type { GenerateTokenIdRequest, TokenId } from "../../types/nft/generate-t
 import type { BatchFillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import type { CanTransferResult, IRestrictionSdk } from "../../types/nft/restriction/domain"
 import type { PreprocessMetaRequest, PreprocessMetaResponse } from "../../types/nft/mint/preprocess-meta"
-import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import { Middlewarer } from "../../common/middleware/middleware"
 import type {
 	ConvertRequest,
@@ -59,6 +54,13 @@ import type {
 	IFlowSetupMattelCollections,
 	IFlowCheckInitMattelCollections,
 } from "../../types/nft/collection"
+import type {
+	UnionSupportedBlockchain } from "../../common/utils"
+import {
+	convertSupportedBlockchainToUnion,
+	extractUnionSupportedBlockchain,
+	getBidEntity,
+} from "../../common/utils"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -100,18 +102,6 @@ export function createUnionSdk(
 		ethereum: new UnionEthereumSpecificSdk(evm.ethereum!),
 		flow: new UnionFlowSpecificSdk(flow.flow!),
 	}
-}
-
-export type UnionSupportedBlockchain = "EVM" | typeof NonEVMBlockchains[number]
-function extractUnionSupportedBlockchain(value: BlockchainIsh): UnionSupportedBlockchain {
-	const blockchain = extractBlockchain(value)
-	return convertSupportedBlockchainToUnion(blockchain)
-}
-function convertSupportedBlockchainToUnion(blockchain: SupportedBlockchain): UnionSupportedBlockchain {
-	if (isEVMBlockchain(blockchain)) {
-		return "EVM"
-	}
-	return blockchain
 }
 
 class UnionOrderSdk implements IOrderInternalSdk {
@@ -330,16 +320,6 @@ class UnionFlowSpecificSdk implements IFlowSdk {
   checkInitMattelCollections: IFlowCheckInitMattelCollections = this.flowSdk.checkInitMattelCollections
 }
 
-
-function getBidEntity(request: PrepareBidRequest) {
-	if ("itemId" in request) {
-		return request.itemId
-	} else if ("collectionId" in request) {
-		return request.collectionId
-	} else {
-		throw new Error("Bit request should contains itemId or collectionId")
-	}
-}
 
 function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency): SupportedBlockchain {
 	if (isAssetType(currency)) {
