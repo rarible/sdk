@@ -141,7 +141,6 @@ function getTxData(tx: EthereumTransaction) {
 	return {
 		hash: tx.hash,
 		data: tx.data,
-		nonce: tx.nonce,
 		from: tx.from,
 		to: tx.to,
 	}

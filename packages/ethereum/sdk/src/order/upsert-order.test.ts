@@ -170,7 +170,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 
 	})
 

@@ -13,4 +13,5 @@ export const prodConfig: RaribleSdkConfig = {
 	zksync: "zksync",
 	chiliz: "chiliz",
 	lightlink: "lightlink",
+	rari: "testnet-rari",
 }

@@ -69,6 +69,7 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 		case Blockchain.ARBITRUM:
 		case Blockchain.ZKSYNC:
 		case Blockchain.CHILIZ:
+		case Blockchain.RARI:
 			if (type === "TOKEN") {
 				return getERC20(contract)
 			}
@@ -264,8 +265,8 @@ export function getCurrencyOptions(
 					 return res
 				}
 				return []
-			case Blockchain.CHILIZ:
-				 if (currency.type === "ERC20") {
+			case Blockchain.CHILIZ: {
+				if (currency.type === "ERC20") {
 					const res: CurrencyOption[] = []
 					switch (environment) {
 						case"testnet":
@@ -286,9 +287,28 @@ export function getCurrencyOptions(
 							break
 						default:
 					}
-					 return res
+					return res
 				}
 				return []
+			}
+			case Blockchain.RARI: {
+				if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case"testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.RARI,
+								contract: "RARI:0x6df6A970A5e92F93C65BD81dFf2D2ad4ab27C9CD",
+							})
+							break
+						default:
+					}
+					return res
+				}
+				return []
+			}
 			case Blockchain.IMMUTABLEX:
 				if (currency.type === "NATIVE") {
 					return { type: "NATIVE", label: "ETH", blockchain: Blockchain.IMMUTABLEX }

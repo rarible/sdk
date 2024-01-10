@@ -42,7 +42,7 @@ export class SolanaCollection {
 
 			try {
 				// calling this to let backend know what mint is actually created as a collection
-				await this.apis.collection.refreshCollectionMeta({
+				await this.apis.collection.refreshCollectionItemsMeta({
 					collection: collectionAddress,
 				})
 			} catch (e) {

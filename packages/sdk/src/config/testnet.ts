@@ -13,4 +13,5 @@ export const testnetConfig: RaribleSdkConfig = {
 	zksync: "testnet-zksync",
 	chiliz: "testnet-chiliz",
 	lightlink: "testnet-lightlink",
+	rari: "testnet-rari",
 }

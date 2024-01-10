@@ -34,7 +34,6 @@ export interface EthereumTransaction {
 	from: Address
 	to?: Address
 	data: Binary
-	nonce: number
 	wait(): Promise<EthereumTransactionReceipt>
 	getEvents(): Promise<EthereumTransactionEvent[]>
 }
