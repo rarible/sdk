@@ -103,7 +103,6 @@ describe("get transaction receipt events", () => {
 			null as any,
 			null as any,
 			null as any,
-			null as any,
 			toAddress(seaportAddr),
 			SeaportABI,
 		)
