@@ -302,13 +302,11 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				}
 				const promiEvent = this.config.web3.eth.sendTransaction(transactionOptions)
 				const promises = toPromises(promiEvent)
-				const transaction = await getTransaction(await promises.hash, this.config)
 
 				return new Web3Transaction(
 					promises.receipt,
-					toWord(transaction.hash),
+					toWord(await promises.hash),
 					toBinary(enhancedData),
-					transaction.nonce,
 					from,
 					this.contractAddress,
 					this.contract.options.jsonInterface
@@ -322,12 +320,10 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			}
 			const promiEvent: PromiEvent<Contract> = this.sendMethod.send(sendMethodConfig)
 			const promises = toPromises(promiEvent)
-			const transaction = await getTransaction(await promises.hash, this.config)
 			return new Web3Transaction(
 				promises.receipt,
-				toWord(transaction.hash),
+				toWord(await promises.hash),
 				toBinary(data),
-				transaction.nonce,
 				from,
 				this.contractAddress
 			)
@@ -385,7 +381,6 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 		private readonly receipt: Promise<TransactionReceipt>,
 		public readonly hash: Word,
 		public readonly data: Binary,
-		public readonly nonce: number,
 		public readonly from: Address,
 		public readonly to?: Address,
 		private readonly contractAbi?: AbiItem[],
@@ -402,7 +397,6 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 				data: {
 					hash: this.hash,
 					data: this.data,
-					nonce: this.nonce,
 					from: this.from,
 					to: this.to,
 				},
