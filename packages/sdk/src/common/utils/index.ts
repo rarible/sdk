@@ -79,6 +79,14 @@ export function getBidEntity(request: PrepareBidRequest) {
 	}
 }
 
+export function getOrderId(req: PrepareFillRequest) {
+	if ("orderId" in req) {
+		return req.orderId
+	} else {
+		return req.order.id
+	}
+}
+
 export type UnionSupportedBlockchain = "EVM" | typeof NonEVMBlockchains[number]
 export function extractUnionSupportedBlockchain(value: BlockchainIsh): UnionSupportedBlockchain {
 	const blockchain = extractBlockchain(value)

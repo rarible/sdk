@@ -1,4 +1,4 @@
-import { configDictionary, getEthereumConfig } from "../config"
+import { configDictionary } from "../config"
 import type { EthereumNetwork } from "../types"
 import { getBaseFee } from "./get-base-fee"
 import { createEthereumApis, getApis as getApisTemplate } from "./apis"

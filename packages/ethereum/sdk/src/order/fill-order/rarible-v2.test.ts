@@ -24,7 +24,7 @@ import { signOrder } from "../sign-order"
 import type { SimpleOrder } from "../types"
 import { id } from "../../common/id"
 import { approveErc20 } from "../approve-erc20"
-import { createEthereumApis, getApis as getApisTemplate } from "../../common/apis"
+import { getApis as getApisTemplate } from "../../common/apis"
 import { createRaribleSdk } from "../../index"
 import { FILL_CALLDATA_TAG } from "../../config/common"
 import type { EthereumNetwork } from "../../types"
@@ -50,8 +50,6 @@ describe("buy & acceptBid orders", () => {
 	const getConfig = async () => config
 	const getApisBuyer = getApisTemplate.bind(null, buyerEthereum, env)
 	const getApisSeller = getApisTemplate.bind(null, sellerEthereum, env)
-
-	const apis = createEthereumApis(env)
 
 	const send = getSimpleSendWithInjects()
 	const getBaseOrderFee = async () => 100

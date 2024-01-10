@@ -20,7 +20,7 @@ import { getEthereumConfig } from "../../config"
 import type { SimpleOrder } from "../types"
 import { id } from "../../common/id"
 import { retry } from "../../common/retry"
-import { createEthereumApis, getApis as getApisTemplate } from "../../common/apis"
+import { getApis as getApisTemplate } from "../../common/apis"
 import { OrderFiller } from "./index"
 
 describe.skip("fillOrder", () => {

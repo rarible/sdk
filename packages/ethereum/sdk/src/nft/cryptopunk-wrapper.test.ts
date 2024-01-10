@@ -6,16 +6,13 @@ import {
 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
-import { getApiConfig } from "../config/api-config"
 import { getEthereumConfig } from "../config"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./cryptopunk-wrapper"
 
 describe.skip("wrap crypto punk", () => {
 	const { provider, addresses } = createGanacheProvider()
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
 
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config

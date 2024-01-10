@@ -1,9 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { getSendWithInjects } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
 import { getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
@@ -17,8 +15,6 @@ describe("deploy erc-721 token test", () => {
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
-
-	const configuration = new Configuration(getApiConfig(env))
 
 	const send = getSendWithInjects()
 	const deployErc721 = new DeployErc721(ethereum1, send, getConfig)

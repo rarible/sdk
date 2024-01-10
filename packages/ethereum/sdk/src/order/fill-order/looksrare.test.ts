@@ -8,7 +8,6 @@ import { ethers } from "ethers"
 import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
-import { checkChainId } from "../check-chain-id"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { createErc1155V2Collection, createErc721V3Collection } from "../../common/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
@@ -33,11 +32,6 @@ describe.skip("looksrare fill", () => {
 	const web3Seller = new Web3(providerSeller as any)
 	const ethereumSeller = new Web3Ethereum({
 		web3: web3Seller,
-		gas: 3000000,
-	})
-	const web3 = new Web3(providerBuyer as any)
-	const ethereum = new Web3Ethereum({
-		web3,
 		gas: 3000000,
 	})
 

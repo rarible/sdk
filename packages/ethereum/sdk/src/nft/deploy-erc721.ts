@@ -4,7 +4,6 @@ import { randomWord } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SendFunction } from "../common/send-transaction"
 import type { GetConfigByChainId } from "../config"
-import { checkChainId } from "../order/check-chain-id"
 import { createErc721FactoryContract } from "./contracts/erc721/deploy/rarible-factory"
 import { createErc721UserFactoryContract } from "./contracts/erc721/deploy/rarible-user-factory"
 

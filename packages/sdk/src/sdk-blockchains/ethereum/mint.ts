@@ -13,10 +13,8 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import { getCollectionId } from "@rarible/sdk"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type { PrepareMintResponse, OffChainMintResponse, OnChainMintResponse } from "../../types/nft/mint/prepare"
@@ -28,6 +26,7 @@ import type { IApisSdk } from "../../domain"
 import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
+import { getCollectionId } from "../../common/get-collection-id"
 import type { EVMBlockchain } from "./common"
 import { checkWalletBlockchain, getWalletNetwork, isEVMBlockchain } from "./common"
 import { convertEthereumItemId, convertToEthereumAddress } from "./common"
@@ -37,7 +36,6 @@ export class EthereumMint {
 		private readonly sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
 		private readonly apis: IApisSdk,
-		private network: EthereumNetwork,
 	) {
 		this.prepare = this.prepare.bind(this)
 		this.mintBasic = this.mintBasic.bind(this)

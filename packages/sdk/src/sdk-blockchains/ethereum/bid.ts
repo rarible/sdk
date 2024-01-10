@@ -1,5 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { Address, ContractAddress } from "@rarible/types"
+import type { Address } from "@rarible/types"
 import { toBinary, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
@@ -8,7 +8,6 @@ import { Blockchain } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { NftItem } from "@rarible/ethereum-api-client/build/models"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import { Action } from "@rarible/action"
@@ -64,7 +63,6 @@ export class EthereumBid {
 		private wallet: Maybe<EthereumWallet>,
 		private apis: IApisSdk,
 		private balanceService: EthereumBalance,
-		private network: EthereumNetwork,
 		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 		private config?: IEthereumSdkConfig
 	) {
@@ -183,7 +181,7 @@ export class EthereumBid {
 		let contractAddress: Address | undefined
 		let item: NftItem | undefined
 		let takeAssetType: AssetTypeRequest
-		let blockchain: EVMBlockchain | undefined
+		let blockchain: EVMBlockchain
 
 		const ethApi = await this.getEthereumApis()
 		if ("itemId" in prepare) {
@@ -277,7 +275,7 @@ export class EthereumBid {
 		let contractAddress: Address | undefined
 		let item: NftItem | undefined
 		let takeAssetType: AssetTypeRequest
-		let blockchain: EVMBlockchain | undefined
+		let blockchain: EVMBlockchain
 
 		if ("itemId" in prepare) {
 			blockchain = extractEVMBlockchain(prepare.itemId)
@@ -331,7 +329,7 @@ export class EthereumBid {
 			})
 			.after(async (res) => {
 				await res.approveTx?.wait()
-				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+				return common.convertEthereumOrderHash(res.order.hash, blockchain)
 			})
 
 		const submit = Action.create({
@@ -464,7 +462,7 @@ export class EthereumBid {
 			})
 			.after(async (res) => {
 				await res.approveTx?.wait()
-				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+				return common.convertEthereumOrderHash(res.order.hash, blockchain)
 			})
 
 		const actionWithConvert = Action

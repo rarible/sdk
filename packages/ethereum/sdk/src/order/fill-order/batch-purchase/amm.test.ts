@@ -11,7 +11,6 @@ import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../../types"
 import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
-import { checkChainId } from "../../check-chain-id"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 

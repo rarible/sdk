@@ -6,7 +6,7 @@ import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainEthereumTransaction<TransactionResult = undefined> implements
 IBlockchainTransaction<Blockchain, TransactionResult> {
-	blockchain: Blockchain
+	public blockchain: Blockchain
 
 	constructor(
 		public transaction: EthereumTransaction,

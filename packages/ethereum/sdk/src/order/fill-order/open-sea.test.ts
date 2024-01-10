@@ -35,8 +35,7 @@ import { createOpenseaProxyRegistryEthContract } from "../contracts/proxy-regist
 import { createOpenseaContract } from "../contracts/exchange-opensea-v1"
 import { cancel } from "../cancel"
 import type { SimpleOpenSeaV1Order } from "../types"
-import { createEthereumApis, getApis, getApis as getApisTemplate } from "../../common/apis"
-import { checkChainId } from "../check-chain-id"
+import { getApis as getApisTemplate } from "../../common/apis"
 import { createRaribleSdk } from "../../index"
 import { createErc721V3Collection } from "../../common/mint"
 import type { ERC721RequestV3 } from "../../nft/mint"
@@ -70,8 +69,6 @@ describe.skip("fillOrder: Opensea orders", function () {
 		},
 	}
 	const getConfig = async () => config
-	const apis = createEthereumApis(env)
-
 	const getBaseOrderFee = async () => 0
 
 	const send1 = getSimpleSendWithInjects()

@@ -8,7 +8,7 @@ import { deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
 import { delay, retry } from "../common/retry"
 import { getSimpleSendWithInjects, sentTx, sentTxConfirm } from "../common/send-transaction"
-import { createEthereumApis, getApis as getApisTemplate } from "../common/apis"
+import { getApis as getApisTemplate } from "../common/apis"
 import { createRaribleSdk } from "../index"
 import { createErc721V3Collection } from "../common/mint"
 import { MintResponseTypeEnum } from "../nft/mint"
@@ -20,7 +20,6 @@ import { signOrder } from "./sign-order"
 import { UpsertOrder } from "./upsert-order"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { OrderFiller } from "./fill-order"
-import { checkChainId } from "./check-chain-id"
 import { ItemType } from "./fill-order/seaport-utils/constants"
 import { createSeaportOrder } from "./test/order-opensea"
 import { awaitOrder } from "./test/await-order"
@@ -38,8 +37,6 @@ describe("cancel order", () => {
 	const getApis = getApisTemplate.bind(null, ethereum, env)
 
 	const sign = signOrder.bind(null, ethereum, getConfig)
-	const apis = createEthereumApis(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
 
 	const getBaseOrderFee = async () => 0
 	const send = getSimpleSendWithInjects()

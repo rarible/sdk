@@ -59,7 +59,7 @@ import type {
 import {
 	convertSupportedBlockchainToUnion,
 	extractUnionSupportedBlockchain,
-	getBidEntity,
+	getBidEntity, getOrderId,
 } from "../../common/utils"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
@@ -179,14 +179,6 @@ class UnionOrderSdk implements IOrderInternalSdk {
   cancel(request: CancelOrderRequest): Promise<IBlockchainTransaction> {
   	return this.instances[extractUnionSupportedBlockchain(request.orderId)].cancel(request)
   }
-}
-
-function getOrderId(req: PrepareFillRequest) {
-	if ("orderId" in req) {
-		return req.orderId
-	} else {
-		return req.order.id
-	}
 }
 
 class UnionNftSdk implements Omit<INftSdk, "mintAndSell"> {

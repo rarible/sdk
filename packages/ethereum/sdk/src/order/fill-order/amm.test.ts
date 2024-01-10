@@ -6,7 +6,6 @@ import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
-import { checkChainId } from "../check-chain-id"
 import { retry } from "../../common/retry"
 import type { SimpleOrder } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
@@ -24,8 +23,6 @@ describe.skip("amm", () => {
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
-	const getConfig = async () => config
-
 	const sellerWeb3 = new Web3Ethereum({ web3: new Web3(providerSeller as any), gas: 3000000 })
 	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
 	const sendBuyer = getSimpleSendWithInjects()

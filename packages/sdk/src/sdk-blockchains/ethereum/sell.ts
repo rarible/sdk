@@ -1,6 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toWord } from "@rarible/types"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { OrderId } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
@@ -14,7 +13,6 @@ import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../t
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
-import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
 	checkWalletBlockchain,
@@ -31,7 +29,6 @@ export class EthereumSell {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private network: EthereumNetwork,
 		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 		private config?: IEthereumSdkConfig
 	) {

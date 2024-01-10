@@ -1,13 +1,9 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber } from "@rarible/types"
-import {
-	Configuration,
-} from "@rarible/ethereum-api-client"
 import { BigNumber, toBn } from "@rarible/utils"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
 import { createTestProviders } from "../common/test/create-test-providers"
 import {
 	createErc1155V1Collection,

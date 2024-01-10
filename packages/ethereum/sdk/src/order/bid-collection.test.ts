@@ -1,9 +1,4 @@
 import { toAddress, ZERO_WORD } from "@rarible/types"
-import {
-	Configuration, GatewayControllerApi,
-	NftCollectionControllerApi, NftLazyMintControllerApi,
-	OrderControllerApi,
-} from "@rarible/ethereum-api-client"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import Web3 from "web3"
@@ -12,7 +7,7 @@ import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
 import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
 import { delay } from "../common/retry"
-import { createEthereumApis, getApis as getApisTemplate } from "../common/apis"
+import { getApis as getApisTemplate } from "../common/apis"
 import { createErc721V3Collection } from "../common/mint"
 import type { ERC721RequestV3, MintOffChainResponse } from "../nft/mint"
 import { mint as mintTemplate } from "../nft/mint"

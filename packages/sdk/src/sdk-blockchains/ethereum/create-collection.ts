@@ -3,29 +3,25 @@ import type { Address, ContractAddress, UnionAddress } from "@rarible/types"
 import { toAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
 import { isEVMBlockchain } from "@rarible/sdk-common"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
+import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
 import type { CreateCollectionResponse, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type {
 	EthereumCreatePrivateCollectionSimplified,
 	EthereumCreatePublicCollectionSimplified,
 } from "../../types/nft/deploy/simplified"
-import type { CreateEthereumCollectionResponse, EVMBlockchain } from "./common"
-import { convertEthereumContractAddress, getEVMBlockchain } from "./common"
+import type { CreateEthereumCollectionResponse } from "./common"
+import { assertWallet, convertEthereumContractAddress } from "./common"
 
 export class EthereumCreateCollection {
-	private readonly blockchain: EVMBlockchain
-
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private network: EthereumNetwork,
 	) {
-		this.blockchain = getEVMBlockchain(network)
 		this.createCollectionSimplified = this.createCollectionSimplified.bind(this)
 	}
 
@@ -42,12 +38,15 @@ export class EthereumCreateCollection {
 		})
 	}
 
-	private convertResponse(
+	private async convertResponse(
 		response: { tx: EthereumTransaction, address: Address },
-	): { tx: BlockchainEthereumTransaction, address: ContractAddress } {
+	): Promise<{ tx: BlockchainEthereumTransaction, address: ContractAddress }> {
+		const chainId = await assertWallet(this.wallet).ethereum.getChainId()
+		const network = await getNetworkFromChainId(chainId)
+		const blockchain = await getBlockchainFromChainId(chainId)
 		return {
-			tx: new BlockchainEthereumTransaction(response.tx, this.network),
-			address: convertEthereumContractAddress(response.address, this.blockchain),
+			tx: new BlockchainEthereumTransaction(response.tx, network),
+			address: convertEthereumContractAddress(response.address, blockchain),
 		}
 	}
 

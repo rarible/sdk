@@ -4,7 +4,6 @@ import type {
 	CryptoPunksAssetType,
 	Erc1155AssetType,
 	Erc721AssetType,
-	NftCollectionControllerApi,
 } from "@rarible/ethereum-api-client"
 import type { Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Erc1155LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"

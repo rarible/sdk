@@ -6,7 +6,6 @@ import type {
 	Erc20AssetType,
 	EthAssetType,
 	Order,
-	OrderControllerApi,
 	OrderForm,
 	Part,
 	RaribleV2OrderForm,
@@ -26,7 +25,6 @@ import { getRequiredWallet } from "../common/get-required-wallet"
 import { waitTx } from "../common/wait-tx"
 import { checkMinPaymentValue } from "../common/check-min-payment-value"
 import { ETHER_IN_WEI } from "../common"
-import type { EthereumConfig } from "../config/type"
 import type { GetConfigByChainId } from "../config"
 import type { RaribleEthereumApis } from "../common/apis"
 import type { SimpleCryptoPunkOrder, SimpleOrder } from "./types"

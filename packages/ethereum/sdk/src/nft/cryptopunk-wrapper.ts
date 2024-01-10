@@ -1,11 +1,9 @@
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/types"
 import { ZERO_ADDRESS } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
 import type { GetConfigByChainId } from "../config"
-import { getNetworkConfigByChainId } from "../config"
 import { createCryptoPunksWrapperContract } from "./contracts/cryptoPunks/cryptopunk-wrapper"
 import { createCryptoPunksMarketContract } from "./contracts/cryptoPunks"
 

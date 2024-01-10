@@ -10,8 +10,6 @@ import { getRequiredWallet } from "../common/get-required-wallet"
 import { compareCaseInsensitive } from "../common/compare-case-insensitive"
 import type { GetConfigByChainId } from "../config"
 import { createWethContract } from "./contracts/weth"
-import { checkChainId } from "./check-chain-id"
-
 export class ConvertWeth {
 	getWethContractAddress = async () => {
 		const config = await this.getConfig()

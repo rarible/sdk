@@ -2,9 +2,7 @@ import type {
 	Address,
 	BigNumber,
 	Binary,
-	NftCollectionControllerApi,
 	NftItem,
-	NftLazyMintControllerApi,
 	NftTokenId,
 	Part,
 } from "@rarible/ethereum-api-client"

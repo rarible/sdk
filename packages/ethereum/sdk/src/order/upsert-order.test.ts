@@ -1,10 +1,8 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { Configuration, OrderControllerApi } from "@rarible/ethereum-api-client"
 import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
-import { getApiConfig } from "../config/api-config"
 import { createTestProviders } from "../common/test/create-test-providers"
 import { createEthereumApis, getApis as getApisTemplate } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
@@ -13,7 +11,6 @@ import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
 import { OrderFiller } from "./fill-order"
-import { checkChainId } from "./check-chain-id"
 
 const { provider, wallet } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
 const { providers, web3 } = createTestProviders(provider, wallet)

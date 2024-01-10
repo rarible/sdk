@@ -7,8 +7,6 @@ import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { ConvertWeth } from "./convert-weth"
 import { createWethContract } from "./contracts/weth"
-import { checkChainId } from "./check-chain-id"
-
 describe("convert weth test", () => {
 	const { addresses, provider } = createGanacheProvider()
 	const [sender1Address] = addresses
