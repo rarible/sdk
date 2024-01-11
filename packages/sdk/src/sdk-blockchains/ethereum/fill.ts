@@ -23,7 +23,6 @@ import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { extractBlockchain } from "@rarible/sdk-common"
-import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
 import type {
 	BatchFillRequest,
 	FillRequest,
