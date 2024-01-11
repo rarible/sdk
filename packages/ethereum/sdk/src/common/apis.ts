@@ -1,7 +1,11 @@
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import { NetworkError } from "@rarible/logger/build"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { Ethereum } from "@rarible/ethereum-provider"
 import { getApiConfig } from "../config/api-config"
 import type { EthereumNetwork } from "../types"
+import type { IRaribleEthereumSdkConfig } from "../types"
+import { getNetworkFromChainId } from "./index"
 
 export type RaribleEthereumApis = {
 	nftItem: EthereumApiClient.NftItemControllerApi;
@@ -48,4 +52,22 @@ export function createEthereumApis(
 		nftLazyMint: new EthereumApiClient.NftLazyMintControllerApi(configuration),
 		auction: new EthereumApiClient.AuctionControllerApi(configuration),
 	}
+}
+
+export async function getApis(
+	ethereum: Maybe<Ethereum>,
+	env: EthereumNetwork,
+	sdkConfig?: IRaribleEthereumSdkConfig
+) {
+	let apisEnv: EthereumNetwork
+	if (ethereum) {
+		const chainId = await ethereum.getChainId()
+		apisEnv = getNetworkFromChainId(chainId)
+	} else {
+		apisEnv = env
+	}
+	return createEthereumApis(apisEnv, {
+		...(sdkConfig?.apiClientParams || {}),
+		apiKey: sdkConfig?.apiKey,
+	})
 }

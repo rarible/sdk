@@ -1,12 +1,8 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { awaitAll, deployCryptoPunks, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
-import { getEthereumConfig } from "../config"
-import { checkChainId } from "../order/check-chain-id"
 import { transferCryptoPunk } from "./transfer-crypto-punk"
 
 describe("transfer crypto punks", () => {
@@ -22,11 +18,7 @@ describe("transfer crypto punks", () => {
 		punksMarket: deployCryptoPunks(web3),
 	})
 
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const config = getEthereumConfig("dev-ethereum")
-	const checkWalletChainId = checkChainId.bind(null, ethereumSeller, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects()
 
 	beforeAll(async () => {
 		await sentTx(it.punksMarket.methods.allInitialOwnersAssigned(), { from: sellerAddress })

@@ -1,5 +1,4 @@
 import { getStringifiedData } from "@rarible/sdk-common"
-import type { EthereumConfig } from "../config/type"
 import type { EthereumNetwork } from "../types"
 import type { SimpleOrder } from "../order/types"
 import { CURRENT_ORDER_TYPE_VERSION } from "./order"
@@ -7,11 +6,11 @@ import type { RaribleEthereumApis } from "./apis"
 import { retry } from "./retry"
 
 export async function getBaseFee(
-	config: EthereumConfig,
 	env: EthereumNetwork,
-	apis: RaribleEthereumApis,
+	getApis: () => Promise<RaribleEthereumApis>,
 	type: EnvFeeType = CURRENT_ORDER_TYPE_VERSION
 ): Promise<number> {
+	const apis = await getApis()
 	let envFeeConfig: Record<EnvFeeType, number>
 	try {
 		const fees = await retry(

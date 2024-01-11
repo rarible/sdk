@@ -24,6 +24,12 @@ import type { EthereumWallet } from "@rarible/sdk-wallet/build"
 import type { EVMBlockchain } from "@rarible/sdk-common/build"
 import { WalletIsUndefinedError, EVMBlockchains, isEVMBlockchain } from "@rarible/sdk-common/build"
 import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
+import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
+import type { OrderData } from "@rarible/api-client/build/models/OrderData"
+import type { EthErc20AssetType } from "@rarible/api-client/build/models/AssetType"
+import type { Payout } from "@rarible/api-client/build/models/Payout"
+import type { BlockchainIsh, SupportedBlockchain } from "@rarible/sdk-common"
+import { extractBlockchain } from "@rarible/sdk-common"
 import type { OrderRequest, UnionPart } from "../../../types/order/common"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
@@ -131,7 +137,7 @@ export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Par
 	})) || []
 }
 
-export function getOriginFeesSum(originFees: Array<Part>): number {
+export function getOriginFeesSum(originFees: Array<Part | Payout>): number {
 	return originFees.reduce((prev, curr) => prev + curr.value, 0)
 }
 
@@ -174,6 +180,15 @@ export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
 	const blockchain = getBlockchainBySDKNetwork(network)
 	if (!isEVMBlockchain(blockchain)) {
 		throw new Error(`Network ${network} is not EVM compatible`)
+	}
+	return blockchain
+}
+
+
+export function extractEVMBlockchain(value: BlockchainIsh): EVMBlockchain {
+	const blockchain = extractBlockchain(value)
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error(`Blockchain ${blockchain} is not EVM compatible`)
 	}
 	return blockchain
 }
@@ -296,6 +311,24 @@ export function getAssetTypeFromFillRequest(
 export function assertWallet(wallet: Maybe<EthereumWallet>) {
 	if (!wallet) throw new WalletIsUndefinedError()
 	return wallet
+}
+
+export async function getWalletBlockchain(wallet: Maybe<EthereumWallet>) {
+	return getBlockchainFromChainId(await assertWallet(wallet).ethereum.getChainId())
+}
+
+export async function getWalletNetwork(wallet: Maybe<EthereumWallet>) {
+	return getNetworkFromChainId(await assertWallet(wallet).ethereum.getChainId())
+}
+export async function checkWalletBlockchain(wallet: Maybe<EthereumWallet>, blockchain: SupportedBlockchain) {
+	const walletChainId = await assertWallet(wallet).ethereum.getChainId()
+	assertBlockchainAndChainId(walletChainId, blockchain)
+}
+
+export function assertBlockchainAndChainId(chainId: number, blockchain: SupportedBlockchain) {
+	if (getBlockchainFromChainId(chainId) !== blockchain) {
+		throw new Error(`Change network of your wallet to ${blockchain}`)
+	}
 }
 
 export * from "./validators"

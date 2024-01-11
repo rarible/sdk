@@ -1,16 +1,8 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import {
-	Configuration,
-	GatewayControllerApi,
-	NftCollectionControllerApi,
-	NftLazyMintControllerApi,
-	OrderControllerApi,
-} from "@rarible/ethereum-api-client"
 import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
-import { getApiConfig } from "../config/api-config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
 import { createTestProviders } from "../common/test/create-test-providers"
@@ -18,7 +10,7 @@ import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
 import { retry } from "../common/retry"
-import { createEthereumApis } from "../common/apis"
+import { getApis as getApisTemplate } from "../common/apis"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
@@ -29,7 +21,6 @@ import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { createErc20Contract } from "./contracts/erc20"
-import { checkChainId } from "./check-chain-id"
 import { approve as approveTemplate } from "./approve"
 import { checkLazyOrder as checkLazyOrderTemplate } from "./check-lazy-order"
 import { checkLazyAsset as checkLazyAssetTemplate } from "./check-lazy-asset"
@@ -41,43 +32,37 @@ const { providers } = createTestProviders(provider, wallet)
 
 describe.each(providers)("bid", (ethereum) => {
 	const env: EthereumNetwork = "dev-ethereum"
-	const configuration = new Configuration(getApiConfig(env))
-	const nftCollectionApi = new NftCollectionControllerApi(configuration)
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const nftLazyMintApi = new NftLazyMintControllerApi(configuration)
-	const orderApi = new OrderControllerApi(configuration)
 	const config = getEthereumConfig(env)
-	const signOrder = signOrderTemplate.bind(null, ethereum, config)
-	const checkAssetType = checkAssetTypeTemplate.bind(null, nftCollectionApi)
-	const signNft = signNftTemplate.bind(null, ethereum, config.chainId)
-	const apis = createEthereumApis(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
-	const mint = mintTemplate
-		.bind(null, ethereum, send, signNft, nftCollectionApi)
-		.bind(null, nftLazyMintApi, checkWalletChainId)
-	const approve = approveTemplate.bind(null, ethereum, send, config.transferProxies)
+	const getConfig = async () => config
+	const getApis = getApisTemplate.bind(null, ethereum, env)
+
+	const signOrder = signOrderTemplate.bind(null, ethereum, getConfig)
+	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
+	const signNft = signNftTemplate.bind(null, ethereum, getConfig)
+
+	const send = getSendWithInjects()
+	const mint = mintTemplate.bind(null, ethereum, send, signNft, getApis)
+	const approve = approveTemplate.bind(null, ethereum, send, getConfig)
 	const getBaseOrderFee = async () => 0
 
-	const orderService = new OrderFiller(ethereum, send, config, apis, getBaseOrderFee, env)
+	const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
 
-	const checkLazyAssetType = checkLazyAssetTypeTemplate.bind(null, apis.nftItem)
+	const checkLazyAssetType = checkLazyAssetTypeTemplate.bind(null, getApis)
 	const checkLazyAsset = checkLazyAssetTemplate.bind(null, checkLazyAssetType)
 	const checkLazyOrder = checkLazyOrderTemplate.bind(null, checkLazyAsset)
 
 	const upserter = new UpsertOrder(
 		orderService,
 		send,
-		config,
+		getConfig,
 		checkLazyOrder,
 		approve,
 		signOrder,
-		orderApi,
+		getApis,
 		ethereum,
-		checkWalletChainId,
 		ZERO_WORD
 	)
-	const orderSell = new OrderBid(upserter, checkAssetType, checkWalletChainId)
+	const orderSell = new OrderBid(upserter, checkAssetType)
 	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 	const treasury = createE2eWallet()
 	const treasuryAddress = toAddress(treasury.getAddressString())

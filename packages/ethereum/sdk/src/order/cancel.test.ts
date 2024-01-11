@@ -3,14 +3,12 @@ import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { Address, OrderForm } from "@rarible/ethereum-api-client"
-import { Configuration, OrderControllerApi } from "@rarible/ethereum-api-client"
 import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
-import { getApiConfig } from "../config/api-config"
 import { delay, retry } from "../common/retry"
 import { getSimpleSendWithInjects, sentTx, sentTxConfirm } from "../common/send-transaction"
-import { createEthereumApis } from "../common/apis"
+import { getApis as getApisTemplate } from "../common/apis"
 import { createRaribleSdk } from "../index"
 import { createErc721V3Collection } from "../common/mint"
 import { MintResponseTypeEnum } from "../nft/mint"
@@ -22,7 +20,6 @@ import { signOrder } from "./sign-order"
 import { UpsertOrder } from "./upsert-order"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { OrderFiller } from "./fill-order"
-import { checkChainId } from "./check-chain-id"
 import { ItemType } from "./fill-order/seaport-utils/constants"
 import { createSeaportOrder } from "./test/order-opensea"
 import { awaitOrder } from "./test/await-order"
@@ -36,16 +33,15 @@ describe("cancel order", () => {
 	const ethereum = new Web3Ethereum({ web3 })
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
-	const sign = signOrder.bind(null, ethereum, config)
-	const configuration = new Configuration(getApiConfig(env))
-	const orderApi = new OrderControllerApi(configuration)
-	const apis = createEthereumApis(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
+	const getConfig = async () => config
+	const getApis = getApisTemplate.bind(null, ethereum, env)
+
+	const sign = signOrder.bind(null, ethereum, getConfig)
 
 	const getBaseOrderFee = async () => 0
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-	const approve = approveTemplate.bind(null, ethereum, send, config.transferProxies)
-	const orderService = new OrderFiller(ethereum, send, config, apis, getBaseOrderFee, env)
+	const send = getSimpleSendWithInjects()
+	const approve = approveTemplate.bind(null, ethereum, send, getConfig)
+	const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),
@@ -131,18 +127,17 @@ describe("cancel order", () => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
-			config,
+			getConfig,
 			checkLazyOrder,
 			approve,
 			sign,
-			orderApi,
+			getApis,
 			ethereum,
-			checkWalletChainId,
 			ZERO_WORD
 		)
 
 		const order = await upserter.upsert({ order: form })
-		const tx = await cancel(checkLazyOrder, ethereum, send, config.exchange, checkWalletChainId, apis, order)
+		const tx = await cancel(checkLazyOrder, ethereum, send, getConfig, getApis, order)
 		await tx.wait()
 		return { tx, order }
 	}
@@ -159,10 +154,7 @@ describe.skip("test of cancelling seaport rinkeby order", () => {
 
 	const rinkebyErc721V3ContractAddress = toAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
 
-	const config = getEthereumConfig("testnet")
-
-	const checkWalletChainId = checkChainId.bind(null, ethereumSeller, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 	test("cancel seaport order", async () => {
 		const accountAddressBuyer = toAddress(await ethereumSeller.getFrom())

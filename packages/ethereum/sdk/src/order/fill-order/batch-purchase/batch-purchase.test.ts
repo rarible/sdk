@@ -8,7 +8,6 @@ import { toAddress } from "@rarible/types"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { getEthereumConfig } from "../../../config"
 import type { SimpleOrder } from "../../types"
-import { checkChainId } from "../../check-chain-id"
 import { createRaribleSdk } from "../../../index"
 import type { EthereumNetwork } from "../../../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
@@ -34,8 +33,7 @@ describe("Batch purchase", function () {
 	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 	beforeAll(async () => {
 		console.log({

@@ -1,14 +1,13 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
-import { Configuration, GatewayControllerApi, NftCollectionControllerApi, NftItemControllerApi, NftLazyMintControllerApi, NftOwnershipControllerApi } from "@rarible/ethereum-api-client"
 import { randomAddress, toAddress } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
 import { createErc721V3Collection } from "../common/mint"
-import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
+import { getApis as getApisTemplate } from "../common/apis"
+import type { EthereumNetwork } from "../types"
 import { signNft } from "./sign-nft"
 import type { ERC721RequestV3 } from "./mint"
 import { mint } from "./mint"
@@ -22,17 +21,14 @@ describe("transfer Erc721 lazy", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const nftOwnershipApi = new NftOwnershipControllerApi(configuration)
-	const nftCollectionApi = new NftCollectionControllerApi(configuration)
-	const nftLazyMintControllerApi = new NftLazyMintControllerApi(configuration)
-	const nftItemApi = new NftItemControllerApi(configuration)
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const config = getEthereumConfig("dev-ethereum")
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
-	const checkAssetType = checkAssetTypeTemplate.bind(null, nftCollectionApi)
-	const sign = signNft.bind(null, ethereum, 300500)
+	const env: EthereumNetwork = "dev-ethereum"
+	const config = getEthereumConfig(env)
+	const getConfig = async () => config
+
+	const send = getSendWithInjects()
+	const getApis = getApisTemplate.bind(null, ethereum, env)
+	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
+	const sign = signNft.bind(null, ethereum, getConfig)
 
 	test("should transfer erc721 lazy token", async () => {
 		const from = toAddress(wallet.getAddressString())
@@ -51,9 +47,7 @@ describe("transfer Erc721 lazy", () => {
 			ethereum,
 			send,
 			sign,
-			nftCollectionApi,
-			nftLazyMintControllerApi,
-			checkWalletChainId,
+			getApis,
 			request
 		)
 
@@ -66,9 +60,7 @@ describe("transfer Erc721 lazy", () => {
 			ethereum,
 			send,
 			checkAssetType,
-			nftItemApi,
-			nftOwnershipApi,
-			checkWalletChainId,
+			getApis,
 			asset,
 			recipient
 		)

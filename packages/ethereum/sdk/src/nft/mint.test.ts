@@ -1,26 +1,18 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toAddress } from "@rarible/types"
 import type { Address } from "@rarible/ethereum-api-client"
-import {
-	Configuration,
-	GatewayControllerApi,
-	NftCollectionControllerApi,
-	NftItemControllerApi,
-	NftLazyMintControllerApi,
-} from "@rarible/ethereum-api-client"
 import { BigNumber, toBn } from "@rarible/utils"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { ethers } from "ethers"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import Web3 from "web3"
 import { getSendWithInjects } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
 import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
-import { checkChainId } from "../order/check-chain-id"
 import { getEthereumConfig } from "../config"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { delay } from "../common/retry"
+import { getApis as getApisTemplate } from "../common/apis"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV1, ERC721RequestV2, ERC721RequestV3 } from "./mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
@@ -43,11 +35,6 @@ const providers = [
 ]
 
 const env: EthereumNetwork = "dev-ethereum"
-const configuration = new Configuration(getApiConfig(env))
-const nftCollectionApi = new NftCollectionControllerApi(configuration)
-const nftLazyMintApi = new NftLazyMintControllerApi(configuration)
-const nftItemApi = new NftItemControllerApi(configuration)
-const gatewayApi = new GatewayControllerApi(configuration)
 
 const erc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
 const erc1155V2ContractAddress = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
@@ -55,19 +42,18 @@ const erc1155V2ContractAddress = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0
 describe.each(providers)("mint test", ethereum => {
 	let minter: Address
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
+	const getConfig = async () => config
+	const getApis = getApisTemplate.bind(null, ethereum, env)
 
 	beforeAll(async () => {
 		minter = toAddress(await ethereum.getFrom())
 	})
 
-	const sign = signNft.bind(null, ethereum, config.chainId)
+	const sign = signNft.bind(null, ethereum, getConfig)
 
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects()
 
-	const mint = mintTemplate
-		.bind(null, ethereum, send, sign, nftCollectionApi)
-		.bind(null, nftLazyMintApi, checkWalletChainId)
+	const mint = mintTemplate.bind(null, ethereum, send, sign, getApis)
 
 	beforeEach(async () => {
 		await delay(2000)
@@ -113,7 +99,8 @@ describe.each(providers)("mint test", ethereum => {
 
 	test.skip("use provided nftTokenId", async () => {
 		const collection = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
-		const nftTokenId = await nftCollectionApi.generateNftTokenId({ collection, minter })
+		const apis = await getApis()
+		const nftTokenId = await apis.nftCollection.generateNftTokenId({ collection, minter })
 		const result = await mint({
 			uri: "ipfs://ipfs/hash",
 			royalties: [{
@@ -201,10 +188,11 @@ describe.each(providers)("mint test", ethereum => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
-		const resultNft = await nftItemApi.getNftItemById({ itemId: minted.itemId })
+		const apis = await getApis()
+		const resultNft = await apis.nftItem.getNftItemById({ itemId: minted.itemId })
 		expect(resultNft.lazySupply).toEqual("1")
 
-		const lazy = await nftItemApi.getNftLazyItemById({ itemId: resultNft.id })
+		const lazy = await apis.nftItem.getNftLazyItemById({ itemId: resultNft.id })
 		expect(lazy.uri).toBe("/ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
 	})
 
@@ -220,10 +208,11 @@ describe.each(providers)("mint test", ethereum => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
-		const resultNft = await nftItemApi.getNftItemById({ itemId: minted.itemId })
+		const apis = await getApis()
+		const resultNft = await apis.nftItem.getNftItemById({ itemId: minted.itemId })
 		expect(resultNft.lazySupply).toEqual("100")
 
-		const lazy = await nftItemApi.getNftLazyItemById({ itemId: resultNft.id })
+		const lazy = await apis.nftItem.getNftLazyItemById({ itemId: resultNft.id })
 		expect(lazy.uri).toBe("/ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
 	})
 })

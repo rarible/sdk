@@ -1,19 +1,16 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { Configuration, OrderControllerApi } from "@rarible/ethereum-api-client"
 import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
-import { getApiConfig } from "../config/api-config"
 import { createTestProviders } from "../common/test/create-test-providers"
-import { createEthereumApis } from "../common/apis"
+import { createEthereumApis, getApis as getApisTemplate } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../common/check-min-payment-value"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
 import { OrderFiller } from "./fill-order"
-import { checkChainId } from "./check-chain-id"
 
 const { provider, wallet } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
 const { providers, web3 } = createTestProviders(provider, wallet)
@@ -24,17 +21,15 @@ const it = awaitAll({
 describe.each(providers)("upsertOrder", (ethereum) => {
 	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
-	const sign = signOrder.bind(null, ethereum, config)
-	const apis = createEthereumApis(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
+	const getConfig = async () => config
+	const sign = signOrder.bind(null, ethereum, getConfig)
+	const getApis = getApisTemplate.bind(null, ethereum, env)
 
 	const getBaseOrderFee = async () => 0
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-	const orderService = new OrderFiller(ethereum, send, config, apis, getBaseOrderFee, env)
+	const send = getSimpleSendWithInjects()
+	const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
 
 	const approve = () => Promise.resolve(undefined)
-	const configuration = new Configuration(getApiConfig(env))
-	const orderApi = new OrderControllerApi(configuration)
 	const checkLazyOrder: any = async (form: any) => Promise.resolve(form)
 
 	test.skip("sign and upsert works", async () => {
@@ -55,13 +50,12 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
-			config,
+			getConfig,
 			checkLazyOrder,
 			approve,
 			sign,
-			orderApi,
+			getApis,
 			ethereum,
-			checkWalletChainId,
 			ZERO_WORD
 		)
 
@@ -88,13 +82,12 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
-			config,
+			getConfig,
 			checkLazyOrder,
 			approve,
 			sign,
-			orderApi,
+			getApis,
 			ethereum,
-			checkWalletChainId,
 			ZERO_WORD
 		)
 
@@ -122,13 +115,12 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
-			config,
+			getConfig,
 			checkLazyOrder,
 			approve,
 			sign,
-			orderApi,
+			getApis,
 			ethereum,
-			checkWalletChainId,
 			ZERO_WORD
 		)
 
@@ -137,18 +129,21 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 	})
 
 	test("throw error if sell order has less than minimal payment value", async () => {
-		const orderApi = new OrderControllerApi(configuration)
-		orderApi.upsertOrder = async () => ({} as any)
+		const getApis = async () => {
+			const apis = createEthereumApis(env)
+			apis.order.upsertOrder = async () => ({} as any)
+			return apis
+		}
+
 		const upserter = new UpsertOrder(
 			orderService,
 			send,
-			config,
+			getConfig,
 			checkLazyOrder,
 			approve,
 			sign,
-			orderApi,
+			getApis,
 			ethereum,
-			checkWalletChainId,
 			ZERO_WORD
 		)
 		const request = {

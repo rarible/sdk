@@ -15,8 +15,7 @@ import type { EthereumNetwork } from "../../../types"
 import type { EthereumConfig } from "../../../config/type"
 import { getEthereumConfig } from "../../../config"
 import { id32 } from "../../../common/id"
-import { createEthereumApis } from "../../../common/apis"
-import { checkChainId } from "../../check-chain-id"
+import { getApis as getApisTemplate } from "../../../common/apis"
 import { getSimpleSendWithInjects, sentTx } from "../../../common/send-transaction"
 import type { SimpleRaribleV2Order } from "../../types"
 import { signOrder } from "../../sign-order"
@@ -37,15 +36,15 @@ describe.skip("fillOrder: Opensea orders", function () {
 			proxyRegistry: ZERO_ADDRESS,
 		},
 	}
-	const apis = createEthereumApis(env)
+	const getConfig = async () => config
+	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
 
 	const getBaseOrderFee = async () => 100
-	const checkWalletChainId1 = checkChainId.bind(null, ethereum1, config)
 	// const checkWalletChainId2 = checkChainId.bind(null, ethereum2, config)
 
-	const send1 = getSimpleSendWithInjects().bind(null, checkWalletChainId1)
+	const send1 = getSimpleSendWithInjects()
 
-	const orderFiller = new BatchOrderFiller(ethereum1, send1, config, apis, getBaseOrderFee, env)
+	const orderFiller = new BatchOrderFiller(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, env)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),
@@ -143,7 +142,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			default:
 		}
 		const order = getOrder(asset, receiver)
-		return { ...order, signature: await signOrder(ethereum2, config, order) }
+		return { ...order, signature: await signOrder(ethereum2, getConfig, order) }
 	}
 
 	async function getBalance(assetType: "ERC721" | "ERC1155", userAddress: Address, tokenId?: string): Promise<BigNumber> {

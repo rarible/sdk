@@ -16,12 +16,14 @@ import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Blockchain, OrderId } from "@rarible/api-client"
 import { Platform } from "@rarible/api-client"
 import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
+import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
+import { extractBlockchain } from "@rarible/sdk-common"
+import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
 import type {
 	BatchFillRequest,
 	FillRequest,
@@ -34,13 +36,16 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import type { EVMBlockchain } from "./common"
 import {
+	assertBlockchainAndChainId,
+	assertWallet, checkWalletBlockchain,
 	convertEthereumContractAddress,
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
 	getAssetTypeFromFillRequest,
-	getEthereumItemId, getEVMBlockchain,
-	getOrderId,
+	getEthereumItemId,
+	getOrderId, getWalletNetwork, isEVMBlockchain,
 	toEthereumParts,
 	validateOrderDataV3Request,
 } from "./common"
@@ -59,7 +64,7 @@ export class EthereumFill {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private network: EthereumNetwork,
+		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 		private config?: IEthereumSdkConfig,
 	) {
 		this.fill = this.fill.bind(this)
@@ -321,8 +326,8 @@ export class EthereumFill {
 				order.take.assetType.tokenId,
 				toAddress(address),
 			)
-
-			const ownership = await this.sdk.apis.nftOwnership.getNftOwnershipById({ ownershipId })
+			const ethApis = await this.getEthereumApis()
+			const ownership = await ethApis.nftOwnership.getNftOwnershipById({ ownershipId })
 
 			return toBigNumber(BigNumberClass.min(ownership.value, order.take.value).toFixed())
 		}
@@ -341,7 +346,8 @@ export class EthereumFill {
 		} else {
 			throw new Error("Nft has not been found")
 		}
-		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+		const ethApis = await this.getEthereumApis()
+		const collection = await ethApis.nftCollection.getNftCollectionById({
 			collection: contract,
 		})
 
@@ -366,11 +372,18 @@ export class EthereumFill {
 		request: PrepareFillRequest,
 		isBid = false
 	): Promise<PrepareFillResponse> {
+		const blockchain = extractBlockchain(getOrderId(request))
+		await checkWalletBlockchain(this.wallet, blockchain)
 		const orderHash = this.getOrderHashFromRequest(request)
-		const order = await this.sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
+		const ethApis = await this.getEthereumApis()
+		const order = await ethApis.order.getValidatedOrderByHash({ hash: orderHash })
+		if (!isEVMBlockchain(blockchain)) {
+			throw new Error("Not an EVM order")
+		}
 
 		const submit = action
-			.before((fillRequest: FillRequest) => {
+			.before(async (fillRequest: FillRequest) => {
+				await checkWalletBlockchain(this.wallet, blockchain)
 				checkPayouts(fillRequest.payouts)
 				if (fillRequest.unwrap) {
 					throw new Warning("Unwrap is not supported yet")
@@ -380,9 +393,8 @@ export class EthereumFill {
 				}
 				return this.getFillOrderRequest(order, fillRequest)
 			})
-			.after((tx => new BlockchainEthereumTransaction(tx, this.network)))
+			.after((async tx => new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))))
 
-		const blockchain = getEVMBlockchain(this.network)
 		const nftAssetType = isBid ? order.take.assetType : order.make.assetType
 		return {
 			...this.getSupportFlags(order),
@@ -419,8 +431,11 @@ export class EthereumFill {
 		const orders: Record<OrderId, Order> = {} // ethereum orders cache
 
 		const submit = this.sdk.order.buyBatch.around(
-			(request: BatchFillRequest) => {
+			async (request: BatchFillRequest) => {
+				const walletChainId = await assertWallet(this.wallet).ethereum.getChainId()
 				return request.map((req) => {
+					const blockchain = extractBlockchain(req.orderId)
+					assertBlockchainAndChainId(walletChainId, blockchain)
 					checkPayouts(req.payouts)
 					const order = orders[req.orderId]
 					if (!order) {
@@ -434,10 +449,11 @@ export class EthereumFill {
 					return this.getFillOrderRequest(order, req) as FillBatchSingleOrderRequest
 				})
 			},
-			(tx, request: BatchFillRequest) => {
+			async (tx, request: BatchFillRequest) => {
+				const network = await getWalletNetwork(this.wallet)
 				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
 					tx,
-					this.network,
+					network,
 					async (getEvents) => {
 						try {
 							const events: any = await getEvents() || []
@@ -484,11 +500,13 @@ export class EthereumFill {
 			},
 		)
 
-		const blockchain = getEVMBlockchain(this.network)
+		const ethApis = await this.getEthereumApis()
+
 		const prepared = await Promise.all(prepareRequest.map(async (req) => {
 			const orderHash = this.getOrderHashFromRequest(req)
-			const ethOrder = await this.sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
+			const ethOrder = await ethApis.order.getValidatedOrderByHash({ hash: orderHash })
 			const orderId = getOrderId(req)
+			const blockchain = extractBlockchain(orderId) as EVMBlockchain
 			orders[orderId] = ethOrder
 
 			if (ethOrder.status !== "ACTIVE") {
