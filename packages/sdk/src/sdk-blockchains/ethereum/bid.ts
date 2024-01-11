@@ -277,10 +277,11 @@ export class EthereumBid {
 		let takeAssetType: AssetTypeRequest
 		let blockchain: EVMBlockchain
 
+		const ethApi = await this.getEthereumApis()
 		if ("itemId" in prepare) {
 			blockchain = extractEVMBlockchain(prepare.itemId)
 			const { itemId } = getEthereumItemId(prepare.itemId)
-			item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
+			item = await ethApi.nftItem.getNftItemById({ itemId })
 			contractAddress = item.contract
 
 			takeAssetType = {
@@ -298,7 +299,7 @@ export class EthereumBid {
 			throw new Error("ItemId or CollectionId must be assigned")
 		}
 
-		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
+		const collection = await ethApi.nftCollection.getNftCollectionById({
 			collection: contractAddress,
 		})
 

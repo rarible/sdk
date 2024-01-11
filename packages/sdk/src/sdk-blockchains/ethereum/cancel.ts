@@ -24,11 +24,11 @@ export class EthereumCancel {
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an ethereum order")
 		}
+		await checkWalletBlockchain(this.wallet, blockchain)
 		const ethApis = await this.getEthereumApis()
 		const order = await ethApis.order.getValidatedOrderByHash({
 			hash: orderId,
 		})
-		await checkWalletBlockchain(this.wallet, blockchain)
 		const cancelTx = await this.sdk.order.cancel(order)
 		return new BlockchainEthereumTransaction(cancelTx, await getWalletNetwork(this.wallet))
 	}

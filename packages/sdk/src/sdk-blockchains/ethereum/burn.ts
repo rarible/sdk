@@ -27,6 +27,8 @@ export class EthereumBurn {
 		const { contract, tokenId } = getEthereumItemId(prepare.itemId)
 
 		const blockchain = extractBlockchain(prepare.itemId)
+		await checkWalletBlockchain(this.wallet, blockchain)
+
 		const ethApi = await this.getEthereumApis()
 		const item = await ethApi.nftItem.getNftItemById({
 			itemId: `${contract}:${tokenId}`,

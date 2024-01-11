@@ -322,25 +322,13 @@ export async function getWalletNetwork(wallet: Maybe<EthereumWallet>) {
 }
 export async function checkWalletBlockchain(wallet: Maybe<EthereumWallet>, blockchain: SupportedBlockchain) {
 	const walletChainId = await assertWallet(wallet).ethereum.getChainId()
-	if (getBlockchainFromChainId(walletChainId) !== blockchain) {
-		throw new Error("Change network of your wallet")
+	assertBlockchainAndChainId(walletChainId, blockchain)
+}
+
+export function assertBlockchainAndChainId(chainId: number, blockchain: SupportedBlockchain) {
+	if (getBlockchainFromChainId(chainId) !== blockchain) {
+		throw new Error(`Change network of your wallet to ${blockchain}`)
 	}
-}
-
-const RARIBLE_ORDER_TYPES: OrderData["@type"][] = [
-	"ETH_RARIBLE_V1",
-	"ETH_RARIBLE_V2",
-	"ETH_RARIBLE_V2_2",
-	"ETH_RARIBLE_V2_DATA_V3_SELL",
-	"ETH_RARIBLE_V2_DATA_V3_BUY",
-]
-export function isRaribleOrder(data: OrderData) {
-	return RARIBLE_ORDER_TYPES.includes(data["@type"])
-}
-
-export function isWETH(type: AssetType, wethContract: Address): type is EthErc20AssetType {
-	return type["@type"] === "ERC20"
-    && convertToEthereumAddress(type.contract).toLowerCase() === wethContract.toLowerCase()
 }
 
 export * from "./validators"

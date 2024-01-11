@@ -82,7 +82,7 @@ export function createEthereumSdk(
 			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
 			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
 			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
-			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
+			generateTokenId: new EthereumTokenId(sdk, getEthereumApis).generateTokenId,
 			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,

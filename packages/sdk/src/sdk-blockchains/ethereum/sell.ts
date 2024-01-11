@@ -160,6 +160,7 @@ export class EthereumSell {
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an ethereum order")
 		}
+		await checkWalletBlockchain(this.wallet, blockchain)
 
 		const ethApis = await this.getEthereumApis()
 		const order = await ethApis.order.getValidatedOrderByHash({ hash })

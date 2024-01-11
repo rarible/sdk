@@ -36,8 +36,10 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import type { EVMBlockchain } from "./common"
 import {
-	assertWallet,
+	assertBlockchainAndChainId,
+	assertWallet, checkWalletBlockchain,
 	convertEthereumContractAddress,
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
@@ -370,16 +372,18 @@ export class EthereumFill {
 		request: PrepareFillRequest,
 		isBid = false
 	): Promise<PrepareFillResponse> {
+		const blockchain = extractBlockchain(getOrderId(request))
+		await checkWalletBlockchain(this.wallet, blockchain)
 		const orderHash = this.getOrderHashFromRequest(request)
 		const ethApis = await this.getEthereumApis()
 		const order = await ethApis.order.getValidatedOrderByHash({ hash: orderHash })
-		const blockchain = extractBlockchain(getOrderId(request))
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an EVM order")
 		}
 
 		const submit = action
-			.before((fillRequest: FillRequest) => {
+			.before(async (fillRequest: FillRequest) => {
+				await checkWalletBlockchain(this.wallet, blockchain)
 				checkPayouts(fillRequest.payouts)
 				if (fillRequest.unwrap) {
 					throw new Warning("Unwrap is not supported yet")
@@ -425,13 +429,13 @@ export class EthereumFill {
 
 	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
 		const orders: Record<OrderId, Order> = {} // ethereum orders cache
-		const chainId = await assertWallet(this.wallet).ethereum.getChainId()
-		const network = await getNetworkFromChainId(chainId)
-		const blockchain = await getBlockchainFromChainId(chainId)
 
 		const submit = this.sdk.order.buyBatch.around(
-			(request: BatchFillRequest) => {
+			async (request: BatchFillRequest) => {
+				const walletChainId = await assertWallet(this.wallet).ethereum.getChainId()
 				return request.map((req) => {
+					const blockchain = extractBlockchain(req.orderId)
+					assertBlockchainAndChainId(walletChainId, blockchain)
 					checkPayouts(req.payouts)
 					const order = orders[req.orderId]
 					if (!order) {
@@ -445,7 +449,8 @@ export class EthereumFill {
 					return this.getFillOrderRequest(order, req) as FillBatchSingleOrderRequest
 				})
 			},
-			(tx, request: BatchFillRequest) => {
+			async (tx, request: BatchFillRequest) => {
+				const network = await getWalletNetwork(this.wallet)
 				return new BlockchainEthereumTransaction<IBatchBuyTransactionResult>(
 					tx,
 					network,
@@ -501,6 +506,7 @@ export class EthereumFill {
 			const orderHash = this.getOrderHashFromRequest(req)
 			const ethOrder = await ethApis.order.getValidatedOrderByHash({ hash: orderHash })
 			const orderId = getOrderId(req)
+			const blockchain = extractBlockchain(orderId) as EVMBlockchain
 			orders[orderId] = ethOrder
 
 			if (ethOrder.status !== "ACTIVE") {

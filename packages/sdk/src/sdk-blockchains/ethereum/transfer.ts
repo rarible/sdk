@@ -25,6 +25,7 @@ export class EthereumTransfer {
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
 		}
+		await checkWalletBlockchain(this.wallet, blockchain)
 
 		const ethApi = await this.getEthereumApis()
 		const item = await ethApi.nftItem.getNftItemById({

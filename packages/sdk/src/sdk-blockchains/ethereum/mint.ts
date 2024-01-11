@@ -127,6 +127,8 @@ export class EthereumMint {
 		const collection = await getCollection(this.apis.collection, request)
 		const nftCollection = toNftCollection(collection)
 		const blockchain = extractBlockchain(getCollectionId(request))
+		await checkWalletBlockchain(this.wallet, blockchain)
+
 		return {
 			multiple: collection.type === CollectionType.ERC1155,
 			supportsRoyalties: this.isSupportsRoyalties(nftCollection),
