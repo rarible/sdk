@@ -41,11 +41,6 @@ const MAP_TEST_CONTRACTS: PartialRecord<EthereumNetwork, Record<TestContractType
 		erc1155V2: "0xe46D6235f3488B8Ce8AA054e8E5bc0aE86146145",
 		erc20Mintable: "",
 	},
-	"staging": {
-		erc721V3: "0x2BCCacA812c8FF9003b2bEA778421551f58Ed11b",
-		erc1155V2: "0xf33F626ca16cE18eF0052ECa6Ed6fC97Cedf031D",
-		erc20Mintable: "0x31C827f06E10e4999eb88c193669d408eF597B3D",
-	},
 }
 
 export function getTestContract(env: EthereumNetwork, contract: TestContractType): Address {
@@ -57,4 +52,19 @@ export function getTestContract(env: EthereumNetwork, contract: TestContractType
 		throw new Error(`Contract ${contract} in ${env} env hasn't created`)
 	}
 	return toAddress(envContracts[contract])
+}
+
+export function getAPIKey(env:  EthereumNetwork) {
+	switch (env) {
+		case "mainnet":
+		case "mantle":
+		case "polygon":
+		case "arbitrum":
+		case "zksync":
+		case "chiliz":
+		case "lightlink":
+			return process.env.SDK_API_KEY_PROD
+		default:
+			return process.env.SDK_API_KEY_TESTNET
+	}
 }

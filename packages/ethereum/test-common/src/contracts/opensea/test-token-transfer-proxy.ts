@@ -1,19 +1,21 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
+import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../../common"
 
 export function createOpenseaTokenTransferProxyContract(web3: Web3, address?: Address) {
-	return new web3.eth.Contract(tokenTransferProxyAbi, address)
+	return new web3.eth.Contract(tokenTransferProxyAbi, address, DEFAULT_DATA_TYPE)
 }
 
 export async function deployOpenseaTokenTransferProxy(web3: Web3, proxyRegistryAddress: string) {
 	const empty = createOpenseaTokenTransferProxyContract(web3)
 	const [address] = await web3.eth.getAccounts()
-	return empty.deploy({
+	const contract = await empty.deploy({
 		data: tokenTransferProxyBytecode,
 		arguments: [
 			proxyRegistryAddress,
 		],
-	}).send({ from: address, gas: "8000000", gasPrice: "0" })
+	}).send({ from: address, gas: "8000000" })
+	return replaceBigIntInContract(contract)
 }
 
 export const tokenTransferProxyAbi = [

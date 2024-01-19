@@ -92,14 +92,14 @@ export async function fulfillOrder(
 		seaportContract.functionCall("getOrderStatus", getOrderHash(orderParameters)).call(),
 	])
 
+	const orderStatusData = { ...orderStatus }
+	orderStatusData.totalFilled = toBn(orderStatus.totalFilled)
+	orderStatusData.totalSize = toBn(orderStatus.totalSize)
 
-	orderStatus.totalFilled = toBn(orderStatus.totalFilled)
-	orderStatus.totalSize = toBn(orderStatus.totalSize)
-
-	const { totalFilled, totalSize } = orderStatus
+	const { totalFilled, totalSize } = orderStatusData
 	const sanitizedOrder = validateAndSanitizeFromOrderStatus(
 		order,
-		orderStatus
+		orderStatusData
 	)
 
 	const timeBasedItemParams = {

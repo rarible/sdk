@@ -1,13 +1,28 @@
 import Web3 from "web3"
+// @ts-ignore
+import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
-import HDWalletProvider from "@truffle/hdwallet-provider"
+// @ts-ignore
+import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { randomWord } from "@rarible/types"
-import { delay } from "@rarible/protocol-ethereum-sdk/src/common/retry"
+import { Web3Ethereum } from "@rarible/web3-ethereum"
 
 
 export function createE2eWallet(pk: string = randomWord()): Wallet {
 	return new Wallet(Buffer.from(fixPK(pk), "hex"))
+}
+
+class Web3ProviderEngineSync extends Web3ProviderEngine {
+	//@ts-ignore
+	constructor(opts) {
+		super(opts)
+	}
+	//@ts-ignore
+	send(payload, cb) {
+		//@ts-ignore
+		this.sendAsync(payload, cb)
+	}
 }
 
 export type E2EProviderConfig = {
@@ -15,11 +30,11 @@ export type E2EProviderConfig = {
 	chainId: number
 	rpcUrl: string
 	pollingInterval: number
+	customEngine?: Web3ProviderEngine
 }
 
 export class E2EProvider {
-	// readonly provider: Web3ProviderEngine
-	readonly provider: any
+	readonly provider: Web3ProviderEngineSync
 	readonly config: E2EProviderConfig
 	readonly wallet: Wallet
 	readonly web3: Web3
@@ -30,38 +45,13 @@ export class E2EProvider {
 	) {
 		this.config = this.createConfig(configOverride)
 		this.wallet = createE2eWallet(pk)
-
-		const origInit = (HDWalletProvider.prototype as any).initialize;
-		(HDWalletProvider.prototype as any).initialize = async function () {
-			while (true) {
-				try {
-					return await origInit.call(this)
-				} catch (e) {
-					console.log("origInit failed")
-					console.log(e)
-				}
-				await delay(1000)
-			}
-		}
-		const provider = new HDWalletProvider({
-			privateKeys: [pk],
-			providerOrUrl: this.config.rpcUrl,
-			// pollingInterval: 100000,
-			chainId: configOverride.chainId,
-			// addressIndex: 0,
-		});
-
-		(provider.engine as any)._blockTracker.on("error", function () {
-			console.log("BlockTracker error")
-			console.log(arguments)
-		})
-		provider.engine.on("error", function () {
-			console.log("Web3ProviderEngine error")
-			console.log(arguments)
-		} as any)
+		const provider = this.createEngine(this.config.pollingInterval)
+		provider.addProvider(this.createWalletProvider())
+		provider.addProvider(this.createRpcProvider())
 
 		this.provider = provider
 		this.web3 = new Web3(provider as any)
+		this.web3.setConfig({ defaultTransactionType: "0x0" })
 	}
 
 	private createConfig(override: Partial<E2EProviderConfig>) {
@@ -75,6 +65,12 @@ export class E2EProvider {
 		}
 	}
 
+	private createEngine(pollingInterval: number) {
+		return new Web3ProviderEngineSync({
+			pollingInterval,
+		})
+	}
+
 	private createWalletProvider() {
 		return new TestSubprovider(this.wallet, {
 			networkId: this.config.networkId,
@@ -82,9 +78,13 @@ export class E2EProvider {
 		})
 	}
 
-	start = () => this.provider.engine.start()
+	private createRpcProvider() {
+		return new RpcSubprovider({ rpcUrl: this.config.rpcUrl })
+	}
 
-	stop = () => this.provider.engine.stop()
+	start = () => this.provider.start()
+
+	stop = () => this.provider.stop()
 }
 
 function fixPK(pk: string) {
@@ -94,12 +94,13 @@ function fixPK(pk: string) {
 export function createE2eProvider(pk?: string, config?: Partial<E2EProviderConfig>) {
 	const provider = new E2EProvider(pk, config)
 
-	provider.start()
 	beforeAll(() => provider.start())
 	afterAll(() => provider.stop())
 
 	return {
 		provider: provider.provider as any,
 		wallet: provider.wallet,
+		web3: provider.web3,
+		web3Ethereum: new Web3Ethereum({ web3: provider.web3 }),
 	}
 }

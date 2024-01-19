@@ -72,7 +72,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -85,7 +85,7 @@ describe("sale", () => {
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
-		await updateAction.submit({ price: "0.000000000000000001" })
+		await updateAction.submit({ price: "0.0001" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
@@ -124,7 +124,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -172,7 +172,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -218,7 +218,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -266,7 +266,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: toCurrencyId(erc20ContractAddress),
 			expirationDate: generateExpirationDate(),
 		})
@@ -304,7 +304,7 @@ describe("sale", () => {
 		const orderId = await sdk1.order.sell({
 			itemId: result.itemId,
 			amount: 1,
-			price: "0.000000000000000002",
+			price: "0.0002",
 			currency: toCurrencyId(erc20ContractAddress),
 			expirationDate: generateExpirationDate(),
 		})

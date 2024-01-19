@@ -2,14 +2,11 @@ import { randomAddress, toAddress } from "@rarible/types"
 import type { Contract } from "web3-eth-contract"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { createGanacheProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
 import type { testErc1155Abi } from "@rarible/ethereum-sdk-test-common/src"
-import { getApiConfig } from "../config/api-config"
+import { fromUtf8 } from "ethereumjs-util"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
-import { getEthereumConfig } from "../config"
 import { approveErc1155 as approveErc1155Template } from "./approve-erc1155"
-import { checkChainId } from "./check-chain-id"
 
 describe("approveErc1155", () => {
 	const { provider, addresses } = createGanacheProvider(
@@ -18,11 +15,7 @@ describe("approveErc1155", () => {
 	const web3 = new Web3(provider as any)
 	const ethereum = new Web3Ethereum({ web3 })
 	const [testAddress] = addresses
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const config = getEthereumConfig("dev-ethereum")
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects()
 	const approveErc1155 = approveErc1155Template.bind(null, ethereum, send)
 
 	let testErc1155: Contract<typeof testErc1155Abi>
@@ -32,10 +25,10 @@ describe("approveErc1155", () => {
 
 	test("should approve", async () => {
 		const tokenId = testAddress + "b00000000000000000000003"
-		await sentTx(testErc1155.methods.mint(testAddress, tokenId, 1, "123"), { from: testAddress, gas: "200000" })
+		await sentTx(testErc1155.methods.mint(testAddress, tokenId, 1, fromUtf8("123")), { from: testAddress, gas: "200000" })
 
 		const balance = await testErc1155.methods.balanceOf(testAddress, tokenId).call()
-		expect(balance).toEqual("1")
+		expect(balance.toString()).toEqual("1")
 
 		const operator = randomAddress()
 		await approveErc1155(toAddress(testErc1155.options.address!), testAddress, operator)
@@ -46,10 +39,10 @@ describe("approveErc1155", () => {
 
 	test("should not approve if already approved", async () => {
 		const tokenId = testAddress + "b00000000000000000000002"
-		await testErc1155.methods.mint(testAddress, tokenId, 5, "123").send({ from: testAddress, gas: "200000" })
+		await testErc1155.methods.mint(testAddress, tokenId, 5, fromUtf8("123")).send({ from: testAddress, gas: "200000" })
 
 		const balance = await testErc1155.methods.balanceOf(testAddress, tokenId).call()
-		expect(balance).toEqual("5")
+		expect(balance.toString()).toEqual("5")
 
 		const operator = randomAddress()
 		await sentTx(testErc1155.methods.setApprovalForAll(operator, true), { from: testAddress })

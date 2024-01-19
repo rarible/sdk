@@ -6,9 +6,9 @@ import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
 import type { SimpleOrder, SimpleX2Y2Order } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import type { RaribleEthereumApis } from "../../common/apis"
+import type { GetConfigByChainId } from "../../config"
 import type { PreparedOrderRequestDataForExchangeWrapper, X2Y2OrderFillRequest } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import type { OrderFillSendData } from "./types"
@@ -19,9 +19,9 @@ export class X2Y2OrderHandler {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 	) {}
 
 	async fillOrder(order: SimpleX2Y2Order, request: X2Y2OrderFillRequest): Promise<EthereumTransaction> {
@@ -37,8 +37,8 @@ export class X2Y2OrderHandler {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-
-		const wrapper = createExchangeWrapperContract(this.ethereum, this.config.exchange.wrapper)
+		const config = await this.getConfig()
+		const wrapper = createExchangeWrapperContract(this.ethereum, config.exchange.wrapper)
 
 		if (!request.order.data?.orderId) {
 			throw new Error("No x2y2 orderId provided")
@@ -88,9 +88,11 @@ export class X2Y2OrderHandler {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
+		const config = await this.getConfig()
+		const apis = await this.getApis()
 
-		const x2y2Input = await X2Y2Utils.getOrderSign(this.apis, {
-			sender: this.config.exchange.wrapper,
+		const x2y2Input = await X2Y2Utils.getOrderSign(apis, {
+			sender: config.exchange.wrapper,
 			orderId: request.order.data.orderId,
 			currency: ZERO_ADDRESS,
 			price: request.order.take.value,

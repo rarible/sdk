@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
-import type { Items } from "@rarible/api-client"
+import type { Blockchain, Items } from "@rarible/api-client"
 import { Alert, AlertTitle, Box, CircularProgress } from "@mui/material"
 import { Page } from "../../components/page"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
@@ -8,16 +8,18 @@ import { CommentedBlock } from "../../components/common/commented-block"
 import { ItemsList } from "./items/items-list"
 import { GetItemsComment } from "./comments/getitems-comment"
 
-function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string) {
+function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string, blockchain?: string) {
 	const [items, setItems] = useState<Items | null>(null)
 	const [fetching, setFetching] = useState(false)
 	const [error, setError] = useState<any>(null)
 
 	async function fetchItems() {
 		try {
+			if (!blockchain) throw new Error("useFetchItems: blockchain should be specified")
 			setFetching(true)
 			const res = await sdk?.apis.item.getItemsByOwner({
 				owner: walletAddress!,
+				blockchains: blockchain ? [blockchain as Blockchain] : [],
 			})
 
 			setItems(res ?? null )
@@ -46,8 +48,15 @@ function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string) {
 
 export function ItemsPage() {
 	const connection = useContext(ConnectorContext)
-	const { items, fetching, error } = useFetchItems(connection.sdk, connection.walletAddress)
+	if (connection.state.status !== "connected") {
+		return null
+	}
 
+	const { items, fetching, error } = useFetchItems(
+		connection.sdk,
+		connection.walletAddress,
+		connection.state.connection.blockchain
+	)
 	return (
 		<Page header="My Items">
 			<CommentedBlock sx={{ my: 2 }} comment={<GetItemsComment/>}>

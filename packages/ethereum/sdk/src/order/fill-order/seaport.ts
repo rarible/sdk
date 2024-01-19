@@ -12,12 +12,12 @@ import axios from "axios"
 import { isNft } from "../is-nft"
 import type { SimpleOrder } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import type { RaribleEthereumApis } from "../../common/apis"
 import { isWeth } from "../../nft/common"
+import type { GetConfigByChainId } from "../../config"
 import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
@@ -31,8 +31,8 @@ export class SeaportOrderHandler {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getConfig: GetConfigByChainId,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
@@ -51,7 +51,8 @@ export class SeaportOrderHandler {
 
 	async getSignature({ hash, protocol } : {hash: string, protocol: string}): Promise<any> {
 		try {
-			const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
+			const apis = await this.getApis()
+			const { signature } = await apis.orderSignature.getSeaportOrderSignature({
 				hash: hash,
 			})
 			return signature
@@ -160,7 +161,7 @@ export class SeaportOrderHandler {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-
+		const config = await this.getConfig()
 		const { unitsToFill } = getUnitsToFill(request)
 
 		const { totalFeeBasisPoints } = originFeeValueConvert(originFees)
@@ -175,13 +176,13 @@ export class SeaportOrderHandler {
 			}
 		}
 
-		if (!this.config.exchange.wrapper) {
+		if (!config.exchange.wrapper) {
 			throw new Error("Exchange wrapper is not defined for Seaport tx")
 		}
 
 		const takeAssetType = request.order.take.assetType
 		let feeValueWithCurrency = feeValue
-		if (isWeth(takeAssetType, this.config.weth)) {
+		if (isWeth(takeAssetType, config)) {
 			feeValueWithCurrency = setFeesCurrency(feeValueWithCurrency, true)
 		}
 

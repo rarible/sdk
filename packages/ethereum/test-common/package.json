@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-sdk-test-common",
-  "version": "0.13.46",
+  "version": "0.13.67",
   "description": "",
   "keywords": [
     "ethereum",
@@ -13,25 +13,22 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "echo 'There has no tests'",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.40",
+    "@rarible/ethereum-provider": "^0.13.67",
+    "@rarible/sdk-common": "^0.13.68",
     "@rarible/test-provider": "~0.5.0",
-    "@rarible/types": "~0.9.6",
+    "@rarible/types": "~0.9.21",
     "@types/web3-provider-engine": "^14.0.1",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",
-    "ganache": "^7.0.2",
-    "@truffle/hdwallet-provider": "^2.1.14",
+    "ganache": "^7.9.2",
     "web3-provider-engine": "^16.0.4"
-  },
-  "devDependencies": {
-    "typescript": "^4.8.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1",
-    "web3": "^4.2.0"
+    "web3": "^4.3.1-dev.5161642.0"
   },
   "publishConfig": {
     "access": "public",

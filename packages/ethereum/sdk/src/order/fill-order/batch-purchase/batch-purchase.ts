@@ -7,12 +7,10 @@ import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber } from "@rarible/types"
 import type { SimpleOpenSeaV1Order, SimpleOrder, SimpleRaribleV2Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
-import type { EthereumConfig } from "../../../config/type"
 import type { RaribleEthereumApis } from "../../../common/apis"
 import type { CheckAssetTypeFunction } from "../../check-asset-type"
 import { checkAssetType } from "../../check-asset-type"
 import { checkLazyAssetType } from "../../check-lazy-asset-type"
-import { checkChainId } from "../../check-chain-id"
 import type { IRaribleEthereumSdkConfig } from "../../../types"
 import type { EthereumNetwork } from "../../../types"
 import type {
@@ -42,6 +40,7 @@ import { getRequiredWallet } from "../../../common/get-required-wallet"
 import { LooksrareV2OrderHandler } from "../looksrare-v2"
 import { isErc20, isETH, isWeth } from "../../../nft/common"
 import { pureApproveFn } from "../../approve"
+import type { GetConfigByChainId } from "../../../config"
 
 export class BatchOrderFiller {
 	v2Handler: RaribleV2OrderHandler
@@ -58,28 +57,28 @@ export class BatchOrderFiller {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getConfig: GetConfigByChainId,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly getBaseOrderFee: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {
-		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, config, getBaseOrderFee)
-		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
-		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, apis, getBaseOrderFee, env)
-		this.looksrareHandler = new LooksrareOrderHandler(ethereum, send, config, getBaseOrderFee, env, apis)
+		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, getConfig, getBaseOrderFee)
+		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, sdkConfig)
+		this.seaportHandler = new SeaportOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
+		this.looksrareHandler = new LooksrareOrderHandler(ethereum, send, getConfig, getBaseOrderFee, env, getApis)
 		this.looksrareV2Handler = new LooksrareV2OrderHandler(
 			ethereum,
 			send,
-			config,
+			getConfig,
 			getBaseOrderFee,
 			env,
-			apis,
+			getApis,
 		)
-		this.x2Y2Handler = new X2Y2OrderHandler(ethereum, send, config, getBaseOrderFee, apis)
-		this.ammHandler = new AmmOrderHandler(ethereum, send, config, getBaseOrderFee, apis, env)
-		this.checkAssetType = checkAssetType.bind(this, apis.nftCollection)
-		this.checkLazyAssetType = checkLazyAssetType.bind(this, apis.nftItem)
+		this.x2Y2Handler = new X2Y2OrderHandler(ethereum, send, getConfig, getBaseOrderFee, getApis)
+		this.ammHandler = new AmmOrderHandler(ethereum, send, getConfig, getBaseOrderFee, getApis, env)
+		this.checkAssetType = checkAssetType.bind(this, getApis)
+		this.checkLazyAssetType = checkLazyAssetType.bind(this, getApis)
 		this.getTransactionRequestData = this.getTransactionRequestData.bind(this)
 	}
 
@@ -119,10 +118,6 @@ export class BatchOrderFiller {
 					return this.send(functionCall, options)
 				},
 			})
-			.before(async (input: Request) => {
-				await checkChainId(this.ethereum, this.config)
-				return input
-			})
 	}
 
 	/**
@@ -134,9 +129,10 @@ export class BatchOrderFiller {
 		feesReducer: OriginFeeReducer
 	): Promise<PreparedOrder[]> {
 		const from = toAddress(await getRequiredWallet(this.ethereum).getFrom())
+		const config = await this.getConfig()
 
 		const preparedOrders = await Promise.all(requests.map(async (request) => {
-			if (!isWeth(request.order.take.assetType, this.config.weth) && !isETH(request.order.take.assetType)) {
+			if (!isWeth(request.order.take.assetType, config) && !isETH(request.order.take.assetType)) {
 				throw new Error("Batch purchase is available only for ETH/WETH currencies")
 			}
 			let approveAsset: Asset | undefined
@@ -238,16 +234,18 @@ export class BatchOrderFiller {
 			infinite: isInfinite,
 		}
 
+		const config = await this.getConfig()
+
 		switch (orderType) {
 			case "RARIBLE_V2":
 				return pureApproveFn({
 					...approveInput,
-					operator: this.config.transferProxies.erc20,
+					operator: config.transferProxies.erc20,
 				})
 			case "SEAPORT_V1":
 				return pureApproveFn({
 					...approveInput,
-					operator: this.config.exchange.wrapper,
+					operator: config.exchange.wrapper,
 				})
 			default:
 				throw new Error(`Unsupported order: ${orderType}`)
@@ -263,6 +261,8 @@ export class BatchOrderFiller {
 	): Promise<OrderFillSendData> {
 		let totalValue = toBn(0)
 
+		const config = await this.getConfig()
+
 		const ordersCallData = await Promise.all(
 			preparedOrders.map(async (preparedOrder) => {
 				const requestData = await this.getOrderData(preparedOrder)
@@ -271,7 +271,7 @@ export class BatchOrderFiller {
 			})
 		)
 
-		const wrapperContract = createExchangeWrapperContract(this.ethereum!, this.config.exchange.wrapper)
+		const wrapperContract = createExchangeWrapperContract(this.ethereum!, config.exchange.wrapper)
 		const functionCall = wrapperContract.functionCall(
 			"bulkPurchase",
 			ordersCallData,

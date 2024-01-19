@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-common",
-  "version": "0.13.49",
+  "version": "0.13.68",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -13,10 +13,17 @@
     "build": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
     "test": "jest --runInBand --passWithNoTests",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/api-client": "0.0.15-beta1"
+    "@rarible/api-client": "0.16.5-alpha.6"
+  },
+  "devDependencies": {
+    "dotenv": "16.0.0",
+    "jest": "^27.2.7",
+    "jest-junit": "^15.0.0",
+    "node-fetch": "2.6.7",
+    "ts-jest": "^27.0.3"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

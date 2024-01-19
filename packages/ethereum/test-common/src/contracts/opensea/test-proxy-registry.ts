@@ -1,17 +1,18 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
-import type { Contract, types } from "web3"
+import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../../common"
 
 export function createOpenseaProxyRegistryContract(web3: Web3, address?: Address) {
-	return new web3.eth.Contract(proxyRegistryAbi, address)
+	return new web3.eth.Contract(proxyRegistryAbi, address, DEFAULT_DATA_TYPE)
 }
 
 export async function deployOpenseaProxyRegistry(web3: Web3) {
 	const empty = createOpenseaProxyRegistryContract(web3)
 	const [address] = await web3.eth.getAccounts()
-	return empty
+	const contract = await empty
 		.deploy({ data: proxyRegistryBytecode })
-		.send({ from: address, gas: "4000000", gasPrice: "0" })
+		.send({ from: address, gas: "4000000" })
+	return replaceBigIntInContract(contract)
 }
 
 export const proxyRegistryBytecode =

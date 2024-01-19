@@ -2,16 +2,12 @@ import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, deployTestErc20, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import { ethers } from "ethers"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { Web3Ethereum } from "../../../web3-ethereum"
-import { getApiConfig } from "../config/api-config"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
-import { getEthereumConfig } from "../config"
 import { approveErc20 as approveErc20Template } from "./approve-erc20"
-import { checkChainId } from "./check-chain-id"
 import { prependProviderName } from "./test/prepend-provider-name"
 
 const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
@@ -27,11 +23,8 @@ const providers = [
 
 describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 	const [testAddress] = addresses
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const config = getEthereumConfig("dev-ethereum")
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+
+	const send = getSendWithInjects()
 	const approveErc20 = approveErc20Template.bind(null, ethereum, send)
 
 	const it = awaitAll({

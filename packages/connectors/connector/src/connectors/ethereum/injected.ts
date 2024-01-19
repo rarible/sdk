@@ -12,16 +12,20 @@ import { getChainId } from "./common/get-chain-id"
 import type { EthereumProviderConnectionResult } from "./domain"
 const PROVIDER_ID = "injected" as const
 
+export type InjectedWeb3ConnectionConfig = {
+	prefer?: DappType[]
+}
+
 export class InjectedWeb3ConnectionProvider extends
 	AbstractConnectionProvider<DappType, EthereumProviderConnectionResult> {
   private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
-  constructor() {
+  constructor(
+	  private readonly config: InjectedWeb3ConnectionConfig = { prefer: [] },
+  ) {
   	super()
-  	this.connection = defer(() => {
-  		return connect()
-  	}).pipe(
-  		mergeMap(() => promiseToObservable(getWalletAsync())),
+  	this.connection = defer(() => connect(config)).pipe(
+  		mergeMap(() => promiseToObservable(getWalletAsync(config))),
   		map((wallet) => {
   			if (wallet) {
   				const disconnect = () => {
@@ -51,18 +55,18 @@ export class InjectedWeb3ConnectionProvider extends
   }
 
   getOption(): Promise<Maybe<DappType>> {
-  	const provider = getInjectedProvider()
+  	const provider = getInjectedProvider(this.config)
   	return Promise.resolve(getDappType(provider))
   }
 
   isAutoConnected(): Promise<boolean> {
-  	const provider = getInjectedProvider()
+  	const provider = getInjectedProvider(this.config)
   	const dapp = getDappType(provider)
   	return Promise.resolve(isDappSupportAutoConnect(dapp))
   }
 
   async isConnected(): Promise<boolean> {
-  	const provider = getInjectedProvider()
+  	const provider = getInjectedProvider(this.config)
   	if (provider !== undefined) {
   		return ethAccounts(provider)
   			.then(([account]) => account !== undefined)
@@ -72,8 +76,8 @@ export class InjectedWeb3ConnectionProvider extends
   }
 }
 
-async function connect(): Promise<void> {
-	const provider = getInjectedProvider()
+async function connect(config: InjectedWeb3ConnectionConfig): Promise<void> {
+	const provider = getInjectedProvider(config)
 	if (!provider) {
 		throw new Error("Injected provider not available")
 	}
@@ -89,8 +93,10 @@ async function connect(): Promise<void> {
 	})
 }
 
-async function getWalletAsync(): Promise<Observable<EthereumProviderConnectionResult | undefined>> {
-	const provider = getInjectedProvider()
+async function getWalletAsync(
+	config: InjectedWeb3ConnectionConfig
+): Promise<Observable<EthereumProviderConnectionResult | undefined>> {
+	const provider = getInjectedProvider(config)
 	return combineLatest([getAddress(provider), getChainId(provider)]).pipe(
 		map(([address, chainId]) => {
 			if (address) {
@@ -112,9 +118,22 @@ async function enableProvider(provider: any) {
 			await provider.request({
 				method: "eth_requestAccounts",
 			})
-		} catch (e) {
-			if (typeof provider.enable === "function") {
-				await provider.enable()
+		} catch (e: any) {
+			if (e && "code" in e && e.code === 4001) {
+				return
+			}
+
+			try {
+				// Attempt wallet_requestPermissions if eth_requestAccounts fails
+				// https://github.com/MetaMask/metamask-extension/issues/10085#issuecomment-1244107244
+				await provider.request({
+					method: "wallet_requestPermissions",
+					params: [{ eth_accounts: {} }],
+				})
+			} catch (e: any) {
+				if (typeof provider.enable === "function") {
+					await provider.enable()
+				}
 			}
 		}
 	} else {
@@ -125,14 +144,28 @@ async function enableProvider(provider: any) {
 	return provider
 }
 
-function getInjectedProvider(): any | undefined {
+function getInjectedProvider({ prefer }: InjectedWeb3ConnectionConfig): any | undefined {
 	let provider: any = undefined
 
 	const global: any = typeof window !== "undefined" ? window : undefined
 	if (!global) {
 		return provider
 	} else if (global.ethereum) {
-		provider = Array.isArray(global.ethereum.providers) ? global.ethereum.providers[0] : global.ethereum;
+		if (Array.isArray(global.ethereum.providers)) {
+			if (Array.isArray(prefer) && prefer.length) {
+				for (const preferredDapp of prefer) {
+					const found = global.ethereum.providers.find((p: any) => getDappType(p) === preferredDapp)
+					if (found) {
+						provider = found
+						break
+					}
+				}
+			} else {
+				provider = global.ethereum.providers[0]
+			}
+		}
+
+		provider = provider || global.ethereum;
 		(provider as any).autoRefreshOnNetworkChange = false
 	} else if (global.web3?.currentProvider) {
 		provider = global.web3.currentProvider
@@ -146,7 +179,7 @@ function isDappSupportAutoConnect(dapp: Maybe<DappType>): boolean {
 	}
 
 	const unsupportedDappTypes: Set<DappType> = new Set([DappType.Dapper])
-	const disabledAutoLogin = new Set([DappType.Generic, DappType.Metamask])
+	const disabledAutoLogin = new Set([DappType.Generic, DappType.Metamask, DappType.Coinbase])
 
 	return !(unsupportedDappTypes.has(dapp) || disabledAutoLogin.has(dapp))
 }

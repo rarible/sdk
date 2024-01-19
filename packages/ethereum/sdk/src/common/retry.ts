@@ -1,3 +1,5 @@
+import { conditionalRetry, FAILED_TO_FETCH_ERROR } from "@rarible/sdk-common"
+
 export function retry<T>(
 	num: number,
 	del: number,
@@ -13,4 +15,13 @@ export function retry<T>(
 
 export function delay(num: number) {
 	return new Promise<void>((r) => setTimeout(r, num))
+}
+
+export function wrapInRetry<T>(thunk: () => Promise<T>) {
+	return conditionalRetry(
+		5,
+		3000,
+		thunk,
+		(error) => error?.message === FAILED_TO_FETCH_ERROR
+	)
 }

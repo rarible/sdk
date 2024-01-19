@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.13.40",
+  "version": "0.13.65",
   "keywords": [
     "solana",
     "web3"
@@ -15,7 +15,7 @@
     "clean": "rimraf ./build",
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
-    "verify": "tsc --noEmit"
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-auction": "^0.0.2",
@@ -27,8 +27,8 @@
     "@metaplex/js": "^4.12.0",
     "@project-serum/anchor": "^0.22.1",
     "@rarible/logger": "^0.9.12",
-    "@rarible/solana-common": "^0.13.37",
-    "@rarible/solana-wallet": "^0.13.40",
+    "@rarible/solana-common": "^0.13.65",
+    "@rarible/solana-wallet": "^0.13.65",
     "@rarible/utils": "~0.9.10",
     "@solana/spl-token": "^0.1.8",
     "@solana/web3.js": "^1.36.0",
@@ -46,8 +46,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.5.1",
     "jest-junit": "^15.0.0",
-    "ts-jest": "^27.0.7",
-    "typescript": "^4.8.4"
+    "ts-jest": "^27.0.7"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

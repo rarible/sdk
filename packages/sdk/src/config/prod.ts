@@ -8,4 +8,10 @@ export const prodConfig: RaribleSdkConfig = {
 	polygonNetwork: "polygon",
 	solanaNetwork: "mainnet-beta",
 	immutablexNetwork: "prod",
+	mantleNetwork: "mantle",
+	arbitrumNetwork: "arbitrum",
+	zksync: "zksync",
+	chiliz: "chiliz",
+	lightlink: "lightlink",
+	rari: "testnet-rari",
 }

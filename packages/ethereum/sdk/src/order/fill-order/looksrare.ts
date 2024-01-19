@@ -8,7 +8,6 @@ import type { Part } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { BigNumberValue } from "@rarible/utils"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import { toVrs } from "../../common/to-vrs"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
@@ -18,6 +17,7 @@ import { isNft } from "../is-nft"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import type { RaribleEthereumApis } from "../../common/apis"
+import type { GetConfigByChainId } from "../../config"
 import type { MakerOrderWithVRS, TakerOrderWithEncodedParams } from "./looksrare-utils/types"
 import type { LooksrareOrderFillRequest, OrderFillSendData } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
@@ -33,10 +33,10 @@ export class LooksrareOrderHandler {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
 
@@ -120,11 +120,13 @@ export class LooksrareOrderHandler {
 
 		const makerOrder = this.convertMakerOrderToLooksrare(request.order, request.amount)
 
-		makerOrder.currency = this.config.weth
+		const config = await this.getConfig()
+
+		makerOrder.currency = config.weth
 
 		const takerOrder: TakerOrderWithEncodedParams = {
 			isOrderAsk: false,
-			taker: this.config.exchange.wrapper,
+			taker: config.exchange.wrapper,
 			price: makerOrder.price,
 			tokenId: makerOrder.tokenId,
 			minPercentageToAsk: makerOrder.minPercentageToAsk,
@@ -150,7 +152,8 @@ export class LooksrareOrderHandler {
 		}
 
 		if (request.addRoyalty) {
-			const royalties = (await this.apis.nftItem.getNftItemRoyaltyById({
+			const apis = await this.getApis()
+			const royalties = (await apis.nftItem.getNftItemRoyaltyById({
 				itemId: `${makerOrder.collection}:${makerOrder.tokenId}`,
 			})).royalty
 
@@ -191,7 +194,9 @@ export class LooksrareOrderHandler {
 		const { requestData, feeAddresses } = await this.prepareTransactionData(request, request.originFees, undefined)
 
 		const provider = getRequiredWallet(this.ethereum)
-		const wrapperContract = createExchangeWrapperContract(provider, this.config.exchange.wrapper)
+		const config = await this.getConfig()
+
+		const wrapperContract = createExchangeWrapperContract(provider, config.exchange.wrapper)
 
 		const functionCall = wrapperContract.functionCall(
 			"singlePurchase",

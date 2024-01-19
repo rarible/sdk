@@ -2,7 +2,7 @@
   "packages": [
     "packages/**/*"
   ],
-  "version": "0.13.49",
+  "version": "0.13.68",
   "npmClient": "yarn",
   "useWorkspaces": true,
   "command": {
@@ -10,7 +10,8 @@
       "allowBranch": [
         "master",
         "fix/*",
-        "beta/*"
+        "beta/*",
+        "release/*"
       ],
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",

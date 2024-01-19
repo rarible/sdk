@@ -8,4 +8,10 @@ export const developmentConfig: RaribleSdkConfig = {
 	polygonNetwork: "dev-polygon",
 	solanaNetwork: "devnet",
 	immutablexNetwork: "testnet",
+	mantleNetwork: "testnet-mantle",
+	arbitrumNetwork: "testnet-arbitrum",
+	zksync: "testnet-zksync",
+	chiliz: "testnet-chiliz",
+	lightlink: "testnet-lightlink",
+	rari: "testnet-rari",
 }

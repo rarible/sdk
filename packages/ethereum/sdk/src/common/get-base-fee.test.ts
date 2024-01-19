@@ -1,14 +1,35 @@
-import { configDictionary, getEthereumConfig } from "../config"
+import { configDictionary } from "../config"
 import type { EthereumNetwork } from "../types"
-import type { EnvFeeType } from "./get-base-fee"
 import { getBaseFee } from "./get-base-fee"
+import { createEthereumApis, getApis as getApisTemplate } from "./apis"
+import { delay } from "./retry"
+import { getAPIKey } from "./test/test-credentials"
 
 describe("get base fee", () => {
-	const config = getEthereumConfig("testnet")
-
 	test("get base fee from mainnet", async () => {
-	  const fee = await getBaseFee(config, "mainnet")
+		const env: EthereumNetwork = "mainnet"
+		const getApis = getApisTemplate.bind(null, undefined, env, { apiKey: getAPIKey(env) })
+	  const fee = await getBaseFee(env, getApis)
 		expect(fee).not.toBeNaN()
+	})
+
+	test.concurrent("get base fee with error", async () => {
+		const env: EthereumNetwork = "mainnet"
+		// const getApis = getApisTemplate.bind(null, null, env, { apiKey: getAPIKey(env) })
+		//
+		const getApis = async () => {
+			const apis = createEthereumApis(env, {})
+		  apis.orderSettings.getFees = () => { throw new Error("wow") }
+			return apis
+		}
+	  let feeError: any
+		try {
+			await getBaseFee(env, getApis)
+		} catch (e) {
+			feeError = e
+		}
+		expect(feeError).toBeTruthy()
+		expect(feeError?.message.startsWith("Getting fee error")).toBe(true)
 	})
 
 	test("check fees.json config", async () => {
@@ -17,31 +38,17 @@ describe("get base fee", () => {
 	})
 })
 
-const envs = Object.keys(configDictionary) as EthereumNetwork[]
+const envs = Object.keys(configDictionary)
+	.filter(network => network !== "testnet-lightlink" && network !== "lightlink") as EthereumNetwork[]
 
-describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
-	const config = getEthereumConfig(env)
-	const configFile = require("../config/fees.json")
+describe.each(envs)("get base fee each of environments", (env: EthereumNetwork) => {
+	const getApis = async () => {
+		return createEthereumApis(env, { apiKey: getAPIKey(env) })
+	}
 
-	test(`get base fee from ${env} with master branch`, async () => {
-		const fee = await getBaseFee(config, env)
+	afterAll(async () => delay(1000))
+	test(`get base fee from ${env}`, async () => {
+		const fee = await getBaseFee(env, getApis)
 		expect(fee).not.toBeNaN()
-	})
-
-	const orderTypes: EnvFeeType[] = [
-		"RARIBLE_V1",
-		"RARIBLE_V2",
-		"OPEN_SEA_V1",
-		"SEAPORT_V1",
-		"LOOKSRARE",
-		"CRYPTO_PUNK",
-		"AMM",
-		"X2Y2",
-		"AUCTION",
-	]
-	test.each(orderTypes)(`get base fee with env=${env} for type=%s`, async () => {
-		for (let type of orderTypes) {
-			expect(configFile[env][type]).not.toBeNaN()
-		}
 	})
 })

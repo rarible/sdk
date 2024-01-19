@@ -10,7 +10,7 @@ export type EthereumProviderErrorData = {
 	code?: string | number
 	signer?: string
 	chainId?: number
-
+	blockNumber?: number
 }
 
 export class EthereumProviderError extends Error {
@@ -22,36 +22,38 @@ export class EthereumProviderError extends Error {
   code?: string | number
   signer?: string
 	chainId?: number
+  blockNumber?: number
 
-	constructor(data: EthereumProviderErrorData) {
+  constructor(data: EthereumProviderErrorData) {
   	super(EthereumProviderError.getErrorMessage(data?.error))
   	Object.setPrototypeOf(this, EthereumProviderError.prototype)
   	this.name = "EthereumProviderError"
   	this.error = data?.error
-		if (data?.error?.stack) {
-			this.stack = this.getNewStack(data?.error)
-		}
+  	if (data?.error?.stack) {
+  		this.stack = this.getNewStack(data?.error)
+  	}
   	this.provider = data?.provider
   	this.data = data?.data
   	this.method = data?.method
-		this.code = data?.error?.code || data?.code
-		this.signer = data?.signer
-		this.chainId = data?.chainId
-		this.providerId = data?.providerId
-	}
+  	this.code = data?.error?.code || data?.error?.error?.code || data?.code
+  	this.signer = data?.signer
+  	this.chainId = data?.chainId
+  	this.providerId = data?.providerId
+  	this.blockNumber = data?.blockNumber
+  }
 
-	static getErrorMessage(error: any) {
-		if (typeof error === "string") return error
-		if (error && typeof error.message === "string") return error.message
-		if (typeof error !== "undefined" && error !== null) return getStringifiedData(error)
-		return "EthereumProviderError"
-	}
+  static getErrorMessage(error: any) {
+  	if (typeof error === "string") return error
+  	if (error && typeof error.message === "string") return error.message
+  	if (typeof error !== "undefined" && error !== null) return getStringifiedData(error)
+  	return "EthereumProviderError"
+  }
 
-	getNewStack(error: any) {
-		try {
-			return (this.stack?.split("\n").slice(0, 2).join("\n") + "\n" + error.stack) || this.stack
-		} catch (e) {
-			return this.stack || error.stack
-		}
-	}
+  getNewStack(error: any) {
+  	try {
+  		return (this.stack?.split("\n").slice(0, 2).join("\n") + "\n" + error.stack) || this.stack
+  	} catch (e) {
+  		return this.stack || error.stack
+  	}
+  }
 }

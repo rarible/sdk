@@ -2,9 +2,8 @@ import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { toAddress } from "@rarible/types"
+import { deepReplaceBigInt } from "@rarible/sdk-common"
 import { parseRequestError } from "./utils/parse-request-error"
-import type { TxReceiptNumberFormatted } from "./domain"
-import { NumberDataFormat } from "./domain"
 import { Web3Ethereum, Web3Transaction } from "./index"
 
 describe("Web3Ethereum", () => {
@@ -93,6 +92,7 @@ describe("Web3Ethereum", () => {
 })
 
 describe("get transaction receipt events", () => {
+
 	const { provider } = common.createE2eProvider(
 		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469",
 		{
@@ -104,15 +104,12 @@ describe("get transaction receipt events", () => {
 
 	test("get Seaport tx events (prod)", async () => {
 		const web3 = e2eEthereum.getWeb3Instance()
-		const receipt = web3.eth.getTransactionReceipt(
-			"0x2f81b44332228d78eda5ea48e62134fddd2354713d77f4f61588d91cd7a735ff",
-			NumberDataFormat
-		)
+		const receipt = web3.eth.getTransactionReceipt("0x2f81b44332228d78eda5ea48e62134fddd2354713d77f4f61588d91cd7a735ff")
 		const seaportAddr = "0x00000000006c3852cbef3e08e8df289169ede581"
 
+		// console.log("receipt", await receipt)
 		const tx = new Web3Transaction(
-			receipt as Promise<TxReceiptNumberFormatted>,
-			null as any,
+			deepReplaceBigInt(await receipt),
 			null as any,
 			null as any,
 			null as any,
@@ -120,6 +117,7 @@ describe("get transaction receipt events", () => {
 			SeaportABI,
 		)
 		const events = await tx.getEvents()
+		console.log(JSON.stringify(events, null, "  "))
 		expect(events.find(e => e.event === "OrderFulfilled")).toBeTruthy()
 	})
 })

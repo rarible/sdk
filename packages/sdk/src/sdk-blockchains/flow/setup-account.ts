@@ -2,8 +2,9 @@ import type { FlowSdk } from "@rarible/flow-sdk"
 import type { CollectionId } from "@rarible/api-client"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
 import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
-import type { CollectionsInitStatus } from "@rarible/flow-sdk/build/collection/check-init-mattel-collections"
-import { getFlowCollection } from "./common/converters"
+import type { CollectionsInitStatus } from "@rarible/flow-sdk/build/collection/check-init-collections"
+import type { UnionAddress } from "@rarible/types"
+import { getFlowCollection, parseFlowAddressFromUnionAddress } from "./common/converters"
 
 export class FlowSetupAccount {
 	constructor(
@@ -21,8 +22,9 @@ export class FlowSetupAccount {
 		return new BlockchainFlowTransaction(tx, this.network)
 	}
 
-	async checkInitMattelCollections() {
-		const statuses = await this.sdk.collection.checkInitMattelCollections()
+	async checkInitMattelCollections(address?: UnionAddress) {
+		const flowAddress = address ? parseFlowAddressFromUnionAddress(address) : undefined
+		const statuses = await this.sdk.collection.checkInitCollections(flowAddress)
 		const initCollections = Object.keys(statuses)
 			.every(key => statuses[key as keyof CollectionsInitStatus])
 		return {
@@ -32,7 +34,7 @@ export class FlowSetupAccount {
 	}
 
 	async setupMattelCollections() {
-		const tx = await this.sdk.collection.setupMattelCollections()
+		const tx = await this.sdk.collection.setupCollections()
 		return new BlockchainFlowTransaction(tx, this.network)
 	}
 }

@@ -12,19 +12,16 @@ export function ConnectorUsageComment() {
 		<Code>
 			{`
 import { Connector, InjectedWeb3ConnectionProvider } from "@rarible/connector"
-import { MEWConnectionProvider } from "@rarible/connector-mew"
 
 // 1. Configure providers			
-const injected = new InjectedWeb3ConnectionProvider()
-const mew = new MEWConnectionProvider({
-  networkId: 4,
-  rpcUrl: ethereumRpcMap[4]
+const injected = new InjectedWeb3ConnectionProvider({
+  // optional, order of dapps preferred to connect 
+  prefer: [DappType.Metamask, DappType.Coinbase],
 })
 			
 // 2. Create connector			
 const connector = Connector
   .create(injected)
-  .add(mew)
   
 // 3. Connector ready to use
 connector.connection.subscribe((con) => {  

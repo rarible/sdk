@@ -6,11 +6,11 @@ import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
-import { checkChainId } from "../check-chain-id"
 import { retry } from "../../common/retry"
 import type { SimpleOrder } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
+import { ETHER_IN_WEI } from "../../common"
 import { mintTokensToNewSudoswapPool } from "./amm/test/utils"
 
 describe.skip("amm", () => {
@@ -25,13 +25,11 @@ describe.skip("amm", () => {
 	const config = getEthereumConfig(env)
 	const sellerWeb3 = new Web3Ethereum({ web3: new Web3(providerSeller as any), gas: 3000000 })
 	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
-	const checkWalletChainId = checkChainId.bind(null, buyerWeb3, config)
-	const sendBuyer = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const sendBuyer = getSimpleSendWithInjects()
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 
 	const sdkSeller = createRaribleSdk(sellerWeb3, env)
-	const checkWalletChainIdSeller = checkChainId.bind(null, sellerWeb3, config)
-	const sendSeller = getSimpleSendWithInjects().bind(null, checkWalletChainIdSeller)
+	const sendSeller = getSimpleSendWithInjects()
 
 	const royalty1Account = toAddress("0x8508317a912086b921F6D2532f65e343C8140Cc8")
 	const royalty2Account = toAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
@@ -123,14 +121,14 @@ describe.skip("amm", () => {
 
 	async function checkEthBalance(address: string, value: string) {
 		return retry(10, 3000, async () => {
-			const balance = toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+			const balance = toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
 			expect(balance.toString()).toBe(value)
 		})
 	}
 	async function getEthBalances(addresses: string[]) {
 		return Promise.all(
 			addresses.map(async address => {
-				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
 			})
 		)
 	}

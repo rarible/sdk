@@ -1,7 +1,9 @@
 @Library('shared-library') _
 
 def pipelineConfig = [
-  "JSpublicLibrary": "true"
+  "JSpublicLibrary": "true",
+  "pkgRepoName": "npmjs-org",
+  "ignoreEngines": "true"
 ]
 
 withCredentials([
@@ -9,5 +11,5 @@ withCredentials([
   string(credentialsId: 'sdk-api-key-testnet', variable: 'SDK_API_KEY_TESTNET'),
   string(credentialsId: 'sdk-api-key-prod', variable: 'SDK_API_KEY_PROD')
 ]) {
-  pipelinePackageRelease(pipelineConfig)
+    pipelinePackageRelease(pipelineConfig)
 }

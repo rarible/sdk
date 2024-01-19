@@ -1,4 +1,3 @@
-import type { GatewayControllerApi } from "@rarible/ethereum-api-client"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
 import {
 	getPromiEventConfirmationPromise,
@@ -16,8 +15,6 @@ export type SendFunction = (
 ) => Promise<EthereumTransaction>
 
 type SendMethod = (
-	api: GatewayControllerApi,
-	checkChainId: () => Promise<boolean>,
 	functionCall: EthereumFunctionCall,
 	options?: EthereumSendOptions
 ) => Promise<EthereumTransaction>
@@ -28,17 +25,12 @@ export function getSendWithInjects(injects: {
 	const logger = injects.logger
 
 	return async function send(
-		api: GatewayControllerApi,
-		checkChainId: () => Promise<boolean>,
 		functionCall: EthereumFunctionCall,
 		options?: EthereumSendOptions
 	): Promise<EthereumTransaction> {
-		await checkChainId()
 		const callInfo = await functionCall.getCallInfo()
 
-		try {
-			await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
-		} catch (err) {}
+		await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
 
 		try {
 			const tx = await functionCall.send(options)
@@ -89,7 +81,6 @@ export function getSendWithInjects(injects: {
 }
 
 type SimpleSendMethod = (
-	checkChainId: () => Promise<boolean>,
 	functionCall: EthereumFunctionCall,
 	options?: EthereumSendOptions,
 ) => Promise<EthereumTransaction>
@@ -100,7 +91,6 @@ export function getSimpleSendWithInjects(injects: {
 	const logger = injects.logger
 
 	return async function simpleSend(
-		checkChainId: () => Promise<boolean>,
 		functionCall: EthereumFunctionCall,
 		options?: EthereumSendOptions,
 	) {
@@ -155,7 +145,6 @@ function getTxData(tx: EthereumTransaction) {
 	return {
 		hash: tx.hash,
 		data: tx.data,
-		nonce: tx.nonce,
 		from: tx.from,
 		to: tx.to,
 	}

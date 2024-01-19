@@ -1,5 +1,6 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
+import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../common"
 
 
 const cryptoPunksAbi = [{
@@ -469,15 +470,15 @@ export async function deployCryptoPunks(web3: Web3, address?: Address) {
 	const contract = createCryptoPunks(web3, address)
 	const [from] = await web3.eth.getAccounts()
 
-	return contract
+	const deployedContract = await contract
 		.deploy({ data: cryptoPunksMarketBytecode, arguments: [] })
 		.send({
 			from,
 			gas: "4000000",
-			gasPrice: "0",
 		})
+	return replaceBigIntInContract(deployedContract)
 }
 
 export function createCryptoPunks(web3: Web3, address?: Address) {
-	return new web3.eth.Contract(cryptoPunksAbi, address)
+	return new web3.eth.Contract(cryptoPunksAbi, address, DEFAULT_DATA_TYPE)
 }

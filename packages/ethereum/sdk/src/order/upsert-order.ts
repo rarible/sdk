@@ -6,7 +6,6 @@ import type {
 	Erc20AssetType,
 	EthAssetType,
 	Order,
-	OrderControllerApi,
 	OrderForm,
 	Part,
 	RaribleV2OrderForm,
@@ -24,7 +23,11 @@ import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
 import { waitTx } from "../common/wait-tx"
-import type { SimpleCryptoPunkOrder, SimpleOrder, UpsertSimpleOrder } from "./types"
+import { checkMinPaymentValue } from "../common/check-min-payment-value"
+import { ETHER_IN_WEI } from "../common"
+import type { GetConfigByChainId } from "../config"
+import type { RaribleEthereumApis } from "../common/apis"
+import type { SimpleCryptoPunkOrder, SimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
 import type { OrderFiller } from "./fill-order"
@@ -50,7 +53,7 @@ export type OrderRequestV2 = {
 	payouts: Part[]
 	originFees: Part[]
 	start?: number
-	end?: number
+	end: number
 }
 
 export type OrderRequestV3Sell = {
@@ -61,7 +64,7 @@ export type OrderRequestV3Sell = {
 	originFeeSecond?: Part
 	maxFeesBasePoint: number
 	start?: number
-	end?: number
+	end: number
 }
 
 export type OrderRequestV3Buy = {
@@ -71,7 +74,7 @@ export type OrderRequestV3Buy = {
 	originFeeFirst?: Part
 	originFeeSecond?: Part
 	start?: number
-	end?: number
+	end: number
 }
 
 export type OrderRequest = OrderRequestV2 | OrderRequestV3Buy | OrderRequestV3Sell
@@ -80,12 +83,12 @@ export class UpsertOrder {
 	constructor(
 		private readonly orderFiller: OrderFiller,
 		private readonly send: SendFunction,
+		private readonly getConfig: GetConfigByChainId,
 		public readonly checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
 		private readonly approveFn: ApproveFunction,
 		private readonly signOrder: (order: SimpleOrder) => Promise<Binary>,
-		private readonly orderApi: OrderControllerApi,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly ethereum: Maybe<Ethereum>,
-		private readonly checkWalletChainId: () => Promise<boolean>,
 		private readonly marketplaceMarker: Word | undefined
 	) {}
 
@@ -102,16 +105,13 @@ export class UpsertOrder {
 			id: "sign" as const,
 			run: (checked: OrderForm) => this.upsertRequest(checked),
 		})
-		.before(async (input: UpsertOrderActionArg) => {
-			await this.checkWalletChainId()
-			return input
-		})
 
 	async getOrder(hasOrder: HasOrder): Promise<SimpleOrder> {
 		if ("order" in hasOrder) {
 			return hasOrder.order
 		} else {
-			return this.orderApi.getValidatedOrderByHash({ hash: hasOrder.orderHash })
+			const apis = await this.getApis()
+			return apis.order.getValidatedOrderByHash({ hash: hasOrder.orderHash })
 		}
 	}
 
@@ -121,7 +121,7 @@ export class UpsertOrder {
 		} else {
 			switch (assetType.assetClass) {
 				case "ETH":
-					return toBn(hasPrice.priceDecimal).multipliedBy(toBn(10).pow(18))
+					return toBn(hasPrice.priceDecimal).multipliedBy(ETHER_IN_WEI)
 				case "ERC20":
 					const decimals = await createErc20Contract(
 						getRequiredWallet(this.ethereum),
@@ -136,13 +136,11 @@ export class UpsertOrder {
 		}
 	}
 
-	async approve(checkedOrder: OrderForm, infinite: boolean = false): Promise<EthereumTransaction | undefined>  {
+	async approve(checkedOrder: OrderForm, infinite: boolean = false): Promise<EthereumTransaction | undefined> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checkedOrder)
 		const fee = await this.orderFiller.getOrderFee(simple)
 		const make = addFee(checkedOrder.make, fee)
-		console.log("checkedOrder.maker, make", checkedOrder.maker, make)
 		const approveTx = this.approveFn(checkedOrder.maker, make, infinite)
-		console.log("approveTx", await approveTx)
 		if (approveTx) {
 			await waitTx(approveTx)
 		}
@@ -151,7 +149,10 @@ export class UpsertOrder {
 
 	async upsertRequest(checked: OrderForm): Promise<Order> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checked)
-		return this.orderApi.upsertOrder({
+		const config = await this.getConfig()
+		const apis = await this.getApis()
+		checkMinPaymentValue(checked, config)
+		return apis.order.upsertOrder({
 			orderForm: {
 				...checked,
 				signature: await this.signOrder(simple),
@@ -216,16 +217,6 @@ export class UpsertOrder {
 		return {
 			...form,
 			salt: toBinary(toBn(form.salt).toString(16)) as any,
-		}
-	}
-
-	getOrderFormFromOrder<T extends UpsertSimpleOrder>(order: T, make: T["make"], take: T["take"]): OrderForm {
-		return {
-			...order,
-			make,
-			take,
-			salt: toBigNumber(toBn(order.salt, 16).toString(10)),
-			signature: order.signature || toBinary("0x"),
 		}
 	}
 

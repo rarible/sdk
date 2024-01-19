@@ -1,11 +1,24 @@
 import { EthereumProviderError } from "@rarible/ethereum-provider"
-import { isInfoLevel } from "@rarible/sdk-common"
+import { delay, isInfoLevel } from "@rarible/sdk-common"
 import { WrongNetworkWarning } from "@rarible/protocol-ethereum-sdk/src/order/check-chain-id"
-import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk/src"
-import { LogsLevel } from "@rarible/protocol-ethereum-sdk/src/types"
-import { WalletType } from "../../index"
+import { Blockchain } from "@rarible/api-client"
+import { toCollectionId } from "@rarible/types"
+import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { Web3Ethereum } from "@rarible/web3-ethereum"
+import Web3 from "web3"
+import { EthereumWallet } from "@rarible/sdk-wallet"
+import { RemoteLogger } from "@rarible/logger/build"
+import type { LoggableValue } from "@rarible/logger/build/domain"
+import { DEV_PK_1, ETH_DEV_SETTINGS } from "../../sdk-blockchains/ethereum/test/common"
+import { awaitItem } from "../test/await-item"
+import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "../../sdk-blockchains/ethereum/common"
 import { InsufficientFundsError } from "../../sdk-blockchains/ethereum/bid"
-import { getErrorLevel, getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
+import { createRaribleSdk, WalletType } from "../../index"
+import { getAPIKey } from "../test/create-sdk"
+import { getSdkContext } from "../get-sdk-context"
+import { LogsLevel } from "../../domain"
+import { MintType } from "../../types/nft/mint/prepare"
+import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
 describe("logger overrides", () => {
 	describe("isErrorWarning", () => {
@@ -36,16 +49,22 @@ describe("logger overrides", () => {
 		})
 	})
 
-	test("isInfoLevel returns true", async () => {
-		const err = new EthereumProviderError({
-			data: null,
-			error: {
-				message: "Cancelled",
-			},
-			method: "any",
+	describe("isInfoLevel tests", () => {
+		const errors = [
+			{ message: "Cancelled" },
+			{ message: "User did not approve" },
+			{ message: "Popup closed" },
+			{ code: 4001 },
+		]
+		test.each(errors)("isInfoLevel test with message=$message and code=$code", (error) => {
+			const err = new EthereumProviderError({
+				data: null,
+				error,
+				method: "any",
+			})
+			const isInfoLvl = isInfoLevel(err)
+			expect(isInfoLvl).toBeTruthy()
 		})
-		const isInfoLvl = isInfoLevel(err)
-		expect(isInfoLvl).toBeTruthy()
 	})
 
 	test("simple message", () => {
@@ -82,22 +101,82 @@ describe("logger overrides", () => {
 		expect(isErrorWarning(error, WalletType.FLOW)).toBeTruthy()
 	})
 
-	test("get level=ERROR during getValidatedOrderByHash", async () => {
-		const sdk = createRaribleSdk(undefined, "mainnet", {
-			logs: {
-				level: LogsLevel.DISABLED,
-			},
-			apiKey: process.env.SDK_API_KEY_PROD || undefined,
-		})
-		let responseError
-		try {
-			await sdk.apis.order.getValidatedOrderByHash({
-				hash: "0xa7dade8642acc83dc60d50bef30af7f2951cd454e1c35cdc71a14db6452759e5",
+	describe("SDK middleware extra fields", () => {
+		const { provider, wallet } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
+		const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
+
+		const ethereumWallet = new EthereumWallet(ethereum)
+		const erc721Address = convertEthereumContractAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d", Blockchain.ETHEREUM)
+
+		test("should mint ERC721 token", async () => {
+			const mockLogger = jest.fn()
+
+			const sdk = createRaribleSdk(ethereumWallet, "development", {
+				apiKey: getAPIKey("development"),
+				logger: new RemoteLogger(
+					async (msg: LoggableValue) => mockLogger(msg),
+					{
+						initialContext: getSdkContext({
+							env: "development",
+							sessionId: "",
+							config: {
+								logs: LogsLevel.ERROR,
+							},
+						}),
+						dropBatchInterval: 100,
+						maxByteSize: 5 * 10240,
+					}),
+				logs: LogsLevel.ERROR,
 			})
-		} catch (e: any) {
-			responseError = e
-		}
-		const errorLevel = getErrorLevel("any", responseError, undefined)
-		expect(errorLevel).toBe("ERROR")
+
+			const senderRaw = wallet.getAddressString()
+			const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
+			const tokenId = {
+				tokenId: "53721905486644660545161939638297855196812841812653174796223513003283747704164" as any,
+				signature: {
+					v: 28,
+					r: "0xfee4b9f9cd62202e8e1550748d58ae39a3af8775f2c38f202b253f0e40cd35ab" as any,
+					s: "0x4c4eb02b8edd71f8522fa465e3dbfaee75f887287daadddd5b5056d9c2bae038" as any,
+				},
+			}
+
+			try {
+				const action = await sdk.nft.mint.prepare({
+					collectionId: toCollectionId(erc721Address),
+					tokenId: tokenId,
+				})
+				const result = await action.submit({
+					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+					creators: [{
+						account: sender,
+						value: 10000,
+					}],
+					royalties: [],
+					lazyMint: false,
+					supply: 1,
+				})
+
+				if (result.type === MintType.ON_CHAIN) {
+					const transaction = await result.transaction.wait()
+					expect(transaction.blockchain).toEqual("ETHEREUM")
+					expect(transaction.hash).toBeTruthy()
+
+					const item = await awaitItem(sdk, result.itemId)
+					expect(item.tokenId).toEqual(tokenId?.tokenId)
+				} else {
+					throw new Error("Must be on chain")
+				}
+			} catch (e) {}
+
+			await delay(1000)
+
+			const logObject = JSON.parse(mockLogger.mock.calls[0][0][0].error)
+
+			expect(logObject.data.method).toBe("mintAndTransfer")
+			expect(logObject.data.from).toBeTruthy()
+			expect(logObject.blockNumber).toBeTruthy()
+			expect(logObject.chainId).toBeTruthy()
+		})
 	})
+
 })

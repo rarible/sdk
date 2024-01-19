@@ -1,16 +1,18 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
+import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../common"
 
 export function createTransferProxyContract(web3: Web3, address?: Address) {
-	return new web3.eth.Contract(transferProxyAbi, address)
+	return new web3.eth.Contract(transferProxyAbi, address, DEFAULT_DATA_TYPE)
 }
 
 export async function deployTransferProxy(web3: Web3) {
 	const empty = createTransferProxyContract(web3)
 	const [address] = await web3.eth.getAccounts()
-	return empty
+	const contract = await empty
 		.deploy({ data: transferProxyBytecode })
-		.send({ from: address, gas: "4000000", gasPrice: "0" })
+		.send({ from: address, gas: "4000000" })
+	return replaceBigIntInContract(contract)
 }
 
 const transferProxyAbi = [

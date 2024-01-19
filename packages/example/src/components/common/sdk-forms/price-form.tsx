@@ -27,7 +27,7 @@ export function parseCurrencyType(value: string): {
 	return {
 		blockchain: blockchain as Blockchain,
 		type: type as CurrencyOption["type"],
-		contract: contract ? toContractAddress(contract) : undefined,
+		contract: (contract && contract !== "null") ? toContractAddress(contract) : undefined,
 	}
 }
 

@@ -2,6 +2,7 @@ import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/types"
 import { utils, eth } from "web3"
 import type { ContractAbi } from "web3"
+import { deepReplaceBigInt } from "@rarible/sdk-common"
 import type { TxReceiptNumberFormatted } from "../domain"
 
 
@@ -131,19 +132,4 @@ export function parseReceiptEvents(
 	})
 
 	return eventsMap as any
-}
-
-export function deepReplaceBigInt(o: unknown): any {
-	if (Array.isArray(o)) {
-		return o.map(item => deepReplaceBigInt(item))
-	}
-	if (typeof o === "object") {
-		const clonedObject = { ...o } as Record<string, unknown>
-		return Object.keys(clonedObject).reduce((acc, key) => {
-			acc[key] = deepReplaceBigInt(acc[key])
-			return acc
-		}, clonedObject)
-	}
-	if (typeof o === "bigint") return o.toString()
-	return o
 }

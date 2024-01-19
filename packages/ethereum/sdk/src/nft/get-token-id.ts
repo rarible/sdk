@@ -1,4 +1,5 @@
 import type { Address, NftCollectionControllerApi, NftTokenId } from "@rarible/ethereum-api-client"
+import { wrapInRetry } from "../common/retry"
 
 export async function getTokenId(
 	nftCollectionApi: NftCollectionControllerApi, collection: Address, minter: Address, nftTokenId?: NftTokenId
@@ -6,10 +7,5 @@ export async function getTokenId(
 	if (nftTokenId !== undefined) {
 		return nftTokenId
 	}
-	try {
-	  return await nftCollectionApi.generateNftTokenId({ collection, minter })
-	} catch (e) {
-		console.log("e", e, collection, minter, nftTokenId)
-		throw e
-	}
+	return wrapInRetry(() => nftCollectionApi.generateNftTokenId({ collection, minter }))
 }

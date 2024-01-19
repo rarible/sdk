@@ -6,6 +6,9 @@ module.exports = {
 		"^.+\\.ts?$": "ts-jest",
 	},
 	globals: {
+		"ts-jest": {
+			tsconfig: "tsconfig-build.json",
+		},
 		crypto: {
 			getRandomValues: (arr) => require("crypto").randomBytes(arr.length),
 		},

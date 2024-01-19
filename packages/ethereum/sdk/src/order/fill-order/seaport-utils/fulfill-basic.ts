@@ -85,8 +85,6 @@ export async function getfulfillBasicOrderData({
 	// const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 	const functionCall = seaportContract.functionCall("fulfillBasicOrder", basicOrderParameters)
 
-	console.log("fulfillBasicOrder", JSON.stringify(basicOrderParameters, null, " "))
-
 	return {
 		functionCall,
 		options: { value: totalNativeAmount?.toString() },

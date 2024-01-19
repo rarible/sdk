@@ -4,12 +4,21 @@ import type { Word } from "@rarible/types"
 export type EthereumNetwork =
   | "mainnet"
   | "testnet"
-  | "staging"
   | "mumbai"
   | "polygon"
   | "dev-ethereum"
   | "dev-polygon"
-  | "staging-polygon"
+  | "mantle"
+  | "testnet-mantle"
+  | "arbitrum"
+  | "testnet-arbitrum"
+  | "zksync"
+  | "testnet-zksync"
+  | "chiliz"
+  | "testnet-chiliz"
+  | "lightlink"
+  | "testnet-lightlink"
+  | "testnet-rari"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -27,6 +36,11 @@ export interface IRaribleEthereumSdkConfig {
 	logs?: LogsConfig
 	ethereum?: EthereumNetworkConfig
 	polygon?: EthereumNetworkConfig
+	mantle?: EthereumNetworkConfig
+	arbitrum?: EthereumNetworkConfig
+	zksync?: EthereumNetworkConfig
+	chiliz?: EthereumNetworkConfig
+	rari?: EthereumNetworkConfig
 	marketplaceMarker?: Binary
 	apiKey?: string
 }

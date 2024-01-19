@@ -3,6 +3,262 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.66](https://github.com/rarible/sdk/compare/v0.13.65...v0.13.66) (2024-01-09)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.65](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.65) (2023-12-20)
+
+
+### Features
+
+* **PLTF-194:** support chiliz ([#581](https://github.com/rarible/sdk/issues/581)) ([be4f767](https://github.com/rarible/sdk/commit/be4f767d7b2bf3defb3bb9fcbfa6eb40026b63dd))
+
+
+
+
+
+## [0.13.64-beta.5](https://github.com/rarible/sdk/compare/v0.13.64-beta.4...v0.13.64-beta.5) (2023-12-19)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.64-beta.4](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.64-beta.4) (2023-12-19)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.64-beta.3](https://github.com/rarible/sdk/compare/v0.13.64-beta.2...v0.13.64-beta.3) (2023-12-15)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.64-beta.2](https://github.com/rarible/sdk/compare/v0.13.64-beta.1...v0.13.64-beta.2) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.64-beta.1](https://github.com/rarible/sdk/compare/v0.13.64-beta.0...v0.13.64-beta.1) (2023-12-14)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.64-beta.0](https://github.com/rarible/sdk/compare/v0.13.63-beta.3...v0.13.64-beta.0) (2023-12-13)
+
+
+### Features
+
+* remove mew connector as it's abandoned and not supported anymore ([#578](https://github.com/rarible/sdk/issues/578)) ([a58e6a4](https://github.com/rarible/sdk/commit/a58e6a4feb923506dae52393248b3120aadb7f8e))
+
+
+
+
+
+## [0.13.62](https://github.com/rarible/sdk/compare/v0.13.61...v0.13.62) (2023-12-05)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.61](https://github.com/rarible/sdk/compare/v0.13.60-beta.2...v0.13.61) (2023-11-28)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.60-beta.2](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.2) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.60-beta.1](https://github.com/rarible/sdk/compare/v0.13.60-beta.0...v0.13.60-beta.1) (2023-11-23)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.60-beta.0](https://github.com/rarible/sdk/compare/v0.13.59-fix.9...v0.13.60-beta.0) (2023-11-22)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.59](https://github.com/rarible/sdk/compare/v0.13.58-fix.0...v0.13.59) (2023-11-16)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.58-fix.0](https://github.com/rarible/sdk/compare/v0.13.58...v0.13.58-fix.0) (2023-11-15)
+
+
+### Features
+
+* **WL-2208:** add firebase invalidation logic ([#562](https://github.com/rarible/sdk/issues/562)) ([4fa1746](https://github.com/rarible/sdk/commit/4fa1746d8263b9e84dcd785c97cddd8161ef9781))
+
+
+
+
+
+## [0.13.57](https://github.com/rarible/sdk/compare/v0.13.56...v0.13.57) (2023-11-09)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **MPX-2453:** remove walletconnect-v1 provider ([#542](https://github.com/rarible/sdk/issues/542)) ([25fff1d](https://github.com/rarible/sdk/commit/25fff1d5d4bf70a85c68c7c72e270f1153405d37))
+
+
+### BREAKING CHANGES
+
+* **MPX-2453:** @rarible/connector-walletconnect was removed
+
+* fix: update README.md
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+
+### Bug Fixes
+
+* **MPX-2252:** provider errors ([#540](https://github.com/rarible/sdk/issues/540)) ([cba995d](https://github.com/rarible/sdk/commit/cba995dd506acc35fadd039c0ddf2c41eda28fc9))
+* **MPX-2264:** fallback to wallet_requestPermissions, when eth_requestAccounts fails ([#538](https://github.com/rarible/sdk/issues/538)) ([67a8b80](https://github.com/rarible/sdk/commit/67a8b8086d57c01842aab8699b5ae9ab0453cd6e))
+
+
+### Features
+
+* **MPX-2448:** pass fingerprint to rarible logger ([#541](https://github.com/rarible/sdk/issues/541)) ([9a18e6f](https://github.com/rarible/sdk/commit/9a18e6facdd9f7a365d633bec4d2743953466cc9))
+* **MPX-2460:** add prefer option to injected web3 provider ([#539](https://github.com/rarible/sdk/issues/539)) ([f2ed99f](https://github.com/rarible/sdk/commit/f2ed99f9202b3235f0b8b721a64e0c98e322a42b))
+
+
+
+
+
+## [0.13.54-beta.1](https://github.com/rarible/sdk/compare/v0.13.54-beta.0...v0.13.54-beta.1) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.54-beta.0](https://github.com/rarible/sdk/compare/v0.13.53...v0.13.54-beta.0) (2023-10-03)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+
+### Bug Fixes
+
+* **MPX-2400:** disable autoconnect for coinbase app ([#531](https://github.com/rarible/sdk/issues/531)) ([f0e3453](https://github.com/rarible/sdk/commit/f0e3453fd9cb6acab8c95e8f6f0b782ed94453fb))
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.50-beta.1](https://github.com/rarible/sdk/compare/v0.13.50-beta.0...v0.13.50-beta.1) (2023-08-17)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
+## [0.13.50-beta.0](https://github.com/rarible/sdk/compare/v0.13.49...v0.13.50-beta.0) (2023-08-15)
+
+**Note:** Version bump only for package @rarible/connector
+
+
+
+
+
 ## [0.13.49](https://github.com/rarible/sdk/compare/v0.13.49-beta.0...v0.13.49) (2023-08-09)
 
 **Note:** Version bump only for package @rarible/connector

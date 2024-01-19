@@ -1,37 +1,37 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { toAddress, toWord } from "@rarible/types"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { OrderId } from "@rarible/api-client"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
+import { extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { PrepareSellInternalResponse } from "../../types/order/sell/domain"
 import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../types/order/sell/simplified"
-import { convertDateToTimestamp } from "../../common/get-expiration-date"
+import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
-import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
+	checkWalletBlockchain,
 	convertEthereumContractAddress,
 	getEthereumItemId,
-	getEVMBlockchain,
 	getOriginFeeSupport,
-	getPayoutsSupport,
+	getPayoutsSupport, getWalletBlockchain,
 	isEVMBlockchain,
 	validateOrderDataV3Request,
 } from "./common"
 import type { IEthereumSdkConfig } from "./domain"
 
 export class EthereumSell {
-	private readonly blockchain: EVMBlockchain
-
 	constructor(
 		private sdk: RaribleSdk,
-		private network: EthereumNetwork,
+		private wallet: Maybe<EthereumWallet>,
+		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 		private config?: IEthereumSdkConfig
 	) {
-		this.blockchain = getEVMBlockchain(network)
 		this.sell = this.sell.bind(this)
 		this.update = this.update.bind(this)
 		this.sellBasic = this.sellBasic.bind(this)
@@ -66,9 +66,12 @@ export class EthereumSell {
 	private async sellDataV2(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
+				await checkWalletBlockchain(this.wallet, extractBlockchain(sellFormRequest.itemId))
 				checkPayouts(sellFormRequest.payouts)
 				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
-				const expirationDate = convertDateToTimestamp(sellFormRequest.expirationDate)
+				const expirationDate = sellFormRequest.expirationDate
+					? convertDateToTimestamp(sellFormRequest.expirationDate)
+					: getDefaultExpirationDateTimestamp()
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 				return {
 					type: "DATA_V2",
@@ -84,8 +87,10 @@ export class EthereumSell {
 					end: expirationDate,
 				}
 			})
-			.after(order => {
-				return common.convertEthereumOrderHash(order.hash, this.blockchain)
+			.after(async order => {
+				//todo replace with returned chainId/blockchain
+				const blockchain = await getWalletBlockchain(this.wallet)
+				return common.convertEthereumOrderHash(order.hash, blockchain)
 			})
 
 		return {
@@ -102,10 +107,13 @@ export class EthereumSell {
 	async sellDataV3(): Promise<PrepareSellInternalResponse> {
 		const sellAction = this.sdk.order.sell
 			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
+				await checkWalletBlockchain(this.wallet, extractBlockchain(sellFormRequest.itemId))
 				validateOrderDataV3Request(sellFormRequest, { shouldProvideMaxFeesBasePoint: true })
 
 				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
-				const expirationDate = convertDateToTimestamp(sellFormRequest.expirationDate)
+				const expirationDate = sellFormRequest.expirationDate
+					? convertDateToTimestamp(sellFormRequest.expirationDate)
+					: getDefaultExpirationDateTimestamp()
 
 				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
 
@@ -128,7 +136,10 @@ export class EthereumSell {
 					end: expirationDate,
 				}
 			})
-			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.after(async order => {
+				const blockchain = await getWalletBlockchain(this.wallet)
+				return common.convertEthereumOrderHash(order.hash, blockchain)
+			})
 
 		return {
 			originFeeSupport: OriginFeeSupport.FULL,
@@ -149,18 +160,23 @@ export class EthereumSell {
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an ethereum order")
 		}
+		await checkWalletBlockchain(this.wallet, blockchain)
 
-		const order = await this.sdk.apis.order.getValidatedOrderByHash({ hash })
+		const ethApis = await this.getEthereumApis()
+		const order = await ethApis.order.getValidatedOrderByHash({ hash })
 		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
 			throw new Error(`You can't update non-Rarible orders. Unable to update sell ${JSON.stringify(order)}`)
 		}
 
 		const sellUpdateAction = this.sdk.order.sellUpdate
-			.before((request: OrderCommon.OrderUpdateRequest) => ({
-				orderHash: toWord(hash),
-				priceDecimal: request.price,
-			}))
-			.after(order => common.convertEthereumOrderHash(order.hash, this.blockchain))
+			.before(async (request: OrderCommon.OrderUpdateRequest) => {
+				await checkWalletBlockchain(this.wallet, blockchain)
+				return {
+					orderHash: toWord(hash),
+					priceDecimal: request.price,
+				}
+			})
+			.after(order => common.convertEthereumOrderHash(order.hash, blockchain))
 
 		return {
 			originFeeSupport: getOriginFeeSupport(order.type),
@@ -170,7 +186,7 @@ export class EthereumSell {
 			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
 			submit: sellUpdateAction,
 			orderData: {
-				nftCollection: "contract" in order.make.assetType ? convertEthereumContractAddress(order.make.assetType.contract, this.blockchain) : undefined,
+				nftCollection: "contract" in order.make.assetType ? convertEthereumContractAddress(order.make.assetType.contract, blockchain) : undefined,
 			},
 		}
 	}

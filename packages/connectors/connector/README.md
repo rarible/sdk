@@ -65,11 +65,10 @@ import {
 	EthereumProviderConnectionResult,
 } from "@rarible/connector"
 import { FclConnectionProvider, FlowProviderConnectionResult } from "@rarible/connector-fcl"
-import { MEWConnectionProvider } from "@rarible/connector-mew"
 import { BeaconConnectionProvider, TezosProviderConnectionResult } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
-import { WalletConnectConnectionProvider } from "@rarible/connector-walletconnect-v2"
+import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
 import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
 import { PortisConnectionProvider } from "@rarible/connector-portis"
 import { mapEthereumWallet, mapFlowWallet, mapTezosWallet } from "@rarible/connector-helper"
@@ -87,11 +86,6 @@ export type WalletAndAddress = {
 }
 
 const injected = mapEthereumWallet(new InjectedWeb3ConnectionProvider())
-
-const mew = mapEthereumWallet(new MEWConnectionProvider({
-	networkId: 4,
-	rpcUrl: ethereumRpcMap[4]
-}))
 
 const beacon = mapTezosWallet(new BeaconConnectionProvider({
 	appName: "Rarible Test",
@@ -123,11 +117,10 @@ const walletLink = mapEthereumWallet(new WalletLinkConnectionProvider({
 	darkMode: false
 }))
 
-const walletConnect = mapEthereumWallet(new WalletConnectConnectionProvider({
-	rpc: {
-		4: "https://node-rinkeby.rarible.com"
-	},
-	chainId: 4
+const walletConnectV2 = mapEthereumWallet(new WalletConnectConnectionProviderV2({
+	projectId: "4f9fb88799dfa8d3654bdd130be840f2",
+	chains: [1, 5],
+	showQrModal: true,
 }))
 
 // Providers required secrets
@@ -148,10 +141,9 @@ const connector = Connector
     .create(injected, state) // use ConnectionState for store connector data (last connected provider, etc)
 	.add(torus)
 	.add(walletLink)
-	.add(mew)
 	.add(beacon)
 	.add(fcl)
-	.add(walletConnect)
+	.add(walletConnectV2)
     // .add(portis)
     // .add(fortmatic)
 
@@ -178,9 +170,8 @@ FortmaticConnectionProvider
 PortisConnectionProvider
 TorusConnectionProvider
 WalletLinkConnectionProvider
-MEWConnectionProvider
 IframeConnectionProvider
-WalletConnectConnectionProvider
+WalletConnectConnectionProviderV2
 ```
 
 Tezos providers

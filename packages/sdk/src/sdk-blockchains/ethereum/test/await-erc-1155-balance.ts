@@ -5,7 +5,7 @@ import type { ItemId } from "@rarible/api-client"
 import { toAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import { retry } from "../../../common/retry"
+import { retry } from "@rarible/sdk-common"
 import { convertToEthereumAddress, getEthereumItemId } from "../common"
 
 export async function awaitErc1155Balance(
@@ -24,6 +24,6 @@ export async function awaitErc1155Balance(
 	const erc1155Contract = createTestErc1155((eth.ethereum as any).config.web3, toAddress(contract))
 	await retry(10, 1000, async () => {
 		const balanceRecipient = await erc1155Contract.methods.balanceOf(rawRecipient, tokenId).call()
-		expect(balanceRecipient).toBe(balance.toString())
+		expect(balanceRecipient.toString()).toBe(balance.toString())
 	})
 }

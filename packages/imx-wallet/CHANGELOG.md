@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.65](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.65) (2023-12-20)
+
+**Note:** Version bump only for package @rarible/immutable-wallet
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+**Note:** Version bump only for package @rarible/immutable-wallet
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/immutable-wallet
+
+
+
+
+
+## [0.13.51](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.51) (2023-09-06)
+
+
+### Features
+
+* bump imx sdk version ([ea2e52c](https://github.com/rarible/sdk/commit/ea2e52c2940c65e6c99f003279ed0970a57b8321))
+* support new version of imx sdk ([43c4ec0](https://github.com/rarible/sdk/commit/43c4ec030c5f0c914bcec337524b395c16a385be))
+
+
+
+
+
+## [0.13.50-beta.5](https://github.com/rarible/sdk/compare/v0.13.50-beta.1...v0.13.50-beta.5) (2023-08-29)
+
+
+### Features
+
+* bump imx sdk version ([3c7b50f](https://github.com/rarible/sdk/commit/3c7b50f3a90a98eaaa2b6053fa43ca69b848b524))
+* support new version of imx sdk ([8d8eea3](https://github.com/rarible/sdk/commit/8d8eea3b7470ede5dc0e54ae53ddb05ae7feab32))
+
+
+
+
+
 ## [0.13.37](https://github.com/rarible/sdk/compare/v0.13.36...v0.13.37) (2023-05-18)
 
 **Note:** Version bump only for package @rarible/immutable-wallet

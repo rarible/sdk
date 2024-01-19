@@ -32,13 +32,15 @@
     "build-connector-iframe": "yarn workspace @rarible/connector-iframe run build",
     "build-connector-fcl": "yarn workspace @rarible/connector-fcl run build",
     "build-connector-beacon": "yarn workspace @rarible/connector-beacon run build",
-    "build-connector-mew": "yarn workspace @rarible/connector-mew run build",
     "build-connector-nfid": "yarn workspace @rarible/connector-nfid run build",
     "build-connector-fortmatic": "yarn workspace @rarible/connector-fortmatic run build",
     "build-connector-portis": "yarn workspace @rarible/connector-portis run build",
     "build-connector-torus": "yarn workspace @rarible/connector-torus run build",
+    "build-connector-firebase": "yarn workspace @rarible/connector-firebase run build",
+    "build-connector-firebase-apple": "yarn workspace @rarible/connector-firebase-apple run build",
+    "build-connector-firebase-email": "yarn workspace @rarible/connector-firebase-email run build",
     "build-connector-walletlink": "yarn workspace @rarible/connector-walletlink run build",
-    "build-connector-walletconnect": "yarn workspace @rarible/connector-walletconnect run build",
+    "build-connector-walletconnect-v2": "yarn workspace @rarible/connector-walletconnect-v2 run build",
     "build-connector-mattel": "yarn workspace @rarible/connector-mattel run build",
     "build-connector-phantom": "yarn workspace @rarible/connector-phantom run build",
     "build-connector-solflare": "yarn workspace @rarible/connector-solflare run build",
@@ -48,6 +50,7 @@
     "build-ethereum": "sh ./scripts/build-ethereum.sh",
     "build-imx": "sh ./scripts/build-imx.sh",
     "build-solana": "sh ./scripts/build-solana.sh",
+    "build-example": "yarn build && cd packages/example && yarn build",
     "build-all": "sh ./scripts/build.sh",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx . --fix",
@@ -79,7 +82,7 @@
   },
   "resolutions": {
     "**/axios": "^0.26.1",
-    "web3-core": "^4.2.0"
+    "web3-core": "^4.3.3-dev.5161642.0+5161642"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",

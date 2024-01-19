@@ -1,5 +1,6 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
+import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../common"
 
 const testErc20Abi = [
 	{
@@ -314,11 +315,12 @@ const testErc20Bytecode =
 export async function deployTestErc20(web3: Web3, name: string, symbol: string) {
 	const empty = getTestErc20Contract(web3)
 	const [address] = await web3.eth.getAccounts()
-	return empty
+	const contract = await empty
 		.deploy({ data: testErc20Bytecode, arguments: [name, symbol] })
-		.send({ from: address, gas: "4000000", gasPrice: "0" })
+		.send({ from: address, gas: "4000000" })
+	return replaceBigIntInContract(contract)
 }
 
 export function getTestErc20Contract(web3: Web3, address?: Address) {
-	return new web3.eth.Contract(testErc20Abi, address)
+	return new web3.eth.Contract(testErc20Abi, address, DEFAULT_DATA_TYPE)
 }

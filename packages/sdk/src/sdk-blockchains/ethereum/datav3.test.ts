@@ -96,7 +96,7 @@ describe("Create & fill orders with order data v3", () => {
 		await args.reduce(async (prev, [seller, buyer, buyMarker]) => {
 			await prev
 			const erc721 = seller.contracts.getContract("erc721_1")
-			const wrappedEth = seller.contracts.getContract("wrapped_eth")
+			const wrappedEth = seller.contracts.getContract("erc20_mintable_1")
 			const { itemId } = await seller.items.mintAndWait(erc721.collectionId)
 			const bidAction = await buyer.sdk.order.bid.prepare({ itemId: itemId })
 			expect(bidAction.maxFeesBasePointSupport).toEqual(MaxFeesBasePointSupport.IGNORED)

@@ -12,7 +12,7 @@ import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { approve as approveTemplate } from "../order/approve"
 import { createEthereumApis } from "../common/apis"
-import { checkChainId } from "../order/check-chain-id"
+import { getNetworkFromChainId } from "../common"
 import { StartAuction } from "./start"
 
 describe.skip("start auction", () => {
@@ -23,14 +23,18 @@ describe.skip("start auction", () => {
 	const feeWalletAddress = feeWallet.getAddressString()
 	const web3 = new Web3(provider as any)
 	const config = getEthereumConfig("testnet")
+	const getConfig = async () => config
 
 	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const checkWalletChainId = checkChainId.bind(null, ethereum1, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
-	const approve1 = approveTemplate.bind(null, ethereum1, send, config.transferProxies)
-	const apis = createEthereumApis("testnet")
-	const auctionService = new StartAuction(ethereum1, send, config, "testnet", approve1, apis)
+	const approve1 = approveTemplate.bind(null, ethereum1, send, getConfig)
+	const getApis1 = async () => {
+		const chainId = await ethereum1.getChainId()
+		const env = getNetworkFromChainId(chainId)
+		return createEthereumApis(env)
+	}
+	const auctionService = new StartAuction(ethereum1, send, getConfig, "testnet", approve1, getApis1)
 
 	const it = awaitAll({
 		testErc721: deployTestErc721ForAuction(web3, "TST", "TST"),

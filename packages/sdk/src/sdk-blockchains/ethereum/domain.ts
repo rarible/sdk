@@ -1,9 +1,9 @@
-import type { Blockchain } from "@rarible/api-client"
 import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { EVMBlockchain } from "@rarible/sdk-common"
 
-export interface IEthereumSdkConfig {
-	useDataV3?: boolean
-	marketplaceMarker?: string
-	[Blockchain.ETHEREUM]?: EthereumNetworkConfig
-	[Blockchain.POLYGON]?: EthereumNetworkConfig
+export type IEthereumSdkConfig = {
+	[B in EVMBlockchain]?: EthereumNetworkConfig;
+} & {
+	useDataV3?: boolean;
+	marketplaceMarker?: string;
 }

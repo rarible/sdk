@@ -1,7 +1,5 @@
 import { toAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
@@ -11,26 +9,20 @@ import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../../types"
 import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
-import { checkChainId } from "../../check-chain-id"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 
 describe("amm batch buy tests", () => {
-	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
-	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: buyerWeb3 } = createE2eProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum } = createE2eProvider(DEV_PK_2)
 
 	const env: EthereumNetwork = "dev-ethereum"
-	const web3Seller = new Web3(providerSeller as any)
-	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
-	const ethereum = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 
-	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
-	const sdkSeller = createRaribleSdk(ethereumSeller, env)
+	const sdkSeller = createRaribleSdk(ethereum, env)
 
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 
 	test.skip("amm sudoswap few items sell form different pools", async () => {

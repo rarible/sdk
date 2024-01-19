@@ -8,7 +8,6 @@ import { ethers } from "ethers"
 import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
-import { checkChainId } from "../check-chain-id"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { createErc1155V2Collection, createErc721V3Collection } from "../../common/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
@@ -17,6 +16,7 @@ import { FILL_CALLDATA_TAG } from "../../config/common"
 import { DEV_PK_1, DEV_PK_2, getTestContract, GOERLI_CONFIG } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
 import { delay } from "../../common/retry"
+import { ETHER_IN_WEI } from "../../common"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
@@ -32,11 +32,6 @@ describe.skip("looksrare fill", () => {
 	const web3Seller = new Web3(providerSeller as any)
 	const ethereumSeller = new Web3Ethereum({
 		web3: web3Seller,
-		gas: 3000000,
-	})
-	const web3 = new Web3(providerBuyer as any)
-	const ethereum = new Web3Ethereum({
-		web3,
 		gas: 3000000,
 	})
 
@@ -61,8 +56,7 @@ describe.skip("looksrare fill", () => {
 
 	const config = getEthereumConfig("testnet")
 
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 	beforeAll(async () => {
 		console.log({
@@ -299,7 +293,7 @@ describe.skip("looksrare fill", () => {
 	async function getEthBalances(addresses: string[]) {
 		return Promise.all(
 			addresses.map(async address => {
-				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(toBn(10).pow(18))
+				return toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
 			})
 		)
 	}

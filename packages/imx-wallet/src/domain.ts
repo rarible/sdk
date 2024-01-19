@@ -6,7 +6,6 @@ export type ImxEnv = "testnet" | "prod"
 export enum ImxWalletProviderEnum {
 	METAMASK = "METAMASK",
 	MAGIC_LINK = "MAGIC_LINK",
-	WALLET_CONNECT = "WALLET_CONNECT",
 	GAMESTOP = "GAMESTOP",
 	NONE = "NONE"
 }

@@ -1,5 +1,6 @@
 import type Web3 from "web3"
 import type { Ethereum } from "@rarible/ethereum-provider"
+import { replaceBigIntInContract } from "./common"
 
 export async function testSimpleContract(web3: Web3, ethereum: Ethereum) {
 	const deployed = await deployTestContract(web3)
@@ -22,8 +23,9 @@ export async function testSimpleContract(web3: Web3, ethereum: Ethereum) {
 async function deployTestContract(web3: Web3) {
 	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
 	const [from] = await web3.eth.getAccounts()
-	return c.deploy({ data: bytecode })
-		.send({ from, gasPrice: "0", gas: "300000" })
+	const contract = await c.deploy({ data: bytecode })
+		.send({ from, gas: "300000" })
+	return replaceBigIntInContract(contract)
 }
 
 const SIMPLE_TEST_ABI = [

@@ -1,8 +1,6 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
-import Web3 from "web3"
 import type { IRaribleSdk } from "../../index"
 import { awaitItem } from "../../common/test/await-item"
 import { generateExpirationDate } from "../../common/suite/order"
@@ -10,15 +8,11 @@ import { createSdk } from "../../common/test/create-sdk"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("Batch buy", () => {
-	const { provider: providerSeller } = createE2eProvider(DEV_PK_1)
-	const { provider: providerBuyer } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: ethereum1 } = createE2eProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum2 } = createE2eProvider(DEV_PK_2)
 
-	const web31 = new Web3(providerSeller)
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const sdkSeller = createSdk(new EthereumWallet(ethereum1), "development")
 
-	const web32 = new Web3(providerBuyer)
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdkBuyer = createSdk(new EthereumWallet(ethereum2), "development")
 
 	test("batch buy rarible orders", async () => {
@@ -29,7 +23,7 @@ describe("Batch buy", () => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
-				price: "0.00000000001",
+				price: "0.0001",
 				currency: { "@type": "ETH" },
 				expirationDate: generateExpirationDate(),
 			})
@@ -58,7 +52,7 @@ describe("Batch buy", () => {
 			const prep = await sdkSeller.order.sell.prepare({ itemId: token.id })
 			return await prep.submit({
 				amount: 1,
-				price: "0.00000000001",
+				price: "0.0001",
 				currency: { "@type": "ETH" },
 				expirationDate: generateExpirationDate(),
 			})

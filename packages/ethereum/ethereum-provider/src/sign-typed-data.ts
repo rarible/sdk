@@ -7,43 +7,39 @@ export type SendFunction = (method: string, params: any) => Promise<any>
 export async function signTypedData<T extends MessageTypes>(
 	send: SendFunction, signer: string, data: TypedMessage<T>,
 ): Promise<string> {
+	const errorsStack = []
 	try {
 		const signature = await send(SignTypedDataMethodEnum.V4, [signer, JSON.stringify(data)])
 		filterErrors(signature)
 		return signature
 	} catch (error) {
 		filterErrors(error)
+		errorsStack.push(error)
 		try {
 			console.error("got error while executing sign typed data v4", error)
 			if (isError(error) && error.message === "MetaMask Message Signature: Error: Not supported on this device") {
 				return await signWithHardwareWallets(send, signer, data)
 			} else {
-				filterErrors(error)
 				try {
 					return await send(SignTypedDataMethodEnum.V3, [signer, JSON.stringify(data)])
 				} catch (error) {
 					console.error("got error while executing sign typed data v3", error)
 					filterErrors(error)
+					errorsStack.push(error)
 					return await send(SignTypedDataMethodEnum.DEFAULT, [signer, data])
 				}
 			}
 		} catch (e) {
+			errorsStack.push(e)
 			throw new SignTypedDataError({
-				message: getErrorMessage(error) || "Can't sign typed data by V4/V3/Default methods",
-				error: e,
+				error,
 				data: {
 					signer,
 					data,
+					errorsStack,
 				},
 			})
 		}
-	}
-}
-
-function getErrorMessage(e: unknown) {
-	if (isError(e)) return e.message
-	if (hasCode(e) && e.code === 4001) {
-		return "Request rejected"
 	}
 }
 
@@ -76,12 +72,28 @@ export function filterErrors(original: unknown) {
 			throw original
 		}
 	}
+	if (hasMessage(original)) {
+		const jsonMsg = getJSONFromMessage(original.message)
+		if (jsonMsg) {
+			filterErrors(jsonMsg)
+		}
+	}
 }
 
+function getJSONFromMessage(message: unknown) {
+	if (!message || typeof message !== "string") {
+		return
+	}
+	try {
+		return JSON.parse(message)
+	} catch (e) {
+		return
+	}
+}
 function hasCode(error: unknown): error is { code: number } {
 	return typeof error === "object" && error !== null && "code" in error
 }
-function hasMessage(error: unknown): error is { message: string } {
+export function hasMessage(error: unknown): error is { message: string } {
 	return typeof error === "object" && error !== null && "message" in error
 }
 
@@ -104,11 +116,11 @@ export class SignTypedDataError extends Error {
   	this.name = "SignTypedDataError"
   	this.error = data?.error
   	this.data = data?.data
-		this.code = data?.error?.code || undefined
+		this.code = data?.error?.code || data?.error?.error?.code || undefined
 	}
 
 	static getErrorMessage(data: any) {
 		if (typeof data.error === "string") return data.error
-		return data.message || data?.error?.message || "SignTypedDataError"
+		return data?.error?.message || data?.message || "SignTypedDataError"
 	}
 }

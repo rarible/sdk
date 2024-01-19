@@ -3,6 +3,77 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
+
+
+### Features
+
+* **PLTF-106:** slow polygon transactions ([#587](https://github.com/rarible/sdk/issues/587)) ([5530259](https://github.com/rarible/sdk/commit/5530259ce814c2398f930a7d3c461a9f709f748c))
+
+
+
+
+
+## [0.13.65](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.65) (2023-12-20)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
+## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
+
+
+### Features
+
+* **MPX-2463:** add checking payment value ([#547](https://github.com/rarible/sdk/issues/547)) ([97cc8fc](https://github.com/rarible/sdk/commit/97cc8fc47670633267242f26a7de3122e3466214))
+
+
+
+
+
+## [0.13.55](https://github.com/rarible/sdk/compare/v0.13.54-beta.1...v0.13.55) (2023-10-09)
+
+
+### Bug Fixes
+
+* **MPX-2252:** provider errors ([#540](https://github.com/rarible/sdk/issues/540)) ([cba995d](https://github.com/rarible/sdk/commit/cba995dd506acc35fadd039c0ddf2c41eda28fc9))
+
+
+
+
+
+## [0.13.53](https://github.com/rarible/sdk/compare/v0.13.52-hotfix.0...v0.13.53) (2023-09-25)
+
+
+### Features
+
+* **MPX-2458:** phantom wallet fix ([#536](https://github.com/rarible/sdk/issues/536)) ([64f6015](https://github.com/rarible/sdk/commit/64f60155bcbac4512d97c6dfb13ba57621c39c7d))
+
+
+
+
+
+## [0.13.52](https://github.com/rarible/sdk/compare/v0.13.51-hotfix.0...v0.13.52) (2023-09-12)
+
+
+### Features
+
+* **MPX-2146:** handle user cancellations ([#533](https://github.com/rarible/sdk/issues/533)) ([0808b30](https://github.com/rarible/sdk/commit/0808b300b3e662ac4a93c31537e9098ba5880a4b))
+
+
+
+
+
+## [0.13.51-hotfix.0](https://github.com/rarible/sdk/compare/v0.13.51...v0.13.51-hotfix.0) (2023-09-07)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
 ## [0.13.40](https://github.com/rarible/sdk/compare/v0.13.39...v0.13.40) (2023-06-05)
 
 

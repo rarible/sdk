@@ -2,17 +2,13 @@ import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, deployTestErc1155, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { ethers } from "ethers"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { getApiConfig } from "../config/api-config"
+import { fromUtf8 } from "ethereumjs-util"
 import { isError } from "../common/is-error"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
-import { getEthereumConfig } from "../config"
-import { checkChainId } from "../order/check-chain-id"
 import { prependProviderName } from "../order/test/prepend-provider-name"
-import type { EthereumNetwork } from "../types"
 import { transferErc1155 } from "./transfer-erc1155"
 
 const { provider, addresses, accounts } = createGanacheProvider()
@@ -30,13 +26,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	const [from] = addresses
 	const to = randomAddress()
 
-	const env: EthereumNetwork = "dev-ethereum"
-	const configuration = new Configuration(getApiConfig(env))
-	const gatewayApi = new GatewayControllerApi(configuration)
-
-	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects()
 
 	const it = awaitAll({
 		testErc1155: deployTestErc1155(web3, "TST"),
@@ -45,17 +35,15 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	test(prependProviderName(ethereum, "should transfer erc1155 token"), async () => {
 		const token1Id = from + "b00000000000000000000001"
 		const token1Balance = "10"
-		await sentTx(it.testErc1155.methods.mint(from, token1Id, token1Balance, "123"), { from, gas: "200000" })
+		await sentTx(it.testErc1155.methods.mint(from, token1Id, token1Balance, fromUtf8("123")), { from, gas: "200000" })
 
 		const senderBalance: string = await it.testErc1155.methods.balanceOf(from, token1Id).call()
 		expect(senderBalance === token1Balance).toBeTruthy()
 
-		console.log("before transfer")
 		const hash = await transferErc1155(ethereum, send, toAddress(it.testErc1155.options.address!), from, to, token1Id, "5")
 		await hash.wait()
 		expect(!!hash).toBeTruthy()
 
-		console.log("after transfer")
 		const senderResultBalance: string = await it.testErc1155.methods.balanceOf(from, token1Id).call()
 		expect(senderResultBalance === "5").toBeTruthy()
 
@@ -70,9 +58,9 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 			from + "b00000000000000000000004",
 		]
 		const [token2Balance, token3Balance, token4Balance]: string[] = ["100", "200", "300"]
-		await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, "123"), { from: from, gas: "200000" })
-		await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, "123"), { from: from, gas: "200000" })
-		await sentTx(it.testErc1155.methods.mint(from, token4Id, token4Balance, "123"), { from: from, gas: "200000" })
+		await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, fromUtf8("123")), { from: from, gas: "200000" })
+		await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, fromUtf8("123")), { from: from, gas: "200000" })
+		await sentTx(it.testErc1155.methods.mint(from, token4Id, token4Balance, fromUtf8("123")), { from: from, gas: "200000" })
 
 		const [
 			token2Balances,
@@ -120,8 +108,8 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 				from + "b00000000000000000000006",
 			]
 			const [token2Balance, token3Balance]: string[] = ["100", "100"]
-			await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, "123"), { from: from, gas: "200000" })
-			await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, "123"), { from: from, gas: "200000" })
+			await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, fromUtf8("123")), { from: from, gas: "200000" })
+			await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, fromUtf8("123")), { from: from, gas: "200000" })
 
 			const [
 				token2Balances,

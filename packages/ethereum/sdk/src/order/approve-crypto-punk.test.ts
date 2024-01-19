@@ -1,14 +1,9 @@
-import { off } from "process"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { awaitAll, createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { randomAddress, toAddress } from "@rarible/types"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
-import { getEthereumConfig } from "../config"
 import { approveCryptoPunk } from "./approve-crypto-punk"
-import { checkChainId } from "./check-chain-id"
 
 describe("approve crypto punks", () => {
 	const {
@@ -23,12 +18,7 @@ describe("approve crypto punks", () => {
 		punksMarket: deployCryptoPunks(web3),
 	})
 
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const gatewayApi = new GatewayControllerApi(configuration)
-
-	const config = getEthereumConfig("dev-ethereum")
-	const checkWalletChainId = checkChainId.bind(null, ethereumSeller, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const send = getSendWithInjects()
 	const approve = approveCryptoPunk.bind(null, ethereumSeller, send)
 
 	beforeAll(async () => {
@@ -49,9 +39,9 @@ describe("approve crypto punks", () => {
 		const offer = await it.punksMarket.methods.punksOfferedForSale(0).call()
 
 		expect(offer.isForSale).toBe(true)
-		expect(offer.punkIndex).toBe("0")
+		expect(offer.punkIndex.toString()).toBe("0")
 		expect(offer.seller.toLowerCase()).toBe(sellerAddress.toLowerCase())
-		expect(offer.minValue).toBe("0")
+		expect(offer.minValue.toString()).toBe("0")
 		expect(offer.onlySellTo.toLowerCase()).toBe(operator.toLowerCase())
 	})
 

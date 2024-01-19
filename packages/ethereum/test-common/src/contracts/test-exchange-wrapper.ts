@@ -1,16 +1,18 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
+import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../common"
 
 export function createTestExchangeWrapperContract(web3: Web3, address?: Address) {
-	return new web3.eth.Contract(EXCHANGEV2_BULK_ABI, address)
+	return new web3.eth.Contract(EXCHANGEV2_BULK_ABI, address, DEFAULT_DATA_TYPE)
 }
 
 export async function deployTestExchangeWrapper(web3: Web3) {
 	const empty = createTestExchangeWrapperContract(web3)
 	const [address] = await web3.eth.getAccounts()
-	return empty
+	const contract = await empty
 		.deploy({ data: exchangeBulkV2Bytecode })
-		.send({ from: address, gas: "5000000", gasPrice: "0" })
+		.send({ from: address, gas: "5000000" })
+	return replaceBigIntInContract(contract)
 }
 
 export const exchangeBulkV2Bytecode =

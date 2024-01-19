@@ -9,6 +9,7 @@ import { toContractAddress } from "@rarible/types"
 import type { WalletType } from "@rarible/sdk-wallet"
 import type { IRaribleSdk } from "@rarible/sdk"
 import type { UnionAddress } from "@rarible/types/build/union-address"
+import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 import { FormSelect } from "../../components/common/form/form-select"
@@ -28,6 +29,7 @@ export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAd
 	const blockchain = connection.state.status === "connected" ? connection.state.connection.blockchain : connection.sdk?.wallet?.walletType
 
 	const wethAddress = getWethAddress(blockchain, environment)
+
 	const nativeToken = blockchain === "POLYGON" ? "MATIC" : "ETH"
 	const convertOptions = [
 		{
@@ -57,7 +59,7 @@ export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAd
 				try {
 					if (connection.state.status === "connected") {
 						const res = await sdk?.balances.convert({
-							blockchain: connection.state.connection.blockchain,
+							blockchain: connection.state.connection.blockchain as SupportedBlockchain,
 							value: form.getValues("value"),
 							isWrap: convertSchema.from["@type"] === "ETH",
 						})
@@ -139,7 +141,6 @@ const wethMapByBlockchain: PartialRecord<Blockchain, PartialRecord<RaribleSdkEnv
 	[Blockchain.ETHEREUM]: {
 		prod: toContractAddress("ETHEREUM:0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
 		testnet: toContractAddress("ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"),
-		staging: toContractAddress("ETHEREUM:0x8618444D5916c52Ef2BA9a64dDE5fE04249F6001"),
 		development: toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
 	},
 	// [Blockchain.POLYGON]: {

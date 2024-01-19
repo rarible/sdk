@@ -105,7 +105,7 @@ describe.skip("get transaction receipt events", () => {
 
 
 	test("get Seaport tx events (prod)", async () => {
-		const tx = await ethereum.web3Provider.getTransaction("0x8d7ce93eac45141de762bf29fae4a1c6458e2b2d0b0361432b091a9e29b3c903")
+		const tx = await ethereum.web3Provider.getTransaction("0x2f81b44332228d78eda5ea48e62134fddd2354713d77f4f61588d91cd7a735ff")
 		const signer = web3Provider.getSigner()
 		const seaportAddr = "0x00000000006c3852cbef3e08e8df289169ede581"
 

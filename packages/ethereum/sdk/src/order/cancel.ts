@@ -8,6 +8,7 @@ import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
 import type { RaribleEthereumApis } from "../common/apis"
 import { getRequiredWallet } from "../common/get-required-wallet"
+import type { GetConfigByChainId } from "../config"
 import { createExchangeV1Contract } from "./contracts/exchange-v1"
 import { createExchangeV2Contract } from "./contracts/exchange-v2"
 import { createOpenseaContract } from "./contracts/exchange-opensea-v1"
@@ -33,31 +34,32 @@ export async function cancel(
 	checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
-	config: ExchangeAddresses,
-	checkWalletChainId: () => Promise<boolean>,
-	apis: RaribleEthereumApis,
+	getConfig: GetConfigByChainId,
+	getApis: () => Promise<RaribleEthereumApis>,
 	orderToCheck: SimpleOrder,
 ): Promise<EthereumTransaction> {
-	await checkWalletChainId()
+	const config = await getConfig()
+	const apis = await getApis()
+
 	if (ethereum) {
 		const order = await checkLazyOrder(orderToCheck) as SimpleOrder
 		switch (order.type) {
 			case "RARIBLE_V1":
-				return cancelLegacyOrder(ethereum, send, config.v1, order)
+				return cancelLegacyOrder(ethereum, send, config.exchange.v1, order)
 			case "RARIBLE_V2":
-				return cancelV2Order(ethereum, send, config.v2, order)
+				return cancelV2Order(ethereum, send, config.exchange.v2, order)
 			case "OPEN_SEA_V1":
 				return cancelOpenseaOrderV1(ethereum, send, order)
 			case "SEAPORT_V1":
 				return cancelSeaportOrder(ethereum, send, apis, order)
 			case "LOOKSRARE":
-				return cancelLooksRareOrder(ethereum, send, config, order)
+				return cancelLooksRareOrder(ethereum, send, config.exchange, order)
 			case "LOOKSRARE_V2":
-				return cancelLooksRareV2Order(ethereum, send, config, order)
+				return cancelLooksRareV2Order(ethereum, send, config.exchange, order)
 			case "CRYPTO_PUNK":
 				return cancelCryptoPunksOrder(ethereum, send, order)
 			case "X2Y2":
-				return cancelX2Y2Order(ethereum, send, apis, config.x2y2, order)
+				return cancelX2Y2Order(ethereum, send, apis, config.exchange.x2y2, order)
 			default:
 				throw new Error(`Unsupported order: ${JSON.stringify(order)}`)
 		}
@@ -103,7 +105,11 @@ export function cancelOpenseaOrderV1(
 }
 
 export async function cancelX2Y2Order(
-	ethereum: Ethereum, send: SendFunction, apis: RaribleEthereumApis, contract: Address, order: SimpleX2Y2Order
+	ethereum: Ethereum,
+	send: SendFunction,
+	apis: RaribleEthereumApis,
+	contract: Address,
+	order: SimpleX2Y2Order
 ) {
 	function decodeCancelInput(input: string) {
 		return ethereum.decodeParameter(

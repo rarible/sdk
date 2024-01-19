@@ -19,13 +19,10 @@ export async function mintErc721v1(
 ): Promise<MintOnChainResponse> {
 	const owner = toAddress(await ethereum.getFrom())
 	const erc721Contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, data.collection.id)
-	debugger
 	const nftTokenId = await getTokenId(nftCollectionApi, data.collection.id, owner, data.nftTokenId)
-	debugger
 	const { tokenId, signature: { v, r, s } } = nftTokenId
 
 	const uriPrefix = await erc721Contract.functionCall("tokenURIPrefix").call()
-	debugger
 	const uri = sanitizeUri(uriPrefix, data.uri)
 	const transaction = await send(erc721Contract.functionCall("mint", tokenId, v, r, s, uri))
 

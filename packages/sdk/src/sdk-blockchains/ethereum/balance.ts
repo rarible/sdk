@@ -4,9 +4,10 @@ import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
 import { Action } from "@rarible/action"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { ConvertRequest } from "../../types/balances"
 import type {
 	DepositBiddingBalanceRequest,
@@ -17,13 +18,19 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
 import type { IApisSdk } from "../../domain"
 import { extractBlockchain } from "../../common/extract-blockchain"
-import { convertEthereumContractAddress, convertToEthereumAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
+import {
+	convertEthereumContractAddress,
+	convertToEthereumAddress,
+	convertToEthereumAssetType,
+	getWalletNetwork,
+	isEVMBlockchain,
+} from "./common"
 
 export class EthereumBalance {
 	constructor(
 		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private readonly apis: IApisSdk,
-		private network: EthereumNetwork,
 	) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
@@ -42,7 +49,7 @@ export class EthereumBalance {
 
 	async convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		const tx = await this.send(request)
-		return new BlockchainEthereumTransaction(tx, this.network)
+		return new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
 	}
 
 	private send(request: ConvertRequest) {
@@ -51,15 +58,15 @@ export class EthereumBalance {
 	}
 
 	async getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumber> {
-		const currency = this.getBiddingCurrency(request)
+		const currency = await this.getBiddingCurrency(request)
 		return this.getBalance(request.walletAddress, currency)
 	}
 
-	private getBiddingCurrency(request: GetBiddingBalanceRequest): RequestCurrency {
+	private async getBiddingCurrency(request: GetBiddingBalanceRequest): Promise<RequestCurrency> {
 		if ("currency" in request) {
 			return request.currency
 		} else {
-			const wrappedContract = this.sdk.balances.getWethContractAddress()
+			const wrappedContract = await this.sdk.balances.getWethContractAddress()
 			const blockchain = extractBlockchain(request.walletAddress)
 			if (isEVMBlockchain(blockchain)) {
 				return {

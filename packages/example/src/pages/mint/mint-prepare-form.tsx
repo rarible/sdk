@@ -74,8 +74,6 @@ function getDefaultETHCollection(env: RaribleSdkEnvironment) {
 			return "0x6972347e66A32F40ef3c012615C13cB88Bf681cc"
 		case "testnet":
 			return "0xD8560C88D1DC85f9ED05b25878E366c49B68bEf9"
-		case "staging":
-			return "0xBf558E78CfdE95AfbF17a4ABe394Cb2cC42E6270"
 		case "prod":
 			return "0xc9154424B823b10579895cCBE442d41b9Abd96Ed"
 		default:

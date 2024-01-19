@@ -1,5 +1,14 @@
 global.FormData = require("form-data")
 global.window = {
 	fetch: require("node-fetch"),
+	dispatchEvent: () => {
+	},
 }
-jest.setTimeout(1000 * 60 * 2)
+global.CustomEvent = class CustomEvent extends Event {
+	constructor(message, data) {
+		super(message, data)
+		this.detail = data.detail
+	}
+}
+
+jest.setTimeout(1000 * 60 * 3)

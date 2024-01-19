@@ -16,27 +16,23 @@ import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
-import type { Order } from "@rarible/ethereum-api-client/build/models"
+import type { NftCollection, Order } from "@rarible/ethereum-api-client/build/models"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import type { NftCollection } from "@rarible/ethereum-api-client/build/models"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type { EthereumWallet } from "@rarible/sdk-wallet/build"
-import { WalletIsUndefinedError } from "@rarible/sdk-common/build"
-import type { OrderRequest } from "../../../types/order/common"
+import type { EVMBlockchain } from "@rarible/sdk-common/build"
+import { WalletIsUndefinedError, EVMBlockchains, isEVMBlockchain } from "@rarible/sdk-common/build"
+import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
+import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
+import type { Payout } from "@rarible/api-client/build/models/Payout"
+import type { BlockchainIsh, SupportedBlockchain } from "@rarible/sdk-common"
+import { extractBlockchain } from "@rarible/sdk-common"
+import type { OrderRequest, UnionPart } from "../../../types/order/common"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
-import type { UnionPart } from "../../../types/order/common"
-
-export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON
-export const EVMBlockchains: EVMBlockchain[] = [
-	Blockchain.ETHEREUM,
-	Blockchain.POLYGON,
-]
-
 export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
-
 export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 	switch (currency["@type"]) {
 		case "ERC20":
@@ -139,7 +135,7 @@ export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Par
 	})) || []
 }
 
-export function getOriginFeesSum(originFees: Array<Part>): number {
+export function getOriginFeesSum(originFees: Array<Part | Payout>): number {
 	return originFees.reduce((prev, curr) => prev + curr.value, 0)
 }
 
@@ -179,20 +175,20 @@ export function getPayoutsSupport(type: "RARIBLE_V1" | "RARIBLE_V2"): PayoutsSup
 }
 
 export function getEVMBlockchain(network: EthereumNetwork): EVMBlockchain {
-	switch (network) {
-		case "testnet":
-		case "dev-ethereum":
-		case "mainnet":
-		case "staging":
-			return Blockchain.ETHEREUM
-		case "dev-polygon":
-		case "mumbai":
-		case "polygon":
-		case "staging-polygon":
-			return Blockchain.POLYGON
-		default:
-			throw new Error(`Unsupported network: ${network}`)
+	const blockchain = getBlockchainBySDKNetwork(network)
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error(`Network ${network} is not EVM compatible`)
 	}
+	return blockchain
+}
+
+
+export function extractEVMBlockchain(value: BlockchainIsh): EVMBlockchain {
+	const blockchain = extractBlockchain(value)
+	if (!isEVMBlockchain(blockchain)) {
+		throw new Error(`Blockchain ${blockchain} is not EVM compatible`)
+	}
+	return blockchain
 }
 
 export function getSupportedCurrencies(
@@ -208,18 +204,6 @@ export function getSupportedCurrencies(
 	]
 }
 
-/**
- * Return true if blockchain works like ethereum blockchain
- * @param blockchain
- */
-export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
-	for (const b of EVMBlockchains) {
-		if (b === blockchain) {
-			return true
-		}
-	}
-	return false
-}
 
 export function convertToEthereumAddress(
 	contractAddress: UnionAddress | ContractAddress | CollectionId,
@@ -327,4 +311,23 @@ export function assertWallet(wallet: Maybe<EthereumWallet>) {
 	return wallet
 }
 
+export async function getWalletBlockchain(wallet: Maybe<EthereumWallet>) {
+	return getBlockchainFromChainId(await assertWallet(wallet).ethereum.getChainId())
+}
+
+export async function getWalletNetwork(wallet: Maybe<EthereumWallet>) {
+	return getNetworkFromChainId(await assertWallet(wallet).ethereum.getChainId())
+}
+export async function checkWalletBlockchain(wallet: Maybe<EthereumWallet>, blockchain: SupportedBlockchain) {
+	const walletChainId = await assertWallet(wallet).ethereum.getChainId()
+	assertBlockchainAndChainId(walletChainId, blockchain)
+}
+
+export function assertBlockchainAndChainId(chainId: number, blockchain: SupportedBlockchain) {
+	if (getBlockchainFromChainId(chainId) !== blockchain) {
+		throw new Error(`Change network of your wallet to ${blockchain}`)
+	}
+}
+
 export * from "./validators"
+export { EVMBlockchains, EVMBlockchain, isEVMBlockchain }

@@ -1,7 +1,6 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
-import type { EVMBlockchain } from "../common"
 import { initProvider } from "./init-providers"
 
 export const ETH_DEV_SETTINGS = {
@@ -22,6 +21,11 @@ export const ETH_STAGING_SETTINGS = {
 export const POLYGON_MAINNET_SETTINGS = {
 	rpcUrl: "https://node-mainnet-polygon.rarible.com",
 	networkId: 137,
+}
+
+export const ETH_MAINNET_SETTINGS = {
+	rpcUrl: "https://rarible.com/nodes/ethereum-node",
+	networkId: 1,
 }
 
 export const POLYGON_TESTNET_SETTINGS = {
@@ -55,7 +59,7 @@ export function createEthWallets(num: number) {
 	return wallets.slice(0, num).map(x => createEthWallet(x))
 }
 
-export const devNetworkByBlockchain: Record<EVMBlockchain, any> = {
+export const devNetworkByBlockchain: Record<Blockchain.ETHEREUM | Blockchain.POLYGON, any> = {
 	[Blockchain.ETHEREUM]: ETH_DEV_SETTINGS,
 	[Blockchain.POLYGON]: POLYGON_DEV_SETTINGS,
 }

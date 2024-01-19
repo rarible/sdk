@@ -6,6 +6,7 @@ import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethe
 
 export function createTestProviders(provider: any, wallet: Wallet) {
 	const web3 = new Web3(provider)
+	web3.setConfig({ defaultTransactionType: "0x0" })
 	const ethersWeb3Provider = new ethers.providers.Web3Provider(provider)
 
 	return {

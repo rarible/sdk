@@ -5,6 +5,8 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
 import { toBinary } from "@rarible/types"
+import { getApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
+import type { IRaribleEthereumSdkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { LogsLevel } from "../../domain"
 import type { CanTransferResult } from "../../types/nft/restriction/domain"
@@ -40,7 +42,7 @@ export function createEthereumSdk(
 		apiKey?: string
 	} & IEthereumSdkConfig
 ): IRaribleInternalSdk {
-	const sdk = createRaribleSdk(wallet?.ethereum, network, {
+	const sdkConfig: IRaribleEthereumSdkConfig = {
 		apiClientParams: {
 			...(config?.params || {}),
 			middleware: [
@@ -55,18 +57,23 @@ export function createEthereumSdk(
 		polygon: config[Blockchain.POLYGON],
 		marketplaceMarker: config.marketplaceMarker ? toBinary(config.marketplaceMarker) : undefined,
 		apiKey: config.apiKey,
-	})
+	}
+	const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
 
-	const sellService = new EthereumSell(sdk, network, config)
-	const balanceService = new EthereumBalance(sdk, apis, network)
-	const bidService = new EthereumBid(sdk, wallet, balanceService, network, config)
-	const mintService = new EthereumMint(sdk, apis, network)
-	const fillService = new EthereumFill(sdk, wallet, network, config)
-	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, network)
-	const cryptopunkService = new EthereumCryptopunk(sdk, network)
-	const transferService = new EthereumTransfer(sdk, network)
-	const burnService = new EthereumBurn(sdk, network)
-	const cancelService = new EthereumCancel(sdk, network)
+	const getEthereumApis = async () => {
+		return getApis(wallet?.ethereum, network, sdkConfig)
+	}
+
+	const sellService = new EthereumSell(sdk, wallet, getEthereumApis, config)
+	const balanceService = new EthereumBalance(sdk, wallet, apis)
+	const bidService = new EthereumBid(sdk, wallet, apis, balanceService, getEthereumApis, config)
+	const mintService = new EthereumMint(sdk, wallet, apis)
+	const fillService = new EthereumFill(sdk, wallet, getEthereumApis, config)
+	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, wallet)
+	const cryptopunkService = new EthereumCryptopunk(sdk, wallet)
+	const transferService = new EthereumTransfer(sdk, wallet, getEthereumApis)
+	const burnService = new EthereumBurn(sdk, wallet, network, getEthereumApis)
+	const cancelService = new EthereumCancel(sdk, wallet, getEthereumApis)
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
@@ -75,16 +82,16 @@ export function createEthereumSdk(
 			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
 			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
 			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
-			generateTokenId: new EthereumTokenId(sdk).generateTokenId,
+			generateTokenId: new EthereumTokenId(sdk, getEthereumApis).generateTokenId,
 			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,
 		},
 		order: {
 			fill: { prepare: fillService.fill },
-			buy: new MethodWithPrepare(fillService.buyBasic, fillService.fill),
+			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
 			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
-			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.fill),
+			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
 			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
 			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
 			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),

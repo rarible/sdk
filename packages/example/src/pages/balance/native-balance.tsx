@@ -3,6 +3,7 @@ import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { CircularProgress } from "@mui/material"
 import type { UnionAddress } from "@rarible/types/build/union-address"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
+import { Blockchain } from "@rarible/api-client"
 import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { ConvertForm, isAvailableWethConvert } from "./convert-form"
@@ -24,7 +25,9 @@ export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProp
 		walletAddress,
 		currencies.find((c) => c.isNative)?.getAssetType()!
 	)
-	const isAvailableConvert = isAvailableWethConvert(wallet.walletType, environment)
+
+	const isMantleNetwork = (connection.state as any)?.connection.blockchain === Blockchain.MANTLE
+	const isAvailableConvert = !isMantleNetwork && isAvailableWethConvert(wallet.walletType, environment)
 
 	const content = () => {
 		if (fetching) {

@@ -2,8 +2,6 @@ import type {
 	Address,
 	Erc1155AssetType,
 	Erc721AssetType,
-	NftItemControllerApi,
-	NftOwnershipControllerApi,
 } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
@@ -13,6 +11,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { CheckAssetTypeFunction, NftAssetType } from "../order/check-asset-type"
 import { getOwnershipId } from "../common/get-ownership-id"
 import type { SendFunction } from "../common/send-transaction"
+import type { RaribleEthereumApis } from "../common/apis"
 import { transferErc721 } from "./transfer-erc721"
 import { transferErc1155 } from "./transfer-erc1155"
 import { transferNftLazy } from "./transfer-nft-lazy"
@@ -24,19 +23,17 @@ export async function transfer(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	checkAssetType: CheckAssetTypeFunction,
-	nftItemApi: NftItemControllerApi,
-	nftOwnershipApi: NftOwnershipControllerApi,
-	checkWalletChainId: () => Promise<boolean>,
+	getApis: () => Promise<RaribleEthereumApis>,
 	initialAsset: TransferAsset,
 	to: Address,
 	amount?: BigNumber
 ): Promise<EthereumTransaction> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
 	const from = toAddress(await ethereum.getFrom())
-	const ownership = await nftOwnershipApi.getNftOwnershipByIdRaw({
+	const apis = await getApis()
+	const ownership = await apis.nftOwnership.getNftOwnershipByIdRaw({
 		ownershipId: getOwnershipId(initialAsset.contract, toBigNumber(`${initialAsset.tokenId}`), from),
 	})
 	if (ownership.status === 200) {
@@ -51,7 +48,7 @@ export async function transfer(
 			return transferNftLazy(
 				ethereum,
 				send,
-				nftItemApi,
+				apis.nftItem,
 				asset,
 				toAddress(from), to, amount
 			)
