@@ -112,7 +112,6 @@ describe("get transaction receipt events", () => {
 			deepReplaceBigInt(await receipt),
 			null as any,
 			null as any,
-			null as any,
 			toAddress(seaportAddr),
 			SeaportABI,
 		)
