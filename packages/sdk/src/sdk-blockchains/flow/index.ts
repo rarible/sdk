@@ -1,9 +1,9 @@
 import type { FlowWallet } from "@rarible/sdk-wallet"
 import { createFlowSdk as createFlowSdkInstance } from "@rarible/flow-sdk"
-import type { FlowEnv } from "@rarible/flow-sdk/build/types"
+import type { FlowEnv } from "@rarible/flow-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { ConfigurationParameters } from "@rarible/ethereum-api-client"
-import { ENV_CONFIG } from "@rarible/flow-sdk/build/config/env"
+import { FLOW_ENV_CONFIG as ENV_CONFIG } from "@rarible/flow-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdkConfig } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -81,7 +81,7 @@ export function createFlowSdk(
 			getBalance: balanceService.getBalance,
 			transfer: balanceService.transfer,
 			convert: notImplemented,
-			getBiddingBalance: nonImplementedAction,
+			getBiddingBalance: notImplemented,
 			depositBiddingBalance: nonImplementedAction,
 			withdrawBiddingBalance: nonImplementedAction,
 		},
@@ -97,6 +97,7 @@ export function createFlowSdk(
 			setupAccount: setupAccount.setupAccount,
 			checkInitMattelCollections: setupAccount.checkInitMattelCollections,
 			setupMattelCollections: setupAccount.setupMattelCollections,
+			setupGamisodesCollections: setupAccount.setupGamisodesCollections,
 		},
 	}
 }

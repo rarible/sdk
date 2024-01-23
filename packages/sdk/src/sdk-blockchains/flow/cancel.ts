@@ -1,7 +1,7 @@
 import type { FlowSdk } from "@rarible/flow-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainFlowTransaction } from "@rarible/sdk-transaction"
-import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
+import type { FlowNetwork } from "@rarible/flow-sdk"
 import type { IApisSdk } from "../../domain"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import { getFlowCollection, parseOrderId } from "./common/converters"
