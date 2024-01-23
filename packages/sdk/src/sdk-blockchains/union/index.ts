@@ -309,6 +309,7 @@ class UnionFlowSpecificSdk implements IFlowSdk {
 
   setupAccount: IFlowSetupAccount = this.flowSdk.setupAccount
   setupMattelCollections: IFlowSetupMattelCollections = this.flowSdk.setupMattelCollections
+  setupGamisodesCollections: IFlowSetupMattelCollections = this.flowSdk.setupGamisodesCollections
   checkInitMattelCollections: IFlowCheckInitMattelCollections = this.flowSdk.checkInitMattelCollections
 }
 

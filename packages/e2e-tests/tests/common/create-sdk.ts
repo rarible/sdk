@@ -4,7 +4,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/src/config/domain"
 import { createRaribleSdk } from "@rarible/sdk"
 import { LogsLevel } from "@rarible/sdk/build/domain"
-import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import { WalletType } from "@rarible/sdk-wallet"
 import { testsConfig } from "./config"
 
