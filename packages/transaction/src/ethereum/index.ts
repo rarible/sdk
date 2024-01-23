@@ -34,42 +34,43 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
 			result: await this.resultExtractor?.(this.transaction.getEvents.bind(this.transaction)),
 		}
 	}
-
 	getTxLink() {
-		switch (this.network) {
-			case "mainnet":
-				return `https://etherscan.io/tx/${this.hash()}`
-			case "mumbai":
-				return `https://mumbai.polygonscan.com/tx/${this.hash()}`
-			case "polygon":
-				return `https://polygonscan.com/tx/${this.hash()}`
-			case "testnet":
-				return `https://goerli.etherscan.io/tx/${this.hash()}`
-			case "mantle":
-				return `https://explorer.mantle.xyz/tx/${this.hash()}`
-			case "testnet-mantle":
-				return `https://explorer.testnet.mantle.xyz/tx/${this.hash()}`
-			case "arbitrum":
-				return `https://arbiscan.io/tx/${this.hash()}`
-			case "testnet-arbitrum":
-				return `https://sepolia.arbiscan.io/tx/${this.hash()}`
-			case "zksync":
-				return `https://explorer.zksync.io/tx/${this.hash()}`
-			case "testnet-zksync":
-				return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
-			case "chiliz":
-				return `https://scan.chiliz.com/tx/${this.hash()}`
-			case "testnet-chiliz":
-				return `https://spicy-explorer.chiliz.com/tx/${this.hash()}`
-			case "lightlink":
-				return `https://phoenix.lightlink.io/tx/${this.hash()}`
-			case "testnet-lightlink":
-				return `https://pegasus.lightlink.io/tx/${this.hash()}`
-			case "testnet-rari":
-				return `https://rari-testnet.calderaexplorer.xyz/tx/${this.hash()}`
-			default:
-				throw new Error("Unsupported transaction network")
-		}
+  	switch (this.network) {
+  		case "mainnet":
+  			return `https://etherscan.io/tx/${this.hash()}`
+  		case "mumbai":
+  			return `https://mumbai.polygonscan.com/tx/${this.hash()}`
+  		case "polygon":
+  			return `https://polygonscan.com/tx/${this.hash()}`
+  		case "testnet":
+  			return `https://goerli.etherscan.io/tx/${this.hash()}`
+  		case "mantle":
+  			return `https://explorer.mantle.xyz/tx/${this.hash()}`
+  		case "testnet-mantle":
+  			return `https://explorer.testnet.mantle.xyz/tx/${this.hash()}`
+  		case "arbitrum":
+  			return `https://arbiscan.io/tx/${this.hash()}`
+  		case "testnet-arbitrum":
+  			return `https://sepolia.arbiscan.io/tx/${this.hash()}`
+  		case "zksync":
+  			return `https://explorer.zksync.io/tx/${this.hash()}`
+  		case "testnet-zksync":
+  			return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
+  		case "chiliz":
+  			return `https://scan.chiliz.com/tx/${this.hash()}`
+  		case "testnet-chiliz":
+  			return `https://spicy-explorer.chiliz.com/tx/${this.hash()}`
+  		case "lightlink":
+  			return `https://phoenix.lightlink.io/tx/${this.hash()}`
+  		case "testnet-lightlink":
+  			return `https://pegasus.lightlink.io/tx/${this.hash()}`
+  		case "rari":
+  			return `https://rari.calderaexplorer.xyz/tx/${this.hash()}`
+  		case "testnet-rari":
+  			return `https://rari-testnet.calderaexplorer.xyz/tx/${this.hash()}`
+  		default:
+  			throw new Error("Unsupported transaction network")
+  	}
 	}
 
 	get isEmpty(): boolean {
