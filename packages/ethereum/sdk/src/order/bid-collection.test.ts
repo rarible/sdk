@@ -1,8 +1,6 @@
 import { toAddress, ZERO_WORD } from "@rarible/types"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
 import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
@@ -24,13 +22,8 @@ import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
 describe("bid", () => {
-	const { provider: provider1 } = createE2eProvider(DEV_PK_1)
-	const web31 = new Web3(provider1)
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
-
-	const { provider: provider2 } = createE2eProvider(DEV_PK_2)
-	const web32 = new Web3(provider2)
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
+	const { web3: web31, web3Ethereum: ethereum1 } = createE2eProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum2 } = createE2eProvider(DEV_PK_2)
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
@@ -97,7 +90,7 @@ describe("bid", () => {
 			},
 			takeAssetType: {
 				assetClass: "COLLECTION",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 			},
 			price: toBn("1000000000000000000"),
 			amount: 1,
@@ -111,7 +104,7 @@ describe("bid", () => {
 			originFees: [],
 			assetType: {
 				assetClass: "ERC721",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 				tokenId: toBigNumber("1"),
 			},
 		})

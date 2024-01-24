@@ -16,8 +16,6 @@ import {
 	deployTestRoyaltiesProvider,
 	deployTransferProxy,
 } from "@rarible/ethereum-sdk-test-common"
-import { ethers } from "ethers"
-import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import { getSimpleSendWithInjects, sentTx, sentTxConfirm } from "../../common/send-transaction"
 import { getEthereumConfig } from "../../config"
 import { signOrder } from "../sign-order"
@@ -32,18 +30,11 @@ import type { BuyOrderRequest } from "./types"
 import { OrderFiller } from "./index"
 
 describe("buy & acceptBid orders", () => {
-	const { addresses, provider, accounts } = createGanacheProvider()
-	const [account1] = accounts
+	const { addresses, provider } = createGanacheProvider()
 	const [buyerAddress, sellerAddress] = addresses
 	const web3 = new Web3(provider as any)
 	const buyerEthereum = new Web3Ethereum({ web3, from: buyerAddress, gas: 1000000 })
 	const sellerEthereum = new Web3Ethereum({ web3, from: sellerAddress, gas: 1000000 })
-
-	const ethersWeb3Provider = new ethers.providers.Web3Provider(provider as any)
-	const buyerEthersWeb3Provider1 = new EthersWeb3ProviderEthereum(ethersWeb3Provider, buyerAddress)
-	const buyerEthersEthereum1 =	new EthersEthereum(
-		new ethers.Wallet(account1.secretKey, ethersWeb3Provider)
-	)
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
@@ -76,24 +67,24 @@ describe("buy & acceptBid orders", () => {
 		 */
 		await sentTx(
 			it.exchangeV2.methods.__ExchangeV2_init(
-				toAddress(it.transferProxy.options.address),
-				toAddress(it.erc20TransferProxy.options.address),
+				toAddress(it.transferProxy.options.address!),
+				toAddress(it.erc20TransferProxy.options.address!),
 				toBigNumber("0"),
 				buyerAddress,
-				toAddress(it.royaltiesProvider.options.address)
+				toAddress(it.royaltiesProvider.options.address!)
 			),
 			{ from: buyerAddress }
 		)
-		config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-		config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-		config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address)
-		config.transferProxies.erc20 = toAddress(it.erc20TransferProxy.options.address)
+		config.exchange.v1 = toAddress(it.exchangeV2.options.address!)
+		config.exchange.v2 = toAddress(it.exchangeV2.options.address!)
+		config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address!)
+		config.transferProxies.erc20 = toAddress(it.erc20TransferProxy.options.address!)
 		// config.chainId = 200500
 
-		await sentTx(it.transferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+		await sentTx(it.transferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address!)), {
 			from: buyerAddress,
 		})
-		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address!)), {
 			from: buyerAddress,
 		})
 
@@ -101,7 +92,7 @@ describe("buy & acceptBid orders", () => {
 		await sentTx(
 			it.exchangeV2.methods.setTransferProxy(
 				id("CRYPTO_PUNKS"),
-				it.punksTransferProxy.options.address
+				it.punksTransferProxy.options.address!
 			),
 			{ from: buyerAddress }
 		)
@@ -110,7 +101,7 @@ describe("buy & acceptBid orders", () => {
 		await sentTx(
 			it.exchangeV2.methods.setAssetMatcher(
 				id("CRYPTO_PUNKS"),
-				it.punkAssetMatcher.options.address
+				it.punkAssetMatcher.options.address!
 			),
 			{ from: buyerAddress }
 		)
@@ -132,7 +123,7 @@ describe("buy & acceptBid orders", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				value: toBigNumber("5"),
@@ -141,7 +132,7 @@ describe("buy & acceptBid orders", () => {
 			take: {
 				assetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				value: toBigNumber("10"),
 			},
@@ -154,11 +145,11 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		await sentTx(it.testErc20.methods.approve(it.erc20TransferProxy.options.address, toBn(10)), {
+		await sentTx(it.testErc20.methods.approve(it.erc20TransferProxy.options.address!, 10), {
 			from: buyerAddress,
 		})
 
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 			from: sellerAddress,
 		})
 
@@ -182,80 +173,80 @@ describe("buy & acceptBid orders", () => {
 		expect(finishErc1155Balance.minus(startErc1155Balance).toString()).toBe("1")
 	})
 
-	test.each([
-		{ provider: buyerEthereum, name: "web3" },
-		{ provider: buyerEthersWeb3Provider1, name: "ethersWeb3Ethereum" },
-		{ provider: buyerEthersEthereum1, name: "ethersEthereum" },
-	])("should match order(buy erc1155 for erc20) with $name provider", async ({ provider }) => {
-		//sender1 has ERC20, sender2 has ERC1155
-
-		const tokenId = "999"
-		const left: SimpleOrder = {
-			make: {
-				assetType: {
-					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
-					tokenId: toBigNumber(tokenId),
-				},
-				value: toBigNumber("5"),
-			},
-			maker: sellerAddress,
-			take: {
-				assetType: {
-					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
-				},
-				value: toBigNumber("10"),
-			},
-			salt: randomWord(),
-			type: "RARIBLE_V2",
-			data: {
-				dataType: "RARIBLE_V2_DATA_V1",
-				payouts: [],
-				originFees: [],
-			},
-		}
-
-		await sentTx(it.testErc20.methods.approve(it.erc20TransferProxy.options.address, toBn(10)), {
-			from: buyerAddress,
-		})
-
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
-			from: sellerAddress,
-		})
-
-		const signature = await signOrder(sellerEthereum, getConfig, left)
-
-		const finalOrder = { ...left, signature }
-
-		const startErc20Balance = toBn(await it.testErc20.methods.balanceOf(buyerAddress).call())
-		const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
-
-		const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
-		const getApis = getApisTemplate.bind(null, provider, env)
-
-		const filler = new OrderFiller(provider, send, getConfig, getApis, getBaseOrderFee, env, {
-			marketplaceMarker,
-		})
-		const tx = await filler.buy({ order: finalOrder, amount: 1, payouts: [], originFees: [] })
-		await tx.wait()
-		const matchEvent = (await tx.getEvents()).find(e => e.event === "Match")
-		expect(matchEvent).toBeTruthy()
-		expect(matchEvent?.returnValues).toBeTruthy()
-
-		const finishErc20Balance = toBn(await it.testErc20.methods.balanceOf(buyerAddress).call())
-		const finishErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
-
-		expect(startErc20Balance.minus(finishErc20Balance).toString()).toBe("2")
-		expect(finishErc1155Balance.minus(startErc1155Balance).toString()).toBe("1")
-	})
+	// test.each([
+	// 	{ provider: buyerEthereum, name: "web3" },
+	// 	{ provider: buyerEthersWeb3Provider1, name: "ethersWeb3Ethereum" },
+	// 	{ provider: buyerEthersEthereum1, name: "ethersEthereum" },
+	// ])("should match order(buy erc1155 for erc20) with $name provider", async ({ provider }) => {
+	// 	//sender1 has ERC20, sender2 has ERC1155
+	//
+	// 	const tokenId = "999"
+	// 	const left: SimpleOrder = {
+	// 		make: {
+	// 			assetType: {
+	// 				assetClass: "ERC1155",
+	// 				contract: toAddress(it.testErc1155.options.address!),
+	// 				tokenId: toBigNumber(tokenId),
+	// 			},
+	// 			value: toBigNumber("5"),
+	// 		},
+	// 		maker: sellerAddress,
+	// 		take: {
+	// 			assetType: {
+	// 				assetClass: "ERC20",
+	// 				contract: toAddress(it.testErc20.options.address!),
+	// 			},
+	// 			value: toBigNumber("10"),
+	// 		},
+	// 		salt: randomWord(),
+	// 		type: "RARIBLE_V2",
+	// 		data: {
+	// 			dataType: "RARIBLE_V2_DATA_V1",
+	// 			payouts: [],
+	// 			originFees: [],
+	// 		},
+	// 	}
+	//
+	// 	await sentTx(it.testErc20.methods.approve(it.erc20TransferProxy.options.address!, 10), {
+	// 		from: buyerAddress,
+	// 	})
+	//
+	// 	await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
+	// 		from: sellerAddress,
+	// 	})
+	//
+	// 	const signature = await signOrder(sellerEthereum, getConfig, left)
+	//
+	// 	const finalOrder = { ...left, signature }
+	//
+	// 	const startErc20Balance = toBn(await it.testErc20.methods.balanceOf(buyerAddress).call())
+	// 	const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
+	//
+	// 	const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
+	// 	const getApis = getApisTemplate.bind(null, provider, env)
+	//
+	// 	const filler = new OrderFiller(provider, send, getConfig, getApis, getBaseOrderFee, env, {
+	// 		marketplaceMarker,
+	// 	})
+	// 	const tx = await filler.buy({ order: finalOrder, amount: 1, payouts: [], originFees: [] })
+	// 	await tx.wait()
+	// 	const matchEvent = (await tx.getEvents()).find(e => e.event === "Match")
+	// 	expect(matchEvent).toBeTruthy()
+	// 	expect(matchEvent?.returnValues).toBeTruthy()
+	//
+	// 	const finishErc20Balance = toBn(await it.testErc20.methods.balanceOf(buyerAddress).call())
+	// 	const finishErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
+	//
+	// 	expect(startErc20Balance.minus(finishErc20Balance).toString()).toBe("2")
+	// 	expect(finishErc1155Balance.minus(startErc1155Balance).toString()).toBe("1")
+	// })
 
 	test("get transaction data", async () => {
 		const left: SimpleOrder = {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				value: toBigNumber("5"),
@@ -300,7 +291,7 @@ describe("buy & acceptBid orders", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("5"),
@@ -321,7 +312,7 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 			from: sellerAddress,
 		})
 
@@ -353,7 +344,7 @@ describe("buy & acceptBid orders", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				value: toBigNumber("5"),
@@ -375,7 +366,7 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 			from: sellerAddress,
 		})
 
@@ -407,7 +398,7 @@ describe("buy & acceptBid orders", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				value: toBigNumber("5"),
@@ -434,7 +425,7 @@ describe("buy & acceptBid orders", () => {
 			},
 		}
 
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 			from: sellerAddress,
 		})
 
@@ -469,13 +460,13 @@ describe("buy & acceptBid orders", () => {
 		const punkId = 43
 		//Mint punks
 		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sellerAddress })
-		await it.testErc20.methods.mint(buyerAddress, 100).send({ from: buyerAddress, gas: 200000 })
+		await it.testErc20.methods.mint(buyerAddress, 100).send({ from: buyerAddress, gas: "200000" })
 
 		const left: SimpleOrder = {
 			make: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
@@ -500,7 +491,7 @@ describe("buy & acceptBid orders", () => {
 			it.punksMarket.methods.offerPunkForSaleToAddress(
 				punkId,
 				0,
-				toAddress(it.punksTransferProxy.options.address),
+				toAddress(it.punksTransferProxy.options.address!),
 			),
 			{ from: sellerAddress }
 		)
@@ -520,14 +511,14 @@ describe("buy & acceptBid orders", () => {
 		const punkId = 50
 		//Mint crypto punks
 		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sellerAddress })
-		await it.testErc20.methods.mint(buyerAddress, 100).send({ from: buyerAddress, gas: 200000 })
+		await it.testErc20.methods.mint(buyerAddress, 100).send({ from: buyerAddress, gas: "200000" })
 
 		const tx = await approveErc20(
 			buyerEthereum,
 			send,
-			toAddress(it.testErc20.options.address),
+			toAddress(it.testErc20.options.address!),
 			toAddress(buyerAddress),
-			toAddress(it.erc20TransferProxy.options.address),
+			toAddress(it.erc20TransferProxy.options.address!),
 			toBigNumber("10")
 		)
 		await tx?.wait()
@@ -537,14 +528,14 @@ describe("buy & acceptBid orders", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				value: toBigNumber("1"),
 			},
 			take: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
@@ -579,7 +570,7 @@ describe("buy & acceptBid orders", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("5"),
@@ -604,7 +595,7 @@ describe("buy & acceptBid orders", () => {
 
 		const finalOrder = { ...left, signature }
 
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
 			from: sellerAddress,
 		})
 

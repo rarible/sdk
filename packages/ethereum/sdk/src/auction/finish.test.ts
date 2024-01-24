@@ -1,6 +1,5 @@
 import { awaitAll, createE2eProvider, deployTestErc1155, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
@@ -16,8 +15,8 @@ import { awaitForAuction, awaitForAuctionBid } from "./test"
 
 
 describe.skip("finish auction auction", () => {
-	const { provider: providerSeller, wallet: walletSeller } = createE2eProvider("0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9")
-	const { provider: providerBuyer, wallet: walletBuyer } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
+	const { provider: providerSeller, wallet: walletSeller, web3Ethereum: ethereum1 } = createE2eProvider("0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9")
+	const { provider: providerBuyer, wallet: walletBuyer, web3Ethereum: ethereum2 } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
 	const { wallet: feeWallet } = createE2eProvider()
 
 	const sender1Address = walletSeller.getAddressString()
@@ -28,9 +27,6 @@ describe.skip("finish auction auction", () => {
 
 	const config = getEthereumConfig("testnet")
 	const getConfig = async () => config
-
-	const ethereum1 = new Web3Ethereum({ web3: web3Seller, from: sender1Address, gas: 1000000 })
-	const ethereum2 = new Web3Ethereum({ web3: web3Buyer, from: sender2Address, gas: 1000000 })
 
 	const send1 = getSimpleSendWithInjects()
 	const send2 = getSimpleSendWithInjects()
@@ -61,15 +57,15 @@ describe.skip("finish auction auction", () => {
 
 	test("finish auction erc-1155 <-> erc-20", async () => {
 		const tokenId = "1"
-		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: 1000000 })
+		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: "1000000" })
 		const erc20Supply = toBn("30000000")
 		await sentTx(
 			it.testErc20.methods.mint(sender2Address, erc20Supply.toString()),
-			{ from: sender1Address, gas: 1000000 }
+			{ from: sender1Address, gas: "1000000" }
 		)
 		await sentTx(
 			it.testErc20.methods.mint(sender1Address, "10000000000000000000000000000"),
-			{ from: sender1Address, gas: 1000000 }
+			{ from: sender1Address, gas: "1000000" }
 		)
 		console.log("erc20", it.testErc20.options.address)
 
@@ -77,13 +73,13 @@ describe.skip("finish auction auction", () => {
 			{
 				makeAssetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				amount: toBigNumber("1"),
 				takeAssetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				minimalStepDecimal: toBigNumber("0.00000000000000001"),
 				minimalPriceDecimal: toBigNumber("0.00000000000000005"),
@@ -131,18 +127,18 @@ describe.skip("finish auction auction", () => {
 
 	test("finish auction erc-1155 <-> eth", async () => {
 		const tokenId = "2"
-		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: 1000000 })
+		await sentTx(it.testErc1155.methods.mint(sender1Address, tokenId, 10, "0x"), { from: sender1Address, gas: "1000000" })
 		const erc20Supply = toBn("30000000")
 		await sentTx(
 			it.testErc20.methods.mint(sender2Address, erc20Supply.toString()),
-			{ from: sender1Address, gas: 1000000 }
+			{ from: sender1Address, gas: "1000000" }
 		)
 
 		const auction = await auctionService.start(
 			{
 				makeAssetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				amount: toBigNumber("1"),

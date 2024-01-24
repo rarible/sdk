@@ -1,6 +1,4 @@
 import { awaitAll, createE2eProvider, deployTestErc1155, deployTestErc20, deployTestErc721ForAuction } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { AuctionControllerApi, Configuration } from "@rarible/ethereum-api-client"
 import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
@@ -15,15 +13,13 @@ import { BuyoutAuction } from "./buy-out"
 import { awaitForAuction } from "./test"
 
 describe.skip("buy out auction", () => {
-	const { provider: providerSeller, wallet: walletSeller } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
-	const { provider: providerBuyer, wallet: walletBuyer } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
+	const { wallet: walletSeller, web3: web3Seller, web3Ethereum: ethereum1 } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
+	const { wallet: walletBuyer, web3: web3Buyer, web3Ethereum: ethereum2 } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
 	const { wallet: feeWallet } = createE2eProvider()
 
 	const sender1Address = walletSeller.getAddressString()
 	const sender2Address = walletBuyer.getAddressString()
 	const feeAddress = feeWallet.getAddressString()
-	const web3Seller = new Web3(providerSeller as any)
-	const web3Buyer = new Web3(providerBuyer as any)
 	const env: EthereumNetwork = "testnet"
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
@@ -31,8 +27,6 @@ describe.skip("buy out auction", () => {
 	const configuration = new Configuration(getApiConfig(env))
 	const auctionApi = new AuctionControllerApi(configuration)
 
-	const ethereum1 = new Web3Ethereum({ web3: web3Seller, from: sender1Address, gas: 1000000 })
-	const ethereum2 = new Web3Ethereum({ web3: web3Buyer, from: sender2Address, gas: 1000000 })
 	const send1 = getSimpleSendWithInjects()
 	const send2 = getSimpleSendWithInjects()
 	const approve1 = approveTemplate.bind(null, ethereum1, send1, getConfig)
@@ -60,13 +54,13 @@ describe.skip("buy out auction", () => {
 			{
 				makeAssetType: {
 					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
+					contract: toAddress(it.testErc1155.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				amount: toBigNumber("1"),
 				takeAssetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				minimalStepDecimal: toBigNumber("0.00000000000000001"),
 				minimalPriceDecimal: toBigNumber("0.00000000000000005"),
@@ -88,7 +82,7 @@ describe.skip("buy out auction", () => {
 
 		await buyoutTx.wait()
 
-		expect(await it.testErc1155.methods.balanceOf(sender2Address, "1").call()).toBe("1")
+		expect((await it.testErc1155.methods.balanceOf(sender2Address, "1").call()).toString()).toBe("1")
 	})
 
 	test("buy out erc-721 <-> erc-20", async () => {
@@ -99,13 +93,13 @@ describe.skip("buy out auction", () => {
 			{
 				makeAssetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber("1"),
 				},
 				amount: toBigNumber("1"),
 				takeAssetType: {
 					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
+					contract: toAddress(it.testErc20.options.address!),
 				},
 				minimalStepDecimal: toBigNumber("0.00000000000000001"),
 				minimalPriceDecimal: toBigNumber("0.00000000000000005"),
@@ -127,7 +121,7 @@ describe.skip("buy out auction", () => {
 
 		await buyoutTx.wait()
 
-		expect(await it.testErc721.methods.balanceOf(sender2Address).call()).toBe("1")
+		expect((await it.testErc721.methods.balanceOf(sender2Address).call()).toString()).toBe("1")
 	})
 
 	test("buy out erc-1155 <-> eth", async () => {
@@ -137,7 +131,7 @@ describe.skip("buy out auction", () => {
 		const auction = await auctionService1.start({
 			makeAssetType: {
 				assetClass: "ERC1155",
-				contract: toAddress(it.testErc1155.options.address),
+				contract: toAddress(it.testErc1155.options.address!),
 				tokenId: toBigNumber("2"),
 			},
 			amount: toBigNumber("1"),
@@ -167,7 +161,7 @@ describe.skip("buy out auction", () => {
 			}],
 		})
 		await buyoutTx.wait()
-		expect(await it.testErc1155.methods.balanceOf(sender2Address, "2").call()).toBe("1")
+		expect((await it.testErc1155.methods.balanceOf(sender2Address, "2").call()).toString()).toBe("1")
 
 		expect(await web3Buyer.eth.getBalance(feeAddress)).toBe("10")
 	})

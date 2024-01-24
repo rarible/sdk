@@ -121,3 +121,18 @@ export function isObjectLike(x: unknown): x is object {
 export function hasName(x: unknown): x is Error {
 	return typeof x === "object" && x !== null && "name" in x
 }
+
+export function deepReplaceBigInt(o: unknown): any {
+	if (Array.isArray(o)) {
+		return o.map(item => deepReplaceBigInt(item))
+	}
+	if (typeof o === "object") {
+		const clonedObject = { ...o } as Record<string, unknown>
+		return Object.keys(clonedObject).reduce((acc, key) => {
+			acc[key] = deepReplaceBigInt(acc[key])
+			return acc
+		}, clonedObject)
+	}
+	if (typeof o === "bigint") return o.toString()
+	return o
+}

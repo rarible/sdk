@@ -1,12 +1,11 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/ethereum-api-client"
-import type { AbiItem } from "../../common/abi-item"
 
 export function createLooksrareV2Validator(ethereum: Ethereum, address?: Address): EthereumContract {
 	return ethereum.createContract(LOOKSRARE_V2_VALIDATOR_ABI, address)
 }
 
-export const LOOKSRARE_V2_VALIDATOR_ABI: AbiItem[] = [
+export const LOOKSRARE_V2_VALIDATOR_ABI = [
 	{
 		"inputs": [
 			{

@@ -1,6 +1,5 @@
-import type { AbiItem } from "../../../common/abi-item"
 
-export const wethABI: AbiItem[] = [
+export const wethABI = [
 	{
 		constant: true,
 		inputs: [],

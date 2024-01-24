@@ -1,6 +1,4 @@
 import { awaitAll, createE2eProvider, deployTestErc1155, createAuctionContract } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
@@ -12,13 +10,11 @@ import { cancelAuction } from "./cancel"
 import { awaitForAuction } from "./test"
 
 describe.skip("cancel auction", () => {
-	const { provider, wallet } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
+	const { wallet, web3Ethereum: ethereum1, web3 } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
 	const sender1Address = wallet.getAddressString()
-	const web3 = new Web3(provider as any)
 	const config = getEthereumConfig("testnet")
 	const getConfig = async () => config
 
-	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
 	const send = getSimpleSendWithInjects()
 	const approve1 = approveTemplate.bind(null, ethereum1, send, getConfig)
 	const apis = createEthereumApis("testnet")
@@ -40,7 +36,7 @@ describe.skip("cancel auction", () => {
 		const auction = await auctionService.start({
 			makeAssetType: {
 				assetClass: "ERC1155",
-				contract: toAddress(it.testErc1155.options.address),
+				contract: toAddress(it.testErc1155.options.address!),
 				tokenId: toBigNumber("1"),
 			},
 			amount: toBigNumber("1"),

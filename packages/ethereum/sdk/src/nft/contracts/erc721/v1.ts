@@ -1,6 +1,4 @@
-import type { AbiItem } from "../../../common/abi-item"
-
-export const erc721v1Abi: AbiItem[] = [
+export const erc721v1Abi = [
 	{
 		"inputs": [
 			{
@@ -760,4 +758,4 @@ export const erc721v1Abi: AbiItem[] = [
 		"stateMutability": "nonpayable",
 		"type": "function",
 	},
-]
+] as const

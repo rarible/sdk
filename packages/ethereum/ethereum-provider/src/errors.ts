@@ -1,3 +1,4 @@
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { Provider } from "./domain"
 
 export type EthereumProviderErrorData = {
@@ -43,7 +44,9 @@ export class EthereumProviderError extends Error {
 
   static getErrorMessage(error: any) {
   	if (typeof error === "string") return error
-  	return error?.message || "EthereumProviderError"
+  	if (error && typeof error.message === "string") return error.message
+  	if (typeof error !== "undefined" && error !== null) return getStringifiedData(error)
+  	return "EthereumProviderError"
   }
 
   getNewStack(error: any) {

@@ -4,7 +4,10 @@ global.window = {
 	dispatchEvent: () => {
 	},
 }
-global.CustomEvent = function CustomEvent() {
-	return
+global.CustomEvent = class CustomEvent extends Event {
+	constructor(message, data) {
+		super(message, data)
+		this.detail = data.detail
+	}
 }
 jest.setTimeout(4 * 60 * 1000)

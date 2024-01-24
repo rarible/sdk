@@ -5,7 +5,6 @@ import { BigNumber, toBn } from "@rarible/utils"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { ethers } from "ethers"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
-import Web3 from "web3"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
@@ -21,10 +20,9 @@ import { getErc721Contract } from "./contracts/erc721"
 import { getErc1155Contract } from "./contracts/erc1155"
 
 const pk = DEV_PK_1
-const { provider: provider1 } = createE2eProvider(pk)
+const { web3 } = createE2eProvider(pk)
 const { provider: provider2, wallet: wallet2 } = createE2eProvider(pk)
 const { provider: provider3 } = createE2eProvider(pk)
-const web3 = new Web3(provider1 as any)
 
 const providers = [
 	new Web3Ethereum({ web3 }),

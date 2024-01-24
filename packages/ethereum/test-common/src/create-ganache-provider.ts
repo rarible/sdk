@@ -15,16 +15,16 @@ export function createGanacheProvider(...pk: string[]) {
 	}))
 
 	const provider = ganache.provider({
-		accounts,
-		gasLimit: 10000000,
-		hardfork: "berlin",
-		chainId: 300500,
-	})
-
-	afterAll((cb) => {
-		provider.disconnect().then(() => {
-			setTimeout(cb, 500)
-		})
+		chain: {
+			hardfork: "shanghai",
+		  chainId: 300500,
+		},
+		wallet: {
+			accounts,
+		},
+		logging: {
+			quiet: true,
+		},
 	})
 
 	return {

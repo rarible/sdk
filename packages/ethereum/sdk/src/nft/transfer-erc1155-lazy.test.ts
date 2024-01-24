@@ -1,7 +1,5 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
 import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V2Collection } from "../common/mint"
@@ -16,9 +14,7 @@ import { ERC1155VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"
 
 describe("transfer Erc721 lazy", () => {
-	const { provider, wallet } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
+	const { wallet, web3Ethereum: ethereum } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
 
 	const getApis = getApisTemplate.bind(null, ethereum, "dev-ethereum")
 	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)

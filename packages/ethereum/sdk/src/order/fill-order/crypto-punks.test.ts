@@ -23,7 +23,7 @@ import { retry } from "../../common/retry"
 import { getApis as getApisTemplate } from "../../common/apis"
 import { OrderFiller } from "./index"
 
-describe.skip("fillOrder", () => {
+describe("fillOrder", () => {
 	const { addresses, provider } = createGanacheProvider()
 	const [sender1Address, sender2Address] = addresses
 	const web3 = new Web3(provider as any)
@@ -57,9 +57,9 @@ describe.skip("fillOrder", () => {
 		 */
 		await sentTx(
 			it.exchangeV2.methods.__ExchangeV2_init(
-				toAddress(it.transferProxy.options.address),
+				toAddress(it.transferProxy.options.address!),
 				// ZERO_ADDRESS,
-				toAddress(it.erc20TransferProxy.options.address),
+				toAddress(it.erc20TransferProxy.options.address!),
 				toBigNumber("0"),
 				// sender1Address,
 				ZERO_ADDRESS,
@@ -68,19 +68,19 @@ describe.skip("fillOrder", () => {
 			),
 			{ from: sender1Address }
 		)
-		config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-		config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-		config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address)
+		config.exchange.v1 = toAddress(it.exchangeV2.options.address!)
+		config.exchange.v2 = toAddress(it.exchangeV2.options.address!)
+		config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address!)
 		config.chainId = 4
 
-		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address!)), {
 			from: sender1Address,
 		})
 
 		await sentTx(
 			it.exchangeV2.methods.setTransferProxy(
 				id("CRYPTO_PUNKS"),
-				it.punksTransferProxy.options.address
+				it.punksTransferProxy.options.address!
 			),
 			{ from: sender1Address }
 		)
@@ -89,7 +89,7 @@ describe.skip("fillOrder", () => {
 		await sentTx(
 			it.exchangeV2.methods.setAssetMatcher(
 				id("CRYPTO_PUNKS"),
-				it.punkAssetMatcher.options.address
+				it.punkAssetMatcher.options.address!
 			),
 			{ from: sender1Address }
 		)
@@ -103,7 +103,7 @@ describe.skip("fillOrder", () => {
 			make: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: 0,
 				},
 				value: toBigNumber("1"),
@@ -139,7 +139,7 @@ describe.skip("fillOrder", () => {
 			make: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
@@ -175,7 +175,7 @@ describe.skip("fillOrder", () => {
 		//Mint punks
 		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sender1Address })
 
-		await sentTx(it.punksMarket.methods.enterBidForPunk(punkId), { from: sender2Address, value: punkPrice })
+		await sentTx(it.punksMarket.methods.enterBidForPunk(punkId), { from: sender2Address, value: punkPrice.toFixed() })
 
 		const left: SimpleOrder = {
 			make: {
@@ -188,7 +188,7 @@ describe.skip("fillOrder", () => {
 			take: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),

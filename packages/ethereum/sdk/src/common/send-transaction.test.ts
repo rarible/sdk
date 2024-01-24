@@ -1,7 +1,5 @@
-import Web3 from "web3"
 import { Configuration, NftCollectionControllerApi } from "@rarible/ethereum-api-client"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
 import { getApiConfig } from "../config/api-config"
 import { getTokenId as getTokenIdTemplate } from "../nft/get-token-id"
@@ -13,9 +11,7 @@ import { getSendWithInjects } from "./send-transaction"
 import { DEV_PK_1 } from "./test/test-credentials"
 
 describe("sendTransaction", () => {
-	const { provider, wallet } = createE2eProvider(DEV_PK_1)
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
+	const { wallet, web3Ethereum: ethereum } = createE2eProvider(DEV_PK_1)
 	const env: EthereumNetwork = "dev-ethereum"
 	const configuration = new Configuration(getApiConfig(env))
 	const collectionApi = new NftCollectionControllerApi(configuration)

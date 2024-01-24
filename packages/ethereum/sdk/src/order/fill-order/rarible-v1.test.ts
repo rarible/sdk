@@ -1,7 +1,5 @@
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { getEthereumConfig } from "../../config"
 import { retry } from "../../common/retry"
 import { getSimpleSendWithInjects, sentTxConfirm } from "../../common/send-transaction"
@@ -12,12 +10,8 @@ import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
 import { OrderFiller } from "./"
 
 describe.skip("test exchange v1 order", () => {
-	const { provider: provider1, wallet: wallet1 } = createE2eProvider(DEV_PK_1)
-	const { provider: provider2, wallet: wallet2 } = createE2eProvider(DEV_PK_2)
-	const web31 = new Web3(provider1)
-	const web32 = new Web3(provider2)
-	const sellerEthereum = new Web3Ethereum({ web3: web31 })
-	const buyerEthereum = new Web3Ethereum({ web3: web32 })
+	const { wallet: wallet1, web3: web31, web3Ethereum: sellerEthereum } = createE2eProvider(DEV_PK_1)
+	const { wallet: wallet2, web3Ethereum: buyerEthereum } = createE2eProvider(DEV_PK_2)
 
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config
@@ -45,7 +39,7 @@ describe.skip("test exchange v1 order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("1"),
@@ -92,7 +86,7 @@ describe.skip("test exchange v1 order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("1"),

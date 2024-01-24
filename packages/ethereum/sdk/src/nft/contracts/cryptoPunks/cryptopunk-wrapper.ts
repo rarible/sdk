@@ -1,12 +1,11 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/types"
-import type { AbiItem } from "../../../common/abi-item"
 
 export function createCryptoPunksWrapperContract(ethereum: Ethereum, address?: Address): EthereumContract {
 	return ethereum.createContract(cryptoPunksWrapperAbi, address)
 }
 
-export const cryptoPunksWrapperAbi: AbiItem[] = [
+export const cryptoPunksWrapperAbi = [
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",
@@ -465,4 +464,4 @@ export const cryptoPunksWrapperAbi: AbiItem[] = [
 		"stateMutability": "payable",
 		"type": "function",
 	},
-]
+] as const

@@ -16,7 +16,8 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "eth-sig-util": "^3.0.0"
+    "eth-sig-util": "^3.0.0",
+    "@rarible/sdk-common": "^0.13.49"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

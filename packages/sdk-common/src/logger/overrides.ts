@@ -141,6 +141,7 @@ export const COMMON_INFO_MESSAGES = [
 	"زبانه فعال نیست",
 	"发生了一个内部的错误",
 	"發生內部錯誤",
+	"User Reject",
 ].map((msg) => msg.toLowerCase())
 
 const shortCancelMessages = ["cancel", "canceled", "cancelled", "rejected"]

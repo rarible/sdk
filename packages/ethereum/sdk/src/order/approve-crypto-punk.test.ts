@@ -30,7 +30,7 @@ describe("approve crypto punks", () => {
 		const operator = randomAddress()
 
 		const tx = await approve(
-			toAddress(it.punksMarket.options.address),
+			toAddress(it.punksMarket.options.address!),
 			sellerAddress,
 			operator,
 			0
@@ -39,9 +39,9 @@ describe("approve crypto punks", () => {
 		const offer = await it.punksMarket.methods.punksOfferedForSale(0).call()
 
 		expect(offer.isForSale).toBe(true)
-		expect(offer.punkIndex).toBe("0")
+		expect(offer.punkIndex.toString()).toBe("0")
 		expect(offer.seller.toLowerCase()).toBe(sellerAddress.toLowerCase())
-		expect(offer.minValue).toBe("0")
+		expect(offer.minValue.toString()).toBe("0")
 		expect(offer.onlySellTo.toLowerCase()).toBe(operator.toLowerCase())
 	})
 
@@ -54,7 +54,7 @@ describe("approve crypto punks", () => {
 		)
 
 		const approveResult = await approve(
-			toAddress(it.punksMarket.options.address),
+			toAddress(it.punksMarket.options.address!),
 			sellerAddress,
 			operator,
 			0

@@ -16,6 +16,6 @@ export async function awaitErc721Balance(
 	const erc721Contract = createTestErc721((eth.ethereum as any).config.web3, toAddress(contract))
 	await retry(10, 1000, async () => {
 		const balanceRecipient = await erc721Contract.methods.balanceOf(rawRecipient).call()
-		expect(balanceRecipient).toBe("1")
+		expect(balanceRecipient.toString()).toBe("1")
 	})
 }

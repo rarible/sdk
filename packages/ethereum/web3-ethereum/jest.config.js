@@ -15,5 +15,8 @@ module.exports = {
 		"ts-jest": {
 			tsconfig: "tsconfig-build.json",
 		},
+		crypto: {
+			getRandomValues: (arr) => require("crypto").randomBytes(arr.length),
+		},
 	},
 }

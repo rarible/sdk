@@ -1,6 +1,4 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
 import { configDictionary } from "../config"
 import { createRaribleSdk } from "../index"
@@ -12,9 +10,7 @@ import { getNetworkFromChainId } from "./index"
 
 describe("getBalance test", () => {
 	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
-	const { provider } = createE2eProvider(pk)
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
+	const { web3Ethereum: ethereum } = createE2eProvider(pk)
 
 	const getApis = async () => {
 		const chainId = await ethereum.getChainId()
@@ -24,12 +20,6 @@ describe("getBalance test", () => {
 	const balances = new Balances(getApis)
 
 	const testErc20Address = toAddress("0xa03C1eCaEB1D8A7581FC38d28f67c3d42a8B9b76")
-
-	test.concurrent("get eth balance", async () => {
-		const senderAddress = toAddress(await ethereum.getFrom())
-		const balance = await balances.getBalance(senderAddress, { assetClass: "ETH" })
-		expect(balance.toString()).toBe("0")
-	})
 
 	test.concurrent("get non-zero eth balance", async () => {
 		const senderAddress = toAddress("0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")

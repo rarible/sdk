@@ -12,7 +12,6 @@ export async function isSigner(ethereum: Ethereum, signer: string, hash: Buffer,
 
 async function isErc1271Signer(ethereum: Ethereum, signer: string, hash: Buffer, signature: string): Promise<boolean> {
 	const hashHex = `0x${hash.toString("hex")}`
-	console.log("checking signer using erc-1271", hashHex)
 	const erc1271 = ethereum.createContract(ABI, signer)
 	try {
 		const result = await erc1271.functionCall("isValidSignature", hashHex, signature).call()

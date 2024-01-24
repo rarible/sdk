@@ -1,8 +1,6 @@
 import {
 	createE2eProvider,
 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { Part } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
@@ -20,25 +18,21 @@ import {
 } from "./test/common/utils"
 
 describe("Batch purchase", function () {
-	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
-	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: buyerEthereum } = createE2eProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum } = createE2eProvider(DEV_PK_2)
 
 	const env: EthereumNetwork = "dev-ethereum"
-	const web3Seller = new Web3(providerSeller as any)
-	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
-	const ethereum = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 
-	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
-	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
-	const sdkSeller = createRaribleSdk(ethereumSeller, env)
+	const sdkBuyer = createRaribleSdk(buyerEthereum, env)
+	const sdkSeller = createRaribleSdk(ethereum, env)
 
 	const config = getEthereumConfig(env)
 	const send = getSimpleSendWithInjects()
 
 	beforeAll(async () => {
 		console.log({
-			buyerWallet: await buyerWeb3.getFrom(),
-			sellerWallet: await ethereumSeller.getFrom(),
+			buyerWallet: await buyerEthereum.getFrom(),
+			sellerWallet: await ethereum.getFrom(),
 		})
 	})
 
@@ -52,7 +46,7 @@ describe("Batch purchase", function () {
 		await checkOwnerships(
 			sdkBuyer,
 			orders.map((o) => o.make),
-			toAddress(await buyerWeb3.getFrom())
+			toAddress(await buyerEthereum.getFrom())
 		)
 	}
 
@@ -129,7 +123,7 @@ describe("Batch purchase", function () {
 		await checkOwnerships(
 			sdkBuyer,
 			orders.map((o) => o.make),
-			toAddress(await buyerWeb3.getFrom())
+			toAddress(await buyerEthereum.getFrom())
 		)
 	})
 })

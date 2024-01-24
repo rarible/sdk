@@ -21,15 +21,15 @@ describe("transfer Erc721", () => {
 
 	test("should transfer erc721 token", async () => {
 		const tokenId = from + "b00000000000000000000001"
-		await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 500000 })
+		await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: "500000" })
 
-		const senderBalance = await it.testErc721.methods.balanceOf(from).call()
+		const senderBalance = (await it.testErc721.methods.balanceOf(from).call()).toString()
 		expect(senderBalance === "1").toBeTruthy()
 
 		const ownership: Address = await it.testErc721.methods.ownerOf(tokenId).call()
 		expect(toAddress(ownership) === toAddress(from)).toBeTruthy()
 
-		const tx = await transferErc721(ethereum, send, toAddress(it.testErc721.options.address), from, to, tokenId)
+		const tx = await transferErc721(ethereum, send, toAddress(it.testErc721.options.address!), from, to, tokenId)
 		expect(tx).toBeTruthy()
 		await tx.wait()
 

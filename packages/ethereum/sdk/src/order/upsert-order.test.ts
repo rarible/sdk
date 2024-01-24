@@ -106,7 +106,7 @@ describe.each(providers)("upsertOrder", (ethereum) => {
 			priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
 			takeAssetType: {
 				assetClass: "ERC20" as const,
-				contract: toAddress(it.testErc20.options.address),
+				contract: toAddress(it.testErc20.options.address!),
 			},
 			amount: 1,
 			payouts: [],
