@@ -14,6 +14,7 @@ export class FlowSetupAccount {
 		this.setupAccount = this.setupAccount.bind(this)
 		this.checkInitMattelCollections = this.checkInitMattelCollections.bind(this)
 		this.setupMattelCollections = this.setupMattelCollections.bind(this)
+		this.setupGamisodesCollections = this.setupGamisodesCollections.bind(this)
 	}
 
 	async setupAccount(collection: CollectionId) {
