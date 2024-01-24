@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.67",
+    "@rarible/web3-ethereum": "^0.13.67",
     "@rarible/sdk-common": "^0.13.68",
     "@rarible/test-provider": "~0.5.0",
     "@rarible/types": "~0.9.21",
@@ -28,7 +29,7 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1",
-    "web3": "^4.3.1-dev.5161642.0"
+    "web3": "^4.4.0"
   },
   "publishConfig": {
     "access": "public",

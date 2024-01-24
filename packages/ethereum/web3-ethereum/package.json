@@ -26,10 +26,10 @@
     "@rarible/sdk-common": "^0.13.68",
     "eth-rpc-errors": "^4.0.3",
     "exponential-backoff": "^3.1.0",
-    "web3-core": "^4.3.3-dev.5161642.0+5161642",
-    "web3-eth-abi": "^4.1.5-dev.5161642.0+5161642",
-    "web3-eth-contract": "^4.1.5-dev.5161642.0+5161642",
-    "web3-utils": "^4.1.1-dev.5161642.0+5161642"
+    "web3-core": "^4.3.2",
+    "web3-eth-abi": "^4.2.0",
+    "web3-eth-contract": "^4.2.0",
+    "web3-utils": "^4.1.1"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.67",
@@ -45,7 +45,7 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1",
-    "web3": "^4.3.1-dev.5161642.0"
+    "web3": "^4.4.0"
   },
   "publishConfig": {
     "access": "public",

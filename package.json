@@ -82,7 +82,7 @@
   },
   "resolutions": {
     "**/axios": "^0.26.1",
-    "web3-core": "^4.3.3-dev.5161642.0+5161642"
+    "web3-core": "^4.3.2"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
