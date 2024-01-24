@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.67-fix.2](https://github.com/rarible/sdk/compare/v0.13.67-fix.1...v0.13.67-fix.2) (2024-01-24)
+
+
+### Features
+
+* **PLTF-229:** split setup collections ([9bfab5b](https://github.com/rarible/sdk/commit/9bfab5b82751a8de1fbcb7e2905c50661cc21795))
+
+
+
+
+
 ## [0.13.67-fix.1](https://github.com/rarible/sdk/compare/v0.13.67-fix.0...v0.13.67-fix.1) (2024-01-23)
 
 

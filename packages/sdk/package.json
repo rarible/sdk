@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk",
-  "version": "0.13.67-fix.1",
+  "version": "0.13.67-fix.2",
   "homepage": "https://github.com/rarible/sdk#readme",
   "repository": {
     "type": "git",
@@ -33,10 +33,10 @@
     "@rarible/immutable-sdk": "^0.13.66",
     "@rarible/immutable-wallet": "^0.13.65",
     "@rarible/logger": "~0.9.12",
-    "@rarible/protocol-ethereum-sdk": "^0.13.67-fix.1",
+    "@rarible/protocol-ethereum-sdk": "^0.13.67-fix.2",
     "@rarible/sdk-common": "^0.13.66",
-    "@rarible/sdk-transaction": "^0.13.67-fix.1",
-    "@rarible/sdk-wallet": "^0.13.67-fix.1",
+    "@rarible/sdk-transaction": "^0.13.67-fix.2",
+    "@rarible/sdk-wallet": "^0.13.67-fix.2",
     "@rarible/solana-sdk": "^0.13.65",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/types": "~0.9.21",
