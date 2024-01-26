@@ -1,15 +1,20 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import { toBigNumber } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { IApisSdk } from "../../domain"
-import { checkWalletBlockchain, convertToEthereumAddress, getWalletNetwork, isEVMBlockchain } from "./common"
+import {
+	checkWalletBlockchain,
+	convertToEthereumAddress,
+	getEthereumItemId,
+	getWalletNetwork,
+	isEVMBlockchain,
+} from "./common"
 
 export class EthereumTransfer {
 	constructor(
@@ -22,17 +27,15 @@ export class EthereumTransfer {
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
-		const [blockchain] = prepare.itemId.split(":")
-		if (!isEVMBlockchain(blockchain)) {
+		const { contract, tokenId, domain } = getEthereumItemId(prepare.itemId)
+		if (!isEVMBlockchain(domain)) {
 			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
 		}
 
-		const item = await this.apis.item.getItemById({
-			itemId: prepare.itemId,
-		})
-		const collection = await this.apis.collection.getCollectionById({
-			collection: item.contract,
-		})
+		const [item, collection] = await Promise.all([
+			this.apis.item.getItemById({ itemId: prepare.itemId }),
+			this.apis.collection.getCollectionById({ collection: `${domain}:${contract}` }),
+		])
 
 		return {
 			multiple: collection.type === "ERC1155",
@@ -40,13 +43,13 @@ export class EthereumTransfer {
 			submit: Action.create({
 				id: "transfer" as const,
 				run: async (request: TransferRequest) => {
-					await checkWalletBlockchain(this.wallet, blockchain)
+					await checkWalletBlockchain(this.wallet, domain)
 					const amount = request.amount !== undefined ? toBigNumber(request.amount.toFixed()) : undefined
 
 					const tx = await this.sdk.nft.transfer(
 						{
-						  contract: item.contract,
-						  tokenId: item.tokenId,
+						  contract: toAddress(contract),
+						  tokenId: tokenId,
 					  },
 						convertToEthereumAddress(request.to),
 						amount

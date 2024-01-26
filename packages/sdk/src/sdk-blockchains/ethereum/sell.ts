@@ -3,7 +3,6 @@ import { toAddress, toWord } from "@rarible/types"
 import type { OrderId } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -17,11 +16,10 @@ import type { IApisSdk } from "../../domain"
 import * as common from "./common"
 import {
 	checkWalletBlockchain,
-	convertEthereumContractAddress,
 	getEthereumItemId, getEthOrder,
 	getOriginFeeSupport,
 	getPayoutsSupport, getWalletBlockchain,
-	isEVMBlockchain, isRaribleOrderData, isRaribleV1Data, isRaribleV2Data,
+	isEVMBlockchain, isRaribleV1Data, isRaribleV2Data,
 	validateOrderDataV3Request,
 } from "./common"
 import type { IEthereumSdkConfig } from "./domain"

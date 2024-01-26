@@ -42,7 +42,6 @@ import {
 	assertBlockchainAndChainId,
 	assertWallet, checkWalletBlockchain,
 	convertEthereumContractAddress,
-	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
 	getAssetTypeFromFillRequest,
 	getEthereumItemId, getEthOrder,

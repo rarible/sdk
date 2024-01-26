@@ -1,6 +1,5 @@
 import type { Address, Maybe, UnionAddress, Word } from "@rarible/types"
 import {
-	BigNumber, Binary,
 	toAddress,
 	toBigNumber,
 	toBinary,
@@ -60,10 +59,7 @@ import { OrderLooksRareDataV2QuoteType,
 	OrderOpenSeaV1DataV1SaleKind, OrderOpenSeaV1DataV1Side,
 } from "@rarible/ethereum-api-client/build/models/OrderData"
 import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
-import { SeaportOffer } from "@rarible/ethereum-api-client/build/models/SeaportOffer"
-import { SeaportConsideration } from "@rarible/ethereum-api-client/build/models/SeaportConsideration"
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
-import { LooksRareMerkleProof } from "@rarible/ethereum-api-client/build/models/LooksRareMerkleProof"
 import { SudoSwapCurveType } from "@rarible/ethereum-api-client/build/models/SudoSwapCurveType"
 import { SudoSwapPoolType } from "@rarible/ethereum-api-client/build/models/SudoSwapPoolType"
 import { ETHER_IN_WEI } from "@rarible/protocol-ethereum-sdk/src/common"
@@ -168,6 +164,18 @@ export function convertToEthereumAssetType(assetType: AssetType): EthereumAssetT
 		case "GEN_ART": {
 			return {
 				assetClass: "GEN_ART",
+				contract: convertToEthereumAddress(assetType.contract),
+			}
+		}
+		case "AMM_NFT": {
+			return {
+				assetClass: "AMM_NFT",
+				contract: convertToEthereumAddress(assetType.contract),
+			}
+		}
+		case "COLLECTION": {
+			return {
+				assetClass: "COLLECTION",
 				contract: convertToEthereumAddress(assetType.contract),
 			}
 		}

@@ -5,7 +5,6 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
@@ -25,15 +24,13 @@ export class EthereumBurn {
 	}
 
 	async burn(prepare: PrepareBurnRequest) {
-
+		const { contract, tokenId, domain } = getEthereumItemId(prepare.itemId)
 		const blockchain = extractBlockchain(prepare.itemId)
 
-		const item = await this.apis.item.getItemById({
-			itemId: prepare.itemId,
-		})
-		const collection = await this.apis.collection.getCollectionById({
-			collection: item.contract,
-		})
+		const [item, collection] = await Promise.all([
+			this.apis.item.getItemById({ itemId: prepare.itemId }),
+			this.apis.collection.getCollectionById({ collection: `${domain}:${contract}` }),
+		])
 
 		return {
 			multiple: collection.type === "ERC1155",
@@ -43,7 +40,6 @@ export class EthereumBurn {
 				run: async (request: BurnRequest) => {
 					await checkWalletBlockchain(this.wallet, blockchain)
 					const amount = request?.amount !== undefined ? toBigNumber(request.amount.toFixed()) : undefined
-					const { contract, tokenId } = getEthereumItemId(prepare.itemId)
 
 					const tx = await this.sdk.nft.burn(
 						{

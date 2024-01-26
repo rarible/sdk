@@ -46,8 +46,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 	const e2eErc1155V1ContractAddress = toAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
 	const e2eErc1155V2ContractAddress = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
 
-	//@todo remove skip when we will unable to mint v2
-	test.skip("should burn ERC-721 v2 token", async () => {
+	test("should burn ERC-721 v2 token", async () => {
 		const testErc721 = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, e2eErc721V2ContractAddress)
 		const minted = await mint({
 			collection: createErc721V2Collection(e2eErc721V2ContractAddress),
