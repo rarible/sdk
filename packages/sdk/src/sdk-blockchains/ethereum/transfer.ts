@@ -8,30 +8,29 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
+import type { IApisSdk } from "../../domain"
 import { checkWalletBlockchain, convertToEthereumAddress, getWalletNetwork, isEVMBlockchain } from "./common"
 
 export class EthereumTransfer {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private getEthereumApis: () => Promise<RaribleEthereumApis>,
+		private apis: IApisSdk,
 	) {
 		this.transfer = this.transfer.bind(this)
 		this.transferBasic = this.transferBasic.bind(this)
 	}
 
 	async transfer(prepare: PrepareTransferRequest) {
-		const [blockchain, contract, tokenId] = prepare.itemId.split(":")
+		const [blockchain] = prepare.itemId.split(":")
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error(`Not an ethereum item: ${prepare.itemId}`)
 		}
-		await checkWalletBlockchain(this.wallet, blockchain)
 
-		const ethApi = await this.getEthereumApis()
-		const item = await ethApi.nftItem.getNftItemById({
-			itemId: `${contract}:${tokenId}`,
+		const item = await this.apis.item.getItemById({
+			itemId: prepare.itemId,
 		})
-		const collection = await ethApi.nftCollection.getNftCollectionById({
+		const collection = await this.apis.collection.getCollectionById({
 			collection: item.contract,
 		})
 

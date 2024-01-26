@@ -12,17 +12,18 @@ import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/typ
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { isNft } from "@rarible/protocol-ethereum-sdk/build/order/is-nft"
 import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { Blockchain, OrderId } from "@rarible/api-client"
+import type { Blockchain, Order, OrderId } from "@rarible/api-client"
 import { Platform } from "@rarible/api-client"
-import type { Order } from "@rarible/ethereum-api-client/build/models/Order"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { extractBlockchain } from "@rarible/sdk-common"
+import {
+	validateBatchSupportedOrders,
+} from "@rarible/protocol-ethereum-sdk/src/order/fill-order/batch-purchase/batch-purchase"
 import type {
 	BatchFillRequest,
 	FillRequest,
@@ -35,6 +36,7 @@ import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../..
 import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
+import type { IApisSdk } from "../../domain"
 import type { EVMBlockchain } from "./common"
 import {
 	assertBlockchainAndChainId,
@@ -43,8 +45,8 @@ import {
 	convertOrderIdToEthereumHash,
 	convertToEthereumAddress,
 	getAssetTypeFromFillRequest,
-	getEthereumItemId,
-	getOrderId, getWalletNetwork, isEVMBlockchain,
+	getEthereumItemId, getEthOrder,
+	getOrderId, getWalletNetwork, isEVMBlockchain, isNft,
 	toEthereumParts,
 	validateOrderDataV3Request,
 } from "./common"
@@ -63,7 +65,7 @@ export class EthereumFill {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private getEthereumApis: () => Promise<RaribleEthereumApis>,
+		private apis: IApisSdk,
 		private config?: IEthereumSdkConfig,
 	) {
 		this.fill = this.fill.bind(this)
@@ -199,9 +201,9 @@ export class EthereumFill {
 		return request
 	}
 
-	getSupportFlags(order: SimpleOrder): SupportFlagsResponse {
-		switch (order.type) {
-			case "RARIBLE_V1": {
+	getSupportFlags(order: Order): SupportFlagsResponse {
+		switch (order.data["@type"]) {
+			case "ETH_RARIBLE_V1": {
 				return {
 					originFeeSupport: OriginFeeSupport.AMOUNT_ONLY,
 					payoutsSupport: PayoutsSupport.SINGLE,
@@ -209,41 +211,39 @@ export class EthereumFill {
 					supportsPartialFill: true,
 				}
 			}
-			case "RARIBLE_V2": {
-				switch (order.data.dataType) {
-					case "RARIBLE_V2_DATA_V3_BUY":
-						return {
-							originFeeSupport: OriginFeeSupport.FULL,
-							payoutsSupport: PayoutsSupport.SINGLE,
-							maxFeesBasePointSupport: MaxFeesBasePointSupport.REQUIRED,
-							supportsPartialFill: true,
-						}
-					case "RARIBLE_V2_DATA_V3_SELL":
-						return {
-							originFeeSupport: OriginFeeSupport.FULL,
-							payoutsSupport: PayoutsSupport.SINGLE,
-							maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-							supportsPartialFill: true,
-						}
-					case "RARIBLE_V2_DATA_V2":
-					default:
-						return {
-							originFeeSupport: OriginFeeSupport.FULL,
-							payoutsSupport: PayoutsSupport.MULTIPLE,
-							maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-							supportsPartialFill: true,
-						}
+
+			case "ETH_RARIBLE_V2":
+			case "ETH_RARIBLE_V2_2": {
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.MULTIPLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
 				}
 			}
-			case "OPEN_SEA_V1": {
+			case "ETH_RARIBLE_V2_DATA_V3_SELL":
 				return {
-					originFeeSupport: order.take.assetType.assetClass === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.SINGLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
+					supportsPartialFill: true,
+				}
+			case "ETH_RARIBLE_V2_DATA_V3_BUY":
+				return {
+					originFeeSupport: OriginFeeSupport.FULL,
+					payoutsSupport: PayoutsSupport.SINGLE,
+					maxFeesBasePointSupport: MaxFeesBasePointSupport.REQUIRED,
+					supportsPartialFill: true,
+				}
+			case "ETH_OPEN_SEA_V1": {
+				return {
+					originFeeSupport: order.take.type["@type"] === "ETH" ? OriginFeeSupport.FULL : OriginFeeSupport.NONE,
 					payoutsSupport: PayoutsSupport.SINGLE,
 					maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 					supportsPartialFill: false,
 				}
 			}
-			case "SEAPORT_V1": {
+			case "ETH_BASIC_SEAPORT_DATA_V1": {
 				const supportsPartialFill = order.data.orderType === "PARTIAL_OPEN" || order.data.orderType === "PARTIAL_RESTRICTED"
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
@@ -252,7 +252,7 @@ export class EthereumFill {
 					supportsPartialFill,
 				}
 			}
-			case "LOOKSRARE": {
+			case "ETH_LOOKSRARE_ORDER_DATA_V1": {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
@@ -260,7 +260,7 @@ export class EthereumFill {
 					supportsPartialFill: true,
 				}
 			}
-			case "LOOKSRARE_V2": {
+			case "ETH_LOOKSRARE_ORDER_DATA_V2": {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
@@ -268,7 +268,7 @@ export class EthereumFill {
 					supportsPartialFill: true,
 				}
 			}
-			case "AMM": {
+			case "ETH_SUDOSWAP_AMM_DATA_V1": {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
@@ -276,7 +276,7 @@ export class EthereumFill {
 					supportsPartialFill: true,
 				}
 			}
-			case "X2Y2": {
+			case "ETH_X2Y2_ORDER_DATA_V1": {
 				return {
 					originFeeSupport: OriginFeeSupport.FULL,
 					payoutsSupport: PayoutsSupport.NONE,
@@ -289,81 +289,69 @@ export class EthereumFill {
 		}
 	}
 
-	getPlatform(order: SimpleOrder): Platform {
-		switch (order.type) {
-			case "RARIBLE_V1":
-			case "RARIBLE_V2":
+	getPlatform(order: Order): Platform {
+		switch (order.data["@type"]) {
+			case "ETH_RARIBLE_V1":
+			case "ETH_RARIBLE_V2":
+			case "ETH_RARIBLE_V2_2":
+			case "ETH_RARIBLE_V2_DATA_V3_BUY":
+			case "ETH_RARIBLE_V2_DATA_V3_SELL":
 				return Platform.RARIBLE
-			case "OPEN_SEA_V1":
-			case "SEAPORT_V1":
+			case "ETH_OPEN_SEA_V1":
+			case "ETH_BASIC_SEAPORT_DATA_V1":
 				return Platform.OPEN_SEA
-			case "LOOKSRARE":
-			case "LOOKSRARE_V2":
+			case "ETH_LOOKSRARE_ORDER_DATA_V1":
+			case "ETH_LOOKSRARE_ORDER_DATA_V2":
 				return Platform.LOOKSRARE
-			case "AMM":
+			case "ETH_SUDOSWAP_AMM_DATA_V1":
 				return Platform.SUDOSWAP
-			case "X2Y2":
+			case "ETH_X2Y2_ORDER_DATA_V1":
 				return Platform.X2Y2
-			case "CRYPTO_PUNK":
+			case "ETH_CRYPTO_PUNKS":
 				return Platform.CRYPTO_PUNKS
 			default:
 				return Platform.RARIBLE
 		}
 	}
 
-	async getMaxAmount(order: SimplePreparedOrder): Promise<BigNumber | null> {
-		if (order.take.assetType.assetClass === "COLLECTION") {
+	async getMaxAmount(order: Order): Promise<BigNumber | null> {
+		if (order.take.type["@type"] === "COLLECTION") {
 			return null
 		}
-		if (isNft(order.take.assetType)) {
+		if (isNft(order.take.type)) {
 			if (this.wallet === undefined) {
 				throw new Error("Wallet undefined")
 			}
 			const address = await this.wallet.ethereum.getFrom()
-			const ownershipId = getOwnershipId(
-				order.take.assetType.contract,
-				order.take.assetType.tokenId,
-				toAddress(address),
-			)
-			const ethApis = await this.getEthereumApis()
-			const ownership = await ethApis.nftOwnership.getNftOwnershipById({ ownershipId })
+			const ownershipId = `${order.take.type.contract}:${order.take.type.tokenId}:${toAddress(address)}`
+			const ownership = await this.apis.ownership.getOwnershipById({ ownershipId })
 
 			return toBigNumber(BigNumberClass.min(ownership.value, order.take.value).toFixed())
 		}
 		return order.makeStock
 	}
 
-	async isMultiple(order: SimplePreparedOrder): Promise<boolean> {
+	async isMultiple(order: Order): Promise<boolean> {
 		let contract: string
 
-		if (isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION") {
-			contract = order.take.assetType.contract
-		} else if (isNft(order.make.assetType) || order.make.assetType.assetClass === "COLLECTION") {
-			contract = order.make.assetType.contract
-		} else if (order.make.assetType.assetClass === "AMM_NFT") {
+		if (isNft(order.take.type) || order.take.type["@type"] === "COLLECTION") {
+			contract = order.take.type.contract
+		} else if (isNft(order.make.type) || order.make.type["@type"] === "COLLECTION") {
+			contract = order.make.type.contract
+		} else if (order.make.type["@type"] === "AMM_NFT") {
 			return false
 		} else {
 			throw new Error("Nft has not been found")
 		}
-		const ethApis = await this.getEthereumApis()
-		const collection = await ethApis.nftCollection.getNftCollectionById({
+		const collection = await this.apis.collection.getCollectionById({
 			collection: contract,
 		})
 
 		return collection.type === "ERC1155"
 	}
 
-	getOrderHashFromRequest(request: PrepareFillRequest): string {
-		if ("order" in request) {
-			return convertOrderIdToEthereumHash(request.order.id)
-		} else if ("orderId" in request) {
-			return convertOrderIdToEthereumHash(request.orderId)
-		}
-		throw new Error("OrderId has not been found in request")
-	}
-
-	hasCollectionAssetType(order: SimplePreparedOrder) {
-		return order.take.assetType.assetClass === "COLLECTION" || order.make.assetType.assetClass === "COLLECTION"
+	hasCollectionAssetType(order: Order) {
+		return order.take.type["@type"] === "COLLECTION" || order.make.type["@type"] === "COLLECTION"
 	}
 
 	private async commonFill(
@@ -371,14 +359,13 @@ export class EthereumFill {
 		request: PrepareFillRequest,
 		isBid = false
 	): Promise<PrepareFillResponse> {
-		const blockchain = extractBlockchain(getOrderId(request))
-		await checkWalletBlockchain(this.wallet, blockchain)
-		const orderHash = this.getOrderHashFromRequest(request)
-		const ethApis = await this.getEthereumApis()
-		const order = await ethApis.order.getValidatedOrderByHash({ hash: orderHash })
+		const orderId = getOrderId(request)
+		const blockchain = extractBlockchain(orderId)
+		const order = await this.apis.order.getValidatedOrderById({ id: orderId })
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an EVM order")
 		}
+		const ethOrder = getEthOrder(order)
 
 		const submit = action
 			.before(async (fillRequest: FillRequest) => {
@@ -390,16 +377,16 @@ export class EthereumFill {
 				if (this.hasCollectionAssetType(order) && !fillRequest.itemId) {
 					throw new Warning("For collection order you should pass itemId")
 				}
-				return this.getFillOrderRequest(order, fillRequest)
+				return this.getFillOrderRequest(ethOrder, fillRequest)
 			})
 			.after((async tx => new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))))
 
-		const nftAssetType = isBid ? order.take.assetType : order.make.assetType
+		const nftAssetType = isBid ? order.take.type : order.make.type
 		return {
 			...this.getSupportFlags(order),
 			multiple: await this.isMultiple(order),
 			maxAmount: await this.getMaxAmount(order),
-			baseFee: await this.sdk.order.getBaseOrderFillFee(order),
+			baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
 			submit,
 			orderData: {
 				platform: this.getPlatform(order),
@@ -427,7 +414,7 @@ export class EthereumFill {
 	}
 
 	async batchBuy(prepareRequest: PrepareFillRequest[]): Promise<PrepareBatchBuyResponse> {
-		const orders: Record<OrderId, Order> = {} // ethereum orders cache
+		const orders: Record<OrderId, SimpleOrder> = {} // ethereum orders cache
 
 		const submit = this.sdk.order.buyBatch.around(
 			async (request: BatchFillRequest) => {
@@ -499,48 +486,46 @@ export class EthereumFill {
 			},
 		)
 
-		const ethApis = await this.getEthereumApis()
-
 		const prepared = await Promise.all(prepareRequest.map(async (req) => {
-			const orderHash = this.getOrderHashFromRequest(req)
-			const ethOrder = await ethApis.order.getValidatedOrderByHash({ hash: orderHash })
 			const orderId = getOrderId(req)
+			const unionOrder = await this.apis.order.getOrderById({ id: orderId })
 			const blockchain = extractBlockchain(orderId) as EVMBlockchain
-			orders[orderId] = ethOrder
+			const order = getEthOrder(unionOrder)
+			orders[orderId] = order
 
-			if (ethOrder.status !== "ACTIVE") {
+			if (unionOrder.status !== "ACTIVE") {
 				throw new Error(`Order with id ${orderId} is not active`)
 			}
 
 			if (
-				ethOrder.type !== "OPEN_SEA_V1" &&
-				ethOrder.type !== "RARIBLE_V2" &&
-				ethOrder.type !== "SEAPORT_V1" &&
-				ethOrder.type !== "LOOKSRARE" &&
-				ethOrder.type !== "LOOKSRARE_V2" &&
-				ethOrder.type !== "AMM" &&
-				ethOrder.type !== "X2Y2"
+				order.type !== "OPEN_SEA_V1" &&
+				order.type !== "RARIBLE_V2" &&
+				order.type !== "SEAPORT_V1" &&
+				order.type !== "LOOKSRARE" &&
+				order.type !== "LOOKSRARE_V2" &&
+				order.type !== "AMM" &&
+				order.type !== "X2Y2"
 			) {
-				throw new Error(`Order type ${ethOrder.type} is not supported for batch buy`)
+				throw new Error(`Order type ${order.type} is not supported for batch buy`)
 			}
 
 			if (
-				ethOrder.make.assetType.assetClass === "ETH" ||
-				ethOrder.make.assetType.assetClass === "ERC20"
+				order.make.assetType.assetClass === "ETH" ||
+				order.make.assetType.assetClass === "ERC20"
 			) {
 				throw new Error("Bid orders is not supported")
 			}
 
 			return {
 				orderId,
-				...this.getSupportFlags(ethOrder),
-				multiple: await this.isMultiple(ethOrder),
-				maxAmount: await this.getMaxAmount(ethOrder),
-				baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
+				...this.getSupportFlags(unionOrder),
+				multiple: await this.isMultiple(unionOrder),
+				maxAmount: await this.getMaxAmount(unionOrder),
+				baseFee: await this.sdk.order.getBaseOrderFillFee(order),
 				orderData: {
-					platform: this.getPlatform(ethOrder),
-					nftCollection: "contract" in ethOrder.make.assetType
-						? convertEthereumContractAddress(ethOrder.make.assetType.contract, blockchain)
+					platform: this.getPlatform(unionOrder),
+					nftCollection: "contract" in order.make.assetType
+						? convertEthereumContractAddress(order.make.assetType.contract, blockchain)
 						: undefined,
 				},
 			}

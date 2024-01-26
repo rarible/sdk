@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import { toBigNumber } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -10,30 +10,28 @@ import { extractBlockchain } from "@rarible/sdk-common"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { BurnResponse } from "../../types/nft/burn/domain"
+import type { IApisSdk } from "../../domain"
 import { checkWalletBlockchain, getEthereumItemId, getWalletNetwork, toEthereumParts } from "./common"
 
 export class EthereumBurn {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
+		private apis: IApisSdk,
 		private network: EthereumNetwork,
-		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 	) {
 		this.burn = this.burn.bind(this)
 		this.burnBasic = this.burnBasic.bind(this)
 	}
 
 	async burn(prepare: PrepareBurnRequest) {
-		const { contract, tokenId } = getEthereumItemId(prepare.itemId)
 
 		const blockchain = extractBlockchain(prepare.itemId)
-		await checkWalletBlockchain(this.wallet, blockchain)
 
-		const ethApi = await this.getEthereumApis()
-		const item = await ethApi.nftItem.getNftItemById({
-			itemId: `${contract}:${tokenId}`,
+		const item = await this.apis.item.getItemById({
+			itemId: prepare.itemId,
 		})
-		const collection = await ethApi.nftCollection.getNftCollectionById({
+		const collection = await this.apis.collection.getCollectionById({
 			collection: item.contract,
 		})
 
@@ -45,12 +43,13 @@ export class EthereumBurn {
 				run: async (request: BurnRequest) => {
 					await checkWalletBlockchain(this.wallet, blockchain)
 					const amount = request?.amount !== undefined ? toBigNumber(request.amount.toFixed()) : undefined
+					const { contract, tokenId } = getEthereumItemId(prepare.itemId)
 
 					const tx = await this.sdk.nft.burn(
 						{
 							assetType: {
-								contract: item.contract,
-								tokenId: item.tokenId,
+								contract: toAddress(contract),
+								tokenId: tokenId,
 							},
 						  amount,
 							creators: toEthereumParts(request?.creators),
