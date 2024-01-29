@@ -8,7 +8,6 @@ import { ZERO_ADDRESS, ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { hashToSign, orderToStruct, signOrder } from "../sign-order"
 import { getAssetWithFee } from "../get-asset-with-fee"
-import type { EthereumConfig } from "../../config/type"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
 import { createExchangeV2Contract } from "../contracts/exchange-v2"
@@ -20,6 +19,8 @@ import type { IRaribleEthereumSdkConfig } from "../../types"
 import { assetTypeToStruct } from "../asset-type-to-struct"
 import { encodeRaribleV2OrderData } from "../encode-rarible-v2-order-data"
 import { isETH, isWeth } from "../../nft/common"
+import type { GetConfigByChainId } from "../../config"
+import { getNetworkConfigByChainId } from "../../config"
 import { encodeRaribleV2OrderPurchaseStruct } from "./rarible-v2/encode-rarible-v2-order"
 import { invertOrder } from "./invert-order"
 import type {
@@ -39,7 +40,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) { }
@@ -98,7 +99,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 			throw new Error("Wallet undefined")
 		}
 		const withFee = await this.getMakeAssetWithFee(order)
-		await waitTx(approve(this.ethereum, this.send, this.config.transferProxies, order.maker, withFee, infinite))
+		await waitTx(approve(this.ethereum, this.send, () => this.getConfig(), order.maker, withFee, infinite))
 	}
 
 	async getTransactionData(
@@ -107,7 +108,8 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		const exchangeContract = createExchangeV2Contract(this.ethereum, this.config.exchange.v2)
+		const config = await this.getConfig()
+		const exchangeContract = createExchangeV2Contract(this.ethereum, config.exchange.v2)
 
 		if (isSellOrder(initial)) {
 			const nftStruct = assetTypeToStruct(this.ethereum, initial.make.assetType)
@@ -192,8 +194,9 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
+		const config = await this.getConfig()
 		if (!initial.signature) {
-			initial.signature = await signOrder(this.ethereum, this.config, initial)
+			initial.signature = await signOrder(this.ethereum, () => this.getConfig(), initial)
 		}
 
 		// fix payouts to send bought item to buyer
@@ -229,7 +232,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		let fees = ZERO_FEE_VALUE
 		// let amount
 		const paymentAsset = await this.getMakeAssetWithFee(inverted)
-		if (isWeth(initial.take.assetType, this.config)) {
+		if (isWeth(initial.take.assetType, config)) {
 			fees = setFeesCurrency(fees, true)
 		}
 
@@ -248,7 +251,8 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		const hash = hashToSign(this.config, this.ethereum, order)
+		const config = getNetworkConfigByChainId(await this.ethereum.getChainId())
+		const hash = hashToSign(config, this.ethereum, order)
 		const isMakerSigner = await isSigner(this.ethereum, order.maker, hash, order.signature!)
 		return orderToStruct(this.ethereum, order, !isMakerSigner)
 	}

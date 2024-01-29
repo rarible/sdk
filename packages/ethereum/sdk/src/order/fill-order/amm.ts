@@ -2,12 +2,12 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import type { SimpleOrder } from "../types"
 import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "../../types"
 import { createExchangeWrapperContract } from "../contracts/exchange-wrapper"
 import type { RaribleEthereumApis } from "../../common/apis"
+import type { GetConfigByChainId } from "../../config"
 import type { AmmOrderFillRequest, OrderFillSendData, PreparedOrderRequestDataForExchangeWrapper } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { SudoswapFill } from "./amm/sudoswap-fill"
@@ -17,9 +17,9 @@ export class AmmOrderHandler {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
 		private readonly options: {directBuy: boolean} = { directBuy: false },
@@ -28,6 +28,8 @@ export class AmmOrderHandler {
 	async getTransactionData(request: AmmOrderFillRequest): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const fillData = await this.getTransactionDataDirectBuy(request)
+
+		const config = await this.getConfig()
 
 		if (this.options.directBuy) { // direct buy with sudoswap contract
 			if (request.originFees?.length) {
@@ -39,11 +41,13 @@ export class AmmOrderHandler {
 				options: fillData.options,
 			}
 		} else { // buy with rarible wrapper
-			const wrapperContract = createExchangeWrapperContract(ethereum, this.config.exchange.wrapper)
+			const wrapperContract = createExchangeWrapperContract(ethereum, config.exchange.wrapper)
+
+			const apis = await this.getApis()
 
 			const { data, options, originFees: { feeAddresses } } = await getMarketData(
 				this.ethereum,
-				this.apis,
+				apis,
 				{
 					marketId: ExchangeWrapperOrderType.AAM,
 					request,
@@ -70,11 +74,12 @@ export class AmmOrderHandler {
 
 	private async getTransactionDataDirectBuy(request: AmmOrderFillRequest): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
+		const config = await this.getConfig()
 
 		let fillData: OrderFillSendData
 		switch (request.order.data.dataType) {
 			case "SUDOSWAP_AMM_DATA_V1":
-				fillData = await SudoswapFill.getDirectFillData(ethereum, request, this.config)
+				fillData = await SudoswapFill.getDirectFillData(ethereum, request, config)
 				break
 			default:
 				throw new Error("Unsupported order data type " + request.order.data.dataType)
@@ -94,11 +99,13 @@ export class AmmOrderHandler {
 			throw new Error("Unsupported asset type for take asset " + request.order.take.assetType.assetClass)
 		}
 
+		const apis = await this.getApis()
+
 		const fillData = await this.getTransactionDataDirectBuy(request)
 		// const {data, options} = await this.getMarketData(request, fillData, feeValue)
 		const { data, options } = await getMarketData(
 			this.ethereum,
-			this.apis,
+			apis,
 			{
 				marketId: ExchangeWrapperOrderType.AAM,
 				request,

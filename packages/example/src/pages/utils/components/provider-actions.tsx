@@ -20,6 +20,13 @@ export function ProviderActions() {
 		}
 	}
 
+	async function getChainId() {
+		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
+			const chainId = await connection.sdk?.wallet.ethereum.getChainId()
+			setComplete(chainId)
+		}
+	}
+
 	async function sendTransaction() {
 		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
 
@@ -94,9 +101,19 @@ export function ProviderActions() {
               Get from
 						</Button>
 					</Box>
+
+					<Box sx={{ my: 2 }}>
+						<Button
+							variant="outlined"
+							component="span"
+							onClick={() => getChainId()}
+						>
+              Get chain id
+						</Button>
+					</Box>
 				</Grid>
 
-				<div style={{marginTop: 20, maxWidth: 500, wordBreak: "break-all"}}>
+				<div style={{marginTop: 30, marginLeft: 20, maxWidth: 500, wordBreak: "break-all"}}>
 					<RequestResult
 						result={result}
 						completeRender={(data) =>

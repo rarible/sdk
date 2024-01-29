@@ -42,7 +42,7 @@ describe("check min payment value fn", function () {
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 	})
 
 	test("checkGreaterThanMinPaymentValue throws error with weth token", async () => {
@@ -59,7 +59,7 @@ describe("check min payment value fn", function () {
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 	})
 
 	test("checkGreaterThanMinPaymentValue throws error with ETH", async () => {
@@ -69,7 +69,7 @@ describe("check min payment value fn", function () {
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 	})
 
 	test("checkGreaterThanMinPaymentValue returns undefined with 0.0001 ETH", async () => {
@@ -100,7 +100,7 @@ describe("check min payment value fn", function () {
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 
 	})
 
@@ -114,7 +114,7 @@ describe("check min payment value fn", function () {
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 
 	})
 })

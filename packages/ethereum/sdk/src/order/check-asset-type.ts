@@ -4,10 +4,10 @@ import type {
 	CryptoPunksAssetType,
 	Erc1155AssetType,
 	Erc721AssetType,
-	NftCollectionControllerApi,
 } from "@rarible/ethereum-api-client"
 import type { Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Erc1155LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { RaribleEthereumApis } from "../common/apis"
 
 export type NftAssetType = {
 	contract: Address
@@ -25,12 +25,13 @@ export type AssetTypeResponse =
 export type CheckAssetTypeFunction = (asset: AssetTypeRequest) => Promise<AssetTypeResponse>
 
 export async function checkAssetType(
-	collectionApi: NftCollectionControllerApi, asset: AssetTypeRequest
+	getApis: () => Promise<RaribleEthereumApis>, asset: AssetTypeRequest
 ): Promise<AssetTypeResponse> {
+	const apis = await getApis()
 	if ("assetClass" in asset) {
 		return asset
 	} else {
-		const collectionResponse = await collectionApi.getNftCollectionByIdRaw({ collection: asset.contract })
+		const collectionResponse = await apis.nftCollection.getNftCollectionByIdRaw({ collection: asset.contract })
 		if (collectionResponse.status === 200) {
 			switch (collectionResponse.value.type) {
 				case "ERC721":

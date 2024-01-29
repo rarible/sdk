@@ -6,7 +6,6 @@ import type {
 	Erc20AssetType,
 	EthAssetType,
 	Order,
-	OrderControllerApi,
 	OrderForm,
 	Part,
 	RaribleV2OrderForm,
@@ -26,7 +25,8 @@ import { getRequiredWallet } from "../common/get-required-wallet"
 import { waitTx } from "../common/wait-tx"
 import { checkMinPaymentValue } from "../common/check-min-payment-value"
 import { ETHER_IN_WEI } from "../common"
-import type { EthereumConfig } from "../config/type"
+import type { GetConfigByChainId } from "../config"
+import type { RaribleEthereumApis } from "../common/apis"
 import type { SimpleCryptoPunkOrder, SimpleOrder } from "./types"
 import { addFee } from "./add-fee"
 import type { ApproveFunction } from "./approve"
@@ -83,13 +83,12 @@ export class UpsertOrder {
 	constructor(
 		private readonly orderFiller: OrderFiller,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		public readonly checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
 		private readonly approveFn: ApproveFunction,
 		private readonly signOrder: (order: SimpleOrder) => Promise<Binary>,
-		private readonly orderApi: OrderControllerApi,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly ethereum: Maybe<Ethereum>,
-		private readonly checkWalletChainId: () => Promise<boolean>,
 		private readonly marketplaceMarker: Word | undefined
 	) {}
 
@@ -106,16 +105,13 @@ export class UpsertOrder {
 			id: "sign" as const,
 			run: (checked: OrderForm) => this.upsertRequest(checked),
 		})
-		.before(async (input: UpsertOrderActionArg) => {
-			await this.checkWalletChainId()
-			return input
-		})
 
 	async getOrder(hasOrder: HasOrder): Promise<SimpleOrder> {
 		if ("order" in hasOrder) {
 			return hasOrder.order
 		} else {
-			return this.orderApi.getValidatedOrderByHash({ hash: hasOrder.orderHash })
+			const apis = await this.getApis()
+			return apis.order.getValidatedOrderByHash({ hash: hasOrder.orderHash })
 		}
 	}
 
@@ -153,8 +149,10 @@ export class UpsertOrder {
 
 	async upsertRequest(checked: OrderForm): Promise<Order> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checked)
-		checkMinPaymentValue(checked, this.config)
-		return this.orderApi.upsertOrder({
+		const config = await this.getConfig()
+		const apis = await this.getApis()
+		checkMinPaymentValue(checked, config)
+		return apis.order.upsertOrder({
 			orderForm: {
 				...checked,
 				signature: await this.signOrder(simple),

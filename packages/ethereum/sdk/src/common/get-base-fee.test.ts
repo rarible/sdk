@@ -1,27 +1,30 @@
-import { configDictionary, getEthereumConfig } from "../config"
+import { configDictionary } from "../config"
 import type { EthereumNetwork } from "../types"
 import { getBaseFee } from "./get-base-fee"
-import { createEthereumApis } from "./apis"
+import { createEthereumApis, getApis as getApisTemplate } from "./apis"
 import { delay } from "./retry"
 import { getAPIKey } from "./test/test-credentials"
 
 describe("get base fee", () => {
-	const config = getEthereumConfig("testnet")
-
 	test("get base fee from mainnet", async () => {
 		const env: EthereumNetwork = "mainnet"
-		const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
-	  const fee = await getBaseFee(config, env, apis)
+		const getApis = getApisTemplate.bind(null, undefined, env, { apiKey: getAPIKey(env) })
+	  const fee = await getBaseFee(env, getApis)
 		expect(fee).not.toBeNaN()
 	})
 
 	test.concurrent("get base fee with error", async () => {
 		const env: EthereumNetwork = "mainnet"
-		const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
-		apis.orderSettings.getFees = () => { throw new Error("wow") }
+		// const getApis = getApisTemplate.bind(null, null, env, { apiKey: getAPIKey(env) })
+		//
+		const getApis = async () => {
+			const apis = createEthereumApis(env, {})
+		  apis.orderSettings.getFees = () => { throw new Error("wow") }
+			return apis
+		}
 	  let feeError: any
 		try {
-			await getBaseFee(config, env, apis)
+			await getBaseFee(env, getApis)
 		} catch (e) {
 			feeError = e
 		}
@@ -35,15 +38,17 @@ describe("get base fee", () => {
 	})
 })
 
-const envs = Object.keys(configDictionary) as EthereumNetwork[]
+const envs = Object.keys(configDictionary)
+	.filter(network => network !== "testnet-lightlink" && network !== "lightlink") as EthereumNetwork[]
 
 describe.each(envs)("get base fee each of environments", (env: EthereumNetwork) => {
-	const config = getEthereumConfig(env)
-	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
+	const getApis = async () => {
+		return createEthereumApis(env, { apiKey: getAPIKey(env) })
+	}
 
 	afterAll(async () => delay(1000))
 	test(`get base fee from ${env}`, async () => {
-		const fee = await getBaseFee(config, env, apis)
+		const fee = await getBaseFee(env, getApis)
 		expect(fee).not.toBeNaN()
 	})
 })

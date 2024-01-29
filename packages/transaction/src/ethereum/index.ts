@@ -1,40 +1,43 @@
 import type { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
+import { getBlockchainBySDKNetwork, getChainIdByNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
 import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainEthereumTransaction<TransactionResult = undefined> implements
 IBlockchainTransaction<Blockchain, TransactionResult> {
-	blockchain: Blockchain
+	public blockchain: Blockchain
+  public chainId: number
 
-	constructor(
-		public transaction: EthereumTransaction,
-		public network: EthereumNetwork,
-		public resultExtractor?: (getEvents: EthereumTransaction["getEvents"]) => Promise<TransactionResult | undefined>,
-	) {
-		this.blockchain = this.getBlockchain(network)
-	}
+  constructor(
+  	public transaction: EthereumTransaction,
+  	public network: EthereumNetwork,
+  	public resultExtractor?: (getEvents: EthereumTransaction["getEvents"]) => Promise<TransactionResult | undefined>,
+  ) {
+  	this.blockchain = this.getBlockchain(network)
+  	this.chainId = getChainIdByNetwork(this.network)
+  }
 
-	private getBlockchain(network: EthereumNetwork): Blockchain {
-		return getBlockchainBySDKNetwork(network)
-	}
+  private getBlockchain(network: EthereumNetwork): Blockchain {
+  	return getBlockchainBySDKNetwork(network)
+  }
 
-	hash() {
-		return this.transaction.hash
-	}
+  hash() {
+  	return this.transaction.hash
+  }
 
-	async wait() {
-		await this.transaction.wait()
+  async wait() {
+  	await this.transaction.wait()
 
-		return {
-			blockchain: this.blockchain,
-			hash: this.transaction.hash,
-			events: await this.transaction.getEvents(),
-			result: await this.resultExtractor?.(this.transaction.getEvents.bind(this.transaction)),
-		}
-	}
-	getTxLink() {
+  	return {
+  		blockchain: this.blockchain,
+  		hash: this.transaction.hash,
+  		events: await this.transaction.getEvents(),
+  		result: await this.resultExtractor?.(this.transaction.getEvents.bind(this.transaction)),
+  	}
+  }
+
+  getTxLink() {
   	switch (this.network) {
   		case "mainnet":
   			return `https://etherscan.io/tx/${this.hash()}`
@@ -71,9 +74,9 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
   		default:
   			throw new Error("Unsupported transaction network")
   	}
-	}
+  }
 
-	get isEmpty(): boolean {
-		return false
-	}
+  get isEmpty(): boolean {
+  	return false
+  }
 }

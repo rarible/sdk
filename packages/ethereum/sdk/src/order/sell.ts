@@ -29,7 +29,6 @@ export class OrderSell {
 	constructor(
 		private readonly upserter: UpsertOrder,
 		private readonly checkAssetType: (asset: AssetTypeRequest) => Promise<AssetTypeResponse>,
-		private readonly checkWalletChainId: () => Promise<boolean>,
 	) {}
 
 	readonly sell: SellOrderAction = Action
@@ -45,10 +44,6 @@ export class OrderSell {
 		.thenStep({
 			id: "sign" as const,
 			run: (form: OrderForm) => this.upserter.upsertRequest(form),
-		})
-		.before(async (input: SellRequest) => {
-			await this.checkWalletChainId()
-			return input
 		})
 
 	private async getSellForm(request: SellRequest): Promise<RaribleV2OrderForm> {
@@ -94,10 +89,6 @@ export class OrderSell {
 				}
 				return this.upserter.updateCryptoPunkOrder(form)
 			},
-		})
-		.before(async (input: SellUpdateRequest) => {
-			await this.checkWalletChainId()
-			return input
 		})
 
 	async prepareOrderUpdateForm(

@@ -2,7 +2,6 @@ import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumFunctionCall, EthereumSendOptions } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { getAssetWithFee } from "../get-asset-with-fee"
-import type { EthereumConfig } from "../../config/type"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
 import { waitTx } from "../../common/wait-tx"
@@ -10,6 +9,7 @@ import type { SimpleCryptoPunkOrder } from "../types"
 import { createCryptoPunksMarketContract } from "../../nft/contracts/cryptoPunks"
 import type { SimpleOrder } from "../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
+import type { GetConfigByChainId } from "../../config"
 import { invertOrder } from "./invert-order"
 import type { CryptoPunksOrderFillRequest, OrderFillSendData, OrderHandler } from "./types"
 
@@ -17,7 +17,7 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
@@ -35,7 +35,8 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
 			throw new Error("Wallet undefined")
 		}
 		const withFee = this.getMakeAssetWithFee(order)
-		await waitTx(approve(this.ethereum, this.send, this.config.transferProxies, order.maker, withFee, infinite))
+
+		await waitTx(approve(this.ethereum, this.send, () => this.getConfig(), order.maker, withFee, infinite))
 	}
 
 	async getTransactionData(

@@ -6,7 +6,7 @@ import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { approve as approveTemplate } from "../order/approve"
 import { createEthereumApis } from "../common/apis"
-import { checkChainId } from "../order/check-chain-id"
+import { getNetworkFromChainId } from "../common"
 import { StartAuction } from "./start"
 import { cancelAuction } from "./cancel"
 import { awaitForAuction } from "./test"
@@ -16,12 +16,18 @@ describe.skip("cancel auction", () => {
 	const sender1Address = wallet.getAddressString()
 	const web3 = new Web3(provider as any)
 	const config = getEthereumConfig("testnet")
+	const getConfig = async () => config
+
 	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const checkWalletChainId = checkChainId.bind(null, ethereum1, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-	const approve1 = approveTemplate.bind(null, ethereum1, send, config.transferProxies)
+	const send = getSimpleSendWithInjects()
+	const approve1 = approveTemplate.bind(null, ethereum1, send, getConfig)
 	const apis = createEthereumApis("testnet")
-	const auctionService = new StartAuction(ethereum1, send, config, "testnet", approve1, apis)
+	const getApis = async () => {
+		const chainId = await ethereum1.getChainId()
+		const env = getNetworkFromChainId(chainId)
+		return createEthereumApis(env)
+	}
+	const auctionService = new StartAuction(ethereum1, send, getConfig, "testnet", approve1, getApis)
 
 	const it = awaitAll({
 		testErc1155: deployTestErc1155(web3, "TST"),
@@ -56,7 +62,7 @@ describe.skip("cancel auction", () => {
 
 		const auctionContract = createAuctionContract(web3, config.auction)
 
-		const tx = await cancelAuction(ethereum1, send, config, apis, await auction.hash)
+		const tx = await cancelAuction(ethereum1, send, getConfig, getApis, await auction.hash)
 		await tx.wait()
 
 		const auctionExistence = await auctionContract.methods.checkAuctionExistence(await auction.auctionId).call()

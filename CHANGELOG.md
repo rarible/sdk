@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
+
+
+### Bug Fixes
+
+* **PLTF-107:** walletConnect chainId ([#588](https://github.com/rarible/sdk/issues/588)) ([0904b99](https://github.com/rarible/sdk/commit/0904b99cb705526424a06aca55ea70f12f93018e))
+
+
 ## [0.13.67-fix.2](https://github.com/rarible/sdk/compare/v0.13.67-fix.1...v0.13.67-fix.2) (2024-01-24)
 
 
@@ -31,7 +39,6 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 * rari chain mainnet support ([9c6161f](https://github.com/rarible/sdk/commit/9c6161fab1cab1f776459ebb505e67d2874b5f6a))
-
 
 
 

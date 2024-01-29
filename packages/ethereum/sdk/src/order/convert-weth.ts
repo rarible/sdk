@@ -5,20 +5,21 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
 import type { AssetType } from "@rarible/ethereum-api-client"
 import type { Address } from "@rarible/types"
-import type { EthereumConfig } from "../config/type"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
 import { compareCaseInsensitive } from "../common/compare-case-insensitive"
+import type { GetConfigByChainId } from "../config"
 import { createWethContract } from "./contracts/weth"
-import { checkChainId } from "./check-chain-id"
-
 export class ConvertWeth {
-	getWethContractAddress = () => this.config.weth
+	getWethContractAddress = async () => {
+		const config = await this.getConfig()
+		return config.weth
+	}
 
 	constructor(
 		private ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 	) {
 		this.deposit = this.deposit.bind(this)
 		this.depositWei = this.depositWei.bind(this)
@@ -52,9 +53,7 @@ export class ConvertWeth {
 		if (valueBn.isZero()) {
 			throw new ZeroValueIsPassedError()
 		}
-		const provider = getRequiredWallet(this.ethereum)
-		await checkChainId(provider, this.config)
-		const contract = this.getContract()
+		const contract = await this.getContract()
 		return this.send(contract.functionCall("deposit"), {
 			value: valueBn.toString(),
 		})
@@ -83,19 +82,18 @@ export class ConvertWeth {
 		if (valueBn.isZero()) {
 			throw new ZeroValueIsPassedError()
 		}
-		const provider = getRequiredWallet(this.ethereum)
-		await checkChainId(provider, this.config)
-		const contract = this.getContract()
+		const contract = await this.getContract()
 		return this.send(contract.functionCall("withdraw", valueInWei))
 	}
 
-	private getContract() {
+	private async getContract() {
+		const config = await this.getConfig()
 		const provider = getRequiredWallet(this.ethereum)
-		return createWethContract(provider, this.config.weth)
+		return createWethContract(provider, config.weth)
 	}
 
-	private getContractDecimals() {
-		const contract = this.getContract()
+	private async getContractDecimals() {
+		const contract = await this.getContract()
 		return contract.functionCall("decimals").call()
 	}
 
@@ -103,15 +101,16 @@ export class ConvertWeth {
 	 * @deprecated please use `deposit` or `withdraw` functions
 	 */
 	async convert(from: AssetType, to: AssetType, value: BigNumberValue): Promise<EthereumTransaction> {
-		await checkChainId(this.ethereum, this.config)
+		const config = await this.getConfig()
+
 		if (from.assetClass === "ETH" && to.assetClass === "ERC20") {
-			if (!compareCaseInsensitive(to.contract, this.config.weth)) {
+			if (!compareCaseInsensitive(to.contract, config.weth)) {
 				throw new UnsupportedCurrencyConvertError(to.contract)
 			}
 			return this.deposit(value)
 		}
 		if (from.assetClass === "ERC20" && to.assetClass === "ETH") {
-			if (!compareCaseInsensitive(from.contract, this.config.weth)) {
+			if (!compareCaseInsensitive(from.contract, config.weth)) {
 				throw new UnsupportedCurrencyConvertError(from.contract)
 			}
 			return this.withdraw(value)

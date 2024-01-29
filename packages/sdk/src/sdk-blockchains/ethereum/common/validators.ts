@@ -23,3 +23,7 @@ export function validateOrderDataV3Request(request: OrderCommon.OrderRequest | F
 	}
 	checkPayouts(request.payouts)
 }
+
+export function validateBlockchainChainId() {
+
+}

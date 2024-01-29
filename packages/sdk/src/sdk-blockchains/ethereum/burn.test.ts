@@ -8,6 +8,7 @@ import { awaitItem } from "../../common/test/await-item"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 // import { awaitDeletedItem } from "../../common/test/await-deleted-item"
 import { createSdk } from "../../common/test/create-sdk"
+import { awaitDeletedItem } from "../../common/test/await-deleted-item"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
@@ -51,7 +52,7 @@ describe("burn", () => {
 		  await tx.wait()
 		}
 
-		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
+		await awaitDeletedItem(sdk, mintResult.itemId)
 	})
 
 	test("burn erc1155", async () => {

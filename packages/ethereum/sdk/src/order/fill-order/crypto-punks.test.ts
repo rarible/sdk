@@ -20,8 +20,7 @@ import { getEthereumConfig } from "../../config"
 import type { SimpleOrder } from "../types"
 import { id } from "../../common/id"
 import { retry } from "../../common/retry"
-import { createEthereumApis } from "../../common/apis"
-import { checkChainId } from "../check-chain-id"
+import { getApis as getApisTemplate } from "../../common/apis"
 import { OrderFiller } from "./index"
 
 describe.skip("fillOrder", () => {
@@ -31,13 +30,13 @@ describe.skip("fillOrder", () => {
 	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
 
 	const env = "testnet" as const
-	const apis = createEthereumApis(env)
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum1, config)
+	const getConfig = async () => config
+	const getApis = getApisTemplate.bind(null, ethereum1, env)
 
 	const getBaseOrderFee = async () => 0
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-	const filler = new OrderFiller(ethereum1, send, config, apis, getBaseOrderFee, env)
+	const send = getSimpleSendWithInjects()
+	const filler = new OrderFiller(ethereum1, send, getConfig, getApis, getBaseOrderFee, env)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),

@@ -1,11 +1,10 @@
-import { Configuration, NftItemControllerApi } from "@rarible/ethereum-api-client"
 import { toAddress, toBigNumber } from "@rarible/types"
-import { devEthereumConfig } from "../config/dev"
+import { getApis as getApisTemplate } from "../common/apis"
 import { checkLazyAssetType } from "./check-lazy-asset-type"
 import { checkLazyAsset } from "./check-lazy-asset"
 
-const client = new NftItemControllerApi(new Configuration({ basePath: devEthereumConfig.basePath }))
-const partial = checkLazyAssetType.bind(null, client)
+const getApis = getApisTemplate.bind(null, undefined, "dev-ethereum")
+const partial = checkLazyAssetType.bind(null, getApis)
 
 describe("checkLazyAsset", () => {
 	test("if not found", async () => {

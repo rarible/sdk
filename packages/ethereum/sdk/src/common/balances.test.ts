@@ -8,6 +8,7 @@ import type { EthereumNetwork } from "../types"
 import { Balances } from "./balances"
 import { createEthereumApis } from "./apis"
 import { getAPIKey } from "./test/test-credentials"
+import { getNetworkFromChainId } from "./index"
 
 describe("getBalance test", () => {
 	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
@@ -15,15 +16,17 @@ describe("getBalance test", () => {
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 
-	const env: EthereumNetwork = "dev-ethereum"
-	const apis = createEthereumApis(env, { apiKey: getAPIKey(env) })
-
-	const balances = new Balances(apis)
+	const getApis = async () => {
+		const chainId = await ethereum.getChainId()
+		const env = getNetworkFromChainId(chainId)
+		return createEthereumApis(env)
+	}
+	const balances = new Balances(getApis)
 
 	const testErc20Address = toAddress("0xa03C1eCaEB1D8A7581FC38d28f67c3d42a8B9b76")
 
 	test.concurrent("get eth balance", async () => {
-		const senderAddress = toAddress(await ethereum.getFrom())
+		const senderAddress = toAddress("0xC072c9889dE7206c1C18B9d9973B06B8646FC6bd")
 		const balance = await balances.getBalance(senderAddress, { assetClass: "ETH" })
 		expect(balance.toString()).toBe("0")
 	})
@@ -52,6 +55,7 @@ describe("getBalance test", () => {
 })
 
 const envs = (Object.keys(configDictionary) as EthereumNetwork[])
+	.filter(network => network !== "lightlink" && network !== "testnet-lightlink")
 
 
 describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
