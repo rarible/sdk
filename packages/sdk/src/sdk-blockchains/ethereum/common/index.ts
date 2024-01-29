@@ -62,7 +62,7 @@ import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/Seap
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import { SudoSwapCurveType } from "@rarible/ethereum-api-client/build/models/SudoSwapCurveType"
 import { SudoSwapPoolType } from "@rarible/ethereum-api-client/build/models/SudoSwapPoolType"
-import { ETHER_IN_WEI } from "@rarible/protocol-ethereum-sdk/src/common"
+import { ETHER_IN_WEI } from "@rarible/protocol-ethereum-sdk/build/common"
 import { convertDateToTimestamp } from "../../../common/get-expiration-date"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"

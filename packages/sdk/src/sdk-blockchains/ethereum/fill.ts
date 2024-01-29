@@ -12,18 +12,13 @@ import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/typ
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import { getOwnershipId } from "@rarible/protocol-ethereum-sdk/build/common/get-ownership-id"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Blockchain, Order, OrderId } from "@rarible/api-client"
 import { Platform } from "@rarible/api-client"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { extractBlockchain } from "@rarible/sdk-common"
-import {
-	validateBatchSupportedOrders,
-} from "@rarible/protocol-ethereum-sdk/src/order/fill-order/batch-purchase/batch-purchase"
 import type {
 	BatchFillRequest,
 	FillRequest,
