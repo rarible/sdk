@@ -3,7 +3,6 @@ import { toAddress, toWord } from "@rarible/types"
 import type { OrderId } from "@rarible/api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
@@ -13,14 +12,14 @@ import type { SellSimplifiedRequest, SellUpdateSimplifiedRequest } from "../../t
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import { checkPayouts } from "../../common/check-payouts"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
+import type { IApisSdk } from "../../domain"
 import * as common from "./common"
 import {
 	checkWalletBlockchain,
-	convertEthereumContractAddress,
-	getEthereumItemId,
+	getEthereumItemId, getEthOrder,
 	getOriginFeeSupport,
 	getPayoutsSupport, getWalletBlockchain,
-	isEVMBlockchain,
+	isEVMBlockchain, isRaribleV1Data, isRaribleV2Data,
 	validateOrderDataV3Request,
 } from "./common"
 import type { IEthereumSdkConfig } from "./domain"
@@ -29,7 +28,7 @@ export class EthereumSell {
 	constructor(
 		private sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private getEthereumApis: () => Promise<RaribleEthereumApis>,
+		private apis: IApisSdk,
 		private config?: IEthereumSdkConfig
 	) {
 		this.sell = this.sell.bind(this)
@@ -160,11 +159,11 @@ export class EthereumSell {
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an ethereum order")
 		}
-		await checkWalletBlockchain(this.wallet, blockchain)
 
-		const ethApis = await this.getEthereumApis()
-		const order = await ethApis.order.getValidatedOrderByHash({ hash })
-		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
+		const order = await this.apis.order.getValidatedOrderById({
+			id: prepareRequest.orderId,
+		})
+		if (!isRaribleV1Data(order.data) && !isRaribleV2Data(order.data)) {
 			throw new Error(`You can't update non-Rarible orders. Unable to update sell ${JSON.stringify(order)}`)
 		}
 
@@ -179,14 +178,14 @@ export class EthereumSell {
 			.after(order => common.convertEthereumOrderHash(order.hash, blockchain))
 
 		return {
-			originFeeSupport: getOriginFeeSupport(order.type),
-			payoutsSupport: getPayoutsSupport(order.type),
+			originFeeSupport: getOriginFeeSupport(order.data),
+			payoutsSupport: getPayoutsSupport(order.data),
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: common.getSupportedCurrencies(),
-			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
+			baseFee: await this.sdk.order.getBaseOrderFee(getEthOrder(order).type as "RARIBLE_V1" | "RARIBLE_V2"),
 			submit: sellUpdateAction,
 			orderData: {
-				nftCollection: "contract" in order.make.assetType ? convertEthereumContractAddress(order.make.assetType.contract, blockchain) : undefined,
+				nftCollection: "contract" in order.make.type ? order.make.type.contract : undefined,
 			},
 		}
 	}

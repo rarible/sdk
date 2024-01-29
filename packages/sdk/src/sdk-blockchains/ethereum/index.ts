@@ -5,7 +5,6 @@ import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
 import { toBinary } from "@rarible/types"
-import { getApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import type { IRaribleEthereumSdkConfig } from "@rarible/protocol-ethereum-sdk/build/types"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -60,20 +59,16 @@ export function createEthereumSdk(
 	}
 	const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
 
-	const getEthereumApis = async () => {
-		return getApis(wallet?.ethereum, network, sdkConfig)
-	}
-
-	const sellService = new EthereumSell(sdk, wallet, getEthereumApis, config)
+	const sellService = new EthereumSell(sdk, wallet, apis, config)
 	const balanceService = new EthereumBalance(sdk, wallet, apis)
-	const bidService = new EthereumBid(sdk, wallet, apis, balanceService, getEthereumApis, config)
+	const bidService = new EthereumBid(sdk, wallet, apis, balanceService, config)
 	const mintService = new EthereumMint(sdk, wallet, apis)
-	const fillService = new EthereumFill(sdk, wallet, getEthereumApis, config)
+	const fillService = new EthereumFill(sdk, wallet, apis, config)
 	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, wallet)
 	const cryptopunkService = new EthereumCryptopunk(sdk, wallet)
-	const transferService = new EthereumTransfer(sdk, wallet, getEthereumApis)
-	const burnService = new EthereumBurn(sdk, wallet, network, getEthereumApis)
-	const cancelService = new EthereumCancel(sdk, wallet, getEthereumApis)
+	const transferService = new EthereumTransfer(sdk, wallet, apis)
+	const burnService = new EthereumBurn(sdk, wallet, apis, network)
+	const cancelService = new EthereumCancel(sdk, wallet, apis)
 	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
 	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
@@ -82,7 +77,7 @@ export function createEthereumSdk(
 			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
 			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
 			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
-			generateTokenId: new EthereumTokenId(sdk, getEthereumApis).generateTokenId,
+			generateTokenId: new EthereumTokenId(sdk, apis).generateTokenId,
 			createCollection: createCollectionSimplified,
 			preprocessMeta,
 			uploadMeta: metaUploader.uploadMeta,

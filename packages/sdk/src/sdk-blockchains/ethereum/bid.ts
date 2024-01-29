@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { Address } from "@rarible/types"
-import { toBinary, toUnionAddress, toWord } from "@rarible/types"
+import type { ContractAddress } from "@rarible/types"
+import { toAddress, toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
 import type { AssetType, OrderId } from "@rarible/api-client"
@@ -8,7 +8,6 @@ import { Blockchain } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { NftItem } from "@rarible/ethereum-api-client/build/models"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import { Action } from "@rarible/action"
 import { addFee } from "@rarible/protocol-ethereum-sdk/build/order/add-fee"
@@ -18,7 +17,7 @@ import { compareCaseInsensitive } from "@rarible/protocol-ethereum-sdk/build/com
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import { Warning } from "@rarible/logger/build"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
+import type { Item } from "@rarible/api-client/build/models"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
@@ -42,7 +41,7 @@ import * as common from "./common"
 import {
 	checkWalletBlockchain,
 	convertEthereumContractAddress,
-	convertEthereumToUnionAddress,
+	convertEthereumToUnionAddress, convertOrderType,
 	convertToEthereumAddress,
 	convertToEthereumAssetType, extractEVMBlockchain,
 	getEthereumItemId,
@@ -50,7 +49,7 @@ import {
 	getOrderFeesSum,
 	getOriginFeeSupport,
 	getPayoutsSupport,
-	isEVMBlockchain,
+	isEVMBlockchain, isRaribleOrderData, isWETH,
 	validateOrderDataV3Request,
 } from "./common"
 import type { EthereumBalance } from "./balance"
@@ -63,7 +62,6 @@ export class EthereumBid {
 		private wallet: Maybe<EthereumWallet>,
 		private apis: IApisSdk,
 		private balanceService: EthereumBalance,
-		private getEthereumApis: () => Promise<RaribleEthereumApis>,
 		private config?: IEthereumSdkConfig
 	) {
 		this.bid = this.bid.bind(this)
@@ -178,35 +176,15 @@ export class EthereumBid {
 	}
 
 	async bidDataV2(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		let contractAddress: Address | undefined
-		let item: NftItem | undefined
-		let takeAssetType: AssetTypeRequest
-		let blockchain: EVMBlockchain
+		const {
+			ethAssetType,
+			item,
+			contract,
+			blockchain,
+		} = await getTakeAssetType(this.apis, prepare)
 
-		const ethApi = await this.getEthereumApis()
-		if ("itemId" in prepare) {
-			blockchain = extractEVMBlockchain(prepare.itemId)
-			const { itemId } = getEthereumItemId(prepare.itemId)
-			item = await ethApi.nftItem.getNftItemById({ itemId })
-			contractAddress = item.contract
-
-			takeAssetType = {
-				tokenId: item.tokenId,
-				contract: item.contract,
-			}
-		} else if ("collectionId" in prepare) {
-			blockchain = extractEVMBlockchain(prepare.collectionId)
-			contractAddress = convertToEthereumAddress(prepare.collectionId)
-			takeAssetType = {
-				assetClass: "COLLECTION",
-				contract: contractAddress,
-			}
-		} else {
-			throw new Warning("ItemId or CollectionId must be assigned")
-		}
-
-		const collection = await ethApi.nftCollection.getNftCollectionById({
-			collection: contractAddress,
+		const collection = await this.apis.collection.getCollectionById({
+			collection: contract,
 		})
 
 		const bidAction = this.sdk.order.bid
@@ -219,7 +197,7 @@ export class EthereumBid {
 				return {
 					type: "DATA_V2",
 					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					takeAssetType: takeAssetType,
+					takeAssetType: ethAssetType,
 					amount: getOrderAmount(request.amount, collection),
 					priceDecimal: request.price,
 					payouts: common.toEthereumParts(request.payouts),
@@ -272,35 +250,15 @@ export class EthereumBid {
 	}
 
 	async bidDataV3(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		let contractAddress: Address | undefined
-		let item: NftItem | undefined
-		let takeAssetType: AssetTypeRequest
-		let blockchain: EVMBlockchain
+		const {
+			ethAssetType,
+			item,
+			contract,
+			blockchain,
+		} = await getTakeAssetType(this.apis, prepare)
 
-		const ethApi = await this.getEthereumApis()
-		if ("itemId" in prepare) {
-			blockchain = extractEVMBlockchain(prepare.itemId)
-			const { itemId } = getEthereumItemId(prepare.itemId)
-			item = await ethApi.nftItem.getNftItemById({ itemId })
-			contractAddress = item.contract
-
-			takeAssetType = {
-				tokenId: item.tokenId,
-				contract: item.contract,
-			}
-		} else if ("collectionId" in prepare) {
-			blockchain = extractEVMBlockchain(prepare.collectionId)
-			contractAddress = convertToEthereumAddress(prepare.collectionId)
-			takeAssetType = {
-				assetClass: "COLLECTION",
-				contract: contractAddress,
-			}
-		} else {
-			throw new Error("ItemId or CollectionId must be assigned")
-		}
-
-		const collection = await ethApi.nftCollection.getNftCollectionById({
-			collection: contractAddress,
+		const collection = await this.apis.collection.getCollectionById({
+			collection: contract,
 		})
 
 		const bidAction = this.sdk.order.bid
@@ -319,7 +277,7 @@ export class EthereumBid {
 				return {
 					type: "DATA_V3_BUY",
 					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					takeAssetType: takeAssetType,
+					takeAssetType: ethAssetType,
 					amount: getOrderAmount(request.amount, collection),
 					priceDecimal: request.price,
 					payout: payouts[0],
@@ -421,7 +379,7 @@ export class EthereumBid {
 			wallet.ethereum.getFrom(),
 		])
 
-		const fromUnion = convertEthereumToUnionAddress(from, Blockchain.ETHEREUM)
+		const fromUnion = convertEthereumToUnionAddress(from, blockchain)
 		const asset: AssetType = { "@type": "ETH", blockchain }
 		const value = toBn(valueWithFee.value).integerValue().div(toBn(10).pow(assetDecimals))
 
@@ -447,10 +405,11 @@ export class EthereumBid {
 			throw new Error("Not an ethereum order")
 		}
 
-		const ethApi = await this.getEthereumApis()
-		const order = await ethApi.order.getValidatedOrderByHash({ hash })
-		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
-			throw new UpdateBidNotSupportedForThidKindOfOrderError(order.type)
+		const order = await this.apis.order.getValidatedOrderById({
+			id: prepareRequest.orderId,
+		})
+		if (!isRaribleOrderData(order.data)) {
+			throw new UpdateBidNotSupportedForThidKindOfOrderError(order.data["@type"])
 		}
 
 		const bidUpdateAction = this.sdk.order.bidUpdate
@@ -474,16 +433,14 @@ export class EthereumBid {
 					if (blockchain === Blockchain.MANTLE) {
 						return request
 					}
-					const wethContractAddress = await this.sdk.balances.getWethContractAddress()
-					if (order.make.assetType.assetClass === "ERC20" && compareCaseInsensitive(order.make.assetType.contract, wethContractAddress)) {
-						const asset = this.convertAssetType(order.make.assetType, blockchain) as RequestCurrencyAssetType
+					if (isWETH(order.make.type, await this.sdk.balances.getWethContractAddress())) {
 						const feesBp = getOrderFeesSum(order)
 						const value = await this.getConvertableValueCommon(
-							asset,
+							order.make.type as ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType,
 							request.price,
 							order.take.value,
 							feesBp,
-							blockchain
+							blockchain,
 						)
 						await this.convertCurrency(value)
 					}
@@ -494,16 +451,16 @@ export class EthereumBid {
 			.thenAction(bidUpdateAction)
 
 		return {
-			originFeeSupport: getOriginFeeSupport(order.type),
-			payoutsSupport: getPayoutsSupport(order.type),
+			originFeeSupport: getOriginFeeSupport(order.data),
+			payoutsSupport: getPayoutsSupport(order.data),
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
-			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
+			baseFee: await this.sdk.order.getBaseOrderFee(convertOrderType(order.data)),
 			getConvertableValue: this.getConvertableValue.bind(this, blockchain),
 			submit: actionWithConvert,
 			orderData: {
-				nftCollection: "contract" in order.take.assetType
-					? convertEthereumContractAddress(order.take.assetType.contract, blockchain)
+				nftCollection: "contract" in order.take.type
+					? order.take.type.contract
 					: undefined,
 			},
 		}
@@ -521,5 +478,37 @@ export class UpdateBidNotSupportedForThidKindOfOrderError extends Error {
 	constructor(type: string) {
 		super(`Update bid is not supported for ${type} kind of order`)
 		this.name = "UpdateBidNotSupportedForThidKindOfOrderError"
+	}
+}
+
+
+async function getTakeAssetType(
+	apis: IApisSdk,
+	prepare: PrepareBidRequest
+): Promise<{ethAssetType: AssetTypeRequest, item?: Item, contract: ContractAddress, blockchain: EVMBlockchain}> {
+	if ("itemId" in prepare) {
+		const item = await apis.item.getItemById({ itemId: prepare.itemId })
+		const { tokenId, contract, domain } = getEthereumItemId(item.id)
+
+		return {
+			ethAssetType: {
+				tokenId: tokenId,
+				contract: toAddress(contract),
+			},
+			item,
+			contract: toContractAddress(item.contract),
+			blockchain: domain,
+		}
+	} else if ("collectionId" in prepare) {
+		return {
+			ethAssetType: {
+				assetClass: "COLLECTION",
+				contract: convertToEthereumAddress(prepare.collectionId),
+			},
+			contract: toContractAddress(prepare.collectionId),
+			blockchain: extractEVMBlockchain(prepare.collectionId),
+		}
+	} else {
+		throw new Warning("ItemId or CollectionId must be assigned")
 	}
 }
