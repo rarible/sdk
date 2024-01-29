@@ -23,6 +23,7 @@ import { burn as burnTemplate } from "./burn"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "./contracts/domain"
 import { getErc721Contract } from "./contracts/erc721"
 import { getErc1155Contract } from "./contracts/erc1155"
+import { awaitOwnership } from "./test/await-ownership"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
@@ -56,6 +57,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
+		await awaitOwnership(await getApis(), e2eErc721V2ContractAddress, minted.tokenId, testAddress)
 		const testBalance = await testErc721.functionCall("balanceOf", testAddress).call()
 
 		const burnTx = await burn({
@@ -72,8 +74,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		expect(new BigNumber(testBalance.toString()).minus(testBalanceAfterBurn.toString()).toString()).toBe("1")
 	})
 
-	//@todo remove skip when we will unable to mint v1
-	test.skip("should burn ERC-1155 v1 token", async () => {
+	test("should burn ERC-1155 v1 token", async () => {
 		const testErc1155 = await getErc1155Contract(ethereum, ERC1155VersionEnum.ERC1155V1, e2eErc1155V1ContractAddress)
 		const minted = await mint({
 			collection: createErc1155V1Collection(e2eErc1155V1ContractAddress),
@@ -84,6 +85,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
+		await awaitOwnership(await getApis(), e2eErc1155V1ContractAddress, minted.tokenId, testAddress)
 		const burnTx = await burn({
 			assetType: {
 				contract: e2eErc1155V1ContractAddress,
@@ -99,7 +101,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		expect(toBn(testBalanceAfterBurn).toString()).toBe("50")
 	})
 
-	test.skip("should burn ERC-721 v3 lazy", async () => {
+	test("should burn ERC-721 v3 lazy", async () => {
 		const minted = await mint({
 			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
 			uri: "ipfs://ipfs/hash",
@@ -110,6 +112,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
+		await awaitOwnership(await getApis(), e2eErc721V3ContractAddress, minted.tokenId, testAddress)
 		const tx = await burn({
 			assetType: {
 				contract: e2eErc721V3ContractAddress,
@@ -129,7 +132,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		})
 	})
 
-	test.skip("should burn ERC-1155 v2 lazy", async () => {
+	test("should burn ERC-1155 v2 lazy", async () => {
 		const minted = await mint({
 			collection: createErc1155V2Collection(e2eErc1155V2ContractAddress),
 			uri: "ipfs://ipfs/hash",
@@ -141,6 +144,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
+		await awaitOwnership(await getApis(), e2eErc1155V2ContractAddress, minted.tokenId, testAddress)
 		const tx = await burn({
 			assetType: {
 				contract: e2eErc1155V2ContractAddress,
@@ -162,7 +166,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		})
 	})
 
-	test.skip("should burn ERC-1155 v2 lazy and burn creators is empty", async () => {
+	test("should burn ERC-1155 v2 lazy and burn creators is empty", async () => {
 		const minted = await mint({
 			collection: createErc1155V2Collection(e2eErc1155V2ContractAddress),
 			uri: "ipfs://ipfs/hash",
@@ -174,6 +178,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
 			await minted.transaction.wait()
 		}
+		await awaitOwnership(await getApis(), e2eErc1155V2ContractAddress, minted.tokenId, testAddress)
 		const tx = await burn({
 			assetType: {
 				contract: e2eErc1155V2ContractAddress,
