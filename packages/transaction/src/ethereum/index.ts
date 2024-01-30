@@ -58,7 +58,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
   		case "zksync":
   			return `https://explorer.zksync.io/tx/${this.hash()}`
   		case "testnet-zksync":
-  			return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
+  			return `https://sepolia.explorer.zksync.io/tx/${this.hash()}`
   		case "chiliz":
   			return `https://scan.chiliz.com/tx/${this.hash()}`
   		case "testnet-chiliz":
