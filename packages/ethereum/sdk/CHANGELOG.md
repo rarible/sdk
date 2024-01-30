@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.1](https://github.com/rarible/sdk/compare/v0.13.68-fix.0...v0.13.68-fix.1) (2024-01-30)
+
+
+### Features
+
+* **PLTF-262:** zksync deploy collection fix ([#592](https://github.com/rarible/sdk/issues/592)) ([2d2be69](https://github.com/rarible/sdk/commit/2d2be691c2491080bb5bced8f4db4576893b1d19))
+
+
+
+
+
 ## [0.13.68-fix.0](https://github.com/rarible/sdk/compare/v0.13.68...v0.13.68-fix.0) (2024-01-30)
 
 
