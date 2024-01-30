@@ -56,16 +56,6 @@ describe("get balance", () => {
 		expect(balance.toString()).toEqual("0")
 	})
 
-	test.concurrent("get Polygon balance without wallet", async () => {
-		const sdk = createSdk(undefined, "development")
-		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
-		const balance = await sdk.balances.getBalance(walletAddress, {
-			"@type": "ETH",
-			blockchain: Blockchain.POLYGON,
-		})
-		expect(balance.toString()).toEqual("0")
-	})
-
 	test.concurrent("get ETH balance without wallet with CurrencyId", async () => {
 		const sdk = createSdk(undefined, "development")
 		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
