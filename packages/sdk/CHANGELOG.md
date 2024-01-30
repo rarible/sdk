@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
+
+
+### Features
+
+* **PLTF-275:** get evm balances from union api ([#593](https://github.com/rarible/sdk/issues/593)) ([5f51042](https://github.com/rarible/sdk/commit/5f510422c338e06ea10ab94bc98d0b65031626af))
+
+
+
+
+
 ## [0.13.68-fix.1](https://github.com/rarible/sdk/compare/v0.13.68-fix.0...v0.13.68-fix.1) (2024-01-30)
 
 **Note:** Version bump only for package @rarible/sdk
