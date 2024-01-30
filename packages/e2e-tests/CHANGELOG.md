@@ -11,6 +11,25 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.67-fix.2](https://github.com/rarible/sdk/compare/v0.13.67-fix.1...v0.13.67-fix.2) (2024-01-24)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
+
+
+
+## [0.13.67-fix.1](https://github.com/rarible/sdk/compare/v0.13.67-fix.0...v0.13.67-fix.1) (2024-01-23)
+
+
+### Features
+
+* split setup gamisodes and mattel collections ([113952a](https://github.com/rarible/sdk/commit/113952a09c2a8ba8ac5b3779908632b59158e8cd))
+
+
+
+
+
 ## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

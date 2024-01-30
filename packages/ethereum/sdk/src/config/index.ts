@@ -17,6 +17,7 @@ import { chilizTestnetConfig } from "./testnet-chiliz"
 import { lightlinkConfig } from "./lightlink"
 import { testnetLightlinkConfig } from "./testnet-lightlink"
 import { rariTestnetConfig } from "./testnet-rari"
+import { rariMainnetConfig } from "./rari"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -36,6 +37,7 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	lightlink: lightlinkConfig,
 	"testnet-lightlink": testnetLightlinkConfig,
 	"testnet-rari": rariTestnetConfig,
+	rari: rariMainnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
