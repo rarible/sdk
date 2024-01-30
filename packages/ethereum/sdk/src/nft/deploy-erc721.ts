@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Address, Word } from "@rarible/types"
+import type { Address } from "@rarible/types"
 import { randomWord } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SendFunction } from "../common/send-transaction"
