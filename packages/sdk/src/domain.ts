@@ -148,6 +148,7 @@ export interface IApisSdk {
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi
 	ownership: ApiClient.OwnershipControllerApi
+	balances: ApiClient.BalanceControllerApi
 }
 
 /**

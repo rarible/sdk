@@ -3,8 +3,8 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Address } from "@rarible/types"
 import { toAddress, toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
-import type { BigNumberValue } from "@rarible/utils"
 import { Blockchain } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
 import BigNumber from "bignumber.js"
 import { createWethContract } from "@rarible/ethereum-sdk-test-common"
 import { retry } from "../../common/retry"
@@ -44,6 +44,16 @@ describe("get balance", () => {
 			"@type": "ETH",
 		})
 		expect(balance.toString()).toEqual("1.9355")
+	})
+
+	test.concurrent("get Polygon balance without wallet", async () => {
+		const sdk = createSdk(undefined, "development")
+		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
+		const balance = await sdk.balances.getBalance(walletAddress, {
+			"@type": "ETH",
+			blockchain: Blockchain.POLYGON,
+		})
+		expect(balance.toString()).toEqual("0")
 	})
 
 	test.concurrent("get ETH balance without wallet with CurrencyId", async () => {
