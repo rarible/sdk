@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.0](https://github.com/rarible/sdk/compare/v0.13.68...v0.13.68-fix.0) (2024-01-30)
+
+
+### Features
+
+* **PLTF-264:** replace evm apis in union ([#590](https://github.com/rarible/sdk/issues/590)) ([e516db8](https://github.com/rarible/sdk/commit/e516db8386bae0d95c1f9813c092f19573194999))
+
+
+
+
+
 ## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
 
 
