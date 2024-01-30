@@ -1,7 +1,8 @@
 import { toBigNumber, toContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { isEVMBlockchain } from "../sdk-blockchains/ethereum/common"
+import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
+import { isEVMBlockchain } from "@rarible/sdk-common"
 import type { RequestCurrency, RequestCurrencyAssetType } from "./domain"
 
 export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrencyAssetType {
@@ -14,11 +15,43 @@ export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrency
 	}
 }
 
+export function getEVMCurrencyId(
+	currency: ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType,
+): ApiClient.CurrencyId {
+	if (isRequestCurrencyAssetType(currency)) {
+		return currency
+	} else if (isAssetType(currency)) {
+		return convertEVMAssetTypeToCurrencyId(currency)
+	} else {
+		throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
+	}
+}
+
 export function isRequestCurrencyAssetType(x: RequestCurrency): x is ApiClient.CurrencyId {
 	return typeof x === "string" && !!toCurrencyId(x)
 }
 export function isAssetType(x: RequestCurrency): x is RequestCurrencyAssetType {
 	return typeof x === "object" && "@type" in x
+}
+
+export function isEth(x: AssetType): x is EthEthereumAssetType {
+	return x["@type"] === "ETH"
+}
+
+export function isErc20(x: AssetType): x is EthErc20AssetType {
+	return x["@type"] === "ERC20"
+}
+
+export function convertEVMAssetTypeToCurrencyId(
+	id: RequestCurrencyAssetType,
+): ApiClient.CurrencyId {
+	if (isEth(id)) {
+		return toCurrencyId(`${id.blockchain || Blockchain.ETHEREUM}:${ZERO_ADDRESS}`)
+	}
+	if (isErc20(id)) {
+		return toCurrencyId(id.contract)
+	}
+	throw new Error(`Unsupported currency type: ${id}`)
 }
 
 export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestCurrencyAssetType {

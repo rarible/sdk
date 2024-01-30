@@ -46,6 +46,7 @@ export function createApisSdk(
 		ownership: new ApiClient.OwnershipControllerApi(configuration),
 		order: new ApiClient.OrderControllerApi(configuration),
 		activity: new ApiClient.ActivityControllerApi(configuration),
+		balances: new ApiClient.BalanceControllerApi(configuration),
 	}
 }
 
