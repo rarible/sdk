@@ -58,6 +58,7 @@ export function getAPIKey(env:  EthereumNetwork) {
 		case "mantle":
 		case "polygon":
 		case "arbitrum":
+		case "rari":
 		case "zksync":
 		case "chiliz":
 		case "lightlink":

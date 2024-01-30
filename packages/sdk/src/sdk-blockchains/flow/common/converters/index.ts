@@ -1,5 +1,5 @@
 import type { FlowCurrency, FlowItemId as FlowItemIdSdk } from "@rarible/flow-sdk"
-import { toFlowContractAddress } from "@rarible/types"
+import { toFlowContractAddress } from "@rarible/flow-sdk"
 import type { CollectionId, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, FlowAddress, UnionAddress, FlowContractAddress } from "@rarible/types"
