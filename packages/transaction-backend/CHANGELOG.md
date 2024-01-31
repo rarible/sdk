@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+
+### Features
+
+* **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
+
+
+
+
+
 ## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend

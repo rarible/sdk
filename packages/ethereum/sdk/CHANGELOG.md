@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+
+### Bug Fixes
+
+* **MPX-2213:** move validate errors ([a6e048b](https://github.com/rarible/sdk/commit/a6e048bcac59f6ac52eda98a30aca37bd56dc84b))
+
+
+### Features
+
+* **MPX-2230:** update web3 to latest version ([75c1913](https://github.com/rarible/sdk/commit/75c19137cd770d05862005d4d75a6038ab30cc14))
+* **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
+
+
+
+
+
 ## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
