@@ -3,12 +3,66 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.1](https://github.com/rarible/sdk/compare/v0.13.68-fix.0...v0.13.68-fix.1) (2024-01-30)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.0](https://github.com/rarible/sdk/compare/v0.13.68...v0.13.68-fix.0) (2024-01-30)
+
+**Note:** Version bump only for package example
+
+
+
+
+
 ## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
 
 
 ### Bug Fixes
 
 * **PLTF-107:** walletConnect chainId ([#588](https://github.com/rarible/sdk/issues/588)) ([0904b99](https://github.com/rarible/sdk/commit/0904b99cb705526424a06aca55ea70f12f93018e))
+
+
+
+
+
+## [0.13.67-fix.2](https://github.com/rarible/sdk/compare/v0.13.67-fix.1...v0.13.67-fix.2) (2024-01-24)
+
+
+### Features
+
+* **PLTF-229:** split setup collections ([9bfab5b](https://github.com/rarible/sdk/commit/9bfab5b82751a8de1fbcb7e2905c50661cc21795))
+
+
+
+
+
+## [0.13.67-fix.1](https://github.com/rarible/sdk/compare/v0.13.67-fix.0...v0.13.67-fix.1) (2024-01-23)
+
+
+### Features
+
+* split setup gamisodes and mattel collections ([113952a](https://github.com/rarible/sdk/commit/113952a09c2a8ba8ac5b3779908632b59158e8cd))
+
+
+
+
+
+## [0.13.67-fix.0](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.67-fix.0) (2024-01-23)
+
+**Note:** Version bump only for package example
 
 
 

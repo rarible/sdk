@@ -58,7 +58,7 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
   		case "zksync":
   			return `https://explorer.zksync.io/tx/${this.hash()}`
   		case "testnet-zksync":
-  			return `https://goerli.explorer.zksync.io/tx/${this.hash()}`
+  			return `https://sepolia.explorer.zksync.io/tx/${this.hash()}`
   		case "chiliz":
   			return `https://scan.chiliz.com/tx/${this.hash()}`
   		case "testnet-chiliz":
@@ -67,6 +67,8 @@ IBlockchainTransaction<Blockchain, TransactionResult> {
   			return `https://phoenix.lightlink.io/tx/${this.hash()}`
   		case "testnet-lightlink":
   			return `https://pegasus.lightlink.io/tx/${this.hash()}`
+  		case "rari":
+  			return `https://rari.calderaexplorer.xyz/tx/${this.hash()}`
   		case "testnet-rari":
   			return `https://rari-testnet.calderaexplorer.xyz/tx/${this.hash()}`
   		default:

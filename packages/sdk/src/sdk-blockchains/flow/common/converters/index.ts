@@ -1,8 +1,8 @@
-import type { FlowContractAddress, FlowCurrency, FlowItemId as FlowItemIdSdk } from "@rarible/flow-sdk"
+import type { FlowCurrency, FlowItemId as FlowItemIdSdk } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
 import type { CollectionId, ItemId, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { ContractAddress, FlowAddress, UnionAddress } from "@rarible/types"
+import type { ContractAddress, FlowAddress, UnionAddress, FlowContractAddress } from "@rarible/types"
 import {
 	toBigNumber,
 	toCollectionId,
@@ -13,7 +13,7 @@ import {
 	toUnionAddress,
 } from "@rarible/types"
 import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
-import type { FlowFee } from "@rarible/flow-sdk/build/types"
+import type { FlowFee } from "@rarible/flow-sdk"
 import type { UnionPart } from "../../../../types/order/common"
 import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
 

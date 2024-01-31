@@ -236,7 +236,7 @@ describe("sale", () => {
 			const tx = await fillAction.submit({ amount: 1 })
 			await tx.wait()
 		} catch (e: any) {
-			errorMessage = e.message
+			errorMessage = e
 		}
 		expect(errorMessage).toBeTruthy()
 	})

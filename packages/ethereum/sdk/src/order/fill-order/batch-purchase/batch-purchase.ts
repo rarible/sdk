@@ -137,17 +137,7 @@ export class BatchOrderFiller {
 			}
 			let approveAsset: Asset | undefined
 
-			if (
-				request.order.type !== "RARIBLE_V2" &&
-				request.order.type !== "OPEN_SEA_V1" &&
-				request.order.type !== "LOOKSRARE" &&
-				request.order.type !== "LOOKSRARE_V2" &&
-				request.order.type !== "SEAPORT_V1" &&
-				request.order.type !== "X2Y2" &&
-				request.order.type !== "AMM"
-			) {
-				throw new Error("Unsupported order type for batch purchase")
-			}
+			validateBatchSupportedOrders(request.order)
 
 			const feesData = feesReducer.getComplexReducedFeesData(request.originFees)
 
@@ -397,4 +387,18 @@ function groupErc20AssetsByContract(assets: Asset[]) {
 		}
 		return acc
 	}, new Map() as Map<Address, Asset>)
+}
+
+export function validateBatchSupportedOrders(order: FillBatchSingleOrderRequest["order"]) {
+	if (
+		order.type !== "RARIBLE_V2" &&
+    order.type !== "OPEN_SEA_V1" &&
+    order.type !== "LOOKSRARE" &&
+    order.type !== "LOOKSRARE_V2" &&
+    order.type !== "SEAPORT_V1" &&
+    order.type !== "X2Y2" &&
+    order.type !== "AMM"
+	) {
+		throw new Error("Unsupported order type for batch purchase")
+	}
 }

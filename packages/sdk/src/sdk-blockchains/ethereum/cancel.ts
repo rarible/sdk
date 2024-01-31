@@ -3,15 +3,15 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { RaribleEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
-import { checkWalletBlockchain, getWalletNetwork, isEVMBlockchain } from "./common"
+import type { IApisSdk } from "../../domain"
+import { getEthOrder, getWalletNetwork, isEVMBlockchain } from "./common"
 
 export class EthereumCancel {
 	constructor(
 		private readonly sdk: RaribleSdk,
 		private wallet: Maybe<EthereumWallet>,
-		private getEthereumApis: () => Promise<RaribleEthereumApis>,
+		private apis: IApisSdk,
 	) {
 		this.cancel = this.cancel.bind(this)
 	}
@@ -20,16 +20,16 @@ export class EthereumCancel {
 		if (!request.orderId) {
 			throw new Error("OrderId has not been specified")
 		}
-		const [blockchain, orderId] = request.orderId.split(":")
+		const [blockchain] = request.orderId.split(":")
 		if (!isEVMBlockchain(blockchain)) {
 			throw new Error("Not an ethereum order")
 		}
-		await checkWalletBlockchain(this.wallet, blockchain)
-		const ethApis = await this.getEthereumApis()
-		const order = await ethApis.order.getValidatedOrderByHash({
-			hash: orderId,
+		const order = await this.apis.order.getValidatedOrderById({
+			id: request.orderId,
 		})
-		const cancelTx = await this.sdk.order.cancel(order)
+		const cancelTx = await this.sdk.order.cancel(
+			getEthOrder(order)
+		)
 		return new BlockchainEthereumTransaction(cancelTx, await getWalletNetwork(this.wallet))
 	}
 }

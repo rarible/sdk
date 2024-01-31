@@ -2,7 +2,7 @@ import type * as ApiClient from "@rarible/api-client"
 import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type {
 	IConvert,
@@ -148,6 +148,7 @@ export interface IApisSdk {
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi
 	ownership: ApiClient.OwnershipControllerApi
+	balances: ApiClient.BalanceControllerApi
 }
 
 /**
@@ -392,6 +393,7 @@ export interface IEthereumSdk {
 export interface IFlowSdk {
 	setupAccount: IFlowSetupAccount
 	setupMattelCollections: IFlowSetupMattelCollections
+	setupGamisodesCollections: IFlowSetupMattelCollections
 	checkInitMattelCollections: IFlowCheckInitMattelCollections
 }
 

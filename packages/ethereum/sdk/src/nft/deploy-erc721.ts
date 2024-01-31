@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Address, Word } from "@rarible/types"
+import type { Address } from "@rarible/types"
 import { randomWord } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SendFunction } from "../common/send-transaction"
@@ -26,23 +26,19 @@ export class DeployErc721 {
 		const config = await this.getConfig()
 		const contract = createErc721FactoryContract(this.ethereum, config.factories.erc721)
 		const salt = randomWord()
+		const tx = await this.send(
+			contract.functionCall("createToken", name, symbol, baseURI, contractURI, salt)
+		)
+		const events = await tx.getEvents()
+		const proxyEvent = events
+			.find(e => e.event === "Create721RaribleProxy")
+		if (!proxyEvent) {
+			throw new Error("Event 'Create721RaribleProxy' has not been found")
+		}
 		return {
-			tx: await this.send(
-				contract.functionCall("createToken", name, symbol, baseURI, contractURI, salt)
-			),
-			address: await this.getContractAddress(name, symbol, baseURI, contractURI, salt),
+			tx,
+			address: proxyEvent.args.proxy,
 		}
-	}
-
-	private async getContractAddress(
-		name: string, symbol: string, baseURI: string, contractURI: string, salt: Word
-	): Promise<Address> {
-		if (!this.ethereum) {
-			throw new Error("Wallet undefined")
-		}
-		const config = await this.getConfig()
-		const contract = createErc721FactoryContract(this.ethereum, config.factories.erc721)
-		return contract.functionCall("getAddress", name, symbol, baseURI, contractURI, salt).call()
 	}
 
 	async deployUserToken(
@@ -54,22 +50,18 @@ export class DeployErc721 {
 		const config = await this.getConfig()
 		const contract = createErc721UserFactoryContract(this.ethereum, config.factories.erc721)
 		const salt = randomWord()
+		const tx = await this.send(
+			contract.functionCall("createToken", name, symbol, baseURI, contractURI, operators, salt)
+		)
+		const events = await tx.getEvents()
+		const proxyEvent = events
+			.find(e => e.event === "Create721RaribleUserProxy")
+		if (!proxyEvent) {
+			throw new Error("Event 'Create721RaribleUserProxy' has not been found")
+		}
 		return {
-			tx: await this.send(
-				contract.functionCall("createToken", name, symbol, baseURI, contractURI, operators, salt)
-			),
-			address: await this.getUserContractAddress(name, symbol, baseURI, contractURI, operators, salt),
+			tx,
+			address: proxyEvent.args.proxy,
 		}
-	}
-
-	private async getUserContractAddress(
-		name: string, symbol: string, baseURI: string, contractURI: string, operators: Address[], salt: Word
-	): Promise<Address> {
-		if (!this.ethereum) {
-			throw new Error("Wallet undefined")
-		}
-		const config = await this.getConfig()
-		const contract = createErc721UserFactoryContract(this.ethereum, config.factories.erc721)
-		return contract.functionCall("getAddress", name, symbol, baseURI, contractURI, operators, salt).call()
 	}
 }

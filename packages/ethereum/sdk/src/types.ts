@@ -19,6 +19,7 @@ export type EthereumNetwork =
   | "lightlink"
   | "testnet-lightlink"
   | "testnet-rari"
+  | "rari"
 
 export enum LogsLevel {
 	DISABLED = 0,
