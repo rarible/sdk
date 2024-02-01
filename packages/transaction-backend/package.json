@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction-backend",
-  "version": "0.13.68-fix.2",
+  "version": "0.13.68-fix.3",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -21,7 +21,7 @@
     "get-orders": "npx ts-node scripts/getorders.ts"
   },
   "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.2",
+    "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.3",
     "@rarible/web3-ethereum": "^0.13.68",
     "axios": "^1.4.0",
     "body-parser": "^1.20.0",
