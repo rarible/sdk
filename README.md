@@ -46,6 +46,17 @@ You also can find **Typescript (.ts)** [`examples in that folder`](https://githu
 
 You can find this information on our [Getting Started with SDK](https://docs.rarible.org/reference/getting-started) Reference page
 
+**IMPORTANT**: since _0.13.69_ version we've migrated from 1.* version to 4.* of [Web3](https://www.npmjs.com/package/web3) library.
+You should specify _"defaultTransactionType"_ property during initialization of Web3 instance
+([see Web3 config guide](https://docs.web3js.org/guides/web3_config/) and [different tx types](https://docs.web3js.org/guides/web3_eth/eth#step-6-send-different-type-of-transactions))
+to provide information about actual transaction type in the current network.
+```javascript
+const web3 = new Web3(...)
+web3.setConfig({ defaultTransactionType: "0x0" | "0x1" | "0x2" | undefined }) // Legacy | EIP-2930 | EIP-1559 | not specified 
+```
+It helps web3 to calculate transaction fees. Set _defaultTransactionType: undefined_ if you want to disable fee calculating by Web3 and let your provider do it.
+
+
 ### Use Rarible SDK Wallet Connector
 
 Wallet Connector make possible to connect the following providers:
@@ -65,7 +76,7 @@ Wallet Connector make possible to connect the following providers:
 Connectors are used in [Frontend example app](https://github.com/rarible/sdk/tree/master/packages/example)
 
 ## Methods
-_When you initialized Rarible SDK with required provider ([see Installation section](#installation)) it's ready for using._
+_When you initialized Rarible SDK with required provider ([see Installation section](https://docs.rarible.org/reference/getting-started)) it's ready for using._
 
 ### About advanced methods calls
 Most methods have two ways to call, simple and advanced. The advanced methods consists of two stages: preparation and submit, and gives more information and control to complete the transaction.
