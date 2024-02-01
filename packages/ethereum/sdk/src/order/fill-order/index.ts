@@ -170,11 +170,20 @@ export class OrderFiller {
 	public acceptBid: SellOrderAction = this.getFillAction<SellOrderRequest>()
 
 	async getBuyTx({ request, from }: GetOrderBuyTxRequest): Promise<TransactionData> {
+		if (!this.isNonInvertableOrder(request.order) && !from) {
+			throw new Error("'From' field must be specified for this order type")
+		}
 		const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
 		if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
 			inverted.make.assetType = await this.checkAssetType(request.assetType)
 		}
-		const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
+		const { functionCall, options } = await this.getTransactionRequestData(
+			request,
+			inverted,
+			{
+				checkInsufficientBalances: false,
+			}
+		)
 		const callInfo = await functionCall.getCallInfo()
 		const value = options.value?.toString() || "0"
 		return {
@@ -237,7 +246,9 @@ export class OrderFiller {
 	}
 
 	private async getTransactionRequestData(
-		request: FillOrderRequest, inverted: SimpleOrder
+		request: FillOrderRequest,
+		inverted: SimpleOrder,
+		options?: { checkInsufficientBalances?: boolean }
 	): Promise<OrderFillSendData> {
 		switch (request.order.type) {
 			case "RARIBLE_V1":
@@ -258,7 +269,10 @@ export class OrderFiller {
 					<OpenSeaV1OrderFillRequest>request
 				)
 			case "SEAPORT_V1":
-				return this.seaportHandler.getTransactionData(<SeaportV1OrderFillRequest>request)
+				return this.seaportHandler.getTransactionData(
+          <SeaportV1OrderFillRequest>request,
+          { checkInsufficientBalances: options?.checkInsufficientBalances }
+				)
 			case "LOOKSRARE":
 				return this.looksrareHandler.getTransactionData(<LooksrareOrderFillRequest>request)
 			case "LOOKSRARE_V2":

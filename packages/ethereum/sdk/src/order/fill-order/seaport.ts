@@ -90,6 +90,7 @@ export class SeaportOrderHandler {
 	}
 	async getTransactionData(
 		request: SeaportV1OrderFillRequest,
+		requestOptions?: { checkInsufficientBalances?: boolean },
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
@@ -128,6 +129,7 @@ export class SeaportOrderHandler {
 			{
 				unitsToFill,
 				tips,
+				checkInsufficientBalances: requestOptions?.checkInsufficientBalances,
 			},
 		)
 
@@ -157,6 +159,7 @@ export class SeaportOrderHandler {
 		request: SeaportV1OrderFillRequest,
 		originFees: Part[] | undefined,
 		feeValue: BigNumber,
+		options?: { checkInsufficientBalances?: boolean },
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
@@ -194,6 +197,7 @@ export class SeaportOrderHandler {
 				unitsToFill: unitsToFill,
 				encodedFeesValue: feeValueWithCurrency,
 				totalFeeBasisPoints: totalFeeBasisPoints,
+				checkInsufficientBalances: options?.checkInsufficientBalances,
 			},
 		)
 	}
