@@ -1,7 +1,7 @@
 {
   "name": "@rarible/solana-common",
   "description": "Common code",
-  "version": "0.13.69-beta.0",
+  "version": "0.13.69-beta.1",
   "license": "Apache-2.0",
   "files": [
     "build"

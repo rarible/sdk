@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
+
+
+### Bug Fixes
+
+* web3 events fix ([063f1b2](https://github.com/rarible/sdk/commit/063f1b204ab55e5370f9b8db01ccb493937a57a1))
+
+
+
+
+
 ## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
 
 **Note:** Version bump only for package @rarible/connector-helper
