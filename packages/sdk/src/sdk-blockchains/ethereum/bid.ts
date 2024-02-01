@@ -41,15 +41,19 @@ import * as common from "./common"
 import {
 	checkWalletBlockchain,
 	convertEthereumContractAddress,
-	convertEthereumToUnionAddress, convertOrderType,
+	convertEthereumToUnionAddress,
+	convertOrderType,
 	convertToEthereumAddress,
-	convertToEthereumAssetType, extractEVMBlockchain,
+	convertToEthereumAssetType,
+	extractEVMBlockchain,
 	getEthereumItemId,
 	getOrderAmount,
 	getOrderFeesSum,
 	getOriginFeeSupport,
 	getPayoutsSupport,
-	isEVMBlockchain, isRaribleOrderData, isWETH,
+	isEVMBlockchain,
+	isRaribleOrderData,
+	isWETH,
 	validateOrderDataV3Request,
 } from "./common"
 import type { EthereumBalance } from "./balance"
@@ -379,7 +383,7 @@ export class EthereumBid {
 			wallet.ethereum.getFrom(),
 		])
 
-		const fromUnion = convertEthereumToUnionAddress(from, blockchain)
+		const fromUnion = convertEthereumToUnionAddress(from, Blockchain.ETHEREUM)
 		const asset: AssetType = { "@type": "ETH", blockchain }
 		const value = toBn(valueWithFee.value).integerValue().div(toBn(10).pow(assetDecimals))
 

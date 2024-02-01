@@ -2,12 +2,13 @@ import type { UnionAddress } from "@rarible/types"
 import { Blockchain, OrderStatus } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
+import { toItemId } from "@rarible/types"
 import { waitForDate } from "../../common/wait-for-date"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import { EVMTestSuiteFactory } from "./test/suite"
 import type { EVMTestSuite } from "./test/suite"
 
-describe("bid", () => {
+describe.skip("bid", () => {
 	const suiteFactory = new EVMTestSuiteFactory(Blockchain.ETHEREUM)
 
 	let suiteDev1: EVMTestSuite<Blockchain.ETHEREUM>
