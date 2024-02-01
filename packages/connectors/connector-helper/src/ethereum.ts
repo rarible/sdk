@@ -16,6 +16,7 @@ export function mapEthereumWallet<O>(
 	return provider.map(state => {
 		const blockchain = getEvmBlockchain(state.chainId)
 		let web3: Web3 = new Web3(state.provider)
+		web3.setConfig({ defaultTransactionType: undefined })
 
 		return {
 			wallet: new EthereumWallet(

@@ -345,7 +345,11 @@ implements EthereumProvider.EthereumFunctionCall {
 
 			const promiEvent = this.config.web3.eth.sendTransaction(
 				transactionOptions,
-				NumberDataFormat
+				NumberDataFormat,
+				{
+					contractAbi: this.contract.options.jsonInterface,
+					checkRevertBeforeSending: true,
+				}
 			)
 			const promises = toPromises(promiEvent as SendTxResult)
 
@@ -440,6 +444,17 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 
 	async getEvents(): Promise<EthereumProvider.EthereumTransactionEvent[]> {
 		await this.wait()
+		const receipt = await this.receipt
+		if (receipt.events) {
+			return Object.values(receipt.events || {}).map(e => ({
+				...e,
+				logIndex: e.logIndex || 0,
+				transactionIndex: e.transactionIndex || 0,
+				transactionHash: e.transactionHash || "",
+				blockHash: e.blockHash || "",
+				args: e.returnValues,
+			}))
+		}
 		if (this.to && this.contractAbi) {
 			return getTransactionReceiptEvents(
 				this.receipt,

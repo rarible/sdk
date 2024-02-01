@@ -112,11 +112,11 @@ describe("get transaction receipt events", () => {
 			deepReplaceBigInt(await receipt),
 			null as any,
 			null as any,
+			null as any,
 			toAddress(seaportAddr),
 			SeaportABI,
 		)
 		const events = await tx.getEvents()
-		console.log(JSON.stringify(events, null, "  "))
 		expect(events.find(e => e.event === "OrderFulfilled")).toBeTruthy()
 	})
 })

@@ -13,7 +13,7 @@ export function ProviderActions() {
 
 	function switchToChain() {
 		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM) {
-			connection.sdk?.wallet.ethereum.getCurrentProvider().request({
+			connection.sdk?.wallet.ethereum.getCurrentProvider().send({
 				method: "wallet_switchEthereumChain",
 				params: [{ chainId: "0x" + parseInt(chainId).toString(16) }],
 			})

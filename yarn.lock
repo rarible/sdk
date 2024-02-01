@@ -7288,10 +7288,10 @@
   dependencies:
     "@rarible/types" "^0.9.16"
 
-"@rarible/flow-sdk@~0.5.76-beta.0":
-  version "0.5.78"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.78.tgz#8d9110a2cc53f2f61ad670dedec3fea677ad2fd0"
-  integrity sha512-64crgdVCH34VG28McxU88PHUeANr7du+GLOt21UV2Pq3Ed4/+Mtqj+CSBGxXMJHYBJ8ujIYSW3AGAunW09zv2g==
+"@rarible/flow-sdk@~0.5.78-fix.0":
+  version "0.5.78-fix.0"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.78-fix.0.tgz#dd9e0b7f17018bf872fb27c54ceaeaffd7ac7b01"
+  integrity sha512-oUDj+KfTtc4z3VDbaUJmHX9vEbgl1N8m8u1L/QDvuorD8Ha/NlfsGyWXSHSY9gJUhAOY+SsOTOK8TlKzxwHnSw==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"

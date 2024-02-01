@@ -18,6 +18,10 @@ export function getPromiEventReceiptPromise<T>(promiEvent: Web3PromiEvent<T, any
 			resolve(receipt)
 			clearTimeout(timeout)
 		})
+		promiEvent.catch(err => {
+			reject(err)
+			clearTimeout(timeout)
+		})
 	})
 }
 
@@ -34,8 +38,13 @@ export function getPromiEventHashPromise(
 			resolve(hash)
 			clearTimeout(timeout)
 		})
+		promiEvent.catch(err => {
+			reject(err)
+			clearTimeout(timeout)
+		})
 	})
 }
+
 
 export function getPromiEventConfirmationPromise(promiEvent: Web3PromiEvent<any, any>): Promise<string> {
 	return new Promise<string>((resolve, reject) => {
@@ -46,6 +55,10 @@ export function getPromiEventConfirmationPromise(promiEvent: Web3PromiEvent<any,
 		})
 		promiEvent.once("confirmation", ({ receipt }) => {
 			resolve(receipt.transactionHash)
+			clearTimeout(timeout)
+		})
+		promiEvent.catch(err => {
+			reject(err)
 			clearTimeout(timeout)
 		})
 	})

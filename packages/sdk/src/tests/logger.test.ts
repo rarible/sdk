@@ -113,7 +113,7 @@ describe("Logging", () => {
 			itemId: toItemId(nftId!),
 			currency: { "@type": "ETH" },
 			amount: 1,
-			price: 0.000001,
+			price: 0.0001,
 			expirationDate: generateExpirationDate(),
 		})
 		expect(logger.raw.mock.calls[0][0]).toMatchObject({

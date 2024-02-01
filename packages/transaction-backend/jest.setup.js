@@ -4,6 +4,13 @@ global.window = {
 }
 jest.setTimeout(1000 * 60)
 
+global.CustomEvent = class CustomEvent extends Event {
+	constructor(message, data) {
+		super(message, data)
+		this.detail = data.detail
+	}
+}
+
 process.env.RPC_URL = "https://dev-ethereum-node.rarible.com"
 process.env.SDK_ENV = "dev-ethereum"
 
