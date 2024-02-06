@@ -181,7 +181,7 @@ export class OrderFiller {
 			request,
 			inverted,
 			{
-				checkInsufficientBalances: false,
+				disableCheckingBalances: true,
 			}
 		)
 		const callInfo = await functionCall.getCallInfo()
@@ -248,7 +248,7 @@ export class OrderFiller {
 	private async getTransactionRequestData(
 		request: FillOrderRequest,
 		inverted: SimpleOrder,
-		options?: { checkInsufficientBalances?: boolean }
+		options?: { disableCheckingBalances?: boolean }
 	): Promise<OrderFillSendData> {
 		switch (request.order.type) {
 			case "RARIBLE_V1":
@@ -271,7 +271,7 @@ export class OrderFiller {
 			case "SEAPORT_V1":
 				return this.seaportHandler.getTransactionData(
           <SeaportV1OrderFillRequest>request,
-          { checkInsufficientBalances: options?.checkInsufficientBalances }
+          { disableCheckingBalances: options?.disableCheckingBalances }
 				)
 			case "LOOKSRARE":
 				return this.looksrareHandler.getTransactionData(<LooksrareOrderFillRequest>request)

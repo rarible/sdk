@@ -219,14 +219,14 @@ export const validateBasicFulfillBalancesAndApprovals = ({
 	timeBasedItemParams,
 	offererOperator,
 	fulfillerOperator,
-	checkInsufficientBalances,
+	disableCheckingBalances,
 }: {
 	offererBalancesAndApprovals: BalancesAndApprovals;
 	fulfillerBalancesAndApprovals: BalancesAndApprovals;
 	timeBasedItemParams: TimeBasedItemParams;
 	offererOperator: string;
 	fulfillerOperator: string;
-	checkInsufficientBalances?: boolean;
+	disableCheckingBalances?: boolean;
 } & Pick<OrderParameters, "offer" | "consideration">) => {
 	validateOfferBalancesAndApprovals({
 		offer,
@@ -255,7 +255,7 @@ export const validateBasicFulfillBalancesAndApprovals = ({
     	operator: fulfillerOperator,
     })
 
-	if (!!checkInsufficientBalances && insufficientBalances.length > 0) {
+	if (!disableCheckingBalances && insufficientBalances.length > 0) {
 		throw new Error(
 			"The fulfiller does not have the balances needed to fulfill."
 		)
@@ -274,7 +274,7 @@ export const validateStandardFulfillBalancesAndApprovals = ({
 	timeBasedItemParams,
 	offererOperator,
 	fulfillerOperator,
-	checkInsufficientBalances,
+	disableCheckingBalances,
 }: Pick<OrderParameters, "offer" | "consideration"> & {
 	offerCriteria: InputCriteria[];
 	considerationCriteria: InputCriteria[];
@@ -283,7 +283,7 @@ export const validateStandardFulfillBalancesAndApprovals = ({
 	timeBasedItemParams: TimeBasedItemParams;
 	offererOperator: string;
 	fulfillerOperator: string;
-	checkInsufficientBalances?: boolean;
+	disableCheckingBalances?: boolean;
 }) => {
 	validateOfferBalancesAndApprovals({
 		offer,
@@ -317,7 +317,7 @@ export const validateStandardFulfillBalancesAndApprovals = ({
     	operator: fulfillerOperator,
     })
 
-	if (!!checkInsufficientBalances && insufficientBalances.length > 0) {
+	if (!disableCheckingBalances && insufficientBalances.length > 0) {
 		throw new Error(
 			"The fulfiller does not have the balances needed to fulfill."
 		)

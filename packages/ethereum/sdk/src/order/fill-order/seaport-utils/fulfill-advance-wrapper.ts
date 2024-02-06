@@ -28,7 +28,7 @@ export async function getFulfillAdvancedOrderWrapperData({
 	conduitKey,
 	recipientAddress,
 	seaportContract,
-	checkInsufficientBalances,
+	disableCheckingBalances,
 }: {
 	order: Order;
 	unitsToFill?: BigNumberValue;
@@ -47,7 +47,7 @@ export async function getFulfillAdvancedOrderWrapperData({
 	recipientAddress: string;
 	timeBasedItemParams: TimeBasedItemParams;
 	seaportContract: EthereumContract,
-	checkInsufficientBalances?: boolean;
+	disableCheckingBalances?: boolean;
 }) {
 	// If we are supplying units to fill, we adjust the order by the minimum of the amount to fill and
 	// the remaining order left to be fulfilled
@@ -107,7 +107,7 @@ export async function getFulfillAdvancedOrderWrapperData({
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
-		checkInsufficientBalances,
+		disableCheckingBalances,
 	})
 
 	const orderAccountingForTips: OrderStruct = {
