@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+
+### Features
+
+* **PLTF-215:** fixes transactions for backend service ([#594](https://github.com/rarible/sdk/issues/594)) ([8fe175a](https://github.com/rarible/sdk/commit/8fe175a85b6d4de16985653bc25a08b957758bae))
+
+
+
+
+
 ## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend
