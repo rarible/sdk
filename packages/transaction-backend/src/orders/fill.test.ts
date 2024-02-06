@@ -52,7 +52,7 @@ describe.skip("get buy transaction", () => {
 			takeAssetType: {
 				assetClass: "ETH",
 			},
-			priceDecimal: "0.000000000000000002",
+			priceDecimal: "0.0002",
 			payouts: [],
 			originFees: [],
 			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
@@ -85,7 +85,7 @@ describe.skip("get buy transaction", () => {
 		}
 		await web3Buyer.eth.sendSignedTransaction(signedBuyerTx.rawTransaction)
 
-		await retry(5, 2000, async () => {
+		await retry(10, 3000, async () => {
 			await sdkItemOwner.apis.nftOwnership.getNftOwnershipById({
 				ownershipId: `${mintResult.itemId}:${buyerAddress}`,
 			})
@@ -123,7 +123,7 @@ describe.skip("get buy transaction", () => {
 			takeAssetType: {
 				assetClass: "ETH",
 			},
-			priceDecimal: "0.000000000000000002",
+			priceDecimal: "0.0002",
 			payouts: [],
 			originFees: [],
 			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
@@ -162,4 +162,5 @@ describe.skip("get buy transaction", () => {
 		})
 
 	})
+
 })

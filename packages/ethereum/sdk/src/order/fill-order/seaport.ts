@@ -90,15 +90,12 @@ export class SeaportOrderHandler {
 	}
 	async getTransactionData(
 		request: SeaportV1OrderFillRequest,
+		requestOptions?: { disableCheckingBalances?: boolean },
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
 		if (order.start === undefined || order.end === undefined) {
 			throw new Error("Order should includes start/end fields")
-		}
-
-		if (request.order.taker) {
-			throw new Error("You can't fill private orders")
 		}
 
 		const { unitsToFill, takeIsNft } = getUnitsToFill(request)
@@ -128,6 +125,7 @@ export class SeaportOrderHandler {
 			{
 				unitsToFill,
 				tips,
+				disableCheckingBalances: requestOptions?.disableCheckingBalances,
 			},
 		)
 
@@ -157,6 +155,7 @@ export class SeaportOrderHandler {
 		request: SeaportV1OrderFillRequest,
 		originFees: Part[] | undefined,
 		feeValue: BigNumber,
+		options?: { disableCheckingBalances?: boolean },
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
@@ -194,6 +193,7 @@ export class SeaportOrderHandler {
 				unitsToFill: unitsToFill,
 				encodedFeesValue: feeValueWithCurrency,
 				totalFeeBasisPoints: totalFeeBasisPoints,
+				disableCheckingBalances: options?.disableCheckingBalances,
 			},
 		)
 	}
