@@ -20,7 +20,6 @@ import {
 	getOriginFeeSupport,
 	getPayoutsSupport, getWalletBlockchain,
 	isEVMBlockchain, isRaribleV1Data, isRaribleV2Data,
-	validateOrderDataV3Request,
 } from "./common"
 import type { IEthereumSdkConfig } from "./domain"
 

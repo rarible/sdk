@@ -239,6 +239,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		return this.config.reserveNodes && this.config.reserveNodes[+(await this.config.web3.eth.getChainId())]
 	}
 
+
 	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
 		try {
 			try {
@@ -250,12 +251,9 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				if (e?.message?.toLowerCase().includes(OUT_OF_GAS_ERROR)) {
 					const method = await this.getMethodWithReserveNode()
 					if (method) {
-						const gas = await conditionalRetry(5, 3000, () =>
+						return await conditionalRetry(5, 3000, () =>
 							method.estimateGas(options),
 						(error) => error?.message === FAILED_TO_FETCH_ERROR)
-						if (gas !== undefined) {
-							return gas
-						}
 					}
 				}
 				throw e
@@ -283,34 +281,29 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		}
 	}
 
+	private async callWithRetry(sendMethod: ContractSendMethod, options: EthereumProvider.EthereumSendOptions = {}) {
+		const gasOptions = this.getGasOptions(options)
+		return await conditionalRetry(5, 3000, () =>
+			sendMethod.call({
+				from: this.config.from,
+				...gasOptions,
+			}),
+		(error) => error?.message === FAILED_TO_FETCH_ERROR
+		)
+	}
+
 	async call(options: EthereumProvider.EthereumSendOptions = {}): Promise<any> {
 		let gasOptions: Web3EthereumGasOptions | undefined
 		try {
 			gasOptions = this.getGasOptions(options)
-			console.log("before call")
 			try {
-				return await conditionalRetry(5, 3000, () =>
-					this.sendMethod.call({
-						from: this.config.from,
-						...gasOptions,
-					}),
-				(error) => error?.message === FAILED_TO_FETCH_ERROR
-				)
+				return await this.callWithRetry(this.sendMethod, options)
 			} catch (e: any) {
-				console.log("call err", e)
+				//Try to invoke call method with reserve node
 				if (e?.message?.toLowerCase().includes(OUT_OF_GAS_ERROR)) {
 					const method = await this.getMethodWithReserveNode()
-					console.log("call method", method)
 					if (method) {
-						const gas = await conditionalRetry(5, 3000, () =>
-							method.call({
-								from: this.config.from,
-								...gasOptions,
-							}),
-						(error) => error?.message === FAILED_TO_FETCH_ERROR)
-						if (gas !== undefined) {
-							return gas
-						}
+						return await this.callWithRetry(method, options)
 					}
 				}
 				throw e
@@ -516,8 +509,6 @@ function getMethodWithNewWeb3Node(
 	callOptions: { contract: Contract, methodName: string, args: any[]}
 ): ContractSendMethod {
 	const web3 = new Web3(new Web3.providers.HttpProvider(nodeUrl))
-	console.log("json interface", callOptions.contract.options.jsonInterface)
-	console.log("address", callOptions.contract.options.address)
 	const updatedContract = new web3.eth.Contract(
 		callOptions.contract.options.jsonInterface,
 		callOptions.contract.options.address

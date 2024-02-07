@@ -32,7 +32,6 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
-import { checkPayouts } from "../../common/check-payouts"
 import type { IApisSdk } from "../../domain"
 import { checkRoyalties } from "../../common/check-royalties"
 import { getCollectionFromItemId } from "../../common/utils"
@@ -54,7 +53,6 @@ import {
 	isEVMBlockchain,
 	isRaribleOrderData,
 	isWETH,
-	validateOrderDataV3Request,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 import type { IEthereumSdkConfig } from "./domain"
