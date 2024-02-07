@@ -38,11 +38,7 @@ export class EthereumSell {
 	}
 
 	async sell(): Promise<PrepareSellInternalResponse> {
-		if (this.config?.useDataV3) {
-			return this.sellDataV3()
-		} else {
-			return this.sellDataV2()
-		}
+		return this.sellDataV2()
 	}
 
 	async sellBasic(request: SellSimplifiedRequest): Promise<OrderId> {
@@ -96,54 +92,6 @@ export class EthereumSell {
 			originFeeSupport: OriginFeeSupport.FULL,
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(),
-			baseFee: await this.sdk.order.getBaseOrderFee(),
-			supportsExpirationDate: true,
-			submit: sellAction,
-		}
-	}
-
-	async sellDataV3(): Promise<PrepareSellInternalResponse> {
-		const sellAction = this.sdk.order.sell
-			.before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
-				await checkWalletBlockchain(this.wallet, extractBlockchain(sellFormRequest.itemId))
-				validateOrderDataV3Request(sellFormRequest, { shouldProvideMaxFeesBasePoint: true })
-
-				const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
-				const expirationDate = sellFormRequest.expirationDate
-					? convertDateToTimestamp(sellFormRequest.expirationDate)
-					: getDefaultExpirationDateTimestamp()
-
-				const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
-
-				const payouts = common.toEthereumParts(sellFormRequest.payouts)
-				const originFees = common.toEthereumParts(sellFormRequest.originFees)
-
-				return {
-					type: "DATA_V3_SELL",
-					makeAssetType: {
-						tokenId: tokenId,
-						contract: toAddress(contract),
-					},
-					payout: payouts[0],
-					originFeeFirst: originFees[0],
-					originFeeSecond: originFees[1],
-					maxFeesBasePoint: sellFormRequest.maxFeesBasePoint ?? 0,
-					amount: sellFormRequest.amount ?? 1,
-					takeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					priceDecimal: sellFormRequest.price,
-					end: expirationDate,
-				}
-			})
-			.after(async order => {
-				const blockchain = await getWalletBlockchain(this.wallet)
-				return common.convertEthereumOrderHash(order.hash, blockchain)
-			})
-
-		return {
-			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.SINGLE,
-			maxFeesBasePointSupport: MaxFeesBasePointSupport.REQUIRED,
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			supportsExpirationDate: true,

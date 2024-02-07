@@ -2,8 +2,9 @@ import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { toAddress } from "@rarible/types"
+import { deployTestContract, SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/src/test-contract"
 import { parseRequestError } from "./utils/parse-request-error"
-import { Web3Ethereum, Web3Transaction } from "./index"
+import { Web3Ethereum, Web3FunctionCall, Web3Transaction } from "./index"
 
 describe("Web3Ethereum", () => {
 	const { provider } = common.createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
@@ -80,6 +81,39 @@ describe("Web3Ethereum", () => {
 		}
 	})
 
+	test("test retrying call with reserve node", async () => {
+		const deployed = await deployTestContract(web3)
+		const contract = ganacheEthereum.createContract(SIMPLE_TEST_ABI, deployed.options.address)
+		const tx = await contract.functionCall("setValue", 10).send()
+		await tx.wait()
+
+		const web3Contract = new web3.eth.Contract(SIMPLE_TEST_ABI as any, deployed.options.address)
+		web3Contract.methods["value"] = () => {
+			return {
+				call: () => {
+					console.log("before throw")
+					throw new Error("OOOReturned values aren't valid, did it run Out of Gas? " +
+            "You might also see this error if you are not using the correct ABI for the " +
+            "contract you are retrieving data from, requesting data from a block number " +
+            "that does not exist, or querying a node which is not fully synced.")
+				},
+			}
+		}
+		const fnCall = new Web3FunctionCall(
+			{
+				web3,
+				reserveNodes: {
+					300500: "https://dev-ethereum-node.rarible.com",
+				},
+				from: await ganacheEthereum.getFrom(),
+			},
+			web3Contract,
+			"value",
+			[]
+		)
+
+		await fnCall.call()
+	})
 })
 
 describe("get transaction receipt events", () => {

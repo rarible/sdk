@@ -1,5 +1,5 @@
 import type { Contract, ContractSendMethod, SendOptions } from "web3-eth-contract"
-import type Web3 from "web3"
+import Web3 from "web3"
 import type { PromiEvent, TransactionConfig, TransactionReceipt } from "web3-core"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
@@ -7,7 +7,14 @@ import { EthereumProviderError, filterErrors, Provider, signTypedData } from "@r
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { AbiItem } from "web3-utils"
-import { DappType, getDappType, promiseSettledRequest, conditionalRetry, FAILED_TO_FETCH_ERROR } from "@rarible/sdk-common"
+import {
+	DappType,
+	getDappType,
+	promiseSettledRequest,
+	conditionalRetry,
+	FAILED_TO_FETCH_ERROR,
+	OUT_OF_GAS_ERROR,
+} from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
@@ -214,11 +221,45 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		}
 	}
 
+	async getMethodWithReserveNode(): Promise<ContractSendMethod | undefined> {
+		const reserveNode = await this.getReserveNode()
+		if (reserveNode) {
+			return getMethodWithNewWeb3Node(
+				reserveNode,
+				{
+					contract: this.contract,
+					methodName: this.methodName,
+					args: this.args,
+				}
+			)
+		}
+	}
+
+	async getReserveNode(): Promise<string | undefined> {
+		return this.config.reserveNodes && this.config.reserveNodes[+(await this.config.web3.eth.getChainId())]
+	}
+
 	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
 		try {
-			return await conditionalRetry(5, 3000, () =>
-				this.sendMethod.estimateGas(options),
-			(error) => error?.message === FAILED_TO_FETCH_ERROR)
+			try {
+				return await conditionalRetry(5, 3000, () =>
+					this.sendMethod.estimateGas(options),
+				(error) => error?.message === FAILED_TO_FETCH_ERROR)
+			} catch (e: any) {
+				//Try to call estimateGas with reserve node
+				if (e?.message?.toLowerCase().includes(OUT_OF_GAS_ERROR)) {
+					const method = await this.getMethodWithReserveNode()
+					if (method) {
+						const gas = await conditionalRetry(5, 3000, () =>
+							method.estimateGas(options),
+						(error) => error?.message === FAILED_TO_FETCH_ERROR)
+						if (gas !== undefined) {
+							return gas
+						}
+					}
+				}
+				throw e
+			}
 		} catch (error) {
 			let callInfo = null, data = null, chainId = undefined
 			try {
@@ -246,13 +287,34 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		let gasOptions: Web3EthereumGasOptions | undefined
 		try {
 			gasOptions = this.getGasOptions(options)
-			return await conditionalRetry(5, 3000, () =>
-				this.sendMethod.call({
-					from: this.config.from,
-					...gasOptions,
-				}),
-			(error) => error?.message === FAILED_TO_FETCH_ERROR
-			)
+			console.log("before call")
+			try {
+				return await conditionalRetry(5, 3000, () =>
+					this.sendMethod.call({
+						from: this.config.from,
+						...gasOptions,
+					}),
+				(error) => error?.message === FAILED_TO_FETCH_ERROR
+				)
+			} catch (e: any) {
+				console.log("call err", e)
+				if (e?.message?.toLowerCase().includes(OUT_OF_GAS_ERROR)) {
+					const method = await this.getMethodWithReserveNode()
+					console.log("call method", method)
+					if (method) {
+						const gas = await conditionalRetry(5, 3000, () =>
+							method.call({
+								from: this.config.from,
+								...gasOptions,
+							}),
+						(error) => error?.message === FAILED_TO_FETCH_ERROR)
+						if (gas !== undefined) {
+							return gas
+						}
+					}
+				}
+				throw e
+			}
 		} catch (error) {
 			let info = null
 			let data = null
@@ -447,4 +509,18 @@ function getProvidersData(config: Web3EthereumConfig) {
 export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 	if (web3) return getDappType(web3.currentProvider) || DappType.Unknown
 	return DappType.Unknown
+}
+
+function getMethodWithNewWeb3Node(
+	nodeUrl: string,
+	callOptions: { contract: Contract, methodName: string, args: any[]}
+): ContractSendMethod {
+	const web3 = new Web3(new Web3.providers.HttpProvider(nodeUrl))
+	console.log("json interface", callOptions.contract.options.jsonInterface)
+	console.log("address", callOptions.contract.options.address)
+	const updatedContract = new web3.eth.Contract(
+		callOptions.contract.options.jsonInterface,
+		callOptions.contract.options.address
+	)
+	return updatedContract.methods[callOptions.methodName](...callOptions.args)
 }

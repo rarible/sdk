@@ -143,6 +143,7 @@ export const COMMON_INFO_MESSAGES = [
 	"發生內部錯誤",
 ].map((msg) => msg.toLowerCase())
 
+export const OUT_OF_GAS_ERROR = "returned values aren't valid, did it run out of gas"
 const shortCancelMessages = ["cancel", "canceled", "cancelled", "rejected"]
 
 export function isCancelCode(code?: unknown) {

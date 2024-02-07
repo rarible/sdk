@@ -172,11 +172,7 @@ export class EthereumBid {
 			}
 		}
 
-		if (this.config?.useDataV3) {
-			return this.bidDataV3(prepare)
-		} else {
-			return this.bidDataV2(prepare)
-		}
+		return this.bidDataV2(prepare)
 	}
 
 	async bidDataV2(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
@@ -244,86 +240,6 @@ export class EthereumBid {
 			payoutsSupport: PayoutsSupport.MULTIPLE,
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
-			multiple: collection.type === "ERC1155",
-			maxAmount: item ? item.supply : null,
-			baseFee: await this.sdk.order.getBaseOrderFee(),
-			getConvertableValue: this.getConvertableValue.bind(this, blockchain),
-			supportsExpirationDate: true,
-			submit,
-		}
-	}
-
-	async bidDataV3(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		const {
-			ethAssetType,
-			item,
-			contract,
-			blockchain,
-		} = await getTakeAssetType(this.apis, prepare)
-
-		const collection = await this.apis.collection.getCollectionById({
-			collection: contract,
-		})
-
-		const bidAction = this.sdk.order.bid
-			.before(async (request: OrderCommon.OrderRequest) => {
-				await checkWalletBlockchain(this.wallet, blockchain)
-				validateOrderDataV3Request(request, { shouldProvideMaxFeesBasePoint: false })
-
-				const expirationDate = request.expirationDate
-					? convertDateToTimestamp(request.expirationDate)
-					: getDefaultExpirationDateTimestamp()
-				const currencyAssetType = getCurrencyAssetType(request.currency)
-
-				const payouts = common.toEthereumParts(request.payouts)
-				const originFees = common.toEthereumParts(request.originFees)
-
-				return {
-					type: "DATA_V3_BUY",
-					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					takeAssetType: ethAssetType,
-					amount: getOrderAmount(request.amount, collection),
-					priceDecimal: request.price,
-					payout: payouts[0],
-					originFeeFirst: originFees[0],
-					originFeeSecond: originFees[1],
-					end: expirationDate,
-				}
-			})
-			.after(async (res) => {
-				await res.approveTx?.wait()
-				return common.convertEthereumOrderHash(res.order.hash, blockchain)
-			})
-
-		const submit = Action.create({
-			id: "convert" as const,
-			run: async (request: OrderCommon.OrderRequest) => {
-				await checkWalletBlockchain(this.wallet, blockchain)
-				checkPayouts(request.payouts)
-				const wrappedAddress = await this.sdk.balances.getWethContractAddress()
-				const currency = getCurrencyAssetType(request.currency)
-				if (blockchain !== Blockchain.MANTLE && currency["@type"] === "ERC20"
-          && compareCaseInsensitive(convertToEthereumAddress(currency.contract), wrappedAddress)) {
-					const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
-					const quantity = getOrderAmount(request.amount, collection)
-					const value = await this.getConvertableValueCommon(
-						currency,
-						request.price,
-						quantity,
-						feeBp,
-						blockchain
-					)
-					await this.convertCurrency(value)
-				}
-				return request
-			},
-		}).thenAction(bidAction)
-
-		return {
-			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
-			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(blockchain, true),
 			multiple: collection.type === "ERC1155",
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
