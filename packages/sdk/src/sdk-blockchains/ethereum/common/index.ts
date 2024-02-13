@@ -19,7 +19,7 @@ import type {
 	ItemId,
 	Order,
 	OrderData,
-	OrderId,
+	OrderId, UnionContractAddress,
 } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
@@ -63,6 +63,7 @@ import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/Seapo
 import { SudoSwapCurveType } from "@rarible/ethereum-api-client/build/models/SudoSwapCurveType"
 import { SudoSwapPoolType } from "@rarible/ethereum-api-client/build/models/SudoSwapPoolType"
 import { ETHER_IN_WEI } from "@rarible/protocol-ethereum-sdk/build/common"
+import type { BigNumber } from "@rarible/types"
 import { convertDateToTimestamp } from "../../../common/get-expiration-date"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
@@ -86,11 +87,30 @@ export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 }
 
 export function convertToEthereumAsset(asset: Asset): EthereumAsset {
+	let value: BigNumber
+	if (asset.type["@type"] === "ETH") {
+		value = toBigNumber(toBn(asset.value).multipliedBy(ETHER_IN_WEI).toString())
+	} else if(asset.type["@type"] === "ERC20") {
+		const decimals = getErc20Decimals(asset.type.contract)
+		const multiplier = toBn(10).pow(decimals)
+		value = toBigNumber(toBn(asset.value).multipliedBy(multiplier).toString())
+	} else {
+		value = asset.value
+	}
+
 	return {
 		assetType: convertToEthereumAssetType(asset.type),
-		value: asset.type["@type"] === "ETH" || asset.type["@type"] === "ERC20"
-			? toBn(asset.value).multipliedBy(ETHER_IN_WEI).toString()
-			: asset.value,
+		value,
+	}
+}
+
+function getErc20Decimals(contract: UnionContractAddress): number {
+	if ("POLYGON:0x2791bca1f2de4661ed88a30c99a7a9449aa84174" === contract) { // POLYGON USDC
+		return 6
+	} else if ("ETHEREUM:0x2f3a40a3db8a7e3d09b0adfefbce4f6f81927557" === contract) { // GOERLI USDC
+		return 6
+	} else {
+		return 18
 	}
 }
 
