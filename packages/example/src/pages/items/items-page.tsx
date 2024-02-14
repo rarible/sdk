@@ -1,10 +1,10 @@
-import React, { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import type { Blockchain, Items } from "@rarible/api-client"
 import { Alert, AlertTitle, Box, CircularProgress } from "@mui/material"
 import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
+import { useSdkContext } from "../../components/connector/sdk"
 import { ItemsList } from "./items/items-list"
 import { GetItemsComment } from "./comments/getitems-comment"
 
@@ -47,7 +47,7 @@ function useFetchItems(sdk?: IRaribleSdk, walletAddress?: string, blockchain?: s
 }
 
 export function ItemsPage() {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	if (connection.state.status !== "connected") {
 		return null
 	}

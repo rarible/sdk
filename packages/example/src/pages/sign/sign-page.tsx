@@ -1,16 +1,16 @@
-import React, { useContext, useState } from "react"
+import { useState } from "react"
 import type { WalletType } from "@rarible/sdk-wallet"
 import { LoadingButton } from "@mui/lab"
 import { Alert, Box, TextField, Typography } from "@mui/material"
 import { faCheck, faExclamationCircle, faFileSignature } from "@fortawesome/free-solid-svg-icons"
 import type { UserSignature } from "@rarible/sdk-wallet/build/domain"
 import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
 import { Icon } from "../../components/common/icon"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
+import { useSdkContext } from "../../components/connector/sdk"
 import { SignMessageComment } from "./comments/signmessage-comment"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
@@ -18,8 +18,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 }
 
 export function SignPage() {
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 	const [input, setInput] = useState("")
 	const [isSigning, setSigning] = useState(false)
 	const [error, setError] = useState(undefined)

@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import type { PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
@@ -8,9 +7,9 @@ import { Blockchain } from "@rarible/api-client"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
+import { useSdkContext } from "../../components/connector/sdk"
+import { useEnvironmentContext } from "../../components/connector/env"
 
 interface IMintPrepareFormProps {
 	disabled?: boolean,
@@ -18,8 +17,8 @@ interface IMintPrepareFormProps {
 }
 
 export function MintPrepareForm({ disabled, onComplete }: IMintPrepareFormProps) {
-	const connection = useContext(ConnectorContext)
-	const { environment } = useContext(EnvironmentContext)
+	const connection = useSdkContext()
+	const { environment } = useEnvironmentContext()
 
 	const form = useForm()
 	const { handleSubmit } = form

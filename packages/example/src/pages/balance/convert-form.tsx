@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Grid, MenuItem } from "@mui/material"
 import type { EthEthereumAssetType, EthErc20AssetType } from "@rarible/api-client"
@@ -11,23 +11,22 @@ import type { IRaribleSdk } from "@rarible/sdk"
 import type { UnionAddress } from "@rarible/types/build/union-address"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { FormSubmit } from "../../components/common/form/form-submit"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
 import { FormSelect } from "../../components/common/form/form-select"
 import { useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { RequestResult } from "../../components/common/request-result"
 import { TransactionInfo } from "../../components/common/transaction-info"
+import { useSdkContext } from "../../components/connector/sdk"
+import { useEnvironmentContext } from "../../components/connector/env"
 import { useGetBalance } from "./hooks/use-get-balance"
 
 export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAddress: UnionAddress }) {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
+	const { environment } = useEnvironmentContext()
 	const form = useForm()
 	const { handleSubmit } = form
-	const { environment } = useContext(EnvironmentContext)
 
-	const blockchain = connection.state.status === "connected" ? connection.state.connection.blockchain : connection.sdk?.wallet?.walletType
-
+	const blockchain = connection.state.status === "connected" ? connection.state.connection.blockchain : connection.sdk.wallet?.walletType
 	const wethAddress = getWethAddress(blockchain, environment)
 
 	const nativeToken = blockchain === "POLYGON" ? "MATIC" : "ETH"

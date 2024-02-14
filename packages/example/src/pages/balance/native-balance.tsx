@@ -1,11 +1,10 @@
-import React, { useContext } from "react"
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { CircularProgress } from "@mui/material"
 import type { UnionAddress } from "@rarible/types/build/union-address"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useEnvironmentContext } from "../../components/connector/env"
+import { useSdkContext } from "../../components/connector/sdk"
 import { ConvertForm, isAvailableWethConvert } from "./convert-form"
 import { useGetBalance } from "./hooks/use-get-balance"
 import { getCurrenciesForBlockchain } from "./utils/currencies"
@@ -17,8 +16,8 @@ interface INativeBalanceProps {
 }
 
 export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProps) {
-	const { environment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
+	const { environment } = useEnvironmentContext()
+	const connection = useSdkContext()
 	const currencies = getCurrenciesForBlockchain(wallet.walletType, environment, connection)
 	const { balance, fetching, error } = useGetBalance(
 		sdk,
@@ -30,13 +29,9 @@ export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProp
 	const isAvailableConvert = !isMantleNetwork && isAvailableWethConvert(wallet.walletType, environment)
 
 	const content = () => {
-		if (fetching) {
-			return <CircularProgress size={14}/>
-		} else if (error) {
-			return <b>{error.message}</b>
-		} else {
-			return <>{balance}</>
-		}
+		if (fetching) return <CircularProgress size={14}/>
+		if (error) return <b>{error.message}</b>
+		return <>{balance}</>
 	}
 
 	return (
@@ -44,9 +39,7 @@ export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProp
 			<div style={{ marginBottom: 20 }}>
 				Native Balance: {content()}
 			</div>
-			{
-				isAvailableConvert && <ConvertForm sdk={sdk} walletAddress={walletAddress} />
-			}
+			{isAvailableConvert ? <ConvertForm sdk={sdk} walletAddress={walletAddress} /> : null}
 		</>
 
 	)

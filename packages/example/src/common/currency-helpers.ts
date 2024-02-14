@@ -52,50 +52,32 @@ export type CurrencyOption = {
 export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"], contract: ContractAddress): RequestCurrency {
 	switch (blockchain) {
 		case Blockchain.ETHEREUM:
-			if (type === "NATIVE") {
-				return getEthNative(blockchain)
-			} else if (type === "TOKEN") {
-				return getERC20(contract)
-			}
+		case Blockchain.POLYGON: {
+			if (type === "NATIVE") return getEthNative(blockchain)
+			if (type === "TOKEN") return getERC20(contract)
 			throw new Error("Unsupported option subtype")
-		case Blockchain.POLYGON:
-			if (type === "NATIVE") {
-				return getEthNative(blockchain)
-			} else if (type === "TOKEN") {
-				return getERC20(contract)
-			}
-			throw new Error("Unsupported option subtype")
+		}
+		// @todo it must support native tokens as well
 		case Blockchain.MANTLE:
 		case Blockchain.ARBITRUM:
 		case Blockchain.ZKSYNC:
 		case Blockchain.CHILIZ:
+		case Blockchain.ASTARZKEVM:
 		case Blockchain.RARI:
-			if (type === "TOKEN") {
-				return getERC20(contract)
-			}
+			if (type === "TOKEN") return getERC20(contract)
 			throw new Error("Unsupported option subtype")
 		case Blockchain.IMMUTABLEX:
-			if (type === "NATIVE") {
-				return getEthNative(blockchain)
-			}
+			if (type === "NATIVE") return getEthNative(blockchain)
 			throw new Error("Unsupported option subtype")
 		case Blockchain.TEZOS:
-			if (type === "NATIVE") {
-				return tezosNative
-			}
+			if (type === "NATIVE") return tezosNative
 			throw new Error("Unsupported option subtype")
 		case Blockchain.SOLANA:
-			if (type === "NATIVE") {
-				return solanaNative
-			}
+			if (type === "NATIVE") return solanaNative
 			throw new Error("Unsupported blockchain or asset type")
 		case Blockchain.FLOW:
-			if (type === "NATIVE") {
-				return flowNative
-			}
-			if (type === "TOKEN" && contract === flowUSDC.contract) {
-				return flowUSDC
-			}
+			if (type === "NATIVE") return flowNative
+			if (type === "TOKEN" && contract === flowUSDC.contract) return flowUSDC
 			throw new Error("Unsupported currency subtype")
 		default:
 			throw new Error("Unsupported blockchain")

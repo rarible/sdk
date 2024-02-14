@@ -1,14 +1,7 @@
 import { NetworkType as TezosNetwork } from "@airgap/beacon-sdk"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import type {
-	ConnectionProvider,
-	IConnectorStateProvider,
-} from "@rarible/connector"
-import {
-	Connector,
-	DappType,
-	InjectedWeb3ConnectionProvider,
-} from "@rarible/connector"
+import type { ConnectionProvider, IConnectorStateProvider } from "@rarible/connector"
+import { Connector, DappType, InjectedWeb3ConnectionProvider } from "@rarible/connector"
 import { FclConnectionProvider } from "@rarible/connector-fcl"
 import { NFIDConnectionProvider } from "@rarible/connector-nfid"
 import { BeaconConnectionProvider } from "@rarible/connector-beacon"
@@ -20,47 +13,26 @@ import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
-import {
-	mapEthereumWallet,
-	mapFlowWallet,
-	mapImmutableXWallet,
-	mapSolanaWallet,
-	mapTezosWallet,
-} from "@rarible/connector-helper"
+import { mapEthereumWallet, mapFlowWallet, mapImmutableXWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
-// import { FortmaticConnectionProvider } from "@rarible/connector-fortmatic"
-// import { PortisConnectionProvider } from "@rarible/connector-portis"
+import type { ImxEnv } from "@rarible/immutable-wallet"
 
 export const ethereumRpcMap: Record<number, string> = {
-	1: "https://node-mainnet.rarible.com",
-	3: "https://node-ropsten.rarible.com",
-	4: "https://node-rinkeby.rarible.com",
-	5: "https://goerli-ethereum-node.rarible.com",
-	17: "https://node-e2e.rarible.com",
-	137: "https://polygon-rpc.com",
-	80001: "https://rpc-mumbai.matic.today",
+	1: "https://rarible.com/nodes/ethereum-node",
+	5: "https://testnet.rarible.com/nodes/goerli-ethereum-node",
 }
 
 const ethereumNetworkMap: Record<number, string> = {
 	1: "mainnet",
-	3: "ropsten",
-	4: "rinkeby",
 	5: "goerli",
-	17: "e2e",
-	137: "polygon",
-	80001: "mumbai",
 }
 
-function environmentToEthereumChainId(environment: RaribleSdkEnvironment) {
-	switch (environment) {
-		case "prod":
-			return 1
-		case "testnet":
-		default:
-			return 5
-	}
+const environmentToEthereumChainId: Record<RaribleSdkEnvironment, number> = {
+	prod: 1,
+	testnet: 5,
+	development: 5,
 }
 
 function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {
@@ -102,29 +74,26 @@ function environmentToTezosNetwork(environment: RaribleSdkEnvironment) {
 	}
 }
 
-function environmentToImmutableXEnv(environment: RaribleSdkEnvironment) {
-	switch (environment) {
-		case "prod":
-			return "prod"
-		default:
-			return "testnet"
-	}
+
+const environmentToImmutableXNetwork: Record<RaribleSdkEnvironment, ImxEnv> = {
+	prod: "prod",
+	testnet: "testnet",
+	development: "testnet"
 }
 
+const LOCALSTORAGE_STATE_KEY = "saved_provider"
 const state: IConnectorStateProvider = {
 	async getValue(): Promise<string | undefined> {
-		const value = localStorage.getItem("saved_provider")
-		return value ? value : undefined
+		return localStorage.getItem(LOCALSTORAGE_STATE_KEY) || undefined
 	},
 	async setValue(value: string | undefined): Promise<void> {
-		localStorage.setItem("saved_provider", value || "")
+		if (value) return localStorage.setItem(LOCALSTORAGE_STATE_KEY, value)
+		return localStorage.removeItem(LOCALSTORAGE_STATE_KEY)
 	},
 }
 
 export function getConnector(environment: RaribleSdkEnvironment) {
-	const ethChainId = environmentToEthereumChainId(environment)
-	const ethNetworkName = ethereumNetworkMap[ethChainId]
-	const isEthNetwork = ["mainnet", "goerli"].includes(ethNetworkName)
+	const ethChainId = environmentToEthereumChainId[environment]
 	const flowNetwork = environmentToFlowNetwork(environment)
 	const tezosNetwork = environmentToTezosNetwork(environment)
 
@@ -140,14 +109,13 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		})
 	)
 
-	const beacon: ConnectionProvider<"beacon", IWalletAndAddress> =
-    mapTezosWallet(
-    	new BeaconConnectionProvider({
-    		appName: "Rarible Test",
-    		accessNode: tezosNetwork.accessNode,
-    		network: tezosNetwork.network,
-    	})
-    )
+	const beacon: ConnectionProvider<"beacon", IWalletAndAddress> = mapTezosWallet(
+		new BeaconConnectionProvider({
+			appName: "Rarible Test",
+			accessNode: tezosNetwork.accessNode,
+			network: tezosNetwork.network,
+		})
+	)
 
 	const fcl = mapFlowWallet(
 		new FclConnectionProvider({
@@ -175,106 +143,94 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 					},
 				},
 			},
-		}) as any
-	) as any
+		})
+	)
 
-	let torus = undefined
-	if (isEthNetwork) {
-		torus = mapEthereumWallet(
-			new TorusConnectionProvider({
-				network: {
-					host: ethNetworkName,
-				},
-			})
-		)
-	}
+	const torus = mapEthereumWallet(
+		new TorusConnectionProvider({
+			network: {
+				host: ethereumNetworkMap[ethChainId],
+			},
+		})
+	)
 
-	let firebase = undefined
-	if (isEthNetwork) {
-		firebase = mapEthereumWallet(
-			new FirebaseConnectionProvider(
-				"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
-				{
-					chainNamespace: "eip155",
-					chainId: "0x13881",
-					rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-					displayName: "Polygon Mumbai Testnet",
-					blockExplorer: "https://mumbai.polygonscan.com/",
-					ticker: "MATIC",
-					tickerName: "Matic",
-				},
-				{
-					apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
-					authDomain: "dogami-auth.firebaseapp.com",
-					projectId: "dogami-auth",
-					storageBucket: "dogami-auth.appspot.com",
-					messagingSenderId: "741349520212",
-					appId: "1:741349520212:web:8acb236f44ddd005adcec1",
-				},
-				"testnet",
-				"http://localhost:3000",
-				"firebase-dog-dev"
-			)
+	const firebase = mapEthereumWallet(
+		new FirebaseConnectionProvider(
+			"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
+			{
+				chainNamespace: "eip155",
+				chainId: "0x13881",
+				rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+				displayName: "Polygon Mumbai Testnet",
+				blockExplorer: "https://mumbai.polygonscan.com/",
+				ticker: "MATIC",
+				tickerName: "Matic",
+			},
+			{
+				apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
+				authDomain: "dogami-auth.firebaseapp.com",
+				projectId: "dogami-auth",
+				storageBucket: "dogami-auth.appspot.com",
+				messagingSenderId: "741349520212",
+				appId: "1:741349520212:web:8acb236f44ddd005adcec1",
+			},
+			"testnet",
+			"http://localhost:3000",
+			"firebase-dog-dev"
 		)
-	}
+	)
 
-	let firebaseApple = undefined
-	if (isEthNetwork) {
-		firebaseApple = mapEthereumWallet(
-			new FirebaseAppleConnectionProvider(
-				"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
-				{
-					chainNamespace: "eip155",
-					chainId: "0x13881",
-					rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-					displayName: "Polygon Mumbai Testnet",
-					blockExplorer: "https://mumbai.polygonscan.com/",
-					ticker: "MATIC",
-					tickerName: "Matic",
-				},
-				{
-					apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
-					authDomain: "dogami-auth.firebaseapp.com",
-					projectId: "dogami-auth",
-					storageBucket: "dogami-auth.appspot.com",
-					messagingSenderId: "741349520212",
-					appId: "1:741349520212:web:8acb236f44ddd005adcec1",
-				},
-				"testnet",
-				"http://localhost:3000",
-				"firebase-dog-dev"
-			)
+	const firebaseApple = mapEthereumWallet(
+		new FirebaseAppleConnectionProvider(
+			"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
+			{
+				chainNamespace: "eip155",
+				chainId: "0x13881",
+				rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+				displayName: "Polygon Mumbai Testnet",
+				blockExplorer: "https://mumbai.polygonscan.com/",
+				ticker: "MATIC",
+				tickerName: "Matic",
+			},
+			{
+				apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
+				authDomain: "dogami-auth.firebaseapp.com",
+				projectId: "dogami-auth",
+				storageBucket: "dogami-auth.appspot.com",
+				messagingSenderId: "741349520212",
+				appId: "1:741349520212:web:8acb236f44ddd005adcec1",
+			},
+			"testnet",
+			"http://localhost:3000",
+			"firebase-dog-dev"
 		)
-	}
+	)
 
-	let firebaseEmail = undefined
-	if (isEthNetwork) {
-		firebaseEmail = mapEthereumWallet(
-			new FirebaseEmailConnectionProvider(
-				"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
-				{
-					chainNamespace: "eip155",
-					chainId: "0x13881",
-					rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
-					displayName: "Polygon Mumbai Testnet",
-					blockExplorer: "https://mumbai.polygonscan.com/",
-					ticker: "MATIC",
-					tickerName: "Matic",
-				},
-				{
-					apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
-					authDomain: "dogami-auth.firebaseapp.com",
-					projectId: "dogami-auth",
-					storageBucket: "dogami-auth.appspot.com",
-					messagingSenderId: "741349520212",
-					appId: "1:741349520212:web:8acb236f44ddd005adcec1",
-				},
-				"testnet",
-				"http://localhost:3000",
-				"firebase-dog-dev"
-			)
+	const firebaseEmail = mapEthereumWallet(
+		new FirebaseEmailConnectionProvider(
+			"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
+			{
+				chainNamespace: "eip155",
+				chainId: "0x13881",
+				rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
+				displayName: "Polygon Mumbai Testnet",
+				blockExplorer: "https://mumbai.polygonscan.com/",
+				ticker: "MATIC",
+				tickerName: "Matic",
+			},
+			{
+				apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
+				authDomain: "dogami-auth.firebaseapp.com",
+				projectId: "dogami-auth",
+				storageBucket: "dogami-auth.appspot.com",
+				messagingSenderId: "741349520212",
+				appId: "1:741349520212:web:8acb236f44ddd005adcec1",
+			},
+			"testnet",
+			"http://localhost:3000",
+			"firebase-dog-dev"
 		)
-	}
+	)
 
 	const walletLink = mapEthereumWallet(
 		new WalletLinkConnectionProvider(
@@ -332,15 +288,11 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 
 	const imxConnector = mapImmutableXWallet(
 		new ImmutableXLinkConnectionProvider({
-			env: environmentToImmutableXEnv(environment),
+			env: environmentToImmutableXNetwork[environment],
 		})
 	)
 
-	// Providers required secrets
-	// const fortmatic = mapEthereumWallet(new FortmaticConnectionProvider({ apiKey: "ENTER", ethNetwork: { chainId: 4, rpcUrl: "https://node-rinkeby.rarible.com" } }))
-	// const portis = mapEthereumWallet(new PortisConnectionProvider({ appId: "ENTER", network: "rinkeby" }))
-
-	let connector = Connector.create(injected, state)
+	return Connector.create(injected, state)
 		.add(nfid)
 		.add(walletLink)
 		.add(beacon)
@@ -350,24 +302,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(solflareConnect)
 		.add(imxConnector)
 		.add(magic)
-	// .add(portis)
-	// .add(fortmatic)
-
-	if (torus) {
-		connector = connector.add(torus)
-	}
-
-	if (firebase) {
-		connector = connector.add(firebase)
-	}
-
-	if (firebaseApple) {
-		connector = connector.add(firebaseApple)
-	}
-
-	if(firebaseEmail) {
-		connector = connector.add(firebaseEmail)
-	}
-
-	return connector
+		.add(firebaseApple)
+		.add(torus)
+		.add(firebase)
+		.add(firebaseEmail)
 }
+
+export type ConnectorInstance = ReturnType<typeof getConnector>

@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { Box, Typography } from "@mui/material"
 import type { WalletType } from "@rarible/sdk-wallet"
 import { useParams } from "react-router-dom"
@@ -7,9 +6,9 @@ import { CommentedBlock } from "../../components/common/commented-block"
 import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
+import { useSdkContext } from "../../components/connector/sdk"
 import { SellUpdateComment } from "./comments/sell-update-comment"
 import { SellUpdateForm } from "./sell-update-form"
 import { SellUpdatePrepareForm } from "./sell-update-prepare-form"
@@ -20,8 +19,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 
 export function SellUpdatePage() {
 	const params = useParams()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 
 	return (
 		<Page header="Change Price">
