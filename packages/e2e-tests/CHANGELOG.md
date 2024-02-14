@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+
+
+
+
+
 ## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

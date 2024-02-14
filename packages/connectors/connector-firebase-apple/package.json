@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-firebase-apple",
-  "version": "0.13.68",
+  "version": "0.13.68-fix.5",
   "homepage": "",
   "license": "ISC",
   "publishConfig": {
@@ -23,7 +23,7 @@
   "dependencies": {
     "@firebase/app": "^0.9.22",
     "@firebase/auth": "^1.3.2",
-    "@rarible/connector": "^0.13.68",
+    "@rarible/connector": "^0.13.68-fix.5",
     "@web3auth/base-provider": "7.2.0",
     "@web3auth/ethereum-provider": "7.2.0",
     "@web3auth/no-modal": "7.2.0",

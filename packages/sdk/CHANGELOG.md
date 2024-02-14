@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Bug Fixes
+
+* ad-hoc fix for selected erc-20 tokens decimals ([eef6cd9](https://github.com/rarible/sdk/commit/eef6cd9907f2ccb6af42c5bb34a239ffccbcbb41))
+* correct erc20 value convertion with decimals ([91a6141](https://github.com/rarible/sdk/commit/91a61410b75bba8d6a4727c8d808d5c141751e9b))
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+
+
+
+
+
 ## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
 
 **Note:** Version bump only for package @rarible/sdk

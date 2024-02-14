@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Features
+
+* cleanup a little example app ([2c690ff](https://github.com/rarible/sdk/commit/2c690ffec8b2b91cede62ae4c1d071cc4f21e15d))
+
+
+
+
+
 ## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
 
 **Note:** Version bump only for package example
