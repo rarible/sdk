@@ -18,6 +18,7 @@ import { lightlinkConfig } from "./lightlink"
 import { testnetLightlinkConfig } from "./testnet-lightlink"
 import { rariTestnetConfig } from "./testnet-rari"
 import { rariMainnetConfig } from "./rari"
+import { zkatanaConfig } from "./zkatana"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -38,6 +39,7 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-lightlink": testnetLightlinkConfig,
 	"testnet-rari": rariTestnetConfig,
 	rari: rariMainnetConfig,
+	zkatana: zkatanaConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
@@ -45,13 +47,9 @@ export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
 }
 
 export type GetConfigByChainId = () => Promise<EthereumConfig>
+
 export function getNetworkConfigByChainId(chainId: number): EthereumConfig {
-	const config = Object.values(configDictionary)
-		.find((config: EthereumConfig) => {
-			return config.chainId === chainId
-		})
-	if (!config) {
-		throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
-	}
+	const config = Object.values(configDictionary).find((x: EthereumConfig) => x.chainId === chainId)
+	if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
 	return config
 }
