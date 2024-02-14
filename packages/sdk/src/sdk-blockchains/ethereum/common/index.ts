@@ -19,14 +19,14 @@ import type {
 	ItemId,
 	Order,
 	OrderData,
-	OrderId, UnionContractAddress,
+	OrderId,
 } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { AssetType as EthereumAssetType, Asset as EthereumAsset, Part } from "@rarible/ethereum-api-client"
-import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type { EthereumWallet } from "@rarible/sdk-wallet/build"
@@ -62,14 +62,18 @@ import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/Seap
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import { SudoSwapCurveType } from "@rarible/ethereum-api-client/build/models/SudoSwapCurveType"
 import { SudoSwapPoolType } from "@rarible/ethereum-api-client/build/models/SudoSwapPoolType"
-import { ETHER_IN_WEI } from "@rarible/protocol-ethereum-sdk/build/common"
-import type { BigNumber } from "@rarible/types"
+import { getPrice } from "@rarible/protocol-ethereum-sdk/build/common/get-price"
 import { convertDateToTimestamp } from "../../../common/get-expiration-date"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
 import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
 import type { OrderRequest, UnionPart } from "../../../types/order/common"
-export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
+
+export type CreateEthereumCollectionResponse = {
+	tx: EthereumTransaction
+	address: Address
+}
+
 export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 	switch (currency["@type"]) {
 		case "ERC20":
@@ -86,31 +90,15 @@ export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 	}
 }
 
-export function convertToEthereumAsset(asset: Asset): EthereumAsset {
-	let value: BigNumber
-	if (asset.type["@type"] === "ETH") {
-		value = toBigNumber(toBn(asset.value).multipliedBy(ETHER_IN_WEI).toString())
-	} else if(asset.type["@type"] === "ERC20") {
-		const decimals = getErc20Decimals(asset.type.contract)
-		const multiplier = toBn(10).pow(decimals)
-		value = toBigNumber(toBn(asset.value).multipliedBy(multiplier).toString())
-	} else {
-		value = asset.value
+export async function convertToEthereumAsset(ethereum: Ethereum, asset: Asset): Promise<EthereumAsset> {
+	const assetType = convertToEthereumAssetType(asset.type)
+	let value = toBn(asset.value)
+	if (asset.type["@type"] === "ERC20" || asset.type["@type"] === "ETH") {
+		value = await getPrice(ethereum, assetType, value)
 	}
-
 	return {
-		assetType: convertToEthereumAssetType(asset.type),
-		value,
-	}
-}
-
-function getErc20Decimals(contract: UnionContractAddress): number {
-	if ("POLYGON:0x2791bca1f2de4661ed88a30c99a7a9449aa84174" === contract) { // POLYGON USDC
-		return 6
-	} else if ("ETHEREUM:0x2f3a40a3db8a7e3d09b0adfefbce4f6f81927557" === contract) { // GOERLI USDC
-		return 6
-	} else {
-		return 18
+		assetType,
+		value: toBigNumber(value.toString()),
 	}
 }
 
@@ -366,13 +354,13 @@ export function getEthOrderType(data: OrderData): SimpleOrder["type"] {
 	}
 }
 
-export function getEthOrder(order: Order): SimpleOrder {
+export async function getEthOrder(ethereum: Ethereum, order: Order): Promise<SimpleOrder> {
 	return {
 		hash: toWord(convertOrderIdToEthereumHash(order.id)),
 		type: getEthOrderType(order.data),
 		maker: convertToEthereumAddress(order.maker),
-		make: convertToEthereumAsset(order.make),
-		take: convertToEthereumAsset(order.take),
+		make: await convertToEthereumAsset(ethereum, order.make),
+		take: await convertToEthereumAsset(ethereum, order.take),
 		taker: order.taker && convertToEthereumAddress(order.taker),
 		salt: toWord(order.salt),
 		start: order.startedAt && convertDateToTimestamp(new Date(order.startedAt)),

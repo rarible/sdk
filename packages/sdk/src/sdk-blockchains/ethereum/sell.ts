@@ -177,12 +177,15 @@ export class EthereumSell {
 			})
 			.after(order => common.convertEthereumOrderHash(order.hash, blockchain))
 
+		const { ethereum } = common.assertWallet(this.wallet)
+		const ethOrder = await getEthOrder(ethereum, order)
+
 		return {
 			originFeeSupport: getOriginFeeSupport(order.data),
 			payoutsSupport: getPayoutsSupport(order.data),
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: common.getSupportedCurrencies(),
-			baseFee: await this.sdk.order.getBaseOrderFee(getEthOrder(order).type as "RARIBLE_V1" | "RARIBLE_V2"),
+			baseFee: await this.sdk.order.getBaseOrderFee(ethOrder.type as "RARIBLE_V1" | "RARIBLE_V2"),
 			submit: sellUpdateAction,
 			orderData: {
 				nftCollection: "contract" in order.make.type ? order.make.type.contract : undefined,

@@ -5,7 +5,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"
-import { getEthOrder, getWalletNetwork, isEVMBlockchain } from "./common"
+import { assertWallet, getEthOrder, getWalletNetwork, isEVMBlockchain } from "./common"
 
 export class EthereumCancel {
 	constructor(
@@ -27,9 +27,9 @@ export class EthereumCancel {
 		const order = await this.apis.order.getValidatedOrderById({
 			id: request.orderId,
 		})
-		const cancelTx = await this.sdk.order.cancel(
-			getEthOrder(order)
-		)
+		const { ethereum } = assertWallet(this.wallet)
+		const ethOrder = await getEthOrder(ethereum, order)
+		const cancelTx = await this.sdk.order.cancel(ethOrder)
 		return new BlockchainEthereumTransaction(cancelTx, await getWalletNetwork(this.wallet))
 	}
 }
