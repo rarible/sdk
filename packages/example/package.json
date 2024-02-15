@@ -71,7 +71,7 @@
   "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
     "serve-static": "serve ./build",
-    "build": "mv common.env .env && CI=false NODE_OPTIONS=--max-old-space-size=6096 SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
+    "build": "mv common.env .env && CI=false NODE_OPTIONS=\"--max-old-space-size=6096 --openssl-legacy-provider\" SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
     "eject": "SKIP_PREFLIGHT_CHECK=true react-app-rewired eject",
     "verify": "tsc --noEmit"
   },
