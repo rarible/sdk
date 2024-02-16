@@ -2,6 +2,30 @@
   "name": "example",
   "version": "0.13.68-fix.6",
   "private": true,
+  "scripts": {
+    "build": "mv common.env .env && yarn run build:raw",
+    "build:raw": "NODE_OPTIONS='--max-old-space-size=6096 --openssl-legacy-provider' SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
+    "eject": "SKIP_PREFLIGHT_CHECK=true react-app-rewired eject",
+    "serve-static": "serve ./build",
+    "start": "SKIP_PREFLIGHT_CHECK=true NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
+    "verify": "tsc --noEmit"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "resolutions": {
+    "//": "See https://github.com/facebook/create-react-app/issues/11773",
+    "react-error-overlay": "6.0.9"
+  },
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/plugin-proposal-logical-assignment-operators": "^7.20.7",
@@ -64,29 +88,5 @@
     "react-syntax-highlighter": "^15.4.5",
     "rxjs": "^6.6.7",
     "serve": "^14.2.1"
-  },
-  "resolutions": {
-    "//": "See https://github.com/facebook/create-react-app/issues/11773",
-    "react-error-overlay": "6.0.9"
-  },
-  "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true NODE_OPTIONS=--openssl-legacy-provider react-app-rewired start",
-    "serve-static": "serve ./build",
-    "build": "mv common.env .env && yarn run build:raw",
-    "build:raw": "NODE_OPTIONS='--max-old-space-size=6096 --openssl-legacy-provider' SKIP_PREFLIGHT_CHECK=true react-app-rewired build",
-    "eject": "SKIP_PREFLIGHT_CHECK=true react-app-rewired eject",
-    "verify": "tsc --noEmit"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
   }
 }

@@ -3,9 +3,6 @@
   "version": "0.13.68-fix.6",
   "homepage": "",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
@@ -26,7 +23,7 @@
     "@rarible/sdk": "^0.13.68-fix.6",
     "@rarible/sdk-wallet": "^0.13.68-fix.6",
     "@rarible/test-provider": "~0.5.4",
-    "@rarible/types": "~0.9.22",
+    "@rarible/types": "~0.9.23",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.2",
     "web3": ">=1.5.0 <1.9.0",
@@ -43,5 +40,8 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

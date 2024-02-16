@@ -1,9 +1,9 @@
 {
   "name": "@rarible/sdk-e2e-tests",
   "version": "0.13.68-fix.6",
+  "private": true,
   "homepage": "",
   "license": "ISC",
-  "private": true,
   "scripts": {
     "test": "echo run e2e-test to run e2e-tests",
     "e2e-tests": "jest --runInBand",
@@ -20,7 +20,7 @@
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.6",
     "@rarible/flow-test-common": "~0.5.75-fix.1",
     "@rarible/sdk-wallet": "^0.13.68-fix.6",
-    "@rarible/types": "~0.9.22",
+    "@rarible/types": "~0.9.23",
     "bignumber.js": "^9.0.1",
     "jest-jasmine2": "^29.4.1"
   },
