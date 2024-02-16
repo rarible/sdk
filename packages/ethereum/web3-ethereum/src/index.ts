@@ -357,16 +357,15 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 	}
 
 	private getGasOptions(options: EthereumProvider.EthereumSendOptions) {
-		const gasOptions: Web3EthereumGasOptions = {
-			// If we won't setup null here explicitly sometimes MetaMask
-			// interpret this option as 'suggested by website' in their UI
-			// @see https://stackoverflow.com/questions/68926306/how-to-avoid-this-gas-fee-has-been-suggested-by-message-in-metamask-using-web3
-			gasPrice: null as unknown as Web3EthereumGasOptions["gasPrice"],
+		const gasOptions: Web3EthereumGasOptions = {}
+		const gasPrice = options.gasPrice?.toString() ?? this.config.gasPrice
+		if (typeof gasPrice === "string" || typeof gasPrice === "number") {
+			gasOptions.gasPrice = gasPrice
 		}
-		const gasPrice = options.gasPrice?.toString() || this.config.gasPrice
-		if (typeof gasPrice !== "undefined") gasOptions.gasPrice = gasPrice
-		const gas = options.gas || this.config.gas
-		if (typeof gas !== "undefined") gasOptions.gas = gas
+		const gas = options.gas ?? this.config.gas
+		if (typeof gas === "number" || typeof gas === "string") {
+			gasOptions.gas = gas
+		}
 		return gasOptions
 	}
 

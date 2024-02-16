@@ -28347,7 +28347,7 @@ web3-core@1.7.3:
     web3-core-requestmanager "1.7.3"
     web3-utils "1.7.3"
 
-web3-core@1.8.2, "web3-core@>=1.5.0 <1.9.0":
+web3-core@1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/web3-core/-/web3-core-1.8.2.tgz#333e93d7872b1a36efe758ed8b89a7acbdd962c2"
   integrity sha512-DJTVEAYcNqxkqruJE+Rxp3CIv0y5AZMwPHQmOkz/cz+MM75SIzMTc0AUdXzGyTS8xMF8h3YWMQGgGEy8SBf1PQ==
@@ -28368,7 +28368,7 @@ web3-eth-abi@1.7.3:
     "@ethersproject/abi" "5.0.7"
     web3-utils "1.7.3"
 
-web3-eth-abi@1.8.2, "web3-eth-abi@>=1.5.0 <1.9.0":
+web3-eth-abi@1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/web3-eth-abi/-/web3-eth-abi-1.8.2.tgz#16e1e9be40e2527404f041a4745111211488f31a"
   integrity sha512-Om9g3kaRNjqiNPAgKwGT16y+ZwtBzRe4ZJFGjLiSs6v5I7TPNF+rRMWuKnR6jq0azQZDj6rblvKFMA49/k48Og==
@@ -28392,7 +28392,7 @@ web3-eth-accounts@1.8.2:
     web3-core-method "1.8.2"
     web3-utils "1.8.2"
 
-web3-eth-contract@1.8.2, "web3-eth-contract@>=1.5.0 <1.9.0":
+web3-eth-contract@1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/web3-eth-contract/-/web3-eth-contract-1.8.2.tgz#5388b7130923d2b790c09a420391a81312a867fb"
   integrity sha512-ID5A25tHTSBNwOPjiXSVzxruz006ULRIDbzWTYIFTp7NJ7vXu/kynKK2ag/ObuTqBpMbobP8nXcA9b5EDkIdQA==
@@ -28693,7 +28693,7 @@ web3-utils@1.7.3, web3-utils@^1.7.0:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-web3-utils@1.8.2, "web3-utils@>=1.5.0 <1.9.0":
+web3-utils@1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/web3-utils/-/web3-utils-1.8.2.tgz#c32dec5e9b955acbab220eefd7715bc540b75cc9"
   integrity sha512-v7j6xhfLQfY7xQDrUP0BKbaNrmZ2/+egbqP9q3KYmOiPpnvAfol+32slgL0WX/5n8VPvKCK5EZ1HGrAVICSToA==
@@ -28719,7 +28719,7 @@ web3-utils@^1.3.4:
     randombytes "^2.1.0"
     utf8 "3.0.0"
 
-"web3@>=1.5.0 <1.9.0":
+web3@1.8.2:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/web3/-/web3-1.8.2.tgz#95a4e5398fd0f01325264bf8e5e8cdc69a7afe86"
   integrity sha512-92h0GdEHW9wqDICQQKyG4foZBYi0OQkyg4CRml2F7XBl/NG+fu9o6J19kzfFXzSBoA4DnJXbyRgj/RHZv5LRiw==

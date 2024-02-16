@@ -65,7 +65,8 @@
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
     "e2e-tests": "sh ./scripts/e2e.sh",
-    "docs:sdk": "yarn workspace @rarible/sdk run docs"
+    "docs:sdk": "yarn workspace @rarible/sdk run docs",
+    "nuke": "rm -rf node_modules; for d in packages/*/node_modules; do echo $d; rm -r $d; done"
   },
   "commitlint": {
     "extends": [
@@ -95,6 +96,9 @@
     "npm-run-all": "^4.1.5",
     "sort-package-json": "^1.52.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.8.4"
+    "typescript": "^4.8.4",
+    "web3": "1.8.2",
+    "web3-eth-abi": "1.8.2",
+    "web3-eth-contract": "1.8.2"
   }
 }
