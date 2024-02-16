@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+
+### Features
+
+* add support of base and base-sepolia networks ([34f9622](https://github.com/rarible/sdk/commit/34f96223fd08f88272769bc39449bcf4d6bf0125))
+
+
+
+
+
 ## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
 
 
