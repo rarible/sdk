@@ -14,4 +14,5 @@ export const prodConfig: RaribleSdkConfig = {
 	chiliz: "chiliz",
 	lightlink: "lightlink",
 	rari: "rari",
+	base: "base",
 }

@@ -64,6 +64,7 @@ export function getCurrency(blockchain: Blockchain, type: CurrencyOption["type"]
 		case Blockchain.CHILIZ:
 		case Blockchain.ASTARZKEVM:
 		case Blockchain.RARI:
+		case Blockchain.BASE:
 			if (type === "TOKEN") return getERC20(contract)
 			throw new Error("Unsupported option subtype")
 		case Blockchain.IMMUTABLEX:
@@ -103,7 +104,7 @@ export function getCurrencyOptions(
 								contract: "ETHEREUM:0xA4A70E8627e858567a9f1F08748Fe30691f72b9e",
 							})
 							break
-						case"testnet":
+						case "testnet":
 							res.push({
 								type: "TOKEN",
 								label: "Rarible Test ERC20",
@@ -117,7 +118,7 @@ export function getCurrencyOptions(
 								contract: "ETHEREUM:0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
 							})
 							break
-						case"prod":
+						case "prod":
 							res.push({
 								type: "TOKEN",
 								label: "WETH",
@@ -127,7 +128,12 @@ export function getCurrencyOptions(
 							break
 						default:
 					}
-					res.push({ type: "TOKEN", label: "Custom ERC20", blockchain: Blockchain.ETHEREUM, contract: null })
+					res.push({
+						type: "TOKEN",
+						label: "Custom ERC20",
+						blockchain: Blockchain.ETHEREUM,
+						contract: null
+					})
 					return res
 				}
 				return []
@@ -277,12 +283,64 @@ export function getCurrencyOptions(
 				if (currency.type === "ERC20") {
 					const res: CurrencyOption[] = []
 					switch (environment) {
-						case"testnet":
+						case "testnet":
 							res.push({
 								type: "TOKEN",
 								label: "WETH",
 								blockchain: Blockchain.RARI,
-								contract: "RARI:0x6df6A970A5e92F93C65BD81dFf2D2ad4ab27C9CD",
+								contract: "RARI:0x2c9dd2b2cd55266e3b5c3c95840f3c037fbcb856",
+							})
+							break
+						case "prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.RARI,
+								contract: "RARI:0xf037540e51D71b2D2B1120e8432bA49F29EDFBD0",
+							})
+							break
+						default:
+					}
+					return res
+				}
+				return []
+			}
+			case Blockchain.BASE: {
+				if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case "testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.BASE,
+								contract: "BASE:0x4200000000000000000000000000000000000006",
+							})
+							break
+						case "prod":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.BASE,
+								contract: "BASE:0x4200000000000000000000000000000000000006",
+							})
+							break
+						default:
+					}
+					return res
+				}
+				return []
+			}
+			case Blockchain.ASTARZKEVM: {
+				if (currency.type === "ERC20") {
+					const res: CurrencyOption[] = []
+					switch (environment) {
+						case "testnet":
+							res.push({
+								type: "TOKEN",
+								label: "WETH",
+								blockchain: Blockchain.ASTARZKEVM,
+								contract: "ASTARZKEVM:0xD8560C88D1DC85f9ED05b25878E366c49B68bEf9",
 							})
 							break
 						default:

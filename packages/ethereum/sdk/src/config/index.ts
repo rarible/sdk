@@ -19,6 +19,8 @@ import { testnetLightlinkConfig } from "./testnet-lightlink"
 import { rariTestnetConfig } from "./testnet-rari"
 import { rariMainnetConfig } from "./rari"
 import { zkatanaConfig } from "./zkatana"
+import { baseConfig } from "./base"
+import { baseSepoliaConfig } from "./base-sepolia"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -40,6 +42,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-rari": rariTestnetConfig,
 	rari: rariMainnetConfig,
 	zkatana: zkatanaConfig,
+	base: baseConfig,
+	"base-sepolia": baseSepoliaConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

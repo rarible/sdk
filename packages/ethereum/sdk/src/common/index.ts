@@ -52,14 +52,15 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 			return Blockchain.RARI
 		case "zkatana":
 			return Blockchain.ASTARZKEVM
+		case "base":
+		case "base-sepolia":
+			return Blockchain.BASE
 		default: throw new Error(`Unrecognized ethereum network ${network}`)
 	}
 }
 
 export function getChainIdByNetwork(network: EthereumNetwork): number {
 	const config = getEthereumConfig(network)
-	if (!config) {
-		throw new Error(`Config for network=${network} has not been found`)
-	}
+	if (!config) throw new Error(`Config for network=${network} has not been found`)
 	return config.chainId
 }

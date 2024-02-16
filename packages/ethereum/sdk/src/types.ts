@@ -21,6 +21,8 @@ export type EthereumNetwork =
   | "testnet-rari"
   | "rari"
   | "zkatana"
+  | "base"
+  | "base-sepolia"
 
 export enum LogsLevel {
 	DISABLED = 0,

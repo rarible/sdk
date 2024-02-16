@@ -20,4 +20,5 @@ export type RaribleSdkConfig = {
 	chiliz: EthereumNetwork
 	lightlink: EthereumNetwork
 	rari: EthereumNetwork
+	base: EthereumNetwork
 }

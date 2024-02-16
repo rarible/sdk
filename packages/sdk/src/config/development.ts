@@ -14,4 +14,5 @@ export const developmentConfig: RaribleSdkConfig = {
 	chiliz: "testnet-chiliz",
 	lightlink: "testnet-lightlink",
 	rari: "testnet-rari",
+	base: "base-sepolia",
 }
