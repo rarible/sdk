@@ -1,45 +1,27 @@
-import base58 from "bs58"
+import { getSolanaMockWallet, solanaKeyKinds } from "@rarible/solana-common/build/tests/wallets"
 import { SolanaKeypairWallet } from "../wallet/keypair-wallet"
 
-export const testWallet = {
-	privateKeyString: "2zCVNyb3KhunreVgamvMPDiFZpkHKHnhNeuyoanQcPaN5yHzKBM8f9PF2h6zSaBm2UUDYf98yBGNS7iRbRHGvYrm",
-	privateKeyArray: Uint8Array.from([
-		99, 87, 171, 135, 138, 126, 92, 128, 190, 64, 22,
-		156, 36, 13, 155, 14, 214, 77, 78, 101, 109, 150,
-		94, 234, 196, 21, 218, 230, 47, 10, 188, 156, 22,
-		203, 117, 122, 86, 152, 247, 27, 69, 100, 69, 12,
-		18, 49, 12, 192, 255, 53, 207, 73, 136, 97, 31,
-		162, 159, 106, 115, 88, 189, 176, 183, 218,
-	]),
-	publicKeyString: "2XyukL1KvwDkfNcdBpfXbj6UtPqF7zcUdTDURNjLFAMo",
-}
-
-export function getSolanaTestWallet() {
-	return SolanaKeypairWallet.createFrom(testWallet.privateKeyString)
-}
 
 describe("solana wallet", () => {
-	test("should generate new keypair", () => {
-		const wallet = SolanaKeypairWallet.generate()
+	test("should generate random keypair", () => {
+		const wallet = SolanaKeypairWallet.fromSeed(undefined)
 		expect(wallet.keyPair.secretKey).toBeTruthy()
 	})
 
-	test("Should create wallet from string private key", () => {
-		const wallet = getSolanaTestWallet()
+	test.each(solanaKeyKinds)("Should create wallet from %s", (key) => {
+		const walletMock = getSolanaMockWallet(0)
+		const wallet = SolanaKeypairWallet.fromKey(walletMock.keys[key])
 
-		expect(wallet.keyPair.secretKey).toEqual(testWallet.privateKeyArray)
-		expect(wallet.keyPair.publicKey.toBase58()).toEqual(testWallet.publicKeyString)
+		expect(wallet.keyPair.secretKey).toEqual(walletMock.keys.arrayPrivateKey)
+		expect(wallet.keyPair.publicKey.toBase58()).toEqual(walletMock.publicKeyString)
 	})
 
-	test("Should create wallet from array private key", () => {
-		const wallet = getSolanaTestWallet()
-
-		expect(base58.encode(wallet.keyPair.secretKey)).toEqual(testWallet.privateKeyString)
-		expect(wallet.keyPair.publicKey.toBase58()).toEqual(testWallet.publicKeyString)
-	})
-
-	test("Should sign message", async () => {
-		const wallet = getSolanaTestWallet()
-		await wallet.signMessage("Hello")
+	test.each(solanaKeyKinds)("Should sign message with %s", async (key) => {
+		const walletMock = getSolanaMockWallet(0)
+		const signatureWord = "test" as const
+		const wallet = SolanaKeypairWallet.fromKey(walletMock.keys[key])
+		const result = await wallet.signMessage(signatureWord)
+		expect(result.publicKey.toString()).toEqual(walletMock.publicKeyString)
+		expect(result.signature).toEqual(walletMock.signatures[signatureWord])
 	})
 })

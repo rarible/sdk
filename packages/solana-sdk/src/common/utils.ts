@@ -1,17 +1,16 @@
-import type BigNumber from "bignumber.js"
-import { BN } from "@project-serum/anchor"
+import { BN as SerumBN } from "@project-serum/anchor"
 import type { BigNumberValue } from "@rarible/utils"
 
-export function bnToBuffer(value: BN, endian: BN.Endianness, length: number) {
+export function bnToBuffer(value: SerumBN, endian: SerumBN.Endianness, length: number) {
 	return value.toArrayLike(Buffer, endian, length)
 }
 
-export function bigNumToBuffer(value: BigNumber, endian: BN.Endianness, length: number) {
-	return bnToBuffer(bigNumToBn(value), endian, length)
+export function serumBnToBuffer(value: SerumBN, endian: SerumBN.Endianness, length: number) {
+	return bnToBuffer(value, endian, length)
 }
 
-export function bigNumToBn(value: BigNumberValue) {
-	return new BN(value.toString())
+export function toSerumBn(value: BigNumberValue) {
+	return new SerumBN(value.toString())
 }
 
 /**
@@ -19,6 +18,6 @@ export function bigNumToBn(value: BigNumberValue) {
  * @param value - value
  * @param len - len
  */
-export function alignBn(value: BN, len: number): BN {
-	return new BN(bnToBuffer(value, "le", len))
+export function alignBn(value: SerumBN, len: number): SerumBN {
+	return new SerumBN(bnToBuffer(value, "le", len))
 }
