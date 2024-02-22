@@ -1,24 +1,24 @@
 import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, createGanacheProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { sentTx, getSendWithInjects } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
+import { createTestProviders } from "../common/test/create-test-providers"
+import { sentTx } from "../common/test"
 import { approveErc721 as approveErc721Template } from "./approve-erc721"
 
-describe("approveErc721", () => {
-	const { provider, addresses } = createGanacheProvider()
-	const web3 = new Web3(provider as any)
-	const ethereum = new Web3Ethereum({ web3 })
+const { provider, addresses, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+
+describe.each(providers)("approveErc721", (ethereum) => {
 	const [from] = addresses
 	const send = getSendWithInjects()
 
 	const approveErc721 = approveErc721Template.bind(null, ethereum, send)
 
 	const it = awaitAll({
-		testErc721: deployTestErc721(web3, "TST", "TST"),
+		testErc721: deployTestErc721(web3v4, "TST", "TST"),
 	})
 
-	test("should approve", async () => {
+	test(`[${ethereum.constructor.name}] should approve`, async () => {
 		const tokenId = from + "b00000000000000000000001"
 		await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: "200000" })
 
@@ -29,7 +29,7 @@ describe("approveErc721", () => {
 		expect(result).toBeTruthy()
 	})
 
-	test("should not approve if already approved", async () => {
+	test(`[${ethereum.constructor.name}] should not approve if already approved`, async () => {
 		const tokenId = from + "b00000000000000000000002"
 		await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: "200000" })
 

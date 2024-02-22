@@ -1,17 +1,17 @@
-import Web3 from "web3"
 import { awaitAll, createGanacheProvider, deployWethContract } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { ConvertWeth } from "./convert-weth"
 import { createWethContract } from "./contracts/weth"
-describe("convert weth test", () => {
-	const { addresses, provider } = createGanacheProvider()
+
+const { provider, addresses, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+
+describe.each(providers)("convert weth test", (ethereum) => {
 	const [sender1Address] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereum = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config
 
@@ -19,7 +19,7 @@ describe("convert weth test", () => {
 	const converter = new ConvertWeth(ethereum, send, getConfig)
 
 	const it = awaitAll({
-		deployWeth: deployWethContract(web3),
+		deployWeth: deployWethContract(web3v4),
 	})
 
 	test("convert eth to weth test", async () => {

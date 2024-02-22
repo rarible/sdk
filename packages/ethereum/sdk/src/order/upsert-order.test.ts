@@ -13,9 +13,9 @@ import { signOrder } from "./sign-order"
 import { OrderFiller } from "./fill-order"
 
 const { provider, wallet } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
-const { providers, web3 } = createTestProviders(provider, wallet)
+const { providers, web3v4 } = createTestProviders(provider, wallet)
 const it = awaitAll({
-	testErc20: deployTestErc20(web3, "TST", "TST"),
+	testErc20: deployTestErc20(web3v4, "TST", "TST"),
 })
 
 describe.each(providers)("upsertOrder", (ethereum) => {

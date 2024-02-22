@@ -2,13 +2,13 @@ import { personalSign } from "eth-sig-util"
 import Wallet from "ethereumjs-wallet"
 import { fromRpcSig, bufferToHex, toBuffer, setLengthLeft } from "ethereumjs-util"
 import { randomWord } from "@rarible/types"
-import type Web3 from "web3"
+import type Web3 from "web3-v4"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { isSigner } from "./is-signer"
 import { createTestProviders } from "./test/create-test-providers"
 
 const { provider, wallets } = createGanacheProvider()
-const { web3, providers } = createTestProviders(provider, wallets[0] )
+const { web3v4, providers } = createTestProviders(provider, wallets[0] )
 
 describe.each(providers)("isSigner", (ethereum) => {
 	test("recover works for hw wallets workaround", async () => {
@@ -25,7 +25,7 @@ describe.each(providers)("isSigner", (ethereum) => {
 	})
 
 	test("erc1271 works", async () => {
-		const test = await deployTestErc1271(web3)
+		const test = await deployTestErc1271(web3v4)
 		const from = await ethereum.getFrom()
 		const hash = Buffer.from(randomWord().substring(2), "hex")
 		const pk = Buffer.from(randomWord().substring(2), "hex")

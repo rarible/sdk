@@ -1,4 +1,4 @@
-import type Web3 from "web3"
+import type Web3 from "web3-v4"
 import { erc1155v1Abi } from "../v1"
 import { NumberDataFormat } from "../../../../common/contracts"
 

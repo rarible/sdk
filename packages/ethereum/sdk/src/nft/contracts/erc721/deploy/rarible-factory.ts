@@ -1,4 +1,4 @@
-import type Web3 from "web3"
+import type Web3 from "web3-v4"
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import { ZERO_ADDRESS } from "@rarible/types"

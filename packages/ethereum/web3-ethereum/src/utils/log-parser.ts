@@ -1,15 +1,27 @@
 import type * as EthereumProvider from "@rarible/ethereum-provider"
+import type { AbiItem } from "web3-utils"
+import type { TransactionReceipt } from "web3-core"
+// @ts-ignore
+import web3EthAbi from "web3-eth-abi"
+import web3Utils from "web3-utils"
 import type { Address } from "@rarible/types"
-import { utils, eth } from "web3"
-import type { ContractAbi } from "web3"
-import { deepReplaceBigInt } from "@rarible/sdk-common"
-import type { TxReceiptNumberFormatted } from "../domain"
 
+export async function getContractMethodReceiptEvents(
+	receiptPromise: Promise<TransactionReceipt>
+): Promise<EthereumProvider.EthereumTransactionEvent[]> {
+	const receipt = await receiptPromise
+	return receipt.events ? Object.keys(receipt.events!)
+		.map(ev => receipt.events![ev])
+		.map(ev => ({
+			...ev,
+			args: ev.returnValues,
+		})) : []
+}
 
 export async function getTransactionReceiptEvents(
-	receiptPromise: Promise<TxReceiptNumberFormatted>,
+	receiptPromise: Promise<TransactionReceipt>,
 	address: Address,
-	abi: ContractAbi,
+	abi: AbiItem[],
 ): Promise<EthereumProvider.EthereumTransactionEvent[]> {
 	const eventsResponse = parseReceiptEvents(
 		abi,
@@ -27,19 +39,20 @@ export async function getTransactionReceiptEvents(
  * the execution of the transaction, those will not be parsed automatically. For
  * those cases, additional parsing effort is required.
  *
- * @param {ContractAbi} abi The ABI of the contract.
+ * @param {AbiItem[]} abi The ABI of the contract.
  * @param {string} address The address of the contract.
- * @param {TxReceiptNumberFormatted} receipt The receipt to parse.
- * @returns {TxReceiptNumberFormatted} The patched receipt.
+ * @param {TransactionReceipt} receipt The receipt to parse.
+ * @returns {TransactionReceipt} The patched receipt.
  */
 export function parseReceiptEvents(
-	abi: ContractAbi, address: Address, receipt: TxReceiptNumberFormatted
+	abi: AbiItem[], address: Address, receipt: TransactionReceipt
 ): EthereumProvider.EthereumTransactionEvent[] {
 	// @ts-ignore
 	const events = []
 
-	const eventsMap = {}
 	if (receipt.logs) {
+
+		receipt.events = {}
 
 		receipt.logs.forEach(function (log) {
 			// @ts-ignore
@@ -51,10 +64,14 @@ export function parseReceiptEvents(
 				data: log.data,
 				topics: log.topics,
 			}
+			// @ts-ignore
+			delete log.data
+			// @ts-ignore
+			delete log.topics
 
 			const eventNumber = log.logIndex
 			// @ts-ignore
-			eventsMap[eventNumber] = log
+			receipt.events[eventNumber] = log
 		})
 
 		// @ts-ignore
@@ -62,13 +79,13 @@ export function parseReceiptEvents(
 	}
 
 	// @ts-ignore
-	Object.keys(eventsMap).forEach(function (n) {
+	Object.keys(receipt.events).forEach(function (n) {
 		// @ts-ignore
-		const event = eventsMap[n]
+		const event = receipt.events[n]
 
-		if (utils.toChecksumAddress(event.address)
+		if (web3Utils.toChecksumAddress(event.address)
       // @ts-ignore
-      !== utils.toChecksumAddress(address) || event.signature) {
+      !== web3Utils.toChecksumAddress(address) || event.signature) {
 			return
 		}
 
@@ -77,7 +94,7 @@ export function parseReceiptEvents(
 			.map(desc => ({
 				...desc,
 				// @ts-ignore
-				signature: desc.signature || eth.abi.encodeEventSignature(desc),
+				signature: desc.signature || web3EthAbi.encodeEventSignature(desc),
 			}))
 		// @ts-ignore
 			.find(desc => desc.signature === event.raw.topics[0])
@@ -86,7 +103,7 @@ export function parseReceiptEvents(
 		event.event = descriptor.name
 		// @ts-ignore
 		event.signature = descriptor.signature
-		const decodedLogs = eth.abi.decodeLog(
+		event.returnValues = web3EthAbi.decodeLog(
 			// @ts-ignore
 			descriptor.inputs,
 			// @ts-ignore
@@ -94,15 +111,12 @@ export function parseReceiptEvents(
 			// @ts-ignore
 			event.raw.topics.slice(1)
 		)
-
-		event.returnValues = deepReplaceBigInt(decodedLogs)
-		event.args = event.returnValues
 		events.push(event)
 
 
 		delete event.returnValues.__length__
 		// @ts-ignore
-		delete eventsMap[n]
+		delete receipt.events[n]
 	})
 
 	let count = 0
@@ -110,26 +124,26 @@ export function parseReceiptEvents(
 	events.forEach(function (ev) {
 		if (ev.event) {
 			// @ts-ignore
-			if (eventsMap[ev.event]) {
+			if (receipt.events[ev.event]) {
 				// @ts-ignore
-				if (Array.isArray(eventsMap[ev.event])) {
+				if (Array.isArray(receipt.events[ev.event])) {
 					// @ts-ignore
-					eventsMap[ev.event].push(ev)
+					receipt.events[ev.event].push(ev)
 				} else {
 					// @ts-ignore
-					eventsMap[ev.event] = [eventsMap[ev.event], ev]
+					receipt.events[ev.event] = [receipt.events[ev.event], ev]
 				}
 			} else {
 				// @ts-ignore
-				eventsMap[ev.event] = ev
+				receipt.events[ev.event] = ev
 			}
 		} else {
 			// @ts-ignore
-			eventsMap[count] = ev
+			receipt.events[count] = ev
 			// @ts-ignore
 			count += 1
 		}
 	})
 
-	return eventsMap as any
+	return receipt?.events as any
 }

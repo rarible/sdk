@@ -1,14 +1,15 @@
 import { awaitAll, createE2eProvider, deployTestErc1155, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { AuctionControllerApi, Configuration } from "@rarible/ethereum-api-client"
-import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
+import Web3v4 from "web3-v4"
+import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
+import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { approve as approveTemplate } from "../order/approve"
 import { getApiConfig } from "../config/api-config"
 import { createEthereumApis } from "../common/apis"
 import { getNetworkFromChainId } from "../common"
+import { sentTx } from "../common/test"
 import { StartAuction } from "./start"
 import { PutAuctionBid } from "./put-bid"
 import { awaitForAuction } from "./test"
@@ -23,15 +24,15 @@ describe.skip("put auction bid", () => {
 	const sender2Address = walletBuyer.getAddressString()
 	const feeAddress = feeWallet.getAddressString()
 
-	const web3 = new Web3(provider as any)
-	const web3Buyer = new Web3(providerBuyer as any)
+	const web3 = new Web3v4(provider as any)
+	const web3Buyer = new Web3v4(providerBuyer as any)
 	const getConfig = async () => getEthereumConfig("testnet")
 
 	const configuration = new Configuration(getApiConfig("testnet"))
 	const auctionApi = new AuctionControllerApi(configuration)
 
-	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const ethereum2 = new Web3Ethereum({ web3: web3Buyer, from: sender2Address, gas: 1000000 })
+	const ethereum1 = new Web3v4Ethereum({ web3, from: sender1Address, gas: 1000000 })
+	const ethereum2 = new Web3v4Ethereum({ web3: web3Buyer, from: sender2Address, gas: 1000000 })
 
 	const send1 = getSimpleSendWithInjects()
 	const send2 = getSimpleSendWithInjects()

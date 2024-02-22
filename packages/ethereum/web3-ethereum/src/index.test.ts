@@ -2,7 +2,6 @@ import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { toAddress } from "@rarible/types"
-import { deepReplaceBigInt } from "@rarible/sdk-common"
 import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3Transaction } from "./index"
 
@@ -12,13 +11,6 @@ describe("Web3Ethereum", () => {
 	const { provider: ganache } = common.createGanacheProvider()
 	const web3 = new Web3(ganache)
 	const ganacheEthereum = new Web3Ethereum({ web3 })
-
-	test("get balance", async () => {
-		const value = await ganacheEthereum.getBalance(
-			toAddress(await ganacheEthereum.getFrom())
-		)
-		expect(value).toBe("324518553658426726783156020576256")
-	})
 
 	test("signs typed data correctly", async () => {
 		await common.testTypedSignature(e2eEthereum)
@@ -82,7 +74,6 @@ describe("Web3Ethereum", () => {
 
 		const encoded = e2eEthereum.encodeParameter(type, data)
 		const decoded = e2eEthereum.decodeParameter(type, encoded)
-
 		for (const field in data) {
 			//@ts-ignore
 			expect(decoded["data"][field]).toEqual(data[field].toString())
@@ -107,9 +98,8 @@ describe("get transaction receipt events", () => {
 		const receipt = web3.eth.getTransactionReceipt("0x2f81b44332228d78eda5ea48e62134fddd2354713d77f4f61588d91cd7a735ff")
 		const seaportAddr = "0x00000000006c3852cbef3e08e8df289169ede581"
 
-		// console.log("receipt", await receipt)
 		const tx = new Web3Transaction(
-			deepReplaceBigInt(await receipt),
+			receipt,
 			null as any,
 			null as any,
 			null as any,

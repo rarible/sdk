@@ -1,25 +1,16 @@
 import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, deployTestErc20, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
-import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
-import { ethers } from "ethers"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { Web3Ethereum } from "../../../web3-ethereum"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
+import { createTestProviders } from "../common/test/create-test-providers"
+import { sentTx } from "../common/test"
 import { approveErc20 as approveErc20Template } from "./approve-erc20"
 import { prependProviderName } from "./test/prepend-provider-name"
 
 const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
-const { provider, addresses } = createGanacheProvider(pk)
-const ethersWeb3Provider = new ethers.providers.Web3Provider(provider as any)
-const web3 = new Web3(provider as any)
-
-const providers = [
-	new Web3Ethereum({ web3 }),
-	new EthersEthereum(new ethers.Wallet(pk, ethersWeb3Provider)),
-	new EthersWeb3ProviderEthereum(ethersWeb3Provider),
-]
+const { provider, addresses, wallets } = createGanacheProvider(pk)
+const { providers, web3v4 } = createTestProviders(provider, wallets[0])
 
 describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 	const [testAddress] = addresses
@@ -28,7 +19,7 @@ describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 	const approveErc20 = approveErc20Template.bind(null, ethereum, send)
 
 	const it = awaitAll({
-		testErc20: deployTestErc20(web3, "TST", "TST"),
+		testErc20: deployTestErc20(web3v4, "TST", "TST"),
 	})
 
 	beforeAll(async () => {

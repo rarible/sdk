@@ -1,6 +1,4 @@
 import { randomAddress, randomWord, toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
 import {
 	awaitAll,
@@ -16,7 +14,7 @@ import {
 	deployTestRoyaltiesProvider,
 	deployTransferProxy,
 } from "@rarible/ethereum-sdk-test-common"
-import { getSimpleSendWithInjects, sentTx, sentTxConfirm } from "../../common/send-transaction"
+import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { getEthereumConfig } from "../../config"
 import { signOrder } from "../sign-order"
 import type { SimpleOrder } from "../types"
@@ -26,16 +24,16 @@ import { getApis as getApisTemplate } from "../../common/apis"
 import { createRaribleSdk } from "../../index"
 import { FILL_CALLDATA_TAG } from "../../config/common"
 import type { EthereumNetwork } from "../../types"
+import { createBuyerSellerProviders } from "../../common/test/create-test-providers"
+import { sentTx, sentTxConfirm } from "../../common/test"
 import type { BuyOrderRequest } from "./types"
 import { OrderFiller } from "./index"
 
-describe("buy & acceptBid orders", () => {
-	const { addresses, provider } = createGanacheProvider()
+const { addresses, provider, wallets } = createGanacheProvider()
+const { providers, web3v4Buyer } = createBuyerSellerProviders(provider, wallets)
+describe.each(providers)("buy & acceptBid orders", (buyerEthereum, sellerEthereum) => {
 	const [buyerAddress, sellerAddress] = addresses
-	const web3 = new Web3(provider as any)
-	const buyerEthereum = new Web3Ethereum({ web3, from: buyerAddress, gas: 1000000 })
-	const sellerEthereum = new Web3Ethereum({ web3, from: sellerAddress, gas: 1000000 })
-
+	const web3 = web3v4Buyer
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
@@ -59,12 +57,10 @@ describe("buy & acceptBid orders", () => {
 		punkAssetMatcher: deployCryptoPunkAssetMatcher(web3),
 	})
 
-	// beforeEach(async () => await delay(500))
-
 	beforeAll(async () => {
 		/**
-		 * Configuring
-		 */
+     * Configuring
+     */
 		await sentTx(
 			it.exchangeV2.methods.__ExchangeV2_init(
 				toAddress(it.transferProxy.options.address!),
@@ -113,7 +109,7 @@ describe("buy & acceptBid orders", () => {
 
 	})
 
-	test("should match order(buy erc1155 for erc20)", async () => {
+	test(`[${buyerEthereum.constructor.name}] should match order(buy erc1155 for erc20)`, async () => {
 		//sender1 has ERC20, sender2 has ERC1155
 
 		await sentTxConfirm(it.testErc20.methods.mint(buyerAddress, 100), { from: buyerAddress })
@@ -241,7 +237,7 @@ describe("buy & acceptBid orders", () => {
 	// 	expect(finishErc1155Balance.minus(startErc1155Balance).toString()).toBe("1")
 	// })
 
-	test("get transaction data", async () => {
+	test(`[${buyerEthereum.constructor.name}] get transaction data`, async () => {
 		const left: SimpleOrder = {
 			make: {
 				assetType: {
@@ -281,7 +277,7 @@ describe("buy & acceptBid orders", () => {
 		})
 	})
 
-	test("should match order(buy erc1155 for eth)", async () => {
+	test(`[${buyerEthereum.constructor.name}] should match order(buy erc1155 for eth)`, async () => {
 		//sender1 has ETH, sender2 has ERC1155
 
 		const tokenId = "3"
@@ -337,7 +333,7 @@ describe("buy & acceptBid orders", () => {
 		)
 	})
 
-	test("should match order(buy erc1155 for eth) with dataType=V2", async () => {
+	test(`[${buyerEthereum.constructor.name}] should match order(buy erc1155 for eth) with dataType=V2`, async () => {
 		await sentTx(it.testErc1155.methods.mint(sellerAddress, 4, 10, "0x"), { from: buyerAddress })
 
 		const left: SimpleOrder = {
@@ -391,7 +387,7 @@ describe("buy & acceptBid orders", () => {
 		)
 	})
 
-	test("should match order(buy erc1155 for eth) with dataType=V3", async () => {
+	test(`[${buyerEthereum.constructor.name}] should match order(buy erc1155 for eth) with dataType=V3`, async () => {
 		await sentTx(it.testErc1155.methods.mint(sellerAddress, 5, 10, "0x"), { from: buyerAddress })
 
 		const left: SimpleOrder = {
@@ -456,7 +452,7 @@ describe("buy & acceptBid orders", () => {
 		)
 	})
 
-	test("should fill order (buy) with crypto punks asset", async () => {
+	test(`[${buyerEthereum.constructor.name}] should fill order (buy) with crypto punks asset`, async () => {
 		const punkId = 43
 		//Mint punks
 		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sellerAddress })
@@ -507,7 +503,7 @@ describe("buy & acceptBid orders", () => {
 		expect(ownerAddress.toLowerCase()).toBe(buyerAddress.toLowerCase())
 	})
 
-	test("should accept bid with crypto punks asset", async () => {
+	test(`[${buyerEthereum.constructor.name}] should accept bid with crypto punks asset`, async () => {
 		const punkId = 50
 		//Mint crypto punks
 		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sellerAddress })
@@ -562,7 +558,7 @@ describe("buy & acceptBid orders", () => {
 		expect(ownerAddress.toLowerCase()).toBe(buyerAddress.toLowerCase())
 	})
 
-	test("buy erc-1155 <-> ETH with calldata flag", async () => {
+	test(`[${buyerEthereum.constructor.name}] buy erc-1155 <-> ETH with calldata flag`, async () => {
 		const tokenId = "5"
 		await sentTx(it.testErc1155.methods.mint(sellerAddress, tokenId, 10, "0x"), { from: buyerAddress })
 

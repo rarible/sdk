@@ -1,6 +1,6 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/ethereum-api-client"
-import type Web3 from "web3"
+import type Web3 from "web3-v4"
 import { NumberDataFormat } from "../../common/contracts"
 
 export function createUpgradableBeaconContract(ethereum: Ethereum, address?: Address): EthereumContract {

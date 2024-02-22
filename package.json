@@ -14,6 +14,7 @@
     "build-ethereum-provider": "yarn workspace @rarible/ethereum-provider run build",
     "build-ethereum-ethers": "yarn workspace @rarible/ethers-ethereum run build",
     "build-ethereum-web3": "yarn workspace @rarible/web3-ethereum run build",
+    "build-ethereum-web3-v4": "yarn workspace @rarible/web3-v4-ethereum run build",
     "build-ethereum-sdk": "yarn workspace @rarible/protocol-ethereum-sdk run build",
     "build-ethereum-sdk-dev": "yarn workspace @rarible/protocol-ethereum-sdk run build:ts",
     "build-sdk-common": "yarn workspace @rarible/sdk-common run build",
@@ -81,8 +82,7 @@
     ]
   },
   "resolutions": {
-    "**/axios": "^0.26.1",
-    "web3-core": "^4.3.2"
+    "**/axios": "^0.26.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",

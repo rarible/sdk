@@ -1,4 +1,4 @@
-import type Web3 from "web3"
+import type Web3 from "web3-v4"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { replaceBigIntInContract } from "./common"
 

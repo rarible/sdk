@@ -3,7 +3,7 @@ import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum
 import { toBn } from "@rarible/utils"
 import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
-import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
+import { getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
 import { delay } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
 import { createErc721V3Collection } from "../common/mint"
@@ -12,6 +12,8 @@ import { mint as mintTemplate } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../common/test/test-credentials"
+import { sentTx } from "../common/test"
+import { concatBuyerSellerProviders, createTestProviders } from "../common/test/create-test-providers"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -21,9 +23,15 @@ import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
-describe("bid", () => {
-	const { web3: web31, web3Ethereum: ethereum1 } = createE2eProvider(DEV_PK_1)
-	const { web3Ethereum: ethereum2 } = createE2eProvider(DEV_PK_2)
+const pk1Provider = createE2eProvider(DEV_PK_1)
+const pk2Provider = createE2eProvider(DEV_PK_2)
+
+// const { providers, web3v4 } = createTestProviders(provider, wallet)
+const pk1TestProviders = createTestProviders(pk1Provider.provider, pk1Provider.wallet)
+const pk2TestProviders = createTestProviders(pk2Provider.provider, pk2Provider.wallet)
+
+const providers = concatBuyerSellerProviders(pk1TestProviders.providers, pk2TestProviders.providers)
+describe.each(providers)("bid", (ethereum1, ethereum2) => {
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
@@ -59,7 +67,7 @@ describe("bid", () => {
 	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
 
 	const it = awaitAll({
-		testErc721: deployTestErc721(web31, "Test", "TST"),
+		testErc721: deployTestErc721(pk1Provider.web3v4, "Test", "TST"),
 	})
 
 	beforeAll(async () => {

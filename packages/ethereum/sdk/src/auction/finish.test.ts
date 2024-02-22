@@ -1,13 +1,13 @@
 import { awaitAll, createE2eProvider, deployTestErc1155, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils"
-import { sentTx, getSimpleSendWithInjects } from "../common/send-transaction"
+import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { approve as approveTemplate } from "../order/approve"
 import { createEthereumApis } from "../common/apis"
 import { delay } from "../common/retry"
 import { getNetworkFromChainId } from "../common"
+import { sentTx } from "../common/test"
 import { StartAuction } from "./start"
 import { finishAuction as finishAuctionTemplate } from "./finish"
 import { PutAuctionBid } from "./put-bid"
@@ -15,15 +15,13 @@ import { awaitForAuction, awaitForAuctionBid } from "./test"
 
 
 describe.skip("finish auction auction", () => {
-	const { provider: providerSeller, wallet: walletSeller, web3Ethereum: ethereum1 } = createE2eProvider("0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9")
-	const { provider: providerBuyer, wallet: walletBuyer, web3Ethereum: ethereum2 } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
+	const { wallet: walletSeller, web3Ethereum: ethereum1, web3v4: web3Seller } = createE2eProvider("0xded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9")
+	const { wallet: walletBuyer, web3Ethereum: ethereum2, web3v4: web3Buyer } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
 	const { wallet: feeWallet } = createE2eProvider()
 
 	const sender1Address = walletSeller.getAddressString()
 	const sender2Address = walletBuyer.getAddressString()
 	const feeAddress = feeWallet.getAddressString()
-	const web3Seller = new Web3(providerSeller as any)
-	const web3Buyer = new Web3(providerBuyer as any)
 
 	const config = getEthereumConfig("testnet")
 	const getConfig = async () => config

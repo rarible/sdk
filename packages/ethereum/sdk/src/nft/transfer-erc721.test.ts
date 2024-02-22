@@ -1,22 +1,22 @@
 import { randomAddress, toAddress } from "@rarible/types"
 import type { Address } from "@rarible/ethereum-api-client"
 import { awaitAll, deployTestErc721, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
+import { sentTx } from "../common/test"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { transferErc721 } from "./transfer-erc721"
 
-describe("transfer Erc721", () => {
-	const { provider, addresses } = createGanacheProvider()
-	const web3 = new Web3(provider as any)
-	const ethereum = new Web3Ethereum({ web3, gas: 200000 })
+const { addresses, provider, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+
+describe.each(providers)("transfer Erc721", (ethereum) => {
 	const [from] = addresses
 	const to = randomAddress()
 
 	const send = getSendWithInjects()
 
 	const it = awaitAll({
-		testErc721: deployTestErc721(web3, "TST", "TST"),
+		testErc721: deployTestErc721(web3v4, "TST", "TST"),
 	})
 
 	test("should transfer erc721 token", async () => {

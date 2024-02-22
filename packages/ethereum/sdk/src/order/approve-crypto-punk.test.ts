@@ -1,21 +1,17 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
 import { awaitAll, createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
 import { randomAddress, toAddress } from "@rarible/types"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
+import { createTestProviders } from "../common/test/create-test-providers"
+import { sentTx } from "../common/test"
 import { approveCryptoPunk } from "./approve-crypto-punk"
 
-describe("approve crypto punks", () => {
-	const {
-		addresses,
-		provider,
-	} = createGanacheProvider()
+const { addresses, provider, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+describe.each(providers)("approve crypto punks", (ethereumSeller) => {
 	const [sellerAddress] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereumSeller = new Web3Ethereum({ web3, from: sellerAddress, gas: 1000000 })
 
 	const it = awaitAll({
-		punksMarket: deployCryptoPunks(web3),
+		punksMarket: deployCryptoPunks(web3v4),
 	})
 
 	const send = getSendWithInjects()
@@ -26,7 +22,7 @@ describe("approve crypto punks", () => {
 		await sentTx(it.punksMarket.methods.getPunk(0), { from: sellerAddress })
 	})
 
-	test("should approve", async () => {
+	test(`[${ethereumSeller.constructor.name}] should approve`, async () => {
 		const operator = randomAddress()
 
 		const tx = await approve(
@@ -45,7 +41,7 @@ describe("approve crypto punks", () => {
 		expect(offer.onlySellTo.toLowerCase()).toBe(operator.toLowerCase())
 	})
 
-	test("should not approve if already approved", async () => {
+	test(`[${ethereumSeller.constructor.name}] should not approve if already approved`, async () => {
 		const operator = randomAddress()
 
 		await sentTx(

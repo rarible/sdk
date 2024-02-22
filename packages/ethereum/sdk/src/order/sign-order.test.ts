@@ -1,17 +1,20 @@
 import { toAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
+import { createTestProviders } from "../common/test/create-test-providers"
 import { signOrder } from "./sign-order"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import type { SimpleOrder } from "./types"
 
-describe("signOrder", () => {
-	const { web3Ethereum: ethereum } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+const { provider, wallet } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+const { providers } = createTestProviders(provider, wallet)
+
+describe.each(providers)("signOrder", (ethereum) => {
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config
 	const signOrderE2e = signOrder.bind(null, ethereum, getConfig)
 
-	test("should sign legacy orders", async () => {
+	test(`[${ethereum.constructor.name}] should sign legacy orders`, async () => {
 		const signer = await ethereum.getFrom()
 		const order: SimpleOrder = {
 			...TEST_ORDER_TEMPLATE,
@@ -30,7 +33,7 @@ describe("signOrder", () => {
 		)
 	})
 
-	test("should sign v2 orders", async () => {
+	test(`[${ethereum.constructor.name}] should sign v2 orders`, async () => {
 		const signer = await ethereum.getFrom()
 		const signature = await signOrderE2e({
 			...TEST_ORDER_TEMPLATE,
