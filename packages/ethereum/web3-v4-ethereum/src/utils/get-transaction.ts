@@ -1,6 +1,6 @@
 import { backOff } from "exponential-backoff"
 import { promiseSettledRequest } from "@rarible/sdk-common"
-import type Web3 from "web3-v4"
+import type Web3 from "web3"
 
 export async function getTransaction(hash: string, config: {web3: Web3, alternateWeb3Instance?: Web3}) {
 	return backOff(async () => {

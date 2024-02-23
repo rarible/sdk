@@ -1,5 +1,5 @@
 import type { PayableTxOptions } from "web3-eth-contract/lib/types"
-import type { AbiFunctionFragment, ContractMethod } from "web3-types"
+import type { AbiFunctionFragment, ContractMethod } from "web3-v4-types"
 import type { NonPayableMethodObject, PayableMethodObject } from "web3-eth-contract/lib/types"
 import {
 	getPromiEventConfirmationPromise,

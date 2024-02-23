@@ -1,5 +1,5 @@
-import type Web3 from "web3-v4"
-import type { types, eth, ContractAbi } from "web3-v4"
+import type Web3 from "web3"
+import type { types, eth, ContractAbi } from "web3"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
 import { EthereumProviderError, filterErrors, Provider, signTypedData } from "@rarible/ethereum-provider"
@@ -500,3 +500,5 @@ export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 }
 
 type InternalGasOptions = { gas?: string, gasPrice?: string }
+
+export { Web3 } from "web3"

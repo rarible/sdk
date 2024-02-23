@@ -1,5 +1,3 @@
-import Web3 from "web3"
-import Web3v4 from "web3-v4"
 // @ts-ignore
 import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
@@ -7,8 +5,8 @@ import { TestSubprovider } from "@rarible/test-provider"
 // @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { randomWord } from "@rarible/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 
 export function createE2eWallet(pk: string = randomWord()): Wallet {
 	return new Wallet(Buffer.from(fixPK(pk), "hex"))

@@ -4,12 +4,10 @@ import type {
 	EthereumProviderConnectionResult,
 } from "@rarible/connector"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
-import Web3v4 from "web3-v4"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import type { EVMBlockchain } from "@rarible/sdk-common"
 import { getBlockchainFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
-import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 /**

@@ -1,7 +1,7 @@
 import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { Address } from "@rarible/types"
-import { utils, eth } from "web3-v4"
-import type { ContractAbi } from "web3-v4"
+import { utils, eth } from "web3"
+import type { ContractAbi } from "web3"
 import { deepReplaceBigInt } from "@rarible/sdk-common"
 import type { TxReceiptNumberFormatted } from "../domain"
 

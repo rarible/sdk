@@ -1,4 +1,4 @@
-import type Web3 from "web3-v4"
+import type Web3 from "web3"
 import type { Web3PromiEvent } from "web3-core"
 import type { FormatType, TransactionReceipt, ETH_DATA_FORMAT } from "web3-types"
 import { FMT_BYTES, FMT_NUMBER } from "web3-types"

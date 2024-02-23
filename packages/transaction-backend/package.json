@@ -34,8 +34,7 @@
     "redoc-express": "^1.0.0",
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.8.4",
-    "web3": "^4.4.0"
+    "typescript": "^4.8.4"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.1",

@@ -448,3 +448,5 @@ export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 	if (web3) return getDappType(web3.currentProvider) || DappType.Unknown
 	return DappType.Unknown
 }
+
+export { Web3 } from "web3"

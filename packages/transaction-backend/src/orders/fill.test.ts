@@ -52,7 +52,7 @@ describe.skip("get buy transaction", () => {
 			takeAssetType: {
 				assetClass: "ETH",
 			},
-			priceDecimal: "0.000000000000000002",
+			priceDecimal: "0.0002",
 			payouts: [],
 			originFees: [],
 			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
@@ -123,7 +123,7 @@ describe.skip("get buy transaction", () => {
 			takeAssetType: {
 				assetClass: "ETH",
 			},
-			priceDecimal: "0.000000000000000002",
+			priceDecimal: "0.0002",
 			payouts: [],
 			originFees: [],
 			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
