@@ -1,5 +1,4 @@
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { getEthereumConfig } from "../config"

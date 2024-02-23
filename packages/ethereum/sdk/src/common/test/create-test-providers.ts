@@ -1,9 +1,7 @@
 import type Wallet from "ethereumjs-wallet"
-import Web3 from "web3"
-import Web3v4 from "web3-v4"
 import { ethers } from "ethers"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 
 export function createTestProviders(provider: any, wallet: Wallet) {

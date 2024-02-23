@@ -1,4 +1,4 @@
-import type Web3 from "web3-v4"
+import type { Web3 } from "@rarible/web3-v4-ethereum"
 import { erc721v1Abi } from "../../v1"
 import { NumberDataFormat } from "../../../../../common/contracts"
 import { erc721v1MintableTokenBytecode } from "./bytecodes"

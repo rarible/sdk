@@ -1,6 +1,5 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum/build"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum/build"
 import type { SeaportV1Order } from "@rarible/ethereum-api-client/build/models/Order"
 import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"

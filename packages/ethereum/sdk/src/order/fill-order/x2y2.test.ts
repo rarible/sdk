@@ -1,6 +1,5 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum/build"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum/build"
 import { toAddress } from "@rarible/types"
 import type { X2Y2Order } from "@rarible/ethereum-api-client"
 import { createRaribleSdk } from "../../index"
