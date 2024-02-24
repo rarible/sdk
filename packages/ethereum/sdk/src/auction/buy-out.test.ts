@@ -1,4 +1,4 @@
-import { awaitAll, createE2eProvider, deployTestErc1155, deployTestErc20, deployTestErc721ForAuction } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc1155, deployTestErc20, deployTestErc721ForAuction } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { AuctionControllerApi, Configuration } from "@rarible/ethereum-api-client"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
@@ -9,14 +9,15 @@ import { createEthereumApis } from "../common/apis"
 import type { EthereumNetwork } from "../types"
 import { getNetworkFromChainId } from "../common"
 import { sentTx } from "../common/test"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { StartAuction } from "./start"
 import { BuyoutAuction } from "./buy-out"
 import { awaitForAuction } from "./test"
 
 describe.skip("buy out auction", () => {
-	const { wallet: walletSeller, web3v4: web3Seller, web3Ethereum: ethereum1 } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
-	const { wallet: walletBuyer, web3v4: web3Buyer, web3Ethereum: ethereum2 } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
-	const { wallet: feeWallet } = createE2eProvider()
+	const { wallet: walletSeller, web3v4: web3Seller, web3Ethereum: ethereum1 } = createE2eTestProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
+	const { wallet: walletBuyer, web3v4: web3Buyer, web3Ethereum: ethereum2 } = createE2eTestProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
+	const { wallet: feeWallet } = createE2eTestProvider()
 
 	const sender1Address = walletSeller.getAddressString()
 	const sender2Address = walletBuyer.getAddressString()

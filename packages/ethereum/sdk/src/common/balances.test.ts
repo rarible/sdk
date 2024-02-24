@@ -1,4 +1,3 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toAddress } from "@rarible/types"
 import { configDictionary } from "../config"
 import { createRaribleSdk } from "../index"
@@ -6,11 +5,12 @@ import type { EthereumNetwork } from "../types"
 import { Balances } from "./balances"
 import { createEthereumApis } from "./apis"
 import { getAPIKey } from "./test/test-credentials"
+import { createE2eTestProvider } from "./test/create-test-providers"
 import { getNetworkFromChainId } from "./index"
 
 describe("getBalance test", () => {
 	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
-	const { web3Ethereum: ethereum } = createE2eProvider(pk)
+	const { web3Ethereum: ethereum } = createE2eTestProvider(pk)
 
 	const getApis = async () => {
 		const chainId = await ethereum.getChainId()

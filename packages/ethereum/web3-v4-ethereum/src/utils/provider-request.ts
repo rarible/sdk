@@ -29,9 +29,9 @@ function legacySend(
 }
 
 function requestLegacy(provider: any, method: string, params: unknown[]): Promise<any> {
-	return new Promise<any>((resolve, reject) => {
+	return new Promise<any>(async (resolve, reject) => {
 		try {
-			legacySend(provider, {
+			await legacySend(provider, {
 				jsonrpc: "2.0",
 				id: new Date().getTime(),
 				method,

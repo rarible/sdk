@@ -1,9 +1,10 @@
 {
   "name": "root",
   "private": true,
-  "workspaces": [
-    "packages/**/*"
-  ],
+  "workspaces": {
+    "packages": ["packages/**/*"],
+    "nohoist": []
+  },
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
     "clean": "lerna run clean --parallel --stream",

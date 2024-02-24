@@ -1,6 +1,5 @@
 import {
 	awaitAll,
-	createE2eProvider,
 	deployTestErc1155,
 	deployTestErc20,
 	deployTestErc721ForAuction,
@@ -12,11 +11,12 @@ import { approve as approveTemplate } from "../order/approve"
 import { createEthereumApis } from "../common/apis"
 import { getNetworkFromChainId } from "../common"
 import { sentTx } from "../common/test"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { StartAuction } from "./start"
 
 describe.skip("start auction", () => {
-	const { wallet, web3v4: web3, web3v4Ethereum: ethereum1 } = createE2eProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
-	const { wallet: feeWallet } = createE2eProvider()
+	const { wallet, web3v4: web3, web3v4Ethereum: ethereum1 } = createE2eTestProvider("0xa0d2baba419896add0b6e638ba4e50190f331db18e3271760b12ce87fa853dcb")
+	const { wallet: feeWallet } = createE2eTestProvider()
 
 	const sender1Address = wallet.getAddressString()
 	const feeWalletAddress = feeWallet.getAddressString()

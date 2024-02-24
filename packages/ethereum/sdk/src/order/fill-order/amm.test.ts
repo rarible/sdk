@@ -1,4 +1,3 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum/build"
 import { toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
@@ -10,13 +9,14 @@ import type { SimpleOrder } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../types"
 import { ETHER_IN_WEI } from "../../common"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { mintTokensToNewSudoswapPool } from "./amm/test/utils"
 
 describe.skip("amm", () => {
-	const { provider: providerSeller } = createE2eProvider(
+	const { provider: providerSeller } = createE2eTestProvider(
 		DEV_PK_2,
 	)
-	const { provider: providerBuyer } = createE2eProvider(
+	const { provider: providerBuyer } = createE2eTestProvider(
 		DEV_PK_1,
 	)
 

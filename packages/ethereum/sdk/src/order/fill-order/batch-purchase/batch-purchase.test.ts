@@ -1,6 +1,3 @@
-import {
-	createE2eProvider,
-} from "@rarible/ethereum-sdk-test-common"
 import type { Part } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
@@ -9,6 +6,7 @@ import type { SimpleOrder } from "../../types"
 import { createRaribleSdk } from "../../../index"
 import type { EthereumNetwork } from "../../../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
+import { createE2eTestProvider } from "../../../common/test/create-test-providers"
 import {
 	checkOwnerships,
 	makeLooksrareOrder,
@@ -18,8 +16,8 @@ import {
 } from "./test/common/utils"
 
 describe("Batch purchase", function () {
-	const { web3Ethereum: buyerEthereum } = createE2eProvider(DEV_PK_1)
-	const { web3Ethereum: ethereum } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: buyerEthereum } = createE2eTestProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_2)
 
 	const env: EthereumNetwork = "dev-ethereum"
 

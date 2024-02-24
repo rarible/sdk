@@ -1,10 +1,10 @@
-import { createE2eProvider, getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
+import { getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
-import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/send-transaction"
+import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/test"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
@@ -13,7 +13,7 @@ import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { createSdk } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
-import { initProviders } from "./test/init-providers"
+import { createE2eTestProvider, initProviders } from "./test/init-providers"
 import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
@@ -334,7 +334,7 @@ describe("sale", () => {
 })
 
 describe.skip("buy item with opensea order", () => {
-	const { provider } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
+	const { provider } = createE2eTestProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
 		rpcUrl: "https://node-rinkeby.rarible.com",
 		networkId: 4,
 	})

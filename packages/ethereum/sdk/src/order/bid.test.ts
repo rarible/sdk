@@ -1,11 +1,11 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
+import { createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
@@ -27,7 +27,7 @@ import { checkLazyAsset as checkLazyAssetTemplate } from "./check-lazy-asset"
 import { checkLazyAssetType as checkLazyAssetTypeTemplate } from "./check-lazy-asset-type"
 import { getEndDateAfterMonth } from "./test/utils"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
 
 describe.each(providers)("bid", (ethereum) => {

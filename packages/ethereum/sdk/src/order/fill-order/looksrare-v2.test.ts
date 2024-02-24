@@ -1,12 +1,12 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import type { LooksRareOrder } from "@rarible/ethereum-api-client"
 import type { EthereumNetwork } from "../../types"
 import { createRaribleSdk } from "../../index"
 import { DEV_PK_2, GOERLI_CONFIG } from "../../common/test/test-credentials"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 
 describe.skip("looksrare v2 fill tests", () => {
-	const { provider: providerBuyer } = createE2eProvider(
+	const { provider: providerBuyer } = createE2eTestProvider(
 		DEV_PK_2,
 		GOERLI_CONFIG
 	)

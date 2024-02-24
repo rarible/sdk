@@ -1,11 +1,11 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
+import { createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
@@ -21,8 +21,9 @@ import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { getEndDateAfterMonth } from "./test/utils"
+import { awaitOrder } from "./test/await-order"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
 
 describe.each(providers)("sell", (ethereum) => {
@@ -95,7 +96,7 @@ describe.each(providers)("sell", (ethereum) => {
 
 		expect(order.hash).toBeTruthy()
 
-		await delay(1000)
+		await awaitOrder(await getApis(), order.hash)
 
 		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 

@@ -1,5 +1,4 @@
 import { toAddress } from "@rarible/types"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
@@ -10,11 +9,12 @@ import type { EthereumNetwork } from "../../../types"
 import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
+import { createE2eTestProvider } from "../../../common/test/create-test-providers"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 
 describe("amm batch buy tests", () => {
-	const { web3Ethereum: buyerWeb3 } = createE2eProvider(DEV_PK_1)
-	const { web3Ethereum: ethereum } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: buyerWeb3 } = createE2eTestProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_2)
 
 	const env: EthereumNetwork = "dev-ethereum"
 

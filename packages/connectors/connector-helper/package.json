@@ -26,9 +26,7 @@
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/sdk-common": "^0.13.69-beta.1",
     "@rarible/sdk-wallet": "^0.13.69-beta.1",
-    "@rarible/tezos-sdk": "0.1.46",
-    "@rarible/web3-ethereum": "^0.13.69-beta.1",
-    "@rarible/web3-v4-ethereum": "^0.13.69-beta.1"
+    "@rarible/tezos-sdk": "0.1.46"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
@@ -38,6 +36,8 @@
   },
   "peerDependencies": {
     "rxjs": ">= 6.6.7 < 8.0.0",
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "@rarible/web3-ethereum": "^0.13.69-beta.1",
+    "@rarible/web3-v4-ethereum": "^0.13.69-beta.1"
   }
 }

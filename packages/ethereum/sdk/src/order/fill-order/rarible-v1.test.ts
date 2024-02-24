@@ -1,5 +1,5 @@
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../../config"
 import { retry } from "../../common/retry"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
@@ -8,11 +8,12 @@ import type { SimpleLegacyOrder, SimpleOrder } from "../types"
 import { getApis as getApisTemplate } from "../../common/apis"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
 import { sentTxConfirm } from "../../common/test"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { OrderFiller } from "./"
 
 describe.skip("test exchange v1 order", () => {
-	const { wallet: wallet1, web3v4: web31, web3Ethereum: sellerEthereum } = createE2eProvider(DEV_PK_1)
-	const { wallet: wallet2, web3Ethereum: buyerEthereum } = createE2eProvider(DEV_PK_2)
+	const { wallet: wallet1, web3v4: web31, web3Ethereum: sellerEthereum } = createE2eTestProvider(DEV_PK_1)
+	const { wallet: wallet2, web3Ethereum: buyerEthereum } = createE2eTestProvider(DEV_PK_2)
 
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config

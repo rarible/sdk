@@ -1,4 +1,4 @@
-import { awaitAll, createE2eProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { Address, OrderForm } from "@rarible/ethereum-api-client"
 import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
@@ -9,7 +9,7 @@ import { getApis as getApisTemplate } from "../common/apis"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
 import { sentTx, sentTxConfirm } from "../common/test"
 import { cancel } from "./cancel"
 import { signOrder } from "./sign-order"
@@ -19,7 +19,7 @@ import { OrderFiller } from "./fill-order"
 import { approve as approveTemplate } from "./approve"
 import { getEndDateAfterMonth } from "./test/utils"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers, web3v4 } = createTestProviders(provider, wallet)
 
 describe.each(providers)("cancel order", (ethereum) => {

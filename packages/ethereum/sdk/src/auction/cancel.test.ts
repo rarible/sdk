@@ -1,4 +1,4 @@
-import { awaitAll, createE2eProvider, deployTestErc1155, createAuctionContract } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc1155, createAuctionContract } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
@@ -6,12 +6,13 @@ import { approve as approveTemplate } from "../order/approve"
 import { createEthereumApis } from "../common/apis"
 import { getNetworkFromChainId } from "../common"
 import { sentTx } from "../common/test"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { StartAuction } from "./start"
 import { cancelAuction } from "./cancel"
 import { awaitForAuction } from "./test"
 
 describe.skip("cancel auction", () => {
-	const { wallet, web3Ethereum: ethereum1, web3v4 } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
+	const { wallet, web3Ethereum: ethereum1, web3v4 } = createE2eTestProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a")
 	const sender1Address = wallet.getAddressString()
 	const config = getEthereumConfig("testnet")
 	const getConfig = async () => config

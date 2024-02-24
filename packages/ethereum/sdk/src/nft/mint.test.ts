@@ -1,10 +1,9 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toAddress } from "@rarible/types"
 import type { Address } from "@rarible/ethereum-api-client"
 import { BigNumber, toBn } from "@rarible/utils"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { ethers } from "ethers"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
+import { ethers } from "ethers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
@@ -12,6 +11,7 @@ import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { delay } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV1, ERC721RequestV2, ERC721RequestV3 } from "./mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
@@ -20,9 +20,9 @@ import { getErc721Contract } from "./contracts/erc721"
 import { getErc1155Contract } from "./contracts/erc1155"
 
 const pk = DEV_PK_1
-const { web3 } = createE2eProvider(pk)
-const { provider: provider2, wallet: wallet2 } = createE2eProvider(pk)
-const { provider: provider3 } = createE2eProvider(pk)
+const { web3 } = createE2eTestProvider(pk)
+const { provider: provider2, wallet: wallet2 } = createE2eTestProvider(pk)
+const { provider: provider3 } = createE2eTestProvider(pk)
 
 const providers = [
 	new Web3Ethereum({ web3 }),

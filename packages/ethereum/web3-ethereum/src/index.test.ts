@@ -2,6 +2,9 @@ import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { toAddress } from "@rarible/types"
+import { replaceBigIntInContract } from "@rarible/ethereum-sdk-test-common/build/common"
+import { SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/build/test-contract"
+import { SIMPLE_TEST_CONTRACT_BYTECODE } from "@rarible/ethereum-sdk-test-common/build/test-contract"
 import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3Transaction } from "./index"
 
@@ -33,7 +36,8 @@ describe("Web3Ethereum", () => {
 	})
 
 	test("allows to send transactions and call functions", async () => {
-		await common.testSimpleContract(web3, ganacheEthereum)
+		const contract = await deployTestContract(web3)
+		await common.testSimpleContract(ganacheEthereum, contract.options.address)
 	})
 
 	test("getNetwork", async () => {
@@ -110,3 +114,11 @@ describe("get transaction receipt events", () => {
 		expect(events.find(e => e.event === "OrderFulfilled")).toBeTruthy()
 	})
 })
+
+async function deployTestContract(web3: Web3) {
+	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
+	const [from] = await web3.eth.getAccounts()
+	const contract = await c.deploy({ data: SIMPLE_TEST_CONTRACT_BYTECODE })
+		.send({ from, gas: 300000 })
+	return replaceBigIntInContract(contract)
+}

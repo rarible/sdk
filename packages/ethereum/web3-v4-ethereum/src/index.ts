@@ -15,9 +15,8 @@ import {
 } from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import { FMT_BYTES, FMT_NUMBER } from "web3-types"
-import type { AbiFunctionFragment, FilterAbis } from "web3-types"
+import type { AbiFunctionFragment, FilterAbis, Transaction } from "web3-types"
 import type { ContractMethodsInterface, NonPayableMethodObject, PayableMethodObject } from "web3-eth-contract"
-import type { Transaction } from "web3-types"
 import type { Web3EthereumConfig } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
@@ -502,3 +501,5 @@ export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 type InternalGasOptions = { gas?: string, gasPrice?: string }
 
 export { Web3, FMT_BYTES, FMT_NUMBER }
+export { types as Web3Types } from "web3"
+export * as Web3EthContractTypes from "web3-eth-contract"

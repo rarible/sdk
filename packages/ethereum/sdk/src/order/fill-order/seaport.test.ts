@@ -1,4 +1,3 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum/build"
 import type { SeaportV1Order } from "@rarible/ethereum-api-client/build/models/Order"
 import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
@@ -24,21 +23,22 @@ import { FILL_CALLDATA_TAG } from "../../config/common"
 import { GOERLI_CONFIG, MUMBAI_CONFIG } from "../../common/test/test-credentials"
 import { getApis as getApisTemplate } from "../../common/apis"
 import type { EthereumNetwork } from "../../types"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { ItemType } from "./seaport-utils/constants"
 import type { CreateInputItem } from "./seaport-utils/types"
 import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
 describe.skip("seaport", () => {
-	const { provider: providerBuyer } = createE2eProvider(
+	const { provider: providerBuyer } = createE2eTestProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		GOERLI_CONFIG
 	)
-	const { provider: providerSeller } = createE2eProvider(
+	const { provider: providerSeller } = createE2eTestProvider(
 		"0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
 		GOERLI_CONFIG
 	)
-	const { wallet: feeWallet } = createE2eProvider(undefined, GOERLI_CONFIG)
+	const { wallet: feeWallet } = createE2eTestProvider(undefined, GOERLI_CONFIG)
 	const web3Seller = new Web3(providerSeller as any)
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 	const web3 = new Web3(providerBuyer as any)
@@ -434,7 +434,7 @@ describe.skip("seaport", () => {
 })
 
 describe.skip("polygon seaport", () => {
-	const { provider: providerBuyer } = createE2eProvider(
+	const { provider: providerBuyer } = createE2eTestProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		MUMBAI_CONFIG
 	)

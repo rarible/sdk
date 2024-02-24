@@ -1,4 +1,3 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
 import type { IRaribleSdk } from "../../index"
@@ -6,10 +5,11 @@ import { awaitItem } from "../../common/test/await-item"
 import { generateExpirationDate } from "../../common/suite/order"
 import { createSdk } from "../../common/test/create-sdk"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { createE2eTestProvider } from "./test/init-providers"
 
 describe("Batch buy", () => {
-	const { web3Ethereum: ethereum1 } = createE2eProvider(DEV_PK_1)
-	const { web3Ethereum: ethereum2 } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: ethereum1 } = createE2eTestProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum2 } = createE2eTestProvider(DEV_PK_2)
 
 	const sdkSeller = createSdk(new EthereumWallet(ethereum1), "development")
 

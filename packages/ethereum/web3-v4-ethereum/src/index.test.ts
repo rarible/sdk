@@ -1,14 +1,19 @@
-import Web3 from "web3-v4"
+import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { toAddress } from "@rarible/types"
 import { deepReplaceBigInt } from "@rarible/sdk-common"
+import { SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/build/test-contract"
+import { SIMPLE_TEST_CONTRACT_BYTECODE } from "@rarible/ethereum-sdk-test-common/src/test-contract"
+import { replaceBigIntInContract } from "@rarible/ethereum-sdk-test-common/src/common"
 import { parseRequestError } from "./utils/parse-request-error"
 import { Web3v4Ethereum, Web3Transaction } from "./index"
 
 describe("Web3Ethereum", () => {
 	const { provider } = common.createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
-	const e2eEthereum = new Web3v4Ethereum({ web3: new Web3(provider) })
+	const web3e2e = new Web3(provider)
+	web3e2e.setConfig({ defaultTransactionType: "0x0" })
+	const e2eEthereum = new Web3v4Ethereum({ web3: web3e2e })
 	const { provider: ganache } = common.createGanacheProvider()
 	const web3 = new Web3(ganache)
 	const ganacheEthereum = new Web3v4Ethereum({ web3 })
@@ -41,7 +46,8 @@ describe("Web3Ethereum", () => {
 	})
 
 	test("allows to send transactions and call functions", async () => {
-		await common.testSimpleContract(web3, ganacheEthereum)
+		const contract = await deployTestContract(web3)
+		await common.testSimpleContract(ganacheEthereum, contract.options.address)
 	})
 
 	test("getNetwork", async () => {
@@ -120,3 +126,11 @@ describe("get transaction receipt events", () => {
 		expect(events.find(e => e.event === "OrderFulfilled")).toBeTruthy()
 	})
 })
+
+async function deployTestContract(web3: Web3) {
+	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
+	const [from] = await web3.eth.getAccounts()
+	const contract = await c.deploy({ data: SIMPLE_TEST_CONTRACT_BYTECODE })
+		.send({ from, gas: "300000" })
+	return replaceBigIntInContract(contract)
+}

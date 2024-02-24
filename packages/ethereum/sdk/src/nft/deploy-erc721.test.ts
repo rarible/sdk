@@ -1,12 +1,12 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { getSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { DeployErc721 } from "./deploy-erc721"
 
 describe("deploy erc-721 token test", () => {
-	const { web3Ethereum: ethereum1 } = createE2eProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum1 } = createE2eTestProvider(DEV_PK_1)
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)

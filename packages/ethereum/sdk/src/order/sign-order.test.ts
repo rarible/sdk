@@ -1,12 +1,11 @@
 import { toAddress } from "@rarible/types"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
 import { signOrder } from "./sign-order"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import type { SimpleOrder } from "./types"
 
-const { provider, wallet } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+const { provider, wallet } = createE2eTestProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
 const { providers } = createTestProviders(provider, wallet)
 
 describe.each(providers)("signOrder", (ethereum) => {

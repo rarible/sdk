@@ -1,4 +1,4 @@
-import { FMT_BYTES, FMT_NUMBER } from "@rarible/web3-v4-ethereum"
+import { FMT_BYTES, FMT_NUMBER } from "web3-types"
 import { deepReplaceBigInt } from "@rarible/sdk-common"
 
 export const DEFAULT_DATA_TYPE = { number: FMT_NUMBER.STR, bytes: FMT_BYTES.HEX } as const

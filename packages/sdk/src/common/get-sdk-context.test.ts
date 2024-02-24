@@ -1,10 +1,10 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
+import { createE2eTestProvider } from "../sdk-blockchains/ethereum/test/init-providers"
 import { createSdk } from "./test/create-sdk"
 
 describe("get sdk context", () => {
-	const { provider } = createE2eProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c")
+	const { provider } = createE2eTestProvider("0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c")
 
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3: web3 })

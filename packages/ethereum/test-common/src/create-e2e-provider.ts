@@ -5,8 +5,6 @@ import { TestSubprovider } from "@rarible/test-provider"
 // @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { randomWord } from "@rarible/types"
-import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
-import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 
 export function createE2eWallet(pk: string = randomWord()): Wallet {
 	return new Wallet(Buffer.from(fixPK(pk), "hex"))
@@ -93,17 +91,8 @@ export function createE2eProvider(pk?: string, config?: Partial<E2EProviderConfi
 	beforeAll(() => provider.start())
 	afterAll(() => provider.stop())
 
-	const web3 = new Web3(provider as any)
-	const web3v4 = new Web3v4(provider as any)
-
-	web3v4.setConfig({ defaultTransactionType: "0x0" })
-
 	return {
 		provider: provider.provider as any,
 		wallet: provider.wallet,
-		web3,
-		web3v4,
-		web3Ethereum: new Web3Ethereum({ web3: web3 }),
-		web3v4Ethereum: new Web3v4Ethereum({ web3: web3v4 }),
 	}
 }

@@ -1,9 +1,9 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
 import { createEthereumApis, getApis as getApisTemplate } from "../common/apis"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { MIN_PAYMENT_VALUE, MIN_PAYMENT_VALUE_DECIMAL } from "../common/check-min-payment-value"
@@ -12,7 +12,7 @@ import { UpsertOrder } from "./upsert-order"
 import { signOrder } from "./sign-order"
 import { OrderFiller } from "./fill-order"
 
-const { provider, wallet } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+const { provider, wallet } = createE2eTestProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
 const { providers, web3v4 } = createTestProviders(provider, wallet)
 const it = awaitAll({
 	testErc20: deployTestErc20(web3v4, "TST", "TST"),

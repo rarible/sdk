@@ -20,13 +20,12 @@
     "@rarible/sdk-common": "^0.13.69-beta.1",
     "@rarible/test-provider": "~0.5.0",
     "@rarible/types": "~0.9.21",
-    "@rarible/web3-ethereum": "^0.13.69-beta.1",
-    "@rarible/web3-v4-ethereum": "^0.13.69-beta.1",
     "@types/web3-provider-engine": "^14.0.1",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",
     "ganache": "^7.9.2",
-    "web3-provider-engine": "^16.0.4"
+    "web3-provider-engine": "^16.0.4",
+    "web3": "^4.4.0"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

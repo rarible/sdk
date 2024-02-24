@@ -1,5 +1,5 @@
 import { toAddress, ZERO_WORD } from "@rarible/types"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
@@ -13,7 +13,11 @@ import { signNft } from "../nft/sign-nft"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../common/test/test-credentials"
 import { sentTx } from "../common/test"
-import { concatBuyerSellerProviders, createTestProviders } from "../common/test/create-test-providers"
+import {
+	concatBuyerSellerProviders,
+	createE2eTestProvider,
+	createTestProviders,
+} from "../common/test/create-test-providers"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -23,8 +27,8 @@ import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
-const pk1Provider = createE2eProvider(DEV_PK_1)
-const pk2Provider = createE2eProvider(DEV_PK_2)
+const pk1Provider = createE2eTestProvider(DEV_PK_1)
+const pk2Provider = createE2eTestProvider(DEV_PK_2)
 
 // const { providers, web3v4 } = createTestProviders(provider, wallet)
 const pk1TestProviders = createTestProviders(pk1Provider.provider, pk1Provider.wallet)

@@ -1,8 +1,8 @@
 import { randomAddress, toAddress } from "@rarible/types"
-import type { Contract } from "web3-eth-contract"
 import { createGanacheProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-test-common"
-import type { testErc1155Abi } from "@rarible/ethereum-sdk-test-common/src"
+import type { testErc1155Abi } from "@rarible/ethereum-sdk-test-common"
 import { fromUtf8 } from "ethereumjs-util"
+import type { Web3EthContractTypes } from "@rarible/web3-v4-ethereum"
 import { getSendWithInjects } from "../common/send-transaction"
 import { sentTx } from "../common/test"
 import { createTestProviders } from "../common/test/create-test-providers"
@@ -17,7 +17,7 @@ describe.each(providers)("approveErc1155", (ethereum) => {
 	const send = getSendWithInjects()
 	const approveErc1155 = approveErc1155Template.bind(null, ethereum, send)
 
-	let testErc1155: Contract<typeof testErc1155Abi>
+	let testErc1155: Web3EthContractTypes.Contract<typeof testErc1155Abi>
 	beforeAll(async () => {
 		testErc1155 = await deployTestErc1155(web3v4, "TST")
 	})

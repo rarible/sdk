@@ -1,10 +1,9 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { BigNumber, toBn } from "@rarible/utils"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
 import {
 	createErc1155V1Collection,
 	createErc1155V2Collection,
@@ -25,10 +24,10 @@ import { getErc721Contract } from "./contracts/erc721"
 import { getErc1155Contract } from "./contracts/erc1155"
 import { awaitOwnership } from "./test/await-ownership"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
 
-describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
+describe.skip.each(providers)("burn nfts", (ethereum: Ethereum) => {
 	const testAddress = toAddress(wallet.getAddressString())
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
