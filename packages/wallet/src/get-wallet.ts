@@ -71,17 +71,17 @@ function isImxWallet(x: any): x is ImxWallet {
 	return "link" in x && "network" in x && "getConnectionData" in x
 }
 
-function getMajorVersion(version: string | undefined) {
+export function isWeb3v1(x: Web3 | Web3v4): x is Web3 {
+	return "version" in x && getMajorVersion(x.version) === "1"
+}
+
+export function isWeb3v4(x: Web3 | Web3v4): x is Web3v4 {
+	return "version" in x && getMajorVersion(x.version) === "4"
+}
+
+export function getMajorVersion(version: string | undefined) {
 	if (!version) return ""
 	const components = version?.split(".")
 	const [major] = components
 	return major
-}
-
-function isWeb3v1(x: Web3 | Web3v4): x is Web3 {
-	return "version" in x && getMajorVersion(x.version) === "1"
-}
-
-function isWeb3v4(x: Web3 | Web3v4): x is Web3v4 {
-	return "version" in x && getMajorVersion(x.version) === "4"
 }

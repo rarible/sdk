@@ -36,8 +36,7 @@ describe("Web3Ethereum", () => {
 	})
 
 	test("allows to send transactions and call functions", async () => {
-		const contract = await deployTestContract(web3)
-		await common.testSimpleContract(ganacheEthereum, contract.options.address)
+		await common.testSimpleContract(web3, ganacheEthereum)
 	})
 
 	test("getNetwork", async () => {
@@ -114,11 +113,3 @@ describe("get transaction receipt events", () => {
 		expect(events.find(e => e.event === "OrderFulfilled")).toBeTruthy()
 	})
 })
-
-async function deployTestContract(web3: Web3) {
-	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
-	const [from] = await web3.eth.getAccounts()
-	const contract = await c.deploy({ data: SIMPLE_TEST_CONTRACT_BYTECODE })
-		.send({ from, gas: 300000 })
-	return replaceBigIntInContract(contract)
-}

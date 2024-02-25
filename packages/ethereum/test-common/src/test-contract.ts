@@ -1,8 +1,9 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
+import { replaceBigIntInContract } from "./common"
 
-export async function testSimpleContract(ethereum: Ethereum, contractAddress: Address) {
-	const contract = ethereum.createContract(SIMPLE_TEST_ABI, contractAddress)
+export async function testSimpleContract(web3: any, ethereum: Ethereum) {
+	const deployed = await deployTestContract(web3)
+	const contract = ethereum.createContract(SIMPLE_TEST_ABI, deployed.options.address)
 
 	const tx = await contract.functionCall("setValue", 10).send()
 	await tx.wait()
@@ -15,7 +16,17 @@ export async function testSimpleContract(ethereum: Ethereum, contractAddress: Ad
 	expect(value.toString()).toBe("10")
 
 	const valueCallInfo = await valueCall.getCallInfo()
-	expect(valueCallInfo.contract.toLowerCase()).toEqual(contractAddress?.toLowerCase())
+	expect(valueCallInfo.contract.toLowerCase()).toEqual(deployed.options.address?.toLowerCase())
+}
+
+//@todo add web3 types after resolving problem with web3v1/web3v4 deps
+async function deployTestContract(web3: any) {
+	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
+	const [from] = await web3.eth.getAccounts()
+	const contract = await c
+		.deploy({ data: SIMPLE_TEST_CONTRACT_BYTECODE })
+		.send({ from, gas: 300000 })
+	return replaceBigIntInContract(contract)
 }
 
 export const SIMPLE_TEST_ABI = [

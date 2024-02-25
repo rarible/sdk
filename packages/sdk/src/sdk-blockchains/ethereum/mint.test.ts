@@ -1,5 +1,3 @@
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { toCollectionId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { MintType } from "../../types/nft/mint/prepare"
@@ -8,11 +6,11 @@ import { awaitItem } from "../../common/test/await-item"
 import { createSdk } from "../../common/test/create-sdk"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
+import { initProvider } from "./test/init-providers"
 
 describe("mint", () => {
-	const { wallet, web3Ethereum: ethereum } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
+	const { wallet, ethereumWallet } = initProvider(DEV_PK_1, ETH_DEV_SETTINGS)
 
-	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createSdk(ethereumWallet, "development")
 
 	const erc1155Address = convertEthereumContractAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a", Blockchain.ETHEREUM)

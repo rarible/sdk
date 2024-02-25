@@ -18,11 +18,9 @@ import { convertEthereumCollectionId, convertEthereumContractAddress, convertEth
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 
 describe("sale", () => {
-	const { web31, web32, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createSdk(new EthereumWallet(ethereum1), "development")
-	const sdk2 = createSdk(new EthereumWallet(ethereum2), "development", {
+	const { web31, wallet1, wallet2, ethereumWallet1, ethereumWallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
+	const sdk1 = createSdk(ethereumWallet1, "development")
+	const sdk2 = createSdk(ethereumWallet2, "development", {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {

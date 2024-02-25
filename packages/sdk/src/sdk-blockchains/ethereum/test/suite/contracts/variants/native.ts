@@ -1,9 +1,9 @@
 import type { EthEthereumAssetType } from "@rarible/api-client"
-import { getPromiEventReceiptPromise } from "@rarible/web3-ethereum/build/utils/to-promises"
 import type { Address } from "@rarible/types"
 import { ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
+import { getPromiEventReceiptPromise } from "@rarible/web3-v4-ethereum/build/utils/to-promises"
 import type { EVMSuiteProvider, EVMSuiteSupportedBlockchain } from "../../domain"
 import { EVMAddressful } from "./base"
 

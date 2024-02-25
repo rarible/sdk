@@ -1,5 +1,3 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { LogsLevel } from "../../domain"
@@ -8,15 +6,13 @@ import { awaitItem } from "../../common/test/await-item"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createSdk } from "../../common/test/create-sdk"
 import { awaitDeletedItem } from "../../common/test/await-deleted-item"
-import { initProviders } from "./test/init-providers"
+import { initProvider } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
-import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { DEV_PK_1 } from "./test/common"
 
 describe("burn", () => {
-	const { web31, wallet1 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
-	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum)
-	const sdk = createSdk(wallet, "development", { logs: LogsLevel.DISABLED })
+	const { ethereum, ethereumWallet } = initProvider(DEV_PK_1)
+	const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
 
 	const contractErc721 = toAddress("0x4Ab7B255Df8B212678582F7271BE99f3dECe1eAE")
 	const contractErc1155 = toAddress("0xFe3d1f0003B17eA0C8D29164F0511508f1425b3a")
@@ -24,7 +20,7 @@ describe("burn", () => {
 	const e2eErc1155V2ContractAddress = toAddress("0xFe3d1f0003B17eA0C8D29164F0511508f1425b3a")
 
 	test("burn erc721", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = await ethereum.getFrom()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
 		const mintAction = await sdk.nft.mint.prepare({ collection })
@@ -55,7 +51,7 @@ describe("burn", () => {
 	})
 
 	test("burn erc1155", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = await ethereum.getFrom()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
@@ -90,7 +86,7 @@ describe("burn", () => {
 	})
 
 	test.skip("burn erc-721 lazy item", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = await ethereum.getFrom()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
@@ -122,7 +118,7 @@ describe("burn", () => {
 	})
 
 	test.skip("burn erc1155 lazy item", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = await ethereum.getFrom()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
@@ -156,7 +152,7 @@ describe("burn", () => {
 	})
 
 	test("burn erc1155 lazy item with basic function", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = await ethereum.getFrom()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({

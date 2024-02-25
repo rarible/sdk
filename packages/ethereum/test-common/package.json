@@ -24,8 +24,8 @@
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",
     "ganache": "^7.9.2",
-    "web3-provider-engine": "^16.0.4",
-    "web3": "^4.4.0"
+    "web3": "^4.4.0",
+    "web3-provider-engine": "^16.0.4"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

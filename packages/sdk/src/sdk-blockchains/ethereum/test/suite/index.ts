@@ -1,10 +1,10 @@
 import { E2EProvider } from "@rarible/ethereum-sdk-test-common/build"
 import type { E2EProviderConfig } from "@rarible/ethereum-sdk-test-common/build"
 import type { BigNumberValue } from "@rarible/utils"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { Blockchain } from "@rarible/api-client"
 import type { Address } from "@rarible/types"
 import { toAddress } from "@rarible/types"
+import { Web3v4Ethereum, Web3 } from "@rarible/web3-v4-ethereum"
 import { SDKTestSuite } from "../../../../common/suite"
 import { devNetworkByBlockchain } from "../common"
 import type { EVMSuiteHookedProvider, EVMSuiteSupportedBlockchain, EVMSuiteTestConfig } from "./domain"
@@ -19,8 +19,10 @@ class EVMTestSuiteHookedProvider<T extends EVMSuiteSupportedBlockchain> implemen
     		...devNetworkByBlockchain[blockchain],
     		...config,
     	})
-    	this.provider = new Web3Ethereum({
-    		web3: this.internalProvider.web3,
+    	const web3 = new Web3(this.internalProvider.provider)
+    	web3.setConfig({ defaultTransactionType: "0x0" })
+    	this.provider = new Web3v4Ethereum({
+    		web3,
     	})
     }
 

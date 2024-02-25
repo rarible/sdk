@@ -1,4 +1,4 @@
-import type { Web3Ethereum } from "@rarible/web3-ethereum/build"
+import type { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import type { EVMSuiteSupportedBlockchain } from "../domain"
 import type { EVMKnownTestContract, EVMContractsDictionary } from "./domain"
 import { ERC1155Contract } from "./variants/erc1155"
@@ -10,7 +10,7 @@ import { EVMNativeToken } from "./variants/native"
 export class EVMContractsTestSuite<T extends EVMSuiteSupportedBlockchain> {
 	constructor(
 		private readonly blockchain: T,
-		private readonly provider: Web3Ethereum
+		private readonly provider: Web3v4Ethereum
 	) {}
 
   getContract = <K extends EVMKnownTestContract>(

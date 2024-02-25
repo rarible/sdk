@@ -1,5 +1,3 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
 import type { Address } from "@rarible/types"
 import { toAddress, toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType } from "@rarible/api-client"
@@ -9,20 +7,16 @@ import BigNumber from "bignumber.js"
 import { createWethContract } from "@rarible/ethereum-sdk-test-common"
 import { retry } from "../../common/retry"
 import { createSdk } from "../../common/test/create-sdk"
-import { initProviders } from "./test/init-providers"
+import { initProvider } from "./test/init-providers"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
 import { POLYGON_TESTNET_SETTINGS } from "./test/common"
 
 describe("get balance", () => {
-	const { web31, wallet1 } = initProviders({
-		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	})
+	const { ethereumWallet, ethereum, wallet } = initProvider(
+		"ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	)
 
-	const ethereum = new Web3Ethereum({
-		web3: web31,
-		from: wallet1.getAddressString(),
-	})
-	const sdk = createSdk(new EthereumWallet(ethereum), "development")
+	const sdk = createSdk(ethereumWallet, "development")
 
 	test.concurrent("should be the same balance", async () => {
 		const ethWalletAddess = toAddress("0x00a329c0648769A73afAc7F9381E08FB43dBEA72")
@@ -85,7 +79,7 @@ describe("get balance", () => {
 	})
 
 	test("convert from eth to wETH", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = wallet.getAddressString()
 		const wethE2eAssetType: AssetType = {
 			"@type": "ERC20",
 			contract: convertEthereumContractAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6", Blockchain.ETHEREUM),
@@ -109,7 +103,7 @@ describe("get balance", () => {
 	})
 
 	test("convert from wETH to eth", async () => {
-		const senderRaw = wallet1.getAddressString()
+		const senderRaw = wallet.getAddressString()
 		const wethE2eAssetType: AssetType = {
 			"@type": "ERC20",
 			contract: convertEthereumContractAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6", Blockchain.ETHEREUM),
@@ -150,16 +144,12 @@ describe("get balance", () => {
 })
 
 describe("get polygon balance", () => {
-	const { web31, wallet1 } = initProviders({
-		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	}, POLYGON_TESTNET_SETTINGS)
+	const { ethereumWallet } = initProvider(
+		"ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+		POLYGON_TESTNET_SETTINGS
+	)
 
-	const ethereum = new Web3Ethereum({
-		web3: web31,
-		from: wallet1.getAddressString(),
-	})
-
-	const sdk = createSdk(new EthereumWallet(ethereum), "testnet")
+	const sdk = createSdk(ethereumWallet, "testnet")
 
 	test.concurrent("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
@@ -179,19 +169,17 @@ describe("get polygon balance", () => {
 })
 
 describe.skip("Bidding balance", () => {
-	const { web31, wallet1 } = initProviders({
-		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	})
+	const { wallet, ethereumWallet } = initProvider(
+		"ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9"
+	)
 
-	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum)
-	const sdk = createSdk(wallet, "development")
+	const sdk = createSdk(ethereumWallet, "development")
 
 	test("Should check bidding balance & deposit & withdraw", async () => {
 		const checkBalance = async (expecting: BigNumberValue | null) => {
 			const balance = await sdk.balances.getBiddingBalance({
 				blockchain: Blockchain.ETHEREUM,
-				walletAddress: toUnionAddress("ETHEREUM:" + wallet1.getAddressString()),
+				walletAddress: toUnionAddress("ETHEREUM:" + wallet.getAddressString()),
 			})
 			if (expecting !== null) {
 				expect(parseFloat(balance.toString())).toBeCloseTo(parseFloat(expecting.toString()), 5)
