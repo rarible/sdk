@@ -1,4 +1,4 @@
-import type { Web3 } from "@rarible/web3-v4-ethereum"
+import type { Web3, Web3EthContractTypes } from "@rarible/web3-v4-ethereum"
 import type { Address } from "@rarible/types"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import { NumberDataFormat } from "../../../../common/contracts"
@@ -7,7 +7,9 @@ export function createErc1155FactoryContract(ethereum: Ethereum, address?: Addre
 	return ethereum.createContract(erc1155FactoryABI, address)
 }
 
-export function createTestErc1155RaribleFactoryContract(web3: Web3, address?: Address) {
+export function createTestErc1155RaribleFactoryContract(
+	web3: Web3, address?: Address
+): Web3EthContractTypes.Contract<typeof erc1155FactoryABI> {
 	return new web3.eth.Contract(erc1155FactoryABI, address, NumberDataFormat)
 }
 export const erc1155FactoryABI = [
