@@ -19,13 +19,13 @@ export async function testSimpleContract(web3: Web3, ethereum: Ethereum) {
 	expect(valueCallInfo.contract).toEqual(deployed.options.address)
 }
 
-async function deployTestContract(web3: Web3) {
+export async function deployTestContract(web3: Web3) {
 	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
 	const [from] = await web3.eth.getAccounts()
 	return c.deploy({ data: bytecode }).send({ from, gasPrice: "0", gas: 300000 })
 }
 
-const SIMPLE_TEST_ABI = [
+export const SIMPLE_TEST_ABI = [
 	{
 		"anonymous": false,
 		"inputs": [
