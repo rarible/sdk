@@ -4,8 +4,7 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const celoTestnetConfig: EthereumConfig = {
-	//@todo insert
-	basePath: "",
+	basePath: "https://testnet-celo-api.rarible.org",
 	chainId: 44787,
 	exchange: {
 		v1: ZERO_ADDRESS,

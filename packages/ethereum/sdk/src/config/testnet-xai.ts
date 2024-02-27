@@ -4,8 +4,7 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const xaiTestnetConfig: EthereumConfig = {
-	//@todo add endpoint
-	basePath: "",
+	basePath: "https://testnet-xai-api.rarible.org",
 	chainId: 37714555429,
 	exchange: {
 		v1: ZERO_ADDRESS,

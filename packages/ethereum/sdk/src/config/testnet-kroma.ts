@@ -4,8 +4,7 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const kromaTestnetConfig: EthereumConfig = {
-	//@todo insert
-	basePath: "",
+	basePath: "https://testnet-kroma-api.rarible.org",
 	chainId: 2358,
 	exchange: {
 		v1: ZERO_ADDRESS,

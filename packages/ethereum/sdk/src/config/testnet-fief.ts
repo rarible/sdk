@@ -4,8 +4,7 @@ import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
 export const fiefTestnetConfig: EthereumConfig = {
-	//@todo insert
-	basePath: "",
+	basePath: "https://testnet-fief-api.rarible.org",
 	chainId: 712,
 	exchange: {
 		v1: ZERO_ADDRESS,
