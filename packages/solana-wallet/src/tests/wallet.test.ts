@@ -22,6 +22,6 @@ describe("solana wallet", () => {
 		const wallet = SolanaKeypairWallet.fromKey(walletMock.keys[key])
 		const result = await wallet.signMessage(signatureWord)
 		expect(result.publicKey.toString()).toEqual(walletMock.publicKeyString)
-		expect(result.signature).toEqual(walletMock.signatures[signatureWord])
+		expect(result.signature).toEqual(walletMock.signatures[signatureWord].array)
 	})
 })
