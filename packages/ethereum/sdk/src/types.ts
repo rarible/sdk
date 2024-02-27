@@ -23,6 +23,12 @@ export type EthereumNetwork =
   | "zkatana"
   | "base"
   | "base-sepolia"
+  | "testnet-fief"
+  | "xai"
+  | "testnet-xai"
+  | "testnet-kroma"
+  | "testnet-celo"
+  | "celo"
 
 export enum LogsLevel {
 	DISABLED = 0,

@@ -21,7 +21,7 @@
     "@babel/runtime": "^7.15.4",
     "@ethersproject/abstract-signer": "^5.4.0",
     "@imtbl/imx-sdk": "^2.1.1",
-    "@rarible/api-client": "0.16.5-alpha.6",
+    "@rarible/api-client": "0.16.5-alpha.7",
     "@rarible/ethereum-provider": "^0.13.67",
     "@rarible/ethers-ethereum": "^0.13.68-fix.7",
     "@rarible/fcl-types": "~0.5.56",
