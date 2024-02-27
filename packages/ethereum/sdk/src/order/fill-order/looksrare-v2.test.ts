@@ -2,14 +2,13 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { LooksRareOrder } from "@rarible/ethereum-api-client"
-import type { EthereumNetwork } from "../../types"
 import { createRaribleSdk } from "../../index"
-import { DEV_PK_2, GOERLI_CONFIG } from "../../common/test/test-credentials"
+import { DEV_PK_2, getE2EConfigByNetwork } from "../../common/test/test-credentials"
 
 describe.skip("looksrare v2 fill tests", () => {
 	const { provider: providerBuyer } = createE2eProvider(
 		DEV_PK_2,
-		GOERLI_CONFIG
+		getE2EConfigByNetwork("goerli")
 	)
 
 	const buyerWeb3 = new Web3Ethereum({
@@ -17,7 +16,7 @@ describe.skip("looksrare v2 fill tests", () => {
 		gas: 3000000,
 	})
 
-	const env: EthereumNetwork = "testnet"
+	const env = "testnet" as const
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 
 	test("buy", async () => {

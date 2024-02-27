@@ -1,14 +1,11 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import {
-	createSudoswapFactoryV1Contract,
-} from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
+import { createSudoswapFactoryV1Contract } from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
 import { approveErc721 } from "../../../approve-erc721"
 import { mintTestToken } from "../../batch-purchase/test/common/utils"
 import type { RaribleSdk } from "../../../../index"
 import type { SendFunction } from "../../../../common/send-transaction"
-import type { EthereumNetwork } from "../../../../types"
 
 async function createSudoswapPool(
 	sellerWeb3: Ethereum,
@@ -50,7 +47,7 @@ async function createSudoswapPool(
 
 export async function mintTokensToNewSudoswapPool(
 	sdk: RaribleSdk,
-	env: EthereumNetwork,
+	erc721Contract: Address,
 	sellerWeb3: Ethereum,
 	send: SendFunction,
 	sudoswapFactoryAddress: Address,
@@ -58,7 +55,7 @@ export async function mintTokensToNewSudoswapPool(
 ): Promise<{poolAddress: Address, contract: Address, items: string[]}> {
 	const tokensPromises = []
 	for (let i = 0; i < tokensCount; i++) {
-		tokensPromises.push(mintTestToken(sdk, env))
+		tokensPromises.push(mintTestToken(sdk, erc721Contract))
 	}
 	const tokens = await Promise.all(tokensPromises)
 	const contract = tokens[0].contract

@@ -8,7 +8,6 @@ import { getEthereumConfig } from "../config"
 import { approve as approveTemplate } from "../order/approve"
 import { getApiConfig } from "../config/api-config"
 import { createEthereumApis } from "../common/apis"
-import type { EthereumNetwork } from "../types"
 import { getNetworkFromChainId } from "../common"
 import { StartAuction } from "./start"
 import { BuyoutAuction } from "./buy-out"
@@ -22,9 +21,9 @@ describe.skip("buy out auction", () => {
 	const sender1Address = walletSeller.getAddressString()
 	const sender2Address = walletBuyer.getAddressString()
 	const feeAddress = feeWallet.getAddressString()
-	const web3Seller = new Web3(providerSeller as any)
-	const web3Buyer = new Web3(providerBuyer as any)
-	const env: EthereumNetwork = "testnet"
+	const web3Seller = new Web3(providerSeller)
+	const web3Buyer = new Web3(providerBuyer)
+	const env = "testnet" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 
