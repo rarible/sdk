@@ -17,7 +17,7 @@ import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 // init sdk
 const sdk = SolanaSdk.create({ connection: { cluster: "devnet", commitmentOrConfig: "confirmed" } })
 // generate new wallet
-const wallet = SolanaKeypairWallet.generate()
+const wallet = SolanaKeypairWallet.fromSeed(undefined)
 
 // airdrop some SOL to new wallet
 const airdropTx = await sdk.connection.requestAirdrop(

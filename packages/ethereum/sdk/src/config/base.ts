@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const baseConfig: EthereumConfig = {
 	basePath: "https://base-api.rarible.org",
 	chainId: 8453,
+	environment: "production",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x6C65a3C3AA67b126e43F86DA85775E0F5e9743F7"),

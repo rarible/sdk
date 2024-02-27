@@ -12,6 +12,7 @@ import { FirebaseEmailConnectionProvider } from "@rarible/connector-firebase-ema
 import { WalletLinkConnectionProvider } from "@rarible/connector-walletlink"
 import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
+import { SalmonConnectionProvider } from "@rarible/connector-salmon"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
 import { mapEthereumWallet, mapFlowWallet, mapImmutableXWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
@@ -280,11 +281,13 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	)
 
 	const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
+	const salmonConnect = mapSolanaWallet(new SalmonConnectionProvider())
 	const solflareConnect = mapSolanaWallet(
 		new SolflareConnectionProvider({
 			network: environment === "prod" ? "mainnet-beta" : "devnet",
 		})
 	)
+
 
 	const imxConnector = mapImmutableXWallet(
 		new ImmutableXLinkConnectionProvider({
@@ -298,6 +301,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(beacon)
 		.add(fcl)
 		.add(walletConnectV2)
+		.add(salmonConnect)
 		.add(phantomConnect)
 		.add(solflareConnect)
 		.add(imxConnector)

@@ -1,23 +1,20 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
 import type { TezosProvider } from "@rarible/tezos-sdk"
-import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { ImxWallet } from "@rarible/immutable-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { AbstractWallet, UserSignature } from "./domain"
 import { WalletType } from "./domain"
 
 export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWallet {
 	readonly walletType = WalletType.ETHEREUM
 
-	constructor(public readonly ethereum: T) {
-	}
+	constructor(public readonly ethereum: T) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const address = await this.ethereum.getFrom()
-		if (!address) {
-			throw new Error("Not connected to Ethereum blockchain")
-		}
+		if (!address) throw new Error("Not connected to Ethereum blockchain")
 		return {
 			signature: await this.ethereum.personalSign(message),
 			publicKey: address,
@@ -28,8 +25,7 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
 export class FlowWallet implements AbstractWallet {
 	readonly walletType = WalletType.FLOW
 
-	constructor(public readonly fcl: Fcl, public auth?: AuthWithPrivateKey) {
-	}
+	constructor(public readonly fcl: Fcl, public auth?: AuthWithPrivateKey) {}
 
 	getAuth(): AuthWithPrivateKey {
 		return this.auth
@@ -103,22 +99,19 @@ export interface TezosSignatureResult {
 export class TezosWallet implements AbstractWallet {
 	readonly walletType = WalletType.TEZOS
 
-	constructor(public readonly provider: TezosProvider) {
-	}
+	constructor(public readonly provider: TezosProvider) {}
 
 	private async sign(p: TezosProvider, message: string, type: "operation" | "message"): Promise<TezosSignatureResult> {
 		type = type || "message"
 		const edpk = await p.public_key()
-		if (edpk === undefined) throw new Error("cannot get public key from provider")
+		if (typeof edpk === "undefined") throw new Error("cannot get public key from provider")
 		const r = await p.sign(message, type)
 		return { edpk, ...r }
 	}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const publicKey = await this.provider.public_key()
-		if (publicKey === undefined) {
-			throw new Error("Public key undefined")
-		}
+		if (typeof publicKey === "undefined") throw new Error("Public key undefined")
 
 		const result = await this.sign(this.provider, message, "message")
 		return {
@@ -131,23 +124,14 @@ export class TezosWallet implements AbstractWallet {
 export class SolanaWallet implements AbstractWallet {
 	readonly walletType = WalletType.SOLANA
 
-	constructor(public readonly provider: SolanaWalletProvider) {
-	}
+	constructor(public readonly provider: SolanaSigner) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		const data = new TextEncoder().encode(message)
-		const res = await this.provider.signMessage(data, "utf8")
-
-		if (res.signature) { // phantom wallet response
-			return {
-				signature: Buffer.from(res.signature).toString("hex"),
-				publicKey: res.publicKey.toString(),
-			}
-		} else { // solflare wallet response
-			return {
-				signature: Buffer.from(res).toString("hex"),
-				publicKey: this.provider.publicKey.toString(),
-			}
+		const result = await this.provider.signMessage(data, "utf8")
+		return {
+			signature: Buffer.from(result.signature).toString("hex"),
+			publicKey: result.publicKey.toString(),
 		}
 	}
 }
@@ -155,8 +139,7 @@ export class SolanaWallet implements AbstractWallet {
 export class ImmutableXWallet implements AbstractWallet {
 	readonly walletType = WalletType.IMMUTABLEX
 
-	constructor(public wallet: ImxWallet) {
-	}
+	constructor(public wallet: ImxWallet) {}
 
 	async signPersonalMessage(message: string): Promise<UserSignature> {
 		return {

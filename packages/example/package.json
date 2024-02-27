@@ -55,6 +55,7 @@
     "@rarible/connector-mattel": "^0.13.68-fix.7",
     "@rarible/connector-nfid": "^0.13.68-fix.7",
     "@rarible/connector-portis": "^0.13.68-fix.7",
+    "@rarible/connector-salmon": "^0.13.68-fix.7",
     "@rarible/connector-torus": "^0.13.68-fix.7",
     "@rarible/connector-walletconnect-v2": "^0.13.68-fix.7",
     "@rarible/connector-walletlink": "^0.13.68-fix.7",

@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const zkatanaConfig: EthereumConfig = {
 	basePath: "https://testnet-astarzkevm-api.rarible.org",
 	chainId: 1261120,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x51D04BE44865c323fDfb065d149725995dbF05f8"),

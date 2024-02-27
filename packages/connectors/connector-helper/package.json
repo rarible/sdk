@@ -20,17 +20,11 @@
     "@rarible/connector-beacon": "^0.13.68-fix.7",
     "@rarible/connector-fcl": "^0.13.68-fix.7",
     "@rarible/connector-mattel": "^0.13.68-fix.7",
-    "@rarible/estimate-middleware": "~0.9.6",
+    "@rarible/connector-solana": "^0.13.68-fix.7",
     "@rarible/sdk-common": "^0.13.68-fix.7",
     "@rarible/sdk-wallet": "^0.13.68-fix.7",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/web3-ethereum": "^0.13.68-fix.7"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
-    "ts-jest": "^27.0.3"
   },
   "peerDependencies": {
     "rxjs": ">= 6.6.7 < 8.0.0",
