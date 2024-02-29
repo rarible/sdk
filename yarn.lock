@@ -6964,10 +6964,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
 
-"@rarible/types@~0.9.23":
-  version "0.9.23"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.23.tgz#5e14f18e3fca2b7040a1bfcee54050bd9a64bc4c"
-  integrity sha512-/Tjf8Fjb5O5qOGC51tzqZUPq9xg632WwvAVPFR33Y9FyQSAPkO7Tx54PxPFhqWG9S7r3OghR22EY5A7neoSlcg==
+"@rarible/types@~0.9.24":
+  version "0.9.24"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.24.tgz#b3c38fed1c875f89905d56239b655190b645b691"
+  integrity sha512-iFhGHrBEzc1jZECOppQGIEWNekdzSWGxeSnNzcNJKx9wwkBcGl77F6xNblM4c4+1ghPZKFdf5bDQQzeDB/mUXg==
 
 "@rarible/utils@^0.9.1":
   version "0.9.1"
