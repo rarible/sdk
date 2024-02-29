@@ -1,5 +1,5 @@
-import type { Address, BigNumber } from "@rarible/types"
+import type { Address, BigNumber, ItemId } from "@rarible/types"
 
-export function createItemId(contract: Address, tokenId: BigNumber): string {
-	return `${contract}:${tokenId}`
+export function createItemId(contract: Address, tokenId: BigNumber): ItemId {
+	return `${contract}:${tokenId}` as ItemId
 }

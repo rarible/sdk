@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const rariMainnetConfig: EthereumConfig = {
+export const rariMainnetConfig: EthereumConfig<"rari"> = {
+	network: "rari",
+	blockchain: Blockchain.RARI,
 	basePath: "https://rari-api.rarible.org",
 	chainId: 1380012617,
 	environment: "production",
@@ -41,6 +44,15 @@ export const rariMainnetConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: ZERO_ADDRESS,
+			v3: toAddress("0xD9F3BfeD52ec008A13cF08C7382a917Eb364Cc32"),
+		},
+		erc1155: {
+			v2: toAddress("0xBFb17500344bA3475d46091F5c8f1e33B31ed909"),
+		},
 	},
 	weth: toAddress("0xf037540e51D71b2D2B1120e8432bA49F29EDFBD0"),
 	auction: ZERO_ADDRESS,

@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const zkatanaConfig: EthereumConfig = {
+export const zkatanaConfig: EthereumConfig<"zkatana"> = {
+	network: "zkatana",
+	blockchain: Blockchain.ASTARZKEVM,
 	basePath: "https://testnet-astarzkevm-api.rarible.org",
 	chainId: 1261120,
 	environment: "testnet",
@@ -41,6 +44,15 @@ export const zkatanaConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: toAddress("0x916b1865262465ed0c91459Fd43574C8F3853aAA"),
+			v3: toAddress("0xd41278d23ED550777367dbDbCb57d38DDd0d22D0"),
+		},
+		erc1155: {
+			v2: toAddress("0x7cDC3E0BEc775FE7857b9ceAF62ca20620F13572"),
+		},
 	},
 	weth: toAddress("0xD8560C88D1DC85f9ED05b25878E366c49B68bEf9"),
 	auction: ZERO_ADDRESS,

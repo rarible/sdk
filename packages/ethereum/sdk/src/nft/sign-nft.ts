@@ -5,6 +5,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { TypedMessage } from "eth-sig-util"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { GetConfigByChainId } from "../config"
+import { getRequiredWallet } from "../common/get-required-wallet"
 import {
 	EIP1155_DOMAIN_NFT_TEMPLATE,
 	EIP1155_NFT_TYPE,
@@ -14,12 +15,16 @@ import {
 	EIP721_NFT_TYPES,
 } from "./eip712"
 
-export type SimpleLazyNft<K extends keyof any> = Omit<LazyErc721, K> | Omit<LazyErc1155, K>
+type LazyErc721Signless = Omit<LazyErc721, "signatures">
+type LazyErc1155Signless = Omit<LazyErc1155, "signatures">
+export type LazyNftSignless = LazyErc721Signless | LazyErc1155Signless
 
-export async function signNft(ethereum: Maybe<Ethereum>, getConfig: GetConfigByChainId, nft: SimpleLazyNft<"signatures">): Promise<Binary> {
-	if (!ethereum) {
-		throw new Error("Wallet undefined")
-	}
+export async function signNft(
+	ethereum: Maybe<Ethereum>,
+	getConfig: GetConfigByChainId,
+	nft: LazyNftSignless
+): Promise<Binary> {
+	const wallet = getRequiredWallet(ethereum)
 	const config = await getConfig()
 	switch (nft["@type"]) {
 		case "ERC721": {
@@ -34,7 +39,7 @@ export async function signNft(ethereum: Maybe<Ethereum>, getConfig: GetConfigByC
 					tokenURI: nft.uri,
 				},
 			}
-			const signedData = await ethereum.signTypedData(data)
+			const signedData = await wallet.signTypedData(data)
 			if (!signedData) {
 				throw new Error(`signNft error: signedData is empty (${signedData}), data=${JSON.stringify(data)}`)
 			}
@@ -52,15 +57,14 @@ export async function signNft(ethereum: Maybe<Ethereum>, getConfig: GetConfigByC
 					tokenURI: nft.uri,
 				},
 			}
-			const signedData = await ethereum.signTypedData(data)
+			const signedData = await wallet.signTypedData(data)
 			if (!signedData) {
 				throw new Error(`signNft error: signedData=${signedData}, data=${JSON.stringify(data)}`)
 			}
 			return toBinary(signedData)
 		}
-		default: {
-			throw new Error("Unexpected")
-		}
+		default:
+			throw new Error(`Unexpected nft type - ${nft["@type"]}`)
 	}
 }
 
@@ -84,8 +88,7 @@ function createEIP712NftDomain(
 				verifyingContract: verifyingContract,
 			}
 		}
-		default: {
-			throw new Error("Unexpected")
-		}
+		default:
+			throw new Error(`Unexpected nft type ${nftType}`)
 	}
 }

@@ -26,7 +26,7 @@ export const ethereumNetworks = [
 	"zkatana",
 	"base",
 	"base-sepolia",
-]
+] as const
 
 export type EthereumNetwork = typeof ethereumNetworks[number]
 

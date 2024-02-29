@@ -21,6 +21,7 @@ import { encodeRaribleV2OrderData } from "../encode-rarible-v2-order-data"
 import { isETH, isWeth } from "../../nft/common"
 import type { GetConfigByChainId } from "../../config"
 import { getNetworkConfigByChainId } from "../../config"
+import { getRequiredWallet } from "../../common/get-required-wallet"
 import { encodeRaribleV2OrderPurchaseStruct } from "./rarible-v2/encode-rarible-v2-order"
 import { invertOrder } from "./invert-order"
 import type {
@@ -248,13 +249,14 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 	}
 
 	async fixForTx(order: SimpleRaribleV2Order): Promise<any> {
-		if (!this.ethereum) {
-			throw new Error("Wallet undefined")
+		const wallet = getRequiredWallet(this.ethereum)
+		const config = getNetworkConfigByChainId(await wallet.getChainId())
+		const hash = hashToSign(config, wallet, order)
+		if (order.signature) {
+			const isMakerSigner = await isSigner(wallet, order.maker, hash, order.signature!)
+			return orderToStruct(wallet, order, !isMakerSigner)
 		}
-		const config = getNetworkConfigByChainId(await this.ethereum.getChainId())
-		const hash = hashToSign(config, this.ethereum, order)
-		const isMakerSigner = await isSigner(this.ethereum, order.maker, hash, order.signature!)
-		return orderToStruct(this.ethereum, order, !isMakerSigner)
+		throw new Error("Order signature is required. This error should never happen")
 	}
 
 	async getMatchV2Options(

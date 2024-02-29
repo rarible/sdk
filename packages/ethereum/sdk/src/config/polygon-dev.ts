@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const devPolygonConfig: EthereumConfig = {
+export const devPolygonConfig: EthereumConfig<"dev-polygon"> = {
+	network: "dev-polygon",
+	blockchain: Blockchain.POLYGON,
 	basePath: "https://dev-polygon-api.rarible.org",
 	chainId: 300501,
 	environment: "dev",
@@ -38,6 +41,15 @@ export const devPolygonConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: ZERO_ADDRESS,
+			v3: toAddress("0x5A3Ed919C18137dcC67fBEA707d7E41F3E498BEF"),
+		},
+		erc1155: {
+			v2: toAddress("0x67A8fE17Db4d441f96f26094677763a2213a3B5f"),
+		},
 	},
 	weth: toAddress("0x328823f69a0915c9BEc366Eb09ccdfB964f91Ad5"),
 	auction: ZERO_ADDRESS,

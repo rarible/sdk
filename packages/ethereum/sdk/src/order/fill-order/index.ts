@@ -52,6 +52,7 @@ import { AmmOrderHandler } from "./amm"
 import { getUpdatedCalldata } from "./common/get-updated-call"
 import { LooksrareV2OrderHandler } from "./looksrare-v2"
 import type { LooksrareOrderV2FillRequest } from "./types"
+import { BaseFeeService } from "../../common/base-fee"
 
 export class OrderFiller {
 	v1Handler: RaribleV1OrderHandler
@@ -72,7 +73,7 @@ export class OrderFiller {
 		private readonly send: SendFunction,
 		private readonly getConfig: GetConfigByChainId,
 		private readonly getApis: () => Promise<RaribleEthereumApis>,
-		private readonly getBaseOrderFee: (type: SimpleOrder["type"]) => Promise<number>,
+		private readonly baseFeeService: BaseFeeService,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
 	) {
@@ -84,7 +85,7 @@ export class OrderFiller {
 			getApis,
 			send,
 			getConfig,
-			getBaseOrderFee,
+			baseFeeService,
 			sdkConfig,
 		)
 		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)

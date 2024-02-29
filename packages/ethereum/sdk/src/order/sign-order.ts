@@ -6,6 +6,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import { TypedDataUtils } from "eth-sig-util"
 import type { EthereumConfig } from "../config/type"
 import type { GetConfigByChainId } from "../config"
+import { getRequiredWallet } from "../common/get-required-wallet"
 import { hashLegacyOrder } from "./hash-legacy-order"
 import { assetTypeToStruct } from "./asset-type-to-struct"
 import { EIP712_DOMAIN_TEMPLATE, EIP712_ORDER_TYPE, EIP712_ORDER_TYPES } from "./eip712"
@@ -17,19 +18,17 @@ export async function signOrder(
 	getConfig: GetConfigByChainId,
 	order: SimpleOrder
 ): Promise<Binary> {
-	if (!ethereum) {
-		throw new Error("Wallet undefined")
-	}
+	const wallet = getRequiredWallet(ethereum)
 	const config = await getConfig()
 	switch (order.type) {
 		case "RARIBLE_V1": {
-			const legacyHash = hashLegacyOrder(ethereum, order)
-			return toBinary(await ethereum.personalSign(legacyHash.substring(2)))
+			const legacyHash = hashLegacyOrder(wallet, order)
+			return toBinary(await wallet.personalSign(legacyHash.substring(2)))
 		}
 		case "RARIBLE_V2": {
 			const domain = createEIP712Domain(config.chainId, config.exchange.v2)
-			const structMessage = orderToStruct(ethereum, order)
-			const signature = await ethereum.signTypedData({
+			const structMessage = orderToStruct(wallet, order)
+			const signature = await wallet.signTypedData({
 				primaryType: EIP712_ORDER_TYPE,
 				domain,
 				types: EIP712_ORDER_TYPES,
@@ -40,9 +39,8 @@ export async function signOrder(
 			}
 			return toBinary(signature)
 		}
-		default: {
+		default:
 			throw new Error(`Unsupported order type: ${(order as any).type}`)
-		}
 	}
 }
 
@@ -64,7 +62,7 @@ function createEIP712Domain(chainId: number, verifyingContract: Address): EIP712
 	}
 }
 
-export function orderToStruct(ethereum: Ethereum, order: SimpleRaribleV2Order, wrongEncode: Boolean = false): any {
+export function orderToStruct(ethereum: Ethereum, order: SimpleRaribleV2Order, wrongEncode: Boolean = false) {
 	const [dataType, data] = encodeRaribleV2OrderData(ethereum, order.data, wrongEncode)
 	return {
 		maker: order.maker,

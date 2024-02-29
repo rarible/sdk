@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const zkSyncConfig: EthereumConfig = {
+export const zkSyncConfig: EthereumConfig<"zksync"> = {
+	network: "zksync",
+	blockchain: Blockchain.ZKSYNC,
 	basePath: "https://zksync-api.rarible.org",
 	chainId: 324,
 	environment: "production",
@@ -41,6 +44,15 @@ export const zkSyncConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: ZERO_ADDRESS,
+			v3: toAddress("0xd02cb44Adf7acf92EeF81067Ac276b453011EF40"),
+		},
+		erc1155: {
+			v2: toAddress("0xf501F9dF64e433d54D6eb33513244aEb5288FFE8"),
+		},
 	},
 	weth: toAddress("0x8Ebe4A94740515945ad826238Fc4D56c6B8b0e60"),
 	auction: ZERO_ADDRESS,

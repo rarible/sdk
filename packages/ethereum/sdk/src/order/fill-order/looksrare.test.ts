@@ -19,7 +19,7 @@ import { ETHER_IN_WEI } from "../../common"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
-	const goerli = getE2EConfigByNetwork("goerli")
+	const goerli = getE2EConfigByNetwork("testnet")
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1, goerli)
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_2, goerli)
 	const { wallet: feeWallet } = createE2eProvider(undefined, goerli)

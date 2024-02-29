@@ -28,6 +28,7 @@
     "@rarible/action": "~0.9.1",
     "@rarible/ethereum-api-client": "^0.1.26-beta3",
     "@rarible/ethereum-provider": "^0.13.67",
+    "p-lazy": "^3.1.0",
     "@rarible/logger": "^0.9.12",
     "@rarible/sdk-common": "^0.13.68-fix.7",
     "@rarible/utils": "~0.9.10",

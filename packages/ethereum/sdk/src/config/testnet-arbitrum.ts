@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const arbitrumTestnetConfig: EthereumConfig = {
+export const arbitrumTestnetConfig: EthereumConfig<"testnet-arbitrum"> = {
+	network: "testnet-arbitrum",
+	blockchain: Blockchain.ARBITRUM,
 	basePath: "https://testnet-arbitrum-api.rarible.org",
 	chainId: 421614,
 	environment: "testnet",
@@ -41,6 +44,15 @@ export const arbitrumTestnetConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: toAddress("0x98C2d878064dCD20489214cf0866f972f91784D0"),
+			v3: toAddress("0xB02f8F8F3527e5b2C7dB72B7eE1Af244fA8B3BAE"),
+		},
+		erc1155: {
+			v2: toAddress("0xc9eB416CDb5cc2aFC09bb75393AEc6dBA4E5C84a"),
+		},
 	},
 	weth: toAddress("0x980b62da83eff3d4576c647993b0c1d7faf17c73"),
 	auction: ZERO_ADDRESS,

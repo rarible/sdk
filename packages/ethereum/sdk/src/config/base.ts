@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const baseConfig: EthereumConfig = {
+export const baseConfig: EthereumConfig<"base"> = {
+	network: "base",
+	blockchain: Blockchain.BASE,
 	basePath: "https://base-api.rarible.org",
 	chainId: 8453,
 	environment: "production",
@@ -41,6 +44,15 @@ export const baseConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: ZERO_ADDRESS,
+			v3: toAddress("0x139608ABeE12Ff39FEDae39C493B571A25995E10"),
+		},
+		erc1155: {
+			v2: toAddress("0x55A921a57f7F15dF2f229Ab9889506Ca89310800"),
+		},
 	},
 	weth: toAddress("0x4200000000000000000000000000000000000006"),
 	auction: ZERO_ADDRESS,

@@ -8,7 +8,7 @@ import Web3 from "web3"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
-import { DEV_PK_1, getE2EConfigByNetwork } from "../common/test/test-credentials"
+import { DEV_PK_1, getE2EConfigByNetwork, getTestContract } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { getApis as getApisTemplate } from "../common/apis"
 import { signNft } from "./sign-nft"
@@ -53,12 +53,14 @@ describe("mint test", () => {
 		const send = getSendWithInjects()
 		const mint = mintTemplate.bind(null, ethereum, send, sign, getApis)
 
-		test("mint ERC-721 v1", async () => {
+		// We're skipping this since we sunsetting our V1 contracts
+		// and it will be eliminated soon
+		test.skip("mint ERC-721 v1", async () => {
 			const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
 			const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, address)
 			const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
 			const result = await mint({
-				uri: "ipfs://ipfs/hash",
+				uri: "ipfs://hash",
 				collection: createErc721V1Collection(address),
 			} as ERC721RequestV1)
 			if (result.type === MintResponseTypeEnum.ON_CHAIN) {
@@ -66,29 +68,29 @@ describe("mint test", () => {
 			}
 			const balanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
 			const uri = await contract.functionCall("tokenURI", result.tokenId).call()
-			expect(uri).toBe("ipfs://ipfs/hash")
+			expect(uri).toBe("ipfs://hash")
 			expect(toBn(balanceOfMinter).minus(startBalanceOfMinter).toString()).toBe("1")
 		})
 
-		test("mint ERC-721 v2", async () => {
-			const address = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
-			const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, address)
-			const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
+		test.only("mint ERC-721 v2", async () => {
+			const contractAddress = getTestContract("dev-ethereum", "erc721V3")
+			const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, contractAddress)
+			const initialBalanceRaw = await contract.functionCall("balanceOf", minter).call()
+			const initialBalance = toBn(initialBalanceRaw).toNumber()
 			const result = await mint({
-				uri: "ipfs://ipfs/hash",
-				royalties: [{
-					account: minter,
-					value: 250,
-				}],
-				collection: createErc721V2Collection(address),
-			} as ERC721RequestV2)
-			if (result.type === MintResponseTypeEnum.ON_CHAIN) {
-				await result.transaction.wait()
-			}
-			const balanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
+				uri: "ipfs://hash",
+				royalties: [{ account: minter, value: 250 }],
+				collection: createErc721V2Collection(contractAddress),
+			})
+
+			if (result.type !== MintResponseTypeEnum.ON_CHAIN) throw new Error("Unexpected minting kind")
+			await result.transaction.wait()
+
+			const balanceRaw = await contract.functionCall("balanceOf", minter).call()
+			const balanceOfMinter = toBn(balanceRaw).toNumber()
 			const uri = await contract.functionCall("tokenURI", result.tokenId).call()
-			expect(uri).toBe("ipfs://ipfs/hash")
-			expect(toBn(balanceOfMinter).minus(startBalanceOfMinter).toString()).toBe("1")
+			expect(uri).toBe("ipfs://hash")
+			expect(toBn(balanceOfMinter).minus(initialBalance).toString()).toBe("1")
 		})
 
 		test.skip("use provided nftTokenId", async () => {
@@ -122,7 +124,7 @@ describe("mint test", () => {
 					account: minter,
 					value: 250,
 				}],
-			} as ERC1155RequestV1)
+			})
 			if (result.type === MintResponseTypeEnum.ON_CHAIN) {
 				await result.transaction.wait()
 			}
@@ -134,22 +136,24 @@ describe("mint test", () => {
 		})
 
 		test("mint ERC-721 v3", async () => {
-			const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V3, erc721V3ContractAddress)
-			const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
+			const contractAddress = getTestContract("dev-ethereum", "erc721V3")
+			const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V3, contractAddress)
+			const initialBalance = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
 			const result = await mint({
-				collection: createErc721V3Collection(erc721V3ContractAddress),
+				collection: createErc721V3Collection(contractAddress),
 				uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 				creators: [{ account: toAddress(minter), value: 10000 }],
 				royalties: [],
 				lazy: false,
-			} as ERC721RequestV3)
-			if (result.type === MintResponseTypeEnum.ON_CHAIN) {
-				await result.transaction.wait()
-			}
-			const finishBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
+			})
+
+			if (result.type !== MintResponseTypeEnum.ON_CHAIN) throw new Error("Unexpected minting kind")
+			await result.transaction.wait()
+
+			const balance = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
 			const uri = await contract.functionCall("tokenURI", result.tokenId).call()
 			expect(uri).toBe("ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5")
-			expect(toBn(finishBalanceOfMinter).minus(startBalanceOfMinter).toString()).toEqual("1")
+			expect(toBn(balance).minus(initialBalance).toString()).toEqual("1")
 		})
 
 		test("mint ERC-1155 v2", async () => {

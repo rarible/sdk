@@ -1,19 +1,28 @@
 import type { Address, Asset, AssetType } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { TransferProxies } from "../config/type"
-import type { SendFunction } from "../common/send-transaction"
-import type { GetConfigByChainId } from "../config"
-import { approveErc20 } from "./approve-erc20"
-import { approveErc721 } from "./approve-erc721"
-import { approveErc1155 } from "./approve-erc1155"
-import { approveCryptoPunk } from "./approve-crypto-punk"
+import type { TransferProxies } from "../../config/type"
+import type { SendFunction } from "../../common/send-transaction"
+import type { ConfigService } from "../../common/config"
+import { approveErc20 } from "./erc20"
+import { approveErc721 } from "./erc721"
+import { approveErc1155 } from "./erc1155"
+import { approveCryptoPunk } from "./crypto-punk"
 
 export type ApproveFunction =
 	(owner: Address, asset: Asset, infinite: undefined | boolean) => Promise<EthereumTransaction | undefined>
 
+export class ApproveService {
+	constructor(private readonly configService: ConfigService) {}
+
+	approve = async (owner: Address, asset: Asset, infinite = true) => {
+		const config = await this.configService.getCurrentConfig()
+		const operator = getAssetTransferProxy(asset.assetType.assetClass, config.transferProxies)
+	}
+}
+
 export async function approve(
-	ethereum: Maybe<Ethereum>,
+	ethereum: Ethereum,
 	send: SendFunction,
 	getConfig: GetConfigByChainId,
 	owner: Address,
@@ -21,10 +30,11 @@ export async function approve(
 	infinite: undefined | boolean = true,
 ): Promise<EthereumTransaction | undefined> {
 	const config = await getConfig()
-	const operator = getAssetTransferProxy(asset.assetType.assetClass, config.transferProxies)
-	if (!operator) {
-		return undefined
-	}
+	const operator = getAssetTransferProxy(asset, config.transferProxies)
+
+	if (!operator) return undefined
+
+
 	return pureApproveFn({ ethereum, send, operator, owner, asset, infinite })
 }
 
@@ -68,8 +78,9 @@ export async function pureApproveFn({
 }
 
 
-export function getAssetTransferProxy(assetClass: AssetType["assetClass"], proxies: TransferProxies) {
-	switch (assetClass) {
+export function getAssetTransferProxy(asset: Asset, proxies: TransferProxies) {
+	switch (asset.assetType.assetClass) {
+		// @todo make sure this is the full list
 		case "ERC20": return proxies.erc20
 		case "ERC721": return proxies.nft
 		case "ERC1155": return proxies.nft

@@ -22,7 +22,9 @@ import { zkatanaConfig } from "./zkatana"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
 
-export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
+export const configDictionary: {
+	[K in EthereumNetwork]: EthereumConfig<K>
+} = {
 	mainnet: mainnetConfig,
 	mumbai: mumbaiConfig,
 	polygon: polygonConfig,
@@ -46,15 +48,21 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"base-sepolia": baseSepoliaConfig,
 }
 
-export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
-	return configDictionary[env]
+export function getEthereumConfig<T extends EthereumNetwork>(network: T): EthereumConfig<T> {
+	return configDictionary[network]
 }
 
-export type GetConfigByChainId = () => Promise<EthereumConfig>
-
 const dictionaryFlat = Object.values(configDictionary)
+
 export function getNetworkConfigByChainId(chainId: number): EthereumConfig {
-	const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
-	if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
+	const config = dictionaryFlat.find(x => x.chainId === chainId)
+	if (!config) throw new UnsupportedNetworkError(chainId)
 	return config
+}
+
+class UnsupportedNetworkError extends Error {
+	constructor(chainId: number) {
+		super(`ChainID ${chainId} is not found in list of supported chains`)
+		this.name = "UnsupportedNetworkError"
+	}
 }

@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const mantleConfig: EthereumConfig = {
+export const mantleConfig: EthereumConfig<"mantle"> = {
+	network: "mantle",
+	blockchain: Blockchain.MANTLE,
 	basePath: "https://mantle-api.rarible.org",
 	chainId: 5000,
 	environment: "production",
@@ -41,6 +44,15 @@ export const mantleConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: toAddress("0x0E63021A7597B254484b7F99dDD9b319591350B6"),
+			v3: toAddress("0x66BF67a86c17D5907a233D07226224c271acd563"),
+		},
+		erc1155: {
+			v2: toAddress("0xd9F72455509A4B0A8E34153d237c44EEf6a05Ebe"),
+		},
 	},
 	weth: toAddress("0xdeaddeaddeaddeaddeaddeaddeaddeaddead1111"),
 	auction: ZERO_ADDRESS,

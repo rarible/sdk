@@ -3,17 +3,16 @@ import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
-
 import { Action } from "@rarible/action"
 import type { Auction } from "@rarible/ethereum-api-client/build/models"
 import type { ApproveFunction } from "../order/approve"
-import { waitTx } from "../common/wait-tx"
 import { getPrice } from "../common/get-price"
 import type { SendFunction } from "../common/send-transaction"
 import type { RaribleEthereumApis } from "../common/apis"
 import type { EthereumNetwork } from "../types"
 import { getBaseFee } from "../common/get-base-fee"
 import type { GetConfigByChainId } from "../config"
+import { getRequiredWallet } from "../common/get-required-wallet"
 import { createEthereumAuctionContract } from "./contracts/auction"
 import {
 	AUCTION_BID_DATA_V1,
@@ -45,38 +44,36 @@ export class BuyoutAuction {
 	readonly buyout: BuyoutAuctionAction = Action.create({
 		id: "approve" as const,
 		run: async (request: BuyOutRequest) => {
-			if (!this.ethereum) {
-				throw new Error("Wallet is undefined")
-			}
+			const wallet = getRequiredWallet(this.ethereum)
 			const apis = await this.getApis()
 			const auction = await apis.auction.getAuctionByHash({ hash: request.hash })
 			this.validate(auction)
 			if (auction.data.buyOutPrice === undefined) {
 				throw new Error("Buy out is unavailable for current auction")
 			}
-			const buyoutPrice = toBigNumber((await getPrice(this.ethereum, auction.buy, auction.data.buyOutPrice)).toString())
+
+			const buyoutPrice = await getPrice(wallet, auction.buy, auction.data.buyOutPrice)
+			const buyoutPriceBn = toBigNumber(buyoutPrice.toString())
 
 			if (auction.buy.assetClass !== "ETH") {
-				await waitTx(
-					this.approve(
-						toAddress(await this.ethereum.getFrom()),
-						{ assetType: auction.buy, value: buyoutPrice },
-						true
-					)
-				)
+				const asset = { assetType: auction.buy, value: buyoutPriceBn }
+				const from = await wallet.getFrom()
+				const approveTx = await this.approve(toAddress(from), asset, true)
+				if (approveTx) {
+					// Wait for approval to be confirmed
+					await approveTx.wait()
+				}
 			}
 
-			return { request, auction, price: buyoutPrice }
+			return { request, auction, price: buyoutPriceBn }
 		},
 	})
 		.thenStep({
 			id: "sign" as const,
 			run: async ({ request, auction, price }: { request: BuyOutRequest, auction: Auction, price: BigNumber}) => {
-				if (!this.ethereum) {
-					throw new Error("Wallet is undefined")
-				}
+				const wallet = getRequiredWallet(this.ethereum)
 				const buyerOriginFees = request.originFees || []
-				const bidData = this.ethereum.encodeParameter(AUCTION_BID_DATA_V1, {
+				const bidData = wallet.encodeParameter(AUCTION_BID_DATA_V1, {
 					payouts: [],
 					originFees: buyerOriginFees,
 				})
@@ -90,7 +87,7 @@ export class BuyoutAuction {
 				const totalFees = calculatePartsSum(buyerOriginFees.concat(auction.data.originFees)) + protocolFee
 				const options = getAuctionOperationOptions(auction.buy, price, totalFees)
 				const config = await this.getConfig()
-				const contract = createEthereumAuctionContract(this.ethereum, config.auction)
+				const contract = createEthereumAuctionContract(wallet, config.auction)
 				return this.send(
 					contract.functionCall("buyOut", auction.auctionId, bid),
 					options

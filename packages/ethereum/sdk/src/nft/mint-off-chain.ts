@@ -4,7 +4,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Part } from "@rarible/ethereum-api-client"
 import { sanitizeUri } from "../common/sanitize-uri"
 import { getBlockchainFromChainId } from "../common"
-import type { SimpleLazyNft } from "./sign-nft"
+import type { LazyNftSignless } from "./sign-nft"
 import { getTokenId } from "./get-token-id"
 import type { ERC1155RequestV2, ERC721RequestV3, MintOffChainResponse } from "./mint"
 import { MintResponseTypeEnum } from "./mint"
@@ -15,7 +15,7 @@ import { getErc1155Contract } from "./contracts/erc1155"
 
 export async function mintOffChain(
 	ethereum: Ethereum,
-	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<EthereumApi.Binary>,
+	signNft: (nft: LazyNftSignless) => Promise<EthereumApi.Binary>,
 	nftCollectionApi: EthereumApi.NftCollectionControllerApi,
 	nftLazyMintApi: EthereumApi.NftLazyMintControllerApi,
 	data: ERC721RequestV3 | ERC1155RequestV2
@@ -51,7 +51,7 @@ function getMintOffChainData(
 	data: ERC721RequestV3 | ERC1155RequestV2,
 	creators: Part[],
 	tokenId: EthereumApi.BigNumber
-): SimpleLazyNft<"signatures"> {
+): LazyNftSignless {
 	const base = {
 		contract: data.collection.id,
 		uri: data.uri,

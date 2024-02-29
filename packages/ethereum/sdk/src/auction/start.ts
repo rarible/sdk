@@ -10,17 +10,15 @@ import type { Erc20AssetType, EthAssetType, Part } from "@rarible/ethereum-api-c
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { id } from "../common/id"
 import type { ApproveFunction } from "../order/approve"
-import { waitTx } from "../common/wait-tx"
 import { getPrice } from "../common/get-price"
 import type { AssetTypeRequest, AssetTypeResponse } from "../order/check-asset-type"
 import type { RaribleEthereumApis } from "../common/apis"
 import { checkAssetType } from "../order/check-asset-type"
 import type { SendFunction } from "../common/send-transaction"
-import { isNft } from "../order/is-nft"
-import { isPaymentToken } from "../common/is-payment-token"
 import { validateParts } from "../common/validate-part"
 import type { EthereumNetwork } from "../types"
 import type { GetConfigByChainId } from "../config"
+import { isNftAssetType, isPaymentAssetType } from "../common/asset-types"
 import { createEthereumAuctionContract } from "./contracts/auction"
 import { AUCTION_DATA_TYPE, AUCTION_DATA_V1, getAssetEncodedData, getAuctionHash } from "./common"
 
@@ -75,16 +73,15 @@ export class StartAuction {
 			const makeAssetType = await this.checkAssetType(request.makeAssetType)
 			this.validate(request, makeAssetType)
 
-			await waitTx(
-				this.approve(
-					toAddress(await this.ethereum.getFrom()),
-					{
-						assetType: makeAssetType,
-						value: request.amount,
-					},
-					true
-				)
-			)
+			const fromRaw = await this.ethereum.getFrom()
+			const asset = { assetType: makeAssetType, value: request.amount }
+			const approveTx = await this.approve(toAddress(fromRaw), asset, true)
+
+			if (approveTx) {
+				// Wait for approve tx before signature
+				await approveTx.wait()
+			}
+
 			return { request, makeAssetType }
 		},
 	})
@@ -151,13 +148,13 @@ export class StartAuction {
 		})
 
 	validate(request: CreateAuctionRequest, makeAssetType: AssetType): boolean {
-		if (!isNft(makeAssetType)) {
+		if (!isNftAssetType(makeAssetType)) {
 			throw new Error("Make asset should be NFT token")
 		}
 		if (makeAssetType.assetClass === "ERC721_LAZY" || makeAssetType.assetClass === "ERC1155_LAZY") {
 			throw new Error("Auction cannot be created with lazy assets")
 		}
-		if (!isPaymentToken(request.takeAssetType)) {
+		if (!isPaymentAssetType(request.takeAssetType)) {
 			throw new Error("Take asset should be payment token (ETH or ERC-20)")
 		}
 		const minPrice = toBn(request.minimalPriceDecimal)

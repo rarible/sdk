@@ -1,6 +1,7 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Word } from "@rarible/types"
-import type { EthereumSdkEnvironment } from "../types"
+import type { EVMBlockchain } from "@rarible/sdk-common"
+import type { EthereumNetwork, EthereumSdkEnvironment } from "../types"
 
 export type ExchangeAddresses = {
 	v1: Address
@@ -42,7 +43,16 @@ export type SudoswapConfig = {
 	pairRouter: Address
 }
 
-export type EthereumConfig = {
+export type RariblePublicCollections = {
+	erc721: { v2: Address, v3: Address }
+	erc1155: { v2: Address }
+}
+
+export type EthereumConfig<T extends EthereumNetwork = EthereumNetwork> = {
+	network: T
+	// @todo once typescript 5 will be done it should be inferred
+	// from dictionary mapping
+	blockchain: EVMBlockchain
 	basePath: string
 	environment: EthereumSdkEnvironment
 	chainId: number
@@ -52,9 +62,9 @@ export type EthereumConfig = {
 	openSea: OpenSeaConfig
 	factories: FactoriesAddresses
 	weth: Address
-	rari?: Address
 	auction: Address
 	cryptoPunks: CryptoPunksConfig
 	sudoswap: SudoswapConfig
+	publicCollections: RariblePublicCollections
 	looksrareOrderValidatorV2?: Address
 }

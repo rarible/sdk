@@ -23,7 +23,7 @@ import type {
 } from "./types"
 import { orderToStruct } from "./sign-order"
 import { convertOpenSeaOrderToDTO } from "./fill-order/open-sea-converter"
-import type { CheckLazyOrderPart } from "./check-lazy-order"
+import type { CheckLazyOrderService } from "./check-lazy-order"
 import { convertAPIOrderToSeaport } from "./fill-order/seaport-utils/convert-to-seaport-order"
 import { createLooksrareExchange } from "./contracts/looksrare-exchange"
 import { createX2Y2Contract } from "./contracts/exchange-x2y2-v1"
@@ -31,7 +31,7 @@ import { getSeaportContract } from "./fill-order/seaport-utils/seaport-utils"
 import { createLooksrareV2Exchange } from "./contracts/looksrare-v2"
 
 export async function cancel(
-	checkLazyOrder: (form: CheckLazyOrderPart) => Promise<CheckLazyOrderPart>,
+	checkLazyOrder: CheckLazyOrderService,
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	getConfig: GetConfigByChainId,
@@ -40,31 +40,29 @@ export async function cancel(
 ): Promise<EthereumTransaction> {
 	const config = await getConfig()
 	const apis = await getApis()
+	const wallet = getRequiredWallet(ethereum)
 
-	if (ethereum) {
-		const order = await checkLazyOrder(orderToCheck) as SimpleOrder
-		switch (order.type) {
-			case "RARIBLE_V1":
-				return cancelLegacyOrder(ethereum, send, config.exchange.v1, order)
-			case "RARIBLE_V2":
-				return cancelV2Order(ethereum, send, config.exchange.v2, order)
-			case "OPEN_SEA_V1":
-				return cancelOpenseaOrderV1(ethereum, send, order)
-			case "SEAPORT_V1":
-				return cancelSeaportOrder(ethereum, send, apis, order)
-			case "LOOKSRARE":
-				return cancelLooksRareOrder(ethereum, send, config.exchange, order)
-			case "LOOKSRARE_V2":
-				return cancelLooksRareV2Order(ethereum, send, config.exchange, order)
-			case "CRYPTO_PUNK":
-				return cancelCryptoPunksOrder(ethereum, send, order)
-			case "X2Y2":
-				return cancelX2Y2Order(ethereum, send, apis, config.exchange.x2y2, order)
-			default:
-				throw new Error(`Unsupported order: ${JSON.stringify(order)}`)
-		}
+	const order = await checkLazyOrder.check(orderToCheck) as SimpleOrder
+	switch (order.type) {
+		case "RARIBLE_V1":
+			return cancelLegacyOrder(wallet, send, config.exchange.v1, order)
+		case "RARIBLE_V2":
+			return cancelV2Order(wallet, send, config.exchange.v2, order)
+		case "OPEN_SEA_V1":
+			return cancelOpenseaOrderV1(wallet, send, order)
+		case "SEAPORT_V1":
+			return cancelSeaportOrder(wallet, send, apis, order)
+		case "LOOKSRARE":
+			return cancelLooksRareOrder(wallet, send, config.exchange, order)
+		case "LOOKSRARE_V2":
+			return cancelLooksRareV2Order(wallet, send, config.exchange, order)
+		case "CRYPTO_PUNK":
+			return cancelCryptoPunksOrder(wallet, send, order)
+		case "X2Y2":
+			return cancelX2Y2Order(wallet, send, apis, config.exchange.x2y2, order)
+		default:
+			throw new Error(`Unsupported order: ${JSON.stringify(order)}`)
 	}
-	throw new Error("Wallet undefined")
 }
 
 async function cancelLegacyOrder(ethereum: Ethereum, send: SendFunction, contract: Address, order: SimpleLegacyOrder) {

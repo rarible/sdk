@@ -1,11 +1,4 @@
-import type {
-	Address,
-	BigNumber,
-	Binary,
-	NftItem,
-	NftTokenId,
-	Part,
-} from "@rarible/ethereum-api-client"
+import type { Address, BigNumber, Binary, NftItem, NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
@@ -13,9 +6,10 @@ import { Warning } from "@rarible/logger/build"
 import type { SendFunction } from "../common/send-transaction"
 import type { CommonNftCollection } from "../common/mint"
 import type { RaribleEthereumApis } from "../common/apis"
+import { getRequiredWallet } from "../common/get-required-wallet"
 import { mintOffChain } from "./mint-off-chain"
 import { mintErc1155v1, mintErc1155v2, mintErc721v1, mintErc721v2, mintErc721v3 } from "./mint-on-chain"
-import type { SimpleLazyNft } from "./sign-nft"
+import type { LazyNftSignless } from "./sign-nft"
 import type { ERC1155VersionEnum, ERC721VersionEnum, NFTContractVersion } from "./contracts/domain"
 
 type Collection<V extends NFTContractVersion> = CommonNftCollection & { version: V }
@@ -89,33 +83,31 @@ export type MintOnChainResponse = MintResponseCommon & {
 export async function mint(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
-	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<Binary>,
+	signNft: (nft: LazyNftSignless) => Promise<Binary>,
 	getApis: () => Promise<RaribleEthereumApis>,
 	data: MintRequest
 ): Promise<MintOffChainResponse | MintOnChainResponse> {
-	if (!ethereum) {
-		throw new Error("Wallet undefined")
-	}
-	if (data.uri === undefined) {
-		throw new Warning("URI should be not undefined")
-	}
+	const wallet = getRequiredWallet(ethereum)
 	const apis = await getApis()
+
+	if (!data.uri) throw new Warning("URI should be non-empty string")
+
 	if (isERC1155Request(data)) {
 		if (isERC1155v2Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
-			return mintErc1155v2(ethereum, send, apis.nftCollection, data)
+			if (data.lazy) return mintOffChain(wallet, signNft, apis.nftCollection, apis.nftLazyMint, data)
+			return mintErc1155v2(wallet, send, apis.nftCollection, data)
 		}
-		return mintErc1155v1(ethereum, send, apis.nftCollection, data)
+		return mintErc1155v1(wallet, send, apis.nftCollection, data)
 	}
 	if (isERC721Request(data)) {
 		if (isERC721v3Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
-			return mintErc721v3(ethereum, send, apis.nftCollection, data)
+			if (data.lazy) return mintOffChain(wallet, signNft, apis.nftCollection, apis.nftLazyMint, data)
+			return mintErc721v3(wallet, send, apis.nftCollection, data)
 		}
 		if (isERC721v2Request(data)) {
-			return mintErc721v2(ethereum, send, apis.nftCollection, data)
+			return mintErc721v2(wallet, send, apis.nftCollection, data)
 		}
-		return mintErc721v1(ethereum, send, apis.nftCollection, data)
+		return mintErc721v1(wallet, send, apis.nftCollection, data)
 	}
 	throw new Error("Unsupported collection")
 }

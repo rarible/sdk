@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const testnetLightlinkConfig: EthereumConfig = {
+export const testnetLightlinkConfig: EthereumConfig<"testnet-lightlink"> = {
+	network: "testnet-lightlink",
+	blockchain: Blockchain.LIGHTLINK,
 	basePath: "https://testnet-lightlink-api.rarible.org",
 	chainId: 1891,
 	environment: "testnet",
@@ -41,6 +44,15 @@ export const testnetLightlinkConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: toAddress("0x5CF19eDb50C9EdF56EfEBe12DFa588E9E589514D"),
+			v3: toAddress("0xA74E313D26Bf99e0b10CCe6471696334f0C6B536"),
+		},
+		erc1155: {
+			v2: toAddress("0x4492608238eB09c7AD036e9C089538a7286B8985"),
+		},
 	},
 	weth: toAddress("0xF42991f02C07AB66cFEa282E7E482382aEB85461"),
 	auction: ZERO_ADDRESS,

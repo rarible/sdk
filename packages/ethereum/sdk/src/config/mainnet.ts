@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const mainnetConfig: EthereumConfig = {
+export const mainnetConfig: EthereumConfig<"mainnet"> = {
+	network: "mainnet",
+	blockchain: Blockchain.ETHEREUM,
 	basePath: "https://ethereum-api.rarible.org",
 	chainId: 1,
 	environment: "production",
@@ -42,8 +45,16 @@ export const mainnetConfig: EthereumConfig = {
 		pairFactory: toAddress("0xb16c1342E617A5B6E4b631EB114483FDB289c0A4"),
 		pairRouter: toAddress("0x2b2e8cda09bba9660dca5cb6233787738ad68329"),
 	},
+	publicCollections: {
+		erc721: {
+			v2: toAddress("0xF6793dA657495ffeFF9Ee6350824910Abc21356C"),
+			v3: toAddress("0xc9154424B823b10579895cCBE442d41b9Abd96Ed"),
+		},
+		erc1155: {
+			v2: toAddress("0xB66a603f4cFe17e3D27B87a8BfCaD319856518B8"),
+		},
+	},
 	weth: toAddress("0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"),
-	rari: toAddress("0xfca59cd816ab1ead66534d82bc21e7515ce441cf"),
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: toAddress("0x2a784a5b5C8AE0bd738FBc67E4C069dB4F4961B7"),
 }

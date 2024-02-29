@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const baseSepoliaConfig: EthereumConfig = {
+export const baseSepoliaConfig: EthereumConfig<"base-sepolia"> = {
+	network: "base-sepolia",
+	blockchain: Blockchain.BASE,
 	basePath: "https://testnet-base-api.rarible.org",
 	chainId: 84532,
 	environment: "testnet",
@@ -43,6 +46,15 @@ export const baseSepoliaConfig: EthereumConfig = {
 		pairRouter: ZERO_ADDRESS,
 	},
 	weth: toAddress("0x4200000000000000000000000000000000000006"),
+	publicCollections: {
+		erc721: {
+			v2: ZERO_ADDRESS,
+			v3: toAddress("0xe10605b2026884aCc669C2A9Cd4A5ec5f5FFf494"),
+		},
+		erc1155: {
+			v2: toAddress("0x57B3f3b79F64c475a37E6c493BAA8E6E7C5F748e"),
+		},
+	},
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: ZERO_ADDRESS,
 }

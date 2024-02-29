@@ -1,9 +1,12 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const chilizTestnetConfig: EthereumConfig = {
+export const chilizTestnetConfig: EthereumConfig<"testnet-chiliz"> = {
+	network: "testnet-chiliz",
+	blockchain: Blockchain.CHILIZ,
 	basePath: "https://testnet-chiliz-api.rarible.org",
 	chainId: 88882,
 	environment: "testnet",
@@ -41,6 +44,15 @@ export const chilizTestnetConfig: EthereumConfig = {
 	sudoswap: {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
+	},
+	publicCollections: {
+		erc721: {
+			v2: toAddress("0x8BeE3f88E0a57D4A39ced7F2bC5AA6deB609c197"),
+			v3: toAddress("0xEc4bD7602A0f54244E35EDa4CF0C975A898Fa80e"),
+		},
+		erc1155: {
+			v2: toAddress("0xd8c4A74091a67276E5323Fe41C2286F8975ae3aA"),
+		},
 	},
 	weth: toAddress("0x678c34581db0a7808d0aC669d7025f1408C9a3C6"),
 	auction: ZERO_ADDRESS,

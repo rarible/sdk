@@ -308,10 +308,6 @@ export function createRaribleSdk(
 			level: sdkConfig?.logs?.level ?? LogsLevel.DISABLED,
 		},
 	}))
-	const checkLazyAssetType = partialCall(order.checkLazyAssetType, getApis)
-	const checkLazyAsset = partialCall(order.checkLazyAsset, checkLazyAssetType)
-	const checkLazyOrder = order.checkLazyOrder.bind(null, checkLazyAsset)
-	const checkAssetType = partialCall(checkAssetTypeTemplate, getApis)
 
 	const getBaseOrderFee = getBaseFee.bind(null, env, getApis)
 	const filler = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env, sdkConfig)
@@ -327,11 +323,13 @@ export function createRaribleSdk(
 
 	const approveFn = partialCall(approveTemplate, ethereum, send, getConfig)
 
+	const checkLazyAssetType = partialCall(order.checkLazyAssetType, getApis)
+	const checkLazyAsset = partialCall(order.checkLazyAsset, checkLazyAssetType)
+	const checkLazyOrderService = new order.CheckLazyOrderService(checkLazyAsset)
 	const upsertService = new UpsertOrder(
 		filler,
 		send,
-		getConfig,
-		checkLazyOrder,
+		checkLazyOrderService,
 		approveFn,
 		partialCall(signOrderTemplate, ethereum, getConfig),
 		getApis,
@@ -339,6 +337,7 @@ export function createRaribleSdk(
 		toWord(getUpdatedCalldata(sdkConfig))
 	)
 
+	const checkAssetType = partialCall(checkAssetTypeTemplate, getApis)
 	const sellService = new OrderSell(upsertService, checkAssetType)
 	const bidService = new OrderBid(upsertService, checkAssetType)
 	const wethConverter = new ConvertWeth(ethereum, send, getConfig)
@@ -360,7 +359,7 @@ export function createRaribleSdk(
 			bid: bidService.bid,
 			bidUpdate: bidService.update,
 			upsert: upsertService.upsert,
-			cancel: partialCall(cancelTemplate, checkLazyOrder, ethereum, send, getConfig, getApis),
+			cancel: partialCall(cancelTemplate, checkLazyOrderService, ethereum, send, getConfig, getApis),
 			getBaseOrderFee: getBaseOrderFee,
 			getBaseOrderFillFee: filler.getBaseOrderFillFee,
 			getBuyAmmInfo: filler.getBuyAmmInfo,
