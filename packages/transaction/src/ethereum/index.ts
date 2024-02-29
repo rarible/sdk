@@ -76,6 +76,8 @@ Blockchain, TransactionResult
 				return `http://polygon-explorer.dev.rarible.int/transactions/${this.hash()}`
 			case "zkatana":
 				return `https://zkatana.blockscout.com/tx/${this.hash()}`
+			case "astar":
+				return `https://astar.blockscout.com/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

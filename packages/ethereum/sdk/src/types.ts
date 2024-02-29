@@ -21,6 +21,7 @@ export type EthereumNetwork =
   | "testnet-rari"
   | "rari"
   | "zkatana"
+  | "astar"
   | "base"
   | "base-sepolia"
 
