@@ -27,6 +27,8 @@ import { xaiTestnetConfig } from "./testnet-xai"
 import { kromaTestnetConfig } from "./testnet-kroma"
 import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
+import { astarConfig } from "./astar"
+import { kromaConfig } from "./kroma"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -48,12 +50,14 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-rari": rariTestnetConfig,
 	rari: rariMainnetConfig,
 	zkatana: zkatanaConfig,
+	astar: astarConfig,
 	base: baseConfig,
 	"base-sepolia": baseSepoliaConfig,
-	xai: xaiConfig,
 	"testnet-xai": xaiTestnetConfig,
+	xai: xaiConfig,
 	"testnet-fief": fiefTestnetConfig,
 	"testnet-kroma": kromaTestnetConfig,
+	kroma: kromaConfig,
 	"testnet-celo": celoTestnetConfig,
 	"celo": celoConfig,
 }

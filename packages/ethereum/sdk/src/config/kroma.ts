@@ -3,23 +3,23 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const kromaTestnetConfig: EthereumConfig = {
-	basePath: "https://testnet-kroma-api.rarible.org",
-	chainId: 2358,
+export const kromaConfig: EthereumConfig = {
+	basePath: "https://kroma-api.rarible.org",
+	chainId: 255,
 	exchange: {
 		v1: ZERO_ADDRESS,
-		v2: toAddress("0x0fE65B68Eb627c21EAF3cfe8183C4F946F3d48BD"),
+		v2: toAddress("0x418f1b76448866CF072dd14d092138190CcdC9aF"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0x166F6180170f438Ddc38050a2B708d38c0890956"),
+		wrapper: toAddress("0x69Be0b6f5BB5e9F8DfAA1562F06427142fb0a10a"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
-		nft: toAddress("0x4f4cC63D7f2bC894078d41f284453062842Afa46"),
-		erc20: toAddress("0xBc57D6e50fa760A01536A7c2EAEDD6fC9b2A4f9A"),
-		erc721Lazy: toAddress("0xF1cb795B7eA59a9213a790f868104c11a14690Fa"),
-		erc1155Lazy: toAddress("0xa90e536A492aef0d57e6d295FA17687c3ca93347"),
+		nft: toAddress("0x30fc6eed1d302F5f5C4a8aa58047d1a730b3Cc91"),
+		erc20: toAddress("0x6C65a3C3AA67b126e43F86DA85775E0F5e9743F7"),
+		erc721Lazy: toAddress("0x9f4CE147beF144a571c1372cd6e1DEB148742027"),
+		erc1155Lazy: toAddress("0x8d5D3e1e6609A798B84160Ec9CC25198B9e4F177"),
 		openseaV1: ZERO_ADDRESS,
 		cryptoPunks: ZERO_ADDRESS,
 	},
@@ -30,8 +30,8 @@ export const kromaTestnetConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: toAddress("0x41407B447Fb5425187A9BCA3a062644EF2410F8D"),
-		erc1155: toAddress("0xc798B273FaF23932Cf11177402C10C9b44D30Da2"),
+		erc721: toAddress("0x24562E94332f06F1F0aEa79cAf283088F9e1B8A8"),
+		erc1155: toAddress("0xbd426Ce20Ac84ad3a6FA6FF50cfe5fB325AB0e5d"),
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,

@@ -3,23 +3,23 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const kromaTestnetConfig: EthereumConfig = {
-	basePath: "https://testnet-kroma-api.rarible.org",
-	chainId: 2358,
+export const astarConfig: EthereumConfig = {
+	basePath: "https://astarzkevm-api.rarible.org",
+	chainId: 3776,
 	exchange: {
 		v1: ZERO_ADDRESS,
-		v2: toAddress("0x0fE65B68Eb627c21EAF3cfe8183C4F946F3d48BD"),
+		v2: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0x166F6180170f438Ddc38050a2B708d38c0890956"),
+		wrapper: toAddress("0x0B7Acd053BC236fc95537e2aDD37C22968b48C1b"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
 	},
 	transferProxies: {
-		nft: toAddress("0x4f4cC63D7f2bC894078d41f284453062842Afa46"),
-		erc20: toAddress("0xBc57D6e50fa760A01536A7c2EAEDD6fC9b2A4f9A"),
-		erc721Lazy: toAddress("0xF1cb795B7eA59a9213a790f868104c11a14690Fa"),
-		erc1155Lazy: toAddress("0xa90e536A492aef0d57e6d295FA17687c3ca93347"),
+		nft: toAddress("0xF65eF65a95821A16E02973b1C2200FA58898e3c0"),
+		erc20: toAddress("0x248B46BEB66b3078D771a9E7E5a0a0216d0d07ba"),
+		erc721Lazy: toAddress("0xce4bf732f53A76C463aE8822be858017b02779c8"),
+		erc1155Lazy: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
 		openseaV1: ZERO_ADDRESS,
 		cryptoPunks: ZERO_ADDRESS,
 	},
@@ -30,8 +30,8 @@ export const kromaTestnetConfig: EthereumConfig = {
 		merkleValidator: ZERO_ADDRESS,
 	},
 	factories: {
-		erc721: toAddress("0x41407B447Fb5425187A9BCA3a062644EF2410F8D"),
-		erc1155: toAddress("0xc798B273FaF23932Cf11177402C10C9b44D30Da2"),
+		erc721: toAddress("0x726f5DD8a1fFAa349bD57501Ba760AB5A03e91Ff"),
+		erc1155: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
 	},
 	cryptoPunks: {
 		marketContract: ZERO_ADDRESS,
@@ -41,6 +41,6 @@ export const kromaTestnetConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0x4200000000000000000000000000000000000001"),
+	weth: toAddress("0xAeaaf0e2c81Af264101B9129C00F4440cCF0F720"),
 	auction: ZERO_ADDRESS,
 }

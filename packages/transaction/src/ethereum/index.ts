@@ -76,6 +76,8 @@ Blockchain, TransactionResult
 				return `http://polygon-explorer.dev.rarible.int/transactions/${this.hash()}`
 			case "zkatana":
 				return `https://zkatana.blockscout.com/tx/${this.hash()}`
+			case "astar":
+				return `https://astar.blockscout.com/tx/${this.hash()}`
 			case "testnet-fief":
 				return `https://explorer.playground.fiefdom.gg/tx/${this.hash()}`
 			case "testnet-xai":
@@ -88,6 +90,8 @@ Blockchain, TransactionResult
 				return `https://explorer.celo.org/mainnet/tx/${this.hash()}`
 			case "testnet-kroma":
 				return `https://blockscout.sepolia.kroma.network/tx/${this.hash()}`
+			case "kroma":
+				return `https://blockscout.kroma.network/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}
