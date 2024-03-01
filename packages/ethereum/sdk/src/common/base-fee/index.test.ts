@@ -2,6 +2,7 @@ import { toBn } from "@rarible/utils"
 import { ethereumNetworks } from "../../types"
 import { ApiService } from "../apis"
 import { getTestAPIKey } from "../test/test-credentials"
+import { ConfigService } from "../config"
 import { BaseFeeService, UnexpectedBaseFeeError } from "./index"
 
 describe("BaseFeeService", () => {
@@ -11,7 +12,8 @@ describe("BaseFeeService", () => {
 		test.each(ethereumNetworks)("get base fee for %s", async (network) => {
 			jest.retryTimes(3)
 
-			const apiService = new ApiService(undefined, network, {
+			const configService = new ConfigService(network, undefined)
+			const apiService = new ApiService(configService, {
 				apiKey: getTestAPIKey(network),
 			})
 			const baseFeeService = BaseFeeService.fromApiService(apiService)

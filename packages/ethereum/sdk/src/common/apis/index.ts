@@ -1,18 +1,16 @@
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import { NetworkError } from "@rarible/logger/build"
-import type { Ethereum } from "@rarible/ethereum-provider"
 import { ethereumNetworks } from "../../types"
 import type { IRaribleEthereumSdkConfig, EthereumNetwork } from "../../types"
 import { getEthereumConfig } from "../../config"
-import { getNetworkFromChainId } from ".."
+import type { ConfigService } from "../config"
 
 export class ApiService {
 	private readonly dictionary: Record<EthereumNetwork, RaribleEthereumApis>
 	readonly apis: RaribleEthereumApis
 
 	constructor(
-		readonly ethereum: Ethereum | undefined,
-		readonly defaultNetwork: EthereumNetwork,
+		readonly configService: ConfigService,
 		readonly sdkConfig: IRaribleEthereumSdkConfig
 	) {
 		this.dictionary = ethereumNetworks.reduce((prev, curr) => {
@@ -21,17 +19,17 @@ export class ApiService {
 				[curr]: createEthereumApis(curr, sdkConfig.apiKey, sdkConfig.apiClientParams),
 			}
 		}, {} as Record<EthereumNetwork, RaribleEthereumApis>)
-		this.apis = this.dictionary[defaultNetwork]
+		this.apis = this.dictionary[this.configService.defaultNetwork]
 	}
 
 	byNetwork = (network: EthereumNetwork) => this.dictionary[network]
 
 	byCurrentWallet = async () => {
-		if (this.ethereum) {
-			const chainId = await this.ethereum.getChainId()
-			return this.byNetwork(getNetworkFromChainId(chainId))
+		if (this.configService.ethereum) {
+			const currentNetwork = await this.configService.getCurrentNetwork()
+			return this.byNetwork(currentNetwork)
 		} else {
-			return this.byNetwork(this.defaultNetwork)
+			return this.byNetwork(this.configService.defaultNetwork)
 		}
 	}
 }

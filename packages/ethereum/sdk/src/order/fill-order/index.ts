@@ -1,8 +1,7 @@
-import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { toAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
 import type { Address, AssetType } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type {
@@ -13,13 +12,14 @@ import type {
 	SimpleRaribleV2Order,
 } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
-import type { RaribleEthereumApis } from "../../common/apis"
+import type { ApiService } from "../../common/apis"
 import type { CheckAssetTypeFunction } from "../check-asset-type"
 import { checkAssetType } from "../check-asset-type"
 import { checkLazyAssetType } from "../check-lazy-asset-type"
 import type { IRaribleEthereumSdkConfig } from "../../types"
-import type { EthereumNetwork } from "../../types"
-import type { GetConfigByChainId } from "../../config"
+import type { BaseFeeService } from "../../common/base-fee"
+import type { ConfigService } from "../../common/config"
+import type { ApproveService } from "../approve"
 import type {
 	CryptoPunksOrderFillRequest,
 	FillOrderAction,
@@ -52,7 +52,6 @@ import { AmmOrderHandler } from "./amm"
 import { getUpdatedCalldata } from "./common/get-updated-call"
 import { LooksrareV2OrderHandler } from "./looksrare-v2"
 import type { LooksrareOrderV2FillRequest } from "./types"
-import { BaseFeeService } from "../../common/base-fee"
 
 export class OrderFiller {
 	v1Handler: RaribleV1OrderHandler
@@ -65,29 +64,22 @@ export class OrderFiller {
 	x2y2Handler: X2Y2OrderHandler
 	ammHandler: AmmOrderHandler
 	private checkAssetType: CheckAssetTypeFunction
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private checkLazyAssetType: (type: AssetType) => Promise<AssetType>
 
 	constructor(
-		private readonly ethereum: Maybe<Ethereum>,
+		private readonly configService: ConfigService,
+		private readonly apiService: ApiService,
 		private readonly send: SendFunction,
-		private readonly getConfig: GetConfigByChainId,
-		private readonly getApis: () => Promise<RaribleEthereumApis>,
+		private readonly approveService: ApproveService,
 		private readonly baseFeeService: BaseFeeService,
-		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
 	) {
 		this.getBaseOrderFillFee = this.getBaseOrderFillFee.bind(this)
 		this.getTransactionData = this.getTransactionData.bind(this)
 		this.getBuyTx = this.getBuyTx.bind(this)
-		this.v1Handler = new RaribleV1OrderHandler(
-			ethereum,
-			getApis,
-			send,
-			getConfig,
-			baseFeeService,
-			sdkConfig,
-		)
+		this.v1Handler = new RaribleV1OrderHandler(configService, approveService, apiService, baseFeeService)
+
+		// @todo fix all of the following
 		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)
 		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, sdkConfig)
 		this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)

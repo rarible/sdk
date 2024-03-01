@@ -4,7 +4,7 @@ import type { E2EProviderSupportedNetwork } from "./domain"
 import { SPONSOR_PK_1 } from "./test-credentials"
 
 export function createSponsorProvider(network: E2EProviderSupportedNetwork) {
-	return createE2EProviderBase(SPONSOR_PK_1, e2eProviderConfigs[network])
+	return createE2EProviderWithPk(network, SPONSOR_PK_1)
 }
 
 export function createE2EProviderWithPk(network: E2EProviderSupportedNetwork, pk: string) {
@@ -14,6 +14,7 @@ export function createE2EProviderWithPk(network: E2EProviderSupportedNetwork, pk
 export function createE2EProviderEmpty(network: E2EProviderSupportedNetwork) {
 	return createE2EProviderBase(undefined, e2eProviderConfigs[network])
 }
+
 
 const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProviderConfig>> = {
 	"dev-ethereum": {

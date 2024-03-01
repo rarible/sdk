@@ -6,6 +6,8 @@ import type { ApiService } from "../apis"
 
 export type GetBaseFeeFn = (network: EthereumNetwork, type: EnvFeeType) => Promise<BigNumber>
 
+// @todo make sure it's used everywhere
+
 export class BaseFeeService {
 	constructor(private readonly getBaseFeeFn: GetBaseFeeFn) {}
 

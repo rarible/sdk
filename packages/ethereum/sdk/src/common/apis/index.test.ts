@@ -5,6 +5,7 @@ import { ethereumNetworks } from "../../types"
 import { getTestAPIKey } from "../test/test-credentials"
 import { createE2EProviderEmpty } from "../test/provider"
 import { createTestWeb3Adapter } from "../test/provider-adapters"
+import { ConfigService } from "../config"
 import { ApiService } from "./index"
 
 describe("ApiService", () => {
@@ -14,7 +15,8 @@ describe("ApiService", () => {
 		// We might expect unexpected error in some cases (during high load of some networks)
 		jest.retryTimes(3)
 
-		const service = new ApiService(undefined, network, {
+		const configService = new ConfigService(network, undefined)
+		const service = new ApiService(configService, {
 			apiKey: getTestAPIKey(network),
 		})
 		const balance = await service.apis.balances.getEthBalance({
@@ -24,7 +26,8 @@ describe("ApiService", () => {
 	})
 
 	test("should throw error with 403 status in case of no api key", async () => {
-		const service = new ApiService(undefined, "mainnet", {})
+		const configService = new ConfigService("mainnet", undefined)
+		const service = new ApiService(configService, {})
 		try {
 			await service.apis.balances.getEthBalance({
 				owner: wallet.getAddressString(),
@@ -43,7 +46,8 @@ describe("ApiService", () => {
 		const web3Ethereum = createTestWeb3Adapter(e2eProvider.provider)
 
 		test("should depend on provider's wallet in case", async () => {
-			const service = new ApiService(web3Ethereum, "mainnet", {})
+			const configService = new ConfigService("mainnet", web3Ethereum)
+			const service = new ApiService(configService, {})
 			const apisByWallet = await service.byCurrentWallet()
 			expect(apisByWallet.network).toEqual("polygon")
 		})

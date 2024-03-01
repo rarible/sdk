@@ -58,11 +58,7 @@ export class BuyoutAuction {
 			if (auction.buy.assetClass !== "ETH") {
 				const asset = { assetType: auction.buy, value: buyoutPriceBn }
 				const from = await wallet.getFrom()
-				const approveTx = await this.approve(toAddress(from), asset, true)
-				if (approveTx) {
-					// Wait for approval to be confirmed
-					await approveTx.wait()
-				}
+				await this.approve(toAddress(from), asset, true)
 			}
 
 			return { request, auction, price: buyoutPriceBn }

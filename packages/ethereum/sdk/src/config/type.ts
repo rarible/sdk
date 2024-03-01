@@ -58,6 +58,7 @@ export type EthereumConfig<T extends EthereumNetwork = EthereumNetwork> = {
 	chainId: number
 	exchange: ExchangeAddresses
 	transferProxies: TransferProxies
+	// @todo get rid of it in favor of BaseFeeService
 	feeConfigUrl: string
 	openSea: OpenSeaConfig
 	factories: FactoriesAddresses

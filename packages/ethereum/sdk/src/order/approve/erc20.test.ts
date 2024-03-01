@@ -20,7 +20,7 @@ describe("Erc20Handler", () => {
 
 	test.each(adapters.cases)("should successfully send approval tx with $type", async ({ adapter }) => {
 		const configService = new ConfigService(config.network, adapter)
-		const handler = new Erc20Handler(config.transferProxies.erc20, sendFn, configService)
+		const handler = new Erc20Handler(sendFn, configService)
 		const erc20Contract = await deployErc20AndMintTokens(adapters.web3, ownerAddress)
 		const erc20ContractAddress = toAddress(erc20Contract.options.address)
 		const allowance = toBn(10)
@@ -36,7 +36,7 @@ describe("Erc20Handler", () => {
 
 	test("should return undefined in case of sufficiency and otherwise if not", async () => {
 		const configService = new ConfigService(config.network, adapters.web3)
-		const handler = new Erc20Handler(config.transferProxies.erc20, sendFn, configService)
+		const handler = new Erc20Handler(sendFn, configService)
 		const erc20Contract = await deployErc20AndMintTokens(adapters.web3, ownerAddress)
 		const erc20ContractAddress = toAddress(erc20Contract.options.address)
 		const allowance = toBn(10)
@@ -62,7 +62,7 @@ describe("Erc20Handler", () => {
 
 	test("should return set infinite approval", async () => {
 		const configService = new ConfigService(config.network, adapters.web3)
-		const handler = new Erc20Handler(config.transferProxies.erc20, sendFn, configService)
+		const handler = new Erc20Handler(sendFn, configService)
 		const erc20Contract = await deployErc20AndMintTokens(adapters.web3, ownerAddress)
 		const erc20ContractAddress = toAddress(erc20Contract.options.address)
 		const allowance = toBn(10)

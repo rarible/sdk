@@ -1,30 +1,24 @@
 import type { Address } from "@rarible/ethereum-api-client"
-import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
+import type { EthereumSendOptions } from "@rarible/ethereum-provider"
 import { toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils"
-import type { Maybe } from "@rarible/types/build/maybe"
-import { approve } from "../approve"
-import type { SendFunction } from "../../common/send-transaction"
+import type { ApproveService } from "../approve"
 import type { SimpleLegacyOrder } from "../types"
 import { getAssetWithFee } from "../get-asset-with-fee"
 import { createExchangeV1Contract } from "../contracts/exchange-v1"
 import { toLegacyAssetType } from "../to-legacy-asset-type"
 import { toVrs } from "../../common/to-vrs"
-import type { GetConfigByChainId } from "../../config"
 import type { ApiService } from "../../common/apis"
 import type { BaseFeeService } from "../../common/base-fee"
-import { getRequiredWallet } from "../../common/get-required-wallet"
+import type { ConfigService } from "../../common/config"
 import { invertOrder } from "./invert-order"
 import type { LegacyOrderFillRequest, OrderFillSendData, OrderHandler } from "./types"
-import { ConfigService } from "../../common/config"
 
 export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillRequest> {
-
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly approveService: ApproveService,
 		private readonly apiService: ApiService,
-		private readonly send: SendFunction,
-		private readonly getConfig: GetConfigByChainId,
 		private readonly baseFeeService: BaseFeeService,
 	) {}
 
@@ -38,14 +32,13 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 	}
 
 	async approve(order: SimpleLegacyOrder, infinite: boolean): Promise<void> {
-		const wallet = this.configService.getRequiredWallet()
 		const withFee = getAssetWithFee(order.make, this.getOrderFee(order))
-		const approveTx = await approve(wallet, this.send, () => this.getConfig(), order.maker, withFee, infinite)
+		await this.approveService.approve(order.maker, withFee, infinite)
 	}
 
 	async getBaseOrderFee(): Promise<number> {
-		// const
-		return this.baseFeeService.getBaseFee("RARIBLE_V1")
+		const network = await this.configService.getCurrentNetwork()
+		return this.baseFeeService.getBaseFee(network, "RARIBLE_V1")
 	}
 
 	getOrderFee(order: SimpleLegacyOrder): number {
@@ -57,9 +50,10 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 		inverted: SimpleLegacyOrder,
 		request: LegacyOrderFillRequest
 	): Promise<OrderFillSendData> {
-		const wallet = getRequiredWallet(this.ethereum)
+		const wallet = this.configService.getRequiredWallet()
 		const apis = await this.apiService.byCurrentWallet()
 		if (!initial.end) {
+			// @todo can SimpleLegacyOrder have better typings here?
 			throw new Error("Expiration date is required")
 		}
 		const buyerFeeSig = await apis.order.buyerFeeSignature(
@@ -73,7 +67,7 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 				},
 			},
 		)
-		const config = await this.getConfig()
+		const config = await this.configService.getCurrentConfig()
 		const exchangeContract = createExchangeV1Contract(wallet, config.exchange.v1)
 		const functionCall = exchangeContract.functionCall(
 			"exchange",

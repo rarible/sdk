@@ -1,17 +1,13 @@
 import { toAddress, toBigNumber, ZERO_WORD } from "@rarible/types"
 import type { Address, BigNumber, Erc1155AssetType, Erc20AssetType, Erc721AssetType, EthAssetType, OrderForm, Part } from "@rarible/ethereum-api-client"
-import { createE2eProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
+import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { getEthereumConfig } from "../../config"
-import { createTestAdapters } from "../../common/test/create-test-providers"
-import { getApis as getApisTemplate } from "../../common/apis"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { signNft as signNftTemplate } from "../../nft/sign-nft"
 import type { MintRequest } from "../../nft/mint"
 import { MintResponseTypeEnum, mint as mintTemplate } from "../../nft/mint"
-import type { TestContractsNetwork, TestContractType } from "../../common/test/test-credentials"
-import { DEV_PK_1, getE2EConfigByNetwork, getTestContract } from "../../common/test/test-credentials"
 import { createErc1155V2Collection, createErc721V3Collection } from "../../common/mint"
 import { MIN_PAYMENT_VALUE } from "../../common/check-min-payment-value"
 import { ETHER_IN_WEI } from "../../common"
@@ -22,13 +18,17 @@ import { OrderFiller } from "../fill-order"
 import type { CheckLazyAssetFn } from "../check-lazy-order"
 import { CheckLazyOrderService } from "../check-lazy-order"
 import type { ApproveFunction } from "../approve"
+import { createSponsorProvider } from "../../common/test/provider"
+import { createTestAdapters } from "../../common/test/provider-adapters"
+import { getPublicNftContract } from "../../common/test/contracts"
+import { ERC721VersionEnum } from "../../nft/contracts/domain"
 
 describe("upsert orders", () => {
-	const network = "dev-ethereum" as const
+	const network = getEthereumConfig("dev-ethereum")
 
 	// The wallet must have funds:
 	// 1. to cover mint gas for the mint
-	const { provider, wallet } = createE2eProvider(DEV_PK_1, getE2EConfigByNetwork(network))
+	const { provider, wallet } = createSponsorProvider(network.network)
 	const adapters = createTestAdapters(provider, wallet)
 	const makerAddress = toAddress(wallet.getAddressString())
 
@@ -119,7 +119,7 @@ describe("upsert orders", () => {
 		})
 
 		test("throw error if sell order has less than minimal payment value", async () => {
-			const contractAddress = getTestContract("dev-ethereum", "erc721V3")
+			const contractAddress = getPublicNftContract(network.network, ERC721VersionEnum.ERC721V3)
 			const ethPrice = MIN_PAYMENT_VALUE.multipliedBy(ETHER_IN_WEI).minus(1)
 
 			const dataV3Request = createV3OrderRequest(makerAddress)

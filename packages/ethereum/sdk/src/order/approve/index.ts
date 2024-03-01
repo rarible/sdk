@@ -1,30 +1,45 @@
-import type { Address, Asset, AssetType } from "@rarible/ethereum-api-client"
+import type { Address, Asset } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { TransferProxies } from "../../config/type"
 import type { SendFunction } from "../../common/send-transaction"
 import type { ConfigService } from "../../common/config"
-import { approveErc20 } from "./erc20"
+import { Erc20Handler } from "./erc20"
 import { approveErc721 } from "./erc721"
 import { approveErc1155 } from "./erc1155"
 import { approveCryptoPunk } from "./crypto-punk"
+import type { ApproveHandlers } from "./domain"
+import { isApprovableAsset } from "./domain"
 
 export type ApproveFunction =
 	(owner: Address, asset: Asset, infinite: undefined | boolean) => Promise<EthereumTransaction | undefined>
 
 export class ApproveService {
-	constructor(private readonly configService: ConfigService) {}
+	readonly handlers: ApproveHandlers = {
+		// @todo add more handlers here
+		ERC20: new Erc20Handler(this.sendFn, this.configService),
+	}
 
-	approve = async (owner: Address, asset: Asset, infinite = true) => {
-		const config = await this.configService.getCurrentConfig()
-		const operator = getAssetTransferProxy(asset.assetType.assetClass, config.transferProxies)
+	constructor(private readonly sendFn: SendFunction, private readonly configService: ConfigService) {}
+
+	approve = async (owner: Address, asset: Asset, infinite = true): Promise<EthereumTransaction | undefined> => {
+		if (isApprovableAsset(asset.assetType)) {
+			const handler = this.handlers[asset.assetType.assetClass]
+			const transaction = await handler.approve(owner, asset, infinite)
+			if (transaction) {
+				// This operation requires waiting for confirmation
+				await transaction.wait()
+			}
+		}
+
+		return undefined
 	}
 }
 
+// @deprecated and will be replaced by ApproveService
 export async function approve(
 	ethereum: Ethereum,
 	send: SendFunction,
-	getConfig: GetConfigByChainId,
 	owner: Address,
 	asset: Asset,
 	infinite: undefined | boolean = true,
@@ -38,6 +53,7 @@ export async function approve(
 	return pureApproveFn({ ethereum, send, operator, owner, asset, infinite })
 }
 
+// @deprecated and will be replaced by ApproveService
 export async function pureApproveFn({
 	ethereum, send, operator, owner, asset, infinite,
 }: {
@@ -77,7 +93,7 @@ export async function pureApproveFn({
 	}
 }
 
-
+// @deprecated and will be replaced by ApproveService
 export function getAssetTransferProxy(asset: Asset, proxies: TransferProxies) {
 	switch (asset.assetType.assetClass) {
 		// @todo make sure this is the full list

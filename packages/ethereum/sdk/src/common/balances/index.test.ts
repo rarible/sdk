@@ -3,6 +3,7 @@ import { toAddress } from "@rarible/types"
 import { ApiService } from "../apis"
 import { getEthereumConfig } from "../../config"
 import { getTestAPIKey } from "../test/test-credentials"
+import { ConfigService } from "../config"
 import { Balances } from "./index"
 
 describe("Balances", () => {
@@ -12,7 +13,8 @@ describe("Balances", () => {
 	// We don't do test of all possible networks because it's
 	// already covered in tests of ApiService
 	const network = "mainnet" as const
-	const apiService = new ApiService(undefined, network, {
+	const configService = new ConfigService("mainnet", undefined)
+	const apiService = new ApiService(configService, {
 		apiKey: getTestAPIKey(network),
 	})
 	const balances = new Balances(apiService)
