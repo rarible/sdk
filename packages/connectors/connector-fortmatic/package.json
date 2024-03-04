@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-fortmatic",
-  "version": "0.13.68-fix.8",
+  "version": "0.13.68-fix.9",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -14,7 +14,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.8",
+    "@rarible/connector": "^0.13.68-fix.9",
     "fortmatic": "^2.2.1"
   },
   "devDependencies": {
