@@ -23,7 +23,7 @@ export abstract class ApproveHandler<Type extends ApprovableAssetType> {
 		config: ApproveConfig<Type>
 	) => Promise<EthereumTransaction | undefined>
 
-	constructor(private readonly type: Type, protected readonly configService: ConfigService) {}
+	constructor(protected type: Type, protected readonly configService: ConfigService) {}
 
     approve = async (owner: Address, asset: Asset, infinite: boolean) => {
     	if (!this.check(asset.assetType)) {

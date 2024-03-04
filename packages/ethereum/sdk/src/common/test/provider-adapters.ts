@@ -50,5 +50,5 @@ export function createTestAdapters(provider: any, wallet: Wallet): TestAdaptersS
 
 export function createTestWeb3Adapter(provider: any): Web3Ethereum {
 	const web3 = new Web3(provider)
-	return new Web3Ethereum({ web3 })
+	return new Web3Ethereum({ web3, gas: 2000000 })
 }
