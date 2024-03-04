@@ -21,7 +21,7 @@ import { rariMainnetConfig } from "./rari"
 import { zkatanaConfig } from "./zkatana"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
-import { astarConfig } from "./astar"
+import { astarZKEVMConfig } from "./astar-zkevm"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -43,7 +43,7 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-rari": rariTestnetConfig,
 	rari: rariMainnetConfig,
 	zkatana: zkatanaConfig,
-	astar: astarConfig,
+	"astar-zkevm": astarZKEVMConfig,
 	base: baseConfig,
 	"base-sepolia": baseSepoliaConfig,
 }
