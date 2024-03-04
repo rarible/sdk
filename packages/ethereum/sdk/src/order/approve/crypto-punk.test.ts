@@ -1,7 +1,7 @@
-import type { Web3Ethereum } from "@rarible/web3-ethereum"
 import { createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
 import { toAddress, toBigNumber } from "@rarible/types"
 import type { Address, CryptoPunksAssetType, Asset } from "@rarible/ethereum-api-client"
+import type { Web3Ethereum } from "@rarible/web3-ethereum"
 import { getSendWithInjects } from "../../common/send-transaction"
 import { createTestWeb3Adapter } from "../../common/test/provider-adapters"
 import { getEthereumConfig } from "../../config"

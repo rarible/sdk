@@ -5,8 +5,8 @@ import type { TransferProxies } from "../../config/type"
 import type { SendFunction } from "../../common/send-transaction"
 import type { ConfigService } from "../../common/config"
 import { Erc20Handler } from "./erc20"
-import { approveErc721, Erc721Handler } from "./erc721"
-import { approveErc1155, Erc1155Handler } from "./erc1155"
+import { approveErc721, Erc721Handler, Erc721LazyHandler } from "./erc721"
+import { approveErc1155, Erc1155Handler, Erc1155LazyHandler } from "./erc1155"
 import { approveCryptoPunk, CryptoPunkHandler } from "./crypto-punk"
 import type { ApproveHandlers } from "./domain"
 import { isApprovableAsset } from "./domain"
@@ -20,7 +20,9 @@ export class ApproveService {
 		ERC20: new Erc20Handler(this.sendFn, this.configService),
 		CRYPTO_PUNKS: new CryptoPunkHandler(this.sendFn, this.configService),
 		ERC721: new Erc721Handler(this.sendFn, this.configService),
+		ERC721_LAZY: new Erc721LazyHandler(this.sendFn, this.configService),
 		ERC1155: new Erc1155Handler(this.sendFn, this.configService),
+		ERC1155_LAZY: new Erc1155LazyHandler(this.sendFn, this.configService),
 	}
 
 	constructor(private readonly sendFn: SendFunction, private readonly configService: ConfigService) {}
