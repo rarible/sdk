@@ -3,7 +3,7 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const astarConfig: EthereumConfig = {
+export const astarZKEVMConfig: EthereumConfig = {
 	basePath: "https://astarzkevm-api.rarible.org",
 	chainId: 3776,
 	exchange: {
@@ -41,6 +41,6 @@ export const astarConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0xAeaaf0e2c81Af264101B9129C00F4440cCF0F720"),
+	weth: toAddress("0xE9CC37904875B459Fa5D0FE37680d36F1ED55e38"),
 	auction: ZERO_ADDRESS,
 }

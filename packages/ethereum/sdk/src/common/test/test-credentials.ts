@@ -63,7 +63,7 @@ export function getAPIKey(env:  EthereumNetwork) {
 		case "chiliz":
 		case "lightlink":
 		case "base":
-		case "astar":
+		case "astar-zkevm":
 			return process.env.SDK_API_KEY_PROD
 		default:
 			return process.env.SDK_API_KEY_TESTNET
