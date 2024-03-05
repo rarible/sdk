@@ -1,6 +1,6 @@
 {
   "name": "@rarible/immutable-sdk",
-  "version": "0.13.68-fix.7",
+  "version": "0.13.68-fix.10",
   "description": "SDK for interact with immutable blockchain and Rarible protocol",
   "license": "MIT",
   "main": "build/index.js",
@@ -23,7 +23,7 @@
     "@rarible/immutable-wallet": "^0.13.65"
   },
   "devDependencies": {
-    "@rarible/types": "~0.9.23",
+    "@rarible/types": "~0.9.24",
     "@rarible/utils": "~0.9.10",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.0",

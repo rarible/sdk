@@ -51,10 +51,14 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 		case "testnet-rari":
 			return Blockchain.RARI
 		case "zkatana":
+		case "astar-zkevm":
 			return Blockchain.ASTARZKEVM
 		case "base":
 		case "base-sepolia":
 			return Blockchain.BASE
+		case "testnet-celo":
+		case "celo":
+			return Blockchain.CELO
 		default: throw new Error(`Unrecognized ethereum network ${network}`)
 	}
 }

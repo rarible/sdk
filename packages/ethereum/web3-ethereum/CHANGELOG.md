@@ -3,6 +3,33 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+**Note:** Version bump only for package @rarible/web3-ethereum
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+
+### Features
+
+* **PLTF-197:** out of gas error ([#596](https://github.com/rarible/sdk/issues/596)) ([a50f1e9](https://github.com/rarible/sdk/commit/a50f1e960478d506b506e21e3d71ab274641a0ed))
+
+
+
+
+
 ## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
 
 
