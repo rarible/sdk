@@ -4,14 +4,14 @@ import type { BN } from "@project-serum/anchor"
 import { serialize } from "borsh"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import type { BigNumberValue } from "@rarible/utils"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import { Account } from "@metaplex-foundation/mpl-core"
+import type { SolanaSigner } from "@rarible/solana-common"
 import { createAssociatedTokenAccountInstruction } from "../../../common/helpers"
-import { alignBn, bigNumToBn, bnToBuffer } from "../../../common/utils"
+import { alignBn, toSerumBn, bnToBuffer } from "../../../common/utils"
 
 export interface ITokenTransferRequest {
 	connection: Connection
-	signer: IWalletSigner
+	signer: SolanaSigner
 	tokenAccount: PublicKey
 	to: PublicKey
 	mint: PublicKey
@@ -49,7 +49,7 @@ export async function getTokenTransferInstructions(
 			request.tokenAccount,
 			destinationTokenAccount,
 			request.signer.publicKey,
-			alignBn(bigNumToBn(request.amount), 8),
+			alignBn(toSerumBn(request.amount), 8),
 		),
 	)
 

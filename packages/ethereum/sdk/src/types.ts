@@ -1,31 +1,37 @@
 import type { Binary, ConfigurationParameters } from "@rarible/ethereum-api-client"
 import type { Word } from "@rarible/types"
 
-export type EthereumNetwork =
-  | "mainnet"
-  | "testnet"
-  | "mumbai"
-  | "polygon"
-  | "dev-ethereum"
-  | "dev-polygon"
-  | "mantle"
-  | "testnet-mantle"
-  | "arbitrum"
-  | "testnet-arbitrum"
-  | "zksync"
-  | "testnet-zksync"
-  | "chiliz"
-  | "testnet-chiliz"
-  | "lightlink"
-  | "testnet-lightlink"
-  | "testnet-rari"
-  | "rari"
-  | "zkatana"
-  | "astar-zkevm"
-  | "base"
-  | "base-sepolia"
-  | "testnet-celo"
-  | "celo"
+export const ethereumSdkEnvironments = ["testnet", "production", "dev"] as const
+export type EthereumSdkEnvironment = typeof ethereumSdkEnvironments[number]
+
+export const ethereumNetworks = [
+	"mainnet",
+	"testnet",
+	"mumbai",
+	"polygon",
+	"dev-ethereum",
+	"dev-polygon",
+	"mantle",
+	"testnet-mantle",
+	"arbitrum",
+	"testnet-arbitrum",
+	"zksync",
+	"testnet-zksync",
+	"chiliz",
+	"testnet-chiliz",
+	"lightlink",
+	"testnet-lightlink",
+	"testnet-rari",
+	"rari",
+	"zkatana",
+	"astar-zkevm",
+	"base",
+	"base-sepolia",
+	"testnet-celo",
+	"celo",
+]
+
+export type EthereumNetwork = typeof ethereumNetworks[number]
 
 export enum LogsLevel {
 	DISABLED = 0,

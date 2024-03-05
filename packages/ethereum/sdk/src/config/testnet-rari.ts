@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const rariTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-rari-api.rarible.org",
 	chainId: 1918988905,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x61512179F6a16bEC0D259d8010CC0485CE363868"),

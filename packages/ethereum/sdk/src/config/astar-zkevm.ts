@@ -5,6 +5,7 @@ import { FEE_CONFIG_URL } from "./common"
 
 export const astarZKEVMConfig: EthereumConfig = {
 	basePath: "https://astarzkevm-api.rarible.org",
+	environment: "production",
 	chainId: 3776,
 	exchange: {
 		v1: ZERO_ADDRESS,

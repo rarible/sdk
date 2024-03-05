@@ -1,7 +1,7 @@
 import type BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { BigNumberValue } from "@rarible/utils"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { getAuctionHouseBuyerEscrow, loadAuctionHouseProgram } from "../../common/auction-house-helpers"
 import { getTokenAmount } from "../../common/helpers"
@@ -9,22 +9,21 @@ import { PreparedTransaction } from "../prepared-transaction"
 import { getActionHouseEscrowWithdrawInstructions } from "./methods/escrow-withdraw"
 import { getActionHouseEscrowDepositInstructions } from "./methods/escrow-deposit"
 
-
 export interface IGetEscrowBalanceRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	wallet: PublicKey
 }
 
 export interface IWithdrawEscrowRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	amount: BigNumberValue
 }
 
 export interface IDepositEscrowRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	amount: BigNumberValue
 }
 
@@ -49,7 +48,6 @@ export class SolanaAuctionHouseSdk implements ISolanaAuctionHouseSdk {
 
 		const amount = await getTokenAmount(
 			this.connection,
-			anchorProgram,
 			escrowPaymentAccount,
 			auctionHouseObj.treasuryMint,
 		)
@@ -78,7 +76,7 @@ export class SolanaAuctionHouseSdk implements ISolanaAuctionHouseSdk {
 				this.logger.log("Withdrew",
 				 	request.amount,
 				 	"from Auction House Escrow account",
-				 )
+				)
 			}
 		)
 	}
@@ -100,7 +98,7 @@ export class SolanaAuctionHouseSdk implements ISolanaAuctionHouseSdk {
 				this.logger.log("Deposited",
 				 	request.amount,
 				 	"to Auction House Escrow account",
-				 )
+				)
 			}
 		)
 	}
