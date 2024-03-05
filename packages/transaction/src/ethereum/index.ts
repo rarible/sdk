@@ -78,6 +78,10 @@ Blockchain, TransactionResult
 				return `https://zkatana.blockscout.com/tx/${this.hash()}`
 			case "astar-zkevm":
 				return `https://astar-zkevm.explorer.startale.com/tx/${this.hash()}`
+			case "testnet-celo":
+				return `https://explorer.celo.org/alfajores/tx/${this.hash()}`
+			case "celo":
+				return `https://explorer.celo.org/mainnet/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}
