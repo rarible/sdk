@@ -22,6 +22,8 @@ import { zkatanaConfig } from "./zkatana"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
 import { astarZKEVMConfig } from "./astar-zkevm"
+import { celoTestnetConfig } from "./testnet-celo"
+import { celoConfig } from "./celo"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -46,6 +48,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"astar-zkevm": astarZKEVMConfig,
 	base: baseConfig,
 	"base-sepolia": baseSepoliaConfig,
+	"testnet-celo": celoTestnetConfig,
+	celo: celoConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

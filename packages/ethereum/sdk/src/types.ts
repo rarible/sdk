@@ -24,6 +24,8 @@ export type EthereumNetwork =
   | "astar-zkevm"
   | "base"
   | "base-sepolia"
+  | "testnet-celo"
+  | "celo"
 
 export enum LogsLevel {
 	DISABLED = 0,

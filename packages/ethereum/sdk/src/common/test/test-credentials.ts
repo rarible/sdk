@@ -64,6 +64,7 @@ export function getAPIKey(env:  EthereumNetwork) {
 		case "lightlink":
 		case "base":
 		case "astar-zkevm":
+		case "celo":
 			return process.env.SDK_API_KEY_PROD
 		default:
 			return process.env.SDK_API_KEY_TESTNET
