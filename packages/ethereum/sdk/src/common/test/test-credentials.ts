@@ -1,5 +1,5 @@
 import type { Address } from "@rarible/ethereum-api-client"
-import { toAddress } from "@rarible/types"
+import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { EthereumNetwork } from "../../types"
 
 export const DEV_PK_1 = "0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21"
@@ -26,16 +26,21 @@ export const MAINNET_CONFIG = {
 	networkId: 1,
 }
 
-export type TestContractType = "erc721V3" | "erc1155V2"
+export type TestContractType = "erc721V3" | "erc1155V2" | "erc20" | "sudoswapCurve"
 
 type PartialRecord<K extends keyof any, T> =  Partial<Record<K, T>>
 
 const MAP_TEST_CONTRACTS: PartialRecord<EthereumNetwork, Record<TestContractType, string>> = {
 	"dev-ethereum": {
-		erc721V3: "0xf9864189fe52456345DD0055D210fD160694Dd08",
-		erc1155V2: "0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1",
+		erc20: "0x0457Df69CaDb8b116E7C9b7c1EA1131cb7C30d10",
+		erc721V3: "0x5fc5Fc8693211D29b53C2923222083a81fCEd33c",
+		erc1155V2: "0x4733791eED7d0Cfe49eD855EC21dFE5D32447938",
+		//Linear curve
+		sudoswapCurve: "0xF3348949Db80297C78EC17d19611c263fc61f987",
 	},
 	"testnet": {
+		erc20: ZERO_ADDRESS,
+		sudoswapCurve: ZERO_ADDRESS,
 		erc721V3: "0x1723017329a804564bC8d215496C89eaBf1F3211",
 		erc1155V2: "0xe46D6235f3488B8Ce8AA054e8E5bc0aE86146145",
 	},

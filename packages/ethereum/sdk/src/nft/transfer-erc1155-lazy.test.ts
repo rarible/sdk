@@ -15,6 +15,9 @@ import { transfer } from "./transfer"
 import { ERC1155VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"
 
+/**
+ * @group provider/dev
+ */
 describe("transfer Erc721 lazy", () => {
 	const { provider, wallet } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
 	const web3 = new Web3(provider)
@@ -30,7 +33,7 @@ describe("transfer Erc721 lazy", () => {
 
 	test("should transfer erc1155 lazy token", async () => {
 		const recipient = randomAddress()
-		const contract = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
+		const contract = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
 
 		const request: ERC1155RequestV2 = {
 			uri: "ipfs://ipfs/hash",

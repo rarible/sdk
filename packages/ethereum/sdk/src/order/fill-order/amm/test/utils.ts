@@ -9,10 +9,12 @@ import { mintTestToken } from "../../batch-purchase/test/common/utils"
 import type { RaribleSdk } from "../../../../index"
 import type { SendFunction } from "../../../../common/send-transaction"
 import type { EthereumNetwork } from "../../../../types"
+import { getTestContract } from "../../../../common/test/test-credentials"
 
 async function createSudoswapPool(
 	sellerWeb3: Ethereum,
 	send: SendFunction,
+	env: EthereumNetwork,
 	sudoswapFactoryAddress: Address,
 	tokenContract: Address,
 	tokensIds: string[]
@@ -25,12 +27,7 @@ async function createSudoswapPool(
 	const sudoswapFactory = await createSudoswapFactoryV1Contract(sellerWeb3, sudoswapFactoryAddress)
 	const fc = sudoswapFactory.functionCall("createPairETH",
 		tokenContract, //nft address
-		// EXPONENTIAL_CURVE: 0x0D807bd5fF2C4eF298755bE30E22926b33244B0c
-		// LINEAR_CURVE: 0xaC6dcFF6E13132f075e36cA3a7F403236f869438
-		// XYK_CURVE: 0x02363a2F1B2c2C5815cb6893Aa27861BE0c4F760
-		// "0xaC6dcFF6E13132f075e36cA3a7F403236f869438", //goerli curve
-		"0xdd661D1DADdb8F37751a45975C1f4851faFfC9bD", //dev curve
-		// "0x42d8004fd14114C989654b825F993cA127EedBce", //dev curve
+		getTestContract(env, "sudoswapCurve"), //dev curve
 		from, //_assetRecipient
 		1, //_poolType
 		"100", //_delta
@@ -63,9 +60,11 @@ export async function mintTokensToNewSudoswapPool(
 	const tokens = await Promise.all(tokensPromises)
 	const contract = tokens[0].contract
 	const tokensIds = tokens.map((t) => t.tokenId)
+
 	const poolAddress = await createSudoswapPool(
 		sellerWeb3,
 		send,
+		env,
 		sudoswapFactoryAddress,
 		contract,
 		tokensIds

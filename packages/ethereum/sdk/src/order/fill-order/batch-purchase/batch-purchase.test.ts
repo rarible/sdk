@@ -19,6 +19,9 @@ import {
 	ordersToRequests,
 } from "./test/common/utils"
 
+/**
+ * @group provider/dev
+ */
 describe("Batch purchase", function () {
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)

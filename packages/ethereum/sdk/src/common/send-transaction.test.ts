@@ -12,6 +12,9 @@ import type { EthereumNetwork } from "../types"
 import { getSendWithInjects } from "./send-transaction"
 import { DEV_PK_1 } from "./test/test-credentials"
 
+/**
+ * @group provider/dev
+ */
 describe("sendTransaction", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)

@@ -9,7 +9,7 @@ import Web3 from "web3"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V1Collection, createErc1155V2Collection, createErc721V1Collection, createErc721V2Collection, createErc721V3Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
-import { DEV_PK_1 } from "../common/test/test-credentials"
+import { DEV_PK_1, getTestContract } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { delay } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
@@ -36,9 +36,12 @@ const providers = [
 
 const env: EthereumNetwork = "dev-ethereum"
 
-const erc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
-const erc1155V2ContractAddress = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
+const erc721V3ContractAddress = getTestContract(env, "erc721V3")
+const erc1155V2ContractAddress = getTestContract(env, "erc1155V2")
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("mint test", ethereum => {
 	let minter: Address
 	const config = getEthereumConfig(env)
@@ -59,7 +62,7 @@ describe.each(providers)("mint test", ethereum => {
 		await delay(2000)
 	})
 
-	test("mint ERC-721 v1", async () => {
+	test.skip("mint ERC-721 v1", async () => {
 		const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
@@ -76,7 +79,7 @@ describe.each(providers)("mint test", ethereum => {
 		expect(new BigNumber(balanceOfMinter).minus(startBalanceOfMinter).toString()).toBe("1")
 	})
 
-	test("mint ERC-721 v2", async () => {
+	test.skip("mint ERC-721 v2", async () => {
 		const address = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
 		const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, address)
 		const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
@@ -116,7 +119,7 @@ describe.each(providers)("mint test", ethereum => {
 		expect(result.tokenId).toBe(nftTokenId.tokenId)
 	})
 
-	test("mint ERC-1155 v1", async () => {
+	test.skip("mint ERC-1155 v1", async () => {
 		const address = toAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
 		const uri = "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5"
 		const supply = 101

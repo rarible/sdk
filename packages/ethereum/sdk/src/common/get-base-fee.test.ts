@@ -5,6 +5,9 @@ import { createEthereumApis, getApis as getApisTemplate } from "./apis"
 import { delay } from "./retry"
 import { getAPIKey } from "./test/test-credentials"
 
+/**
+ * @group type/common
+ */
 describe("get base fee", () => {
 	test("get base fee from mainnet", async () => {
 		const env: EthereumNetwork = "mainnet"

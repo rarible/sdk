@@ -6,6 +6,9 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { transferErc721 } from "./transfer-erc721"
 
+/**
+ * @group provider/ganache
+ */
 describe("transfer Erc721", () => {
 	const { provider, addresses } = createGanacheProvider()
 	const web3 = new Web3(provider as any)

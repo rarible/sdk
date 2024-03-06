@@ -8,12 +8,15 @@ import { DEV_PK_1 } from "./test/test-credentials"
 import type { ILoggerConfig } from "./logger/logger"
 import { getSendWithInjects } from "./send-transaction"
 
+/**
+ * @group provider/dev
+ */
 describe("estimate gas before send tx", () => {
 	const { provider } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider as any)
 	const ethereum = new Web3Ethereum({ web3, gas: 1000000 })
 
-	const erc1155Address = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
+	const erc1155Address = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
 	const logConfig: ILoggerConfig = {
 		level: LogsLevel.ERROR,
 		instance: {
@@ -37,7 +40,6 @@ describe("estimate gas before send tx", () => {
 		  const tx = await send(fnCall, { value: "0x00" })
 			await tx.wait()
 		} catch (e) {
-			console.log(e)
 		  expect(e).toBeTruthy()
 		}
 	})

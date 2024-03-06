@@ -11,7 +11,7 @@ import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
 import { delay, retry } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
-import { DEV_PK_1 } from "../common/test/test-credentials"
+import { DEV_PK_1, getTestContract } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { OrderSell } from "./sell"
@@ -25,6 +25,9 @@ import { getEndDateAfterMonth } from "./test/utils"
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("sell", (ethereum) => {
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
@@ -51,7 +54,7 @@ describe.each(providers)("sell", (ethereum) => {
 		ZERO_WORD
 	)
 	const orderSell = new OrderSell(upserter, checkAssetType)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
 	const treasury = createE2eWallet()
 	const treasuryAddress = toAddress(treasury.getAddressString())
 

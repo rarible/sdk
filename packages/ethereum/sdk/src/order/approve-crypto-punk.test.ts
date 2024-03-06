@@ -5,6 +5,9 @@ import { randomAddress, toAddress } from "@rarible/types"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { approveCryptoPunk } from "./approve-crypto-punk"
 
+/**
+ * @group provider/ganache
+ */
 describe("approve crypto punks", () => {
 	const {
 		addresses,

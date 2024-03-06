@@ -17,6 +17,7 @@ module.exports = {
 		"default",
 		["jest-junit", {
 			outputDirectory: "reports",
+			runner: "groups",
 		}],
 	],
 	globals: {
@@ -24,4 +25,5 @@ module.exports = {
 			tsconfig: "tsconfig-build.json",
 		},
 	},
+	runner: "groups",
 }

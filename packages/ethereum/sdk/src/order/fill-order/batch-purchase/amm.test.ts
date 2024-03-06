@@ -5,7 +5,6 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
-import type { NftAssetType } from "../../check-asset-type"
 import type { AmmOrderFillRequest } from "../types"
 import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
 import type { EthereumNetwork } from "../../../types"
@@ -14,6 +13,9 @@ import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 
+/**
+ * @group provider/dev
+ */
 describe("amm batch buy tests", () => {
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)
@@ -60,11 +62,6 @@ describe("amm batch buy tests", () => {
 			return await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		}) as SimpleAmmOrder
 
-		const requests: NftAssetType[] = items.map(item => ({
-			contract,
-			tokenId: item,
-		}))
-		console.log("reqs", requests)
 		const tx = await sdkBuyer.order.buyBatch([{
 			order,
 			amount: 1,
@@ -77,7 +74,6 @@ describe("amm batch buy tests", () => {
 				tokenId: item,
 			})),
 		} as AmmOrderFillRequest])
-		console.log(tx)
 		await tx.wait()
 	})
 
