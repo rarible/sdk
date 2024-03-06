@@ -13,7 +13,6 @@ import {
 } from "../common/mint"
 import { getApis as getApisTemplate } from "../common/apis"
 import { retry } from "../common/retry"
-import type { EthereumNetwork } from "../types"
 import { DEV_PK_1, getTestAPIKey, getTestContract } from "../common/test/test-credentials"
 import { getEthereumConfig } from "../config"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV2, ERC721RequestV3 } from "./mint"

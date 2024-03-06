@@ -18,7 +18,6 @@ import type { EthereumConfig } from "../../../../../config/type"
 import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
 import { getEndDateAfterMonth } from "../../../../test/utils"
 import { MIN_PAYMENT_VALUE_DECIMAL } from "../../../../../common/check-min-payment-value"
-import { getTestContract } from "../../../../../common/test/test-credentials"
 
 export async function mintTestToken(sdk: RaribleSdk, erc721Contract: Address) {
 	const sellItem = await sdk.nft.mint({
