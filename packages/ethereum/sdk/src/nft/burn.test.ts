@@ -14,7 +14,7 @@ import {
 import { getApis as getApisTemplate } from "../common/apis"
 import { retry } from "../common/retry"
 import type { EthereumNetwork } from "../types"
-import { DEV_PK_1, getAPIKey, getTestContract } from "../common/test/test-credentials"
+import { DEV_PK_1, getTestAPIKey, getTestContract } from "../common/test/test-credentials"
 import { getEthereumConfig } from "../config"
 import type { ERC1155RequestV1, ERC1155RequestV2, ERC721RequestV2, ERC721RequestV3 } from "./mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "./mint"
@@ -33,13 +33,13 @@ const { providers } = createTestProviders(provider, wallet)
  */
 describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
 	const testAddress = toAddress(wallet.getAddressString())
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 
 	const sign = signNft.bind(null, ethereum, getConfig)
 	const send = getSendWithInjects().bind(ethereum)
-	const getApis = getApisTemplate.bind(null, ethereum, env, { apiKey: getAPIKey(env) })
+	const getApis = getApisTemplate.bind(null, ethereum, env, { apiKey: getTestAPIKey(env) })
 
 	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
 	const mint = mintTemplate.bind(null, ethereum, send, sign, getApis)

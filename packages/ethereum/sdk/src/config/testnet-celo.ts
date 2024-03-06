@@ -5,6 +5,7 @@ import { FEE_CONFIG_URL } from "./common"
 
 export const celoTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-celo-api.rarible.org",
+	environment: "testnet",
 	chainId: 44787,
 	exchange: {
 		v1: ZERO_ADDRESS,

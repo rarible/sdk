@@ -1,21 +1,17 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import {
-	createSudoswapFactoryV1Contract,
-} from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
+import { createSudoswapFactoryV1Contract } from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
 import { approveErc721 } from "../../../approve-erc721"
 import { mintTestToken } from "../../batch-purchase/test/common/utils"
 import type { RaribleSdk } from "../../../../index"
 import type { SendFunction } from "../../../../common/send-transaction"
-import type { EthereumNetwork } from "../../../../types"
-import { getTestContract } from "../../../../common/test/test-credentials"
 
 async function createSudoswapPool(
 	sellerWeb3: Ethereum,
 	send: SendFunction,
-	env: EthereumNetwork,
 	sudoswapFactoryAddress: Address,
+	sudoswapCurveAddress: Address,
 	tokenContract: Address,
 	tokensIds: string[]
 ): Promise<Address> {
@@ -27,7 +23,7 @@ async function createSudoswapPool(
 	const sudoswapFactory = await createSudoswapFactoryV1Contract(sellerWeb3, sudoswapFactoryAddress)
 	const fc = sudoswapFactory.functionCall("createPairETH",
 		tokenContract, //nft address
-		getTestContract(env, "sudoswapCurve"), //dev curve
+		sudoswapCurveAddress, //dev curve
 		from, //_assetRecipient
 		1, //_poolType
 		"100", //_delta
@@ -47,25 +43,25 @@ async function createSudoswapPool(
 
 export async function mintTokensToNewSudoswapPool(
 	sdk: RaribleSdk,
-	env: EthereumNetwork,
+	erc721Contract: Address,
 	sellerWeb3: Ethereum,
 	send: SendFunction,
 	sudoswapFactoryAddress: Address,
+	sudoswapCurveAddress: Address,
 	tokensCount: number = 1
 ): Promise<{poolAddress: Address, contract: Address, items: string[]}> {
 	const tokensPromises = []
 	for (let i = 0; i < tokensCount; i++) {
-		tokensPromises.push(mintTestToken(sdk, env))
+		tokensPromises.push(mintTestToken(sdk, erc721Contract))
 	}
 	const tokens = await Promise.all(tokensPromises)
 	const contract = tokens[0].contract
 	const tokensIds = tokens.map((t) => t.tokenId)
-
 	const poolAddress = await createSudoswapPool(
 		sellerWeb3,
 		send,
-		env,
 		sudoswapFactoryAddress,
+		sudoswapCurveAddress,
 		contract,
 		tokensIds
 	)

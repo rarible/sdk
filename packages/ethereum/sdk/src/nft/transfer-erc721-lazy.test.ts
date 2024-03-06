@@ -8,6 +8,7 @@ import { createErc721V3Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
 import { getApis as getApisTemplate } from "../common/apis"
 import type { EthereumNetwork } from "../types"
+import { DEV_PK_1 } from "../common/test/test-credentials"
 import { signNft } from "./sign-nft"
 import type { ERC721RequestV3 } from "./mint"
 import { mint } from "./mint"
@@ -20,7 +21,7 @@ import { getErc721Contract } from "./contracts/erc721"
  * @group provider/dev
  */
 describe("transfer Erc721 lazy", () => {
-	const { provider, wallet } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
+	const { provider, wallet } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 

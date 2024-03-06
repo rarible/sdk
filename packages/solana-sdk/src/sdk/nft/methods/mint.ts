@@ -11,9 +11,9 @@ import {
 } from "@metaplex-foundation/mpl-token-metadata"
 import type { Uses } from "@metaplex-foundation/mpl-token-metadata"
 import fetch from "node-fetch"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { handleFetchErrorResponse, NetworkError } from "@rarible/logger/build"
+import type { SolanaSigner } from "@rarible/solana-common"
 import {
 	createAssociatedTokenAccountInstruction,
 	getMasterEdition,
@@ -97,7 +97,7 @@ export async function createMetadata(
 
 export async function getMintNftInstructions(
 	connection: Connection,
-	signer: IWalletSigner,
+	signer: SolanaSigner,
 	params: {
 		metadataLink: string,
 		//mutableMetadata: boolean,
@@ -126,9 +126,9 @@ export async function getMintNftInstructions(
 	)
 
 	// Generate a mint
-	const mint = SolanaKeypairWallet.generate()
+	const mint = SolanaKeypairWallet.fromSeed(undefined)
 	const instructions: TransactionInstruction[] = []
-	const signers: IWalletSigner[] = [mint, signer]
+	const signers: SolanaSigner[] = [mint, signer]
 
 	instructions.push(
 		SystemProgram.createAccount({

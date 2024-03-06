@@ -1,19 +1,19 @@
 import type { BigNumberValue } from "@rarible/utils"
-import BigNumber from "bignumber.js"
+import { toBn } from "@rarible/utils"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import * as web3 from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getAssociatedTokenAccountForMint, getPriceWithMantissa } from "../../../common/helpers"
 import { getAuctionHouseBuyerEscrow, loadAuctionHouseProgram } from "../../../common/auction-house-helpers"
-import { bigNumToBn } from "../../../common/utils"
+import { toSerumBn } from "../../../common/utils"
 
 export interface IActionHouseEscrowWithdrawRequest {
 	connection: Connection
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	amount: BigNumberValue
 }
 
@@ -25,9 +25,9 @@ export async function getActionHouseEscrowWithdrawInstructions(
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
-	const amountAdjusted = bigNumToBn(await getPriceWithMantissa(
+	const amountAdjusted = toSerumBn(await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.amount),
+		toBn(request.amount),
 		auctionHouseObj.treasuryMint,
 		walletKeyPair
 	))

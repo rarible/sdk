@@ -6,8 +6,7 @@ import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
 import type { AmmOrderFillRequest } from "../types"
-import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
-import type { EthereumNetwork } from "../../../types"
+import { DEV_PK_1, DEV_PK_2, getTestContract } from "../../../common/test/test-credentials"
 import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
@@ -20,47 +19,49 @@ describe("amm batch buy tests", () => {
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)
 
-	const env: EthereumNetwork = "dev-ethereum"
-	const web3Seller = new Web3(providerSeller as any)
+	const env = "dev-ethereum" as const
+	const web3Seller = new Web3(providerSeller)
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 	const ethereum = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 
-	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
+	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer), gas: 3000000 })
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
 	const config = getEthereumConfig(env)
 	const send = getSimpleSendWithInjects()
-
+	const sudoswapCurveAddress = getTestContract(env, "sudoswapCurve")
 
 	test.skip("amm sudoswap few items sell form different pools", async () => {
+		const contract = getTestContract(env, "erc721V3")
 		const orders = await Promise.all([
-			makeAmmOrder(sdkSeller, env, ethereum, send, config),
-			makeAmmOrder(sdkSeller, env, ethereum, send, config),
+			makeAmmOrder(sdkSeller, contract, sudoswapCurveAddress, ethereum, send, config),
+			makeAmmOrder(sdkSeller, contract, sudoswapCurveAddress, ethereum, send, config),
 		])
 
-		console.log("order", orders[0])
 		const tx = await sdkBuyer.order.buyBatch(ordersToRequests(orders, [{
 			account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
 			value: 100,
 		}]))
-		await tx.wait()
-		console.log(tx)
+
+		const result = await tx.wait()
+		expect(result).toBeTruthy()
 	})
 
 	test("amm sudoswap few items sell from one pool one request", async () => {
 		const { poolAddress, items, contract } = await mintTokensToNewSudoswapPool(
 			sdkSeller,
-			env,
+			getTestContract(env, "erc721V3"),
 			ethereum,
 			send,
 			config.sudoswap.pairFactory,
+			sudoswapCurveAddress,
 			3
 		)
 		const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
-		const order = await retry(20, 2000, async () => {
-			return await sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
-		}) as SimpleAmmOrder
+		const order = await retry(20, 2000, () =>
+			sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
+		) as SimpleAmmOrder
 
 		const tx = await sdkBuyer.order.buyBatch([{
 			order,
@@ -74,7 +75,9 @@ describe("amm batch buy tests", () => {
 				tokenId: item,
 			})),
 		} as AmmOrderFillRequest])
-		await tx.wait()
+
+		const result = await tx.wait()
+		expect(result).toBeTruthy()
 	})
 
 })

@@ -2,21 +2,22 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
-import { configDictionary } from "../config"
 import { createRaribleSdk } from "../index"
 import type { EthereumNetwork } from "../types"
+import { ethereumNetworks } from "../types"
 import { Balances } from "./balances"
 import { createEthereumApis } from "./apis"
-import { getAPIKey, getTestContract } from "./test/test-credentials"
+import { getTestAPIKey, getTestContract } from "./test/test-credentials"
 import { getNetworkFromChainId } from "./index"
+
+const randomEvmAddress = toAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 
 /**
  * GetBalance tests
  * @group provider/dev
  */
 describe("getBalance test", () => {
-	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
-	const { provider } = createE2eProvider(pk)
+	const { provider } = createE2eProvider()
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 
@@ -25,6 +26,7 @@ describe("getBalance test", () => {
 		const env = getNetworkFromChainId(chainId)
 		return createEthereumApis(env)
 	}
+
 	const balances = new Balances(getApis)
 
 	const testErc20Address = getTestContract("dev-ethereum", "erc20")
@@ -42,7 +44,7 @@ describe("getBalance test", () => {
 	})
 
 	test.concurrent("get erc-20 balance big value", async () => {
-		const senderAddress = toAddress(await ethereum.getFrom())
+		const senderAddress = toAddress("0xC5eAC3488524D577a1495492599E8013B1F91efa")
 
 		const nextBalance = "1000"
 
@@ -67,17 +69,13 @@ describe("getBalance test", () => {
 
 })
 
-const envs = (Object.keys(configDictionary) as EthereumNetwork[])
-	.filter(network => network !== "lightlink" && network !== "testnet-lightlink")
-
-
-describe.each(envs)("get balances each of environments", (env: EthereumNetwork) => {
-	const senderAddress = toAddress("0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
+describe.each(ethereumNetworks)("get balances each of environments", (env: EthereumNetwork) => {
 	const sdk = createRaribleSdk(undefined, env, {
-		apiKey: getAPIKey(env),
+		apiKey: getTestAPIKey(env),
 	})
 
 	test(`get balance on ${env}`, async () => {
-		await sdk.balances.getBalance(senderAddress, { assetClass: "ETH" })
+		const value = await sdk.balances.getBalance(randomEvmAddress, { assetClass: "ETH" })
+		expect(value.toNumber()).toEqual(0)
 	})
 })

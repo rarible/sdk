@@ -58,8 +58,9 @@ export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
 
 export type GetConfigByChainId = () => Promise<EthereumConfig>
 
+const dictionaryFlat = Object.values(configDictionary)
 export function getNetworkConfigByChainId(chainId: number): EthereumConfig {
-	const config = Object.values(configDictionary).find((x: EthereumConfig) => x.chainId === chainId)
+	const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
 	if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
 	return config
 }

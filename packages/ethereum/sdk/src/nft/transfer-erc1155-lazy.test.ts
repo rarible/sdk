@@ -7,6 +7,7 @@ import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V2Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
 import { getApis as getApisTemplate } from "../common/apis"
+import { DEV_PK_1 } from "../common/test/test-credentials"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV2 } from "./mint"
 import { mint, MintResponseTypeEnum } from "./mint"
@@ -19,7 +20,7 @@ import { getErc1155Contract } from "./contracts/erc1155"
  * @group provider/dev
  */
 describe("transfer Erc721 lazy", () => {
-	const { provider, wallet } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
+	const { provider, wallet } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 

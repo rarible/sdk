@@ -29,7 +29,7 @@ const { providers } = createTestProviders(provider, wallet)
  * @group provider/dev
  */
 describe.each(providers)("sell", (ethereum) => {
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 	const getApis = getApisTemplate.bind(null, ethereum, env)
