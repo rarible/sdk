@@ -1,8 +1,9 @@
-import type { IRaribleSdk, RequestCurrency } from "@rarible/sdk"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { UnionAddress } from "@rarible/types"
 import { waitFor } from "../wait-for"
+import type { RequestCurrency } from "../domain"
+import type { IRaribleSdk } from "../../domain"
 import type { EVMSuiteSupportedBlockchain } from "../../sdk-blockchains/ethereum/test/suite/domain"
 
 export class BalancesTestSuite<T extends EVMSuiteSupportedBlockchain> {
