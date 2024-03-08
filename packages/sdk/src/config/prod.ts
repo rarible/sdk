@@ -15,4 +15,8 @@ export const prodConfig: RaribleSdkConfig = {
 	lightlink: "lightlink",
 	rari: "rari",
 	base: "base",
+	xai: "testnet-xai",
+	fief: "testnet-fief",
+	kroma: "testnet-kroma",
+	celo: "testnet-celo",
 }

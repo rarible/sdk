@@ -21,6 +21,11 @@ import { rariMainnetConfig } from "./rari"
 import { zkatanaConfig } from "./zkatana"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
+import { xaiConfig } from "./xai"
+import { fiefTestnetConfig } from "./testnet-fief"
+import { xaiTestnetConfig } from "./testnet-xai"
+import { kromaTestnetConfig } from "./testnet-kroma"
+import { kromaConfig } from "./kroma"
 import { astarZKEVMConfig } from "./astar-zkevm"
 import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
@@ -50,6 +55,11 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"base-sepolia": baseSepoliaConfig,
 	"testnet-celo": celoTestnetConfig,
 	celo: celoConfig,
+	"testnet-xai": xaiTestnetConfig,
+	xai: xaiConfig,
+	"testnet-fief": fiefTestnetConfig,
+	"testnet-kroma": kromaTestnetConfig,
+	kroma: kromaConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
