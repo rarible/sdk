@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const kromaTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-kroma-api.rarible.org",
 	chainId: 2358,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x0fE65B68Eb627c21EAF3cfe8183C4F946F3d48BD"),

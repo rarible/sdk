@@ -1,30 +1,38 @@
-import type BigNumber from "bignumber.js"
 import type { Connection } from "@solana/web3.js"
 import { PublicKey } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
+import { toSolanaLegacySigner } from "@rarible/solana-common"
 import { Program, Provider } from "@project-serum/anchor"
+import type { BigNumber } from "@rarible/utils"
 import { AUCTION_HOUSE, AUCTION_HOUSE_PROGRAM_ID } from "./contracts"
-import { bigNumToBuffer } from "./utils"
+import { serumBnToBuffer, toSerumBn } from "./utils"
 
 export async function loadAuctionHouseProgram(
 	connection: Connection,
-	signer: IWalletSigner
+	signer: SolanaSigner
 ) {
-	const provider = new Provider(connection, signer, {
+	const legacySigner = toSolanaLegacySigner(signer)
+	const provider = new Provider(connection, legacySigner, {
 		preflightCommitment: "recent",
 	})
 	const idl = await Program.fetchIdl(AUCTION_HOUSE_PROGRAM_ID, provider)
-	return new Program(idl!, AUCTION_HOUSE_PROGRAM_ID, provider)
+	if (!idl) {
+		throw new Error("Idl couldn't be fetched")
+	}
+	return new Program(idl, AUCTION_HOUSE_PROGRAM_ID, provider)
 }
 
-
-export async function getAuctionHouseProgramAsSigner (): Promise<[PublicKey, number]> {
-	return await PublicKey.findProgramAddress(
-		[Buffer.from(AUCTION_HOUSE), Buffer.from("signer")], AUCTION_HOUSE_PROGRAM_ID,
+export function getAuctionHouseProgramAsSigner (): Promise<[PublicKey, number]> {
+	return PublicKey.findProgramAddress(
+		[
+			Buffer.from(AUCTION_HOUSE),
+			Buffer.from("signer"),
+		],
+		AUCTION_HOUSE_PROGRAM_ID
 	)
 }
 
-export async function getAuctionHouseTradeState (
+export function getAuctionHouseTradeState (
 	auctionHouse: PublicKey,
 	wallet: PublicKey,
 	tokenAccount: PublicKey,
@@ -33,7 +41,7 @@ export async function getAuctionHouseTradeState (
 	tokenSize: BigNumber,
 	buyPrice: BigNumber,
 ): Promise<[PublicKey, number]> {
-	return await PublicKey.findProgramAddress(
+	return PublicKey.findProgramAddress(
 		[
 			Buffer.from(AUCTION_HOUSE),
 			wallet.toBuffer(),
@@ -41,19 +49,23 @@ export async function getAuctionHouseTradeState (
 			tokenAccount.toBuffer(),
 			treasuryMint.toBuffer(),
 			tokenMint.toBuffer(),
-			bigNumToBuffer(buyPrice, "le", 8),
-			bigNumToBuffer(tokenSize, "le", 8),
+			serumBnToBuffer(toSerumBn(buyPrice), "le", 8),
+			serumBnToBuffer(toSerumBn(tokenSize), "le", 8),
 		],
 		AUCTION_HOUSE_PROGRAM_ID,
 	)
 }
 
-export async function getAuctionHouseBuyerEscrow(
+export function getAuctionHouseBuyerEscrow(
 	auctionHouse: PublicKey,
 	wallet: PublicKey,
 ): Promise<[PublicKey, number]> {
-	return await PublicKey.findProgramAddress(
-		[Buffer.from(AUCTION_HOUSE), auctionHouse.toBuffer(), wallet.toBuffer()],
+	return PublicKey.findProgramAddress(
+		[
+			Buffer.from(AUCTION_HOUSE),
+			auctionHouse.toBuffer(),
+			wallet.toBuffer(),
+		],
 		AUCTION_HOUSE_PROGRAM_ID,
 	)
 }

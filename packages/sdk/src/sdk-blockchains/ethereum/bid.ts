@@ -215,7 +215,7 @@ export class EthereumBid {
 				const currency = getCurrencyAssetType(request.currency)
 				if (currency["@type"] === "ERC20") {
 					const wrappedContract = await this.sdk.balances.getWethContractAddress()
-					if (blockchain !== Blockchain.MANTLE
+					if (![Blockchain.MANTLE, Blockchain.CELO].includes(blockchain)
             && compareCaseInsensitive(convertToEthereumAddress(currency.contract), wrappedContract)) {
 						const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
 						const quantity = getOrderAmount(request.amount, collection)
@@ -254,7 +254,7 @@ export class EthereumBid {
 		const assetType = this.getAssetTypeForConvert(request)
 		if (assetType["@type"] === "ERC20") {
 			const wrappedCurrency = await this.sdk.balances.getWethContractAddress()
-			if (blockchain !== Blockchain.MANTLE
+			if (![Blockchain.MANTLE, Blockchain.CELO].includes(blockchain)
         && compareCaseInsensitive(convertToEthereumAddress(assetType.contract), wrappedCurrency)) {
 				const feeBp = request.originFees.reduce((prev, curr) => prev + curr.value, 0)
 				return this.getConvertableValueCommon(assetType, request.price, request.amount, feeBp, blockchain)
@@ -348,7 +348,7 @@ export class EthereumBid {
 				id: "convert" as const,
 				run: async (request: OrderCommon.OrderUpdateRequest) => {
 					await checkWalletBlockchain(this.wallet, blockchain)
-					if (blockchain === Blockchain.MANTLE) {
+					if ([Blockchain.MANTLE, Blockchain.CELO].includes(blockchain)) {
 						return request
 					}
 					if (isWETH(order.make.type, await this.sdk.balances.getWethContractAddress())) {

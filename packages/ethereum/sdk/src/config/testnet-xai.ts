@@ -2,10 +2,10 @@ import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
-
 export const xaiTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-xai-api.rarible.org",
 	chainId: 37714555429,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x61512179F6a16bEC0D259d8010CC0485CE363868"),
@@ -41,6 +41,6 @@ export const xaiTestnetConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: ZERO_ADDRESS,
+	weth: toAddress("0x3fB787101DC6Be47cfe18aeEe15404dcC842e6AF"),
 	auction: ZERO_ADDRESS,
 }

@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const arbitrumConfig: EthereumConfig = {
 	basePath: "https://arbitrum-api.rarible.org",
 	chainId: 42161,
+	environment: "production",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x07b637739CAd9A5f0c487219B283a52717E69978"),

@@ -51,13 +51,13 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 		case "testnet-rari":
 			return Blockchain.RARI
 		case "zkatana":
-		case "astar":
+		case "astar-zkevm":
 			return Blockchain.ASTARZKEVM
 		case "base":
 		case "base-sepolia":
 			return Blockchain.BASE
-		case "celo":
 		case "testnet-celo":
+		case "celo":
 			return Blockchain.CELO
 		case "testnet-fief":
 			return Blockchain.FIEF

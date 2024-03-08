@@ -1,0 +1,22 @@
+{
+  "name": "@rarible/connector-phantom",
+  "version": "0.13.68-fix.11",
+  "homepage": "",
+  "license": "ISC",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "verify": "tsc --noEmit --project tsconfig-build.json"
+  },
+  "dependencies": {
+    "@rarible/connector-solana": "^0.13.68-fix.11"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -22,7 +22,7 @@ import { getEthereumConfig } from "../../config"
 import type { SendFunction } from "../../common/send-transaction"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { FILL_CALLDATA_TAG } from "../../config/common"
-import { GOERLI_CONFIG, MUMBAI_CONFIG } from "../../common/test/test-credentials"
+import { getE2EConfigByNetwork } from "../../common/test/test-credentials"
 import { getApis as getApisTemplate } from "../../common/apis"
 import type { EthereumNetwork } from "../../types"
 import { ItemType } from "./seaport-utils/constants"
@@ -31,24 +31,23 @@ import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
 describe.skip("seaport", () => {
+	const goerli = getE2EConfigByNetwork("goerli")
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
-		GOERLI_CONFIG
+		goerli
 	)
 	const { provider: providerSeller } = createE2eProvider(
 		"0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
-		GOERLI_CONFIG
+		goerli
 	)
-	const { wallet: feeWallet } = createE2eProvider(undefined, GOERLI_CONFIG)
-	const web3Seller = new Web3(providerSeller as any)
+	const { wallet: feeWallet } = createE2eProvider(undefined, goerli)
+	const web3Seller = new Web3(providerSeller)
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
-	const web3 = new Web3(providerBuyer as any)
+	const web3 = new Web3(providerBuyer)
 	const ethereum = new Web3Ethereum({ web3, gas: 3000000 })
 
-	const env: EthereumNetwork = "testnet"
-
-
-	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
+	const env = "testnet" as const
+	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer), gas: 3000000 })
 	const ethersWeb3Provider = new ethers.providers.Web3Provider(providerBuyer as any)
 	const buyerEthersWeb3Provider = new EthersWeb3ProviderEthereum(ethersWeb3Provider)
 	const buyerEthersEthereum =	new EthersEthereum(
@@ -437,7 +436,7 @@ describe.skip("seaport", () => {
 describe.skip("polygon seaport", () => {
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
-		MUMBAI_CONFIG
+		getE2EConfigByNetwork("mumbai")
 	)
 	const web3 = new Web3(providerBuyer as any)
 
