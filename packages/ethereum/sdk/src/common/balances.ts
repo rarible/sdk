@@ -4,7 +4,6 @@ import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { RaribleEthereumApis } from "./apis"
 import { wrapInRetry } from "./retry"
-import { ETHER_IN_WEI } from "./index"
 
 export type BalanceRequestAssetType = EthAssetType | Erc20AssetType
 
@@ -20,7 +19,7 @@ export class Balances {
 				const ethBalance = await wrapInRetry(() =>
 					apis.balances.getEthBalance({ owner: address })
 				)
-				return toBn(ethBalance.balance).div(ETHER_IN_WEI)
+				return toBn(ethBalance.decimalBalance)
 			}
 			case "ERC20": {
 				const balance = await wrapInRetry(() =>
@@ -29,7 +28,7 @@ export class Balances {
 						owner: address,
 					})
 				)
-				return toBn(balance.balance).div(ETHER_IN_WEI)
+				return toBn(balance.decimalBalance)
 			}
 			default: throw new Error("Asset class is not supported")
 		}

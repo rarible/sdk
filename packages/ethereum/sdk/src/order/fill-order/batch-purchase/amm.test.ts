@@ -59,6 +59,7 @@ describe("amm batch buy tests", () => {
 			3
 		)
 		const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
+		console.log("hash", orderHash)
 		const order = await retry(20, 2000, () =>
 			sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		) as SimpleAmmOrder

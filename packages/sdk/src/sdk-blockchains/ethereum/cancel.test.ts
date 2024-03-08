@@ -23,11 +23,10 @@ describe("cancel", () => {
 		const erc721 = suiteDev1.contracts.getContract("erc721_1")
 		const erc20Mintable = suiteDev1.contracts.getContract("erc20_mintable_1")
 		const { itemId } = await suiteDev1.items.mintAndWait(erc721.collectionId)
-
 		const orderId = await suiteDev1.orders.sellWithPrepare({
 			itemId,
-			price: toBn(0.00001),
-			currency: erc20Mintable.asset,
+			price: toBn(1),
+			currency: erc20Mintable.assetType,
 		})
 
 		await suiteDev1.orders.cancelOrder(orderId)
@@ -40,8 +39,8 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev1.orders.sellWithPrepare({
 			itemId,
-			price: toBn(0.00001),
-			currency: erc20Mintable.asset,
+			price: toBn(1),
+			currency: erc20Mintable.assetType,
 			quantity: 10,
 		})
 
@@ -55,8 +54,8 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev2.orders.bid({
 			itemId,
-			price: toBn(0.00001),
-			currency: erc20Mintable.asset,
+			price: toBn(1),
+			currency: erc20Mintable.assetType,
 		})
 
 		await suiteDev2.orders.cancelOrder(orderId)
@@ -69,9 +68,9 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev2.orders.bid({
 			itemId,
-			price: toBn(0.00001),
+			price: toBn(1),
 			quantity: 10,
-			currency: erc20Mintable.asset,
+			currency: erc20Mintable.assetType,
 		})
 
 		await suiteDev2.orders.cancelOrder(orderId)
@@ -83,8 +82,8 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev2.orders.bidByCollection({
 			collectionId: erc721.collectionId,
-			price: toBn(0.00001),
-			currency: erc20Mintable.asset,
+			price: toBn(1),
+			currency: erc20Mintable.assetType,
 		})
 
 		await suiteDev2.orders.cancelOrder(orderId)
