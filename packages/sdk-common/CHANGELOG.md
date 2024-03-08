@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+
+### Features
+
+* fief xai celo kroma evm blockchains supporting ([#602](https://github.com/rarible/sdk/issues/602)) ([30e730b](https://github.com/rarible/sdk/commit/30e730b736a4cfafa4bb6f6a4aa74d9c39c52432))
+
+
+
+
+
 ## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
 
 **Note:** Version bump only for package @rarible/sdk-common
