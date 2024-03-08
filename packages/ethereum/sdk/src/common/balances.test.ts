@@ -102,7 +102,7 @@ describe("getBalance test", () => {
 			"1"
 		)
 		const erc20AssetType = getErc20AssetType(erc20ContractAddress)
-		await awaitBalance(generatedAddress, erc20AssetType, "1")
+		await awaitBalance(generatedAddress, erc20AssetType, "0.000000000000000001")
 	})
 
 })
