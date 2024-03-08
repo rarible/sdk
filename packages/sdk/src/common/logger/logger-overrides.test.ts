@@ -157,7 +157,6 @@ describe("logger overrides", () => {
 
 			await delay(1000)
 
-			console.log("JSON", mockLogger.mock.calls[0][0])
 			const logObject = JSON.parse(mockLogger.mock.calls[0][0][0].error)
 
 			expect(logObject.status).toBe(404)
