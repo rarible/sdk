@@ -3,8 +3,6 @@ import type { Address, ContractAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { EthereumContract } from "@rarible/ethereum-provider/build"
-import { Blockchain, CurrencyId } from "@rarible/api-client"
-import { toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
 import type { EVMSuiteProvider, EVMSuiteSupportedBlockchain } from "../../domain"
 import { EVMContractBase } from "./base"
 

@@ -1,11 +1,10 @@
-import { createE2eProvider, getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
+import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toAddress, toCollectionId, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
+import { toCollectionId, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
-import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/send-transaction"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
@@ -15,7 +14,7 @@ import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { createSdk } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
-import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
 
@@ -38,7 +37,6 @@ describe("sale", () => {
 		ethereum1
 	)
 	const erc721Address = testSuite.getContract("erc721_1").contractAddress
-	const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
 	const erc20 = testSuite.getContract("erc20_mintable_1")
 	const erc20ContractAddress = erc20.contractAddress

@@ -7,8 +7,6 @@ import { initProvider } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
 import { awaitOwnership } from "./test/await-ownership"
 import { createEthWallets } from "./test/common"
-import { awaitErc721Balance } from "./test/await-erc-721-balance"
-import { awaitErc1155Balance } from "./test/await-erc-1155-balance"
 
 describe("transfer", () => {
 	const [eth1] = createEthWallets(1)

@@ -8,7 +8,7 @@ import { MintType } from "../../types/nft/mint/prepare"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { awaitItem } from "../../common/test/await-item"
 import { createSdk } from "../../common/test/create-sdk"
-import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
 

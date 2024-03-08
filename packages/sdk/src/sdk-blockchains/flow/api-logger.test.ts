@@ -1,7 +1,7 @@
 import { toOrderId } from "@rarible/types"
 import { createSdk } from "../../common/test/create-sdk"
 
-describe("ethereum api logger", () => {
+describe("flow api logger", () => {
 	const sdk = createSdk(undefined, "testnet")
 
 	test.concurrent("request url in FlowSDK.apis.* returns error with error.url", async () => {
