@@ -61,6 +61,7 @@ import {
 	extractUnionSupportedBlockchain,
 	getBidEntity, getOrderId,
 } from "../../common/utils"
+import type { IFlowCheckInitGamisodesCollections } from "../../types/nft/collection"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -311,6 +312,7 @@ class UnionFlowSpecificSdk implements IFlowSdk {
   setupMattelCollections: IFlowSetupMattelCollections = this.flowSdk.setupMattelCollections
   setupGamisodesCollections: IFlowSetupMattelCollections = this.flowSdk.setupGamisodesCollections
   checkInitMattelCollections: IFlowCheckInitMattelCollections = this.flowSdk.checkInitMattelCollections
+  checkInitGamisodesCollections: IFlowCheckInitGamisodesCollections = this.flowSdk.checkInitGamisodesCollections
 }
 
 
