@@ -1,5 +1,5 @@
 import type { Connection, Commitment } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { ITransactionPreparedInstructions } from "../common/transactions"
 import type { TransactionResult } from "../types"
 import { sendTransactionWithRetry } from "../common/transactions"
@@ -9,13 +9,12 @@ export class PreparedTransaction {
 	constructor(
 		private readonly connection: Connection,
 		public readonly data: ITransactionPreparedInstructions,
-		public readonly signer: IWalletSigner,
+		public readonly signer: SolanaSigner,
 		private readonly logger: DebugLogger,
 		public readonly onSubmit?: (tx: TransactionResult) => void
-	) {
-	}
+	) {}
 
-	public async submit(commitment: Commitment): Promise<TransactionResult> {
+	submit = async (commitment: Commitment): Promise<TransactionResult> => {
 		const res = await sendTransactionWithRetry(
 			this.connection,
 			this.signer,
@@ -26,7 +25,6 @@ export class PreparedTransaction {
 		)
 
 		this.onSubmit?.(res)
-
 		return res
 	}
 }

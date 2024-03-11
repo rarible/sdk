@@ -21,6 +21,9 @@ const providers = [
 	new EthersWeb3ProviderEthereum(ethersWeb3Provider),
 ]
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	const [from] = addresses
 	const to = randomAddress()

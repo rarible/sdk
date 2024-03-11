@@ -23,5 +23,5 @@ export function getWallet(index: number = 0): SolanaKeypairWallet {
 	if (index >= pks.length) {
 		throw new Error("No wallet index available")
 	}
-	return SolanaKeypairWallet.createFrom(Uint8Array.from(pks[index]))
+	return SolanaKeypairWallet.fromKey(Uint8Array.from(pks[index]))
 }

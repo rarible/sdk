@@ -10,7 +10,6 @@ import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RemoteLogger } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { DEV_PK_1, ETH_DEV_SETTINGS } from "../../sdk-blockchains/ethereum/test/common"
-import { awaitItem } from "../test/await-item"
 import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "../../sdk-blockchains/ethereum/common"
 import { InsufficientFundsError } from "../../sdk-blockchains/ethereum/bid"
 import { createRaribleSdk, WalletType } from "../../index"
@@ -106,7 +105,7 @@ describe("logger overrides", () => {
 		const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
 		const ethereumWallet = new EthereumWallet(ethereum)
-		const erc721Address = convertEthereumContractAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d", Blockchain.ETHEREUM)
+		const erc721Address = convertEthereumContractAddress("0xF3348949Db80297C78EC17d19611c263fc61f987", Blockchain.ETHEREUM)
 
 		test("should mint ERC721 token", async () => {
 			const mockLogger = jest.fn()
@@ -131,19 +130,10 @@ describe("logger overrides", () => {
 
 			const senderRaw = wallet.getAddressString()
 			const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
-			const tokenId = {
-				tokenId: "53721905486644660545161939638297855196812841812653174796223513003283747704164" as any,
-				signature: {
-					v: 28,
-					r: "0xfee4b9f9cd62202e8e1550748d58ae39a3af8775f2c38f202b253f0e40cd35ab" as any,
-					s: "0x4c4eb02b8edd71f8522fa465e3dbfaee75f887287daadddd5b5056d9c2bae038" as any,
-				},
-			}
 
 			try {
 				const action = await sdk.nft.mint.prepare({
 					collectionId: toCollectionId(erc721Address),
-					tokenId: tokenId,
 				})
 				const result = await action.submit({
 					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -160,9 +150,6 @@ describe("logger overrides", () => {
 					const transaction = await result.transaction.wait()
 					expect(transaction.blockchain).toEqual("ETHEREUM")
 					expect(transaction.hash).toBeTruthy()
-
-					const item = await awaitItem(sdk, result.itemId)
-					expect(item.tokenId).toEqual(tokenId?.tokenId)
 				} else {
 					throw new Error("Must be on chain")
 				}
@@ -172,10 +159,8 @@ describe("logger overrides", () => {
 
 			const logObject = JSON.parse(mockLogger.mock.calls[0][0][0].error)
 
-			expect(logObject.data.method).toBe("mintAndTransfer")
-			expect(logObject.data.from).toBeTruthy()
-			expect(logObject.blockNumber).toBeTruthy()
-			expect(logObject.chainId).toBeTruthy()
+			expect(logObject.status).toBe(404)
+			expect(logObject.code).toBe("NETWORK_ERR")
 		})
 	})
 

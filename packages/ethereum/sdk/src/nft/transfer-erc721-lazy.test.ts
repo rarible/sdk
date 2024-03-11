@@ -8,6 +8,7 @@ import { createErc721V3Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
 import { getApis as getApisTemplate } from "../common/apis"
 import type { EthereumNetwork } from "../types"
+import { DEV_PK_1 } from "../common/test/test-credentials"
 import { signNft } from "./sign-nft"
 import type { ERC721RequestV3 } from "./mint"
 import { mint } from "./mint"
@@ -16,8 +17,11 @@ import { transfer } from "./transfer"
 import { ERC721VersionEnum } from "./contracts/domain"
 import { getErc721Contract } from "./contracts/erc721"
 
+/**
+ * @group provider/dev
+ */
 describe("transfer Erc721 lazy", () => {
-	const { provider, wallet } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
+	const { provider, wallet } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)
 	const ethereum = new Web3Ethereum({ web3 })
 
@@ -33,7 +37,7 @@ describe("transfer Erc721 lazy", () => {
 	test("should transfer erc721 lazy token", async () => {
 		const from = toAddress(wallet.getAddressString())
 		const recipient = randomAddress()
-		const contract = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+		const contract = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
 
 		const request: ERC721RequestV3 = {
 			uri: "ipfs://ipfs/hash",

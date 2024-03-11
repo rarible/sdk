@@ -1,18 +1,23 @@
 import { toBigNumber, toCollectionId, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
 import type { Collection } from "@rarible/api-client"
 import { Blockchain, CollectionFeatures, CollectionType, OrderStatus, Platform } from "@rarible/api-client"
+import type { Web3Ethereum } from "@rarible/web3-ethereum"
 import { MintType } from "../../types/nft/mint/prepare"
 import { retry } from "../../common/retry"
 import { generateExpirationDate } from "../../common/suite/order"
 import { createSdk } from "../../common/test/create-sdk"
 import { createEthWallets } from "./test/common"
-import { convertEthereumContractAddress } from "./common"
+import { EVMContractsTestSuite } from "./test/suite/contracts"
 
 describe("mint and sell", () => {
 	const [eth1, eth2] = createEthWallets(2)
 
-	const erc721Address = convertEthereumContractAddress("0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E", Blockchain.ETHEREUM)
-	const erc1155Address = convertEthereumContractAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a", Blockchain.ETHEREUM)
+	const testSuite = new EVMContractsTestSuite(
+		Blockchain.ETHEREUM,
+		eth1.ethereum as Web3Ethereum
+	)
+	const erc721Address = testSuite.getContract("erc721_1").contractAddress
+	const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
 	test.concurrent("prepare should work even if wallet is undefined", async () => {
 		const sdk = createSdk(eth1, "development")
@@ -62,7 +67,6 @@ describe("mint and sell", () => {
 				},
 				salt: "0x83e8e03e0df70e0197619db44fa2e85b1b2a90830738b49ec9029352624395f4",
 				signature: "0xae119b2b9fdf8e8ea15216605c9c73cf7713cac987fedb1f2705e6c11c2062155cae8257ec9996934760a1fe68ea90270a8d9e6f42a1fd3dc5d2f0e3e5ee06111b",
-				pending: [],
 				data: {
 					"@type": "ETH_RARIBLE_V2",
 					payouts: [],

@@ -21,6 +21,14 @@ import { rariMainnetConfig } from "./rari"
 import { zkatanaConfig } from "./zkatana"
 import { baseConfig } from "./base"
 import { baseSepoliaConfig } from "./base-sepolia"
+import { xaiConfig } from "./xai"
+import { fiefTestnetConfig } from "./testnet-fief"
+import { xaiTestnetConfig } from "./testnet-xai"
+import { kromaTestnetConfig } from "./testnet-kroma"
+import { kromaConfig } from "./kroma"
+import { astarZKEVMConfig } from "./astar-zkevm"
+import { celoTestnetConfig } from "./testnet-celo"
+import { celoConfig } from "./celo"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -42,8 +50,16 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	"testnet-rari": rariTestnetConfig,
 	rari: rariMainnetConfig,
 	zkatana: zkatanaConfig,
+	"astar-zkevm": astarZKEVMConfig,
 	base: baseConfig,
 	"base-sepolia": baseSepoliaConfig,
+	"testnet-celo": celoTestnetConfig,
+	celo: celoConfig,
+	"testnet-xai": xaiTestnetConfig,
+	xai: xaiConfig,
+	"testnet-fief": fiefTestnetConfig,
+	"testnet-kroma": kromaTestnetConfig,
+	kroma: kromaConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
@@ -52,8 +68,9 @@ export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
 
 export type GetConfigByChainId = () => Promise<EthereumConfig>
 
+const dictionaryFlat = Object.values(configDictionary)
 export function getNetworkConfigByChainId(chainId: number): EthereumConfig {
-	const config = Object.values(configDictionary).find((x: EthereumConfig) => x.chainId === chainId)
+	const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
 	if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
 	return config
 }

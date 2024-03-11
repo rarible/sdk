@@ -12,8 +12,8 @@ import { createErc721V3Collection } from "../common/mint"
 import type { ERC721RequestV3, MintOffChainResponse } from "../nft/mint"
 import { mint as mintTemplate } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
-import type { EthereumNetwork } from "../types"
-import { DEV_PK_1, DEV_PK_2 } from "../common/test/test-credentials"
+import { DEV_PK_1, DEV_PK_2, getTestContract } from "../common/test/test-credentials"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -23,6 +23,9 @@ import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
+/**
+ * @group provider/dev
+ */
 describe("bid", () => {
 	const { provider: provider1 } = createE2eProvider(DEV_PK_1)
 	const web31 = new Web3(provider1)
@@ -32,7 +35,7 @@ describe("bid", () => {
 	const web32 = new Web3(provider2)
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
 
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
@@ -62,8 +65,8 @@ describe("bid", () => {
 	const send1 = getSendWithInjects()
 	const sign1 = signNft.bind(null, ethereum1, getConfig)
 	const mint1 = mintTemplate.bind(null, ethereum1, send1, sign1, getApis1)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
-	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
+	const erc20Contract = getTestContract(env, "erc20")
 
 	const it = awaitAll({
 		testErc721: deployTestErc721(web31, "Test", "TST"),
@@ -142,12 +145,13 @@ describe("bid", () => {
 				assetClass: "COLLECTION",
 				contract: e2eErc721V3ContractAddress,
 			},
-			price: toBn("10000"),
+			price: toBn(MIN_PAYMENT_VALUE.toFixed()),
 			amount: 1,
 			payouts: [],
 			originFees: [],
 		})
 
+		console.log("order", JSON.stringify(order, null, "  "))
 		const acceptBidTx = await filler1.acceptBid({
 			order: order as SimpleRaribleV2Order,
 			amount: 1,

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/solana-sdk",
-  "version": "0.13.68-fix.7",
+  "version": "0.13.68-fix.12",
   "keywords": [
     "solana",
     "web3"
@@ -15,26 +15,25 @@
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
     "clean": "rimraf ./build",
+    "test": "jest --silent --forceExit",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@metaplex-foundation/mpl-auction": "^0.0.2",
-    "@metaplex-foundation/mpl-auction-house": "^1.2.0",
-    "@metaplex-foundation/mpl-core": "^0.0.5",
-    "@metaplex-foundation/mpl-metaplex": "^0.0.5",
-    "@metaplex-foundation/mpl-token-metadata": "1.2.5",
-    "@metaplex-foundation/mpl-token-vault": "^0.0.2",
-    "@metaplex/js": "^4.12.0",
-    "@project-serum/anchor": "^0.22.1",
+    "@metaplex-foundation/mpl-auction": "~0.0.2",
+    "@metaplex-foundation/mpl-auction-house": "~1.2.0",
+    "@metaplex-foundation/mpl-core": "~0.0.5",
+    "@metaplex-foundation/mpl-metaplex": "~0.0.5",
+    "@metaplex-foundation/mpl-token-metadata": "~1.2.5",
+    "@metaplex-foundation/mpl-token-vault": "~0.0.2",
+    "@metaplex/js": "~4.12.0",
+    "@project-serum/anchor": "~0.22.1",
     "@rarible/logger": "^0.9.12",
-    "@rarible/solana-common": "^0.13.68-fix.7",
-    "@rarible/solana-wallet": "^0.13.68-fix.7",
+    "@rarible/solana-common": "^0.13.68-fix.12",
+    "@rarible/solana-wallet": "^0.13.68-fix.12",
     "@rarible/utils": "~0.9.10",
-    "@solana/spl-token": "^0.1.8",
-    "@solana/web3.js": "^1.36.0",
+    "@solana/spl-token": "~0.1.8",
     "@types/bs58": "^4.0.1",
-    "bignumber.js": "^9.0.1",
-    "borsh": "^0.7.0",
+    "borsh": "~0.7.0",
     "bs58": "^5.0.0",
     "node-fetch": "^2.6.7"
   },
@@ -49,6 +48,7 @@
     "ts-jest": "^27.0.7"
   },
   "peerDependencies": {
+    "@solana/web3.js": "^1.54.0",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

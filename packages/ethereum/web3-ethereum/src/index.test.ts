@@ -3,11 +3,12 @@ import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { toAddress } from "@rarible/types"
 import { deployTestContract, SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/src/test-contract"
+import { DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
 import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3FunctionCall, Web3Transaction } from "./index"
 
 describe("Web3Ethereum", () => {
-	const { provider } = common.createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+	const { provider } = common.createE2eProvider(DEV_PK_1)
 	const web3e2e = new Web3(provider)
 	const e2eEthereum = new Web3Ethereum({ web3: web3e2e })
 	const { provider: ganache } = common.createGanacheProvider()
@@ -15,6 +16,7 @@ describe("Web3Ethereum", () => {
 	const ganacheEthereum = new Web3Ethereum({ web3 })
 
 	test("signs typed data correctly", async () => {
+		console.log(await e2eEthereum.getFrom())
 		await common.testTypedSignature(e2eEthereum)
 	})
 
@@ -125,6 +127,7 @@ describe("Web3Ethereum", () => {
 	})
 
 	test("test retrying call/estimateGas without reserve node is not working", async () => {
+		console.log("from", await e2eEthereum.getFrom())
 		const deployed = await deployTestContract(web3e2e)
 		const contract = e2eEthereum.createContract(SIMPLE_TEST_ABI, deployed.options.address)
 		const tx = await contract.functionCall("setValue", 10).send()

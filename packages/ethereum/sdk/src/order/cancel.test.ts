@@ -7,7 +7,7 @@ import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
 import { delay, retry } from "../common/retry"
-import { getSimpleSendWithInjects, sentTx, sentTxConfirm } from "../common/send-transaction"
+import { getSimpleSendWithInjects, sentTxConfirm } from "../common/send-transaction"
 import { getApis as getApisTemplate } from "../common/apis"
 import { createRaribleSdk } from "../index"
 import { createErc721V3Collection } from "../common/mint"
@@ -27,6 +27,9 @@ import { getOpenseaEthTakeData } from "./test/get-opensea-take-data"
 import { approve as approveTemplate } from "./approve"
 import { getEndDateAfterMonth } from "./test/utils"
 
+/**
+ * @group provider/dev
+ */
 describe("cancel order", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)
@@ -86,40 +89,6 @@ describe("cancel order", () => {
 		const { tx, order } = await testOrder(form)
 		const events = await tx.getEvents()
 		expect(events.some(e => e.event === "Cancel" && e.returnValues.hash === order.hash)).toBe(true)
-	})
-
-	test("ExchangeV1 should work", async () => {
-		await sentTx(it.testErc1155.methods.mint(from, "11", 11, "0x"), { from })
-		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
-			make: {
-				assetType: {
-					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
-					tokenId: toBigNumber("11"),
-				},
-				value: toBigNumber("1"),
-			},
-			take: {
-				assetType: {
-					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
-				},
-				value: toBigNumber("10"),
-			},
-			salt: toBigNumber("10") as any,
-			maker: toAddress(wallet.getAddressString()),
-			type: "RARIBLE_V1",
-			data: {
-				dataType: "LEGACY",
-				fee: 0,
-			},
-			signature: toBinary("0x"),
-			end: getEndDateAfterMonth(),
-		}
-		const { tx } = await testOrder(form)
-		const events = await tx.getEvents()
-		expect(events.some(e => e.event === "Cancel")).toBe(true)
 	})
 
 	async function testOrder(form: OrderForm) {

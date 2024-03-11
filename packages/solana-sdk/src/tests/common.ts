@@ -43,11 +43,7 @@ export function createSdk(): SolanaSdk {
 }
 
 export function getTestWallet(walletIndex: number = 0): SolanaKeypairWallet {
-	return SolanaKeypairWallet.createFrom(testWallets[walletIndex].privateKeyString)
-}
-
-export function genTestWallet(seed?: Uint8Array): SolanaKeypairWallet {
-	return SolanaKeypairWallet.generate(seed)
+	return SolanaKeypairWallet.fromKey(testWallets[walletIndex].privateKeyString)
 }
 
 export async function requestSol(connection: Connection, publicKey: PublicKey, sol: number = 2): Promise<number> {
@@ -59,12 +55,8 @@ export async function requestSol(connection: Connection, publicKey: PublicKey, s
 	return await connection.getBalance(publicKey)
 }
 
-export async function getTokenAccounts(
-	connection: Connection,
-	owner: PublicKey,
-	mint: PublicKey,
-): Promise<Awaited<ReturnType<typeof connection.getTokenAccountsByOwner>>> {
-	return await connection.getTokenAccountsByOwner(owner, { mint })
+export function getTokenAccounts(connection: Connection, owner: PublicKey, mint: PublicKey) {
+	return connection.getTokenAccountsByOwner(owner, { mint })
 }
 
 export async function mintToken(

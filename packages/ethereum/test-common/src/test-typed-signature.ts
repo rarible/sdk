@@ -8,7 +8,7 @@ export async function testTypedSignature(eth: Ethereum) {
 	const domain = {
 		name: "Ether Mail",
 		version: "1",
-		chainId: 17,
+		chainId: 300500,
 		verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
 	}
 	const types = {
@@ -46,7 +46,7 @@ export async function testTypedSignature(eth: Ethereum) {
 		message,
 	}
 	const signature = await eth.signTypedData(data)
-	expect(signature).toBe("0xcdb06d43817c98f1aefb9e3ecdfc45c35a07795b89f15930913e9150442b157f7fb5b37ae49e3c8674857660c16f7512f140ed4594e6d426f4db5fae57701d491b")
+	expect(signature).toBe("0x3fe4fa104fface8c7c587d306b97c902ff54554d6d8155c136fbf97ffafa4b7a2193ddc2dea38bff53da6cf67f9a3b207a54de934e0d706508359d9690d165c81c")
 	const result = sigUtil.recoverTypedSignature_v4({
 		data,
 		sig: signature,

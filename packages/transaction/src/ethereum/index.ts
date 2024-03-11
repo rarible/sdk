@@ -76,6 +76,22 @@ Blockchain, TransactionResult
 				return `http://polygon-explorer.dev.rarible.int/transactions/${this.hash()}`
 			case "zkatana":
 				return `https://zkatana.blockscout.com/tx/${this.hash()}`
+			case "astar-zkevm":
+				return `https://astar-zkevm.explorer.startale.com/tx/${this.hash()}`
+			case "testnet-celo":
+				return `https://explorer.celo.org/alfajores/tx/${this.hash()}`
+			case "celo":
+				return `https://explorer.celo.org/mainnet/tx/${this.hash()}`
+			case "testnet-fief":
+				return `https://explorer.playground.fiefdom.gg/tx/${this.hash()}`
+			case "testnet-xai":
+				return `https://testnet-explorer-v2.xai-chain.net/tx/${this.hash()}`
+			case "xai":
+				return `https://explorer.xai-chain.net/tx/${this.hash()}`
+			case "testnet-kroma":
+				return `https://blockscout.sepolia.kroma.network/tx/${this.hash()}`
+			case "kroma":
+				return `https://blockscout.kroma.network/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

@@ -6,15 +6,14 @@ import { toAddress } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { parseRequestError } from "@rarible/web3-ethereum/src/utils/parse-request-error"
+import { DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
 import { EthersEthereum, EthersTransaction, EthersWeb3ProviderEthereum } from "./index"
 
-const testPK = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
-
-const { provider } = createGanacheProvider(testPK)
+const { provider } = createGanacheProvider(DEV_PK_1)
 const web3 = new Web3(provider as any)
 const web3Provider = new ethers.providers.Web3Provider(provider as any)
 const ethereum = new EthersWeb3ProviderEthereum(web3Provider)
-const wallet = new ethers.Wallet(testPK, web3Provider)
+const wallet = new ethers.Wallet(DEV_PK_1, web3Provider)
 const etheresEthereum = new EthersEthereum(wallet)
 
 const data = [
@@ -94,7 +93,7 @@ describe.each(data)("ethers.js Ethereum", (eth: Ethereum) => {
 
 describe("get transaction receipt events", () => {
 	const { provider } = common.createE2eProvider(
-		testPK,
+		DEV_PK_1,
 		{
 			networkId: 1,
 			rpcUrl: "https://node-mainnet.rarible.com",

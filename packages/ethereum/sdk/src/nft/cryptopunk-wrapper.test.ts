@@ -11,6 +11,9 @@ import { getEthereumConfig } from "../config"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./cryptopunk-wrapper"
 
+/**
+ * @group chain/ganache
+ */
 describe.skip("wrap crypto punk", () => {
 	const { provider, addresses } = createGanacheProvider()
 

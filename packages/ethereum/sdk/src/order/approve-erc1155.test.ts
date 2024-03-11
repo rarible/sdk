@@ -7,6 +7,9 @@ import { createGanacheProvider, deployTestErc1155 } from "@rarible/ethereum-sdk-
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { approveErc1155 as approveErc1155Template } from "./approve-erc1155"
 
+/**
+ * @group provider/ganache
+ */
 describe("approveErc1155", () => {
 	const { provider, addresses } = createGanacheProvider(
 		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"

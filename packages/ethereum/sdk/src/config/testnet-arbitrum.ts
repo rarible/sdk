@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const arbitrumTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-arbitrum-api.rarible.org",
 	chainId: 421614,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x47F6d59216aAdb2e5aA6bFAf0b06d790EdC35118"),

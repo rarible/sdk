@@ -75,7 +75,7 @@ import { createRaribleSdk } from "@rarible/sdk"
 
 const privateKey = "YOUR_SOLANA_PRIVATE_KEY"
 
-const keypairWallet = SolanaKeypairWallet.createFrom(privateKey)
+const keypairWallet = SolanaKeypairWallet.fromKey(privateKey)
 const raribleSdkWallet = new SolanaWallet(keypairWallet)
 const raribleSdk = createRaribleSdk(raribleSdkWallet, "dev")
 ```
