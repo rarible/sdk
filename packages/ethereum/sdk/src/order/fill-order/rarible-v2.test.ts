@@ -31,6 +31,9 @@ import type { EthereumNetwork } from "../../types"
 import type { BuyOrderRequest } from "./types"
 import { OrderFiller } from "./index"
 
+/**
+ * @group provider/ganache
+ */
 describe("buy & acceptBid orders", () => {
 	const { addresses, provider, accounts } = createGanacheProvider()
 	const [account1] = accounts

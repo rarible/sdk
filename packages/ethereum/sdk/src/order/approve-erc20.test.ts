@@ -21,6 +21,9 @@ const providers = [
 	new EthersWeb3ProviderEthereum(ethersWeb3Provider),
 ]
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 	const [testAddress] = addresses
 

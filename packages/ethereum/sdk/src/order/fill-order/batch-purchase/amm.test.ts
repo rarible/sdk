@@ -12,6 +12,9 @@ import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 
+/**
+ * @group provider/dev
+ */
 describe("amm batch buy tests", () => {
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)
@@ -27,13 +30,13 @@ describe("amm batch buy tests", () => {
 
 	const config = getEthereumConfig(env)
 	const send = getSimpleSendWithInjects()
-
+	const sudoswapCurveAddress = getTestContract(env, "sudoswapCurve")
 
 	test.skip("amm sudoswap few items sell form different pools", async () => {
 		const contract = getTestContract(env, "erc721V3")
 		const orders = await Promise.all([
-			makeAmmOrder(sdkSeller, contract, ethereum, send, config),
-			makeAmmOrder(sdkSeller, contract, ethereum, send, config),
+			makeAmmOrder(sdkSeller, contract, sudoswapCurveAddress, ethereum, send, config),
+			makeAmmOrder(sdkSeller, contract, sudoswapCurveAddress, ethereum, send, config),
 		])
 
 		const tx = await sdkBuyer.order.buyBatch(ordersToRequests(orders, [{
@@ -52,9 +55,11 @@ describe("amm batch buy tests", () => {
 			ethereum,
 			send,
 			config.sudoswap.pairFactory,
+			sudoswapCurveAddress,
 			3
 		)
 		const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
+		console.log("hash", orderHash)
 		const order = await retry(20, 2000, () =>
 			sdkSeller.apis.order.getValidatedOrderByHash({ hash: orderHash })
 		) as SimpleAmmOrder

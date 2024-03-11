@@ -119,6 +119,7 @@ export async function makeLooksrareOrder(
 export async function makeAmmOrder(
 	sdk: RaribleSdk,
 	erc721Contract: Address,
+	curveAddress: Address,
 	ethereum: Ethereum,
 	send: SendFunction,
 	config: EthereumConfig
@@ -129,6 +130,7 @@ export async function makeAmmOrder(
 		ethereum,
 		send,
 		config.sudoswap.pairFactory,
+		curveAddress,
 		2
 	)
 	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")

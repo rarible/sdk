@@ -82,7 +82,8 @@
     ]
   },
   "resolutions": {
-    "**/axios": "^0.26.1"
+    "**/axios": "^0.26.1",
+    "jest": "^27.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",

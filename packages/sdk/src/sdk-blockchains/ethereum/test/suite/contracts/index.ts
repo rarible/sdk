@@ -1,5 +1,7 @@
 import type { Web3Ethereum } from "@rarible/web3-ethereum/build"
 import { Blockchain } from "@rarible/api-client"
+import { getTestContract } from "@rarible/ethereum-sdk-test-common"
+import { getEthereumConfig } from "@rarible/protocol-ethereum-sdk/src/config"
 import type { EVMSuiteSupportedBlockchain } from "../domain"
 import type { EVMKnownTestContract, EVMContractsDictionary } from "./domain"
 import { ERC1155Contract } from "./variants/erc1155"
@@ -58,10 +60,10 @@ export class EVMContractsTestSuite<T extends EVMSuiteSupportedBlockchain> {
 
 const CONTRACTS_DICTIONARY: EVMContractsByBlockchain = {
 	[Blockchain.ETHEREUM]: {
-		erc20_mintable_1: "0xA4A70E8627e858567a9f1F08748Fe30691f72b9e",
-		wrapped_eth: "0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6",
-		erc721_1: "0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E",
-		erc1155_1: "0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a",
+		erc20_mintable_1: getTestContract("dev-ethereum", "erc20"),
+		wrapped_eth: getEthereumConfig("dev-ethereum").weth,
+		erc721_1: getTestContract("dev-ethereum", "erc721V3"),
+		erc1155_1: getTestContract("dev-ethereum", "erc1155V2"),
 	},
 	[Blockchain.POLYGON]: {
 		erc20_mintable_1: "0xd6e804e7EDB5B2AecB31D9cCC9d9F3940a7b4cE2",

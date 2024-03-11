@@ -10,6 +10,9 @@ import { createRaribleSdk } from "../../../index"
 import { DEV_PK_1, DEV_PK_2, getTestContract } from "../../../common/test/test-credentials"
 import { checkOwnerships, makeLooksrareOrder, makeRaribleV2Order, makeSeaportOrder, ordersToRequests } from "./test/common/utils"
 
+/**
+ * @group provider/dev
+ */
 describe("Batch purchase", function () {
 	const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
 	const { provider: providerSeller } = createE2eProvider(DEV_PK_2)

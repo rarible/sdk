@@ -8,8 +8,9 @@ import { MintType } from "../../types/nft/mint/prepare"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { awaitItem } from "../../common/test/await-item"
 import { createSdk } from "../../common/test/create-sdk"
-import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, ETH_DEV_SETTINGS } from "./test/common"
+import { EVMContractsTestSuite } from "./test/suite/contracts"
 
 describe("mint", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
@@ -18,8 +19,12 @@ describe("mint", () => {
 	const ethereumWallet = new EthereumWallet(ethereum)
 	const sdk = createSdk(ethereumWallet, "development")
 
-	const erc1155Address = convertEthereumContractAddress("0xda75B20cCFf4F86d2E8Ef00Da61A166edb7a233a", Blockchain.ETHEREUM)
-	const erc721Address = convertEthereumContractAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d", Blockchain.ETHEREUM)
+	const testSuite = new EVMContractsTestSuite(
+		Blockchain.ETHEREUM,
+		ethereum
+	)
+	const erc721Address = testSuite.getContract("erc721_1").contractAddress
+	const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
 	test("should mint ERC721 token with simplified function", async () => {
 

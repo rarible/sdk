@@ -5,6 +5,9 @@ import { toAddress } from "@rarible/types"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { transferCryptoPunk } from "./transfer-crypto-punk"
 
+/**
+ * @group provider/ganache
+ */
 describe("transfer crypto punks", () => {
 	const {
 		addresses,

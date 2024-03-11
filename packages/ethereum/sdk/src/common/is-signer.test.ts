@@ -10,6 +10,9 @@ import { createTestProviders } from "./test/create-test-providers"
 const { provider, wallets } = createGanacheProvider()
 const { web3, providers } = createTestProviders(provider, wallets[0] )
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("isSigner", (ethereum) => {
 	test("recover works for hw wallets workaround", async () => {
 		const hash = randomWord()

@@ -38,6 +38,7 @@ describe.skip("amm", () => {
 			sellerWeb3,
 			sendBuyer,
 			config.sudoswap.pairFactory,
+			getTestContract(env, "sudoswapCurve"),
 			1
 		)
 		const orderHash = "0x" + pair.poolAddress.slice(2).padStart(64, "0")
@@ -66,6 +67,7 @@ describe.skip("amm", () => {
 			sellerWeb3,
 			sendSeller,
 			config.sudoswap.pairFactory,
+			getTestContract(env, "sudoswapCurve"),
 			1
 		)
 

@@ -4,6 +4,9 @@ import { getBaseFee } from "./get-base-fee"
 import { createEthereumApis, getApis as getApisTemplate } from "./apis"
 import { getTestAPIKey } from "./test/test-credentials"
 
+/**
+ * @group type/common
+ */
 describe("get base fee", () => {
 	test("get base fee from mainnet", async () => {
 		const env: EthereumNetwork = "mainnet"

@@ -7,6 +7,9 @@ import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import { DeployErc721 } from "./deploy-erc721"
 
+/**
+ * @group provider/dev
+ */
 describe("deploy erc-721 token test", () => {
 	const { provider } = createE2eProvider(DEV_PK_1)
 	const web3 = new Web3(provider)
