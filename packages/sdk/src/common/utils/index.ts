@@ -87,7 +87,7 @@ export function getOrderId(req: PrepareFillRequest) {
 	}
 }
 
-export type UnionSupportedBlockchain = "EVM" | typeof NonEVMBlockchains[number]
+export type UnionSupportedBlockchain = "EVM" | typeof NonEVMBlockchains[number] | "ECLIPSE"
 export function extractUnionSupportedBlockchain(value: BlockchainIsh): UnionSupportedBlockchain {
 	const blockchain = extractBlockchain(value)
 	return convertSupportedBlockchainToUnion(blockchain)

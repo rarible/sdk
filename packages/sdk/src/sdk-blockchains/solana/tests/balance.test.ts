@@ -1,4 +1,9 @@
-import { toCollectionId, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
+import {
+	toCollectionId,
+	toCurrencyId,
+	toUnionAddress,
+	ZERO_ADDRESS,
+} from "@rarible/types"
 import { getWallet } from "../common/test/test-wallets"
 import { MintType } from "../../../types/nft/mint/prepare"
 import { retry } from "../../../common/retry"
@@ -43,4 +48,27 @@ describe("Solana get balance", () => {
 		})
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 	})
+})
+
+describe.skip("Eclipse get balance", () => {
+	const wallet = getWallet()
+	const sdk = createSdk(wallet)
+
+	test("get balance SOL", async () => {
+		console.log("wallet.publicKey", wallet.publicKey.toString())
+		const balance = await sdk.balances.getBalance(
+			toUnionAddress("SOLANA:EeLKq9SnMK6WNLdk8px7yT2JM5Gru8pgbAGghnBYArVt"),
+			toCurrencyId(`ECLIPSE:${ZERO_ADDRESS}`)
+		)
+		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
+	})
+
+	test("get balance sWOL", async () => {
+		const balance = await sdk.balances.getBalance(
+			toUnionAddress("SOLANA:EeLKq9SnMK6WNLdk8px7yT2JM5Gru8pgbAGghnBYArVt"),
+			toCurrencyId("ECLIPSE:So11111111111111111111111111111111111111112")
+		)
+		expect(parseFloat(balance.toString())).toBe("0.80485509")
+	})
+
 })
