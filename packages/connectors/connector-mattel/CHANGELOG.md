@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+
+### Features
+
+* **PLTF-353:** get balances for eclipse ([#610](https://github.com/rarible/sdk/issues/610)) ([756ebf3](https://github.com/rarible/sdk/commit/756ebf3785488c9ccc55c0ed6b7fa56e05f014df))
+
+
+
+
+
 ## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
 
 **Note:** Version bump only for package @rarible/connector-mattel
