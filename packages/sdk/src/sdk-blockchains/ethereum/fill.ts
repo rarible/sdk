@@ -355,11 +355,10 @@ export class EthereumFill {
 	): Promise<PrepareFillResponse> {
 		const orderId = getOrderId(request)
 		const blockchain = extractBlockchain(orderId)
+		if (!isEVMBlockchain(blockchain)) throw new Error("Not an EVM order")
+
 		const order = await this.apis.order.getValidatedOrderById({ id: orderId })
-		if (!isEVMBlockchain(blockchain)) {
-			throw new Error("Not an EVM order")
-		}
-		const ethOrder = getEthOrder(order)
+		const ethOrder = await getEthOrder(assertWallet(this.wallet).ethereum, order)
 
 		const submit = action
 			.before(async (fillRequest: FillRequest) => {
@@ -484,7 +483,7 @@ export class EthereumFill {
 			const orderId = getOrderId(req)
 			const unionOrder = await this.apis.order.getOrderById({ id: orderId })
 			const blockchain = extractBlockchain(orderId) as EVMBlockchain
-			const order = getEthOrder(unionOrder)
+			const order = await getEthOrder(assertWallet(this.wallet).ethereum, unionOrder)
 			orders[orderId] = order
 
 			if (unionOrder.status !== "ACTIVE") {

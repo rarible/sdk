@@ -1,6 +1,7 @@
 {
   "name": "@rarible/sdk-transaction-backend",
   "version": "0.13.69-beta.1",
+  "private": true,
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -8,17 +9,16 @@
   "files": [
     "build"
   ],
-  "private": true,
   "scripts": {
-    "start": "node ./build/index.js",
     "build": "yarn clean && yarn tsc --project ./tsconfig.json && yarn copy-files",
     "clean": "rimraf ./build",
     "copy-files": "cp ./src/openapi.yml ./build/",
-    "test": "jest --runInBand",
-    "verify": "tsc --noEmit",
-    "serve": "nodemon",
     "get-buy-tx": "npx ts-node scripts/gettxbuy.ts",
-    "get-orders": "npx ts-node scripts/getorders.ts"
+    "get-orders": "npx ts-node scripts/getorders.ts",
+    "serve": "nodemon",
+    "start": "node ./build/index.js",
+    "test": "jest --runInBand",
+    "verify": "tsc --noEmit"
   },
   "dependencies": {
     "@rarible/protocol-ethereum-sdk": "^0.13.69-beta.1",
@@ -34,8 +34,7 @@
     "redoc-express": "^1.0.0",
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.8.4",
-    "web3": "^4.4.0"
+    "typescript": "^4.8.4"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.1",

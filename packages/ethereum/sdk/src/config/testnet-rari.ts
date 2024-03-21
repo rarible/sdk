@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const rariTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-rari-api.rarible.org",
 	chainId: 1918988905,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x61512179F6a16bEC0D259d8010CC0485CE363868"),
@@ -41,7 +42,7 @@ export const rariTestnetConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0x6df6A970A5e92F93C65BD81dFf2D2ad4ab27C9CD"),
+	weth: toAddress("0x2c9dd2b2cd55266e3b5c3c95840f3c037fbcb856"),
 	auction: ZERO_ADDRESS,
 	looksrareOrderValidatorV2: ZERO_ADDRESS,
 }

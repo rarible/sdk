@@ -41,6 +41,7 @@ import type {
 	IFlowSetupMattelCollections,
 } from "./types/nft/collection"
 import type { ExternalContext } from "./common/get-sdk-context"
+import type { IFlowCheckInitGamisodesCollections } from "./types/nft/collection"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -149,6 +150,7 @@ export interface IApisSdk {
 	item: ApiClient.ItemControllerApi
 	ownership: ApiClient.OwnershipControllerApi
 	balances: ApiClient.BalanceControllerApi
+	search: ApiClient.SearchControllerApi
 }
 
 /**
@@ -395,6 +397,7 @@ export interface IFlowSdk {
 	setupMattelCollections: IFlowSetupMattelCollections
 	setupGamisodesCollections: IFlowSetupMattelCollections
 	checkInitMattelCollections: IFlowCheckInitMattelCollections
+	checkInitGamisodesCollections: IFlowCheckInitGamisodesCollections
 }
 
 

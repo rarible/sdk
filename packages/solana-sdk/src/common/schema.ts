@@ -1,10 +1,9 @@
 import { BinaryReader, BinaryWriter, deserializeUnchecked } from "borsh"
 import base58 from "bs58"
 import { PublicKey } from "@solana/web3.js"
-import type { default as BN } from "bn.js"
+import type { BigNumberValue } from "@rarible/utils"
 
 type StringPublicKey = string
-
 
 export enum MetadataKey {
 	Uninitialized = 0,
@@ -84,9 +83,9 @@ export class UpdateMetadataArgs {
 
 export class CreateMasterEditionArgs {
 	instruction: number = 10
-	maxSupply: BN | null
+	maxSupply: BigNumberValue | null
 
-	constructor(args: { maxSupply: BN | null }) {
+	constructor(args: { maxSupply: BigNumberValue | null }) {
 		this.maxSupply = args.maxSupply
 	}
 }
@@ -201,11 +200,7 @@ export const METADATA_SCHEMA = new Map<any, any>([
 const METADATA_REPLACE = new RegExp("\u0000", "g")
 
 export const decodeMetadata = (buffer: Buffer): Metadata => {
-	const metadata = deserializeUnchecked(
-		METADATA_SCHEMA,
-		Metadata,
-		buffer,
-	) as Metadata
+	const metadata = deserializeUnchecked(METADATA_SCHEMA, Metadata, buffer)
 	metadata.data.name = metadata.data.name.replace(METADATA_REPLACE, "")
 	metadata.data.uri = metadata.data.uri.replace(METADATA_REPLACE, "")
 	metadata.data.symbol = metadata.data.symbol.replace(METADATA_REPLACE, "")

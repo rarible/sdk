@@ -8,12 +8,10 @@ import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { ethers } from "ethers"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
-import Web3 from "web3"
-import type Web3Types from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import HDWalletProvider from "@truffle/hdwallet-provider"
 
-export type Web3Provider = InstanceType<typeof Web3Types>["currentProvider"]
+export type Web3Provider = InstanceType<typeof Web3>["currentProvider"]
 
 export function updateNodeGlobalVars() {
 	(global as any).FormData = FormData;

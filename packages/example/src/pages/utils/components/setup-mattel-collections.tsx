@@ -1,22 +1,21 @@
-import React, { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Grid, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
 import { TransactionInfo } from "../../../components/common/transaction-info"
+import { useSdkContext } from "../../../components/connector/sdk"
 
 export function SetupMattelCollections() {
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const [collectionsState, setCollections] = useState("")
-
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = connection.sdk.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
-	const { handleSubmit } = form
+
 	function getCollectionsStatus() {
 		if (connection?.sdk?.flow) {
 			connection.sdk.flow.checkInitMattelCollections()
@@ -27,10 +26,10 @@ export function SetupMattelCollections() {
 	useEffect(() => {
 		getCollectionsStatus()
 	}, [])
+
 	return (
 		<div style={{ marginTop: 20 }}>
-
-			<form onSubmit={handleSubmit(async () => {
+			<form onSubmit={form.handleSubmit(async () => {
 				try {
 					const tx = await connection?.sdk?.flow?.setupMattelCollections()
 					setComplete(tx)
@@ -39,9 +38,8 @@ export function SetupMattelCollections() {
 					setError(e)
 				}
 			})}>
-
 				<Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
-          Setup Mattel collections
+          			Setup Mattel collections
 				</Typography>
 				<Grid container spacing={2}>
 
@@ -64,11 +62,9 @@ export function SetupMattelCollections() {
 			<RequestResult
 				result={result}
 				completeRender={(data) =>
-					<>
-						<Box sx={{ my: 2 }}>
-							<TransactionInfo transaction={data}/>
-						</Box>
-					</>
+					<Box sx={{ my: 2 }}>
+						<TransactionInfo transaction={data}/>
+					</Box>
 				}
 			/>
 

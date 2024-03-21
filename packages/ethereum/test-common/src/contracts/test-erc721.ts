@@ -1,4 +1,4 @@
-import type Web3 from "web3"
+import type { Web3 } from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
 import { DEFAULT_DATA_TYPE, replaceBigIntInContract } from "../common"
 

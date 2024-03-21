@@ -5,6 +5,9 @@ import { toAddress } from "@rarible/types"
 import { devEthereumConfig } from "../config/dev"
 import { checkGreaterThanMinPaymentValue, checkMinPaymentValue } from "./check-min-payment-value"
 
+/**
+ * @group provider/dev
+ */
 describe("check min payment value fn", function () {
 	const config = devEthereumConfig
 	const enoughEthAsset: Asset = {

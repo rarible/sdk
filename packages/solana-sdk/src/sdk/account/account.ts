@@ -1,5 +1,5 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { PreparedTransaction } from "../prepared-transaction"
 import { getTokenAccounts } from "../../tests/common"
@@ -17,7 +17,7 @@ export interface IAccountInfoRequest {
 }
 
 export interface IRevokeRequest {
-	signer: IWalletSigner
+	signer: SolanaSigner
 	tokenAccount: PublicKey
 }
 
@@ -37,7 +37,7 @@ export class SolanaAccountSdk implements ISolanaAccountSdk {
 	}
 
 	getAccountInfo(request: IAccountInfoRequest): ReturnType<typeof getAccountInfo> {
-		return getAccountInfo(this.connection, request.mint, null, request.tokenAccount)
+		return getAccountInfo(this.connection, request.mint, undefined, request.tokenAccount)
 	}
 
 	async revokeDelegate(request: IRevokeRequest): Promise<PreparedTransaction> {

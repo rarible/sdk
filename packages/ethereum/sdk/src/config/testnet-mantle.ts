@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const mantleTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-mantle-api.rarible.org",
 	chainId: 5001,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x41407B447Fb5425187A9BCA3a062644EF2410F8D"),

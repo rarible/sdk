@@ -19,8 +19,103 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ### Features
 
-* **MPX-2230:** update web3 to latest version ([75c1913](https://github.com/rarible/sdk/commit/75c19137cd770d05862005d4d75a6038ab30cc14))
-* **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
+* webpack dev server ([9dd2887](https://github.com/rarible/sdk/commit/9dd288726b293a74cfff7f1977098334a6d18b85))
+
+
+
+
+
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+
+### Features
+
+* refine solana support ([1668cf0](https://github.com/rarible/sdk/commit/1668cf0a72414d1fd96729a1e57b41ce0b7cff3e))
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+
+### Features
+
+* **PLTF-305:** support celo network ([#606](https://github.com/rarible/sdk/issues/606)) ([cc8c63a](https://github.com/rarible/sdk/commit/cc8c63a12536905b49185aac925d7c89628fde3b))
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+
+### Features
+
+* **PLTF-315:** support astar mainnet ([#603](https://github.com/rarible/sdk/issues/603)) ([cdae32f](https://github.com/rarible/sdk/commit/cdae32f4ca84b4273d48b9fc052a8f36f4b18342))
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+* web3 dependencies done right ([c68c9d5](https://github.com/rarible/sdk/commit/c68c9d53eb64e0bdb12eb07fccb54405b0a85947))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+
+
+
+
+
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
+
+## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
 
 
 

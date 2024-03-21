@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { useRequestResult } from "../../../components/hooks/use-request-result"

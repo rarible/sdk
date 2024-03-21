@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { Order } from "@rarible/api-client"
@@ -6,7 +5,6 @@ import { toItemId } from "@rarible/types"
 import type { PrepareBatchBuyResponse } from "@rarible/sdk/build/types/order/fill/domain"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { FillRequestForm } from "../../components/common/sdk-forms/fill-request-form"
 
@@ -17,29 +15,14 @@ interface IBatchBuyFormProps {
 	onComplete: (response: any) => void
 }
 
-export function BatchBuyForm(
-	{
-		prepare,
-		orders,
-		disabled,
-		onComplete,
-	}: IBatchBuyFormProps,
-) {
-	const connection = useContext(ConnectorContext)
+export function BatchBuyForm({ prepare, orders, disabled, onComplete }: IBatchBuyFormProps) {
 	const form = useForm()
 	const { handleSubmit } = form
-	const {
-		result,
-		setError,
-	} = useRequestResult()
+	const { result, setError } = useRequestResult()
 
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
-
 				try {
 					onComplete(await prepare.submit(prepare.prepared.map((prepare) => {
 						const itemsCounter = parseInt(formData[prepare.orderId + "_itemsCounter"] || 1)

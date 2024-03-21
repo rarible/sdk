@@ -1,23 +1,22 @@
-import BigNumber from "bignumber.js"
 import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import * as web3 from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getAssociatedTokenAccountForMint, getPriceWithMantissa } from "../../../common/helpers"
 import { getAuctionHouseBuyerEscrow, loadAuctionHouseProgram } from "../../../common/auction-house-helpers"
-import { bigNumToBn } from "../../../common/utils"
+import { toSerumBn } from "../../../common/utils"
 
 export interface IActionHouseEscrowDepositRequest {
 	connection: Connection
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	amount: BigNumberValue
 }
-
 
 export async function getActionHouseEscrowDepositInstructions(
 	request: IActionHouseEscrowDepositRequest,
@@ -26,11 +25,12 @@ export async function getActionHouseEscrowDepositInstructions(
 
 	const anchorProgram = await loadAuctionHouseProgram(request.connection, request.signer)
 	const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
+	const treasuryMintPublicKey = auctionHouseObj.treasuryMint as PublicKey
 
-	const amountAdjusted = bigNumToBn(await getPriceWithMantissa(
+	const amountAdjusted = toSerumBn(await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.amount),
-		auctionHouseObj.treasuryMint,
+		toBn(request.amount),
+		treasuryMintPublicKey,
 		walletKeyPair,
 	))
 
@@ -39,16 +39,14 @@ export async function getActionHouseEscrowDepositInstructions(
 		walletKeyPair.publicKey,
 	)
 
-	const isNative = auctionHouseObj.treasuryMint.equals(WRAPPED_SOL_MINT)
-	const ata = (
-		await getAssociatedTokenAccountForMint(
-			auctionHouseObj.treasuryMint,
-			walletKeyPair.publicKey,
-		)
-	)[0]
+	const isNative = treasuryMintPublicKey.equals(WRAPPED_SOL_MINT)
+	const [ata] = await getAssociatedTokenAccountForMint(
+		treasuryMintPublicKey,
+		walletKeyPair.publicKey,
+	)
 
-	const transferAuthority = SolanaKeypairWallet.generate()
-	const signers = isNative ? [] : [transferAuthority]
+	const transferAuthority = SolanaKeypairWallet.fromSeed(undefined)
+	const signers = (isNative ? [] : [transferAuthority])
 
 	const instruction = await anchorProgram.instruction.deposit(
 		escrowBump,
@@ -61,12 +59,9 @@ export async function getActionHouseEscrowDepositInstructions(
 					? web3.SystemProgram.programId
 					: transferAuthority.publicKey,
 				escrowPaymentAccount,
-				//@ts-ignore
 				treasuryMint: auctionHouseObj.treasuryMint,
-				//@ts-ignore
 				authority: auctionHouseObj.authority,
 				auctionHouse: request.auctionHouse,
-				//@ts-ignore
 				auctionHouseFeeAccount: auctionHouseObj.auctionHouseFeeAccount,
 				tokenProgram: TOKEN_PROGRAM_ID,
 				systemProgram: web3.SystemProgram.programId,

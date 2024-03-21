@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const polygonConfig: EthereumConfig = {
 	basePath: "https://polygon-api.rarible.org",
 	chainId: 137,
+	environment: "production",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x12b3897a36fDB436ddE2788C06Eff0ffD997066e"),

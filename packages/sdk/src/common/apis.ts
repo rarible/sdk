@@ -47,6 +47,7 @@ export function createApisSdk(
 		order: new ApiClient.OrderControllerApi(configuration),
 		activity: new ApiClient.ActivityControllerApi(configuration),
 		balances: new ApiClient.BalanceControllerApi(configuration),
+		search: new ApiClient.SearchControllerApi(configuration),
 	}
 }
 

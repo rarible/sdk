@@ -1,5 +1,5 @@
 import type { EthErc20AssetType } from "@rarible/api-client"
-import type { Address } from "@rarible/types"
+import type { Address, ContractAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { EthereumContract } from "@rarible/ethereum-provider/build"
@@ -7,20 +7,23 @@ import type { EVMSuiteProvider, EVMSuiteSupportedBlockchain } from "../../domain
 import { EVMContractBase } from "./base"
 
 export class ERC20<T extends EVMSuiteSupportedBlockchain> extends EVMContractBase<T> {
-    readonly operator = this.provider.getFrom()
+  readonly operator = this.provider.getFrom()
+	readonly assetType = ERC20.getAssetType(this.contractAddress)
 
-    constructor(
-    	public readonly contract: EthereumContract,
-    	blockchain: T,
-    	addressString: string,
-    	provider: EVMSuiteProvider<T>
-    ) {
-    	super(blockchain, addressString, provider)
-    }
+	constructor(
+  	public readonly contract: EthereumContract,
+  	blockchain: T,
+  	addressString: string,
+  	provider: EVMSuiteProvider<T>
+	) {
+  	super(blockchain, addressString, provider)
+	}
 
-	readonly asset: EthErc20AssetType = {
-		"@type": "ERC20",
-		contract: this.contractAddress,
+	static getAssetType(contract: ContractAddress): EthErc20AssetType {
+  	return {
+  		"@type": "ERC20",
+  		contract,
+  	}
 	}
 
 	balanceOf = async (owner?: string) => {
@@ -31,17 +34,22 @@ export class ERC20<T extends EVMSuiteSupportedBlockchain> extends EVMContractBas
 		return bn
 	}
 
-    decimals = async () => {
-    	const decimalsRaw = await this.contract.functionCall("decimals").call()
-    	const decimals = parseInt(decimalsRaw)
-    	if (isNaN(decimals)) throw new Error("Decimals is unknown")
-    	return decimals
-    }
+  decimals = async () => {
+  	const decimalsRaw = await this.contract.functionCall("decimals").call()
+  	const decimals = parseInt(decimalsRaw)
+  	if (isNaN(decimals)) throw new Error("Decimals is unknown")
+  	return decimals
+  }
 
-    toWei = async (valueInDecimals: BigNumberValue) => {
-    	const decimals = await this.decimals()
-    	return toBn(valueInDecimals).multipliedBy(toBn(10).pow(decimals))
-    }
+  toWei = async (valueInDecimals: BigNumberValue) => {
+  	const decimals = await this.decimals()
+  	return toBn(valueInDecimals).multipliedBy(toBn(10).pow(decimals))
+  }
+
+  fromWei = async (valueInDecimals: BigNumberValue) => {
+  	const decimals = await this.decimals()
+  	return toBn(valueInDecimals).dividedBy(toBn(10).pow(decimals))
+  }
 
 	transfer = async (to: Address, valueDecimal: BigNumberValue) => {
 		const valueWei = await this.toWei(valueDecimal)

@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { PrepareBidResponse } from "@rarible/sdk/build/types/order/bid/domain"
@@ -7,11 +6,10 @@ import { generateExpirationDate } from "@rarible/sdk/build/common/suite/order"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { getCurrency, getCurrencyOptions } from "../../common/currency-helpers"
 import { parseCurrencyType, PriceForm } from "../../components/common/sdk-forms/price-form"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
+import { useEnvironmentContext } from "../../components/connector/env"
 
 interface IBidFormProps {
 	prepare: PrepareBidResponse
@@ -20,8 +18,7 @@ interface IBidFormProps {
 }
 
 export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
-	const { environment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
+	const { environment } = useEnvironmentContext()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
@@ -29,10 +26,6 @@ export function BidForm({ prepare, disabled, onComplete }: IBidFormProps) {
 	return (
 		<>
 			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
-
 				try {
 					const currency = parseCurrencyType(formData.currencyType)
 

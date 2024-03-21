@@ -5,14 +5,17 @@ import { CssBaseline, ThemeProvider } from "@mui/material"
 import { App } from "./app"
 import { appTheme } from "./theme"
 
-ReactDOM.render(
-	<React.StrictMode>
-		<CssBaseline />
-		<ThemeProvider theme={appTheme}>
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
-		</ThemeProvider>
-	</React.StrictMode>,
-	document.getElementById("root")
-)
+function Root() {
+	return (
+		<React.StrictMode>
+			<CssBaseline />
+			<ThemeProvider theme={appTheme}>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</ThemeProvider>
+		</React.StrictMode>
+	)
+}
+
+ReactDOM.render(<Root />, document.getElementById("root"))

@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import type { Order } from "@rarible/api-client"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
@@ -9,8 +8,8 @@ import type { PrepareOrderUpdateResponse } from "@rarible/sdk/build/types/order/
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { useSdkContext } from "../../components/connector/sdk"
 
 interface ISellUpdatePrepareFormProps {
 	disabled?: boolean
@@ -20,17 +19,13 @@ interface ISellUpdatePrepareFormProps {
 
 export function SellUpdatePrepareForm({ orderId, disabled, onComplete }: ISellUpdatePrepareFormProps) {
 	const navigate = useNavigate()
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const form = useForm()
-	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
+			<form onSubmit={form.handleSubmit(async (formData) => {
 				try {
 					const orderId = toOrderId(formData.orderId)
 					onComplete({

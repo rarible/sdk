@@ -1,6 +1,6 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { BigNumberValue } from "@rarible/utils"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { DebugLogger } from "../../logger/debug-logger"
 import type { TransactionResult } from "../../types"
 import type { ISolanaAccountSdk } from "../account/account"
@@ -11,7 +11,7 @@ import { getTokenBurnInstructions } from "./methods/burn"
 
 export type IMintRequest = {
 	metadataUrl: string
-	signer: IWalletSigner
+	signer: SolanaSigner
 	collection: PublicKey | null
 } & ({
 	masterEditionSupply: number, // for master edition
@@ -22,7 +22,7 @@ export type IMintRequest = {
 export type IMintResponse = { tx: PreparedTransaction, mint: PublicKey }
 
 export interface ITransferRequest {
-	signer: IWalletSigner
+	signer: SolanaSigner
 	tokenAccount?: PublicKey
 	to: PublicKey
 	mint: PublicKey
@@ -30,7 +30,7 @@ export interface ITransferRequest {
 }
 
 export interface IBurnRequest {
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	amount: BigNumberValue
 	tokenAccount?: PublicKey
@@ -40,9 +40,7 @@ export interface IBurnRequest {
 
 export interface ISolanaNftSdk {
 	mint(request: IMintRequest): Promise<IMintResponse>
-
 	transfer(request: ITransferRequest): Promise<PreparedTransaction>
-
 	burn(request: IBurnRequest): Promise<PreparedTransaction>
 }
 

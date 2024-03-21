@@ -22,6 +22,107 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+
+### Features
+
+* fief xai celo kroma evm blockchains supporting ([#602](https://github.com/rarible/sdk/issues/602)) ([30e730b](https://github.com/rarible/sdk/commit/30e730b736a4cfafa4bb6f6a4aa74d9c39c52432))
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+
+### Features
+
+* **PLTF-305:** support celo network ([#606](https://github.com/rarible/sdk/issues/606)) ([cc8c63a](https://github.com/rarible/sdk/commit/cc8c63a12536905b49185aac925d7c89628fde3b))
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+
+### Features
+
+* **PLTF-315:** support astar zkevm on mainnet ([#605](https://github.com/rarible/sdk/issues/605)) ([96fb3a6](https://github.com/rarible/sdk/commit/96fb3a6ca209c74e16906330fc97e35a08f80e28))
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+
+### Features
+
+* **PLTF-315:** support astar mainnet ([#603](https://github.com/rarible/sdk/issues/603)) ([cdae32f](https://github.com/rarible/sdk/commit/cdae32f4ca84b4273d48b9fc052a8f36f4b18342))
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+
+### Features
+
+* add support of base and base-sepolia networks ([34f9622](https://github.com/rarible/sdk/commit/34f96223fd08f88272769bc39449bcf4d6bf0125))
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+
+
+
+
+
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
 ## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
 
 **Note:** Version bump only for package @rarible/sdk-transaction

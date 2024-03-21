@@ -1,11 +1,11 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 import { PreparedTransaction } from "../prepared-transaction"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { getVerifyCollectionInstructions } from "./verifyCollection/verify-collection"
 
 export interface IVerifyCollectionRequest {
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	collection: PublicKey
 }

@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const testnetLightlinkConfig: EthereumConfig = {
 	basePath: "https://testnet-lightlink-api.rarible.org",
 	chainId: 1891,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x2E015B0474364757d2cc8e28897DCBCdEE07e340"),

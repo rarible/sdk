@@ -1,6 +1,6 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Address, AssetType, OrderForm } from "@rarible/ethereum-api-client"
-import type { BigNumber } from "@rarible/types"
+import type { BigNumber } from "@rarible/utils"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
@@ -28,12 +28,7 @@ import type { RaribleEthereumApis } from "./common/apis"
 import { createEthereumApis, getApis as getApisTemplate } from "./common/apis"
 import { getSendWithInjects } from "./common/send-transaction"
 import { cancel as cancelTemplate } from "./order/cancel"
-import type {
-	FillBatchOrderAction,
-	FillOrderAction,
-	GetOrderBuyTxData,
-	GetOrderFillTxData,
-} from "./order/fill-order/types"
+import type { FillBatchOrderAction, FillOrderAction, GetOrderBuyTxData, GetOrderFillTxData } from "./order/fill-order/types"
 import type { SimpleOrder } from "./order/types"
 import { OrderFiller } from "./order/fill-order"
 import { getBaseFee } from "./common/get-base-fee"
@@ -59,7 +54,6 @@ import type { CryptoPunksWrapper } from "./common/crypto-punks"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./nft/cryptopunk-wrapper"
 import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purchase"
 import { getUpdatedCalldata } from "./order/fill-order/common/get-updated-call"
-import type { EthereumConfig } from "./config/type"
 import { getRequiredWallet } from "./common/get-required-wallet"
 
 export interface RaribleOrderSdk {
@@ -166,7 +160,7 @@ export interface RaribleNftSdk {
 	 * @param to recipient address
 	 * @param amount for transfer
 	 */
-	transfer(asset: TransferAsset, to: Address, amount?: BigNumber): Promise<EthereumTransaction>
+	transfer(asset: TransferAsset, to: Address, amount?: BigNumberValue): Promise<EthereumTransaction>
 
 	/**
 	 * @param request burn request
@@ -186,7 +180,7 @@ export interface RaribleBalancesSdk {
 	 * @param assetType type of asset. Supports ERC20 and ETH
 	 * @returns balance of user
 	 */
-	getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumberValue>
+	getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumber>
 
 	/**
 	 * Convert ETH balance from/to the Wrapped Ether (ERC-20) token
@@ -276,7 +270,7 @@ export interface RaribleAuctionSdk {
    * Generate hash of auction by id
    * @param auctionId Auction ID
    */
-	getHash: (auctionId: BigNumber) => Promise<string>
+	getHash: (auctionId: string) => Promise<string>
 }
 
 export interface RaribleSdk {
@@ -287,14 +281,16 @@ export interface RaribleSdk {
 	balances: RaribleBalancesSdk
 }
 
-// noinspection JSUnusedGlobalSymbols
 export function createRaribleSdk(
 	ethereum: Maybe<Ethereum>,
 	env: EthereumNetwork,
 	sdkConfig?: IRaribleEthereumSdkConfig
 ): RaribleSdk {
-	const getConfig: () => Promise<EthereumConfig> = async () =>
-		getNetworkConfigByChainId(await getRequiredWallet(ethereum).getChainId())
+	const getConfig = async () => {
+		const chainId = await getRequiredWallet(ethereum).getChainId()
+		return getNetworkConfigByChainId(chainId)
+	}
+
 	const apis = createEthereumApis(env, {
 		...(sdkConfig?.apiClientParams || {}),
 		apiKey: sdkConfig?.apiKey,

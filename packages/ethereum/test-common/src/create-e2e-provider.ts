@@ -1,4 +1,3 @@
-import Web3 from "web3"
 // @ts-ignore
 import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
@@ -6,8 +5,6 @@ import { TestSubprovider } from "@rarible/test-provider"
 // @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { randomWord } from "@rarible/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-
 
 export function createE2eWallet(pk: string = randomWord()): Wallet {
 	return new Wallet(Buffer.from(fixPK(pk), "hex"))
@@ -37,7 +34,6 @@ export class E2EProvider {
 	readonly provider: Web3ProviderEngineSync
 	readonly config: E2EProviderConfig
 	readonly wallet: Wallet
-	readonly web3: Web3
 
 	constructor(
 		pk: string = randomWord(),
@@ -50,8 +46,6 @@ export class E2EProvider {
 		provider.addProvider(this.createRpcProvider())
 
 		this.provider = provider
-		this.web3 = new Web3(provider as any)
-		this.web3.setConfig({ defaultTransactionType: "0x0" })
 	}
 
 	private createConfig(override: Partial<E2EProviderConfig>) {
@@ -100,7 +94,5 @@ export function createE2eProvider(pk?: string, config?: Partial<E2EProviderConfi
 	return {
 		provider: provider.provider as any,
 		wallet: provider.wallet,
-		web3: provider.web3,
-		web3Ethereum: new Web3Ethereum({ web3: provider.web3 }),
 	}
 }

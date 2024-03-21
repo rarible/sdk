@@ -31,7 +31,7 @@ export function isRequestCurrencyAssetType(x: RequestCurrency): x is ApiClient.C
 	return typeof x === "string" && !!toCurrencyId(x)
 }
 export function isAssetType(x: RequestCurrency): x is RequestCurrencyAssetType {
-	return typeof x === "object" && "@type" in x
+	return typeof x === "object" && x !== null  && "@type" in x
 }
 
 export function isEth(x: AssetType): x is EthEthereumAssetType {

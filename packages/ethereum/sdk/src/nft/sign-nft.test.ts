@@ -1,11 +1,13 @@
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { toAddress, toBigNumber } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { getEthereumConfig } from "../config"
 import type { SimpleLazyNft } from "./sign-nft"
 import { signNft } from "./sign-nft"
 
+/**
+ * @group provider/ganache
+ */
 describe("mint-lazy test", () => {
 	const { provider, addresses } = createGanacheProvider(
 		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"

@@ -1,6 +1,5 @@
 module.exports = {
 	roots: ["<rootDir>/src"],
-	setupFiles: ["<rootDir>/jest.setup.js"],
 	bail: true,
 	transform: {
 		"^.+\\.ts?$": "ts-jest",
@@ -9,9 +8,6 @@ module.exports = {
 		"<rootDir>/build/",
 		"<rootDir>/node_modules/",
 	],
-	moduleNameMapper: {
-		"source-map-support/register": "identity-obj-proxy",
-	},
 	testResultsProcessor: "jest-junit",
 	reporters: [
 		"default",

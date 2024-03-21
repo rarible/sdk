@@ -53,7 +53,11 @@ export async function fulfillOrder(
 	ethereum: Ethereum,
 	send: SendFunction,
 	simpleOrder: SimpleSeaportV1Order,
-	{ tips, unitsToFill }: {tips?: TipInputItem[], unitsToFill?: BigNumberValue}
+	{ tips, unitsToFill, disableCheckingBalances }: {
+		tips?: TipInputItem[],
+		unitsToFill?: BigNumberValue,
+		disableCheckingBalances?: boolean
+	}
 ) {
 	const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
 	const order = convertAPIOrderToSeaport(simpleOrder)
@@ -134,6 +138,7 @@ export async function fulfillOrder(
 			timeBasedItemParams,
 			offererOperator,
 			fulfillerOperator,
+			disableCheckingBalances,
 		})
 		return getfulfillBasicOrderData({
 			order: sanitizedOrder,
@@ -191,6 +196,7 @@ export async function approveBeforeBasicFulfillOrder(
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
+		disableCheckingBalances,
 	}: {
 		ethereum: Ethereum,
 		send: SendFunction,
@@ -201,6 +207,7 @@ export async function approveBeforeBasicFulfillOrder(
 		timeBasedItemParams: TimeBasedItemParams;
 		offererOperator: string;
 		fulfillerOperator: string;
+		disableCheckingBalances?: boolean;
 	}) {
 	const { offer, consideration } = order.parameters
 
@@ -214,6 +221,7 @@ export async function approveBeforeBasicFulfillOrder(
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
+		disableCheckingBalances,
 	})
 
 	const approvalActions = await getApprovalActions(

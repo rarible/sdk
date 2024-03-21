@@ -1,11 +1,4 @@
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
-import {
-	getPromiEventConfirmationPromise,
-	getPromiEventHashPromise,
-} from "@rarible/web3-ethereum/build/utils/to-promises"
-import type { NonPayableMethodObject, PayableMethodObject } from "web3-eth-contract"
-import type { AbiFunctionFragment, ContractMethod } from "web3-types"
-import type { PayableTxOptions } from "web3-eth-contract/src/types"
 import { LogsLevel } from "../types"
 import type { ILoggerConfig } from "./logger/logger"
 import { getErrorMessageString } from "./logger/logger"
@@ -148,24 +141,4 @@ function getTxData(tx: EthereumTransaction) {
 		from: tx.from,
 		to: tx.to,
 	}
-}
-
-export async function sentTx(source: BoundType, options: PayableTxOptions): Promise<string> {
-	const event = source.send({ ...options, gas: "3000000" })
-	return getPromiEventHashPromise(event)
-}
-
-export type ContractBoundMethod<
-	Abi extends AbiFunctionFragment,
-	Method extends ContractMethod<Abi> = ContractMethod<Abi>,
-> = (
-	...args: Method["Inputs"]
-) => Method["Abi"]["stateMutability"] extends "payable" | "pure"
-	? PayableMethodObject<Method["Inputs"], Method["Outputs"]>
-	: NonPayableMethodObject<Method["Inputs"], Method["Outputs"]>
-
-export type BoundType = ReturnType<ContractBoundMethod<any, any>>
-export async function sentTxConfirm(source: BoundType, options: PayableTxOptions): Promise<string> {
-	const event = source.send({ ...options, gas: "3000000" })
-	return getPromiEventConfirmationPromise(event)
 }

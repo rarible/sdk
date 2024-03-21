@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo } from "react"
+import React, { useCallback, useMemo } from "react"
 import { from } from "rxjs"
 import { Rx } from "@rixio/react"
 import { LoadingButton } from "@mui/lab"
@@ -8,11 +8,10 @@ import { MappedConnectionProvider } from "@rarible/connector"
 import type { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { faChevronRight, faLinkSlash } from "@fortawesome/free-solid-svg-icons"
 import type { StateConnected } from "@rarible/connector/build/connection-state"
-import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { Icon } from "../../components/common/icon"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
-import { ENVIRONMENTS } from "../../components/connector/environments"
+import { useEnvironmentContext } from "../../components/connector/env"
+import { useSdkContext } from "../../components/connector/sdk"
+import { environmentUtils } from "../../common/env"
 
 function getWalletInfo(option: string): { label: string } {
 	switch (option) {
@@ -26,24 +25,22 @@ function getWalletInfo(option: string): { label: string } {
 }
 
 export function ConnectOptions() {
-	const { environment, setEnvironment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
-	const { connector, state } = connection
+	const { environment, setEnvironment } = useEnvironmentContext()
+	const { connector, state } = useSdkContext()
 
 	const options$ = useMemo(
 		() => (connector ? from(connector.getOptions()) : from([])),
 		[connector]
 	)
+
 	const envSelectHandler = useCallback(
 		(e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-			setEnvironment?.(e.target.value as RaribleSdkEnvironment)
+			if (environmentUtils.isEnvironment(e.target.value)) {
+				setEnvironment(e.target.value)
+			}
 		},
 		[setEnvironment]
 	)
-
-	if (!connector) {
-		return null
-	}
 
 	const style = {
 		justifyContent: "start",
@@ -55,11 +52,7 @@ export function ConnectOptions() {
 	}
 
 	return (
-		<Box
-			sx={{
-				maxWidth: 300,
-			}}
-		>
+		<Box sx={{ maxWidth: 300 }}>
 			<Rx value$={options$}>
 				{(options) => (
 					<Stack spacing={1}>
@@ -71,7 +64,7 @@ export function ConnectOptions() {
 							value={environment}
 							onChange={envSelectHandler}
 						>
-							{ENVIRONMENTS.map((option) => (
+							{Object.values(environmentUtils.environments).map((option) => (
 								<MenuItem key={option.value} value={option.value}>
 									{option.label}
 								</MenuItem>
@@ -93,19 +86,15 @@ export function ConnectOptions() {
 										}
 										connector.connect(o)
 									}}
-									loading={
-										state.status === "connecting" &&
-                    state.providerId === o.provider.getId()
-									}
+									loading={state.status === "connecting" && state.providerId === o.provider.getId()}
 									loadingPosition="start"
 									startIcon={<Icon icon={faChevronRight} />}
 									sx={style}
 									variant="outlined"
 									disabled={state?.status === "connected"}
 									fullWidth
-								>
-									{walletInfo.label}
-								</LoadingButton>
+									children={walletInfo.label}
+								/>
 							)
 						})}
 						<Button
@@ -116,9 +105,8 @@ export function ConnectOptions() {
 							variant="outlined"
 							disabled={state?.status !== "connected"}
 							fullWidth
-						>
-              Disconnect
-						</Button>
+							children="Disconnect"
+						/>
 					</Stack>
 				)}
 			</Rx>

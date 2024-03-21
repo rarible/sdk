@@ -1,26 +1,29 @@
-import { toItemId } from "@rarible/types"
+import { DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
+import type { ItemId } from "@rarible/api-client"
 import { createSdk } from "../common/test/create-sdk"
 import { createRaribleSdk } from "../index"
 import { LogsLevel } from "../domain"
+import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
+import { mintTestERC721 } from "../sdk-blockchains/ethereum/test/mint-erc-721"
 
 describe("server api keys", () => {
-	test.concurrent("get item without API key should be succeed", async () => {
-		const sdk = createSdk(undefined, "development")
-
-		await sdk.apis.item.getItemById({
-			itemId: toItemId("ETHEREUM:0x6972347e66a32f40ef3c012615c13cb88bf681cc:53721905486644660545161939638297855196812841812653174796223513003283747704177"),
-		})
+	const { web31 } = initProviders({ pk1: DEV_PK_1 })
+	let itemId: ItemId
+	beforeAll( async () => {
+		itemId = await mintTestERC721(web31)
 	})
 
-	test.concurrent("get item with valid API key should be succeed", async () => {
+	test("get item without API key should be succeed", async () => {
 		const sdk = createSdk(undefined, "development")
-
-		await sdk.apis.item.getItemById({
-			itemId: toItemId("ETHEREUM:0x6972347e66a32f40ef3c012615c13cb88bf681cc:53721905486644660545161939638297855196812841812653174796223513003283747704177"),
-		})
+		await sdk.apis.item.getItemById({ itemId })
 	})
 
-	test.concurrent("get item with invalid API key should be failed", async () => {
+	test("get item with valid API key should be succeed", async () => {
+		const sdk = createSdk(undefined, "development")
+		await sdk.apis.item.getItemById({ itemId })
+	})
+
+	test("get item with invalid API key should be failed", async () => {
 		const sdk = createRaribleSdk(undefined, "development", {
 			logs: LogsLevel.DISABLED,
 			apiKey: "eb0e4c76-b662-4c3d-8121-3643a7eb75ba",
@@ -29,7 +32,7 @@ describe("server api keys", () => {
 		let responseError
 		try {
 			await sdk.apis.item.getItemById({
-				itemId: toItemId("ETHEREUM:0x6972347e66a32f40ef3c012615c13cb88bf681cc:53721905486644660545161939638297855196812841812653174796223513003283747704177"),
+				itemId,
 			})
 		} catch (e: any) {
 			responseError = await e.json()

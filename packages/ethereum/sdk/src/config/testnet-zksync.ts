@@ -6,6 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const zkSyncTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-zksync-api.rarible.org",
 	chainId: 300,
+	environment: "testnet",
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x99bD7BA01f9872f034a35DC4bC737cFaaaC11D63"),

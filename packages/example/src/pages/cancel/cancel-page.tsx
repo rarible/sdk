@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { Box } from "@mui/material"
 import type { WalletType } from "@rarible/sdk-wallet"
 import { Page } from "../../components/page"
@@ -7,7 +6,7 @@ import { FormStepper } from "../../components/common/form-stepper"
 import { RequestResult } from "../../components/common/request-result"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdkContext } from "../../components/connector/sdk"
 import { CancelComment } from "./comments/cancel-comment"
 import { CancelForm } from "./cancel-form"
 
@@ -16,9 +15,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 }
 
 export function CancelPage() {
-	//const params = useParams()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 
 	return (
 		<Page header="Cancel Order">

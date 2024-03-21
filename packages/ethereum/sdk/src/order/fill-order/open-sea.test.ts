@@ -1,6 +1,5 @@
 import {
 	awaitAll,
-	createE2eProvider,
 	createGanacheProvider,
 	deployMerkleValidator,
 	deployOpenSeaExchangeV1,
@@ -11,16 +10,15 @@ import {
 	deployTestErc721,
 	deployTestExchangeWrapper,
 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { Address, Asset } from "@rarible/ethereum-api-client"
 import { OrderOpenSeaV1DataV1Side, Platform } from "@rarible/ethereum-api-client"
-import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { OPENSEA_EXCHANGE_ABI, proxyRegistryAbi, tokenTransferProxyAbi } from "@rarible/ethereum-sdk-test-common/src"
-import { getSimpleSendWithInjects, sentTx } from "../../common/send-transaction"
+import type { Web3EthContractTypes } from "@rarible/web3-v4-ethereum"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
+import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getEthereumConfig } from "../../config"
 import { id32 } from "../../common/id"
@@ -41,6 +39,8 @@ import { createRaribleSdk } from "../../index"
 import { createErc721V3Collection } from "../../common/mint"
 import type { ERC721RequestV3 } from "../../nft/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
+import { sentTx } from "../../common/test"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import {
 	getAtomicMatchArgAddresses,
 	getAtomicMatchArgCommonData,
@@ -51,12 +51,11 @@ import { convertOpenSeaOrderToDTO } from "./open-sea-converter"
 import { OrderFiller } from "./index"
 
 describe.skip("fillOrder: Opensea orders", function () {
-	const { addresses, provider } = createGanacheProvider()
+	const { addresses, web3 } = createGanacheProvider()
 	const [sender1Address, sender2Address, feeRecipient] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const ethereum2 = new Web3Ethereum({ web3, from: sender2Address, gas: 1000000 })
-	const { provider: polygonProvider } = createE2eProvider(undefined, {
+	const ethereum1 = new Web3v4Ethereum({ web3, from: sender1Address, gas: 1000000 })
+	const ethereum2 = new Web3v4Ethereum({ web3, from: sender2Address, gas: 1000000 })
+	const { provider: polygonProvider } = createE2eTestProvider(undefined, {
 		networkId: 137,
 		rpcUrl: "https://polygon-rpc.com",
 	})
@@ -90,9 +89,9 @@ describe.skip("fillOrder: Opensea orders", function () {
 		exchangeWrapper: deployTestExchangeWrapper(web3),
 	})
 
-	let wyvernExchange: Contract<typeof OPENSEA_EXCHANGE_ABI>
-	let wyvernProxyRegistry: Contract<typeof proxyRegistryAbi>
-	let wyvernTokenTransferProxy: Contract<typeof tokenTransferProxyAbi>
+	let wyvernExchange: Web3EthContractTypes.Contract<typeof OPENSEA_EXCHANGE_ABI>
+	let wyvernProxyRegistry: Web3EthContractTypes.Contract<typeof proxyRegistryAbi>
+	let wyvernTokenTransferProxy: Web3EthContractTypes.Contract<typeof tokenTransferProxyAbi>
 	let proxyRegistryEthContract: EthereumContract
 
 	beforeAll(async () => {
@@ -218,7 +217,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 	}
 
 	test("mint polygon", async () => {
-		const buyerWeb3 = new Web3Ethereum({ web3: new Web3(polygonProvider as any), gas: 1000000 })
+		const buyerWeb3 = new Web3v4Ethereum({ web3: new Web3v4(polygonProvider as any), gas: 1000000 })
 
 		const sdkBuyer = createRaribleSdk(buyerWeb3, "polygon")
 
@@ -462,8 +461,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	test("get order origin with passed polygon platform and polygon wallet", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const web3 = new Web3(polygonProvider as any)
-		const polygon1 = new Web3Ethereum({ web3 })
+		const web3 = new Web3v4(polygonProvider as any)
+		const polygon1 = new Web3v4Ethereum({ web3 })
 		const getApis = getApisTemplate.bind(null, polygon1, env)
 		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, getConfig, getApis, getBaseOrderFee, {
 			polygon: {
@@ -475,8 +474,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	test("get order origin with passed polygon platform and polygon wallet", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const web3 = new Web3(polygonProvider as any)
-		const polygon1 = new Web3Ethereum({ web3 })
+		const web3 = new Web3v4(polygonProvider as any)
+		const polygon1 = new Web3v4Ethereum({ web3 })
 		const getApis = getApisTemplate.bind(null, polygon1, env)
 		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, getConfig, getApis, getBaseOrderFee, {
 			polygon: {

@@ -1,10 +1,11 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc1155V2Collection } from "../common/mint"
 import { getEthereumConfig } from "../config"
 import { getApis as getApisTemplate } from "../common/apis"
+import { DEV_PK_1 } from "../common/test/test-credentials"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { signNft } from "./sign-nft"
 import type { ERC1155RequestV2 } from "./mint"
 import { mint, MintResponseTypeEnum } from "./mint"
@@ -13,8 +14,11 @@ import { transfer } from "./transfer"
 import { ERC1155VersionEnum } from "./contracts/domain"
 import { getErc1155Contract } from "./contracts/erc1155"
 
+/**
+ * @group provider/dev
+ */
 describe("transfer Erc721 lazy", () => {
-	const { wallet, web3Ethereum: ethereum } = createE2eProvider("0x26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21")
+	const { wallet, web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
 	const getApis = getApisTemplate.bind(null, ethereum, "dev-ethereum")
 	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
@@ -26,7 +30,7 @@ describe("transfer Erc721 lazy", () => {
 
 	test("should transfer erc1155 lazy token", async () => {
 		const recipient = randomAddress()
-		const contract = toAddress("0x11F13106845CF424ff5FeE7bAdCbCe6aA0b855c1")
+		const contract = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
 
 		const request: ERC1155RequestV2 = {
 			uri: "ipfs://ipfs/hash",

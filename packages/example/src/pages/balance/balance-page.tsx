@@ -1,10 +1,9 @@
-import React, { useContext } from "react"
 import type { WalletType } from "@rarible/sdk-wallet"
 import { Box } from "@mui/material"
 import { Page } from "../../components/page"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
+import { useSdkContext } from "../../components/connector/sdk"
 import { GetBalanceComment } from "./comments/getbalance-comment"
 import { NativeBalance } from "./native-balance"
 
@@ -13,8 +12,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 }
 
 export function BalancePage() {
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 
 	return (
 		<Page header="Balances">

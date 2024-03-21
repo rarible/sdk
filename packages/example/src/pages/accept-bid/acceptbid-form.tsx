@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
@@ -6,8 +5,8 @@ import { MaxFeesBasePointSupport } from "@rarible/sdk/build/types/order/fill/dom
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { useSdkContext } from "../../components/connector/sdk"
 
 interface IAcceptBidFormProps {
 	prepare: PrepareFillResponse
@@ -16,7 +15,7 @@ interface IAcceptBidFormProps {
 }
 
 export function AcceptBidForm({ prepare, disabled, onComplete }: IAcceptBidFormProps) {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()

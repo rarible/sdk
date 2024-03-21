@@ -98,6 +98,7 @@ export function createFlowSdk(
 			checkInitMattelCollections: setupAccount.checkInitMattelCollections,
 			setupMattelCollections: setupAccount.setupMattelCollections,
 			setupGamisodesCollections: setupAccount.setupGamisodesCollections,
+			checkInitGamisodesCollections: setupAccount.checkInitGamisodesCollections,
 		},
 	}
 }

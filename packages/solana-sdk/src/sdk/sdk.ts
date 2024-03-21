@@ -1,7 +1,7 @@
 import type { Cluster, Commitment, ConnectionConfig } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import { clusterApiUrl, Connection } from "@solana/web3.js"
 import type { TransactionInstruction } from "@solana/web3.js"
+import type { SolanaSigner } from "@rarible/solana-common"
 import { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
 import { sendTransactionWithRetry } from "../common/transactions"
@@ -28,7 +28,7 @@ export interface IRaribleSolanaSdk {
 		...args: Parameters<typeof Connection.prototype.confirmTransaction>
 	): ReturnType<typeof Connection.prototype.confirmTransaction>
 	unionInstructionsAndSend(
-		signer: IWalletSigner,
+		signer: SolanaSigner,
 		preparedTransactions: PreparedTransaction[],
 		commitment: Commitment,
 	): Promise<TransactionResult>
@@ -77,7 +77,7 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 	}
 
 	async unionInstructionsAndSend(
-		signer: IWalletSigner,
+		signer: SolanaSigner,
 		preparedTransactions: PreparedTransaction[],
 		commitment: Commitment,
 	): Promise<TransactionResult> {
@@ -88,7 +88,7 @@ export class SolanaSdk implements IRaribleSolanaSdk {
 				acc.push(...trans.data.instructions)
 				return acc
 			}, []),
-			preparedTransactions.reduce<IWalletSigner[]>((acc, trans) => {
+			preparedTransactions.reduce<SolanaSigner[]>((acc, trans) => {
 				acc.push(...trans.data.signers)
 				return acc
 			}, []),

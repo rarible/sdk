@@ -9,7 +9,7 @@ export async function waitFor<T>(
 		const result = await promise()
 		if (predicate) {
 			if (!predicate(result)) {
-				throw new Error("Predicate is not matched")
+				throw new Error(`Predicate is not matched: expected ${result}`)
 			}
 		}
 		return result

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react"
+import { useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Button, Grid, TextField, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
@@ -9,18 +9,19 @@ import type { Fcl } from "@rarible/fcl-types"
 import type { AuthWithPrivateKey, FlowNetwork } from "@rarible/flow-sdk"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
 import { TransactionInfo } from "../../../components/common/transaction-info"
-import { EnvironmentContext } from "../../../components/connector/environment-selector-provider"
+import { useEnvironmentContext } from "../../../components/connector/env"
+import { useSdkContext } from "../../../components/connector/sdk"
+
 export function ExecuteRawTransaction() {
-	const { environment: env } = useContext(EnvironmentContext)
+	const { environment: env } = useEnvironmentContext()
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const [code, setCode] = useState("")
 
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = connection.sdk.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
 	const { handleSubmit } = form
@@ -39,7 +40,7 @@ export function ExecuteRawTransaction() {
 
 			<form onSubmit={handleSubmit(async () => {
 				try {
-					if (connection.sdk?.wallet?.walletType === WalletType.FLOW) {
+					if (connection.sdk.wallet?.walletType === WalletType.FLOW) {
 						const { fcl, auth } = connection.sdk.wallet
 						const txId = await runRawTransaction(
 							fcl,

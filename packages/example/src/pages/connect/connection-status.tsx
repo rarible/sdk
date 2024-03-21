@@ -1,10 +1,9 @@
-import React, { useContext } from "react"
 import { isString } from "lodash"
 import { Alert, AlertTitle, Box } from "@mui/material"
 import { faLink, faLinkSlash } from "@fortawesome/free-solid-svg-icons"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { Icon } from "../../components/common/icon"
 import { Address } from "../../components/common/address"
+import { useSdkContext } from "../../components/connector/sdk"
 
 function connectionErrorMessage(error: any): string | null {
 	if (!error) {
@@ -21,9 +20,9 @@ function connectionErrorMessage(error: any): string | null {
 }
 
 export function ConnectionStatus() {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 
-	switch (connection?.state.status) {
+	switch (connection.state.status) {
 		case "connected":
 			return <Alert severity="success" icon={<Icon icon={faLink}/>}>
 				<AlertTitle>Current Status: connected</AlertTitle>

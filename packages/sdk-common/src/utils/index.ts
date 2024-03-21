@@ -126,7 +126,7 @@ export function deepReplaceBigInt(o: unknown): any {
 	if (Array.isArray(o)) {
 		return o.map(item => deepReplaceBigInt(item))
 	}
-	if (typeof o === "object") {
+	if (typeof o === "object" && o !== null ) {
 		const clonedObject = { ...o } as Record<string, unknown>
 		return Object.keys(clonedObject).reduce((acc, key) => {
 			acc[key] = deepReplaceBigInt(acc[key])

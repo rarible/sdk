@@ -13,7 +13,6 @@ export type ConnectionProvider<Option, Connection> = {
 	 * Returns unique identifier of the connection provider. It's used to save/load last connected provider
 	 */
 	getId(): string
-
 	/**
 	 * Checks if this provider is auto-connected. For example, injected mobile providers are connected by default
 	 */
@@ -23,7 +22,7 @@ export type ConnectionProvider<Option, Connection> = {
 	 */
 	getOption(): Promise<Maybe<Option>>
 	/**
-	 * Current connection state. If value is undefined, then provider is considered disconnected.
+	 * Returns current connection state
 	 */
 	getConnection(): Observable<ConnectionState<Connection>>
 	/**

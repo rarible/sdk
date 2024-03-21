@@ -5,6 +5,7 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { RaribleSdk } from "../../../../../index"
 import { delay, retry } from "../../../../../common/retry"
 import { createErc721V3Collection } from "../../../../../common/mint"
+import { isNft } from "../../../../../order/is-nft"
 import { MintResponseTypeEnum } from "../../../../../nft/mint"
 import type { FillBatchSingleOrderRequest } from "../../../types"
 import type { SimpleAmmOrder, SimpleOrder } from "../../../../types"
@@ -15,18 +16,12 @@ import type { SendFunction } from "../../../../../common/send-transaction"
 import { makeRaribleSellOrder } from "../../../looksrare-utils/create-order"
 import type { EthereumConfig } from "../../../../../config/type"
 import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
-import { getTestContract } from "../../../../../common/test/test-credentials"
-import type { EthereumNetwork } from "../../../../../types"
 import { getEndDateAfterMonth } from "../../../../test/utils"
 import { MIN_PAYMENT_VALUE_DECIMAL } from "../../../../../common/check-min-payment-value"
 
-// const goerliErc721V3ContractAddress = toAddress("0x1723017329a804564bC8d215496C89eaBf1F3211")
-// const devErc721V3ContractAddress = toAddress("0xf9864189fe52456345DD0055D210fD160694Dd08")
-
-export async function mintTestToken(sdk: RaribleSdk, env: EthereumNetwork) {
+export async function mintTestToken(sdk: RaribleSdk, erc721Contract: Address) {
 	const sellItem = await sdk.nft.mint({
-		// collection: createErc721V3Collection(goerliErc721V3ContractAddress),
-		collection: createErc721V3Collection(getTestContract(env, "erc721V3")),
+		collection: createErc721V3Collection(erc721Contract),
 		uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 		royalties: [
 			{
@@ -49,13 +44,12 @@ export async function mintTestToken(sdk: RaribleSdk, env: EthereumNetwork) {
 
 export async function makeRaribleV2Order(
 	sdk: RaribleSdk,
-	env: EthereumNetwork,
+	erc721Contract: Address,
 	request?: {
 		price?: string,
 	},
 ) {
-	const token = await mintTestToken(sdk, env)
-	//token
+	const token = await mintTestToken(sdk, erc721Contract)
 	const sellOrder = await sdk.order.sell({
 		type: "DATA_V2",
 		amount: 1,
@@ -79,10 +73,10 @@ export async function makeRaribleV2Order(
 export async function makeSeaportOrder(
 	sdk: RaribleSdk,
 	ethereum: Ethereum,
-	env: EthereumNetwork,
+	erc721Contract: Address,
 	send: SendFunction,
 ) {
-	const token = await mintTestToken(sdk, env)
+	const token = await mintTestToken(sdk, erc721Contract)
 	await delay(10000)
 	const orderHash = await retry(10, 1000, async () => {
 		const make = {
@@ -99,14 +93,14 @@ export async function makeSeaportOrder(
 export async function makeLooksrareOrder(
 	sdk: RaribleSdk,
 	ethereum: Ethereum,
-	env: EthereumNetwork,
+	erc721Contract: Address,
 	send: SendFunction,
 	config: EthereumConfig
 ) {
-	const token = await mintTestToken(sdk, env)
+	const token = await mintTestToken(sdk, erc721Contract)
 
 	if (!config.exchange.looksrare) {
-		throw new Error(`Set looksrare contract address for ${env} env`)
+		throw new Error(`Set looksrare contract address for ${config.chainId} network`)
 	}
 	const sellOrder = await makeRaribleSellOrder(
 		ethereum,
@@ -124,16 +118,32 @@ export async function makeLooksrareOrder(
 
 export async function makeAmmOrder(
 	sdk: RaribleSdk,
-	env: EthereumNetwork,
+	erc721Contract: Address,
+	curveAddress: Address,
 	ethereum: Ethereum,
 	send: SendFunction,
 	config: EthereumConfig
 ): Promise<SimpleAmmOrder> {
-	const { poolAddress } = await mintTokensToNewSudoswapPool(sdk, env, ethereum, send, config.sudoswap.pairFactory, 2)
+	const { poolAddress } = await mintTokensToNewSudoswapPool(
+		sdk,
+		erc721Contract,
+		ethereum,
+		send,
+		config.sudoswap.pairFactory,
+		curveAddress,
+		2
+	)
 	const orderHash = "0x" + poolAddress.slice(2).padStart(64, "0")
-	return await retry(20, 2000, async () => {
-		return await sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
-	}) as SimpleAmmOrder
+	return await retry(20, 2000, () =>
+		sdk.apis.order.getValidatedOrderByHash({ hash: orderHash })
+	) as SimpleAmmOrder
+}
+
+const supportedOrderTypes = ["RARIBLE_V2", "OPEN_SEA_V1", "SEAPORT_V1", "LOOKSRARE", "AMM"] as const
+type SupportedOrderType = typeof supportedOrderTypes[number]
+
+function isSupportedOrderType(str: string): str is SupportedOrderType {
+	return supportedOrderTypes.includes(str as SupportedOrderType)
 }
 
 export function ordersToRequests(
@@ -142,16 +152,9 @@ export function ordersToRequests(
 	payouts?: Part[],
 ): FillBatchSingleOrderRequest[] {
 	return orders.map((order) => {
-		if (
-			order.type !== "RARIBLE_V2" &&
-			order.type !== "OPEN_SEA_V1" &&
-			order.type !== "SEAPORT_V1" &&
-			order.type !== "LOOKSRARE" &&
-			order.type !== "AMM"
-		) {
+		if (!isSupportedOrderType(order.type)) {
 			throw new Error("Unsupported order type")
 		}
-
 		return {
 			order,
 			amount: order.make.value,
@@ -172,13 +175,7 @@ export function waitUntilOrderActive(sdk: RaribleSdk, orderHash: string) {
 export async function checkOwnerships(sdk: RaribleSdk, assets: Asset[], expectedOwner: Address) {
 	await Promise.all(assets.map(async (asset) => {
 		await retry(20, 2000, async () => {
-			if (
-				asset.assetType.assetClass === "ETH" ||
-				asset.assetType.assetClass === "ERC20" ||
-				asset.assetType.assetClass === "COLLECTION" ||
-				asset.assetType.assetClass === "GEN_ART" ||
-				asset.assetType.assetClass === "AMM_NFT"
-			) {
+			if (!isNft(asset.assetType)) {
 				throw new Error("Not an token type")
 			}
 
@@ -186,8 +183,6 @@ export async function checkOwnerships(sdk: RaribleSdk, assets: Asset[], expected
 				contract: asset.assetType.contract,
 				tokenId: asset.assetType.tokenId.toString(),
 			})
-			console.log("asset:", asset.assetType.contract, asset.assetType.tokenId.toString())
-			console.log("expectedOwner:", expectedOwner)
 
 			expect(ownership.ownerships[0].owner).toEqual(expectedOwner)
 		})

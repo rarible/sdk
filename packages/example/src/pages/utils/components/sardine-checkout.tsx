@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { toItemId } from "@rarible/types"
 import { Grid, Typography } from "@mui/material"
@@ -9,28 +8,25 @@ import { useForm } from "react-hook-form"
 import { FormTextInput } from "../../../components/common/form/form-text-input"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
+import { useSdkContext } from "../../../components/connector/sdk"
 
 export function SardineCheckout() {
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
-	const { handleSubmit } = form
 	const connector = getConnectorFromContext()
+
 	if (!isMattelProvider(connector)) {
-		return <></>
+		return <span>Not a mattel provider</span>
 	}
+
 	return (
 		<>
-
-			<form onSubmit={handleSubmit(async () => {
+			<form onSubmit={form.handleSubmit(async () => {
 				try {
-					if (!connection.sdk) {
-						return
-					}
 					try {
 						const accountInitStatus = await connection.sdk.flow?.checkInitMattelCollections()
 						console.log("accountInitStatus", accountInitStatus)
@@ -67,7 +63,7 @@ export function SardineCheckout() {
 			})}>
 
 				<Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
-          Buy Flow item by Sardine
+          			Buy Flow item by Sardine
 				</Typography>
 				<Grid container spacing={2}>
 
@@ -93,11 +89,7 @@ export function SardineCheckout() {
 
 			<RequestResult
 				result={result}
-				completeRender={(data) =>
-					<>
-            result: {data.toString()}
-					</>
-				}
+				completeRender={(data) => <span>result: {data.toString()}</span>}
 			/>
 		</>
 	)
@@ -108,9 +100,8 @@ function isMattelProvider(x: ConnectionProvider<any, any> | undefined): x is Mat
 }
 
 function getConnectorFromContext() {
-	const connection = useContext(ConnectorContext)
-	const currentProvider = connection.connector?.getCurrentProvider()
-
+	const connection = useSdkContext()
+	const currentProvider = connection.connector.getCurrentProvider()
 	if (currentProvider) {
 		return (currentProvider as MappedConnectionProvider<any, any, any>).getProvider()
 	}

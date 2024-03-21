@@ -1,7 +1,6 @@
-import type { ProviderConnectionResult } from "../../common/provider-wallet"
-
-export interface EthereumProviderConnectionResult extends ProviderConnectionResult {
+export interface EthereumProviderConnectionResult {
 	provider: any
 	chainId: number
+	address: string
 	disconnect?: () => void
 }

@@ -1,32 +1,20 @@
-import type {
-	Commitment,
-	Connection,
-	RpcResponseAndContext,
-	SignatureStatus,
-	SimulatedTransactionResponse,
-	TransactionInstruction,
-	TransactionSignature,
-} from "@solana/web3.js"
-import {
-	Transaction,
-} from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { Commitment, Connection, RpcResponseAndContext, SignatureStatus, SimulatedTransactionResponse, TransactionInstruction, TransactionSignature } from "@solana/web3.js"
+import { Transaction } from "@solana/web3.js"
+import type { SolanaSigner } from "@rarible/solana-common"
 import { getUnixTs, sleep } from "@rarible/solana-common"
 import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
 
-export const DEFAULT_TIMEOUT = 60000
-
 export interface ITransactionPreparedInstructions {
 	instructions: TransactionInstruction[]
-	signers: IWalletSigner[]
+	signers: SolanaSigner[]
 }
 
 export async function sendTransactionWithRetry(
 	connection: Connection,
-	wallet: IWalletSigner,
+	wallet: SolanaSigner,
 	instructions: TransactionInstruction[],
-	signers: IWalletSigner[],
+	signers: SolanaSigner[],
 	commitment: Commitment,
 	logger?: DebugLogger,
 ): Promise<TransactionResult> {
@@ -56,7 +44,7 @@ export async function sendSignedTransaction(
 	{
 		signedTransaction,
 		connection,
-		timeout = DEFAULT_TIMEOUT,
+		timeout = 1000 * 60,
 	}: {
 		signedTransaction: Transaction
 		connection: Connection
@@ -150,21 +138,17 @@ async function simulateTransaction(
 	commitment: Commitment,
 	logger?: DebugLogger,
 ): Promise<RpcResponseAndContext<SimulatedTransactionResponse>> {
-	// @ts-ignore
-	transaction.recentBlockhash = await connection._recentBlockhash(
-		// @ts-ignore
-		connection._disableBlockhashCaching,
-	)
-
+	const anyConnection = connection as any
+	transaction.recentBlockhash = await anyConnection._recentBlockhash(anyConnection._disableBlockhashCaching)
 	const signData = transaction.serializeMessage()
-	// @ts-ignore
-	const wireTransaction = transaction._serialize(signData)
+
+	const anyTransaction = transaction as any
+	const wireTransaction = anyTransaction._serialize(signData)
 	const encodedTransaction = wireTransaction.toString("base64")
-	const config: any = { encoding: "base64", commitment }
+	const config = { encoding: "base64", commitment }
 	const args = [encodedTransaction, config]
 
-	// @ts-ignore
-	const res = await connection._rpcRequest("simulateTransaction", args, logger)
+	const res = await anyConnection._rpcRequest("simulateTransaction", args, logger)
 	if (res.error) {
 		throw new Error("failed to simulate transaction: " + res.error.message)
 	}
@@ -186,12 +170,9 @@ async function awaitTransactionSignatureConfirmation(
 		err: null,
 	}
 	let subId = 0
-	// eslint-disable-next-line no-async-promise-executor
 	status = await new Promise(async (resolve, reject) => {
 		setTimeout(() => {
-			if (done) {
-				return
-			}
+			if (done) return
 			done = true
 			logger?.log("Rejecting for timeout...")
 			reject({ timeout: true })
@@ -253,8 +234,8 @@ async function awaitTransactionSignatureConfirmation(
 		}
 	})
 
-	//@ts-ignore
-	if (connection._signatureSubscriptions[subId]) {
+	const anyConnection = connection as any
+	if (anyConnection._signatureSubscriptions[subId]) {
 		connection.removeSignatureListener(subId)
 	}
 	done = true

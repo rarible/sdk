@@ -1,6 +1,9 @@
 import { createRaribleSdk } from "../index"
 import { LogsLevel } from "../types"
 
+/**
+ * @group type/common
+ */
 describe("api keys", () => {
 	test("get item without API key should be succeed", async () => {
 		const sdk = createRaribleSdk(undefined, "dev-ethereum", {

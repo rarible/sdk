@@ -1,3 +1,4 @@
+import type { Blockchain } from "@rarible/api-client"
 import type { EVMSuiteSupportedBlockchain } from "../domain"
 import type { ERC1155Contract } from "./variants/erc1155"
 import type { ERC20Mintable } from "./variants/erc20-mintable"
@@ -15,4 +16,10 @@ export interface EVMContractsDictionary<T extends EVMSuiteSupportedBlockchain>
 	"eth": EVMNativeToken<T>
 	"erc721_1": ERC721Contract<T>,
 	"erc1155_1": ERC1155Contract<T>,
+}
+
+export type EVMContracts = Exclude<EVMKnownTestContract, "eth">
+export type EVMContractsByBlockchain = {
+	[Blockchain.ETHEREUM]: Record<EVMContracts, string>,
+	[Blockchain.POLYGON]: Record<EVMContracts, string>,
 }

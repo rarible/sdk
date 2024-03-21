@@ -220,7 +220,7 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 }
 
 function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
-	// @ts-ignore
+	// @ts-expect-error
 	return new MethodWithPrepare(
 		async (request: any) => {
 			const mintResponse = await mint(request)

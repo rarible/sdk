@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { useParams } from "react-router-dom"
 import { Box, Typography } from "@mui/material"
 import type { WalletType } from "@rarible/sdk-wallet"
@@ -9,7 +8,7 @@ import { RequestResult } from "../../components/common/request-result"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
+import { useSdkContext } from "../../components/connector/sdk"
 import { SellPrepareForm } from "./sell-prepare-form"
 import { SellForm } from "./sell-form"
 import { SellComment } from "./comments/sell-comment"
@@ -20,8 +19,8 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 
 export function SellPage() {
 	const params = useParams()
-	const connection = useContext(ConnectorContext)
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 
 	return (
 		<Page header="Sell Token">

@@ -3,9 +3,6 @@
   "version": "0.13.69-beta.1",
   "homepage": "",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
@@ -21,9 +18,9 @@
     "@magic-ext/flow": "~13.5.0",
     "@magic-ext/oidc": "~1.3.0",
     "@onflow/fcl": "~1.3.2",
-    "@rarible/api-client": "0.16.5-alpha.6",
+    "@rarible/api-client": "0.16.5-alpha.7",
     "@rarible/connector": "^0.13.69-beta.1",
-    "@rarible/types": "~0.9.21",
+    "@rarible/types": "~0.9.24",
     "magic-sdk": "~18.4.1"
   },
   "devDependencies": {
@@ -34,5 +31,8 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

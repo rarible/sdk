@@ -1,8 +1,7 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 
 
 export function getRpcUrl(blockchain: string) {

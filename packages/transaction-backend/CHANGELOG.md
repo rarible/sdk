@@ -25,6 +25,93 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+* web3 dependencies done right ([c68c9d5](https://github.com/rarible/sdk/commit/c68c9d53eb64e0bdb12eb07fccb54405b0a85947))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+
+### Features
+
+* **PLTF-215:** fixes transactions for backend service ([#594](https://github.com/rarible/sdk/issues/594)) ([8fe175a](https://github.com/rarible/sdk/commit/8fe175a85b6d4de16985653bc25a08b957758bae))
+
+
+
+
+
+## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
 ## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend

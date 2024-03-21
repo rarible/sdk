@@ -1,11 +1,9 @@
-import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { MintResponse, PrepareMintResponse } from "@rarible/sdk/build/types/nft/mint/prepare"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { FormCheckbox } from "../../components/common/form/form-checkbox"
 import { RequestResult } from "../../components/common/request-result"
 
@@ -17,18 +15,12 @@ interface IMintFormProps {
 }
 
 export function MintForm({ prepare, disabled, onComplete }: IMintFormProps) {
-	const connection = useContext(ConnectorContext)
 	const form = useForm()
-	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
-
+			<form onSubmit={form.handleSubmit(async (formData) => {
 				try {
 					onComplete(await prepare.submit({
 						uri: formData.metadataUri,

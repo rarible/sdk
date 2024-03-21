@@ -6,6 +6,9 @@ import { assetTypeToStruct } from "./asset-type-to-struct"
 const { provider, wallets } = createGanacheProvider()
 const { providers } = createTestProviders(provider, wallets[0])
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("assetTypeToStruct", ethereum => {
 
 	test("encodes ERC20", () => {

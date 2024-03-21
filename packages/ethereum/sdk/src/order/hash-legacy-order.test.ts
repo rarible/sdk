@@ -6,6 +6,9 @@ import { hashLegacyOrder } from "./hash-legacy-order"
 const { provider, wallets } = createGanacheProvider()
 const { providers } = createTestProviders(provider, wallets[0])
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("hashLegacyOrder", ethereum => {
 
 	test("simple order is hashed correctly", () => {
