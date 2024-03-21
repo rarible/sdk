@@ -27,6 +27,7 @@ export const NonEVMBlockchains = [
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.SOLANA,
+	Blockchain.ECLIPSE,
 	Blockchain.IMMUTABLEX,
 ] as const
 

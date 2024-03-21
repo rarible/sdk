@@ -104,6 +104,12 @@ export function createRaribleSdk(
 			blockchainConfig.solanaNetwork,
 			config?.blockchain?.SOLANA
 		),
+		createSolanaSdk(
+			filterWallet(wallet, WalletType.SOLANA),
+			apis,
+			blockchainConfig.solanaNetwork,
+			config?.blockchain?.SOLANA
+		),
 		createImmutablexSdk(
 			filterWallet(wallet, WalletType.IMMUTABLEX),
 			apis,

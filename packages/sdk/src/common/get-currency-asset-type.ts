@@ -86,7 +86,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
 			tokenId: tokenId ? toBigNumber(tokenId) : undefined,
 		}
 	}
-	if (blockchain === Blockchain.SOLANA) {
+	if (blockchain === Blockchain.SOLANA || blockchain === Blockchain.ECLIPSE) {
 		if (contract === ZERO_ADDRESS) {
 			return {
 				"@type": "SOLANA_SOL",
