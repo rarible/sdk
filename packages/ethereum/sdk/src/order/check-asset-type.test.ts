@@ -16,9 +16,12 @@ const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
 const from = toAddress(wallet.getAddressString())
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("check-asset-type test", ethereum => {
 	const env: EthereumNetwork = "dev-ethereum"
-	const e2eErc721ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+	const e2eErc721ContractAddress = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
 	const config = getEthereumConfig(env)
 
 	const getConfig = async () => config

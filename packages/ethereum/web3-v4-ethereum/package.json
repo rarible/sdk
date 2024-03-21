@@ -25,7 +25,6 @@
     "@rarible/ethereum-provider": "^0.13.69-beta.1",
     "@rarible/sdk-common": "^0.13.69-beta.1",
     "eth-rpc-errors": "^4.0.3",
-    "exponential-backoff": "^3.1.0",
     "web3": "^4.4.0"
   },
   "devDependencies": {

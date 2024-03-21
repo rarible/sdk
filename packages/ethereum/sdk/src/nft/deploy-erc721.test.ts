@@ -5,6 +5,9 @@ import { DEV_PK_1 } from "../common/test/test-credentials"
 import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { DeployErc721 } from "./deploy-erc721"
 
+/**
+ * @group provider/dev
+ */
 describe("deploy erc-721 token test", () => {
 	const { web3Ethereum: ethereum1 } = createE2eTestProvider(DEV_PK_1)
 

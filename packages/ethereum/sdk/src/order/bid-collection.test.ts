@@ -10,8 +10,8 @@ import { createErc721V3Collection } from "../common/mint"
 import type { ERC721RequestV3, MintOffChainResponse } from "../nft/mint"
 import { mint as mintTemplate } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
-import type { EthereumNetwork } from "../types"
-import { DEV_PK_1, DEV_PK_2 } from "../common/test/test-credentials"
+import { DEV_PK_1, DEV_PK_2, getTestContract } from "../common/test/test-credentials"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { sentTx } from "../common/test"
 import {
 	concatBuyerSellerProviders,
@@ -37,7 +37,7 @@ const pk2TestProviders = createTestProviders(pk2Provider.provider, pk2Provider.w
 const providers = concatBuyerSellerProviders(pk1TestProviders.providers, pk2TestProviders.providers)
 describe.each(providers)("bid", (ethereum1, ethereum2) => {
 
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
@@ -67,8 +67,8 @@ describe.each(providers)("bid", (ethereum1, ethereum2) => {
 	const send1 = getSendWithInjects()
 	const sign1 = signNft.bind(null, ethereum1, getConfig)
 	const mint1 = mintTemplate.bind(null, ethereum1, send1, sign1, getApis1)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
-	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
+	const erc20Contract = getTestContract(env, "erc20")
 
 	const it = awaitAll({
 		testErc721: deployTestErc721(pk1Provider.web3v4, "Test", "TST"),
@@ -147,7 +147,7 @@ describe.each(providers)("bid", (ethereum1, ethereum2) => {
 				assetClass: "COLLECTION",
 				contract: e2eErc721V3ContractAddress,
 			},
-			price: toBn("10000"),
+			price: toBn(MIN_PAYMENT_VALUE.toFixed()),
 			amount: 1,
 			payouts: [],
 			originFees: [],

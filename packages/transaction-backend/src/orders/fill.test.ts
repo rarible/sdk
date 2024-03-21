@@ -84,7 +84,7 @@ describe.skip("get buy transaction", () => {
 		}
 		await web3Buyer.eth.sendSignedTransaction(signedBuyerTx.rawTransaction)
 
-		await retry(5, 2000, async () => {
+		await retry(10, 3000, async () => {
 			await sdkItemOwner.apis.nftOwnership.getNftOwnershipById({
 				ownershipId: `${mintResult.itemId}:${buyerAddress}`,
 			})
@@ -161,4 +161,5 @@ describe.skip("get buy transaction", () => {
 		})
 
 	})
+
 })

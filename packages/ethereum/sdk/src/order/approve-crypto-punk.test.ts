@@ -9,6 +9,10 @@ const { addresses, provider, wallets } = createGanacheProvider()
 const { providers, web3v4 } = createTestProviders(provider, wallets[0])
 //@todo some tests don't work with ethers providers, need to fix
 const filteredProviders = excludeProviders(providers, ["EthersEthereum", "EthersWeb3ProviderEthereum"])
+
+/**
+ * @group provider/ganache
+ */
 describe.each(filteredProviders)("approve crypto punks", (ethereumSeller) => {
 	const [sellerAddress] = addresses
 

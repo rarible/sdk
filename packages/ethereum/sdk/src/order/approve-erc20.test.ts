@@ -12,6 +12,9 @@ const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 const { provider, addresses, wallets } = createGanacheProvider(pk)
 const { providers, web3v4 } = createTestProviders(provider, wallets[0])
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 	const [testAddress] = addresses
 

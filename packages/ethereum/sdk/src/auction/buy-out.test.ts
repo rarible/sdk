@@ -6,7 +6,6 @@ import { getEthereumConfig } from "../config"
 import { approve as approveTemplate } from "../order/approve"
 import { getApiConfig } from "../config/api-config"
 import { createEthereumApis } from "../common/apis"
-import type { EthereumNetwork } from "../types"
 import { getNetworkFromChainId } from "../common"
 import { sentTx } from "../common/test"
 import { createE2eTestProvider } from "../common/test/create-test-providers"
@@ -22,8 +21,8 @@ describe.skip("buy out auction", () => {
 	const sender1Address = walletSeller.getAddressString()
 	const sender2Address = walletBuyer.getAddressString()
 	const feeAddress = feeWallet.getAddressString()
-	const env: EthereumNetwork = "testnet"
-	const config = getEthereumConfig(env)
+  const env = "testnet" as const
+  const config = getEthereumConfig(env)
 	const getConfig = async () => config
 
 	const configuration = new Configuration(getApiConfig(env))

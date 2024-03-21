@@ -3,7 +3,9 @@
 def pipelineConfig = [
     "buildCommand": "yarn && yarn build-example",
     "buildResultDirPath": "packages/example/build",
-    "ghPagesDomain": "example.rarible.org"
+    "ghPagesDomain": "example.rarible.org",
+    "pkgRepoName": "npmjs-org",
+    "baseImageTag": "18-bullseye-slim"
 ]
 
 pipelineGHPages(pipelineConfig)

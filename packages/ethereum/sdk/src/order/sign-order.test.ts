@@ -8,6 +8,9 @@ import type { SimpleOrder } from "./types"
 const { provider, wallet } = createE2eTestProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
 const { providers } = createTestProviders(provider, wallet)
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("signOrder", (ethereum) => {
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config
@@ -45,7 +48,7 @@ describe.each(providers)("signOrder", (ethereum) => {
 			maker: toAddress(signer),
 		})
 		expect(signature).toEqual(
-			"0xf2f467bd5cd30de2cd6a2b83b8d3b8405a730a0453589ce252b2f25a38b19052236e0a18d0f44023617f4055822b5f4fbf54dd091e87cf71c4f8f9a133136cf51c"
+			"0xc959c911e719426947215dc612f937b79f2e9e3cec0d98237552a5a87c535493209a0a9c0dd3a9f1be39faa615076d4e47f388fa76bbb6c66b6e82d7c6669e251b"
 		)
 	})
 })

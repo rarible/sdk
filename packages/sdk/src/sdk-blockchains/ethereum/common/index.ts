@@ -7,7 +7,8 @@ import {
 	toContractAddress,
 	toItemId,
 	toOrderId,
-	toUnionAddress, toWord,
+	toUnionAddress,
+	toWord,
 } from "@rarible/types"
 import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type {
@@ -25,50 +26,66 @@ import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types/build/contract-address"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { AssetType as EthereumAssetType, Asset as EthereumAsset, Part } from "@rarible/ethereum-api-client"
-import type { EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Asset as EthereumAsset, AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
+import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
-import type { EthereumWallet } from "@rarible/sdk-wallet/build"
-import type { EVMBlockchain } from "@rarible/sdk-common/build"
-import { WalletIsUndefinedError, EVMBlockchains, isEVMBlockchain } from "@rarible/sdk-common/build"
-import { getBlockchainBySDKNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
-import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type { EVMBlockchain } from "@rarible/sdk-common"
+import { EVMBlockchains, isEVMBlockchain, WalletIsUndefinedError } from "@rarible/sdk-common/build"
+import {
+	getBlockchainBySDKNetwork,
+	getBlockchainFromChainId,
+	getNetworkFromChainId,
+} from "@rarible/protocol-ethereum-sdk/build/common"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { BlockchainIsh, SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type { EthOrderDataLegacy, EthRaribleV2OrderData } from "@rarible/api-client/build/models/OrderData"
 import type {
 	EthCryptoPunksAssetType,
-	EthErc1155AssetType, EthErc1155LazyAssetType,
+	EthErc1155AssetType,
+	EthErc1155LazyAssetType,
 	EthErc721AssetType,
 	EthErc721LazyAssetType,
 } from "@rarible/api-client/build/models/AssetType"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/src/order/types"
 import type {
 	OrderCryptoPunksData,
-	OrderDataLegacy, OrderLooksRareDataV1, OrderLooksRareDataV2,
+	OrderDataLegacy,
+	OrderLooksRareDataV1,
+	OrderLooksRareDataV2,
 	OrderOpenSeaV1DataV1,
 	OrderRaribleV2DataV1,
 	OrderRaribleV2DataV2,
 	OrderRaribleV2DataV3Buy,
-	OrderRaribleV2DataV3Sell, OrderSudoSwapAmmDataV1, OrderX2Y2Data } from "@rarible/ethereum-api-client/build/models/OrderData"
-import { OrderLooksRareDataV2QuoteType,
+	OrderRaribleV2DataV3Sell,
+	OrderSudoSwapAmmDataV1,
+	OrderX2Y2Data,
+} from "@rarible/ethereum-api-client/build/models/OrderData"
+import {
+	OrderLooksRareDataV2QuoteType,
 	OrderOpenSeaV1DataV1FeeMethod,
 	OrderOpenSeaV1DataV1HowToCall,
-	OrderOpenSeaV1DataV1SaleKind, OrderOpenSeaV1DataV1Side,
+	OrderOpenSeaV1DataV1SaleKind,
+	OrderOpenSeaV1DataV1Side,
 } from "@rarible/ethereum-api-client/build/models/OrderData"
 import { SeaportOrderType } from "@rarible/ethereum-api-client/build/models/SeaportOrderType"
 import { SeaportItemType } from "@rarible/ethereum-api-client/build/models/SeaportItemType"
 import { SudoSwapCurveType } from "@rarible/ethereum-api-client/build/models/SudoSwapCurveType"
 import { SudoSwapPoolType } from "@rarible/ethereum-api-client/build/models/SudoSwapPoolType"
-import { ETHER_IN_WEI } from "@rarible/protocol-ethereum-sdk/build/common"
+import { getPrice } from "@rarible/protocol-ethereum-sdk/build/common/get-price"
 import { convertDateToTimestamp } from "../../../common/get-expiration-date"
 import type { CurrencyType, RequestCurrencyAssetType } from "../../../common/domain"
-import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { FillRequest, PrepareFillRequest } from "../../../types/order/fill/domain"
+import { OriginFeeSupport, PayoutsSupport } from "../../../types/order/fill/domain"
 import type { OrderRequest, UnionPart } from "../../../types/order/common"
-export type CreateEthereumCollectionResponse = { tx: EthereumTransaction, address: Address }
+
+export type CreateEthereumCollectionResponse = {
+	tx: EthereumTransaction
+	address: Address
+}
+
 export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 	switch (currency["@type"]) {
 		case "ERC20":
@@ -85,12 +102,15 @@ export function getEthTakeAssetType(currency: RequestCurrencyAssetType) {
 	}
 }
 
-export function convertToEthereumAsset(asset: Asset): EthereumAsset {
+export async function convertToEthereumAsset(ethereum: Ethereum, asset: Asset): Promise<EthereumAsset> {
+	const assetType = convertToEthereumAssetType(asset.type)
+	let value = toBn(asset.value)
+	if (asset.type["@type"] === "ERC20" || asset.type["@type"] === "ETH") {
+		value = await getPrice(ethereum, assetType, value)
+	}
 	return {
-		assetType: convertToEthereumAssetType(asset.type),
-		value: asset.type["@type"] === "ETH" || asset.type["@type"] === "ERC20"
-			? toBn(asset.value).multipliedBy(ETHER_IN_WEI).toString()
-			: asset.value,
+		assetType,
+		value: toBigNumber(value.toString()),
 	}
 }
 
@@ -346,13 +366,13 @@ export function getEthOrderType(data: OrderData): SimpleOrder["type"] {
 	}
 }
 
-export function getEthOrder(order: Order): SimpleOrder {
+export async function getEthOrder(ethereum: Ethereum, order: Order): Promise<SimpleOrder> {
 	return {
 		hash: toWord(convertOrderIdToEthereumHash(order.id)),
 		type: getEthOrderType(order.data),
 		maker: convertToEthereumAddress(order.maker),
-		make: convertToEthereumAsset(order.make),
-		take: convertToEthereumAsset(order.take),
+		make: await convertToEthereumAsset(ethereum, order.make),
+		take: await convertToEthereumAsset(ethereum, order.take),
 		taker: order.taker && convertToEthereumAddress(order.taker),
 		salt: toWord(order.salt),
 		start: order.startedAt && convertDateToTimestamp(new Date(order.startedAt)),
@@ -498,7 +518,10 @@ export function convertEthereumCollectionId(address: string, blockchain: EVMBloc
 	return toCollectionId(`${blockchain}:${address}`)
 }
 
-export function convertEthereumToUnionAddress(address: string, blockchain: EVMBlockchain): UnionAddress {
+export function convertEthereumToUnionAddress(
+	address: string,
+	blockchain: EVMBlockchain = Blockchain.ETHEREUM
+): UnionAddress {
 	return toUnionAddress(`${blockchain}:${address}`)
 }
 
@@ -562,7 +585,7 @@ export function getAssetTypeFromFillRequest(
 	return getAssetTypeFromItemId(itemId)
 }
 
-export function assertWallet(wallet: Maybe<EthereumWallet>) {
+export function assertWallet(wallet: Maybe<EthereumWallet>): EthereumWallet {
 	if (!wallet) throw new WalletIsUndefinedError()
 	return wallet
 }

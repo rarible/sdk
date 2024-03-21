@@ -18,6 +18,9 @@ const it = awaitAll({
 	testErc20: deployTestErc20(web3v4, "TST", "TST"),
 })
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("upsertOrder", (ethereum) => {
 	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)

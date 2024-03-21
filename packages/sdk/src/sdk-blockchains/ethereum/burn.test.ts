@@ -6,6 +6,8 @@ import { awaitItem } from "../../common/test/await-item"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createSdk } from "../../common/test/create-sdk"
 import { awaitDeletedItem } from "../../common/test/await-deleted-item"
+import { initProviders } from "./test/init-providers"
+import { EVMContractsTestSuite } from "./test/suite/contracts"
 import { initProvider } from "./test/init-providers"
 import { convertEthereumContractAddress } from "./common"
 import { DEV_PK_1 } from "./test/common"
@@ -14,15 +16,16 @@ describe("burn", () => {
 	const { ethereum, ethereumWallet } = initProvider(DEV_PK_1)
 	const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED })
 
-	const contractErc721 = toAddress("0x4Ab7B255Df8B212678582F7271BE99f3dECe1eAE")
-	const contractErc1155 = toAddress("0xFe3d1f0003B17eA0C8D29164F0511508f1425b3a")
-	const e2eErc721V3ContractAddress = toAddress("0x4Ab7B255Df8B212678582F7271BE99f3dECe1eAE")
-	const e2eErc1155V2ContractAddress = toAddress("0xFe3d1f0003B17eA0C8D29164F0511508f1425b3a")
+	const testSuite = new EVMContractsTestSuite(Blockchain.ETHEREUM, ethereum)
+	const contractErc721 = testSuite.getContract("erc721_1").contractAddress
+	const contractErc1155 = testSuite.getContract("erc1155_1").contractAddress
 
 	test("burn erc721", async () => {
 		const senderRaw = await ethereum.getFrom()
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
-		const collection = await sdk.apis.collection.getCollectionById({ collection: `ETHEREUM:${contractErc721}` })
+		const collection = await sdk.apis.collection.getCollectionById({
+			collection: contractErc721,
+		})
 		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -55,7 +58,7 @@ describe("burn", () => {
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: `ETHEREUM:${contractErc1155}`,
+			collection: contractErc1155,
 		})
 		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
@@ -90,7 +93,7 @@ describe("burn", () => {
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: convertEthereumContractAddress(e2eErc721V3ContractAddress, Blockchain.ETHEREUM),
+			collection: contractErc721,
 		})
 		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
@@ -122,7 +125,7 @@ describe("burn", () => {
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
+			collection: contractErc1155,
 		})
 		const mintAction = await sdk.nft.mint.prepare({ collection })
 		const mintResult  = await mintAction.submit({
@@ -156,7 +159,7 @@ describe("burn", () => {
 		const sender = toUnionAddress(`ETHEREUM:${senderRaw}`)
 
 		const collection = await sdk.apis.collection.getCollectionById({
-			collection: convertEthereumContractAddress(e2eErc1155V2ContractAddress, Blockchain.ETHEREUM),
+			collection: contractErc1155,
 		})
 		const mintResult = await sdk.nft.mint({
 			collection,

@@ -1,6 +1,5 @@
 import type { TypedDataSigner, Signer } from "@ethersproject/abstract-signer"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { SolanaWalletProvider } from "@rarible/solana-wallet"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
 import type { ImxWallet } from "@rarible/immutable-wallet"
@@ -9,23 +8,21 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { BlockchainWallet } from "./"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
 import { isBlockchainWallet } from "./"
 import { ImmutableXWallet } from "./"
 
-export type BlockchainProvider = Ethereum | SolanaWalletProvider | TezosProvider | Fcl
+export type BlockchainProvider = Ethereum | SolanaSigner | TezosProvider | Fcl
 type EtherSigner = TypedDataSigner & Signer
 export type EthereumProvider = Web3 | Web3v4 | EtherSigner | ImxWallet
 export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider
 
 export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet {
-	if (isBlockchainWallet(provider)) {
-		return provider
-	}
-
+	if (isBlockchainWallet(provider)) return provider
 	if (isEthereumProvider(provider)) return new EthereumWallet(provider)
-	if (isSolanaProvider(provider)) return new SolanaWallet(provider)
+	if (isSolanaSigner(provider)) return new SolanaWallet(provider)
 	if (isTezosProvider(provider)) return new TezosWallet(provider)
 	if (isFlowProvider(provider)) return new FlowWallet(provider)
 	if (isImxWallet(provider)) return new ImmutableXWallet(provider)
@@ -47,7 +44,7 @@ function isEthereumProvider(x: any): x is Ethereum {
 	return "personalSign" in x && "getFrom" in x && "getChainId" in x
 }
 
-function isSolanaProvider(x: any): x is SolanaWalletProvider {
+function isSolanaSigner(x: any): x is SolanaSigner {
 	return "signTransaction" in x && "signAllTransactions" in x && "publicKey" in x
 }
 

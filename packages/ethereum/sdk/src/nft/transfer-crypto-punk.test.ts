@@ -8,6 +8,9 @@ import { transferCryptoPunk } from "./transfer-crypto-punk"
 const {	addresses, provider, wallets } = createGanacheProvider()
 const { providers, web3v4 } = createTestProviders(provider, wallets[0])
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("transfer crypto punks", (ethereumSeller) => {
 	const [sellerAddress, receipentAddress] = addresses
 

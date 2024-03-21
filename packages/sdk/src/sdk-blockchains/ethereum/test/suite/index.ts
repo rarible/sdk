@@ -65,6 +65,7 @@ export class EVMTestSuite<T extends EVMSuiteSupportedBlockchain> extends SDKTest
     getNativeToken = () => {
     	switch (this.blockchain) {
     		case Blockchain.ETHEREUM: return this.contracts.getContract("eth")
+    		case Blockchain.POLYGON: return this.contracts.getContract("eth")
     		default: throw new Error("Unsupported EVM blockchain")
     	}
     }

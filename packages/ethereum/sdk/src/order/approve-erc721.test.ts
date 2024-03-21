@@ -8,6 +8,9 @@ import { approveErc721 as approveErc721Template } from "./approve-erc721"
 const { provider, addresses, wallets } = createGanacheProvider()
 const { providers, web3v4 } = createTestProviders(provider, wallets[0])
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("approveErc721", (ethereum) => {
 	const [from] = addresses
 	const send = getSendWithInjects()

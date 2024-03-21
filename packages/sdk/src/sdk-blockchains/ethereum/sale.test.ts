@@ -1,10 +1,8 @@
-import { getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toAddress, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
+import { toCollectionId, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
-import { sentTxConfirm } from "@rarible/protocol-ethereum-sdk/src/common/test"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
@@ -14,11 +12,18 @@ import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { createSdk } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
 import { createE2eTestProvider, initProviders } from "./test/init-providers"
-import { convertEthereumCollectionId, convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
+import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { EVMContractsTestSuite } from "./test/suite/contracts"
 
 describe("sale", () => {
-	const { web31, wallet1, wallet2, ethereumWallet1, ethereumWallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
+	const {
+		wallet1,
+		wallet2,
+		ethereumWallet1,
+		ethereumWallet2,
+		ethereum1,
+	} = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const sdk1 = createSdk(ethereumWallet1, "development")
 	const sdk2 = createSdk(ethereumWallet2, "development", {
 		logs: LogsLevel.DISABLED,
@@ -29,26 +34,25 @@ describe("sale", () => {
 		},
 	})
 
-	const erc721Address = toAddress("0x64F088254d7EDE5dd6208639aaBf3614C80D396d")
-	const erc20 = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
-	const erc20ContractAddress = convertEthereumContractAddress(erc20, Blockchain.ETHEREUM)
+	const testSuite = new EVMContractsTestSuite(
+		Blockchain.ETHEREUM,
+		ethereum1
+	)
+	const erc721Address = testSuite.getContract("erc721_1").contractAddress
 
-	const testErc20 = getTestErc20Contract(web31, erc20)
+	const erc20 = testSuite.getContract("erc20_mintable_1")
+	const erc20ContractAddress = erc20.contractAddress
 
 	beforeAll(async () => {
-		const wallet1Address = wallet1.getAddressString()
 		const wallet2Address = wallet2.getAddressString()
-		await sentTxConfirm(
-			testErc20.methods.mint(wallet2Address, "10000000000000000"),
-			{ from: wallet1Address, gas: "200000" }
-		)
+		await erc20.mintWei("10000000000000000", wallet2Address)
 	})
 
 	test("erc721 sell/buy using erc-20", async () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			collectionId: toCollectionId(erc721Address),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -100,7 +104,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			collectionId: toCollectionId(erc721Address),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -148,7 +152,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			collectionId: toCollectionId(erc721Address),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -195,7 +199,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			collectionId: toCollectionId(erc721Address),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -215,7 +219,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.0002",
+			price: "2",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -242,7 +246,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const action = await sdk1.nft.mint.prepare({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			collectionId: toCollectionId(erc721Address),
 		})
 		const result = await action.submit({
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
@@ -286,7 +290,7 @@ describe("sale", () => {
 		const wallet1Address = wallet1.getAddressString()
 
 		const result = await sdk1.nft.mint({
-			collectionId: convertEthereumCollectionId(erc721Address, Blockchain.ETHEREUM),
+			collectionId: toCollectionId(erc721Address),
 			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
 			creators: [{
 				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),

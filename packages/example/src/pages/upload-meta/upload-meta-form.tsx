@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { Box, Stack } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { toUnionAddress } from "@rarible/types"
@@ -7,20 +7,19 @@ import type { UploadMetaResponse } from "@rarible/sdk/build/sdk-blockchains/unio
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { FormFileInput } from "../../components/common/form/form-file-input"
+import { useSdkContext } from "../../components/connector/sdk"
 
 interface IUploadMEtaFormProps {
 	onComplete: (response: UploadMetaResponse) => void
 }
 
 export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const form = useForm()
-	const { handleSubmit } = form
 	const { result } = useRequestResult()
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = connection.sdk.wallet?.walletType
 	const [disabled, setDisabled] = useState(true)
 
 	useEffect(() => {
@@ -32,13 +31,8 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
-
+			<form onSubmit={form.handleSubmit(async (formData) => {
 				const { name, description, image, animationUrl, nftStorageApiKey, accountAddress } = formData
-				// try {
 				onComplete(await connection.sdk.nft.uploadMeta({
 					accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
 					nftStorageApiKey,
@@ -51,9 +45,6 @@ export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
 					},
 					royalty: "",
 				}))
-				// } catch (e) {
-				// 	setError(e)
-				// }
 			})}
 			>
 				<Stack spacing={2}>

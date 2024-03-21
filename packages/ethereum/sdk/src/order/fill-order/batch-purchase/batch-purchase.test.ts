@@ -15,6 +15,9 @@ import {
 	ordersToRequests,
 } from "./test/common/utils"
 
+/**
+ * @group provider/dev
+ */
 describe("Batch purchase", function () {
 	const { web3Ethereum: buyerEthereum } = createE2eTestProvider(DEV_PK_1)
 	const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_2)
@@ -27,19 +30,12 @@ describe("Batch purchase", function () {
 	const config = getEthereumConfig(env)
 	const send = getSimpleSendWithInjects()
 
-	beforeAll(async () => {
-		console.log({
-			buyerWallet: await buyerEthereum.getFrom(),
-			sellerWallet: await ethereum.getFrom(),
-		})
-	})
-
 	async function buyout(orders: SimpleOrder[], originFees: Part[] | undefined) {
 		const requests = ordersToRequests(orders, originFees)
 
 		const tx = await sdkBuyer.order.buyBatch(requests)
-		console.log(tx)
-		await tx.wait()
+		const result = await tx.wait()
+		expect(result).toBeTruthy()
 
 		await checkOwnerships(
 			sdkBuyer,
@@ -49,9 +45,10 @@ describe("Batch purchase", function () {
 	}
 
 	test("RaribleOrder few items sell", async () => {
+		const erc721Contract = getTestContract(env, "erc721V3")
 		const orders = await Promise.all([
-			makeRaribleV2Order(sdkSeller, env),
-			makeRaribleV2Order(sdkSeller, env),
+			makeRaribleV2Order(sdkSeller, erc721Contract),
+			makeRaribleV2Order(sdkSeller, erc721Contract),
 		])
 
 		await buyout(orders, [{
@@ -61,9 +58,10 @@ describe("Batch purchase", function () {
 	})
 
 	test.skip("Seaport few items sell", async () => {
+		const erc721Contract = getTestContract(env, "erc721V3")
 		const orders = await Promise.all([
-			makeSeaportOrder(sdkSeller, ethereum, env, send),
-			makeSeaportOrder(sdkSeller, ethereum, env, send),
+			makeSeaportOrder(sdkSeller, ethereum, erc721Contract, send),
+			makeSeaportOrder(sdkSeller, ethereum, erc721Contract, send),
 		])
 
 		await buyout(orders, [{
@@ -73,9 +71,10 @@ describe("Batch purchase", function () {
 	})
 
 	test.skip("looksrare few items sell", async () => {
+		const erc721Contract = getTestContract(env, "erc721V3")
 		const orders = [
-			await makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
-			await makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
+			await makeLooksrareOrder(sdkSeller, ethereum, erc721Contract, send, config),
+			await makeLooksrareOrder(sdkSeller, ethereum, erc721Contract, send, config),
 		]
 
 		await buyout(orders, [{
@@ -85,11 +84,12 @@ describe("Batch purchase", function () {
 	})
 
 	test.skip("Different orders types sell", async () => {
+		const erc721Contract = getTestContract(env, "erc721V3")
 		const orders = await Promise.all([
-			makeRaribleV2Order(sdkSeller, env),
-			makeSeaportOrder(sdkSeller, ethereum, env, send),
-			makeLooksrareOrder(sdkSeller, ethereum, env, send, config),
-			makeRaribleV2Order(sdkSeller, env),
+			makeRaribleV2Order(sdkSeller, erc721Contract),
+			makeSeaportOrder(sdkSeller, ethereum, erc721Contract, send),
+			makeLooksrareOrder(sdkSeller, ethereum, erc721Contract, send, config),
+			makeRaribleV2Order(sdkSeller, erc721Contract),
 		])
 
 		const requests = [
@@ -115,8 +115,8 @@ describe("Batch purchase", function () {
 		]
 
 		const tx = await sdkBuyer.order.buyBatch(requests)
-		console.log(tx)
-		await tx.wait()
+		const result = await tx.wait()
+		expect(result).toBeTruthy()
 
 		await checkOwnerships(
 			sdkBuyer,

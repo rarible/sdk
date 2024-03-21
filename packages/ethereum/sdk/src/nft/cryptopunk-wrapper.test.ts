@@ -11,6 +11,9 @@ import { getSendWithInjects } from "../common/send-transaction"
 import { sentTx } from "../common/test"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./cryptopunk-wrapper"
 
+/**
+ * @group chain/ganache
+ */
 describe.skip("wrap crypto punk", () => {
 	const { addresses, web3 } = createGanacheProvider()
 

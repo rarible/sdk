@@ -13,6 +13,9 @@ const { provider, addresses, wallets } = createGanacheProvider()
 const { providers, web3v4 } = createTestProviders(provider, wallets[0])
 
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	const [from] = addresses
 	const to = randomAddress()

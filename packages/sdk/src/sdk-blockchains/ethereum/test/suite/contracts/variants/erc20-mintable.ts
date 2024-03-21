@@ -2,6 +2,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import { createErc20Contract } from "@rarible/protocol-ethereum-sdk/build/order/contracts/erc20"
 import { toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
+import { deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import type { EVMSuiteProvider, EVMSuiteSupportedBlockchain } from "../../domain"
 import { ERC20 } from "./erc20"
 
@@ -24,5 +25,13 @@ export class ERC20Mintable<T extends EVMSuiteSupportedBlockchain> extends ERC20<
     	const valueWeiString = toBn(valueWei).toString()
     	const tx = await this.contract.functionCall("mint", from, valueWeiString).send()
     	return tx.wait()
+    }
+
+    static async deploy<T extends EVMSuiteSupportedBlockchain>(
+    	blockchain: T,
+    	provider: EVMSuiteProvider<T>,
+    ) {
+    	const contract = await deployTestErc20(provider.getWeb3Instance(), "TST", "TST")
+    	return new ERC20Mintable(blockchain, contract.options.address, provider)
     }
 }

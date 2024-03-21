@@ -19,8 +19,7 @@ export async function testSimpleContract(web3: any, ethereum: Ethereum) {
 	expect(valueCallInfo.contract.toLowerCase()).toEqual(deployed.options.address?.toLowerCase())
 }
 
-//@todo add web3 types after resolving problem with web3v1/web3v4 deps
-async function deployTestContract(web3: any) {
+export async function deployTestContract(web3: any) {
 	const c = new web3.eth.Contract(SIMPLE_TEST_ABI as any)
 	const [from] = await web3.eth.getAccounts()
 	const contract = await c

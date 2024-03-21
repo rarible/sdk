@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { Box, MenuItem, Stack, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import { Blockchain } from "@rarible/api-client"
@@ -10,13 +9,13 @@ import { Page } from "../../components/page"
 import { CommentedBlock } from "../../components/common/commented-block"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { FormSelect } from "../../components/common/form/form-select"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { RequestResult } from "../../components/common/request-result"
 import { InlineCode } from "../../components/common/inline-code"
 import { CopyToClipboard } from "../../components/common/copy-to-clipboard"
 import { TransactionInfo } from "../../components/common/transaction-info"
 import { UnsupportedBlockchainWarning } from "../../components/common/unsupported-blockchain-warning"
+import { useSdkContext } from "../../components/connector/sdk"
 import { CollectionResultComment } from "./comments/collection-result-comment"
 import { CollectionDeployComment } from "./comments/collection-deploy-comment"
 import { DeployForm } from "./deploy-form"
@@ -64,11 +63,10 @@ function validateConditions(blockchain: WalletType | undefined): boolean {
 }
 
 export function DeployPage() {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const form = useForm()
-	const { handleSubmit } = form
 	const { result, setComplete, setError } = useRequestResult()
-	const blockchain = connection.sdk?.wallet?.walletType
+	const blockchain = connection.sdk.wallet?.walletType
 
 	return (
 		<Page header="Deploy Collection">
@@ -81,15 +79,14 @@ export function DeployPage() {
 			}
 			<CommentedBlock sx={{ my: 2 }} comment={<CollectionDeployComment/>}>
 				<form
-					onSubmit={handleSubmit(async (formData) => {
-
+					onSubmit={form.handleSubmit(async (formData) => {
 						try {
 							if (formData["blockchain"] === Blockchain.ETHEREUM) {
 								formData.blockchain = (connection.state as any)?.connection.blockchain
 							}
 							console.log("connection", connection, getDeployRequest(formData))
 
-							setComplete(await connection.sdk?.nft.createCollection(getDeployRequest(formData)))
+							setComplete(await connection.sdk.nft.createCollection(getDeployRequest(formData)))
 						} catch (e) {
 							setError(e)
 						}

@@ -22,6 +22,9 @@ import { getEndDateAfterMonth } from "./test/utils"
 const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers, web3v4 } = createTestProviders(provider, wallet)
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("cancel order", (ethereum) => {
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)

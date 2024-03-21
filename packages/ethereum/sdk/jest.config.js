@@ -1,7 +1,7 @@
 const crypto = require("crypto")
 module.exports = {
 	roots: ["<rootDir>/src"],
-	setupFiles: ["<rootDir>/jest.setup.js"],
+	setupFiles: ["<rootDir>/jest.setup.js", "dotenv/config"],
 	bail: true,
 	transform: {
 		"^.+\\.ts?$": "ts-jest",
@@ -18,6 +18,7 @@ module.exports = {
 		"default",
 		["jest-junit", {
 			outputDirectory: "reports",
+			runner: "groups",
 		}],
 	],
 	globals: {
@@ -29,4 +30,5 @@ module.exports = {
 		},
 		...crypto,
 	},
+	runner: "groups",
 }

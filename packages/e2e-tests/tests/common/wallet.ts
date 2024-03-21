@@ -74,7 +74,7 @@ export function getSolanaWallet(walletNumber: number = 0): SolanaWallet {
 		testsConfig.variables.SOLANA_WALLET_1,
 		testsConfig.variables.SOLANA_WALLET_2,
 	]
-	return new SolanaWallet(SolanaKeypairWallet.createFrom(Uint8Array.from(wallets[walletNumber])))
+	return new SolanaWallet(SolanaKeypairWallet.fromKey(Uint8Array.from(wallets[walletNumber])))
 }
 
 export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<WalletAddress> {

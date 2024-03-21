@@ -1,6 +1,6 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { BigNumberValue } from "@rarible/utils"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { DebugLogger } from "../../logger/debug-logger"
 import { PreparedTransaction } from "../prepared-transaction"
 import { getAuctionHouseSellInstructions } from "./methods/sell"
@@ -10,7 +10,7 @@ import { getAuctionHouseCancelInstructions } from "./methods/cancel"
 
 export interface ISellRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	price: BigNumberValue
 	// tokens amount to sell
@@ -19,7 +19,7 @@ export interface ISellRequest {
 
 export interface IBuyRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	tokenAccount?: PublicKey
 	price: BigNumberValue
@@ -29,7 +29,7 @@ export interface IBuyRequest {
 
 export interface ICancelRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	price: BigNumberValue
 	tokensAmount: BigNumberValue
@@ -37,7 +37,7 @@ export interface ICancelRequest {
 
 export interface IExecuteSellRequest {
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	buyerWallet: PublicKey
 	sellerWallet: PublicKey
 	mint: PublicKey

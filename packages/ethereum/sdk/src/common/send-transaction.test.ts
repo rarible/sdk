@@ -10,6 +10,9 @@ import { getSendWithInjects } from "./send-transaction"
 import { DEV_PK_1 } from "./test/test-credentials"
 import { createE2eTestProvider } from "./test/create-test-providers"
 
+/**
+ * @group provider/dev
+ */
 describe("sendTransaction", () => {
 	const { wallet, web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 	const env: EthereumNetwork = "dev-ethereum"
