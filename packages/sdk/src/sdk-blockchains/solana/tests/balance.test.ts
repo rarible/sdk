@@ -63,7 +63,7 @@ describe.skip("Eclipse get balance", () => {
 		expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
 	})
 
-	test("get balance sWOL", async () => {
+	test("get balance wSOL", async () => {
 		const balance = await sdk.balances.getBalance(
 			toUnionAddress("SOLANA:EeLKq9SnMK6WNLdk8px7yT2JM5Gru8pgbAGghnBYArVt"),
 			toCurrencyId("ECLIPSE:So11111111111111111111111111111111111111112")
