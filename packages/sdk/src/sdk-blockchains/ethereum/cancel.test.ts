@@ -25,7 +25,7 @@ describe("cancel", () => {
 		const { itemId } = await suiteDev1.items.mintAndWait(erc721.collectionId)
 		const orderId = await suiteDev1.orders.sellWithPrepare({
 			itemId,
-			price: toBn(1),
+			price: toBn("2000000000000000000"),
 			currency: erc20Mintable.assetType,
 		})
 
@@ -39,7 +39,7 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev1.orders.sellWithPrepare({
 			itemId,
-			price: toBn(1),
+			price: toBn("2000000000000000000"),
 			currency: erc20Mintable.assetType,
 			quantity: 10,
 		})
@@ -54,7 +54,7 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev2.orders.bid({
 			itemId,
-			price: toBn(1),
+			price: toBn("2000000000000000000"),
 			currency: erc20Mintable.assetType,
 		})
 
@@ -68,7 +68,7 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev2.orders.bid({
 			itemId,
-			price: toBn(1),
+			price: toBn("2000000000000000000"),
 			quantity: 10,
 			currency: erc20Mintable.assetType,
 		})
@@ -82,7 +82,7 @@ describe("cancel", () => {
 
 		const orderId = await suiteDev2.orders.bidByCollection({
 			collectionId: erc721.collectionId,
-			price: toBn(1),
+			price: toBn("2000000000000000000"),
 			currency: erc20Mintable.assetType,
 		})
 
