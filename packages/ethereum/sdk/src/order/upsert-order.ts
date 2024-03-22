@@ -149,9 +149,8 @@ export class UpsertOrder {
 
 	async upsertRequest(checked: OrderForm): Promise<Order> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checked)
-		const config = await this.getConfig()
 		const apis = await this.getApis()
-		checkMinPaymentValue(checked, config)
+		checkMinPaymentValue(checked)
 		return apis.order.upsertOrder({
 			orderForm: {
 				...checked,
