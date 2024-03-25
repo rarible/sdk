@@ -41,7 +41,7 @@ Blockchain, TransactionResult
 			case "polygon":
 				return `https://polygonscan.com/tx/${this.hash()}`
 			case "testnet":
-				return `https://goerli.etherscan.io/tx/${this.hash()}`
+				return `https://sepolia.etherscan.io/tx/${this.hash()}`
 			case "mantle":
 				return `https://explorer.mantle.xyz/tx/${this.hash()}`
 			case "testnet-mantle":
