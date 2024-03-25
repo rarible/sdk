@@ -31,7 +31,7 @@ import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
 describe.skip("seaport", () => {
-	const goerli = getE2EConfigByNetwork("goerli")
+	const goerli = getE2EConfigByNetwork("sepolia")
 	const { provider: providerBuyer } = createE2eProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		goerli
