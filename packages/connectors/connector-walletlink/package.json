@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletlink",
-  "version": "0.13.68-fix.14",
+  "version": "0.13.68-fix.15",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -14,7 +14,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.14",
+    "@rarible/connector": "^0.13.68-fix.15",
     "walletlink": "^2.4.1"
   },
   "devDependencies": {
