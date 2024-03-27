@@ -166,6 +166,7 @@ export async function fulfillOrder(
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
+		disableCheckingBalances,
 	})
 	return getFulfillStandardOrderData({
 		order: sanitizedOrder,
@@ -248,6 +249,7 @@ export async function approveBeforeStandardFulfillOrder(
 		totalFilled,
 		offerCriteria,
 		considerationCriteria,
+		disableCheckingBalances,
 	}: {
 		ethereum: Ethereum,
 		send: SendFunction,
@@ -263,6 +265,7 @@ export async function approveBeforeStandardFulfillOrder(
 		totalSize: BigNumber;
 		offerCriteria: InputCriteria[];
 		considerationCriteria: InputCriteria[];
+		disableCheckingBalances?: boolean;
 	}) {
 	const orderWithAdjustedFills = unitsToFill
 		? mapOrderAmountsFromUnitsToFill(order, {
@@ -292,6 +295,7 @@ export async function approveBeforeStandardFulfillOrder(
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
+		disableCheckingBalances,
 	})
 
 	const approvalActions = await getApprovalActions(
