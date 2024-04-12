@@ -154,19 +154,16 @@ export function getInternalLoggerMiddleware(
 				: responsePromise)
 
 			returnedPromis.then(async (tx) => {
-
-				if (tx.transaction.constructor.name === "BlockchainEthereumTransaction") {
+				if (tx?.transaction?.constructor.name === "BlockchainEthereumTransaction") {
 					try {
 						await tx.transaction.wait()
-						// Throw error for testing
-						// throw new Error('HOHOHO')
 						await remoteLogger.raw(await dataContainer.getTraceData({ method: replaceMethodPart(callable.name, "wait") }))
 					} catch(err: any) {
 						wrappedError = wrapSpecialErrors(err)
 						await remoteLogger.raw(dataContainer.getErrorData(wrappedError || err, { method: replaceMethodPart(callable.name, "wait") }))
 					}
 				}
-			}).catch((e) => {})
+			}).catch((_) => {})
 
 			return returnedPromis
 

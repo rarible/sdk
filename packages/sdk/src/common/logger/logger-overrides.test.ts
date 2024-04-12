@@ -19,20 +19,17 @@ import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
+class BlockchainEthereumTransaction {
+	async wait(): Promise<any> { return Promise.reject("asd") }
+}
 
-/*
-jest.mock('@rarible/sdk-transaction', () => { // replace with actual path
+jest.mock("@rarible/sdk-transaction", () => { // replace with actual path
 	return {
 	  BlockchainEthereumTransaction: jest.fn().mockImplementation(() => {
-		return {
-		  // mock properties and methods here
-		  wait: jest.fn().mockImplementation(() => Promise.reject("MLOK error")),
-		  // add other properties and methods as needed
-		};
+			return new BlockchainEthereumTransaction()
 	  }),
-	};
-  });
- */
+	}
+})
 
 
 describe("logger overrides", () => {
@@ -184,6 +181,7 @@ describe("logger overrides", () => {
 			expect(logObject.status).toBe(404)
 			expect(logObject.code).toBe("NETWORK_ERR")
 		})
+
 		test("successful transaction wait", async () => {
 			const mockLogger = jest.fn()
 
@@ -238,6 +236,7 @@ describe("logger overrides", () => {
 			const trace = mockLogger.mock.calls[0][0][0].level
 			expect(trace).toBe("TRACE")
 		})
+
 		test("failed transaction wait", async () => {
 			const mockLogger = jest.fn()
 
@@ -279,12 +278,7 @@ describe("logger overrides", () => {
 				})
 
 				if (result.type === MintType.ON_CHAIN) {
-
-					const transaction = await result.transaction.wait()
-
-					// const transaction = await result.transaction.wait()
-					// expect(transaction.blockchain).toEqual("ETHEREUM")
-					// expect(transaction.hash).toBeTruthy()
+					await result.transaction.wait()
 				} else {
 					throw new Error("Must be on chain")
 				}
@@ -292,8 +286,9 @@ describe("logger overrides", () => {
 
 			await delay(1000)
 
-			const trace = mockLogger.mock.calls
-			// expect(trace).toBe("TRACE")
+			const trace = mockLogger.mock.calls[0][0]
+			const foundCall = trace.find((call: any) => call.method === "nft.mint.prepare.submit.wait")
+			expect(foundCall).toBeTruthy()
 		})
 	})
 })
