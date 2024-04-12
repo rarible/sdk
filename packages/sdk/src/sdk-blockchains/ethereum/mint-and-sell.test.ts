@@ -174,6 +174,50 @@ describe("mint and sell", () => {
 		})
 	})
 
+	test("should mint and create zero-price order with ERC1155 token with basic function", async () => {
+		const wallet = eth2
+		const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
+		const sdk = createSdk(wallet, "development")
+
+		const tokenId = await sdk.nft.generateTokenId({
+			collection: erc1155Address,
+			minter: sender,
+		})
+		const result = await sdk.nft.mintAndSell({
+			collectionId: toCollectionId(erc1155Address),
+			tokenId,
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: sender,
+				value: 10000,
+			}],
+			royalties: [],
+			lazyMint: false,
+			supply: 5,
+			price: "0",
+			currency: {
+				"@type": "ETH",
+			},
+			expirationDate: generateExpirationDate(),
+		})
+
+		const transaction = await result.transaction.wait()
+		expect(transaction.blockchain).toEqual("ETHEREUM")
+		expect(transaction.hash).toBeTruthy()
+
+		await retry(10, 2000, async () => {
+			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
+			expect(order.makeStock.toString()).toBe("1")
+			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
+			expect(item.supply.toString()).toEqual("1")
+			if (tokenId) {
+				expect(item.tokenId).toEqual(tokenId.tokenId)
+			} else {
+				throw new Error("Token id must be defined")
+			}
+		})
+	})
+
 	test("should lazy mint and put on sale ERC1155 token with basic function", async () => {
 		const wallet = eth2
 		const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)

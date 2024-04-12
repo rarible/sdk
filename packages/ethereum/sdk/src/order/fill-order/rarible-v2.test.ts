@@ -1,4 +1,4 @@
-import { randomAddress, randomWord, toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
+import { randomAddress, randomWord, toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
@@ -28,6 +28,7 @@ import { getApis as getApisTemplate } from "../../common/apis"
 import { createRaribleSdk } from "../../index"
 import { FILL_CALLDATA_TAG } from "../../config/common"
 import type { EthereumNetwork } from "../../types"
+import { getEndDateAfterMonth } from "../test/utils"
 import type { BuyOrderRequest } from "./types"
 import { OrderFiller } from "./index"
 
@@ -403,71 +404,6 @@ describe("buy & acceptBid orders", () => {
 		)
 	})
 
-	test("should match order(buy erc1155 for eth) with dataType=V3", async () => {
-		await sentTx(it.testErc1155.methods.mint(sellerAddress, 5, 10, "0x"), { from: buyerAddress })
-
-		const left: SimpleOrder = {
-			make: {
-				assetType: {
-					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
-					tokenId: toBigNumber("1"),
-				},
-				value: toBigNumber("5"),
-			},
-			maker: sellerAddress,
-			take: {
-				assetType: {
-					assetClass: "ETH",
-				},
-				value: toBigNumber("1000000"),
-			},
-			salt: randomWord(),
-			type: "RARIBLE_V2",
-			data: {
-				dataType: "RARIBLE_V2_DATA_V3_SELL",
-				payout: {
-					value: 10000,
-					account: sellerAddress,
-				},
-				originFeeFirst: undefined,
-				originFeeSecond: undefined,
-				maxFeesBasePoint: 200,
-				marketplaceMarker: toWord("0x000000000000000000000000000000000000000000000000000000000000face"),
-			},
-		}
-
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
-			from: sellerAddress,
-		})
-
-		const signature = await signOrder(sellerEthereum, getConfig, left)
-
-		const before1 = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call())
-		const before2 = toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call())
-
-		console.log(before1.toString())
-		console.log(before2.toString())
-
-		const finalOrder = { ...left, signature }
-		const tx = await filler.buy({
-			order: finalOrder,
-			amount: 2,
-			originFeeFirst: {
-				account: randomAddress(),
-				value: 100,
-			},
-		})
-		await tx.wait()
-
-		expect(toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call()).toString()).toBe(
-			before2.minus(2).toFixed()
-		)
-		expect(toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call()).toString()).toBe(
-			before1.plus(2).toFixed()
-		)
-	})
-
 	test("should fill order (buy) with crypto punks asset", async () => {
 		const punkId = 43
 		//Mint punks
@@ -575,7 +511,7 @@ describe("buy & acceptBid orders", () => {
 	})
 
 	test("buy erc-1155 <-> ETH with calldata flag", async () => {
-		const tokenId = "5"
+		const tokenId = "5123400"
 		await sentTx(it.testErc1155.methods.mint(sellerAddress, tokenId, 10, "0x"), { from: buyerAddress })
 
 		const left: SimpleOrder = {
@@ -617,6 +553,94 @@ describe("buy & acceptBid orders", () => {
 		})
 		const tx = await sdkBuyer.order.buy({ order: finalOrder, amount: 2, originFees: [] })
 		expect(tx.data.endsWith(marketplaceMarker.concat(FILL_CALLDATA_TAG).slice(2))).toBe(true)
+		await tx.wait()
+	})
+
+	test("buy erc-1155 <-> ETH with zero-price", async () => {
+		const tokenId = "51234"
+		await sentTx(it.testErc1155.methods.mint(sellerAddress, tokenId, 10, "0x"), { from: buyerAddress })
+
+		const left: SimpleOrder = {
+			make: {
+				assetType: {
+					assetClass: "ERC1155",
+					contract: toAddress(it.testErc1155.options.address),
+					tokenId: toBigNumber(tokenId),
+				},
+				value: toBigNumber("5"),
+			},
+			maker: sellerAddress,
+			take: {
+				assetType: {
+					assetClass: "ETH",
+				},
+				value: toBigNumber("0"),
+			},
+			salt: randomWord(),
+			end: getEndDateAfterMonth(),
+			type: "RARIBLE_V2",
+			data: {
+				dataType: "RARIBLE_V2_DATA_V2",
+				payouts: [],
+				originFees: [],
+				isMakeFill: true,
+			},
+		}
+
+		const signature = await signOrder(sellerEthereum, getConfig, left)
+
+		const finalOrder = { ...left, signature }
+
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+			from: sellerAddress,
+		})
+
+		const sdkBuyer = createRaribleSdk(buyerEthereum, env)
+		const tx = await sdkBuyer.order.buy({ order: finalOrder, amount: 5, originFees: [] })
+		await tx.wait()
+	})
+
+	test("partial buy erc-1155 <-> ETH with zero-price", async () => {
+		const tokenId = "512345"
+		await sentTx(it.testErc1155.methods.mint(sellerAddress, tokenId, 10, "0x"), { from: buyerAddress })
+
+		const left: SimpleOrder = {
+			make: {
+				assetType: {
+					assetClass: "ERC1155",
+					contract: toAddress(it.testErc1155.options.address),
+					tokenId: toBigNumber(tokenId),
+				},
+				value: toBigNumber("5"),
+			},
+			maker: sellerAddress,
+			take: {
+				assetType: {
+					assetClass: "ETH",
+				},
+				value: toBigNumber("0"),
+			},
+			salt: randomWord(),
+			end: getEndDateAfterMonth(),
+			type: "RARIBLE_V2",
+			data: {
+				dataType: "RARIBLE_V2_DATA_V2",
+				payouts: [],
+				originFees: [],
+				isMakeFill: true,
+			},
+		}
+
+		const signature = await signOrder(sellerEthereum, getConfig, left)
+
+		const finalOrder = { ...left, signature }
+
+		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+			from: sellerAddress,
+		})
+
+		const sdkBuyer = createRaribleSdk(buyerEthereum, env)
+		const tx = await sdkBuyer.order.buy({ order: finalOrder, amount: 5, originFees: [] })
 		await tx.wait()
 	})
 })

@@ -103,4 +103,17 @@ describe("check min payment value fn", function () {
 		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 
 	})
+
+	test("checkMinPaymentValue should pass zero-price orders", async () => {
+		checkMinPaymentValue({
+			make: {
+				assetType: {
+					assetClass: "ETH",
+				},
+				value: toBigNumber("0"),
+			},
+			take: erc721Asset,
+		} as any)
+
+	})
 })

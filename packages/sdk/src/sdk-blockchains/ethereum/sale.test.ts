@@ -1,7 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toCollectionId, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
+import { toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
@@ -17,13 +17,16 @@ import { initProviders } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
+import { awaitErc1155Balance } from "./test/await-erc-1155-balance"
 
 describe("sale", () => {
 	const { web31, web32, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
 	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const ethereum2 = new Web3Ethereum({ web3: web32 })
-	const sdk1 = createSdk(new EthereumWallet(ethereum1), "development")
-	const sdk2 = createSdk(new EthereumWallet(ethereum2), "development", {
+	const ethWallet1 = new EthereumWallet(ethereum1)
+	const ethWallet2 = new EthereumWallet(ethereum2)
+	const sdk1 = createSdk(ethWallet1, "development")
+	const sdk2 = createSdk(ethWallet2, "development", {
 		logs: LogsLevel.DISABLED,
 		blockchain: {
 			[BlockchainGroup.ETHEREUM]: {
@@ -37,6 +40,7 @@ describe("sale", () => {
 		ethereum1
 	)
 	const erc721Address = testSuite.getContract("erc721_1").contractAddress
+	const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
 	const erc20 = testSuite.getContract("erc20_mintable_1")
 	const erc20ContractAddress = erc20.contractAddress
@@ -322,6 +326,48 @@ describe("sale", () => {
 		const nextStock2 = "0"
 		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
+	})
+
+	test("erc1155 sell/buy zero price order using erc-20 with CurrencyId with basic functions", async () => {
+		const wallet1Address = wallet1.getAddressString()
+
+		const result = await sdk1.nft.mint({
+			collectionId: toCollectionId(erc1155Address),
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			supply: 5,
+			royalties: [],
+		})
+		await result.transaction.wait()
+
+		await awaitItem(sdk1, result.itemId)
+
+		const orderId = await sdk1.order.sell({
+			itemId: result.itemId,
+			amount: 5,
+			price: "0",
+			currency: toCurrencyId(erc20ContractAddress),
+			expirationDate: generateExpirationDate(),
+		})
+
+		const nextStock = "5"
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const tx = await sdk2.order.buy({
+			order,
+			amount: 2,
+		})
+
+		await tx.wait()
+
+		const nextStock2 = "3"
+		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
+		console.log(order2)
+		await awaitErc1155Balance(ethWallet2, result.itemId, toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`), 2)
 	})
 
 	test("get future order fees", async () => {
