@@ -365,8 +365,7 @@ describe("sale", () => {
 		await tx.wait()
 
 		const nextStock2 = "3"
-		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
-		console.log(order2)
+		await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		await awaitErc1155Balance(ethWallet2, result.itemId, toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`), 2)
 	})
 

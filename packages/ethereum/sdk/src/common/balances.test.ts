@@ -109,7 +109,13 @@ describe("getBalance test", () => {
 
 const randomEvmAddress = toAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 
-describe.each(ethereumNetworks)("get balances each of environments", (env: EthereumNetwork) => {
+const nonWorkingNetworks = [
+	"testnet-rari",
+	"testnet-fief",
+]
+const filteredUnworkingNetworks = ethereumNetworks
+	.filter(network => !nonWorkingNetworks.includes(network))
+describe.each(filteredUnworkingNetworks)("get balances each of environments", (env: EthereumNetwork) => {
 	const sdk = createRaribleSdk(undefined, env, {
 		apiKey: getTestAPIKey(env),
 	})
