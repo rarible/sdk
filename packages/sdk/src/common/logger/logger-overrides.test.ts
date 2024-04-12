@@ -19,19 +19,6 @@ import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
-class BlockchainEthereumTransaction {
-	async wait(): Promise<any> { return Promise.reject("asd") }
-}
-
-jest.mock("@rarible/sdk-transaction", () => { // replace with actual path
-	return {
-	  BlockchainEthereumTransaction: jest.fn().mockImplementation(() => {
-			return new BlockchainEthereumTransaction()
-	  }),
-	}
-})
-
-
 describe("logger overrides", () => {
 	describe("isErrorWarning", () => {
 		test("EthereumProviderError (transaction underpriced)", async () => {
@@ -238,6 +225,17 @@ describe("logger overrides", () => {
 		})
 
 		test("failed transaction wait", async () => {
+			class BlockchainEthereumTransaction {
+				async wait(): Promise<any> { return Promise.reject("asd") }
+			}
+
+			jest.mock("@rarible/sdk-transaction", () => { // replace with actual path
+				return {
+				  BlockchainEthereumTransaction: jest.fn().mockImplementation(() => {
+						return new BlockchainEthereumTransaction()
+				  }),
+				}
+			})
 			const mockLogger = jest.fn()
 
 			const sdk = createRaribleSdk(ethereumWallet, "development", {
