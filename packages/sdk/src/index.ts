@@ -233,8 +233,10 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 			if (mintResponse.type === MintType.ON_CHAIN) {
 				await (mintResponse as OnChainMintResponse).transaction.wait()
 			}
+			const { supply, ...restRequest } = request
 			const orderId = await sell({
-				...request,
+				...restRequest,
+				amount: supply,
 				itemId: mintResponse.itemId,
 			})
 			return {
