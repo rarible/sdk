@@ -4,6 +4,7 @@ import { toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { TypedDataUtils } from "eth-sig-util"
+import { getStringifiedData } from "@rarible/sdk-common"
 import type { EthereumConfig } from "../config/type"
 import type { GetConfigByChainId } from "../config"
 import { hashLegacyOrder } from "./hash-legacy-order"
@@ -29,14 +30,16 @@ export async function signOrder(
 		case "RARIBLE_V2": {
 			const domain = createEIP712Domain(config.chainId, config.exchange.v2)
 			const structMessage = orderToStruct(ethereum, order)
+			console.log("domain", domain)
+			console.log("structMessage", JSON.stringify(structMessage, null, "  "))
 			const signature = await ethereum.signTypedData({
 				primaryType: EIP712_ORDER_TYPE,
 				domain,
 				types: EIP712_ORDER_TYPES,
 				message: structMessage,
 			})
-			if (!signature) {
-				throw new Error(`signOrder error: signature=${signature}, data=${JSON.stringify(structMessage)}`)
+			if (!signature || typeof signature !== "string") {
+				throw new Error(`signOrder error: signature=${getStringifiedData(signature)}, data=${JSON.stringify(structMessage)}`)
 			}
 			return toBinary(signature)
 		}
