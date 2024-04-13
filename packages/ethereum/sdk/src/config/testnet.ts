@@ -11,7 +11,7 @@ export const testnetEthereumConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x3e52D660b69d1bDacb6C513cE085D924F5Cb9c77"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0x7d47126a2600E22eab9eD6CF0e515678727779A6"),
+		wrapper: toAddress("0x1554aDA53194B961016931A2E86C80D09a816209"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: toAddress("0x34098cc15a8a48Da9d3f31CC0F63F01f9aa3D9F3"),
 		x2y2: ZERO_ADDRESS,

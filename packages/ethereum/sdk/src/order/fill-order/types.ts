@@ -125,7 +125,8 @@ export enum ExchangeWrapperOrderType {
 	AAM = 5,
 	SEAPORT_V14 = 6,
 	LOOKSRARE_V2_ORDERS = 7,
-	SEAPORT_V15 = 9
+	SEAPORT_V15 = 9,
+	SEAPORT_V16 = 10
 }
 
 export type PreparedOrderRequestDataForExchangeWrapper = {
