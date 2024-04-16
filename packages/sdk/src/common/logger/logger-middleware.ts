@@ -163,7 +163,7 @@ export function getInternalLoggerMiddleware(
 						await remoteLogger.raw(dataContainer.getErrorData(wrappedError || err, { method: replaceMethodPart(callable.name, "wait") }))
 					}
 				}
-			}).catch((_) => {})
+			}).catch(() => {})
 
 			return returnedPromis
 
