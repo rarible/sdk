@@ -30,6 +30,7 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
 			return Blockchain.ETHEREUM
 		case "dev-polygon":
 		case "mumbai":
+		case "amoy-polygon":
 		case "polygon":
 			return Blockchain.POLYGON
 		case "mantle":
