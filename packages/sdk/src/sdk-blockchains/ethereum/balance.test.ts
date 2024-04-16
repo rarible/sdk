@@ -136,7 +136,8 @@ describe("get balance", () => {
 	})
 })
 
-describe("get polygon balance", () => {
+//@todo update polygon testnet balances
+describe.skip("get polygon balance", () => {
 	const { web31, wallet1 } = initProviders({
 		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
 	}, POLYGON_TESTNET_SETTINGS)

@@ -282,6 +282,7 @@ describe("logger overrides", () => {
 				}
 			} catch (e) { }
 
+			await delay(2000)
 			const trace = mockLogger.mock.calls[0][0]
 			const foundCall = trace.find((call: any) => call.method === "nft.mint.prepare.submit.wait")
 			expect(foundCall).toBeTruthy()

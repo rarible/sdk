@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethers-ethereum",
-  "version": "0.13.68-fix.17",
+  "version": "0.13.68-fix.18",
   "description": "Ethereum interface with ethers.js",
   "keywords": [
     "ethereum",
@@ -22,13 +22,13 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.67",
-    "@rarible/sdk-common": "^0.13.68-fix.17",
+    "@rarible/ethereum-provider": "^0.13.68-fix.18",
+    "@rarible/sdk-common": "^0.13.68-fix.18",
     "ethereumjs-util": "^7.1.0",
     "ethers": "~5.4.4"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.17",
+    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.18",
     "@types/jest": "^27.0.2",
     "jest": "^27.3.1",
     "jest-junit": "^15.0.0",

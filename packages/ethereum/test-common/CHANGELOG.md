@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+
+### Features
+
+* **PLTF-399:** support seaport 1.6 ([#615](https://github.com/rarible/sdk/issues/615)) ([4da2128](https://github.com/rarible/sdk/commit/4da2128a77ce30d089676d28a339e3a5122710d9))
+
+
+
+
+
 ## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common

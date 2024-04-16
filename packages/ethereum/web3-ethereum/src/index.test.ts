@@ -16,7 +16,6 @@ describe("Web3Ethereum", () => {
 	const ganacheEthereum = new Web3Ethereum({ web3 })
 
 	test("signs typed data correctly", async () => {
-		console.log(await e2eEthereum.getFrom())
 		await common.testTypedSignature(e2eEthereum)
 	})
 

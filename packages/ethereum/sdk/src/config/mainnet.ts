@@ -11,7 +11,7 @@ export const mainnetConfig: EthereumConfig = {
 		v1: toAddress("0x09EaB21c40743B2364b94345419138eF80f39e30"),
 		v2: toAddress("0x9757F2d2b135150BBeb65308D4a91804107cd8D6"),
 		openseaV1: toAddress("0x7be8076f4ea4a4ad08075c2508e481d6c946d12b"),
-		wrapper: toAddress("0x0c17Fc3Ea97cDBFc9503333dAEEc3097EE076E23"),
+		wrapper: toAddress("0x9BDB46adb3972f9a5e2eadCcd009f0bf3e386845"),
 		looksrare: toAddress("0x59728544B08AB483533076417FbBB2fD0B17CE3a"),
 		looksrareV2: toAddress("0x0000000000E655fAe4d56241588680F86E3b2377"),
 		x2y2: toAddress("0x74312363e45dcaba76c59ec49a7aa8a65a67eed3"),

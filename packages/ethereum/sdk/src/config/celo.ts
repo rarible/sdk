@@ -11,7 +11,7 @@ export const celoConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
+		wrapper: toAddress("0xBFb17500344bA3475d46091F5c8f1e33B31ed909"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,
