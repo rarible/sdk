@@ -261,9 +261,9 @@ describe("mint and sell", () => {
 
 		await retry(10, 2000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
-			expect(order.makeStock.toString()).toBe(supply)
+			expect(order.makeStock.toString()).toBe(supply.toString())
 			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
-			expect(item.supply.toString()).toEqual(supply)
+			expect(item.supply.toString()).toEqual(supply.toString())
 			if (tokenId) {
 				expect(item.tokenId).toEqual(tokenId.tokenId)
 			} else {
