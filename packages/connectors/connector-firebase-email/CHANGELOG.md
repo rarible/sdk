@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+**Note:** Version bump only for package @rarible/connector-firebase-email
+
+
+
+
+
 ## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
 
 **Note:** Version bump only for package @rarible/connector-firebase-email

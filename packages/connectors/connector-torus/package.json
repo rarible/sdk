@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-torus",
-  "version": "0.13.68-fix.18",
+  "version": "0.13.68-fix.19",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -15,7 +15,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.18",
+    "@rarible/connector": "^0.13.68-fix.19",
     "@toruslabs/torus-embed": "^1.19.0"
   },
   "devDependencies": {

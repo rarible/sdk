@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+
+### Bug Fixes
+
+* add logs for transaction failing ([#614](https://github.com/rarible/sdk/issues/614)) ([a23b740](https://github.com/rarible/sdk/commit/a23b740bdf4a67b730faa1f85b9d7a7f1049f4f3))
+
+
+### Features
+
+* **PLTF-387:** support amoy polygon ([#616](https://github.com/rarible/sdk/issues/616)) ([ffe991b](https://github.com/rarible/sdk/commit/ffe991b6c87a5dc4937e6d4ee71bdbdc97608460))
+
+
+
+
+
 ## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
 
 
