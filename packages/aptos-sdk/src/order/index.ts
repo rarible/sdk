@@ -1,5 +1,4 @@
 import { AptosMethodClass } from "../common/method"
-import { TESTNET_NFT_MARKETPLACE } from "../config"
 import { isChangeBelongsToType } from "../common"
 
 export class AptosOrder extends AptosMethodClass {
@@ -9,12 +8,7 @@ export class AptosOrder extends AptosMethodClass {
   	startTime: number,
   	price: string
   ) => {
-  	const marketplaceAddress = TESTNET_NFT_MARKETPLACE
-  	// const nft_token = "0x2403e8b3fd91e6ebf95f1a3c2f98fc87261c35e0af66b0697b9506fac9a31a56"
-  	// const fee_schedule = process.env.FEE_SCHEDULER
-  	// const startTime = Math.floor(Date.now()/1000)
-  	// const price = "2000000"
-
+  	const marketplaceAddress = "0x"
   	// non-serialized arguments transaction
   	const pendingTransaction = await this.aptos.transaction.build.simple({
   		sender: this.account.accountAddress,
@@ -31,13 +25,17 @@ export class AptosOrder extends AptosMethodClass {
   	})
 
   	const tx = await this.sendAndWaitTx(pendingTransaction)
-  	// const mintChange = tx.changes.find(change =>
-  		// isChangeBelongsToType(change, "0x4::token::Token")
-  	// )
+  	const change = tx.changes.find(change =>
+  		isChangeBelongsToType(change, type => type.includes("token::Token"))
+  	)
+  	if (!change || !("address" in change)) {
+  		throw new Error("Address has not been found")
+  	}
+  	return change.address
   }
 
   cancel = async (listing: string) => {
-  	const marketplaceAddress = TESTNET_NFT_MARKETPLACE
+  	const marketplaceAddress = "0x"
   	const transaction = await this.aptos.transaction.build.simple({
   		sender: this.account.accountAddress,
   		data: {
@@ -59,12 +57,8 @@ export class AptosOrder extends AptosMethodClass {
   	endTime: number,
   	price: string
   ) => {
-  	const marketplaceAddress = TESTNET_NFT_MARKETPLACE
-  	// const item_price = "1500000"
-  	// const amount = 5
-  	// const expiration_time = Math.floor(Date.now()/1000) + 24 * 60 * 60 * 60
+  	const marketplaceAddress = "0x"
 
-  	// non-serialized arguments transaction
   	const transaction = await this.aptos.transaction.build.simple({
   		sender: this.account.accountAddress,
   		data: {

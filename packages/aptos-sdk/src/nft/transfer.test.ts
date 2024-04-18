@@ -2,11 +2,11 @@ import {
 	Account,
 } from "@aptos-labs/ts-sdk"
 import { createTestAptosState, mintTestToken } from "../common/test"
-import { AptosTransfer } from "./transfer"
+import { AptosNft } from "./nft"
 
 describe("transfer nft", () => {
 	const { aptos, account } = createTestAptosState()
-	const transferClass = new AptosTransfer(aptos, account)
+	const transferClass = new AptosNft(aptos, account)
 
 	test("transfer", async () => {
 		const recepientAccount = Account.generate()

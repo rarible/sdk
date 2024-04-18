@@ -5,7 +5,7 @@ import {
 	Network,
 	Ed25519PrivateKey,
 } from "@aptos-labs/ts-sdk"
-import { AptosMint } from "../../nft/mint"
+import { AptosNft } from "../../nft/nft"
 export function createTestAptosState(privateKey: string = DEFAULT_PK) {
 	const pk = new Ed25519PrivateKey(privateKey)
 	const account = Account.fromPrivateKey({ privateKey: pk })
@@ -27,14 +27,14 @@ export async function mintTestToken(
 	aptos: Aptos,
 	account: Account
 ) {
-	const mintClass = new AptosMint(aptos, account)
+	const mintClass = new AptosNft(aptos, account)
 	const randomId = Math.floor(Math.random() * 1000000)
 	const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"
-	const { tokenAddress } = await mintClass.mint(
-		"Test collection 1016",
-		`Mytoken #${randomId}`,
-		`Description of Mytoken #${randomId}`,
-		uri
-	)
+	const { tokenAddress } = await mintClass.mintWithCollectionName({
+		collectionName: "Test collection 1016",
+		name: `Mytoken #${randomId}`,
+		description: `Description of Mytoken #${randomId}`,
+		uri,
+	})
 	return tokenAddress
 }

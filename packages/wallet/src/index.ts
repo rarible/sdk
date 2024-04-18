@@ -3,6 +3,7 @@ import type { Fcl } from "@rarible/fcl-types"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { ImxWallet } from "@rarible/immutable-wallet"
+import type { AptosWallet as AptWallet } from "@rarible/aptos-wallet"
 import type { SolanaSigner } from "@rarible/solana-common"
 import type { AbstractWallet, UserSignature } from "./domain"
 import { WalletType } from "./domain"
@@ -147,6 +148,19 @@ export class ImmutableXWallet implements AbstractWallet {
 			publicKey: this.wallet.getConnectionData().address,
 		}
 	}
+}
+
+export class AptosWallet implements AbstractWallet {
+  readonly walletType = WalletType.APTOS
+
+  constructor(public wallet: AptWallet) {}
+
+  async signPersonalMessage(message: string): Promise<UserSignature> {
+  	return {
+  		signature: this.wallet.signMessage(message),
+  		publicKey: this.wallet.getPublicKey(),
+  	}
+  }
 }
 
 export type BlockchainWallet =

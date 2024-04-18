@@ -3,6 +3,7 @@ import type {
 	Aptos,
 } from "@aptos-labs/ts-sdk"
 import type { AnyRawTransaction } from "@aptos-labs/ts-sdk"
+import type { CommittedTransactionResponse } from "@aptos-labs/ts-sdk"
 
 export abstract class AptosMethodClass {
 	constructor(
@@ -11,7 +12,7 @@ export abstract class AptosMethodClass {
 	) {
 	}
 
-	async sendAndWaitTx(tx: AnyRawTransaction) {
+	async sendAndWaitTx(tx: AnyRawTransaction): Promise<CommittedTransactionResponse> {
 		const pendingMintTx = await this.aptos.signAndSubmitTransaction({
 			signer: this.account,
 			transaction: tx,

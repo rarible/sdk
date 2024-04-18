@@ -1,9 +1,9 @@
 import { createTestAptosState, mintTestToken } from "../common/test"
-import { AptosBurn } from "./burn"
+import { AptosNft } from "./nft"
 
 describe("burn nft", () => {
 	const { aptos, account } = createTestAptosState()
-	const burnClass = new AptosBurn(aptos, account)
+	const burnClass = new AptosNft(aptos, account)
 
 	test("burn", async () => {
 		const testTokenAddress = await mintTestToken(aptos, account)

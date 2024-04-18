@@ -4,6 +4,7 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
+import type { AptosSdkConfig } from "@rarible/aptos-sdk/src/domain"
 import type {
 	IConvert,
 	IDepositBiddingBalance,
@@ -75,6 +76,7 @@ export interface IRaribleSdkConfig {
 		[WalletType.SOLANA]?: ISolanaSdkConfig
 		[WalletType.ETHEREUM]?: IEthereumSdkConfig
 		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
+		[WalletType.APTOS]?: AptosSdkConfig
 	}
 	/**
 	 * Middlewares

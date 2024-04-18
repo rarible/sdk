@@ -116,6 +116,12 @@ export function createRaribleSdk(
 			blockchainConfig.immutablexNetwork,
 			config?.logs
 		),
+		createAptosSdk(
+			filterWallet(wallet, WalletType.APTOS),
+			apis,
+			blockchainConfig.aptosNetwork,
+			config?.blockchain?.APTOS
+		),
 	)
 
 	const sdkContext: ISdkContext = {
