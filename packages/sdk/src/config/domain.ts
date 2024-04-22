@@ -3,6 +3,7 @@ import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { SolanaCluster } from "@rarible/solana-sdk"
 import type { ImxEnv } from "@rarible/immutable-wallet"
 import type { FlowEnv } from "@rarible/flow-sdk"
+import type { AptosSdkEnv } from "@rarible/aptos-sdk/src/domain"
 
 export type RaribleSdkEnvironment = "development" | "testnet" | "prod"
 
@@ -16,6 +17,7 @@ export type RaribleSdkConfig = {
 	immutablexNetwork: ImxEnv
 	mantleNetwork: EthereumNetwork
 	arbitrumNetwork: EthereumNetwork
+	aptosNetwork: AptosSdkEnv
 	zksync: EthereumNetwork
 	chiliz: EthereumNetwork
 	lightlink: EthereumNetwork

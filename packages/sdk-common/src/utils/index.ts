@@ -119,5 +119,9 @@ export function isObjectLike(x: unknown): x is object {
 }
 
 export function hasName(x: unknown): x is Error {
-	return typeof x === "object" && x !== null && "name" in x
+	return isObjectLike(x) && "name" in x
+}
+
+export function hasCode(error: unknown): error is { code: number } {
+	return isObjectLike(error) && "code" in error
 }

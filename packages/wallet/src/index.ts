@@ -168,7 +168,8 @@ export type BlockchainWallet =
 	FlowWallet |
 	TezosWallet |
 	SolanaWallet |
-	ImmutableXWallet
+	ImmutableXWallet |
+	AptosWallet
 
 export function isBlockchainWallet(x: any): x is BlockchainWallet {
 	return x instanceof EthereumWallet ||
@@ -176,6 +177,7 @@ export function isBlockchainWallet(x: any): x is BlockchainWallet {
 		x instanceof FlowWallet ||
 		x instanceof SolanaWallet ||
 		x instanceof ImmutableXWallet ||
+		x instanceof AptosWallet ||
 		(
 			(
 				(x.walletType === WalletType.ETHEREUM && x.ethereum) ||
@@ -183,6 +185,7 @@ export function isBlockchainWallet(x: any): x is BlockchainWallet {
 				(x.walletType === WalletType.FLOW && x.fcl) ||
 				(x.walletType === WalletType.TEZOS && x.provider) ||
 				(x.walletType === WalletType.IMMUTABLEX && x.wallet)
+				(x.walletType === WalletType.APTOS && x.wallet)
 			) && (x.signPersonalMessage)
 		)
 }
@@ -193,6 +196,7 @@ export type WalletByBlockchain = {
 	"TEZOS": TezosWallet
 	"SOLANA": SolanaWallet
 	"IMMUTABLEX": ImmutableXWallet
+	"APTOS": AptosWallet
 }
 
 export { WalletType }

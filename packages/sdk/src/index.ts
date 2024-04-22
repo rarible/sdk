@@ -35,6 +35,7 @@ import { getSdkContext } from "./common/get-sdk-context"
 import { createFlowSdk } from "./sdk-blockchains/flow"
 import { checkRoyalties } from "./common/check-royalties"
 import { getCollectionFromItemId } from "./common/utils"
+import { createAptosSdk } from "./sdk-blockchains/aptos"
 
 /**
  * @module

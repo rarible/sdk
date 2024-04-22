@@ -1,6 +1,5 @@
 import type {
 	CommittedTransactionResponse,
-	Network,
 	AptosSettings,
 } from "@aptos-labs/ts-sdk"
 import type {
@@ -26,6 +25,6 @@ export interface AptosNftSdk {
 	burn(tokenAddress: string): Promise<CommittedTransactionResponse>
 }
 
-export type AptosSdkEnv = Network.TESTNET | Network.MAINNET
+export type AptosSdkEnv = "testnet" | "mainnet"
 
 export type AptosSdkConfig = Omit<AptosSettings, "network">

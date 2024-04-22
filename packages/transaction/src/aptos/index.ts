@@ -1,33 +1,35 @@
 import {
-	Network, TransactionResponseType,
+	Network,
+	TransactionResponseType,
 } from "@aptos-labs/ts-sdk"
 import type {
 	TransactionResponse,
-
-	Aptos } from "@aptos-labs/ts-sdk"
-import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+} from "@aptos-labs/ts-sdk"
 import { Blockchain } from "@rarible/api-client"
 import type { AptosSdkEnv } from "@rarible/aptos-sdk/build/domain"
+import type { AptosSdk } from "@rarible/aptos-sdk"
+import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainAptosTransaction implements IBlockchainTransaction {
   blockchain: Blockchain = Blockchain.APTOS
+
   constructor(
-  	readonly tx: TransactionResponse,
+  	readonly transaction: TransactionResponse,
   	readonly network: AptosSdkEnv,
-  	readonly sdk: Aptos,
+  	readonly sdk: AptosSdk,
   ) {
   }
 
-  hash = () => this.tx.hash
+  hash = () => this.transaction.hash
 
   wait = async () => {
-  	if (this.tx.type === TransactionResponseType.Pending) {
-  		await this.sdk.waitForTransaction({ transactionHash: this.tx.hash })
+  	if (this.transaction.type === TransactionResponseType.Pending) {
+  		await this.sdk.waitForTransaction(this.transaction.hash)
   	}
 
   	return {
   		blockchain: this.blockchain,
-  		hash: this.tx.hash,
+  		hash: this.transaction.hash,
   	}
   }
 
@@ -40,5 +42,9 @@ export class BlockchainAptosTransaction implements IBlockchainTransaction {
   		default:
   			throw new Error("Unsupported transaction network")
   	}
+  }
+
+  get isEmpty(): boolean {
+  	return false
   }
 }

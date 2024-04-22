@@ -2,11 +2,12 @@ import {
 	AccountAddress,
 } from "@aptos-labs/ts-sdk"
 import type {
-	Account,
 	Aptos,
 } from "@aptos-labs/ts-sdk"
+import type { Maybe } from "@rarible/types"
+import type { AptosWallet } from "@rarible/aptos-wallet"
 import { AptosMethodClass } from "../common/method"
-import { isChangeBelongsToType } from "../common"
+import { getRequiredWallet, isChangeBelongsToType } from "../common"
 import type { AptosNftSdk } from "../domain"
 
 export type CreateCollectionOptions = { name: string, description: string, uri: string }
@@ -25,8 +26,8 @@ export type MintByCollectionAddressOptions = {
 }
 
 export class AptosNft extends AptosMethodClass implements AptosNftSdk {
-	constructor(readonly aptos: Aptos, readonly account: Account) {
-		super(aptos, account)
+	constructor(readonly aptos: Aptos, readonly wallet: Maybe<AptosWallet>) {
+		super(aptos, wallet)
 	}
 
   createCollection = async (
@@ -36,7 +37,7 @@ export class AptosNft extends AptosMethodClass implements AptosNftSdk {
   		name: options.name,
   		description: options.description,
   		uri: options.uri,
-  		creator: this.account,
+  		creator: getRequiredWallet(this.wallet).account,
   	})
   	const tx = await this.sendAndWaitTx(createCollectionTransaction)
 
@@ -61,7 +62,7 @@ export class AptosNft extends AptosMethodClass implements AptosNftSdk {
   		description: options.description,
   		name: options.name,
   		uri: options.uri,
-  		creator: this.account,
+  		creator: getRequiredWallet(this.wallet).account,
   		collection: options.collectionName,
   	})
   	const tx = await this.sendAndWaitTx(mintTokenTransaction)
@@ -96,7 +97,7 @@ export class AptosNft extends AptosMethodClass implements AptosNftSdk {
   	to: string
   ) => {
   	const transferTransaction = await this.aptos.transferDigitalAssetTransaction({
-  		sender: this.account,
+  		sender: getRequiredWallet(this.wallet).account,
   		digitalAssetAddress: tokenAddress,
   		recipient: AccountAddress.from(to),
   	})
@@ -105,7 +106,7 @@ export class AptosNft extends AptosMethodClass implements AptosNftSdk {
 
   burn = async (tokenAddress: string) => {
   	const tx = await this.aptos.burnDigitalAssetTransaction({
-  		creator: this.account,
+  		creator: getRequiredWallet(this.wallet).account,
   		digitalAssetAddress: tokenAddress,
   	})
   	return this.sendAndWaitTx(tx)
