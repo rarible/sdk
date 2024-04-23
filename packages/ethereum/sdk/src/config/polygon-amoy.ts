@@ -39,6 +39,6 @@ export const polygonAmoyConfig: EthereumConfig = {
 		pairFactory: ZERO_ADDRESS,
 		pairRouter: ZERO_ADDRESS,
 	},
-	weth: toAddress("0x35da2a468dc7b2c20965235d4a60e2a2a9dace8f"),
+	weth: toAddress("0x0ae690aad8663aab12a671a6a0d74242332de85f"),
 	auction: ZERO_ADDRESS,
 }
