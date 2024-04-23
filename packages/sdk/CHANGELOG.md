@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+
+### Bug Fixes
+
+* amoy weth address ([#617](https://github.com/rarible/sdk/issues/617)) ([e9b38c5](https://github.com/rarible/sdk/commit/e9b38c5a0d56c2c74c92a3b19646fe5cf75ce96a))
+
+
+
+
+
 ## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
 
 
