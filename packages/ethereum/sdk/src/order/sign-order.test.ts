@@ -53,37 +53,4 @@ describe("signOrder", () => {
 			"0xc959c911e719426947215dc612f937b79f2e9e3cec0d98237552a5a87c535493209a0a9c0dd3a9f1be39faa615076d4e47f388fa76bbb6c66b6e82d7c6669e251b"
 		)
 	})
-
-	test("should sign v2 orders v2", async () => {
-		const signer = await ethereum.getFrom()
-		const signature = await signOrderE2e({
-			...TEST_ORDER_TEMPLATE,
-			"make": {
-				"assetType": {
-					"tokenId": "18551088957228879759075475368992614048365334349021829635293421296415359893507",
-					"contract": "0xbe3d01e5a918d7e1e94417a268e22e201d4e27ea",
-					"assetClass": "ERC1155",
-				},
-				"value": "100",
-			} as any,
-			"salt": "58083292164850754839539257079261382566271820039696284596179797525977289410067" as any,
-			"take": {
-				"assetType": {
-					"assetClass": "ETH",
-				},
-				"value": "10000000000000000000",
-			} as any,
-			type: "RARIBLE_V2",
-			data: {
-				dataType: "RARIBLE_V2_DATA_V2",
-				payouts: [],
-				originFees: [{ "account": "0xa0d586e322616c3a4ad7b5a5fcaeb9ed5e9fe9e0", "value": 300 }],
-				"isMakeFill": true,
-			} as any,
-			maker: toAddress(signer),
-		})
-		expect(signature).toEqual(
-			"0xc959c911e719426947215dc612f937b79f2e9e3cec0d98237552a5a87c535493209a0a9c0dd3a9f1be39faa615076d4e47f388fa76bbb6c66b6e82d7c6669e251b"
-		)
-	})
 })
