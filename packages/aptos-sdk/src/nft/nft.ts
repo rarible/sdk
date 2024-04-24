@@ -25,7 +25,13 @@ export type MintByCollectionAddressOptions = {
 }
 
 export class AptosNft implements AptosNftSdk {
-	constructor(readonly aptos: Aptos, readonly wallet: Maybe<AptosWalletInterface>) {}
+	constructor(readonly aptos: Aptos, readonly wallet: Maybe<AptosWalletInterface>) {
+		this.createCollection = this.createCollection.bind(this)
+		this.mintWithCollectionName = this.mintWithCollectionName.bind(this)
+		this.mintWithCollectionAddress = this.mintWithCollectionAddress.bind(this)
+		this.transfer = this.transfer.bind(this)
+		this.burn = this.burn.bind(this)
+	}
 
   createCollection = async (
   	options: CreateCollectionOptions

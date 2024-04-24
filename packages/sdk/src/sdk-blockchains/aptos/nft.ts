@@ -24,6 +24,8 @@ import type { AptosCreateCollectionSimplified } from "../../types/nft/deploy/sim
 import type { BurnResponse, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
+import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../types/nft/mint/preprocess-meta"
+import type { AptosTokenMetadata } from "./domain"
 
 export class AptosNft {
 	constructor(
@@ -36,9 +38,25 @@ export class AptosNft {
 		this.burn = this.burn.bind(this)
 		this.burnBasic = this.burnBasic.bind(this)
 		this.transfer = this.transfer.bind(this)
-		// this.preprocessMeta = this.preprocessMeta.bind(this)
+		this.preprocessMeta = this.preprocessMeta.bind(this)
 		this.mintBasic = this.mintBasic.bind(this)
 		this.transferBasic = this.transferBasic.bind(this)
+	}
+
+	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
+		// eslint-disable-next-line camelcase
+		const { name, description, image, animation_url, external_url, attributes } = meta as AptosTokenMetadata
+		return {
+			name: name || "",
+			description: description || "",
+			image: image,
+			animation_url: animation_url,
+			external_url: external_url,
+			attributes: attributes.map(attr => ({
+				key: attr.trait_type,
+				value: attr.value,
+			})),
+		}
 	}
 
 	async createCollectionBasic(request: CreateCollectionRequestSimplified): Promise<CreateCollectionResponse> {

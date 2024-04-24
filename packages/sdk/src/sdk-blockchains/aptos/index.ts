@@ -10,6 +10,7 @@ import { MethodWithPrepare } from "../../types/common"
 import type { IMint } from "../../types/nft/mint"
 import type { IRaribleInternalSdk } from "../../domain"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
+import { Middlewarer } from "../../common/middleware/middleware"
 import { AptosNft } from "./nft"
 import { AptosBalance } from "./balance"
 
@@ -22,6 +23,7 @@ export function createAptosSdk(
 	const sdk = new AptosSdk(wallet?.wallet, env, config)
 	const nftService = new AptosNft(sdk, env, apis)
 	const balanceService = new AptosBalance(sdk)
+	const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
 
 	return {
 		nft: {
@@ -30,7 +32,7 @@ export function createAptosSdk(
 			transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
 			generateTokenId: notImplemented,
 			createCollection: nftService.createCollectionBasic,
-			preprocessMeta: notImplemented,
+			preprocessMeta,
 			uploadMeta: notImplemented,
 		},
 		order: {

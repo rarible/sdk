@@ -53,10 +53,3 @@ export async function testTypedSignature(eth: Ethereum) {
 	})
 	expect(result).toEqual(toAddress(from))
 }
-
-export function recover(data: any, sig: any) {
-	return sigUtil.recoverTypedSignature_v4({
-		data,
-		sig,
-	})
-}

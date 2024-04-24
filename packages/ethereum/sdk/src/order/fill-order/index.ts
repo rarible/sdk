@@ -181,7 +181,7 @@ export class OrderFiller {
 			request,
 			inverted,
 			{
-				disableCheckingBalances: false,
+				disableCheckingBalances: true,
 			}
 		)
 		const callInfo = await functionCall.getCallInfo()
