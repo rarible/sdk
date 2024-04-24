@@ -51,6 +51,13 @@ function getDeployRequest(data: Record<string, any>) {
 				blockchain: data["blockchain"] as CreateCollectionBlockchains,
 				metadataURI: data["metadataURI"],
 			} as CreateCollectionRequestSimplified
+		case WalletType.APTOS:
+			return {
+				blockchain: data["blockchain"] as CreateCollectionBlockchains,
+				name: data["name"],
+				description: data["description"],
+				uri: data["uri"],
+			} as CreateCollectionRequestSimplified
 		default:
 			throw new Error("Unsupported blockchain")
 	}
@@ -59,7 +66,8 @@ function getDeployRequest(data: Record<string, any>) {
 function validateConditions(blockchain: WalletType | undefined): boolean {
 	return blockchain === WalletType.ETHEREUM ||
 		blockchain === WalletType.TEZOS ||
-		blockchain === WalletType.SOLANA
+		blockchain === WalletType.SOLANA ||
+		blockchain === WalletType.APTOS
 }
 
 export function DeployPage() {
@@ -106,6 +114,7 @@ export function DeployPage() {
 								</MenuItem>
 								<MenuItem value={WalletType.TEZOS}>{WalletType.TEZOS}</MenuItem>
 								<MenuItem value={Blockchain.SOLANA}>{Blockchain.SOLANA}</MenuItem>
+								<MenuItem value={Blockchain.APTOS}>{Blockchain.APTOS}</MenuItem>
 								{ /*<MenuItem value={Blockchain.FLOW}>{Blockchain.FLOW}</MenuItem>*/ }
 							</FormSelect>
 						}

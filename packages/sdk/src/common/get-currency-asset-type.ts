@@ -97,6 +97,18 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
 			itemId: toItemId("SOLANA:" + contract),
 		}
 	}
+	if (blockchain === Blockchain.APTOS) {
+		if (contract === ZERO_ADDRESS) {
+			return {
+				"@type": "CURRENCY_NATIVE",
+				blockchain: Blockchain.APTOS,
+			}
+		}
+		return {
+			"@type": "CURRENCY_TOKEN",
+			contract,
+		}
+	}
 	throw new Error(`Unsupported currency type: ${id}`)
 }
 

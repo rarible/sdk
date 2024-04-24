@@ -7,15 +7,18 @@ import type { ImxWallet } from "@rarible/immutable-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
+import { AptosSdkWallet, isExternalAccount } from "@rarible/aptos-wallet"
+import type { ExternalAccount } from "@rarible/aptos-wallet"
 import type { BlockchainWallet } from "./"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
+import { AptosWallet, EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
 import { isBlockchainWallet } from "./"
 import { ImmutableXWallet } from "./"
 
 export type BlockchainProvider = Ethereum | SolanaSigner | TezosProvider | Fcl
 type EtherSigner = TypedDataSigner & Signer
 export type EthereumProvider = Web3 | EtherSigner | ImxWallet
-export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider
+export type AptosProvider = ExternalAccount
+export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider | AptosProvider
 
 export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet {
 	if (isBlockchainWallet(provider)) return provider
@@ -26,6 +29,7 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
 	if (isImxWallet(provider)) return new ImmutableXWallet(provider)
 	if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
 	if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
+	if (isAptosWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
 
 	throw new Error("Unsupported provider")
 }
@@ -56,4 +60,8 @@ function isEthersSigner(x: any): x is EtherSigner {
 
 function isImxWallet(x: any): x is ImxWallet {
 	return "link" in x && "network" in x && "getConnectionData" in x
+}
+
+function isAptosWallet(x: any): x is AptosProvider {
+	return isExternalAccount(x)
 }

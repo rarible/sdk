@@ -383,6 +383,7 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			)
 		} catch (error) {
 			throw new EthereumProviderError({
+				...await getCommonErrorData(this.config),
 				...getProvidersData(this.config),
 				method: "Web3FunctionCall.send",
 				error,

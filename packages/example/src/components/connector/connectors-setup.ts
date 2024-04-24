@@ -18,7 +18,9 @@ import { mapEthereumWallet, mapFlowWallet, mapImmutableXWallet, mapSolanaWallet,
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
+import { AptosConnectionProvider } from "@rarible/connector-aptos"
 import type { ImxEnv } from "@rarible/immutable-wallet"
+import { mapAptosWallet } from "@rarible/connector-helper/build/aptos"
 
 export const ethereumRpcMap: Record<number, string> = {
 	1: "https://rarible.com/nodes/ethereum-node",
@@ -154,6 +156,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 				host: ethereumNetworkMap[ethChainId],
 			},
 		})
+	)
+
+	const aptos = mapAptosWallet(
+		new AptosConnectionProvider()
 	)
 
 	const firebase = mapEthereumWallet(
@@ -309,6 +315,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(magic)
 		.add(firebaseApple)
 		.add(torus)
+		.add(aptos)
 		.add(firebase)
 		.add(firebaseEmail)
 }

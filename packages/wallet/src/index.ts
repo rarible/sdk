@@ -4,6 +4,7 @@ import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { ImxWallet } from "@rarible/immutable-wallet"
 import type { SolanaSigner } from "@rarible/solana-common"
+import type { AptosWalletInterface } from "@rarible/aptos-wallet"
 import type { AbstractWallet, UserSignature } from "./domain"
 import { WalletType } from "./domain"
 
@@ -149,12 +150,27 @@ export class ImmutableXWallet implements AbstractWallet {
 	}
 }
 
+export class AptosWallet implements AbstractWallet {
+  readonly walletType = WalletType.APTOS
+
+  constructor(public wallet: AptosWalletInterface) {}
+
+  async signPersonalMessage(message: string): Promise<UserSignature> {
+  	const accountInfo = await this.wallet.getAccountInfo()
+  	return {
+  		signature: await this.wallet.signMessage(message),
+  		publicKey: accountInfo.publicKey,
+  	}
+  }
+}
+
 export type BlockchainWallet =
 	EthereumWallet |
 	FlowWallet |
 	TezosWallet |
 	SolanaWallet |
-	ImmutableXWallet
+	ImmutableXWallet |
+	AptosWallet
 
 export function isBlockchainWallet(x: any): x is BlockchainWallet {
 	return x instanceof EthereumWallet ||
@@ -162,13 +178,15 @@ export function isBlockchainWallet(x: any): x is BlockchainWallet {
 		x instanceof FlowWallet ||
 		x instanceof SolanaWallet ||
 		x instanceof ImmutableXWallet ||
+		x instanceof AptosWallet ||
 		(
 			(
 				(x.walletType === WalletType.ETHEREUM && x.ethereum) ||
 				(x.walletType === WalletType.SOLANA && x.provider) ||
 				(x.walletType === WalletType.FLOW && x.fcl) ||
 				(x.walletType === WalletType.TEZOS && x.provider) ||
-				(x.walletType === WalletType.IMMUTABLEX && x.wallet)
+				(x.walletType === WalletType.IMMUTABLEX && x.wallet) ||
+				(x.walletType === WalletType.APTOS && x.wallet)
 			) && (x.signPersonalMessage)
 		)
 }
@@ -179,6 +197,7 @@ export type WalletByBlockchain = {
 	"TEZOS": TezosWallet
 	"SOLANA": SolanaWallet
 	"IMMUTABLEX": ImmutableXWallet
+	"APTOS": AptosWallet
 }
 
 export { WalletType }

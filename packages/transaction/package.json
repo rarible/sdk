@@ -22,7 +22,8 @@
     "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.20",
     "@rarible/solana-sdk": "^0.13.68-fix.20",
     "@rarible/tezos-sdk": "0.1.46",
-    "@rarible/types": "~0.9.25"
+    "@rarible/aptos-sdk": "^0.13.68-fix.20",
+    "@rarible/types": "~0.9.26"
   },
   "devDependencies": {
     "@babel/cli": "^7.14.8",

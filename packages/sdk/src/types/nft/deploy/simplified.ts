@@ -5,6 +5,7 @@ import type { CreateCollectionBlockchains } from "./domain"
 import type { CreateCollectionResponse } from "./domain"
 import type { CreatePublicCollectionArguments } from "./domain"
 import type { TezosCreateCollectionTokenAsset } from "./domain"
+import type { AptosCreateCollectionTokenAsset } from "./domain"
 
 export type ICreateCollectionSimplified = (req: CreateCollectionRequestSimplified) => Promise<CreateCollectionResponse>
 
@@ -13,6 +14,7 @@ export type CreateCollectionRequestSimplified =
   | EthereumCreatePrivateCollectionSimplified
   | TezosCreatePublicCollectionSimplified
   | SolanaCreateCollectionSimplified
+  | AptosCreateCollectionSimplified
 
 
 export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBlockchains>
@@ -57,3 +59,9 @@ export type TezosCreatePublicCollectionSimplified =
 export interface SolanaCreateCollectionSimplified extends AbstractCreateCollectionSimplified<Blockchain.SOLANA> {
 	metadataURI: string
 }
+
+/**
+ * Aptos
+ */
+export type AptosCreateCollectionSimplified =
+  AbstractCreateCollectionSimplified<Blockchain.APTOS> & AptosCreateCollectionTokenAsset

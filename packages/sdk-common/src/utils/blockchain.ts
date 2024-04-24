@@ -29,6 +29,7 @@ export const NonEVMBlockchains = [
 	Blockchain.SOLANA,
 	Blockchain.ECLIPSE,
 	Blockchain.IMMUTABLEX,
+	Blockchain.APTOS,
 ] as const
 
 export const SupportedBlockchains = [
