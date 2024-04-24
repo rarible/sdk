@@ -16,7 +16,7 @@
   "dependencies": {
     "@rarible/api-client": "0.16.5-alpha.10",
     "@rarible/connector": "^0.13.68-fix.16",
-    "@rarible/types": "~0.9.25"
+    "@rarible/types": "~0.9.26"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

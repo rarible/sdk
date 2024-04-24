@@ -1,9 +1,11 @@
+import { AptosGenericSdkWallet } from "@rarible/aptos-wallet"
 import { createTestAptosState } from "../common/test"
 import { AptosNft } from "./nft"
 
 describe("create collection", () => {
 	const { aptos, account } = createTestAptosState()
-	const deploy = new AptosNft(aptos, account)
+	const wallet = new AptosGenericSdkWallet(aptos, account)
+	const deploy = new AptosNft(aptos, wallet)
 
 	test("create collection", async () => {
 		const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"

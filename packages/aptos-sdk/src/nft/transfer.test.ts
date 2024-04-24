@@ -1,12 +1,14 @@
 import {
 	Account,
 } from "@aptos-labs/ts-sdk"
+import { AptosGenericSdkWallet } from "@rarible/aptos-wallet"
 import { createTestAptosState, mintTestToken } from "../common/test"
 import { AptosNft } from "./nft"
 
 describe("transfer nft", () => {
 	const { aptos, account } = createTestAptosState()
-	const transferClass = new AptosNft(aptos, account)
+	const wallet = new AptosGenericSdkWallet(aptos, account)
+	const transferClass = new AptosNft(aptos, wallet)
 
 	test("transfer", async () => {
 		const recepientAccount = Account.generate()

@@ -1,13 +1,12 @@
 import {
-	AccountAddress,
+	isString,
 } from "@aptos-labs/ts-sdk"
 import type {
 	Aptos,
 } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
-import type { AptosWallet } from "@rarible/aptos-wallet"
-import { AptosMethodClass } from "../common/method"
-import { getRequiredWallet, isChangeBelongsToType } from "../common"
+import type { AptosWalletInterface } from "@rarible/aptos-wallet/src/domain"
+import { getRequiredWallet, isChangeBelongsToType, MAX_U64_INT } from "../common"
 import type { AptosNftSdk } from "../domain"
 
 export type CreateCollectionOptions = { name: string, description: string, uri: string }
@@ -25,27 +24,47 @@ export type MintByCollectionAddressOptions = {
 	uri: string
 }
 
-export class AptosNft extends AptosMethodClass implements AptosNftSdk {
-	constructor(readonly aptos: Aptos, readonly wallet: Maybe<AptosWallet>) {
-		super(aptos, wallet)
-	}
+export class AptosNft implements AptosNftSdk {
+	constructor(readonly aptos: Aptos, readonly wallet: Maybe<AptosWalletInterface>) {}
 
   createCollection = async (
   	options: CreateCollectionOptions
   ) => {
-  	const createCollectionTransaction = await this.aptos.createCollectionTransaction({
-  		name: options.name,
-  		description: options.description,
-  		uri: options.uri,
-  		creator: getRequiredWallet(this.wallet).account,
+
+  	const transaction = {
+  		arguments: [
+  			options.description,
+  			MAX_U64_INT,
+  			options.name,
+  			options.uri,
+  			true,
+  			true,
+  			true,
+  			true,
+  			true,
+  			true,
+  			true,
+  			true,
+  			true,
+  			"0",
+  			"1",
+  		],
+  		function: "0x4::aptos_token::create_collection",
+  		type: "entry_function_payload",
+  		typeArguments: [],
+  	}
+  	const pendingTx = await getRequiredWallet(this.wallet)
+  		.signAndSubmitTransaction(transaction)
+
+  	const tx = await this.aptos.waitForTransaction({
+  		transactionHash: pendingTx.hash,
   	})
-  	const tx = await this.sendAndWaitTx(createCollectionTransaction)
 
   	const collectionChange = tx.changes.find(state => {
   		return state.type === "write_resource" &&
         "data" in state && typeof state.data === "object" && state.data !== null &&
         "type" in state.data &&
-        typeof state.data.type === "string" && state.data.type.includes("collection::Collection")
+        isString(state.data.type) && state.data.type.includes("collection::Collection")
   	})
   	if (!(collectionChange && "address" in collectionChange)) {
   		throw new Error("Collection address has not been found")
@@ -58,14 +77,26 @@ export class AptosNft extends AptosMethodClass implements AptosNftSdk {
   }
 
   mintWithCollectionName = async (options: MintByCollectionNameOptions) => {
-  	const mintTokenTransaction = await this.aptos.mintDigitalAssetTransaction({
-  		description: options.description,
-  		name: options.name,
-  		uri: options.uri,
-  		creator: getRequiredWallet(this.wallet).account,
-  		collection: options.collectionName,
+  	const transaction = {
+  		function: "0x4::aptos_token::mint",
+  		typeArguments: [],
+  		arguments: [
+  			options.collectionName,
+  			options.description,
+  			options.name,
+  			options.uri,
+  			[],
+  			[],
+  			[],
+  		],
+  		type: "entry_function_payload",
+  	}
+  	const pendingTx = await getRequiredWallet(this.wallet)
+  		.signAndSubmitTransaction(transaction)
+
+  	const tx = await this.aptos.waitForTransaction({
+  		transactionHash: pendingTx.hash,
   	})
-  	const tx = await this.sendAndWaitTx(mintTokenTransaction)
 
   	const mintChange = tx.changes.find(changeItem =>
   		isChangeBelongsToType(changeItem, (type) => type.includes("token::Token"))
@@ -96,19 +127,33 @@ export class AptosNft extends AptosMethodClass implements AptosNftSdk {
   	tokenAddress: string,
   	to: string
   ) => {
-  	const transferTransaction = await this.aptos.transferDigitalAssetTransaction({
-  		sender: getRequiredWallet(this.wallet).account,
-  		digitalAssetAddress: tokenAddress,
-  		recipient: AccountAddress.from(to),
+  	const transaction = {
+  		function: "0x1::object::transfer",
+  		typeArguments: ["0x4::token::Token"],
+  		arguments: [tokenAddress, to],
+  		type: "entry_function_payload",
+  	}
+
+  	const pendingTx = await getRequiredWallet(this.wallet)
+  		.signAndSubmitTransaction(transaction)
+
+  	return this.aptos.waitForTransaction({
+  		transactionHash: pendingTx.hash,
   	})
-  	return this.sendAndWaitTx(transferTransaction)
   }
 
   burn = async (tokenAddress: string) => {
-  	const tx = await this.aptos.burnDigitalAssetTransaction({
-  		creator: getRequiredWallet(this.wallet).account,
-  		digitalAssetAddress: tokenAddress,
+  	const transaction = {
+  		function: "0x4::aptos_token::burn",
+  		typeArguments: ["0x4::token::Token"],
+  		arguments: [tokenAddress],
+  		type: "entry_function_payload",
+  	}
+  	const pendingTx = await getRequiredWallet(this.wallet)
+  		.signAndSubmitTransaction(transaction)
+
+  	return this.aptos.waitForTransaction({
+  		transactionHash: pendingTx.hash,
   	})
-  	return this.sendAndWaitTx(tx)
   }
 }

@@ -5,8 +5,9 @@ import {
 	Network,
 	Ed25519PrivateKey,
 } from "@aptos-labs/ts-sdk"
-import { AptosWallet } from "@rarible/aptos-wallet"
+import { AptosGenericSdkWallet } from "@rarible/aptos-wallet"
 import { AptosNft } from "../../nft/nft"
+
 export function createTestAptosState(privateKey: string = DEFAULT_PK) {
 	const pk = new Ed25519PrivateKey(privateKey)
 	const account = Account.fromPrivateKey({ privateKey: pk })
@@ -19,6 +20,7 @@ export function createTestAptosState(privateKey: string = DEFAULT_PK) {
 	// to support key rotation and differentiation between Legacy Ed25519 and Unified authentications
 	// Read more https://github.com/aptos-labs/aptos-ts-sdk/blob/main/src/api/account.ts#L364
 	const aptos = new Aptos(config)
+
 	return { aptos, account }
 }
 
@@ -28,7 +30,7 @@ export async function mintTestToken(
 	aptos: Aptos,
 	account: Account
 ) {
-	const mintClass = new AptosNft(aptos, new AptosWallet(account))
+	const mintClass = new AptosNft(aptos, new AptosGenericSdkWallet(aptos, account))
 	const randomId = Math.floor(Math.random() * 1000000)
 	const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"
 	const { tokenAddress } = await mintClass.mintWithCollectionName({

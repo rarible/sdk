@@ -315,9 +315,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(magic)
 		.add(firebaseApple)
 		.add(torus)
+		.add(aptos)
 		.add(firebase)
 		.add(firebaseEmail)
-		.add(aptos)
 }
 
 export type ConnectorInstance = ReturnType<typeof getConnector>

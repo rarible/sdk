@@ -1,12 +1,9 @@
 import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toAddress } from "@rarible/types"
 import { deployTestContract, SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/src/test-contract"
 import { DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
-import * as sigUtil from "eth-sig-util"
-import { EIP712_ORDER_NAME, EIP712_ORDER_VERSION } from "@rarible/protocol-ethereum-sdk/src/order/eip712"
-import { recover } from "@rarible/ethereum-sdk-test-common/build/test-typed-signature"
 import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3FunctionCall, Web3Transaction } from "./index"
 
@@ -17,157 +14,6 @@ describe("Web3Ethereum", () => {
 	const { provider: ganache } = common.createGanacheProvider()
 	const web3 = new Web3(ganache)
 	const ganacheEthereum = new Web3Ethereum({ web3 })
-
-	test("asd", async () => {
-		const __msg = {
-			"maker": "0x29038b549efbbb795a3dc83c5ef2a7d7682e6a55",
-			"type": "RARIBLE_V2",
-			"data": {
-				"dataType": "RARIBLE_V2_DATA_V2",
-				"payouts": [],
-				"originFees": [{ "account": "0xa0d586e322616c3a4ad7b5a5fcaeb9ed5e9fe9e0", "value": 300 }],
-				"isMakeFill": true,
-			},
-			"salt": "58083292164850754839539257079261382566271820039696284596179797525977289410067",
-			"signature": "0x2e648475565f77647d9c6f477be97251fc6e0945886a3d08412a1bed502530415c81ebae2130d848c7de355202eb24cfdda2292277f6df7f83c7a43e8e6e59481b",
-			"end": 1715269004,
-			"make": {
-				"assetType": {
-					"tokenId": "18551088957228879759075475368992614048365334349021829635293421296415359893507",
-					"contract": "0xbe3d01e5a918d7e1e94417a268e22e201d4e27ea",
-					"assetClass": "ERC1155",
-				},
-				"value": "100",
-			},
-			"take": { "assetType": { "assetClass": "ETH" }, "value": "10000000000000000000" },
-		}
-		const EIP712_ORDER_TYPES = {
-			EIP712Domain: [
-				{ type: "string", name: "name" },
-				{ type: "string", name: "version" },
-				{ type: "uint256", name: "chainId" },
-				{ type: "address", name: "verifyingContract" },
-			],
-			AssetType: [
-				{ name: "assetClass", type: "bytes4" },
-				{ name: "data", type: "bytes" },
-			],
-			Asset: [
-				{ name: "assetType", type: "AssetType" },
-				{ name: "value", type: "uint256" },
-			],
-			Order: [
-				{ name: "maker", type: "address" },
-				{ name: "makeAsset", type: "Asset" },
-				{ name: "taker", type: "address" },
-				{ name: "takeAsset", type: "Asset" },
-				{ name: "salt", type: "uint256" },
-				{ name: "start", type: "uint256" },
-				{ name: "end", type: "uint256" },
-				{ name: "dataType", type: "bytes4" },
-				{ name: "data", type: "bytes" },
-			],
-		}
-		const msg = {
-			maker: "0x29038b549efbbb795a3dc83c5ef2a7d7682e6a55",
-			// makeAsset: {
-			// 	"assetType": {
-			// 		"tokenId": "18551088957228879759075475368992614048365334349021829635293421296415359893507",
-			// 		"contract": "0xbe3d01e5a918d7e1e94417a268e22e201d4e27ea",
-			// 		"assetClass": "ERC1155",
-			// 	},
-			// 	"value": "100",
-			// },
-			// taker: ZERO_ADDRESS,
-			// takeAsset: {
-			// 	"assetType": {
-			// 		"assetClass": "ETH",
-			// 	},
-			// 	"value": "10000000000000000000",
-			// },
-			// salt: "58083292164850754839539257079261382566271820039696284596179797525977289410067",
-			// start: 0,
-			// end: 1715269004,
-			// dataType: "0x23d235ef",
-			// data: e2eEthereum.encodeParameter({
-			// 	components: [
-			// 		{
-			// 			components: [
-			// 				{
-			// 					name: "account",
-			// 					type: "address",
-			// 				},
-			// 				{
-			// 					name: "value",
-			// 					type: "uint96",
-			// 				},
-			// 			],
-			// 			name: "payouts",
-			// 			type: "tuple[]",
-			// 		},
-			// 		{
-			// 			components: [
-			// 				{
-			// 					name: "account",
-			// 					type: "address",
-			// 				},
-			// 				{
-			// 					name: "value",
-			// 					type: "uint96",
-			// 				},
-			// 			],
-			// 			name: "originFees",
-			// 			type: "tuple[]",
-			// 		},
-			// 		{
-			// 			name: "isMakeFill",
-			// 			type: "bool",
-			// 		},
-			// 	],
-			// 	name: "data",
-			// 	type: "tuple",
-			// }, {
-			// 	"payouts": [],
-			// 	"originFees": [{ "account": "0xa0d586e322616c3a4ad7b5a5fcaeb9ed5e9fe9e0", "value": 300 }],
-			// 	"isMakeFill": true,
-			// }),
-
-
-			"makeAsset": {
-				"assetType": {
-					"assetClass": "0x973bb640",
-					"data": "0x000000000000000000000000be3d01e5a918d7e1e94417a268e22e201d4e27ea29038b549efbbb795a3dc83c5ef2a7d7682e6a55000000000000000000000003",
-				},
-				"value": "100",
-			},
-			"taker": "0x0000000000000000000000000000000000000000",
-			"takeAsset": {
-				"assetType": {
-					"assetClass": "0xaaaebeba",
-					"data": "0x",
-				},
-				"value": "10000000000000000000",
-			},
-			"salt": "58083292164850754839539257079261382566271820039696284596179797525977289410067",
-			start: 0,
-			end: 1715269004,
-			"dataType": "0x23d235ef",
-			"data": "0x000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000600000000000000000000000000000000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000a0d586e322616c3a4ad7b5a5fcaeb9ed5e9fe9e0000000000000000000000000000000000000000000000000000000000000012c",
-		}
-		//@ts-ignore
-		const addr = await recover({
-			primaryType: "Order",
-			domain: {
-				name: "Exchange",
-				version: "2",
-				verifyingContract: "0x6C65a3C3AA67b126e43F86DA85775E0F5e9743F7",
-				chainId: 8453,
-			},
-			types: EIP712_ORDER_TYPES,
-			message: msg,
-		}, "0x2e648475565f77647d9c6f477be97251fc6e0945886a3d08412a1bed502530415c81ebae2130d848c7de355202eb24cfdda2292277f6df7f83c7a43e8e6e59481b")
-		console.log("result addr", addr)
-	})
 
 	test("signs typed data correctly", async () => {
 		console.log(await e2eEthereum.getFrom())
@@ -256,12 +102,8 @@ describe("Web3Ethereum", () => {
 		web3Contract.methods["value"] = () => {
 			return {
 				...web3Contract.methods["value"],
-				call: () => {
-					throw new Error(outOfGasMsg)
-				},
-				estimateGas: () => {
-					throw new Error(outOfGasMsg)
-				},
+				call: () => { throw new Error(outOfGasMsg) },
+				estimateGas: () => { throw new Error(outOfGasMsg) },
 			}
 		}
 
@@ -300,12 +142,8 @@ describe("Web3Ethereum", () => {
 		web3Contract.methods["value"] = () => {
 			return {
 				...web3Contract.methods["value"],
-				call: () => {
-					throw new Error(outOfGasMsg)
-				},
-				estimateGas: () => {
-					throw new Error(outOfGasMsg)
-				},
+				call: () => { throw new Error(outOfGasMsg) },
+				estimateGas: () => { throw new Error(outOfGasMsg) },
 			}
 		}
 

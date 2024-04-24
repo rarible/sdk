@@ -25,3 +25,5 @@ export type RequestCurrencyAssetType =
 	| ApiClient.SolanaNftAssetType
 	| ApiClient.SolanaFtAssetType
 	| ApiClient.SolanaSolAssetType
+	| ApiClient.NativeCurrencyAssetType
+	| ApiClient.TokenCurrencyAssetType

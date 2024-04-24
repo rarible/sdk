@@ -11,6 +11,7 @@ import type { IMint } from "../../types/nft/mint"
 import type { IRaribleInternalSdk } from "../../domain"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { AptosNft } from "./nft"
+import { AptosBalance } from "./balance"
 
 export function createAptosSdk(
 	wallet: Maybe<AptosWallet>,
@@ -20,6 +21,7 @@ export function createAptosSdk(
 ): IRaribleInternalSdk {
 	const sdk = new AptosSdk(wallet?.wallet, env, config)
 	const nftService = new AptosNft(sdk, env, apis)
+	const balanceService = new AptosBalance(sdk)
 
 	return {
 		nft: {
@@ -43,7 +45,7 @@ export function createAptosSdk(
 			cancel: notImplemented,
 		},
 		balances: {
-			getBalance: notImplemented,
+			getBalance: balanceService.getBalance,
 			convert: notImplemented,
 			transfer: notImplemented,
 			getBiddingBalance: notImplemented,

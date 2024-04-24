@@ -14,8 +14,5 @@ module.exports = function o(config) {
 		include: /node_modules/,
 		type: "javascript/auto"
 	})
-	const c = configFn(config)
-	console.log(JSON.stringify(c, null, "  "))
-
-	return c
+	return configFn(config)
 }

@@ -29,7 +29,7 @@
     "@rarible/solana-wallet": "^0.13.68-fix.16",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/aptos-wallet": "^0.13.68-fix.16",
-    "@rarible/types": "~0.9.25",
+    "@rarible/types": "~0.9.26",
     "@rarible/web3-ethereum": "^0.13.68-fix.16"
   },
   "devDependencies": {

@@ -11,9 +11,8 @@ import {
 	promiseToObservable,
 } from "@rarible/connector"
 import type { Maybe } from "@rarible/types"
-import { hasCode } from "@rarible/sdk-common"
 import type { AptosProviderConnectionResult } from "./domain"
-import { getAddress, getNetwork } from "./common"
+import { getAddress, getNetwork, setAccountActive } from "./common"
 
 const PROVIDER_ID = "aptos" as const
 
@@ -21,21 +20,16 @@ export enum AptosWalletType {
 	"Petra" = "Petra",
 }
 
-export type AptosConnectionConfig = {
-	// prefer?: AptosWalletType[]
-}
-
 export class AptosConnectionProvider extends
 	AbstractConnectionProvider<AptosWalletType, AptosProviderConnectionResult> {
   private readonly connection: Observable<ConnectionState<AptosProviderConnectionResult>>
 
-  constructor(
-  	private readonly config: AptosConnectionConfig = { prefer: [] },
-  ) {
+  constructor() {
   	super()
-  	this.connection = defer(() => connect(config)).pipe(
-  		mergeMap(() => promiseToObservable(getWalletAsync(config))),
+  	this.connection = defer(() => connect()).pipe(
+  		mergeMap(() => promiseToObservable(getWalletAsync())),
   		map((wallet) => {
+  			console.log("map after getWalletAsync", wallet)
   			if (wallet) {
   				const disconnect = () => {
   					if ("disconnect" in wallet.provider) {
@@ -62,7 +56,7 @@ export class AptosConnectionProvider extends
 
   getOption(): Promise<Maybe<AptosWalletType>> {
   	const provider = getInjectedProvider()
-  	return Promise.resolve(getDappType(provider))
+  	return Promise.resolve(provider?.type)
   }
 
   async isAutoConnected(): Promise<boolean> {
@@ -70,40 +64,37 @@ export class AptosConnectionProvider extends
   }
 
   async isConnected(): Promise<boolean> {
-  	const provider = getInjectedProvider()
-  	if (provider !== undefined) {
-  		return !!(await provider.account())
+  	const dapp = getInjectedProvider()
+  	if (dapp?.provider !== undefined) {
+  		try {
+  		  return !!(await dapp.provider.account())
+  		} catch (_) {}
+  		return false
   	} else {
   		return false
   	}
   }
 }
 
-async function connect(config: AptosConnectionConfig): Promise<void> {
-	const provider = getInjectedProvider()
-	if (!provider) {
+async function connect(): Promise<void> {
+	const dapp = getInjectedProvider()
+	if (!dapp) {
 		throw new Error("Injected provider not available")
 	}
-	try {
-	  await provider.account()
-	} catch (e) {
-		if (hasCode(e) && e.code === 4100) {
-			await provider.connect()
-		}
-	}
+	await setAccountActive(dapp.provider)
 }
 
-async function getWalletAsync(
-	config: AptosConnectionConfig
-): Promise<Observable<AptosProviderConnectionResult | undefined>> {
-	const provider = getInjectedProvider()
-	return combineLatest([getAddress(provider), getNetwork(provider)]).pipe(
+
+async function getWalletAsync(): Promise<Observable<AptosProviderConnectionResult | undefined>> {
+	const dapp = getInjectedProvider()
+	return combineLatest([getAddress(dapp?.provider), getNetwork(dapp?.provider)]).pipe(
 		map(([address, network]) => {
+			setAccountActive(dapp?.provider)
 			if (address) {
 				return {
 					network,
 					address,
-					provider,
+					provider: dapp?.provider,
 				}
 			} else {
 				return undefined
@@ -112,19 +103,23 @@ async function getWalletAsync(
 	)
 }
 
-function getInjectedProvider(): any | undefined {
+function getInjectedProvider(): AptosDapp | undefined {
 	const global: any = typeof window !== "undefined" ? window : undefined
 	if (global) {
-		return getDappType(global)
+		return getDapp(global)
 	}
 	return undefined
 }
 
-export function getDappType(global: any) {
+
+export function getDapp(global: any): AptosDapp | undefined {
 	if ("aptos" in global) {
-		return global.aptos
+		return { provider: global.aptos, type: AptosWalletType.Petra }
 	}
+
 	return undefined
 }
+
+export type AptosDapp = { provider: any, type: AptosWalletType }
 
 export * from "./domain"

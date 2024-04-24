@@ -12,7 +12,6 @@ import type { MintRequest } from "../../types/nft/mint/mint-request.type"
 import { MintType } from "../../types/nft/mint/prepare"
 import type { IApisSdk } from "../../domain"
 import { getCollectionId } from "../../common/get-collection-id"
-import type { CreateCollectionRequest, ICreateCollectionAction } from "../../types/nft/deploy/domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type {

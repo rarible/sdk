@@ -1,16 +1,17 @@
 import { Observable, from } from "rxjs"
+import { hasCode } from "@rarible/sdk-common"
 import type { Network } from "./domain"
 
 export function getObservable<Raw, T>(
 	provider: any,
 	getRaw: (provider: any) => Promise<Raw>,
-	mapRaw: (raw: Raw) => T,
+	mapRaw: (raw: Raw) => T | Promise<T>,
 	eventName: string
 ): Observable<T> {
 	if (eventName in provider) {
 		return new Observable<T>(subscriber => {
-			const handler = (raw: Raw) => {
-				subscriber.next(mapRaw(raw))
+			const handler = async (raw: Raw) => {
+				subscriber.next(await mapRaw(raw))
 			}
 			getRaw(provider)
 				.then(handler)
@@ -26,10 +27,17 @@ export function getObservable<Raw, T>(
 }
 
 export function getAddress(provider: any): Observable<string> {
-	return getObservable<string, string>(
+	return getObservable<{ address: string, publicKey: string}, string>(
 		provider,
-		(provider) => provider.account(),
-		(account) => account,
+		async (provider) => {
+			try {
+				return await provider.account()
+			} catch (e) {}
+			return ""
+		},
+		async (account) => {
+			return account.address
+		},
 		"onAccountChange"
 	)
 }
@@ -37,8 +45,21 @@ export function getAddress(provider: any): Observable<string> {
 export function getNetwork(provider: any): Observable<Network> {
 	return getObservable<Network, Network>(
 		provider,
-		(provider) => provider.network(),
+		async (provider) => {
+			return await provider.network()
+		},
 		(network) => network,
 		"onNetworkChange"
 	)
+}
+
+export async function setAccountActive(provider: any | undefined) {
+	if (!provider) return
+	try {
+		await provider.account()
+	} catch (e) {
+		if (hasCode(e) && e.code === 4100) {
+			await provider.connect()
+		}
+	}
 }

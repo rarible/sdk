@@ -1,9 +1,11 @@
+import { AptosGenericSdkWallet } from "@rarible/aptos-wallet"
 import { createTestAptosState } from "../common/test"
 import { AptosNft } from "./nft"
 
 describe("mint nft", () => {
 	const { aptos, account } = createTestAptosState()
-	const mintClass = new AptosNft(aptos, account)
+	const wallet = new AptosGenericSdkWallet(aptos, account)
+	const mintClass = new AptosNft(aptos, wallet)
 
 	test("mint by mintDigitalAssetTransaction function", async () => {
 		const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"

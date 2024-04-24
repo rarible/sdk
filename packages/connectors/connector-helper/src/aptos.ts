@@ -1,6 +1,6 @@
 import type { AbstractConnectionProvider, ConnectionProvider } from "@rarible/connector"
 import { AptosWallet } from "@rarible/sdk-wallet"
-import { AptosWallet as AptWallet } from "@rarible/aptos-wallet"
+import { AptosSdkWallet } from "@rarible/aptos-wallet"
 import type { AptosProviderConnectionResult } from "@rarible/connector-aptos/src/domain"
 import { Blockchain } from "@rarible/api-client"
 import type { IWalletAndAddress } from "./wallet-connection"
@@ -12,7 +12,7 @@ export function mapAptosWallet<O>(
 
 		return {
 			wallet: new AptosWallet(
-				new AptWallet(state.provider)
+				new AptosSdkWallet(state.provider)
 			),
 			address: state.address,
 			blockchain: Blockchain.APTOS,

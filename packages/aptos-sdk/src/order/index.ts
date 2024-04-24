@@ -9,9 +9,10 @@ export class AptosOrder extends AptosMethodClass {
   	price: string
   ) => {
   	const marketplaceAddress = "0x"
-  	// non-serialized arguments transaction
+  	const accountInfo = await getRequiredWallet(this.wallet)
+  		.getAccountInfo()
   	const pendingTransaction = await this.aptos.transaction.build.simple({
-  		sender: getRequiredWallet(this.wallet).account.accountAddress,
+  		sender: accountInfo.address,
   		data: {
   			function: `${marketplaceAddress}::coin_listing::init_fixed_price`,
   			typeArguments: ["0x1::aptos_coin::AptosCoin"],
@@ -36,8 +37,10 @@ export class AptosOrder extends AptosMethodClass {
 
   cancel = async (listing: string) => {
   	const marketplaceAddress = "0x"
+  	const accountInfo = await getRequiredWallet(this.wallet)
+  		.getAccountInfo()
   	const transaction = await this.aptos.transaction.build.simple({
-  		sender: getRequiredWallet(this.wallet).account.accountAddress,
+  		sender: accountInfo.address,
   		data: {
   			function: `${marketplaceAddress}::coin_listing::end_fixed_price`,
   			typeArguments: ["0x1::aptos_coin::AptosCoin"],
@@ -59,8 +62,10 @@ export class AptosOrder extends AptosMethodClass {
   ) => {
   	const marketplaceAddress = "0x"
 
+  	const accountInfo = await getRequiredWallet(this.wallet)
+  		.getAccountInfo()
   	const transaction = await this.aptos.transaction.build.simple({
-  		sender: getRequiredWallet(this.wallet).account.accountAddress,
+  		sender: accountInfo.address,
   		data: {
   			function: `${marketplaceAddress}::collection_offer::init_for_tokenv2_entry`,
   			typeArguments: ["0x1::aptos_coin::AptosCoin"],
