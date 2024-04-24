@@ -19,6 +19,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
+    "@rarible/sdk-common": "^0.13.68-fix.20",
     "@aptos-labs/ts-sdk": "^1.5.1",
     "@rarible/logger": "^0.9.12",
     "@rarible/types": "~0.9.26",
