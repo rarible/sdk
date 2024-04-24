@@ -14,8 +14,12 @@ import { compareCaseInsensitive } from "../../../common/compare-case-insensitive
 import { isETH } from "../../../nft/common"
 import type { InputCriteria } from "./types"
 import {
-	CROSS_CHAIN_SEAPORT_ADDRESS, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
-	getConduitByKey, NO_CONDUIT,
+	CROSS_CHAIN_SEAPORT_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_6_ADDRESS,
+	getConduitByKey,
+	NO_CONDUIT,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 import { getBalancesAndApprovals } from "./balance-and-approval-check"
@@ -153,6 +157,8 @@ export function getMarketIdByOpenseaContract(contract: Address) {
 		return ExchangeWrapperOrderType.SEAPORT_ADVANCED_ORDERS
 	} else if (compareCaseInsensitive(contract, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS)) {
 		return ExchangeWrapperOrderType.SEAPORT_V15
+	} else if (compareCaseInsensitive(contract, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS)) {
+		return ExchangeWrapperOrderType.SEAPORT_V16
 	}
 	throw new Error("Unrecognized opensea protocol contract")
 }

@@ -90,11 +90,11 @@ function getJSONFromMessage(message: unknown) {
 		return
 	}
 }
+export function isObject(x: unknown): x is Object {
+	return typeof x === "object" && x !== null
+}
 function hasCode(error: unknown): error is { code: number } {
 	return isObject(error) && "code" in error
-}
-function isObject(x: unknown): x is object {
-	return typeof x === "object" && x !== null
 }
 export function hasMessage(error: unknown): error is { message: string } {
 	return isObject(error) && "message" in error

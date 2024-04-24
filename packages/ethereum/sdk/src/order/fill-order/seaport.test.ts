@@ -76,6 +76,16 @@ describe.skip("seaport", () => {
 		"testnet"
 	)
 
+	test("get buy tx successfully", async () => {
+		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
+			hash: "0x6c9909349c21e1d9fa6f8209ac03b1689dbf55864d126723398e407529145aa4",
+		})
+		await sdkBuyer.order.getBuyTxData({
+			request: { order: order as any, amount: 1, originFees: [] },
+			from: toAddress(await buyerWeb3.getFrom()),
+		})
+	})
+
 	test("get signature", async () => {
 		try {
 			await seaportBuyerOrderHandler.getSignature({

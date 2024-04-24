@@ -29,11 +29,13 @@ import { kromaConfig } from "./kroma"
 import { astarZKEVMConfig } from "./astar-zkevm"
 import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
+import { polygonAmoyConfig } from "./polygon-amoy"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
 	mumbai: mumbaiConfig,
 	polygon: polygonConfig,
+	"amoy-polygon": polygonAmoyConfig,
 	"dev-ethereum": devEthereumConfig,
 	"dev-polygon": devPolygonConfig,
 	mantle: mantleConfig,

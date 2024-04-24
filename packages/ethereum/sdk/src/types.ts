@@ -11,6 +11,7 @@ export const ethereumNetworks = [
 	"polygon",
 	"dev-ethereum",
 	"dev-polygon",
+	"amoy-polygon",
 	"mantle",
 	"testnet-mantle",
 	"arbitrum",

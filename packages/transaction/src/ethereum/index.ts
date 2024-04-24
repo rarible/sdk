@@ -74,6 +74,8 @@ Blockchain, TransactionResult
 				return `http://ethereum-explorer.dev.rarible.int/transactions/${this.hash()}`
 			case "dev-polygon":
 				return `http://polygon-explorer.dev.rarible.int/transactions/${this.hash()}`
+			case "amoy-polygon":
+				return `https://amoy.polygonscan.com/tx/${this.hash()}`
 			case "zkatana":
 				return `https://zkatana.blockscout.com/tx/${this.hash()}`
 			case "astar-zkevm":
