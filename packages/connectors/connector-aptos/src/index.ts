@@ -29,7 +29,6 @@ export class AptosConnectionProvider extends
   	this.connection = defer(() => connect()).pipe(
   		mergeMap(() => promiseToObservable(getWalletAsync())),
   		map((wallet) => {
-  			console.log("map after getWalletAsync", wallet)
   			if (wallet) {
   				const disconnect = () => {
   					if ("disconnect" in wallet.provider) {
