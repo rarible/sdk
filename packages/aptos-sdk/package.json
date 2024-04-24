@@ -1,6 +1,6 @@
 {
   "name": "@rarible/aptos-sdk",
-  "version": "0.13.68-fix.20",
+  "version": "0.13.68-fix.21",
   "keywords": [
     "solana",
     "web3"
@@ -19,14 +19,14 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/logger": "^0.9.12",
-    "@rarible/utils": "~0.9.10",
-    "@rarible/types": "~0.9.26",
     "@aptos-labs/ts-sdk": "^1.5.1",
+    "@rarible/logger": "^0.9.12",
+    "@rarible/types": "~0.9.26",
+    "@rarible/utils": "~0.9.10",
     "node-fetch": "^2.6.7"
   },
   "devDependencies": {
-    "@rarible/aptos-wallet": "~0.13.68-fix.20",
+    "@rarible/aptos-wallet": "^0.13.68-fix.21",
     "@types/jest": "^27.4.0",
     "@types/node-fetch": "^2.6.1",
     "dotenv": "16.0.0",
