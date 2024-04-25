@@ -23,7 +23,7 @@
     "@rarible/immutable-wallet": "^0.13.69-beta.1"
   },
   "devDependencies": {
-    "@rarible/types": "~0.9.24",
+    "@rarible/types": "~0.9.25",
     "@rarible/utils": "~0.9.10",
     "@types/jest": "^27.0.2",
     "jest": "^27.2.0",

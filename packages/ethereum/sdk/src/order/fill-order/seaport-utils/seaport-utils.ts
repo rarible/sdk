@@ -31,7 +31,7 @@ import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
 	CROSS_CHAIN_SEAPORT_ADDRESS,
 	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
-	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
+	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS,
 	getConduitByKey, OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
@@ -40,6 +40,7 @@ export function getSeaportContract(ethereum: Ethereum, protocol: string): Ethere
 	if (
 		compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS)
 		|| compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS)
+		|| compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS)
 	) {
 	  return createSeaportV14Contract(ethereum, toAddress(protocol))
 	} else if (compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_ADDRESS)) {
@@ -166,6 +167,7 @@ export async function fulfillOrder(
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
+		disableCheckingBalances,
 	})
 	return getFulfillStandardOrderData({
 		order: sanitizedOrder,
@@ -248,6 +250,7 @@ export async function approveBeforeStandardFulfillOrder(
 		totalFilled,
 		offerCriteria,
 		considerationCriteria,
+		disableCheckingBalances,
 	}: {
 		ethereum: Ethereum,
 		send: SendFunction,
@@ -263,6 +266,7 @@ export async function approveBeforeStandardFulfillOrder(
 		totalSize: BigNumber;
 		offerCriteria: InputCriteria[];
 		considerationCriteria: InputCriteria[];
+		disableCheckingBalances?: boolean;
 	}) {
 	const orderWithAdjustedFills = unitsToFill
 		? mapOrderAmountsFromUnitsToFill(order, {
@@ -292,6 +296,7 @@ export async function approveBeforeStandardFulfillOrder(
 		timeBasedItemParams,
 		offererOperator,
 		fulfillerOperator,
+		disableCheckingBalances,
 	})
 
 	const approvalActions = await getApprovalActions(

@@ -22,18 +22,19 @@ import type { ImxEnv } from "@rarible/immutable-wallet"
 
 export const ethereumRpcMap: Record<number, string> = {
 	1: "https://rarible.com/nodes/ethereum-node",
-	5: "https://testnet.rarible.com/nodes/goerli-ethereum-node",
+	11155111: "https://testnet.rarible.com/nodes/sepolia-ethereum-node",
 }
 
 const ethereumNetworkMap: Record<number, string> = {
 	1: "mainnet",
 	5: "goerli",
+	11155111: "sepolia",
 }
 
 const environmentToEthereumChainId: Record<RaribleSdkEnvironment, number> = {
 	prod: 1,
-	testnet: 5,
-	development: 5,
+	testnet: 11155111,
+	development: 300500,
 }
 
 function environmentToFlowNetwork(environment: RaribleSdkEnvironment) {

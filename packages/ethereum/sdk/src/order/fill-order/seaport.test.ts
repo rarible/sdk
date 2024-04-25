@@ -30,7 +30,7 @@ import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
 describe.skip("seaport", () => {
-	const goerli = getE2EConfigByNetwork("goerli")
+	const goerli = getE2EConfigByNetwork("sepolia")
 	const { provider: providerBuyer } = createE2eTestProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
 		goerli
@@ -74,6 +74,16 @@ describe.skip("seaport", () => {
 		async () => 0,
 		"testnet"
 	)
+
+	test("get buy tx successfully", async () => {
+		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
+			hash: "0x6c9909349c21e1d9fa6f8209ac03b1689dbf55864d126723398e407529145aa4",
+		})
+		await sdkBuyer.order.getBuyTxData({
+			request: { order: order as any, amount: 1, originFees: [] },
+			from: toAddress(await buyerWeb3.getFrom()),
+		})
+	})
 
 	test("get signature", async () => {
 		try {

@@ -25,6 +25,80 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+
+### Features
+
+* **PLTF-399:** support seaport 1.6 ([#615](https://github.com/rarible/sdk/issues/615)) ([4da2128](https://github.com/rarible/sdk/commit/4da2128a77ce30d089676d28a339e3a5122710d9))
+
+
+
+
+
+## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.16](https://github.com/rarible/sdk/compare/v0.13.68-fix.15...v0.13.68-fix.16) (2024-03-25)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.15](https://github.com/rarible/sdk/compare/v0.13.68-fix.14...v0.13.68-fix.15) (2024-03-25)
+
+
+### Features
+
+* sepolia fixes ([2a7a2a4](https://github.com/rarible/sdk/commit/2a7a2a49d2d31763d0a188fe60c56f56e046977c))
+
+
+
+
+
+## [0.13.68-fix.14](https://github.com/rarible/sdk/compare/v0.13.68-fix.13...v0.13.68-fix.14) (2024-03-22)
+
+**Note:** Version bump only for package example
+
+
+
+
+
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+
+### Features
+
+* **PLTF-341:** check init gamisodes collection ([#600](https://github.com/rarible/sdk/issues/600)) ([d5ad6ce](https://github.com/rarible/sdk/commit/d5ad6cef6ba053c43f46ee55e2d7c67c049bbe6f))
+* **PLTF-353:** get balances for eclipse ([#610](https://github.com/rarible/sdk/issues/610)) ([756ebf3](https://github.com/rarible/sdk/commit/756ebf3785488c9ccc55c0ed6b7fa56e05f014df))
+
+
+
+
+
 ## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
 
 **Note:** Version bump only for package example

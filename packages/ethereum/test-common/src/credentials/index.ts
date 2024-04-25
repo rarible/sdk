@@ -12,7 +12,7 @@ export const DEV_PK_3 = "064b2a70a2932eb5b45c760b210a2bee579d94031a8c40bff05cfd9
 export const DEV_PK_4 = "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9"
 
 
-export const e2eProviderSupportedNetworks = ["rarible-dev", "mumbai", "polygon", "goerli", "mainnet"] as const
+export const e2eProviderSupportedNetworks = ["rarible-dev", "mumbai", "polygon", "sepolia", "mainnet"] as const
 export type E2EProviderSupportedNetwork = typeof e2eProviderSupportedNetworks[number]
 
 const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProviderConfig>> = {
@@ -28,9 +28,9 @@ const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProvide
 		rpcUrl: "https://node-mainnet-polygon.rarible.com",
 		networkId: 137,
 	},
-	goerli: {
-		rpcUrl: "https://goerli-ethereum-node.rarible.com",
-		networkId: 5,
+	sepolia: {
+		rpcUrl: "https://testnet.rarible.com/nodes/sepolia-ethereum-node",
+		networkId: 11155111,
 	},
 	mainnet: {
 		rpcUrl: "https://node-mainnet.rarible.com",

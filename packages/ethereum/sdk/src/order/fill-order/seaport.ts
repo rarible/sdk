@@ -67,7 +67,7 @@ export class SeaportOrderHandler {
 					const orderData = {
 						listing: {
 							hash: hash,
-							chain: this.env === "testnet" ? "goerli" : "mumbai",
+							chain: this.env === "testnet" ? "sepolia" : "mumbai",
 							protocol_address: protocol,
 						},
 						fulfiller: {

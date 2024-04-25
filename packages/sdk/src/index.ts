@@ -104,6 +104,12 @@ export function createRaribleSdk(
 			blockchainConfig.solanaNetwork,
 			config?.blockchain?.SOLANA
 		),
+		createSolanaSdk(
+			filterWallet(wallet, WalletType.SOLANA),
+			apis,
+			blockchainConfig.solanaNetwork,
+			config?.blockchain?.SOLANA
+		),
 		createImmutablexSdk(
 			filterWallet(wallet, WalletType.IMMUTABLEX),
 			apis,
@@ -227,8 +233,10 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
 			if (mintResponse.type === MintType.ON_CHAIN) {
 				await (mintResponse as OnChainMintResponse).transaction.wait()
 			}
+			const { supply, ...restRequest } = request
 			const orderId = await sell({
-				...request,
+				...restRequest,
+				amount: supply,
 				itemId: mintResponse.itemId,
 			})
 			return {

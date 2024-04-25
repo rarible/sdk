@@ -7,7 +7,7 @@ import { DEV_PK_2, getE2EConfigByNetwork } from "../../common/test/test-credenti
 describe.skip("looksrare v2 fill tests", () => {
 	const { provider: providerBuyer } = createE2eTestProvider(
 		DEV_PK_2,
-		getE2EConfigByNetwork("goerli")
+		getE2EConfigByNetwork("sepolia")
 	)
 
 	const buyerWeb3 = new Web3Ethereum({

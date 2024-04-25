@@ -28,8 +28,8 @@ export const ETH_MAINNET_SETTINGS = {
 }
 
 export const POLYGON_TESTNET_SETTINGS = {
-	rpcUrl: "https://node-mumbai.rarible.com",
-	networkId: 80001,
+	rpcUrl: "https://testnet.rarible.com/nodes/amoy-polygon-node",
+	networkId: 80002,
 }
 
 export const POLYGON_DEV_SETTINGS = {

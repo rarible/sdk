@@ -15,6 +15,7 @@ import { createE2eTestProvider, initProviders } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
+import { awaitErc1155Balance } from "./test/await-erc-1155-balance"
 
 describe("sale", () => {
 	const {
@@ -39,6 +40,7 @@ describe("sale", () => {
 		ethereum1
 	)
 	const erc721Address = testSuite.getContract("erc721_1").contractAddress
+	const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
 	const erc20 = testSuite.getContract("erc20_mintable_1")
 	const erc20ContractAddress = erc20.contractAddress
@@ -73,7 +75,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.0002",
+			price: "2000000000000000000",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -86,7 +88,7 @@ describe("sale", () => {
 		expect(order.makeStock.toString()).toEqual(nextStock)
 
 		const updateAction = await sdk1.order.sellUpdate.prepare({ orderId })
-		await updateAction.submit({ price: "0.0001" })
+		await updateAction.submit({ price: "1000000000000000000" })
 
 		await sdk1.apis.order.getOrderById({ id: orderId })
 
@@ -125,7 +127,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.0002",
+			price: "2000000000000000000",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -173,7 +175,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.0002",
+			price: "2000000000000000000",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -219,7 +221,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "2",
+			price: "2000000000000000000",
 			currency: {
 				"@type": "ERC20",
 				contract: erc20ContractAddress,
@@ -267,7 +269,7 @@ describe("sale", () => {
 		const sellAction = await sdk1.order.sell.prepare({ itemId: result.itemId })
 		const orderId = await sellAction.submit({
 			amount: 1,
-			price: "0.0002",
+			price: "2000000000000000000",
 			currency: toCurrencyId(erc20ContractAddress),
 			expirationDate: generateExpirationDate(),
 		})
@@ -305,7 +307,7 @@ describe("sale", () => {
 		const orderId = await sdk1.order.sell({
 			itemId: result.itemId,
 			amount: 1,
-			price: "0.0002",
+			price: "2000000000000000000",
 			currency: toCurrencyId(erc20ContractAddress),
 			expirationDate: generateExpirationDate(),
 		})
@@ -324,6 +326,47 @@ describe("sale", () => {
 		const nextStock2 = "0"
 		const order2 = await awaitOrderMakeStock(sdk1, orderId, nextStock2)
 		expect(order2.makeStock.toString()).toEqual(nextStock2)
+	})
+
+	test("erc1155 sell/buy zero price order using erc-20 with CurrencyId with basic functions", async () => {
+		const wallet1Address = wallet1.getAddressString()
+
+		const result = await sdk1.nft.mint({
+			collectionId: toCollectionId(erc1155Address),
+			uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+			creators: [{
+				account: convertEthereumToUnionAddress(wallet1Address, Blockchain.ETHEREUM),
+				value: 10000,
+			}],
+			supply: 5,
+			royalties: [],
+		})
+		await result.transaction.wait()
+
+		await awaitItem(sdk1, result.itemId)
+
+		const orderId = await sdk1.order.sell({
+			itemId: result.itemId,
+			amount: 5,
+			price: "0",
+			currency: toCurrencyId(erc20ContractAddress),
+			expirationDate: generateExpirationDate(),
+		})
+
+		const nextStock = "5"
+		const order = await awaitOrderMakeStock(sdk1, orderId, nextStock)
+		expect(order.makeStock.toString()).toEqual(nextStock)
+
+		const tx = await sdk2.order.buy({
+			order,
+			amount: 2,
+		})
+
+		await tx.wait()
+
+		const nextStock2 = "3"
+		await awaitOrderMakeStock(sdk1, orderId, nextStock2)
+		await awaitErc1155Balance(ethWallet2, result.itemId, toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`), 2)
 	})
 
 	test("get future order fees", async () => {

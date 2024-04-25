@@ -164,7 +164,7 @@ export class LoggerDataContainer {
   	}
   	return parsedArgs
   }
-  async getTraceData() {
+  async getTraceData(additionalFields?: Record<string, any>) {
   	const res = await this.input.responsePromise
   	return {
   		level: LogLevel.TRACE,
@@ -174,10 +174,11 @@ export class LoggerDataContainer {
   		args: this.stringifiedArgs,
   		resp: JSON.stringify(res),
   		...(this.extraFields || {}),
+  		...(additionalFields || {}),
   	}
   }
 
-  getErrorData<T extends Error | WrappedError>(rawError: T) {
+  getErrorData<T extends Error | WrappedError>(rawError: T, additionalFields?: Record<string, any>) {
   	let data
   	const error = WrappedError.isWrappedError(rawError) ? rawError.error as Error : rawError
   	try {
@@ -190,6 +191,7 @@ export class LoggerDataContainer {
   			args: this.stringifiedArgs,
   			requestAddress: undefined as undefined | string,
   			...(this.extraFields || {}),
+  			...(additionalFields || {}),
   		}
   		if (error instanceof NetworkError || error?.name === "NetworkError") {
   			data.requestAddress = (error as NetworkError)?.url

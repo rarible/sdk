@@ -11,7 +11,7 @@ export const baseConfig: EthereumConfig = {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x6C65a3C3AA67b126e43F86DA85775E0F5e9743F7"),
 		openseaV1: ZERO_ADDRESS,
-		wrapper: toAddress("0xC699FB932c1bD7235C7ED19388f26A2428224AED"),
+		wrapper: toAddress("0x6563a331A411829918025D8a7e1d348f8b250906"),
 		looksrare: ZERO_ADDRESS,
 		looksrareV2: ZERO_ADDRESS,
 		x2y2: ZERO_ADDRESS,

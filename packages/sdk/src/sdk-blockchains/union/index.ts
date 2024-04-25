@@ -69,6 +69,7 @@ export function createUnionSdk(
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
 	solana: IRaribleInternalSdk,
+	eclipse: IRaribleInternalSdk,
 	immutablex: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
@@ -78,6 +79,7 @@ export function createUnionSdk(
 			TEZOS: tezos.balances,
 			SOLANA: solana.balances,
 			IMMUTABLEX: immutablex.balances,
+			ECLIPSE: eclipse.balances,
 		}),
 		nft: new UnionNftSdk({
 			EVM: evm.nft,
@@ -85,6 +87,7 @@ export function createUnionSdk(
 			TEZOS: tezos.nft,
 			SOLANA: solana.nft,
 			IMMUTABLEX: immutablex.nft,
+			ECLIPSE: eclipse.nft,
 		}),
 		order: new UnionOrderSdk({
 			EVM: evm.order,
@@ -92,6 +95,7 @@ export function createUnionSdk(
 			TEZOS: tezos.order,
 			SOLANA: solana.order,
 			IMMUTABLEX: immutablex.order,
+			ECLIPSE: eclipse.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			EVM: evm.restriction,
@@ -99,6 +103,7 @@ export function createUnionSdk(
 			TEZOS: tezos.restriction,
 			SOLANA: solana.restriction,
 			IMMUTABLEX: immutablex.restriction,
+			ECLIPSE: eclipse.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(evm.ethereum!),
 		flow: new UnionFlowSpecificSdk(flow.flow!),
