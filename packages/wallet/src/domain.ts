@@ -13,4 +13,5 @@ export enum WalletType {
 	TEZOS = "TEZOS",
 	FLOW = "FLOW",
 	IMMUTABLEX = "IMMUTABLEX",
+	APTOS = "APTOS",
 }

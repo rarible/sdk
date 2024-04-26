@@ -4,8 +4,7 @@ import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { getEthereumConfig } from "../../../config"
 import type { SimpleOrder } from "../../types"
 import { createRaribleSdk } from "../../../index"
-import type { EthereumNetwork } from "../../../types"
-import { DEV_PK_1, DEV_PK_2 } from "../../../common/test/test-credentials"
+import { DEV_PK_1, DEV_PK_2, getTestContract } from "../../../common/test/test-credentials"
 import { createE2eTestProvider } from "../../../common/test/create-test-providers"
 import {
 	checkOwnerships,
@@ -22,7 +21,7 @@ describe("Batch purchase", function () {
 	const { web3Ethereum: buyerEthereum } = createE2eTestProvider(DEV_PK_1)
 	const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_2)
 
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 
 	const sdkBuyer = createRaribleSdk(buyerEthereum, env)
 	const sdkSeller = createRaribleSdk(ethereum, env)

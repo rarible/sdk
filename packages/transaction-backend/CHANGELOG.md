@@ -25,6 +25,14 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
 ## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend

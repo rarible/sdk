@@ -19,7 +19,7 @@ import { getErc721Contract } from "./contracts/erc721"
  * @group provider/dev
  */
 describe("transfer Erc721 lazy", () => {
-  const { wallet, web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
+	const { wallet, web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)

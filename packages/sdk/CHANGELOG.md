@@ -26,6 +26,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+
+### Features
+
+* **PLTF-292:** Aptos integration ([#618](https://github.com/rarible/sdk/issues/618)) ([bcc0ff9](https://github.com/rarible/sdk/commit/bcc0ff950ad2f1d9e5b84f67743166888c275d3a))
+
+
+
+
+
 ## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
 
 

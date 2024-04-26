@@ -276,7 +276,7 @@ describe.each(providers)("buy & acceptBid orders", (buyerEthereum, sellerEthereu
 		await filler.getTransactionData({ order: finalOrder, amount: 2, originFees })
 		await filler.getBuyTx({
 			request: { order: finalOrder, amount: 2, originFees },
-			from: toAddress(await buyerEthereum.getFrom()),
+			from: toAddress("0xf4314839F9Fc945D3B7693E3F6c121cb1d2de066"),
 		})
 	})
 

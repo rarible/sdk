@@ -9,15 +9,18 @@ import type { Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
+import { AptosSdkWallet, isExternalAccount } from "@rarible/aptos-wallet"
+import type { ExternalAccount } from "@rarible/aptos-wallet"
 import type { BlockchainWallet } from "./"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
+import { AptosWallet, EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
 import { isBlockchainWallet } from "./"
 import { ImmutableXWallet } from "./"
 
 export type BlockchainProvider = Ethereum | SolanaSigner | TezosProvider | Fcl
 type EtherSigner = TypedDataSigner & Signer
 export type EthereumProvider = Web3 | Web3v4 | EtherSigner | ImxWallet
-export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider
+export type AptosProvider = ExternalAccount
+export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider | AptosProvider
 
 export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet {
 	if (isBlockchainWallet(provider)) return provider
@@ -26,17 +29,17 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
 	if (isTezosProvider(provider)) return new TezosWallet(provider)
 	if (isFlowProvider(provider)) return new FlowWallet(provider)
 	if (isImxWallet(provider)) return new ImmutableXWallet(provider)
-
+	if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
+	if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
+	if (isAptosWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
 	if (isWeb3(provider)) {
 		if (isWeb3v1(provider)) {
-		  return new EthereumWallet(new Web3Ethereum({ web3: provider }))
+			return new EthereumWallet(new Web3Ethereum({ web3: provider }))
 		}
 		if (isWeb3v4(provider)) {
-		  return new EthereumWallet(new Web3v4Ethereum({ web3: provider }))
+			return new EthereumWallet(new Web3v4Ethereum({ web3: provider }))
 		}
 	}
-	if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
-
 	throw new Error("Unsupported provider")
 }
 
@@ -81,4 +84,8 @@ export function getMajorVersion(version: string | undefined) {
 	const components = version?.split(".")
 	const [major] = components
 	return major
+}
+
+function isAptosWallet(x: any): x is AptosProvider {
+	return isExternalAccount(x)
 }

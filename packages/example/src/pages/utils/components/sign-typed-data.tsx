@@ -21,6 +21,7 @@ export function SignTypedDataUtil() {
 						const wallet = connection.sdk.wallet
 						const jsonObject = JSON.parse(json)
 						const signature = await wallet.ethereum.signTypedData(jsonObject)
+						console.log("sig", signature)
 						setComplete(signature)
 					}
 				} catch (e) {

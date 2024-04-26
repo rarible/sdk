@@ -8,8 +8,8 @@ import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { createE2eTestProvider } from "../../../common/test/create-test-providers"
-import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 import type { EthereumNetwork } from "../../../types"
+import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 /**
  * @group provider/dev
  */

@@ -1,6 +1,7 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { getTestContract } from "@rarible/ethereum-sdk-test-common"
 import { toCollectionId, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "../../index"
 import { awaitItem } from "../../common/test/await-item"
 import { generateExpirationDate } from "../../common/suite/order"

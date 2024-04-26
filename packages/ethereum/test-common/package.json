@@ -19,7 +19,7 @@
     "@rarible/ethereum-provider": "^0.13.69-beta.1",
     "@rarible/sdk-common": "^0.13.69-beta.1",
     "@rarible/test-provider": "~0.5.0",
-    "@rarible/types": "~0.9.25",
+    "@rarible/types": "~0.9.26",
     "@types/web3-provider-engine": "^14.0.1",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",

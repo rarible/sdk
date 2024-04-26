@@ -23,3 +23,11 @@ export type EVMContractsByBlockchain = {
 	[Blockchain.ETHEREUM]: Record<EVMContracts, string>,
 	[Blockchain.POLYGON]: Record<EVMContracts, string>,
 }
+
+export const evmDeployableTestContracts = ["erc20"] as const
+export type EVMDeployableTestContract = typeof evmDeployableTestContracts[number]
+
+export interface EVMDeployContractType<T extends EVMSuiteSupportedBlockchain>
+	extends Record<EVMDeployableTestContract, any>{
+	"erc20": ERC20Mintable<T>
+}

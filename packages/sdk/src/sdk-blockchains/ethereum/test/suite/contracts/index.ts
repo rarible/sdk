@@ -10,6 +10,8 @@ import { ERC20Wrapped } from "./variants/erc20-wrapped"
 import { ERC721Contract } from "./variants/erc721"
 import { EVMNativeToken } from "./variants/native"
 import type { EVMContractsByBlockchain } from "./domain"
+import type { EVMDeployContractType } from "./domain"
+import type { EVMDeployableTestContract } from "./domain"
 
 export class EVMContractsTestSuite<T extends EVMSuiteSupportedBlockchain> {
 	constructor(
@@ -55,7 +57,18 @@ export class EVMContractsTestSuite<T extends EVMSuiteSupportedBlockchain> {
   		default:
   			throw new Error("Unknown contract type")
   	}
-  };
+  }
+
+  deployContract = <K extends EVMDeployableTestContract>(
+  	type: K
+  ): Promise<EVMDeployContractType<T>[K]> => {
+  	switch (type) {
+  		case "erc20": {
+  			return ERC20Mintable.deploy(this.blockchain, this.provider)
+  		}
+  		default: throw new Error(`Unknown deploy contract type (${type})`)
+  	}
+  }
 }
 
 const CONTRACTS_DICTIONARY: EVMContractsByBlockchain = {

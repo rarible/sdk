@@ -14,11 +14,14 @@ import { PhantomConnectionProvider } from "@rarible/connector-phantom"
 import { SolflareConnectionProvider } from "@rarible/connector-solflare"
 import { SalmonConnectionProvider } from "@rarible/connector-salmon"
 import type { IWalletAndAddress } from "@rarible/connector-helper"
-import { mapEthereumWallet, mapFlowWallet, mapImmutableXWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
+import { mapFlowWallet, mapImmutableXWallet, mapSolanaWallet, mapTezosWallet } from "@rarible/connector-helper"
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
+import { AptosConnectionProvider } from "@rarible/connector-aptos"
 import type { ImxEnv } from "@rarible/immutable-wallet"
+import { mapAptosWallet } from "@rarible/connector-helper/build/aptos"
+import { mapEthereumWeb3v4Wallet } from "@rarible/connector-helper/build/ethereum-v4"
 
 export const ethereumRpcMap: Record<number, string> = {
 	1: "https://rarible.com/nodes/ethereum-node",
@@ -99,13 +102,13 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 	const flowNetwork = environmentToFlowNetwork(environment)
 	const tezosNetwork = environmentToTezosNetwork(environment)
 
-	const injected = mapEthereumWallet(
+	const injected = mapEthereumWeb3v4Wallet(
 		new InjectedWeb3ConnectionProvider({
 			prefer: [DappType.Metamask],
 		})
 	)
 
-	const nfid = mapEthereumWallet(
+	const nfid = mapEthereumWeb3v4Wallet(
 		new NFIDConnectionProvider({
 			origin: process.env.REACT_APP_NFID_ORIGIN || "https://nfid.one",
 		})
@@ -148,7 +151,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		})
 	)
 
-	const torus = mapEthereumWallet(
+	const torus = mapEthereumWeb3v4Wallet(
 		new TorusConnectionProvider({
 			network: {
 				host: ethereumNetworkMap[ethChainId],
@@ -156,7 +159,11 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		})
 	)
 
-	const firebase = mapEthereumWallet(
+	const aptos = mapAptosWallet(
+		new AptosConnectionProvider()
+	)
+
+	const firebase = mapEthereumWeb3v4Wallet(
 		new FirebaseConnectionProvider(
 			"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
 			{
@@ -182,7 +189,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		)
 	)
 
-	const firebaseApple = mapEthereumWallet(
+	const firebaseApple = mapEthereumWeb3v4Wallet(
 		new FirebaseAppleConnectionProvider(
 			"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
 			{
@@ -208,7 +215,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		)
 	)
 
-	const firebaseEmail = mapEthereumWallet(
+	const firebaseEmail = mapEthereumWeb3v4Wallet(
 		new FirebaseEmailConnectionProvider(
 			"BBD0kzmxWBstkgHeJsQqwiF7RbVgmA7ReBRIyw2GRJoCHJTuCAXHD8pwX3PtotSwwh0EMoBZVgVjRss6jKq8Kg8",
 			{
@@ -234,7 +241,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		)
 	)
 
-	const walletLink = mapEthereumWallet(
+	const walletLink = mapEthereumWeb3v4Wallet(
 		new WalletLinkConnectionProvider(
 			{
 				networkId: ethChainId,
@@ -249,7 +256,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		)
 	)
 
-	const walletConnectV2 = mapEthereumWallet(
+	const walletConnectV2 = mapEthereumWeb3v4Wallet(
 		new WalletConnectConnectionProviderV2({
 			projectId: "4f9fb88799dfa8d3654bdd130be840f2",
 			chains: [ethChainId],
@@ -309,6 +316,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 		.add(magic)
 		.add(firebaseApple)
 		.add(torus)
+		.add(aptos)
 		.add(firebase)
 		.add(firebaseEmail)
 }

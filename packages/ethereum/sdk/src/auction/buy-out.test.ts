@@ -21,8 +21,8 @@ describe.skip("buy out auction", () => {
 	const sender1Address = walletSeller.getAddressString()
 	const sender2Address = walletBuyer.getAddressString()
 	const feeAddress = feeWallet.getAddressString()
-  const env = "testnet" as const
-  const config = getEthereumConfig(env)
+	const env = "testnet" as const
+	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 
 	const configuration = new Configuration(getApiConfig(env))

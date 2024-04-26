@@ -1,6 +1,6 @@
 import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toCollectionId, toCurrencyId, toItemId, toOrderId, toWord } from "@rarible/types"
+import { toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { LogsLevel } from "../../domain"
@@ -366,7 +366,7 @@ describe("sale", () => {
 
 		const nextStock2 = "3"
 		await awaitOrderMakeStock(sdk1, orderId, nextStock2)
-		await awaitErc1155Balance(ethWallet2, result.itemId, toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`), 2)
+		await awaitErc1155Balance(ethereumWallet2, result.itemId, toUnionAddress(`ETHEREUM:${await ethereumWallet2.ethereum.getFrom()}`), 2)
 	})
 
 	test("get future order fees", async () => {

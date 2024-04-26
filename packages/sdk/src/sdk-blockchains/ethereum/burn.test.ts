@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
@@ -6,10 +6,8 @@ import { awaitItem } from "../../common/test/await-item"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import { createSdk } from "../../common/test/create-sdk"
 import { awaitDeletedItem } from "../../common/test/await-deleted-item"
-import { initProviders } from "./test/init-providers"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
 import { initProvider } from "./test/init-providers"
-import { convertEthereumContractAddress } from "./common"
 import { DEV_PK_1 } from "./test/common"
 
 describe("burn", () => {

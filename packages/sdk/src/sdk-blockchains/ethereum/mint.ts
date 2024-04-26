@@ -27,6 +27,7 @@ import type { CommonTokenMetadataResponse, PreprocessMetaRequest } from "../../t
 import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import { getCollectionId } from "../../common/get-collection-id"
+import type { GeneralMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { EVMBlockchain } from "./common"
 import { checkWalletBlockchain, getWalletNetwork, isEVMBlockchain } from "./common"
 import { convertEthereumItemId, convertToEthereumAddress } from "./common"
@@ -178,9 +179,10 @@ export class EthereumMint {
 	}
 
 	preprocessMeta(meta: PreprocessMetaRequest): CommonTokenMetadataResponse {
-		if (!isEVMBlockchain(meta.blockchain)) {
+		if (!isEvmMeta(meta)) {
 			throw new UnsupportedBlockchainError(meta.blockchain)
 		}
+
 		return {
 			name: meta.name,
 			description: meta.description,
@@ -275,4 +277,8 @@ export class UnsupportedBlockchainError extends Error {
 		this.name = "UnsupportedBlockchainError"
 		Object.setPrototypeOf(this, UnsupportedBlockchainError.prototype)
 	}
+}
+
+function isEvmMeta(x: PreprocessMetaRequest): x is GeneralMetaRequest {
+	return isEVMBlockchain(x.blockchain)
 }

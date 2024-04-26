@@ -61,6 +61,15 @@ export function getCurrenciesForBlockchain(
 					contract: getFlowTokenAddressByEnv(env),
 				}),
 			}]
+		case WalletType.APTOS:
+			return [{
+				isNative: true,
+				requireContract: false,
+				getAssetType: () => ({
+					"@type": "CURRENCY_NATIVE",
+					blockchain: Blockchain.APTOS,
+				}),
+			}]
 		default:
 			throw new Error("Unsupported blockchain")
 	}
