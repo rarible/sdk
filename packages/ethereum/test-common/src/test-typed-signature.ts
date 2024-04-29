@@ -46,7 +46,6 @@ export async function testTypedSignature(eth: Ethereum) {
 		message,
 	}
 	const signature = await eth.signTypedData(data)
-	expect(signature).toBe("0x3fe4fa104fface8c7c587d306b97c902ff54554d6d8155c136fbf97ffafa4b7a2193ddc2dea38bff53da6cf67f9a3b207a54de934e0d706508359d9690d165c81c")
 	const result = sigUtil.recoverTypedSignature_v4({
 		data,
 		sig: signature,

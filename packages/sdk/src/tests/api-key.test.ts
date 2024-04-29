@@ -7,10 +7,10 @@ import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
 import { mintTestERC721 } from "../sdk-blockchains/ethereum/test/mint-erc-721"
 
 describe("server api keys", () => {
-	const { web31 } = initProviders({ pk1: DEV_PK_1 })
+	const { ethereum1 } = initProviders({ pk1: DEV_PK_1 })
 	let itemId: ItemId
 	beforeAll( async () => {
-		itemId = await mintTestERC721(web31)
+		itemId = await mintTestERC721(ethereum1)
 	})
 
 	test("get item without API key should be succeed", async () => {

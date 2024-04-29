@@ -126,7 +126,6 @@ describe("Web3Ethereum", () => {
 	})
 
 	test("test retrying call/estimateGas without reserve node is not working", async () => {
-		console.log("from", await e2eEthereum.getFrom())
 		const deployed = await deployTestContract(web3e2e)
 		const contract = e2eEthereum.createContract(SIMPLE_TEST_ABI, deployed.options.address)
 		const tx = await contract.functionCall("setValue", 10).send()

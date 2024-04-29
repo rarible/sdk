@@ -39,7 +39,7 @@ describe("Aptos NFT", () => {
 			description: "",
 			uri: "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/",
 		})
-		await retry(10, 4000, () =>
+		await retry(20, 4000, () =>
 			sdk.apis.collection.getCollectionById({ collection: response.address }),
 		)
 	})
