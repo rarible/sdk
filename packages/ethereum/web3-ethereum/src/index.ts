@@ -33,7 +33,9 @@ export class Web3Ethereum implements EthereumProvider.Ethereum {
 	}
 
 	static isWeb3v1(x: unknown): x is Web3 {
-		return hasVersion(x) && getMajorVersion(x.version) === "1"
+		const version = getWeb3Version(x)
+		if (!version) return false
+		return getMajorVersion(version) === "1"
 	}
 
 	createContract(abi: any, address?: string): EthereumProvider.EthereumContract {
@@ -525,8 +527,9 @@ function getMethodWithNewWeb3Node(
 	return updatedContract.methods[callOptions.methodName](...callOptions.args)
 }
 
-function getWeb3Version(x: unknown) {
-	return hasVersion(x) && x.version
+function getWeb3Version(x: unknown): string | undefined {
+	if (!hasVersion(x)) return undefined
+	return x.version
 }
 
 export { Web3 }
