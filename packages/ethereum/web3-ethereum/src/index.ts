@@ -26,7 +26,7 @@ import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./u
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
 		if (!Web3Ethereum.isWeb3v1(config.web3)) {
-			throw new Error(`Passed version web3=${config.web3.version}, expected v1`)
+			throw new Error(`Passed version web3=${getWeb3Version(config.web3)}, expected v1`)
 		}
 		this.send = this.send.bind(this)
 		this.getFrom = this.getFrom.bind(this)
@@ -523,6 +523,10 @@ function getMethodWithNewWeb3Node(
 		callOptions.contract.options.address
 	)
 	return updatedContract.methods[callOptions.methodName](...callOptions.args)
+}
+
+function getWeb3Version(x: unknown) {
+	return hasVersion(x) && x.version
 }
 
 export { Web3 }
