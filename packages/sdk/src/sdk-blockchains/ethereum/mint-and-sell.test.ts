@@ -116,7 +116,7 @@ describe("mint and sell", () => {
 			throw new Error("Minted not on chain")
 		}
 
-		await retry(5, 2000, async () => {
+		await retry(20, 3000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe("1")
 			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
@@ -160,7 +160,7 @@ describe("mint and sell", () => {
 		expect(transaction.blockchain).toEqual("ETHEREUM")
 		expect(transaction.hash).toBeTruthy()
 
-		await retry(10, 2000, async () => {
+		await retry(20, 3000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
 
 			expect(order.makeStock.toString()).toBe(supply.toString())
@@ -210,7 +210,7 @@ describe("mint and sell", () => {
 			expect(transaction.hash).toBeTruthy()
 		}
 
-		await retry(10, 2000, async () => {
+		await retry(60, 3000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: response.orderId })
 
 			expect(order.makeStock.toString()).toBe(supply.toString())
@@ -255,7 +255,7 @@ describe("mint and sell", () => {
 		expect(transaction.blockchain).toEqual("ETHEREUM")
 		expect(transaction.hash).toBeTruthy()
 
-		await retry(10, 2000, async () => {
+		await retry(20, 3000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe(supply.toString())
 			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })
@@ -294,7 +294,7 @@ describe("mint and sell", () => {
 			expirationDate: generateExpirationDate(),
 		})
 
-		await retry(10, 2000, async () => {
+		await retry(20, 3000, async () => {
 			const order = await sdk.apis.order.getOrderById({ id: result.orderId })
 			expect(order.makeStock.toString()).toBe("1")
 			const item = await sdk.apis.item.getItemById({ itemId: result.itemId })

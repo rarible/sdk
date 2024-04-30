@@ -82,7 +82,6 @@ export class EthereumSell {
 				}
 			})
 			.after(async order => {
-				//todo replace with returned chainId/blockchain
 				const blockchain = await getWalletBlockchain(this.wallet)
 				return common.convertEthereumOrderHash(order.hash, blockchain)
 			})
