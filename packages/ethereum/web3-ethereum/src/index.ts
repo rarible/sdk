@@ -14,6 +14,8 @@ import {
 	conditionalRetry,
 	FAILED_TO_FETCH_ERROR,
 	OUT_OF_GAS_ERROR,
+	hasVersion,
+	getMajorVersion,
 } from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
@@ -23,8 +25,15 @@ import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./u
 
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
+		if (!Web3Ethereum.isWeb3v1(config.web3)) {
+			throw new Error(`Passed version web3=${config.web3.version}, expected v1`)
+		}
 		this.send = this.send.bind(this)
 		this.getFrom = this.getFrom.bind(this)
+	}
+
+	static isWeb3v1(x: unknown): x is Web3 {
+		return hasVersion(x) && getMajorVersion(x.version) === "1"
 	}
 
 	createContract(abi: any, address?: string): EthereumProvider.EthereumContract {

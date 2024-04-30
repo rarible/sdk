@@ -72,18 +72,11 @@ function isImxWallet(x: any): x is ImxWallet {
 }
 
 export function isWeb3v1(x: Web3 | Web3v4): x is Web3 {
-	return "version" in x && getMajorVersion(x.version) === "1"
+	return Web3Ethereum.isWeb3v1(x)
 }
 
 export function isWeb3v4(x: Web3 | Web3v4): x is Web3v4 {
-	return "version" in x && getMajorVersion(x.version) === "4"
-}
-
-export function getMajorVersion(version: string | undefined) {
-	if (!version) return ""
-	const components = version?.split(".")
-	const [major] = components
-	return major
+	return Web3v4Ethereum.isWeb3v4(x)
 }
 
 function isAptosWallet(x: any): x is AptosProvider {

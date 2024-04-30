@@ -12,6 +12,8 @@ import {
 	conditionalRetry,
 	FAILED_TO_FETCH_ERROR,
 	deepReplaceBigInt,
+	hasVersion,
+	getMajorVersion,
 } from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import { FMT_BYTES, FMT_NUMBER } from "web3-types"
@@ -27,8 +29,15 @@ import { NumberDataFormat } from "./domain"
 
 export class Web3v4Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
+		if (!Web3v4Ethereum.isWeb3v4(config.web3)) {
+			throw new Error(`Passed version web3=${getWeb3Version(config.web3)}, expected v4`)
+		}
 		this.send = this.send.bind(this)
 		this.getFrom = this.getFrom.bind(this)
+	}
+
+	static isWeb3v4(x: unknown): x is Web3 {
+		return hasVersion(x) && getMajorVersion(x.version) === "4"
 	}
 
 	createContract(abi: any, address?: string): EthereumProvider.EthereumContract {
@@ -499,6 +508,10 @@ export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 }
 
 type InternalGasOptions = { gas?: string, gasPrice?: string }
+
+function getWeb3Version(x: unknown) {
+	return hasVersion(x) && x.version
+}
 
 export { Web3, FMT_BYTES, FMT_NUMBER }
 export { types as Web3Types } from "web3"
