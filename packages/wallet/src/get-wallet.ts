@@ -29,7 +29,6 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
 	if (isTezosProvider(provider)) return new TezosWallet(provider)
 	if (isFlowProvider(provider)) return new FlowWallet(provider)
 	if (isImxWallet(provider)) return new ImmutableXWallet(provider)
-	if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
 	if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
 	if (isAptosWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
 	if (isWeb3(provider)) {
