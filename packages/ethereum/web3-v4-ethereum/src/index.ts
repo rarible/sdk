@@ -12,10 +12,8 @@ import {
 	conditionalRetry,
 	FAILED_TO_FETCH_ERROR,
 	deepReplaceBigInt,
-	hasVersion,
 	getMajorVersion,
 	isObjectLike,
-	isFunctionLike,
 } from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import { FMT_BYTES, FMT_NUMBER } from "web3-types"
@@ -514,7 +512,7 @@ export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 type InternalGasOptions = { gas?: string, gasPrice?: string }
 
 function getWeb3Version(x: unknown): string | undefined {
-	if (!(isObjectLike(x) && isFunctionLike(x?.constructor) && hasVersionFnField(x.constructor))) return undefined
+	if (!(isObjectLike(x) && x?.constructor && hasVersionFnField(x.constructor))) return undefined
 	return x.constructor.version
 }
 
