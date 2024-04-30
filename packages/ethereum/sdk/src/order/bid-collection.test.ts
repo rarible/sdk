@@ -16,7 +16,7 @@ import { sentTx } from "../common/test"
 import {
 	concatBuyerSellerProviders,
 	createE2eTestProvider,
-	createTestProviders,
+	createEthereumProviders,
 } from "../common/test/create-test-providers"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
@@ -30,9 +30,9 @@ import { createErc20Contract } from "./contracts/erc20"
 const pk1Provider = createE2eTestProvider(DEV_PK_1)
 const pk2Provider = createE2eTestProvider(DEV_PK_2)
 
-// const { providers, web3v4 } = createTestProviders(provider, wallet)
-const pk1TestProviders = createTestProviders(pk1Provider.provider, pk1Provider.wallet)
-const pk2TestProviders = createTestProviders(pk2Provider.provider, pk2Provider.wallet)
+// const { providers, web3v4 } = createEthereumProviders(provider, wallet)
+const pk1TestProviders = createEthereumProviders(pk1Provider.provider, pk1Provider.wallet)
+const pk2TestProviders = createEthereumProviders(pk2Provider.provider, pk2Provider.wallet)
 
 const providers = concatBuyerSellerProviders(pk1TestProviders.providers, pk2TestProviders.providers)
 describe.each(providers)("bid", (ethereum1, ethereum2) => {

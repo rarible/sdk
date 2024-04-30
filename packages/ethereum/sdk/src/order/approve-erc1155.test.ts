@@ -5,12 +5,12 @@ import { fromUtf8 } from "ethereumjs-util"
 import type { Web3EthContractTypes } from "@rarible/web3-v4-ethereum"
 import { getSendWithInjects } from "../common/send-transaction"
 import { sentTx } from "../common/test"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { approveErc1155 as approveErc1155Template } from "./approve-erc1155"
 
 const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 const { provider, addresses, wallets } = createGanacheProvider(pk)
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache

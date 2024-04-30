@@ -10,6 +10,7 @@ export const DEV_PK_2 = "4d5db4107d237df6a3d58ee5f70ae63d73d7658d4026f2eefd2f204
 export const DEV_PK_3 = "064b2a70a2932eb5b45c760b210a2bee579d94031a8c40bff05cfd9d800d6812"
 //Wallet address 0xf46c479e32cd7703dd8493979c6042d0e4c0a0db
 export const DEV_PK_4 = "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9"
+export const DEV_PK_5 = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 
 
 export const e2eProviderSupportedNetworks = ["rarible-dev", "mumbai", "polygon", "sepolia", "mainnet"] as const

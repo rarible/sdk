@@ -3,21 +3,17 @@ import { toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { ConvertWeth } from "./convert-weth"
 import { createWethContract } from "./contracts/weth"
 
 const { provider, addresses, wallets } = createGanacheProvider()
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
-//@todo fix transfer for these providers
-const filteredProviders = providers.filter(provider => {
-	const { name } = provider.constructor
-	return name !== "EthersWeb3ProviderEthereum" && name !== "EthersEthereum"
-})
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
+
 /**
  * @group provider/ganache
  */
-describe.each(filteredProviders)("convert weth test", (ethereum) => {
+describe.each(providers)("convert weth test", (ethereum) => {
 	const [sender1Address] = addresses
 	const config = getEthereumConfig("dev-ethereum")
 	const getConfig = async () => config

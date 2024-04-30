@@ -3,20 +3,16 @@ import type { Address } from "@rarible/ethereum-api-client"
 import { awaitAll, deployTestErc721, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
 import { getSendWithInjects } from "../common/send-transaction"
 import { sentTx } from "../common/test"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { transferErc721 } from "./transfer-erc721"
 
 const { addresses, provider, wallets } = createGanacheProvider()
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
-//@todo fix transfer for these providers
-const filteredProviders = providers.filter(provider => {
-	const { name } = provider.constructor
-	return name !== "EthersWeb3ProviderEthereum" && name !== "EthersEthereum"
-})
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
+
 /**
  * @group provider/ganache
  */
-describe.each(filteredProviders)("transfer Erc721", (ethereum) => {
+describe.each(providers)("transfer Erc721", (ethereum) => {
 	const [from] = addresses
 	const to = randomAddress()
 

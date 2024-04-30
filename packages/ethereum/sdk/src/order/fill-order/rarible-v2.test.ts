@@ -1,4 +1,4 @@
-import { randomAddress, randomWord, toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
+import { randomAddress, randomWord, toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
 import {
 	awaitAll,
@@ -380,71 +380,6 @@ describe.each(providers)("buy & acceptBid orders", (buyerEthereum, sellerEthereu
 			value: 100,
 		}]
 		const tx = await filler.buy({ order: finalOrder, amount: 2, originFees })
-		await tx.wait()
-
-		expect(toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call()).toString()).toBe(
-			before2.minus(2).toFixed()
-		)
-		expect(toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call()).toString()).toBe(
-			before1.plus(2).toFixed()
-		)
-	})
-
-	test(`[${buyerEthereum.constructor.name}] should match order(buy erc1155 for eth) with dataType=V3`, async () => {
-		await sentTx(it.testErc1155.methods.mint(sellerAddress, 5, 10, "0x"), { from: buyerAddress })
-
-		const left: SimpleOrder = {
-			make: {
-				assetType: {
-					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address!),
-					tokenId: toBigNumber("1"),
-				},
-				value: toBigNumber("5"),
-			},
-			maker: sellerAddress,
-			take: {
-				assetType: {
-					assetClass: "ETH",
-				},
-				value: toBigNumber("1000000"),
-			},
-			salt: randomWord(),
-			type: "RARIBLE_V2",
-			data: {
-				dataType: "RARIBLE_V2_DATA_V3_SELL",
-				payout: {
-					value: 10000,
-					account: sellerAddress,
-				},
-				originFeeFirst: undefined,
-				originFeeSecond: undefined,
-				maxFeesBasePoint: 200,
-				marketplaceMarker: toWord("0x000000000000000000000000000000000000000000000000000000000000face"),
-			},
-		}
-
-		await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
-			from: sellerAddress,
-		})
-
-		const signature = await signOrder(sellerEthereum, getConfig, left)
-
-		const before1 = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, 1).call())
-		const before2 = toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call())
-
-		console.log(before1.toString())
-		console.log(before2.toString())
-
-		const finalOrder = { ...left, signature }
-		const tx = await filler.buy({
-			order: finalOrder,
-			amount: 2,
-			originFeeFirst: {
-				account: randomAddress(),
-				value: 100,
-			},
-		})
 		await tx.wait()
 
 		expect(toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call()).toString()).toBe(

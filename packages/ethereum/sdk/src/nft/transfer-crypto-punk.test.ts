@@ -2,11 +2,11 @@ import { awaitAll, deployCryptoPunks, createGanacheProvider } from "@rarible/eth
 import { toAddress } from "@rarible/types"
 import { getSendWithInjects } from "../common/send-transaction"
 import { sentTx } from "../common/test"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { transferCryptoPunk } from "./transfer-crypto-punk"
 
 const {	addresses, provider, wallets } = createGanacheProvider()
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache

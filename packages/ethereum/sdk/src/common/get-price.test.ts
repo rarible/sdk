@@ -1,12 +1,12 @@
 import { awaitAll, createGanacheProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
 import { toAddress } from "@rarible/types"
+import { Web3 } from "@rarible/web3-v4-ethereum"
 import { getPrice } from "./get-price"
-import { createTestProviders } from "./test/create-test-providers"
-import { sentTx } from "./send-transaction"
+import { createEthereumProviders } from "./test/create-test-providers"
+import { sentTx } from "./test"
 
 const { provider, addresses, wallets } = createGanacheProvider()
-const { providers } = createTestProviders(provider, wallets[0])
+const { providers } = createEthereumProviders(provider, wallets[0])
 const [address] = addresses
 const web3 = new Web3(provider)
 
@@ -22,7 +22,7 @@ describe.each(providers)("get price test", (ethereum) => {
 		await sentTx(it.testErc20.methods
 			.mint(it.testErc20.options.address, 100), {
 			from: address,
-			gas: 200000,
+			gas: "200000",
 		})
 	})
 

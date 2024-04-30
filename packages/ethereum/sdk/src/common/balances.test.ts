@@ -1,5 +1,5 @@
 import { deployTestErc20, DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
-import type { Web3Ethereum } from "@rarible/web3-ethereum"
+import type { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { randomAddress, toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { Address } from "@rarible/ethereum-api-client"
@@ -23,7 +23,7 @@ import { getNetworkFromChainId } from "./index"
  * @group provider/dev
  */
 describe("getBalance test", () => {
-	const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
+	const { web3v4Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
 	const getApis = async () => {
 		const chainId = await ethereum.getChainId()
@@ -107,7 +107,7 @@ describe("getBalance test", () => {
 
 const randomEvmAddress = toAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 
-const nonWorkingNetworks = [
+const nonWorkingNetworks: EthereumNetwork[] = [
 	"testnet-rari",
 	"testnet-fief",
 ]
@@ -124,7 +124,7 @@ describe.each(filteredUnworkingNetworks)("get balances each of environments", (e
 	})
 })
 
-async function deployAndMintErc20(ethereum: Web3Ethereum, to: Address, value: BigNumberValue) {
+async function deployAndMintErc20(ethereum: Web3v4Ethereum, to: Address, value: BigNumberValue) {
 	const erc20Contract = await deployTestErc20(ethereum.getWeb3Instance(), "TST", "TST")
 	await sentTx(erc20Contract.methods.mint(to, value), { from: await ethereum.getFrom() })
 	return {

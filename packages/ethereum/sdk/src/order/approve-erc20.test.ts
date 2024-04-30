@@ -3,14 +3,14 @@ import { awaitAll, deployTestErc20, createGanacheProvider } from "@rarible/ether
 import { toBn } from "@rarible/utils/build/bn"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { getSendWithInjects } from "../common/send-transaction"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { sentTx } from "../common/test"
 import { approveErc20 as approveErc20Template } from "./approve-erc20"
 import { prependProviderName } from "./test/prepend-provider-name"
 
 const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
 const { provider, addresses, wallets } = createGanacheProvider(pk)
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache
@@ -26,7 +26,6 @@ describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
 	})
 
 	beforeAll(async () => {
-		console.log("it", it.testErc20.options.address)
 		await it.testErc20.methods.mint(testAddress, 100).send({ from: testAddress, gas: "200000" })
 	})
 

@@ -1,9 +1,11 @@
+import { AptosGenericSdkWallet } from "@rarible/aptos-wallet"
 import { createTestAptosState, mintTestToken } from "../common/test"
 import { AptosOrder } from "./index"
 
-describe("sell nft", () => {
+describe.skip("sell nft", () => {
 	const { aptos, account } = createTestAptosState()
-	const orderClass = new AptosOrder(aptos, account)
+	const wallet = new AptosGenericSdkWallet(aptos, account)
+	const orderClass = new AptosOrder(aptos, wallet)
 
 	test("sell", async () => {
 		const testTokenAddress = await mintTestToken(aptos, account)

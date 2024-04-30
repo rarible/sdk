@@ -1,9 +1,8 @@
 import {
 	Account,
 	Aptos,
-	AptosConfig,
+	AptosConfig, Ed25519PrivateKey,
 	Network,
-	Ed25519PrivateKey,
 } from "@aptos-labs/ts-sdk"
 import { AptosGenericSdkWallet } from "@rarible/aptos-wallet"
 import { AptosNft } from "../../nft/nft"
@@ -21,7 +20,10 @@ export function createTestAptosState(privateKey: string = DEFAULT_PK) {
 	// Read more https://github.com/aptos-labs/aptos-ts-sdk/blob/main/src/api/account.ts#L364
 	const aptos = new Aptos(config)
 
-	return { aptos, account }
+	return {
+		aptos,
+		account,
+	}
 }
 
 export const DEFAULT_PK = "0x229eea52e53be5a6fd1ba00e660fc632cdb47ffe8f777a847daa8220553c5511"
@@ -33,8 +35,13 @@ export async function mintTestToken(
 	const mintClass = new AptosNft(aptos, new AptosGenericSdkWallet(aptos, account))
 	const randomId = Math.floor(Math.random() * 1000000)
 	const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"
-	const { tokenAddress } = await mintClass.mintWithCollectionName({
-		collectionName: "Test collection 1016",
+	const { collectionAddress } = await mintClass.createCollection({
+		name: `Rarible Test collection ${randomId}-${randomId * 5}-${randomId}`,
+		description: "",
+		uri,
+	})
+	const { tokenAddress } = await mintClass.mintWithCollectionAddress({
+		collectionAddress,
 		name: `Mytoken #${randomId}`,
 		description: `Description of Mytoken #${randomId}`,
 		uri,

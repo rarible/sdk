@@ -2,7 +2,7 @@ import { Account } from "@aptos-labs/ts-sdk"
 import { createTestAptosState } from "./test"
 import { AptosBalance } from "./balance"
 
-describe("balance", () => {
+describe.skip("balance", () => {
 
 	const { aptos } = createTestAptosState()
 

@@ -6,14 +6,14 @@ import { MintResponseTypeEnum } from "../nft/mint"
 import { awaitItem } from "../nft/test/await-item"
 import { getTestAPIKey } from "./test/test-credentials"
 import { createErc721V3Collection } from "./mint"
-import { createTestProviders } from "./test/create-test-providers"
+import { createEthereumProviders } from "./test/create-test-providers"
 
 /**
  * @group type/common
  */
 describe("api keys", () => {
 	const { provider, wallet } = createE2eProvider(DEV_PK_1)
-	const { providers } = createTestProviders(provider, wallet)
+	const { providers } = createEthereumProviders(provider, wallet)
 
 	const env = "dev-ethereum" as const
 	const erc721V3ContractAddress = getTestContract(env, "erc721V3")

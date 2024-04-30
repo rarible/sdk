@@ -8,7 +8,6 @@ import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { createE2eTestProvider } from "../../../common/test/create-test-providers"
-import type { EthereumNetwork } from "../../../types"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
 /**
  * @group provider/dev
@@ -17,7 +16,7 @@ describe("amm batch buy tests", () => {
 	const { web3Ethereum: buyerWeb3 } = createE2eTestProvider(DEV_PK_1)
 	const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_2)
 
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 	const sdkSeller = createRaribleSdk(ethereum, env)

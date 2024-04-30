@@ -1,21 +1,26 @@
 import { awaitAll, createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
 import { randomAddress, toAddress } from "@rarible/types"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import { getSendWithInjects } from "../common/send-transaction"
-import { createTestProviders, excludeProviders } from "../common/test/create-test-providers"
 import { sentTx } from "../common/test"
 import { approveCryptoPunk } from "./approve-crypto-punk"
-
-const { addresses, provider, wallets } = createGanacheProvider()
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
-//@todo some tests don't work with ethers providers, need to fix
-const filteredProviders = excludeProviders(providers, ["EthersEthereum", "EthersWeb3ProviderEthereum"])
 
 /**
  * @group provider/ganache
  */
-describe.each(filteredProviders)("approve crypto punks", (ethereumSeller) => {
+describe("approve crypto punks", () => {
+	const {
+		addresses,
+		provider,
+	} = createGanacheProvider()
 	const [sellerAddress] = addresses
+	const web3v4 = new Web3v4(provider as any)
 
+	const ethereumSeller = new Web3v4Ethereum({
+		web3: web3v4,
+		from: sellerAddress,
+		gas: 8000000,
+	})
 	const it = awaitAll({
 		punksMarket: deployCryptoPunks(web3v4),
 	})

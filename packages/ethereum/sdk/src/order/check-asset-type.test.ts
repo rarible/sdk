@@ -5,7 +5,7 @@ import { mint, MintResponseTypeEnum } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc721V3Collection } from "../common/mint"
-import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import { getEthereumConfig } from "../config"
@@ -13,7 +13,7 @@ import { getApis as getApisTemplate } from "../common/apis"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 
 const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
-const { providers } = createTestProviders(provider, wallet)
+const { providers } = createEthereumProviders(provider, wallet)
 const from = toAddress(wallet.getAddressString())
 
 /**

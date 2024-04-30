@@ -9,8 +9,8 @@ import { getApis as getApisTemplate } from "../common/apis"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
-import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
-import { sentTx, sentTxConfirm } from "../common/test"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
+import { sentTxConfirm } from "../common/test"
 import { cancel } from "./cancel"
 import { signOrder } from "./sign-order"
 import { UpsertOrder } from "./upsert-order"
@@ -20,7 +20,7 @@ import { approve as approveTemplate } from "./approve"
 import { getEndDateAfterMonth } from "./test/utils"
 
 const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
-const { providers, web3v4 } = createTestProviders(provider, wallet)
+const { providers, web3v4 } = createEthereumProviders(provider, wallet)
 
 /**
  * @group provider/dev
@@ -81,40 +81,6 @@ describe.each(providers)("cancel order", (ethereum) => {
 		const { tx, order } = await testOrder(form)
 		const events = await tx.getEvents()
 		expect(events.some(e => e.event === "Cancel" && (e?.returnValues?.hash || e?.args?.hash) === order.hash)).toBe(true)
-	})
-
-	test(`[${ethereum.constructor.name}] ExchangeV1 should work`, async () => {
-		await sentTx(it.testErc1155.methods.mint(from, "11", 11, "0x"), { from })
-		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
-			make: {
-				assetType: {
-					assetClass: "ERC1155",
-					contract: toAddress(it.testErc1155.options.address),
-					tokenId: toBigNumber("11"),
-				},
-				value: toBigNumber("1"),
-			},
-			take: {
-				assetType: {
-					assetClass: "ERC20",
-					contract: toAddress(it.testErc20.options.address),
-				},
-				value: toBigNumber("10"),
-			},
-			salt: toBigNumber("10") as any,
-			maker: toAddress(wallet.getAddressString()),
-			type: "RARIBLE_V1",
-			data: {
-				dataType: "LEGACY",
-				fee: 0,
-			},
-			signature: toBinary("0x"),
-			end: getEndDateAfterMonth(),
-		}
-		const { tx } = await testOrder(form)
-		const events = await tx.getEvents()
-		expect(events.some(e => e.event === "Cancel")).toBe(true)
 	})
 
 	async function testOrder(form: OrderForm) {

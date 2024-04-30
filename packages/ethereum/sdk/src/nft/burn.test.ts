@@ -3,7 +3,7 @@ import { BigNumber, toBn } from "@rarible/utils"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
-import { createE2eTestProvider, createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import {
 	createErc1155V1Collection,
 	createErc1155V2Collection,
@@ -24,7 +24,7 @@ import { getErc1155Contract } from "./contracts/erc1155"
 import { awaitOwnership } from "./test/await-ownership"
 
 const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
-const { providers } = createTestProviders(provider, wallet)
+const { providers } = createEthereumProviders(provider, wallet)
 
 /**
  * @group provider/dev

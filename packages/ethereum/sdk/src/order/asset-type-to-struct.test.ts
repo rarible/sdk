@@ -1,10 +1,10 @@
 import { toAddress, toBigNumber, toBinary } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { assetTypeToStruct } from "./asset-type-to-struct"
 
 const { provider, wallets } = createGanacheProvider()
-const { providers } = createTestProviders(provider, wallets[0])
+const { providers } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache

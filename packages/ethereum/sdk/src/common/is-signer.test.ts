@@ -5,10 +5,10 @@ import { randomWord } from "@rarible/types"
 import type { Web3 } from "@rarible/web3-v4-ethereum"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { isSigner } from "./is-signer"
-import { createTestProviders } from "./test/create-test-providers"
+import { createEthereumProviders } from "./test/create-test-providers"
 
 const { provider, wallets } = createGanacheProvider()
-const { web3v4, providers } = createTestProviders(provider, wallets[0] )
+const { web3v4, providers } = createEthereumProviders(provider, wallets[0] )
 
 /**
  * @group provider/ganache

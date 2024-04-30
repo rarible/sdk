@@ -1,12 +1,12 @@
 import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, createGanacheProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getSendWithInjects } from "../common/send-transaction"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { sentTx } from "../common/test"
 import { approveErc721 as approveErc721Template } from "./approve-erc721"
 
 const { provider, addresses, wallets } = createGanacheProvider()
-const { providers, web3v4 } = createTestProviders(provider, wallets[0])
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache

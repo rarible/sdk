@@ -6,7 +6,7 @@ import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethe
 import type { E2EProviderConfig } from "@rarible/ethereum-sdk-test-common"
 import { createE2eProvider as createE2eProviderCommon } from "@rarible/ethereum-sdk-test-common"
 
-export function createTestProviders(provider: any, wallet: Wallet) {
+export function createEthereumProviders(provider: any, wallet: Wallet) {
 	const web3 = new Web3(provider)
 	const web3v4 = new Web3v4(provider)
 	web3v4.setConfig({ defaultTransactionType: "0x0" })
@@ -26,8 +26,8 @@ export function createTestProviders(provider: any, wallet: Wallet) {
 
 export function createBuyerSellerProviders(provider: any, wallets: Wallet[], options?: { excludeProviders: string[] }) {
 	const [buyerWallet, sellerWallet] = wallets
-	const buyer = createTestProviders(provider, buyerWallet)
-	const seller = createTestProviders(provider, sellerWallet)
+	const buyer = createEthereumProviders(provider, buyerWallet)
+	const seller = createEthereumProviders(provider, sellerWallet)
 
 	return {
 		web3Seller: buyer.web3,
@@ -41,8 +41,8 @@ export function createBuyerSellerProviders(provider: any, wallets: Wallet[], opt
 }
 
 export function concatBuyerSellerProviders(
-	buyer: ReturnType<typeof createTestProviders>["providers"],
-	seller: ReturnType<typeof createTestProviders>["providers"],
+	buyer: ReturnType<typeof createEthereumProviders>["providers"],
+	seller: ReturnType<typeof createEthereumProviders>["providers"],
 	options?: { excludeProviders: string[] }
 ) {
 	return excludeProviders(buyer, options?.excludeProviders || []).map((buyerProvider, i) => {
@@ -50,7 +50,7 @@ export function concatBuyerSellerProviders(
 	})
 }
 
-type ProvidersType = ReturnType<typeof createTestProviders>["providers"]
+type ProvidersType = ReturnType<typeof createEthereumProviders>["providers"]
 export function excludeProviders(
 	providers: ProvidersType,
 	excludeList: string[]
