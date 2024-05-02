@@ -1,12 +1,11 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { AbiItem } from "../../common/abi-item"
 
 export function createErc721Contract(ethereum: Ethereum, address?: Address): EthereumContract {
 	return ethereum.createContract(erc721Abi, address)
 }
 
-export const erc721Abi: AbiItem[] = [
+export const erc721Abi = [
 	{
 		inputs: [
 			{

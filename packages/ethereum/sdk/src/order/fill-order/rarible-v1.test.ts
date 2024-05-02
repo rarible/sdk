@@ -1,37 +1,27 @@
-import { Configuration, NftOwnershipControllerApi } from "@rarible/ethereum-api-client"
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../../config"
 import { retry } from "../../common/retry"
-import { getSimpleSendWithInjects, sentTxConfirm } from "../../common/send-transaction"
-import { getApiConfig } from "../../config/api-config"
+import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { signOrder } from "../sign-order"
 import type { SimpleLegacyOrder, SimpleOrder } from "../types"
-import { createEthereumApis } from "../../common/apis"
-import { checkChainId } from "../check-chain-id"
+import { getApis as getApisTemplate } from "../../common/apis"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
+import { sentTxConfirm } from "../../common/test"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { OrderFiller } from "./"
 
 describe.skip("test exchange v1 order", () => {
-	const { provider: provider1, wallet: wallet1 } = createE2eProvider(DEV_PK_1)
-	const { provider: provider2, wallet: wallet2 } = createE2eProvider(DEV_PK_2)
-	const web31 = new Web3(provider1)
-	const web32 = new Web3(provider2)
-	const sellerEthereum = new Web3Ethereum({ web3: web31 })
-	const buyerEthereum = new Web3Ethereum({ web3: web32 })
+	const { wallet: wallet1, web3v4: web31, web3Ethereum: sellerEthereum } = createE2eTestProvider(DEV_PK_1)
+	const { wallet: wallet2, web3Ethereum: buyerEthereum } = createE2eTestProvider(DEV_PK_2)
 
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const ownershipApi = new NftOwnershipControllerApi(configuration)
-
-	const apis = createEthereumApis("dev-ethereum")
 	const config = getEthereumConfig("dev-ethereum")
+	const getConfig = async () => config
+	const getApis = getApisTemplate.bind(null, buyerEthereum, "dev-ethereum")
 
 	const getBaseOrderFee = async () => 0
-	const checkWalletChainId2 = checkChainId.bind(null, buyerEthereum, config)
-	const send2 = getSimpleSendWithInjects().bind(null, checkWalletChainId2)
-	const filler = new OrderFiller(buyerEthereum, send2, config, apis, getBaseOrderFee, "dev-ethereum")
+	const send2 = getSimpleSendWithInjects()
+	const filler = new OrderFiller(buyerEthereum, send2, getConfig, getApis, getBaseOrderFee, "dev-ethereum")
 
 	const seller = toAddress(wallet1.getAddressString())
 	const buyer = toAddress(wallet2.getAddressString())
@@ -40,7 +30,7 @@ describe.skip("test exchange v1 order", () => {
 		testErc721: deployTestErc721(web31, "Test", "TST"),
 	})
 
-	const sign = signOrder.bind(null, sellerEthereum, config)
+	const sign = signOrder.bind(null, sellerEthereum, getConfig)
 
 	test("simple test v1", async () => {
 		console.log(await buyerEthereum.getFrom())
@@ -51,7 +41,7 @@ describe.skip("test exchange v1 order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("1"),
@@ -79,7 +69,8 @@ describe.skip("test exchange v1 order", () => {
 		await filler.buy({ order: signedOrder, amount: 1, originFee: 100 })
 
 		const ownership = await retry(10, 4000, async () => {
-			const ownership = await ownershipApi.getNftOwnershipById({
+			const apis = await getApis()
+			const ownership = await apis.nftOwnership.getNftOwnershipById({
 				ownershipId: `${it.testErc721.options.address}:${tokenId}:${buyer}`,
 			})
 			if (ownership.value.toString() !== "1") {
@@ -97,7 +88,7 @@ describe.skip("test exchange v1 order", () => {
 			make: {
 				assetType: {
 					assetClass: "ERC721",
-					contract: toAddress(it.testErc721.options.address),
+					contract: toAddress(it.testErc721.options.address!),
 					tokenId: toBigNumber(tokenId),
 				},
 				value: toBigNumber("1"),

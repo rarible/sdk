@@ -1,18 +1,24 @@
 import type { LoggableValue } from "@rarible/logger/build/domain"
 import { Blockchain } from "@rarible/api-client"
-import { toCollectionId, toItemId, toOrderId } from "@rarible/types"
+import { toItemId, toOrderId } from "@rarible/types"
+import { DEV_PK_1, getTestContract } from "@rarible/ethereum-sdk-test-common"
+import { EthereumWallet } from "@rarible/sdk-wallet"
 import { LogsLevel } from "../domain"
 import { MintType } from "../types/nft/mint/prepare"
 import { retry } from "../common/retry"
 import {
-	createEthWallets,
 } from "../sdk-blockchains/ethereum/test/common"
 import { createSdk } from "../common/test/create-sdk"
 import { generateExpirationDate } from "../common/suite/order"
+import { convertEthereumCollectionId } from "../sdk-blockchains/ethereum/common"
+import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
 
 describe("Logging", () => {
-	const [eth1, eth2, eth3, eth4, eth5, eth6] = createEthWallets(6)
+	const { ethereum1: ethereum } = initProviders({
+		pk1: DEV_PK_1,
+	})
 
+	const ethereumWallet = new EthereumWallet(ethereum)
 	const getLogger = () => {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const raw = jest.fn((data: Record<string, LoggableValue>) => {
@@ -35,7 +41,7 @@ describe("Logging", () => {
 
 	test("Should log simple blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createSdk(eth1, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.TRACE, logger })
 		const collection = await sdk.nft.createCollection({
 			blockchain: Blockchain.ETHEREUM,
 			baseURI: "1",
@@ -64,10 +70,13 @@ describe("Logging", () => {
 		}))
 	})
 
-	test.concurrent("Should log simple api call", async () => {
+	test("Should log simple api call", async () => {
 		const logger = getLogger()
-		const sdk = createSdk(eth2, "development", { logs: LogsLevel.TRACE, logger })
-		const collectionAddress = toCollectionId("ETHEREUM:0x3aEb3b6d820dd90B79886537F008f2c36E38beAE")
+		const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.TRACE, logger })
+		const collectionAddress = convertEthereumCollectionId(
+			getTestContract("dev-ethereum", "erc721V3"),
+			Blockchain.ETHEREUM
+		)
 		await sdk.apis.collection.getCollectionById({
 			collection: collectionAddress,
 		})
@@ -81,12 +90,15 @@ describe("Logging", () => {
 	let nftId: string | undefined = undefined
 	test("Should log prepared blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createSdk(eth3, "development", { logs: LogsLevel.TRACE, logger })
-		const collectionAddress = toCollectionId("ETHEREUM:0x3aEb3b6d820dd90B79886537F008f2c36E38beAE")
+		const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.TRACE, logger })
+		const collectionAddress = convertEthereumCollectionId(
+			getTestContract("dev-ethereum", "erc721V3"),
+			Blockchain.ETHEREUM
+		)
 		const prepare = await sdk.nft.mint.prepare({
 			collectionId: collectionAddress,
 		})
-		const nft = await prepare.submit({ uri: "1", supply: 1, lazyMint: false })
+		const nft = await prepare.submit({ uri: "ipfs://1", supply: 1, lazyMint: false })
 		expect(logger.raw.mock.calls.length).toBeGreaterThanOrEqual(3)
 		// logger.raw.mock.calls[0] is for api call log, blockchain specific
 		expect(logger.raw.mock.calls[1][0]).toMatchObject({
@@ -108,12 +120,12 @@ describe("Logging", () => {
 
 	test("Should log simplified blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createSdk(eth4, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.TRACE, logger })
 		await sdk.order.sell({
 			itemId: toItemId(nftId!),
 			currency: { "@type": "ETH" },
 			amount: 1,
-			price: 0.000001,
+			price: 0.0001,
 			expirationDate: generateExpirationDate(),
 		})
 		expect(logger.raw.mock.calls[0][0]).toMatchObject({
@@ -124,7 +136,7 @@ describe("Logging", () => {
 
 	test.concurrent("Should log error api call", async () => {
 		const logger = getLogger()
-		const sdk = createSdk(eth5, "development", { logs: LogsLevel.TRACE, logger })
+		const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.TRACE, logger })
 		try {
 			await sdk.apis.collection.getCollectionById({
 				collection: "unknown",
@@ -141,7 +153,7 @@ describe("Logging", () => {
 
 	test.skip("Should handle error simplified blockchain call", async () => {
 		const logger = getLogger()
-		const sdk = createSdk(eth6, "development", { logs: LogsLevel.DISABLED, logger })
+		const sdk = createSdk(ethereumWallet, "development", { logs: LogsLevel.DISABLED, logger })
 		try {
 			const tx = await sdk.order.buy({ orderId: toOrderId("ETHEREUM:0x78dafa455051f8b7a1abcab8d028a7ef0a9e5c8db053176f826ba12e81b87292"), amount: 1 })
 			await tx.wait()

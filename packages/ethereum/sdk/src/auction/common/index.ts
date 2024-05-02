@@ -5,8 +5,9 @@ import type { AssetType, Part } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { Auction } from "@rarible/ethereum-api-client/build/models"
 import { id } from "../../common/id"
-import type { EthereumConfig } from "../../config/type"
 import { addFee } from "../../order/add-fee"
+import type { GetConfigByChainId } from "../../config"
+import { getRequiredWallet } from "../../common/get-required-wallet"
 
 export function getAuctionOperationOptions(buyAssetType: AssetType, value: BigNumber, fee: number) {
 	if (buyAssetType.assetClass === "ETH") {
@@ -16,15 +17,15 @@ export function getAuctionOperationOptions(buyAssetType: AssetType, value: BigNu
 	return {}
 }
 
-export function getAuctionHash(
+export async function getAuctionHash(
 	ethereum: Maybe<Ethereum>,
-	config: EthereumConfig,
-	auctionId: BigNumber,
-): string {
-	if (!ethereum) {
-		throw new Error("Wallet is undefined")
-	}
-	const hash = ethereum.encodeParameter(AUCTION_HASH_TYPE, {
+	getConfig: GetConfigByChainId,
+	auctionId: string,
+): Promise<string> {
+	const wallet = getRequiredWallet(ethereum)
+	const config = await getConfig()
+
+	const hash = wallet.encodeParameter(AUCTION_HASH_TYPE, {
 		contractAddress: config.auction,
 		auctionId: auctionId,
 	})

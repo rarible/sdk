@@ -1,0 +1,33 @@
+{
+  "name": "@rarible/connector-aptos",
+  "version": "0.13.68-fix.21",
+  "homepage": "",
+  "license": "ISC",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig-build.json",
+    "clean": "rimraf ./build",
+    "verify": "tsc --noEmit --project tsconfig-build.json"
+  },
+  "dependencies": {
+    "@rarible/api-client": "0.16.5-alpha.10",
+    "@rarible/connector": "^0.13.68-fix.21",
+    "@rarible/types": "~0.9.26"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.2",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^27.2.4",
+    "ts-jest": "^27.0.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

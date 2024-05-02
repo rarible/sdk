@@ -4,11 +4,17 @@ import type {
 	Erc1155LazyAssetType,
 	Erc721AssetType,
 	Erc721LazyAssetType,
+	CryptoPunksAssetType,
 } from "@rarible/ethereum-api-client"
 
-export function isNft(
-	type: AssetType,
-): type is (Erc721AssetType | Erc1155AssetType | Erc721LazyAssetType | Erc1155LazyAssetType) {
+export type NftAssetKnownType =
+	| Erc721AssetType
+	| Erc1155AssetType
+	| Erc721LazyAssetType
+	| Erc1155LazyAssetType
+	| CryptoPunksAssetType
+
+export function isNft(type: AssetType): type is NftAssetKnownType {
 	switch (type.assetClass) {
 		case "ERC721":
 		case "ERC721_LAZY":

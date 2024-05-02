@@ -1,4 +1,5 @@
 import type { Provider } from "./domain"
+import { isObject } from "./sign-typed-data"
 
 export type EthereumProviderErrorData = {
 	error: any
@@ -24,7 +25,7 @@ export class EthereumProviderError extends Error {
   blockNumber?: number
 
   constructor(data: EthereumProviderErrorData) {
-  	super(EthereumProviderError.getErrorMessage(data?.error))
+  	super(EthereumProviderError.getErrorMessage(data))
   	Object.setPrototypeOf(this, EthereumProviderError.prototype)
   	this.name = "EthereumProviderError"
   	this.error = data?.error
@@ -41,9 +42,18 @@ export class EthereumProviderError extends Error {
   	this.blockNumber = data?.blockNumber
   }
 
-  static getErrorMessage(error: any) {
-  	if (typeof error === "string") return error
-  	return error?.message || "EthereumProviderError"
+  static getErrorMessage({ error, data, chainId }: EthereumProviderErrorData) {
+  	const sourceError = typeof error === "string" ? error : (error?.message || "EthereumProviderError")
+  	if (isObject(data) && data.args && data.method && data.contract) {
+  		return [
+  			sourceError,
+  			`chainId: ${chainId || ""}`,
+  			`contract: ${data.contract}`,
+  			`method: ${data.method}`,
+  			`args: ${JSON.stringify(data.args, null, " ")}`,
+  		].join("\n")
+  	}
+  	return sourceError
   }
 
   getNewStack(error: any) {

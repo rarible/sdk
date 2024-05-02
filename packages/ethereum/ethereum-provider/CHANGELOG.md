@@ -3,6 +3,79 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+
+### Features
+
+* **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
+
+
+
+
+
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+
+### Features
+
+* **PLTF-399:** support seaport 1.6 ([#615](https://github.com/rarible/sdk/issues/615)) ([4da2128](https://github.com/rarible/sdk/commit/4da2128a77ce30d089676d28a339e3a5122710d9))
+
+
+
+
+
+## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
+
+
+### Features
+
+* **PLTF-106:** slow polygon transactions ([#587](https://github.com/rarible/sdk/issues/587)) ([5530259](https://github.com/rarible/sdk/commit/5530259ce814c2398f930a7d3c461a9f709f748c))
+
+
+
+
+
+## [0.13.65](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.65) (2023-12-20)
+
+**Note:** Version bump only for package @rarible/ethereum-provider
+
+
+
+
+
 ## [0.13.56](https://github.com/rarible/sdk/compare/v0.13.55-fix.0...v0.13.56) (2023-10-26)
 
 

@@ -1,5 +1,6 @@
 import { ethers } from "ethers"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import { EthereumWallet, FlowWallet, SolanaWallet } from "@rarible/sdk-wallet"
 import { BlockchainGroup } from "@rarible/api-client/build/models/BlockchainGroup"
 import * as fcl from "@onflow/fcl"
@@ -8,25 +9,52 @@ import { getWallet } from "../sdk-blockchains/solana/common/test/test-wallets"
 import { createTestWallet } from "../sdk-blockchains/tezos/test/test-wallet"
 import { createSdk } from "../common/test/create-sdk"
 
-const { web31, web32 } = initProviders()
+const { provider1, provider2 } = initProviders()
 
 const providers = [{
-	name: "Ethereum Wallet",
+	name: "Ethereum Wallet Web3 v1",
 	getProvider: () => {
-		const ethereum1 = new Web3Ethereum({ web3: web31 })
+		const ethereum1 = new Web3Ethereum({
+			web3: new Web3(provider1),
+		})
 		return new EthereumWallet(ethereum1)
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,
 }, {
-	name: "Ethereum Provider",
+	name: "Ethereum Provider Web3 v1",
 	getProvider: () => {
-		return new Web3Ethereum({ web3: web32 })
+		return new Web3Ethereum({
+			web3: new Web3(provider2),
+		})
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,
 }, {
-	name: "Web3",
+	name: "Web3 v1",
 	getProvider: () => {
-		return web31
+		return new Web3(provider1)
+	},
+	expectedBlockchain: BlockchainGroup.ETHEREUM,
+}, {
+	name: "Ethereum Wallet Web3 v4",
+	getProvider: () => {
+		const ethereum1 = new Web3v4Ethereum({
+			web3: new Web3v4(provider1),
+		})
+		return new EthereumWallet(ethereum1)
+	},
+	expectedBlockchain: BlockchainGroup.ETHEREUM,
+}, {
+	name: "Ethereum Provider Web3 v4",
+	getProvider: () => {
+		return new Web3v4Ethereum({
+			web3: new Web3v4(provider2),
+		})
+	},
+	expectedBlockchain: BlockchainGroup.ETHEREUM,
+}, {
+	name: "Web3 v4",
+	getProvider: () => {
+		return new Web3v4(provider1)
 	},
 	expectedBlockchain: BlockchainGroup.ETHEREUM,
 }, {

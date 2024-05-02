@@ -1,20 +1,22 @@
 import { toAddress } from "@rarible/types"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
 import { getEthereumConfig } from "../config"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import { signOrder } from "./sign-order"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import type { SimpleOrder } from "./types"
 
-describe("signOrder", () => {
-	const { provider } = createE2eProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
-	const config = getEthereumConfig("dev-ethereum")
-	const signOrderE2e = signOrder.bind(null, ethereum, config)
+const { provider, wallet } = createE2eTestProvider("d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469")
+const { providers } = createEthereumProviders(provider, wallet)
 
-	test("should sign legacy orders", async () => {
+/**
+ * @group provider/dev
+ */
+describe.each(providers)("signOrder", (ethereum) => {
+	const config = getEthereumConfig("dev-ethereum")
+	const getConfig = async () => config
+	const signOrderE2e = signOrder.bind(null, ethereum, getConfig)
+
+	test(`[${ethereum.constructor.name}] should sign legacy orders`, async () => {
 		const signer = await ethereum.getFrom()
 		const order: SimpleOrder = {
 			...TEST_ORDER_TEMPLATE,
@@ -33,7 +35,7 @@ describe("signOrder", () => {
 		)
 	})
 
-	test("should sign v2 orders", async () => {
+	test(`[${ethereum.constructor.name}] should sign v2 orders`, async () => {
 		const signer = await ethereum.getFrom()
 		const signature = await signOrderE2e({
 			...TEST_ORDER_TEMPLATE,
@@ -46,7 +48,7 @@ describe("signOrder", () => {
 			maker: toAddress(signer),
 		})
 		expect(signature).toEqual(
-			"0xf2f467bd5cd30de2cd6a2b83b8d3b8405a730a0453589ce252b2f25a38b19052236e0a18d0f44023617f4055822b5f4fbf54dd091e87cf71c4f8f9a133136cf51c"
+			"0xc959c911e719426947215dc612f937b79f2e9e3cec0d98237552a5a87c535493209a0a9c0dd3a9f1be39faa615076d4e47f388fa76bbb6c66b6e82d7c6669e251b"
 		)
 	})
 })

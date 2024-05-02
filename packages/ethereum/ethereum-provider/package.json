@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-provider",
-  "version": "0.13.56",
+  "version": "0.13.69-beta.1",
   "description": "Library to abstract from web3.js or ethers.js",
   "keywords": [
     "ethereum",
@@ -16,6 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
+    "@rarible/sdk-common": "^0.13.69-beta.1",
     "eth-sig-util": "^3.0.0"
   },
   "peerDependencies": {

@@ -2,8 +2,9 @@ import type * as ApiClient from "@rarible/api-client"
 import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import type { AuthWithPrivateKey } from "@rarible/flow-sdk/build/types"
+import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
+import type { AptosSdkConfig } from "@rarible/aptos-sdk/src/domain"
 import type {
 	IConvert,
 	IDepositBiddingBalance,
@@ -41,6 +42,7 @@ import type {
 	IFlowSetupMattelCollections,
 } from "./types/nft/collection"
 import type { ExternalContext } from "./common/get-sdk-context"
+import type { IFlowCheckInitGamisodesCollections } from "./types/nft/collection"
 
 export enum LogsLevel {
 	DISABLED = 0,
@@ -74,6 +76,7 @@ export interface IRaribleSdkConfig {
 		[WalletType.SOLANA]?: ISolanaSdkConfig
 		[WalletType.ETHEREUM]?: IEthereumSdkConfig
 		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
+		[WalletType.APTOS]?: AptosSdkConfig
 	}
 	/**
 	 * Middlewares
@@ -148,6 +151,8 @@ export interface IApisSdk {
 	activity: ApiClient.ActivityControllerApi
 	item: ApiClient.ItemControllerApi
 	ownership: ApiClient.OwnershipControllerApi
+	balances: ApiClient.BalanceControllerApi
+	search: ApiClient.SearchControllerApi
 }
 
 /**
@@ -392,7 +397,9 @@ export interface IEthereumSdk {
 export interface IFlowSdk {
 	setupAccount: IFlowSetupAccount
 	setupMattelCollections: IFlowSetupMattelCollections
+	setupGamisodesCollections: IFlowSetupMattelCollections
 	checkInitMattelCollections: IFlowCheckInitMattelCollections
+	checkInitGamisodesCollections: IFlowCheckInitGamisodesCollections
 }
 
 

@@ -1,9 +1,6 @@
 import type { Address } from "@rarible/types"
-import type {
-	Erc20AssetType,
-	EthAssetType,
-} from "@rarible/ethereum-api-client/build/models/AssetType"
-import type { BigNumberValue } from "@rarible/utils"
+import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { RaribleEthereumApis } from "./apis"
 import { wrapInRetry } from "./retry"
@@ -11,21 +8,22 @@ import { wrapInRetry } from "./retry"
 export type BalanceRequestAssetType = EthAssetType | Erc20AssetType
 
 export class Balances {
-	constructor(private readonly apis: RaribleEthereumApis) {
+	constructor(private readonly getApis: () => Promise<RaribleEthereumApis>) {
 		this.getBalance = this.getBalance.bind(this)
 	}
 
-	async getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumberValue> {
+	async getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumber> {
+		const apis = await this.getApis()
 		switch (assetType.assetClass) {
 			case "ETH": {
 				const ethBalance = await wrapInRetry(() =>
-					this.apis.balances.getEthBalance({ owner: address })
+					apis.balances.getEthBalance({ owner: address })
 				)
 				return toBn(ethBalance.decimalBalance)
 			}
 			case "ERC20": {
 				const balance = await wrapInRetry(() =>
-					this.apis.balances.getErc20Balance({
+					apis.balances.getErc20Balance({
 						contract: assetType.contract,
 						owner: address,
 					})

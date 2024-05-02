@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { Address, ContractAddress } from "@rarible/types"
-import { toBinary, toUnionAddress, toWord } from "@rarible/types"
+import type { ContractAddress } from "@rarible/types"
+import { toAddress, toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
 import type { AssetType, OrderId } from "@rarible/api-client"
@@ -8,8 +8,6 @@ import { Blockchain } from "@rarible/api-client"
 import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { NftItem } from "@rarible/ethereum-api-client/build/models"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import { Action } from "@rarible/action"
 import { addFee } from "@rarible/protocol-ethereum-sdk/build/order/add-fee"
@@ -19,7 +17,7 @@ import { compareCaseInsensitive } from "@rarible/protocol-ethereum-sdk/build/com
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import { Warning } from "@rarible/logger/build"
-import { extractBlockchain } from "@rarible/sdk-common"
+import type { Item } from "@rarible/api-client/build/models"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
@@ -34,41 +32,40 @@ import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
-import { checkPayouts } from "../../common/check-payouts"
 import type { IApisSdk } from "../../domain"
 import { checkRoyalties } from "../../common/check-royalties"
 import { getCollectionFromItemId } from "../../common/utils"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
+	checkWalletBlockchain,
 	convertEthereumContractAddress,
 	convertEthereumToUnionAddress,
+	convertOrderType,
 	convertToEthereumAddress,
 	convertToEthereumAssetType,
+	extractEVMBlockchain,
 	getEthereumItemId,
-	getEVMBlockchain,
 	getOrderAmount,
 	getOrderFeesSum,
 	getOriginFeeSupport,
 	getPayoutsSupport,
 	isEVMBlockchain,
-	validateOrderDataV3Request,
+	isRaribleOrderData,
+	isWETH,
 } from "./common"
 import type { EthereumBalance } from "./balance"
 import type { IEthereumSdkConfig } from "./domain"
 
 export class EthereumBid {
-	private readonly blockchain: EVMBlockchain
 
 	constructor(
 		private sdk: RaribleSdk,
-		private apis: IApisSdk,
 		private wallet: Maybe<EthereumWallet>,
+		private apis: IApisSdk,
 		private balanceService: EthereumBalance,
-		private network: EthereumNetwork,
 		private config?: IEthereumSdkConfig
 	) {
-		this.blockchain = getEVMBlockchain(network)
 		this.bid = this.bid.bind(this)
 		this.update = this.update.bind(this)
 		this.getConvertableValue = this.getConvertableValue.bind(this)
@@ -77,7 +74,7 @@ export class EthereumBid {
 		this.bidUpdateBasic = this.bidUpdateBasic.bind(this)
 	}
 
-	convertAssetType(assetType: EthereumAssetType): ApiClient.AssetType {
+	convertAssetType(assetType: EthereumAssetType, blockchain: EVMBlockchain): ApiClient.AssetType {
 		switch (assetType.assetClass) {
 			case "ETH": {
 				return {
@@ -87,20 +84,20 @@ export class EthereumBid {
 			case "ERC20": {
 				return {
 					"@type": "ERC20",
-					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
+					contract: convertEthereumContractAddress(assetType.contract, blockchain),
 				}
 			}
 			case "ERC721": {
 				return {
 					"@type": "ERC721",
-					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
+					contract: convertEthereumContractAddress(assetType.contract, blockchain),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC721_LAZY": {
 				return {
 					"@type": "ERC721_Lazy",
-					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
+					contract: convertEthereumContractAddress(assetType.contract, blockchain),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					creators: assetType.creators.map((c) => ({
@@ -117,14 +114,14 @@ export class EthereumBid {
 			case "ERC1155": {
 				return {
 					"@type": "ERC1155",
-					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
+					contract: convertEthereumContractAddress(assetType.contract, blockchain),
 					tokenId: assetType.tokenId,
 				}
 			}
 			case "ERC1155_LAZY": {
 				return {
 					"@type": "ERC1155_Lazy",
-					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
+					contract: convertEthereumContractAddress(assetType.contract, blockchain),
 					tokenId: assetType.tokenId,
 					uri: assetType.uri,
 					supply: assetType.supply !== undefined
@@ -144,7 +141,7 @@ export class EthereumBid {
 			case "GEN_ART": {
 				return {
 					"@type": "GEN_ART",
-					contract: convertEthereumContractAddress(assetType.contract, this.blockchain),
+					contract: convertEthereumContractAddress(assetType.contract, blockchain),
 				}
 			}
 			default: {
@@ -173,43 +170,24 @@ export class EthereumBid {
 			}
 		}
 
-		if (this.config?.useDataV3) {
-			return this.bidDataV3(prepare)
-		} else {
-			return this.bidDataV2(prepare)
-		}
+		return this.bidDataV2(prepare)
 	}
 
 	async bidDataV2(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		let contractAddress: Address | undefined
-		let item: NftItem | undefined
-		let takeAssetType: AssetTypeRequest
+		const {
+			ethAssetType,
+			item,
+			contract,
+			blockchain,
+		} = await getTakeAssetType(this.apis, prepare)
 
-		if ("itemId" in prepare) {
-			const { itemId } = getEthereumItemId(prepare.itemId)
-			item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
-			contractAddress = item.contract
-
-			takeAssetType = {
-				tokenId: item.tokenId,
-				contract: item.contract,
-			}
-		} else if ("collectionId" in prepare) {
-			contractAddress = convertToEthereumAddress(prepare.collectionId)
-			takeAssetType = {
-				assetClass: "COLLECTION",
-				contract: contractAddress,
-			}
-		} else {
-			throw new Warning("ItemId or CollectionId must be assigned")
-		}
-
-		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: contractAddress,
+		const collection = await this.apis.collection.getCollectionById({
+			collection: contract,
 		})
 
 		const bidAction = this.sdk.order.bid
 			.before(async (request: OrderCommon.OrderRequest) => {
+				await checkWalletBlockchain(this.wallet, blockchain)
 				const expirationDate = request.expirationDate
 					? convertDateToTimestamp(request.expirationDate)
 					: getDefaultExpirationDateTimestamp()
@@ -217,7 +195,7 @@ export class EthereumBid {
 				return {
 					type: "DATA_V2",
 					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					takeAssetType: takeAssetType,
+					takeAssetType: ethAssetType,
 					amount: getOrderAmount(request.amount, collection),
 					priceDecimal: request.price,
 					payouts: common.toEthereumParts(request.payouts),
@@ -227,20 +205,27 @@ export class EthereumBid {
 			})
 			.after(async (res) => {
 				await res.approveTx?.wait()
-				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+				return common.convertEthereumOrderHash(res.order.hash, blockchain)
 			})
 
 		const submit = Action.create({
 			id: "convert" as const,
 			run: async (request: OrderCommon.OrderRequest) => {
+				await checkWalletBlockchain(this.wallet, blockchain)
 				const currency = getCurrencyAssetType(request.currency)
 				if (currency["@type"] === "ERC20") {
-					const wrappedContract = this.getWrappedCurrencyAddress()
-					const blockchain = extractBlockchain(wrappedContract)
-					if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(currency.contract, wrappedContract)) {
+					const wrappedContract = await this.sdk.balances.getWethContractAddress()
+					if (![Blockchain.MANTLE, Blockchain.CELO].includes(blockchain)
+            && compareCaseInsensitive(convertToEthereumAddress(currency.contract), wrappedContract)) {
 						const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
 						const quantity = getOrderAmount(request.amount, collection)
-						const value = await this.getConvertableValueCommon(currency, request.price, quantity, feeBp)
+						const value = await this.getConvertableValueCommon(
+							currency,
+							request.price,
+							quantity,
+							feeBp,
+							blockchain
+						)
 						await this.convertCurrency(value)
 					}
 				}
@@ -256,115 +241,23 @@ export class EthereumBid {
 			multiple: collection.type === "ERC1155",
 			maxAmount: item ? item.supply : null,
 			baseFee: await this.sdk.order.getBaseOrderFee(),
-			getConvertableValue: this.getConvertableValue,
+			getConvertableValue: this.getConvertableValue.bind(this, blockchain),
 			supportsExpirationDate: true,
 			submit,
 		}
 	}
 
-	async bidDataV3(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
-		let contractAddress: Address | undefined
-		let item: NftItem | undefined
-		let takeAssetType: AssetTypeRequest
-
-		if ("itemId" in prepare) {
-			const { itemId } = getEthereumItemId(prepare.itemId)
-			item = await this.sdk.apis.nftItem.getNftItemById({ itemId })
-			contractAddress = item.contract
-
-			takeAssetType = {
-				tokenId: item.tokenId,
-				contract: item.contract,
-			}
-		} else if ("collectionId" in prepare) {
-			contractAddress = convertToEthereumAddress(prepare.collectionId)
-			takeAssetType = {
-				assetClass: "COLLECTION",
-				contract: contractAddress,
-			}
-		} else {
-			throw new Error("ItemId or CollectionId must be assigned")
-		}
-
-		const collection = await this.sdk.apis.nftCollection.getNftCollectionById({
-			collection: contractAddress,
-		})
-
-		const bidAction = this.sdk.order.bid
-			.before(async (request: OrderCommon.OrderRequest) => {
-				validateOrderDataV3Request(request, { shouldProvideMaxFeesBasePoint: false })
-
-				const expirationDate = request.expirationDate
-					? convertDateToTimestamp(request.expirationDate)
-					: getDefaultExpirationDateTimestamp()
-				const currencyAssetType = getCurrencyAssetType(request.currency)
-
-				const payouts = common.toEthereumParts(request.payouts)
-				const originFees = common.toEthereumParts(request.originFees)
-
-				return {
-					type: "DATA_V3_BUY",
-					makeAssetType: common.getEthTakeAssetType(currencyAssetType),
-					takeAssetType: takeAssetType,
-					amount: getOrderAmount(request.amount, collection),
-					priceDecimal: request.price,
-					payout: payouts[0],
-					originFeeFirst: originFees[0],
-					originFeeSecond: originFees[1],
-					end: expirationDate,
-				}
-			})
-			.after(async (res) => {
-				await res.approveTx?.wait()
-				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
-			})
-
-		const submit = Action.create({
-			id: "convert" as const,
-			run: async (request: OrderCommon.OrderRequest) => {
-				checkPayouts(request.payouts)
-				const wrappedAddress = this.getWrappedCurrencyAddress()
-				const currency = getCurrencyAssetType(request.currency)
-				const blockchain = extractBlockchain(wrappedAddress)
-
-				if (blockchain !== Blockchain.MANTLE && currency["@type"] === "ERC20" && compareCaseInsensitive(currency.contract, wrappedAddress)) {
-					const feeBp = request.originFees?.reduce((prev, curr) => prev + curr.value, 0) || 0
-					const quantity = getOrderAmount(request.amount, collection)
-					const value = await this.getConvertableValueCommon(currency, request.price, quantity, feeBp)
-					await this.convertCurrency(value)
-				}
-				return request
-			},
-		}).thenAction(bidAction)
-
-		return {
-			originFeeSupport: OriginFeeSupport.FULL,
-			payoutsSupport: PayoutsSupport.MULTIPLE,
-			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-			supportedCurrencies: common.getSupportedCurrencies(this.blockchain, true),
-			multiple: collection.type === "ERC1155",
-			maxAmount: item ? item.supply : null,
-			baseFee: await this.sdk.order.getBaseOrderFee(),
-			getConvertableValue: this.getConvertableValue,
-			supportsExpirationDate: true,
-			submit,
-		}
-	}
-
-	getWrappedCurrencyAddress(): ContractAddress {
-		const addressRaw = this.sdk.balances.getWethContractAddress()
-		return convertEthereumContractAddress(addressRaw, this.blockchain)
-	}
-
-	private async getConvertableValue(request: GetConvertableValueRequest): Promise<GetConvertableValueResult> {
+	private async getConvertableValue(
+		blockchain: EVMBlockchain,
+		request: GetConvertableValueRequest,
+	): Promise<GetConvertableValueResult> {
 		const assetType = this.getAssetTypeForConvert(request)
 		if (assetType["@type"] === "ERC20") {
-			const wrappedCurrency = this.getWrappedCurrencyAddress()
-			const blockchain = extractBlockchain(wrappedCurrency)
-
-			if (blockchain !== Blockchain.MANTLE && compareCaseInsensitive(assetType.contract, wrappedCurrency)) {
+			const wrappedCurrency = await this.sdk.balances.getWethContractAddress()
+			if (![Blockchain.MANTLE, Blockchain.CELO].includes(blockchain)
+        && compareCaseInsensitive(convertToEthereumAddress(assetType.contract), wrappedCurrency)) {
 				const feeBp = request.originFees.reduce((prev, curr) => prev + curr.value, 0)
-				return this.getConvertableValueCommon(assetType, request.price, request.amount, feeBp)
+				return this.getConvertableValueCommon(assetType, request.price, request.amount, feeBp, blockchain)
 			}
 		}
 
@@ -381,7 +274,8 @@ export class EthereumBid {
 		assetType: RequestCurrencyAssetType,
 		price: BigNumberValue,
 		quantity: BigNumberValue,
-		originFeeBp: number
+		originFeeBp: number,
+		blockchain: EVMBlockchain
 	) {
 		const wallet = common.assertWallet(this.wallet)
 		const convertedAssetType = convertToEthereumAssetType(assetType)
@@ -404,7 +298,7 @@ export class EthereumBid {
 		])
 
 		const fromUnion = convertEthereumToUnionAddress(from, Blockchain.ETHEREUM)
-		const asset: AssetType = { "@type": "ETH", blockchain: this.blockchain }
+		const asset: AssetType = { "@type": "ETH", blockchain }
 		const value = toBn(valueWithFee.value).integerValue().div(toBn(10).pow(assetDecimals))
 
 		return getCommonConvertableValue(this.balanceService.getBalance, fromUnion, value, asset, assetType)
@@ -429,34 +323,43 @@ export class EthereumBid {
 			throw new Error("Not an ethereum order")
 		}
 
-		const order = await this.sdk.apis.order.getValidatedOrderByHash({ hash })
-		if (order.type !== "RARIBLE_V2" && order.type !== "RARIBLE_V1") {
-			throw new UpdateBidNotSupportedForThidKindOfOrderError(order.type)
+		const order = await this.apis.order.getValidatedOrderById({
+			id: prepareRequest.orderId,
+		})
+		if (!isRaribleOrderData(order.data)) {
+			throw new UpdateBidNotSupportedForThidKindOfOrderError(order.data["@type"])
 		}
 
 		const bidUpdateAction = this.sdk.order.bidUpdate
-			.before((request: OrderCommon.OrderUpdateRequest) => ({
-				orderHash: toWord(hash),
-				priceDecimal: request.price,
-			}))
+			.before(async (request: OrderCommon.OrderUpdateRequest) => {
+				await checkWalletBlockchain(this.wallet, blockchain)
+				return {
+					orderHash: toWord(hash),
+					priceDecimal: request.price,
+				}
+			})
 			.after(async (res) => {
 				await res.approveTx?.wait()
-				return common.convertEthereumOrderHash(res.order.hash, this.blockchain)
+				return common.convertEthereumOrderHash(res.order.hash, blockchain)
 			})
 
 		const actionWithConvert = Action
 			.create({
 				id: "convert" as const,
 				run: async (request: OrderCommon.OrderUpdateRequest) => {
-					if (blockchain === Blockchain.MANTLE) {
+					await checkWalletBlockchain(this.wallet, blockchain)
+					if ([Blockchain.MANTLE, Blockchain.CELO].includes(blockchain)) {
 						return request
 					}
-
-					const wethContractAddress = this.getWrappedCurrencyAddress()
-					if (order.make.assetType.assetClass === "ERC20" && order.make.assetType.contract.toLowerCase() === wethContractAddress.toLowerCase()) {
-						const asset = this.convertAssetType(order.make.assetType) as RequestCurrencyAssetType
+					if (isWETH(order.make.type, await this.sdk.balances.getWethContractAddress())) {
 						const feesBp = getOrderFeesSum(order)
-						const value = await this.getConvertableValueCommon(asset, request.price, order.take.value, feesBp)
+						const value = await this.getConvertableValueCommon(
+							order.make.type as ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType,
+							request.price,
+							order.take.value,
+							feesBp,
+							blockchain,
+						)
 						await this.convertCurrency(value)
 					}
 
@@ -466,16 +369,16 @@ export class EthereumBid {
 			.thenAction(bidUpdateAction)
 
 		return {
-			originFeeSupport: getOriginFeeSupport(order.type),
-			payoutsSupport: getPayoutsSupport(order.type),
+			originFeeSupport: getOriginFeeSupport(order.data),
+			payoutsSupport: getPayoutsSupport(order.data),
 			maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
 			supportedCurrencies: common.getSupportedCurrencies(Blockchain.ETHEREUM, true),
-			baseFee: await this.sdk.order.getBaseOrderFee(order.type),
-			getConvertableValue: this.getConvertableValue,
+			baseFee: await this.sdk.order.getBaseOrderFee(convertOrderType(order.data)),
+			getConvertableValue: this.getConvertableValue.bind(this, blockchain),
 			submit: actionWithConvert,
 			orderData: {
-				nftCollection: "contract" in order.take.assetType
-					? convertEthereumContractAddress(order.take.assetType.contract, blockchain)
+				nftCollection: "contract" in order.take.type
+					? order.take.type.contract
 					: undefined,
 			},
 		}
@@ -493,5 +396,37 @@ export class UpdateBidNotSupportedForThidKindOfOrderError extends Error {
 	constructor(type: string) {
 		super(`Update bid is not supported for ${type} kind of order`)
 		this.name = "UpdateBidNotSupportedForThidKindOfOrderError"
+	}
+}
+
+
+async function getTakeAssetType(
+	apis: IApisSdk,
+	prepare: PrepareBidRequest
+): Promise<{ethAssetType: AssetTypeRequest, item?: Item, contract: ContractAddress, blockchain: EVMBlockchain}> {
+	if ("itemId" in prepare) {
+		const item = await apis.item.getItemById({ itemId: prepare.itemId })
+		const { tokenId, contract, domain } = getEthereumItemId(item.id)
+
+		return {
+			ethAssetType: {
+				tokenId: tokenId,
+				contract: toAddress(contract),
+			},
+			item,
+			contract: toContractAddress(item.contract),
+			blockchain: domain,
+		}
+	} else if ("collectionId" in prepare) {
+		return {
+			ethAssetType: {
+				assetClass: "COLLECTION",
+				contract: convertToEthereumAddress(prepare.collectionId),
+			},
+			contract: toContractAddress(prepare.collectionId),
+			blockchain: extractEVMBlockchain(prepare.collectionId),
+		}
+	} else {
+		throw new Warning("ItemId or CollectionId must be assigned")
 	}
 }

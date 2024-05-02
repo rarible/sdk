@@ -4,26 +4,32 @@ import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { Blockchain } from "@rarible/api-client"
 import { Action } from "@rarible/action"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
+import type * as ApiClient from "@rarible/api-client"
+import { extractBlockchain } from "@rarible/sdk-common"
 import type { ConvertRequest } from "../../types/balances"
 import type {
 	DepositBiddingBalanceRequest,
 	GetBiddingBalanceRequest,
 	WithdrawBiddingBalanceRequest,
 } from "../../types/balances"
-import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import { getCurrencyAssetType, getEVMCurrencyId, isErc20, isEth } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
 import type { IApisSdk } from "../../domain"
-import { extractBlockchain } from "../../common/extract-blockchain"
-import { convertEthereumContractAddress, convertToEthereumAddress, convertToEthereumAssetType, isEVMBlockchain } from "./common"
+import {
+	convertEthereumContractAddress,
+	getWalletNetwork,
+	isEVMBlockchain,
+} from "./common"
 
 export class EthereumBalance {
 	constructor(
 		private sdk: RaribleSdk,
+		private wallet: Maybe<EthereumWallet>,
 		private readonly apis: IApisSdk,
-		private network: EthereumNetwork,
 	) {
 		this.getBalance = this.getBalance.bind(this)
 		this.convert = this.convert.bind(this)
@@ -31,18 +37,22 @@ export class EthereumBalance {
 	}
 
 	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumber> {
-		const assetType = convertToEthereumAssetType(getCurrencyAssetType(currency))
-		if (assetType.assetClass !== "ETH" && assetType.assetClass !== "ERC20") {
+		const type = getCurrencyAssetType(currency)
+		if (!isEth(type) && !isErc20(type)) {
 			throw new Error("Unsupported asset type for getting balance")
 		}
-		const addressRaw = convertToEthereumAddress(address)
-		const value = await this.sdk.balances.getBalance(addressRaw, assetType)
-		return toBn(value)
+		const response = await this.apis.balances.getBalance({
+			currencyId: getEVMCurrencyId(
+				currency as ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType
+			),
+			owner: address,
+		})
+		return toBn(response.decimal)
 	}
 
 	async convert(request: ConvertRequest): Promise<IBlockchainTransaction> {
 		const tx = await this.send(request)
-		return new BlockchainEthereumTransaction(tx, this.network)
+		return new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
 	}
 
 	private send(request: ConvertRequest) {
@@ -51,15 +61,15 @@ export class EthereumBalance {
 	}
 
 	async getBiddingBalance(request: GetBiddingBalanceRequest): Promise<BigNumber> {
-		const currency = this.getBiddingCurrency(request)
+		const currency = await this.getBiddingCurrency(request)
 		return this.getBalance(request.walletAddress, currency)
 	}
 
-	private getBiddingCurrency(request: GetBiddingBalanceRequest): RequestCurrency {
+	private async getBiddingCurrency(request: GetBiddingBalanceRequest): Promise<RequestCurrency> {
 		if ("currency" in request) {
 			return request.currency
 		} else {
-			const wrappedContract = this.sdk.balances.getWethContractAddress()
+			const wrappedContract = await this.sdk.balances.getWethContractAddress()
 			const blockchain = extractBlockchain(request.walletAddress)
 			if (isEVMBlockchain(blockchain)) {
 				return {

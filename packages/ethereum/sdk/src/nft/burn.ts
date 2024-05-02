@@ -26,16 +26,16 @@ export async function burn(
 	ethereum: Maybe<Ethereum>,
 	send: SendFunction,
 	checkAssetType: CheckAssetTypeFunction,
-	apis: RaribleEthereumApis,
-	checkWalletChainId: () => Promise<boolean>,
+	getApis: () => Promise<RaribleEthereumApis>,
 	request: BurnRequest,
 ): Promise<EthereumTransaction | void> {
-	await checkWalletChainId()
 	if (!ethereum) {
 		throw new Error("Wallet undefined")
 	}
 	const checked = await checkAssetType(request.assetType)
 	const from = toAddress(await ethereum.getFrom())
+	const apis = await getApis()
+
 	const ownership = await apis.nftOwnership.getNftOwnershipByIdRaw({
 		ownershipId: getOwnershipId(request.assetType.contract, toBigNumber(`${request.assetType.tokenId}`), from),
 	})

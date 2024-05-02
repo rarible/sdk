@@ -1,29 +1,26 @@
-import React, { useContext } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Grid, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
-import { EnvironmentContext } from "../../../components/connector/environment-selector-provider"
 import { useRequestResult } from "../../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { FormTextInput } from "../../../components/common/form/form-text-input"
 import { FormSubmit } from "../../../components/common/form/form-submit"
 import { RequestResult } from "../../../components/common/request-result"
 import { TransactionInfo } from "../../../components/common/transaction-info"
+import { useEnvironmentContext } from "../../../components/connector/env"
+import { useSdkContext } from "../../../components/connector/sdk"
 
 export function SetupCollection() {
-	const { environment: env } = useContext(EnvironmentContext)
+	const { environment: env } = useEnvironmentContext()
 	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useContext(ConnectorContext)
-
-	const blockchain = connection.sdk?.wallet?.walletType
+	const connection = useSdkContext()
+	const blockchain = connection.sdk.wallet?.walletType
 	const isFlowActive = blockchain === WalletType.FLOW
 	const form = useForm()
-	const { handleSubmit } = form
 
 	return (
 		<>
-			<form onSubmit={handleSubmit(async () => {
+			<form onSubmit={form.handleSubmit(async () => {
 				try {
 					const tx = await connection?.sdk?.flow?.setupAccount(form.getValues("collection"))
 					setComplete(tx)
@@ -33,10 +30,9 @@ export function SetupCollection() {
 			})}>
 
 				<Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
-          Setup Flow collection
+          			Setup Flow collection
 				</Typography>
 				<Grid container spacing={2}>
-
 					<Grid item xs={4}>
 						<FormTextInput
 							type="text"
@@ -57,15 +53,12 @@ export function SetupCollection() {
 					</Grid>
 				</Grid>
 			</form>
-
 			<RequestResult
 				result={result}
 				completeRender={(data) =>
-					<>
-						<Box sx={{ my: 2 }}>
-							<TransactionInfo transaction={data}/>
-						</Box>
-					</>
+					<Box sx={{ my: 2 }}>
+						<TransactionInfo transaction={data}/>
+					</Box>
 				}
 			/>
 

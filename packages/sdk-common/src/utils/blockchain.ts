@@ -1,8 +1,6 @@
-import { Blockchain } from "@rarible/api-client/build/models/Blockchain"
+import { Blockchain } from "@rarible/api-client"
 
-export type EVMBlockchain = Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.MANTLE
-| Blockchain.ARBITRUM | Blockchain.ZKSYNC | Blockchain.CHILIZ | Blockchain.LIGHTLINK
-export const EVMBlockchains: EVMBlockchain[] = [
+export const EVMBlockchains = [
 	Blockchain.ETHEREUM,
 	Blockchain.POLYGON,
 	Blockchain.MANTLE,
@@ -10,31 +8,33 @@ export const EVMBlockchains: EVMBlockchain[] = [
 	Blockchain.ZKSYNC,
 	Blockchain.CHILIZ,
 	Blockchain.LIGHTLINK,
-]
+	Blockchain.RARI,
+	Blockchain.ASTARZKEVM,
+	Blockchain.BASE,
+	Blockchain.FIEF,
+	Blockchain.XAI,
+	Blockchain.KROMA,
+	Blockchain.CELO,
+] as const
 
-/**
- * Return true if blockchain works like ethereum blockchain
- * @param blockchain
- */
+export type EVMBlockchain = typeof EVMBlockchains[number]
+
 export function isEVMBlockchain(blockchain: string): blockchain is EVMBlockchain {
-	for (const b of EVMBlockchains) {
-		if (b === blockchain) {
-			return true
-		}
-	}
-	return false
+	return EVMBlockchains.includes(blockchain as EVMBlockchain)
 }
 
-export const SupportedBlockchains = [
-	...EVMBlockchains,
+export const NonEVMBlockchains = [
 	Blockchain.FLOW,
 	Blockchain.TEZOS,
 	Blockchain.SOLANA,
+	Blockchain.ECLIPSE,
 	Blockchain.IMMUTABLEX,
+	Blockchain.APTOS,
 ] as const
 
-export type SupportedBlockchain = PickEnum<Blockchain, typeof SupportedBlockchains[number]>
+export const SupportedBlockchains = [
+	...EVMBlockchains,
+	...NonEVMBlockchains,
+] as const
 
-export type PickEnum<T, K extends T> = {
-	[P in keyof K]: P extends K ? P : never;
-}
+export type SupportedBlockchain = Extract<Blockchain, typeof SupportedBlockchains[number]>

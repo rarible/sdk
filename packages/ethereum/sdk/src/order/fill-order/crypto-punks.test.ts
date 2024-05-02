@@ -1,6 +1,4 @@
 import { randomWord, toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
 import {
 	awaitAll,
 	createGanacheProvider,
@@ -15,29 +13,29 @@ import {
 	deployCryptoPunkTransferProxy,
 	deployCryptoPunkAssetMatcher,
 } from "@rarible/ethereum-sdk-test-common"
-import { sentTx, getSimpleSendWithInjects } from "../../common/send-transaction"
+import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { getEthereumConfig } from "../../config"
 import type { SimpleOrder } from "../types"
 import { id } from "../../common/id"
 import { retry } from "../../common/retry"
-import { createEthereumApis } from "../../common/apis"
-import { checkChainId } from "../check-chain-id"
+import { getApis as getApisTemplate } from "../../common/apis"
+import { sentTx } from "../../common/test"
+import { createBuyerSellerProviders } from "../../common/test/create-test-providers"
 import { OrderFiller } from "./index"
 
-describe.skip("fillOrder", () => {
-	const { addresses, provider } = createGanacheProvider()
-	const [sender1Address, sender2Address] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
+const { provider, wallets, web3, addresses } = createGanacheProvider()
+const { providers } = createBuyerSellerProviders(provider, wallets)
 
+describe.each(providers)("fillOrder", (buyerEthereum) => {
+	const [buyerAddress, sellerAddress] = addresses
 	const env = "testnet" as const
-	const apis = createEthereumApis(env)
 	const config = getEthereumConfig(env)
-	const checkWalletChainId = checkChainId.bind(null, ethereum1, config)
+	const getConfig = async () => config
+	const getApis = getApisTemplate.bind(null, buyerEthereum, env)
 
 	const getBaseOrderFee = async () => 0
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-	const filler = new OrderFiller(ethereum1, send, config, apis, getBaseOrderFee, env)
+	const send = getSimpleSendWithInjects()
+	const filler = new OrderFiller(buyerEthereum, send, getConfig, getApis, getBaseOrderFee, env)
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),
@@ -58,44 +56,44 @@ describe.skip("fillOrder", () => {
 		 */
 		await sentTx(
 			it.exchangeV2.methods.__ExchangeV2_init(
-				toAddress(it.transferProxy.options.address),
+				toAddress(it.transferProxy.options.address!),
 				// ZERO_ADDRESS,
-				toAddress(it.erc20TransferProxy.options.address),
+				toAddress(it.erc20TransferProxy.options.address!),
 				toBigNumber("0"),
-				// sender1Address,
+				// buyerAddress,
 				ZERO_ADDRESS,
 				// toAddress(it.royaltiesProvider.options.address)
 				ZERO_ADDRESS
 			),
-			{ from: sender1Address }
+			{ from: buyerAddress }
 		)
-		config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-		config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-		config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address)
+		config.exchange.v1 = toAddress(it.exchangeV2.options.address!)
+		config.exchange.v2 = toAddress(it.exchangeV2.options.address!)
+		config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address!)
 		config.chainId = 4
 
-		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
-			from: sender1Address,
+		await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address!)), {
+			from: buyerAddress,
 		})
 
 		await sentTx(
 			it.exchangeV2.methods.setTransferProxy(
 				id("CRYPTO_PUNKS"),
-				it.punksTransferProxy.options.address
+				it.punksTransferProxy.options.address!
 			),
-			{ from: sender1Address }
+			{ from: buyerAddress }
 		)
 
 		//Set asset matcher for crypto punks
 		await sentTx(
 			it.exchangeV2.methods.setAssetMatcher(
 				id("CRYPTO_PUNKS"),
-				it.punkAssetMatcher.options.address
+				it.punkAssetMatcher.options.address!
 			),
-			{ from: sender1Address }
+			{ from: buyerAddress }
 		)
 
-		await sentTx(it.punksMarket.methods.allInitialOwnersAssigned(), { from: sender1Address })
+		await sentTx(it.punksMarket.methods.allInitialOwnersAssigned(), { from: buyerAddress })
 
 	})
 
@@ -104,12 +102,12 @@ describe.skip("fillOrder", () => {
 			make: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: 0,
 				},
 				value: toBigNumber("1"),
 			},
-			maker: sender2Address,
+			maker: sellerAddress,
 			take: {
 				assetType: {
 					assetClass: "ETH",
@@ -132,20 +130,20 @@ describe.skip("fillOrder", () => {
 		const punkId = 43
 		const punkPrice = 10
 		//Mint punks
-		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sender2Address })
+		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sellerAddress })
 
-		await sentTx(it.punksMarket.methods.offerPunkForSale(punkId, punkPrice), { from: sender2Address })
+		await sentTx(it.punksMarket.methods.offerPunkForSale(punkId, punkPrice), { from: sellerAddress })
 
 		const left: SimpleOrder = {
 			make: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
 			},
-			maker: sender2Address,
+			maker: sellerAddress,
 			take: {
 				assetType: {
 					assetClass: "ETH",
@@ -166,7 +164,7 @@ describe.skip("fillOrder", () => {
 		await retry(5, 500, async () => {
 			const ownerAddress = await it.punksMarket.methods.punkIndexToAddress(punkId).call()
 
-			expect(ownerAddress.toLowerCase()).toBe(sender1Address.toLowerCase())
+			expect(ownerAddress.toLowerCase()).toBe(buyerAddress.toLowerCase())
 		})
 	})
 
@@ -174,9 +172,9 @@ describe.skip("fillOrder", () => {
 		const punkId = 50
 		const punkPrice = 10
 		//Mint punks
-		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: sender1Address })
+		await sentTx(it.punksMarket.methods.getPunk(punkId), { from: buyerAddress })
 
-		await sentTx(it.punksMarket.methods.enterBidForPunk(punkId), { from: sender2Address, value: punkPrice })
+		await sentTx(it.punksMarket.methods.enterBidForPunk(punkId), { from: sellerAddress, value: punkPrice.toFixed() })
 
 		const left: SimpleOrder = {
 			make: {
@@ -185,11 +183,11 @@ describe.skip("fillOrder", () => {
 				},
 				value: toBigNumber(punkPrice.toFixed()),
 			},
-			maker: sender2Address,
+			maker: sellerAddress,
 			take: {
 				assetType: {
 					assetClass: "CRYPTO_PUNKS",
-					contract: toAddress(it.punksMarket.options.address),
+					contract: toAddress(it.punksMarket.options.address!),
 					tokenId: punkId,
 				},
 				value: toBigNumber("1"),
@@ -208,7 +206,7 @@ describe.skip("fillOrder", () => {
 		await retry(5, 500, async () => {
 			const ownerAddress = await it.punksMarket.methods.punkIndexToAddress(punkId).call()
 
-			expect(ownerAddress.toLowerCase()).toBe(sender2Address.toLowerCase())
+			expect(ownerAddress.toLowerCase()).toBe(sellerAddress.toLowerCase())
 		})
 	})
 

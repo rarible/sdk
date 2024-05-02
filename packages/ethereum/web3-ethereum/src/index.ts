@@ -1,5 +1,5 @@
 import type { Contract, ContractSendMethod, SendOptions } from "web3-eth-contract"
-import type Web3 from "web3"
+import Web3 from "web3"
 import type { PromiEvent, TransactionConfig, TransactionReceipt } from "web3-core"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
@@ -7,18 +7,35 @@ import { EthereumProviderError, filterErrors, Provider, signTypedData } from "@r
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { AbiItem } from "web3-utils"
-import { DappType, getDappType, promiseSettledRequest, conditionalRetry, FAILED_TO_FETCH_ERROR } from "@rarible/sdk-common"
+import {
+	DappType,
+	getDappType,
+	promiseSettledRequest,
+	conditionalRetry,
+	FAILED_TO_FETCH_ERROR,
+	OUT_OF_GAS_ERROR,
+	hasVersion,
+	getMajorVersion,
+} from "@rarible/sdk-common"
 import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import type { Web3EthereumConfig, Web3EthereumGasOptions } from "./domain"
 import { providerRequest } from "./utils/provider-request"
 import { toPromises } from "./utils/to-promises"
 import { getContractMethodReceiptEvents, getTransactionReceiptEvents } from "./utils/log-parser"
-import { getTransaction } from "./utils/get-transaction"
 
 export class Web3Ethereum implements EthereumProvider.Ethereum {
 	constructor(private readonly config: Web3EthereumConfig) {
+		if (!Web3Ethereum.isWeb3v1(config.web3)) {
+			throw new Error(`Passed version web3=${getWeb3Version(config.web3)}, expected v1`)
+		}
 		this.send = this.send.bind(this)
 		this.getFrom = this.getFrom.bind(this)
+	}
+
+	static isWeb3v1(x: unknown): x is Web3 {
+		const version = getWeb3Version(x)
+		if (!version) return false
+		return getMajorVersion(version) === "1"
 	}
 
 	createContract(abi: any, address?: string): EthereumProvider.EthereumContract {
@@ -215,11 +232,43 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		}
 	}
 
+	async getMethodWithReserveNode(): Promise<ContractSendMethod | undefined> {
+		const reserveNode = await this.getReserveNode()
+		if (reserveNode) {
+			return getMethodWithNewWeb3Node(
+				reserveNode,
+				{
+					contract: this.contract,
+					methodName: this.methodName,
+					args: this.args,
+				}
+			)
+		}
+	}
+
+	async getReserveNode(): Promise<string | undefined> {
+		return this.config.reserveNodes && this.config.reserveNodes[+(await this.config.web3.eth.getChainId())]
+	}
+
+
 	async estimateGas(options: EthereumProvider.EthereumEstimateGasOptions = {}) {
 		try {
-			return await conditionalRetry(5, 3000, () =>
-				this.sendMethod.estimateGas(options),
-			(error) => error?.message === FAILED_TO_FETCH_ERROR)
+			try {
+				return await conditionalRetry(5, 3000, () =>
+					this.sendMethod.estimateGas(options),
+				(error) => error?.message === FAILED_TO_FETCH_ERROR)
+			} catch (e: any) {
+				//Try to call estimateGas with reserve node
+				if (e?.message?.toLowerCase().includes(OUT_OF_GAS_ERROR)) {
+					const method = await this.getMethodWithReserveNode()
+					if (method) {
+						return await conditionalRetry(5, 3000, () =>
+							method.estimateGas(options),
+						(error) => error?.message === FAILED_TO_FETCH_ERROR)
+					}
+				}
+				throw e
+			}
 		} catch (error) {
 			let callInfo = null, data = null, chainId = undefined
 			try {
@@ -243,17 +292,33 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 		}
 	}
 
+	private async callWithRetry(sendMethod: ContractSendMethod, options: EthereumProvider.EthereumSendOptions = {}) {
+		const gasOptions = this.getGasOptions(options)
+		return await conditionalRetry(5, 3000, () =>
+			sendMethod.call({
+				from: this.config.from,
+				...gasOptions,
+			}),
+		(error) => error?.message === FAILED_TO_FETCH_ERROR
+		)
+	}
+
 	async call(options: EthereumProvider.EthereumSendOptions = {}): Promise<any> {
 		let gasOptions: Web3EthereumGasOptions | undefined
 		try {
 			gasOptions = this.getGasOptions(options)
-			return await conditionalRetry(5, 3000, () =>
-				this.sendMethod.call({
-					from: this.config.from,
-					...gasOptions,
-				}),
-			(error) => error?.message === FAILED_TO_FETCH_ERROR
-			)
+			try {
+				return await this.callWithRetry(this.sendMethod, options)
+			} catch (e: any) {
+				//Try to invoke call method with reserve node
+				if (e?.message?.toLowerCase().includes(OUT_OF_GAS_ERROR)) {
+					const method = await this.getMethodWithReserveNode()
+					if (method) {
+						return await this.callWithRetry(method, options)
+					}
+				}
+				throw e
+			}
 		} catch (error) {
 			let info = null
 			let data = null
@@ -302,13 +367,11 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 				}
 				const promiEvent = this.config.web3.eth.sendTransaction(transactionOptions)
 				const promises = toPromises(promiEvent)
-				const transaction = await getTransaction(await promises.hash, this.config)
 
 				return new Web3Transaction(
 					promises.receipt,
-					toWord(transaction.hash),
+					toWord(await promises.hash),
 					toBinary(enhancedData),
-					transaction.nonce,
 					from,
 					this.contractAddress,
 					this.contract.options.jsonInterface
@@ -322,17 +385,16 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 			}
 			const promiEvent: PromiEvent<Contract> = this.sendMethod.send(sendMethodConfig)
 			const promises = toPromises(promiEvent)
-			const transaction = await getTransaction(await promises.hash, this.config)
 			return new Web3Transaction(
 				promises.receipt,
-				toWord(transaction.hash),
+				toWord(await promises.hash),
 				toBinary(data),
-				transaction.nonce,
 				from,
 				this.contractAddress
 			)
 		} catch (error) {
 			throw new EthereumProviderError({
+				...await getCommonErrorData(this.config),
 				...getProvidersData(this.config),
 				method: "Web3FunctionCall.send",
 				error,
@@ -362,16 +424,15 @@ export class Web3FunctionCall implements EthereumProvider.EthereumFunctionCall {
 	}
 
 	private getGasOptions(options: EthereumProvider.EthereumSendOptions) {
-		const gasOptions: Web3EthereumGasOptions = {
-			// If we won't setup null here explicitly sometimes MetaMask
-			// interpret this option as 'suggested by website' in their UI
-			// @see https://stackoverflow.com/questions/68926306/how-to-avoid-this-gas-fee-has-been-suggested-by-message-in-metamask-using-web3
-			gasPrice: null as unknown as Web3EthereumGasOptions["gasPrice"],
+		const gasOptions: Web3EthereumGasOptions = {}
+		const gasPrice = options.gasPrice?.toString() ?? this.config.gasPrice
+		if (typeof gasPrice === "string" || typeof gasPrice === "number") {
+			gasOptions.gasPrice = gasPrice
 		}
-		const gasPrice = options.gasPrice?.toString() || this.config.gasPrice
-		if (typeof gasPrice !== "undefined") gasOptions.gasPrice = gasPrice
-		const gas = options.gas || this.config.gas
-		if (typeof gas !== "undefined") gasOptions.gas = gas
+		const gas = options.gas ?? this.config.gas
+		if (typeof gas === "number" || typeof gas === "string") {
+			gasOptions.gas = gas
+		}
 		return gasOptions
 	}
 
@@ -385,7 +446,6 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 		private readonly receipt: Promise<TransactionReceipt>,
 		public readonly hash: Word,
 		public readonly data: Binary,
-		public readonly nonce: number,
 		public readonly from: Address,
 		public readonly to?: Address,
 		private readonly contractAbi?: AbiItem[],
@@ -402,7 +462,6 @@ export class Web3Transaction implements EthereumProvider.EthereumTransaction {
 				data: {
 					hash: this.hash,
 					data: this.data,
-					nonce: this.nonce,
 					from: this.from,
 					to: this.to,
 				},
@@ -455,3 +514,22 @@ export function getCurrentProviderId(web3: Web3 | undefined): DappType {
 	if (web3) return getDappType(web3.currentProvider) || DappType.Unknown
 	return DappType.Unknown
 }
+
+function getMethodWithNewWeb3Node(
+	nodeUrl: string,
+	callOptions: { contract: Contract, methodName: string, args: any[]}
+): ContractSendMethod {
+	const web3 = new Web3(new Web3.providers.HttpProvider(nodeUrl))
+	const updatedContract = new web3.eth.Contract(
+		callOptions.contract.options.jsonInterface,
+		callOptions.contract.options.address
+	)
+	return updatedContract.methods[callOptions.methodName](...callOptions.args)
+}
+
+function getWeb3Version(x: unknown): string | undefined {
+	if (!hasVersion(x)) return undefined
+	return x.version
+}
+
+export { Web3 }

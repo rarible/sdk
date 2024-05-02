@@ -1,24 +1,21 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toCollectionId, toContractAddress, toUnionAddress } from "@rarible/types"
-import Web3 from "web3"
+import { getTestContract } from "@rarible/ethereum-sdk-test-common"
+import { toCollectionId, toUnionAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "../../index"
 import { awaitItem } from "../../common/test/await-item"
 import { generateExpirationDate } from "../../common/suite/order"
 import { createSdk } from "../../common/test/create-sdk"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { createE2eTestProvider } from "./test/init-providers"
+import { convertEthereumCollectionId } from "./common"
 
 describe("Batch buy", () => {
-	const { provider: providerSeller } = createE2eProvider(DEV_PK_1)
-	const { provider: providerBuyer } = createE2eProvider(DEV_PK_2)
+	const { web3Ethereum: ethereum1 } = createE2eTestProvider(DEV_PK_1)
+	const { web3Ethereum: ethereum2 } = createE2eTestProvider(DEV_PK_2)
 
-	const web31 = new Web3(providerSeller)
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
 	const sdkSeller = createSdk(new EthereumWallet(ethereum1), "development")
 
-	const web32 = new Web3(providerBuyer)
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
 	const sdkBuyer = createSdk(new EthereumWallet(ethereum2), "development")
 
 	test("batch buy rarible orders", async () => {
@@ -81,7 +78,7 @@ describe("Batch buy", () => {
 			throw new Error("Sdk was initialized without ethereum provider")
 		}
 		const data = await sdkBuyer.ethereum.getBatchBuyAmmInfo({
-			hash: "0x000000000000000000000000fc065082a3a05f1605d94113987c0fac117b20e7",
+			hash: "0x0000000000000000000000003be56db77c0b983272a526d7df976e837c44c4fb",
 			numNFTs: 5,
 		})
 		expect(data.prices[4].price).toBeTruthy()
@@ -89,7 +86,10 @@ describe("Batch buy", () => {
 })
 
 async function mint(sdk: IRaribleSdk) {
-	const contract = toContractAddress("ETHEREUM:0x6972347e66A32F40ef3c012615C13cB88Bf681cc") //erc721
+	const contract = convertEthereumCollectionId(
+		getTestContract("dev-ethereum", "erc721V3"),
+		Blockchain.ETHEREUM
+	)
 	const action = await sdk.nft.mint.prepare({
 		collectionId: toCollectionId(contract),
 	})

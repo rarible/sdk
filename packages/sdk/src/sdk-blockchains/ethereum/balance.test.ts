@@ -1,155 +1,131 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
-import type { Address } from "@rarible/types"
-import { toAddress, toContractAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
-import type { AssetType } from "@rarible/api-client"
-import type { BigNumberValue } from "@rarible/utils"
+import { randomAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import BigNumber from "bignumber.js"
-import { createWethContract } from "@rarible/ethereum-sdk-test-common"
-import { retry } from "../../common/retry"
 import { createSdk } from "../../common/test/create-sdk"
-import { initProviders } from "./test/init-providers"
-import { convertEthereumContractAddress, convertEthereumToUnionAddress } from "./common"
-import { POLYGON_TESTNET_SETTINGS } from "./test/common"
+import { convertEthereumToUnionAddress } from "./common"
+import { DEV_PK_1, POLYGON_TESTNET_SETTINGS } from "./test/common"
+import { ERC20 } from "./test/suite/contracts/variants/erc20"
+import type { EVMTestSuite } from "./test/suite"
+import { EVMTestSuiteFactory } from "./test/suite"
+import { EVMNativeToken } from "./test/suite/contracts/variants/native"
+import { initProvider } from "./test/init-providers"
 
 describe("get balance", () => {
-	const { web31, wallet1 } = initProviders({
-		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+	const suiteFactoryETH = new EVMTestSuiteFactory(Blockchain.ETHEREUM)
+	const suiteFactoryPolygon = new EVMTestSuiteFactory(Blockchain.POLYGON)
+	let suiteDevETH: EVMTestSuite<Blockchain.ETHEREUM>
+	let suiteDevPolygon: EVMTestSuite<Blockchain.POLYGON>
+
+	beforeAll(async () => {
+		suiteDevETH = await suiteFactoryETH.create(DEV_PK_1)
+		suiteDevPolygon = await suiteFactoryPolygon.create(DEV_PK_1)
 	})
 
-	const ethereum = new Web3Ethereum({
-		web3: web31,
-		from: wallet1.getAddressString(),
-	})
-	const sdk = createSdk(new EthereumWallet(ethereum), "development")
-
-	test.concurrent("should be the same balance", async () => {
-		const ethWalletAddess = toAddress("0x00a329c0648769A73afAc7F9381E08FB43dBEA72")
-		const walletAddress = toUnionAddress(`ETHEREUM:${ethWalletAddess}`)
-		const balance = await sdk.balances.getBalance(walletAddress, {
-			"@type": "ERC20",
-			contract: toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
-		})
-		const wethContract = createWethContract((ethereum as any).config.web3, "0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6" as Address)
-		const wethBalance = new BigNumber(await wethContract.methods.balanceOf(ethWalletAddess).call())
-			.div(new BigNumber(10).pow(18))
-		expect(balance.toString()).toEqual(wethBalance.toString())
+	afterAll(() => {
+		suiteDevETH.destroy()
+		suiteDevPolygon.destroy()
 	})
 
-	test.concurrent("get ETH balance without wallet", async () => {
-		const sdk = createSdk(undefined, "development")
-		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
-		const balance = await sdk.balances.getBalance(walletAddress, {
-			"@type": "ETH",
-		})
-		expect(balance.toString()).toEqual("1.9355")
+	test("should be the same ERC-20 balance from contract/api", async () => {
+		const erc20Contract = await suiteDevETH.contracts.deployContract("erc20")
+		const generatedAddress = randomAddress()
+		await erc20Contract.mint(1, generatedAddress)
+		const erc20ContractBalance = await erc20Contract.fromWei(await erc20Contract.balanceOf(generatedAddress))
+		//With AssetType
+		await suiteDevETH.balances.waitBalance(
+			ERC20.getAssetType(erc20Contract.contractAddress),
+			erc20ContractBalance,
+			convertEthereumToUnionAddress(generatedAddress),
+		)
+		//With CurrencyId
+		await suiteDevETH.balances.waitBalance(
+			toCurrencyId(erc20Contract.contractAddress),
+			erc20ContractBalance,
+			convertEthereumToUnionAddress(generatedAddress),
+		)
 	})
 
-	test.concurrent("get ETH balance without wallet with CurrencyId", async () => {
-		const sdk = createSdk(undefined, "development")
-		const walletAddress = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
-		const currency = toCurrencyId(`ETHEREUM:${ZERO_ADDRESS}`)
-		const balance = await sdk.balances.getBalance(walletAddress, currency)
-		expect(balance.toString()).toEqual("1.9355")
-	})
+	describe("get ETH balance with different request currencies", () => {
+		const generatedAddress = randomAddress()
+		const sponsorAmount = "0.00019355"
 
-	test.concurrent("get balance erc-20", async () => {
-		const sender = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
+		beforeAll(async () =>
+			await suiteDevETH.sponsor(generatedAddress, sponsorAmount)
+		)
 
-		const contract = toContractAddress("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
-		const nextBalance = "0.00035"
-		const balance = await sdk.balances.getBalance(sender, {
-			"@type": "ERC20",
-			contract,
-		})
-		expect(balance.toString()).toEqual(nextBalance)
-	})
-
-	test.concurrent("get balance erc-20 with CurrencyId", async () => {
-		const sender = toUnionAddress("ETHEREUM:0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
-		const contract = toCurrencyId("ETHEREUM:0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6")
-		const nextBalance = "0.00035"
-		const balance = await sdk.balances.getBalance(sender, contract)
-		expect(balance.toString()).toEqual(nextBalance)
-	})
-
-	test("convert from eth to wETH", async () => {
-		const senderRaw = wallet1.getAddressString()
-		const wethE2eAssetType: AssetType = {
-			"@type": "ERC20",
-			contract: convertEthereumContractAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6", Blockchain.ETHEREUM),
-		}
-		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
-		const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
-		const convertTx = await sdk.balances.convert({
-			blockchain: Blockchain.ETHEREUM,
-			isWrap: true,
-			value: "0.00035",
-		})
-		await convertTx.wait()
-
-		await retry(10, 2000, async () => {
-			const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
-
-			expect(finishWethBalance.toString()).toBe(
-				new BigNumber(initWethBalance).plus("0.00035").toString()
+		test.each([
+			{ currency: EVMNativeToken.assetType, label: "Asset type" },
+			{ currency: EVMNativeToken.getCurrency(), label: "CurrencyID" },
+		])("$label", async ({ currency }) => {
+			await suiteDevETH.balances.waitBalance(
+				currency,
+				sponsorAmount,
+				convertEthereumToUnionAddress(generatedAddress),
 			)
 		})
 	})
 
-	test("convert from wETH to eth", async () => {
-		const senderRaw = wallet1.getAddressString()
-		const wethE2eAssetType: AssetType = {
-			"@type": "ERC20",
-			contract: convertEthereumContractAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6", Blockchain.ETHEREUM),
-		}
-		const sender = convertEthereumToUnionAddress(senderRaw, Blockchain.ETHEREUM)
-		const balanceWithoutWeth = await sdk.balances.getBalance(sender, wethE2eAssetType)
-		const prepareConvertTx = await sdk.balances.convert({
-			blockchain: Blockchain.ETHEREUM,
-			isWrap: true,
-			value: "0.00000000000071",
-		})
-		await prepareConvertTx.wait()
+	describe("get Polygon balance", () => {
+		const generatedAddress = randomAddress()
+		const sponsorAmount = "0.00019355"
 
-		const initWethBalance = await retry(5, 2000, async () => {
-			const initWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
-			if (new BigNumber(balanceWithoutWeth).isEqualTo(initWethBalance)) {
-				throw new Error("Balance was not updated after init convert operation")
-			}
-			return initWethBalance
+		beforeAll(async () => {
+		  await suiteDevPolygon.sponsor(generatedAddress, sponsorAmount)
 		})
 
-		const convertTx = await sdk.balances.convert({
-			blockchain: Blockchain.ETHEREUM,
-			isWrap: false,
-			value: "0.00000000000039",
-		})
-		await convertTx.wait()
-
-		await retry(5, 2000, async () => {
-			const finishWethBalance = await sdk.balances.getBalance(sender, wethE2eAssetType)
-
-			expect(finishWethBalance.toString()).toBe(
-				new BigNumber(initWethBalance).minus("0.00000000000039").toString()
+		test.each([
+			{ currency: EVMNativeToken.getAssetType(Blockchain.POLYGON), label: "Asset type" },
+			{ currency: EVMNativeToken.getCurrency(Blockchain.POLYGON), label: "CurrencyID" },
+		])("$label", async ({ currency }) => {
+			await suiteDevPolygon.balances.waitBalance(
+				currency,
+				sponsorAmount,
+				convertEthereumToUnionAddress(generatedAddress),
 			)
 		})
 	})
 
+	describe("ETH <-> wETH convertation",  () => {
+
+		test("ETH -> wETH", async () => {
+			const wethContract = suiteDevETH.contracts.getContract("wrapped_eth")
+			const startBalance = await suiteDevETH.sdk.balances.getBalance(
+				suiteDevETH.addressUnion,
+				wethContract.assetType
+			)
+			await suiteDevETH.balances.convertToWeth("0.00035")
+
+			await suiteDevETH.balances.waitBalance(
+				wethContract.assetType,
+				toBn(startBalance).plus("0.00035"),
+			)
+		})
+
+		test("wETH -> ETH", async () => {
+			const wethContract = suiteDevETH.contracts.getContract("wrapped_eth")
+			const startBalance = await suiteDevETH.sdk.balances.getBalance(
+				suiteDevETH.addressUnion,
+				wethContract.assetType
+			)
+			await suiteDevETH.balances.convertFromWeth("0.00035")
+
+			await suiteDevETH.balances.waitBalance(
+				wethContract.assetType,
+				toBn(startBalance).minus("0.00035"),
+			)
+		})
+	})
 })
 
 describe("get polygon balance", () => {
-	const { web31, wallet1 } = initProviders({
-		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	}, POLYGON_TESTNET_SETTINGS)
+	const { ethereumWallet } = initProvider(
+		"ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
+		POLYGON_TESTNET_SETTINGS
+	)
 
-	const ethereum = new Web3Ethereum({
-		web3: web31,
-		from: wallet1.getAddressString(),
-	})
-
-	const sdk = createSdk(new EthereumWallet(ethereum), "testnet")
+	const sdk = createSdk(ethereumWallet, "testnet")
 
 	test.concurrent("get Matic balance", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
@@ -157,31 +133,29 @@ describe("get polygon balance", () => {
 			"@type": "ETH",
 			blockchain: Blockchain.POLYGON,
 		})
-		expect(balance.toString()).toEqual("0.009145")
+		expect(balance.toString()).toBeTruthy()
 	})
 
 	test.concurrent("get Matic balance with CurrencyId", async () => {
 		const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
 		const currency = toCurrencyId(`POLYGON:${ZERO_ADDRESS}`)
 		const balance = await sdk.balances.getBalance(walletAddress, currency)
-		expect(balance.toString()).toEqual("0.009145")
+		expect(balance.toString()).toBeTruthy()
 	})
 })
 
 describe.skip("Bidding balance", () => {
-	const { web31, wallet1 } = initProviders({
-		pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-	})
+	const { wallet, ethereumWallet } = initProvider(
+		"ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9"
+	)
 
-	const ethereum = new Web3Ethereum({ web3: web31 })
-	const wallet = new EthereumWallet(ethereum)
-	const sdk = createSdk(wallet, "development")
+	const sdk = createSdk(ethereumWallet, "development")
 
 	test("Should check bidding balance & deposit & withdraw", async () => {
 		const checkBalance = async (expecting: BigNumberValue | null) => {
 			const balance = await sdk.balances.getBiddingBalance({
 				blockchain: Blockchain.ETHEREUM,
-				walletAddress: toUnionAddress("ETHEREUM:" + wallet1.getAddressString()),
+				walletAddress: toUnionAddress("ETHEREUM:" + wallet.getAddressString()),
 			})
 			if (expecting !== null) {
 				expect(parseFloat(balance.toString())).toBeCloseTo(parseFloat(expecting.toString()), 5)

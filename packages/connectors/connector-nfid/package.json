@@ -1,12 +1,9 @@
 {
   "name": "@rarible/connector-nfid",
-  "version": "0.13.64-beta.5",
+  "version": "0.13.69-beta.1",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",
-  "publishConfig": {
-    "access": "public"
-  },
   "files": [
     "build"
   ],
@@ -17,7 +14,7 @@
   },
   "dependencies": {
     "@nfid/embed": "0.0.5-alpha.0",
-    "@rarible/connector": "^0.13.64-beta.5",
+    "@rarible/connector": "^0.13.69-beta.1",
     "ethers": "^5.7.2",
     "rollup": "^2.0.0"
   },
@@ -30,5 +27,8 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

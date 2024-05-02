@@ -1,6 +1,5 @@
 import {
 	awaitAll,
-	createE2eProvider,
 	createGanacheProvider,
 	deployMerkleValidator,
 	deployOpenSeaExchangeV1,
@@ -11,15 +10,15 @@ import {
 	deployTestErc721,
 	deployTestExchangeWrapper,
 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { Address, Asset } from "@rarible/ethereum-api-client"
 import { OrderOpenSeaV1DataV1Side, Platform } from "@rarible/ethereum-api-client"
-import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
-import { getSimpleSendWithInjects, sentTx } from "../../common/send-transaction"
+import type { OPENSEA_EXCHANGE_ABI, proxyRegistryAbi, tokenTransferProxyAbi } from "@rarible/ethereum-sdk-test-common/src"
+import type { Web3EthContractTypes } from "@rarible/web3-v4-ethereum"
+import { Web3v4Ethereum, Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
+import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
 import { getEthereumConfig } from "../../config"
 import { id32 } from "../../common/id"
@@ -35,12 +34,13 @@ import { createOpenseaProxyRegistryEthContract } from "../contracts/proxy-regist
 import { createOpenseaContract } from "../contracts/exchange-opensea-v1"
 import { cancel } from "../cancel"
 import type { SimpleOpenSeaV1Order } from "../types"
-import { createEthereumApis } from "../../common/apis"
-import { checkChainId } from "../check-chain-id"
+import { getApis as getApisTemplate } from "../../common/apis"
 import { createRaribleSdk } from "../../index"
 import { createErc721V3Collection } from "../../common/mint"
 import type { ERC721RequestV3 } from "../../nft/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
+import { sentTx } from "../../common/test"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import {
 	getAtomicMatchArgAddresses,
 	getAtomicMatchArgCommonData,
@@ -51,12 +51,11 @@ import { convertOpenSeaOrderToDTO } from "./open-sea-converter"
 import { OrderFiller } from "./index"
 
 describe.skip("fillOrder: Opensea orders", function () {
-	const { addresses, provider } = createGanacheProvider()
+	const { addresses, web3 } = createGanacheProvider()
 	const [sender1Address, sender2Address, feeRecipient] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const ethereum2 = new Web3Ethereum({ web3, from: sender2Address, gas: 1000000 })
-	const { provider: polygonProvider } = createE2eProvider(undefined, {
+	const ethereum1 = new Web3v4Ethereum({ web3, from: sender1Address, gas: 1000000 })
+	const ethereum2 = new Web3v4Ethereum({ web3, from: sender2Address, gas: 1000000 })
+	const { provider: polygonProvider } = createE2eTestProvider(undefined, {
 		networkId: 137,
 		rpcUrl: "https://polygon-rpc.com",
 	})
@@ -69,19 +68,18 @@ describe.skip("fillOrder: Opensea orders", function () {
 			proxyRegistry: ZERO_ADDRESS,
 		},
 	}
-	const apis = createEthereumApis(env)
-
+	const getConfig = async () => config
 	const getBaseOrderFee = async () => 0
-	const checkWalletChainId1 = checkChainId.bind(null, ethereum1, config)
-	const checkWalletChainId2 = checkChainId.bind(null, ethereum2, config)
 
-	const send1 = getSimpleSendWithInjects().bind(null, checkWalletChainId1)
-	const send2 = getSimpleSendWithInjects().bind(null, checkWalletChainId2)
+	const send1 = getSimpleSendWithInjects()
+	const send2 = getSimpleSendWithInjects()
+	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
+	const getApis2 = getApisTemplate.bind(null, ethereum2, env)
 
-	const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee)
-	const openSeaFillHandler2 = new OpenSeaOrderHandler(ethereum2, send2, config, apis, getBaseOrderFee)
-	const orderFiller1 = new OrderFiller(ethereum1, send1, config, apis, getBaseOrderFee, "testnet")
-	const orderFiller2 = new OrderFiller(ethereum2, send2, config, apis, getBaseOrderFee, "testnet")
+	const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee)
+	const openSeaFillHandler2 = new OpenSeaOrderHandler(ethereum2, send2, getConfig, getApis2, getBaseOrderFee)
+	const orderFiller1 = new OrderFiller(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, "testnet")
+	const orderFiller2 = new OrderFiller(ethereum2, send2, getConfig, getApis2, getBaseOrderFee, "testnet")
 
 	const it = awaitAll({
 		testErc20: deployTestErc20(web3, "Test1", "TST1"),
@@ -91,9 +89,9 @@ describe.skip("fillOrder: Opensea orders", function () {
 		exchangeWrapper: deployTestExchangeWrapper(web3),
 	})
 
-	let wyvernExchange: Contract
-	let wyvernProxyRegistry: Contract
-	let wyvernTokenTransferProxy: Contract
+	let wyvernExchange: Web3EthContractTypes.Contract<typeof OPENSEA_EXCHANGE_ABI>
+	let wyvernProxyRegistry: Web3EthContractTypes.Contract<typeof proxyRegistryAbi>
+	let wyvernTokenTransferProxy: Web3EthContractTypes.Contract<typeof tokenTransferProxyAbi>
 	let proxyRegistryEthContract: EthereumContract
 
 	beforeAll(async () => {
@@ -103,13 +101,13 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 		wyvernProxyRegistry = await deployOpenseaProxyRegistry(web3)
 		console.log("deployed wyvernProxyRegistry", wyvernProxyRegistry.options.address)
-		wyvernTokenTransferProxy = await deployOpenseaTokenTransferProxy(web3, wyvernProxyRegistry.options.address)
+		wyvernTokenTransferProxy = await deployOpenseaTokenTransferProxy(web3, wyvernProxyRegistry.options.address!)
 		console.log("deployed wyvernTokenTransferProxy", wyvernTokenTransferProxy.options.address)
 
 		wyvernExchange = await deployOpenSeaExchangeV1(
 			web3,
-			wyvernProxyRegistry.options.address,
-			wyvernTokenTransferProxy.options.address,
+			wyvernProxyRegistry.options.address!,
+			wyvernTokenTransferProxy.options.address!,
 			ZERO_ADDRESS, //ETH
 			feeRecipient
 		)
@@ -117,20 +115,20 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 		await sentTx(
 			it.exchangeWrapper.methods.__ExchangeWrapper_init(
-				wyvernExchange.options.address,
+				wyvernExchange.options.address!,
 				ZERO_ADDRESS,
 			),
 			{ from: sender1Address }
 		)
-		config.exchange.openseaV1 = toAddress(wyvernExchange.options.address)
-		config.openSea.proxyRegistry = toAddress(wyvernProxyRegistry.options.address)
-		config.transferProxies.openseaV1 = toAddress(wyvernTokenTransferProxy.options.address)
-		config.openSea.merkleValidator = toAddress(it.merkleValidator.options.address)
-		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
+		config.exchange.openseaV1 = toAddress(wyvernExchange.options.address!)
+		config.openSea.proxyRegistry = toAddress(wyvernProxyRegistry.options.address!)
+		config.transferProxies.openseaV1 = toAddress(wyvernTokenTransferProxy.options.address!)
+		config.openSea.merkleValidator = toAddress(it.merkleValidator.options.address!)
+		config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address!)
 
 		proxyRegistryEthContract = await createOpenseaProxyRegistryEthContract(
 			ethereum1,
-			toAddress(wyvernProxyRegistry.options.address)
+			toAddress(wyvernProxyRegistry.options.address!)
 		)
 
 
@@ -152,13 +150,15 @@ describe.skip("fillOrder: Opensea orders", function () {
 	async function mintTestAsset(asset: Asset, sender: Address): Promise<any> {
 		switch (asset.assetType.assetClass) {
 			case "ERC20": {
-				return await sentTx(it.testErc20.methods.mint(sender, toBn(asset.value).multipliedBy(10)), { from: sender })
+				return await sentTx(
+					it.testErc20.methods.mint(sender, toBn(asset.value).multipliedBy(10).toFixed()), { from: sender }
+				)
 			}
 			case "ERC721": {
 				return await sentTx(it.testErc721.methods.mint(sender, asset.assetType.tokenId, "0x"), { from: sender })
 			}
 			case "ERC1155": {
-				return await sentTx(it.testErc1155.methods.mint(sender, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10), "0x"), { from: sender })
+				return await sentTx(it.testErc1155.methods.mint(sender, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10).toFixed(), "0x"), { from: sender })
 			}
 			default:
 		}
@@ -167,7 +167,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 	async function getBalance(asset: Asset, sender: Address): Promise<string> {
 		switch (asset.assetType.assetClass) {
 			case "ETH": {
-				return toBn(await web3.eth.getBalance(sender)).toString()
+				return toBn(await ethereum1.getBalance(sender)).toString()
 			}
 			case "ERC20": {
 				return toBn(await it.testErc20.methods.balanceOf(sender).call()).toString()
@@ -189,7 +189,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 					...side,
 					assetType: {
 						...side.assetType,
-						contract: toAddress(it.testErc20.options.address),
+						contract: toAddress(it.testErc20.options.address!),
 					},
 				}
 			}
@@ -198,7 +198,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 					...side,
 					assetType: {
 						...side.assetType,
-						contract: toAddress(it.testErc721.options.address),
+						contract: toAddress(it.testErc721.options.address!),
 					},
 				}
 			}
@@ -207,7 +207,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 					...side,
 					assetType: {
 						...side.assetType,
-						contract: toAddress(it.testErc1155.options.address),
+						contract: toAddress(it.testErc1155.options.address!),
 					},
 				}
 			}
@@ -217,7 +217,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 	}
 
 	test("mint polygon", async () => {
-		const buyerWeb3 = new Web3Ethereum({ web3: new Web3(polygonProvider as any), gas: 1000000 })
+		const buyerWeb3 = new Web3v4Ethereum({ web3: new Web3v4(polygonProvider as any), gas: 1000000 })
 
 		const sdkBuyer = createRaribleSdk(buyerWeb3, "polygon")
 
@@ -245,7 +245,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 	})
 
 	test("should calculate valid hash", async () => {
-		const exchangeContract = createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address))
+		const exchangeContract = createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address!))
 
 		const order: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
@@ -254,7 +254,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
@@ -381,7 +381,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 			},
 		}
@@ -401,15 +401,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 			checkLazyOrder,
 			ethereum1,
 			send1,
-			{
-				openseaV1: toAddress(wyvernExchange.options.address),
-				v1: ZERO_ADDRESS,
-				v2: ZERO_ADDRESS,
-				wrapper: toAddress(it.exchangeWrapper.options.address),
-				x2y2: ZERO_ADDRESS,
-			},
-			checkChainId.bind(null, ethereum1, config),
-			apis,
+			getConfig,
+			getApis1,
 			{
 				...order,
 				signature,
@@ -430,7 +423,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 				feeRecipient: toAddress(sender2Address),
 			},
@@ -442,13 +435,13 @@ describe.skip("fillOrder: Opensea orders", function () {
 	})
 
 	test("get order origin without sdkConfig", async () => {
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee)
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee)
 		expect(openSeaFillHandler1.getOrderMetadata()).toEqual(id32(Platform.RARIBLE))
 	})
 
 	test("get order origin with sdkConfig and passed ethereum platform", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee, {
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, {
 			ethereum: {
 				openseaOrdersMetadata: meta,
 			},
@@ -458,7 +451,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	test("get order origin with passed polygon platform, but wallet still ethereum", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, config, apis, getBaseOrderFee, {
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, {
 			polygon: {
 				openseaOrdersMetadata: meta,
 			},
@@ -468,17 +461,10 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	test("get order origin with passed polygon platform and polygon wallet", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const web3 = new Web3(polygonProvider as any)
-		const polygon1 = new Web3Ethereum({ web3 })
-		const config: EthereumConfig = {
-			...getEthereumConfig("polygon"),
-			chainId: 137,
-			openSea: {
-				metadata: id32("RARIBLE"),
-				proxyRegistry: ZERO_ADDRESS,
-			},
-		}
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, config, apis, getBaseOrderFee, {
+		const web3 = new Web3v4(polygonProvider as any)
+		const polygon1 = new Web3v4Ethereum({ web3 })
+		const getApis = getApisTemplate.bind(null, polygon1, env)
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, getConfig, getApis, getBaseOrderFee, {
 			polygon: {
 				openseaOrdersMetadata: meta,
 			},
@@ -488,17 +474,10 @@ describe.skip("fillOrder: Opensea orders", function () {
 
 	test("get order origin with passed polygon platform and polygon wallet", async () => {
 		const meta = toWord(id32("CUSTOM_STRING"))
-		const web3 = new Web3(polygonProvider as any)
-		const polygon1 = new Web3Ethereum({ web3 })
-		const config: EthereumConfig = {
-			...getEthereumConfig("polygon"),
-			chainId: 137,
-			openSea: {
-				metadata: id32("RARIBLE"),
-				proxyRegistry: ZERO_ADDRESS,
-			},
-		}
-		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, config, apis, getBaseOrderFee, {
+		const web3 = new Web3v4(polygonProvider as any)
+		const polygon1 = new Web3v4Ethereum({ web3 })
+		const getApis = getApisTemplate.bind(null, polygon1, env)
+		const openSeaFillHandler1 = new OpenSeaOrderHandler(polygon1, send1, getConfig, getApis, getBaseOrderFee, {
 			polygon: {
 				openseaOrdersMetadata: meta,
 			},
@@ -527,7 +506,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 				order.data.takerProtocolFee = toBigNumber("500")
 				order.data.makerRelayerFee = toBigNumber("500")
 				order.data.makerProtocolFee = toBigNumber("500")
-				order.data.exchange = toAddress(wyvernExchange.options.address)
+				order.data.exchange = toAddress(wyvernExchange.options.address!)
 				order.data.feeRecipient = toAddress(feeRecipient)
 				order.maker = toAddress(nftOwner)
 
@@ -566,7 +545,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			const nftBuyerEthereum = ethereum1
 
 			beforeEach(async () => {
-				order.data.exchange = toAddress(wyvernExchange.options.address)
+				order.data.exchange = toAddress(wyvernExchange.options.address!)
 				order.data.makerRelayerFee = toBigNumber("500")
 				order.data.makerProtocolFee = toBigNumber("500")
 				order.data.takerRelayerFee = toBigNumber("500")
@@ -598,7 +577,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 		})
 
 	async function prepareSimpleOrdersForTest() {
-		const exchangeContract = await createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address))
+		const exchangeContract = await createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address!))
 
 		const sell: SimpleOpenSeaV1Order = {
 			...OPENSEA_ORDER_TEMPLATE,
@@ -607,7 +586,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 			take: getAssetTypeBlank("ETH"),
 			data: {
 				...OPENSEA_ORDER_TEMPLATE.data,
-				exchange: toAddress(wyvernExchange.options.address),
+				exchange: toAddress(wyvernExchange.options.address!),
 				side: OrderOpenSeaV1DataV1Side.SELL,
 				feeRecipient,
 			},

@@ -1,15 +1,9 @@
-import type { Connection } from "@solana/web3.js"
-import {
-	LAMPORTS_PER_SOL,
-	PublicKey,
-	SystemProgram,
-	SYSVAR_RENT_PUBKEY,
-	TransactionInstruction,
-} from "@solana/web3.js"
-import type { Program } from "@project-serum/anchor"
+import type { Connection, Signer } from "@solana/web3.js"
+import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY, TransactionInstruction } from "@solana/web3.js"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import type { AccountInfo } from "@solana/spl-token"
-import BigNumber from "bignumber.js"
+import { BigNumber, toBn } from "@rarible/utils"
+import type { SolanaSigner } from "@rarible/solana-common"
 import { SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID, TOKEN_METADATA_PROGRAM_ID, WRAPPED_SOL_MINT } from "./contracts"
 
 export async function getTokenWallet(
@@ -108,22 +102,20 @@ export async function getPriceWithMantissa(
 	connection: Connection,
 	price: BigNumber,
 	mint: PublicKey,
-	walletKeyPair: any,
+	walletKeyPair: SolanaSigner,
 ): Promise<BigNumber> {
 	const token = new Token(
 		connection,
 		mint,
 		TOKEN_PROGRAM_ID,
-		walletKeyPair,
+		walletKeyPair as unknown as Signer,
 	)
 
 	const mintInfo = await token.getMintInfo()
-
-	const mantissa = 10 ** mintInfo.decimals
-
+	const mantissa = toBn(10).pow(mintInfo.decimals)
 	const totalValue = price.multipliedBy(mantissa).integerValue(BigNumber.ROUND_CEIL)
 
-	if (totalValue.gt(2**64)) {
+	if (totalValue.gt(toBn(2).pow(64))) {
 		throw new Error(
 			`Total price with mantissa for lot ${totalValue.toString()} ` +
 			`is lager than maximum allowed value ${2 ** 64}. Try to split lot, or reduce item price.`
@@ -133,20 +125,24 @@ export async function getPriceWithMantissa(
 	return totalValue
 }
 
-export async function getAccountInfo(
+export function getAccountInfo(
 	connection: Connection,
-	mint: PublicKey,
-	walletKeyPair: any,
+	mintPublicKey: PublicKey,
+	signer: SolanaSigner | undefined,
 	tokenAccount: PublicKey,
 ): Promise<AccountInfo> {
-	const token = new Token(
-		connection,
-		mint,
-		TOKEN_PROGRAM_ID,
-		walletKeyPair,
-	)
+	const token = createLegacyToken(connection, mintPublicKey, TOKEN_PROGRAM_ID, signer)
+	return token.getAccountInfo(tokenAccount)
+}
 
-	return await token.getAccountInfo(tokenAccount)
+export function createLegacyToken(
+	connection: Connection,
+	publicKey: PublicKey,
+	programId: PublicKey,
+	// @todo make sure this is ok
+	signer: SolanaSigner | undefined
+) {
+	return new Token(connection, publicKey, programId, signer as unknown as Signer)
 }
 
 export async function getAssociatedTokenAccountForMint(
@@ -165,19 +161,18 @@ export async function getAssociatedTokenAccountForMint(
 
 export async function getTokenAmount(
 	connection: Connection,
-	anchorProgram: Program,
 	account: PublicKey,
 	mint: PublicKey,
 	integer: boolean = false
 ): Promise<BigNumber> {
-	let amount = new BigNumber(0)
+	let amount = toBn(0)
 	if (!mint.equals(WRAPPED_SOL_MINT)) {
 		try {
 			const token = await connection.getTokenAccountBalance(account, "confirmed")
 			if (token?.value?.uiAmount) {
 				amount = integer ?
-					new BigNumber(token.value.uiAmount).multipliedBy(Math.pow(10, token.value.decimals)) :
-					new BigNumber(token.value.uiAmount)
+					toBn(token.value.uiAmount).multipliedBy(Math.pow(10, token.value.decimals)) :
+					toBn(token.value.uiAmount)
 			}
 		} catch (e) {
 			console.error(e)
@@ -188,7 +183,7 @@ export async function getTokenAmount(
 			)
 		}
 	} else {
-		amount = new BigNumber(await connection.getBalance(account, "confirmed"))
+		amount = toBn(await connection.getBalance(account, "confirmed"))
 		amount = integer ? amount : amount.dividedBy(LAMPORTS_PER_SOL)
 	}
 	return amount

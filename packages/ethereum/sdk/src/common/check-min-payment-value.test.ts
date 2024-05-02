@@ -5,6 +5,9 @@ import { toAddress } from "@rarible/types"
 import { devEthereumConfig } from "../config/dev"
 import { checkGreaterThanMinPaymentValue, checkMinPaymentValue } from "./check-min-payment-value"
 
+/**
+ * @group provider/dev
+ */
 describe("check min payment value fn", function () {
 	const config = devEthereumConfig
 	const enoughEthAsset: Asset = {
@@ -28,23 +31,6 @@ describe("check min payment value fn", function () {
 		value: toBigNumber("1"),
 	}
 
-	test("checkGreaterThanMinPaymentValue throws error with rari token", async () => {
-		let err: any
-		try {
-			const rariAsset: Asset = {
-				assetType: {
-					assetClass: "ERC20",
-					contract: config.rari as Address,
-				},
-				value: toBigNumber("10"),
-			}
-			checkGreaterThanMinPaymentValue(rariAsset, config)
-		} catch (e) {
-			err = e
-		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
-	})
-
 	test("checkGreaterThanMinPaymentValue throws error with weth token", async () => {
 		let err: any
 		try {
@@ -55,39 +41,39 @@ describe("check min payment value fn", function () {
 				},
 				value: toBigNumber("10"),
 			}
-			checkGreaterThanMinPaymentValue(wethAsset, config)
+			checkGreaterThanMinPaymentValue(wethAsset)
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 	})
 
 	test("checkGreaterThanMinPaymentValue throws error with ETH", async () => {
 		let err: any
 		try {
-			checkGreaterThanMinPaymentValue(notEnoughEthAsset, config)
+			checkGreaterThanMinPaymentValue(notEnoughEthAsset)
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 	})
 
 	test("checkGreaterThanMinPaymentValue returns undefined with 0.0001 ETH", async () => {
-		checkGreaterThanMinPaymentValue(enoughEthAsset, config)
+		checkGreaterThanMinPaymentValue(enoughEthAsset)
 	})
 
 	test("checkMinPaymentValue returns undefined if sell order has been passed", async () => {
 		checkMinPaymentValue({
 			make: erc721Asset,
 			take: enoughEthAsset,
-		} as any, config)
+		} as any)
 	})
 
 	test("checkMinPaymentValue returns undefined if bid order has been passed", async () => {
 		checkMinPaymentValue({
 			make: enoughEthAsset,
 			take: erc721Asset,
-		} as any, config)
+		} as any)
 	})
 
 	test("checkMinPaymentValue throws error if sell order has been passed", async () => {
@@ -96,11 +82,11 @@ describe("check min payment value fn", function () {
 			checkMinPaymentValue({
 				make: erc721Asset,
 				take: notEnoughEthAsset,
-			} as any, config)
+			} as any)
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
 
 	})
 
@@ -110,11 +96,24 @@ describe("check min payment value fn", function () {
 			checkMinPaymentValue({
 				make: notEnoughEthAsset,
 				take: erc721Asset,
-			} as any, config)
+			} as any)
 		} catch (e) {
 			err = e
 		}
-		expect(err?.message.startsWith("Asset value must be less or equal to")).toBeTruthy()
+		expect(err?.message.startsWith("Asset value must be greater or equal to")).toBeTruthy()
+
+	})
+
+	test("checkMinPaymentValue should pass zero-price orders", async () => {
+		checkMinPaymentValue({
+			make: {
+				assetType: {
+					assetClass: "ETH",
+				},
+				value: toBigNumber("0"),
+			},
+			take: erc721Asset,
+		} as any)
 
 	})
 })

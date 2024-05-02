@@ -1,6 +1,6 @@
 {
   "name": "@rarible/web3-ethereum",
-  "version": "0.13.64-beta.5",
+  "version": "0.13.69-beta.1",
   "description": "Ethereum interface with web3.js",
   "keywords": [
     "ethereum",
@@ -22,29 +22,34 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.56",
-    "@rarible/sdk-common": "^0.13.64-beta.5",
+    "@rarible/ethereum-provider": "^0.13.69-beta.1",
+    "@rarible/sdk-common": "^0.13.69-beta.1",
     "eth-rpc-errors": "^4.0.3",
-    "exponential-backoff": "^3.1.0",
-    "web3-eth-abi": ">=1.5.0 <1.9.0",
-    "web3-eth-contract": ">=1.5.0 <1.9.0",
-    "web3-utils": ">=1.5.0 <1.9.0"
+    "web3": "^1.5.0",
+    "web3-utils": "^1.5.0",
+    "web3-eth": "^1.5.0",
+    "web3-eth-abi": "^1.5.0",
+    "web3-eth-contract": "^1.5.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.64-beta.5",
+    "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.1",
     "@types/jest": "^27.0.2",
+    "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
+    "https-browserify": "^1.0.0",
     "jest": "^27.3.1",
     "jest-junit": "^15.0.0",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
     "ts-jest": "^27.0.3",
+    "web3-core": "^1.5.0",
     "webpack": "^5.68.0",
     "webpack-cli": "^4.9.2"
   },
   "peerDependencies": {
     "tslib": "^2.3.1",
-    "web3": ">=1.5.0 <1.9.0"
+    "web3": "^1.5.0"
   },
   "publishConfig": {
     "access": "public",

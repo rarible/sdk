@@ -1,27 +1,23 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { getSendWithInjects } from "../common/send-transaction"
-import { getApiConfig } from "../config/api-config"
 import { getEthereumConfig } from "../config"
-import { checkChainId } from "../order/check-chain-id"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import { DeployErc1155 } from "./deploy-erc1155"
 
-describe("deploy token test", () => {
-	const { provider } = createE2eProvider(DEV_PK_1)
-	const web3 = new Web3(provider as any)
-	const ethereum1 = new Web3Ethereum({ web3 })
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
+const { providers } = createEthereumProviders(provider, wallet)
 
+/**
+ * @group provider/dev
+ */
+describe.each(providers)("deploy token test", (ethereum) => {
 	const env: EthereumNetwork = "dev-ethereum"
 	const config = getEthereumConfig(env)
-	const configuration = new Configuration(getApiConfig(env))
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const checkWalletChainId = checkChainId.bind(null, ethereum1, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
-	const deployErc1155 = new DeployErc1155(ethereum1, send, config)
+	const getConfig = async () => config
+
+	const send = getSendWithInjects()
+	const deployErc1155 = new DeployErc1155(ethereum, send, getConfig)
 
 
 	test("should deploy erc1155 token", async () => {

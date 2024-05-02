@@ -1,5 +1,6 @@
 import { from, Observable } from "rxjs"
-import { mergeMap } from "rxjs/operators"
+import { timer } from "rxjs"
+import { takeWhile, map, mergeMap, take } from "rxjs/operators"
 
 export type Maybe<T> = T | undefined
 
@@ -17,6 +18,19 @@ export function cache<T>(fn: () => Promise<T>): Observable<T> {
 			})
 	})
 }
+
+export function pollUntilConditionMetOrMaxAttempts<T>(
+	getter: () => T | undefined,
+	delay: number,
+	maxAttempts: number
+): Observable<T | undefined> {
+	return timer(0, delay).pipe(
+		map(() => getter()),
+		takeWhile(x => typeof x === "undefined", true),
+		take(maxAttempts)
+	)
+}
+
 
 export function promiseToObservable<T>(promise: Promise<Observable<T>>): Observable<T> {
 	return from(promise).pipe(

@@ -4,28 +4,25 @@ import {
 	deployCryptoPunksMarketV1,
 	deployCryptoPunksWrapper,
 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { Configuration, GatewayControllerApi } from "@rarible/ethereum-api-client"
 import { toAddress } from "@rarible/types"
-import { getApiConfig } from "../config/api-config"
+import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { getEthereumConfig } from "../config"
-import { checkChainId } from "../order/check-chain-id"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
+import { sentTx } from "../common/test"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./cryptopunk-wrapper"
 
+/**
+ * @group chain/ganache
+ */
 describe.skip("wrap crypto punk", () => {
-	const { provider, addresses } = createGanacheProvider()
-	const configuration = new Configuration(getApiConfig("dev-ethereum"))
-	const gatewayApi = new GatewayControllerApi(configuration)
+	const { addresses, web3 } = createGanacheProvider()
 
 	const config = getEthereumConfig("dev-ethereum")
+	const getConfig = async () => config
 
 	// @ts-ignore
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId)
+	const ethereum = new Web3v4Ethereum({ web3 })
+	const send = getSendWithInjects()
 
 	const it = awaitAll({
 		punksMarket: deployCryptoPunksMarketV1(web3),
@@ -33,8 +30,8 @@ describe.skip("wrap crypto punk", () => {
 	})
 
 	beforeAll(async () => {
-		config.cryptoPunks.marketContract = toAddress(it.punksMarket.options.address)
-		config.cryptoPunks.wrapperContract = toAddress(it.punksWrapper.options.address)
+		config.cryptoPunks.marketContract = toAddress(it.punksMarket.options.address!)
+		config.cryptoPunks.wrapperContract = toAddress(it.punksWrapper.options.address!)
 	})
 
 	const punkId = 3490
@@ -51,9 +48,7 @@ describe.skip("wrap crypto punk", () => {
 			const apTx = await approveForWrapper(
 				ethereum,
 				send,
-				checkWalletChainId,
-				(it.punksMarket as any)._address, // config.cryptoPunks.marketContract,
-				(it.punksWrapper as any)._address, // config.cryptoPunks.wrapperContract,
+				getConfig,
 				punkId
 			)
 
@@ -66,8 +61,7 @@ describe.skip("wrap crypto punk", () => {
 		const wrapTx = await wrapPunk(
 			ethereum,
 			send,
-			checkWalletChainId,
-			(it.punksWrapper as any)._address, // config.cryptoPunks.wrapperContract,
+			getConfig,
 			punkId,
 		)
 
@@ -80,8 +74,7 @@ describe.skip("wrap crypto punk", () => {
 		const tx = await unwrapPunk(
 			ethereum,
 			send,
-			checkWalletChainId,
-			(it.punksWrapper as any)._address, // config.cryptoPunks.wrapperContract,
+			getConfig,
 			punkId,
 		)
 

@@ -1,87 +1,77 @@
 import { toAddress, ZERO_WORD } from "@rarible/types"
-import {
-	Configuration, GatewayControllerApi,
-	NftCollectionControllerApi, NftLazyMintControllerApi,
-	OrderControllerApi,
-} from "@rarible/ethereum-api-client"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
-import { getApiConfig } from "../config/api-config"
-import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
+import { getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
 import { delay } from "../common/retry"
-import { createEthereumApis } from "../common/apis"
+import { getApis as getApisTemplate } from "../common/apis"
 import { createErc721V3Collection } from "../common/mint"
 import type { ERC721RequestV3, MintOffChainResponse } from "../nft/mint"
 import { mint as mintTemplate } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
-import type { EthereumNetwork } from "../types"
-import { DEV_PK_1, DEV_PK_2 } from "../common/test/test-credentials"
+import { DEV_PK_1, DEV_PK_2, getTestContract } from "../common/test/test-credentials"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
+import { sentTx } from "../common/test"
+import {
+	concatBuyerSellerProviders,
+	createE2eTestProvider,
+	createEthereumProviders,
+} from "../common/test/create-test-providers"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
 import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
-import { checkChainId } from "./check-chain-id"
 import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
-describe("bid", () => {
-	const { provider: provider1 } = createE2eProvider(DEV_PK_1)
-	const web31 = new Web3(provider1)
-	const ethereum1 = new Web3Ethereum({ web3: web31 })
+const pk1Provider = createE2eTestProvider(DEV_PK_1)
+const pk2Provider = createE2eTestProvider(DEV_PK_2)
 
-	const { provider: provider2 } = createE2eProvider(DEV_PK_2)
-	const web32 = new Web3(provider2)
-	const ethereum2 = new Web3Ethereum({ web3: web32 })
+// const { providers, web3v4 } = createEthereumProviders(provider, wallet)
+const pk1TestProviders = createEthereumProviders(pk1Provider.provider, pk1Provider.wallet)
+const pk2TestProviders = createEthereumProviders(pk2Provider.provider, pk2Provider.wallet)
 
-	const env: EthereumNetwork = "dev-ethereum"
-	const configuration = new Configuration(getApiConfig(env))
-	const nftCollectionApi = new NftCollectionControllerApi(configuration)
-	const orderApi = new OrderControllerApi(configuration)
+const providers = concatBuyerSellerProviders(pk1TestProviders.providers, pk2TestProviders.providers)
+describe.each(providers)("bid", (ethereum1, ethereum2) => {
+
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
-	const signOrder2 = signOrderTemplate.bind(null, ethereum2, config)
-	const checkAssetType = checkAssetTypeTemplate.bind(null, nftCollectionApi)
-	const apis = createEthereumApis(env)
-	const checkWalletChainId2 = checkChainId.bind(null, ethereum2, config)
+	const getConfig = async () => config
+	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
+	const getApis2 = getApisTemplate.bind(null, ethereum2, env)
 
+	const signOrder2 = signOrderTemplate.bind(null, ethereum2, getConfig)
+	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis2)
 	const getBaseOrderFee = async () => 0
-	const send2 = getSimpleSendWithInjects().bind(null, checkWalletChainId2)
-	const orderService = new OrderFiller(ethereum2, send2, config, apis, getBaseOrderFee, env)
-	const approve2 = approveTemplate.bind(null, ethereum2, send2, config.transferProxies)
+	const send2 = getSimpleSendWithInjects()
+	const orderService = new OrderFiller(ethereum2, send2, getConfig, getApis2, getBaseOrderFee, env)
+	const approve2 = approveTemplate.bind(null, ethereum2, send2, getConfig)
 
 
 	const upserter = new UpsertOrder(
 		orderService,
 		send2,
-		config,
+		getConfig,
 		(x) => Promise.resolve(x),
 		approve2,
 		signOrder2,
-		orderApi,
+		getApis2,
 		ethereum2,
-		checkWalletChainId2,
 		ZERO_WORD
 	)
-	const orderBid = new OrderBid(upserter, checkAssetType, checkWalletChainId2)
+	const orderBid = new OrderBid(upserter, checkAssetType)
 
-	const checkWalletChainId1 = checkChainId.bind(null, ethereum1, config)
-	const gatewayApi = new GatewayControllerApi(configuration)
-	const nftLazyMintApi = new NftLazyMintControllerApi(configuration)
-	const send1 = getSendWithInjects().bind(null, gatewayApi, checkWalletChainId1)
-	const sign1 = signNft.bind(null, ethereum1, 300500)
-	const mint1 = mintTemplate
-		.bind(null, ethereum1, send1, sign1, nftCollectionApi)
-		.bind(null, nftLazyMintApi, checkWalletChainId1)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
-	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const send1 = getSendWithInjects()
+	const sign1 = signNft.bind(null, ethereum1, getConfig)
+	const mint1 = mintTemplate.bind(null, ethereum1, send1, sign1, getApis1)
+	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
+	const erc20Contract = getTestContract(env, "erc20")
 
 	const it = awaitAll({
-		testErc721: deployTestErc721(web31, "Test", "TST"),
+		testErc721: deployTestErc721(pk1Provider.web3v4, "Test", "TST"),
 	})
 
 	beforeAll(async () => {
@@ -92,7 +82,7 @@ describe("bid", () => {
 		await tx.wait()
 	})
 
-	const filler1 = new OrderFiller(ethereum1, send1, config, apis, getBaseOrderFee, env)
+	const filler1 = new OrderFiller(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, env)
 
 	test("create bid for collection", async () => {
 		const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
@@ -112,7 +102,7 @@ describe("bid", () => {
 			},
 			takeAssetType: {
 				assetClass: "COLLECTION",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 			},
 			price: toBn("1000000000000000000"),
 			amount: 1,
@@ -126,7 +116,7 @@ describe("bid", () => {
 			originFees: [],
 			assetType: {
 				assetClass: "ERC721",
-				contract: toAddress(it.testErc721.options.address),
+				contract: toAddress(it.testErc721.options.address!),
 				tokenId: toBigNumber("1"),
 			},
 		})
@@ -157,7 +147,7 @@ describe("bid", () => {
 				assetClass: "COLLECTION",
 				contract: e2eErc721V3ContractAddress,
 			},
-			price: toBn("10000"),
+			price: toBn(MIN_PAYMENT_VALUE.toFixed()),
 			amount: 1,
 			payouts: [],
 			originFees: [],

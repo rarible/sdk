@@ -1,19 +1,13 @@
-import type { ContractSendMethod, SendOptions } from "web3-eth-contract"
-import type { PromiEvent, TransactionReceipt } from "web3-core"
-import type { GatewayControllerApi } from "@rarible/ethereum-api-client"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
 import { LogsLevel } from "../types"
 import type { ILoggerConfig } from "./logger/logger"
 import { getErrorMessageString } from "./logger/logger"
 import { estimateGas } from "./estimate-gas"
-
 export type SendFunction = (
 	functionCall: EthereumFunctionCall, options?: EthereumSendOptions,
 ) => Promise<EthereumTransaction>
 
 type SendMethod = (
-	api: GatewayControllerApi,
-	checkChainId: () => Promise<boolean>,
 	functionCall: EthereumFunctionCall,
 	options?: EthereumSendOptions
 ) => Promise<EthereumTransaction>
@@ -24,12 +18,9 @@ export function getSendWithInjects(injects: {
 	const logger = injects.logger
 
 	return async function send(
-		api: GatewayControllerApi,
-		checkChainId: () => Promise<boolean>,
 		functionCall: EthereumFunctionCall,
 		options?: EthereumSendOptions
 	): Promise<EthereumTransaction> {
-		await checkChainId()
 		const callInfo = await functionCall.getCallInfo()
 
 		await estimateGas(functionCall, { from: callInfo.from, value: options?.value }, logger)
@@ -83,7 +74,6 @@ export function getSendWithInjects(injects: {
 }
 
 type SimpleSendMethod = (
-	checkChainId: () => Promise<boolean>,
 	functionCall: EthereumFunctionCall,
 	options?: EthereumSendOptions,
 ) => Promise<EthereumTransaction>
@@ -94,7 +84,6 @@ export function getSimpleSendWithInjects(injects: {
 	const logger = injects.logger
 
 	return async function simpleSend(
-		checkChainId: () => Promise<boolean>,
 		functionCall: EthereumFunctionCall,
 		options?: EthereumSendOptions,
 	) {
@@ -149,38 +138,7 @@ function getTxData(tx: EthereumTransaction) {
 	return {
 		hash: tx.hash,
 		data: tx.data,
-		nonce: tx.nonce,
 		from: tx.from,
 		to: tx.to,
 	}
-}
-
-export async function sentTx(source: ContractSendMethod, options: SendOptions): Promise<string> {
-	const event = source.send({ ...options, gas: 3000000 })
-	return waitForHash(event)
-}
-
-export async function sentTxConfirm(source: ContractSendMethod, options: SendOptions): Promise<string> {
-	const event = source.send({ ...options, gas: 3000000 })
-	return waitForConfirmation(event)
-}
-
-export async function waitForHash<T>(promiEvent: PromiEvent<T>): Promise<string> {
-	return new Promise((resolve, reject) => {
-		promiEvent.once("transactionHash", hash => resolve(hash))
-		promiEvent.once("error", error => reject(error))
-	})
-}
-
-export async function waitForConfirmation<T>(promiEvent: PromiEvent<T>): Promise<string> {
-	return new Promise((resolve, reject) => {
-		promiEvent.once("confirmation", (confNumber: number, receipt: TransactionReceipt) => resolve(receipt.transactionHash))
-		promiEvent.once("error", error => reject(error))
-	})
-}
-export async function waitForReceipt<T>(promiEvent: PromiEvent<T>): Promise<TransactionReceipt> {
-	return new Promise((resolve, reject) => {
-		promiEvent.once("receipt", receipt => resolve(receipt))
-		promiEvent.once("error", error => reject(error))
-	})
 }

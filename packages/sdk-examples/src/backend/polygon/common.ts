@@ -1,7 +1,6 @@
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import HDWalletProvider from "@truffle/hdwallet-provider"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { estimate } from "@rarible/estimate-middleware"
 
 export async function initWalletWeb3WithHDWalletWithEstimate(privateKey: string): Promise<EthereumWallet> {

@@ -9,7 +9,6 @@ import { toBn } from "@rarible/utils"
 import type { Erc20AssetType, EthAssetType, Part } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { id } from "../common/id"
-import type { EthereumConfig } from "../config/type"
 import type { ApproveFunction } from "../order/approve"
 import { waitTx } from "../common/wait-tx"
 import { getPrice } from "../common/get-price"
@@ -17,11 +16,11 @@ import type { AssetTypeRequest, AssetTypeResponse } from "../order/check-asset-t
 import type { RaribleEthereumApis } from "../common/apis"
 import { checkAssetType } from "../order/check-asset-type"
 import type { SendFunction } from "../common/send-transaction"
-import { checkChainId } from "../order/check-chain-id"
 import { isNft } from "../order/is-nft"
 import { isPaymentToken } from "../common/is-payment-token"
 import { validateParts } from "../common/validate-part"
 import type { EthereumNetwork } from "../types"
+import type { GetConfigByChainId } from "../config"
 import { createEthereumAuctionContract } from "./contracts/auction"
 import { AUCTION_DATA_TYPE, AUCTION_DATA_V1, getAssetEncodedData, getAuctionHash } from "./common"
 
@@ -49,20 +48,22 @@ export class StartAuction {
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	private readonly checkAssetType: (asset: AssetTypeRequest) => Promise<AssetTypeResponse>
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	private readonly getAuctionHash: (auctionId: BigNumber) => string
 	private readonly MAX_DURATION_SECONDS = 60 * 60 * 24 * 1000 //1000 days
 	private readonly MIN_DURATION_SECONDS = 60 * 60 * 15 // 15 minutes
 
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly env: EthereumNetwork,
 		private readonly approve: ApproveFunction,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 	) {
-		this.checkAssetType = checkAssetType.bind(null, apis.nftCollection)
-		this.getAuctionHash = getAuctionHash.bind(null, this.ethereum, this.config)
+		this.checkAssetType = checkAssetType.bind(null, getApis)
+	}
+
+	private async getAuctionHash(auctionId: BigNumber): Promise<string> {
+		return getAuctionHash(this.ethereum, () => this.getConfig(), auctionId)
 	}
 
 	readonly start: AuctionStartAction = Action.create({
@@ -93,6 +94,8 @@ export class StartAuction {
 				if (!this.ethereum) {
 					throw new Error("Wallet is undefined")
 				}
+				const config = await this.getConfig()
+
 				const sellAsset = {
 					assetType: {
 						assetClass: id(makeAssetType.assetClass),
@@ -114,7 +117,7 @@ export class StartAuction {
 				})
 
 				const tx = await this.send(
-					await createEthereumAuctionContract(this.ethereum, this.config.auction)
+					await createEthereumAuctionContract(this.ethereum, config.auction)
 						.functionCall(
 							"startAuction",
 							sellAsset,
@@ -145,10 +148,6 @@ export class StartAuction {
 					auctionId: auctionIdPromise,
 				}
 			},
-		})
-		.before(async (request: CreateAuctionRequest) => {
-			await checkChainId(this.ethereum, this.config)
-			return request
 		})
 
 	validate(request: CreateAuctionRequest, makeAssetType: AssetType): boolean {

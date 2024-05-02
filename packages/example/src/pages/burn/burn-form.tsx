@@ -1,12 +1,11 @@
-import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import type { PrepareBurnResponse } from "@rarible/sdk/build/types/nft/burn/domain"
 import { Alert, AlertTitle, Box, Stack } from "@mui/material"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
+import { useSdkContext } from "../../components/connector/sdk"
 
 interface IBurnFormProps {
 	disabled?: boolean
@@ -14,20 +13,11 @@ interface IBurnFormProps {
 	prepare: PrepareBurnResponse
 }
 
-export function BurnForm(
-	{
-		disabled,
-		onComplete,
-		prepare,
-	}: IBurnFormProps,
-) {
-	const connection = useContext(ConnectorContext)
+export function BurnForm({ disabled, onComplete, prepare }: IBurnFormProps) {
+	const connection = useSdkContext()
 	const form = useForm()
 	const { handleSubmit } = form
-	const {
-		result,
-		setError,
-	} = useRequestResult()
+	const { result, setError } = useRequestResult()
 
 	return (
 		<>

@@ -1,24 +1,20 @@
-import BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getMetadata, getAssociatedTokenAccountForMint, getPriceWithMantissa } from "../../../common/helpers"
-import {
-	getAuctionHouseBuyerEscrow,
-	getAuctionHouseTradeState,
-	loadAuctionHouseProgram,
-} from "../../../common/auction-house-helpers"
-import { bigNumToBn } from "../../../common/utils"
+import { getAuctionHouseBuyerEscrow, getAuctionHouseTradeState, loadAuctionHouseProgram } from "../../../common/auction-house-helpers"
+import { toSerumBn } from "../../../common/utils"
 
 export interface IActionHouseBuyRequest {
 	connection: Connection
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	tokenAccount?: PublicKey
 	price: BigNumberValue
@@ -37,14 +33,14 @@ export async function getActionHouseBuyInstructions(
 
 	const buyPriceAdjusted = await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.price),
+		toBn(request.price),
 		auctionHouseObj.treasuryMint,
 		walletKeyPair,
 	)
 
 	const tokenSizeAdjusted = await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.tokensAmount),
+		toBn(request.tokensAmount),
 		request.mint,
 		walletKeyPair,
 	)
@@ -80,8 +76,8 @@ export async function getActionHouseBuyInstructions(
 			walletKeyPair.publicKey,
 		)
 	)[0]
-	const transferAuthority = SolanaKeypairWallet.generate()
-	const signers: IWalletSigner[] = isNative ? [] : [transferAuthority]
+	const transferAuthority = SolanaKeypairWallet.fromSeed(undefined)
+	const signers: SolanaSigner[] = isNative ? [] : [transferAuthority]
 
 	const instruction = AuctionHouseProgram.instructions.createBuyInstruction({
 		wallet: request.signer.publicKey,
@@ -98,8 +94,8 @@ export async function getActionHouseBuyInstructions(
 	}, {
 		tradeStateBump: tradeBump,
 		escrowPaymentBump: escrowBump,
-		buyerPrice: bigNumToBn(buyPriceAdjusted),
-		tokenSize: bigNumToBn(tokenSizeAdjusted),
+		buyerPrice: toSerumBn(buyPriceAdjusted),
+		tokenSize: toSerumBn(tokenSizeAdjusted),
 	})
 
 	if (!isNative) {

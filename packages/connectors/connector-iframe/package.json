@@ -1,11 +1,8 @@
 {
   "name": "@rarible/connector-iframe",
-  "version": "0.13.64-beta.5",
+  "version": "0.13.69-beta.1",
   "homepage": "",
   "license": "ISC",
-  "publishConfig": {
-    "access": "public"
-  },
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "files": [
@@ -18,7 +15,7 @@
   },
   "dependencies": {
     "@ledgerhq/iframe-provider": "^0.4.2",
-    "@rarible/connector": "^0.13.64-beta.5"
+    "@rarible/connector": "^0.13.69-beta.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",
@@ -28,5 +25,8 @@
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

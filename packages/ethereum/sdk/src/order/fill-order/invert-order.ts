@@ -54,7 +54,8 @@ function calculateAmounts(
 }
 
 function checkValue(value: BigNumberValue) {
-	if (parseFloat(value.toString()) < 1) {
+	const floatValue = parseFloat(value.toString())
+	if (floatValue < 1 && floatValue > 0) {
 		throw new Error("Invalid order. Price per one item is less than minimum allowable currency amount.")
 	}
 }

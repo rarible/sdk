@@ -1,11 +1,10 @@
-import type { Address, OrderControllerApi } from "@rarible/ethereum-api-client"
+import type { Address } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
 import { toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import type { SimpleLegacyOrder } from "../types"
 import { getAssetWithFee } from "../get-asset-with-fee"
 import { createExchangeV1Contract } from "../contracts/exchange-v1"
@@ -14,6 +13,8 @@ import { toVrs } from "../../common/to-vrs"
 import { waitTx } from "../../common/wait-tx"
 import type { SimpleOrder } from "../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
+import type { GetConfigByChainId } from "../../config"
+import type { RaribleEthereumApis } from "../../common/apis"
 import { invertOrder } from "./invert-order"
 import type { LegacyOrderFillRequest, OrderFillSendData, OrderHandler } from "./types"
 
@@ -21,9 +22,9 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
-		private readonly orderApi: OrderControllerApi,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
+		private readonly getConfig: GetConfigByChainId,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig
 	) {}
@@ -42,7 +43,7 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 			throw new Error("Wallet undefined")
 		}
 		const withFee = getAssetWithFee(order.make, this.getOrderFee(order))
-		await waitTx(approve(this.ethereum, this.send, this.config.transferProxies, order.maker, withFee, infinite))
+		await waitTx(approve(this.ethereum, this.send, () => this.getConfig(), order.maker, withFee, infinite))
 	}
 
 	async getBaseOrderFee(): Promise<number> {
@@ -59,8 +60,8 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-
-		const buyerFeeSig = await this.orderApi.buyerFeeSignature(
+		const apis = await this.getApis()
+		const buyerFeeSig = await apis.order.buyerFeeSignature(
 			{
 				fee: inverted.data.fee,
 				orderForm: {
@@ -71,7 +72,8 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
 				},
 			},
 		)
-		const exchangeContract = createExchangeV1Contract(this.ethereum, this.config.exchange.v1)
+		const config = await this.getConfig()
+		const exchangeContract = createExchangeV1Contract(this.ethereum, config.exchange.v1)
 		const functionCall = exchangeContract.functionCall(
 			"exchange",
 			toStructLegacyOrder(initial),

@@ -1,6 +1,4 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { Erc1155AssetType, LooksRareOrder } from "@rarible/ethereum-api-client"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
@@ -8,36 +6,25 @@ import { ethers } from "ethers"
 import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
-import { checkChainId } from "../check-chain-id"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { createErc1155V2Collection, createErc721V3Collection } from "../../common/mint"
 import { MintResponseTypeEnum } from "../../nft/mint"
 import { awaitOwnership } from "../test/await-ownership"
 import { FILL_CALLDATA_TAG } from "../../config/common"
-import { DEV_PK_1, DEV_PK_2, getTestContract, GOERLI_CONFIG } from "../../common/test/test-credentials"
-import type { EthereumNetwork } from "../../types"
+import { DEV_PK_1, DEV_PK_2, getE2EConfigByNetwork, getTestContract } from "../../common/test/test-credentials"
 import { delay } from "../../common/retry"
 import { ETHER_IN_WEI } from "../../common"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
-	const { provider: providerBuyer } = createE2eProvider(
-		DEV_PK_1,
-		GOERLI_CONFIG
-	)
-	const { provider: providerSeller } = createE2eProvider(
-		DEV_PK_2,
-		GOERLI_CONFIG
-	)
-	const { wallet: feeWallet } = createE2eProvider(undefined, GOERLI_CONFIG)
+	const goerli = getE2EConfigByNetwork("sepolia")
+	const { provider: providerBuyer } = createE2eTestProvider(DEV_PK_1, goerli)
+	const { provider: providerSeller } = createE2eTestProvider(DEV_PK_2, goerli)
+	const { wallet: feeWallet } = createE2eTestProvider(undefined, goerli)
 	const web3Seller = new Web3(providerSeller as any)
 	const ethereumSeller = new Web3Ethereum({
 		web3: web3Seller,
-		gas: 3000000,
-	})
-	const web3 = new Web3(providerBuyer as any)
-	const ethereum = new Web3Ethereum({
-		web3,
 		gas: 3000000,
 	})
 
@@ -52,7 +39,7 @@ describe.skip("looksrare fill", () => {
 		new ethers.Wallet(DEV_PK_1, buyerEthersWeb3Provider)
 	)
 
-	const env: EthereumNetwork = "testnet"
+	const env = "testnet" as const
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
@@ -62,15 +49,7 @@ describe.skip("looksrare fill", () => {
 
 	const config = getEthereumConfig("testnet")
 
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
-
-	beforeAll(async () => {
-		console.log({
-			buyerWallet: await buyerWeb3.getFrom(),
-			sellerWallet: await ethereumSeller.getFrom(),
-		})
-	})
+	const send = getSimpleSendWithInjects()
 
 	test("fill erc 721", async () => {
 		if (!config.exchange.looksrare) {

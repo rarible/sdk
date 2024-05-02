@@ -1,6 +1,4 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum/build"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum/build"
 import type { SeaportV1Order } from "@rarible/ethereum-api-client/build/models/Order"
 import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
@@ -19,37 +17,36 @@ import { awaitOrder } from "../test/await-order"
 import { awaitOwnership } from "../test/await-ownership"
 import { getOpenseaEthTakeData } from "../test/get-opensea-take-data"
 import { getEthereumConfig } from "../../config"
-import { checkChainId } from "../check-chain-id"
 import type { SendFunction } from "../../common/send-transaction"
 import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { FILL_CALLDATA_TAG } from "../../config/common"
-import { GOERLI_CONFIG, MUMBAI_CONFIG } from "../../common/test/test-credentials"
-import { createEthereumApis } from "../../common/apis"
+import { getE2EConfigByNetwork } from "../../common/test/test-credentials"
+import { getApis as getApisTemplate } from "../../common/apis"
 import type { EthereumNetwork } from "../../types"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { ItemType } from "./seaport-utils/constants"
 import type { CreateInputItem } from "./seaport-utils/types"
 import { SeaportOrderHandler } from "./seaport"
 
 //createSeaportOrder may return 400 error, try again
 describe.skip("seaport", () => {
-	const { provider: providerBuyer } = createE2eProvider(
+	const goerli = getE2EConfigByNetwork("sepolia")
+	const { provider: providerBuyer } = createE2eTestProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
-		GOERLI_CONFIG
+		goerli
 	)
-	const { provider: providerSeller } = createE2eProvider(
+	const { provider: providerSeller } = createE2eTestProvider(
 		"0x6370fd033278c143179d81c5526140625662b8daa446c22ee2d73db3707e620c",
-		GOERLI_CONFIG
+		goerli
 	)
-	const { wallet: feeWallet } = createE2eProvider(undefined, GOERLI_CONFIG)
-	const web3Seller = new Web3(providerSeller as any)
+	const { wallet: feeWallet } = createE2eTestProvider(undefined, goerli)
+	const web3Seller = new Web3(providerSeller)
 	const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
-	const web3 = new Web3(providerBuyer as any)
+	const web3 = new Web3(providerBuyer)
 	const ethereum = new Web3Ethereum({ web3, gas: 3000000 })
 
-	const env: EthereumNetwork = "testnet"
-	const apis = createEthereumApis(env)
-
-	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
+	const env = "testnet" as const
+	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer), gas: 3000000 })
 	const ethersWeb3Provider = new ethers.providers.Web3Provider(providerBuyer as any)
 	const buyerEthersWeb3Provider = new EthersWeb3ProviderEthereum(ethersWeb3Provider)
 	const buyerEthersEthereum =	new EthersEthereum(
@@ -58,23 +55,35 @@ describe.skip("seaport", () => {
 	const sdkBuyer = createRaribleSdk(buyerWeb3, env)
 	const sdkSeller = createRaribleSdk(ethereumSeller, env)
 
+	const getApisBuyer = getApisTemplate.bind(null, ethereum, env)
+
 	const rinkebyErc721V3ContractAddress = toAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
 	const goerliErc1155V2ContractAddress = toAddress("0xC87FA76c704fE8dE4BC727ef337907BF1e316418")
 	const originFeeAddress = toAddress(feeWallet.getAddressString())
 
 	const config = getEthereumConfig("testnet")
+	const getConfig = async () => config
 
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
 	const seaportBuyerOrderHandler = new SeaportOrderHandler(
 		buyerWeb3,
 		send,
-		config,
-		apis,
+		getConfig,
+		getApisBuyer,
 		async () => 0,
 		"testnet"
 	)
+
+	test("get buy tx successfully", async () => {
+		const order = await sdkBuyer.apis.order.getValidatedOrderByHash({
+			hash: "0x6c9909349c21e1d9fa6f8209ac03b1689dbf55864d126723398e407529145aa4",
+		})
+		await sdkBuyer.order.getBuyTxData({
+			request: { order: order as any, amount: 1, originFees: [] },
+			from: toAddress(await buyerWeb3.getFrom()),
+		})
+	})
 
 	test("get signature", async () => {
 		try {
@@ -434,9 +443,9 @@ describe.skip("seaport", () => {
 })
 
 describe.skip("polygon seaport", () => {
-	const { provider: providerBuyer } = createE2eProvider(
+	const { provider: providerBuyer } = createE2eTestProvider(
 		"0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
-		MUMBAI_CONFIG
+		getE2EConfigByNetwork("mumbai")
 	)
 	const web3 = new Web3(providerBuyer as any)
 
@@ -445,17 +454,17 @@ describe.skip("polygon seaport", () => {
 	const env: EthereumNetwork = "polygon"
 
 	const config = getEthereumConfig(env)
+	const getConfig = async () => config
 
-	const checkWalletChainId = checkChainId.bind(null, ethereum, config)
-	const send = getSimpleSendWithInjects().bind(null, checkWalletChainId)
+	const send = getSimpleSendWithInjects()
 
-	const apis = createEthereumApis(env)
+	const getApis = getApisTemplate.bind(null, ethereum, env)
 
 	const seaportBuyerOrderHandler = new SeaportOrderHandler(
 		ethereum,
 		send,
-		config,
-		apis,
+		getConfig,
+		getApis,
 		async () => 0,
 		env
 	)

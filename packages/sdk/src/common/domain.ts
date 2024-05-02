@@ -23,4 +23,7 @@ export type RequestCurrencyAssetType =
 	| ApiClient.TezosXTZAssetType
 	| ApiClient.TezosFTAssetType
 	| ApiClient.SolanaNftAssetType
+	| ApiClient.SolanaFtAssetType
 	| ApiClient.SolanaSolAssetType
+	| ApiClient.NativeCurrencyAssetType
+	| ApiClient.TokenCurrencyAssetType

@@ -1,10 +1,10 @@
 import type { Connection, PublicKey } from "@solana/web3.js"
 import { Token, TOKEN_PROGRAM_ID } from "@solana/spl-token"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import type { SolanaSigner } from "@rarible/solana-common"
 
 export interface IAccountRevokeDelegateRequest {
 	connection: Connection
-	signer: IWalletSigner
+	signer: SolanaSigner
 	tokenAccount: PublicKey
 }
 

@@ -1,5 +1,6 @@
 import type { Address } from "@rarible/ethereum-api-client"
 import type { Word } from "@rarible/types"
+import type { EthereumSdkEnvironment } from "../types"
 
 export type ExchangeAddresses = {
 	v1: Address
@@ -43,6 +44,7 @@ export type SudoswapConfig = {
 
 export type EthereumConfig = {
 	basePath: string
+	environment: EthereumSdkEnvironment
 	chainId: number
 	exchange: ExchangeAddresses
 	transferProxies: TransferProxies
@@ -50,7 +52,6 @@ export type EthereumConfig = {
 	openSea: OpenSeaConfig
 	factories: FactoriesAddresses
 	weth: Address
-	rari?: Address
 	auction: Address
 	cryptoPunks: CryptoPunksConfig
 	sudoswap: SudoswapConfig

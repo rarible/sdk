@@ -3,6 +3,270 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
+
+
+### Bug Fixes
+
+* web3 events fix ([063f1b2](https://github.com/rarible/sdk/commit/063f1b204ab55e5370f9b8db01ccb493937a57a1))
+
+
+
+
+
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+
+### Features
+
+* **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
+
+
+
+
+
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.16](https://github.com/rarible/sdk/compare/v0.13.68-fix.15...v0.13.68-fix.16) (2024-03-25)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.15](https://github.com/rarible/sdk/compare/v0.13.68-fix.14...v0.13.68-fix.15) (2024-03-25)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.14](https://github.com/rarible/sdk/compare/v0.13.68-fix.13...v0.13.68-fix.14) (2024-03-22)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+* web3 dependencies done right ([c68c9d5](https://github.com/rarible/sdk/commit/c68c9d53eb64e0bdb12eb07fccb54405b0a85947))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+
+### Features
+
+* **PLTF-215:** fixes transactions for backend service ([#594](https://github.com/rarible/sdk/issues/594)) ([8fe175a](https://github.com/rarible/sdk/commit/8fe175a85b6d4de16985653bc25a08b957758bae))
+
+
+
+
+
+## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.1](https://github.com/rarible/sdk/compare/v0.13.68-fix.0...v0.13.68-fix.1) (2024-01-30)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68-fix.0](https://github.com/rarible/sdk/compare/v0.13.68...v0.13.68-fix.0) (2024-01-30)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.67-fix.2](https://github.com/rarible/sdk/compare/v0.13.67-fix.1...v0.13.67-fix.2) (2024-01-24)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.67-fix.1](https://github.com/rarible/sdk/compare/v0.13.67-fix.0...v0.13.67-fix.1) (2024-01-23)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.67-fix.0](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.67-fix.0) (2024-01-23)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.66](https://github.com/rarible/sdk/compare/v0.13.65...v0.13.66) (2024-01-09)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
+## [0.13.65](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.65) (2023-12-20)
+
+
+### Features
+
+* **PLTF-194:** support chiliz ([#581](https://github.com/rarible/sdk/issues/581)) ([be4f767](https://github.com/rarible/sdk/commit/be4f767d7b2bf3defb3bb9fcbfa6eb40026b63dd))
+
+
+
+
+
 ## [0.13.64-beta.5](https://github.com/rarible/sdk/compare/v0.13.64-beta.4...v0.13.64-beta.5) (2023-12-19)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend

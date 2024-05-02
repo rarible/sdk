@@ -1,26 +1,21 @@
-import BigNumber from "bignumber.js"
-import type { Connection, PublicKey } from "@solana/web3.js"
-import * as web3 from "@solana/web3.js"
+import type { Connection } from "@solana/web3.js"
+import { PublicKey, SYSVAR_RENT_PUBKEY, SystemProgram } from "@solana/web3.js"
 import type { BigNumberValue } from "@rarible/utils"
-import type { IWalletSigner } from "@rarible/solana-wallet"
+import { toBn } from "@rarible/utils"
 import { ASSOCIATED_TOKEN_PROGRAM_ID, TOKEN_PROGRAM_ID } from "@solana/spl-token"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { Metadata } from "../../../common/schema"
 import { decodeMetadata } from "../../../common/schema"
 import { WRAPPED_SOL_MINT } from "../../../common/contracts"
 import { getAssociatedTokenAccountForMint, getMetadata, getPriceWithMantissa } from "../../../common/helpers"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
-import {
-	getAuctionHouseBuyerEscrow,
-	getAuctionHouseProgramAsSigner,
-	getAuctionHouseTradeState,
-	loadAuctionHouseProgram,
-} from "../../../common/auction-house-helpers"
-import { bigNumToBn } from "../../../common/utils"
+import { getAuctionHouseBuyerEscrow, getAuctionHouseProgramAsSigner, getAuctionHouseTradeState, loadAuctionHouseProgram } from "../../../common/auction-house-helpers"
+import { toSerumBn } from "../../../common/utils"
 
 export interface IActionHouseExecuteSellRequest {
 	connection: Connection
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	buyerWallet: PublicKey
 	sellerWallet: PublicKey
 	mint: PublicKey
@@ -39,55 +34,48 @@ export async function getAuctionHouseExecuteSellInstructions(
 	const isNative = auctionHouseObj.treasuryMint.equals(WRAPPED_SOL_MINT)
 	const buyPriceAdjusted = await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.price),
+		toBn(request.price),
 		auctionHouseObj.treasuryMint,
 		request.signer,
 	)
 
 	const tokenSizeAdjusted = await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.tokensAmount),
+		toBn(request.tokensAmount),
 		request.mint,
 		request.signer,
 	)
 
 	const tokenAccountKey = (await getAssociatedTokenAccountForMint(request.mint, request.sellerWallet))[0]
 
-	const buyerTradeState = (
-		await getAuctionHouseTradeState(
-			request.auctionHouse,
-			request.buyerWallet,
-			tokenAccountKey,
-			//@ts-ignore
-			auctionHouseObj.treasuryMint,
-			request.mint,
-			tokenSizeAdjusted,
-			buyPriceAdjusted,
-		)
-	)[0]
+	const [buyerTradeState] = await getAuctionHouseTradeState(
+		request.auctionHouse,
+		request.buyerWallet,
+		tokenAccountKey,
+		auctionHouseObj.treasuryMint,
+		request.mint,
+		tokenSizeAdjusted,
+		buyPriceAdjusted,
+	)
 
-	const sellerTradeState = (
-		await getAuctionHouseTradeState(
-			request.auctionHouse,
-			request.sellerWallet,
-			tokenAccountKey,
-			//@ts-ignore
-			auctionHouseObj.treasuryMint,
-			request.mint,
-			tokenSizeAdjusted,
-			buyPriceAdjusted,
-		)
-	)[0]
+	const [sellerTradeState] = await getAuctionHouseTradeState(
+		request.auctionHouse,
+		request.sellerWallet,
+		tokenAccountKey,
+		auctionHouseObj.treasuryMint,
+		request.mint,
+		tokenSizeAdjusted,
+		buyPriceAdjusted,
+	)
 
 	const [freeTradeState, freeTradeStateBump] = await getAuctionHouseTradeState(
 		request.auctionHouse,
 		request.sellerWallet,
 		tokenAccountKey,
-		//@ts-ignore
 		auctionHouseObj.treasuryMint,
 		request.mint,
 		tokenSizeAdjusted,
-		new BigNumber(0),
+		toBn(0),
 	)
 
 	const [escrowPaymentAccount, escrowBump] = await getAuctionHouseBuyerEscrow(
@@ -97,23 +85,16 @@ export async function getAuctionHouseExecuteSellInstructions(
 	const [programAsSigner, programAsSignerBump] = await getAuctionHouseProgramAsSigner()
 	const metadata = await getMetadata(request.mint)
 
-	const metadataObj = await anchorProgram.provider.connection.getAccountInfo(
-		metadata,
-	)
+	const metadataObj = await anchorProgram.provider.connection.getAccountInfo(metadata)
+	if (!metadataObj) throw new Error("Account info doesn't fetched")
 
-	if (!metadataObj) {
-		throw new Error("Account info doesn't fetched")
-	}
-	const metadataDecoded: Metadata = decodeMetadata(
-		Buffer.from(metadataObj.data),
-	)
-
+	const metadataDecoded: Metadata = decodeMetadata(Buffer.from(metadataObj.data))
 	const remainingAccounts = []
 
 	if (metadataDecoded.data.creators) {
 		for (let i = 0; i < metadataDecoded.data.creators.length; i++) {
 			remainingAccounts.push({
-				pubkey: new web3.PublicKey(metadataDecoded.data.creators[i].address),
+				pubkey: new PublicKey(metadataDecoded.data.creators[i].address),
 				isWritable: true,
 				isSigner: false,
 			})
@@ -121,7 +102,6 @@ export async function getAuctionHouseExecuteSellInstructions(
 				remainingAccounts.push({
 					pubkey: (
 						await getAssociatedTokenAccountForMint(
-							//@ts-ignore
 							auctionHouseObj.treasuryMint,
 							remainingAccounts[remainingAccounts.length - 1].pubkey,
 						)
@@ -136,12 +116,12 @@ export async function getAuctionHouseExecuteSellInstructions(
 
 	const tMint = auctionHouseObj.treasuryMint
 
-	const instruction = await anchorProgram.instruction.executeSale(
+	const instruction = anchorProgram.instruction.executeSale(
 		escrowBump,
 		freeTradeStateBump,
 		programAsSignerBump,
-		bigNumToBn(buyPriceAdjusted),
-		bigNumToBn(tokenSizeAdjusted),
+		toSerumBn(buyPriceAdjusted),
+		toSerumBn(tokenSizeAdjusted),
 		{
 			accounts: {
 				buyer: request.buyerWallet,
@@ -162,10 +142,10 @@ export async function getAuctionHouseExecuteSellInstructions(
 				sellerTradeState,
 				buyerTradeState,
 				tokenProgram: TOKEN_PROGRAM_ID,
-				systemProgram: web3.SystemProgram.programId,
+				systemProgram: SystemProgram.programId,
 				ataProgram: ASSOCIATED_TOKEN_PROGRAM_ID,
 				programAsSigner,
-				rent: web3.SYSVAR_RENT_PUBKEY,
+				rent: SYSVAR_RENT_PUBKEY,
 				freeTradeState,
 			},
 			remainingAccounts,

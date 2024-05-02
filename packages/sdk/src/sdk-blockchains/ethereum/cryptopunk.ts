@@ -1,18 +1,20 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
+import type { Maybe } from "@rarible/types/build/maybe"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type {
 	CryptopunkUnwrapRequest,
 	CryptopunkWrapRequest,
 	ICryptopunkUnwrap,
 	ICryptopunkWrap,
 } from "../../types/ethereum/domain"
+import { getWalletNetwork } from "./common"
 
 export class EthereumCryptopunk {
 	constructor(
 		private readonly sdk: RaribleSdk,
-		private network: EthereumNetwork,
+		private wallet: Maybe<EthereumWallet>,
 	) {}
 
 	wrap: ICryptopunkWrap = Action.create({
@@ -24,7 +26,7 @@ export class EthereumCryptopunk {
 
 			const tx = await this.sdk.nft.cryptoPunks.approveForWrapper(request.punkId)
 			if (tx) {
-				await (new BlockchainEthereumTransaction(tx, this.network)).wait()
+				await (new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))).wait()
 			}
 
 			return request
@@ -33,7 +35,7 @@ export class EthereumCryptopunk {
 		id: "wrap-tx" as const,
 		run: async (request: CryptopunkWrapRequest) => {
 			const tx = await this.sdk.nft.cryptoPunks.wrap(request.punkId)
-			return new BlockchainEthereumTransaction(tx, this.network)
+			return new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
 		},
 	})
 
@@ -45,7 +47,7 @@ export class EthereumCryptopunk {
 			}
 
 			const tx = await this.sdk.nft.cryptoPunks.unwrap(request.punkId)
-			return new BlockchainEthereumTransaction(tx, this.network)
+			return new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
 		},
 	})
 }

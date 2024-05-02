@@ -3,6 +3,313 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
+
+
+### Bug Fixes
+
+* web3 events fix ([063f1b2](https://github.com/rarible/sdk/commit/063f1b204ab55e5370f9b8db01ccb493937a57a1))
+
+
+
+
+
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+
+### Features
+
+* **PLTF-292:** Aptos integration ([#618](https://github.com/rarible/sdk/issues/618)) ([bcc0ff9](https://github.com/rarible/sdk/commit/bcc0ff950ad2f1d9e5b84f67743166888c275d3a))
+
+
+
+
+
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+
+### Features
+
+* **PLTF-387:** support amoy polygon ([#616](https://github.com/rarible/sdk/issues/616)) ([ffe991b](https://github.com/rarible/sdk/commit/ffe991b6c87a5dc4937e6d4ee71bdbdc97608460))
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.16](https://github.com/rarible/sdk/compare/v0.13.68-fix.15...v0.13.68-fix.16) (2024-03-25)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.15](https://github.com/rarible/sdk/compare/v0.13.68-fix.14...v0.13.68-fix.15) (2024-03-25)
+
+
+### Features
+
+* sepolia fixes ([2a7a2a4](https://github.com/rarible/sdk/commit/2a7a2a49d2d31763d0a188fe60c56f56e046977c))
+
+
+
+
+
+## [0.13.68-fix.14](https://github.com/rarible/sdk/compare/v0.13.68-fix.13...v0.13.68-fix.14) (2024-03-22)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+
+### Features
+
+* **PLTF-341:** check init gamisodes collection ([#600](https://github.com/rarible/sdk/issues/600)) ([d5ad6ce](https://github.com/rarible/sdk/commit/d5ad6cef6ba053c43f46ee55e2d7c67c049bbe6f))
+* **PLTF-353:** get balances for eclipse ([#610](https://github.com/rarible/sdk/issues/610)) ([756ebf3](https://github.com/rarible/sdk/commit/756ebf3785488c9ccc55c0ed6b7fa56e05f014df))
+
+
+
+
+
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+
+### Features
+
+* fief xai celo kroma evm blockchains supporting ([#602](https://github.com/rarible/sdk/issues/602)) ([30e730b](https://github.com/rarible/sdk/commit/30e730b736a4cfafa4bb6f6a4aa74d9c39c52432))
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+
+### Features
+
+* **PLTF-305:** support celo network ([#606](https://github.com/rarible/sdk/issues/606)) ([cc8c63a](https://github.com/rarible/sdk/commit/cc8c63a12536905b49185aac925d7c89628fde3b))
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+
+### Features
+
+* **PLTF-315:** support astar zkevm on mainnet ([#605](https://github.com/rarible/sdk/issues/605)) ([96fb3a6](https://github.com/rarible/sdk/commit/96fb3a6ca209c74e16906330fc97e35a08f80e28))
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+
+### Features
+
+* **PLTF-315:** support astar mainnet ([#603](https://github.com/rarible/sdk/issues/603)) ([cdae32f](https://github.com/rarible/sdk/commit/cdae32f4ca84b4273d48b9fc052a8f36f4b18342))
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+
+### Features
+
+* add support of base and base-sepolia networks ([34f9622](https://github.com/rarible/sdk/commit/34f96223fd08f88272769bc39449bcf4d6bf0125))
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+
+
+
+
+
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.1](https://github.com/rarible/sdk/compare/v0.13.68-fix.0...v0.13.68-fix.1) (2024-01-30)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68-fix.0](https://github.com/rarible/sdk/compare/v0.13.68...v0.13.68-fix.0) (2024-01-30)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+
+
+
+
+## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
+
+
+### Bug Fixes
+
+* **PLTF-107:** walletConnect chainId ([#588](https://github.com/rarible/sdk/issues/588)) ([0904b99](https://github.com/rarible/sdk/commit/0904b99cb705526424a06aca55ea70f12f93018e))
+
+
+
+
+
+## [0.13.67-fix.2](https://github.com/rarible/sdk/compare/v0.13.67-fix.1...v0.13.67-fix.2) (2024-01-24)
+
+
+### Features
+
+* **PLTF-229:** split setup collections ([9bfab5b](https://github.com/rarible/sdk/commit/9bfab5b82751a8de1fbcb7e2905c50661cc21795))
+
+
+
+
+
+## [0.13.67-fix.1](https://github.com/rarible/sdk/compare/v0.13.67-fix.0...v0.13.67-fix.1) (2024-01-23)
+
+
+### Features
+
+* split setup gamisodes and mattel collections ([113952a](https://github.com/rarible/sdk/commit/113952a09c2a8ba8ac5b3779908632b59158e8cd))
+
+
+
+
+
+## [0.13.67-fix.0](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.67-fix.0) (2024-01-23)
+
+
+### Features
+
+* rari chain mainnet support ([9c6161f](https://github.com/rarible/sdk/commit/9c6161fab1cab1f776459ebb505e67d2874b5f6a))
+
+
+
+
+
+## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
+
+
+### Features
+
+* **PLTF-106:** slow polygon transactions ([#587](https://github.com/rarible/sdk/issues/587)) ([5530259](https://github.com/rarible/sdk/commit/5530259ce814c2398f930a7d3c461a9f709f748c))
+
+
+
+
+
+## [0.13.66](https://github.com/rarible/sdk/compare/v0.13.65...v0.13.66) (2024-01-09)
+
+
+### Features
+
+* **PLTF-216:** support rari blockchain ([#586](https://github.com/rarible/sdk/issues/586)) ([deeb2bc](https://github.com/rarible/sdk/commit/deeb2bc05dbca36500a26e0a7bd58843ab231d25))
+
+
+
+
+
+## [0.13.65](https://github.com/rarible/sdk/compare/v0.13.64-beta.3...v0.13.65) (2023-12-20)
+
+
+### Features
+
+* **PLTF-194:** support chiliz ([#581](https://github.com/rarible/sdk/issues/581)) ([be4f767](https://github.com/rarible/sdk/commit/be4f767d7b2bf3defb3bb9fcbfa6eb40026b63dd))
+* **PLTF-196:** support lightlink ([#584](https://github.com/rarible/sdk/issues/584)) ([1b71cf0](https://github.com/rarible/sdk/commit/1b71cf0eaca4d8a0f11227f9de40a408fd6eff99))
+
+
+
+
+
 ## [0.13.64-beta.5](https://github.com/rarible/sdk/compare/v0.13.64-beta.4...v0.13.64-beta.5) (2023-12-19)
 
 **Note:** Version bump only for package @rarible/sdk-transaction

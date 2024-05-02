@@ -12,12 +12,12 @@ import axios from "axios"
 import { isNft } from "../is-nft"
 import type { SimpleOrder } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import type { EthereumNetwork } from "../../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import { getRequiredWallet } from "../../common/get-required-wallet"
 import type { RaribleEthereumApis } from "../../common/apis"
 import { isWeth } from "../../nft/common"
+import type { GetConfigByChainId } from "../../config"
 import { ItemType, OrderType } from "./seaport-utils/constants"
 import type { PreparedOrderRequestDataForExchangeWrapper, SeaportV1OrderFillRequest } from "./types"
 import type { TipInputItem } from "./seaport-utils/types"
@@ -31,8 +31,8 @@ export class SeaportOrderHandler {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getConfig: GetConfigByChainId,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
@@ -51,7 +51,8 @@ export class SeaportOrderHandler {
 
 	async getSignature({ hash, protocol } : {hash: string, protocol: string}): Promise<any> {
 		try {
-			const { signature } = await this.apis.orderSignature.getSeaportOrderSignature({
+			const apis = await this.getApis()
+			const { signature } = await apis.orderSignature.getSeaportOrderSignature({
 				hash: hash,
 			})
 			return signature
@@ -66,7 +67,7 @@ export class SeaportOrderHandler {
 					const orderData = {
 						listing: {
 							hash: hash,
-							chain: this.env === "testnet" ? "goerli" : "mumbai",
+							chain: this.env === "testnet" ? "sepolia" : "mumbai",
 							protocol_address: protocol,
 						},
 						fulfiller: {
@@ -89,15 +90,12 @@ export class SeaportOrderHandler {
 	}
 	async getTransactionData(
 		request: SeaportV1OrderFillRequest,
+		requestOptions?: { disableCheckingBalances?: boolean },
 	): Promise<OrderFillSendData> {
 		const ethereum = getRequiredWallet(this.ethereum)
 		const { order } = request
 		if (order.start === undefined || order.end === undefined) {
 			throw new Error("Order should includes start/end fields")
-		}
-
-		if (request.order.taker) {
-			throw new Error("You can't fill private orders")
 		}
 
 		const { unitsToFill, takeIsNft } = getUnitsToFill(request)
@@ -127,6 +125,7 @@ export class SeaportOrderHandler {
 			{
 				unitsToFill,
 				tips,
+				disableCheckingBalances: requestOptions?.disableCheckingBalances,
 			},
 		)
 
@@ -156,11 +155,12 @@ export class SeaportOrderHandler {
 		request: SeaportV1OrderFillRequest,
 		originFees: Part[] | undefined,
 		feeValue: BigNumber,
+		options?: { disableCheckingBalances?: boolean },
 	): Promise<PreparedOrderRequestDataForExchangeWrapper> {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-
+		const config = await this.getConfig()
 		const { unitsToFill } = getUnitsToFill(request)
 
 		const { totalFeeBasisPoints } = originFeeValueConvert(originFees)
@@ -175,13 +175,13 @@ export class SeaportOrderHandler {
 			}
 		}
 
-		if (!this.config.exchange.wrapper) {
+		if (!config.exchange.wrapper) {
 			throw new Error("Exchange wrapper is not defined for Seaport tx")
 		}
 
 		const takeAssetType = request.order.take.assetType
 		let feeValueWithCurrency = feeValue
-		if (isWeth(takeAssetType, this.config)) {
+		if (isWeth(takeAssetType, config)) {
 			feeValueWithCurrency = setFeesCurrency(feeValueWithCurrency, true)
 		}
 
@@ -193,6 +193,7 @@ export class SeaportOrderHandler {
 				unitsToFill: unitsToFill,
 				encodedFeesValue: feeValueWithCurrency,
 				totalFeeBasisPoints: totalFeeBasisPoints,
+				disableCheckingBalances: options?.disableCheckingBalances,
 			},
 		)
 	}

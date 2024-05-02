@@ -13,14 +13,13 @@ import type {
 	SimpleRaribleV2Order,
 } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
-import type { EthereumConfig } from "../../config/type"
 import type { RaribleEthereumApis } from "../../common/apis"
 import type { CheckAssetTypeFunction } from "../check-asset-type"
 import { checkAssetType } from "../check-asset-type"
 import { checkLazyAssetType } from "../check-lazy-asset-type"
-import { checkChainId } from "../check-chain-id"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import type { EthereumNetwork } from "../../types"
+import type { GetConfigByChainId } from "../../config"
 import type {
 	CryptoPunksOrderFillRequest,
 	FillOrderAction,
@@ -71,8 +70,8 @@ export class OrderFiller {
 	constructor(
 		private readonly ethereum: Maybe<Ethereum>,
 		private readonly send: SendFunction,
-		private readonly config: EthereumConfig,
-		private readonly apis: RaribleEthereumApis,
+		private readonly getConfig: GetConfigByChainId,
+		private readonly getApis: () => Promise<RaribleEthereumApis>,
 		private readonly getBaseOrderFee: (type: SimpleOrder["type"]) => Promise<number>,
 		private readonly env: EthereumNetwork,
 		private readonly sdkConfig?: IRaribleEthereumSdkConfig,
@@ -82,45 +81,45 @@ export class OrderFiller {
 		this.getBuyTx = this.getBuyTx.bind(this)
 		this.v1Handler = new RaribleV1OrderHandler(
 			ethereum,
-			apis.order,
+			getApis,
 			send,
-			config,
+			getConfig,
 			getBaseOrderFee,
 			sdkConfig,
 		)
-		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
-		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, config, apis, getBaseOrderFee, sdkConfig)
-		this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, config, getBaseOrderFee, sdkConfig)
-		this.seaportHandler = new SeaportOrderHandler(ethereum, send, config, apis, getBaseOrderFee, env, sdkConfig)
+		this.v2Handler = new RaribleV2OrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)
+		this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, sdkConfig)
+		this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)
+		this.seaportHandler = new SeaportOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, env, sdkConfig)
 		this.looksrareHandler = new LooksrareOrderHandler(
 			ethereum,
 			send,
-			config,
+			getConfig,
 			getBaseOrderFee,
 			env,
-			apis,
+			getApis,
 			sdkConfig,
 		)
 		this.looksrareV2Handler = new LooksrareV2OrderHandler(
 			ethereum,
 			send,
-			config,
+			getConfig,
 			getBaseOrderFee,
 			env,
-			apis,
+			getApis,
 		)
-		this.x2y2Handler = new X2Y2OrderHandler(ethereum, send, config, getBaseOrderFee, apis)
+		this.x2y2Handler = new X2Y2OrderHandler(ethereum, send, getConfig, getBaseOrderFee, getApis)
 		this.ammHandler = new AmmOrderHandler(
 			ethereum,
 			send,
-			config,
+			getConfig,
 			getBaseOrderFee,
-			apis,
+			getApis,
 			env,
 			sdkConfig
 		)
-		this.checkAssetType = checkAssetType.bind(this, apis.nftCollection)
-		this.checkLazyAssetType = checkLazyAssetType.bind(this, apis.nftItem)
+		this.checkAssetType = checkAssetType.bind(this, getApis)
+		this.checkLazyAssetType = checkLazyAssetType.bind(this, getApis)
 		this.getBuyAmmInfo = this.getBuyAmmInfo.bind(this)
 	}
 
@@ -153,10 +152,6 @@ export class OrderFiller {
 					return this.sendTransaction(request, inverted)
 				},
 			})
-			.before(async (input: Request) => {
-				await checkChainId(this.ethereum, this.config)
-				return input
-			})
 	}
 
 	/**
@@ -175,11 +170,20 @@ export class OrderFiller {
 	public acceptBid: SellOrderAction = this.getFillAction<SellOrderRequest>()
 
 	async getBuyTx({ request, from }: GetOrderBuyTxRequest): Promise<TransactionData> {
+		if (!this.isNonInvertableOrder(request.order) && !from) {
+			throw new Error("'From' field must be specified for this order type")
+		}
 		const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
 		if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
 			inverted.make.assetType = await this.checkAssetType(request.assetType)
 		}
-		const { functionCall, options } = await this.getTransactionRequestData(request, inverted)
+		const { functionCall, options } = await this.getTransactionRequestData(
+			request,
+			inverted,
+			{
+				disableCheckingBalances: true,
+			}
+		)
 		const callInfo = await functionCall.getCallInfo()
 		const value = options.value?.toString() || "0"
 		return {
@@ -242,7 +246,9 @@ export class OrderFiller {
 	}
 
 	private async getTransactionRequestData(
-		request: FillOrderRequest, inverted: SimpleOrder
+		request: FillOrderRequest,
+		inverted: SimpleOrder,
+		options?: { disableCheckingBalances?: boolean }
 	): Promise<OrderFillSendData> {
 		switch (request.order.type) {
 			case "RARIBLE_V1":
@@ -263,7 +269,10 @@ export class OrderFiller {
 					<OpenSeaV1OrderFillRequest>request
 				)
 			case "SEAPORT_V1":
-				return this.seaportHandler.getTransactionData(<SeaportV1OrderFillRequest>request)
+				return this.seaportHandler.getTransactionData(
+          <SeaportV1OrderFillRequest>request,
+          { disableCheckingBalances: options?.disableCheckingBalances }
+				)
 			case "LOOKSRARE":
 				return this.looksrareHandler.getTransactionData(<LooksrareOrderFillRequest>request)
 			case "LOOKSRARE_V2":
@@ -288,7 +297,6 @@ export class OrderFiller {
 		if (!this.ethereum) {
 			throw new Error("Wallet undefined")
 		}
-		await checkChainId(this.ethereum, this.config)
 		const from = toAddress(await this.ethereum.getFrom())
 		const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
 		if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
@@ -363,8 +371,9 @@ export class OrderFiller {
 		}
 	}
 
-	getBuyAmmInfo(request: GetAmmBuyInfoRequest): Promise<AmmTradeInfo> {
-		return this.apis.order.getAmmBuyInfo(request)
+	async getBuyAmmInfo(request: GetAmmBuyInfoRequest): Promise<AmmTradeInfo> {
+		const apis = await this.getApis()
+		return apis.order.getAmmBuyInfo(request)
 	}
 
 	isNonInvertableOrder(order: SimpleOrder): boolean {

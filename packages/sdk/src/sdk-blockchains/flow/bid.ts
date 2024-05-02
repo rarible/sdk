@@ -1,7 +1,7 @@
 import type { FlowItemId, FlowSdk } from "@rarible/flow-sdk"
-import { toFlowContractAddress } from "@rarible/flow-sdk"
+import { toFlowContractAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
-import { toFlowItemId } from "@rarible/flow-sdk/build/common/item"
+import { toFlowItemId } from "@rarible/flow-sdk"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type { OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
@@ -54,6 +54,7 @@ export class FlowBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		console.log("FLOW BID", prepare)
 		const bidObjectData = this.getBidObjectData(prepare)
 
 		const bidAction = Action.create({
