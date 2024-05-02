@@ -218,6 +218,21 @@ export class MattelConnectionProvider extends
 		return auth0.isAuthenticated()
 	}
 
+	async isAuth0AuthenticatedCritical(): Promise<boolean> {
+		const { auth0 } = await this.instance.pipe(first()).toPromise()
+		return auth0
+			.getTokenWithPopup()
+			.then(token => !!token)
+			.catch(async (e: { error: string }) => {
+				const reLoginNeeded = e.error === "missing_refresh_token" || e.error === "invalid_grant"
+				if (reLoginNeeded) {
+					const token = await auth0.getTokenWithPopup()
+					return !!token
+				}
+				throw e
+			})
+	}
+
 	async sardinePurchase(data: {
 		orderId: OrderId
 		orderMaker: UnionAddress
