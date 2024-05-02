@@ -46,15 +46,25 @@ You also can find **Typescript (.ts)** [`examples in that folder`](https://githu
 
 You can find this information on our [Getting Started with SDK](https://docs.rarible.org/reference/getting-started) Reference page
 
-**IMPORTANT**: since _0.13.69_ version we've migrated from 1.* version to 4.* of [Web3](https://www.npmjs.com/package/web3) library.
-You should specify _"defaultTransactionType"_ property during initialization of Web3 instance
+**IMPORTANT**: since _0.13.69_ version we've started migration from 1.* version to 4.* of [Web3](https://www.npmjs.com/package/web3) library.
+* _**Web3@1.**_ *
+Users still can use **@rarible/web3-ethereum** package for Web3 v1, but it's not compatible with older major versions (like v2, v3, v4 and etc.) 
+* _**Web3@4.**_ *
+For using 4.* version of web3 we created **@rarible/web3-v4-ethereum** package.
+
+You should specify _"defaultTransactionType"_ property during initialization of _Web3@4.*_ instance. 
+It helps web3 to calculate transaction fees. Set _defaultTransactionType: undefined_ if you want to disable fee calculating by Web3 and let your provider do it.
+
 ([see Web3 config guide](https://docs.web3js.org/guides/web3_config/) and [different tx types](https://docs.web3js.org/guides/web3_eth/eth#step-6-send-different-type-of-transactions))
 to provide information about actual transaction type in the current network.
 ```javascript
+import { Web3v4Ethereum, Web3 } from "@rarible/web3-v4-ethereum"
 const web3 = new Web3(...)
-web3.setConfig({ defaultTransactionType: "0x0" | "0x1" | "0x2" | undefined }) // Legacy | EIP-2930 | EIP-1559 | not specified 
+web3.setConfig({ defaultTransactionType: "0x0" | "0x1" | "0x2" | undefined }) // Legacy | EIP-2930 | EIP-1559 | not specified
+const ethereumWallet = new Web3v4Ethereum({ web3 })
+const sdk = createRaribleSdk(ethereumWallet, "prod", { apiKey: "YOUR_API_KEY" })
 ```
-It helps web3 to calculate transaction fees. Set _defaultTransactionType: undefined_ if you want to disable fee calculating by Web3 and let your provider do it.
+[How to get the API key read on https://rarible.org](https://rarible.org/).
 
 
 ### Use Rarible SDK Wallet Connector
