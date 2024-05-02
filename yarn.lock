@@ -6643,25 +6643,6 @@
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.10.tgz#9f9f43f3134bfd8db6507105903912fc0da8b202"
   integrity sha512-GPAhX86KlfOhxnzFgUH6+Pv3PG1tQzsgZ7CtQQ6xKTDJ7fm+vGftBCheuVGogynwcvJ8vQ3sQhmu+mh2M7YoZA==
 
-"@rarible/api-client@0.16.5-alpha.6":
-  version "0.16.5-alpha.6"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.6.tgz#fc98b568ab58b4deee53fda2789e6724cb3fe683"
-  integrity sha512-MnzOBVWMBNYdwrF2hxIaB4/dt8nq42FjZShdyubGAGMSRRUtNepfzJGxFebvp94v7mt1hq+cgkPUzPDmeMT0bw==
-
-"@rarible/connector-mattel@^0.13.69-beta.1":
-  version "0.13.69-beta.1"
-  resolved "https://registry.yarnpkg.com/@rarible/connector-mattel/-/connector-mattel-0.13.69-beta.1.tgz#abdc18c078b819a259840a5d779fe9159764d477"
-  integrity sha512-OnmTmC2TlnzgHOavxWTGWh7jEN4VR2+PAdQ77Ojj7BrMqeIXjsbp21pzVqm25ZNL2Npc6SCZVK3VxczDo0j4YA==
-  dependencies:
-    "@auth0/auth0-spa-js" "~2.1.1"
-    "@magic-ext/flow" "~13.5.0"
-    "@magic-ext/oidc" "~1.3.0"
-    "@onflow/fcl" "~1.3.2"
-    "@rarible/api-client" "0.16.5-alpha.6"
-    "@rarible/connector" "^0.13.69-beta.1"
-    "@rarible/types" "~0.9.21"
-    magic-sdk "~18.4.1"
-
 "@rarible/connector@^0.13.68-fix.21":
   version "0.13.68-fix.21"
   resolved "https://registry.yarnpkg.com/@rarible/connector/-/connector-0.13.68-fix.21.tgz#c0198eb8e0ee2839ba9672089c41437c6caaaf6e"
@@ -6863,15 +6844,15 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
 
-"@rarible/types@~0.9.21", "@rarible/types@~0.9.26":
-  version "0.9.26"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.26.tgz#2d8183fd53b5cff32640185e4782d6610d00820a"
-  integrity sha512-q4lX1wOUBDENlzhZXctrCU9O0SFaZBsnU/AIgrKixzLktzq96MG/5lOkXxsBhQzotpUnixuDHFbEDtfqtkaLzw==
-
 "@rarible/types@~0.9.25":
   version "0.9.25"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.25.tgz#fdb77d1f9a52ca5e8a37dcf18f70296bb7a95e6e"
   integrity sha512-AbtgPbuVQy5ecQFLniN2HFw1pdrU4nJFVSoLXWGOVaQOYCt3/EQohW21NeYKC8k9bMgcqsmqXEYJoZ1z472SmQ==
+
+"@rarible/types@~0.9.26":
+  version "0.9.26"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.26.tgz#2d8183fd53b5cff32640185e4782d6610d00820a"
+  integrity sha512-q4lX1wOUBDENlzhZXctrCU9O0SFaZBsnU/AIgrKixzLktzq96MG/5lOkXxsBhQzotpUnixuDHFbEDtfqtkaLzw==
 
 "@rarible/utils@^0.9.1":
   version "0.9.1"
