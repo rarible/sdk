@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.3](https://github.com/rarible/sdk/compare/v0.13.69-beta.2...v0.13.69-beta.3) (2024-05-02)
+
+
+### Bug Fixes
+
+* deps ([5560fe0](https://github.com/rarible/sdk/commit/5560fe09e9e923421c8699442d9f4cd76fbc5e60))
+
+
+
+
+
 ## [0.13.69-beta.2](https://github.com/rarible/sdk/compare/v0.13.69-beta.1...v0.13.69-beta.2) (2024-05-02)
 
 

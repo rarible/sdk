@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-mattel",
-  "version": "0.13.69-beta.2",
+  "version": "0.13.69-beta.3",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
