@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.2](https://github.com/rarible/sdk/compare/v0.13.69-beta.1...v0.13.69-beta.2) (2024-05-02)
+
+
+### Features
+
+* **PLTF-325:** support web3 v1 and v4 ([#598](https://github.com/rarible/sdk/issues/598)) ([782d417](https://github.com/rarible/sdk/commit/782d4170a3038a4f60f1b9ed4dafd990d79bf098))
+
+
+
+
+
 ## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
 
 **Note:** Version bump only for package @rarible/connector-fcl

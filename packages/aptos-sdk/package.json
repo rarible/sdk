@@ -1,6 +1,6 @@
 {
   "name": "@rarible/aptos-sdk",
-  "version": "0.13.68-fix.21",
+  "version": "0.13.69-beta.2",
   "keywords": [
     "solana",
     "web3"
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@peculiar/webcrypto": "^1.4.6",
-    "@rarible/aptos-wallet": "^0.13.68-fix.21",
+    "@rarible/aptos-wallet": "^0.13.69-beta.2",
     "@types/jest": "^27.4.0",
     "@types/node-fetch": "^2.6.1",
     "dotenv": "16.0.0",

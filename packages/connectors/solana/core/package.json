@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-solana",
-  "version": "0.13.68-fix.21",
+  "version": "0.13.69-beta.2",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
