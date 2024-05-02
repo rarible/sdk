@@ -1,11 +1,14 @@
 import { toAddress, toBigNumber, toWord } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { hashLegacyOrder } from "./hash-legacy-order"
 
 const { provider, wallets } = createGanacheProvider()
-const { providers } = createTestProviders(provider, wallets[0])
+const { providers } = createEthereumProviders(provider, wallets[0])
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("hashLegacyOrder", ethereum => {
 
 	test("simple order is hashed correctly", () => {

@@ -19,6 +19,145 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.16](https://github.com/rarible/sdk/compare/v0.13.68-fix.15...v0.13.68-fix.16) (2024-03-25)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.15](https://github.com/rarible/sdk/compare/v0.13.68-fix.14...v0.13.68-fix.15) (2024-03-25)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.14](https://github.com/rarible/sdk/compare/v0.13.68-fix.13...v0.13.68-fix.14) (2024-03-22)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
+
+
+
+
 ## [0.13.68](https://github.com/rarible/sdk/compare/v0.13.67...v0.13.68) (2024-01-11)
 
 **Note:** Version bump only for package @rarible/connector-walletlink

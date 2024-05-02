@@ -5,28 +5,27 @@ import {
 	deployTestErc20,
 	deployTestErc721, deployTestExchangeV2, deployTestExchangeWrapper, deployTestRoyaltiesProvider, deployTransferProxy,
 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { randomWord, toAddress, toBigNumber, ZERO_ADDRESS } from "@rarible/types"
 import type { Address, Asset } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import type { BigNumber } from "@rarible/utils"
+import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import type { EthereumNetwork } from "../../../types"
 import type { EthereumConfig } from "../../../config/type"
 import { getEthereumConfig } from "../../../config"
 import { id32 } from "../../../common/id"
 import { getApis as getApisTemplate } from "../../../common/apis"
-import { getSimpleSendWithInjects, sentTx } from "../../../common/send-transaction"
+import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import type { SimpleRaribleV2Order } from "../../types"
 import { signOrder } from "../../sign-order"
+import { sentTx } from "../../../common/test"
 import { BatchOrderFiller } from "./batch-purchase"
 
 describe.skip("fillOrder: Opensea orders", function () {
-	const { addresses, provider } = createGanacheProvider()
+	const { addresses, web3 } = createGanacheProvider()
 	const [sender1Address, sender2Address] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const ethereum2 = new Web3Ethereum({ web3, from: sender2Address, gas: 1000000 })
+	const ethereum1 = new Web3v4Ethereum({ web3, from: sender1Address, gas: 1000000 })
+	const ethereum2 = new Web3v4Ethereum({ web3, from: sender2Address, gas: 1000000 })
 
 	const env: EthereumNetwork = "dev-ethereum"
 	const config: EthereumConfig = {

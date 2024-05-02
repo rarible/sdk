@@ -1,16 +1,35 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createGanacheProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toAddress } from "@rarible/types"
+import { Web3 } from "@rarible/web3-v4-ethereum"
 import { getPrice } from "./get-price"
+import { createEthereumProviders } from "./test/create-test-providers"
+import { sentTx } from "./test"
 
-describe("get price test", () => {
-	const { web3Ethereum: ethereum } = createE2eProvider(
-		"d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469",
-	)
+const { provider, addresses, wallets } = createGanacheProvider()
+const { providers } = createEthereumProviders(provider, wallets[0])
+const [address] = addresses
+const web3 = new Web3(provider)
+
+/**
+ * @group provider/dev
+ */
+describe.each(providers)("get price test", (ethereum) => {
+	const it = awaitAll({
+		testErc20: deployTestErc20(web3, "TST", "TST"),
+	})
+
+	beforeAll(async () => {
+		await sentTx(it.testErc20.methods
+			.mint(it.testErc20.options.address, 100), {
+			from: address,
+			gas: "200000",
+		})
+	})
 
 	test("get price", async () => {
 		const value = await getPrice(ethereum, {
 			assetClass: "ERC20",
-			contract: toAddress("0x55eB2809896aB7414706AaCDde63e3BBb26e0BC6"),
+			contract: toAddress(it.testErc20.options.address),
 		}, "0.000000000000000002")
 		expect(value.toString()).toEqual("2")
 	})

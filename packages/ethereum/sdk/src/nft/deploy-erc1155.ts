@@ -37,7 +37,7 @@ export class DeployErc1155 {
 		}
 		return {
 			tx,
-			address: proxyEvent.args.proxy,
+			address: proxyEvent.args?.proxy || proxyEvent.returnValues?.proxy,
 		}
 	}
 
@@ -61,7 +61,7 @@ export class DeployErc1155 {
 		}
 		return {
 			tx,
-			address: proxyEvent.args.proxy,
+			address: proxyEvent.args?.proxy || proxyEvent.returnValues?.proxy,
 		}
 	}
 }

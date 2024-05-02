@@ -1,18 +1,18 @@
+import { useState } from "react"
 import { Box, Button, Typography } from "@mui/material"
-import React, { useContext, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { OffRampClient } from "@rarible/connector-mattel/build/off-ramp"
-import { ConnectorContext } from "../../../components/connector/sdk-connection-provider"
 import { getFlowTokenAddressByEnv } from "../../balance/utils/currencies"
+import { useSdkContext } from "../../../components/connector/sdk"
 
 export function SardineOfframp() {
-	const connection = useContext(ConnectorContext)
+	const connection = useSdkContext()
 	const [iframeUrl, setIframeUrl] = useState("")
 	const [quotesResult, setQuotesResult] = useState("")
 	const [supportedTokens, setSupportedTokens] = useState("")
 
 	async function renderIframe() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
+		if (connection.sdk.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
 			const url = await clientTokenStorage.getSellLink({
 				address: connection.walletAddress,
 				cryptoAmount: "0.04",
@@ -20,7 +20,7 @@ export function SardineOfframp() {
 				assetType: { "@type": "ETH" },
 			})
 			setIframeUrl(url)
-		} else if (connection.sdk?.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
+		} else if (connection.sdk.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
 			const url = await clientTokenStorage.getSellLink({
 				address: connection.walletAddress,
 				cryptoAmount: "110",
@@ -37,7 +37,7 @@ export function SardineOfframp() {
 	}
 
 	async function getQuotes() {
-		if (connection.sdk?.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
+		if (connection.sdk.wallet?.walletType === WalletType.ETHEREUM && connection.walletAddress) {
 
 			const quotes = await clientTokenStorage.getQuotes({
 				cryptoAmount: "0.04",
@@ -46,7 +46,7 @@ export function SardineOfframp() {
 				address: connection.walletAddress,
 			})
 			setQuotesResult(JSON.stringify(quotes, null, "  "))
-		} else if (connection.sdk?.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
+		} else if (connection.sdk.wallet?.walletType === WalletType.FLOW && connection.walletAddress) {
 			const quotes = await clientTokenStorage.getQuotes({
 				cryptoAmount: "3",
 				fiatCurrency: "USD",

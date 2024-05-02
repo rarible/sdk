@@ -1,6 +1,7 @@
 import Wallet from "ethereumjs-wallet"
 import ganache from "ganache"
 import { randomWord, toAddress } from "@rarible/types"
+import Web3 from "web3"
 
 export function createGanacheProvider(...pk: string[]) {
 	let wallets: Wallet[]
@@ -32,5 +33,6 @@ export function createGanacheProvider(...pk: string[]) {
 		wallets,
 		addresses: wallets.map(w => toAddress(w.getAddressString())),
 		accounts,
+		web3: new Web3(provider),
 	}
 }

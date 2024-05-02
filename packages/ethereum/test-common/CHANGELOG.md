@@ -23,6 +23,165 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+
+### Features
+
+* **PLTF-292:** Aptos integration ([#618](https://github.com/rarible/sdk/issues/618)) ([bcc0ff9](https://github.com/rarible/sdk/commit/bcc0ff950ad2f1d9e5b84f67743166888c275d3a))
+
+
+
+
+
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+
+### Features
+
+* **PLTF-399:** support seaport 1.6 ([#615](https://github.com/rarible/sdk/issues/615)) ([4da2128](https://github.com/rarible/sdk/commit/4da2128a77ce30d089676d28a339e3a5122710d9))
+
+
+
+
+
+## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.16](https://github.com/rarible/sdk/compare/v0.13.68-fix.15...v0.13.68-fix.16) (2024-03-25)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.15](https://github.com/rarible/sdk/compare/v0.13.68-fix.14...v0.13.68-fix.15) (2024-03-25)
+
+
+### Features
+
+* sepolia fixes ([2a7a2a4](https://github.com/rarible/sdk/commit/2a7a2a49d2d31763d0a188fe60c56f56e046977c))
+
+
+
+
+
+## [0.13.68-fix.14](https://github.com/rarible/sdk/compare/v0.13.68-fix.13...v0.13.68-fix.14) (2024-03-22)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+
+### Features
+
+* **PLTF-353:** get balances for eclipse ([#610](https://github.com/rarible/sdk/issues/610)) ([756ebf3](https://github.com/rarible/sdk/commit/756ebf3785488c9ccc55c0ed6b7fa56e05f014df))
+
+
+
+
+
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+
+### Features
+
+* **PLTF-197:** out of gas error ([#596](https://github.com/rarible/sdk/issues/596)) ([a50f1e9](https://github.com/rarible/sdk/commit/a50f1e960478d506b506e21e3d71ab274641a0ed))
+* **PLTF-315:** support astar mainnet ([#603](https://github.com/rarible/sdk/issues/603)) ([cdae32f](https://github.com/rarible/sdk/commit/cdae32f4ca84b4273d48b9fc052a8f36f4b18342))
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+* web3 dependencies done right ([c68c9d5](https://github.com/rarible/sdk/commit/c68c9d53eb64e0bdb12eb07fccb54405b0a85947))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+
+
+
+
+
 ## [0.13.67](https://github.com/rarible/sdk/compare/v0.13.66...v0.13.67) (2024-01-10)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common

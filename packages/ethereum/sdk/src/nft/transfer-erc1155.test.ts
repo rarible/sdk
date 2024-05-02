@@ -1,27 +1,21 @@
 import { randomAddress, toAddress } from "@rarible/types"
 import { awaitAll, deployTestErc1155, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { ethers } from "ethers"
-import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { fromUtf8 } from "ethereumjs-util"
 import { isError } from "../common/is-error"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
 import { prependProviderName } from "../order/test/prepend-provider-name"
+import { createEthereumProviders } from "../common/test/create-test-providers"
+import { sentTx } from "../common/test"
 import { transferErc1155 } from "./transfer-erc1155"
 
-const { provider, addresses, accounts } = createGanacheProvider()
-const ethersWeb3Provider = new ethers.providers.Web3Provider(provider as any)
-const web3 = new Web3(provider as any)
-const [account1] = accounts
+const { provider, addresses, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
-const providers = [
-	new Web3Ethereum({ web3, gas: 500000 }),
-	new EthersEthereum(new ethers.Wallet(account1.secretKey, ethersWeb3Provider)),
-	new EthersWeb3ProviderEthereum(ethersWeb3Provider),
-]
 
+/**
+ * @group provider/ganache
+ */
 describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	const [from] = addresses
 	const to = randomAddress()
@@ -29,7 +23,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
 	const send = getSendWithInjects()
 
 	const it = awaitAll({
-		testErc1155: deployTestErc1155(web3, "TST"),
+		testErc1155: deployTestErc1155(web3v4, "TST"),
 	})
 
 	test(prependProviderName(ethereum, "should transfer erc1155 token"), async () => {

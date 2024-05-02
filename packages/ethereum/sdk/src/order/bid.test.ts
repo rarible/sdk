@@ -1,18 +1,17 @@
 import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
+import { createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
 import { retry } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
-import type { EthereumNetwork } from "../types"
-import { DEV_PK_1 } from "../common/test/test-credentials"
+import { DEV_PK_1, getTestContract } from "../common/test/test-credentials"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
@@ -26,12 +25,16 @@ import { checkLazyOrder as checkLazyOrderTemplate } from "./check-lazy-order"
 import { checkLazyAsset as checkLazyAssetTemplate } from "./check-lazy-asset"
 import { checkLazyAssetType as checkLazyAssetTypeTemplate } from "./check-lazy-asset-type"
 import { getEndDateAfterMonth } from "./test/utils"
+import { awaitOrder } from "./test/await-order"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
-const { providers } = createTestProviders(provider, wallet)
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
+const { providers } = createEthereumProviders(provider, wallet)
 
+/**
+ * @group provider/dev
+ */
 describe.each(providers)("bid", (ethereum) => {
-	const env: EthereumNetwork = "dev-ethereum"
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 	const getApis = getApisTemplate.bind(null, ethereum, env)
@@ -63,15 +66,15 @@ describe.each(providers)("bid", (ethereum) => {
 		ZERO_WORD
 	)
 	const orderSell = new OrderBid(upserter, checkAssetType)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
+	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
 	const treasury = createE2eWallet()
 	const treasuryAddress = toAddress(treasury.getAddressString())
 
-	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const erc20Contract = getTestContract(env, "erc20")
 	beforeAll(async () => {
+		const contract = createErc20Contract(ethereum, erc20Contract)
 		const tx = await send(
-			createErc20Contract(ethereum, erc20Contract)
-				.functionCall("mint", await ethereum.getFrom(), "10000000")
+			contract.functionCall("mint", await ethereum.getFrom(), "1000000000000000000000")
 		)
 		await tx.wait()
 	})
@@ -114,6 +117,8 @@ describe.each(providers)("bid", (ethereum) => {
 			}],
 		})
 		expect(order.hash).toBeTruthy()
+
+		await awaitOrder(await getApis(), order.hash)
 
 		await retry(5, 2000, async () => {
 			const nextPrice = MIN_PAYMENT_VALUE.plus(1).toFixed()
@@ -170,6 +175,8 @@ describe.each(providers)("bid", (ethereum) => {
 			signature: toBinary("0x"),
 		}
 		const order = await upserter.upsert({ order: form })
+
+		await awaitOrder(await getApis(), order.hash)
 
 		await retry(5, 2000, async () => {
 			const nextPrice = MIN_PAYMENT_VALUE.plus(1).toFixed()

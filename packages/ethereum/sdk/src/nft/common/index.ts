@@ -20,7 +20,3 @@ export function isErc1155(asset: AssetType): asset is Erc721AssetType {
 export function isWeth(asset: AssetType, config: EthereumConfig): boolean {
 	return isErc20(asset) && asset.contract === config.weth
 }
-
-export function isRari(asset: AssetType, config: EthereumConfig): boolean {
-	return isErc20(asset) && asset.contract === config.rari
-}

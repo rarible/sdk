@@ -12,3 +12,7 @@ global.CustomEvent = class CustomEvent extends Event {
 }
 
 jest.setTimeout(1000 * 60 * 3)
+
+process.on("unhandledRejection", (e) => {
+	console.log("ethereum sdk unhandledRejection", e)
+})

@@ -61,6 +61,7 @@ import {
 	extractUnionSupportedBlockchain,
 	getBidEntity, getOrderId,
 } from "../../common/utils"
+import type { IFlowCheckInitGamisodesCollections } from "../../types/nft/collection"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -68,7 +69,9 @@ export function createUnionSdk(
 	flow: IRaribleInternalSdk,
 	tezos: IRaribleInternalSdk,
 	solana: IRaribleInternalSdk,
+	eclipse: IRaribleInternalSdk,
 	immutablex: IRaribleInternalSdk,
+	aptos: IRaribleInternalSdk,
 ): IRaribleInternalSdk {
 	return {
 		balances: new UnionBalanceSdk({
@@ -77,6 +80,8 @@ export function createUnionSdk(
 			TEZOS: tezos.balances,
 			SOLANA: solana.balances,
 			IMMUTABLEX: immutablex.balances,
+			ECLIPSE: eclipse.balances,
+			APTOS: aptos.balances,
 		}),
 		nft: new UnionNftSdk({
 			EVM: evm.nft,
@@ -84,6 +89,8 @@ export function createUnionSdk(
 			TEZOS: tezos.nft,
 			SOLANA: solana.nft,
 			IMMUTABLEX: immutablex.nft,
+			ECLIPSE: eclipse.nft,
+			APTOS: aptos.nft,
 		}),
 		order: new UnionOrderSdk({
 			EVM: evm.order,
@@ -91,6 +98,8 @@ export function createUnionSdk(
 			TEZOS: tezos.order,
 			SOLANA: solana.order,
 			IMMUTABLEX: immutablex.order,
+			ECLIPSE: eclipse.order,
+			APTOS: aptos.order,
 		}),
 		restriction: new UnionRestrictionSdk({
 			EVM: evm.restriction,
@@ -98,6 +107,8 @@ export function createUnionSdk(
 			TEZOS: tezos.restriction,
 			SOLANA: solana.restriction,
 			IMMUTABLEX: immutablex.restriction,
+			ECLIPSE: eclipse.restriction,
+			APTOS: eclipse.restriction,
 		}),
 		ethereum: new UnionEthereumSpecificSdk(evm.ethereum!),
 		flow: new UnionFlowSpecificSdk(flow.flow!),
@@ -311,6 +322,7 @@ class UnionFlowSpecificSdk implements IFlowSdk {
   setupMattelCollections: IFlowSetupMattelCollections = this.flowSdk.setupMattelCollections
   setupGamisodesCollections: IFlowSetupMattelCollections = this.flowSdk.setupGamisodesCollections
   checkInitMattelCollections: IFlowCheckInitMattelCollections = this.flowSdk.checkInitMattelCollections
+  checkInitGamisodesCollections: IFlowCheckInitGamisodesCollections = this.flowSdk.checkInitGamisodesCollections
 }
 
 

@@ -149,12 +149,33 @@ export function getInternalLoggerMiddleware(
 					remoteLogger.raw(dataContainer.getErrorData(wrappedError || err))
 				}
 			}
-			return wrappedError ? responsePromise.catch(() => { throw wrappedError })
-				: responsePromise
+
+			const returnedPromis = (wrappedError ? responsePromise.catch(() => { throw wrappedError })
+				: responsePromise)
+
+			returnedPromis.then(async (tx) => {
+				if (tx?.transaction?.constructor.name === "BlockchainEthereumTransaction") {
+					try {
+						await tx.transaction.wait()
+						await remoteLogger.raw(await dataContainer.getTraceData({ method: replaceMethodPart(callable.name, "wait") }))
+					} catch(err: any) {
+						wrappedError = wrapSpecialErrors(err)
+						await remoteLogger.raw(dataContainer.getErrorData(wrappedError || err, { method: replaceMethodPart(callable.name, "wait") }))
+					}
+				}
+			}).catch(() => {})
+
+			return returnedPromis
 
 		}]
 	}
 }
+function replaceMethodPart(method: string, argForReplace: string): string {
+	let parts = method.split(".")
+	parts[parts.length - 1] = argForReplace
+	return parts.join(".")
+}
+
 function isCallable(fn: any): fn is WrappedAdvancedFn {
 	return fn instanceof WrappedAdvancedFn || fn?.constructor?.name === "WrappedAdvancedFn"
 }

@@ -1,6 +1,5 @@
-import Web3 from "web3"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { createErc721V3Collection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
@@ -52,7 +51,7 @@ describe.skip("get buy transaction", () => {
 			takeAssetType: {
 				assetClass: "ETH",
 			},
-			priceDecimal: "0.000000000000000002",
+			priceDecimal: "0.0002",
 			payouts: [],
 			originFees: [],
 			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
@@ -85,7 +84,7 @@ describe.skip("get buy transaction", () => {
 		}
 		await web3Buyer.eth.sendSignedTransaction(signedBuyerTx.rawTransaction)
 
-		await retry(5, 2000, async () => {
+		await retry(10, 3000, async () => {
 			await sdkItemOwner.apis.nftOwnership.getNftOwnershipById({
 				ownershipId: `${mintResult.itemId}:${buyerAddress}`,
 			})
@@ -123,7 +122,7 @@ describe.skip("get buy transaction", () => {
 			takeAssetType: {
 				assetClass: "ETH",
 			},
-			priceDecimal: "0.000000000000000002",
+			priceDecimal: "0.0002",
 			payouts: [],
 			originFees: [],
 			end: Date.now() + 1000 * 60 * 60 * 24 * 30,
@@ -162,4 +161,5 @@ describe.skip("get buy transaction", () => {
 		})
 
 	})
+
 })

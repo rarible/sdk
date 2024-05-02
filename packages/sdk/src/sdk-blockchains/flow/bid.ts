@@ -54,6 +54,7 @@ export class FlowBid {
 	}
 
 	async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
+		console.log("FLOW BID", prepare)
 		const bidObjectData = this.getBidObjectData(prepare)
 
 		const bidAction = Action.create({

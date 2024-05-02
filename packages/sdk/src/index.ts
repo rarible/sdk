@@ -35,6 +35,7 @@ import { getSdkContext } from "./common/get-sdk-context"
 import { createFlowSdk } from "./sdk-blockchains/flow"
 import { checkRoyalties } from "./common/check-royalties"
 import { getCollectionFromItemId } from "./common/utils"
+import { createAptosSdk } from "./sdk-blockchains/aptos"
 
 /**
  * @module
@@ -104,11 +105,23 @@ export function createRaribleSdk(
 			blockchainConfig.solanaNetwork,
 			config?.blockchain?.SOLANA
 		),
+		createSolanaSdk(
+			filterWallet(wallet, WalletType.SOLANA),
+			apis,
+			blockchainConfig.solanaNetwork,
+			config?.blockchain?.SOLANA
+		),
 		createImmutablexSdk(
 			filterWallet(wallet, WalletType.IMMUTABLEX),
 			apis,
 			blockchainConfig.immutablexNetwork,
 			config?.logs
+		),
+		createAptosSdk(
+			filterWallet(wallet, WalletType.APTOS),
+			apis,
+			blockchainConfig.aptosNetwork,
+			config?.blockchain?.APTOS
 		),
 	)
 
@@ -220,15 +233,17 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
 }
 
 function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
-	// @ts-ignore
+	// @ts-expect-error
 	return new MethodWithPrepare(
 		async (request: any) => {
 			const mintResponse = await mint(request)
 			if (mintResponse.type === MintType.ON_CHAIN) {
 				await (mintResponse as OnChainMintResponse).transaction.wait()
 			}
+			const { supply, ...restRequest } = request
 			const orderId = await sell({
-				...request,
+				...restRequest,
+				amount: supply,
 				itemId: mintResponse.itemId,
 			})
 			return {

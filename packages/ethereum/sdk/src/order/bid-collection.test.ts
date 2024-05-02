@@ -1,17 +1,23 @@
 import { toAddress, ZERO_WORD } from "@rarible/types"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
-import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
+import { getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
 import { delay } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
 import { createErc721V3Collection } from "../common/mint"
 import type { ERC721RequestV3, MintOffChainResponse } from "../nft/mint"
 import { mint as mintTemplate } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
-import type { EthereumNetwork } from "../types"
-import { DEV_PK_1, DEV_PK_2 } from "../common/test/test-credentials"
+import { DEV_PK_1, DEV_PK_2, getTestContract } from "../common/test/test-credentials"
+import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
+import { sentTx } from "../common/test"
+import {
+	concatBuyerSellerProviders,
+	createE2eTestProvider,
+	createEthereumProviders,
+} from "../common/test/create-test-providers"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -21,11 +27,17 @@ import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
-describe("bid", () => {
-	const { web3: web31, web3Ethereum: ethereum1 } = createE2eProvider(DEV_PK_1)
-	const { web3Ethereum: ethereum2 } = createE2eProvider(DEV_PK_2)
+const pk1Provider = createE2eTestProvider(DEV_PK_1)
+const pk2Provider = createE2eTestProvider(DEV_PK_2)
 
-	const env: EthereumNetwork = "dev-ethereum"
+// const { providers, web3v4 } = createEthereumProviders(provider, wallet)
+const pk1TestProviders = createEthereumProviders(pk1Provider.provider, pk1Provider.wallet)
+const pk2TestProviders = createEthereumProviders(pk2Provider.provider, pk2Provider.wallet)
+
+const providers = concatBuyerSellerProviders(pk1TestProviders.providers, pk2TestProviders.providers)
+describe.each(providers)("bid", (ethereum1, ethereum2) => {
+
+	const env = "dev-ethereum" as const
 	const config = getEthereumConfig(env)
 	const getConfig = async () => config
 	const getApis1 = getApisTemplate.bind(null, ethereum1, env)
@@ -55,11 +67,11 @@ describe("bid", () => {
 	const send1 = getSendWithInjects()
 	const sign1 = signNft.bind(null, ethereum1, getConfig)
 	const mint1 = mintTemplate.bind(null, ethereum1, send1, sign1, getApis1)
-	const e2eErc721V3ContractAddress = toAddress("0x6972347e66A32F40ef3c012615C13cB88Bf681cc")
-	const erc20Contract = toAddress("0xA4A70E8627e858567a9f1F08748Fe30691f72b9e")
+	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
+	const erc20Contract = getTestContract(env, "erc20")
 
 	const it = awaitAll({
-		testErc721: deployTestErc721(web31, "Test", "TST"),
+		testErc721: deployTestErc721(pk1Provider.web3v4, "Test", "TST"),
 	})
 
 	beforeAll(async () => {
@@ -135,7 +147,7 @@ describe("bid", () => {
 				assetClass: "COLLECTION",
 				contract: e2eErc721V3ContractAddress,
 			},
-			price: toBn("10000"),
+			price: toBn(MIN_PAYMENT_VALUE.toFixed()),
 			amount: 1,
 			payouts: [],
 			originFees: [],

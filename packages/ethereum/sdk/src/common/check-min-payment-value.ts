@@ -2,14 +2,14 @@ import type { Asset } from "@rarible/ethereum-api-client"
 import { BigNumber, toBn } from "@rarible/utils"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
-import { isETH, isRari, isWeth } from "../nft/common"
-import type { EthereumConfig } from "../config/type"
+import { isErc20, isETH } from "../nft/common"
 import { isNft } from "../order/is-nft"
 import { ETHER_IN_WEI } from "./index"
 
-export function checkGreaterThanMinPaymentValue({ assetType, value }: Asset, config: EthereumConfig): void {
-	if ((isETH(assetType) || isWeth(assetType, config) || isRari(assetType, config))
-    && !toBn(value).gte(MIN_PAYMENT_VALUE)) {
+export function checkGreaterThanMinPaymentValue({ assetType, value }: Asset): void {
+	const bnValue = toBn(value)
+	if ((isETH(assetType) || isErc20(assetType))
+    && !bnValue.gte(MIN_PAYMENT_VALUE) && !bnValue.eq(0)) {
 		throw new Warning(`Asset value must be greater or equal to ${MIN_PAYMENT_VALUE.div(ETHER_IN_WEI).toFixed()}`)
 	}
 }
@@ -18,10 +18,10 @@ export function checkGreaterThanMinPaymentValue({ assetType, value }: Asset, con
 export const MIN_PAYMENT_VALUE = new BigNumber(10).pow(14)
 export const MIN_PAYMENT_VALUE_DECIMAL = MIN_PAYMENT_VALUE.div(ETHER_IN_WEI)
 
-export function checkMinPaymentValue(checked: OrderForm, config: EthereumConfig): void {
+export function checkMinPaymentValue(checked: OrderForm): void {
 	if (isNft(checked.make.assetType)) {
-		checkGreaterThanMinPaymentValue(checked.take, config)
+		checkGreaterThanMinPaymentValue(checked.take)
 	} else if (isNft(checked.take.assetType)) {
-		checkGreaterThanMinPaymentValue(checked.make, config)
+		checkGreaterThanMinPaymentValue(checked.make)
 	}
 }

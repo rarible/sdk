@@ -114,19 +114,27 @@ export function getDappType(provider: any): DappType | undefined {
 	return DappType.Unknown
 }
 
-export function isObjectLike(x: unknown): x is object {
+export function isObjectLike(x: unknown): x is Object {
 	return typeof x === "object" && x !== null
 }
 
 export function hasName(x: unknown): x is Error {
-	return typeof x === "object" && x !== null && "name" in x
+	return isObjectLike(x) && "name" in x
+}
+
+export function hasCode(error: unknown): error is { code: number } {
+	return isObjectLike(error) && "code" in error
+}
+
+export function hasVersion(x: unknown): x is { version: string } {
+	return isObjectLike(x) && "version" in x
 }
 
 export function deepReplaceBigInt(o: unknown): any {
 	if (Array.isArray(o)) {
 		return o.map(item => deepReplaceBigInt(item))
 	}
-	if (typeof o === "object") {
+	if (typeof o === "object" && o !== null ) {
 		const clonedObject = { ...o } as Record<string, unknown>
 		return Object.keys(clonedObject).reduce((acc, key) => {
 			acc[key] = deepReplaceBigInt(acc[key])
@@ -135,4 +143,11 @@ export function deepReplaceBigInt(o: unknown): any {
 	}
 	if (typeof o === "bigint") return o.toString()
 	return o
+}
+
+export function getMajorVersion(version: string | undefined) {
+	if (!version) return ""
+	const components = version?.split(".")
+	const [major] = components
+	return major
 }

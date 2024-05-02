@@ -6,14 +6,15 @@
   ],
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna link",
-    "clean": "lerna run clean --parallel --stream",
-    "build": "yarn bootstrap && yarn clean && yarn build:lerna",
+    "clean": "lerna run clean",
+    "build": "run-s bootstrap clean build:lerna",
     "build:lerna": "lerna run build --stream --ignore example --ignore @rarible/sdk-examples",
     "build-ethereum-test-common": "yarn workspace @rarible/ethereum-sdk-test-common run build",
     "build-ethereum-biconomy-middleware": "yarn workspace @rarible/biconomy-middleware run build",
     "build-ethereum-provider": "yarn workspace @rarible/ethereum-provider run build",
     "build-ethereum-ethers": "yarn workspace @rarible/ethers-ethereum run build",
     "build-ethereum-web3": "yarn workspace @rarible/web3-ethereum run build",
+    "build-ethereum-web3-v4": "yarn workspace @rarible/web3-v4-ethereum run build",
     "build-ethereum-sdk": "yarn workspace @rarible/protocol-ethereum-sdk run build",
     "build-ethereum-sdk-dev": "yarn workspace @rarible/protocol-ethereum-sdk run build:ts",
     "build-sdk-common": "yarn workspace @rarible/sdk-common run build",
@@ -57,7 +58,7 @@
     "prettify:packages": "lerna exec -- sort-package-json && sort-package-json",
     "prettify": "run-s prettify:*",
     "test": "sh ./scripts/test.sh",
-    "verify": "lerna run verify --parallel",
+    "verify": "lerna run verify",
     "lint-staged": "lint-staged",
     "precommit": "run-s verify lint",
     "prepare": "husky install",
@@ -65,7 +66,8 @@
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
     "publish-all": "lerna publish from-package",
     "e2e-tests": "sh ./scripts/e2e.sh",
-    "docs:sdk": "yarn workspace @rarible/sdk run docs"
+    "docs:sdk": "yarn workspace @rarible/sdk run docs",
+    "nuke": "rm -rf node_modules; for d in packages/*/node_modules; do echo $d; rm -r $d; done"
   },
   "commitlint": {
     "extends": [
@@ -82,18 +84,20 @@
   },
   "resolutions": {
     "**/axios": "^0.26.1",
-    "web3-core": "^4.3.2"
+    "jest": "^27.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^13.1.0",
     "@commitlint/config-conventional": "^13.1.0",
     "@rarible/eslint-config-ts": "~0.5.0",
+    "@solana/web3.js": "~1.54.0",
     "eslint": "^7.32.0",
     "husky": "^7.0.4",
-    "lerna": "^6.0.3",
+    "lerna": "^6.6.2",
     "lint-staged": "^10.4.0",
     "npm-check-updates": "^11.5.13",
     "npm-run-all": "^4.1.5",
+    "rxjs": "^6.6.7",
     "sort-package-json": "^1.52.0",
     "tslib": "^2.3.1",
     "typescript": "^4.8.4"

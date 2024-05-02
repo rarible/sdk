@@ -1,74 +1,65 @@
-import * as web3 from "@solana/web3.js"
-import * as nacl from "tweetnacl"
+import nacl from "tweetnacl"
 import base58 from "bs58"
-import { isPrivateKey } from "@rarible/solana-common"
-import type { DisplayEncoding, IWalletSigner } from "../domain"
+import type { SolanaSignature, SolanaSigner, TransactionOrVersionedTransaction } from "@rarible/solana-common"
+import type { PublicKey, Transaction } from "@solana/web3.js"
+import { Keypair } from "@solana/web3.js"
 
-/**
- * Abstraction over solana web3.Keypair
- */
-export class SolanaKeypairWallet implements IWalletSigner {
-	private _keyPair: web3.Keypair
-
-	private constructor(keyPair: web3.Keypair) {
-		this._keyPair = keyPair
+export class SolanaKeypairWallet implements SolanaSigner {
+	static fromKeypair(keyPair: Keypair) {
+		return new SolanaKeypairWallet(keyPair)
 	}
 
-	public get keyPair(): web3.Keypair {
-		return this._keyPair
+	static fromKey(secret: Uint8Array | string) {
+		return new SolanaKeypairWallet(Keypair.fromSecretKey(toUint8SecretKey(secret)))
 	}
 
-	public get publicKey(): web3.PublicKey {
-		return this.keyPair.publicKey
+	static fromSeed(seed: Uint8Array | undefined): SolanaKeypairWallet {
+		const pair = seed ? Keypair.fromSeed(seed) : Keypair.generate()
+		return SolanaKeypairWallet.fromKeypair(pair)
 	}
 
-	async signTransaction(tx: web3.Transaction): Promise<web3.Transaction> {
-		tx.partialSign(this.keyPair)
-		return tx
+	readonly publicKey: PublicKey
+	private constructor(public readonly keyPair: Keypair) {
+		this.publicKey = keyPair.publicKey
 	}
 
-	async signAllTransactions(txs: web3.Transaction[]): Promise<web3.Transaction[]> {
-		return txs.map((t) => {
-			t.partialSign(this.keyPair)
-			return t
-		})
-	}
+	signTransaction = (tx: TransactionOrVersionedTransaction) => isTransaction(tx)
+		? Promise.resolve(signWithKeypair(tx, this.keyPair))
+		: Promise.reject(new UnsupportedSolanaTransactionType())
 
-	//eslint-disable-next-line @typescript-eslint/no-unused-vars
-	async signMessage(message: Uint8Array | string, display?: DisplayEncoding) {
-		let data: Uint8Array
-		if (typeof message === "string") {
-			data = new TextEncoder().encode(message)
-		} else {
-			data = message
-		}
-		return nacl.sign(data, this._keyPair.secretKey).slice(0, nacl.sign.signatureLength)
-	}
+	signAllTransactions = (txs: TransactionOrVersionedTransaction[]) =>
+		Promise.all(txs.map(x => this.signTransaction(x)))
 
-	/**
-	 * Instantiate new SolanaWallet with provided keypair or from secret key
-	 * @param keyPair - web3.Keypair | Uint8Array | string
-	 */
-	static createFrom(keyPair: web3.Keypair | Uint8Array | string): SolanaKeypairWallet {
-		if (isPrivateKey(keyPair)) {
-			return new SolanaKeypairWallet(keyPair)
-		} else if (ArrayBuffer.isView(keyPair)) {
-			return new SolanaKeypairWallet(web3.Keypair.fromSecretKey(keyPair))
-		} else if (typeof keyPair === "string") {
-			return new SolanaKeypairWallet(web3.Keypair.fromSecretKey(
-				Uint8Array.from(base58.decode(keyPair))
-			))
-		}
+	signMessage = async (message: Uint8Array | string): Promise<SolanaSignature> => ({
+		publicKey: this.publicKey,
+		signature: nacl
+			.sign(getSignMessageData(message), this.keyPair.secretKey)
+			.slice(0, nacl.sign.signatureLength),
+	})
+}
 
-		throw new Error("Unknown type of secret key")
-	}
+function isTransaction(tx: TransactionOrVersionedTransaction): tx is Transaction {
+	return "partialSign" in tx
+}
 
-	/**
-	 * Instantiate new SolanaWallet with new generated keypair
-	 */
-	static generate(seed?: Uint8Array): SolanaKeypairWallet {
-		return SolanaKeypairWallet.createFrom(
-			seed ? web3.Keypair.fromSeed(seed) : web3.Keypair.generate()
-		)
+function signWithKeypair(tx: Transaction, keypair: Keypair) {
+	tx.partialSign(keypair)
+	return tx
+}
+
+function toUint8SecretKey(str: Uint8Array | string): Uint8Array {
+	if (typeof str === "string") return Uint8Array.from(base58.decode(str))
+	return str
+}
+
+function getSignMessageData(message: Uint8Array | string) {
+	if (typeof message === "string") return new TextEncoder().encode(message)
+	return message
+}
+
+class UnsupportedSolanaTransactionType extends Error {
+	constructor() {
+		super("VersionedTransaction is not supported")
+		this.name = "UnsupportedSolanaTransactionType"
 	}
 }

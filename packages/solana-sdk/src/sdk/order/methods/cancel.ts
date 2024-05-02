@@ -1,20 +1,17 @@
-import BigNumber from "bignumber.js"
 import type { Connection, PublicKey } from "@solana/web3.js"
-import type { IWalletSigner } from "@rarible/solana-wallet"
 import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import { AuctionHouseProgram } from "@metaplex-foundation/mpl-auction-house"
+import type { SolanaSigner } from "@rarible/solana-common"
 import type { ITransactionPreparedInstructions } from "../../../common/transactions"
-import {
-	getAuctionHouseTradeState,
-	loadAuctionHouseProgram,
-} from "../../../common/auction-house-helpers"
+import { getAuctionHouseTradeState, loadAuctionHouseProgram } from "../../../common/auction-house-helpers"
 import { getPriceWithMantissa } from "../../../common/helpers"
-import { bigNumToBn } from "../../../common/utils"
+import { toSerumBn } from "../../../common/utils"
 
 export interface IActionHouseCancelRequest {
 	connection: Connection
 	auctionHouse: PublicKey
-	signer: IWalletSigner
+	signer: SolanaSigner
 	mint: PublicKey
 	price: BigNumberValue
 	tokensAmount: BigNumberValue
@@ -28,14 +25,14 @@ export async function getAuctionHouseCancelInstructions(
 
 	const buyPriceAdjusted = await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.price),
+		toBn(request.price),
 		auctionHouseObj.treasuryMint,
 		request.signer,
 	)
 
 	const tokenSizeAdjusted = await getPriceWithMantissa(
 		request.connection,
-		new BigNumber(request.tokensAmount),
+		toBn(request.tokensAmount),
 		request.mint,
 		request.signer,
 	)
@@ -68,8 +65,8 @@ export async function getAuctionHouseCancelInstructions(
 		auctionHouseFeeAccount: auctionHouseObj.auctionHouseFeeAccount,
 		tradeState,
 	}, {
-		buyerPrice: bigNumToBn(buyPriceAdjusted),
-		tokenSize: bigNumToBn(tokenSizeAdjusted),
+		buyerPrice: toSerumBn(buyPriceAdjusted),
+		tokenSize: toSerumBn(tokenSizeAdjusted),
 	})
 
 	return { instructions: [instruction], signers: [] }

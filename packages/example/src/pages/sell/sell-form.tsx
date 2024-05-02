@@ -1,4 +1,3 @@
-import React, { useContext } from "react"
 import { useForm } from "react-hook-form"
 import { Box, Stack } from "@mui/material"
 import type { PrepareOrderResponse } from "@rarible/sdk/build/types/order/common"
@@ -8,11 +7,11 @@ import { generateExpirationDate } from "@rarible/sdk/build/common/suite/order"
 import { FormTextInput } from "../../components/common/form/form-text-input"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
-import { ConnectorContext } from "../../components/connector/sdk-connection-provider"
 import { RequestResult } from "../../components/common/request-result"
 import { getCurrency, getCurrencyOptions } from "../../common/currency-helpers"
 import { parseCurrencyType, PriceForm } from "../../components/common/sdk-forms/price-form"
-import { EnvironmentContext } from "../../components/connector/environment-selector-provider"
+import { useEnvironmentContext } from "../../components/connector/env"
+import { useSdkContext } from "../../components/connector/sdk"
 
 interface ISellFormProps {
 	onComplete: (response: any) => void
@@ -21,8 +20,8 @@ interface ISellFormProps {
 }
 
 export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
-	const { environment } = useContext(EnvironmentContext)
-	const connection = useContext(ConnectorContext)
+	const { environment } = useEnvironmentContext()
+	const connection = useSdkContext()
 	const form = useForm()
 	const { handleSubmit } = form
 	const { result, setError } = useRequestResult()

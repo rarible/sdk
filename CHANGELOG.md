@@ -32,6 +32,235 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
+
+
+### Features
+
+* **PLTF-292:** Aptos integration ([#618](https://github.com/rarible/sdk/issues/618)) ([bcc0ff9](https://github.com/rarible/sdk/commit/bcc0ff950ad2f1d9e5b84f67743166888c275d3a))
+
+
+
+
+
+## [0.13.68-fix.20](https://github.com/rarible/sdk/compare/v0.13.68-fix.19...v0.13.68-fix.20) (2024-04-23)
+
+
+### Bug Fixes
+
+* amoy weth address ([#617](https://github.com/rarible/sdk/issues/617)) ([e9b38c5](https://github.com/rarible/sdk/commit/e9b38c5a0d56c2c74c92a3b19646fe5cf75ce96a))
+
+
+
+
+
+## [0.13.68-fix.19](https://github.com/rarible/sdk/compare/v0.13.68-fix.18...v0.13.68-fix.19) (2024-04-16)
+
+
+### Bug Fixes
+
+* add logs for transaction failing ([#614](https://github.com/rarible/sdk/issues/614)) ([a23b740](https://github.com/rarible/sdk/commit/a23b740bdf4a67b730faa1f85b9d7a7f1049f4f3))
+
+
+### Features
+
+* **PLTF-387:** support amoy polygon ([#616](https://github.com/rarible/sdk/issues/616)) ([ffe991b](https://github.com/rarible/sdk/commit/ffe991b6c87a5dc4937e6d4ee71bdbdc97608460))
+
+
+
+
+
+## [0.13.68-fix.18](https://github.com/rarible/sdk/compare/v0.13.68-fix.17...v0.13.68-fix.18) (2024-04-13)
+
+
+### Features
+
+* **PLTF-399:** support seaport 1.6 ([#615](https://github.com/rarible/sdk/issues/615)) ([4da2128](https://github.com/rarible/sdk/commit/4da2128a77ce30d089676d28a339e3a5122710d9))
+
+
+
+
+
+## [0.13.68-fix.17](https://github.com/rarible/sdk/compare/v0.13.68-fix.16...v0.13.68-fix.17) (2024-03-27)
+
+
+### Bug Fixes
+
+* balance checking ([280d914](https://github.com/rarible/sdk/commit/280d9146cde62f038459683c022e0777431381aa))
+
+
+
+
+
+## [0.13.68-fix.16](https://github.com/rarible/sdk/compare/v0.13.68-fix.15...v0.13.68-fix.16) (2024-03-25)
+
+
+### Features
+
+* tests fix ([87d2a43](https://github.com/rarible/sdk/commit/87d2a431eccf9d56794d8a5613bc3ebe23dff10c))
+
+
+
+
+
+## [0.13.68-fix.15](https://github.com/rarible/sdk/compare/v0.13.68-fix.14...v0.13.68-fix.15) (2024-03-25)
+
+
+### Features
+
+* sepolia fixes ([2a7a2a4](https://github.com/rarible/sdk/commit/2a7a2a49d2d31763d0a188fe60c56f56e046977c))
+
+
+
+
+
+## [0.13.68-fix.14](https://github.com/rarible/sdk/compare/v0.13.68-fix.13...v0.13.68-fix.14) (2024-03-22)
+
+
+### Features
+
+* **PLTF-337:** sepolia integration ([#611](https://github.com/rarible/sdk/issues/611)) ([4865465](https://github.com/rarible/sdk/commit/48654652b74b43da59a2e3c3d988db4dad65d171))
+
+
+
+
+
+## [0.13.68-fix.13](https://github.com/rarible/sdk/compare/v0.13.68-fix.12...v0.13.68-fix.13) (2024-03-21)
+
+
+### Features
+
+* **PLTF-341:** check init gamisodes collection ([#600](https://github.com/rarible/sdk/issues/600)) ([d5ad6ce](https://github.com/rarible/sdk/commit/d5ad6cef6ba053c43f46ee55e2d7c67c049bbe6f))
+* **PLTF-353:** get balances for eclipse ([#610](https://github.com/rarible/sdk/issues/610)) ([756ebf3](https://github.com/rarible/sdk/commit/756ebf3785488c9ccc55c0ed6b7fa56e05f014df))
+
+
+
+
+
+## [0.13.68-fix.12](https://github.com/rarible/sdk/compare/v0.13.68-fix.11...v0.13.68-fix.12) (2024-03-08)
+
+
+### Features
+
+* fief xai celo kroma evm blockchains supporting ([#602](https://github.com/rarible/sdk/issues/602)) ([30e730b](https://github.com/rarible/sdk/commit/30e730b736a4cfafa4bb6f6a4aa74d9c39c52432))
+
+
+
+
+
+## [0.13.68-fix.11](https://github.com/rarible/sdk/compare/v0.13.68-fix.10...v0.13.68-fix.11) (2024-03-05)
+
+
+### Features
+
+* refine solana support ([1668cf0](https://github.com/rarible/sdk/commit/1668cf0a72414d1fd96729a1e57b41ce0b7cff3e))
+
+
+
+
+
+## [0.13.68-fix.10](https://github.com/rarible/sdk/compare/v0.13.68-fix.9...v0.13.68-fix.10) (2024-03-05)
+
+
+### Features
+
+* **PLTF-305:** support celo network ([#606](https://github.com/rarible/sdk/issues/606)) ([cc8c63a](https://github.com/rarible/sdk/commit/cc8c63a12536905b49185aac925d7c89628fde3b))
+
+
+
+
+
+## [0.13.68-fix.9](https://github.com/rarible/sdk/compare/v0.13.68-fix.8...v0.13.68-fix.9) (2024-03-04)
+
+
+### Features
+
+* **PLTF-315:** support astar zkevm on mainnet ([#605](https://github.com/rarible/sdk/issues/605)) ([96fb3a6](https://github.com/rarible/sdk/commit/96fb3a6ca209c74e16906330fc97e35a08f80e28))
+
+
+
+
+
+## [0.13.68-fix.8](https://github.com/rarible/sdk/compare/v0.13.68-fix.7...v0.13.68-fix.8) (2024-02-29)
+
+
+### Features
+
+* **PLTF-197:** out of gas error ([#596](https://github.com/rarible/sdk/issues/596)) ([a50f1e9](https://github.com/rarible/sdk/commit/a50f1e960478d506b506e21e3d71ab274641a0ed))
+* **PLTF-315:** support astar mainnet ([#603](https://github.com/rarible/sdk/issues/603)) ([cdae32f](https://github.com/rarible/sdk/commit/cdae32f4ca84b4273d48b9fc052a8f36f4b18342))
+
+
+
+
+
+## [0.13.68-fix.7](https://github.com/rarible/sdk/compare/v0.13.68-fix.6...v0.13.68-fix.7) (2024-02-16)
+
+
+### Bug Fixes
+
+* update rarible/types to 0.9.23 (base support) ([d907f35](https://github.com/rarible/sdk/commit/d907f35e2a60fe79d956933a7cffa58787875d17))
+* web3 dependencies done right ([c68c9d5](https://github.com/rarible/sdk/commit/c68c9d53eb64e0bdb12eb07fccb54405b0a85947))
+
+
+
+
+
+## [0.13.68-fix.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.5...v0.13.68-fix.6) (2024-02-16)
+
+
+### Bug Fixes
+
+* example bigint support for legacy react-scripts ([50c8a83](https://github.com/rarible/sdk/commit/50c8a837900aa0b06c09e37fe85ed909c07ffe57))
+
+
+### Features
+
+* add support of base and base-sepolia networks ([34f9622](https://github.com/rarible/sdk/commit/34f96223fd08f88272769bc39449bcf4d6bf0125))
+
+
+
+
+
+## [0.13.68-fix.5](https://github.com/rarible/sdk/compare/v0.13.68-fix.4...v0.13.68-fix.5) (2024-02-14)
+
+
+### Bug Fixes
+
+* ad-hoc fix for selected erc-20 tokens decimals ([eef6cd9](https://github.com/rarible/sdk/commit/eef6cd9907f2ccb6af42c5bb34a239ffccbcbb41))
+* correct erc20 value convertion with decimals ([91a6141](https://github.com/rarible/sdk/commit/91a61410b75bba8d6a4727c8d808d5c141751e9b))
+
+
+### Features
+
+* add support of astarZkEvm ([7c6e2a3](https://github.com/rarible/sdk/commit/7c6e2a3524594958755af16013afc0b8fe611931))
+* cleanup a little example app ([2c690ff](https://github.com/rarible/sdk/commit/2c690ffec8b2b91cede62ae4c1d071cc4f21e15d))
+
+
+
+
+
+## [0.13.68-fix.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.3...v0.13.68-fix.4) (2024-02-06)
+
+
+### Features
+
+* **PLTF-215:** fixes transactions for backend service ([#594](https://github.com/rarible/sdk/issues/594)) ([8fe175a](https://github.com/rarible/sdk/commit/8fe175a85b6d4de16985653bc25a08b957758bae))
+
+
+
+
+
+## [0.13.68-fix.3](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.68-fix.3) (2024-02-01)
+
+
+### Bug Fixes
+
+* bid convert operation ([#595](https://github.com/rarible/sdk/issues/595)) ([efe2d74](https://github.com/rarible/sdk/commit/efe2d74a829b64d16bd3ea24e1ea5d5f11082bd3))
+
+
+
+
+
 ## [0.13.68-fix.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.1...v0.13.68-fix.2) (2024-01-30)
 
 

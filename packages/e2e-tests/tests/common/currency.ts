@@ -3,6 +3,7 @@ import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "@rarible/sdk-wallet"
 import { toContractAddress, toAddress } from "@rarible/types"
 import { getTestErc20Contract } from "@rarible/ethereum-sdk-test-common"
+import { getPromiEventConfirmationPromise } from "@rarible/web3-v4-ethereum/src/utils/to-promises"
 import { getWalletAddressFull } from "./wallet"
 import { testsConfig } from "./config"
 import { Logger } from "./logger"
@@ -28,10 +29,7 @@ export async function getCurrency(
 					from: addressSeller.address,
 					gas: "200000",
 				})
-			await new Promise((resolve, reject) => {
-				promiEvent.once("confirmation", ({ receipt }) => resolve(receipt.transactionHash))
-				promiEvent.once("error", (error: any) => reject(error))
-			})
+			await getPromiEventConfirmationPromise(promiEvent)
 			return {
 				"@type": "ERC20",
 				contract: toContractAddress(`ETHEREUM:${testsConfig.variables.ETHEREUM_ERC20}`),

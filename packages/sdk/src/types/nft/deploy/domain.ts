@@ -13,6 +13,7 @@ export interface CreateCollectionAsset extends Record<CreateCollectionBlockchain
 	[ApiClient.Blockchain.ETHEREUM]: EthereumCreateCollectionAsset;
 	[ApiClient.Blockchain.TEZOS]: TezosCreateCollectionTokenAsset;
 	[ApiClient.Blockchain.SOLANA]: SolanaCreateCollectionTokenAsset;
+	[ApiClient.Blockchain.APTOS]: AptosCreateCollectionTokenAsset;
 }
 
 export type CreateCollectionBlockchains = SupportedBlockchain
@@ -20,7 +21,8 @@ export type CreateCollectionBlockchains = SupportedBlockchain
 export type DeployTokenAsset =
 	EthereumCreateCollectionAsset |
 	TezosCreateCollectionTokenAsset |
-	SolanaCreateCollectionTokenAsset
+	SolanaCreateCollectionTokenAsset |
+	AptosCreateCollectionTokenAsset
 
 export type SolanaCreateCollectionTokenAsset = {
 	arguments: {
@@ -63,6 +65,12 @@ export type CreatePrivateCollectionArguments =
 export type CreateCollectionResponse = {
 	tx: IBlockchainTransaction,
 	address: ContractAddress
+}
+
+export type AptosCreateCollectionTokenAsset = {
+	name: string
+	description: string
+	uri: string
 }
 
 /**

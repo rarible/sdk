@@ -14,6 +14,7 @@ import type { MintSimplifiedRequest } from "../../types/nft/mint/simplified"
 import type { MintSimplifiedRequestOffChain, MintSimplifiedRequestOnChain } from "../../types/nft/mint/simplified"
 import type { IApisSdk } from "../../domain"
 import { getContractFromMintRequest } from "../../common/utils"
+import type { GeneralMetaRequest } from "../../types/nft/mint/preprocess-meta"
 import type { MaybeProvider, TezosMetaContent, TezosMetadataResponse } from "./common"
 import {
 	checkChainId,
@@ -35,7 +36,7 @@ export class TezosMint {
 		this.preprocessMeta = this.preprocessMeta.bind(this)
 	}
 
-	private getFormatsMeta(meta: PreprocessMetaRequest) {
+	private getFormatsMeta(meta: GeneralMetaRequest) {
 		return [meta.image, meta.animation]
 			.reduce((acc, item) => {
 				if (item) {
