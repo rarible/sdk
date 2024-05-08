@@ -150,7 +150,7 @@ export class UpsertOrder {
 	async upsertRequest(checked: OrderForm): Promise<Order> {
 		const simple = UpsertOrder.orderFormToSimpleOrder(checked)
 		const apis = await this.getApis()
-		checkMinPaymentValue(checked)
+		await checkMinPaymentValue(getRequiredWallet(this.ethereum), checked)
 		return apis.order.upsertOrder({
 			orderForm: {
 				...checked,

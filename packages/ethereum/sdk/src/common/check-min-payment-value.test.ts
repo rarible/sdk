@@ -2,14 +2,34 @@ import type { Asset } from "@rarible/ethereum-api-client"
 import type { Address } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import { toAddress } from "@rarible/types"
-import { devEthereumConfig } from "../config/dev"
-import { checkGreaterThanMinPaymentValue, checkMinPaymentValue } from "./check-min-payment-value"
+import {
+	awaitAll,
+	createGanacheProvider,
+	deployWethContract,
+} from "@rarible/ethereum-sdk-test-common"
+import Web3 from "web3"
+import { Web3Ethereum } from "@rarible/web3-ethereum"
+import {
+	checkGreaterThanMinPaymentValue,
+	checkMinPaymentValue,
+} from "./check-min-payment-value"
 
 /**
- * @group provider/dev
+ * @group provider/ganache
  */
 describe("check min payment value fn", function () {
-	const config = devEthereumConfig
+	const {
+		addresses,
+		provider,
+	} = createGanacheProvider()
+	const [address] = addresses
+	const web3 = new Web3(provider as any)
+	const ethereum = new Web3Ethereum({ web3, from: address, gas: 1000000 })
+
+	const it = awaitAll({
+		weth: deployWethContract(web3),
+	})
+
 	const enoughEthAsset: Asset = {
 		assetType: {
 			assetClass: "ETH",
@@ -20,7 +40,7 @@ describe("check min payment value fn", function () {
 		assetType: {
 			assetClass: "ETH",
 		},
-		value: toBigNumber("10"),
+		value: toBigNumber("10000000000"),
 	}
 	const erc721Asset: Asset = {
 		assetType: {
@@ -37,11 +57,11 @@ describe("check min payment value fn", function () {
 			const wethAsset: Asset = {
 				assetType: {
 					assetClass: "ERC20",
-					contract: config.weth as Address,
+					contract: it.weth.options.address as Address,
 				},
 				value: toBigNumber("10"),
 			}
-			checkGreaterThanMinPaymentValue(wethAsset)
+			await checkGreaterThanMinPaymentValue(ethereum, wethAsset)
 		} catch (e) {
 			err = e
 		}
@@ -51,7 +71,7 @@ describe("check min payment value fn", function () {
 	test("checkGreaterThanMinPaymentValue throws error with ETH", async () => {
 		let err: any
 		try {
-			checkGreaterThanMinPaymentValue(notEnoughEthAsset)
+			await checkGreaterThanMinPaymentValue(ethereum, notEnoughEthAsset)
 		} catch (e) {
 			err = e
 		}
@@ -59,18 +79,18 @@ describe("check min payment value fn", function () {
 	})
 
 	test("checkGreaterThanMinPaymentValue returns undefined with 0.0001 ETH", async () => {
-		checkGreaterThanMinPaymentValue(enoughEthAsset)
+		await checkGreaterThanMinPaymentValue(ethereum, enoughEthAsset)
 	})
 
 	test("checkMinPaymentValue returns undefined if sell order has been passed", async () => {
-		checkMinPaymentValue({
+		await checkMinPaymentValue(ethereum, {
 			make: erc721Asset,
 			take: enoughEthAsset,
 		} as any)
 	})
 
 	test("checkMinPaymentValue returns undefined if bid order has been passed", async () => {
-		checkMinPaymentValue({
+		await checkMinPaymentValue(ethereum, {
 			make: enoughEthAsset,
 			take: erc721Asset,
 		} as any)
@@ -79,7 +99,7 @@ describe("check min payment value fn", function () {
 	test("checkMinPaymentValue throws error if sell order has been passed", async () => {
 		let err: any
 		try {
-			checkMinPaymentValue({
+			await checkMinPaymentValue(ethereum, {
 				make: erc721Asset,
 				take: notEnoughEthAsset,
 			} as any)
@@ -93,7 +113,7 @@ describe("check min payment value fn", function () {
 	test("checkMinPaymentValue throws error if bid order has been passed", async () => {
 		let err: any
 		try {
-			checkMinPaymentValue({
+			await checkMinPaymentValue(ethereum, {
 				make: notEnoughEthAsset,
 				take: erc721Asset,
 			} as any)
@@ -105,7 +125,7 @@ describe("check min payment value fn", function () {
 	})
 
 	test("checkMinPaymentValue should pass zero-price orders", async () => {
-		checkMinPaymentValue({
+		await checkMinPaymentValue(ethereum, {
 			make: {
 				assetType: {
 					assetClass: "ETH",
