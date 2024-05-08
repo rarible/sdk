@@ -30,6 +30,7 @@ import { astarZKEVMConfig } from "./astar-zkevm"
 import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
 import { polygonAmoyConfig } from "./polygon-amoy"
+import { astarKyotoConfig } from "./astar-kyoto"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	mainnet: mainnetConfig,
@@ -53,6 +54,7 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
 	rari: rariMainnetConfig,
 	zkatana: zkatanaConfig,
 	"astar-zkevm": astarZKEVMConfig,
+	"astar-kyoto": astarKyotoConfig,
 	base: baseConfig,
 	"base-sepolia": baseSepoliaConfig,
 	"testnet-celo": celoTestnetConfig,
