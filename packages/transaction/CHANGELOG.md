@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+
+### Features
+
+* **PLTF-389:** astar kyoto testnet support ([#621](https://github.com/rarible/sdk/issues/621)) ([3199837](https://github.com/rarible/sdk/commit/31998375c4464135662c1d9db349264f4d6afc29))
+
+
+
+
+
 ## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
 
 
