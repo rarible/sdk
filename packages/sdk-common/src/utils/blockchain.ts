@@ -15,6 +15,11 @@ export const EVMBlockchains = [
 	Blockchain.XAI,
 	Blockchain.KROMA,
 	Blockchain.CELO,
+<<<<<<< Updated upstream
+=======
+	Blockchain.SAAKURU,
+	Blockchain.OASYS,
+>>>>>>> Stashed changes
 ] as const
 
 export type EVMBlockchain = typeof EVMBlockchains[number]
