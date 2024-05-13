@@ -112,6 +112,7 @@ const randomEvmAddress = toAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 const nonWorkingNetworks = [
 	"testnet-rari",
 	"testnet-fief",
+	"saakuru",
 ]
 const filteredUnworkingNetworks = ethereumNetworks
 	.filter(network => !nonWorkingNetworks.includes(network))
