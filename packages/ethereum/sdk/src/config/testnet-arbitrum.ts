@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const arbitrumTestnetConfig: EthereumConfig = {
 	basePath: "https://testnet-arbitrum-api.rarible.org",
 	chainId: 421614,
 	environment: "testnet",
+	blockchain: Blockchain.ARBITRUM,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x47F6d59216aAdb2e5aA6bFAf0b06d790EdC35118"),

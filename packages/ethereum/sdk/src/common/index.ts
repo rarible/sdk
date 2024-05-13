@@ -23,54 +23,11 @@ export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
 }
 
 export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockchain {
-	switch (network) {
-		case "testnet":
-		case "dev-ethereum":
-		case "mainnet":
-			return Blockchain.ETHEREUM
-		case "dev-polygon":
-		case "mumbai":
-		case "amoy-polygon":
-		case "polygon":
-			return Blockchain.POLYGON
-		case "mantle":
-		case "testnet-mantle":
-			return Blockchain.MANTLE
-		case "arbitrum":
-		case "testnet-arbitrum":
-			return Blockchain.ARBITRUM
-		case "zksync":
-		case "testnet-zksync":
-			return Blockchain.ZKSYNC
-		case "chiliz":
-		case "testnet-chiliz":
-			return Blockchain.CHILIZ
-		case "lightlink":
-		case "testnet-lightlink":
-			return Blockchain.LIGHTLINK
-		case "rari":
-		case "testnet-rari":
-			return Blockchain.RARI
-		case "zkatana":
-		case "astar-zkevm":
-		case "astar-kyoto":
-			return Blockchain.ASTARZKEVM
-		case "base":
-		case "base-sepolia":
-			return Blockchain.BASE
-		case "testnet-celo":
-		case "celo":
-			return Blockchain.CELO
-		case "testnet-fief":
-			return Blockchain.FIEF
-		case "xai":
-		case "testnet-xai":
-			return Blockchain.XAI
-		case "kroma":
-		case "testnet-kroma":
-			return Blockchain.KROMA
-		default: throw new Error(`Unrecognized ethereum network ${network}`)
+	const config = getEthereumConfig(network)
+	if (!config) {
+		throw new Error(`Unrecognized ethereum network ${network}`)
 	}
+	return config.blockchain
 }
 
 export function getChainIdByNetwork(network: EthereumNetwork): number {

@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const rariMainnetConfig: EthereumConfig = {
 	basePath: "https://rari-api.rarible.org",
 	chainId: 1380012617,
 	environment: "production",
+	blockchain: Blockchain.RARI,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x10CCBf49617ECB7A8262065853D6C93Ad42C3C2C"),

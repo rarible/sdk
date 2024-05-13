@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const zkatanaConfig: EthereumConfig = {
 	basePath: "https://testnet-astarzkevm-api.rarible.org",
 	chainId: 1261120,
 	environment: "testnet",
+	blockchain: Blockchain.ASTARZKEVM,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x51D04BE44865c323fDfb065d149725995dbF05f8"),

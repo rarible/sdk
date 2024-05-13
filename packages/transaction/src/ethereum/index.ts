@@ -96,6 +96,10 @@ Blockchain, TransactionResult
 				return `https://blockscout.sepolia.kroma.network/tx/${this.hash()}`
 			case "kroma":
 				return `https://blockscout.kroma.network/tx/${this.hash()}`
+			case "testnet-saakuru":
+				return `https://explorer-testnet.saakuru.network/explorer-testnet/tx/${this.hash()}`
+			case "saakuru":
+				return `https://explorer.saakuru.network/explorer/tx/${this.hash()}`
 			default:
 				throw new Error("Unsupported transaction network")
 		}

@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const kromaConfig: EthereumConfig = {
 	basePath: "https://kroma-api.rarible.org",
 	chainId: 255,
 	environment: "production",
+	blockchain: Blockchain.KROMA,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x418f1b76448866CF072dd14d092138190CcdC9aF"),

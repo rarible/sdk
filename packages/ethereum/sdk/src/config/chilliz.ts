@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const chilizConfig: EthereumConfig = {
 	basePath: "https://chiliz-api.rarible.org",
 	chainId: 88888,
 	environment: "production",
+	blockchain: Blockchain.CHILIZ,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0xdA12E4Ab1d731F29bF4Bff8f971579D95f8DDD07"),

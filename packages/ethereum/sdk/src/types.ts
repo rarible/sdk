@@ -36,6 +36,8 @@ export const ethereumNetworks = [
 	"xai",
 	"testnet-kroma",
 	"kroma",
+	"testnet-saakuru",
+	"saakuru",
 ]
 
 export type EthereumNetwork = typeof ethereumNetworks[number]
