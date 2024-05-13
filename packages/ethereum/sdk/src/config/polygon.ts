@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const polygonConfig: EthereumConfig = {
 	basePath: "https://polygon-api.rarible.org",
 	chainId: 137,
 	environment: "production",
+	blockchain: Blockchain.POLYGON,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x12b3897a36fDB436ddE2788C06Eff0ffD997066e"),

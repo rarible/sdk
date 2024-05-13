@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const mantleConfig: EthereumConfig = {
 	basePath: "https://mantle-api.rarible.org",
 	chainId: 5000,
 	environment: "production",
+	blockchain: Blockchain.MANTLE,
 	exchange: {
 		v1: ZERO_ADDRESS,
 		v2: toAddress("0x0e7B24d73e45B639A5cF674C5f2Bb02930716f87"),

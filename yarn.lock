@@ -7471,10 +7471,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.16.5-alpha.10":
-  version "0.16.5-alpha.10"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.10.tgz#9f9f43f3134bfd8db6507105903912fc0da8b202"
-  integrity sha512-GPAhX86KlfOhxnzFgUH6+Pv3PG1tQzsgZ7CtQQ6xKTDJ7fm+vGftBCheuVGogynwcvJ8vQ3sQhmu+mh2M7YoZA==
+"@rarible/api-client@0.16.5-alpha.12":
+  version "0.16.5-alpha.12"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.12.tgz#a3d812631acde486d8089f0e61056e63bb00a1e5"
+  integrity sha512-UsmY8oKS6jn730V0bLsaUzHLNc2wZg/Yi4ZbRQoj2yUWiyQ1Q0e4g4PkXrttQfXaqNQ7uc2LKZi8sE+AhRg1xw==
 
 "@rarible/eslint-config-ts@~0.5.0":
   version "0.5.0"
