@@ -37,7 +37,7 @@ export class WrappedAdvancedFn<T extends (...args: any) => any = (...args: any[]
 	}
 
 	private fnCallable(...args: Parameters<T>): ReturnType<T> {
-		return this.fn(...(args as []))
+		return this.fn(...args)
 	}
 
 	setContext(context: PreparedFillInfo) {

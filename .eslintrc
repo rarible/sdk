@@ -1,10 +1,11 @@
 {
 	"extends": ["@rarible/ts"],
 	"rules": {
+    "camelcase": "off",
 		"object-curly-spacing": ["error", "always"],
     "unicorn/custom-error-definition": "off",
-    "@typescript-eslint/indent": "warn",
-    "@typescript-eslint/semi": "warn"
+    "@typescript-eslint/indent": "off",
+    "@typescript-eslint/semi": "off"
 	},
   "globals":{
     "BigInt": true

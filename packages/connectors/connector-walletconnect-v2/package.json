@@ -18,14 +18,9 @@
     "@walletconnect/ethereum-provider": "^2.10.1",
     "@walletconnect/modal": "^2.6.2"
   },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
-    "ts-jest": "^27.0.3"
-  },
   "peerDependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "publishConfig": {
     "access": "public"

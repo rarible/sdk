@@ -3,7 +3,9 @@ module.exports = {
 	bail: true,
 	setupFiles: ["<rootDir>/jest.setup.js"],
 	transform: {
-		"^.+\\.ts?$": "ts-jest",
+		"^.+\\.ts?$": ["ts-jest", {
+			tsconfig: "tsconfig-build.json",
+		}],
 	},
 	testResultsProcessor: "jest-junit",
 	reporters: [
@@ -12,9 +14,4 @@ module.exports = {
 			outputDirectory: "reports",
 		}],
 	],
-	globals: {
-		"ts-jest": {
-			tsconfig: "tsconfig-build.json",
-		},
-	},
 }

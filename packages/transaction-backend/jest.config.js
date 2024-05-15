@@ -1,14 +1,11 @@
 module.exports = {
-	globals: {
-		"ts-jest": {
-			tsconfig: "tsconfig.json",
-		},
-	},
 	roots: ["<rootDir>/src"],
 	setupFiles: ["<rootDir>/jest.setup.js"],
 	bail: true,
 	transform: {
-		"^.+\\.ts?$": "ts-jest",
+		"^.+\\.ts?$": ["ts-jest", {
+			tsconfig: "tsconfig-build.json",
+		}],
 	},
 	transformIgnorePatterns: [
 		"<rootDir>/build/",

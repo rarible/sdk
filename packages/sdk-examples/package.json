@@ -31,11 +31,8 @@
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "latest",
-    "@types/jest": "^27.0.2",
     "@types/node": "^12.20.36",
     "@types/node-fetch": "^2.6.1",
-    "jest": "^27.2.7",
-    "ts-jest": "^27.0.3",
     "yargs": "^17.2.1"
   },
   "peerDependencies": {

@@ -3,7 +3,9 @@ module.exports = {
 	roots: ["<rootDir>/src"],
 	setupFiles: ["<rootDir>/jest.setup.js", "dotenv/config"],
 	transform: {
-		"^.+\\.ts?$": "ts-jest",
+		"^.+\\.ts?$": ["ts-jest", {
+			tsconfig: "tsconfig-build.json",
+		}],
 	},
 	modulePathIgnorePatterns: ["<rootDir>/src/sdk-blockchains/solana"],
 	transformIgnorePatterns: [
@@ -17,9 +19,4 @@ module.exports = {
 			outputDirectory: "reports",
 		}],
 	],
-	globals: {
-		"ts-jest": {
-			tsconfig: "tsconfig-build.json",
-		},
-	},
 }
