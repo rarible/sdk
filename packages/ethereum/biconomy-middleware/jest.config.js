@@ -3,7 +3,9 @@ module.exports = {
 	setupFiles: ["<rootDir>/jest.setup.js"],
 	bail: true,
 	transform: {
-		"^.+\\.ts?$": "ts-jest",
+		"^.+\\.ts?$": ["ts-jest", {
+			tsconfig: "tsconfig-build.json",
+		}],
 	},
 	transformIgnorePatterns: [
 		"<rootDir>/build/",
@@ -19,9 +21,4 @@ module.exports = {
 			outputDirectory: "reports",
 		}],
 	],
-	globals: {
-		"ts-jest": {
-			tsconfig: "tsconfig-build.json",
-		},
-	},
 }

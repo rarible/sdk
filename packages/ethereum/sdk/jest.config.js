@@ -3,7 +3,9 @@ module.exports = {
 	setupFiles: ["<rootDir>/jest.setup.js", "dotenv/config"],
 	bail: true,
 	transform: {
-		"^.+\\.ts?$": "ts-jest",
+		"^.+\\.ts?$": ["ts-jest", {
+			tsconfig: "tsconfig-build.json",
+		}],
 	},
 	transformIgnorePatterns: [
 		"<rootDir>/build/",
@@ -20,10 +22,5 @@ module.exports = {
 			runner: "groups",
 		}],
 	],
-	globals: {
-		"ts-jest": {
-			tsconfig: "tsconfig-build.json",
-		},
-	},
 	runner: "groups",
 }

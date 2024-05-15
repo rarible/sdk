@@ -15,6 +15,6 @@ export class MethodWithPrepare
   }
 
   simplified(...args: Parameters<SimplifiedMethod>): ReturnType<SimplifiedMethod> {
-  	return this.simplifiedMethod(...(args as []))
+  	return this.simplifiedMethod(...args)
   }
 }

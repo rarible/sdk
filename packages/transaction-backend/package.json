@@ -41,14 +41,11 @@
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.22",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
-    "@types/jest": "^27.4.1",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^17.0.24",
     "@types/node-fetch": "^2.6.1",
     "@types/supertest": "^2.0.12",
-    "jest": "^27.2.7",
     "nodemon": "^2.0.15",
-    "supertest": "^6.2.2",
-    "ts-jest": "^27.0.3"
+    "supertest": "^6.2.2"
   }
 }

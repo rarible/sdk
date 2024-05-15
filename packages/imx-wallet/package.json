@@ -17,11 +17,6 @@
   "dependencies": {
     "@imtbl/imx-sdk": "^2.1.1"
   },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "jest": "^27.2.0",
-    "ts-jest": "^27.0.5"
-  },
   "publishConfig": {
     "access": "public",
     "registry": "https://registry.npmjs.org"
