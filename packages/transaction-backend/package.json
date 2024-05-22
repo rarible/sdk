@@ -10,8 +10,11 @@
     "build"
   ],
   "scripts": {
-    "build": "yarn clean && yarn tsc --project ./tsconfig.json && yarn copy-files",
-    "clean": "rimraf ./build",
+    "build": "run-s clean build:ts copy-files",
+    "build:ts": "tsc --project ./tsconfig.json",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "copy-files": "cp ./src/openapi.yml ./build/",
     "get-buy-tx": "npx ts-node scripts/gettxbuy.ts",
     "get-orders": "npx ts-node scripts/getorders.ts",
