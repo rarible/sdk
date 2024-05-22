@@ -17,17 +17,17 @@
     "typings.d.ts"
   ],
   "scripts": {
-    "clean": "run-s clean:*",
-    "clean:build": "rimraf ./build",
-    "clean:umd": "rimraf ./umd",
-    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "build": "run-s build:*",
     "build:ts": "tsc --project tsconfig-build.json",
     "build:umd": "webpack",
-    "verify": "tsc --noEmit --project tsconfig-build.json",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
+    "clean:umd": "rimraf ./umd",
     "test": "jest --runInBand --silent --forceExit",
     "test-provider-dev": "jest --runInBand --forceExit --group=provider/dev",
-    "test-provider-ganache": "jest --runInBand --forceExit --group=provider/ganache"
+    "test-provider-ganache": "jest --runInBand --forceExit --group=provider/ganache",
+    "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@rarible/action": "~0.9.1",
@@ -50,9 +50,9 @@
     "buffer": "^6.0.3",
     "ethers": "~5.4.4",
     "form-data": "^4.0.0",
-    "jest-runner-groups": "^2.2.0",
-    "jest-runner": "^29.7.0",
     "jest-docblock": "^29.7.0",
+    "jest-runner": "^29.7.0",
+    "jest-runner-groups": "^2.2.0",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",
