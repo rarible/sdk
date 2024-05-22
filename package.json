@@ -59,7 +59,6 @@
     "test": "sh ./scripts/test.sh",
     "verify": "lerna run verify",
     "lint-staged": "lint-staged",
-    "precommit": "run-s verify lint-staged lint prettify",
     "prepare": "husky install",
     "release": "lerna publish from-package",
     "update:rarible": "lerna exec -- ncu -u @rarible/* && ncu -u @rarible/* && yarn bootstrap",
@@ -74,12 +73,9 @@
     ]
   },
   "lint-staged": {
-    "**/src/package.json": [
-      "yarn run prettify:packages"
-    ],
-    "package.json": [
-      "yarn run prettify:packages"
-    ]
+    "**/src/package.json": "yarn run prettify:packages",
+    "package.json": "yarn run prettify:packages",
+    "*.js,*.jsx,*.ts,*.tsx": "yarn run lint:fix"
   },
   "resolutions": {
     "**/axios": "^0.26.1"
