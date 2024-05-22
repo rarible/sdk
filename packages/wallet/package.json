@@ -15,8 +15,8 @@
     "build:umd": "webpack",
     "clean": "run-s clean:*",
     "clean:build": "rimraf ./build",
-    "clean:umd": "rimraf ./umd",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
+    "clean:umd": "rimraf ./umd",
     "test": "jest --runInBand --forceExit --silent",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
