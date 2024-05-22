@@ -8,51 +8,49 @@ import type { GamisodesInitStatus } from "@rarible/flow-sdk"
 import { getFlowCollection, parseFlowAddressFromUnionAddress } from "./common/converters"
 
 export class FlowSetupAccount {
-	constructor(
-		private readonly sdk: FlowSdk,
-		private network: FlowNetwork,
-	) {
-		this.setupAccount = this.setupAccount.bind(this)
-		this.checkInitMattelCollections = this.checkInitMattelCollections.bind(this)
-		this.checkInitGamisodesCollections = this.checkInitGamisodesCollections.bind(this)
-		this.setupMattelCollections = this.setupMattelCollections.bind(this)
-		this.setupGamisodesCollections = this.setupGamisodesCollections.bind(this)
-	}
+  constructor(
+    private readonly sdk: FlowSdk,
+    private network: FlowNetwork,
+  ) {
+    this.setupAccount = this.setupAccount.bind(this)
+    this.checkInitMattelCollections = this.checkInitMattelCollections.bind(this)
+    this.checkInitGamisodesCollections = this.checkInitGamisodesCollections.bind(this)
+    this.setupMattelCollections = this.setupMattelCollections.bind(this)
+    this.setupGamisodesCollections = this.setupGamisodesCollections.bind(this)
+  }
 
-	async setupAccount(collection: CollectionId) {
-		const flowCollection = getFlowCollection(collection)
-		const tx = await this.sdk.collection.setupAccount(flowCollection)
-		return new BlockchainFlowTransaction(tx, this.network)
-	}
+  async setupAccount(collection: CollectionId) {
+    const flowCollection = getFlowCollection(collection)
+    const tx = await this.sdk.collection.setupAccount(flowCollection)
+    return new BlockchainFlowTransaction(tx, this.network)
+  }
 
-	async checkInitMattelCollections(address?: UnionAddress) {
-		const flowAddress = address ? parseFlowAddressFromUnionAddress(address) : undefined
-		const statuses = await this.sdk.collection.checkInitCollections(flowAddress)
-		const initCollections = Object.keys(statuses)
-			.every(key => statuses[key as keyof CollectionsInitStatus])
-		return {
-			initCollections,
-			collections: statuses,
-		}
-	}
+  async checkInitMattelCollections(address?: UnionAddress) {
+    const flowAddress = address ? parseFlowAddressFromUnionAddress(address) : undefined
+    const statuses = await this.sdk.collection.checkInitCollections(flowAddress)
+    const initCollections = Object.keys(statuses).every(key => statuses[key as keyof CollectionsInitStatus])
+    return {
+      initCollections,
+      collections: statuses,
+    }
+  }
 
-	async checkInitGamisodesCollections(address?: UnionAddress) {
-		const flowAddress = address ? parseFlowAddressFromUnionAddress(address) : undefined
-		const statuses = await this.sdk.collection.checkInitGamisodesCollections(flowAddress)
-		const initCollections = Object.keys(statuses)
-			.every(key => statuses[key as keyof GamisodesInitStatus])
-		return {
-			initCollections,
-			collections: statuses,
-		}
-	}
+  async checkInitGamisodesCollections(address?: UnionAddress) {
+    const flowAddress = address ? parseFlowAddressFromUnionAddress(address) : undefined
+    const statuses = await this.sdk.collection.checkInitGamisodesCollections(flowAddress)
+    const initCollections = Object.keys(statuses).every(key => statuses[key as keyof GamisodesInitStatus])
+    return {
+      initCollections,
+      collections: statuses,
+    }
+  }
 
-	async setupMattelCollections() {
-		const tx = await this.sdk.collection.setupMattelCollections()
-		return new BlockchainFlowTransaction(tx, this.network)
-	}
-	async setupGamisodesCollections() {
-		const tx = await this.sdk.collection.setupGamisodesCollections()
-		return new BlockchainFlowTransaction(tx, this.network)
-	}
+  async setupMattelCollections() {
+    const tx = await this.sdk.collection.setupMattelCollections()
+    return new BlockchainFlowTransaction(tx, this.network)
+  }
+  async setupGamisodesCollections() {
+    const tx = await this.sdk.collection.setupGamisodesCollections()
+    return new BlockchainFlowTransaction(tx, this.network)
+  }
 }

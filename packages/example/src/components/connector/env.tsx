@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useMemo, useState } from "react"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import { environmentUtils } from "../../common/env"
 import type { EnvironmentConfig } from "../../common/env/domain"
-import type { ConnectorInstance} from "./connectors-setup"
+import type { ConnectorInstance } from "./connectors-setup"
 
 export type EnvironmentContextValue<T extends RaribleSdkEnvironment = RaribleSdkEnvironment> = {
 	environment: T

@@ -42,7 +42,7 @@ export function SardineOfframp() {
 			const quotes = await clientTokenStorage.getQuotes({
 				cryptoAmount: "0.04",
 				fiatCurrency: "USD",
-				assetType: { "@type": "ETH"},
+				assetType: { "@type": "ETH" },
 				address: connection.walletAddress,
 			})
 			setQuotesResult(JSON.stringify(quotes, null, "  "))
@@ -69,13 +69,13 @@ export function SardineOfframp() {
 
 	return (
 		<>
-			<Typography sx={{my: 2}} variant="subtitle1" gutterBottom>
+			<Typography sx={{ my: 2 }} variant="subtitle1" gutterBottom>
         Off ramp functionality
 			</Typography>
 
 			<Box sx={{ my: 2 }}>
 				<Button
-					style={{marginRight: 10}}
+					style={{ marginRight: 10 }}
 					variant="outlined"
 					component="span"
 					onClick={() => getQuotes()}
@@ -87,14 +87,14 @@ export function SardineOfframp() {
 
 			{
 				quotesResult &&
-        <Box sx={{my: 2}}>
+        <Box sx={{ my: 2 }}>
         	<pre>{quotesResult}</pre>
         </Box>
 			}
 
 			<Box sx={{ my: 2 }}>
 				<Button
-					style={{marginRight: 10}}
+					style={{ marginRight: 10 }}
 					variant="outlined"
 					component="span"
 					onClick={() => getSupportedTokens()}
@@ -105,7 +105,7 @@ export function SardineOfframp() {
 
 			{
 				supportedTokens &&
-        <Box sx={{my: 2}}>
+        <Box sx={{ my: 2 }}>
         	<pre>{supportedTokens}</pre>
         </Box>
 			}
@@ -122,7 +122,7 @@ export function SardineOfframp() {
 
 			{ iframeUrl &&
         <iframe
-        	style={{border: 0}}
+        	style={{ border: 0 }}
         	src={iframeUrl}
         	onLoad={attachListener}
         	width={500}

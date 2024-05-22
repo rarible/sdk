@@ -1,17 +1,17 @@
 import type { Binary, ContractAddress, UnionAddress } from "@rarible/types"
 
 export type GenerateTokenIdRequest = {
-	collection: ContractAddress;
-	minter: UnionAddress;
+  collection: ContractAddress
+  minter: UnionAddress
 }
 
 export type TokenId = {
-	tokenId: string;
-	signature: {
-		v: number;
-		r: Binary;
-		s: Binary;
-	};
+  tokenId: string
+  signature: {
+    v: number
+    r: Binary
+    s: Binary
+  }
 }
 
 /**

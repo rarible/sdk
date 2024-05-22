@@ -12,362 +12,371 @@ import { awaitForOrder } from "./test/await-for-order"
 import { getTestContract } from "./test/test-contracts"
 
 describe.skip("test tezos mint and sell", () => {
-	const env: RaribleSdkEnvironment = "testnet"
+  const env: RaribleSdkEnvironment = "testnet"
 
-	const sellerWallet = createTestWallet("edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw", env)
-	const sellerSdk = createSdk(sellerWallet, env)
+  const sellerWallet = createTestWallet(
+    "edskS143x9JtTcFUxE5UDT9Tajkx9hdLha9mQhijSarwsKM6fzBEAuMEttFEjBYL7pT4o5P5yRqFGhUmqEynwviMk5KJ8iMgTw",
+    env,
+  )
+  const sellerSdk = createSdk(sellerWallet, env)
 
-	const buyerWallet = createTestWallet("edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj", env)
-	const buyerSdk = createSdk(buyerWallet, env)
+  const buyerWallet = createTestWallet(
+    "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+    env,
+  )
+  const buyerSdk = createSdk(buyerWallet, env)
 
-	const nextBuyerWallet = createTestWallet("edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3", env)
-	const nextBuyerSdk = createSdk(nextBuyerWallet, env)
+  const nextBuyerWallet = createTestWallet(
+    "edskS4QxJFDSkHaf6Ax3ByfrZj5cKvLUR813uqwE94baan31c1cPPTMvoAvUKbEv2xM9mvtwoLANNTBSdyZf3CCyN2re7qZyi3",
+    env,
+  )
+  const nextBuyerSdk = createSdk(nextBuyerWallet, env)
 
-	const eurTzContract = getTestContract(env, "eurTzContract")
-	const fa12Contract = getTestContract(env, "fa12Contract")
-	const nftContract: string = getTestContract(env, "nftContract")
-	const mtContract: string = getTestContract(env, "mtContract")
+  const eurTzContract = getTestContract(env, "eurTzContract")
+  const fa12Contract = getTestContract(env, "fa12Contract")
+  const nftContract: string = getTestContract(env, "nftContract")
+  const mtContract: string = getTestContract(env, "mtContract")
 
-	test("sale NFT with XTZ", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(nftContract),
-		})
+  test("sale NFT with XTZ", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(nftContract),
+    })
 
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("0.0001"),
-			currency: { "@type": "XTZ" },
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-			lazyMint: false,
-		})
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
-		await awaitItem(sellerSdk, mintResult.itemId)
-		await awaitForOrder(sellerSdk, mintResult.orderId)
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("0.0001"),
+      currency: { "@type": "XTZ" },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+      lazyMint: false,
+    })
+    if (mintResult.type === MintType.ON_CHAIN) {
+      await mintResult.transaction.wait()
+    }
+    await awaitItem(sellerSdk, mintResult.itemId)
+    await awaitForOrder(sellerSdk, mintResult.orderId)
 
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-		const fillResult = await fillResponse.submit({
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
+    const fillResult = await fillResponse.submit({
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("1")
-	})
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("1")
+  })
 
-	test("sale with mintAndSell NFT with XTZ", async () => {
+  test("sale with mintAndSell NFT with XTZ", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(nftContract),
+    })
 
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(nftContract),
-		})
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("0.0001"),
+      currency: { "@type": "XTZ" },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+      lazyMint: false,
+    })
+    if (mintResult.type === MintType.ON_CHAIN) {
+      await mintResult.transaction.wait()
+    }
+    await awaitItem(sellerSdk, mintResult.itemId)
+    await awaitForOrder(sellerSdk, mintResult.orderId)
 
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("0.0001"),
-			currency: { "@type": "XTZ" },
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-			lazyMint: false,
-		})
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
-		await awaitItem(sellerSdk, mintResult.itemId)
-		await awaitForOrder(sellerSdk, mintResult.orderId)
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const fillResult = await fillResponse.submit({
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		const fillResult = await fillResponse.submit({
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("1")
+  })
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("1")
-	})
+  test("sale with mintAndSell NFT with XTZ with basic function", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell({
+      collectionId: toCollectionId(nftContract),
+      price: new BigNumber("0.0001"),
+      currency: { "@type": "XTZ" },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+    })
 
-	test("sale with mintAndSell NFT with XTZ with basic function", async () => {
+    await mintAndSellAction.transaction.wait()
+    await awaitItem(sellerSdk, mintAndSellAction.itemId)
 
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell({
-			collectionId: toCollectionId(nftContract),
-			price: new BigNumber("0.0001"),
-			currency: { "@type": "XTZ" },
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-		})
+    const fillResponse = await buyerSdk.order.buy({
+      orderId: mintAndSellAction.orderId,
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await fillResponse.wait()
 
-		await mintAndSellAction.transaction.wait()
-		await awaitItem(sellerSdk, mintAndSellAction.itemId)
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintAndSellAction.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("1")
+  })
 
-		const fillResponse = await buyerSdk.order.buy({
-			orderId: mintAndSellAction.orderId,
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await fillResponse.wait()
+  test("sale NFT with XTZ and with CurrencyId", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(nftContract),
+    })
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintAndSellAction.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("1")
-	})
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("0.0001"),
+      currency: toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU"),
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+      lazyMint: false,
+    })
 
-	test("sale NFT with XTZ and with CurrencyId", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(nftContract),
-		})
+    const order = await awaitForOrder(sellerSdk, mintResult.orderId)
+    const takeAssetType = order.take.type as TezosXTZAssetType
+    expect(takeAssetType["@type"]).toEqual("XTZ")
 
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("0.0001"),
-			currency: toCurrencyId("TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU"),
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-			lazyMint: false,
-		})
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-		const order = await awaitForOrder(sellerSdk, mintResult.orderId)
-		const takeAssetType = order.take.type as TezosXTZAssetType
-		expect(takeAssetType["@type"]).toEqual("XTZ")
+    const fillResult = await fillResponse.submit({
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("1")
+  })
 
-		const fillResult = await fillResponse.submit({
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
+  test("sale NFT with eurTZ", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(nftContract),
+    })
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("1")
-	})
+    const mintResult = await mintAndSellAction.submit({
+      price: "0.0001",
+      currency: {
+        "@type": "TEZOS_FT",
+        contract: eurTzContract,
+      },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+      lazyMint: false,
+    })
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-	test("sale NFT with eurTZ", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(nftContract),
-		})
+    const fillResult = await fillResponse.submit({
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		const mintResult = await mintAndSellAction.submit({
-			price: "0.0001",
-			currency: {
-				"@type": "TEZOS_FT",
-				contract: eurTzContract,
-			},
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-			lazyMint: false,
-		})
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("1")
+  })
 
-		const fillResult = await fillResponse.submit({
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
+  test("sale MT with XTZ", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(mtContract),
+    })
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("1")
-	})
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("0.0001"),
+      currency: { "@type": "XTZ" },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 10,
+      lazyMint: false,
+    })
 
-	test("sale MT with XTZ", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(mtContract),
-		})
+    if (mintResult.type === MintType.ON_CHAIN) {
+      await mintResult.transaction.wait()
+    }
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("0.0001"),
-			currency: { "@type": "XTZ" },
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 10,
-			lazyMint: false,
-		})
+    const fillResult = await fillResponse.submit({
+      amount: 10,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("10")
+  })
 
-		const fillResult = await fillResponse.submit({
-			amount: 10,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
+  test("item creator should receive royalty from resale MT with XTZ", async () => {
+    const itemCreatorAddress = await sellerWallet.provider.address()
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("10")
-	})
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(mtContract),
+    })
 
-	test("item creator should receive royalty from resale MT with XTZ", async () => {
-		const itemCreatorAddress = await sellerWallet.provider.address()
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("1"),
+      currency: { "@type": "XTZ" },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+      lazyMint: false,
+      royalties: [
+        {
+          account: toUnionAddress(`TEZOS:${await sellerWallet.provider.address()}`),
+          value: 1000,
+        },
+      ],
+    })
 
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(mtContract),
-		})
+    const xtzAssetType = { "@type": "XTZ" as const }
 
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("1"),
-			currency: { "@type": "XTZ" },
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-			lazyMint: false,
-			royalties: [{
-				account: toUnionAddress(`TEZOS:${await sellerWallet.provider.address()}`),
-				value: 1000,
-			}],
-		})
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-		const xtzAssetType = { "@type": "XTZ" as const }
+    const fillResult = await fillResponse.submit({
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
+    // sell from item creator to the buyer is finished
 
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const sellAction = await buyerSdk.order.sell.prepare({
+      itemId: mintResult.itemId,
+    })
+    const sellOrderId = await sellAction.submit({
+      price: new BigNumber("1"),
+      currency: { "@type": "XTZ" },
+      amount: 1,
+    })
 
-		const fillResult = await fillResponse.submit({
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
-		// sell from item creator to the buyer is finished
+    const itemCreatorBalance = await sellerSdk.balances.getBalance(
+      toUnionAddress(`TEZOS:${itemCreatorAddress}`),
+      xtzAssetType,
+    )
 
-		const sellAction = await buyerSdk.order.sell.prepare({
-			itemId: mintResult.itemId,
-		})
-		const sellOrderId = await sellAction.submit({
-			price: new BigNumber("1"),
-			currency: { "@type": "XTZ" },
-			amount: 1,
-		})
+    const buyerBalance = await buyerSdk.balances.getBalance(
+      toUnionAddress(`TEZOS:${await buyerWallet.provider.address()}`),
+      xtzAssetType,
+    )
 
-		const itemCreatorBalance = await sellerSdk.balances.getBalance(
-			toUnionAddress(`TEZOS:${itemCreatorAddress}`),
-			xtzAssetType
-		)
+    const nextBuyerFillResponse = await nextBuyerSdk.order.buy.prepare({ orderId: sellOrderId })
+    const nextBuyerFillResult = await nextBuyerFillResponse.submit({
+      amount: 1,
+      infiniteApproval: true,
+    })
+    await nextBuyerFillResult.wait()
+    // sell from buyer to the next buyer is finished
 
-		const buyerBalance = await buyerSdk.balances.getBalance(
-			toUnionAddress(`TEZOS:${await buyerWallet.provider.address()}`),
-			xtzAssetType
-		)
+    const buyerFinishBalance = await buyerSdk.balances.getBalance(
+      toUnionAddress(`TEZOS:${await buyerWallet.provider.address()}`),
+      xtzAssetType,
+    )
 
-		const nextBuyerFillResponse = await nextBuyerSdk.order.buy.prepare({ orderId: sellOrderId })
-		const nextBuyerFillResult = await nextBuyerFillResponse.submit({
-			amount: 1,
-			infiniteApproval: true,
-		})
-		await nextBuyerFillResult.wait()
-		// sell from buyer to the next buyer is finished
+    const buyerBalanceDiff = new BigNumber(buyerFinishBalance).minus(new BigNumber(buyerBalance))
+    expect(buyerBalanceDiff.eq("0.9")).toBeTruthy()
 
-		const buyerFinishBalance = await buyerSdk.balances.getBalance(
-			toUnionAddress(`TEZOS:${await buyerWallet.provider.address()}`),
-			xtzAssetType
-		)
+    const sellerInitBalanceEnd = await sellerSdk.balances.getBalance(
+      toUnionAddress(`TEZOS:${itemCreatorAddress}`),
+      xtzAssetType,
+    )
 
-		const buyerBalanceDiff = new BigNumber(buyerFinishBalance).minus(new BigNumber(buyerBalance))
-		expect(buyerBalanceDiff.eq("0.9")).toBeTruthy()
+    const creatorRoyalty = new BigNumber(sellerInitBalanceEnd).minus(new BigNumber(itemCreatorBalance))
+    expect(creatorRoyalty.eq(new BigNumber("0.1"))).toBeTruthy()
+  })
 
-		const sellerInitBalanceEnd = await sellerSdk.balances.getBalance(
-			toUnionAddress(`TEZOS:${itemCreatorAddress}`),
-			xtzAssetType
-		)
+  test("sale MT with FA12", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(mtContract),
+    })
 
-		const creatorRoyalty = new BigNumber(sellerInitBalanceEnd).minus(new BigNumber(itemCreatorBalance))
-		expect(creatorRoyalty.eq(new BigNumber("0.1"))).toBeTruthy()
-	})
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("0.1"),
+      currency: {
+        "@type": "TEZOS_FT",
+        contract: fa12Contract,
+      },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 10,
+      lazyMint: false,
+    })
 
-	test("sale MT with FA12", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(mtContract),
-		})
+    await awaitItem(sellerSdk, mintResult.itemId)
+    await awaitForOrder(sellerSdk, mintResult.orderId)
 
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("0.1"),
-			currency: {
-				"@type": "TEZOS_FT",
-				contract: fa12Contract,
-			},
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 10,
-			lazyMint: false,
-		})
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
 
-		await awaitItem(sellerSdk, mintResult.itemId)
-		await awaitForOrder(sellerSdk, mintResult.orderId)
+    const fillResult = await fillResponse.submit({
+      amount: 4,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: mintResult.orderId })
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("4")
+  })
 
-		const fillResult = await fillResponse.submit({
-			amount: 4,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
+  test("sale MT with FA2", async () => {
+    const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
+      collectionId: toCollectionId(mtContract),
+    })
 
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("4")
-	})
+    const expirationDate = new Date(Date.now() + 100 * 1000)
+    const mintResult = await mintAndSellAction.submit({
+      price: new BigNumber("0.002"),
+      currency: {
+        "@type": "TEZOS_FT",
+        contract: eurTzContract,
+        tokenId: toBigNumber("0"),
+      },
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 10,
+      lazyMint: false,
+      expirationDate: expirationDate,
+    })
 
-	test("sale MT with FA2", async () => {
-		const mintAndSellAction = await sellerSdk.nft.mintAndSell.prepare({
-			collectionId: toCollectionId(mtContract),
-		})
+    await awaitForOrder(sellerSdk, mintResult.orderId)
 
-		const expirationDate = new Date(Date.now() + 100 * 1000)
-		const mintResult = await mintAndSellAction.submit({
-			price: new BigNumber("0.002"),
-			currency: {
-				"@type": "TEZOS_FT",
-				contract: eurTzContract,
-				tokenId: toBigNumber("0"),
-			},
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 10,
-			lazyMint: false,
-			expirationDate: expirationDate,
-		})
+    const updateAction = await sellerSdk.order.sellUpdate.prepare({
+      orderId: mintResult.orderId,
+    })
+    const updatedOrderId = await updateAction.submit({ price: "0.001" })
 
-		await awaitForOrder(sellerSdk, mintResult.orderId)
+    const fillResponse = await buyerSdk.order.buy.prepare({ orderId: updatedOrderId })
 
-		const updateAction = await sellerSdk.order.sellUpdate.prepare({
-			orderId: mintResult.orderId,
-		})
-		const updatedOrderId = await updateAction.submit({ price: "0.001" })
+    const fillResult = await fillResponse.submit({
+      amount: 5,
+      infiniteApproval: true,
+    })
+    await fillResult.wait()
 
-		const fillResponse = await buyerSdk.order.buy.prepare({ orderId: updatedOrderId })
-
-		const fillResult = await fillResponse.submit({
-			amount: 5,
-			infiniteApproval: true,
-		})
-		await fillResult.wait()
-
-		const ownership = await awaitForOwnership(
-			buyerSdk,
-			toItemId(mintResult.itemId),
-			await buyerWallet.provider.address()
-		)
-		expect(ownership.value).toBe("5")
-	})
+    const ownership = await awaitForOwnership(
+      buyerSdk,
+      toItemId(mintResult.itemId),
+      await buyerWallet.provider.address(),
+    )
+    expect(ownership.value).toBe("5")
+  })
 })

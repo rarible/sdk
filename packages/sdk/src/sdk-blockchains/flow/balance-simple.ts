@@ -12,14 +12,16 @@ import { parseFlowAddressFromUnionAddress } from "./common/converters"
  * @internal
  */
 export async function getSimpleFlowFungibleBalance(
-	network: FlowEnv, address: UnionAddress, assetType: AssetType
+  network: FlowEnv,
+  address: UnionAddress,
+  assetType: AssetType,
 ): Promise<BigNumberValue> {
-	const flowAddress = parseFlowAddressFromUnionAddress(address)
-	const currency = getFlowCurrencyFromAssetType(assetType)
-	const balance = await getFungibleBalanceSimple({
-		network: ENV_CONFIG[network].network,
-		address: flowAddress,
-		currency,
-	})
-	return toBn(balance)
+  const flowAddress = parseFlowAddressFromUnionAddress(address)
+  const currency = getFlowCurrencyFromAssetType(assetType)
+  const balance = await getFungibleBalanceSimple({
+    network: ENV_CONFIG[network].network,
+    address: flowAddress,
+    currency,
+  })
+  return toBn(balance)
 }

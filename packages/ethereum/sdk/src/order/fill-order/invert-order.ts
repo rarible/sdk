@@ -7,55 +7,50 @@ import { isNft } from "../is-nft"
 
 const ZERO = toWord("0x0000000000000000000000000000000000000000000000000000000000000000")
 export function invertOrder<T extends SimpleOrder>(
-	order: T,
-	amount: BigNumberValue,
-	maker: Address,
-	salt: Word = ZERO
+  order: T,
+  amount: BigNumberValue,
+  maker: Address,
+  salt: Word = ZERO,
 ): T {
-	const isBid = isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION"
+  const isBid = isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION"
 
-	const [makeValue, takeValue] = calculateAmounts(
-		toBn(order.make.value),
-		toBn(order.take.value),
-		amount,
-		isBid
-	)
+  const [makeValue, takeValue] = calculateAmounts(toBn(order.make.value), toBn(order.take.value), amount, isBid)
 
-	checkValue(isBid ? takeValue : makeValue )
+  checkValue(isBid ? takeValue : makeValue)
 
-	return {
-		...order,
-		make: {
-			...order.take,
-			value: toBigNumber(makeValue.toString()),
-		},
-		take: {
-			...order.make,
-			value: toBigNumber(takeValue.toString()),
-		},
-		maker,
-		taker: order.maker,
-		salt,
-		signature: undefined,
-	}
+  return {
+    ...order,
+    make: {
+      ...order.take,
+      value: toBigNumber(makeValue.toString()),
+    },
+    take: {
+      ...order.make,
+      value: toBigNumber(takeValue.toString()),
+    },
+    maker,
+    taker: order.maker,
+    salt,
+    signature: undefined,
+  }
 }
 
 function calculateAmounts(
-	make: BigNumberValue,
-	take: BigNumberValue,
-	amount: BigNumberValue,
-	bid: boolean
+  make: BigNumberValue,
+  take: BigNumberValue,
+  amount: BigNumberValue,
+  bid: boolean,
 ): [BigNumberValue, BigNumberValue] {
-	if (bid) {
-		return [amount, toBn(amount).multipliedBy(make).div(take)]
-	} else {
-		return [toBn(amount).multipliedBy(take).div(make), amount]
-	}
+  if (bid) {
+    return [amount, toBn(amount).multipliedBy(make).div(take)]
+  } else {
+    return [toBn(amount).multipliedBy(take).div(make), amount]
+  }
 }
 
 function checkValue(value: BigNumberValue) {
-	const floatValue = parseFloat(value.toString())
-	if (floatValue < 1 && floatValue > 0) {
-		throw new Error("Invalid order. Price per one item is less than minimum allowable currency amount.")
-	}
+  const floatValue = parseFloat(value.toString())
+  if (floatValue < 1 && floatValue > 0) {
+    throw new Error("Invalid order. Price per one item is less than minimum allowable currency amount.")
+  }
 }

@@ -11,81 +11,83 @@ import { createCollection } from "../../../common/atoms-tests/create-collection"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequestSimplified,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	activities: Array<ActivityType>
+  blockchain: Blockchain
+  description: string
+  wallet: BlockchainWallet
+  deployRequest: CreateCollectionRequestSimplified
+  mintRequest: (address: UnionAddress) => MintRequest
+  activities: Array<ActivityType>
 }[] {
-	return [
-		{
-			blockchain: Blockchain.TEZOS,
-			description: "NFT",
-			wallet: getTezosTestWallet(),
-			deployRequest: {
-				blockchain: Blockchain.TEZOS,
-				type: "NFT",
-				name: "NFT",
-				homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-				isPublic: true,
-			} as CreateCollectionRequestSimplified,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "ipfs:/test",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			activities: [ActivityType.MINT],
-		},
-		{
-			blockchain: Blockchain.TEZOS,
-			description: "MT",
-			wallet: getTezosTestWallet(),
-			deployRequest: {
-				blockchain: Blockchain.TEZOS,
-				type: "MT",
-				name: "MT",
-				homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
-				isPublic: false,
-			} as CreateCollectionRequestSimplified,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "ipfs:/test",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 15,
-				}
-			},
-			activities: [ActivityType.MINT],
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.TEZOS,
+      description: "NFT",
+      wallet: getTezosTestWallet(),
+      deployRequest: {
+        blockchain: Blockchain.TEZOS,
+        type: "NFT",
+        name: "NFT",
+        homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+        isPublic: true,
+      } as CreateCollectionRequestSimplified,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "ipfs:/test",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      activities: [ActivityType.MINT],
+    },
+    {
+      blockchain: Blockchain.TEZOS,
+      description: "MT",
+      wallet: getTezosTestWallet(),
+      deployRequest: {
+        blockchain: Blockchain.TEZOS,
+        type: "MT",
+        name: "MT",
+        homepage: "https://ipfs.io/ipfs/QmTKxwnqqxTxH4HE3UVM9yoJFZgbsZ8CuqqRFZCSWBF53m",
+        isPublic: false,
+      } as CreateCollectionRequestSimplified,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "ipfs:/test",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 15,
+        }
+      },
+      activities: [ActivityType.MINT],
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain deploy => mint", (suite) => {
-	const wallet = suite.wallet
-	const sdk = createSdk(suite.blockchain, wallet)
+describe.each(suites())("$blockchain deploy => mint", suite => {
+  const wallet = suite.wallet
+  const sdk = createSdk(suite.blockchain, wallet)
 
-	test(suite.description, async () => {
-		const walletAddress = await getWalletAddressFull(wallet)
-		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
+  test(suite.description, async () => {
+    const walletAddress = await getWalletAddressFull(wallet)
+    const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 
-		const collection = await getCollection(sdk, address)
+    const collection = await getCollection(sdk, address)
 
-		const { nft } = await mint(sdk, wallet, { collection },
-			suite.mintRequest(walletAddress.unionAddress))
+    const { nft } = await mint(sdk, wallet, { collection }, suite.mintRequest(walletAddress.unionAddress))
 
-		await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
-
-	})
+    await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
+  })
 })

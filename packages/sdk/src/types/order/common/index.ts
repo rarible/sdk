@@ -7,7 +7,6 @@ import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../
 import type { OriginFeeSupport, PayoutsSupport } from "../fill/domain"
 import type { MaxFeesBasePointSupport } from "../fill/domain"
 
-
 /**
  * Item identifier to sell or bid
  * @property {ItemId} itemId - item id
@@ -16,10 +15,10 @@ import type { MaxFeesBasePointSupport } from "../fill/domain"
  * const itemId = toItemId("ETHEREUM:0x395d7e3a4c0cc8fb8d19dcd0b010da43a7a98c9b:44188")
  */
 export type PrepareOrderRequest = {
-	/**
-	 * Item identifier to sell or bid
-	 */
-	itemId: ItemId
+  /**
+   * Item identifier to sell or bid
+   */
+  itemId: ItemId
 }
 
 /**
@@ -35,8 +34,8 @@ export type PrepareOrderRequest = {
  * ```
  */
 export type UnionPart = {
-	account: UnionAddress
-	value: number
+  account: UnionAddress
+  value: number
 }
 
 /**
@@ -47,49 +46,53 @@ export type UnionPart = {
  * @property {PayoutsSupport} payoutsSupport is support payouts
  * @property {boolean} supportsExpirationDate is support expiration date
  */
-export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", T, OrderId> & {
-	/**
-	 * currencies supported by the blockchain
-	 */
-	supportedCurrencies: CurrencyType[]
-	/**
-	 * protocol base fee in basis points
-	 */
-	baseFee: number
-	/**
-	 * Whether the underlying exchange contract supports origin fees
-	 */
-	originFeeSupport: OriginFeeSupport
-	/**
-	 * Whether the underlying exchange contract supports specifying payouts
-	 */
-	payoutsSupport: PayoutsSupport
-	/**
-	 * Whether the underlying exchange contract supports specifying max fees value
-	 */
-	maxFeesBasePointSupport: MaxFeesBasePointSupport
-	/**
+export type BasePrepareOrderResponse<T> = AbstractPrepareResponse<
+  "convert" | "approve" | "sign" | "send-tx",
+  T,
+  OrderId
+> & {
+  /**
+   * currencies supported by the blockchain
+   */
+  supportedCurrencies: CurrencyType[]
+  /**
+   * protocol base fee in basis points
+   */
+  baseFee: number
+  /**
+   * Whether the underlying exchange contract supports origin fees
+   */
+  originFeeSupport: OriginFeeSupport
+  /**
+   * Whether the underlying exchange contract supports specifying payouts
+   */
+  payoutsSupport: PayoutsSupport
+  /**
+   * Whether the underlying exchange contract supports specifying max fees value
+   */
+  maxFeesBasePointSupport: MaxFeesBasePointSupport
+  /**
    * Whether the expiration date
    */
-	supportsExpirationDate: boolean
+  supportsExpirationDate: boolean
 }
 
 export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequest> {
-	/**
-	 * Max amount to sell (how many user owns and can sell). If 1, then input not needed
-	 */
-	maxAmount: BigNumber | null
-	/**
+  /**
+   * Max amount to sell (how many user owns and can sell). If 1, then input not needed
+   */
+  maxAmount: BigNumber | null
+  /**
    * is multiple nft
    */
-	multiple: boolean
+  multiple: boolean
 }
 
 export interface PrepareOrderInternalResponse extends BasePrepareOrderResponse<OrderInternalRequest> {
-	/**
+  /**
    * is multiple nft
    */
-	multiple: boolean
+  multiple: boolean
 }
 
 /**
@@ -103,80 +106,81 @@ export interface PrepareOrderInternalResponse extends BasePrepareOrderResponse<O
  * @property {Date} [expirationDate] order expiration date
  */
 export type OrderRequest = {
-	/**
-	 * How many NFTs to sell or create bid for
-	 */
-	amount?: number
-	/**
-	 * Price per one NFT
-	 */
-	price: BigNumberValue
-	/**
-	 * Currency of the trade
-	 */
-	currency: RequestCurrency
-	/**
-	 * Origin fees, if not supported by the underlying contract, will throw Error
-	 */
-	originFees?: UnionPart[]
-	/**
-	 * Payouts, if not supported by the underlying contract, will throw Error
-	 */
-	payouts?: UnionPart[]
-	/**
-	 * Max fees value. Should be greater than 0. If required and not provided, will throw Error
-	 */
-	maxFeesBasePoint?: number
-	/**
-	 * Order expiration date. By default, 30 days
-	 */
-	expirationDate?: Date
+  /**
+   * How many NFTs to sell or create bid for
+   */
+  amount?: number
+  /**
+   * Price per one NFT
+   */
+  price: BigNumberValue
+  /**
+   * Currency of the trade
+   */
+  currency: RequestCurrency
+  /**
+   * Origin fees, if not supported by the underlying contract, will throw Error
+   */
+  originFees?: UnionPart[]
+  /**
+   * Payouts, if not supported by the underlying contract, will throw Error
+   */
+  payouts?: UnionPart[]
+  /**
+   * Max fees value. Should be greater than 0. If required and not provided, will throw Error
+   */
+  maxFeesBasePoint?: number
+  /**
+   * Order expiration date. By default, 30 days
+   */
+  expirationDate?: Date
 }
 
 export type OrderInternalRequest = OrderRequest & {
-	/**
-	 * Id of Item to sell or bid
-	 */
-	itemId: ItemId
+  /**
+   * Id of Item to sell or bid
+   */
+  itemId: ItemId
 }
 
-export interface PrepareOrderUpdateResponse extends AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", OrderUpdateRequest, OrderId> {
-	/**
+export interface PrepareOrderUpdateResponse
+  extends AbstractPrepareResponse<"convert" | "approve" | "sign" | "send-tx", OrderUpdateRequest, OrderId> {
+  /**
    * currencies supported by the blockchain
    */
-	supportedCurrencies: CurrencyType[]
-	/**
+  supportedCurrencies: CurrencyType[]
+  /**
    * protocol base fee in basis points
    */
-	baseFee: number
-	/**
-	 * Whether the underlying exchange contract supports origin fees
-	 */
-	originFeeSupport: OriginFeeSupport
-	/**
-	 * Whether the underlying exchange contract supports specifying payouts
-	 */
-	payoutsSupport: PayoutsSupport
-	/**
-	 * Whether the underlying exchange contract supports specifying max fees value
-	 */
-	maxFeesBasePointSupport: MaxFeesBasePointSupport
+  baseFee: number
+  /**
+   * Whether the underlying exchange contract supports origin fees
+   */
+  originFeeSupport: OriginFeeSupport
+  /**
+   * Whether the underlying exchange contract supports specifying payouts
+   */
+  payoutsSupport: PayoutsSupport
+  /**
+   * Whether the underlying exchange contract supports specifying max fees value
+   */
+  maxFeesBasePointSupport: MaxFeesBasePointSupport
 
-	orderData: {
-		nftCollection: ContractAddress | undefined
-	}
+  orderData: {
+    nftCollection: ContractAddress | undefined
+  }
 }
 
 /**
  * Order identifier to update sell or bid order
  */
 export type PrepareOrderUpdateRequest = {
-	orderId: OrderId
+  orderId: OrderId
 }
 
 /**
  * Price BigNumberValue
  */
 export type OrderUpdateRequest = {
-	price: BigNumberValue
+  price: BigNumberValue
 }

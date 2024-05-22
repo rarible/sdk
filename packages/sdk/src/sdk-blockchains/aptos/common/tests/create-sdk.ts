@@ -8,13 +8,9 @@ import { getAPIKey } from "../../../../common/test/create-sdk"
 import type { RaribleSdkEnvironment } from "../../../../config/domain"
 
 export function createSdk(env: RaribleSdkEnvironment = "testnet"): IRaribleSdk {
-	const { account, aptos } = createTestAptosState()
-	return createRaribleSdk(
-		new AptosWallet(
-			new AptosGenericSdkWallet(aptos, account)
-		),
-		env, {
-			logs: LogsLevel.DISABLED,
-			apiKey: getAPIKey(env),
-		})
+  const { account, aptos } = createTestAptosState()
+  return createRaribleSdk(new AptosWallet(new AptosGenericSdkWallet(aptos, account)), env, {
+    logs: LogsLevel.DISABLED,
+    apiKey: getAPIKey(env),
+  })
 }

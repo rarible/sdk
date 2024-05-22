@@ -57,258 +57,240 @@ import { createAptosSdk } from "./sdk-blockchains/aptos"
  * ```
  */
 export function createRaribleSdk(
-	provider: Maybe<RaribleSdkProvider>,
-	env: RaribleSdkEnvironment,
-	config?: IRaribleSdkConfig
+  provider: Maybe<RaribleSdkProvider>,
+  env: RaribleSdkEnvironment,
+  config?: IRaribleSdkConfig,
 ): IRaribleSdk {
-	const wallet = provider && getRaribleWallet(provider)
-	const sessionId = getRandomId("union")
-	const blockchainConfig = getSdkConfig(env)
-	const apis = createApisSdk(
-		env,
-		{
-			...(config?.apiClientParams || {}),
-			apiKey: config?.apiKey,
-		},
-		config?.logs)
+  const wallet = provider && getRaribleWallet(provider)
+  const sessionId = getRandomId("union")
+  const blockchainConfig = getSdkConfig(env)
+  const apis = createApisSdk(
+    env,
+    {
+      ...(config?.apiClientParams || {}),
+      apiKey: config?.apiKey,
+    },
+    config?.logs,
+  )
 
-	const ethConfig = {
-		...config?.blockchain?.ETHEREUM,
-		params: config?.apiClientParams,
-		logs: config?.logs ? { level: config?.logs, session: sessionId } : { level: LogsLevel.TRACE, session: sessionId },
-		apiKey: config?.apiKey,
-	}
-	const instance = createUnionSdk(
-		createEthereumSdk(
-			filterWallet(wallet, WalletType.ETHEREUM),
-			apis,
-			Blockchain.ETHEREUM,
-			blockchainConfig.ethereumEnv,
-			ethConfig
-		),
-		createFlowSdk(
-			filterWallet(wallet, WalletType.FLOW),
-			apis,
-			blockchainConfig.flowEnv,
-			undefined,
-			config
-		),
-		createTezosSdk(
-			filterWallet(wallet, WalletType.TEZOS),
-			apis,
-			blockchainConfig,
-			config,
-		),
-		createSolanaSdk(
-			filterWallet(wallet, WalletType.SOLANA),
-			apis,
-			blockchainConfig.solanaNetwork,
-			config?.blockchain?.SOLANA
-		),
-		createSolanaSdk(
-			filterWallet(wallet, WalletType.SOLANA),
-			apis,
-			blockchainConfig.solanaNetwork,
-			config?.blockchain?.SOLANA
-		),
-		createImmutablexSdk(
-			filterWallet(wallet, WalletType.IMMUTABLEX),
-			apis,
-			blockchainConfig.immutablexNetwork,
-			config?.logs
-		),
-		createAptosSdk(
-			filterWallet(wallet, WalletType.APTOS),
-			apis,
-			blockchainConfig.aptosNetwork,
-			config?.blockchain?.APTOS
-		),
-	)
+  const ethConfig = {
+    ...config?.blockchain?.ETHEREUM,
+    params: config?.apiClientParams,
+    logs: config?.logs ? { level: config?.logs, session: sessionId } : { level: LogsLevel.TRACE, session: sessionId },
+    apiKey: config?.apiKey,
+  }
+  const instance = createUnionSdk(
+    createEthereumSdk(
+      filterWallet(wallet, WalletType.ETHEREUM),
+      apis,
+      Blockchain.ETHEREUM,
+      blockchainConfig.ethereumEnv,
+      ethConfig,
+    ),
+    createFlowSdk(filterWallet(wallet, WalletType.FLOW), apis, blockchainConfig.flowEnv, undefined, config),
+    createTezosSdk(filterWallet(wallet, WalletType.TEZOS), apis, blockchainConfig, config),
+    createSolanaSdk(
+      filterWallet(wallet, WalletType.SOLANA),
+      apis,
+      blockchainConfig.solanaNetwork,
+      config?.blockchain?.SOLANA,
+    ),
+    createSolanaSdk(
+      filterWallet(wallet, WalletType.SOLANA),
+      apis,
+      blockchainConfig.solanaNetwork,
+      config?.blockchain?.SOLANA,
+    ),
+    createImmutablexSdk(
+      filterWallet(wallet, WalletType.IMMUTABLEX),
+      apis,
+      blockchainConfig.immutablexNetwork,
+      config?.logs,
+    ),
+    createAptosSdk(
+      filterWallet(wallet, WalletType.APTOS),
+      apis,
+      blockchainConfig.aptosNetwork,
+      config?.blockchain?.APTOS,
+    ),
+  )
 
-	const sdkContext: ISdkContext = {
-		wallet,
-		env,
-		config,
-		sessionId,
-		apiKey: config?.apiKey,
-		providerId: config?.context?.providerId,
-		providerMeta: config?.context?.providerMeta,
-	}
-	setupMiddleware({
-		apis,
-		internalSdk: instance,
-		sdkContext,
-		externalLogger: config?.logger,
-	})
+  const sdkContext: ISdkContext = {
+    wallet,
+    env,
+    config,
+    sessionId,
+    apiKey: config?.apiKey,
+    providerId: config?.context?.providerId,
+    providerMeta: config?.context?.providerMeta,
+  }
+  setupMiddleware({
+    apis,
+    internalSdk: instance,
+    sdkContext,
+    externalLogger: config?.logger,
+  })
 
-	return {
-		...instance,
-		nft: {
-			...instance.nft,
-			mintAndSell: createMintAndSell(instance.nft.mint, instance.order.sell),
-		},
-		order: {
-			...instance.order,
-			sell: createSell(instance.order.sell, apis),
-		},
-		apis,
-		wallet,
-		getSdkContext: getSdkContext.bind(null, sdkContext),
-	}
+  return {
+    ...instance,
+    nft: {
+      ...instance.nft,
+      mintAndSell: createMintAndSell(instance.nft.mint, instance.order.sell),
+    },
+    order: {
+      ...instance.order,
+      sell: createSell(instance.order.sell, apis),
+    },
+    apis,
+    wallet,
+    getSdkContext: getSdkContext.bind(null, sdkContext),
+  }
 }
 
 export type SetupMiddlewareData = {
-	apis: IApisSdk
-	internalSdk: IRaribleInternalSdk
-	sdkContext: ISdkContext
-	externalLogger?: AbstractLogger
+  apis: IApisSdk
+  internalSdk: IRaribleInternalSdk
+  sdkContext: ISdkContext
+  externalLogger?: AbstractLogger
 }
 /**
  * Create middleware controller & wrap methods
  */
 function setupMiddleware({ apis, internalSdk, sdkContext, externalLogger }: SetupMiddlewareData) {
-	const middlewarer = new Middlewarer()
+  const middlewarer = new Middlewarer()
 
-	if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
-		middlewarer.use(
-			getInternalLoggerMiddleware(
-				sdkContext.config?.logs ?? LogsLevel.TRACE,
-				sdkContext,
-				externalLogger,
-			)
-		)
-	}
+  if (sdkContext.config?.logs !== LogsLevel.DISABLED) {
+    middlewarer.use(getInternalLoggerMiddleware(sdkContext.config?.logs ?? LogsLevel.TRACE, sdkContext, externalLogger))
+  }
 
-	for (const middleware of (sdkContext.config?.middlewares ?? [])) {
-		middlewarer.use(middleware)
-	}
+  for (const middleware of sdkContext.config?.middlewares ?? []) {
+    middlewarer.use(middleware)
+  }
 
-	for (const prop in apis) {
-		//@ts-ignore
-		//todo: better wrap for apis methods
-		middlewarer.wrapApiControllerMethods(apis[prop], { namespace: "apis." + prop })
-	}
+  for (const prop in apis) {
+    //@ts-ignore
+    //todo: better wrap for apis methods
+    middlewarer.wrapApiControllerMethods(apis[prop], { namespace: "apis." + prop })
+  }
 
-	for (const prop in internalSdk) {
-		//@ts-ignore
-		middlewarer.wrapObjectMethods(internalSdk[prop], { namespace: prop })
-	}
+  for (const prop in internalSdk) {
+    //@ts-ignore
+    middlewarer.wrapObjectMethods(internalSdk[prop], { namespace: prop })
+  }
 }
 
 function filterWallet<T extends WalletType>(
-	wallet: Maybe<BlockchainWallet>,
-	blockchainType: T
+  wallet: Maybe<BlockchainWallet>,
+  blockchainType: T,
 ): Maybe<WalletByBlockchain[T]> {
-	if (wallet?.walletType === blockchainType) {
-		return wallet as WalletByBlockchain[T]
-	}
-	return undefined
+  if (wallet?.walletType === blockchainType) {
+    return wallet as WalletByBlockchain[T]
+  }
+  return undefined
 }
 
 function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
-	return new MethodWithPrepare(
-		 (request) => sell(request),
-		async (request) => {
-			const [item, collection] = await Promise.all([
-				apis.item.getItemById({ itemId: request.itemId }),
-				apis.collection.getCollectionById({ collection: getCollectionFromItemId(request.itemId) }),
-			])
+  return new MethodWithPrepare(
+    request => sell(request),
+    async request => {
+      const [item, collection] = await Promise.all([
+        apis.item.getItemById({ itemId: request.itemId }),
+        apis.collection.getCollectionById({ collection: getCollectionFromItemId(request.itemId) }),
+      ])
 
-			if (collection.self) {
-				await checkRoyalties(request.itemId, apis)
-			}
+      if (collection.self) {
+        await checkRoyalties(request.itemId, apis)
+      }
 
-			const response = await sell.prepare({ ...request, blockchain: extractBlockchain(request.itemId) })
-			return {
-				...response,
-				maxAmount: item.supply,
-				submit: response.submit
-					.before((input: OrderRequest) => ({
-						itemId: request.itemId,
-						...input,
-					})),
-			}
-		}
-	)
+      const response = await sell.prepare({ ...request, blockchain: extractBlockchain(request.itemId) })
+      return {
+        ...response,
+        maxAmount: item.supply,
+        submit: response.submit.before((input: OrderRequest) => ({
+          itemId: request.itemId,
+          ...input,
+        })),
+      }
+    },
+  )
 }
 
 function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
-	// @ts-expect-error
-	return new MethodWithPrepare(
-		async (request: any) => {
-			const mintResponse = await mint(request)
-			if (mintResponse.type === MintType.ON_CHAIN) {
-				await (mintResponse as OnChainMintResponse).transaction.wait()
-			}
-			const { supply, ...restRequest } = request
-			const orderId = await sell({
-				...restRequest,
-				amount: supply,
-				itemId: mintResponse.itemId,
-			})
-			return {
-				...mintResponse,
-				orderId,
-			}
-		},
-		async (request) => {
-    	const mintResponse = await mint.prepare(request)
-    	const collectionId = getCollectionId(request)
-    	const blockchain = getBlockchainCollectionId(collectionId)
-    	const sellResponse = await sell.prepare({ blockchain })
+  // @ts-expect-error
+  return new MethodWithPrepare(
+    async (request: any) => {
+      const mintResponse = await mint(request)
+      if (mintResponse.type === MintType.ON_CHAIN) {
+        await (mintResponse as OnChainMintResponse).transaction.wait()
+      }
+      const { supply, ...restRequest } = request
+      const orderId = await sell({
+        ...restRequest,
+        amount: supply,
+        itemId: mintResponse.itemId,
+      })
+      return {
+        ...mintResponse,
+        orderId,
+      }
+    },
+    async request => {
+      const mintResponse = await mint.prepare(request)
+      const collectionId = getCollectionId(request)
+      const blockchain = getBlockchainCollectionId(collectionId)
+      const sellResponse = await sell.prepare({ blockchain })
 
-    	const mintAction = mintResponse.submit
-    		.around(
-    			(input: MintAndSellRequest) => ({ ...input }),
-    			async (mintResponse, initial): Promise<MiddleMintType> => {
-    				if (mintResponse.type === MintType.ON_CHAIN) {
-    					await mintResponse.transaction.wait()
-    				}
-    				return { initial, mintResponse }
-    			}
-    		)
-    	const sellAction = sellResponse.submit
-    		.around(
-    			({ initial, mintResponse }: MiddleMintType) => ({
-    				...initial,
-    				itemId: mintResponse.itemId,
-    				amount: initial.supply,
-    			}),
-    			(orderId, { mintResponse }): MintAndSellResponse => ({
-    				...mintResponse,
-    				orderId,
-    			})
-    		)
+      const mintAction = mintResponse.submit.around(
+        (input: MintAndSellRequest) => ({ ...input }),
+        async (mintResponse, initial): Promise<MiddleMintType> => {
+          if (mintResponse.type === MintType.ON_CHAIN) {
+            await mintResponse.transaction.wait()
+          }
+          return { initial, mintResponse }
+        },
+      )
+      const sellAction = sellResponse.submit.around(
+        ({ initial, mintResponse }: MiddleMintType) => ({
+          ...initial,
+          itemId: mintResponse.itemId,
+          amount: initial.supply,
+        }),
+        (orderId, { mintResponse }): MintAndSellResponse => ({
+          ...mintResponse,
+          orderId,
+        }),
+      )
 
-    	return {
-    		...mintResponse,
-    		...sellResponse,
-    		submit: mintAction.thenAction(sellAction),
-    	}
-		})
+      return {
+        ...mintResponse,
+        ...sellResponse,
+        submit: mintAction.thenAction(sellAction),
+      }
+    },
+  )
 }
 
 /**
  * @internal
  */
 export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
-	if ("collection" in req) {
-		return req.collection.id
-	}
-	return req.collectionId
+  if ("collection" in req) {
+    return req.collection.id
+  }
+  return req.collectionId
 }
 
 function getBlockchainCollectionId(contract: ContractAddress | CollectionId): SupportedBlockchain {
-	const [blockchain] = contract.split(":")
-	if (!isSupportedBlockchain(blockchain)) {
-		throw new Error(`Unrecognized blockchain in contract ${contract}`)
-	}
-	return blockchain as SupportedBlockchain
+  const [blockchain] = contract.split(":")
+  if (!isSupportedBlockchain(blockchain)) {
+    throw new Error(`Unrecognized blockchain in contract ${contract}`)
+  }
+  return blockchain as SupportedBlockchain
 }
 
 type MiddleMintType = {
-	initial: MintAndSellRequest
-	mintResponse: MintResponse
+  initial: MintAndSellRequest
+  mintResponse: MintResponse
 }
 
 export { WalletType }

@@ -27,144 +27,150 @@ const { providers } = createTestProviders(provider, wallet)
 /**
  * @group provider/dev
  */
-describe.each(providers)("sell", (ethereum) => {
-	const env = "dev-ethereum" as const
-	const config = getEthereumConfig(env)
-	const getConfig = async () => config
-	const getApis = getApisTemplate.bind(null, ethereum, env)
+describe.each(providers)("sell", ethereum => {
+  const env = "dev-ethereum" as const
+  const config = getEthereumConfig(env)
+  const getConfig = async () => config
+  const getApis = getApisTemplate.bind(null, ethereum, env)
 
-	const signOrder = signOrderTemplate.bind(null, ethereum, getConfig)
-	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
-	const signNft = signNftTemplate.bind(null, ethereum, getConfig)
-	const send = getSendWithInjects()
-	const mint = mintTemplate.bind(null, ethereum, send, signNft, getApis)
+  const signOrder = signOrderTemplate.bind(null, ethereum, getConfig)
+  const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
+  const signNft = signNftTemplate.bind(null, ethereum, getConfig)
+  const send = getSendWithInjects()
+  const mint = mintTemplate.bind(null, ethereum, send, signNft, getApis)
 
-	const getBaseOrderFee = async () => 0
-	const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
-	const upserter = new UpsertOrder(
-		orderService,
-		send,
-		getConfig,
-		(x) => Promise.resolve(x),
-		() => Promise.resolve(undefined),
-		signOrder,
-		getApis,
-		ethereum,
-		ZERO_WORD
-	)
-	const orderSell = new OrderSell(upserter, checkAssetType)
-	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
-	const treasury = createE2eWallet()
-	const treasuryAddress = toAddress(treasury.getAddressString())
+  const getBaseOrderFee = async () => 0
+  const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
+  const upserter = new UpsertOrder(
+    orderService,
+    send,
+    getConfig,
+    x => Promise.resolve(x),
+    () => Promise.resolve(undefined),
+    signOrder,
+    getApis,
+    ethereum,
+    ZERO_WORD,
+  )
+  const orderSell = new OrderSell(upserter, checkAssetType)
+  const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
+  const treasury = createE2eWallet()
+  const treasuryAddress = toAddress(treasury.getAddressString())
 
-	test("create and update of v2 works", async () => {
-		const makerAddress = toAddress(wallet.getAddressString())
-		const minted = await mint({
-			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
-			uri: "ipfs://ipfs/hash",
-			creators: [{
-				account: makerAddress,
-				value: 10000,
-			}],
-			royalties: [],
-			lazy: false,
-		} as ERC721RequestV3)
-		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
-			await minted.transaction.wait()
-		}
+  test("create and update of v2 works", async () => {
+    const makerAddress = toAddress(wallet.getAddressString())
+    const minted = await mint({
+      collection: createErc721V3Collection(e2eErc721V3ContractAddress),
+      uri: "ipfs://ipfs/hash",
+      creators: [
+        {
+          account: makerAddress,
+          value: 10000,
+        },
+      ],
+      royalties: [],
+      lazy: false,
+    } as ERC721RequestV3)
+    if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
+      await minted.transaction.wait()
+    }
 
-		const order = await orderSell.sell({
-			type: "DATA_V2",
-			maker: toAddress(wallet.getAddressString()),
-			makeAssetType: {
-				assetClass: "ERC721",
-				contract: minted.contract,
-				tokenId: minted.tokenId,
-			},
-			price: toBn(MIN_PAYMENT_VALUE.multipliedBy(2).toFixed()),
-			takeAssetType: {
-				assetClass: "ETH",
-			},
-			amount: 1,
-			payouts: [],
-			originFees: [{
-				account: treasuryAddress,
-				value: 100,
-			}],
-			start: Math.round(Date.now()/1000),
-			end: Math.round(Date.now()/1000 + 2000000),
-		})
+    const order = await orderSell.sell({
+      type: "DATA_V2",
+      maker: toAddress(wallet.getAddressString()),
+      makeAssetType: {
+        assetClass: "ERC721",
+        contract: minted.contract,
+        tokenId: minted.tokenId,
+      },
+      price: toBn(MIN_PAYMENT_VALUE.multipliedBy(2).toFixed()),
+      takeAssetType: {
+        assetClass: "ETH",
+      },
+      amount: 1,
+      payouts: [],
+      originFees: [
+        {
+          account: treasuryAddress,
+          value: 100,
+        },
+      ],
+      start: Math.round(Date.now() / 1000),
+      end: Math.round(Date.now() / 1000 + 2000000),
+    })
 
-		expect(order.hash).toBeTruthy()
+    expect(order.hash).toBeTruthy()
 
-		await delay(1000)
+    await delay(1000)
 
-		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
+    const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
-		await retry(5, 500, async () => {
-			const updatedOrder = await orderSell.update({
-				orderHash: order.hash,
-				price: nextPrice,
-			})
-			expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
-		})
-	})
+    await retry(5, 500, async () => {
+      const updatedOrder = await orderSell.update({
+        orderHash: order.hash,
+        price: nextPrice,
+      })
+      expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
+    })
+  })
 
-	test("create and update of v1 works", async () => {
-		const makerAddress = toAddress(wallet.getAddressString())
-		const minted = await mint({
-			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
-			uri: "ipfs://ipfs/hash",
-			creators: [{
-				account: makerAddress,
-				value: 10000,
-			}],
-			royalties: [],
-			lazy: false,
-		} as ERC721RequestV3)
+  test("create and update of v1 works", async () => {
+    const makerAddress = toAddress(wallet.getAddressString())
+    const minted = await mint({
+      collection: createErc721V3Collection(e2eErc721V3ContractAddress),
+      uri: "ipfs://ipfs/hash",
+      creators: [
+        {
+          account: makerAddress,
+          value: 10000,
+        },
+      ],
+      royalties: [],
+      lazy: false,
+    } as ERC721RequestV3)
 
-		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
-			await minted.transaction.wait()
-		}
+    if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
+      await minted.transaction.wait()
+    }
 
-		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
-			maker: makerAddress,
-			make: {
-				assetType: {
-					assetClass: "ERC721",
-					contract: minted.contract,
-					tokenId: minted.tokenId,
-				},
-				value: toBigNumber("1"),
-			},
-			take: {
-				assetType: {
-					assetClass: "ETH",
-				},
-				value: toBigNumber(MIN_PAYMENT_VALUE.plus(1).toFixed()),
-			},
-			salt: toBigNumber("10"),
-			type: "RARIBLE_V1",
-			data: {
-				dataType: "LEGACY",
-				fee: 250,
-			},
-			signature: toBinary("0x"),
-			end: getEndDateAfterMonth(),
-		}
-		const order = await upserter.upsert({ order: form })
+    const form: OrderForm = {
+      ...TEST_ORDER_TEMPLATE,
+      maker: makerAddress,
+      make: {
+        assetType: {
+          assetClass: "ERC721",
+          contract: minted.contract,
+          tokenId: minted.tokenId,
+        },
+        value: toBigNumber("1"),
+      },
+      take: {
+        assetType: {
+          assetClass: "ETH",
+        },
+        value: toBigNumber(MIN_PAYMENT_VALUE.plus(1).toFixed()),
+      },
+      salt: toBigNumber("10"),
+      type: "RARIBLE_V1",
+      data: {
+        dataType: "LEGACY",
+        fee: 250,
+      },
+      signature: toBinary("0x"),
+      end: getEndDateAfterMonth(),
+    }
+    const order = await upserter.upsert({ order: form })
 
-		await delay(1000)
+    await delay(1000)
 
-		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
+    const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
-		await retry(5, 500, async () => {
-			const updatedOrder = await orderSell.update({
-				orderHash: order.hash,
-				price: nextPrice,
-			})
-			expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
-		})
-	})
+    await retry(5, 500, async () => {
+      const updatedOrder = await orderSell.update({
+        orderHash: order.hash,
+        price: nextPrice,
+      })
+      expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
+    })
+  })
 })

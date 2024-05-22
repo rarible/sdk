@@ -9,18 +9,21 @@ import type { OrderRequest } from "../../order/common"
 export type MintAndSellRequest = MintRequest & Omit<OrderRequest, "amount">
 
 export type MintAndSellResponse = MintResponse & {
-	orderId: OrderId
+  orderId: OrderId
 }
 
-export type PrepareMintAndSellResponse =
-	AbstractPrepareResponse<"mint" | "convert" | "approve" | "sign" | "send-tx", MintAndSellRequest, MintAndSellResponse> & {
-		supportedCurrencies: CurrencyType[]
-		baseFee: number
-		originFeeSupport: OriginFeeSupport
-		payoutsSupport: PayoutsSupport
-		supportsRoyalties: boolean
-		supportsLazyMint: boolean
-	}
+export type PrepareMintAndSellResponse = AbstractPrepareResponse<
+  "mint" | "convert" | "approve" | "sign" | "send-tx",
+  MintAndSellRequest,
+  MintAndSellResponse
+> & {
+  supportedCurrencies: CurrencyType[]
+  baseFee: number
+  originFeeSupport: OriginFeeSupport
+  payoutsSupport: PayoutsSupport
+  supportsRoyalties: boolean
+  supportsLazyMint: boolean
+}
 
 /**
  * Mint token and create sell order from it

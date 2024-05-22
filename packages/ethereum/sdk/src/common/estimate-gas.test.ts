@@ -12,35 +12,28 @@ import { getSendWithInjects } from "./send-transaction"
  * @group provider/dev
  */
 describe("estimate gas before send tx", () => {
-	const { provider } = createE2eProvider(DEV_PK_1)
-	const web3 = new Web3(provider as any)
-	const ethereum = new Web3Ethereum({ web3, gas: 1000000 })
+  const { provider } = createE2eProvider(DEV_PK_1)
+  const web3 = new Web3(provider as any)
+  const ethereum = new Web3Ethereum({ web3, gas: 1000000 })
 
-	const erc1155Address = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
-	const logConfig: ILoggerConfig = {
-		level: LogsLevel.ERROR,
-		instance: {
-			...console,
-			raw: (...args) => console.info(args),
-		},
-	}
-	const send = getSendWithInjects({ logger: logConfig })
+  const erc1155Address = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
+  const logConfig: ILoggerConfig = {
+    level: LogsLevel.ERROR,
+    instance: {
+      ...console,
+      raw: (...args) => console.info(args),
+    },
+  }
+  const send = getSendWithInjects({ logger: logConfig })
 
-	test("estimate gas should pass to logger 'to' and 'value' fields", async () => {
-		const contract = ethereum.createContract(erc1155v2Abi, erc1155Address)
-		const fnCall = contract.functionCall(
-			"safeTransferFrom",
-			erc1155Address,
-			erc1155Address,
-			"0x00",
-			"0x01",
-			"0x00",
-		)
-		try {
-		  const tx = await send(fnCall, { value: "0x00" })
-			await tx.wait()
-		} catch (e) {
-		  expect(e).toBeTruthy()
-		}
-	})
+  test("estimate gas should pass to logger 'to' and 'value' fields", async () => {
+    const contract = ethereum.createContract(erc1155v2Abi, erc1155Address)
+    const fnCall = contract.functionCall("safeTransferFrom", erc1155Address, erc1155Address, "0x00", "0x01", "0x00")
+    try {
+      const tx = await send(fnCall, { value: "0x00" })
+      await tx.wait()
+    } catch (e) {
+      expect(e).toBeTruthy()
+    }
+  })
 })

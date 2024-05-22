@@ -31,88 +31,88 @@ import type { IEthereumSdkConfig } from "./domain"
 import type { EVMBlockchain } from "./common"
 
 export function createEthereumSdk(
-	wallet: Maybe<EthereumWallet>,
-	apis: IApisSdk,
-	blockchain: EVMBlockchain,
-	network: EthereumNetwork,
-	config: {
-		params?: ConfigurationParameters,
-		logs?: { level: LogsLevel, session: string },
-		apiKey?: string
-	} & IEthereumSdkConfig
+  wallet: Maybe<EthereumWallet>,
+  apis: IApisSdk,
+  blockchain: EVMBlockchain,
+  network: EthereumNetwork,
+  config: {
+    params?: ConfigurationParameters
+    logs?: { level: LogsLevel; session: string }
+    apiKey?: string
+  } & IEthereumSdkConfig,
 ): IRaribleInternalSdk {
-	const sdkConfig: IRaribleEthereumSdkConfig = {
-		apiClientParams: {
-			...(config?.params || {}),
-			middleware: [
-				...(config.logs?.level !== LogsLevel.DISABLED
-					? [getErrorHandlerMiddleware(NetworkErrorCode.ETHEREUM_NETWORK_ERR)]
-					: []),
-				...(config?.params?.middleware || []),
-			],
-		},
-		logs: config.logs,
-		ethereum: config[Blockchain.ETHEREUM],
-		polygon: config[Blockchain.POLYGON],
-		marketplaceMarker: config.marketplaceMarker ? toBinary(config.marketplaceMarker) : undefined,
-		apiKey: config.apiKey,
-	}
-	const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
+  const sdkConfig: IRaribleEthereumSdkConfig = {
+    apiClientParams: {
+      ...(config?.params || {}),
+      middleware: [
+        ...(config.logs?.level !== LogsLevel.DISABLED
+          ? [getErrorHandlerMiddleware(NetworkErrorCode.ETHEREUM_NETWORK_ERR)]
+          : []),
+        ...(config?.params?.middleware || []),
+      ],
+    },
+    logs: config.logs,
+    ethereum: config[Blockchain.ETHEREUM],
+    polygon: config[Blockchain.POLYGON],
+    marketplaceMarker: config.marketplaceMarker ? toBinary(config.marketplaceMarker) : undefined,
+    apiKey: config.apiKey,
+  }
+  const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
 
-	const sellService = new EthereumSell(sdk, wallet, apis, config)
-	const balanceService = new EthereumBalance(sdk, wallet, apis)
-	const bidService = new EthereumBid(sdk, wallet, apis, balanceService, config)
-	const mintService = new EthereumMint(sdk, wallet, apis)
-	const fillService = new EthereumFill(sdk, wallet, apis, config)
-	const { createCollectionSimplified } = new EthereumCreateCollection(sdk, wallet)
-	const cryptopunkService = new EthereumCryptopunk(sdk, wallet)
-	const transferService = new EthereumTransfer(sdk, wallet, apis)
-	const burnService = new EthereumBurn(sdk, wallet, apis, network)
-	const cancelService = new EthereumCancel(sdk, wallet, apis)
-	const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
-	const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
+  const sellService = new EthereumSell(sdk, wallet, apis, config)
+  const balanceService = new EthereumBalance(sdk, wallet, apis)
+  const bidService = new EthereumBid(sdk, wallet, apis, balanceService, config)
+  const mintService = new EthereumMint(sdk, wallet, apis)
+  const fillService = new EthereumFill(sdk, wallet, apis, config)
+  const { createCollectionSimplified } = new EthereumCreateCollection(sdk, wallet)
+  const cryptopunkService = new EthereumCryptopunk(sdk, wallet)
+  const transferService = new EthereumTransfer(sdk, wallet, apis)
+  const burnService = new EthereumBurn(sdk, wallet, apis, network)
+  const cancelService = new EthereumCancel(sdk, wallet, apis)
+  const preprocessMeta = Middlewarer.skipMiddleware(mintService.preprocessMeta)
+  const metaUploader = new MetaUploader(Blockchain.ETHEREUM, preprocessMeta)
 
-	return {
-		nft: {
-			mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
-			burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
-			transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
-			generateTokenId: new EthereumTokenId(sdk, apis).generateTokenId,
-			createCollection: createCollectionSimplified,
-			preprocessMeta,
-			uploadMeta: metaUploader.uploadMeta,
-		},
-		order: {
-			fill: { prepare: fillService.fill },
-			buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
-			batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
-			acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
-			sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
-			sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
-			bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
-			bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
-			cancel: cancelService.cancel,
-		},
-		balances: {
-			getBalance: balanceService.getBalance,
-			convert: balanceService.convert,
-			transfer: notImplemented,
-			getBiddingBalance: balanceService.getBiddingBalance,
-			depositBiddingBalance: balanceService.depositBiddingBalance,
-			withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
-		},
-		restriction: {
-			canTransfer(): Promise<CanTransferResult> {
-				return Promise.resolve({ success: true })
-			},
-			getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
-				return sellService.getFutureOrderFees()
-			},
-		},
-		ethereum: {
-			wrapCryptoPunk: cryptopunkService.wrap,
-			unwrapCryptoPunk: cryptopunkService.unwrap,
-			getBatchBuyAmmInfo: fillService.getBuyAmmInfo,
-		},
-	}
+  return {
+    nft: {
+      mint: new MethodWithPrepare(mintService.mintBasic, mintService.prepare) as IMint,
+      burn: new MethodWithPrepare(burnService.burnBasic, burnService.burn),
+      transfer: new MethodWithPrepare(transferService.transferBasic, transferService.transfer),
+      generateTokenId: new EthereumTokenId(sdk, apis).generateTokenId,
+      createCollection: createCollectionSimplified,
+      preprocessMeta,
+      uploadMeta: metaUploader.uploadMeta,
+    },
+    order: {
+      fill: { prepare: fillService.fill },
+      buy: new MethodWithPrepare(fillService.buyBasic, fillService.buy),
+      batchBuy: new MethodWithPrepare(fillService.batchBuyBasic, fillService.batchBuy),
+      acceptBid: new MethodWithPrepare(fillService.acceptBidBasic, fillService.acceptBid),
+      sell: new MethodWithPrepare(sellService.sellBasic, sellService.sell),
+      sellUpdate: new MethodWithPrepare(sellService.sellUpdateBasic, sellService.update),
+      bid: new MethodWithPrepare(bidService.bidBasic, bidService.bid),
+      bidUpdate: new MethodWithPrepare(bidService.bidUpdateBasic, bidService.update),
+      cancel: cancelService.cancel,
+    },
+    balances: {
+      getBalance: balanceService.getBalance,
+      convert: balanceService.convert,
+      transfer: notImplemented,
+      getBiddingBalance: balanceService.getBiddingBalance,
+      depositBiddingBalance: balanceService.depositBiddingBalance,
+      withdrawBiddingBalance: balanceService.withdrawBiddingBalance,
+    },
+    restriction: {
+      canTransfer(): Promise<CanTransferResult> {
+        return Promise.resolve({ success: true })
+      },
+      getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+        return sellService.getFutureOrderFees()
+      },
+    },
+    ethereum: {
+      wrapCryptoPunk: cryptopunkService.wrap,
+      unwrapCryptoPunk: cryptopunkService.unwrap,
+      getBatchBuyAmmInfo: fillService.getBuyAmmInfo,
+    },
+  }
 }
