@@ -2,11 +2,11 @@ import type { EthereumNetworkConfig } from "@rarible/protocol-ethereum-sdk/build
 import type { EVMBlockchain } from "@rarible/sdk-common"
 
 export type IEthereumSdkConfig = {
-	[B in EVMBlockchain]?: EthereumNetworkConfig;
+  [B in EVMBlockchain]?: EthereumNetworkConfig
 } & {
-	/**
+  /**
    * @deprecated
    */
-	useDataV3?: boolean;
-	marketplaceMarker?: string;
+  useDataV3?: boolean
+  marketplaceMarker?: string
 }

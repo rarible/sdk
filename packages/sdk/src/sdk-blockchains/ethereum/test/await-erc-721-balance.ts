@@ -6,16 +6,12 @@ import { toAddress } from "@rarible/types"
 import { retry } from "../../../common/retry"
 import { convertToEthereumAddress, getEthereumItemId } from "../common"
 
-export async function awaitErc721Balance(
-	eth: EthereumWallet,
-	itemId: ItemId,
-	recipient: UnionAddress
-) {
-	const { contract } = getEthereumItemId(itemId)
-	const rawRecipient = convertToEthereumAddress(recipient)
-	const erc721Contract = createTestErc721((eth.ethereum as any).config.web3, toAddress(contract))
-	await retry(10, 1000, async () => {
-		const balanceRecipient = await erc721Contract.methods.balanceOf(rawRecipient).call()
-		expect(balanceRecipient).toBe("1")
-	})
+export async function awaitErc721Balance(eth: EthereumWallet, itemId: ItemId, recipient: UnionAddress) {
+  const { contract } = getEthereumItemId(itemId)
+  const rawRecipient = convertToEthereumAddress(recipient)
+  const erc721Contract = createTestErc721((eth.ethereum as any).config.web3, toAddress(contract))
+  await retry(10, 1000, async () => {
+    const balanceRecipient = await erc721Contract.methods.balanceOf(rawRecipient).call()
+    expect(balanceRecipient).toBe("1")
+  })
 }

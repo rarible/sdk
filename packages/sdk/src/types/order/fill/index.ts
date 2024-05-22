@@ -5,7 +5,7 @@ import type { IBatchBuySimplified } from "./domain"
 import type { IBatchBuyPrepare } from "./domain"
 
 export type IFill = {
-	prepare: IFillPrepare
+  prepare: IFillPrepare
 }
 
 export type IBuy = MethodWithPrepare<IBuySimplified, IFillPrepare>

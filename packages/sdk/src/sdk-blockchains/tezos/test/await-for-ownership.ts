@@ -4,9 +4,9 @@ import type { IRaribleSdk } from "../../../domain"
 import { retry } from "../../../common/retry"
 
 export async function awaitForOwnership(sdk: IRaribleSdk, itemId: ItemId, receipent: string): Promise<Ownership> {
-	return retry(10, 2000, async () => {
-		return sdk.apis.ownership.getOwnershipById({
-			ownershipId: `${itemId}:${receipent}`,
-		})
-	})
+  return retry(10, 2000, async () => {
+    return sdk.apis.ownership.getOwnershipById({
+      ownershipId: `${itemId}:${receipent}`,
+    })
+  })
 }

@@ -41,52 +41,54 @@ export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => 
 export type IConvert = (request: ConvertRequest) => Promise<IBlockchainTransaction>
 
 export type ConvertRequest = {
-	blockchain: SupportedBlockchain
-	isWrap: boolean
-	value: BigNumberValue
+  blockchain: SupportedBlockchain
+  isWrap: boolean
+  value: BigNumberValue
 }
 
-export type IBalanceTransfer = (
-	request: IBalanceTransferRequest
-) => Promise<IBlockchainTransaction>
+export type IBalanceTransfer = (request: IBalanceTransferRequest) => Promise<IBlockchainTransaction>
 
 export type IBalanceTransferRequest = {
-	recipient: UnionAddress
-	currency: IBalanceTransferCurrency
-	amount: BigNumberValue
+  recipient: UnionAddress
+  currency: IBalanceTransferCurrency
+  amount: BigNumberValue
 }
 export type IBalanceTransferCurrency = FlowAssetTypeFt
 
-export type CurrencyOrOrder = {
-	currency: RequestCurrency
-} | {
-	order: Order
-} | {
-	orderId: OrderId
-} | {
-	blockchain: SupportedBlockchain
-}
+export type CurrencyOrOrder =
+  | {
+      currency: RequestCurrency
+    }
+  | {
+      order: Order
+    }
+  | {
+      orderId: OrderId
+    }
+  | {
+      blockchain: SupportedBlockchain
+    }
 
 export type GetBiddingBalanceRequest = {
-	walletAddress: UnionAddress
+  walletAddress: UnionAddress
 } & CurrencyOrOrder
 
 export type IGetBiddingBalance = (request: GetBiddingBalanceRequest) => Promise<BigNumberValue>
 
 export type DepositBiddingBalanceRequest = {
-	amount: BigNumberValue
+  amount: BigNumberValue
 } & CurrencyOrOrder
 
 export type IDepositBiddingBalance = Action<"send-tx", DepositBiddingBalanceRequest, IBlockchainTransaction>
 
 export type WithdrawBiddingBalanceRequest = {
-	amount: BigNumberValue
+  amount: BigNumberValue
 } & CurrencyOrOrder
 
 export type IWithdrawBiddingBalance = Action<"send-tx", WithdrawBiddingBalanceRequest, IBlockchainTransaction>
 
 export type BuyAmmInfoRequest = {
-	hash: string
-	numNFTs: number
+  hash: string
+  numNFTs: number
 }
 export type IGetBuyAmmInfo = (request: BuyAmmInfoRequest) => Promise<AmmTradeInfo>

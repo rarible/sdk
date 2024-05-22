@@ -5,13 +5,15 @@ import { Logger } from "../logger"
 /**
  * Transfer NFT
  */
-export async function transfer(sdk: IRaribleSdk,
-													 prepareTransferRequest: PrepareTransferRequest,
-													 transferRequest: TransferRequest) {
-	Logger.log("transfer_request=", transferRequest)
-	// Prepare transfer
-	const prepareTransferResponse = await sdk.nft.transfer.prepare(prepareTransferRequest)
+export async function transfer(
+  sdk: IRaribleSdk,
+  prepareTransferRequest: PrepareTransferRequest,
+  transferRequest: TransferRequest,
+) {
+  Logger.log("transfer_request=", transferRequest)
+  // Prepare transfer
+  const prepareTransferResponse = await sdk.nft.transfer.prepare(prepareTransferRequest)
 
-	// Submit transfer
-	await prepareTransferResponse.submit(transferRequest)
+  // Submit transfer
+  await prepareTransferResponse.submit(transferRequest)
 }

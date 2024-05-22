@@ -16,87 +16,98 @@ import { awaitForOwnershipValue } from "../../../common/api-helpers/ownership-he
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallets: { creator: BlockchainWallet, recipient: BlockchainWallet },
-	collectionId: string,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	transferRequest: (address: UnionAddress) => TransferRequest,
-	creatorBalanceAfterTransfer: string,
-	recipientBalanceAfterTransfer: string
-	burnRequest: BurnRequest,
-	totalBalanceAfterBurn: number
+  blockchain: Blockchain
+  description: string
+  wallets: { creator: BlockchainWallet; recipient: BlockchainWallet }
+  collectionId: string
+  mintRequest: (address: UnionAddress) => MintRequest
+  transferRequest: (address: UnionAddress) => TransferRequest
+  creatorBalanceAfterTransfer: string
+  recipientBalanceAfterTransfer: string
+  burnRequest: BurnRequest
+  totalBalanceAfterBurn: number
 }[] {
-	return [
-		{
-			blockchain: Blockchain.FLOW,
-			description: "NFT",
-			wallets: {
-				creator: getFlowSellerWallet(),
-				recipient: getFlowBuyerWallet(),
-			},
-			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
-			mintRequest: (walletAddress: UnionAddress): MintRequest => {
-				return {
-					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
-				return {
-					to: walletAddress,
-					amount: 1,
-				}
-			},
-			creatorBalanceAfterTransfer: "0",
-			recipientBalanceAfterTransfer: "1",
-			burnRequest: {
-				amount: 1,
-				creators: [],
-			},
-			totalBalanceAfterBurn: 0,
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.FLOW,
+      description: "NFT",
+      wallets: {
+        creator: getFlowSellerWallet(),
+        recipient: getFlowBuyerWallet(),
+      },
+      collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+      mintRequest: (walletAddress: UnionAddress): MintRequest => {
+        return {
+          uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      transferRequest: (walletAddress: UnionAddress): TransferRequest => {
+        return {
+          to: walletAddress,
+          amount: 1,
+        }
+      },
+      creatorBalanceAfterTransfer: "0",
+      recipientBalanceAfterTransfer: "1",
+      burnRequest: {
+        amount: 1,
+        creators: [],
+      },
+      totalBalanceAfterBurn: 0,
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
-	const {
-		creator: creatorWallet,
-		recipient: recipientWallet,
-	} = suite.wallets
-	const creatorSdk = createSdk(suite.blockchain, creatorWallet)
-	const recipientSdk = createSdk(suite.blockchain, recipientWallet)
+describe.each(suites())("$blockchain mint => transfer => burn", suite => {
+  const { creator: creatorWallet, recipient: recipientWallet } = suite.wallets
+  const creatorSdk = createSdk(suite.blockchain, creatorWallet)
+  const recipientSdk = createSdk(suite.blockchain, recipientWallet)
 
-	test(suite.description, async () => {
-		const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
-		const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
+  test(suite.description, async () => {
+    const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
+    const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
 
-		const collection = await getCollectionById(creatorSdk, suite.collectionId)
+    const collection = await getCollectionById(creatorSdk, suite.collectionId)
 
-		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
-			suite.mintRequest(creatorWalletAddress.unionAddress))
+    const { nft } = await mint(
+      creatorSdk,
+      creatorWallet,
+      { collection },
+      suite.mintRequest(creatorWalletAddress.unionAddress),
+    )
 
-		await transfer(creatorSdk, { itemId: nft.id },
-			suite.transferRequest(recipientWalletAddress.unionAddress))
+    await transfer(creatorSdk, { itemId: nft.id }, suite.transferRequest(recipientWalletAddress.unionAddress))
 
-		await awaitForOwnershipValue(recipientSdk, nft.id, recipientWalletAddress.address,
-			toBigNumber(suite.recipientBalanceAfterTransfer))
+    await awaitForOwnershipValue(
+      recipientSdk,
+      nft.id,
+      recipientWalletAddress.address,
+      toBigNumber(suite.recipientBalanceAfterTransfer),
+    )
 
-		await getActivitiesByItem(creatorSdk, nft.id,
-			[ActivityType.MINT, ActivityType.TRANSFER],
-			[ActivityType.MINT, ActivityType.TRANSFER])
+    await getActivitiesByItem(
+      creatorSdk,
+      nft.id,
+      [ActivityType.MINT, ActivityType.TRANSFER],
+      [ActivityType.MINT, ActivityType.TRANSFER],
+    )
 
-		await burn(recipientSdk, { itemId: nft.id }, suite.burnRequest, suite.totalBalanceAfterBurn)
+    await burn(recipientSdk, { itemId: nft.id }, suite.burnRequest, suite.totalBalanceAfterBurn)
 
-		await getActivitiesByItem(creatorSdk, nft.id,
-			[ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
-			[ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN])
-
-	})
+    await getActivitiesByItem(
+      creatorSdk,
+      nft.id,
+      [ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
+      [ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
+    )
+  })
 })

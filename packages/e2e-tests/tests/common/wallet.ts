@@ -13,125 +13,98 @@ import { testsConfig } from "./config"
 import { Logger } from "./logger"
 
 export function getEthereumWallet(pk: string = testsConfig.variables.ETHEREUM_WALLET_SELLER): EthereumWallet {
-	const config = {
-		networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
-		rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
-	}
-	const {
-		web3,
-		wallet,
-	} = initProvider(pk, config)
-	const ethereum = new Web3Ethereum({
-		web3: web3,
-		from: wallet.getAddressString(),
-	})
-	return new EthereumWallet(ethereum)
+  const config = {
+    networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
+    rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
+  }
+  const { web3, wallet } = initProvider(pk, config)
+  const ethereum = new Web3Ethereum({
+    web3: web3,
+    from: wallet.getAddressString(),
+  })
+  return new EthereumWallet(ethereum)
 }
 
 export function getPolygonWallet(pk?: string): EthereumWallet {
-	const {
-		web3,
-		wallet,
-	} = initProvider(pk, {
-		networkId: 80001,
-		rpcUrl: "https://rpc-mumbai.maticvigil.com",
-	})
-	const ethereum = new Web3Ethereum({
-		web3: web3,
-		from: wallet.getAddressString(),
-	})
-	return new EthereumWallet(ethereum)
+  const { web3, wallet } = initProvider(pk, {
+    networkId: 80001,
+    rpcUrl: "https://rpc-mumbai.maticvigil.com",
+  })
+  const ethereum = new Web3Ethereum({
+    web3: web3,
+    from: wallet.getAddressString(),
+  })
+  return new EthereumWallet(ethereum)
 }
 
 export function getEthereumWalletBuyer(): EthereumWallet {
-	return getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER)
+  return getEthereumWallet(testsConfig.variables.ETHEREUM_WALLET_BUYER)
 }
 
 export function getTezosTestWallet(walletNumber: number = 0): TezosWallet {
-	const edsks = [
-		testsConfig.variables.TEZOS_WALLET_1,
-		testsConfig.variables.TEZOS_WALLET_2,
-	]
-	return new TezosWallet(
-		in_memory_provider(
-			edsks[walletNumber],
-			testsConfig.variables.TEZOS_WALLET_ENDPOINT,
-		),
-	)
+  const edsks = [testsConfig.variables.TEZOS_WALLET_1, testsConfig.variables.TEZOS_WALLET_2]
+  return new TezosWallet(in_memory_provider(edsks[walletNumber], testsConfig.variables.TEZOS_WALLET_ENDPOINT))
 }
 
 export function getFlowSellerWallet(): FlowWallet {
-	const auth = createTestAuth(
-		fcl,
-		"testnet",
-		FLOW_TESTNET_ACCOUNT_3.address,
-		FLOW_TESTNET_ACCOUNT_3.privKey,
-	)
-	return new FlowWallet(fcl, auth)
+  const auth = createTestAuth(fcl, "testnet", FLOW_TESTNET_ACCOUNT_3.address, FLOW_TESTNET_ACCOUNT_3.privKey)
+  return new FlowWallet(fcl, auth)
 }
 
 export function getFlowBuyerWallet(): FlowWallet {
-	const auth = createTestAuth(
-		fcl,
-		"testnet",
-		FLOW_TESTNET_ACCOUNT_4.address,
-		FLOW_TESTNET_ACCOUNT_4.privKey,
-	)
-	return new FlowWallet(fcl, auth)
+  const auth = createTestAuth(fcl, "testnet", FLOW_TESTNET_ACCOUNT_4.address, FLOW_TESTNET_ACCOUNT_4.privKey)
+  return new FlowWallet(fcl, auth)
 }
 
 export function getSolanaWallet(walletNumber: number = 0): SolanaWallet {
-	const wallets = [
-		testsConfig.variables.SOLANA_WALLET_1,
-		testsConfig.variables.SOLANA_WALLET_2,
-	]
-	return new SolanaWallet(SolanaKeypairWallet.fromKey(Uint8Array.from(wallets[walletNumber])))
+  const wallets = [testsConfig.variables.SOLANA_WALLET_1, testsConfig.variables.SOLANA_WALLET_2]
+  return new SolanaWallet(SolanaKeypairWallet.fromKey(Uint8Array.from(wallets[walletNumber])))
 }
 
 export async function getWalletAddressFull(wallet: BlockchainWallet): Promise<WalletAddress> {
-	let address = ""
-	let addressWithPrefix = ""
-	switch (wallet.walletType) {
-		case WalletType.ETHEREUM:
-			address = await wallet.ethereum.getFrom()
-			addressWithPrefix = "ETHEREUM:" + address
-			break
-		case WalletType.TEZOS:
-			address = await wallet.provider.address()
-			addressWithPrefix = "TEZOS:" + address
-			break
-		case WalletType.FLOW:
-			const auth = wallet.getAuth()
-			if (auth) {
-				const user = await auth()
-				if (user.addr) {
-					address = "0x" + user.addr
-					addressWithPrefix = "FLOW:" + address
-				} else {
-					throw new Error("FLOW user address is undefined")
-				}
-			} else {
-				throw new Error("FLOW auth object is not passed to sdk")
-			}
-			break
-		case WalletType.SOLANA:
-			address = await wallet.provider.publicKey.toString()
-			addressWithPrefix = "SOLANA:" + address
-			break
-		default:
-			throw new Error("Unrecognized wallet")
-	}
-	const response = {
-		address: address,
-		addressWithPrefix: addressWithPrefix,
-		unionAddress: toUnionAddress(addressWithPrefix),
-	}
-	Logger.log("wallet_address=", response)
-	return response
+  let address = ""
+  let addressWithPrefix = ""
+  switch (wallet.walletType) {
+    case WalletType.ETHEREUM:
+      address = await wallet.ethereum.getFrom()
+      addressWithPrefix = "ETHEREUM:" + address
+      break
+    case WalletType.TEZOS:
+      address = await wallet.provider.address()
+      addressWithPrefix = "TEZOS:" + address
+      break
+    case WalletType.FLOW:
+      const auth = wallet.getAuth()
+      if (auth) {
+        const user = await auth()
+        if (user.addr) {
+          address = "0x" + user.addr
+          addressWithPrefix = "FLOW:" + address
+        } else {
+          throw new Error("FLOW user address is undefined")
+        }
+      } else {
+        throw new Error("FLOW auth object is not passed to sdk")
+      }
+      break
+    case WalletType.SOLANA:
+      address = await wallet.provider.publicKey.toString()
+      addressWithPrefix = "SOLANA:" + address
+      break
+    default:
+      throw new Error("Unrecognized wallet")
+  }
+  const response = {
+    address: address,
+    addressWithPrefix: addressWithPrefix,
+    unionAddress: toUnionAddress(addressWithPrefix),
+  }
+  Logger.log("wallet_address=", response)
+  return response
 }
 
 export interface WalletAddress {
-	address: string,
-	addressWithPrefix: string
-	unionAddress: UnionAddress
+  address: string
+  addressWithPrefix: string
+  unionAddress: UnionAddress
 }

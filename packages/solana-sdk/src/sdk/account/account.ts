@@ -7,54 +7,50 @@ import { getAccountInfo } from "../../common/helpers"
 import { getAccountRevokeDelegateInstructions } from "./methods/revoke"
 
 export interface ITokenAccountRequest {
-	mint: PublicKey
-	owner: PublicKey
+  mint: PublicKey
+  owner: PublicKey
 }
 
 export interface IAccountInfoRequest {
-	mint: PublicKey
-	tokenAccount: PublicKey
+  mint: PublicKey
+  tokenAccount: PublicKey
 }
 
 export interface IRevokeRequest {
-	signer: SolanaSigner
-	tokenAccount: PublicKey
+  signer: SolanaSigner
+  tokenAccount: PublicKey
 }
 
 export interface ISolanaAccountSdk {
-	getTokenAccountForMint(request: ITokenAccountRequest): Promise<PublicKey | undefined>
-	getAccountInfo(request: IAccountInfoRequest): ReturnType<typeof getAccountInfo>
-	revokeDelegate(request: IRevokeRequest): Promise<PreparedTransaction>
+  getTokenAccountForMint(request: ITokenAccountRequest): Promise<PublicKey | undefined>
+  getAccountInfo(request: IAccountInfoRequest): ReturnType<typeof getAccountInfo>
+  revokeDelegate(request: IRevokeRequest): Promise<PreparedTransaction>
 }
 
 export class SolanaAccountSdk implements ISolanaAccountSdk {
-	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
-	}
+  constructor(
+    private readonly connection: Connection,
+    private readonly logger: DebugLogger,
+  ) {}
 
-	async getTokenAccountForMint(request: ITokenAccountRequest): Promise<PublicKey | undefined> {
-		const tokenAccount = await getTokenAccounts(this.connection, request.owner, request.mint)
-		return tokenAccount?.value[0]?.pubkey
-	}
+  async getTokenAccountForMint(request: ITokenAccountRequest): Promise<PublicKey | undefined> {
+    const tokenAccount = await getTokenAccounts(this.connection, request.owner, request.mint)
+    return tokenAccount?.value[0]?.pubkey
+  }
 
-	getAccountInfo(request: IAccountInfoRequest): ReturnType<typeof getAccountInfo> {
-		return getAccountInfo(this.connection, request.mint, undefined, request.tokenAccount)
-	}
+  getAccountInfo(request: IAccountInfoRequest): ReturnType<typeof getAccountInfo> {
+    return getAccountInfo(this.connection, request.mint, undefined, request.tokenAccount)
+  }
 
-	async revokeDelegate(request: IRevokeRequest): Promise<PreparedTransaction> {
-		const instructions = await getAccountRevokeDelegateInstructions({
-			connection: this.connection,
-			signer: request.signer,
-			tokenAccount: request.tokenAccount,
-		})
+  async revokeDelegate(request: IRevokeRequest): Promise<PreparedTransaction> {
+    const instructions = await getAccountRevokeDelegateInstructions({
+      connection: this.connection,
+      signer: request.signer,
+      tokenAccount: request.tokenAccount,
+    })
 
-		return new PreparedTransaction(
-			this.connection,
-			instructions,
-			request.signer,
-			this.logger,
-			() => {
-				this.logger.log(`${request.tokenAccount.toString()} delegation revoked`)
-			}
-		)
-	}
+    return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
+      this.logger.log(`${request.tokenAccount.toString()} delegation revoked`)
+    })
+  }
 }

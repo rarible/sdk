@@ -15,150 +15,127 @@ import { balanceOf } from "./balance"
 import { MAX_INT } from "./constants"
 import type { ItemType } from "./constants"
 
-
 export type BalancesAndApprovals = {
-	token: string;
-	identifierOrCriteria: string;
-	balance: BigNumber;
-	approvedAmount: BigNumber;
-	itemType: ItemType;
+  token: string
+  identifierOrCriteria: string
+  balance: BigNumber
+  approvedAmount: BigNumber
+  itemType: ItemType
 }[]
 
 export type InsufficientBalances = {
-	token: string;
-	identifierOrCriteria: string;
-	requiredAmount: BigNumber;
-	amountHave: BigNumber;
-	itemType: ItemType;
+  token: string
+  identifierOrCriteria: string
+  requiredAmount: BigNumber
+  amountHave: BigNumber
+  itemType: ItemType
 }[]
 
 export type InsufficientApprovals = {
-	token: string;
-	identifierOrCriteria: string;
-	approvedAmount: BigNumber;
-	requiredApprovedAmount: BigNumber;
-	operator: string;
-	itemType: ItemType;
+  token: string
+  identifierOrCriteria: string
+  approvedAmount: BigNumber
+  requiredApprovedAmount: BigNumber
+  operator: string
+  itemType: ItemType
 }[]
 
 export const getBalancesAndApprovals = async ({
-	ethereum,
-	owner,
-	items,
-	criterias,
-	operator,
+  ethereum,
+  owner,
+  items,
+  criterias,
+  operator,
 }: {
-	ethereum: Ethereum;
-	owner: string;
-	items: Item[];
-	criterias: InputCriteria[];
-	operator: string;
+  ethereum: Ethereum
+  owner: string
+  items: Item[]
+  criterias: InputCriteria[]
+  operator: string
 }): Promise<BalancesAndApprovals> => {
-	const itemToCriteria = getItemToCriteriaMap(items, criterias)
+  const itemToCriteria = getItemToCriteriaMap(items, criterias)
 
-	return Promise.all(
-		items.map(async (item) => {
-			let approvedAmountPromise = toBn(0)
+  return Promise.all(
+    items.map(async item => {
+      let approvedAmountPromise = toBn(0)
 
-			if (isErc721Item(item.itemType) || isErc1155Item(item.itemType)) {
-				const erc721 = createErc721Contract(ethereum, toAddress(item.token))
-				const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
-				approvedAmountPromise = allowance ? toBn(MAX_INT) : toBn(0)
-			} else if (isErc20Item(item.itemType)) {
-				const erc20 = createErc20Contract(ethereum, toAddress(item.token))
-				approvedAmountPromise = toBn(await erc20.functionCall("allowance", owner, operator).call())
-			} else {
-				approvedAmountPromise = toBn(MAX_INT)
-			}
+      if (isErc721Item(item.itemType) || isErc1155Item(item.itemType)) {
+        const erc721 = createErc721Contract(ethereum, toAddress(item.token))
+        const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
+        approvedAmountPromise = allowance ? toBn(MAX_INT) : toBn(0)
+      } else if (isErc20Item(item.itemType)) {
+        const erc20 = createErc20Contract(ethereum, toAddress(item.token))
+        approvedAmountPromise = toBn(await erc20.functionCall("allowance", owner, operator).call())
+      } else {
+        approvedAmountPromise = toBn(MAX_INT)
+      }
 
-			return {
-				token: item.token,
-				identifierOrCriteria:
-          itemToCriteria.get(item)?.identifier ?? item.identifierOrCriteria,
-				balance: await balanceOf(
-					ethereum,
-					owner,
-					item,
-					itemToCriteria.get(item)
-				),
-				approvedAmount: approvedAmountPromise,
-				itemType: item.itemType,
-			}
-		})
-	)
+      return {
+        token: item.token,
+        identifierOrCriteria: itemToCriteria.get(item)?.identifier ?? item.identifierOrCriteria,
+        balance: await balanceOf(ethereum, owner, item, itemToCriteria.get(item)),
+        approvedAmount: approvedAmountPromise,
+        itemType: item.itemType,
+      }
+    }),
+  )
 }
 
 export const getInsufficientBalanceAndApprovalAmounts = ({
-	balancesAndApprovals,
-	tokenAndIdentifierAmounts,
-	operator,
+  balancesAndApprovals,
+  tokenAndIdentifierAmounts,
+  operator,
 }: {
-	balancesAndApprovals: BalancesAndApprovals;
-	tokenAndIdentifierAmounts: ReturnType<
-    typeof getSummedTokenAndIdentifierAmounts
-	>;
-	operator: string;
+  balancesAndApprovals: BalancesAndApprovals
+  tokenAndIdentifierAmounts: ReturnType<typeof getSummedTokenAndIdentifierAmounts>
+  operator: string
 }): {
-	insufficientBalances: InsufficientBalances;
-	insufficientApprovals: InsufficientApprovals;
+  insufficientBalances: InsufficientBalances
+  insufficientApprovals: InsufficientApprovals
 } => {
-	const tokenAndIdentifierAndAmountNeeded = [
-		...Object.entries(tokenAndIdentifierAmounts).map(
-			([token, identifierToAmount]) =>
-				Object.entries(identifierToAmount).map(
-					([identifierOrCriteria, amountNeeded]) =>
-						[token, identifierOrCriteria, amountNeeded] as const
-				)
-		),
-	].flat()
+  const tokenAndIdentifierAndAmountNeeded = [
+    ...Object.entries(tokenAndIdentifierAmounts).map(([token, identifierToAmount]) =>
+      Object.entries(identifierToAmount).map(
+        ([identifierOrCriteria, amountNeeded]) => [token, identifierOrCriteria, amountNeeded] as const,
+      ),
+    ),
+  ].flat()
 
-	const filterBalancesOrApprovals = (
-		filterKey: "balance" | "approvedAmount"
-	): InsufficientBalances =>
-		tokenAndIdentifierAndAmountNeeded
-			.filter(([token, identifierOrCriteria, amountNeeded]) =>
-				findBalanceAndApproval(
-					balancesAndApprovals,
-					token,
-					identifierOrCriteria
-				)[filterKey].lt(amountNeeded)
-			)
-			.map(([token, identifierOrCriteria, amount]) => {
-				const balanceAndApproval = findBalanceAndApproval(
-					balancesAndApprovals,
-					token,
-					identifierOrCriteria
-				)
+  const filterBalancesOrApprovals = (filterKey: "balance" | "approvedAmount"): InsufficientBalances =>
+    tokenAndIdentifierAndAmountNeeded
+      .filter(([token, identifierOrCriteria, amountNeeded]) =>
+        findBalanceAndApproval(balancesAndApprovals, token, identifierOrCriteria)[filterKey].lt(amountNeeded),
+      )
+      .map(([token, identifierOrCriteria, amount]) => {
+        const balanceAndApproval = findBalanceAndApproval(balancesAndApprovals, token, identifierOrCriteria)
 
-				return {
-					token,
-					identifierOrCriteria,
-					requiredAmount: amount,
-					amountHave: balanceAndApproval[filterKey],
-					itemType: balanceAndApproval.itemType,
-				}
-			})
+        return {
+          token,
+          identifierOrCriteria,
+          requiredAmount: amount,
+          amountHave: balanceAndApproval[filterKey],
+          itemType: balanceAndApproval.itemType,
+        }
+      })
 
-	const mapToApproval = (
-		insufficientBalance: InsufficientBalances[number]
-	): InsufficientApprovals[number] => ({
-		token: insufficientBalance.token,
-		identifierOrCriteria: insufficientBalance.identifierOrCriteria,
-		approvedAmount: insufficientBalance.amountHave,
-		requiredApprovedAmount: insufficientBalance.requiredAmount,
-		itemType: insufficientBalance.itemType,
-		operator,
-	})
+  const mapToApproval = (insufficientBalance: InsufficientBalances[number]): InsufficientApprovals[number] => ({
+    token: insufficientBalance.token,
+    identifierOrCriteria: insufficientBalance.identifierOrCriteria,
+    approvedAmount: insufficientBalance.amountHave,
+    requiredApprovedAmount: insufficientBalance.requiredAmount,
+    itemType: insufficientBalance.itemType,
+    operator,
+  })
 
-	const [insufficientBalances, insufficientApprovals] = [
-		filterBalancesOrApprovals("balance"),
-		filterBalancesOrApprovals("approvedAmount").map(mapToApproval),
-	]
+  const [insufficientBalances, insufficientApprovals] = [
+    filterBalancesOrApprovals("balance"),
+    filterBalancesOrApprovals("approvedAmount").map(mapToApproval),
+  ]
 
-	return {
-		insufficientBalances,
-		insufficientApprovals,
-	}
+  return {
+    insufficientBalances,
+    insufficientApprovals,
+  }
 }
 
 /**
@@ -169,233 +146,201 @@ export const getInsufficientBalanceAndApprovalAmounts = ({
  *    for their respective proxy contract for all offered ERC20, ERC721, and ERC1155 items.
  */
 export const validateOfferBalancesAndApprovals = ({
-	offer,
-	criterias,
-	balancesAndApprovals,
-	timeBasedItemParams,
-	throwOnInsufficientBalances = true,
-	throwOnInsufficientApprovals,
-	operator,
+  offer,
+  criterias,
+  balancesAndApprovals,
+  timeBasedItemParams,
+  throwOnInsufficientBalances = true,
+  throwOnInsufficientApprovals,
+  operator,
 }: {
-	balancesAndApprovals: BalancesAndApprovals;
-	timeBasedItemParams?: TimeBasedItemParams;
-	throwOnInsufficientBalances?: boolean;
-	throwOnInsufficientApprovals?: boolean;
-	operator: string;
+  balancesAndApprovals: BalancesAndApprovals
+  timeBasedItemParams?: TimeBasedItemParams
+  throwOnInsufficientBalances?: boolean
+  throwOnInsufficientApprovals?: boolean
+  operator: string
 } & Pick<OrderParameters, "offer"> & {
-	criterias: InputCriteria[];
-}): InsufficientApprovals => {
-	const { insufficientBalances, insufficientApprovals } =
-    getInsufficientBalanceAndApprovalAmounts({
-    	balancesAndApprovals,
-    	tokenAndIdentifierAmounts: getSummedTokenAndIdentifierAmounts({
-    		items: offer,
-    		criterias,
-    		timeBasedItemParams: timeBasedItemParams
-    			? { ...timeBasedItemParams, isConsiderationItem: false }
-    			: undefined,
-    	}),
-    	operator,
-    })
+    criterias: InputCriteria[]
+  }): InsufficientApprovals => {
+  const { insufficientBalances, insufficientApprovals } = getInsufficientBalanceAndApprovalAmounts({
+    balancesAndApprovals,
+    tokenAndIdentifierAmounts: getSummedTokenAndIdentifierAmounts({
+      items: offer,
+      criterias,
+      timeBasedItemParams: timeBasedItemParams ? { ...timeBasedItemParams, isConsiderationItem: false } : undefined,
+    }),
+    operator,
+  })
 
-	if (throwOnInsufficientBalances && insufficientBalances.length > 0) {
-		throw new Error(
-			"The offerer does not have the amount needed to create or fulfill."
-		)
-	}
+  if (throwOnInsufficientBalances && insufficientBalances.length > 0) {
+    throw new Error("The offerer does not have the amount needed to create or fulfill.")
+  }
 
-	if (throwOnInsufficientApprovals && insufficientApprovals.length > 0) {
-		throw new Error("The offerer does not have the sufficient approvals.")
-	}
+  if (throwOnInsufficientApprovals && insufficientApprovals.length > 0) {
+    throw new Error("The offerer does not have the sufficient approvals.")
+  }
 
-	return insufficientApprovals
+  return insufficientApprovals
 }
 
 export const validateBasicFulfillBalancesAndApprovals = ({
-	offer,
-	consideration,
-	offererBalancesAndApprovals,
-	fulfillerBalancesAndApprovals,
-	timeBasedItemParams,
-	offererOperator,
-	fulfillerOperator,
-	disableCheckingBalances,
+  offer,
+  consideration,
+  offererBalancesAndApprovals,
+  fulfillerBalancesAndApprovals,
+  timeBasedItemParams,
+  offererOperator,
+  fulfillerOperator,
+  disableCheckingBalances,
 }: {
-	offererBalancesAndApprovals: BalancesAndApprovals;
-	fulfillerBalancesAndApprovals: BalancesAndApprovals;
-	timeBasedItemParams: TimeBasedItemParams;
-	offererOperator: string;
-	fulfillerOperator: string;
-	disableCheckingBalances?: boolean;
+  offererBalancesAndApprovals: BalancesAndApprovals
+  fulfillerBalancesAndApprovals: BalancesAndApprovals
+  timeBasedItemParams: TimeBasedItemParams
+  offererOperator: string
+  fulfillerOperator: string
+  disableCheckingBalances?: boolean
 } & Pick<OrderParameters, "offer" | "consideration">) => {
-	validateOfferBalancesAndApprovals({
-		offer,
-		criterias: [],
-		balancesAndApprovals: offererBalancesAndApprovals,
-		timeBasedItemParams,
-		throwOnInsufficientApprovals: true,
-		operator: offererOperator,
-	})
+  validateOfferBalancesAndApprovals({
+    offer,
+    criterias: [],
+    balancesAndApprovals: offererBalancesAndApprovals,
+    timeBasedItemParams,
+    throwOnInsufficientApprovals: true,
+    operator: offererOperator,
+  })
 
-	const considerationWithoutOfferItemType = consideration.filter(
-		(item) => item.itemType !== offer[0].itemType
-	)
+  const considerationWithoutOfferItemType = consideration.filter(item => item.itemType !== offer[0].itemType)
 
-	const { insufficientBalances, insufficientApprovals } =
-    getInsufficientBalanceAndApprovalAmounts({
-    	balancesAndApprovals: fulfillerBalancesAndApprovals,
-    	tokenAndIdentifierAmounts: getSummedTokenAndIdentifierAmounts({
-    		items: considerationWithoutOfferItemType,
-    		criterias: [],
-    		timeBasedItemParams: {
-    			...timeBasedItemParams,
-    			isConsiderationItem: true,
-    		},
-    	}),
-    	operator: fulfillerOperator,
-    })
+  const { insufficientBalances, insufficientApprovals } = getInsufficientBalanceAndApprovalAmounts({
+    balancesAndApprovals: fulfillerBalancesAndApprovals,
+    tokenAndIdentifierAmounts: getSummedTokenAndIdentifierAmounts({
+      items: considerationWithoutOfferItemType,
+      criterias: [],
+      timeBasedItemParams: {
+        ...timeBasedItemParams,
+        isConsiderationItem: true,
+      },
+    }),
+    operator: fulfillerOperator,
+  })
 
-	if (!disableCheckingBalances && insufficientBalances.length > 0) {
-		throw new Error(
-			"The fulfiller does not have the balances needed to fulfill."
-		)
-	}
+  if (!disableCheckingBalances && insufficientBalances.length > 0) {
+    throw new Error("The fulfiller does not have the balances needed to fulfill.")
+  }
 
-	return insufficientApprovals
+  return insufficientApprovals
 }
 
 export const validateStandardFulfillBalancesAndApprovals = ({
-	offer,
-	consideration,
-	offerCriteria,
-	considerationCriteria,
-	offererBalancesAndApprovals,
-	fulfillerBalancesAndApprovals,
-	timeBasedItemParams,
-	offererOperator,
-	fulfillerOperator,
-	disableCheckingBalances,
+  offer,
+  consideration,
+  offerCriteria,
+  considerationCriteria,
+  offererBalancesAndApprovals,
+  fulfillerBalancesAndApprovals,
+  timeBasedItemParams,
+  offererOperator,
+  fulfillerOperator,
+  disableCheckingBalances,
 }: Pick<OrderParameters, "offer" | "consideration"> & {
-	offerCriteria: InputCriteria[];
-	considerationCriteria: InputCriteria[];
-	offererBalancesAndApprovals: BalancesAndApprovals;
-	fulfillerBalancesAndApprovals: BalancesAndApprovals;
-	timeBasedItemParams: TimeBasedItemParams;
-	offererOperator: string;
-	fulfillerOperator: string;
-	disableCheckingBalances?: boolean;
+  offerCriteria: InputCriteria[]
+  considerationCriteria: InputCriteria[]
+  offererBalancesAndApprovals: BalancesAndApprovals
+  fulfillerBalancesAndApprovals: BalancesAndApprovals
+  timeBasedItemParams: TimeBasedItemParams
+  offererOperator: string
+  fulfillerOperator: string
+  disableCheckingBalances?: boolean
 }) => {
-	validateOfferBalancesAndApprovals({
-		offer,
-		criterias: offerCriteria,
-		balancesAndApprovals: offererBalancesAndApprovals,
-		timeBasedItemParams,
-		throwOnInsufficientApprovals: true,
-		operator: offererOperator,
-	})
+  validateOfferBalancesAndApprovals({
+    offer,
+    criterias: offerCriteria,
+    balancesAndApprovals: offererBalancesAndApprovals,
+    timeBasedItemParams,
+    throwOnInsufficientApprovals: true,
+    operator: offererOperator,
+  })
 
-	const fulfillerBalancesAndApprovalsAfterReceivingOfferedItems =
-    addToExistingBalances({
-    	items: offer,
-    	criterias: offerCriteria,
-    	balancesAndApprovals: fulfillerBalancesAndApprovals,
-    	timeBasedItemParams,
-    })
+  const fulfillerBalancesAndApprovalsAfterReceivingOfferedItems = addToExistingBalances({
+    items: offer,
+    criterias: offerCriteria,
+    balancesAndApprovals: fulfillerBalancesAndApprovals,
+    timeBasedItemParams,
+  })
 
-	const { insufficientBalances, insufficientApprovals } =
-    getInsufficientBalanceAndApprovalAmounts({
-    	balancesAndApprovals:
-      fulfillerBalancesAndApprovalsAfterReceivingOfferedItems,
-    	tokenAndIdentifierAmounts: getSummedTokenAndIdentifierAmounts({
-    		items: consideration,
-    		criterias: considerationCriteria,
-    		timeBasedItemParams: {
-    			...timeBasedItemParams,
-    			isConsiderationItem: true,
-    		},
-    	}),
-    	operator: fulfillerOperator,
-    })
+  const { insufficientBalances, insufficientApprovals } = getInsufficientBalanceAndApprovalAmounts({
+    balancesAndApprovals: fulfillerBalancesAndApprovalsAfterReceivingOfferedItems,
+    tokenAndIdentifierAmounts: getSummedTokenAndIdentifierAmounts({
+      items: consideration,
+      criterias: considerationCriteria,
+      timeBasedItemParams: {
+        ...timeBasedItemParams,
+        isConsiderationItem: true,
+      },
+    }),
+    operator: fulfillerOperator,
+  })
 
-	if (!disableCheckingBalances && insufficientBalances.length > 0) {
-		throw new Error(
-			"The fulfiller does not have the balances needed to fulfill."
-		)
-	}
+  if (!disableCheckingBalances && insufficientBalances.length > 0) {
+    throw new Error("The fulfiller does not have the balances needed to fulfill.")
+  }
 
-	return insufficientApprovals
+  return insufficientApprovals
 }
 
 const addToExistingBalances = ({
-	items,
-	criterias,
-	timeBasedItemParams,
-	balancesAndApprovals,
+  items,
+  criterias,
+  timeBasedItemParams,
+  balancesAndApprovals,
 }: {
-	items: Item[];
-	criterias: InputCriteria[];
-	timeBasedItemParams: TimeBasedItemParams;
-	balancesAndApprovals: BalancesAndApprovals;
+  items: Item[]
+  criterias: InputCriteria[]
+  timeBasedItemParams: TimeBasedItemParams
+  balancesAndApprovals: BalancesAndApprovals
 }) => {
-	const summedItemAmounts = getSummedTokenAndIdentifierAmounts({
-		items,
-		criterias,
-		timeBasedItemParams: { ...timeBasedItemParams, isConsiderationItem: false },
-	})
+  const summedItemAmounts = getSummedTokenAndIdentifierAmounts({
+    items,
+    criterias,
+    timeBasedItemParams: { ...timeBasedItemParams, isConsiderationItem: false },
+  })
 
-	// Deep clone existing balances
-	const balancesAndApprovalsAfterReceivingItems = balancesAndApprovals.map(
-		(item) => ({ ...item })
-	)
+  // Deep clone existing balances
+  const balancesAndApprovalsAfterReceivingItems = balancesAndApprovals.map(item => ({ ...item }))
 
-	// Add each summed item amount to the existing balances as we may want tocheck balances after receiving all items
-	Object.entries(summedItemAmounts).forEach(
-		([token, identifierOrCriteriaToAmount]) =>
-			Object.entries(identifierOrCriteriaToAmount).forEach(
-				([identifierOrCriteria, amount]) => {
-					const balanceAndApproval = findBalanceAndApproval(
-						balancesAndApprovalsAfterReceivingItems,
-						token,
-						identifierOrCriteria
-					)
+  // Add each summed item amount to the existing balances as we may want tocheck balances after receiving all items
+  Object.entries(summedItemAmounts).forEach(([token, identifierOrCriteriaToAmount]) =>
+    Object.entries(identifierOrCriteriaToAmount).forEach(([identifierOrCriteria, amount]) => {
+      const balanceAndApproval = findBalanceAndApproval(
+        balancesAndApprovalsAfterReceivingItems,
+        token,
+        identifierOrCriteria,
+      )
 
-					const balanceAndApprovalIndex =
-            balancesAndApprovalsAfterReceivingItems.indexOf(balanceAndApproval)
+      const balanceAndApprovalIndex = balancesAndApprovalsAfterReceivingItems.indexOf(balanceAndApproval)
 
-					balancesAndApprovalsAfterReceivingItems[
-						balanceAndApprovalIndex
-					].balance =
-            balancesAndApprovalsAfterReceivingItems[
-            	balanceAndApprovalIndex
-            ].balance.plus(amount)
-				}
-			)
-	)
+      balancesAndApprovalsAfterReceivingItems[balanceAndApprovalIndex].balance =
+        balancesAndApprovalsAfterReceivingItems[balanceAndApprovalIndex].balance.plus(amount)
+    }),
+  )
 
-	return balancesAndApprovalsAfterReceivingItems
+  return balancesAndApprovalsAfterReceivingItems
 }
 
-
 function findBalanceAndApproval(
-	balancesAndApprovals: BalancesAndApprovals,
-	token: string,
-	identifierOrCriteria: string
+  balancesAndApprovals: BalancesAndApprovals,
+  token: string,
+  identifierOrCriteria: string,
 ) {
-	const balanceAndApproval = balancesAndApprovals.find(
-		({
-			token: checkedToken,
-			identifierOrCriteria: checkedIdentifierOrCriteria,
-		}) =>
-			token.toLowerCase() === checkedToken.toLowerCase() &&
-      checkedIdentifierOrCriteria.toLowerCase() ===
-      identifierOrCriteria.toLowerCase()
-	)
+  const balanceAndApproval = balancesAndApprovals.find(
+    ({ token: checkedToken, identifierOrCriteria: checkedIdentifierOrCriteria }) =>
+      token.toLowerCase() === checkedToken.toLowerCase() &&
+      checkedIdentifierOrCriteria.toLowerCase() === identifierOrCriteria.toLowerCase(),
+  )
 
-	if (!balanceAndApproval) {
-		throw new Warning(
-			"Balances and approvals didn't contain all tokens and identifiers"
-		)
-	}
+  if (!balanceAndApproval) {
+    throw new Warning("Balances and approvals didn't contain all tokens and identifiers")
+  }
 
-	return balanceAndApproval
+  return balanceAndApproval
 }

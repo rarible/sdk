@@ -7,36 +7,34 @@ import type { IRaribleSdk } from "../../domain"
 import type { EVMSuiteSupportedBlockchain } from "../../sdk-blockchains/ethereum/test/suite/domain"
 
 export class BalancesTestSuite<T extends EVMSuiteSupportedBlockchain> {
-	constructor(
-		readonly blockchain: T,
-		private readonly sdk: IRaribleSdk,
-		private readonly addressUnion: UnionAddress
-	) {
-	}
+  constructor(
+    readonly blockchain: T,
+    private readonly sdk: IRaribleSdk,
+    private readonly addressUnion: UnionAddress,
+  ) {}
 
   waitBalance = (
-  	asset: RequestCurrency,
-  	value: BigNumberValue,
-  	address: UnionAddress = this.addressUnion,
-  	interval = 8000
+    asset: RequestCurrency,
+    value: BigNumberValue,
+    address: UnionAddress = this.addressUnion,
+    interval = 8000,
   ) =>
-  	waitFor(
-  		() => this.sdk.balances.getBalance(address, asset),
-  		x => toBn(x).isEqualTo(value),
-  		interval
-  	)
+    waitFor(
+      () => this.sdk.balances.getBalance(address, asset),
+      x => toBn(x).isEqualTo(value),
+      interval,
+    )
   convertToWeth = (value: BigNumberValue) =>
-  	this.sdk.balances.convert({
-  		blockchain: this.blockchain,
-  		isWrap: true,
-  		value,
-  	})
+    this.sdk.balances.convert({
+      blockchain: this.blockchain,
+      isWrap: true,
+      value,
+    })
 
   convertFromWeth = (value: BigNumberValue) =>
-  	this.sdk.balances.convert({
-  		blockchain: this.blockchain,
-  		isWrap: false,
-  		value,
-  	})
-
+    this.sdk.balances.convert({
+      blockchain: this.blockchain,
+      isWrap: false,
+      value,
+    })
 }

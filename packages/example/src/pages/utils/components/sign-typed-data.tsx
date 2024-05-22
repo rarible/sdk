@@ -53,7 +53,7 @@ export function SignTypedDataUtil() {
 				</Grid>
 			</form>
 
-			<div style={{marginTop: 20, maxWidth: 500, wordBreak: "break-all"}}>
+			<div style={{ marginTop: 20, maxWidth: 500, wordBreak: "break-all" }}>
 				<RequestResult
 					result={result}
 					completeRender={(data) => <Box sx={{ my: 2 }}>signature: {data}</Box>}

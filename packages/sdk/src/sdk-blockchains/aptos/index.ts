@@ -15,53 +15,53 @@ import { AptosNft } from "./nft"
 import { AptosBalance } from "./balance"
 
 export function createAptosSdk(
-	wallet: Maybe<AptosWallet>,
-	apis: IApisSdk,
-	env: AptosSdkEnv,
-	config?: AptosSdkConfig,
+  wallet: Maybe<AptosWallet>,
+  apis: IApisSdk,
+  env: AptosSdkEnv,
+  config?: AptosSdkConfig,
 ): IRaribleInternalSdk {
-	const sdk = new AptosSdk(wallet?.wallet, env, config)
-	const nftService = new AptosNft(sdk, env, apis)
-	const balanceService = new AptosBalance(sdk)
-	const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
+  const sdk = new AptosSdk(wallet?.wallet, env, config)
+  const nftService = new AptosNft(sdk, env, apis)
+  const balanceService = new AptosBalance(sdk)
+  const preprocessMeta = Middlewarer.skipMiddleware(nftService.preprocessMeta)
 
-	return {
-		nft: {
-			mint: new MethodWithPrepare(nftService.mintBasic, nftService.mint) as IMint,
-			burn: new MethodWithPrepare(nftService.burnBasic, nftService.burn),
-			transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
-			generateTokenId: notImplemented,
-			createCollection: nftService.createCollectionBasic,
-			preprocessMeta,
-			uploadMeta: notImplemented,
-		},
-		order: {
-			fill: { prepare: notImplemented },
-			buy: new MethodWithPrepare(notImplemented, notImplemented),
-			batchBuy: new MethodWithPrepare(notImplemented, notImplemented),
-			acceptBid: new MethodWithPrepare(notImplemented, notImplemented),
-			sell: new MethodWithPrepare(notImplemented, notImplemented),
-			sellUpdate: new MethodWithPrepare(notImplemented, notImplemented),
-			bid: new MethodWithPrepare(notImplemented, notImplemented),
-			bidUpdate: new MethodWithPrepare(notImplemented, notImplemented),
-			cancel: notImplemented,
-		},
-		balances: {
-			getBalance: balanceService.getBalance,
-			convert: notImplemented,
-			transfer: notImplemented,
-			getBiddingBalance: notImplemented,
-			depositBiddingBalance: nonImplementedAction,
-			withdrawBiddingBalance: nonImplementedAction,
-		},
-		restriction: {
-			canTransfer: notImplemented,
-			async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
-				return {
-					originFeeSupport: OriginFeeSupport.NONE,
-					baseFee: 0,
-				}
-			},
-		},
-	}
+  return {
+    nft: {
+      mint: new MethodWithPrepare(nftService.mintBasic, nftService.mint) as IMint,
+      burn: new MethodWithPrepare(nftService.burnBasic, nftService.burn),
+      transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
+      generateTokenId: notImplemented,
+      createCollection: nftService.createCollectionBasic,
+      preprocessMeta,
+      uploadMeta: notImplemented,
+    },
+    order: {
+      fill: { prepare: notImplemented },
+      buy: new MethodWithPrepare(notImplemented, notImplemented),
+      batchBuy: new MethodWithPrepare(notImplemented, notImplemented),
+      acceptBid: new MethodWithPrepare(notImplemented, notImplemented),
+      sell: new MethodWithPrepare(notImplemented, notImplemented),
+      sellUpdate: new MethodWithPrepare(notImplemented, notImplemented),
+      bid: new MethodWithPrepare(notImplemented, notImplemented),
+      bidUpdate: new MethodWithPrepare(notImplemented, notImplemented),
+      cancel: notImplemented,
+    },
+    balances: {
+      getBalance: balanceService.getBalance,
+      convert: notImplemented,
+      transfer: notImplemented,
+      getBiddingBalance: notImplemented,
+      depositBiddingBalance: nonImplementedAction,
+      withdrawBiddingBalance: nonImplementedAction,
+    },
+    restriction: {
+      canTransfer: notImplemented,
+      async getFutureOrderFees(): Promise<GetFutureOrderFeeData> {
+        return {
+          originFeeSupport: OriginFeeSupport.NONE,
+          baseFee: 0,
+        }
+      },
+    },
+  }
 }

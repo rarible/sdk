@@ -15,22 +15,20 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.post("/v0.1/orders/buy-tx", ordersController.postFillAction)
 
 app.get("/openapi.yml", (req, res) => {
-	res.sendFile("openapi.yml", { root: path.resolve(__dirname) })
+  res.sendFile("openapi.yml", { root: path.resolve(__dirname) })
 })
 app.use(
-	"/",
-	redoc({
-		title: "Rarible Transaction Backend API Docs",
-		specUrl: "/openapi.yml",
-	})
+  "/",
+  redoc({
+    title: "Rarible Transaction Backend API Docs",
+    specUrl: "/openapi.yml",
+  }),
 )
 
-app.use(function(req, res){
-	return res
-		.status(404)
-		.json({ message: "Not found" })
+app.use(function (req, res) {
+  return res.status(404).json({ message: "Not found" })
 })
 
-process.on("unhandledRejection", (e) => {
-	console.error("unhandledRejection", e)
+process.on("unhandledRejection", e => {
+  console.error("unhandledRejection", e)
 })

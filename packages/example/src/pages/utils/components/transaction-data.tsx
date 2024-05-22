@@ -36,7 +36,7 @@ export function TransactionData() {
 
 	return (
 		<div>
-			<Typography sx={{my: 2}} variant="subtitle1" gutterBottom>
+			<Typography sx={{ my: 2 }} variant="subtitle1" gutterBottom>
         Enter Order ID, Chain ID and wallet address to get transaction data
 			</Typography>
 
@@ -69,7 +69,7 @@ export function TransactionData() {
 					/>
 				</Grid>
 
-				<Grid style={{display: "flex", alignItems: "center"}} item xs={7}>
+				<Grid style={{ display: "flex", alignItems: "center" }} item xs={7}>
 					<Button
 						variant="outlined"
 						onClick={() => getTransactionData()}
@@ -80,7 +80,7 @@ export function TransactionData() {
 				</Grid>
 
 				<Grid item xs={12}>
-					<div style={{wordBreak: "break-all"}}>
+					<div style={{ wordBreak: "break-all" }}>
 						<RequestResult
 							result={result}
 							completeRender={(data) =>

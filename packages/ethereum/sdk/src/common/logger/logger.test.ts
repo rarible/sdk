@@ -5,15 +5,15 @@ import { createRemoteLogger } from "./logger"
 
 jest.useFakeTimers()
 describe("logger test", () => {
-	const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
-	const { provider } = createE2eProvider(pk)
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
+  const pk = "d519f025ae44644867ee8384890c4a0b8a7b00ef844e8d64c566c0ac971c9469"
+  const { provider } = createE2eProvider(pk)
+  const web3 = new Web3(provider)
+  const ethereum = new Web3Ethereum({ web3 })
 
-	test("createRemoteLogger", async () => {
-		createRemoteLogger({
-			ethereum,
-			env: "dev",
-		})
-	})
+  test("createRemoteLogger", async () => {
+    createRemoteLogger({
+      ethereum,
+      env: "dev",
+    })
+  })
 })

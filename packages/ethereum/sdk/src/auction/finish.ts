@@ -7,36 +7,33 @@ import type { GetConfigByChainId } from "../config"
 import { createEthereumAuctionContract } from "./contracts/auction"
 
 export async function finishAuction(
-	ethereum: Maybe<Ethereum>,
-	send: SendFunction,
-	getConfig: GetConfigByChainId,
-	getApis: () => Promise<RaribleEthereumApis>,
-	hash: string,
+  ethereum: Maybe<Ethereum>,
+  send: SendFunction,
+  getConfig: GetConfigByChainId,
+  getApis: () => Promise<RaribleEthereumApis>,
+  hash: string,
 ) {
-	if (!ethereum) {
-		throw new Error("Wallet is undefined")
-	}
-	const apis = await getApis()
-	const auction = await apis.auction.getAuctionByHash({ hash })
+  if (!ethereum) {
+    throw new Error("Wallet is undefined")
+  }
+  const apis = await getApis()
+  const auction = await apis.auction.getAuctionByHash({ hash })
 
-	validateFinishAuction(auction)
-	const config = await getConfig()
+  validateFinishAuction(auction)
+  const config = await getConfig()
 
-	return send(
-		createEthereumAuctionContract(ethereum, config.auction)
-			.functionCall("finishAuction", auction.auctionId)
-	)
+  return send(createEthereumAuctionContract(ethereum, config.auction).functionCall("finishAuction", auction.auctionId))
 }
 
 function validateFinishAuction(auction: Auction) {
-	if (!auction.lastBid) {
-		throw new Error("Auction without bid can't be finished")
-	}
-	if (auction.endTime) {
-		const endTime = new Date(auction.endTime).getTime()
+  if (!auction.lastBid) {
+    throw new Error("Auction without bid can't be finished")
+  }
+  if (auction.endTime) {
+    const endTime = new Date(auction.endTime).getTime()
 
-		if (endTime > 0 && endTime < Date.now()) {
-			throw new Error("Auction is not finished")
-		}
-	}
+    if (endTime > 0 && endTime < Date.now()) {
+      throw new Error("Auction is not finished")
+    }
+  }
 }

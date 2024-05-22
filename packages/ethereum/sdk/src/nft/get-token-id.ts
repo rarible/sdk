@@ -2,10 +2,13 @@ import type { Address, NftCollectionControllerApi, NftTokenId } from "@rarible/e
 import { wrapInRetry } from "../common/retry"
 
 export async function getTokenId(
-	nftCollectionApi: NftCollectionControllerApi, collection: Address, minter: Address, nftTokenId?: NftTokenId
+  nftCollectionApi: NftCollectionControllerApi,
+  collection: Address,
+  minter: Address,
+  nftTokenId?: NftTokenId,
 ) {
-	if (nftTokenId !== undefined) {
-		return nftTokenId
-	}
-	return wrapInRetry(() => nftCollectionApi.generateNftTokenId({ collection, minter }))
+  if (nftTokenId !== undefined) {
+    return nftTokenId
+  }
+  return wrapInRetry(() => nftCollectionApi.generateNftTokenId({ collection, minter }))
 }

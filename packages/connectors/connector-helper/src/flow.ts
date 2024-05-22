@@ -6,11 +6,11 @@ import type { MattelProviderConnectionResult } from "@rarible/connector-mattel"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 export function mapFlowWallet<O>(
-	provider: AbstractConnectionProvider<O, FlowProviderConnectionResult | MattelProviderConnectionResult>
+  provider: AbstractConnectionProvider<O, FlowProviderConnectionResult | MattelProviderConnectionResult>,
 ): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new FlowWallet(state.fcl, "auth" in state ? state.auth : undefined),
-		address: state.address,
-		blockchain: Blockchain.FLOW,
-	}))
+  return provider.map(state => ({
+    wallet: new FlowWallet(state.fcl, "auth" in state ? state.auth : undefined),
+    address: state.address,
+    blockchain: Blockchain.FLOW,
+  }))
 }

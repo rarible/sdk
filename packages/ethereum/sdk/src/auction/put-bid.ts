@@ -21,101 +21,93 @@ import { createEthereumAuctionContract } from "./contracts/auction"
 import { AUCTION_BID_DATA_V1, AUCTION_DATA_TYPE, calculatePartsSum, getAuctionOperationOptions } from "./common"
 
 export type PutBidRequest = {
-	hash: string
-	priceDecimal: BigNumber
-	originFees?: Part[]
+  hash: string
+  priceDecimal: BigNumber
+  originFees?: Part[]
 }
 export type PutAuctionBidAction = Action<"approve" | "sign", PutBidRequest, EthereumTransaction>
 
 export class PutAuctionBid {
-	constructor(
-		private readonly ethereum: Maybe<Ethereum>,
-		private readonly send: SendFunction,
-		private readonly getConfig: GetConfigByChainId,
-		private readonly env: EthereumNetwork,
-		private readonly approve: ApproveFunction,
-		private readonly getApis: () => Promise<RaribleEthereumApis>,
-	) {}
+  constructor(
+    private readonly ethereum: Maybe<Ethereum>,
+    private readonly send: SendFunction,
+    private readonly getConfig: GetConfigByChainId,
+    private readonly env: EthereumNetwork,
+    private readonly approve: ApproveFunction,
+    private readonly getApis: () => Promise<RaribleEthereumApis>,
+  ) {}
 
-	private async getBaseFee() {
-		return getBaseFee(this.env, this.getApis, "AUCTION")
-	}
+  private async getBaseFee() {
+    return getBaseFee(this.env, this.getApis, "AUCTION")
+  }
 
-	readonly putBid: PutAuctionBidAction = Action.create({
-		id: "approve" as const,
-		run: async (request: PutBidRequest) => {
-			if (!this.ethereum) {
-				throw new Error("Wallet is undefined")
-			}
-			const apis = await this.getApis()
-			const auction = await apis.auction.getAuctionByHash({ hash: request.hash })
-			this.validate(request, auction)
+  readonly putBid: PutAuctionBidAction = Action.create({
+    id: "approve" as const,
+    run: async (request: PutBidRequest) => {
+      if (!this.ethereum) {
+        throw new Error("Wallet is undefined")
+      }
+      const apis = await this.getApis()
+      const auction = await apis.auction.getAuctionByHash({ hash: request.hash })
+      this.validate(request, auction)
 
-			const price = toBigNumber((await getPrice(this.ethereum, auction.buy, request.priceDecimal)).toString())
+      const price = toBigNumber((await getPrice(this.ethereum, auction.buy, request.priceDecimal)).toString())
 
-			if (auction.buy.assetClass !== "ETH") {
-				await waitTx(
-					this.approve(
-						toAddress(await this.ethereum.getFrom()),
-						{ assetType: auction.buy, value: price },
-						true
-					)
-				)
-			}
-			return { request, auction, price }
-		},
-	})
-		.thenStep({
-			id: "sign" as const,
-			run: async ({ request, auction, price }: { request: PutBidRequest, auction: Auction, price: BigNumber}) => {
-				if (!this.ethereum) {
-					throw new Error("Wallet is undefined")
-				}
-				const config = getNetworkConfigByChainId(await this.ethereum.getChainId())
-				const bidderOriginFees = request.originFees || []
-				const bidData = this.ethereum.encodeParameter(AUCTION_BID_DATA_V1, {
-					payouts: [],
-					originFees: bidderOriginFees,
-				})
-				const bid = {
-					amount: price,
-					dataType: AUCTION_DATA_TYPE,
-					data: bidData,
-				}
-				const protocolFee = await this.getBaseFee()
-				const totalFees = calculatePartsSum(bidderOriginFees.concat(auction.data.originFees)) + protocolFee
-				const options = getAuctionOperationOptions(auction.buy, price, totalFees)
-				const contract = createEthereumAuctionContract(this.ethereum, config.auction)
-				return this.send(
-					contract.functionCall("putBid", auction.auctionId, bid),
-					options
-				)
-			},
-		})
+      if (auction.buy.assetClass !== "ETH") {
+        await waitTx(
+          this.approve(toAddress(await this.ethereum.getFrom()), { assetType: auction.buy, value: price }, true),
+        )
+      }
+      return { request, auction, price }
+    },
+  }).thenStep({
+    id: "sign" as const,
+    run: async ({ request, auction, price }: { request: PutBidRequest; auction: Auction; price: BigNumber }) => {
+      if (!this.ethereum) {
+        throw new Error("Wallet is undefined")
+      }
+      const config = getNetworkConfigByChainId(await this.ethereum.getChainId())
+      const bidderOriginFees = request.originFees || []
+      const bidData = this.ethereum.encodeParameter(AUCTION_BID_DATA_V1, {
+        payouts: [],
+        originFees: bidderOriginFees,
+      })
+      const bid = {
+        amount: price,
+        dataType: AUCTION_DATA_TYPE,
+        data: bidData,
+      }
+      const protocolFee = await this.getBaseFee()
+      const totalFees = calculatePartsSum(bidderOriginFees.concat(auction.data.originFees)) + protocolFee
+      const options = getAuctionOperationOptions(auction.buy, price, totalFees)
+      const contract = createEthereumAuctionContract(this.ethereum, config.auction)
+      return this.send(contract.functionCall("putBid", auction.auctionId, bid), options)
+    },
+  })
 
-	validate(request: PutBidRequest, auction: Auction): boolean {
-		if (auction.status !== AuctionStatus.ACTIVE) {
-			throw new Error(`Auction status is ${auction.status}, expected ${AuctionStatus.ACTIVE}`)
-		}
+  validate(request: PutBidRequest, auction: Auction): boolean {
+    if (auction.status !== AuctionStatus.ACTIVE) {
+      throw new Error(`Auction status is ${auction.status}, expected ${AuctionStatus.ACTIVE}`)
+    }
 
-		const price = toBn(request.priceDecimal)
-		if (price.isNaN() || !price.isPositive()) {
-			throw new Error("Wrong bid price")
-		}
+    const price = toBn(request.priceDecimal)
+    if (price.isNaN() || !price.isPositive()) {
+      throw new Error("Wrong bid price")
+    }
 
-		if (auction.lastBid) {
-			const lastBid = toBn(auction.lastBid.amount)
-			const minimalNextPrice = lastBid.plus(auction.minimalStep)
-			if (minimalNextPrice.isLessThan(price)) {
-				throw new Error("Bid price should be greater")
-			}
-		} else {
-			if (price.isLessThan(auction.minimalPrice)) {
-				throw new Error("Bid price should be greater than minimal price")
-			}
-		}
-		validateParts(request.originFees)
+    if (auction.lastBid) {
+      const lastBid = toBn(auction.lastBid.amount)
+      const minimalNextPrice = lastBid.plus(auction.minimalStep)
+      if (minimalNextPrice.isLessThan(price)) {
+        throw new Error("Bid price should be greater")
+      }
+    } else {
+      if (price.isLessThan(auction.minimalPrice)) {
+        throw new Error("Bid price should be greater than minimal price")
+      }
+    }
+    validateParts(request.originFees)
 
-		return true
-	}
+    return true
+  }
 }
