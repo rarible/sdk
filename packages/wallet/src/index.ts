@@ -1,5 +1,6 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Fcl } from "@rarible/fcl-types"
+import { TextEncoder } from "text-encoding"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { ImxWallet } from "@rarible/immutable-wallet"

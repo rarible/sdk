@@ -1,6 +1,12 @@
-import "dotenv/config"
+import "./setup"
 import { app } from "./app"
+import { readEnvSafe } from "./utils/read-env"
 
-app.listen(process.env.PORT || 3000, () => {
-  console.log("Rarible tx backend listening...")
+const port = parseInt(readEnvSafe("PORT") || "3000")
+app.listen(port, () => {
+  console.log(`Rarible tx backend listening on port ${port}`)
+})
+
+process.on("unhandledRejection", err => {
+  console.error("unhandledRejection", err)
 })
