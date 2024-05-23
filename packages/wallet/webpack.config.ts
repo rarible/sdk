@@ -1,6 +1,8 @@
-const path = require("path")
+import path from "node:path"
+import type { Configuration } from "webpack"
 
-module.exports = {
+const webpackConfig: Configuration = {
+  mode: "production",
   entry: "./build/index.js",
   output: {
     path: path.resolve(__dirname, "umd"),
@@ -15,8 +17,9 @@ module.exports = {
       stream: require.resolve("stream-browserify"),
     },
   },
-  mode: "production",
   optimization: {
     minimize: true,
   },
 }
+
+export default webpackConfig

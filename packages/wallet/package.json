@@ -1,9 +1,12 @@
 {
   "name": "@rarible/sdk-wallet",
   "version": "0.13.68-fix.23",
-  "homepage": "",
+  "homepage": "https://github.com/rarible/sdk/",
   "license": "ISC",
   "exports": {
+    "./package.json": "./package.json",
+    "./build/": "./build/",
+    "./esm/": "./esm/",
     ".": {
       "types": {
         "require": "./build/index.d.ts",
@@ -13,7 +16,6 @@
       "import": "./esm/index.js",
       "default": "./build/index.js"
     },
-    "./build/": "./build/",
     "./*": {
       "types": {
         "require": "./build/*.d.ts",
@@ -24,9 +26,9 @@
       "default": "./build/*.js"
     }
   },
-  "main": "build/index.js",
-  "module": "esm/index.js",
-  "types": "build/index.d.ts",
+  "main": "./build/index.js",
+  "module": "./esm/index.js",
+  "types": "./build/index.d.ts",
   "files": [
     "build",
     "umd",
@@ -34,13 +36,12 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:cjs": "tsc --project tsconfig.cjs.json",
-    "build:esm": "tsc --project tsconfig.esm.json",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json",
     "build:umd": "webpack",
     "clean": "run-s clean:*",
-    "clean:build": "rimraf ./build",
+    "clean:build": "rimraf ./build ./esm ./umd",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
-    "clean:umd": "rimraf ./umd",
     "test": "jest --runInBand --forceExit --silent",
     "verify": "tsc"
   },
@@ -53,6 +54,7 @@
     "@rarible/ethers-ethereum": "^0.13.68-fix.23",
     "@rarible/fcl-types": "~0.5.56",
     "@rarible/flow-sdk": "~0.5.78-fix.3",
+    "@rarible/solana-common": "^0.13.68-fix.23",
     "@rarible/solana-wallet": "^0.13.68-fix.23",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/types": "~0.9.26",

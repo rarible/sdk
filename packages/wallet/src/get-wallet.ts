@@ -1,5 +1,4 @@
 import type Web3 from "web3"
-import type { TypedDataSigner, Signer } from "@ethersproject/abstract-signer"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
@@ -8,17 +7,18 @@ import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
 import { AptosSdkWallet, isExternalAccount } from "@rarible/aptos-wallet"
-import type { ExternalAccount } from "@rarible/aptos-wallet"
-import type { BlockchainWallet } from "./"
-import { AptosWallet, EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./"
-import { isBlockchainWallet } from "./"
-import { ImmutableXWallet } from "./"
-
-export type BlockchainProvider = Ethereum | SolanaSigner | TezosProvider | Fcl
-type EtherSigner = TypedDataSigner & Signer
-export type EthereumProvider = Web3 | EtherSigner | ImxWallet
-export type AptosProvider = ExternalAccount
-export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | EthereumProvider | AptosProvider
+import type { ExternalAccount as AptosProvider } from "@rarible/aptos-wallet"
+import {
+  AptosWallet,
+  ImmutableXWallet,
+  EthereumWallet,
+  FlowWallet,
+  SolanaWallet,
+  TezosWallet,
+  isBlockchainWallet,
+} from "./wallets"
+import type { BlockchainWallet } from "./wallets"
+import type { EtherSigner, RaribleSdkProvider } from "./domain"
 
 export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet {
   if (isBlockchainWallet(provider)) return provider
