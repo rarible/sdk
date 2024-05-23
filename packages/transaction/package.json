@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "jest --runInBand",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
@@ -34,11 +36,7 @@
     "@babel/plugin-transform-runtime": "^7.15.8",
     "@babel/plugin-transform-typescript": "^7.8.3",
     "@babel/preset-env": "^7.8.3",
-    "@babel/preset-typescript": "^7.14.5",
-    "@types/jest": "^27.0.2",
-    "jest": "^27.2.4",
-    "jest-junit": "^15.0.0",
-    "ts-jest": "^27.0.3"
+    "@babel/preset-typescript": "^7.14.5"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

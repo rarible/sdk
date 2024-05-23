@@ -16,76 +16,95 @@ import { createCollection } from "../../../common/atoms-tests/create-collection"
 import { deployCollectionDeployRequest } from "../../common/defaults"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallets: { creator: BlockchainWallet, buyer: BlockchainWallet },
-	deployRequest: CreateCollectionRequestSimplified,
-	mintAndSellRequest: (address: UnionAddress) => MintAndSellRequest,
-	buyAmount: number,
-	creatorBalance: number,
-	mintSellActivities: Array<ActivityType>
+  blockchain: Blockchain
+  description: string
+  wallets: { creator: BlockchainWallet; buyer: BlockchainWallet }
+  deployRequest: CreateCollectionRequestSimplified
+  mintAndSellRequest: (address: UnionAddress) => MintAndSellRequest
+  buyAmount: number
+  creatorBalance: number
+  mintSellActivities: Array<ActivityType>
 }[] {
-	return [
-		{
-			blockchain: Blockchain.SOLANA,
-			description: "NFT <=> SOLANA_SOL",
-			wallets: {
-				creator: getSolanaWallet(0),
-				buyer: getSolanaWallet(1),
-			},
-			deployRequest: deployCollectionDeployRequest,
-			mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
-				return {
-					uri: testsConfig.variables.SOLANA_URI,
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-					price: "0.001",
-					currency: {
-						"@type": "SOLANA_SOL",
-					},
-				}
-			},
-			buyAmount: 1,
-			creatorBalance: 0,
-			mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.SOLANA,
+      description: "NFT <=> SOLANA_SOL",
+      wallets: {
+        creator: getSolanaWallet(0),
+        buyer: getSolanaWallet(1),
+      },
+      deployRequest: deployCollectionDeployRequest,
+      mintAndSellRequest: (walletAddress: UnionAddress): MintAndSellRequest => {
+        return {
+          uri: testsConfig.variables.SOLANA_URI,
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+          price: "0.001",
+          currency: {
+            "@type": "SOLANA_SOL",
+          },
+        }
+      },
+      buyAmount: 1,
+      creatorBalance: 0,
+      mintSellActivities: [ActivityType.MINT, ActivityType.LIST],
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain mint-and-sell => buy", (suite) => {
-	const {
-		creator: creatorWallet,
-		buyer: buyerWallet,
-	} = suite.wallets
-	const creatorSdk = createSdk(suite.blockchain, creatorWallet)
-	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
+describe.each(suites())("$blockchain mint-and-sell => buy", suite => {
+  const { creator: creatorWallet, buyer: buyerWallet } = suite.wallets
+  const creatorSdk = createSdk(suite.blockchain, creatorWallet)
+  const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
-	test(suite.description, async () => {
-		const walletAddressCreator = await getWalletAddressFull(creatorWallet)
-		const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
+  test(suite.description, async () => {
+    const walletAddressCreator = await getWalletAddressFull(creatorWallet)
+    const walletAddressBuyer = await getWalletAddressFull(buyerWallet)
 
-		const { address: collectionId } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
-		const collection = await getCollection(creatorSdk, collectionId)
+    const { address: collectionId } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
+    const collection = await getCollection(creatorSdk, collectionId)
 
-		const mintAndSellResponse = await mintAndSell(creatorSdk, creatorWallet, { collection },
-			suite.mintAndSellRequest(walletAddressCreator.unionAddress))
+    const mintAndSellResponse = await mintAndSell(
+      creatorSdk,
+      creatorWallet,
+      { collection },
+      suite.mintAndSellRequest(walletAddressCreator.unionAddress),
+    )
 
-		await getActivitiesByItem(creatorSdk, mintAndSellResponse.itemId,
-			[ActivityType.MINT, ActivityType.LIST], suite.mintSellActivities)
+    await getActivitiesByItem(
+      creatorSdk,
+      mintAndSellResponse.itemId,
+      [ActivityType.MINT, ActivityType.LIST],
+      suite.mintSellActivities,
+    )
 
-		await buy(buyerSdk, buyerWallet, mintAndSellResponse.itemId,
-			{ orderId: mintAndSellResponse.orderId }, { amount: suite.buyAmount })
+    await buy(
+      buyerSdk,
+      buyerWallet,
+      mintAndSellResponse.itemId,
+      { orderId: mintAndSellResponse.orderId },
+      { amount: suite.buyAmount },
+    )
 
-		await awaitForOwnershipValue(buyerSdk, mintAndSellResponse.itemId,
-			walletAddressBuyer.address, toBigNumber(String(suite.buyAmount)))
+    await awaitForOwnershipValue(
+      buyerSdk,
+      mintAndSellResponse.itemId,
+      walletAddressBuyer.address,
+      toBigNumber(String(suite.buyAmount)),
+    )
 
-		await getActivitiesByItem(creatorSdk, mintAndSellResponse.itemId,
-			[ActivityType.SELL, ActivityType.TRANSFER, ActivityType.MINT, ActivityType.LIST],
-			[ActivityType.TRANSFER, ActivityType.SELL, ActivityType.LIST, ActivityType.MINT])
-	})
+    await getActivitiesByItem(
+      creatorSdk,
+      mintAndSellResponse.itemId,
+      [ActivityType.SELL, ActivityType.TRANSFER, ActivityType.MINT, ActivityType.LIST],
+      [ActivityType.TRANSFER, ActivityType.SELL, ActivityType.LIST, ActivityType.MINT],
+    )
+  })
 })

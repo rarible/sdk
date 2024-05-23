@@ -13,7 +13,7 @@ interface ITransferFormProps {
 	prepare: PrepareTransferResponse
 }
 
-export function TransferForm({ disabled, onComplete, prepare}: ITransferFormProps) {
+export function TransferForm({ disabled, onComplete, prepare }: ITransferFormProps) {
 	const form = useForm()
 	const { result, setError } = useRequestResult()
 

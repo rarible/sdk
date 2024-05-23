@@ -9,38 +9,34 @@ import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplif
 import { parseFlowAddressFromUnionAddress, parseFlowItemIdFromUnionItemId } from "./common/converters"
 
 export class FlowTransfer {
-	constructor(
-		private sdk: FlowSdk,
-		private network: FlowNetwork,
-	) {
-		this.transfer = this.transfer.bind(this)
-		this.transferBasic = this.transferBasic.bind(this)
-	}
+  constructor(
+    private sdk: FlowSdk,
+    private network: FlowNetwork,
+  ) {
+    this.transfer = this.transfer.bind(this)
+    this.transferBasic = this.transferBasic.bind(this)
+  }
 
-	async transfer(prepare: PrepareTransferRequest) {
-		const {
-			itemId,
-			contract,
-		} = parseFlowItemIdFromUnionItemId(prepare.itemId)
+  async transfer(prepare: PrepareTransferRequest) {
+    const { itemId, contract } = parseFlowItemIdFromUnionItemId(prepare.itemId)
 
-		return {
-			multiple: false,
-			maxAmount: toBigNumber("1"),
-			submit: Action.create({
-				id: "transfer" as const,
-				run: async (request: Omit<TransferRequest, "amount">) => {
-					const toAddress = parseFlowAddressFromUnionAddress(request.to)
-					// @todo remove parseInt when strings are supports by flow-sdk
-					const tx = await this.sdk.nft.transfer(contract, parseInt(itemId), toAddress)
-					return new BlockchainFlowTransaction(tx, this.network)
-				},
-			}),
-		}
-	}
+    return {
+      multiple: false,
+      maxAmount: toBigNumber("1"),
+      submit: Action.create({
+        id: "transfer" as const,
+        run: async (request: Omit<TransferRequest, "amount">) => {
+          const toAddress = parseFlowAddressFromUnionAddress(request.to)
+          // @todo remove parseInt when strings are supports by flow-sdk
+          const tx = await this.sdk.nft.transfer(contract, parseInt(itemId), toAddress)
+          return new BlockchainFlowTransaction(tx, this.network)
+        },
+      }),
+    }
+  }
 
-	async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
-		const response = await this.transfer(request)
-		return response.submit(request)
-	}
-
+  async transferBasic(request: TransferSimplifiedRequest): Promise<IBlockchainTransaction> {
+    const response = await this.transfer(request)
+    return response.submit(request)
+  }
 }

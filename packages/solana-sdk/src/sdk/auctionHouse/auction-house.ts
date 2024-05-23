@@ -10,96 +10,73 @@ import { getActionHouseEscrowWithdrawInstructions } from "./methods/escrow-withd
 import { getActionHouseEscrowDepositInstructions } from "./methods/escrow-deposit"
 
 export interface IGetEscrowBalanceRequest {
-	auctionHouse: PublicKey
-	signer: SolanaSigner
-	wallet: PublicKey
+  auctionHouse: PublicKey
+  signer: SolanaSigner
+  wallet: PublicKey
 }
 
 export interface IWithdrawEscrowRequest {
-	auctionHouse: PublicKey
-	signer: SolanaSigner
-	amount: BigNumberValue
+  auctionHouse: PublicKey
+  signer: SolanaSigner
+  amount: BigNumberValue
 }
 
 export interface IDepositEscrowRequest {
-	auctionHouse: PublicKey
-	signer: SolanaSigner
-	amount: BigNumberValue
+  auctionHouse: PublicKey
+  signer: SolanaSigner
+  amount: BigNumberValue
 }
 
 export interface ISolanaAuctionHouseSdk {
-	getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<BigNumber>
-	withdrawEscrow(request: IWithdrawEscrowRequest): Promise<PreparedTransaction>
-	depositEscrow(request: IDepositEscrowRequest): Promise<PreparedTransaction>
+  getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<BigNumber>
+  withdrawEscrow(request: IWithdrawEscrowRequest): Promise<PreparedTransaction>
+  depositEscrow(request: IDepositEscrowRequest): Promise<PreparedTransaction>
 }
 
 export class SolanaAuctionHouseSdk implements ISolanaAuctionHouseSdk {
-	constructor(private readonly connection: Connection, private readonly logger: DebugLogger) {
-	}
+  constructor(
+    private readonly connection: Connection,
+    private readonly logger: DebugLogger,
+  ) {}
 
-	async getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<BigNumber> {
-		const anchorProgram = await loadAuctionHouseProgram(this.connection, request.signer)
-		const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
+  async getEscrowBalance(request: IGetEscrowBalanceRequest): Promise<BigNumber> {
+    const anchorProgram = await loadAuctionHouseProgram(this.connection, request.signer)
+    const auctionHouseObj = await anchorProgram.account.auctionHouse.fetch(request.auctionHouse)
 
-		const [escrowPaymentAccount] = await getAuctionHouseBuyerEscrow(
-			request.auctionHouse,
-			request.wallet,
-		)
+    const [escrowPaymentAccount] = await getAuctionHouseBuyerEscrow(request.auctionHouse, request.wallet)
 
-		const amount = await getTokenAmount(
-			this.connection,
-			escrowPaymentAccount,
-			auctionHouseObj.treasuryMint,
-		)
+    const amount = await getTokenAmount(this.connection, escrowPaymentAccount, auctionHouseObj.treasuryMint)
 
-		this.logger.log(
-			`${request.wallet.toString()} escrow balance: ${amount.toString()} (AuctionHouse: ${request.auctionHouse.toString()})`
-		)
+    this.logger.log(
+      `${request.wallet.toString()} escrow balance: ${amount.toString()} (AuctionHouse: ${request.auctionHouse.toString()})`,
+    )
 
-		return amount
-	}
+    return amount
+  }
 
-	async withdrawEscrow(request: IWithdrawEscrowRequest): Promise<PreparedTransaction> {
-		const instructions = await getActionHouseEscrowWithdrawInstructions({
-			connection: this.connection,
-			auctionHouse: request.auctionHouse,
-			signer: request.signer,
-			amount: request.amount,
-		})
+  async withdrawEscrow(request: IWithdrawEscrowRequest): Promise<PreparedTransaction> {
+    const instructions = await getActionHouseEscrowWithdrawInstructions({
+      connection: this.connection,
+      auctionHouse: request.auctionHouse,
+      signer: request.signer,
+      amount: request.amount,
+    })
 
-		return new PreparedTransaction(
-			this.connection,
-			instructions,
-			request.signer,
-			this.logger,
-			() => {
-				this.logger.log("Withdrew",
-				 	request.amount,
-				 	"from Auction House Escrow account",
-				)
-			}
-		)
-	}
+    return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
+      this.logger.log("Withdrew", request.amount, "from Auction House Escrow account")
+    })
+  }
 
-	async depositEscrow(request: IDepositEscrowRequest): Promise<PreparedTransaction> {
-		const instructions = await getActionHouseEscrowDepositInstructions({
-			connection: this.connection,
-			auctionHouse: request.auctionHouse,
-			signer: request.signer,
-			amount: request.amount,
-		})
+  async depositEscrow(request: IDepositEscrowRequest): Promise<PreparedTransaction> {
+    const instructions = await getActionHouseEscrowDepositInstructions({
+      connection: this.connection,
+      auctionHouse: request.auctionHouse,
+      signer: request.signer,
+      amount: request.amount,
+    })
 
-		return new PreparedTransaction(
-			this.connection,
-			instructions,
-			request.signer,
-			this.logger,
-			() => {
-				this.logger.log("Deposited",
-				 	request.amount,
-				 	"to Auction House Escrow account",
-				)
-			}
-		)
-	}
+    return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
+      this.logger.log("Deposited", request.amount, "to Auction House Escrow account")
+    })
+  }
 }

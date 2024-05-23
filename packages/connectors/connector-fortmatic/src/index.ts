@@ -8,54 +8,54 @@ import { AbstractConnectionProvider, cache, connectToWeb3, getStateConnecting } 
 type FM = WidgetMode
 
 export type FortmaticConfig = {
-	apiKey: string,
-	ethNetwork?: QueryParameters["ETH_NETWORK"]
+  apiKey: string
+  ethNetwork?: QueryParameters["ETH_NETWORK"]
 }
 
 const PROVIDER_ID = "fortmatic" as const
 
-export class FortmaticConnectionProvider extends
-	AbstractConnectionProvider<typeof PROVIDER_ID, EthereumProviderConnectionResult> {
-	private readonly instance: Observable<FM>
-	private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
+export class FortmaticConnectionProvider extends AbstractConnectionProvider<
+  typeof PROVIDER_ID,
+  EthereumProviderConnectionResult
+> {
+  private readonly instance: Observable<FM>
+  private readonly connection: Observable<ConnectionState<EthereumProviderConnectionResult>>
 
-	constructor(
-		private readonly config: FortmaticConfig,
-	) {
-		super()
-		this.instance = cache(() => this._connect())
-		this.connection = this.instance.pipe(
-			mergeMap(instance => {
-				const disconnect = () => instance.user.logout()
-				return connectToWeb3(instance.getProvider(), { disconnect })
-			}),
-			startWith(getStateConnecting({ providerId: PROVIDER_ID })),
-		)
-	}
+  constructor(private readonly config: FortmaticConfig) {
+    super()
+    this.instance = cache(() => this._connect())
+    this.connection = this.instance.pipe(
+      mergeMap(instance => {
+        const disconnect = () => instance.user.logout()
+        return connectToWeb3(instance.getProvider(), { disconnect })
+      }),
+      startWith(getStateConnecting({ providerId: PROVIDER_ID })),
+    )
+  }
 
-	private async _connect(): Promise<FM> {
-		const { default: Fortmatic } = await import("fortmatic")
-		return new Fortmatic(this.config.apiKey)
-	}
+  private async _connect(): Promise<FM> {
+    const { default: Fortmatic } = await import("fortmatic")
+    return new Fortmatic(this.config.apiKey)
+  }
 
-	getId(): string {
-		return PROVIDER_ID
-	}
+  getId(): string {
+    return PROVIDER_ID
+  }
 
-	getConnection() {
-		return this.connection
-	}
+  getConnection() {
+    return this.connection
+  }
 
-	getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
-		return Promise.resolve(PROVIDER_ID)
-	}
+  getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
+    return Promise.resolve(PROVIDER_ID)
+  }
 
-	async isAutoConnected(): Promise<boolean> {
-		return false
-	}
+  async isAutoConnected(): Promise<boolean> {
+    return false
+  }
 
-	async isConnected(): Promise<boolean> {
-		const sdk = await this.instance.pipe(first()).toPromise()
-		return !!(await sdk?.user.isLoggedIn())
-	}
+  async isConnected(): Promise<boolean> {
+    const sdk = await this.instance.pipe(first()).toPromise()
+    return !!(await sdk?.user.isLoggedIn())
+  }
 }

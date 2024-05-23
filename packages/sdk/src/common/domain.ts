@@ -4,26 +4,26 @@ import type { SupportedBlockchain } from "@rarible/sdk-common"
 
 // @todo draft. probably will be changed in future
 export type CurrencyType = {
-	blockchain: SupportedBlockchain
-	type: CurrencySubType
+  blockchain: SupportedBlockchain
+  type: CurrencySubType
 }
 
 export type CurrencySubType = "NATIVE" | "ERC20" | "TEZOS_FT"
 
 export interface AbstractPrepareResponse<Id, In, Out> {
-	submit: Action<Id, In, Out>
+  submit: Action<Id, In, Out>
 }
 
 export type RequestCurrency = ApiClient.CurrencyId | RequestCurrencyAssetType
 
 export type RequestCurrencyAssetType =
-	| ApiClient.EthErc20AssetType
-	| ApiClient.EthEthereumAssetType
-	| ApiClient.FlowAssetTypeFt
-	| ApiClient.TezosXTZAssetType
-	| ApiClient.TezosFTAssetType
-	| ApiClient.SolanaNftAssetType
-	| ApiClient.SolanaFtAssetType
-	| ApiClient.SolanaSolAssetType
-	| ApiClient.NativeCurrencyAssetType
-	| ApiClient.TokenCurrencyAssetType
+  | ApiClient.EthErc20AssetType
+  | ApiClient.EthEthereumAssetType
+  | ApiClient.FlowAssetTypeFt
+  | ApiClient.TezosXTZAssetType
+  | ApiClient.TezosFTAssetType
+  | ApiClient.SolanaNftAssetType
+  | ApiClient.SolanaFtAssetType
+  | ApiClient.SolanaSolAssetType
+  | ApiClient.NativeCurrencyAssetType
+  | ApiClient.TokenCurrencyAssetType

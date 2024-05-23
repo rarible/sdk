@@ -11,158 +11,167 @@ import { getCollection } from "../../../common/helpers"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
 import {
-	getAllCollections, getCollectionsByOwner, verifyCollectionsByBlockchain,
-	verifyCollectionsContainsCollection, verifyCollectionsOwner,
+  getAllCollections,
+  getCollectionsByOwner,
+  verifyCollectionsByBlockchain,
+  verifyCollectionsContainsCollection,
+  verifyCollectionsOwner,
 } from "../../../common/api-helpers/collection-helper"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequestSimplified,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	activities: Array<ActivityType>
+  blockchain: Blockchain
+  description: string
+  wallet: BlockchainWallet
+  deployRequest: CreateCollectionRequestSimplified
+  mintRequest: (address: UnionAddress) => MintRequest
+  activities: Array<ActivityType>
 }[] {
-	return [
-		{
-			blockchain: Blockchain.ETHEREUM,
-			description: "ERC721",
-			wallet: getEthereumWallet(),
-			deployRequest: {
-				blockchain: Blockchain.ETHEREUM,
-				type: "ERC721",
-				name: "name",
-				symbol: "RARI",
-				baseURI: "https://ipfs.rarible.com",
-				contractURI: "https://ipfs.rarible.com",
-				isPublic: true,
-			} as CreateCollectionRequestSimplified,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "ipfs:/test",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			activities: [ActivityType.MINT],
-		},
-		{
-			blockchain: Blockchain.ETHEREUM,
-			description: "ERC721_lazy",
-			wallet: getEthereumWallet(),
-			deployRequest: {
-				blockchain: Blockchain.ETHEREUM,
-				type: "ERC721",
-				name: "name",
-				symbol: "RARI",
-				baseURI: "https://ipfs.rarible.com",
-				contractURI: "https://ipfs.rarible.com",
-				isPublic: false,
-				operators: [],
-			} as CreateCollectionRequestSimplified,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "ipfs:/test",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: true,
-					supply: 1,
-				}
-			},
-			activities: [],
-		},
-		{
-			blockchain: Blockchain.ETHEREUM,
-			description: "ERC1155",
-			wallet: getEthereumWallet(),
-			deployRequest: {
-				blockchain: Blockchain.ETHEREUM,
-				type: "ERC1155",
-				name: "name",
-				symbol: "RARI",
-				baseURI: "https://ipfs.rarible.com",
-				contractURI: "https://ipfs.rarible.com",
-				isPublic: true,
-			} as CreateCollectionRequestSimplified,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "ipfs:/test",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 14,
-				}
-			},
-			activities: [ActivityType.MINT],
-		},
-		{
-			blockchain: Blockchain.ETHEREUM,
-			description: "ERC1155_lazy",
-			wallet: getEthereumWallet(),
-			deployRequest: {
-				blockchain: Blockchain.ETHEREUM,
-				type: "ERC1155",
-				name: "name",
-				symbol: "RARI",
-				baseURI: "https://ipfs.rarible.com",
-				contractURI: "https://ipfs.rarible.com",
-				isPublic: false,
-				operators: [],
-			} as CreateCollectionRequestSimplified,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "ipfs:/test",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: true,
-					supply: 14,
-				}
-			},
-			activities: [],
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.ETHEREUM,
+      description: "ERC721",
+      wallet: getEthereumWallet(),
+      deployRequest: {
+        blockchain: Blockchain.ETHEREUM,
+        type: "ERC721",
+        name: "name",
+        symbol: "RARI",
+        baseURI: "https://ipfs.rarible.com",
+        contractURI: "https://ipfs.rarible.com",
+        isPublic: true,
+      } as CreateCollectionRequestSimplified,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "ipfs:/test",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      activities: [ActivityType.MINT],
+    },
+    {
+      blockchain: Blockchain.ETHEREUM,
+      description: "ERC721_lazy",
+      wallet: getEthereumWallet(),
+      deployRequest: {
+        blockchain: Blockchain.ETHEREUM,
+        type: "ERC721",
+        name: "name",
+        symbol: "RARI",
+        baseURI: "https://ipfs.rarible.com",
+        contractURI: "https://ipfs.rarible.com",
+        isPublic: false,
+        operators: [],
+      } as CreateCollectionRequestSimplified,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "ipfs:/test",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: true,
+          supply: 1,
+        }
+      },
+      activities: [],
+    },
+    {
+      blockchain: Blockchain.ETHEREUM,
+      description: "ERC1155",
+      wallet: getEthereumWallet(),
+      deployRequest: {
+        blockchain: Blockchain.ETHEREUM,
+        type: "ERC1155",
+        name: "name",
+        symbol: "RARI",
+        baseURI: "https://ipfs.rarible.com",
+        contractURI: "https://ipfs.rarible.com",
+        isPublic: true,
+      } as CreateCollectionRequestSimplified,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "ipfs:/test",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 14,
+        }
+      },
+      activities: [ActivityType.MINT],
+    },
+    {
+      blockchain: Blockchain.ETHEREUM,
+      description: "ERC1155_lazy",
+      wallet: getEthereumWallet(),
+      deployRequest: {
+        blockchain: Blockchain.ETHEREUM,
+        type: "ERC1155",
+        name: "name",
+        symbol: "RARI",
+        baseURI: "https://ipfs.rarible.com",
+        contractURI: "https://ipfs.rarible.com",
+        isPublic: false,
+        operators: [],
+      } as CreateCollectionRequestSimplified,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "ipfs:/test",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: true,
+          supply: 14,
+        }
+      },
+      activities: [],
+    },
+  ]
 }
 
-describe.each(suites()/*.filter((t) => t.description === "ERC1155")*/)("$blockchain deploy => mint", (suite) => {
-	const wallet = suite.wallet
-	const sdk = createSdk(suite.blockchain, wallet)
+describe.each(suites() /*.filter((t) => t.description === "ERC1155")*/)("$blockchain deploy => mint", suite => {
+  const wallet = suite.wallet
+  const sdk = createSdk(suite.blockchain, wallet)
 
-	test(suite.description, async () => {
-		const walletAddress = await getWalletAddressFull(wallet)
-		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
-		const collection = await getCollection(sdk, address)
+  test(suite.description, async () => {
+    const walletAddress = await getWalletAddressFull(wallet)
+    const { address } = await createCollection(sdk, wallet, suite.deployRequest)
+    const collection = await getCollection(sdk, address)
 
-		await retry(40, 3000, async () => {
-			const collectionsAll = await getAllCollections(sdk, [suite.blockchain], 10)
-			await verifyCollectionsByBlockchain(collectionsAll, suite.blockchain)
-			await verifyCollectionsContainsCollection(collectionsAll, address)
-		})
+    await retry(40, 3000, async () => {
+      const collectionsAll = await getAllCollections(sdk, [suite.blockchain], 10)
+      await verifyCollectionsByBlockchain(collectionsAll, suite.blockchain)
+      await verifyCollectionsContainsCollection(collectionsAll, address)
+    })
 
-		await retry(40, 3000, async () => {
-			const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
-			await verifyCollectionsByBlockchain(collectionsByOwner, suite.blockchain)
-			await verifyCollectionsOwner(collectionsByOwner, walletAddress.unionAddress)
-			await verifyCollectionsContainsCollection(collectionsByOwner, address)
-		})
+    await retry(40, 3000, async () => {
+      const collectionsByOwner = await getCollectionsByOwner(sdk, walletAddress.unionAddress, 10)
+      await verifyCollectionsByBlockchain(collectionsByOwner, suite.blockchain)
+      await verifyCollectionsOwner(collectionsByOwner, walletAddress.unionAddress)
+      await verifyCollectionsContainsCollection(collectionsByOwner, address)
+    })
 
-		const { nft } = await mint(sdk, wallet, { collection },
-			suite.mintRequest(walletAddress.unionAddress)
-		)
+    const { nft } = await mint(sdk, wallet, { collection }, suite.mintRequest(walletAddress.unionAddress))
 
-		await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
-	})
+    await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
+  })
 })

@@ -7,21 +7,23 @@ import { Logger } from "../logger"
 /**
  * Fill an bid order
  */
-export async function acceptBid(sdk: IRaribleSdk,
-						  wallet: BlockchainWallet,
-						  prepareFillOrderRequest: PrepareFillRequest,
-						  fillRequest: FillRequest): Promise<IBlockchainTransaction> {
-	try {
-		Logger.log("accept_bid, prepare_fill_order_request=", prepareFillOrderRequest)
-		const acceptBidPrepare = await sdk.order.acceptBid.prepare(prepareFillOrderRequest)
-		Logger.log("accept_bid, fill_request=", fillRequest)
+export async function acceptBid(
+  sdk: IRaribleSdk,
+  wallet: BlockchainWallet,
+  prepareFillOrderRequest: PrepareFillRequest,
+  fillRequest: FillRequest,
+): Promise<IBlockchainTransaction> {
+  try {
+    Logger.log("accept_bid, prepare_fill_order_request=", prepareFillOrderRequest)
+    const acceptBidPrepare = await sdk.order.acceptBid.prepare(prepareFillOrderRequest)
+    Logger.log("accept_bid, fill_request=", fillRequest)
 
-		const tx = await acceptBidPrepare.submit(fillRequest)
-		await tx.wait()
+    const tx = await acceptBidPrepare.submit(fillRequest)
+    await tx.wait()
 
-		// todo: add more checks for ownership
-		return tx
-	} catch (e: any) {
-		throw new Error(`Exception during accept bid: ${e.message ?? e.toString()}`)
-	}
+    // todo: add more checks for ownership
+    return tx
+  } catch (e: any) {
+    throw new Error(`Exception during accept bid: ${e.message ?? e.toString()}`)
+  }
 }

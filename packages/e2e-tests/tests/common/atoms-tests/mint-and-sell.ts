@@ -10,22 +10,24 @@ import { Logger } from "../logger"
 /**
  * Mint and sell NFT and check stock
  */
-export async function mintAndSell(sdk: IRaribleSdk,
-													 wallet: BlockchainWallet,
-													 prepareMintRequest: PrepareMintRequest,
-													 mintAndSellRequest: MintAndSellRequest): Promise<MintAndSellResponse> {
-	Logger.log("Minting token, prepare_mint_request=", prepareMintRequest)
-	// Get mint info
-	const prepareMintAndSellResponse = await sdk.nft.mintAndSell.prepare(prepareMintRequest)
+export async function mintAndSell(
+  sdk: IRaribleSdk,
+  wallet: BlockchainWallet,
+  prepareMintRequest: PrepareMintRequest,
+  mintAndSellRequest: MintAndSellRequest,
+): Promise<MintAndSellResponse> {
+  Logger.log("Minting token, prepare_mint_request=", prepareMintRequest)
+  // Get mint info
+  const prepareMintAndSellResponse = await sdk.nft.mintAndSell.prepare(prepareMintRequest)
 
-	Logger.log("mint_and_sell_request=", mintAndSellRequest)
-	// Mint token
-	const mintAndSellResponse = await prepareMintAndSellResponse.submit(mintAndSellRequest)
-	Logger.log("mint_and_sell_response", mintAndSellResponse)
-	if (mintAndSellResponse.type === MintType.ON_CHAIN) {
-		mintAndSellResponse.transaction.wait()
-	}
-	expect(mintAndSellResponse.itemId).not.toBe(null)
-	await awaitOrderStock(sdk, mintAndSellResponse.orderId, toBigNumber((mintAndSellRequest?.supply || 1).toString()))
-	return mintAndSellResponse
+  Logger.log("mint_and_sell_request=", mintAndSellRequest)
+  // Mint token
+  const mintAndSellResponse = await prepareMintAndSellResponse.submit(mintAndSellRequest)
+  Logger.log("mint_and_sell_response", mintAndSellResponse)
+  if (mintAndSellResponse.type === MintType.ON_CHAIN) {
+    mintAndSellResponse.transaction.wait()
+  }
+  expect(mintAndSellResponse.itemId).not.toBe(null)
+  await awaitOrderStock(sdk, mintAndSellResponse.orderId, toBigNumber((mintAndSellRequest?.supply || 1).toString()))
+  return mintAndSellResponse
 }

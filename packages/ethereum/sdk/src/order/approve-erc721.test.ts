@@ -9,37 +9,37 @@ import { approveErc721 as approveErc721Template } from "./approve-erc721"
  * @group provider/ganache
  */
 describe("approveErc721", () => {
-	const { provider, addresses } = createGanacheProvider()
-	const web3 = new Web3(provider as any)
-	const ethereum = new Web3Ethereum({ web3 })
-	const [from] = addresses
-	const send = getSendWithInjects()
+  const { provider, addresses } = createGanacheProvider()
+  const web3 = new Web3(provider as any)
+  const ethereum = new Web3Ethereum({ web3 })
+  const [from] = addresses
+  const send = getSendWithInjects()
 
-	const approveErc721 = approveErc721Template.bind(null, ethereum, send)
+  const approveErc721 = approveErc721Template.bind(null, ethereum, send)
 
-	const it = awaitAll({
-		testErc721: deployTestErc721(web3, "TST", "TST"),
-	})
+  const it = awaitAll({
+    testErc721: deployTestErc721(web3, "TST", "TST"),
+  })
 
-	test("should approve", async () => {
-		const tokenId = from + "b00000000000000000000001"
-		await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 200000 })
+  test("should approve", async () => {
+    const tokenId = from + "b00000000000000000000001"
+    await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 200000 })
 
-		const operator = randomAddress()
-		const tx = await approveErc721( toAddress(it.testErc721.options.address), from, operator)
-		await tx?.wait()
-		const result: boolean = await it.testErc721.methods.isApprovedForAll(from, operator).call()
-		expect(result).toBeTruthy()
-	})
+    const operator = randomAddress()
+    const tx = await approveErc721(toAddress(it.testErc721.options.address), from, operator)
+    await tx?.wait()
+    const result: boolean = await it.testErc721.methods.isApprovedForAll(from, operator).call()
+    expect(result).toBeTruthy()
+  })
 
-	test("should not approve if already approved", async () => {
-		const tokenId = from + "b00000000000000000000002"
-		await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 200000 })
+  test("should not approve if already approved", async () => {
+    const tokenId = from + "b00000000000000000000002"
+    await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 200000 })
 
-		const operator = randomAddress()
-		await sentTx(it.testErc721.methods.setApprovalForAll(operator, true), { from })
-		const result = await approveErc721( toAddress(it.testErc721.options.address), from, operator)
+    const operator = randomAddress()
+    await sentTx(it.testErc721.methods.setApprovalForAll(operator, true), { from })
+    const result = await approveErc721(toAddress(it.testErc721.options.address), from, operator)
 
-		expect(result === undefined).toBeTruthy()
-	})
+    expect(result === undefined).toBeTruthy()
+  })
 })

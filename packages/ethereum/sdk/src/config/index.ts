@@ -33,48 +33,48 @@ import { polygonAmoyConfig } from "./polygon-amoy"
 import { astarKyotoConfig } from "./astar-kyoto"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
-	mainnet: mainnetConfig,
-	mumbai: mumbaiConfig,
-	polygon: polygonConfig,
-	"amoy-polygon": polygonAmoyConfig,
-	"dev-ethereum": devEthereumConfig,
-	"dev-polygon": devPolygonConfig,
-	mantle: mantleConfig,
-	"testnet-mantle": mantleTestnetConfig,
-	testnet: testnetEthereumConfig,
-	"testnet-arbitrum": arbitrumTestnetConfig,
-	arbitrum: arbitrumConfig,
-	"testnet-zksync": zkSyncTestnetConfig,
-	zksync: zkSyncConfig,
-	chiliz: chilizConfig,
-	"testnet-chiliz": chilizTestnetConfig,
-	lightlink: lightlinkConfig,
-	"testnet-lightlink": testnetLightlinkConfig,
-	"testnet-rari": rariTestnetConfig,
-	rari: rariMainnetConfig,
-	zkatana: zkatanaConfig,
-	"astar-zkevm": astarZKEVMConfig,
-	"astar-kyoto": astarKyotoConfig,
-	base: baseConfig,
-	"base-sepolia": baseSepoliaConfig,
-	"testnet-celo": celoTestnetConfig,
-	celo: celoConfig,
-	"testnet-xai": xaiTestnetConfig,
-	xai: xaiConfig,
-	"testnet-fief": fiefTestnetConfig,
-	"testnet-kroma": kromaTestnetConfig,
-	kroma: kromaConfig,
+  mainnet: mainnetConfig,
+  mumbai: mumbaiConfig,
+  polygon: polygonConfig,
+  "amoy-polygon": polygonAmoyConfig,
+  "dev-ethereum": devEthereumConfig,
+  "dev-polygon": devPolygonConfig,
+  mantle: mantleConfig,
+  "testnet-mantle": mantleTestnetConfig,
+  testnet: testnetEthereumConfig,
+  "testnet-arbitrum": arbitrumTestnetConfig,
+  arbitrum: arbitrumConfig,
+  "testnet-zksync": zkSyncTestnetConfig,
+  zksync: zkSyncConfig,
+  chiliz: chilizConfig,
+  "testnet-chiliz": chilizTestnetConfig,
+  lightlink: lightlinkConfig,
+  "testnet-lightlink": testnetLightlinkConfig,
+  "testnet-rari": rariTestnetConfig,
+  rari: rariMainnetConfig,
+  zkatana: zkatanaConfig,
+  "astar-zkevm": astarZKEVMConfig,
+  "astar-kyoto": astarKyotoConfig,
+  base: baseConfig,
+  "base-sepolia": baseSepoliaConfig,
+  "testnet-celo": celoTestnetConfig,
+  celo: celoConfig,
+  "testnet-xai": xaiTestnetConfig,
+  xai: xaiConfig,
+  "testnet-fief": fiefTestnetConfig,
+  "testnet-kroma": kromaTestnetConfig,
+  kroma: kromaConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
-	return configDictionary[env]
+  return configDictionary[env]
 }
 
 export type GetConfigByChainId = () => Promise<EthereumConfig>
 
 const dictionaryFlat = Object.values(configDictionary)
 export function getNetworkConfigByChainId(chainId: number): EthereumConfig {
-	const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
-	if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
-	return config
+  const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
+  if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
+  return config
 }

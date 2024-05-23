@@ -1,11 +1,11 @@
 import type { AssetType, CollectionId, CurrencyId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import type {
-	PrepareOrderRequest,
-	PrepareOrderResponse,
-	PrepareOrderUpdateRequest,
-	PrepareOrderUpdateResponse,
-	UnionPart,
+  PrepareOrderRequest,
+  PrepareOrderResponse,
+  PrepareOrderUpdateRequest,
+  PrepareOrderUpdateResponse,
+  UnionPart,
 } from "../common"
 
 export type PrepareBidResponse = PrepareOrderResponse & GetConvertableValueFunction & {
@@ -18,22 +18,24 @@ export type PrepareBidResponse = PrepareOrderResponse & GetConvertableValueFunct
 export type PrepareBidUpdateResponse = PrepareOrderUpdateResponse & GetConvertableValueFunction
 
 export type GetConvertableValueFunction = {
-	getConvertableValue(request: GetConvertableValueRequest): Promise<GetConvertableValueResult>
+  getConvertableValue(request: GetConvertableValueRequest): Promise<GetConvertableValueResult>
 }
 
 export type GetConvertableValueRequest = {
-	assetType?: AssetType
-	currencyId?: CurrencyId
-	price: BigNumberValue
-	amount: number
-	originFees: UnionPart[]
+  assetType?: AssetType
+  currencyId?: CurrencyId
+  price: BigNumberValue
+  amount: number
+  originFees: UnionPart[]
 }
 
-export type GetConvertableValueResult = {
-	type: "insufficient" | "convertable"
-	currency: AssetType
-	value: BigNumberValue
-} | undefined
+export type GetConvertableValueResult =
+  | {
+      type: "insufficient" | "convertable"
+      currency: AssetType
+      value: BigNumberValue
+    }
+  | undefined
 
 /**
  * Create bid order
@@ -73,5 +75,5 @@ export type IBidUpdatePrepare = (request: PrepareOrderUpdateRequest) => Promise<
 export type PrepareBidRequest = PrepareOrderRequest | { collectionId: CollectionId }
 
 export type ConvertCurrencyRequest = {
-	price: BigNumberValue
+  price: BigNumberValue
 }

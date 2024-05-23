@@ -9,31 +9,29 @@ import { WalletType } from "@rarible/sdk-wallet"
 import { testsConfig } from "./config"
 
 export function createSdk(blockchain: Blockchain, wallet: BlockchainWallet): IRaribleSdk {
-	let env: RaribleSdkEnvironment = testsConfig.env as RaribleSdkEnvironment
-	let flowAuth: AuthWithPrivateKey = undefined
-	switch (blockchain) {
-		case Blockchain.FLOW:
-			env = "development"
-			flowAuth = wallet.walletType === WalletType.FLOW ? wallet.getAuth() : undefined
-			break
-		case Blockchain.TEZOS:
-			env = "testnet"
-			break
-		default:
-	}
+  let env: RaribleSdkEnvironment = testsConfig.env as RaribleSdkEnvironment
+  let flowAuth: AuthWithPrivateKey = undefined
+  switch (blockchain) {
+    case Blockchain.FLOW:
+      env = "development"
+      flowAuth = wallet.walletType === WalletType.FLOW ? wallet.getAuth() : undefined
+      break
+    case Blockchain.TEZOS:
+      env = "testnet"
+      break
+    default:
+  }
 
-	return createRaribleSdk(
-		wallet,
-		env,
-		{
-			logs: LogsLevel.DISABLED,
-			...(flowAuth ? {
-				blockchain: {
-					[WalletType.FLOW]: {
-						auth: flowAuth,
-					},
-				},
-			} : {}),
-		},
-	)
+  return createRaribleSdk(wallet, env, {
+    logs: LogsLevel.DISABLED,
+    ...(flowAuth
+      ? {
+          blockchain: {
+            [WalletType.FLOW]: {
+              auth: flowAuth,
+            },
+          },
+        }
+      : {}),
+  })
 }

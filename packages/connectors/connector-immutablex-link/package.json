@@ -10,7 +10,9 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
@@ -18,12 +20,6 @@
     "@rarible/connector": "^0.13.68-fix.22",
     "@rarible/connector-helper": "^0.13.68-fix.22",
     "@rarible/immutable-wallet": "^0.13.65"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
-    "ts-jest": "^27.0.3"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

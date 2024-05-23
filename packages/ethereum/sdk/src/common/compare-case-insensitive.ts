@@ -1,3 +1,3 @@
 export function compareCaseInsensitive(a?: string, b?: string) {
-	return a?.toLowerCase() === b?.toLowerCase()
+  return a?.toLowerCase() === b?.toLowerCase()
 }

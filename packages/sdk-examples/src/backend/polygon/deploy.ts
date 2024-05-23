@@ -1,7 +1,7 @@
-import {createRaribleSdk} from "@rarible/sdk"
-import {Blockchain} from "@rarible/api-client"
-import {updateNodeGlobalVars} from "../common"
-import {initWalletWeb3WithHDWalletWithEstimate} from "./common"
+import { createRaribleSdk } from "@rarible/sdk"
+import { Blockchain } from "@rarible/api-client"
+import { updateNodeGlobalVars } from "../common"
+import { initWalletWeb3WithHDWalletWithEstimate } from "./common"
 
 updateNodeGlobalVars()
 
@@ -13,7 +13,7 @@ async function deploy() {
 		const raribleSdkWallet = await initWalletWeb3WithHDWalletWithEstimate(process.env["ETH_PRIVATE_KEY"])
 		const raribleSdk = createRaribleSdk(raribleSdkWallet, "testnet")
 
-		const {address, tx} = await raribleSdk.nft.createCollection({
+		const { address, tx } = await raribleSdk.nft.createCollection({
 			blockchain: Blockchain.POLYGON,
 			type: "ERC721",
 			name: "name",

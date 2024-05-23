@@ -1,11 +1,11 @@
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import type {
-	BasePrepareOrderResponse,
-	OrderInternalRequest,
-	OrderRequest,
-	PrepareOrderRequest,
-	PrepareOrderUpdateRequest,
-	PrepareOrderUpdateResponse,
+  BasePrepareOrderResponse,
+  OrderInternalRequest,
+  OrderRequest,
+  PrepareOrderRequest,
+  PrepareOrderUpdateRequest,
+  PrepareOrderUpdateResponse,
 } from "../common"
 
 /**
@@ -54,8 +54,8 @@ export type PrepareSellSpecificResponse = {
 }
 
 export type PrepareSellInternalRequest = {
-	/**
+  /**
    * Blockchain of request
    */
-	blockchain: SupportedBlockchain
+  blockchain: SupportedBlockchain
 }

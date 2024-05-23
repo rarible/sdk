@@ -28,62 +28,59 @@ export type IPreprocessMeta = (meta: PreprocessMetaRequest) => PreprocessMetaRes
  * @property {string | undefined} external
  * @property {TokenMetadataAttribute[]} attributes
  */
-export type PreprocessMetaRequest =
-  GeneralMetaRequest
-  | SolanaMetaRequest
-  | AptosMetaRequest
+export type PreprocessMetaRequest = GeneralMetaRequest | SolanaMetaRequest | AptosMetaRequest
 
 export type GeneralMetaRequest = {
-	blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.TEZOS | Blockchain.FLOW
+  blockchain: Blockchain.ETHEREUM | Blockchain.POLYGON | Blockchain.TEZOS | Blockchain.FLOW
 } & CommonTokenMetadata
 
 export type SolanaMetaRequest = {
-	blockchain: Blockchain.SOLANA
+  blockchain: Blockchain.SOLANA
 } & ISolanaTokenMetadata
 
 export type AptosMetaRequest = {
-	blockchain: Blockchain.APTOS
+  blockchain: Blockchain.APTOS
 } & AptosTokenMetadata
 
 export type PreprocessMetaResponse = CommonTokenMetadataResponse | TezosMetadataResponse | ISolanaMetadataResponse
 
 export type TokenMetadataAttribute = {
-	key: string
-	value: string
-	type?: string
+  key: string
+  value: string
+  type?: string
 }
 
 export type CommonTokenMetadata = {
-	name: string
-	description: string | undefined
-	image: CommonTokenContent | undefined
-	animation: CommonTokenContent | undefined
-	external: string | undefined
-	attributes: TokenMetadataAttribute[]
+  name: string
+  description: string | undefined
+  image: CommonTokenContent | undefined
+  animation: CommonTokenContent | undefined
+  external: string | undefined
+  attributes: TokenMetadataAttribute[]
 }
 
 export type CommonTokenContent = {
-	url: string
-	mimeType: string
-	hash?: string
-	fileSize?: number
-	fileName?: string
-	duration?: string
-	dataRate?: {
-		value: number
-		unit: string
-	}
-	dimensions?: {
-		value: string
-		unit: string
-	}
+  url: string
+  mimeType: string
+  hash?: string
+  fileSize?: number
+  fileName?: string
+  duration?: string
+  dataRate?: {
+    value: number
+    unit: string
+  }
+  dimensions?: {
+    value: string
+    unit: string
+  }
 }
 
 export type CommonTokenMetadataResponse = {
-	name: string
-	description: string | undefined
-	image: string | undefined
-	"animation_url": string | undefined
-	"external_url": string | undefined
-	attributes: TokenMetadataAttribute[]
+  name: string
+  description: string | undefined
+  image: string | undefined
+  animation_url: string | undefined
+  external_url: string | undefined
+  attributes: TokenMetadataAttribute[]
 }

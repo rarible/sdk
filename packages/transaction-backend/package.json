@@ -10,8 +10,11 @@
     "build"
   ],
   "scripts": {
-    "build": "yarn clean && yarn tsc --project ./tsconfig.json && yarn copy-files",
-    "clean": "rimraf ./build",
+    "build": "run-s clean build:ts copy-files",
+    "build:ts": "tsc --project ./tsconfig.json",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "copy-files": "cp ./src/openapi.yml ./build/",
     "get-buy-tx": "npx ts-node scripts/gettxbuy.ts",
     "get-orders": "npx ts-node scripts/getorders.ts",
@@ -34,21 +37,18 @@
     "redoc-express": "^1.0.0",
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.8.4",
+    "typescript": "^5.4.5",
     "web3": "1.8.2"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.22",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
-    "@types/jest": "^27.4.1",
     "@types/js-yaml": "^4.0.5",
     "@types/node": "^17.0.24",
     "@types/node-fetch": "^2.6.1",
     "@types/supertest": "^2.0.12",
-    "jest": "^27.2.7",
     "nodemon": "^2.0.15",
-    "supertest": "^6.2.2",
-    "ts-jest": "^27.0.3"
+    "supertest": "^6.2.2"
   }
 }
