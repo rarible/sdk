@@ -1,13 +1,11 @@
-import {
-	isString,
-} from "@aptos-labs/ts-sdk"
 import type {
 	Aptos,
 } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
-import type { AptosWalletInterface } from "@rarible/aptos-wallet/src/domain"
-import { getRequiredWallet, isChangeBelongsToType, MAX_U64_INT } from "../common"
+import type { AptosWalletInterface } from "@rarible/aptos-wallet"
+import { getRequiredWallet, isChangeBelongsToType, makeId, MAX_U64_INT } from "../common"
 import type { AptosNftSdk } from "../domain"
+import type { AddressConfig } from "../config"
 
 export type CreateCollectionOptions = { name: string, description: string, uri: string }
 export type MintByCollectionNameOptions = {
@@ -25,7 +23,11 @@ export type MintByCollectionAddressOptions = {
 }
 
 export class AptosNft implements AptosNftSdk {
-	constructor(readonly aptos: Aptos, readonly wallet: Maybe<AptosWalletInterface>) {
+	constructor(
+		readonly aptos: Aptos,
+		readonly wallet: Maybe<AptosWalletInterface>,
+		readonly config: AddressConfig
+	) {
 		this.createCollection = this.createCollection.bind(this)
 		this.mintWithCollectionName = this.mintWithCollectionName.bind(this)
 		this.mintWithCollectionAddress = this.mintWithCollectionAddress.bind(this)
@@ -36,28 +38,40 @@ export class AptosNft implements AptosNftSdk {
   createCollection = async (
   	options: CreateCollectionOptions
   ) => {
+  	const royaltiesAddress = (await getRequiredWallet(this.wallet).getAccountInfo()).address
+  	const royaltyPointsDenominator = "10000"
+  	const royaltyPointsNumerator = "0"
+  	const publicSaleMintTime = Math.floor(Date.now() / 1000)
+  	const publicSaleMintPrice = "0"
+  	// const totalSupply = MAX_U64_INT
+  	const totalSupply = "10000"
+  	// const publicMintLimit = MAX_U64_INT
+  	const publicMintLimit = "10000"
+  	const collectionMutateSetting = [false, false, false]
+  	const tokenMutateSetting = [false, false, false, false, false]
+  	// used to generate unique collection address
+  	const collectionSeed = makeId(7)
 
   	const transaction = {
-  		arguments: [
-  			options.description,
-  			MAX_U64_INT,
-  			options.name,
-  			options.uri,
-  			true,
-  			true,
-  			true,
-  			true,
-  			true,
-  			true,
-  			true,
-  			true,
-  			true,
-  			"0",
-  			"1",
-  		],
-  		function: "0x4::aptos_token::create_collection",
-  		type: "entry_function_payload",
+  		function: `${this.config.raribleDropMachineAddress}::rari_drop_machine::init_collection`,
   		typeArguments: [],
+  		arguments: [
+  			options.name,
+  			options.description,
+  			options.uri,
+  			royaltiesAddress,
+  			royaltyPointsDenominator,
+  			royaltyPointsNumerator,
+  			publicSaleMintTime,
+  			publicSaleMintPrice,
+  			totalSupply,
+  			collectionMutateSetting,
+  			tokenMutateSetting,
+  			publicMintLimit,
+  			collectionSeed,
+  			false,
+  			MAX_U64_INT,
+  		],
   	}
   	const pendingTx = await getRequiredWallet(this.wallet)
   		.signAndSubmitTransaction(transaction)
@@ -66,19 +80,23 @@ export class AptosNft implements AptosNftSdk {
   		transactionHash: pendingTx.hash,
   	})
 
-  	const collectionChange = tx.changes.find(state => {
-  		return state.type === "write_resource" &&
-        "data" in state && typeof state.data === "object" && state.data !== null &&
-        "type" in state.data &&
-        isString(state.data.type) && state.data.type.includes("collection::Collection")
-  	})
-  	if (!(collectionChange && "address" in collectionChange)) {
-  		throw new Error("Collection address has not been found")
+  	if (!("events" in tx)) {
+  		throw new Error("Create collection tx don't consist 'events' field")
+  	}
+
+  	const collectionEvent = tx.events.find(e => e?.type.includes("events::CollectionCreated"))
+  	if (!collectionEvent) {
+  		throw new Error("Collection create event has not been found")
+  	}
+  	if (!(collectionEvent && "data" in collectionEvent)) {
+  		throw new Error("Collection data has not been found")
   	}
 
   	return {
   		tx,
-  		collectionAddress: collectionChange.address,
+  		collectionAddress: collectionEvent.data.rari_drop_address,
+  		rariDropAddress: collectionEvent.data.rari_drop_address,
+  		aptosCollectionAddress: collectionEvent.data.aptos_collection_address,
   	}
   }
 
@@ -118,15 +136,29 @@ export class AptosNft implements AptosNftSdk {
   }
 
   mintWithCollectionAddress = async (options: MintByCollectionAddressOptions) => {
-  	const collection = await this.aptos.getCollectionDataByCollectionId({
-  		collectionId: options.collectionAddress,
+  	const rawTx = {
+  		function: `${this.config.raribleDropMachineAddress}::rari_drop_machine::mint_script`,
+  		typeArguments: [],
+  		arguments: [
+  			options.collectionAddress,
+  		],
+  	}
+  	const pendingTx = await getRequiredWallet(this.wallet)
+  		.signAndSubmitTransaction(rawTx)
+  	const commitedTx = await this.aptos.waitForTransaction({
+  		transactionHash: pendingTx.hash,
   	})
-  	return this.mintWithCollectionName({
-  		collectionName: collection.collection_name,
-  		name: options.name,
-  		description: options.description,
-  		uri: options.uri,
-  	})
+  	if (!("events" in commitedTx)) {
+  		throw new Error("Mint transaction should consist 'events' field")
+  	}
+  	const mintEvent = commitedTx.events.find(e => e.type === "0x4::collection::Mint")
+  	if (!mintEvent) {
+  		throw new Error("Mint event has not been found")
+  	}
+  	return {
+  		tx: commitedTx,
+  		tokenAddress: mintEvent.data.token,
+  	}
   }
 
   transfer = async (

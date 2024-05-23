@@ -12,6 +12,7 @@ import {
 	extractBlockchain,
 	isEVMBlockchain,
 } from "@rarible/sdk-common"
+import type { NativeCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
 import type { PrepareFillRequest } from "../../types/order/fill/domain"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
@@ -80,11 +81,12 @@ export function getBidEntity(request: PrepareBidRequest) {
 }
 
 export function getOrderId(req: PrepareFillRequest) {
-	if ("orderId" in req) {
-		return req.orderId
-	} else {
+	if ("order" in req) {
 		return req.order.id
+	} else if ("orderId" in req) {
+		return req.orderId
 	}
+	throw new Error("OrderId has not been found in request")
 }
 
 export type UnionSupportedBlockchain = "EVM" | typeof NonEVMBlockchains[number]
@@ -97,4 +99,8 @@ export function convertSupportedBlockchainToUnion(blockchain: SupportedBlockchai
 		return "EVM"
 	}
 	return blockchain
+}
+
+export function isNativeToken(assetType: AssetType): assetType is NativeCurrencyAssetType {
+	return assetType["@type"] === "CURRENCY_NATIVE"
 }

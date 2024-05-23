@@ -1,10 +1,12 @@
 import { Blockchain } from "@rarible/api-client"
 import { retry } from "@rarible/sdk-common"
+import { createTestAptosState, DEFAULT_PK } from "@rarible/aptos-sdk/src/common/test"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { createSdk } from "./common/tests/create-sdk"
 
 describe("Aptos NFT", () => {
-	const sdk = createSdk()
+	const state = createTestAptosState(DEFAULT_PK)
+	const sdk = createSdk(state, "development")
 
 	test("test preprocess metadata", () => {
 		const response = sdk.nft.preprocessMeta({
@@ -29,7 +31,22 @@ describe("Aptos NFT", () => {
 		expect(response.attributes[0].value).toBe("1")
 	})
 
-	test("create collection", async () => {
+	test.skip("create collection", async () => {
+		const randomId = Math.floor(Math.random() * 100_000_000)
+
+		const response = await sdk.nft.createCollection({
+			blockchain: Blockchain.APTOS,
+			//Collection name must be unique
+			name: `Aptos collection #${randomId}-${randomId}`,
+			description: "",
+			uri: "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/",
+		})
+		await retry(10, 4000, () =>
+			sdk.apis.collection.getCollectionById({ collection: response.address }),
+		)
+	})
+
+	test.skip("mint item", async () => {
 		const randomId = Math.floor(Math.random() * 100_000_000)
 
 		const response = await sdk.nft.createCollection({

@@ -40,11 +40,18 @@ export type ISellInternalPrepare = (request: PrepareSellInternalRequest) => Prom
  */
 export type ISellUpdatePrepare = (request: PrepareOrderUpdateRequest) => Promise<PrepareOrderUpdateResponse>
 
-export type PrepareSellInternalResponse = BasePrepareOrderResponse<OrderInternalRequest>
+export type PrepareSellInternalResponse = BasePrepareOrderResponse<OrderInternalRequest> & PrepareSellSpecificResponse
 /**
  * Prepare sell response
  */
-export type PrepareSellResponse = BasePrepareOrderResponse<OrderRequest>
+export type PrepareSellResponse = BasePrepareOrderResponse<OrderRequest> & PrepareSellSpecificResponse
+
+export type PrepareSellSpecificResponse = {
+	/**
+   * Whether nft should be transferred during operation
+   */
+	shouldTransferNft: boolean
+}
 
 export type PrepareSellInternalRequest = {
 	/**

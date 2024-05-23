@@ -74,6 +74,7 @@ export class FlowBid {
 			baseFee: getFlowBaseFee(this.sdk),
 			getConvertableValue: this.getConvertableValue,
 			supportsExpirationDate: false,
+			shouldTransferFunds: false,
 			submit: bidAction,
 		}
 	}

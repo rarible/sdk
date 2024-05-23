@@ -3,6 +3,7 @@ import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
 import { isEVMBlockchain } from "@rarible/sdk-common"
+import { APTOS_ZERO_ADDRESS } from "../sdk-blockchains/aptos/common"
 import type { RequestCurrency, RequestCurrencyAssetType } from "./domain"
 
 export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrencyAssetType {
@@ -98,7 +99,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
 		}
 	}
 	if (blockchain === Blockchain.APTOS) {
-		if (contract === ZERO_ADDRESS) {
+		if (contract === ZERO_ADDRESS || contract === APTOS_ZERO_ADDRESS) {
 			return {
 				"@type": "CURRENCY_NATIVE",
 				blockchain: Blockchain.APTOS,

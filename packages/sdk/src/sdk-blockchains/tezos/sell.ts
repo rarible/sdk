@@ -103,6 +103,7 @@ export class TezosSell {
 			supportedCurrencies: getSupportedCurrencies(),
 			baseFee: parseInt(this.provider.config.fees.toString()),
 			supportsExpirationDate: false,
+			shouldTransferNft: false,
 			submit,
 		}
 	}

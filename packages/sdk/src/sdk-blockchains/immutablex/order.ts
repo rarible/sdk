@@ -75,6 +75,7 @@ export class ImxOrderService {
 			supportedCurrencies: getCurrencies(),
 			baseFee: 200, // in reality is not taken from the seller, but it needs to display fees correctly
 			supportsExpirationDate: false,
+			shouldTransferNft: false,
 			submit: submit,
 		}
 	}

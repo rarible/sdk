@@ -1,5 +1,6 @@
 import { toBn } from "@rarible/utils"
 import type {
+	MoveResource,
 	WriteSetChange,
 } from "@aptos-labs/ts-sdk"
 import {
@@ -11,7 +12,10 @@ import type { AptosWalletInterface } from "@rarible/aptos-wallet/src/domain"
 import type { AptosSdkEnv } from "../domain"
 
 export const APT_DIVIDER = toBn(10).pow(8)
-export const MAX_U64_INT = "18446744073709551615"
+export const MAX_U64_INT = "18446744073709551610"
+export const APT_TOKEN_TYPE = "0x1::aptos_coin::AptosCoin"
+
+export type CURRENCY_TYPE = typeof APT_TOKEN_TYPE
 
 export function isChangeBelongsToType(
 	change: WriteSetChange, dataTypeFn: (dataType: string) => boolean
@@ -33,4 +37,26 @@ export function getNetworkFromEnv(env: AptosSdkEnv) {
 export function getRequiredWallet<T extends AptosWalletInterface>(wallet: Maybe<T>): T {
 	if (!wallet) throw new Error("Aptos wallet doesn't exist")
 	return wallet
+}
+
+export function makeId(length: number) {
+	let result= ""
+	const characters= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxy"
+	const charactersLength = characters.length
+	for (let i = 0; i < length; i++ ) {
+		result += characters.charAt(Math.floor(Math.random() * charactersLength))
+	}
+	return result
+}
+
+export function getListingTokenType(listingResources: MoveResource[]): CURRENCY_TYPE {
+	const priceResource: any = listingResources.find(o => o.type.includes("coin_listing::FixedPriceListing"))
+	if (!priceResource?.data?.price) {
+		throw new Error("Price object has not been found")
+	}
+	const match = priceResource.type.match(/<([^>]+)>/)
+
+	const tokenType = match ? match[1] : null
+	if (!tokenType) throw new Error("Token type has not been recognized")
+	return tokenType
 }

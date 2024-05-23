@@ -243,6 +243,7 @@ export class EthereumBid {
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			getConvertableValue: this.getConvertableValue.bind(this, blockchain),
 			supportsExpirationDate: true,
+			shouldTransferFunds: false,
 			submit,
 		}
 	}

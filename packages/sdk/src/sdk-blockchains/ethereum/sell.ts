@@ -94,6 +94,7 @@ export class EthereumSell {
 			supportedCurrencies: common.getSupportedCurrencies(),
 			baseFee: await this.sdk.order.getBaseOrderFee(),
 			supportsExpirationDate: true,
+			shouldTransferNft: false,
 			submit: sellAction,
 		}
 	}
