@@ -1,0 +1,11 @@
+{
+  // This is project-wide configuration for build
+  // All of tsconfigs for build should use this as entry point
+  "extends": "./tsconfig.new.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "importHelpers": true,
+    "downlevelIteration": true
+  }
+}

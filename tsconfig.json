@@ -1,21 +1,22 @@
 {
-	"compilerOptions": {
-		"lib": ["es6", "dom", "esnext"],
-		"module": "commonjs",
-		"target": "es6",
-		"incremental": true,
-		"skipLibCheck": true,
-		"importHelpers": true,
-		"declaration": true,
-		"strict": true,
-		"noImplicitReturns": false,
-		"moduleResolution": "node",
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
-		"experimentalDecorators": true,
-		"emitDecoratorMetadata": true,
-		"resolveJsonModule": true,
-		"downlevelIteration": true,
-		"baseUrl": "."
-	},
+  // @todo this is deprecated and all modules should migrate to new tsconfig
+  "compilerOptions": {
+    "lib": ["es6", "dom", "esnext"],
+    "module": "commonjs",
+    "target": "es6",
+    "incremental": true,
+    "skipLibCheck": true,
+    "importHelpers": true,
+    "declaration": true,
+    "strict": true,
+    "noImplicitReturns": false,
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "baseUrl": "."
+  }
 }

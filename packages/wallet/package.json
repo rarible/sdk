@@ -3,22 +3,46 @@
   "version": "0.13.68-fix.23",
   "homepage": "",
   "license": "ISC",
+  "exports": {
+    ".": {
+      "types": {
+        "require": "./build/index.d.ts",
+        "import": "./esm/index.d.ts"
+      },
+      "require": "./build/index.js",
+      "import": "./esm/index.js",
+      "default": "./build/index.js"
+    },
+    "./build/": "./build/",
+    "./*": {
+      "types": {
+        "require": "./build/*.d.ts",
+        "import": "./esm/*.d.ts"
+      },
+      "require": "./build/*.js",
+      "import": "./esm/*.js",
+      "default": "./build/*.js"
+    }
+  },
   "main": "build/index.js",
+  "module": "esm/index.js",
   "types": "build/index.d.ts",
   "files": [
     "build",
-    "umd"
+    "umd",
+    "esm"
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:ts": "tsc --project tsconfig-build.json",
+    "build:cjs": "tsc --project tsconfig.cjs.json",
+    "build:esm": "tsc --project tsconfig.esm.json",
     "build:umd": "webpack",
     "clean": "run-s clean:*",
     "clean:build": "rimraf ./build",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "clean:umd": "rimraf ./umd",
     "test": "jest --runInBand --forceExit --silent",
-    "verify": "tsc --noEmit --project tsconfig-build.json"
+    "verify": "tsc"
   },
   "dependencies": {
     "@ethersproject/abstract-signer": "^5.4.0",
@@ -32,7 +56,8 @@
     "@rarible/solana-wallet": "^0.13.68-fix.23",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/types": "~0.9.26",
-    "@rarible/web3-ethereum": "^0.13.68-fix.23"
+    "@rarible/web3-ethereum": "^0.13.68-fix.23",
+    "text-encoding": "~0.7.0"
   },
   "devDependencies": {
     "@babel/cli": "7.14.8",
@@ -45,6 +70,7 @@
     "@babel/preset-env": "^7.8.3",
     "@babel/preset-typescript": "^7.14.5",
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.23",
+    "@types/text-encoding": "~0.0.39",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
     "path-browserify": "^1.0.1",

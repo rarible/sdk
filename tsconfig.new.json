@@ -1,0 +1,29 @@
+{
+  // This is project-wide configuration
+  // All of tsconfigs should use this as entry point
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "target": "ES2015",
+    "module": "CommonJS",
+    "moduleResolution": "node",
+
+    // By default disable any emit
+    "noEmit": true,
+    "declaration": false,
+
+    // Strictness
+    "strict": true,
+    "skipLibCheck": true,
+    "noImplicitReturns": false,
+    // @todo gradually move to `true`
+    "useUnknownInCatchVariables": false,
+
+    // Interop
+    "esModuleInterop": true,
+
+    // Features
+    "incremental": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true
+  }
+}
