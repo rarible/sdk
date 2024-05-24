@@ -33,7 +33,6 @@
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "latest",
-    "@types/node": "^12.20.36",
     "@types/node-fetch": "^2.6.1",
     "yargs": "^17.2.1"
   },

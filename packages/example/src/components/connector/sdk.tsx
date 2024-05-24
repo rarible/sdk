@@ -42,7 +42,17 @@ export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
     return undefined
   }, [active])
 
-  return <sdkContext.Provider value={{ connector, state, sdk, walletAddress }} children={children} />
+  return (
+    <sdkContext.Provider
+      value={{
+        connector,
+        state,
+        sdk,
+        walletAddress,
+      }}
+      children={children}
+    />
+  )
 }
 
 export function useSdkContext() {
@@ -52,7 +62,7 @@ export function useSdkContext() {
 }
 
 function extractActiveConnection(state: ConnectionState<IWalletAndAddress> | undefined) {
-  if (state && state.status === "connected") return state.connection
+  if (state?.status === "connected") return state.connection
   return undefined
 }
 

@@ -67,7 +67,6 @@
     "@rarible/flow-test-common": "~0.5.75-fix.1",
     "@rarible/solana-wallet": "^0.13.68-fix.23",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^12.20.36",
     "@types/node-fetch": "^2.6.1",
     "@types/uuid": "^8.3.0",
     "babel-plugin-transform-bigint": "^1.0.12",

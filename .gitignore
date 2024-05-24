@@ -25,3 +25,4 @@ lerna-debug.log
 .env.*
 .yarnrc
 .parcel-cache
+*.pem

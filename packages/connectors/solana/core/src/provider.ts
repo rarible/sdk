@@ -26,7 +26,7 @@ export abstract class SolanaInjectableProvider<ProviderId extends string> extend
       catchError(() => of(undefined)),
       shareReplay(1),
     )
-    this.isConnected$ = this.provider$.pipe(map(x => (x ? Boolean(x.isConnected) : false)))
+    this.isConnected$ = this.provider$.pipe(map(x => (x ? x.isConnected() : false)))
     this.connection$ = this.provider$.pipe(
       switchMap(x => (x ? of(x) : throwError(new NoSolanaProviderError()))),
       switchMap(x => from(x.connect()).pipe(switchMap(y => this.toConnectState(y, x)))),

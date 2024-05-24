@@ -6,6 +6,7 @@ import { FclConnectionProvider } from "@rarible/connector-fcl"
 import { NFIDConnectionProvider } from "@rarible/connector-nfid"
 import { BeaconConnectionProvider } from "@rarible/connector-beacon"
 import { TorusConnectionProvider } from "@rarible/connector-torus"
+import { ThirdwebInAppProvider } from "@rarible/connector-thirdweb"
 import { FirebaseConnectionProvider } from "@rarible/connector-firebase"
 import { FirebaseAppleConnectionProvider } from "@rarible/connector-firebase-apple"
 import { FirebaseEmailConnectionProvider } from "@rarible/connector-firebase-email"
@@ -35,7 +36,6 @@ export const ethereumRpcMap: Record<number, string> = {
 
 const ethereumNetworkMap: Record<number, string> = {
   1: "mainnet",
-  5: "goerli",
   11155111: "sepolia",
 }
 
@@ -290,6 +290,18 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     }),
   )
 
+  const thirdwebInApp = mapEthereumWallet(
+    new ThirdwebInAppProvider({
+      clientId: process.env.REACT_APP_THIRDWEB_CLIENT_ID!,
+      defaultChain: {
+        chainId: ethChainId,
+      },
+      options: {
+        strategy: "iframe",
+      },
+    }),
+  )
+
   const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
   const salmonConnect = mapSolanaWallet(new SalmonConnectionProvider())
   const solflareConnect = mapSolanaWallet(
@@ -320,6 +332,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     .add(aptos)
     .add(firebase)
     .add(firebaseEmail)
+    .add(thirdwebInApp)
 }
 
 export type ConnectorInstance = ReturnType<typeof getConnector>

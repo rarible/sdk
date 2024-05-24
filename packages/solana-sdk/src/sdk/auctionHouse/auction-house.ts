@@ -1,4 +1,4 @@
-import type BigNumber from "bignumber.js"
+import type { BigNumber } from "@rarible/utils"
 import type { Connection, PublicKey } from "@solana/web3.js"
 import type { BigNumberValue } from "@rarible/utils"
 import type { SolanaSigner } from "@rarible/solana-common"
