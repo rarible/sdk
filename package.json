@@ -93,6 +93,7 @@
     "@rarible/prettier": "~0.10.0-alpha.37",
     "@solana/web3.js": "~1.54.0",
     "@types/jest": "^29.5.12",
+    "@types/node": "^18.0.0",
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
     "cpy-cli": "^5.0.0",

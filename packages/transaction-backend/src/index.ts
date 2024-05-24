@@ -1,4 +1,4 @@
-import "./setup"
+import "dotenv/config"
 import { app } from "./app"
 import { readEnvSafe } from "./utils/read-env"
 

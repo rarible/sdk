@@ -8,7 +8,7 @@ const devServerConfig: DevServerConfiguration = {
     directory: path.join(__dirname, "src", "public"),
   },
   compress: true,
-  port: 9000,
+  port: 7492,
   historyApiFallback: true,
 }
 
