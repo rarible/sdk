@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.23](https://github.com/rarible/sdk/compare/v0.13.68-fix.22...v0.13.68-fix.23) (2024-05-24)
+
+
+### Bug Fixes
+
+* **PLTF-203:** fixed eslint, fixed build after typescript upgrade ([94b4895](https://github.com/rarible/sdk/commit/94b48956bdf03ade8762f1849f2827121d1aa992))
+
+
+### Features
+
+* add prettier integration, remove editorconfig ([d33d183](https://github.com/rarible/sdk/commit/d33d183016c0d083ac25d5195756b48c8b98a9a7))
+* **PLTF-443:** add Aptos orders ([#628](https://github.com/rarible/sdk/issues/628)) ([1814036](https://github.com/rarible/sdk/commit/1814036d2370820fc84ac96b27b8778baec10630))
+* update typescript to v5, eslint to v8 ([2c9b6e2](https://github.com/rarible/sdk/commit/2c9b6e205d8400c51789f4aa0f120015a80fc75e))
+
+
+
+
+
 ## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend
