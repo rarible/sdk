@@ -1,16 +1,16 @@
-import React from "react"
 import { Link, Typography } from "@mui/material"
 import { Code } from "../../../components/common/code"
 import { InlineCode } from "../../../components/common/inline-code"
 
 export function ConnectorUsageComment() {
-	return <>
-		<Typography gutterBottom>
-			To simplify connection to various wallets, we moved this logic to a separate
-			package <InlineCode>@rarible/connector</InlineCode>.
-		</Typography>
-		<Code>
-			{`
+  return (
+    <>
+      <Typography gutterBottom>
+        To simplify connection to various wallets, we moved this logic to a separate package{" "}
+        <InlineCode>@rarible/connector</InlineCode>.
+      </Typography>
+      <Code>
+        {`
 import { Connector, InjectedWeb3ConnectionProvider } from "@rarible/connector"
 
 // 1. Configure providers			
@@ -35,10 +35,14 @@ const options = await connector.getOptions()
 // connect to first one
 await connector.connect(options[0]) 
 		`}
-		</Code>
-		<Typography gutterBottom>
-			Check out more <Link href="https://github.com/rarible/sdk/tree/master/packages/connector"
-				target="_blank">documentation in package repository</Link>.
-		</Typography>
-	</>
+      </Code>
+      <Typography gutterBottom>
+        Check out more{" "}
+        <Link href="https://github.com/rarible/sdk/tree/master/packages/connector" target="_blank">
+          documentation in package repository
+        </Link>
+        .
+      </Typography>
+    </>
+  )
 }

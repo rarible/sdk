@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function UploadMetaComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // upload metadata
 const uploadMeta = await sdk.nft.uploadMeta(
 	YOUR_NFT_STORAGE_API_KEY: string, 
@@ -25,6 +25,7 @@ const uploadMeta = await sdk.nft.uploadMeta(
 // 	IPFSURL: string
 // }  
 			`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

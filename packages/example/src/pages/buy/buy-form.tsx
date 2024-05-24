@@ -9,44 +9,42 @@ import { RequestResult } from "../../components/common/request-result"
 import { FillRequestForm } from "../../components/common/sdk-forms/fill-request-form"
 
 interface IBuyFormProps {
-	prepare: PrepareFillResponse
-	order: Order,
-	disabled?: boolean
-	onComplete: (response: any) => void
+  prepare: PrepareFillResponse
+  order: Order
+  disabled?: boolean
+  onComplete: (response: any) => void
 }
 
 export function BuyForm({ prepare, order, disabled, onComplete }: IBuyFormProps) {
-	const form = useForm()
-	const { result, setError } = useRequestResult()
+  const form = useForm()
+  const { result, setError } = useRequestResult()
 
-	return (
-		<>
-			<form onSubmit={form.handleSubmit(async (formData) => {
-				try {
-					onComplete(await prepare.submit({
-						amount: parseInt(formData.amount),
-						itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
-					}))
-				} catch (e) {
-					setError(e)
-				}
-			})}
-			>
-				<Stack spacing={2}>
-					<FillRequestForm form={form} prepare={prepare} order={order}/>
-					<Box>
-						<FormSubmit
-							form={form}
-							label="Submit"
-							state={resultToState(result.type)}
-							disabled={disabled}
-						/>
-					</Box>
-				</Stack>
-			</form>
-			<Box sx={{ my: 2 }}>
-				<RequestResult result={result}/>
-			</Box>
-		</>
-	)
+  return (
+    <>
+      <form
+        onSubmit={form.handleSubmit(async formData => {
+          try {
+            onComplete(
+              await prepare.submit({
+                amount: parseInt(formData.amount),
+                itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
+              }),
+            )
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Stack spacing={2}>
+          <FillRequestForm form={form} prepare={prepare} order={order} />
+          <Box>
+            <FormSubmit form={form} label="Submit" state={resultToState(result.type)} disabled={disabled} />
+          </Box>
+        </Stack>
+      </form>
+      <Box sx={{ my: 2 }}>
+        <RequestResult result={result} />
+      </Box>
+    </>
+  )
 }

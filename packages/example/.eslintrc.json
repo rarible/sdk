@@ -1,0 +1,3 @@
+{
+  "extends": ["@rarible/eslint-config-react", "plugin:prettier/recommended"]
+}
