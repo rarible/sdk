@@ -6,7 +6,7 @@ module.exports = {
     "^.+\\.ts?$": [
       "ts-jest",
       {
-        tsconfig: "tsconfig-build.json",
+        tsconfig: "tsconfig.json",
       },
     ],
   },
@@ -14,5 +14,4 @@ module.exports = {
   moduleNameMapper: {
     "source-map-support/register": "identity-obj-proxy",
   },
-  testEnvironment: "node",
 }

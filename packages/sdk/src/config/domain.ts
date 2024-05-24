@@ -3,7 +3,7 @@ import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { SolanaCluster } from "@rarible/solana-sdk"
 import type { ImxEnv } from "@rarible/immutable-wallet"
 import type { FlowEnv } from "@rarible/flow-sdk"
-import type { AptosSdkEnv } from "@rarible/aptos-sdk/src/domain"
+import type { AptosSdkEnv } from "@rarible/aptos-sdk"
 
 export type RaribleSdkEnvironment = "development" | "testnet" | "prod"
 

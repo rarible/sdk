@@ -75,6 +75,7 @@ export class SolanaOrder {
       supportedCurrencies: getCurrencies(),
       baseFee: await getAuctionHouseFee(auctionHouse, this.config?.auctionHouseMapping),
       supportsExpirationDate: false,
+      shouldTransferNft: false,
       submit: submit,
     }
   }
@@ -201,6 +202,7 @@ export class SolanaOrder {
       baseFee: 0,
       getConvertableValue: this.getConvertableValue,
       supportsExpirationDate: false,
+      shouldTransferFunds: false,
       submit,
     }
   }

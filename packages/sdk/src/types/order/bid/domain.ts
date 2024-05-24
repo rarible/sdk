@@ -8,7 +8,13 @@ import type {
   UnionPart,
 } from "../common"
 
-export type PrepareBidResponse = PrepareOrderResponse & GetConvertableValueFunction
+export type PrepareBidResponse = PrepareOrderResponse &
+  GetConvertableValueFunction & {
+    /**
+     * Whether bid funds should be transferred during operation
+     */
+    shouldTransferFunds: boolean
+  }
 
 export type PrepareBidUpdateResponse = PrepareOrderUpdateResponse & GetConvertableValueFunction
 

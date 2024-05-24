@@ -122,6 +122,7 @@ export class TezosBid {
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       getConvertableValue: notImplemented,
       supportsExpirationDate: false,
+      shouldTransferFunds: false,
       submit,
     }
   }

@@ -68,6 +68,7 @@ export class FlowSell {
       payoutsSupport: PayoutsSupport.NONE,
       maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
       supportsExpirationDate: false,
+      shouldTransferNft: false,
       submit: sellAction,
     }
   }
