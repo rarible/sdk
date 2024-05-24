@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function AcceptBidComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get order info
 const accept = await connection.sdk.order.acceptBid.prepare({
   orderId: <ORDER ID>
@@ -16,6 +16,7 @@ const result = await accept.submit({
 })
 // result: IBlockchainTransaction
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

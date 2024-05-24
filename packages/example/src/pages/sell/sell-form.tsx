@@ -14,76 +14,71 @@ import { useEnvironmentContext } from "../../components/connector/env"
 import { useSdkContext } from "../../components/connector/sdk"
 
 interface ISellFormProps {
-	onComplete: (response: any) => void
-	prepare: PrepareOrderResponse
-	disabled?: boolean
+  onComplete: (response: any) => void
+  prepare: PrepareOrderResponse
+  disabled?: boolean
 }
 
 export function SellForm({ prepare, disabled, onComplete }: ISellFormProps) {
-	const { environment } = useEnvironmentContext()
-	const connection = useSdkContext()
-	const form = useForm()
-	const { handleSubmit } = form
-	const { result, setError } = useRequestResult()
+  const { environment } = useEnvironmentContext()
+  const connection = useSdkContext()
+  const form = useForm()
+  const { handleSubmit } = form
+  const { result, setError } = useRequestResult()
 
-	return (
-		<>
-			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
+  return (
+    <>
+      <form
+        onSubmit={handleSubmit(async formData => {
+          if (!connection.sdk) {
+            return
+          }
 
-				let maxFeesBasePoint: number | undefined = undefined
-				if (prepare.maxFeesBasePointSupport === MaxFeesBasePointSupport.REQUIRED) {
-					maxFeesBasePoint = 1000
-				}
+          let maxFeesBasePoint: number | undefined = undefined
+          if (prepare.maxFeesBasePointSupport === MaxFeesBasePointSupport.REQUIRED) {
+            maxFeesBasePoint = 1000
+          }
 
-				try {
-					const currency = parseCurrencyType(formData.currencyType)
+          try {
+            const currency = parseCurrencyType(formData.currencyType)
 
-					onComplete(await prepare.submit({
-						price: toBigNumber(formData.price),
-						amount: parseInt(formData.amount),
-						currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract),
-						maxFeesBasePoint,
-						originFees: [],
-						expirationDate: generateExpirationDate(),
-					}))
-				} catch (e) {
-					setError(e)
-				}
-			})}
-			>
-				<Stack spacing={2}>
-					<PriceForm
-						form={form}
-						currencyOptions={getCurrencyOptions(prepare.supportedCurrencies, environment)}
-					/>
-					<FormTextInput
-						type="number"
-						inputProps={{ min: 1, max: prepare.maxAmount, step: 1 }}
-						form={form}
-						options={{
-							min: 1,
-							max: Number(prepare.maxAmount),
-						}}
-						defaultValue={Math.min(1, Number(prepare.maxAmount))}
-						name="amount"
-						label="Amount"
-					/>
-					<Box>
-						<FormSubmit
-							form={form}
-							label="Submit"
-							state={resultToState(result.type)}
-							disabled={disabled}
-						/>
-					</Box>
-				</Stack>
-			</form>
-			<Box sx={{ my: 2 }}>
-				<RequestResult result={result}/>
-			</Box>
-		</>
-	)
+            onComplete(
+              await prepare.submit({
+                price: toBigNumber(formData.price),
+                amount: parseInt(formData.amount),
+                currency: getCurrency(currency.blockchain, currency.type, currency.contract ?? formData.contract),
+                maxFeesBasePoint,
+                originFees: [],
+                expirationDate: generateExpirationDate(),
+              }),
+            )
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Stack spacing={2}>
+          <PriceForm form={form} currencyOptions={getCurrencyOptions(prepare.supportedCurrencies, environment)} />
+          <FormTextInput
+            type="number"
+            inputProps={{ min: 1, max: prepare.maxAmount, step: 1 }}
+            form={form}
+            options={{
+              min: 1,
+              max: Number(prepare.maxAmount),
+            }}
+            defaultValue={Math.min(1, Number(prepare.maxAmount))}
+            name="amount"
+            label="Amount"
+          />
+          <Box>
+            <FormSubmit form={form} label="Submit" state={resultToState(result.type)} disabled={disabled} />
+          </Box>
+        </Stack>
+      </form>
+      <Box sx={{ my: 2 }}>
+        <RequestResult result={result} />
+      </Box>
+    </>
+  )
 }

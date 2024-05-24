@@ -16,126 +16,121 @@ import { useEnvironmentContext } from "../../../components/connector/env"
 import { useSdkContext } from "../../../components/connector/sdk"
 
 export function ExecuteRawTransaction() {
-	const { environment: env } = useEnvironmentContext()
-	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useSdkContext()
-	const [code, setCode] = useState("")
+  const { environment: env } = useEnvironmentContext()
+  const { result, isFetching, setError, setComplete } = useRequestResult()
+  const connection = useSdkContext()
+  const [code, setCode] = useState("")
 
-	const blockchain = connection.sdk.wallet?.walletType
-	const isFlowActive = blockchain === WalletType.FLOW
-	const form = useForm()
-	const { handleSubmit } = form
+  const blockchain = connection.sdk.wallet?.walletType
+  const isFlowActive = blockchain === WalletType.FLOW
+  const form = useForm()
+  const { handleSubmit } = form
 
-	function updateAddresses() {
-		try {
-			let flowEnv = getFlowEnv(env)
-			const updatedCode = replaceImportAddresses(code, CONFIGS[flowEnv].mainAddressMap)
-			setCode(updatedCode)
-		} catch (e) {
-			console.error(e)
-		}
-	}
-	return (
-		<div style={{ marginTop: 20 }}>
-
-			<form onSubmit={handleSubmit(async () => {
-				try {
-					if (connection.sdk.wallet?.walletType === WalletType.FLOW) {
-						const { fcl, auth } = connection.sdk.wallet
-						const txId = await runRawTransaction(
-							fcl,
-							{
-								cadence: code,
-								args: fcl.args([]),
-							},
-							auth
-						)
-						console.log("tx id=", txId)
-						const tx = await waitForSeal(fcl, txId)
-						console.log("tx", tx)
-					  setComplete(tx)
-					}
-				} catch (e) {
-					setError(e)
-				}
-			})}>
-
-				<Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
+  function updateAddresses() {
+    try {
+      let flowEnv = getFlowEnv(env)
+      const updatedCode = replaceImportAddresses(code, CONFIGS[flowEnv].mainAddressMap)
+      setCode(updatedCode)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  return (
+    <div style={{ marginTop: 20 }}>
+      <form
+        onSubmit={handleSubmit(async () => {
+          try {
+            if (connection.sdk.wallet?.walletType === WalletType.FLOW) {
+              const { fcl, auth } = connection.sdk.wallet
+              const txId = await runRawTransaction(
+                fcl,
+                {
+                  cadence: code,
+                  args: fcl.args([]),
+                },
+                auth,
+              )
+              console.log("tx id=", txId)
+              const tx = await waitForSeal(fcl, txId)
+              console.log("tx", tx)
+              setComplete(tx)
+            }
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
           Execute raw FLOW transaction
-				</Typography>
-				<Grid container spacing={2}>
-
-					<Grid item xs={6}>
-						<Box sx={{ my: 2 }}>
-							<TextField
-								fullWidth={true}
-								label="Input Text"
-								multiline
-								value={code}
-								onChange={(e) => setCode(e.target.value)}
-							/>
-						</Box>
-						<Button
-							variant="outlined"
-							component="span"
-							onClick={() => updateAddresses()}
-						>
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Box sx={{ my: 2 }}>
+              <TextField
+                fullWidth={true}
+                label="Input Text"
+                multiline
+                value={code}
+                onChange={e => setCode(e.target.value)}
+              />
+            </Box>
+            <Button variant="outlined" component="span" onClick={() => updateAddresses()}>
               Replace addresses
-						</Button>
-					</Grid>
-				</Grid>
-				<Grid item xs={2}>
-					<FormSubmit
-						form={form}
-						label="Setup"
-						state={isFetching ? "normal": "success"}
-						disabled={isFetching || !isFlowActive}
-					/>
-				</Grid>
-			</form>
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item xs={2}>
+          <FormSubmit
+            form={form}
+            label="Setup"
+            state={isFetching ? "normal" : "success"}
+            disabled={isFetching || !isFlowActive}
+          />
+        </Grid>
+      </form>
 
-			<RequestResult
-				result={result}
-				completeRender={(data) =>
-					<>
-						<Box sx={{ my: 2 }}>
-							<TransactionInfo transaction={data}/>
-						</Box>
-					</>
-				}
-			/>
-
-		</div>
-	)
+      <RequestResult
+        result={result}
+        completeRender={data => (
+          <>
+            <Box sx={{ my: 2 }}>
+              <TransactionInfo transaction={data} />
+            </Box>
+          </>
+        )}
+      />
+    </div>
+  )
 }
 
 export const runRawTransaction = async (
-	fcl: Fcl,
-	params: { cadence: string, args?: any },
-	signature: AuthWithPrivateKey,
-	gasLimit: number = 999,
+  fcl: Fcl,
+  params: { cadence: string; args?: any },
+  signature: AuthWithPrivateKey,
+  gasLimit: number = 999,
 ): Promise<string> => {
-	const ix = [fcl.limit(gasLimit)]
-	ix.push(
-		fcl.payer(signature || fcl.authz),
-		fcl.proposer(signature || fcl.authz),
-		fcl.authorizations([signature || fcl.authz]),
-	)
+  const ix = [fcl.limit(gasLimit)]
+  ix.push(
+    fcl.payer(signature || fcl.authz),
+    fcl.proposer(signature || fcl.authz),
+    fcl.authorizations([signature || fcl.authz]),
+  )
 
-	if (params.args) {
-		ix.push(params.args)
-	}
-	ix.push(fcl.transaction(params.cadence))
-	const tx = await fcl.send(ix)
-	return tx.transactionId
+  if (params.args) {
+    ix.push(params.args)
+  }
+  ix.push(fcl.transaction(params.cadence))
+  const tx = await fcl.send(ix)
+  return tx.transactionId
 }
 
 function getFlowEnv(env: RaribleSdkEnvironment): FlowNetwork {
-	switch (env) {
-		case "development":
-		case "testnet":
-		case "prod":
-			return "mainnet"
-		default: throw new Error("Unrecognized env")
-	}
+  switch (env) {
+    case "development":
+    case "testnet":
+    case "prod":
+      return "mainnet"
+    default:
+      throw new Error("Unrecognized env")
+  }
 }

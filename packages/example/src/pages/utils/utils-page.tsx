@@ -10,37 +10,35 @@ import { ProviderActions } from "./components/provider-actions"
 import { TransactionData } from "./components/transaction-data"
 import { SardineOfframp } from "./components/sardine-offramp"
 
-
 export function UtilsPage() {
-	const connection = useSdkContext()
-	const blockchain = connection.sdk.wallet?.walletType
+  const connection = useSdkContext()
+  const blockchain = connection.sdk.wallet?.walletType
 
-	return (
-		<Page header="Utils page">
-			{blockchain === WalletType.FLOW && <FlowUtils/>}
-			{blockchain === WalletType.ETHEREUM && <EVMUtils/>}
-			<TransactionData />
-			<SardineOfframp />
-		</Page>
-	)
-
+  return (
+    <Page header="Utils page">
+      {blockchain === WalletType.FLOW && <FlowUtils />}
+      {blockchain === WalletType.ETHEREUM && <EVMUtils />}
+      <TransactionData />
+      <SardineOfframp />
+    </Page>
+  )
 }
 export function FlowUtils() {
-	return (
-		<>
-			<SetupCollection />
-			<SetupMattelCollections />
-			<SardineCheckout />
-			<ExecuteRawTransaction />
-		</>
-	)
+  return (
+    <>
+      <SetupCollection />
+      <SetupMattelCollections />
+      <SardineCheckout />
+      <ExecuteRawTransaction />
+    </>
+  )
 }
 
 export function EVMUtils() {
-	return (
-		<>
-			<SignTypedDataUtil />
-			<ProviderActions/>
-		</>
-	)
+  return (
+    <>
+      <SignTypedDataUtil />
+      <ProviderActions />
+    </>
+  )
 }

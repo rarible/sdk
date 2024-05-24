@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function SellComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get sell info
 const sell = await connection.sdk.order.sell.prepare({
   itemId: <ITEM ID>
@@ -25,6 +25,7 @@ const result = await sell.submit({
 })
 // result: string - order id
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

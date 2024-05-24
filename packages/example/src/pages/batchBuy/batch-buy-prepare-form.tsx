@@ -14,80 +14,76 @@ import { RequestResult } from "../../components/common/request-result"
 import { useSdkContext } from "../../components/connector/sdk"
 
 interface IBatchBuyPrepareFormProps {
-	disabled?: boolean
-	onComplete: (response: { prepare: PrepareBatchBuyResponse, orders: Order[] }) => void
-	orderId: string | undefined
+  disabled?: boolean
+  onComplete: (response: { prepare: PrepareBatchBuyResponse; orders: Order[] }) => void
+  orderId: string | undefined
 }
 
 export function BatchBuyPrepareForm({ orderId, disabled, onComplete }: IBatchBuyPrepareFormProps) {
-	const [inputsCount, setInputsCount] = useState(2)
-	const connection = useSdkContext()
-	const form = useForm()
-	const { handleSubmit } = form
-	const { result, setError } = useRequestResult()
+  const [inputsCount, setInputsCount] = useState(2)
+  const connection = useSdkContext()
+  const form = useForm()
+  const { handleSubmit } = form
+  const { result, setError } = useRequestResult()
 
-	return (
-		<>
-			<form onSubmit={handleSubmit(async (formData) => {
-				try {
-					onComplete({
-						prepare: await connection.sdk.order.batchBuy.prepare(
-							formData.orderId.filter((id: string) => id).map((id: string) => {
-								return {
-									orderId: toOrderId(id),
-								}
-							})
-						),
-						orders: (await connection.sdk.apis.order.getOrdersByIds({
-							orderIds: {
-								ids: formData.orderId.filter((id: string) => id),
-							},
-						})).orders,
-					})
-				} catch (e) {
-					setError(e)
-				}
-			})}
-			>
-				<Stack spacing={2}>
-					{
-						(new Array(inputsCount)).fill(0).map((v, i) => {
-							return <FormTextInput key={i} form={form} defaultValue={orderId} name={`orderId[${i}]`} label="Order ID"/>
-						})
-					}
-					<Box
-						display="flex"
-						justifyContent="flex-end"
-						alignItems="flex-end"
-					>
-						<IconButton
-							color="primary"
-							onClick={() => setInputsCount(inputsCount + 1)}
-						>
-							<AddCircleOutlineIcon/>
-						</IconButton>
-						<IconButton
-							color="error"
-							disabled={inputsCount <= 1}
-							onClick={() => setInputsCount(Math.max(1, inputsCount - 1))}
-						>
-							<RemoveCircleOutlineIcon/>
-						</IconButton>
-					</Box>
-					<Box>
-						<FormSubmit
-							form={form}
-							label="Next"
-							state={resultToState(result.type)}
-							icon={faChevronRight}
-							disabled={disabled}
-						/>
-					</Box>
-				</Stack>
-			</form>
-			<Box sx={{ my: 2 }}>
-				<RequestResult result={result}/>
-			</Box>
-		</>
-	)
+  return (
+    <>
+      <form
+        onSubmit={handleSubmit(async formData => {
+          try {
+            onComplete({
+              prepare: await connection.sdk.order.batchBuy.prepare(
+                formData.orderId
+                  .filter((id: string) => id)
+                  .map((id: string) => {
+                    return {
+                      orderId: toOrderId(id),
+                    }
+                  }),
+              ),
+              orders: (
+                await connection.sdk.apis.order.getOrdersByIds({
+                  orderIds: {
+                    ids: formData.orderId.filter((id: string) => id),
+                  },
+                })
+              ).orders,
+            })
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Stack spacing={2}>
+          {new Array(inputsCount).fill(0).map((v, i) => {
+            return <FormTextInput key={i} form={form} defaultValue={orderId} name={`orderId[${i}]`} label="Order ID" />
+          })}
+          <Box display="flex" justifyContent="flex-end" alignItems="flex-end">
+            <IconButton color="primary" onClick={() => setInputsCount(inputsCount + 1)}>
+              <AddCircleOutlineIcon />
+            </IconButton>
+            <IconButton
+              color="error"
+              disabled={inputsCount <= 1}
+              onClick={() => setInputsCount(Math.max(1, inputsCount - 1))}
+            >
+              <RemoveCircleOutlineIcon />
+            </IconButton>
+          </Box>
+          <Box>
+            <FormSubmit
+              form={form}
+              label="Next"
+              state={resultToState(result.type)}
+              icon={faChevronRight}
+              disabled={disabled}
+            />
+          </Box>
+        </Stack>
+      </form>
+      <Box sx={{ my: 2 }}>
+        <RequestResult result={result} />
+      </Box>
+    </>
+  )
 }

@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function BurnComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get item info
 const prepare = await sdk.nft.burn({
   itemId: <ITEM ID>
@@ -21,6 +21,7 @@ const result = await prepare.submit({
 })
 // result: IBlockchainTransaction
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

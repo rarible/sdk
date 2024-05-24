@@ -14,67 +14,67 @@ import { BidForm } from "./bid-form"
 import { BidComment } from "./comments/bid-comment"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
-	return !!blockchain
+  return !!blockchain
 }
 
 export function BidPage() {
-	const params = useParams()
-	const connection = useSdkContext()
-	const blockchain = connection.sdk.wallet?.walletType
+  const params = useParams()
+  const connection = useSdkContext()
+  const blockchain = connection.sdk.wallet?.walletType
 
-	return (
-		<Page header="Make Bid">
-			{
-				!validateConditions(blockchain) && (
-					<CommentedBlock sx={{ my: 2 }}>
-						<UnsupportedBlockchainWarning blockchain={blockchain}/>
-					</CommentedBlock>
-				)
-			}
-			<CommentedBlock sx={{ my: 2 }} comment={<BidComment/>}>
-				<FormStepper
-					steps={[
-						{
-							label: "Get Item Info",
-							render: (onComplete) => {
-								return <BidPrepareForm
-									onComplete={onComplete}
-									disabled={!validateConditions(blockchain)}
-									itemId={params.itemId}
-								/>
-							},
-						},
-						{
-							label: "Send Transaction",
-							render: (onComplete, lastResponse) => {
-								return <BidForm
-									onComplete={onComplete}
-									prepare={lastResponse}
-									disabled={!validateConditions(blockchain)}
-								/>
-							},
-						},
-						{
-							label: "Done",
-							render: (onComplete, lastResponse) => {
-								return <RequestResult
-									result={{ type: "complete", data: lastResponse }}
-									completeRender={(data) =>
-										<>
-											<Box sx={{ my: 2 }}>
-												<Typography variant="overline">Order ID:</Typography>
-												<div>
-													<InlineCode wrap>{data}</InlineCode> <CopyToClipboard value={data}/>
-												</div>
-											</Box>
-										</>
-									}
-								/>
-							},
-						},
-					]}
-				/>
-			</CommentedBlock>
-		</Page>
-	)
+  return (
+    <Page header="Make Bid">
+      {!validateConditions(blockchain) && (
+        <CommentedBlock sx={{ my: 2 }}>
+          <UnsupportedBlockchainWarning blockchain={blockchain} />
+        </CommentedBlock>
+      )}
+      <CommentedBlock sx={{ my: 2 }} comment={<BidComment />}>
+        <FormStepper
+          steps={[
+            {
+              label: "Get Item Info",
+              render: onComplete => {
+                return (
+                  <BidPrepareForm
+                    onComplete={onComplete}
+                    disabled={!validateConditions(blockchain)}
+                    itemId={params.itemId}
+                  />
+                )
+              },
+            },
+            {
+              label: "Send Transaction",
+              render: (onComplete, lastResponse) => {
+                return (
+                  <BidForm onComplete={onComplete} prepare={lastResponse} disabled={!validateConditions(blockchain)} />
+                )
+              },
+            },
+            {
+              label: "Done",
+              render: (onComplete, lastResponse) => {
+                return (
+                  <RequestResult
+                    result={{ type: "complete", data: lastResponse }}
+                    completeRender={data => (
+                      <>
+                        <Box sx={{ my: 2 }}>
+                          <Typography variant="overline">Order ID:</Typography>
+                          <div>
+                            <InlineCode wrap>{data}</InlineCode> <CopyToClipboard value={data} />
+                          </div>
+                        </Box>
+                      </>
+                    )}
+                  />
+                )
+              },
+            },
+          ]}
+        />
+      </CommentedBlock>
+    </Page>
+  )
 }

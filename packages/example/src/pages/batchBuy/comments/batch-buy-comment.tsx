@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function BatchBuyComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get orders info
 const batchBuy = await connection.sdk.order.batchBuy([
   {orderId: <ORDER ID 1>},
@@ -39,6 +39,7 @@ const result = await buy.submit([{
 }])
 // result: IBlockchainTransaction
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }
