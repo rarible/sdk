@@ -1,0 +1,10 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [0.13.68-fix.24](https://github.com/rarible/sdk/compare/v0.13.68-fix.23...v0.13.68-fix.24) (2024-05-24)
+
+### Features
+
+- add thirdweb wallet connector ([29d27bc](https://github.com/rarible/sdk/commit/29d27bc1d8f8741ec202cffd9728b64be4e7fdd7))
