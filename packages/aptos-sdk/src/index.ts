@@ -34,3 +34,4 @@ export class AptosSdk {
 }
 
 export * from "./domain"
+export { APT_DIVIDER } from "./common"

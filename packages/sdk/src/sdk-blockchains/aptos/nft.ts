@@ -1,10 +1,9 @@
 /* eslint-disable camelcase */
-import type { AptosSdk } from "@rarible/aptos-sdk"
+import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
 import { extractId } from "@rarible/sdk-common"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
-import type { AptosSdkEnv } from "@rarible/aptos-sdk/build/domain"
 import { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"

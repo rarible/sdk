@@ -1,5 +1,4 @@
-import type { AptosSdk } from "@rarible/aptos-sdk"
-import type { AptosSdkEnv } from "@rarible/aptos-sdk/build/domain"
+import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
 import { extractId } from "@rarible/sdk-common"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
