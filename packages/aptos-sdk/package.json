@@ -13,7 +13,7 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:esm": "tsc --project tsconfig-build.json",
+    "build:ts": "tsc --project tsconfig-build.json",
     "clean": "run-s clean:*",
     "clean:build": "rimraf ./build",
     "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",

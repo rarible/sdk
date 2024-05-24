@@ -47,10 +47,10 @@ export type PrepareSellInternalResponse = BasePrepareOrderResponse<OrderInternal
 export type PrepareSellResponse = BasePrepareOrderResponse<OrderRequest> & PrepareSellSpecificResponse
 
 export type PrepareSellSpecificResponse = {
-	/**
+  /**
    * Whether nft should be transferred during operation
    */
-	shouldTransferNft: boolean
+  shouldTransferNft: boolean
 }
 
 export type PrepareSellInternalRequest = {

@@ -1,15 +1,8 @@
-import {
-	Aptos,
-	AptosConfig,
-} from "@aptos-labs/ts-sdk"
+import { Aptos, AptosConfig } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
 import type { AptosWalletInterface } from "@rarible/aptos-wallet"
 import { AptosNft } from "./nft/nft"
-import type {
-	AptosSdkEnv,
-	AptosNftSdk,
-	AptosBalanceSdk,
-} from "./domain"
+import type { AptosSdkEnv, AptosNftSdk, AptosBalanceSdk } from "./domain"
 import type { AptosSdkConfig } from "./domain"
 import { getNetworkFromEnv } from "./common"
 import { AptosBalance } from "./balance/balance"
@@ -25,17 +18,19 @@ export class AptosSdk {
   public readonly waitForTransaction: WaitForTransactionType
 
   constructor(wallet: Maybe<AptosWalletInterface>, env: AptosSdkEnv, settings: AptosSdkConfig = {}) {
-  	const networkFromEnv = getNetworkFromEnv(env)
-  	const config = new AptosConfig({
-  		...settings,
-  		network: networkFromEnv,
-  	})
-  	const aptos = new Aptos(config)
-  	const addressConfig = getEnvConfig(networkFromEnv)
+    const networkFromEnv = getNetworkFromEnv(env)
+    const config = new AptosConfig({
+      ...settings,
+      network: networkFromEnv,
+    })
+    const aptos = new Aptos(config)
+    const addressConfig = getEnvConfig(networkFromEnv)
 
-  	this.nft = new AptosNft(aptos, wallet, addressConfig)
-  	this.balance = new AptosBalance(aptos)
-  	this.order = new AptosOrder(aptos, wallet, addressConfig)
-  	this.waitForTransaction = (hash: string) => aptos.waitForTransaction({ transactionHash: hash })
+    this.nft = new AptosNft(aptos, wallet, addressConfig)
+    this.balance = new AptosBalance(aptos)
+    this.order = new AptosOrder(aptos, wallet, addressConfig)
+    this.waitForTransaction = (hash: string) => aptos.waitForTransaction({ transactionHash: hash })
   }
 }
+
+export * from "./domain"
