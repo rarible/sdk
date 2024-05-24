@@ -24,7 +24,7 @@
     "clean:umd": "rimraf ./umd",
     "docs": "typedoc",
     "test": "sh ./scripts/test.sh",
-    "test:only": "jest --runInBand --testPathPattern=src/sdk-blockchains/ethereum --silent=false --detectOpenHandles",
+    "test:only": "jest --runInBand --testPathPattern=src/sdk-blockchains/aptos --silent=false --detectOpenHandles",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {

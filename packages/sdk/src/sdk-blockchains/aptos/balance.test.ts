@@ -1,10 +1,10 @@
-import { createTestAptosState, DEFAULT_PK } from "@rarible/aptos-sdk/src/common/test"
+import { TestUtils } from "@rarible/aptos-sdk"
 import { Blockchain } from "@rarible/api-client"
 import { createSdk } from "./common/tests/create-sdk"
 import { APTOS_CURRENCY_ID_ZERO_ADDRESS, convertAptosToUnionAddress } from "./common"
 
 describe("aptos balances", () => {
-  const sellerState = createTestAptosState(DEFAULT_PK)
+  const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
   const sdk = createSdk(sellerState, "development")
   const recepientAddress = convertAptosToUnionAddress(sellerState.account.accountAddress.toString())
 

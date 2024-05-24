@@ -1,11 +1,11 @@
 import { Blockchain } from "@rarible/api-client"
 import { retry } from "@rarible/sdk-common"
-import { createTestAptosState, DEFAULT_PK } from "@rarible/aptos-sdk/src/common/test"
+import { TestUtils } from "@rarible/aptos-sdk"
 import type { CommonTokenMetadataResponse } from "../../types/nft/mint/preprocess-meta"
 import { createSdk } from "./common/tests/create-sdk"
 
 describe("Aptos NFT", () => {
-  const state = createTestAptosState(DEFAULT_PK)
+  const state = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
   const sdk = createSdk(state, "development")
 
   test("test preprocess metadata", () => {

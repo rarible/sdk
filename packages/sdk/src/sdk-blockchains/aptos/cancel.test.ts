@@ -1,19 +1,18 @@
-import { createTestAptosState, createTestCollectionAndMint, DEFAULT_PK } from "@rarible/aptos-sdk/src/common/test"
+import { TestUtils } from "@rarible/aptos-sdk"
 import { toItemId } from "@rarible/types"
-import { BUYER_PK } from "@rarible/aptos-sdk/build/common/test"
 import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
 import { APTOS_CURRENCY_ID_ZERO_ADDRESS, convertAptosToUnionCollectionId } from "./common"
 import { createSdk } from "./common/tests/create-sdk"
 
 describe("cancel aptos orders", () => {
-  const sellerState = createTestAptosState(DEFAULT_PK)
+  const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
   const sdkSeller = createSdk(sellerState, "development")
-  const buyerState = createTestAptosState(BUYER_PK)
+  const buyerState = TestUtils.createTestAptosState(TestUtils.BUYER_PK)
   const sdkBuyer = createSdk(buyerState, "development")
 
   test("cancel sell order", async () => {
-    const { tokenAddress } = await createTestCollectionAndMint(sellerState)
+    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
     const sellOrder = await sdkSeller.order.sell({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -30,7 +29,7 @@ describe("cancel aptos orders", () => {
   })
 
   test("cancel collection offer", async () => {
-    const { collectionAddress } = await createTestCollectionAndMint(sellerState)
+    const { collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
     const bidOrder = await sdkBuyer.order.bid({
       collectionId: convertAptosToUnionCollectionId(collectionAddress),
       amount: 1,
@@ -48,7 +47,7 @@ describe("cancel aptos orders", () => {
   })
 
   test("cancel bid", async () => {
-    const { tokenAddress } = await createTestCollectionAndMint(sellerState)
+    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
     const bidOrder = await sdkBuyer.order.bid({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
