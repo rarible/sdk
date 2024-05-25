@@ -3,7 +3,7 @@
 def pipelineConfig = [
   "JSpublicLibrary": "true",
   "pkgRepoName": "npmjs-org",
-  "ignoreEngines": "true"
+  "baseImageTag": "18-bullseye-slim"
 ]
 
 withCredentials([
