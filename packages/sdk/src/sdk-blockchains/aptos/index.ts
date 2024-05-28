@@ -1,6 +1,6 @@
 import { AptosSdk } from "@rarible/aptos-sdk"
 import type { AptosWallet } from "@rarible/sdk-wallet"
-import type { AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import type { AptosSdkConfig } from "@rarible/aptos-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
@@ -19,7 +19,7 @@ import { AptosBid } from "./bid"
 export function createAptosSdk(
   wallet: Maybe<AptosWallet>,
   apis: IApisSdk,
-  env: AptosSdkEnv,
+  env: SupportedAptosNetwork,
   config?: AptosSdkConfig,
 ): IRaribleInternalSdk {
   const sdk = new AptosSdk(wallet?.wallet, env, config)

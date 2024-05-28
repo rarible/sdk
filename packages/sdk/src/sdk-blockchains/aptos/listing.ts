@@ -1,4 +1,4 @@
-import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { OrderId } from "@rarible/api-client"
 import { Action } from "@rarible/action"
@@ -20,7 +20,7 @@ import { convertAptosToUnionOrderId, getFeeObject, getSupportedCurrencies } from
 export class AptosListing {
   constructor(
     private readonly sdk: AptosSdk,
-    private readonly network: AptosSdkEnv,
+    private readonly network: SupportedAptosNetwork,
     private readonly apis: IApisSdk,
   ) {
     this.sell = this.sell.bind(this)

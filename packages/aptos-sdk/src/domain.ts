@@ -1,4 +1,5 @@
 import type { CommittedTransactionResponse, AptosSettings } from "@aptos-labs/ts-sdk"
+import { Network as AptosNetwork } from "@aptos-labs/ts-sdk"
 import type { BigNumber } from "@rarible/types"
 import type { CreateCollectionOptions, MintByCollectionNameOptions, MintByCollectionAddressOptions } from "./nft/nft"
 
@@ -52,8 +53,11 @@ export interface AptosOrderSdk {
   createFeeSchedule(options: { value: number; receiveAddress?: string }): Promise<string>
 }
 
-export type AptosSdkEnv = "testnet" | "mainnet"
+export const supportedNetworks = [AptosNetwork.TESTNET] as const
+export type SupportedNetwork = (typeof supportedNetworks)[number]
 
-export type AptosSdkConfig = Omit<AptosSettings, "network">
-
+export type AptosSdkConfig = {
+  overrides?: Partial<AptosSettings> // this will be passed to aptos' sdk and behave like override
+}
 export type WaitForTransactionType = (hash: string) => Promise<CommittedTransactionResponse>
+export { AptosNetwork }

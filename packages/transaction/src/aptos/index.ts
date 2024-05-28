@@ -1,7 +1,7 @@
 import { Network, TransactionResponseType } from "@aptos-labs/ts-sdk"
 import type { TransactionResponse } from "@aptos-labs/ts-sdk"
 import { Blockchain } from "@rarible/api-client"
-import type { AptosSdkEnv } from "@rarible/aptos-sdk/build/domain"
+import type { SupportedNetwork } from "@rarible/aptos-sdk"
 import type { AptosSdk } from "@rarible/aptos-sdk"
 import type { IBlockchainTransaction } from "../domain"
 
@@ -10,7 +10,7 @@ export class BlockchainAptosTransaction implements IBlockchainTransaction {
 
   constructor(
     readonly transaction: TransactionResponse,
-    readonly network: AptosSdkEnv,
+    readonly network: SupportedNetwork,
     readonly sdk: AptosSdk,
   ) {}
 
@@ -31,8 +31,6 @@ export class BlockchainAptosTransaction implements IBlockchainTransaction {
     switch (this.network) {
       case Network.TESTNET:
         return `https://explorer.aptoslabs.com/txn/${this.hash()}?network=testnet`
-      case Network.MAINNET:
-        return `https://explorer.aptoslabs.com/txn/${this.hash()}?network=mainnet`
       default:
         throw new Error("Unsupported transaction network")
     }
