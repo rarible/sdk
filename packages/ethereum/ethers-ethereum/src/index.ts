@@ -447,15 +447,9 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 			}
 
 			const func = this.contract[this.fnSignature].bind(null, ...this.args)
-			if (options) {
-				const tx = await func(options)
-				hashValue = tx.hash
-				return new EthersTransaction(tx)
-			} else {
-				const tx = await func()
-				hashValue = tx.hash
-				return new EthersTransaction(tx)
-			}
+			const tx = await func(options || {})
+			hashValue = tx.hash
+			return new EthersTransaction(tx, this.contract)
 		} catch (e: any) {
 			let callInfo = null, callData = null
 			try {
