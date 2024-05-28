@@ -35,6 +35,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @rarible/connector-portis
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+**Note:** Version bump only for package @rarible/connector-portis
 
 
 

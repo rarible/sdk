@@ -41,6 +41,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+**Note:** Version bump only for package @rarible/biconomy-middleware
+
+
 
 
 

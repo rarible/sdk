@@ -47,6 +47,15 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+
+### Features
+
+* **PLTF-389:** astar kyoto testnet support ([#621](https://github.com/rarible/sdk/issues/621)) ([3199837](https://github.com/rarible/sdk/commit/31998375c4464135662c1d9db349264f4d6afc29))
+* **PLTF-438:** check minimal price ([#622](https://github.com/rarible/sdk/issues/622)) ([f79c5ed](https://github.com/rarible/sdk/commit/f79c5ed06ced6cfcec929c83139eeec94ff06392))
+
+
 
 
 

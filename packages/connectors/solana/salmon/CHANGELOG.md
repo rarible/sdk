@@ -19,6 +19,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **PLTF-325:** support web3 v1 and v4 ([#598](https://github.com/rarible/sdk/issues/598)) ([782d417](https://github.com/rarible/sdk/commit/782d4170a3038a4f60f1b9ed4dafd990d79bf098))
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+**Note:** Version bump only for package @rarible/connector-salmon
+
 
 
 

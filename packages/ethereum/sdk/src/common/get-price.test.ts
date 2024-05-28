@@ -1,7 +1,7 @@
 import { awaitAll, createGanacheProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toAddress } from "@rarible/types"
 import { Web3 } from "@rarible/web3-v4-ethereum"
-import { getPrice } from "./get-price"
+import { getPrice, getPriceDecimal } from "./get-price"
 import { createEthereumProviders } from "./test/create-test-providers"
 import { sentTx } from "./test"
 
@@ -32,5 +32,13 @@ describe.each(providers)("get price test", (ethereum) => {
 			contract: toAddress(it.testErc20.options.address),
 		}, "0.000000000000000002")
 		expect(value.toString()).toEqual("2")
+	})
+
+	test("get price decimal", async () => {
+		const value = await getPriceDecimal(ethereum, {
+			assetClass: "ERC20",
+			contract: toAddress(it.testErc20.options.address),
+		}, "100000000000000000")
+		expect(value.toString()).toEqual("0.1")
 	})
 })

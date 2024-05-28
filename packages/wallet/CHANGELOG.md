@@ -43,6 +43,13 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+**Note:** Version bump only for package @rarible/sdk-wallet
+
+
+
+
 
 ## [0.13.68-fix.21](https://github.com/rarible/sdk/compare/v0.13.68-fix.20...v0.13.68-fix.21) (2024-04-24)
 

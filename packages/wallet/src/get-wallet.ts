@@ -9,6 +9,7 @@ import type { Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
 import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
+import * as SdkCommon from "@rarible/sdk-common"
 import { AptosSdkWallet, isExternalAccount } from "@rarible/aptos-wallet"
 import type { ExternalAccount } from "@rarible/aptos-wallet"
 import type { BlockchainWallet } from "./"
@@ -71,11 +72,11 @@ function isImxWallet(x: any): x is ImxWallet {
 }
 
 export function isWeb3v1(x: Web3 | Web3v4): x is Web3 {
-	return Web3Ethereum.isWeb3v1(x)
+	return SdkCommon.isWeb3v1(x)
 }
 
 export function isWeb3v4(x: Web3 | Web3v4): x is Web3v4 {
-	return Web3v4Ethereum.isWeb3v4(x)
+	return SdkCommon.isWeb3v4(x)
 }
 
 function isAptosWallet(x: any): x is AptosProvider {

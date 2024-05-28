@@ -80,7 +80,7 @@ describe.each(providers)("cancel order", (ethereum) => {
 		}
 		const { tx, order } = await testOrder(form)
 		const events = await tx.getEvents()
-		expect(events.some(e => e.event === "Cancel" && (e?.returnValues?.hash || e?.args?.hash) === order.hash)).toBe(true)
+		expect(events.some(e => e.event === "Cancel" && e.returnValues.hash === order.hash)).toBe(true)
 	})
 
 	async function testOrder(form: OrderForm) {

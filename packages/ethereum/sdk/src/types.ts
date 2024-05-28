@@ -26,6 +26,7 @@ export const ethereumNetworks = [
 	"rari",
 	"zkatana",
 	"astar-zkevm",
+	"astar-kyoto",
 	"base",
 	"base-sepolia",
 	"testnet-celo",

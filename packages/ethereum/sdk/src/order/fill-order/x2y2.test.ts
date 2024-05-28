@@ -2,12 +2,13 @@ import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum/build"
 import { toAddress } from "@rarible/types"
 import type { X2Y2Order } from "@rarible/ethereum-api-client"
 import { createRaribleSdk } from "../../index"
-import { DEV_PK_1, MAINNET_CONFIG } from "../../common/test/test-credentials"
+import { DEV_PK_1, getE2EConfigByNetwork } from "../../common/test/test-credentials"
 import { createE2eTestProvider } from "../../common/test/create-test-providers"
 
 // x2y2 works only on mainnet
 describe.skip("x2y2", () => {
-	const { provider: providerBuyer } = createE2eTestProvider(DEV_PK_1, MAINNET_CONFIG)
+	const mainnet = getE2EConfigByNetwork("mainnet")
+	const { provider: providerBuyer } = createE2eTestProvider(DEV_PK_1, mainnet)
 
 	const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer as any), gas: 3000000 })
 	const sdkBuyer = createRaribleSdk(buyerWeb3, "mainnet")

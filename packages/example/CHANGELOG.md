@@ -41,6 +41,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * webpack dev server ([9dd2887](https://github.com/rarible/sdk/commit/9dd288726b293a74cfff7f1977098334a6d18b85))
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+**Note:** Version bump only for package example
+
+
 
 
 

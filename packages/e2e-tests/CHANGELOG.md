@@ -38,6 +38,11 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 * **MPX-2230:** update web3 to latest version ([75c1913](https://github.com/rarible/sdk/commit/75c19137cd770d05862005d4d75a6038ab30cc14))
 
 
+## [0.13.68-fix.22](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.68-fix.22) (2024-05-08)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+
 
 
 

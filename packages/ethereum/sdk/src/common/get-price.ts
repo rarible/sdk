@@ -17,3 +17,17 @@ export async function getPrice(
 			throw new Error(`Asset type should be either ETH or ERC-20, received=${JSON.stringify(assetType)}`)
 	}
 }
+
+export async function getPriceDecimal(
+	ethereum: Ethereum, assetType: AssetType, price: BigNumberValue
+): Promise<BigNumber> {
+	const decimals = await getDecimals(ethereum, assetType)
+	const divider = toBn(10).pow(decimals)
+	switch (assetType.assetClass) {
+		case "ETH":
+		case "ERC20":
+			return toBn(price).div(divider)
+		default:
+			throw new Error(`Asset type should be either ETH or ERC-20, received=${JSON.stringify(assetType)}`)
+	}
+}

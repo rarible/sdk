@@ -1,8 +1,8 @@
 {
   "name": "@rarible/sdk-e2e-tests",
   "version": "0.13.69-beta.3",
-  "homepage": "",
   "private": true,
+  "homepage": "",
   "license": "ISC",
   "scripts": {
     "test": "echo run e2e-test to run e2e-tests",
