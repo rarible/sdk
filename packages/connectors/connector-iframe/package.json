@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-iframe",
-  "version": "0.13.69-beta.3",
+  "version": "0.13.69-beta.4",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@ledgerhq/iframe-provider": "^0.4.2",
-    "@rarible/connector": "^0.13.69-beta.3"
+    "@rarible/connector": "^0.13.69-beta.4"
   },
   "devDependencies": {
     "@types/jest": "^27.0.2",

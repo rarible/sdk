@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.22...v0.13.69-beta.4) (2024-05-28)
+
+
+
+## [0.13.69-beta.3](https://github.com/rarible/sdk/compare/v0.13.69-beta.2...v0.13.69-beta.3) (2024-05-02)
+
+
+
+## [0.13.69-beta.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.69-beta.2) (2024-05-02)
+
+
+
+## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
+
+
+
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+**Note:** Version bump only for package @rarible/immutable-wallet
+
+
+
+
+
 ## [0.13.69-beta.3](https://github.com/rarible/sdk/compare/v0.13.69-beta.2...v0.13.69-beta.3) (2024-05-02)
 
 **Note:** Version bump only for package @rarible/immutable-wallet
