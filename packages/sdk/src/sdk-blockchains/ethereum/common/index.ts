@@ -30,7 +30,7 @@ import type { Asset as EthereumAsset, AssetType as EthereumAssetType, Part } fro
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
-import type { EthereumWallet } from "@rarible/sdk-wallet/build"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { EVMBlockchain } from "@rarible/sdk-common/build"
 import { EVMBlockchains, isEVMBlockchain, WalletIsUndefinedError } from "@rarible/sdk-common/build"
 import {

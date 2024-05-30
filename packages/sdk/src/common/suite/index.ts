@@ -1,5 +1,5 @@
 import { toUnionAddress } from "@rarible/types"
-import type { RaribleSdkProvider } from "@rarible/sdk-wallet/build"
+import type { RaribleSdkProvider } from "@rarible/sdk-wallet"
 import { createRaribleSdk } from "../.."
 import { LogsLevel } from "../../domain"
 import type { IRaribleSdk } from "../../domain"
