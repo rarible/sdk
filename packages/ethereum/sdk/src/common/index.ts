@@ -68,6 +68,8 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
     case "kroma":
     case "testnet-kroma":
       return Blockchain.KROMA
+    case "sei-arctic":
+      return Blockchain.SEI
     default:
       throw new Error(`Unrecognized ethereum network ${network}`)
   }

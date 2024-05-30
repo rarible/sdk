@@ -289,18 +289,20 @@ export function getConnector(environment: RaribleSdkEnvironment) {
       rpcMap: ethereumRpcMap,
     }),
   )
-
-  const thirdwebInApp = mapEthereumWallet(
-    new ThirdwebInAppProvider({
-      clientId: process.env.REACT_APP_THIRDWEB_CLIENT_ID!,
-      defaultChain: {
-        chainId: ethChainId,
-      },
-      options: {
-        strategy: "iframe",
-      },
-    }),
-  )
+  let thirdwebInApp
+  if (thirdwebInApp) {
+    thirdwebInApp = mapEthereumWallet(
+      new ThirdwebInAppProvider({
+        clientId: process.env.REACT_APP_THIRDWEB_CLIENT_ID!,
+        defaultChain: {
+          chainId: ethChainId,
+        },
+        options: {
+          strategy: "iframe",
+        },
+      }),
+    )
+  }
 
   const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
   const salmonConnect = mapSolanaWallet(new SalmonConnectionProvider())
@@ -316,7 +318,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     }),
   )
 
-  return Connector.create(injected, state)
+  const connectorInstance = Connector.create(injected, state)
     .add(nfid)
     .add(walletLink)
     .add(beacon)
@@ -332,7 +334,11 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     .add(aptos)
     .add(firebase)
     .add(firebaseEmail)
-    .add(thirdwebInApp)
+
+  if (thirdwebInApp) {
+    connectorInstance.add(thirdwebInApp)
+  }
+  return connectorInstance
 }
 
 export type ConnectorInstance = ReturnType<typeof getConnector>
