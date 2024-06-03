@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
 import { extractId } from "@rarible/sdk-common"
@@ -30,7 +30,7 @@ import type { AptosTokenMetadata } from "./domain"
 export class AptosNft {
   constructor(
     private readonly sdk: AptosSdk,
-    private readonly network: AptosSdkEnv,
+    private readonly network: SupportedAptosNetwork,
     private readonly apis: IApisSdk,
   ) {
     this.createCollectionBasic = this.createCollectionBasic.bind(this)

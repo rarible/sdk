@@ -1,4 +1,4 @@
-import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import { Action } from "@rarible/action"
 import { extractId } from "@rarible/sdk-common"
 import { toBn } from "@rarible/utils"
@@ -21,7 +21,7 @@ import { convertAptosToUnionOrderId, getFeeObject, getSupportedCurrencies } from
 export class AptosBid {
   constructor(
     private readonly sdk: AptosSdk,
-    private readonly network: AptosSdkEnv,
+    private readonly network: SupportedAptosNetwork,
     private readonly apis: IApisSdk,
   ) {
     this.bid = this.bid.bind(this)

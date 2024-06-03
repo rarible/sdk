@@ -1,4 +1,4 @@
-import type { TezosWallet } from "@rarible/sdk-wallet/build"
+import type { TezosWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { Blockchain } from "@rarible/api-client"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
