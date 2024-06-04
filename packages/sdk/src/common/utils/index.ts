@@ -1,7 +1,7 @@
 import type { AssetType, Order, OrderId } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types"
 import type { ItemId } from "@rarible/api-client"
-import { toCollectionId } from "@rarible/types"
+import { toCollectionId, toContractAddress } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import type { BlockchainIsh, NonEVMBlockchains, SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain, isEVMBlockchain } from "@rarible/sdk-common"
@@ -32,6 +32,9 @@ export function getNftContractAddress(assetType: AssetType): ContractAddress | u
     case "COLLECTION":
     case "AMM_NFT":
       return assetType.contract
+    case "NFT":
+    case "NFT_OF_COLLECTION":
+      return toContractAddress(assetType.collectionId)
     default:
       return undefined
   }

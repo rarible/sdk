@@ -1,5 +1,5 @@
 import type { ContractAddress, Maybe } from "@rarible/types"
-import type { CollectionId } from "@rarible/api-client"
+import type { Collection, CollectionId, ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, WalletByBlockchain, RaribleSdkProvider } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
@@ -8,6 +8,7 @@ import { getRaribleWallet } from "@rarible/sdk-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { isSupportedBlockchain, extractBlockchain } from "@rarible/sdk-common"
+import type { Item } from "@rarible/api-client/build/models"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
 import { getSdkConfig } from "./config"
@@ -191,12 +192,9 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
   return new MethodWithPrepare(
     request => sell(request),
     async request => {
-      const [item, collection] = await Promise.all([
-        apis.item.getItemById({ itemId: request.itemId }),
-        apis.collection.getCollectionById({ collection: getCollectionFromItemId(request.itemId) }),
-      ])
+      const { item, collection } = await getSellItemData(request.itemId, apis)
 
-      if (collection.self) {
+      if (collection?.self) {
         await checkRoyalties(request.itemId, apis)
       }
 
@@ -211,6 +209,33 @@ function createSell(sell: ISellInternal, apis: IApisSdk): ISell {
       }
     },
   )
+}
+
+/*
+  Get Item and Collection object in parallel or consistent requests depends on blockhain ItemId
+ */
+async function getSellItemData(
+  itemId: ItemId,
+  apis: IApisSdk,
+): Promise<{ item: Item; collection: Collection | undefined }> {
+  const blockchain = extractBlockchain(itemId)
+  if (blockchain === Blockchain.APTOS) {
+    const item = await apis.item.getItemById({ itemId })
+    let collection
+    const collectionId = item.collection || item.itemCollection?.id
+    if (collectionId) {
+      collection = await apis.collection.getCollectionById({
+        collection: collectionId,
+      })
+    }
+    return { item, collection }
+  }
+
+  const [item, collection] = await Promise.all([
+    apis.item.getItemById({ itemId }),
+    apis.collection.getCollectionById({ collection: getCollectionFromItemId(itemId) }),
+  ])
+  return { item, collection }
 }
 
 function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
