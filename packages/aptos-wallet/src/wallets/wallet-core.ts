@@ -1,5 +1,5 @@
 import type { MoveFunctionId } from "@aptos-labs/ts-sdk"
-import { WalletCore } from "@aptos-labs/wallet-adapter-core"
+import type { WalletCore } from "@aptos-labs/wallet-adapter-core"
 import { randomWord } from "@rarible/types"
 import { normalizeAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface } from "../domain"

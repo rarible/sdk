@@ -6,8 +6,10 @@ import type { ImxWallet } from "@rarible/immutable-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
-import { AptosSdkWallet, AptosWalletCore } from "@rarible/aptos-wallet"
-import type { ExternalAccount as AptosExternalAccount, WalletCore } from "@rarible/aptos-wallet"
+import { AptosSdkWallet } from "@rarible/aptos-wallet"
+import type { WalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
+import { AptosWalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
+import type { ExternalAccount as AptosExternalAccount } from "@rarible/aptos-wallet"
 import { isObjectLike } from "@rarible/sdk-common"
 import {
   AptosWallet,
@@ -30,8 +32,8 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
   if (isImxWallet(provider)) return new ImmutableXWallet(provider)
   if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
   if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
-  if (isAptosCoreWallet(provider)) new AptosWallet(new AptosWalletCore(provider))
-  if (isAptosExternalWallet(provider)) new AptosWallet(new AptosSdkWallet(provider))
+  if (isAptosCoreWallet(provider)) return new AptosWallet(new AptosWalletCore(provider))
+  if (isAptosExternalWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
 
   throw new Error("Unsupported provider")
 }

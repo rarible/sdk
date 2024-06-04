@@ -21,10 +21,8 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/logger": "^0.9.12",
     "@rarible/types": "~0.9.26",
-    "@rarible/utils": "~0.9.10",
-    "node-fetch": "^2.6.7"
+    "@rarible/utils": "~0.9.10"
   },
   "devDependencies": {
     "@rarible/aptos-wallet": "^0.13.68-fix.24",
@@ -32,8 +30,8 @@
     "form-data": "^4.0.0"
   },
   "peerDependencies": {
-    "tslib": "^2.3.1",
-    "@aptos-labs/ts-sdk": "^1.5.1"
+    "@aptos-labs/ts-sdk": "^1.5.1",
+    "tslib": "^2.3.1"
   },
   "publishConfig": {
     "access": "public",

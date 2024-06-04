@@ -5,7 +5,8 @@ import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
 import type { ImxWallet } from "@rarible/immutable-wallet"
 import type { SolanaSigner } from "@rarible/solana-common"
-import type { ExternalAccount as AptosExternalAccount, WalletCore as AptosWalletCore } from "@rarible/aptos-wallet"
+import type { ExternalAccount as AptosExternalAccount } from "@rarible/aptos-wallet"
+import type { WalletCore as AptosWalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
 import type { BlockchainWallet } from "./wallets"
 
 export type EtherSigner = TypedDataSigner & Signer
