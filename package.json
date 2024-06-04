@@ -127,7 +127,9 @@
     "ts-node": "^10.9.2",
     "tslib": "^2.3.1",
     "typescript": "^5.4.5",
-    "web3": "1.8.2"
+    "web3": "1.8.2",
+    "@aptos-labs/ts-sdk": "^1.5.1",
+    "@rarible/api-client": "0.16.5-alpha.10"
   },
   "packageManager": "yarn@1.22.22",
   "engines": {

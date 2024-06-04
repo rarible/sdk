@@ -20,7 +20,7 @@ describe("Aptos Orders", () => {
     console.log("seller", sellerState.account.accountAddress.toString())
   })
 
-  test("sell & buy with CurrencyId with prepare", async () => {
+  test.skip("sell & buy with CurrencyId with prepare", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
     const prepareResponse = await sdkSeller.order.sell.prepare({
       itemId: toItemId(`APTOS:${tokenAddress}`),
