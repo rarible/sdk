@@ -50,9 +50,4 @@ export function getListingTokenType(listingResources: MoveResource[]): CURRENCY_
   return tokenType
 }
 
-export function normalizeAddress(address: string): string {
-  if (address.length === 66 && address.startsWith("0x")) return address
-  return `0x${address.replace("0x", "").padStart(64, "0")}`
-}
-
 export * as TestUtils from "./test"

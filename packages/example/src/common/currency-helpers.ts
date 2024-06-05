@@ -38,6 +38,11 @@ const flowUSDC: FlowAssetTypeFt = {
   contract: toContractAddress("FLOW:A.a983fecbed621163.FiatToken"),
 }
 
+const aptosNative = {
+  "@type": "CURRENCY_NATIVE",
+  blockchain: Blockchain.APTOS,
+} as const
+
 export type CurrencyOption =
   | {
       type: "NATIVE"
@@ -86,6 +91,8 @@ export function getCurrency(
       if (type === "NATIVE") return flowNative
       if (type === "TOKEN" && contract === flowUSDC.contract) return flowUSDC
       throw new Error("Unsupported currency subtype")
+    case Blockchain.APTOS:
+      return aptosNative
     default:
       throw new Error("Unsupported blockchain")
   }
@@ -385,6 +392,11 @@ export function getCurrencyOptions(
               contract: "FLOW:A.a983fecbed621163.FiatToken",
             },
           ]
+        }
+        return []
+      case Blockchain.APTOS:
+        if (currency.type === "NATIVE") {
+          return { type: "NATIVE", label: "APT", blockchain: Blockchain.APTOS }
         }
         return []
       default:

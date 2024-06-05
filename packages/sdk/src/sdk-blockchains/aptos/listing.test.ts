@@ -15,6 +15,33 @@ describe("Aptos Orders", () => {
   const sdkBuyer = createSdk(buyerState, "development")
   const feeAddress = convertAptosToUnionAddress("0x6a98afd2d82f80f2dc535fac0a5d886281f9fe6a2b44a1511af70cdfa106ffe1")
 
+  beforeAll(async () => {
+    console.log("buyer", buyerState.account.accountAddress.toString())
+    console.log("seller", sellerState.account.accountAddress.toString())
+  })
+
+  test.skip("sell & buy with CurrencyId with prepare", async () => {
+    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    const prepareResponse = await sdkSeller.order.sell.prepare({
+      itemId: toItemId(`APTOS:${tokenAddress}`),
+    })
+    const sellOrder = await prepareResponse.submit({
+      amount: 1,
+      price: "0.02",
+      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      expirationDate: generateExpirationDate(),
+    })
+    await awaitOrder(sdkSeller, sellOrder)
+    const buyPrepare = await sdkBuyer.order.buy.prepare({
+      orderId: sellOrder,
+    })
+    expect(buyPrepare.orderData.nftCollection).toBeTruthy()
+    const tx = await buyPrepare.submit({
+      amount: 1,
+    })
+    await tx.wait()
+  })
+
   test("sell & buy with CurrencyId", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
     const sellOrder = await sdkSeller.order.sell({

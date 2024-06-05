@@ -2,6 +2,7 @@ import type { ItemId } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { Creator } from "@rarible/api-client/build/models/Creator"
+import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 export type PrepareBurnRequest = {
@@ -31,6 +32,13 @@ export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", Bur
    * Maximum amount to burn
    */
   maxAmount: BigNumber
+
+  /**
+   * Nft data
+   */
+  nftData: {
+    nftCollection: ContractAddress | undefined
+  }
 }
 
 /**

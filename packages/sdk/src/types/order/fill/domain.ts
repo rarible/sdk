@@ -112,7 +112,7 @@ export interface PreparedFillInfo {
   /**
    * Order data
    */
-  orderData?: {
+  orderData: {
     platform: Platform
     nftCollection: ContractAddress | undefined
   }

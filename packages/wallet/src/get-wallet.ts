@@ -6,8 +6,11 @@ import type { ImxWallet } from "@rarible/immutable-wallet"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
-import { AptosSdkWallet, isExternalAccount } from "@rarible/aptos-wallet"
-import type { ExternalAccount as AptosProvider } from "@rarible/aptos-wallet"
+import { AptosSdkWallet } from "@rarible/aptos-wallet"
+import type { WalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
+import { AptosWalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
+import type { ExternalAccount as AptosExternalAccount } from "@rarible/aptos-wallet"
+import { isObjectLike } from "@rarible/sdk-common"
 import {
   AptosWallet,
   ImmutableXWallet,
@@ -29,7 +32,8 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
   if (isImxWallet(provider)) return new ImmutableXWallet(provider)
   if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
   if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
-  if (isAptosWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
+  if (isAptosCoreWallet(provider)) return new AptosWallet(new AptosWalletCore(provider))
+  if (isAptosExternalWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
 
   throw new Error("Unsupported provider")
 }
@@ -62,6 +66,16 @@ function isImxWallet(x: any): x is ImxWallet {
   return "link" in x && "network" in x && "getConnectionData" in x
 }
 
-function isAptosWallet(x: any): x is AptosProvider {
-  return isExternalAccount(x)
+function isAptosExternalWallet(x: any): x is AptosExternalAccount {
+  return isObjectLike(x) && "signMessage" in x && "signAndSubmitTransaction" in x
+}
+
+function isAptosCoreWallet(x: any): x is WalletCore {
+  return (
+    isObjectLike(x) &&
+    "signAndSubmitTransaction" in x &&
+    "signMessage" in x &&
+    "setWallet" in x &&
+    "standardWallets" in x
+  )
 }

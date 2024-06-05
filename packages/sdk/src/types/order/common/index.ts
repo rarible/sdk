@@ -86,6 +86,13 @@ export interface PrepareOrderResponse extends BasePrepareOrderResponse<OrderRequ
    * is multiple nft
    */
   multiple: boolean
+
+  /**
+   * Nft data
+   */
+  nftData: {
+    nftCollection: ContractAddress | undefined
+  }
 }
 
 export interface PrepareOrderInternalResponse extends BasePrepareOrderResponse<OrderInternalRequest> {

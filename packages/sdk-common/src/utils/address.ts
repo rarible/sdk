@@ -63,3 +63,8 @@ export const FLOW_TOKEN_MAP = {
 export function isSupportedBlockchain(blockchain: string): blockchain is SupportedBlockchain {
   return SupportedBlockchains.includes(blockchain as SupportedBlockchain)
 }
+
+export function normalizeAddress(address: string): string {
+  if (address.length === 66 && address.startsWith("0x")) return address
+  return `0x${address.replace("0x", "").padStart(64, "0")}`
+}

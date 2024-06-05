@@ -26,7 +26,7 @@
   "dependencies": {
     "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.24",
     "@rarible/web3-ethereum": "^0.13.68-fix.24",
-    "axios": "^1.4.0",
+    "axios": "^0.26.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
@@ -35,8 +35,7 @@
     "redoc-express": "^1.0.0",
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
-    "typescript": "^5.4.5",
-    "web3": "1.8.2"
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.24",
@@ -48,6 +47,9 @@
     "@types/supertest": "^2.0.12",
     "nodemon": "^2.0.15",
     "supertest": "^6.2.2"
+  },
+  "peerDependencies": {
+    "web3": ">=1.5.0 <2.0.0"
   },
   "engines": {
     "node": ">=16.0.0"

@@ -17,10 +17,8 @@
     "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
-  "dependencies": {
-    "@rarible/api-client": "0.16.5-alpha.10"
-  },
   "peerDependencies": {
+    "@rarible/api-client": "0.16.5-alpha.10",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

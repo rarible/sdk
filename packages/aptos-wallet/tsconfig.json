@@ -1,8 +1,4 @@
 {
-	"extends": "../../tsconfig.json",
-	"include": ["src/**/*"],
-	"exclude": ["src/**/*.test.ts", "src/**/tests/**/*"],
-	"compilerOptions": {
-		"downlevelIteration": true
-	}
+  "extends": "../../tsconfig.new.json",
+  "include": ["src/**/*", "./jest.config.ts"]
 }

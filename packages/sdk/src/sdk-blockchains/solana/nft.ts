@@ -2,7 +2,7 @@ import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import { toBigNumber, toItemId } from "@rarible/types"
+import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
@@ -117,6 +117,9 @@ export class SolanaNft {
     return {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: item.collection && toContractAddress(item.collection),
+      },
       submit: Action.create({
         id: "burn" as const,
         run: async (request: BurnRequest) => {
@@ -152,6 +155,9 @@ export class SolanaNft {
     return {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: item.collection ? toContractAddress(item.collection) : undefined,
+      },
       submit: Action.create({
         id: "transfer" as const,
         run: async (request: TransferRequest) => {

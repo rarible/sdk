@@ -1,40 +1,40 @@
 import { randomWord } from "@rarible/types"
+import { normalizeAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface, ExternalAccount } from "../domain"
-import { isExternalAccount } from "../common"
 
 export class AptosSdkWallet implements AptosWalletInterface {
-  constructor(public readonly account: ExternalAccount) {
-    if (!isExternalAccount(this.account)) {
-      throw new Error("Unrecognized wallet")
-    }
-  }
+  constructor(public readonly account: ExternalAccount) {}
 
   async signMessage(msg: string) {
     const { signature } = await this.account.signMessage({
       message: msg,
       nonce: randomWord(),
     })
-    return signature
+    if (Array.isArray(signature)) {
+      return signature[0]
+    }
+    return signature.toString()
   }
 
   async getAccountInfo() {
     const { address, publicKey } = await this.account.account()
     return {
-      address,
+      address: normalizeAddress(address),
       publicKey,
     }
   }
 
   async getPublicKey() {
-    const account = await this.account.account()
+    const account = await this.getAccountInfo()
     return account.publicKey
   }
 
   async signAndSubmitTransaction(payload: AptosTransaction) {
-    return this.account.signAndSubmitTransaction({
+    const { hash } = await this.account.signAndSubmitTransaction({
       arguments: payload.arguments,
       function: payload.function,
       type_arguments: payload.typeArguments,
     })
+    return { hash }
   }
 }
