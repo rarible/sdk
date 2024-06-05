@@ -3,10 +3,10 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const seiArcticConfig: EthereumConfig = {
-  basePath: "https://testnet-sei-api.rarible.org",
-  chainId: 713715,
-  environment: "testnet",
+export const seiPacific1Config: EthereumConfig = {
+  basePath: "https://sei-api.rarible.org",
+  chainId: 1329,
+  environment: "production",
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x42b8DB7aCB54B4f8690C7379Ff2Befb6caf67478"),
@@ -42,7 +42,7 @@ export const seiArcticConfig: EthereumConfig = {
     pairFactory: ZERO_ADDRESS,
     pairRouter: ZERO_ADDRESS,
   },
-  weth: toAddress("0x57ee725beeb991c70c53f9642f36755ec6eb2139"),
+  weth: toAddress("0xe30fedd158a2e3b13e9badaeabafc5516e95e8c7"),
   auction: ZERO_ADDRESS,
   looksrareOrderValidatorV2: ZERO_ADDRESS,
 }

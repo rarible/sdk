@@ -31,7 +31,8 @@ import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
 import { polygonAmoyConfig } from "./polygon-amoy"
 import { astarKyotoConfig } from "./astar-kyoto"
-import { seiArcticConfig } from "./sei-arctic"
+import { seiArctic1Config } from "./sei-arctic-1"
+import { seiPacific1Config } from "./sei-pacific-1"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -65,7 +66,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   "testnet-fief": fiefTestnetConfig,
   "testnet-kroma": kromaTestnetConfig,
   kroma: kromaConfig,
-  "sei-arctic": seiArcticConfig,
+  "sei-arctic-1": seiArctic1Config,
+  "sei-pacific-1": seiPacific1Config,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

@@ -23,7 +23,7 @@
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.5.1",
     "@rarible/logger": "^0.9.12",
-    "@rarible/types": "~0.9.26",
+    "@rarible/types": "~0.9.27",
     "@rarible/utils": "~0.9.10",
     "node-fetch": "^2.6.7"
   },

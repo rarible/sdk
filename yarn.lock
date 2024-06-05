@@ -6928,10 +6928,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.16.5-alpha.10":
-  version "0.16.5-alpha.10"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.10.tgz#9f9f43f3134bfd8db6507105903912fc0da8b202"
-  integrity sha512-GPAhX86KlfOhxnzFgUH6+Pv3PG1tQzsgZ7CtQQ6xKTDJ7fm+vGftBCheuVGogynwcvJ8vQ3sQhmu+mh2M7YoZA==
+"@rarible/api-client@0.16.5-alpha.13":
+  version "0.16.5-alpha.13"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.16.5-alpha.13.tgz#67333551811f8535fcf9da54e6e061c94109584f"
+  integrity sha512-7pmHKunl4yVw5nehOBPA5FZ8QD//PpOFMHAegRAjmvl/QDMdy+1UvfJxGwCU1yx/VaEx9eInAMqiF97f2ggFJw==
 
 "@rarible/eslint-config-react@~0.10.0-alpha.37":
   version "0.10.0-alpha.37"
@@ -7094,10 +7094,10 @@
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.3.tgz#16eac9f500b48e4bd4c43f2d93a84c46dc5a5a13"
   integrity sha512-lvmmqyibKNqylXr9yYMdor+onv/2z7O8LThpEsO/DpM2nawJ8f/QeEPjlyqTpjVhQyrpGwwFjuNQCTiiJi3msg==
 
-"@rarible/types@~0.9.26":
-  version "0.9.26"
-  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.26.tgz#2d8183fd53b5cff32640185e4782d6610d00820a"
-  integrity sha512-q4lX1wOUBDENlzhZXctrCU9O0SFaZBsnU/AIgrKixzLktzq96MG/5lOkXxsBhQzotpUnixuDHFbEDtfqtkaLzw==
+"@rarible/types@~0.9.27":
+  version "0.9.27"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.27.tgz#097e5620798e11411854a5e903e53a64779fd11d"
+  integrity sha512-xUoIkr5QOVY9UvxDwwx/ylW7fLSx7cH4rA4lVAVx4lqyKJBeHxxKglSv2YGROZuM6AJGDwvNWSc9uWkpZFhtYg==
 
 "@rarible/utils@^0.9.1":
   version "0.9.1"
