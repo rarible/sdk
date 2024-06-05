@@ -1,6 +1,5 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
-import type { Contract } from "web3-eth-contract"
 import type { AbiItem } from "../common/abi-item"
 
 const testErc721Abi: AbiItem[] = [
@@ -446,6 +445,6 @@ export async function deployTestErc721ForAuction(web3: Web3, name: string, symbo
     .send({ from: address, gas: 4000000, gasPrice: "0" })
 }
 
-function createTestErc721(web3: Web3, address?: Address): Contract {
+function createTestErc721(web3: Web3, address?: Address) {
   return new web3.eth.Contract(testErc721Abi, address)
 }

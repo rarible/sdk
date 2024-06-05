@@ -27,15 +27,6 @@
       "require": "./build/*.js",
       "import": "./esm/*.js",
       "default": "./build/*.js"
-    },
-    "./wallets/*": {
-      "types": {
-        "require": "./build/wallets/*.d.ts",
-        "import": "./esm/wallets/*.d.ts"
-      },
-      "require": "./build/wallets/*.js",
-      "import": "./esm/wallets/*.js",
-      "default": "./build/wallets/*.js"
     }
   },
   "main": "./build/index.js",
