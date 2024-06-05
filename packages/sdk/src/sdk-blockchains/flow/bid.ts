@@ -78,6 +78,9 @@ export class FlowBid {
       supportsExpirationDate: false,
       shouldTransferFunds: false,
       submit: bidAction,
+      nftData: {
+        nftCollection: convertFlowContractAddress(bidObjectData.contract),
+      },
     }
   }
 

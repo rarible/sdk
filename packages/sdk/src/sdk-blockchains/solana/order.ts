@@ -3,7 +3,7 @@ import type { SolanaSdk } from "@rarible/solana-sdk"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { Order, OrderId } from "@rarible/api-client"
@@ -204,6 +204,9 @@ export class SolanaOrder {
       supportsExpirationDate: false,
       shouldTransferFunds: false,
       submit,
+      nftData: {
+        nftCollection: item?.collection ? toContractAddress(item.collection) : undefined,
+      },
     }
   }
 

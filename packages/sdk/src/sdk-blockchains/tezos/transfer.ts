@@ -1,7 +1,7 @@
 import type { Provider, TezosProvider, TezosNetwork } from "@rarible/tezos-sdk"
 import { transfer } from "@rarible/tezos-sdk"
 import { Action } from "@rarible/action"
-import { toBigNumber } from "@rarible/types"
+import { toBigNumber, toContractAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainTezosTransaction } from "@rarible/sdk-transaction"
 import BigNumber from "bignumber.js"
@@ -47,6 +47,9 @@ export class TezosTransfer {
     return {
       multiple: collectionType === "TEZOS_MT",
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: item.collection ? toContractAddress(item.collection) : undefined,
+      },
       submit: Action.create({
         id: "transfer" as const,
         run: async (request: TransferRequest) => {

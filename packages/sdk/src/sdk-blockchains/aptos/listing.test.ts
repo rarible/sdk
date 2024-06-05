@@ -31,12 +31,15 @@ describe("Aptos Orders", () => {
       currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
       expirationDate: generateExpirationDate(),
     })
-
     await awaitOrder(sdkSeller, sellOrder)
-    await sdkBuyer.order.buy({
+    const buyPrepare = await sdkBuyer.order.buy.prepare({
       orderId: sellOrder,
+    })
+    expect(buyPrepare.orderData.nftCollection).toBeTruthy()
+    const tx = await buyPrepare.submit({
       amount: 1,
     })
+    await tx.wait()
   })
 
   test("sell & buy with CurrencyId", async () => {

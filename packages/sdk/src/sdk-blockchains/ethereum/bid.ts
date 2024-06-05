@@ -34,7 +34,6 @@ import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../typ
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import type { IApisSdk } from "../../domain"
 import { checkRoyalties } from "../../common/check-royalties"
-import { getCollectionFromItemId } from "../../common/utils"
 import type { EVMBlockchain } from "./common"
 import * as common from "./common"
 import {
@@ -159,8 +158,10 @@ export class EthereumBid {
 
   async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
     if ("itemId" in prepare) {
-      const collectionId = getCollectionFromItemId(prepare.itemId)
-      const collection = await this.apis.collection.getCollectionById({ collection: collectionId })
+      const { contract, domain } = getEthereumItemId(prepare.itemId)
+      const collection = await this.apis.collection.getCollectionById({
+        collection: convertEthereumContractAddress(contract, domain),
+      })
 
       if (collection.self) {
         await checkRoyalties(prepare.itemId, this.apis)
@@ -233,6 +234,9 @@ export class EthereumBid {
       supportsExpirationDate: true,
       shouldTransferFunds: false,
       submit,
+      nftData: {
+        nftCollection: toContractAddress(collection.id),
+      },
     }
   }
 

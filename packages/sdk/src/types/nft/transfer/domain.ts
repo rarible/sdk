@@ -2,6 +2,7 @@ import type { ItemId } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { BigNumber } from "@rarible/types/build/big-number"
+import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 /**
@@ -48,6 +49,13 @@ export interface PrepareTransferResponse
    * Maximum amount to transfer NFT
    */
   maxAmount: BigNumber
+
+  /**
+   *
+   */
+  nftData: {
+    nftCollection: ContractAddress | undefined
+  }
 }
 
 /**

@@ -6,7 +6,7 @@ import type { FlowNetwork } from "@rarible/flow-sdk"
 import type { BurnRequest, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { BurnResponse } from "../../types/nft/burn/domain"
-import { parseFlowItemIdFromUnionItemId } from "./common/converters"
+import { convertFlowContractAddress, parseFlowItemIdFromUnionItemId } from "./common/converters"
 
 export class FlowBurn {
   constructor(
@@ -26,6 +26,9 @@ export class FlowBurn {
     return {
       multiple: false,
       maxAmount: toBigNumber("1"),
+      nftData: {
+        nftCollection: convertFlowContractAddress(contract),
+      },
       submit: Action.create({
         id: "burn" as const,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

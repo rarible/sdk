@@ -3,7 +3,7 @@ import type { TezosNetwork, TezosProvider, FTAssetType, XTZAssetType } from "@ra
 // eslint-disable-next-line camelcase
 import { put_bid } from "@rarible/tezos-sdk/dist/bids"
 import BigNumber from "bignumber.js"
-import { toBigNumber, toOrderId } from "@rarible/types"
+import { toBigNumber, toContractAddress, toOrderId } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-sdk/dist/main"
 import { AssetTypeV2 } from "@rarible/tezos-common"
@@ -124,6 +124,9 @@ export class TezosBid {
       supportsExpirationDate: false,
       shouldTransferFunds: false,
       submit,
+      nftData: {
+        nftCollection: toContractAddress(requestInfo.collection.id),
+      },
     }
   }
 

@@ -1,13 +1,13 @@
 import type { ContractAddress, Maybe } from "@rarible/types"
 import type { Collection, CollectionId, ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { BlockchainWallet, WalletByBlockchain, RaribleSdkProvider } from "@rarible/sdk-wallet"
+import type { BlockchainWallet, RaribleSdkProvider, WalletByBlockchain } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
 import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
-import { isSupportedBlockchain, extractBlockchain } from "@rarible/sdk-common"
+import { extractBlockchain, isSupportedBlockchain } from "@rarible/sdk-common"
 import type { Item } from "@rarible/api-client/build/models"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
@@ -219,7 +219,7 @@ async function getSellItemData(
   apis: IApisSdk,
 ): Promise<{ item: Item; collection: Collection | undefined }> {
   const blockchain = extractBlockchain(itemId)
-  if (blockchain === Blockchain.APTOS) {
+  if ([Blockchain.APTOS, Blockchain.SOLANA].includes(blockchain)) {
     const item = await apis.item.getItemById({ itemId })
     let collection
     const collectionId = item.collection || item.itemCollection?.id
@@ -233,7 +233,7 @@ async function getSellItemData(
 
   const [item, collection] = await Promise.all([
     apis.item.getItemById({ itemId }),
-    apis.collection.getCollectionById({ collection: getCollectionFromItemId(itemId) }),
+    apis.collection.getCollectionById({ collection: getCollectionFromItemId(itemId)! }),
   ])
   return { item, collection }
 }

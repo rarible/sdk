@@ -8,8 +8,10 @@ import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { IApisSdk } from "../../domain"
+import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import {
   checkWalletBlockchain,
+  convertEthereumContractAddress,
   convertToEthereumAddress,
   getEthereumItemId,
   getWalletNetwork,
@@ -26,7 +28,7 @@ export class EthereumTransfer {
     this.transferBasic = this.transferBasic.bind(this)
   }
 
-  async transfer(prepare: PrepareTransferRequest) {
+  async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
     const { contract, tokenId, domain } = getEthereumItemId(prepare.itemId)
     if (!isEVMBlockchain(domain)) {
       throw new Error(`Not an ethereum item: ${prepare.itemId}`)
@@ -40,6 +42,9 @@ export class EthereumTransfer {
     return {
       multiple: collection.type === "ERC1155",
       maxAmount: item.supply,
+      nftData: {
+        nftCollection: item.collection ? convertEthereumContractAddress(item.collection, domain) : undefined,
+      },
       submit: Action.create({
         id: "transfer" as const,
         run: async (request: TransferRequest) => {

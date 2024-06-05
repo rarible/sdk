@@ -118,10 +118,13 @@ export class AptosNft {
   }
   async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
     const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
-
+    const collectionId = item.collection || item.itemCollection?.id
     return {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: collectionId ? toContractAddress(collectionId) : undefined,
+      },
       submit: Action.create({
         id: "transfer" as const,
         run: async (request: TransferRequest) => {
@@ -137,10 +140,13 @@ export class AptosNft {
 
   async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
     const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
-
+    const collectionId = item.collection || item.itemCollection?.id
     return {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: collectionId ? toContractAddress(collectionId) : undefined,
+      },
       submit: Action.create({
         id: "burn" as const,
         run: async () => {

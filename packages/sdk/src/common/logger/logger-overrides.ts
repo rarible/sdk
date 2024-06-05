@@ -16,12 +16,20 @@ import type { ISdkContext } from "../../domain"
 import type { PrepareBatchBuyResponse, PrepareFillRequest } from "../../types/order/fill/domain"
 import { getCollectionFromItemId, getContractFromMintRequest, getOrderIdFromFillRequest } from "../utils"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
-import type { PrepareOrderRequest, PrepareOrderUpdateRequest } from "../../types/order/common"
+import type {
+  PrepareOrderRequest,
+  PrepareOrderUpdateRequest,
+  PrepareOrderUpdateResponse,
+} from "../../types/order/common"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { PrepareTransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareBurnRequest } from "../../types/nft/burn/domain"
 import { WrappedAdvancedFn } from "../middleware/middleware"
+import type { PrepareBurnResponse } from "../../types/nft/burn/domain"
+import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
+import type { PrepareBidResponse } from "../../types/order/bid/domain"
+import type { PrepareFillResponse } from "../../types/order/fill/domain"
 import { getErrorMessageString } from "./logger-middleware"
 
 const COMMON_NETWORK_ERROR_MESSAGES = ["Network request failed", "Failed to fetch"]
@@ -213,10 +221,11 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
       if (callable?.name.startsWith("order.buy.prepare.submit")) {
         const request: PrepareFillRequest | undefined = parent?.args[0]
         const orderId = getOrderIdFromFillRequest(request)
+        const contextData = parent?.context as PrepareFillResponse | undefined
         return {
           orderId,
-          platform: parent?.context?.orderData?.platform,
-          collectionId: parent?.context?.orderData?.nftCollection,
+          platform: contextData?.orderData?.platform,
+          collectionId: contextData?.orderData?.nftCollection,
         }
       }
 
@@ -254,10 +263,12 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 
       if (callable?.name.startsWith("order.bid.prepare.submit")) {
         const request: PrepareBidRequest | undefined = parent?.args[0]
+        const contextData = parent?.context as PrepareBidResponse | undefined
+
         if (!request) return {}
         return {
           itemId: "itemId" in request ? request.itemId : undefined,
-          collectionId: "collectionId" in request ? request.collectionId : getCollectionFromItemId(request.itemId),
+          collectionId: contextData?.nftData.nftCollection,
         }
       }
 
@@ -281,27 +292,32 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 
       if (callable?.name.startsWith("order.sellUpdate.prepare.submit")) {
         const request: PrepareOrderUpdateRequest | undefined = parent?.args[0]
+        const contextData = parent?.context as PrepareOrderUpdateResponse | undefined
+
         return {
           orderId: request?.orderId,
-          collectionId: parent?.context?.orderData?.nftCollection,
+          collectionId: contextData?.orderData.nftCollection,
         }
       }
 
       if (callable?.name.startsWith("order.acceptBid.prepare.submit")) {
         const request: PrepareFillRequest | undefined = parent?.args[0]
         let orderId = getOrderIdFromFillRequest(request)
+        const contextData = parent?.context as PrepareBidResponse | undefined
 
         return {
           orderId,
-          collectionId: parent?.context?.orderData?.nftCollection,
+          collectionId: contextData?.nftData.nftCollection,
         }
       }
 
       if (callable?.name.startsWith("nft.transfer.prepare.submit")) {
         const request: PrepareTransferRequest | undefined = parent?.args[0]
+        const contextData = parent?.context as PrepareTransferResponse | undefined
+
         if (request?.itemId) {
           return {
-            collectionId: getCollectionFromItemId(request.itemId),
+            collectionId: contextData?.nftData.nftCollection || getCollectionFromItemId(request.itemId),
           }
         }
       }
@@ -317,9 +333,10 @@ export function getCallableExtraFields(callable: any): Record<string, string | u
 
       if (callable?.name.startsWith("nft.burn.prepare.submit")) {
         const request: PrepareBurnRequest | undefined = parent?.args[0]
+        const contextData = parent?.context as PrepareBurnResponse | undefined
         if (request) {
           return {
-            collectionId: getCollectionFromItemId(request.itemId),
+            collectionId: contextData?.nftData.nftCollection || getCollectionFromItemId(request.itemId),
           }
         }
       }
