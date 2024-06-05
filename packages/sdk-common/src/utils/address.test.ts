@@ -1,9 +1,8 @@
-import { normalizeAddress } from "./index"
+import { normalizeAddress } from "./address"
 
-describe("common utilities", () => {
+describe("address utilities", () => {
   test("normalize address #1", () => {
     const normalizedAddress = normalizeAddress("0x001")
-    console.log(normalizedAddress)
     expect(normalizedAddress).toBe("0x0000000000000000000000000000000000000000000000000000000000000001")
   })
 
