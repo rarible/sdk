@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.25](https://github.com/rarible/sdk/compare/v0.13.68-fix.24...v0.13.68-fix.25) (2024-06-05)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+
+
+
+
 ## [0.13.68-fix.24](https://github.com/rarible/sdk/compare/v0.13.68-fix.23...v0.13.68-fix.24) (2024-05-24)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
