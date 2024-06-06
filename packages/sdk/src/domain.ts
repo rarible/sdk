@@ -1,7 +1,7 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { WalletType } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
-import type { BlockchainWallet } from "@rarible/sdk-wallet/build"
+import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { AptosSdkConfig } from "@rarible/aptos-sdk/build/domain"

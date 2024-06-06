@@ -5,13 +5,13 @@ describe("exports", () => {
     expect(Object.keys(entities)).toMatchInlineSnapshot(`
       [
         "WalletType",
+        "isBlockchainWallet",
         "EthereumWallet",
         "AptosWallet",
         "ImmutableXWallet",
         "SolanaWallet",
         "TezosWallet",
         "FlowWallet",
-        "isBlockchainWallet",
       ]
     `)
   })

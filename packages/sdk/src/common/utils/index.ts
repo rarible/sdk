@@ -1,11 +1,12 @@
 import type { AssetType, Order, OrderId } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types"
 import type { ItemId } from "@rarible/api-client"
-import { toCollectionId } from "@rarible/types"
+import { toCollectionId, toContractAddress } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import type { BlockchainIsh, NonEVMBlockchains, SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain, isEVMBlockchain } from "@rarible/sdk-common"
 import type { NativeCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
+import { Blockchain } from "@rarible/api-client"
 import type { PrepareFillRequest } from "../../types/order/fill/domain"
 import type { HasCollection, HasCollectionId } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareBidRequest } from "../../types/order/bid/domain"
@@ -32,6 +33,9 @@ export function getNftContractAddress(assetType: AssetType): ContractAddress | u
     case "COLLECTION":
     case "AMM_NFT":
       return assetType.contract
+    case "NFT":
+    case "NFT_OF_COLLECTION":
+      return toContractAddress(assetType.collectionId)
     default:
       return undefined
   }
@@ -45,11 +49,18 @@ export function getItemIdData(itemId: ItemId) {
   if (!itemId) {
     throw new Error(`Not an item: ${itemId}`)
   }
-  const [blockchain, contract, tokenId] = itemId.split(":")
+  const [blockchain, address, tokenId] = itemId.split(":")
+  if (blockchain === Blockchain.APTOS) {
+    return {
+      tokenId: tokenId,
+      blockchain,
+    }
+  }
+
   return {
-    collection: toCollectionId(`${blockchain}:${contract}`),
-    contract,
-    tokenId,
+    collection: toCollectionId(`${blockchain}:${address}`),
+    contract: address,
+    tokenId: tokenId,
     blockchain,
   }
 }

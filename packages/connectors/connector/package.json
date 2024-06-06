@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector",
-  "version": "0.13.68-fix.24",
+  "version": "0.13.68-fix.25",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -19,7 +19,7 @@
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.3.6",
     "@rarible/logger": "~0.9.12",
-    "@rarible/sdk-common": "^0.13.68-fix.24"
+    "@rarible/sdk-common": "^0.13.68-fix.25"
   },
   "peerDependencies": {
     "rxjs": ">= 6.6.7 < 8.0.0",

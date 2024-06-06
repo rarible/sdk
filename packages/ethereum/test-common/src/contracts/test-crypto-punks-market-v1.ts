@@ -1,6 +1,5 @@
 import type Web3 from "web3"
 import type { Address } from "@rarible/ethereum-api-client"
-import type { Contract } from "web3-eth-contract"
 import type { AbiItem } from "../common/abi-item"
 
 const cryptoPunksMarketBytecode =
@@ -13,7 +12,7 @@ export async function deployCryptoPunksMarketV1(web3: Web3, address?: Address) {
   return contract.deploy({ data: cryptoPunksMarketBytecode }).send({ from, gas: 4000000, gasPrice: "0" })
 }
 
-function createCryptoPunks(web3: Web3, address?: Address): Contract {
+function createCryptoPunks(web3: Web3, address?: Address) {
   return new web3.eth.Contract(cryptoPunksMarketV1Abi, address)
 }
 

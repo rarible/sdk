@@ -1,13 +1,13 @@
-import type { PendingTransactionResponse, Account as GenericAccount } from "@aptos-labs/ts-sdk"
+import type { Account as GenericAccount } from "@aptos-labs/ts-sdk"
 
 export interface AptosWalletInterface {
   signMessage(message: string): Promise<string>
   getAccountInfo(): Promise<{ address: string; publicKey: string }>
-  signAndSubmitTransaction(payload: AptosTransaction): Promise<PendingTransactionResponse>
+  signAndSubmitTransaction(payload: AptosTransaction): Promise<{ hash: string }>
 }
 
 export type ExternalAccount = {
-  signAndSubmitTransaction: (payload: EntryFunctionPayload) => Promise<PendingTransactionResponse>
+  signAndSubmitTransaction: (payload: EntryFunctionPayload) => Promise<{ hash: string }>
   signMessage: (payload: SignMessagePayload) => Promise<SignMessageResponse>
   connect: () => Promise<AccountInfo>
   account: () => Promise<AccountInfo>

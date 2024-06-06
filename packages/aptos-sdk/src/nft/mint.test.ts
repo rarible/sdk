@@ -18,7 +18,7 @@ describe("mint nft", () => {
     expect(tokenAddress).toBeTruthy()
   })
 
-  test.skip("mint by mintByCollectionAddress function", async () => {
+  test("mint by mintByCollectionAddress function", async () => {
     const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"
     const tx = await mintClass.mintWithCollectionAddress({
       collectionAddress: "0x8aefaafd6a9801186095a0697d0a339d28e4784c1cb5a85e83f04bad5db7abc8",

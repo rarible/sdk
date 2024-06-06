@@ -1,7 +1,8 @@
 import type { Aptos } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
 import type { AptosWalletInterface } from "@rarible/aptos-wallet"
-import { getRequiredWallet, isChangeBelongsToType, makeId, MAX_U64_INT, normalizeAddress } from "../common"
+import { normalizeAddress } from "@rarible/sdk-common"
+import { getRequiredWallet, isChangeBelongsToType, makeId, MAX_U64_INT } from "../common"
 import type { AptosNftSdk } from "../domain"
 import type { AddressConfig } from "../config"
 

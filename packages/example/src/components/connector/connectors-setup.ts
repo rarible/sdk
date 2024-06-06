@@ -289,8 +289,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
       rpcMap: ethereumRpcMap,
     }),
   )
+
   let thirdwebInApp
-  if (thirdwebInApp) {
+  if (process.env.REACT_APP_THIRDWEB_CLIENT_ID) {
     thirdwebInApp = mapEthereumWallet(
       new ThirdwebInAppProvider({
         clientId: process.env.REACT_APP_THIRDWEB_CLIENT_ID!,
@@ -318,7 +319,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     }),
   )
 
-  const connectorInstance = Connector.create(injected, state)
+  const mainConnector = Connector.create(injected, state)
     .add(nfid)
     .add(walletLink)
     .add(beacon)
@@ -336,9 +337,9 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     .add(firebaseEmail)
 
   if (thirdwebInApp) {
-    connectorInstance.add(thirdwebInApp)
+    mainConnector.add(thirdwebInApp)
   }
-  return connectorInstance
+  return mainConnector
 }
 
 export type ConnectorInstance = ReturnType<typeof getConnector>

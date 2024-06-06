@@ -3,13 +3,8 @@ import type { CommittedTransactionResponse } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
 import type { AptosWalletInterface } from "@rarible/aptos-wallet"
 import type { AptosTransaction } from "@rarible/aptos-wallet"
-import {
-  APT_TOKEN_TYPE,
-  getListingTokenType,
-  getRequiredWallet,
-  isChangeBelongsToType,
-  normalizeAddress,
-} from "../common"
+import { normalizeAddress } from "@rarible/sdk-common"
+import { APT_TOKEN_TYPE, getListingTokenType, getRequiredWallet, isChangeBelongsToType } from "../common"
 import type { AddressConfig } from "../config"
 
 export class AptosOrder {

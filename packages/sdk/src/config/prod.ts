@@ -1,3 +1,4 @@
+import { AptosNetwork } from "@rarible/aptos-sdk/build/domain"
 import type { RaribleSdkConfig } from "./domain"
 
 export const prodConfig: RaribleSdkConfig = {
@@ -10,7 +11,7 @@ export const prodConfig: RaribleSdkConfig = {
   immutablexNetwork: "prod",
   mantleNetwork: "mantle",
   arbitrumNetwork: "arbitrum",
-  aptosNetwork: "testnet",
+  aptosNetwork: AptosNetwork.TESTNET,
   zksync: "zksync",
   chiliz: "chiliz",
   lightlink: "lightlink",

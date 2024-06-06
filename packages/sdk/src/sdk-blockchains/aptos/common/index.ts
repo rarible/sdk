@@ -1,4 +1,4 @@
-import { toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import { toCollectionId, toContractAddress, toCurrencyId, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { extractId } from "@rarible/sdk-common"
 import type { UnionPart } from "../../../types/order/common"
@@ -19,6 +19,10 @@ export function convertAptosToUnionCollectionId(collection: string) {
 
 export function convertAptosToUnionItemId(item: string) {
   return toItemId(`${Blockchain.APTOS}:${item}`)
+}
+
+export function convertAptosToUnionContractAddress(contract: string) {
+  return toContractAddress(`${Blockchain.APTOS}:${contract}`)
 }
 
 export function getSupportedCurrencies(): [{ blockchain: Blockchain.APTOS; type: "NATIVE" }] {

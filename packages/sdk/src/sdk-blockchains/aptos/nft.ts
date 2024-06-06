@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import { Action } from "@rarible/action"
 import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
 import { extractId } from "@rarible/sdk-common"
@@ -30,7 +30,7 @@ import type { AptosTokenMetadata } from "./domain"
 export class AptosNft {
   constructor(
     private readonly sdk: AptosSdk,
-    private readonly network: AptosSdkEnv,
+    private readonly network: SupportedAptosNetwork,
     private readonly apis: IApisSdk,
   ) {
     this.createCollectionBasic = this.createCollectionBasic.bind(this)
@@ -118,10 +118,13 @@ export class AptosNft {
   }
   async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
     const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
-
+    const collectionId = item.collection || item.itemCollection?.id
     return {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: collectionId ? toContractAddress(collectionId) : undefined,
+      },
       submit: Action.create({
         id: "transfer" as const,
         run: async (request: TransferRequest) => {
@@ -137,10 +140,13 @@ export class AptosNft {
 
   async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
     const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
-
+    const collectionId = item.collection || item.itemCollection?.id
     return {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: collectionId ? toContractAddress(collectionId) : undefined,
+      },
       submit: Action.create({
         id: "burn" as const,
         run: async () => {

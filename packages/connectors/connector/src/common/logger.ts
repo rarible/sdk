@@ -6,6 +6,7 @@ import {
   isInfoLevel,
   isSolanaWarning,
   isTezosWarning,
+  retry,
 } from "@rarible/sdk-common"
 import { BlockchainGroup } from "@rarible/api-client"
 import { getFingerprint } from "./fingerprint"
@@ -20,14 +21,18 @@ export const loggerConfig = {
 export function createLogger() {
   return new RemoteLogger(
     async (msg: LoggableValue) => {
-      await window.fetch(loggerConfig.elkUrl, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(msg),
-      })
+      try {
+        await retry(5, 2000, () =>
+          window.fetch(loggerConfig.elkUrl, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(msg),
+          }),
+        )
+      } catch (_) {}
     },
     {
       initialContext: createLoggerContext(),

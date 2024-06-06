@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-examples",
-  "version": "0.13.68-fix.24",
+  "version": "0.13.68-fix.25",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -21,14 +21,13 @@
   "dependencies": {
     "@rarible/api-client": "0.16.5-alpha.13",
     "@rarible/estimate-middleware": "~0.9.6",
-    "@rarible/ethers-ethereum": "^0.13.68-fix.24",
-    "@rarible/sdk": "^0.13.68-fix.24",
-    "@rarible/sdk-wallet": "^0.13.68-fix.24",
+    "@rarible/ethers-ethereum": "^0.13.68-fix.25",
+    "@rarible/sdk": "^0.13.68-fix.25",
+    "@rarible/sdk-wallet": "^0.13.68-fix.25",
     "@rarible/test-provider": "~0.5.4",
     "@rarible/types": "~0.9.27",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.2",
-    "web3": "1.8.2",
     "web3-provider-engine": "^16.0.4"
   },
   "devDependencies": {
@@ -37,7 +36,8 @@
     "yargs": "^17.2.1"
   },
   "peerDependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "web3": ">=1.5.0 <2.0.0"
   },
   "publishConfig": {
     "access": "public"

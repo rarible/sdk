@@ -1,4 +1,4 @@
-import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import { Action } from "@rarible/action"
 import { extractId } from "@rarible/sdk-common"
 import { toBn } from "@rarible/utils"
@@ -6,6 +6,7 @@ import { APT_DIVIDER } from "@rarible/aptos-sdk"
 import type { OrderId } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
+import { toContractAddress } from "@rarible/types"
 import type { FillRequest, PrepareFillRequest, PrepareFillResponse } from "../../types/order/fill/domain"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
@@ -21,7 +22,7 @@ import { convertAptosToUnionOrderId, getFeeObject, getSupportedCurrencies } from
 export class AptosBid {
   constructor(
     private readonly sdk: AptosSdk,
-    private readonly network: AptosSdkEnv,
+    private readonly network: SupportedAptosNetwork,
     private readonly apis: IApisSdk,
   ) {
     this.bid = this.bid.bind(this)
@@ -32,6 +33,7 @@ export class AptosBid {
 
   async bid(prepare: PrepareBidRequest): Promise<PrepareBidResponse> {
     const item = "itemId" in prepare ? await this.apis.item.getItemById({ itemId: prepare.itemId }) : null
+    const prepareCollectionId = "collectionId" in prepare ? toContractAddress(prepare.collectionId) : undefined
 
     const submit = Action.create({
       id: "send-tx" as const,
@@ -84,6 +86,9 @@ export class AptosBid {
       supportsExpirationDate: true,
       shouldTransferFunds: true,
       submit,
+      nftData: {
+        nftCollection: item?.collection ? toContractAddress(item.collection) : prepareCollectionId,
+      },
     }
   }
 

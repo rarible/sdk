@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.25](https://github.com/rarible/sdk/compare/v0.13.68-fix.24...v0.13.68-fix.25) (2024-06-05)
+
+
+### Features
+
+* aptos updates ([#633](https://github.com/rarible/sdk/issues/633)) ([885be3a](https://github.com/rarible/sdk/commit/885be3aee4ff9c78a55d9f3748dc1b696cff30dd))
+* **PLTF-452:** aptos improvements ([#629](https://github.com/rarible/sdk/issues/629)) ([bafc1cd](https://github.com/rarible/sdk/commit/bafc1cd01bb73820f341862deb26d3a6d616f677))
+
+
+
+
+
 ## [0.13.68-fix.24](https://github.com/rarible/sdk/compare/v0.13.68-fix.23...v0.13.68-fix.24) (2024-05-24)
 
 **Note:** Version bump only for package @rarible/aptos-sdk

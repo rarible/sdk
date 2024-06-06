@@ -13,6 +13,7 @@ import {
   getTezosItemData,
   isExistedTezosProvider,
   checkChainId,
+  convertTezosToContractAddress,
 } from "./common"
 import type { MaybeProvider } from "./common"
 import { getCollectionType } from "./common/get-collection-type"
@@ -44,6 +45,9 @@ export class TezosBurn {
     return {
       multiple: collectionType === "TEZOS_MT",
       maxAmount: toBigNumber(item.supply),
+      nftData: {
+        nftCollection: item.collection && convertTezosToContractAddress(item.collection),
+      },
       submit: Action.create({
         id: "burn" as const,
         run: async (request: BurnRequest) => {

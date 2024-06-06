@@ -1,7 +1,7 @@
 import type { RaribleImxSdk } from "@rarible/immutable-sdk/src/domain"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainImmutableXTransaction } from "@rarible/sdk-transaction"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toAddress, toBigNumber, toContractAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
@@ -9,6 +9,7 @@ import type { IApisSdk } from "../../domain"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
 import type { BurnResponse } from "../../types/nft/burn/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
+import { convertAptosToUnionContractAddress } from "../aptos/common"
 
 export class ImxNftService {
   constructor(
@@ -32,9 +33,14 @@ export class ImxNftService {
   }
 
   async burn(prepare: PrepareBurnRequest): Promise<PrepareBurnResponse> {
+    const item = await this.apis.item.getItemById({ itemId: prepare.itemId })
+
     return {
       multiple: false,
       maxAmount: toBigNumber("1"),
+      nftData: {
+        nftCollection: item.collection && toContractAddress(item.collection),
+      },
       submit: Action.create({
         id: "burn" as const,
         run: async () => {
@@ -53,13 +59,16 @@ export class ImxNftService {
   }
 
   async transfer(prepare: PrepareTransferRequest): Promise<PrepareTransferResponse> {
+    const [, contract, tokenId] = prepare.itemId.split(":")
     return {
       multiple: false,
       maxAmount: toBigNumber("1"),
+      nftData: {
+        nftCollection: convertAptosToUnionContractAddress(contract),
+      },
       submit: Action.create({
         id: "transfer" as const,
         run: async (request: TransferRequest) => {
-          const [, contract, tokenId] = prepare.itemId.split(":")
           const [, address] = request.to.split(":")
 
           const res = await this.sdk.nft.transfer({

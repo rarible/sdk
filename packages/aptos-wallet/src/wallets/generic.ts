@@ -1,17 +1,13 @@
 import type { Account as GenericAccount, Aptos } from "@aptos-labs/ts-sdk"
 import type { MoveFunctionId } from "@aptos-labs/ts-sdk"
+import { normalizeAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface } from "../domain"
-import { isGenericAccount } from "../common"
 
 export class AptosGenericSdkWallet implements AptosWalletInterface {
   constructor(
     public readonly aptos: Aptos,
     public readonly account: GenericAccount,
-  ) {
-    if (!isGenericAccount(this.account)) {
-      throw new Error("Unrecognized wallet")
-    }
-  }
+  ) {}
 
   async signMessage(msg: string) {
     return this.account.sign(msg).toString()
@@ -19,7 +15,7 @@ export class AptosGenericSdkWallet implements AptosWalletInterface {
 
   async getAccountInfo() {
     return {
-      address: this.account.accountAddress.toString(),
+      address: normalizeAddress(this.account.accountAddress.toString()),
       publicKey: this.account.publicKey.toString(),
     }
   }
@@ -34,10 +30,11 @@ export class AptosGenericSdkWallet implements AptosWalletInterface {
       },
     })
 
-    return this.aptos.signAndSubmitTransaction({
+    const { hash } = await this.aptos.signAndSubmitTransaction({
       signer: this.account,
       transaction: tx,
     })
+    return { hash }
   }
 }
 

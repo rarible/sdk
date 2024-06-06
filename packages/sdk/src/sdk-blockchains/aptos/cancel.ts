@@ -1,4 +1,4 @@
-import type { AptosSdk, AptosSdkEnv } from "@rarible/aptos-sdk"
+import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import { extractId } from "@rarible/sdk-common"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
@@ -9,7 +9,7 @@ import { isNativeToken } from "../../common/utils"
 export class AptosCancel {
   constructor(
     private readonly sdk: AptosSdk,
-    private readonly network: AptosSdkEnv,
+    private readonly network: SupportedAptosNetwork,
     private readonly apis: IApisSdk,
   ) {
     this.cancel = this.cancel.bind(this)
