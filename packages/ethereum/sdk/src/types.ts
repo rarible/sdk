@@ -36,7 +36,7 @@ export const ethereumNetworks = [
   "xai",
   "testnet-kroma",
   "kroma",
-  "sei-atlantic-2",
+  "sei-arctic-1",
   "sei-pacific-1",
 ]
 

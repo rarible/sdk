@@ -4,6 +4,9 @@ import { getEthereumConfig } from "../../config"
 
 export function getTestAPIKey(env: EthereumNetwork) {
   const network = getEthereumConfig(env)
+  if (!network) {
+    throw new Error(`Config for env=${env} has not been found`)
+  }
   switch (network.environment) {
     case "production":
       return readEnv("SDK_API_KEY_PROD")
