@@ -1,13 +1,13 @@
 import { startWith, map, switchMap, shareReplay, first } from "rxjs/operators"
 import type { Wallet, WalletId } from "thirdweb/wallets"
-import { createThirdwebClient } from "thirdweb"
 import { AbstractConnectionProvider, connectToWeb3, getStateConnecting } from "@rarible/connector"
 import type { EthereumProviderConnectionResult } from "@rarible/connector"
 import type { Observable } from "rxjs"
-import { from, of } from "rxjs"
+import { combineLatest, from, of } from "rxjs"
 import type { InAppWalletCreationOptions } from "thirdweb/dist/types/wallets/in-app/core/wallet/types"
 import type { ThirdwebProviderConfig } from "./domain"
 import { EIP1193ProviderAdapter } from "./to-eip-1193"
+import { thirdwebPkg$ } from "./utils"
 
 const PROVIDER_ID = "thirdweb" as const
 
@@ -15,10 +15,19 @@ export class ThirdwebBaseProvider<Id extends WalletId> extends AbstractConnectio
   ThirdwebProviderId<Id>,
   EthereumProviderConnectionResult
 > {
-  protected readonly client = getClient(this.config)
+  protected readonly client$ = of(null).pipe(
+    map(() => this.config),
+    switchMap(x => {
+      if ("client" in x) return of(x.client)
+      return thirdwebPkg$.pipe(map(pkg => pkg.createThirdwebClient(x)))
+    }),
+    shareReplay(1),
+  )
 
-  protected readonly adapter$ = this.wallet$.pipe(
-    map(wallet => new EIP1193ProviderAdapter(this.config.defaultChain, this.client, wallet, this.config.options)),
+  protected readonly adapter$ = combineLatest([this.wallet$, this.client$]).pipe(
+    map(
+      ([wallet, client]) => new EIP1193ProviderAdapter(this.config.defaultChain, client, wallet, this.config.options),
+    ),
     shareReplay(1),
   )
 
@@ -78,9 +87,4 @@ export class ThirdwebInAppProvider extends ThirdwebBaseProvider<"inApp"> {
 type ThirdwebProviderId<T extends WalletId> = `thirdweb-${T}`
 function getProviderId<T extends WalletId>(id: T): ThirdwebProviderId<T> {
   return `thirdweb-${id}`
-}
-
-function getClient(config: ThirdwebProviderConfig<WalletId>) {
-  if ("client" in config) return config.client
-  return createThirdwebClient(config)
 }
