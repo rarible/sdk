@@ -43,7 +43,7 @@ export async function getFeeObject({
     throw new Error("Origin fees should consist only 1 item")
   }
   if (originFees[0].value === 0) {
-    return originFees[0].account
+    return extractId(originFees[0].account)
   } else if (originFees[0].value > 0) {
     return createFeeSchedule({
       value: originFees[0].value,
