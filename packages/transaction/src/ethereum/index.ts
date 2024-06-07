@@ -96,6 +96,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://blockscout.sepolia.kroma.network/tx/${this.hash()}`
       case "kroma":
         return `https://blockscout.kroma.network/tx/${this.hash()}`
+      case "sei-arctic-1":
+        return `https://seitrace.com/tx/${this.hash()}?chain=arctic-1`
+      case "sei-pacific-1":
+        return `https://seitrace.com/tx/${this.hash()}?chain=pacific-1`
       default:
         throw new Error("Unsupported transaction network")
     }

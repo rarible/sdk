@@ -49,7 +49,7 @@
   },
   "dependencies": {
     "@rarible/sdk-common": "^0.13.68-fix.25",
-    "@rarible/types": "~0.9.26"
+    "@rarible/types": "~0.9.27"
   },
   "peerDependencies": {
     "@aptos-labs/ts-sdk": "^1.5.1",
