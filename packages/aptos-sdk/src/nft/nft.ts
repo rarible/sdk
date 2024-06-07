@@ -1,5 +1,7 @@
 import type { Aptos } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
+import { extractId } from "@rarible/sdk-common"
+import type { BlockchainIsh } from "@rarible/sdk-common"
 import type { AptosWalletInterface } from "@rarible/aptos-wallet"
 import { normalizeAddress } from "@rarible/sdk-common"
 import { getRequiredWallet, isChangeBelongsToType, makeId, MAX_U64_INT } from "../common"
@@ -149,7 +151,7 @@ export class AptosNft implements AptosNftSdk {
     const transaction = {
       function: "0x1::object::transfer",
       typeArguments: ["0x4::token::Token"],
-      arguments: [tokenAddress, to],
+      arguments: [tokenAddress, extractId(to as unknown as BlockchainIsh)],
       type: "entry_function_payload",
     }
 
