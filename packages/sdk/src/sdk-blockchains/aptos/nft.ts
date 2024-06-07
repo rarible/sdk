@@ -129,8 +129,9 @@ export class AptosNft {
         id: "transfer" as const,
         run: async (request: TransferRequest) => {
           const aptosNftId = extractId(item.id)
+          const recipientAddress = extractId(request.to)
 
-          const tx = await this.sdk.nft.transfer(aptosNftId, request.to)
+          const tx = await this.sdk.nft.transfer(aptosNftId, recipientAddress)
 
           return new BlockchainAptosTransaction(tx, this.network, this.sdk)
         },
