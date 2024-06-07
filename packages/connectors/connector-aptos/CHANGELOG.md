@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.26](https://github.com/rarible/sdk/compare/v0.13.68-fix.25...v0.13.68-fix.26) (2024-06-07)
+
+
+### Features
+
+* **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
+
+
+
+
+
 ## [0.13.68-fix.25](https://github.com/rarible/sdk/compare/v0.13.68-fix.24...v0.13.68-fix.25) (2024-06-05)
 
 **Note:** Version bump only for package @rarible/connector-aptos
