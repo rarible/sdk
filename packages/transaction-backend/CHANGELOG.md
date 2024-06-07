@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.27](https://github.com/rarible/sdk/compare/v0.13.68-fix.26...v0.13.68-fix.27) (2024-06-07)
+
+**Note:** Version bump only for package @rarible/sdk-transaction-backend
+
+
+
+
+
 ## [0.13.68-fix.26](https://github.com/rarible/sdk/compare/v0.13.68-fix.25...v0.13.68-fix.26) (2024-06-07)
 
 **Note:** Version bump only for package @rarible/sdk-transaction-backend

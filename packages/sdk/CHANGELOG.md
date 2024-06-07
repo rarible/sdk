@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.27](https://github.com/rarible/sdk/compare/v0.13.68-fix.26...v0.13.68-fix.27) (2024-06-07)
+
+
+### Bug Fixes
+
+* **RX-617:** aptos - extract id in fees and token transfer address ([#635](https://github.com/rarible/sdk/issues/635)) ([a73da6a](https://github.com/rarible/sdk/commit/a73da6a2d5207b935d94a70818e6af5dccf7976c))
+
+
+
+
+
 ## [0.13.68-fix.26](https://github.com/rarible/sdk/compare/v0.13.68-fix.25...v0.13.68-fix.26) (2024-06-07)
 
 
