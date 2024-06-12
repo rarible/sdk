@@ -2,8 +2,8 @@ import { toBigNumber, toContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } 
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
-import { isEVMBlockchain } from "@rarible/sdk-common"
-import { APTOS_ZERO_ADDRESS } from "../sdk-blockchains/aptos/common"
+import { extractBlockchain, extractId, isEVMBlockchain } from "@rarible/sdk-common"
+import { APT_TOKEN_TYPE } from "@rarible/aptos-sdk"
 import type { RequestCurrency, RequestCurrencyAssetType } from "./domain"
 
 export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrencyAssetType {
@@ -54,7 +54,22 @@ export function convertEVMAssetTypeToCurrencyId(id: RequestCurrencyAssetType): A
 }
 
 export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestCurrencyAssetType {
-  const { blockchain, contract, tokenId } = getDataFromCurrencyId(id)
+  const blockchain = extractBlockchain(id)
+  const rawId = extractId(id)
+  if (blockchain === Blockchain.APTOS) {
+    const normalizedId = normalizeId(rawId)
+    if (normalizedId === APT_TOKEN_TYPE) {
+      return {
+        "@type": "CURRENCY_NATIVE",
+        blockchain: Blockchain.APTOS,
+      }
+    }
+    return {
+      "@type": "CURRENCY_TOKEN",
+      contract: toContractAddress(id),
+    }
+  }
+  const { contract, tokenId } = getDataFromCurrencyId(id)
   if (isEVMBlockchain(blockchain) || blockchain === Blockchain.IMMUTABLEX) {
     if (contract === ZERO_ADDRESS) {
       return {
@@ -96,31 +111,40 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
       itemId: toItemId("SOLANA:" + contract),
     }
   }
-  if (blockchain === Blockchain.APTOS) {
-    if (contract === ZERO_ADDRESS || contract === APTOS_ZERO_ADDRESS) {
-      return {
-        "@type": "CURRENCY_NATIVE",
-        blockchain: Blockchain.APTOS,
-      }
-    }
-    return {
-      "@type": "CURRENCY_TOKEN",
-      contract,
-    }
-  }
   throw new Error(`Unsupported currency type: ${id}`)
 }
 
+/*
+  Get data from currency id for non-Aptos IDs
+ */
 export function getDataFromCurrencyId(id: ApiClient.CurrencyId) {
-  const [blockchain, contract, tokenId] = id.split(":")
+  const blockchain = extractBlockchain(id)
   if (!(blockchain in Blockchain)) {
     throw new Error(`Unsupported blockchain: ${id}`)
   }
+  if (blockchain === Blockchain.APTOS) {
+    throw new Error("Current extractor doesn't support Aptos blockchain")
+  }
+  const extractedId = extractId(id)
+  const [contract, tokenId] = extractedId.split(":")
   return {
     blockchain: blockchain as Blockchain,
+    id: extractedId,
     contract,
     tokenId,
   }
+}
+
+const base64Regex = /^[a-zA-Z0-9+/]*={0,2}$/
+export function isValidBase64(input: string) {
+  return base64Regex.test(input)
+}
+
+export function normalizeId(input: string) {
+  try {
+    return isValidBase64(input) ? atob(input) : input
+  } catch (e) {}
+  return input
 }
 
 export const XTZ = "TEZOS:tz1Ke2h7sDdakHJQh8WX4Z372du1KChsksyU" as ApiClient.CurrencyId

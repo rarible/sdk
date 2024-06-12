@@ -1,7 +1,7 @@
 import type { MoveFunctionId } from "@aptos-labs/ts-sdk"
 import type { WalletCore } from "@aptos-labs/wallet-adapter-core"
 import { randomWord } from "@rarible/types"
-import { normalizeAddress } from "@rarible/sdk-common"
+import { normalizeAptosAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface } from "../domain"
 
 export class AptosWalletCore implements AptosWalletInterface {
@@ -24,7 +24,7 @@ export class AptosWalletCore implements AptosWalletInterface {
       throw new Error("AccountInfo does not exist")
     }
     return {
-      address: normalizeAddress(accountInfo.address),
+      address: normalizeAptosAddress(accountInfo.address),
       publicKey: Array.isArray(accountInfo.publicKey) ? accountInfo.publicKey[0] : accountInfo.publicKey,
     }
   }

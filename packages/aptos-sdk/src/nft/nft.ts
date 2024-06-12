@@ -1,7 +1,7 @@
 import type { Aptos } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
 import type { AptosWalletInterface } from "@rarible/aptos-wallet"
-import { normalizeAddress } from "@rarible/sdk-common"
+import { normalizeAptosAddress } from "@rarible/sdk-common"
 import { getRequiredWallet, isChangeBelongsToType, makeId, MAX_U64_INT } from "../common"
 import type { AptosNftSdk } from "../domain"
 import type { AddressConfig } from "../config"
@@ -90,9 +90,9 @@ export class AptosNft implements AptosNftSdk {
 
     return {
       tx,
-      collectionAddress: normalizeAddress(collectionEvent.data.rari_drop_address),
-      rariDropAddress: normalizeAddress(collectionEvent.data.rari_drop_address),
-      aptosCollectionAddress: normalizeAddress(collectionEvent.data.aptos_collection_address),
+      collectionAddress: normalizeAptosAddress(collectionEvent.data.rari_drop_address),
+      rariDropAddress: normalizeAptosAddress(collectionEvent.data.rari_drop_address),
+      aptosCollectionAddress: normalizeAptosAddress(collectionEvent.data.aptos_collection_address),
     }
   }
 
@@ -118,7 +118,7 @@ export class AptosNft implements AptosNftSdk {
 
     return {
       tx,
-      tokenAddress: normalizeAddress(mintChange.address),
+      tokenAddress: normalizeAptosAddress(mintChange.address),
     }
   }
 
@@ -141,7 +141,7 @@ export class AptosNft implements AptosNftSdk {
     }
     return {
       tx: commitedTx,
-      tokenAddress: normalizeAddress(mintEvent.data.token),
+      tokenAddress: normalizeAptosAddress(mintEvent.data.token),
     }
   }
 

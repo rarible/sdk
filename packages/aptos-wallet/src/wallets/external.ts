@@ -1,5 +1,5 @@
 import { randomWord } from "@rarible/types"
-import { normalizeAddress } from "@rarible/sdk-common"
+import { normalizeAptosAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface, ExternalAccount } from "../domain"
 
 export class AptosSdkWallet implements AptosWalletInterface {
@@ -19,7 +19,7 @@ export class AptosSdkWallet implements AptosWalletInterface {
   async getAccountInfo() {
     const { address, publicKey } = await this.account.account()
     return {
-      address: normalizeAddress(address),
+      address: normalizeAptosAddress(address),
       publicKey,
     }
   }

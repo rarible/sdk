@@ -297,7 +297,7 @@ function getBalanceBlockchain(address: UnionAddress, currency: RequestCurrency):
   if (isAssetType(currency)) {
     return extractBlockchainFromAssetType(currency) || extractBlockchain(address)
   } else if (isRequestCurrencyAssetType(currency)) {
-    const { blockchain } = getDataFromCurrencyId(currency)
+    const blockchain = extractBlockchain(currency)
     return validateBlockchain(blockchain)
   } else {
     throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)

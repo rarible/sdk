@@ -1,6 +1,6 @@
 import type { Account as GenericAccount, Aptos } from "@aptos-labs/ts-sdk"
 import type { MoveFunctionId } from "@aptos-labs/ts-sdk"
-import { normalizeAddress } from "@rarible/sdk-common"
+import { normalizeAptosAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface } from "../domain"
 
 export class AptosGenericSdkWallet implements AptosWalletInterface {
@@ -15,7 +15,7 @@ export class AptosGenericSdkWallet implements AptosWalletInterface {
 
   async getAccountInfo() {
     return {
-      address: normalizeAddress(this.account.accountAddress.toString()),
+      address: normalizeAptosAddress(this.account.accountAddress.toString()),
       publicKey: this.account.publicKey.toString(),
     }
   }
