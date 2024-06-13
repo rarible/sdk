@@ -25,7 +25,8 @@
     "docs": "typedoc",
     "test": "sh ./scripts/test.sh",
     "test:only": "jest --runInBand --testPathPattern=src/sdk-blockchains/aptos --silent=false --detectOpenHandles",
-    "verify": "tsc --noEmit --project tsconfig-build.json"
+    "verify": "tsc --noEmit --project tsconfig-build.json",
+    "verify-all": "tsc --noEmit --project tsconfig.json"
   },
   "dependencies": {
     "@ethersproject/keccak256": "^5.6.0",

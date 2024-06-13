@@ -3,7 +3,7 @@ import type { CommittedTransactionResponse } from "@aptos-labs/ts-sdk"
 import type { Maybe } from "@rarible/types"
 import type { AptosWalletInterface } from "@rarible/aptos-wallet"
 import type { AptosTransaction } from "@rarible/aptos-wallet"
-import { normalizeAddress } from "@rarible/sdk-common"
+import { normalizeAptosAddress } from "@rarible/sdk-common"
 import { APT_TOKEN_TYPE, getListingTokenType, getRequiredWallet, isChangeBelongsToType } from "../common"
 import type { AddressConfig } from "../config"
 
@@ -46,7 +46,7 @@ export class AptosOrder {
     if (!change || !("address" in change)) {
       throw new Error("Address has not been found")
     }
-    return normalizeAddress(change.address)
+    return normalizeAptosAddress(change.address)
   }
 
   getListingTokenType = async (listing: string) => {
@@ -83,7 +83,7 @@ export class AptosOrder {
     if (!change || !("address" in change)) {
       throw new Error("Address has not been found")
     }
-    return normalizeAddress(change.address)
+    return normalizeAptosAddress(change.address)
   }
 
   buy = async (listing: string) => {
@@ -126,7 +126,7 @@ export class AptosOrder {
     if (!change || !("address" in change)) {
       throw new Error("Address has not been found")
     }
-    return normalizeAddress(change.address)
+    return normalizeAptosAddress(change.address)
   }
 
   cancelCollectionOffer = async (offer: string) => {
@@ -164,7 +164,7 @@ export class AptosOrder {
     if (!event || !("token_offer" in event.data)) {
       throw new Error("Offer has not been found")
     }
-    return normalizeAddress(event.data.token_offer)
+    return normalizeAptosAddress(event.data.token_offer)
   }
 
   cancelTokenOffer = async (offer: string) => {
@@ -205,7 +205,7 @@ export class AptosOrder {
     if (!change || !("address" in change)) {
       throw new Error("Address has not been found")
     }
-    return normalizeAddress(change.address)
+    return normalizeAptosAddress(change.address)
   }
 
   getFeeScheduleAddress() {
