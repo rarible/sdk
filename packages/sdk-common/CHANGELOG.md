@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.28](https://github.com/rarible/sdk/compare/v0.13.68-fix.27...v0.13.68-fix.28) (2024-06-13)
+
+
+### Bug Fixes
+
+* aptos currency id converting ([#636](https://github.com/rarible/sdk/issues/636)) ([8e6abd8](https://github.com/rarible/sdk/commit/8e6abd80b6f88c3a4c6536373e6b8310c7962597))
+
+
+
+
+
 ## [0.13.68-fix.27](https://github.com/rarible/sdk/compare/v0.13.68-fix.26...v0.13.68-fix.27) (2024-06-07)
 
 **Note:** Version bump only for package @rarible/sdk-common
