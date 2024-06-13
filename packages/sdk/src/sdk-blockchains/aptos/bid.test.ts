@@ -6,7 +6,7 @@ import { awaitOrder } from "../../common/test/await-order"
 import { awaitBalance } from "../../common/test/await-balance"
 import { awaitItemSupply } from "../../common/test/await-item-supply"
 import {
-  APTOS_CURRENCY_ID_ZERO_ADDRESS,
+  APTOS_APT_CURRENCY,
   convertAptosToUnionAddress,
   convertAptosToUnionCollectionId,
   convertAptosToUnionItemId,
@@ -28,7 +28,7 @@ describe("aptos bid", () => {
       itemId,
       amount: 1,
       price: "0.002",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
       originFees: [
         {
@@ -39,18 +39,13 @@ describe("aptos bid", () => {
     })
 
     await awaitOrder(sdkSeller, bidOrder)
-    const originFeeStartBalance = await sdkBuyer.balances.getBalance(feeAddress, APTOS_CURRENCY_ID_ZERO_ADDRESS)
+    const originFeeStartBalance = await sdkBuyer.balances.getBalance(feeAddress, APTOS_APT_CURRENCY)
 
     await sdkSeller.order.acceptBid({
       orderId: bidOrder,
       amount: 1,
     })
-    await awaitBalance(
-      sdkSeller,
-      feeAddress,
-      APTOS_CURRENCY_ID_ZERO_ADDRESS,
-      toBn("0.0002").plus(originFeeStartBalance),
-    )
+    await awaitBalance(sdkSeller, feeAddress, APTOS_APT_CURRENCY, toBn("0.0002").plus(originFeeStartBalance))
   })
 
   test("collection bid & accept bid", async () => {
@@ -62,7 +57,7 @@ describe("aptos bid", () => {
       collectionId: convertAptosToUnionCollectionId(collectionAddress),
       amount: 1,
       price: "0.002",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
       originFees: [
         {
@@ -71,7 +66,7 @@ describe("aptos bid", () => {
         },
       ],
     })
-    const originFeeStartBalance = await sdkBuyer.balances.getBalance(feeAddress, APTOS_CURRENCY_ID_ZERO_ADDRESS)
+    const originFeeStartBalance = await sdkBuyer.balances.getBalance(feeAddress, APTOS_APT_CURRENCY)
 
     await awaitOrder(sdkSeller, bidOrder)
     await sdkSeller.order.acceptBid({
@@ -79,12 +74,7 @@ describe("aptos bid", () => {
       amount: 1,
       itemId: convertAptosToUnionItemId(tokenAddress),
     })
-    await awaitBalance(
-      sdkSeller,
-      feeAddress,
-      APTOS_CURRENCY_ID_ZERO_ADDRESS,
-      toBn("0.0002").plus(originFeeStartBalance),
-    )
+    await awaitBalance(sdkSeller, feeAddress, APTOS_APT_CURRENCY, toBn("0.0002").plus(originFeeStartBalance))
   })
 
   test("accept bid should throws error when originFees is passed", async () => {
@@ -96,7 +86,7 @@ describe("aptos bid", () => {
       collectionId: convertAptosToUnionCollectionId(collectionAddress),
       amount: 1,
       price: "0.002",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
 

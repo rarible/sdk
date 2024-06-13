@@ -6,7 +6,7 @@ import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
 import { awaitBalance } from "../../common/test/await-balance"
 import { createSdk } from "./common/tests/create-sdk"
-import { APTOS_CURRENCY_ID_ZERO_ADDRESS, convertAptosToUnionAddress } from "./common"
+import { APTOS_APT_CURRENCY, convertAptosToUnionAddress } from "./common"
 
 describe("Aptos Orders", () => {
   const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
@@ -28,11 +28,11 @@ describe("Aptos Orders", () => {
     const sellOrder = await prepareResponse.submit({
       amount: 1,
       price: "0.02",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
       originFees: [
         {
-          value: 0,
+          value: 100,
           account: toUnionAddress("APTOS:0x4e6cac4deeffc70fd680b169882365beae7feab97bb488492a42c1b4308771bf"),
         },
       ],
@@ -54,7 +54,7 @@ describe("Aptos Orders", () => {
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
       price: "0.02",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
 
@@ -103,14 +103,14 @@ describe("Aptos Orders", () => {
         },
       ],
     })
-    const originFeeStartBalance = await sdkBuyer.balances.getBalance(feeAddress, APTOS_CURRENCY_ID_ZERO_ADDRESS)
+    const originFeeStartBalance = await sdkBuyer.balances.getBalance(feeAddress, APTOS_APT_CURRENCY)
 
     await awaitOrder(sdkSeller, sellOrder)
     await sdkBuyer.order.buy({
       orderId: sellOrder,
       amount: 1,
     })
-    await awaitBalance(sdkSeller, feeAddress, APTOS_CURRENCY_ID_ZERO_ADDRESS, toBn("0.002").plus(originFeeStartBalance))
+    await awaitBalance(sdkSeller, feeAddress, APTOS_APT_CURRENCY, toBn("0.002").plus(originFeeStartBalance))
   })
 
   test("buy throws error when origin fees is passed", async () => {

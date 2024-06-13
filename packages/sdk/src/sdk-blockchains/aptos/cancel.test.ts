@@ -2,7 +2,7 @@ import { TestUtils } from "@rarible/aptos-sdk"
 import { toItemId } from "@rarible/types"
 import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
-import { APTOS_CURRENCY_ID_ZERO_ADDRESS, convertAptosToUnionCollectionId } from "./common"
+import { APTOS_APT_CURRENCY, convertAptosToUnionCollectionId } from "./common"
 import { createSdk } from "./common/tests/create-sdk"
 
 describe("cancel aptos orders", () => {
@@ -17,7 +17,7 @@ describe("cancel aptos orders", () => {
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
       price: "0.02",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
     await awaitOrder(sdkSeller, sellOrder)
@@ -34,7 +34,7 @@ describe("cancel aptos orders", () => {
       collectionId: convertAptosToUnionCollectionId(collectionAddress),
       amount: 1,
       price: "0.002",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
 
@@ -52,7 +52,7 @@ describe("cancel aptos orders", () => {
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
       price: "0.002",
-      currency: APTOS_CURRENCY_ID_ZERO_ADDRESS,
+      currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
 
