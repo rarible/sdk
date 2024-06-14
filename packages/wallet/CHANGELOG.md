@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.29](https://github.com/rarible/sdk/compare/v0.13.68-fix.28...v0.13.68-fix.29) (2024-06-14)
+
+
+### Features
+
+* full sign message in aptos response ([#637](https://github.com/rarible/sdk/issues/637)) ([379a37d](https://github.com/rarible/sdk/commit/379a37d5056a9edb052f5344be826fa889af2beb))
+
+
+
+
+
 ## [0.13.68-fix.28](https://github.com/rarible/sdk/compare/v0.13.68-fix.27...v0.13.68-fix.28) (2024-06-13)
 
 **Note:** Version bump only for package @rarible/sdk-wallet
