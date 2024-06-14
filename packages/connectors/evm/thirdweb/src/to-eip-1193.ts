@@ -16,7 +16,7 @@ import type { SendTransactionOption } from "thirdweb/dist/types/wallets/interfac
 import type { Hex } from "thirdweb/dist/types/utils/encoding/hex"
 import { first, map, switchMap } from "rxjs/operators"
 import type { ThirdwebChainOrChainId, ThirdwebWalletOptionsExtra } from "./domain"
-import { thirdwebChains$, thirdwebRpc$ } from "./utils"
+import { getSavedAccounts, setSavedAccounts, thirdwebChains$, thirdwebRpc$ } from "./utils"
 
 export class EIP1193ProviderAdapter<Id extends WalletId>
   extends TypedEmitter<EIP1193EventMap>
@@ -99,11 +99,7 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
       }
 
       case "eth_accounts": {
-        const authorized = this.wallet.getAccount()
-        if (authorized) {
-          return [authorized?.address]
-        }
-        return []
+        return getSavedAccounts()
       }
 
       case "eth_sendTransaction": {
@@ -156,6 +152,8 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
           chain,
           ...this.defaultOptions,
         } as WalletConnectionOption<Id>)
+
+        setSavedAccounts([account.address])
 
         return [account.address]
       }

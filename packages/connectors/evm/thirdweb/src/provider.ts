@@ -65,8 +65,14 @@ export class ThirdwebBaseProvider<Id extends WalletId> extends AbstractConnectio
   getOption = async () => getProviderId(this.id)
 
   isConnected = async () => {
-    const adapter = await this.adapter$.pipe(first()).toPromise()
-    return Boolean(adapter.wallet.getAccount())
+    try {
+      const adapter = await this.adapter$.pipe(first()).toPromise()
+      const accounts = await adapter.request({ method: "eth_accounts" })
+      return accounts.length > 0
+    } catch (error) {
+      console.warn("Can't check whether provider connected or not", error)
+      return false
+    }
   }
 }
 
