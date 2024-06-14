@@ -22,6 +22,7 @@ export type RaribleSdkProvider = BlockchainWallet | BlockchainProvider | Ethereu
 export type UserSignature = {
   signature: string
   publicKey: string
+  message: string
 }
 
 export interface AbstractWallet<T extends WalletType> {

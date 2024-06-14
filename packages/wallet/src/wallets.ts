@@ -18,6 +18,7 @@ export class EthereumWallet<T extends Ethereum = Ethereum> implements AbstractWa
     const address = await this.ethereum.getFrom()
     if (!address) throw new Error("Not connected to Ethereum blockchain")
     return {
+      message,
       signature: await this.ethereum.personalSign(message),
       publicKey: address,
     }
@@ -42,7 +43,10 @@ export class FlowWallet implements AbstractWallet<WalletType.FLOW> {
     }
     const messageHex = Buffer.from(message).toString("hex")
     if (this.auth) {
-      return this._getSignatureFromAuth(messageHex)
+      return {
+        message,
+        ...(await this._getSignatureFromAuth(messageHex)),
+      }
     }
     const currentUser = this.fcl.currentUser()
     const user = await this.fcl.currentUser().snapshot()
@@ -66,6 +70,7 @@ export class FlowWallet implements AbstractWallet<WalletType.FLOW> {
         throw new Error(`Key with index "${signature.keyId}" not found on account with address ${address}`)
       }
       return {
+        message,
         signature: signature.signature,
         publicKey: pubKey.publicKey,
       }
@@ -120,6 +125,7 @@ export class TezosWallet implements AbstractWallet<WalletType.TEZOS> {
 
     const result = await this.sign(this.provider, message, "message")
     return {
+      message,
       signature: result.signature,
       publicKey: `${result.edpk}_${result.prefix}`,
     }
@@ -135,6 +141,7 @@ export class SolanaWallet implements AbstractWallet<WalletType.SOLANA> {
     const data = new TextEncoder().encode(message)
     const result = await this.provider.signMessage(data, "utf8")
     return {
+      message,
       signature: Buffer.from(result.signature).toString("hex"),
       publicKey: result.publicKey.toString(),
     }
@@ -148,6 +155,7 @@ export class ImmutableXWallet implements AbstractWallet<WalletType.IMMUTABLEX> {
 
   async signPersonalMessage(message: string): Promise<UserSignature> {
     return {
+      message,
       signature: (await this.wallet.link.sign({ message, description: message })).result,
       publicKey: this.wallet.getConnectionData().address,
     }
@@ -161,8 +169,10 @@ export class AptosWallet implements AbstractWallet<WalletType.APTOS> {
 
   async signPersonalMessage(message: string): Promise<UserSignature> {
     const accountInfo = await this.wallet.getAccountInfo()
+    const signResponse = await this.wallet.signMessage(message)
     return {
-      signature: await this.wallet.signMessage(message),
+      message: signResponse.message,
+      signature: signResponse.signature,
       publicKey: accountInfo.publicKey,
     }
   }

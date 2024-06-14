@@ -85,6 +85,12 @@ export function SignPage() {
                   <InlineCode wrap>{result.publicKey}</InlineCode> <CopyToClipboard value={result.publicKey} />
                 </div>
               </Box>
+              <Box sx={{ my: 2 }}>
+                <Typography variant="overline">Message:</Typography>
+                <div>
+                  <pre>{result.message}</pre> <CopyToClipboard value={result.message} />
+                </div>
+              </Box>
             </Alert>
           )}
         </Box>
