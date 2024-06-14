@@ -3,7 +3,7 @@
   "version": "0.13.68-fix.28",
   "private": true,
   "scripts": {
-    "build": "run-s setup:env build:webpack",
+    "build": "run-s build:webpack",
     "build:webpack": "webpack --config webpack.prod.ts",
     "serve": "serve ./build",
     "setup:env": "mv common.env .env",

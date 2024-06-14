@@ -7,15 +7,21 @@ import type { AptosTransaction, AptosWalletInterface } from "../domain"
 export class AptosWalletCore implements AptosWalletInterface {
   constructor(public readonly wallet: WalletCore) {}
 
-  async signMessage(message: string) {
+  async signMessage(message: string, options?: { nonce: string }) {
     const response = await this.wallet.signMessage({
       message,
-      nonce: randomWord(),
+      nonce: options?.nonce || randomWord(),
     })
     if (Array.isArray(response.signature)) {
-      return response.signature[0]
+      return {
+        signature: response.signature[0].toString(),
+        message: response.fullMessage.toString(),
+      }
     }
-    return response.signature.toString()
+    return {
+      signature: response.signature.toString(),
+      message: response.fullMessage.toString(),
+    }
   }
 
   async getAccountInfo() {

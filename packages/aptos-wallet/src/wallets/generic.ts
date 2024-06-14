@@ -9,8 +9,12 @@ export class AptosGenericSdkWallet implements AptosWalletInterface {
     public readonly account: GenericAccount,
   ) {}
 
-  async signMessage(msg: string) {
-    return this.account.sign(msg).toString()
+  async signMessage(msg: string): Promise<{ message: string; signature: string }> {
+    return {
+      //@todo test aptos wallet doesn't provide fullMessage and nonce
+      message: msg,
+      signature: this.account.sign(msg).toString(),
+    }
   }
 
   async getAccountInfo() {

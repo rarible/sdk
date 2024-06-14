@@ -5,15 +5,21 @@ import type { AptosTransaction, AptosWalletInterface, ExternalAccount } from "..
 export class AptosSdkWallet implements AptosWalletInterface {
   constructor(public readonly account: ExternalAccount) {}
 
-  async signMessage(msg: string) {
-    const { signature } = await this.account.signMessage({
+  async signMessage(msg: string, options?: { nonce: string }) {
+    const { signature, fullMessage } = await this.account.signMessage({
       message: msg,
-      nonce: randomWord(),
+      nonce: options?.nonce || randomWord(),
     })
     if (Array.isArray(signature)) {
-      return signature[0]
+      return {
+        signature: signature[0].toString(),
+        message: fullMessage,
+      }
     }
-    return signature.toString()
+    return {
+      signature: signature.toString(),
+      message: fullMessage.toString(),
+    }
   }
 
   async getAccountInfo() {
