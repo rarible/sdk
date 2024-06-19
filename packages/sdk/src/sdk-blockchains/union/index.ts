@@ -24,7 +24,7 @@ import type {
   IWithdrawBiddingBalance,
 } from "../../types/balances"
 import type { RequestCurrency } from "../../common/domain"
-import { getDataFromCurrencyId, isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
+import { isAssetType, isRequestCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { ICryptopunkUnwrap, ICryptopunkWrap } from "../../types/ethereum/domain"
 import { MethodWithPrepare } from "../../types/common"
 import type { ISellUpdate } from "../../types/order/sell"
