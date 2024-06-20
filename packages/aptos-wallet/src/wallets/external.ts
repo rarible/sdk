@@ -23,10 +23,11 @@ export class AptosSdkWallet implements AptosWalletInterface {
   }
 
   async getAccountInfo() {
+    if (!this.account.account) throw new Error("Cannot get account info: account has not been set")
     const { address, publicKey } = await this.account.account()
     return {
       address: normalizeAptosAddress(address),
-      publicKey,
+      publicKey: Array.isArray(publicKey) ? publicKey[0] : publicKey.toString(),
     }
   }
 
