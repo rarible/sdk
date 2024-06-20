@@ -9,14 +9,14 @@ import type {
   RpcError,
 } from "viem"
 import { BigNumber } from "bignumber.js"
-import { getRpcClient } from "thirdweb/rpc"
 import type { Wallet, WalletConnectionOption, WalletId } from "thirdweb/wallets"
 import { TypedEmitter } from "tiny-typed-emitter"
 import type { Chain, ThirdwebClient } from "thirdweb"
 import type { SendTransactionOption } from "thirdweb/dist/types/wallets/interfaces/wallet"
-import { defineChain } from "thirdweb/chains"
 import type { Hex } from "thirdweb/dist/types/utils/encoding/hex"
+import { first, map, switchMap } from "rxjs/operators"
 import type { ThirdwebChainOrChainId, ThirdwebWalletOptionsExtra } from "./domain"
+import { getSavedAccounts, setSavedAccounts, thirdwebChains$, thirdwebRpc$ } from "./utils"
 
 export class EIP1193ProviderAdapter<Id extends WalletId>
   extends TypedEmitter<EIP1193EventMap>
@@ -99,11 +99,7 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
       }
 
       case "eth_accounts": {
-        const authorized = this.wallet.getAccount()
-        if (authorized) {
-          return [authorized?.address]
-        }
-        return []
+        return getSavedAccounts()
       }
 
       case "eth_sendTransaction": {
@@ -138,9 +134,8 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
       }
 
       case "wallet_switchEthereumChain": {
-        const chain = defineChain({
-          id: parseChainId(data.params[0].chainId),
-        })
+        const chainId = parseChainId(data.params[0].chainId)
+        const chain = await this._defineChain(chainId)
         return this.wallet.switchChain(chain)
       }
 
@@ -151,36 +146,51 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
       }
 
       case "eth_requestAccounts": {
+        const chain = await this._getDefaultChain()
         const account = await this.wallet.connect({
           client: this.client,
-          chain: this._getDefaultChain(),
+          chain,
           ...this.defaultOptions,
         } as WalletConnectionOption<Id>)
+
+        setSavedAccounts([account.address])
 
         return [account.address]
       }
 
       // Handle other requests by rpc public client
       default: {
-        const client = getRpcClient({
-          chain: this._getChain(),
-          client: this.client,
-        })
-        return await client(data)
+        return await thirdwebRpc$
+          .pipe(
+            map(x =>
+              x.getRpcClient({
+                chain: this._getChain(),
+                client: this.client,
+              }),
+            ),
+            switchMap(request => request(data)),
+            first(),
+          )
+          .toPromise()
       }
     }
   }
 
-  private _getDefaultChain() {
+  private async _getDefaultChain() {
     if (this.defaultChain) {
       if ("chain" in this.defaultChain) {
         return this.defaultChain.chain
       }
-      return defineChain({
-        id: this.defaultChain.chainId,
-      })
+      return this._defineChain(this.defaultChain.chainId)
     }
     return undefined
+  }
+
+  private async _defineChain(chainId: number) {
+    const chains = await thirdwebChains$.pipe(first()).toPromise()
+    return chains.defineChain({
+      id: chainId,
+    })
   }
 
   private _getAccount() {
