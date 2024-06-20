@@ -5,7 +5,6 @@ import type { Maybe } from "@rarible/types/build/maybe"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
-import { toWord } from "@rarible/types"
 import { getNetworkConfigByChainId } from "./config"
 import type { UpsertOrderAction } from "./order/upsert-order"
 import { UpsertOrder } from "./order/upsert-order"
@@ -58,8 +57,8 @@ import { getAuctionHash } from "./auction/common"
 import type { CryptoPunksWrapper } from "./common/crypto-punks"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./nft/cryptopunk-wrapper"
 import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purchase"
-import { getUpdatedCalldata } from "./order/fill-order/common/get-updated-call"
 import { getRequiredWallet } from "./common/get-required-wallet"
+import { CURRENT_ORDER_TYPE_VERSION } from "./common/order"
 
 export interface RaribleOrderSdk {
   /**
@@ -86,42 +85,42 @@ export interface RaribleOrderSdk {
    * Fill order (buy or accept bid - depending on the order type)
    *
    * @deprecated Use {@link buy} or {@link acceptBid} instead
-   * @param request order and parameters (amount to fill, fees etc)
+   * @param request order and parameters (amount to fill, fees etc.)
    */
   fill: FillOrderAction
 
   /**
    * Buy order
    *
-   * @param request order and parameters (amount to fill, fees etc)
+   * @param request order and parameters (amount to fill, fees etc.)
    */
   buy: FillOrderAction
 
   /**
    * Accept bid order
    *
-   * @param request order and parameters (amount to fill, fees etc)
+   * @param request order and parameters (amount to fill, fees etc.)
    */
   acceptBid: FillOrderAction
 
   /**
    * Purchase batch
    *
-   * @param request array of order and parameters (amount to fill, fees etc)
+   * @param request array of order and parameters (amount to fill, fees etc.)
    */
   buyBatch: FillBatchOrderAction
 
   /**
    * Get fill transaction data (for external sending)
    *
-   * @param request order and parameters (amount to fill, fees etc)
+   * @param request order and parameters (amount to fill, fees etc.)
    */
   getFillTxData: GetOrderFillTxData
 
   /**
    * Get buy transaction data (for external sending)
    *
-   * @param request order and parameters (amount to fill, fees etc)
+   * @param request order and parameters (amount to fill, fees etc.)
    */
   getBuyTxData: GetOrderBuyTxData
 
@@ -320,9 +319,12 @@ export function createRaribleSdk(
   const checkLazyOrder = order.checkLazyOrder.bind(null, checkLazyAsset)
   const checkAssetType = partialCall(checkAssetTypeTemplate, getApis)
 
-  const getBaseOrderFee = getBaseFee.bind(null, env, getApis)
-  const filler = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env, sdkConfig)
-  const buyBatchService = new BatchOrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env, sdkConfig)
+  const getBaseOrderFeeOld = getBaseFee.bind(null, env, getApis)
+  const getBaseOrderFee = (type?: OrderForm["type"]) => {
+    return getBaseFee(env, getApis, type || CURRENT_ORDER_TYPE_VERSION)
+  }
+  const filler = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFeeOld, env, sdkConfig)
+  const buyBatchService = new BatchOrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFeeOld, env, sdkConfig)
 
   const approveFn = partialCall(approveTemplate, ethereum, send, getConfig)
 
@@ -335,7 +337,6 @@ export function createRaribleSdk(
     partialCall(signOrderTemplate, ethereum, getConfig),
     getApis,
     ethereum,
-    toWord(getUpdatedCalldata(sdkConfig)),
   )
 
   const sellService = new OrderSell(upsertService, checkAssetType)

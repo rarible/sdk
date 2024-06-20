@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "0.16.5-alpha.13",
+    "@rarible/api-client": "0.18.0-alpha.1",
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.30",
     "@rarible/flow-test-common": "~0.5.75-fix.1",
     "@rarible/sdk-wallet": "^0.13.68-fix.30",

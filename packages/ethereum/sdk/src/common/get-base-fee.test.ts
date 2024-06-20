@@ -3,6 +3,7 @@ import { ethereumNetworks } from "../types"
 import { getBaseFee } from "./get-base-fee"
 import { createEthereumApis, getApis as getApisTemplate } from "./apis"
 import { getTestAPIKey } from "./test/test-credentials"
+import { CURRENT_ORDER_TYPE_VERSION } from "./order"
 
 /**
  * @group type/common
@@ -11,7 +12,7 @@ describe("get base fee", () => {
   test("get base fee from mainnet", async () => {
     const env: EthereumNetwork = "mainnet"
     const getApis = getApisTemplate.bind(null, undefined, env, { apiKey: getTestAPIKey(env) })
-    const fee = await getBaseFee(env, getApis)
+    const fee = await getBaseFee(env, getApis, CURRENT_ORDER_TYPE_VERSION)
     expect(fee).not.toBeNaN()
   })
 
@@ -24,7 +25,7 @@ describe("get base fee", () => {
       return apis
     }
 
-    await expect(() => getBaseFee(env, getApis)).rejects.toBeTruthy()
+    await expect(() => getBaseFee(env, getApis, CURRENT_ORDER_TYPE_VERSION)).rejects.toBeTruthy()
   })
 
   test("check fees.json config", async () => {
@@ -37,7 +38,7 @@ describe.each(ethereumNetworks)("get base fee each of environments", (env: Ether
   const getApis = async () => createEthereumApis(env, { apiKey: getTestAPIKey(env) })
 
   test(`get base fee from ${env}`, async () => {
-    const fee = await getBaseFee(env, getApis)
+    const fee = await getBaseFee(env, getApis, CURRENT_ORDER_TYPE_VERSION)
     expect(fee).not.toBeNaN()
   })
 })

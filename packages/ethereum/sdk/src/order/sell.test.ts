@@ -50,7 +50,6 @@ describe.each(providers)("sell", ethereum => {
     signOrder,
     getApis,
     ethereum,
-    ZERO_WORD,
   )
   const orderSell = new OrderSell(upserter, checkAssetType)
   const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")

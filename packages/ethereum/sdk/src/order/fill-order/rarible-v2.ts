@@ -11,12 +11,12 @@ import { waitTx } from "../../common/wait-tx"
 import type { SimpleOrder, SimpleRaribleV2Order } from "../types"
 import { isSigner } from "../../common/is-signer"
 import { fixSignature } from "../../common/fix-signature"
-import type { IRaribleEthereumSdkConfig } from "../../types"
 import { assetTypeToStruct } from "../asset-type-to-struct"
 import { encodeRaribleV2OrderData } from "../encode-rarible-v2-order-data"
 import { isETH, isWeth } from "../../nft/common"
 import type { GetConfigByChainId } from "../../config"
 import { getNetworkConfigByChainId } from "../../config"
+import { CURRENT_ORDER_TYPE_VERSION } from "../../common/order"
 import { encodeRaribleV2OrderPurchaseStruct } from "./rarible-v2/encode-rarible-v2-order"
 import { invertOrder } from "./invert-order"
 import type {
@@ -25,8 +25,7 @@ import type {
   PreparedOrderRequestDataForExchangeWrapper,
   RaribleV2OrderFillRequest,
   RaribleV2OrderFillRequestV2,
-  RaribleV2OrderFillRequestV3Buy,
-  RaribleV2OrderFillRequestV3Sell,
+  RaribleV2OrderFillRequestV3,
 } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { setFeesCurrency, ZERO_FEE_VALUE } from "./common/origin-fees-utils"
@@ -36,11 +35,10 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     private readonly ethereum: Maybe<Ethereum>,
     private readonly send: SendFunction,
     private readonly getConfig: GetConfigByChainId,
-    private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
-    private readonly sdkConfig?: IRaribleEthereumSdkConfig,
+    private readonly getBaseFee: (type: SimpleOrder["type"]) => Promise<number>,
   ) {}
 
-  invert(request: RaribleV2OrderFillRequest, maker: Address): SimpleRaribleV2Order {
+  async invert(request: RaribleV2OrderFillRequest, maker: Address): Promise<SimpleRaribleV2Order> {
     const inverted = invertOrder(request.order, request.amount, maker)
     switch (request.order.data.dataType) {
       case "RARIBLE_V2_DATA_V1": {
@@ -52,32 +50,22 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         break
       }
       case "RARIBLE_V2_DATA_V2": {
+        const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
         inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V2",
+          dataType: baseFee === 0 ? "RARIBLE_V2_DATA_V2" : "RARIBLE_V2_DATA_V3",
           originFees: (request as RaribleV2OrderFillRequestV2).originFees || [],
           payouts: (request as RaribleV2OrderFillRequestV2).payouts || [],
           isMakeFill: !request.order.data.isMakeFill,
         }
         break
       }
-      case "RARIBLE_V2_DATA_V3_BUY": {
+      case "RARIBLE_V2_DATA_V3": {
+        const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
         inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V3_SELL",
-          payout: (request as RaribleV2OrderFillRequestV3Sell).payout,
-          originFeeFirst: (request as RaribleV2OrderFillRequestV3Sell).originFeeFirst,
-          originFeeSecond: (request as RaribleV2OrderFillRequestV3Sell).originFeeSecond,
-          maxFeesBasePoint: (request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint,
-          marketplaceMarker: (request as RaribleV2OrderFillRequestV3Sell).marketplaceMarker,
-        }
-        break
-      }
-      case "RARIBLE_V2_DATA_V3_SELL": {
-        inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V3_BUY",
-          payout: (request as RaribleV2OrderFillRequestV3Buy).payout,
-          originFeeFirst: (request as RaribleV2OrderFillRequestV3Buy).originFeeFirst,
-          originFeeSecond: (request as RaribleV2OrderFillRequestV3Buy).originFeeSecond,
-          marketplaceMarker: (request as RaribleV2OrderFillRequestV3Buy).marketplaceMarker,
+          dataType: baseFee === 0 ? "RARIBLE_V2_DATA_V2" : "RARIBLE_V2_DATA_V3",
+          originFees: (request as RaribleV2OrderFillRequestV3).originFees || [],
+          payouts: (request as RaribleV2OrderFillRequestV3).payouts || [],
+          isMakeFill: !request.order.data.isMakeFill,
         }
         break
       }
@@ -188,7 +176,11 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     }
 
     // fix payouts to send bought item to buyer
-    if (inverted.data.dataType === "RARIBLE_V2_DATA_V1" || inverted.data.dataType === "RARIBLE_V2_DATA_V2") {
+    if (
+      inverted.data.dataType === "RARIBLE_V2_DATA_V1" ||
+      inverted.data.dataType === "RARIBLE_V2_DATA_V2" ||
+      inverted.data.dataType === "RARIBLE_V2_DATA_V3"
+    ) {
       if (!inverted.data.payouts?.length) {
         inverted.data.payouts = [
           {
@@ -196,16 +188,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
             value: 10000,
           },
         ]
-      }
-    } else if (
-      inverted.data.dataType === "RARIBLE_V2_DATA_V3_BUY" ||
-      inverted.data.dataType === "RARIBLE_V2_DATA_V3_SELL"
-    ) {
-      if (!inverted.data.payout) {
-        inverted.data.payout = {
-          account: inverted.maker,
-          value: 10000,
-        }
       }
     }
 
@@ -261,21 +243,25 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     switch (order.data.dataType) {
       case "RARIBLE_V2_DATA_V1":
       case "RARIBLE_V2_DATA_V2":
-        return order.data.originFees.map(f => f.value).reduce((v, acc) => v + acc, 0) + (await this.getBaseOrderFee())
-      case "RARIBLE_V2_DATA_V3_BUY":
-      case "RARIBLE_V2_DATA_V3_SELL":
+      case "RARIBLE_V2_DATA_V3":
         return (
-          (order.data.originFeeFirst?.value ?? 0) +
-          (order.data.originFeeSecond?.value ?? 0) +
-          (await this.getBaseOrderFee())
+          order.data.originFees.map(f => f.value).reduce((v, acc) => v + acc, 0) +
+          (await this.getBaseFeeByData(order.data))
         )
       default:
         throw new Error("Unsupported order dataType")
     }
   }
 
-  async getBaseOrderFee(): Promise<number> {
-    return this.getBaseOrderFeeConfig("RARIBLE_V2")
+  getBaseOrderFee(order: RaribleV2OrderFillRequest["order"]): Promise<number> | number {
+    return this.getBaseFeeByData(order.data)
+  }
+
+  async getBaseFeeByData(data: RaribleV2OrderFillRequest["order"]["data"]): Promise<number> {
+    if (data.dataType === "RARIBLE_V2_DATA_V3") {
+      return this.getBaseFee("RARIBLE_V2")
+    }
+    return 0
   }
 }
 
@@ -288,4 +274,8 @@ function isSellOrder(order: SimpleOrder): boolean {
 
 function isCollectionOrder(order: SimpleOrder): boolean {
   return order.take.assetType.assetClass === "COLLECTION"
+}
+
+async function generateOrderData() {
+
 }
