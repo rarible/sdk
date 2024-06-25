@@ -101,6 +101,7 @@
     "@typescript-eslint/eslint-plugin": "^7.10.0",
     "@typescript-eslint/parser": "^7.10.0",
     "@wallet-standard/core": "^1.0.3",
+    "aptos": "^1.21.0",
     "cpy-cli": "^5.0.0",
     "depcheck": "^1.4.7",
     "dotenv": "16.0.0",

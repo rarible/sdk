@@ -25,9 +25,9 @@ import {
 import { ImmutableXLinkConnectionProvider } from "@rarible/connector-immutablex-link"
 import { MattelConnectionProvider } from "@rarible/connector-mattel"
 import { WalletConnectConnectionProviderV2 } from "@rarible/connector-walletconnect-v2"
-import { AptosConnectionProvider } from "@rarible/connector-aptos"
 import type { ImxEnv } from "@rarible/immutable-wallet"
-import { mapAptosWallet } from "@rarible/connector-helper/build/aptos"
+import { mapAptosCoreWallet } from "@rarible/connector-helper/build/aptos-wallet-core"
+import { AptosWalletCoreProvider } from "@rarible/connector-aptos-wallet-core"
 
 export const ethereumRpcMap: Record<number, string> = {
   1: "https://rarible.com/nodes/ethereum-node",
@@ -163,7 +163,10 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     }),
   )
 
-  const aptos = mapAptosWallet(new AptosConnectionProvider())
+  //Raw Petra Wallet connector
+  // const aptos = mapAptosWallet(new AptosConnectionProvider())
+  //WalletCore is used as common Connector for Petra Wallet and similar wallets
+  const aptosWalletCore = mapAptosCoreWallet(new AptosWalletCoreProvider())
 
   const firebase = mapEthereumWallet(
     new FirebaseConnectionProvider(
@@ -332,7 +335,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     .add(magic)
     .add(firebaseApple)
     .add(torus)
-    .add(aptos)
+    .add(aptosWalletCore)
     .add(firebase)
     .add(firebaseEmail)
 
