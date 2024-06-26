@@ -25,14 +25,12 @@ import {
   isRaribleV1Data,
   isRaribleV2Data,
 } from "./common"
-import type { IEthereumSdkConfig } from "./domain"
 
 export class EthereumSell {
   constructor(
     private sdk: RaribleSdk,
     private wallet: Maybe<EthereumWallet>,
     private apis: IApisSdk,
-    private config?: IEthereumSdkConfig,
   ) {
     this.sell = this.sell.bind(this)
     this.update = this.update.bind(this)
@@ -62,8 +60,8 @@ export class EthereumSell {
   }
 
   private async sellDataV2(): Promise<PrepareSellInternalResponse> {
-    const sellAction = this.sdk.order.sell
-      .before(async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
+    const sellAction = this.sdk.order.sell.around(
+      async (sellFormRequest: OrderCommon.OrderInternalRequest) => {
         await checkWalletBlockchain(this.wallet, extractBlockchain(sellFormRequest.itemId))
         checkPayouts(sellFormRequest.payouts)
         const { tokenId, contract } = getEthereumItemId(sellFormRequest.itemId)
@@ -71,8 +69,9 @@ export class EthereumSell {
           ? convertDateToTimestamp(sellFormRequest.expirationDate)
           : getDefaultExpirationDateTimestamp()
         const currencyAssetType = getCurrencyAssetType(sellFormRequest.currency)
+        const baseFee = await this.sdk.order.getBaseOrderFee("RARIBLE_V2")
         return {
-          type: "DATA_V2",
+          type: baseFee === 0 ? "DATA_V2" : "DATA_V3",
           makeAssetType: {
             tokenId: tokenId,
             contract: toAddress(contract),
@@ -84,12 +83,13 @@ export class EthereumSell {
           originFees: common.toEthereumParts(sellFormRequest.originFees),
           end: expirationDate,
         }
-      })
-      .after(async order => {
+      },
+      async order => {
         //todo replace with returned chainId/blockchain
         const blockchain = await getWalletBlockchain(this.wallet)
         return common.convertEthereumOrderHash(order.hash, blockchain)
-      })
+      },
+    )
 
     return {
       originFeeSupport: OriginFeeSupport.FULL,
@@ -119,15 +119,16 @@ export class EthereumSell {
       throw new Error(`You can't update non-Rarible orders. Unable to update sell ${JSON.stringify(order)}`)
     }
 
-    const sellUpdateAction = this.sdk.order.sellUpdate
-      .before(async (request: OrderCommon.OrderUpdateRequest) => {
+    const sellUpdateAction = this.sdk.order.sellUpdate.around(
+      async (request: OrderCommon.OrderUpdateRequest) => {
         await checkWalletBlockchain(this.wallet, blockchain)
         return {
           orderHash: toWord(hash),
           priceDecimal: request.price,
         }
-      })
-      .after(order => common.convertEthereumOrderHash(order.hash, blockchain))
+      },
+      order => common.convertEthereumOrderHash(order.hash, blockchain),
+    )
 
     const { ethereum } = common.assertWallet(this.wallet)
     const ethOrder = await getEthOrder(ethereum, order)

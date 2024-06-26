@@ -28,24 +28,13 @@ export function encodeRaribleV2OrderData(
   wrongEncode: Boolean = false,
 ): [string, string] {
   switch (data.dataType) {
-    case "RARIBLE_V2_DATA_V3_BUY": {
-      const encoded = ethereum.encodeParameter(DATA_V3_BUY_TYPE, {
-        payouts: encodePartToBuffer(data.payout),
-        originFeeFirst: encodePartToBuffer(data.originFeeFirst),
-        originFeeSecond: encodePartToBuffer(data.originFeeSecond),
-        marketplaceMarker: data.marketplaceMarker || ZERO_WORD,
+    case "RARIBLE_V2_DATA_V3": {
+      const encoded = ethereum.encodeParameter(DATA_V3_TYPE, {
+        payouts: data.payouts,
+        originFees: data.originFees,
+        isMakeFill: data.isMakeFill,
       })
-      return ["0x1b18cdf6", encoded]
-    }
-    case "RARIBLE_V2_DATA_V3_SELL": {
-      const encoded = ethereum.encodeParameter(DATA_V3_SELL_TYPE, {
-        payouts: encodePartToBuffer(data.payout),
-        originFeeFirst: encodePartToBuffer(data.originFeeFirst),
-        originFeeSecond: encodePartToBuffer(data.originFeeSecond),
-        maxFeesBasePoint: data.maxFeesBasePoint,
-        marketplaceMarker: data.marketplaceMarker || ZERO_WORD,
-      })
-      return ["0x2fa3cfd3", encoded]
+      return ["0x4ade54ca", encoded]
     }
     case "RARIBLE_V2_DATA_V2": {
       const encoded = ethereum.encodeParameter(DATA_V2_TYPE, {
@@ -145,50 +134,39 @@ const DATA_V2_TYPE = {
   type: "tuple",
 }
 
-const DATA_V3_BUY_TYPE = {
+const DATA_V3_TYPE = {
   components: [
     {
+      components: [
+        {
+          name: "account",
+          type: "address",
+        },
+        {
+          name: "value",
+          type: "uint96",
+        },
+      ],
       name: "payouts",
-      type: "uint256",
+      type: "tuple[]",
     },
     {
-      name: "originFeeFirst",
-      type: "uint256",
+      components: [
+        {
+          name: "account",
+          type: "address",
+        },
+        {
+          name: "value",
+          type: "uint96",
+        },
+      ],
+      name: "originFees",
+      type: "tuple[]",
     },
     {
-      name: "originFeeSecond",
-      type: "uint256",
-    },
-    {
-      name: "marketplaceMarker",
-      type: "bytes32",
-    },
-  ],
-  name: "data",
-  type: "tuple",
-}
-
-const DATA_V3_SELL_TYPE = {
-  components: [
-    {
-      name: "payouts",
-      type: "uint256",
-    },
-    {
-      name: "originFeeFirst",
-      type: "uint256",
-    },
-    {
-      name: "originFeeSecond",
-      type: "uint256",
-    },
-    {
-      name: "maxFeesBasePoint",
-      type: "uint256",
-    },
-    {
-      name: "marketplaceMarker",
-      type: "bytes32",
+      name: "isMakeFill",
+      type: "bool",
     },
   ],
   name: "data",

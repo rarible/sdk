@@ -58,8 +58,7 @@ import type {
   OrderOpenSeaV1DataV1,
   OrderRaribleV2DataV1,
   OrderRaribleV2DataV2,
-  OrderRaribleV2DataV3Buy,
-  OrderRaribleV2DataV3Sell,
+  OrderRaribleV2DataV3,
   OrderSudoSwapAmmDataV1,
   OrderX2Y2Data,
 } from "@rarible/ethereum-api-client/build/models/OrderData"
@@ -228,24 +227,13 @@ export function convertOrderDataToEth(data: OrderData): SimpleOrder["data"] {
         isMakeFill: data.isMakeFill,
       } as OrderRaribleV2DataV2
     }
-    case "ETH_RARIBLE_V2_DATA_V3_SELL": {
+    case "ETH_RARIBLE_V2_3": {
       return {
-        dataType: "RARIBLE_V2_DATA_V3_SELL",
-        payout: data.payout && convertEthereumPart(data.payout),
-        originFeeFirst: data.originFeeFirst && convertEthereumPart(data.originFeeFirst),
-        originFeeSecond: data.originFeeSecond && convertEthereumPart(data.originFeeSecond),
-        maxFeesBasePoint: data.maxFeesBasePoint,
-        marketplaceMarker: data.marketplaceMarker,
-      } as OrderRaribleV2DataV3Sell
-    }
-    case "ETH_RARIBLE_V2_DATA_V3_BUY": {
-      return {
-        dataType: "RARIBLE_V2_DATA_V3_BUY",
-        payout: data.payout && convertEthereumPart(data.payout),
-        originFeeFirst: data.originFeeFirst && convertEthereumPart(data.originFeeFirst),
-        originFeeSecond: data.originFeeSecond && convertEthereumPart(data.originFeeSecond),
-        marketplaceMarker: data.marketplaceMarker && toWord(data.marketplaceMarker),
-      } as OrderRaribleV2DataV3Buy
+        dataType: "RARIBLE_V2_DATA_V3",
+        payouts: toEthereumParts(data.payouts),
+        originFees: toEthereumParts(data.originFees),
+        isMakeFill: data.isMakeFill,
+      } as OrderRaribleV2DataV3
     }
     case "ETH_OPEN_SEA_V1": {
       return {
@@ -355,8 +343,7 @@ export function getEthOrderType(data: OrderData): SimpleOrder["type"] {
       return "RARIBLE_V1"
     case "ETH_RARIBLE_V2":
     case "ETH_RARIBLE_V2_2":
-    case "ETH_RARIBLE_V2_DATA_V3_SELL":
-    case "ETH_RARIBLE_V2_DATA_V3_BUY":
+    case "ETH_RARIBLE_V2_3":
       return "RARIBLE_V2"
     case "ETH_OPEN_SEA_V1":
       return "OPEN_SEA_V1"
@@ -414,10 +401,8 @@ export function getOrderFeesSum(order: Order): number {
       return order.data.fee
     case "ETH_RARIBLE_V2":
     case "ETH_RARIBLE_V2_2":
+    case "ETH_RARIBLE_V2_3":
       return getOriginFeesSum(order.data.originFees)
-    case "ETH_RARIBLE_V2_DATA_V3_SELL":
-    case "ETH_RARIBLE_V2_DATA_V3_BUY":
-      return (order.data.originFeeFirst?.value ?? 0) + (order.data.originFeeSecond?.value ?? 0)
     default:
       throw new Error("Unexpected order dataType")
   }
@@ -428,10 +413,7 @@ export function isRaribleV1Data(data: OrderData): boolean {
 }
 export function isRaribleV2Data(data: OrderData): boolean {
   return (
-    data["@type"] === "ETH_RARIBLE_V2" ||
-    data["@type"] === "ETH_RARIBLE_V2_2" ||
-    data["@type"] === "ETH_RARIBLE_V2_DATA_V3_SELL" ||
-    data["@type"] === "ETH_RARIBLE_V2_DATA_V3_BUY"
+    data["@type"] === "ETH_RARIBLE_V2" || data["@type"] === "ETH_RARIBLE_V2_2" || data["@type"] === "ETH_RARIBLE_V2_3"
   )
 }
 
@@ -644,5 +626,4 @@ export function isWETH(assetType: AssetType, wethAddress: Address) {
   return assetType["@type"] === "ERC20" && convertToEthereumAddress(assetType.contract) === wethAddress
 }
 
-export * from "./validators"
 export { EVMBlockchains, EVMBlockchain, isEVMBlockchain }

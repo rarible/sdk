@@ -1,11 +1,10 @@
-import { toAddress, ZERO_WORD } from "@rarible/types"
+import { toAddress, toBigNumber } from "@rarible/types"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toBigNumber } from "@rarible/types"
 import { getEthereumConfig } from "../config"
-import { sentTx, getSimpleSendWithInjects, getSendWithInjects } from "../common/send-transaction"
+import { getSendWithInjects, getSimpleSendWithInjects, sentTx } from "../common/send-transaction"
 import { delay } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
 import { createErc721V3Collection } from "../common/mint"
@@ -57,7 +56,6 @@ describe("bid", () => {
     signOrder2,
     getApis2,
     ethereum2,
-    ZERO_WORD,
   )
   const orderBid = new OrderBid(upserter, checkAssetType)
 

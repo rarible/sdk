@@ -59,11 +59,11 @@ export function createEthereumSdk(
   }
   const sdk = createRaribleSdk(wallet?.ethereum, network, sdkConfig)
 
-  const sellService = new EthereumSell(sdk, wallet, apis, config)
+  const sellService = new EthereumSell(sdk, wallet, apis)
   const balanceService = new EthereumBalance(sdk, wallet, apis)
-  const bidService = new EthereumBid(sdk, wallet, apis, balanceService, config)
+  const bidService = new EthereumBid(sdk, wallet, apis, balanceService)
   const mintService = new EthereumMint(sdk, wallet, apis)
-  const fillService = new EthereumFill(sdk, wallet, apis, config)
+  const fillService = new EthereumFill(sdk, wallet, apis)
   const { createCollectionSimplified } = new EthereumCreateCollection(sdk, wallet)
   const cryptopunkService = new EthereumCryptopunk(sdk, wallet)
   const transferService = new EthereumTransfer(sdk, wallet, apis)

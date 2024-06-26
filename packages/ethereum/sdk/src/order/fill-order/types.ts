@@ -1,5 +1,4 @@
 import type { Address, BigNumber } from "@rarible/types"
-import type { Word } from "@rarible/types/build/word"
 import type { CryptoPunksAssetType, Erc1155AssetType, Erc721AssetType, Part } from "@rarible/ethereum-api-client"
 import type { Action } from "@rarible/action"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
@@ -34,25 +33,13 @@ export type CommonFillRequest<T> = {
 
 export type LegacyOrderFillRequest = CommonFillRequest<SimpleLegacyOrder> & { payout?: Address; originFee: number }
 
-export type RaribleV2OrderFillRequest =
-  | RaribleV2OrderFillRequestV2
-  | RaribleV2OrderFillRequestV3Sell
-  | RaribleV2OrderFillRequestV3Buy
+export type RaribleV2OrderFillRequest = RaribleV2OrderFillRequestV2 | RaribleV2OrderFillRequestV3
 
 export type RaribleV2OrderFillRequestV2 = CommonFillRequest<SimpleRaribleV2Order> & OrderV2FillDataV2
-export type RaribleV2OrderFillRequestV3Sell = CommonFillRequest<SimpleRaribleV2Order> & OrderV2FillDataV3Sell
-export type RaribleV2OrderFillRequestV3Buy = CommonFillRequest<SimpleRaribleV2Order> & OrderV2FillDataV3Buy
+export type RaribleV2OrderFillRequestV3 = CommonFillRequest<SimpleRaribleV2Order> & OrderV2FillDataV3
 
 export type OrderV2FillDataV2 = { payouts?: Part[]; originFees?: Part[] }
-export type OrderV2FillDataV3Buy = {
-  payout?: Part
-  originFeeFirst?: Part
-  originFeeSecond?: Part
-  marketplaceMarker?: Word
-}
-export type OrderV2FillDataV3Sell = OrderV2FillDataV3Buy & {
-  maxFeesBasePoint: number
-}
+export type OrderV2FillDataV3 = { payouts?: Part[]; originFees?: Part[] }
 
 export type OpenSeaV1OrderFillRequest = Omit<CommonFillRequest<SimpleOpenSeaV1Order>, "amount"> & {
   payouts?: Part[]
@@ -83,7 +70,7 @@ export type CryptoPunksOrderFillRequest = CommonFillRequest<SimpleCryptoPunkOrde
 export type SellOrderRequest =
   | LegacyOrderFillRequest
   | RaribleV2OrderFillRequestV2
-  | RaribleV2OrderFillRequestV3Sell
+  | RaribleV2OrderFillRequestV3
   | OpenSeaV1OrderFillRequest
   | SeaportV1OrderFillRequest
   | CryptoPunksOrderFillRequest
@@ -95,7 +82,7 @@ export type SellOrderRequest =
 export type BuyOrderRequest =
   | LegacyOrderFillRequest
   | RaribleV2OrderFillRequestV2
-  | RaribleV2OrderFillRequestV3Buy
+  | RaribleV2OrderFillRequestV3
   | OpenSeaV1OrderFillRequest
   | SeaportV1OrderFillRequest
   | CryptoPunksOrderFillRequest
