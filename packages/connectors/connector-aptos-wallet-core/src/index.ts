@@ -59,6 +59,7 @@ export class AptosWalletCoreProvider extends AbstractConnectionProvider<
     if (currentWalletInfo) {
       return core.pluginWallets.find(w => w.name === currentWalletInfo.name)
     }
+    return undefined
   }
 
   getId(): string {
