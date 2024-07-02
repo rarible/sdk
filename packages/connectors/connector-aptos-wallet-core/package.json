@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@rarible/connector": "^0.13.68-fix.32",
-    "@rarible/types": "~0.9.27",
+    "@rarible/types": "~0.9.28",
     "petra-plugin-wallet-adapter": "~0.4.5"
   },
   "peerDependencies": {
