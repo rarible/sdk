@@ -38,6 +38,8 @@ export const ethereumNetworks = [
   "kroma",
   "sei-arctic-1",
   "sei-pacific-1",
+  "moonbeam-testnet",
+  "moonbeam",
 ]
 
 export type EthereumNetwork = (typeof ethereumNetworks)[number]

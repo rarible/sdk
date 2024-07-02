@@ -33,6 +33,8 @@ import { polygonAmoyConfig } from "./polygon-amoy"
 import { astarKyotoConfig } from "./astar-kyoto"
 import { seiArctic1Config } from "./sei-arctic-1"
 import { seiPacific1Config } from "./sei-pacific-1"
+import { moonbeamTestnetConfig } from "./moonbeam-testnet"
+import { moonbeamMainnetConfig } from "./moonbeam"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -68,6 +70,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   kroma: kromaConfig,
   "sei-arctic-1": seiArctic1Config,
   "sei-pacific-1": seiPacific1Config,
+  "moonbeam-testnet": moonbeamTestnetConfig,
+  moonbeam: moonbeamMainnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
