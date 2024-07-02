@@ -43,7 +43,7 @@
     "@rarible/sdk-wallet": "^0.13.68-fix.32",
     "@rarible/solana-sdk": "^0.13.68-fix.32",
     "@rarible/tezos-sdk": "0.1.46",
-    "@rarible/types": "~0.9.27",
+    "@rarible/types": "~0.9.28",
     "@rarible/utils": "~0.9.10",
     "@solana/web3.js": "~1.54.0",
     "bignumber.js": "^9.0.1",

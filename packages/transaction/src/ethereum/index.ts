@@ -100,6 +100,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://seitrace.com/tx/${this.hash()}?chain=arctic-1`
       case "sei-pacific-1":
         return `https://seitrace.com/tx/${this.hash()}?chain=pacific-1`
+      case "moonbeam":
+        return `https://moonbeam.moonscan.io/tx/${this.hash()}`
+      case "moonbeam-testnet":
+        return `https://moonbase.moonscan.io/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }
