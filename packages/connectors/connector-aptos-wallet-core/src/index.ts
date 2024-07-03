@@ -11,12 +11,13 @@ import {
   promiseToObservable,
 } from "@rarible/connector"
 import type { Maybe } from "@rarible/types"
+import type { AdapterPlugin } from "@aptos-labs/wallet-adapter-core"
 import { WalletCore } from "@aptos-labs/wallet-adapter-core"
 import { PetraWallet } from "petra-plugin-wallet-adapter"
 import { getWalletCoreAccountAddress, getWalletCoreAccountNetwork } from "./common"
 import type { AptosWalletCoreConnectionResult } from "./domain"
 
-const PROVIDER_ID = "aptos_wallet_core" as const
+const PROVIDER_ID = "Petra"
 
 export class AptosWalletCoreProvider extends AbstractConnectionProvider<
   typeof PROVIDER_ID,
@@ -24,9 +25,11 @@ export class AptosWalletCoreProvider extends AbstractConnectionProvider<
 > {
   private readonly connection: Observable<ConnectionState<AptosWalletCoreConnectionResult>>
   public readonly instance: Observable<WalletCore>
+  public readonly petraWallet: AdapterPlugin
 
   constructor() {
     super()
+    this.petraWallet = new PetraWallet()
     this.instance = cache(() => this._connect())
     this.connection = this.instance.pipe(
       mergeMap(walletCore => promiseToObservable(getAccountData(walletCore))),
@@ -43,7 +46,7 @@ export class AptosWalletCoreProvider extends AbstractConnectionProvider<
   }
 
   async _connect() {
-    const petraAdapter = new PetraWallet()
+    const petraAdapter = this.petraWallet
     const walletCore = new WalletCore([petraAdapter], [])
     if (!walletCore.account) {
       await walletCore.connect(petraAdapter.name)
@@ -71,7 +74,7 @@ export class AptosWalletCoreProvider extends AbstractConnectionProvider<
   }
 
   async getOption(): Promise<Maybe<typeof PROVIDER_ID>> {
-    return PROVIDER_ID
+    return this.petraWallet.provider && PROVIDER_ID
   }
 
   async isAutoConnected(): Promise<boolean> {
