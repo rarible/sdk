@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-aptos-wallet-core",
-  "version": "0.13.68-fix.33",
+  "version": "0.13.68-fix.34",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.33",
+    "@rarible/connector": "^0.13.68-fix.34",
     "@rarible/types": "~0.9.28",
     "petra-plugin-wallet-adapter": "~0.4.5"
   },
