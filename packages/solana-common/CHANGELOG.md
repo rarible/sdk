@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
+
+**Note:** Version bump only for package @rarible/solana-common
+
+
+
+
+
 ## [0.13.68-fix.34](https://github.com/rarible/sdk/compare/v0.13.68-fix.33...v0.13.68-fix.34) (2024-07-03)
 
 **Note:** Version bump only for package @rarible/solana-common

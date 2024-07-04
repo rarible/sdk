@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
+
+
+### Bug Fixes
+
+* thirdweb wallet restore connection fixed ([#642](https://github.com/rarible/sdk/issues/642)) ([7cb5ccb](https://github.com/rarible/sdk/commit/7cb5ccbc2f08b8f60aafda7148f6c98b3b57c78a))
+
+
+
+
+
 ## [0.13.68-fix.34](https://github.com/rarible/sdk/compare/v0.13.68-fix.33...v0.13.68-fix.34) (2024-07-03)
 
 
