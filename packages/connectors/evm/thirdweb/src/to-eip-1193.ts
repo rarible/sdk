@@ -147,9 +147,9 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
 
       case "eth_requestAccounts": {
         const chain = await this._getDefaultChain()
-        const account = await this.wallet.connect({
+        const account = await this.requestAccounts({
           client: this.client,
-          chain,
+          chain: chain,
           ...this.defaultOptions,
         } as WalletConnectionOption<Id>)
 
@@ -174,6 +174,14 @@ export class EIP1193ProviderAdapter<Id extends WalletId>
           .toPromise()
       }
     }
+  }
+
+  private requestAccounts(option: WalletConnectionOption<Id>) {
+    const saved = getSavedAccounts()
+    if (saved) {
+      return this.wallet.autoConnect(option)
+    }
+    return this.wallet.connect(option)
   }
 
   private async _getDefaultChain() {
