@@ -31,6 +31,8 @@ export class BlockchainAptosTransaction implements IBlockchainTransaction {
     switch (this.network) {
       case Network.TESTNET:
         return `https://explorer.aptoslabs.com/txn/${this.hash()}?network=testnet`
+      case Network.MAINNET:
+        return `https://explorer.aptoslabs.com/txn/${this.hash()}?network=mainnet`
       default:
         throw new Error("Unsupported transaction network")
     }
