@@ -2,8 +2,9 @@ import { toBigNumber, toContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } 
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
+import type { NativeCurrencyAssetType, TokenCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
 import { extractBlockchain, extractId, isEVMBlockchain } from "@rarible/sdk-common"
-import { APT_TOKEN_TYPE } from "@rarible/aptos-sdk"
+import { APT_TOKEN_TYPE, ENCODED_APT_TOKEN_TYPE } from "@rarible/aptos-sdk"
 import type { RequestCurrency, RequestCurrencyAssetType } from "./domain"
 
 export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrencyAssetType {
@@ -16,13 +17,11 @@ export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrency
   }
 }
 
-export function getEVMCurrencyId(
-  currency: ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType,
-): ApiClient.CurrencyId {
-  if (isRequestCurrencyAssetType(currency)) {
+export function getCurrencyId(currency: RequestCurrency): ApiClient.CurrencyId {
+  if (isAssetType(currency)) {
+    return convertAssetTypeToCurrencyId(currency)
+  } else if (isRequestCurrencyAssetType(currency)) {
     return currency
-  } else if (isAssetType(currency)) {
-    return convertEVMAssetTypeToCurrencyId(currency)
   } else {
     throw new Error(`Unrecognized RequestCurrency ${JSON.stringify(currency)}`)
   }
@@ -43,11 +42,27 @@ export function isErc20(x: AssetType): x is EthErc20AssetType {
   return x["@type"] === "ERC20"
 }
 
-export function convertEVMAssetTypeToCurrencyId(id: RequestCurrencyAssetType): ApiClient.CurrencyId {
+export function isNativeCurrencyAssetType(x: AssetType): x is NativeCurrencyAssetType {
+  return x["@type"] === "CURRENCY_NATIVE" && !!x.blockchain
+}
+
+export function isTokenCurrencyAssetType(x: AssetType): x is TokenCurrencyAssetType {
+  return x["@type"] === "CURRENCY_TOKEN" && !!x.contract
+}
+
+export function convertAssetTypeToCurrencyId(id: RequestCurrencyAssetType): ApiClient.CurrencyId {
   if (isEth(id)) {
     return toCurrencyId(`${id.blockchain || Blockchain.ETHEREUM}:${ZERO_ADDRESS}`)
   }
   if (isErc20(id)) {
+    return toCurrencyId(id.contract)
+  }
+  if (isNativeCurrencyAssetType(id)) {
+    if (id.blockchain === Blockchain.APTOS) {
+      return toCurrencyId(`${Blockchain.APTOS}:${ENCODED_APT_TOKEN_TYPE}`)
+    }
+  }
+  if (isTokenCurrencyAssetType(id)) {
     return toCurrencyId(id.contract)
   }
   throw new Error(`Unsupported currency type: ${id}`)

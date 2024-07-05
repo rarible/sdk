@@ -24,7 +24,7 @@ export function createAptosSdk(
 ): IRaribleInternalSdk {
   const sdk = new AptosSdk(wallet?.wallet, env, config)
   const nftService = new AptosNft(sdk, env, apis)
-  const balanceService = new AptosBalance(sdk)
+  const balanceService = new AptosBalance(sdk, apis)
   const listingService = new AptosListing(sdk, env, apis)
   const bidService = new AptosBid(sdk, env, apis)
   const cancelService = new AptosCancel(sdk, env, apis)

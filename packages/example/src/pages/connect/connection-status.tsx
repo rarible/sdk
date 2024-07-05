@@ -32,6 +32,9 @@ export function ConnectionStatus() {
       )
     case "disconnected":
       const error = connectionErrorMessage(connection?.state.error)
+      if (connection?.state.error) {
+        console.dir(connection?.state.error)
+      }
       return (
         <Alert severity="error" icon={<Icon icon={faLinkSlash} />}>
           <AlertTitle>Disconnected</AlertTitle>

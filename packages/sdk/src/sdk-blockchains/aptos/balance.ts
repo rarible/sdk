@@ -1,24 +1,28 @@
 import type { AptosSdk } from "@rarible/aptos-sdk"
 import type { UnionAddress } from "@rarible/types"
 import type { BigNumber } from "@rarible/utils"
-import { extractId } from "@rarible/sdk-common"
 import { toBn } from "@rarible/utils"
-import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
+import { getCurrencyId } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
+import type { IApisSdk } from "../../domain"
 
 export class AptosBalance {
-  constructor(private readonly sdk: AptosSdk) {
+  constructor(
+    private readonly sdk: AptosSdk,
+    private readonly apis: IApisSdk,
+  ) {
     this.getBalance = this.getBalance.bind(this)
   }
 
   async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumber> {
-    const type = getCurrencyAssetType(currency)
-    if (type["@type"] === "CURRENCY_NATIVE") {
-      const balance = await this.sdk.balance.getAptosBalance({
-        address: extractId(address),
-      })
-      return toBn(balance)
-    }
-    throw new Error("Unsupported Aptos currency")
+    console.log("ll", {
+      currencyId: getCurrencyId(currency),
+      owner: address,
+    })
+    const response = await this.apis.balances.getBalance({
+      currencyId: getCurrencyId(currency),
+      owner: address,
+    })
+    return toBn(response.decimal)
   }
 }
