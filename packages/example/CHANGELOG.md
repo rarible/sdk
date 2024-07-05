@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
+
+
+### Features
+
+* aptos mainnet support ([#643](https://github.com/rarible/sdk/issues/643)) ([c5fa500](https://github.com/rarible/sdk/commit/c5fa50078893806daff01eedf046759e600c7190))
+
+
+
+
+
 ## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
 
 **Note:** Version bump only for package example
