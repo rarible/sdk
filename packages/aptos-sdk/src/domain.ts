@@ -53,7 +53,7 @@ export interface AptosOrderSdk {
   createFeeSchedule(options: { value: number; receiveAddress?: string }): Promise<string>
 }
 
-export const supportedNetworks = [AptosNetwork.TESTNET] as const
+export const supportedNetworks = [AptosNetwork.MAINNET, AptosNetwork.TESTNET] as const
 export type SupportedNetwork = (typeof supportedNetworks)[number]
 
 export type AptosSdkConfig = {

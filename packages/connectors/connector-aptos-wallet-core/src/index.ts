@@ -1,10 +1,9 @@
 import type { Observable } from "rxjs"
-import { combineLatest } from "rxjs"
+import { combineLatest, defer } from "rxjs"
 import { first, map, mergeMap, startWith } from "rxjs/operators"
 import type { ConnectionState } from "@rarible/connector"
 import {
   AbstractConnectionProvider,
-  cache,
   getStateConnected,
   getStateConnecting,
   getStateDisconnected,
@@ -30,7 +29,7 @@ export class AptosWalletCoreProvider extends AbstractConnectionProvider<
   constructor() {
     super()
     this.petraWallet = new PetraWallet()
-    this.instance = cache(() => this._connect())
+    this.instance = defer(() => this._connect())
     this.connection = this.instance.pipe(
       mergeMap(walletCore => promiseToObservable(getAccountData(walletCore))),
       map(wallet => {

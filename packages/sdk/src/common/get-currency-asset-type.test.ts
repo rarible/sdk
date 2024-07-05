@@ -1,9 +1,17 @@
 import { toContractAddress, toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
 import type { EthErc20AssetType, EthEthereumAssetType, TezosFTAssetType, TezosXTZAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { FlowAssetTypeFt, NativeCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
-import type { TokenCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
-import { convertCurrencyIdToAssetType, getCurrencyAssetType, getDataFromCurrencyId } from "./get-currency-asset-type"
+import type {
+  FlowAssetTypeFt,
+  NativeCurrencyAssetType,
+  TokenCurrencyAssetType,
+} from "@rarible/api-client/build/models/AssetType"
+import {
+  convertCurrencyIdToAssetType,
+  getCurrencyAssetType,
+  getCurrencyId,
+  getDataFromCurrencyId,
+} from "./get-currency-asset-type"
 
 describe("test getCurrencyAssetType", () => {
   test("get eth asset type from asset type", async () => {
@@ -130,5 +138,23 @@ describe("test getCurrencyAssetType", () => {
     ) as TokenCurrencyAssetType
     expect(assetType["@type"]).toEqual("CURRENCY_TOKEN")
     expect(assetType.contract).toEqual("APTOS:0x000000000000000000000000000000000000000000000000000000000001234")
+  })
+
+  test("get CurrencyId from APT asset type", async () => {
+    const currencyId = getCurrencyId({
+      "@type": "CURRENCY_NATIVE",
+      blockchain: Blockchain.APTOS,
+    })
+    expect(currencyId).toBe("APTOS:MHgxOjphcHRvc19jb2luOjpBcHRvc0NvaW4=")
+  })
+
+  test("get CurrencyId from token asset type", async () => {
+    const currency = getCurrencyId({
+      "@type": "CURRENCY_TOKEN",
+      contract: toContractAddress(
+        `${Blockchain.APTOS}:0x000000000000000000000000000000000000000000000000000000000001234`,
+      ),
+    })
+    expect(currency).toEqual("APTOS:0x000000000000000000000000000000000000000000000000000000000001234")
   })
 })

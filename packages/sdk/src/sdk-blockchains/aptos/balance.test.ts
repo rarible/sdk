@@ -5,7 +5,7 @@ import { APTOS_APT_CURRENCY, convertAptosToUnionAddress } from "./common"
 
 describe("aptos balances", () => {
   const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
-  const sdk = createSdk(sellerState, "development")
+  const sdk = createSdk(sellerState, "testnet")
   const recepientAddress = convertAptosToUnionAddress(sellerState.account.accountAddress.toString())
 
   test("wallet balance with currency id", async () => {

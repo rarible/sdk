@@ -3,7 +3,6 @@ import { AptosWallet } from "@rarible/sdk-wallet"
 import { AptosSdkWallet } from "@rarible/aptos-wallet"
 import type { AptosProviderConnectionResult } from "@rarible/connector-aptos"
 import { Blockchain } from "@rarible/api-client"
-import { AptosWalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 export function mapAptosWallet<O>(
