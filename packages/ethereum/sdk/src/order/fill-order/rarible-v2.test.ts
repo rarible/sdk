@@ -344,14 +344,22 @@ describe("buy & acceptBid orders", () => {
   })
 
   test("should match order(buy erc1155 for eth) with dataType=V3", async () => {
-    await testMatchV2OrHigher("RARIBLE_V2_DATA_V3")
+    await testMatchV2OrHigher("RARIBLE_V2_DATA_V3", true)
   })
 
   test("should match order(buy erc1155 for eth) with dataType=V2", async () => {
-    await testMatchV2OrHigher("RARIBLE_V2_DATA_V2")
+    await testMatchV2OrHigher("RARIBLE_V2_DATA_V2", true)
   })
 
-  async function testMatchV2OrHigher(dataType: "RARIBLE_V2_DATA_V2" | "RARIBLE_V2_DATA_V3") {
+  test("should match order(buy erc1155 for eth) with dataType=V3 and no origin fees", async () => {
+    await testMatchV2OrHigher("RARIBLE_V2_DATA_V3", false)
+  })
+
+  test("should match order(buy erc1155 for eth) with dataType=V2 and no origin fees", async () => {
+    await testMatchV2OrHigher("RARIBLE_V2_DATA_V2", false)
+  })
+
+  async function testMatchV2OrHigher(dataType: "RARIBLE_V2_DATA_V2" | "RARIBLE_V2_DATA_V3", includeFees: boolean) {
     await sentTx(it.testErc1155.methods.mint(sellerAddress, 4, 10, "0x"), { from: buyerAddress })
 
     const left: SimpleOrder = {
@@ -396,9 +404,8 @@ describe("buy & acceptBid orders", () => {
         value: 100,
       },
     ]
-    const tx = await filler.buy({ order: finalOrder, amount: 2, originFees })
-    const rs = await tx.wait()
-    console.log("useg gas", rs)
+    const tx = await filler.buy({ order: finalOrder, amount: 2, originFees: includeFees ? originFees : [] })
+    await tx.wait()
 
     expect(toBn(await it.testErc1155.methods.balanceOf(sellerAddress, 1).call()).toString()).toBe(
       before2.minus(2).toFixed(),

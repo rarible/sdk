@@ -48,9 +48,9 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         break
       }
       case "RARIBLE_V2_DATA_V2": {
-        const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
+        const v3 = await this.shouldUseV3(request)
         inverted.data = {
-          dataType: baseFee === 0 ? "RARIBLE_V2_DATA_V2" : "RARIBLE_V2_DATA_V3",
+          dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
           originFees: (request as RaribleV2OrderFillRequestV2).originFees || [],
           payouts: (request as RaribleV2OrderFillRequestV2).payouts || [],
           isMakeFill: !request.order.data.isMakeFill,
@@ -58,9 +58,9 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         break
       }
       case "RARIBLE_V2_DATA_V3": {
-        const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
+        const v3 = await this.shouldUseV3(request)
         inverted.data = {
-          dataType: baseFee === 0 ? "RARIBLE_V2_DATA_V2" : "RARIBLE_V2_DATA_V3",
+          dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
           originFees: (request as RaribleV2OrderFillRequestV3).originFees || [],
           payouts: (request as RaribleV2OrderFillRequestV3).payouts || [],
           isMakeFill: !request.order.data.isMakeFill,
@@ -71,6 +71,17 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         throw new Error("Unsupported order dataType")
     }
     return inverted
+  }
+
+  private async shouldUseV3(request: RaribleV2OrderFillRequest): Promise<boolean> {
+    const originFees = (request.originFees || []).reduce((sum, prev) => sum + prev.value, 0)
+    //should not use v3 as order doesn't have fees, so protocol also should not take any fees
+    if (originFees === 0) {
+      return false
+    }
+    const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
+    //if base fee is non-zero, then use v3 (with protocol fees), otherwise use v2 (without fees)
+    return baseFee !== 0
   }
 
   getAssetToApprove(inverted: SimpleRaribleV2Order) {
