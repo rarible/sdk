@@ -16,7 +16,7 @@ import type {
   GetBiddingBalanceRequest,
   WithdrawBiddingBalanceRequest,
 } from "../../types/balances"
-import { getCurrencyAssetType, getEVMCurrencyId, isErc20, isEth } from "../../common/get-currency-asset-type"
+import { getCurrencyAssetType, getCurrencyId, isErc20, isEth } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
 import type { IApisSdk } from "../../domain"
 import { convertEthereumContractAddress, getWalletNetwork, isEVMBlockchain } from "./common"
@@ -38,7 +38,7 @@ export class EthereumBalance {
       throw new Error("Unsupported asset type for getting balance")
     }
     const response = await this.apis.balances.getBalance({
-      currencyId: getEVMCurrencyId(currency as ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType),
+      currencyId: getCurrencyId(currency as ApiClient.EthErc20AssetType | ApiClient.EthEthereumAssetType),
       owner: address,
     })
     return toBn(response.decimal)

@@ -3,6 +3,46 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.68-fix.34](https://github.com/rarible/sdk/compare/v0.13.68-fix.33...v0.13.68-fix.34) (2024-07-03)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.68-fix.33](https://github.com/rarible/sdk/compare/v0.13.68-fix.32...v0.13.68-fix.33) (2024-07-02)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
+## [0.13.68-fix.32](https://github.com/rarible/sdk/compare/v0.13.68-fix.31...v0.13.68-fix.32) (2024-06-27)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
+
+
+
+
 ## [0.13.68-fix.31](https://github.com/rarible/sdk/compare/v0.13.68-fix.30...v0.13.68-fix.31) (2024-06-20)
 
 **Note:** Version bump only for package @rarible/solana-wallet

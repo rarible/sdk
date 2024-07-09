@@ -25,7 +25,7 @@ export function NativeBalance({ sdk, wallet, walletAddress }: INativeBalanceProp
 
   function renderBalance() {
     if (balance.isLoading) return <CircularProgress size={14} />
-    if (balance.error) return <span>{JSON.stringify(balance.error, null, 2)}</span>
+    if (balance.error) return <span>{JSON.stringify(balance.error?.message, null, 2)}</span>
     return <span>{balance.data?.toString()}</span>
   }
 
