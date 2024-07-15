@@ -7226,7 +7226,7 @@
 
 "@rarible/types@~0.9.29":
   version "0.9.29"
-  resolved "http://nexus.rarible.int/repository/npm-all/@rarible/types/-/types-0.9.29.tgz#6121588289b3a70b7835493ad7fae7cf9ef80025"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.9.29.tgz#6121588289b3a70b7835493ad7fae7cf9ef80025"
   integrity sha512-PNtpn8ZAdXaMSQquxViZB38Tr14B9Zxs4MCgSTqtkaufrpbhb35s0P1sXpToY/MVONhCtEYZUz2LlhTMyRzdMA==
 
 "@rarible/utils@^0.9.1":
