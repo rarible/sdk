@@ -1,5 +1,7 @@
 import type { EthereumNetwork } from "../types"
 import { mainnetConfig } from "./mainnet"
+import { palmMainnetConfig } from "./palm"
+import { palmTestnetConfig } from "./palm-testnet"
 import type { EthereumConfig } from "./type"
 import { mumbaiConfig } from "./mumbai"
 import { polygonConfig } from "./polygon"
@@ -72,6 +74,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   "sei-pacific-1": seiPacific1Config,
   "moonbeam-testnet": moonbeamTestnetConfig,
   moonbeam: moonbeamMainnetConfig,
+  "palm-testnet": palmTestnetConfig,
+  palm: palmMainnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
