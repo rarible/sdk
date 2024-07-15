@@ -40,6 +40,8 @@ export const ethereumNetworks = [
   "sei-pacific-1",
   "moonbeam-testnet",
   "moonbeam",
+  "etherlink-testnet",
+  "etherlink",
 ]
 
 export type EthereumNetwork = (typeof ethereumNetworks)[number]

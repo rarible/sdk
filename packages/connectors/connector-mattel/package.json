@@ -21,7 +21,7 @@
     "@magic-ext/oidc": "~1.3.0",
     "@rarible/api-client": "0.16.5-alpha.13",
     "@rarible/connector": "^0.13.68-fix.36",
-    "@rarible/types": "~0.9.28"
+    "@rarible/types": "~0.9.29"
   },
   "peerDependencies": {
     "@onflow/fcl": "^1.4.1",

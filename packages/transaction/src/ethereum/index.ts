@@ -104,6 +104,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://moonbeam.moonscan.io/tx/${this.hash()}`
       case "moonbeam-testnet":
         return `https://moonbase.moonscan.io/tx/${this.hash()}`
+      case "etherlink-testnet":
+        return `https://testnet-explorer.etherlink.com/tx/${this.hash()}`
+      case "etherlink":
+        return `https://explorer.etherlink.com/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

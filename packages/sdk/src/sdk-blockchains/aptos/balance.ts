@@ -15,10 +15,6 @@ export class AptosBalance {
   }
 
   async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumber> {
-    console.log("ll", {
-      currencyId: getCurrencyId(currency),
-      owner: address,
-    })
     const response = await this.apis.balances.getBalance({
       currencyId: getCurrencyId(currency),
       owner: address,
