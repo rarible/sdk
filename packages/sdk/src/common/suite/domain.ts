@@ -2,7 +2,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { Web3Ethereum } from "@rarible/web3-ethereum/build"
 import type { IRaribleSdkConfig } from "../../domain"
 
-export const suiteSupportedBlockchains = [Blockchain.ETHEREUM, Blockchain.POLYGON] as const
+export const suiteSupportedBlockchains = [Blockchain.ETHEREUM] as const
 export type SuiteSupportedBlockchain = (typeof suiteSupportedBlockchains)[number]
 
 export interface TestSuiteProviderDictionary extends Record<SuiteSupportedBlockchain, any> {
