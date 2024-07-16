@@ -1,11 +1,11 @@
 import { ZERO_ADDRESS } from "@rarible/types"
-import { merge } from "lodash"
-import type { DeepPick } from "../../../../utils/deep-pick"
+import { deepMerge } from "../utils/deep-merge"
+import type { DeepPick } from "../utils/deep-pick"
 import { id32 } from "../common/id"
 import { FEE_CONFIG_URL } from "./common"
 import type { EthereumConfig } from "./type"
 
-export type EtheriumConfigRequiredFields = DeepPick<
+type EtheriumConfigRequiredFields = DeepPick<
   EthereumConfig,
   | "basePath"
   | "chainId"
@@ -69,5 +69,5 @@ export function extendConfig(
   additions: EtheriumConfigRequiredFields,
   baseConfig: EthereumConfig = defaultConfig,
 ): EthereumConfig {
-  return merge({}, baseConfig, additions)
+  return deepMerge({}, baseConfig, additions)
 }
