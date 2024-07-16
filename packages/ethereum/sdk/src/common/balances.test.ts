@@ -96,7 +96,7 @@ describe("getBalance test", () => {
 
 const randomEvmAddress = toAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 
-const nonWorkingNetworks = ["testnet-rari", "testnet-fief"]
+const nonWorkingNetworks = ["testnet-rari", "testnet-fief", "dev-polygon"]
 const filteredUnworkingNetworks = ethereumNetworks.filter(network => !nonWorkingNetworks.includes(network))
 describe.each(filteredUnworkingNetworks)("get balances each of environments", (env: EthereumNetwork) => {
   const sdk = createRaribleSdk(undefined, env, {
