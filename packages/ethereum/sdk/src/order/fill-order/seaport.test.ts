@@ -456,7 +456,7 @@ describe.skip("seaport", () => {
 describe.skip("polygon seaport", () => {
   const { provider: providerBuyer } = createE2eProvider(
     "0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
-    getE2EConfigByNetwork("mumbai"),
+    getE2EConfigByNetwork("amoy"),
   )
   const web3 = new Web3(providerBuyer as any)
 
