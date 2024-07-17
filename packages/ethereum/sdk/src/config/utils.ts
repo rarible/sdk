@@ -1,5 +1,6 @@
 import { ZERO_ADDRESS } from "@rarible/types"
 import { deepMerge } from "../utils/deep-merge"
+import type { DeepPartial } from "../utils/deep-partial"
 import type { DeepPick } from "../utils/deep-pick"
 import { id32 } from "../common/id"
 import { FEE_CONFIG_URL } from "./common"
@@ -66,7 +67,7 @@ const defaultConfig: EthereumConfig = {
 }
 
 export function extendConfig(
-  additions: EtheriumConfigRequiredFields,
+  additions: EtheriumConfigRequiredFields & DeepPartial<EthereumConfig>,
   baseConfig: EthereumConfig = defaultConfig,
 ): EthereumConfig {
   return deepMerge({}, baseConfig, additions)
