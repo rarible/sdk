@@ -104,6 +104,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://moonbeam.moonscan.io/tx/${this.hash()}`
       case "moonbeam-testnet":
         return `https://moonbase.moonscan.io/tx/${this.hash()}`
+      case "palm-testnet":
+        return `https://testnet.palm.chainlens.com/transactions/${this.hash()}`
+      case "palm":
+        return `https://palm.chainlens.com/transactions/${this.hash()}`
       case "etherlink-testnet":
         return `https://testnet-explorer.etherlink.com/tx/${this.hash()}`
       case "etherlink":

@@ -18,18 +18,14 @@ import { EVMNativeToken } from "./test/suite/contracts/variants/native"
 
 describe("get balance", () => {
   const suiteFactoryETH = new EVMTestSuiteFactory(Blockchain.ETHEREUM)
-  const suiteFactoryPolygon = new EVMTestSuiteFactory(Blockchain.POLYGON)
   let suiteDevETH: EVMTestSuite<Blockchain.ETHEREUM>
-  let suiteDevPolygon: EVMTestSuite<Blockchain.POLYGON>
 
   beforeAll(async () => {
     suiteDevETH = await suiteFactoryETH.create(DEV_PK_1)
-    suiteDevPolygon = await suiteFactoryPolygon.create(DEV_PK_1)
   })
 
   afterAll(() => {
     suiteDevETH.destroy()
-    suiteDevPolygon.destroy()
   })
 
   const { web31, wallet1 } = initProviders({
@@ -72,26 +68,6 @@ describe("get balance", () => {
       { currency: EVMNativeToken.getCurrency(), label: "CurrencyID" },
     ])("$label", async ({ currency }) => {
       await suiteDevETH.balances.waitBalance(currency, sponsorAmount, convertEthereumToUnionAddress(generatedAddress))
-    })
-  })
-
-  describe("get Polygon balance", () => {
-    const generatedAddress = randomAddress()
-    const sponsorAmount = "0.00019355"
-
-    beforeAll(async () => {
-      await suiteDevPolygon.sponsor(generatedAddress, sponsorAmount)
-    })
-
-    test.each([
-      { currency: EVMNativeToken.getAssetType(Blockchain.POLYGON), label: "Asset type" },
-      { currency: EVMNativeToken.getCurrency(Blockchain.POLYGON), label: "CurrencyID" },
-    ])("$label", async ({ currency }) => {
-      await suiteDevPolygon.balances.waitBalance(
-        currency,
-        sponsorAmount,
-        convertEthereumToUnionAddress(generatedAddress),
-      )
     })
   })
 

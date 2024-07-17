@@ -17,6 +17,7 @@ export const EVMBlockchains = [
   Blockchain.CELO,
   Blockchain.SEI,
   Blockchain.MOONBEAM,
+  Blockchain.PALM,
   Blockchain.ETHERLINK,
 ] as const
 

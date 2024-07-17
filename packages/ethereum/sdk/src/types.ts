@@ -40,6 +40,8 @@ export const ethereumNetworks = [
   "sei-pacific-1",
   "moonbeam-testnet",
   "moonbeam",
+  "palm-testnet",
+  "palm",
   "etherlink-testnet",
   "etherlink",
 ]
