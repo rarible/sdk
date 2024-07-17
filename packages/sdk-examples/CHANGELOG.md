@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.37](https://github.com/rarible/sdk/compare/v0.13.68-fix.36...v0.13.68-fix.37) (2024-07-17)
+
+
+### Features
+
+* support palm ([#644](https://github.com/rarible/sdk/issues/644)) ([f623345](https://github.com/rarible/sdk/commit/f623345a9fbccddedaa9a0ad7af15a1735b6f794))
+
+
+
+
+
 ## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
 
 **Note:** Version bump only for package @rarible/sdk-examples

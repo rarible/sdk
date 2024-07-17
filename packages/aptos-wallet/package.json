@@ -1,6 +1,6 @@
 {
   "name": "@rarible/aptos-wallet",
-  "version": "0.13.68-fix.36",
+  "version": "0.13.68-fix.37",
   "keywords": [
     "solana",
     "web3"
@@ -48,7 +48,7 @@
     "verify": "tsc"
   },
   "dependencies": {
-    "@rarible/sdk-common": "^0.13.68-fix.36",
+    "@rarible/sdk-common": "^0.13.68-fix.37",
     "@rarible/types": "~0.9.29"
   },
   "peerDependencies": {
