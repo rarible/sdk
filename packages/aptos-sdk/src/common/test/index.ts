@@ -46,7 +46,9 @@ async function transferAPT(aptos: Aptos, senderAccount: Ed25519Account, recepien
     transactionHash: pendingTxn.hash,
   })
 }
+//0x484e284d3b98ce736b6b6de27127176bafe30942d949f30b0ab59a17007ccf37
 export const DEFAULT_PK = "0x229eea52e53be5a6fd1ba00e660fc632cdb47ffe8f777a847daa8220553c5511"
+//0xa4576f0bc3f835b5b45b4e49da280779b6352f2083fe28c94386468731b3fd3c
 export const BUYER_PK = "0x15b7dde0584838dd033894bfaa9f64013206ff3f82d9d325e1479cab4709e43c"
 
 export async function mintTestToken(

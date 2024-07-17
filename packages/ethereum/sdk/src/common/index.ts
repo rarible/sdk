@@ -74,6 +74,9 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
     case "moonbeam":
     case "moonbeam-testnet":
       return Blockchain.MOONBEAM
+    case "palm":
+    case "palm-testnet":
+      return Blockchain.PALM
     default:
       throw new Error(`Unrecognized ethereum network ${network}`)
   }

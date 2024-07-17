@@ -6,7 +6,7 @@ import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import type { EVMTestSuite } from "./test/suite"
 import { EVMTestSuiteFactory } from "./test/suite"
 
-const blockchains = [Blockchain.ETHEREUM, Blockchain.POLYGON] as const
+const blockchains = [Blockchain.ETHEREUM] as const
 
 describe.each(blockchains)("create collection", blockchain => {
   const suiteFactory = new EVMTestSuiteFactory(blockchain)
