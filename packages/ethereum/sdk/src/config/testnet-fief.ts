@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const fiefTestnetConfig: EthereumConfig = {
   basePath: "https://testnet-fief-api.rarible.org",
   chainId: 712,
   environment: "testnet",
+  blockchain: Blockchain.FIEF,
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x61512179F6a16bEC0D259d8010CC0485CE363868"),

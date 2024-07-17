@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const seiArctic1Config: EthereumConfig = {
   basePath: "https://testnet-sei-api.rarible.org",
   chainId: 713715,
   environment: "testnet",
+  blockchain: Blockchain.SEI,
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x5b96ddd3245aaC0cd97cFf6717985F3b9B01df3B"),

@@ -4,25 +4,25 @@ import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
 
-export const baseConfig: EthereumConfig = {
-  basePath: "https://base-api.rarible.org",
-  chainId: 8453,
+export const etherlinkConfig: EthereumConfig = {
+  basePath: "https://etherlink-api.rarible.org",
+  chainId: 42793,
+  blockchain: Blockchain.ETHERLINK,
   environment: "production",
-  blockchain: Blockchain.BASE,
   exchange: {
     v1: ZERO_ADDRESS,
-    v2: toAddress("0x6C65a3C3AA67b126e43F86DA85775E0F5e9743F7"),
+    v2: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),
     openseaV1: ZERO_ADDRESS,
-    wrapper: toAddress("0x6563a331A411829918025D8a7e1d348f8b250906"),
+    wrapper: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
     looksrare: ZERO_ADDRESS,
     looksrareV2: ZERO_ADDRESS,
     x2y2: ZERO_ADDRESS,
   },
   transferProxies: {
-    nft: toAddress("0x4217a346C8b48731641327b65bb6F6d3243d64e2"),
-    erc20: toAddress("0x13b05523634ABb96E6017Da71b7698CAecDf50b2"),
-    erc721Lazy: toAddress("0x339e61eb644A29B134D7fD3fA589C6b3ca184111"),
-    erc1155Lazy: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),
+    nft: toAddress("0xF65eF65a95821A16E02973b1C2200FA58898e3c0"),
+    erc20: toAddress("0x248B46BEB66b3078D771a9E7E5a0a0216d0d07ba"),
+    erc721Lazy: toAddress("0xce4bf732f53A76C463aE8822be858017b02779c8"),
+    erc1155Lazy: toAddress("0x1CC22424f2B84791cb99c141A68CD2a44Cf35398"),
     openseaV1: ZERO_ADDRESS,
     cryptoPunks: ZERO_ADDRESS,
   },
@@ -33,8 +33,8 @@ export const baseConfig: EthereumConfig = {
     merkleValidator: ZERO_ADDRESS,
   },
   factories: {
-    erc721: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
-    erc1155: toAddress("0xd37DC0CD86Dfa9B2B57CD7DFA8B6AA0092a9517d"),
+    erc721: toAddress("0xC699FB932c1bD7235C7ED19388f26A2428224AED"),
+    erc1155: toAddress("0xdA12E4Ab1d731F29bF4Bff8f971579D95f8DDD07"),
   },
   cryptoPunks: {
     marketContract: ZERO_ADDRESS,
@@ -44,7 +44,7 @@ export const baseConfig: EthereumConfig = {
     pairFactory: ZERO_ADDRESS,
     pairRouter: ZERO_ADDRESS,
   },
-  weth: toAddress("0x4200000000000000000000000000000000000006"),
+  weth: toAddress("0xc9b53ab2679f573e480d01e0f49e2b5cfb7a3eab"),
   auction: ZERO_ADDRESS,
   looksrareOrderValidatorV2: ZERO_ADDRESS,
 }

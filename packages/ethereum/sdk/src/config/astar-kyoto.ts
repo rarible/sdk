@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -6,6 +7,7 @@ import { FEE_CONFIG_URL } from "./common"
 export const astarKyotoConfig: EthereumConfig = {
   basePath: "https://testnet-astarzkevm-api.rarible.org",
   environment: "testnet",
+  blockchain: Blockchain.ASTARZKEVM,
   chainId: 1998,
   exchange: {
     v1: ZERO_ADDRESS,

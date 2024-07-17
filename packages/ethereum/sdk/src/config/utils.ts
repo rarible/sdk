@@ -1,4 +1,5 @@
 import { ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { deepMerge } from "../utils/deep-merge"
 import type { DeepPartial } from "../utils/deep-partial"
 import type { DeepPick } from "../utils/deep-pick"
@@ -12,6 +13,7 @@ type EtheriumConfigRequiredFields = DeepPick<
   | "chainId"
   | "environment"
   | "weth"
+  | "blockchain"
   | "exchange.v2"
   | "exchange.wrapper"
   | "transferProxies.nft"
@@ -25,6 +27,7 @@ type EtheriumConfigRequiredFields = DeepPick<
 const defaultConfig: EthereumConfig = {
   basePath: "",
   chainId: 0,
+  blockchain: Blockchain.ETHEREUM,
   environment: "production",
   exchange: {
     v1: ZERO_ADDRESS,
