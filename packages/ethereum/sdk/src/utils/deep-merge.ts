@@ -5,7 +5,7 @@ export function deepMerge(result: any, ...additions: any[]) {
         if (addition[key] instanceof Object && result[key] instanceof Object) {
           result[key] = deepMerge(result[key], addition[key])
         } else {
-          result[key] = addition[key]
+          result[key] = addition[key] instanceof Object ? JSON.parse(JSON.stringify(addition[key])) : addition[key]
         }
       }
     }
