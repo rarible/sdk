@@ -1,4 +1,5 @@
 import { toAddress } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
 
@@ -6,6 +7,7 @@ export const palmTestnetConfig: EthereumConfig = extendConfig({
   basePath: "https://testnet-palm-api.rarible.org",
   chainId: 11297108099,
   environment: "testnet",
+  blockchain: Blockchain.PALM,
   exchange: {
     v2: toAddress("0x61512179F6a16bEC0D259d8010CC0485CE363868"),
     wrapper: toAddress("0xc798B273FaF23932Cf11177402C10C9b44D30Da2"),

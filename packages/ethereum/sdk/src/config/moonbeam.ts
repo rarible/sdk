@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const moonbeamMainnetConfig: EthereumConfig = {
   basePath: "https://moonbeam-api.rarible.org",
   chainId: 1284,
   environment: "production",
+  blockchain: Blockchain.MOONBEAM,
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x30fc6eed1d302F5f5C4a8aa58047d1a730b3Cc91"),

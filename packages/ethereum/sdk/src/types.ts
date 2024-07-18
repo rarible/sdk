@@ -42,6 +42,8 @@ export const ethereumNetworks = [
   "moonbeam",
   "palm-testnet",
   "palm",
+  "etherlink-testnet",
+  "etherlink",
   "lisk-sepolia",
   "lisk",
 ]

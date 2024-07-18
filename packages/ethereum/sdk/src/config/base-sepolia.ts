@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const baseSepoliaConfig: EthereumConfig = {
   basePath: "https://testnet-base-api.rarible.org",
   chainId: 84532,
   environment: "testnet",
+  blockchain: Blockchain.BASE,
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x0fE65B68Eb627c21EAF3cfe8183C4F946F3d48BD"),

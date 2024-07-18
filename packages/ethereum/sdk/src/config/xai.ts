@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const xaiConfig: EthereumConfig = {
   basePath: "https://xai-api.rarible.org",
   chainId: 660279,
   environment: "production",
+  blockchain: Blockchain.XAI,
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),

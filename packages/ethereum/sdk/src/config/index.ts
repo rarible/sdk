@@ -39,6 +39,8 @@ import { seiArctic1Config } from "./sei-arctic-1"
 import { seiPacific1Config } from "./sei-pacific-1"
 import { moonbeamTestnetConfig } from "./moonbeam-testnet"
 import { moonbeamMainnetConfig } from "./moonbeam"
+import { etherlinkTestnetConfig } from "./etherlink-testnet"
+import { etherlinkConfig } from "./etherlink"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -78,6 +80,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   moonbeam: moonbeamMainnetConfig,
   "palm-testnet": palmTestnetConfig,
   palm: palmMainnetConfig,
+  "etherlink-testnet": etherlinkTestnetConfig,
+  etherlink: etherlinkConfig,
   "lisk-sepolia": liskSepoliaConfig,
   lisk: liskMainnetConfig,
 }

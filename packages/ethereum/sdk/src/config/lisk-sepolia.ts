@@ -1,3 +1,4 @@
+import { Blockchain } from "@rarible/api-client"
 import { toAddress } from "@rarible/types"
 import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
@@ -6,6 +7,7 @@ export const liskSepoliaConfig: EthereumConfig = extendConfig({
   basePath: "https://testnet-lisk-api.rarible.org/",
   chainId: 4202,
   environment: "testnet",
+  blockchain: Blockchain.LISK,
   exchange: {
     v2: toAddress("0x8E705d722049cEEFd3606b15070CA8A72DC69eA4"),
     wrapper: toAddress("0x45d6C2567a7F32c70e57D26E4ee89045A2F472Dc"),

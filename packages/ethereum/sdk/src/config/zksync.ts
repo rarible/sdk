@@ -1,4 +1,5 @@
 import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { Blockchain } from "@rarible/api-client"
 import { id32 } from "../common/id"
 import type { EthereumConfig } from "./type"
 import { FEE_CONFIG_URL } from "./common"
@@ -7,6 +8,7 @@ export const zkSyncConfig: EthereumConfig = {
   basePath: "https://zksync-api.rarible.org",
   chainId: 324,
   environment: "production",
+  blockchain: Blockchain.ZKSYNC,
   exchange: {
     v1: ZERO_ADDRESS,
     v2: toAddress("0x5E0BbEd68e1b47C94a396226D8AC10DDe242e77c"),
