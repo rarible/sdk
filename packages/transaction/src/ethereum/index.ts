@@ -108,6 +108,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://testnet.palm.chainlens.com/transactions/${this.hash()}`
       case "palm":
         return `https://palm.chainlens.com/transactions/${this.hash()}`
+      case "lisk-sepolia":
+        return `https://sepolia-blockscout.lisk.com/tx/${this.hash()}`
+      case "lisk":
+        return `https://blockscout.lisk.com/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

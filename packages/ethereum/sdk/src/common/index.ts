@@ -77,6 +77,9 @@ export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockcha
     case "palm":
     case "palm-testnet":
       return Blockchain.PALM
+    case "lisk":
+    case "lisk-sepolia":
+      return Blockchain.LISK
     default:
       throw new Error(`Unrecognized ethereum network ${network}`)
   }

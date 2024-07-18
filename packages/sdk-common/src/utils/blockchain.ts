@@ -18,6 +18,7 @@ export const EVMBlockchains = [
   Blockchain.SEI,
   Blockchain.MOONBEAM,
   Blockchain.PALM,
+  Blockchain.LISK,
 ] as const
 
 export type EVMBlockchain = (typeof EVMBlockchains)[number]

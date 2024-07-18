@@ -1,4 +1,6 @@
 import type { EthereumNetwork } from "../types"
+import { liskMainnetConfig } from "./lisk"
+import { liskSepoliaConfig } from "./lisk-sepolia"
 import { mainnetConfig } from "./mainnet"
 import { palmMainnetConfig } from "./palm"
 import { palmTestnetConfig } from "./palm-testnet"
@@ -76,6 +78,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   moonbeam: moonbeamMainnetConfig,
   "palm-testnet": palmTestnetConfig,
   palm: palmMainnetConfig,
+  "lisk-sepolia": liskSepoliaConfig,
+  lisk: liskMainnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
