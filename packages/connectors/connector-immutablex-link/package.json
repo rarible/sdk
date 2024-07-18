@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-immutablex-link",
-  "version": "0.13.68-fix.37",
+  "version": "0.13.68-fix.38",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "@imtbl/imx-sdk": "^2.1.1",
-    "@rarible/connector": "^0.13.68-fix.37",
-    "@rarible/connector-helper": "^0.13.68-fix.37",
-    "@rarible/immutable-wallet": "^0.13.68-fix.37"
+    "@rarible/connector": "^0.13.68-fix.38",
+    "@rarible/connector-helper": "^0.13.68-fix.38",
+    "@rarible/immutable-wallet": "^0.13.68-fix.38"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

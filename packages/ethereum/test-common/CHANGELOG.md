@@ -3,121 +3,69 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.13.68-fix.37](https://github.com/rarible/sdk/compare/v0.13.68-fix.36...v0.13.68-fix.37) (2024-07-17)
+## [0.13.68-fix.38](https://github.com/rarible/sdk/compare/v0.13.68-fix.37...v0.13.68-fix.38) (2024-07-18)
 
+**Note:** Version bump only for package @rarible/ethereum-sdk-test-common
+
+## [0.13.68-fix.37](https://github.com/rarible/sdk/compare/v0.13.68-fix.36...v0.13.68-fix.37) (2024-07-17)
 
 ### Features
 
-* support palm ([#644](https://github.com/rarible/sdk/issues/644)) ([f623345](https://github.com/rarible/sdk/commit/f623345a9fbccddedaa9a0ad7af15a1735b6f794))
-
-
-
-
+- support palm ([#644](https://github.com/rarible/sdk/issues/644)) ([f623345](https://github.com/rarible/sdk/commit/f623345a9fbccddedaa9a0ad7af15a1735b6f794))
 
 ## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
 
-
-
-
-
 ## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
-
-
-
-
 
 ## [0.13.68-fix.34](https://github.com/rarible/sdk/compare/v0.13.68-fix.33...v0.13.68-fix.34) (2024-07-03)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
 
-
-
-
-
 ## [0.13.68-fix.33](https://github.com/rarible/sdk/compare/v0.13.68-fix.32...v0.13.68-fix.33) (2024-07-02)
-
 
 ### Features
 
-* moonbeam chain support ([#641](https://github.com/rarible/sdk/issues/641)) ([d917e51](https://github.com/rarible/sdk/commit/d917e51ef6c3c87bdf8314a43e748dedcd8be77d))
-
-
-
-
+- moonbeam chain support ([#641](https://github.com/rarible/sdk/issues/641)) ([d917e51](https://github.com/rarible/sdk/commit/d917e51ef6c3c87bdf8314a43e748dedcd8be77d))
 
 ## [0.13.68-fix.32](https://github.com/rarible/sdk/compare/v0.13.68-fix.31...v0.13.68-fix.32) (2024-06-27)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
 
-
-
-
-
 ## [0.13.68-fix.31](https://github.com/rarible/sdk/compare/v0.13.68-fix.30...v0.13.68-fix.31) (2024-06-20)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
-
-
-
-
 
 ## [0.13.68-fix.30](https://github.com/rarible/sdk/compare/v0.13.68-fix.29...v0.13.68-fix.30) (2024-06-19)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
 
-
-
-
-
 ## [0.13.68-fix.29](https://github.com/rarible/sdk/compare/v0.13.68-fix.28...v0.13.68-fix.29) (2024-06-14)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
-
-
-
-
 
 ## [0.13.68-fix.28](https://github.com/rarible/sdk/compare/v0.13.68-fix.27...v0.13.68-fix.28) (2024-06-13)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
 
-
-
-
-
 ## [0.13.68-fix.27](https://github.com/rarible/sdk/compare/v0.13.68-fix.26...v0.13.68-fix.27) (2024-06-07)
 
 **Note:** Version bump only for package @rarible/ethereum-sdk-test-common
 
-
-
-
-
 ## [0.13.68-fix.26](https://github.com/rarible/sdk/compare/v0.13.68-fix.25...v0.13.68-fix.26) (2024-06-07)
-
 
 ### Features
 
-* **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
-
-
-
-
+- **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
 
 ## [0.13.68-fix.25](https://github.com/rarible/sdk/compare/v0.13.68-fix.24...v0.13.68-fix.25) (2024-06-05)
 
-
 ### Features
 
-* aptos updates ([#633](https://github.com/rarible/sdk/issues/633)) ([885be3a](https://github.com/rarible/sdk/commit/885be3aee4ff9c78a55d9f3748dc1b696cff30dd))
-
-
-
-
+- aptos updates ([#633](https://github.com/rarible/sdk/issues/633)) ([885be3a](https://github.com/rarible/sdk/commit/885be3aee4ff9c78a55d9f3748dc1b696cff30dd))
 
 ## [0.13.68-fix.24](https://github.com/rarible/sdk/compare/v0.13.68-fix.23...v0.13.68-fix.24) (2024-05-24)
 

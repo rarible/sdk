@@ -3,148 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.13.68-fix.37](https://github.com/rarible/sdk/compare/v0.13.68-fix.36...v0.13.68-fix.37) (2024-07-17)
-
+## [0.13.68-fix.38](https://github.com/rarible/sdk/compare/v0.13.68-fix.37...v0.13.68-fix.38) (2024-07-18)
 
 ### Features
 
-* etherlink support ([#645](https://github.com/rarible/sdk/issues/645)) ([f96ad7d](https://github.com/rarible/sdk/commit/f96ad7d3e069b97fabf075723152befb23314401))
-* support palm ([#644](https://github.com/rarible/sdk/issues/644)) ([f623345](https://github.com/rarible/sdk/commit/f623345a9fbccddedaa9a0ad7af15a1735b6f794))
+- update aptos deps ([#647](https://github.com/rarible/sdk/issues/647)) ([1ce79d8](https://github.com/rarible/sdk/commit/1ce79d84a9bc3c0a340e706e97b5a55edfad3306))
 
+## [0.13.68-fix.37](https://github.com/rarible/sdk/compare/v0.13.68-fix.36...v0.13.68-fix.37) (2024-07-17)
 
+### Features
 
-
+- etherlink support ([#645](https://github.com/rarible/sdk/issues/645)) ([f96ad7d](https://github.com/rarible/sdk/commit/f96ad7d3e069b97fabf075723152befb23314401))
+- support palm ([#644](https://github.com/rarible/sdk/issues/644)) ([f623345](https://github.com/rarible/sdk/commit/f623345a9fbccddedaa9a0ad7af15a1735b6f794))
 
 ## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
 
-
 ### Features
 
-* aptos mainnet support ([#643](https://github.com/rarible/sdk/issues/643)) ([c5fa500](https://github.com/rarible/sdk/commit/c5fa50078893806daff01eedf046759e600c7190))
-
-
-
-
+- aptos mainnet support ([#643](https://github.com/rarible/sdk/issues/643)) ([c5fa500](https://github.com/rarible/sdk/commit/c5fa50078893806daff01eedf046759e600c7190))
 
 ## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
 
-
 ### Bug Fixes
 
-* thirdweb wallet restore connection fixed ([#642](https://github.com/rarible/sdk/issues/642)) ([7cb5ccb](https://github.com/rarible/sdk/commit/7cb5ccbc2f08b8f60aafda7148f6c98b3b57c78a))
-
-
-
-
+- thirdweb wallet restore connection fixed ([#642](https://github.com/rarible/sdk/issues/642)) ([7cb5ccb](https://github.com/rarible/sdk/commit/7cb5ccbc2f08b8f60aafda7148f6c98b3b57c78a))
 
 ## [0.13.68-fix.34](https://github.com/rarible/sdk/compare/v0.13.68-fix.33...v0.13.68-fix.34) (2024-07-03)
 
-
 ### Bug Fixes
 
-* aptos wallet core connector option ([0ba8026](https://github.com/rarible/sdk/commit/0ba80268ca7fd1cdacfe00b387fcd2996ed8ede2))
-
-
-
-
+- aptos wallet core connector option ([0ba8026](https://github.com/rarible/sdk/commit/0ba80268ca7fd1cdacfe00b387fcd2996ed8ede2))
 
 ## [0.13.68-fix.33](https://github.com/rarible/sdk/compare/v0.13.68-fix.32...v0.13.68-fix.33) (2024-07-02)
 
-
 ### Features
 
-* moonbeam chain support ([#641](https://github.com/rarible/sdk/issues/641)) ([d917e51](https://github.com/rarible/sdk/commit/d917e51ef6c3c87bdf8314a43e748dedcd8be77d))
-
-
-
-
+- moonbeam chain support ([#641](https://github.com/rarible/sdk/issues/641)) ([d917e51](https://github.com/rarible/sdk/commit/d917e51ef6c3c87bdf8314a43e748dedcd8be77d))
 
 ## [0.13.68-fix.32](https://github.com/rarible/sdk/compare/v0.13.68-fix.31...v0.13.68-fix.32) (2024-06-27)
 
 **Note:** Version bump only for package root
 
-
-
-
-
 ## [0.13.68-fix.31](https://github.com/rarible/sdk/compare/v0.13.68-fix.30...v0.13.68-fix.31) (2024-06-20)
-
 
 ### Features
 
-* aptos wallet core connector ([#638](https://github.com/rarible/sdk/issues/638)) ([46f88bc](https://github.com/rarible/sdk/commit/46f88bc8949cccd059c1b0ca1d5f085fc63d3c23))
-
-
-
-
+- aptos wallet core connector ([#638](https://github.com/rarible/sdk/issues/638)) ([46f88bc](https://github.com/rarible/sdk/commit/46f88bc8949cccd059c1b0ca1d5f085fc63d3c23))
 
 ## [0.13.68-fix.30](https://github.com/rarible/sdk/compare/v0.13.68-fix.29...v0.13.68-fix.30) (2024-06-19)
 
-
 ### Bug Fixes
 
-* thirdweb as async package ([#634](https://github.com/rarible/sdk/issues/634)) ([20d532c](https://github.com/rarible/sdk/commit/20d532cc69f5f2ee5ea1c2d48c3ee30805fc125d))
-
-
-
-
+- thirdweb as async package ([#634](https://github.com/rarible/sdk/issues/634)) ([20d532c](https://github.com/rarible/sdk/commit/20d532cc69f5f2ee5ea1c2d48c3ee30805fc125d))
 
 ## [0.13.68-fix.29](https://github.com/rarible/sdk/compare/v0.13.68-fix.28...v0.13.68-fix.29) (2024-06-14)
 
-
 ### Features
 
-* full sign message in aptos response ([#637](https://github.com/rarible/sdk/issues/637)) ([379a37d](https://github.com/rarible/sdk/commit/379a37d5056a9edb052f5344be826fa889af2beb))
-
-
-
-
+- full sign message in aptos response ([#637](https://github.com/rarible/sdk/issues/637)) ([379a37d](https://github.com/rarible/sdk/commit/379a37d5056a9edb052f5344be826fa889af2beb))
 
 ## [0.13.68-fix.28](https://github.com/rarible/sdk/compare/v0.13.68-fix.27...v0.13.68-fix.28) (2024-06-13)
 
-
 ### Bug Fixes
 
-* aptos currency id converting ([#636](https://github.com/rarible/sdk/issues/636)) ([8e6abd8](https://github.com/rarible/sdk/commit/8e6abd80b6f88c3a4c6536373e6b8310c7962597))
-
-
-
-
+- aptos currency id converting ([#636](https://github.com/rarible/sdk/issues/636)) ([8e6abd8](https://github.com/rarible/sdk/commit/8e6abd80b6f88c3a4c6536373e6b8310c7962597))
 
 ## [0.13.68-fix.27](https://github.com/rarible/sdk/compare/v0.13.68-fix.26...v0.13.68-fix.27) (2024-06-07)
 
-
 ### Bug Fixes
 
-* **RX-617:** aptos - extract id in fees and token transfer address ([#635](https://github.com/rarible/sdk/issues/635)) ([a73da6a](https://github.com/rarible/sdk/commit/a73da6a2d5207b935d94a70818e6af5dccf7976c))
-
-
-
-
+- **RX-617:** aptos - extract id in fees and token transfer address ([#635](https://github.com/rarible/sdk/issues/635)) ([a73da6a](https://github.com/rarible/sdk/commit/a73da6a2d5207b935d94a70818e6af5dccf7976c))
 
 ## [0.13.68-fix.26](https://github.com/rarible/sdk/compare/v0.13.68-fix.25...v0.13.68-fix.26) (2024-06-07)
 
-
 ### Features
 
-* **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
-
-
-
-
+- **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
 
 ## [0.13.68-fix.25](https://github.com/rarible/sdk/compare/v0.13.68-fix.24...v0.13.68-fix.25) (2024-06-05)
 
-
 ### Features
 
-* aptos updates ([#633](https://github.com/rarible/sdk/issues/633)) ([885be3a](https://github.com/rarible/sdk/commit/885be3aee4ff9c78a55d9f3748dc1b696cff30dd))
-* base repo support ([#630](https://github.com/rarible/sdk/issues/630)) ([f0d644d](https://github.com/rarible/sdk/commit/f0d644d5cd90159350caa0ecfc35eba94f74ad94))
-* **PLTF-452:** aptos improvements ([#629](https://github.com/rarible/sdk/issues/629)) ([bafc1cd](https://github.com/rarible/sdk/commit/bafc1cd01bb73820f341862deb26d3a6d616f677))
-
-
-
-
+- aptos updates ([#633](https://github.com/rarible/sdk/issues/633)) ([885be3a](https://github.com/rarible/sdk/commit/885be3aee4ff9c78a55d9f3748dc1b696cff30dd))
+- base repo support ([#630](https://github.com/rarible/sdk/issues/630)) ([f0d644d](https://github.com/rarible/sdk/commit/f0d644d5cd90159350caa0ecfc35eba94f74ad94))
+- **PLTF-452:** aptos improvements ([#629](https://github.com/rarible/sdk/issues/629)) ([bafc1cd](https://github.com/rarible/sdk/commit/bafc1cd01bb73820f341862deb26d3a6d616f677))
 
 ## [0.13.68-fix.24](https://github.com/rarible/sdk/compare/v0.13.68-fix.23...v0.13.68-fix.24) (2024-05-24)
 

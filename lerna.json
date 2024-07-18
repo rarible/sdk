@@ -1,17 +1,10 @@
 {
-  "packages": [
-    "packages/**/*"
-  ],
-  "version": "0.13.68-fix.37",
+  "packages": ["packages/**/*"],
+  "version": "0.13.68-fix.38",
   "npmClient": "yarn",
   "command": {
     "publish": {
-      "allowBranch": [
-        "master",
-        "fix/*",
-        "beta/*",
-        "release/*"
-      ],
+      "allowBranch": ["master", "fix/*", "beta/*", "release/*"],
       "conventionalCommits": true,
       "registry": "https://registry.npmjs.org/",
       "message": "chore: bump versions after release",
