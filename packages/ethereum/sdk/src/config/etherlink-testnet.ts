@@ -44,7 +44,7 @@ export const etherlinkTestnetConfig: EthereumConfig = {
     pairFactory: ZERO_ADDRESS,
     pairRouter: ZERO_ADDRESS,
   },
-  weth: toAddress("0x281b137369f9446bda014bb44e1be269300634b5"),
+  weth: toAddress("0x340Fa96ACF0b8D36828e1D8963CdF3E95c58ed06"),
   auction: ZERO_ADDRESS,
   looksrareOrderValidatorV2: ZERO_ADDRESS,
 }
