@@ -4,7 +4,7 @@ import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
 
 export const liskSepoliaConfig: EthereumConfig = extendConfig({
-  basePath: "https://testnet-lisk-api.rarible.org/",
+  basePath: "https://testnet-lisk-api.rarible.org",
   chainId: 4202,
   environment: "testnet",
   blockchain: Blockchain.LISK,
