@@ -112,6 +112,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://testnet-explorer.etherlink.com/tx/${this.hash()}`
       case "etherlink":
         return `https://explorer.etherlink.com/tx/${this.hash()}`
+      case "lisk-sepolia":
+        return `https://sepolia-blockscout.lisk.com/tx/${this.hash()}`
+      case "lisk":
+        return `https://blockscout.lisk.com/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

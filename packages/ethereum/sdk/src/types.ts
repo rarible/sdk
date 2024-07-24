@@ -44,6 +44,8 @@ export const ethereumNetworks = [
   "palm",
   "etherlink-testnet",
   "etherlink",
+  "lisk-sepolia",
+  "lisk",
 ]
 
 export type EthereumNetwork = (typeof ethereumNetworks)[number]

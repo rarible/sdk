@@ -1,16 +1,16 @@
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
+import { toAddress } from "@rarible/types"
 import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
 
-export const palmMainnetConfig: EthereumConfig = extendConfig({
-  basePath: "https://palm-api.rarible.org",
-  chainId: 11297108109,
+export const liskMainnetConfig: EthereumConfig = extendConfig({
+  basePath: "https://lisk-api.rarible.org",
+  chainId: 1135,
   environment: "production",
-  blockchain: Blockchain.PALM,
+  blockchain: Blockchain.LISK,
   exchange: {
     v2: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),
-    wrapper: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
+    wrapper: toAddress("0xcD6A173F1C244C3d9b9bc2434582e54B87739F08"),
   },
   transferProxies: {
     nft: toAddress("0xF65eF65a95821A16E02973b1C2200FA58898e3c0"),
@@ -19,8 +19,8 @@ export const palmMainnetConfig: EthereumConfig = extendConfig({
     erc1155Lazy: toAddress("0x1CC22424f2B84791cb99c141A68CD2a44Cf35398"),
   },
   factories: {
-    erc721: toAddress("0xC699FB932c1bD7235C7ED19388f26A2428224AED"),
-    erc1155: toAddress("0xdA12E4Ab1d731F29bF4Bff8f971579D95f8DDD07"),
+    erc721: toAddress("0x69Be0b6f5BB5e9F8DfAA1562F06427142fb0a10a"),
+    erc1155: toAddress("0xf5c9643bE5C6925F2272ecA95De16e002D6fC83C"),
   },
-  weth: toAddress("0xf98cabf0a963452c5536330408b2590567611a71"),
+  weth: toAddress("0xac485391eb2d7d88253a7f1ef18c37f4242d1a24"),
 })
