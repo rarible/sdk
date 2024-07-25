@@ -39,11 +39,35 @@ export interface AptosOrderSdk {
     price: string,
   ): Promise<string>
 
+  collectionOfferV1(
+    creatorAddress: string | undefined,
+    collectionName: string,
+    feeObjectAddress: string,
+    price: string,
+    amount: number,
+    endTime: number,
+  ): Promise<string>
+
   acceptCollectionOffer(offer: string, token: string): Promise<CommittedTransactionResponse>
+  acceptCollectionOfferV1(
+    offer: string,
+    tokenName: string | undefined,
+    propertyVersion: string,
+  ): Promise<CommittedTransactionResponse>
 
   cancelCollectionOffer(offer: string): Promise<CommittedTransactionResponse>
 
   tokenOffer(tokenAddress: string, feeObjectAddress: string, endTime: number, price: string): Promise<string>
+
+  tokenOfferV1(
+    creatorAddress: string,
+    collectionName: string,
+    tokenName: string,
+    propertyVersion: string,
+    feeObjectAddress: string,
+    price: string,
+    endTime: number,
+  ): Promise<string>
 
   acceptTokenOffer(offer: string): Promise<CommittedTransactionResponse>
 

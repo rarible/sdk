@@ -6,8 +6,9 @@ import type { AptosTransaction } from "@rarible/aptos-wallet"
 import { normalizeAptosAddress } from "@rarible/sdk-common"
 import { APT_TOKEN_TYPE, getListingTokenType, getRequiredWallet, isChangeBelongsToType } from "../common"
 import type { AddressConfig } from "../config"
+import type { AptosOrderSdk } from "../domain"
 
-export class AptosOrder {
+export class AptosOrder implements AptosOrderSdk {
   constructor(
     readonly aptos: Aptos,
     readonly wallet: Maybe<AptosWalletInterface>,
@@ -21,9 +22,12 @@ export class AptosOrder {
     this.buy = this.buy.bind(this)
     this.cancel = this.cancel.bind(this)
     this.collectionOffer = this.collectionOffer.bind(this)
+    this.collectionOfferV1 = this.collectionOfferV1.bind(this)
     this.cancelCollectionOffer = this.cancelCollectionOffer.bind(this)
     this.acceptCollectionOffer = this.acceptCollectionOffer.bind(this)
+    this.acceptCollectionOfferV1 = this.acceptCollectionOfferV1.bind(this)
     this.tokenOffer = this.tokenOffer.bind(this)
+    this.tokenOfferV1 = this.tokenOfferV1.bind(this)
     this.cancelTokenOffer = this.cancelTokenOffer.bind(this)
     this.acceptTokenOffer = this.acceptTokenOffer.bind(this)
   }
@@ -129,6 +133,30 @@ export class AptosOrder {
     return normalizeAptosAddress(change.address)
   }
 
+  collectionOfferV1 = async (
+    creatorAddress: string | undefined,
+    collectionName: string,
+    feeObjectAddress: string,
+    price: string,
+    amount: number,
+    endTime: number,
+  ) => {
+    const rawTx = {
+      function: `${this.config.marketplaceAddress}::collection_offer::init_for_tokenv2_entry`,
+      typeArguments: [APT_TOKEN_TYPE],
+      arguments: [creatorAddress, collectionName, feeObjectAddress, price, amount, endTime],
+    }
+
+    const tx = await this.sendAndWaitTx(rawTx)
+    const change = tx.changes.find(change =>
+      isChangeBelongsToType(change, type => type.includes("collection_offer::CollectionOffer")),
+    )
+    if (!change || !("address" in change)) {
+      throw new Error("Address has not been found")
+    }
+    return normalizeAptosAddress(change.address)
+  }
+
   cancelCollectionOffer = async (offer: string) => {
     const rawTx = {
       function: `${this.config.marketplaceAddress}::collection_offer::cancel`,
@@ -149,11 +177,47 @@ export class AptosOrder {
     return this.sendAndWaitTx(rawTx)
   }
 
+  async acceptCollectionOfferV1(offer: string, tokenName: string, propertyVersion: string) {
+    const rawTx = {
+      function: `${this.config.marketplaceAddress}::collection_offer::sell_tokenv1`,
+      typeArguments: [APT_TOKEN_TYPE],
+      arguments: [offer, tokenName, propertyVersion],
+    }
+
+    return this.sendAndWaitTx(rawTx)
+  }
+
   tokenOffer = async (tokenAddress: string, feeObjectAddress: string, endTime: number, price: string) => {
     const rawTx = {
       function: `${this.config.marketplaceAddress}::token_offer::init_for_tokenv2_entry`,
       typeArguments: [APT_TOKEN_TYPE],
       arguments: [tokenAddress, feeObjectAddress, price, endTime],
+    }
+
+    const tx = await this.sendAndWaitTx(rawTx)
+    if (!("events" in tx)) {
+      throw new Error("Events field in tx object was expected")
+    }
+    const event = tx.events.find(e => e.type.includes("events::TokenOfferPlaced"))
+    if (!event || !("token_offer" in event.data)) {
+      throw new Error("Offer has not been found")
+    }
+    return normalizeAptosAddress(event.data.token_offer)
+  }
+
+  tokenOfferV1 = async (
+    creatorAddress: string,
+    collectionName: string,
+    tokenName: string,
+    propertyVersion: string,
+    feeObjectAddress: string,
+    price: string,
+    endTime: number,
+  ) => {
+    const rawTx = {
+      function: `${this.config.marketplaceAddress}::token_offer::init_for_tokenv1_entry`,
+      typeArguments: [APT_TOKEN_TYPE],
+      arguments: [creatorAddress, collectionName, tokenName, propertyVersion, feeObjectAddress, price, endTime],
     }
 
     const tx = await this.sendAndWaitTx(rawTx)
@@ -182,6 +246,16 @@ export class AptosOrder {
       function: `${this.config.marketplaceAddress}::token_offer::sell_tokenv2`,
       typeArguments: [APT_TOKEN_TYPE],
       arguments: [offer],
+    }
+
+    return this.sendAndWaitTx(rawTx)
+  }
+
+  async acceptTokenOfferV1(offer: string, tokenName: String, propertyVersion: string) {
+    const rawTx = {
+      function: `${this.config.marketplaceAddress}::token_offer::sell_tokenv1`,
+      typeArguments: [APT_TOKEN_TYPE],
+      arguments: [offer, tokenName, propertyVersion],
     }
 
     return this.sendAndWaitTx(rawTx)
