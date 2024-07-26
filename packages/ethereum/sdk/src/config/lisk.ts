@@ -22,5 +22,5 @@ export const liskMainnetConfig: EthereumConfig = extendConfig({
     erc721: toAddress("0x69Be0b6f5BB5e9F8DfAA1562F06427142fb0a10a"),
     erc1155: toAddress("0xf5c9643bE5C6925F2272ecA95De16e002D6fC83C"),
   },
-  weth: toAddress("0xac485391eb2d7d88253a7f1ef18c37f4242d1a24"),
+  weth: toAddress("0x4200000000000000000000000000000000000006"),
 })

@@ -22,5 +22,5 @@ export const liskSepoliaConfig: EthereumConfig = extendConfig({
     erc721: toAddress("0xae891BdB73E5B2C454d6Fe03824A86d0d440FC0e"),
     erc1155: toAddress("0x573b8748B7D3204bF60836217f63b1332E123BB1"),
   },
-  weth: toAddress("0x16b840ba01e2b05fc2268eaf6d18892a11ec29d6"),
+  weth: toAddress("0x4200000000000000000000000000000000000006"),
 })
