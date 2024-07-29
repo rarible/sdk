@@ -11,7 +11,7 @@ export const DEV_PK_3 = "064b2a70a2932eb5b45c760b210a2bee579d94031a8c40bff05cfd9
 //Wallet address 0xf46c479e32cd7703dd8493979c6042d0e4c0a0db
 export const DEV_PK_4 = "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9"
 
-export const e2eProviderSupportedNetworks = ["rarible-dev", "mumbai", "polygon", "sepolia", "mainnet"] as const
+export const e2eProviderSupportedNetworks = ["rarible-dev", "amoy", "polygon", "sepolia", "mainnet"] as const
 export type E2EProviderSupportedNetwork = (typeof e2eProviderSupportedNetworks)[number]
 
 const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProviderConfig>> = {
@@ -19,9 +19,9 @@ const e2eProviderConfigs: Record<E2EProviderSupportedNetwork, Partial<E2EProvide
     rpcUrl: "https://dev-ethereum-node.rarible.com",
     networkId: 300500,
   },
-  mumbai: {
-    rpcUrl: "https://node-mumbai.rarible.com",
-    networkId: 80001,
+  amoy: {
+    rpcUrl: "https://rpc-amoy.polygon.technology",
+    networkId: 80002,
   },
   polygon: {
     rpcUrl: "https://node-mainnet-polygon.rarible.com",

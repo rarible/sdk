@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-aptos-wallet-core",
-  "version": "0.13.68-fix.36",
+  "version": "0.13.68-fix.42",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,13 +16,13 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.36",
-    "@rarible/types": "~0.9.28",
+    "@aptos-labs/ts-sdk": "^1.5.1",
+    "@aptos-labs/wallet-adapter-core": "~4.8.0",
+    "@rarible/connector": "^0.13.68-fix.42",
+    "@rarible/types": "~0.9.30",
     "petra-plugin-wallet-adapter": "~0.4.5"
   },
   "peerDependencies": {
-    "@aptos-labs/ts-sdk": "^1.5.1",
-    "@aptos-labs/wallet-adapter-core": "~4.1.2",
     "tslib": "^2.3.1"
   },
   "publishConfig": {

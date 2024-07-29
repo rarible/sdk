@@ -3,107 +3,90 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
+## [0.13.68-fix.42](https://github.com/rarible/sdk/compare/v0.13.68-fix.41...v0.13.68-fix.42) (2024-07-29)
+
+### Features
+
+- **PLTF-429:** Saakuru blockchain support ([#623](https://github.com/rarible/sdk/issues/623)) ([aa3f54c](https://github.com/rarible/sdk/commit/aa3f54cc963d9b6fa9776b8c5c7f32aa0f740617))
+
+## [0.13.68-fix.41](https://github.com/rarible/sdk/compare/v0.13.68-fix.40...v0.13.68-fix.41) (2024-07-26)
+
+### Features
+
+- lisk weth ([3c34d53](https://github.com/rarible/sdk/commit/3c34d5336226fa449f79851cc8b6b72473c545ab))
+
+## [0.13.68-fix.40](https://github.com/rarible/sdk/compare/v0.13.68-fix.39...v0.13.68-fix.40) (2024-07-24)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
+## [0.13.68-fix.39](https://github.com/rarible/sdk/compare/v0.13.68-fix.38...v0.13.68-fix.39) (2024-07-22)
 
+### Features
 
+- etherlink testnet wxtz ([908b2fe](https://github.com/rarible/sdk/commit/908b2fe5c619b902c5e165ede1922eaea9934762))
 
+## [0.13.68-fix.38](https://github.com/rarible/sdk/compare/v0.13.68-fix.37...v0.13.68-fix.38) (2024-07-18)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.37](https://github.com/rarible/sdk/compare/v0.13.68-fix.36...v0.13.68-fix.37) (2024-07-17)
+
+### Features
+
+- etherlink support ([#645](https://github.com/rarible/sdk/issues/645)) ([f96ad7d](https://github.com/rarible/sdk/commit/f96ad7d3e069b97fabf075723152befb23314401))
+- support palm ([#644](https://github.com/rarible/sdk/issues/644)) ([f623345](https://github.com/rarible/sdk/commit/f623345a9fbccddedaa9a0ad7af15a1735b6f794))
+
+## [0.13.68-fix.36](https://github.com/rarible/sdk/compare/v0.13.68-fix.35...v0.13.68-fix.36) (2024-07-05)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
 ## [0.13.68-fix.35](https://github.com/rarible/sdk/compare/v0.13.68-fix.34...v0.13.68-fix.35) (2024-07-04)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
-
-
-
-
 ## [0.13.68-fix.34](https://github.com/rarible/sdk/compare/v0.13.68-fix.33...v0.13.68-fix.34) (2024-07-03)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
-
-
-
-
 ## [0.13.68-fix.33](https://github.com/rarible/sdk/compare/v0.13.68-fix.32...v0.13.68-fix.33) (2024-07-02)
-
 
 ### Features
 
-* moonbeam chain support ([#641](https://github.com/rarible/sdk/issues/641)) ([d917e51](https://github.com/rarible/sdk/commit/d917e51ef6c3c87bdf8314a43e748dedcd8be77d))
-
-
-
-
+- moonbeam chain support ([#641](https://github.com/rarible/sdk/issues/641)) ([d917e51](https://github.com/rarible/sdk/commit/d917e51ef6c3c87bdf8314a43e748dedcd8be77d))
 
 ## [0.13.68-fix.32](https://github.com/rarible/sdk/compare/v0.13.68-fix.31...v0.13.68-fix.32) (2024-06-27)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
-
-
-
-
 ## [0.13.68-fix.31](https://github.com/rarible/sdk/compare/v0.13.68-fix.30...v0.13.68-fix.31) (2024-06-20)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
-
-
-
-
 
 ## [0.13.68-fix.30](https://github.com/rarible/sdk/compare/v0.13.68-fix.29...v0.13.68-fix.30) (2024-06-19)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
-
-
-
-
 ## [0.13.68-fix.29](https://github.com/rarible/sdk/compare/v0.13.68-fix.28...v0.13.68-fix.29) (2024-06-14)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
-
-
-
-
 
 ## [0.13.68-fix.28](https://github.com/rarible/sdk/compare/v0.13.68-fix.27...v0.13.68-fix.28) (2024-06-13)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
-
-
-
-
 ## [0.13.68-fix.27](https://github.com/rarible/sdk/compare/v0.13.68-fix.26...v0.13.68-fix.27) (2024-06-07)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
 
-
-
-
-
 ## [0.13.68-fix.26](https://github.com/rarible/sdk/compare/v0.13.68-fix.25...v0.13.68-fix.26) (2024-06-07)
-
 
 ### Features
 
-* **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
-
-
-
-
+- **PLTF-454:** add sei chain support ([#631](https://github.com/rarible/sdk/issues/631)) ([20969c6](https://github.com/rarible/sdk/commit/20969c62dad2faead84417d4f07a2f9e7fb5248d))
 
 ## [0.13.68-fix.25](https://github.com/rarible/sdk/compare/v0.13.68-fix.24...v0.13.68-fix.25) (2024-06-05)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
-
-
-
-
 
 ## [0.13.68-fix.24](https://github.com/rarible/sdk/compare/v0.13.68-fix.23...v0.13.68-fix.24) (2024-05-24)
 
