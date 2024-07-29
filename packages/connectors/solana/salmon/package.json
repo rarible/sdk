@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-salmon",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -10,11 +10,13 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector-solana": "^0.13.68-fix.22"
+    "@rarible/connector-solana": "^0.13.68-fix.41"
   },
   "publishConfig": {
     "access": "public"

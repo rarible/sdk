@@ -2,42 +2,51 @@ import { createTestAptosState, mintTestToken } from "../common/test"
 import { AptosOrder } from "./index"
 
 describe("sell nft", () => {
-	const { aptos, account } = createTestAptosState()
-	const orderClass = new AptosOrder(aptos, account)
+  const sellerState = createTestAptosState()
+  const buyerState = createTestAptosState()
+  const sellerOrderClass = new AptosOrder(sellerState.aptos, sellerState.wallet, sellerState.config)
+  const buyerOrderClass = new AptosOrder(buyerState.aptos, buyerState.wallet, buyerState.config)
+  const feeAddress = sellerState.config.feeZeroScheduleAddress
 
-	test("sell", async () => {
-		const testTokenAddress = await mintTestToken(aptos, account)
+  test("sell", async () => {
+    const testTokenAddress = await mintTestToken(sellerState)
 
-		const feeAddress = "0x72156c210460e9d1ee90eac2ba5c654f6fda9a7dc60f64e41471291a9110392e"
-		const startTime = Math.floor(Date.now() / 1000)
-		const price = "2000000"
+    const feeAddress = sellerState.config.feeZeroScheduleAddress
+    const startTime = Math.floor(Date.now() / 1000) + 10
+    const price = "2000000"
 
-		const tx = await orderClass.sell(
-			testTokenAddress,
-			feeAddress,
-			startTime,
-			price
-		)
-		console.log("tx", JSON.stringify(tx, null, "  "))
-	})
+    const tx = await sellerOrderClass.sell(testTokenAddress, feeAddress, startTime, price)
+    expect(tx).toBeTruthy()
+  })
 
-	test("cancel sell order", async () => {
-		const testTokenAddress = await mintTestToken(aptos, account)
+  test("cancel sell order", async () => {
+    const testTokenAddress = await mintTestToken(sellerState)
 
-		console.log("testTokenAddress", testTokenAddress)
-		const feeAddress = "0x72156c210460e9d1ee90eac2ba5c654f6fda9a7dc60f64e41471291a9110392e"
-		const startTime = Math.floor(Date.now() / 1000)
-		const price = "2000000"
+    const startTime = Math.floor(Date.now() / 1000)
+    const price = "2000000"
 
-		const tx = await orderClass.sell(
-			testTokenAddress,
-			feeAddress,
-			startTime,
-			price
-		)
-		console.log("tx", JSON.stringify(tx, null, "  "))
-		// orderClass.cancel(tx)
-	})
+    const orderId = await sellerOrderClass.sell(testTokenAddress, feeAddress, startTime, price)
+    const tx = await sellerOrderClass.cancel(orderId)
+    expect(tx).toBeTruthy()
+  })
 
+  test("buy sell order", async () => {
+    const testTokenAddress = await mintTestToken(sellerState)
 
+    const startTime = Math.floor(Date.now() / 1000)
+    const price = "2000000"
+
+    const orderId = await sellerOrderClass.sell(testTokenAddress, feeAddress, startTime, price)
+
+    const tx = await buyerOrderClass.buy(orderId)
+    expect(tx).toBeTruthy()
+  })
+
+  test("create fee schedule", async () => {
+    const feeAddress = await sellerOrderClass.createFeeSchedule({
+      value: 0,
+    })
+    expect(feeAddress).toBeTruthy()
+    expect(typeof feeAddress === "string").toBeTruthy()
+  })
 })

@@ -21,56 +21,43 @@ import { getErc721Contract } from "./contracts/erc721"
  * @group provider/dev
  */
 describe("transfer Erc721 lazy", () => {
-	const { provider, wallet } = createE2eProvider(DEV_PK_1)
-	const web3 = new Web3(provider)
-	const ethereum = new Web3Ethereum({ web3 })
+  const { provider, wallet } = createE2eProvider(DEV_PK_1)
+  const web3 = new Web3(provider)
+  const ethereum = new Web3Ethereum({ web3 })
 
-	const env: EthereumNetwork = "dev-ethereum"
-	const config = getEthereumConfig(env)
-	const getConfig = async () => config
+  const env: EthereumNetwork = "dev-ethereum"
+  const config = getEthereumConfig(env)
+  const getConfig = async () => config
 
-	const send = getSendWithInjects()
-	const getApis = getApisTemplate.bind(null, ethereum, env)
-	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
-	const sign = signNft.bind(null, ethereum, getConfig)
+  const send = getSendWithInjects()
+  const getApis = getApisTemplate.bind(null, ethereum, env)
+  const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
+  const sign = signNft.bind(null, ethereum, getConfig)
 
-	test("should transfer erc721 lazy token", async () => {
-		const from = toAddress(wallet.getAddressString())
-		const recipient = randomAddress()
-		const contract = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
+  test("should transfer erc721 lazy token", async () => {
+    const from = toAddress(wallet.getAddressString())
+    const recipient = randomAddress()
+    const contract = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
 
-		const request: ERC721RequestV3 = {
-			uri: "ipfs://ipfs/hash",
-			creators: [{ account: from, value: 10000 }],
-			royalties: [],
-			lazy: true,
-			collection: createErc721V3Collection(contract),
-		}
+    const request: ERC721RequestV3 = {
+      uri: "ipfs://ipfs/hash",
+      creators: [{ account: from, value: 10000 }],
+      royalties: [],
+      lazy: true,
+      collection: createErc721V3Collection(contract),
+    }
 
-		const minted = await mint(
-			ethereum,
-			send,
-			sign,
-			getApis,
-			request
-		)
+    const minted = await mint(ethereum, send, sign, getApis, request)
 
-		const asset: TransferAsset = {
-			tokenId: minted.tokenId,
-			contract: contract,
-		}
+    const asset: TransferAsset = {
+      tokenId: minted.tokenId,
+      contract: contract,
+    }
 
-		const transferTx = await transfer(
-			ethereum,
-			send,
-			checkAssetType,
-			getApis,
-			asset,
-			recipient
-		)
-		await transferTx.wait()
-		const erc721Lazy = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V3, contract)
-		const recipientBalance = await erc721Lazy.functionCall("balanceOf", recipient).call()
-		expect(recipientBalance).toEqual("1")
-	})
+    const transferTx = await transfer(ethereum, send, checkAssetType, getApis, asset, recipient)
+    await transferTx.wait()
+    const erc721Lazy = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V3, contract)
+    const recipientBalance = await erc721Lazy.functionCall("balanceOf", recipient).call()
+    expect(recipientBalance).toEqual("1")
+  })
 })

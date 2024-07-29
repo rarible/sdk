@@ -10,21 +10,21 @@ import { Logger } from "../logger"
  * Make new sell order and check stocks
  */
 export async function sell(
-	sdk: IRaribleSdk,
-	wallet: BlockchainWallet,
-	prepareOrderRequest: PrepareOrderRequest,
-	orderRequest: OrderRequest,
+  sdk: IRaribleSdk,
+  wallet: BlockchainWallet,
+  prepareOrderRequest: PrepareOrderRequest,
+  orderRequest: OrderRequest,
 ): Promise<Order> {
-	Logger.log("sell, prepare_order_request=", prepareOrderRequest)
-	// Get sell info
-	const sellPrepare = await sdk.order.sell.prepare(prepareOrderRequest)
-	//expect(parseInt(sellPrepare.maxAmount)).toBeGreaterThanOrEqual(orderRequest.amount)
+  Logger.log("sell, prepare_order_request=", prepareOrderRequest)
+  // Get sell info
+  const sellPrepare = await sdk.order.sell.prepare(prepareOrderRequest)
+  //expect(parseInt(sellPrepare.maxAmount)).toBeGreaterThanOrEqual(orderRequest.amount)
 
-	Logger.log("sell, order_request=", orderRequest)
-	// Submit sell order
-	const orderId = await sellPrepare.submit(orderRequest)
-	Logger.log("order_id=", orderId)
-	// Check order stock to be equal sell amount
-	const nextStock = toBigNumber((orderRequest.amount || 1).toString())
-	return await awaitOrderStock(sdk, orderId, nextStock)
+  Logger.log("sell, order_request=", orderRequest)
+  // Submit sell order
+  const orderId = await sellPrepare.submit(orderRequest)
+  Logger.log("order_id=", orderId)
+  // Check order stock to be equal sell amount
+  const nextStock = toBigNumber((orderRequest.amount || 1).toString())
+  return await awaitOrderStock(sdk, orderId, nextStock)
 }

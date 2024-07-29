@@ -3,28 +3,28 @@ import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { SolanaCluster } from "@rarible/solana-sdk"
 import type { ImxEnv } from "@rarible/immutable-wallet"
 import type { FlowEnv } from "@rarible/flow-sdk"
-import type { AptosSdkEnv } from "@rarible/aptos-sdk/src/domain"
+import type { SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 
 export type RaribleSdkEnvironment = "development" | "testnet" | "prod"
 
 export type RaribleSdkConfig = {
-	basePath: string
-	ethereumEnv: EthereumNetwork
-	flowEnv: FlowEnv
-	tezosNetwork: TezosNetwork,
-	polygonNetwork: EthereumNetwork,
-	solanaNetwork: SolanaCluster
-	immutablexNetwork: ImxEnv
-	mantleNetwork: EthereumNetwork
-	arbitrumNetwork: EthereumNetwork
-	aptosNetwork: AptosSdkEnv
-	zksync: EthereumNetwork
-	chiliz: EthereumNetwork
-	lightlink: EthereumNetwork
-	rari: EthereumNetwork
-	base: EthereumNetwork
-	xai: EthereumNetwork
-	fief?: EthereumNetwork
-	kroma?: EthereumNetwork
-	celo: EthereumNetwork
+  basePath: string
+  ethereumEnv: EthereumNetwork
+  flowEnv: FlowEnv
+  tezosNetwork: TezosNetwork
+  polygonNetwork: EthereumNetwork
+  solanaNetwork: SolanaCluster
+  immutablexNetwork: ImxEnv
+  mantleNetwork: EthereumNetwork
+  arbitrumNetwork: EthereumNetwork
+  aptosNetwork: SupportedAptosNetwork
+  zksync: EthereumNetwork
+  chiliz: EthereumNetwork
+  lightlink: EthereumNetwork
+  rari: EthereumNetwork
+  base: EthereumNetwork
+  xai: EthereumNetwork
+  fief?: EthereumNetwork
+  kroma?: EthereumNetwork
+  celo: EthereumNetwork
 }

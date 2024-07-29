@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction-backend",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "private": true,
   "homepage": "",
   "license": "ISC",
@@ -10,45 +10,48 @@
     "build"
   ],
   "scripts": {
-    "build": "yarn clean && yarn tsc --project ./tsconfig.json && yarn copy-files",
-    "clean": "rimraf ./build",
-    "copy-files": "cp ./src/openapi.yml ./build/",
+    "build": "run-s clean build:ts copy-files",
+    "build:ts": "tsc --project ./tsconfig.build.json",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
+    "copy-files": "cpy ./src/openapi.yml ./build/ --flat",
     "get-buy-tx": "npx ts-node scripts/gettxbuy.ts",
     "get-orders": "npx ts-node scripts/getorders.ts",
     "serve": "nodemon",
     "start": "node ./build/index.js",
     "test": "jest --runInBand",
-    "verify": "tsc --noEmit"
+    "verify": "tsc"
   },
   "dependencies": {
-    "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.22",
-    "@rarible/web3-ethereum": "^0.13.68-fix.22",
-    "axios": "^1.4.0",
+    "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.41",
+    "@rarible/web3-ethereum": "^0.13.68-fix.41",
+    "axios": "^0.26.1",
     "body-parser": "^1.20.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",
-    "form-data": "^4.0.0",
-    "http-status": "^1.5.1",
-    "node-fetch": "^2.6.7",
+    "isomorphic-fetch": "^3.0.0",
     "redoc-express": "^1.0.0",
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
-    "typescript": "^4.8.4",
-    "web3": "1.8.2"
+    "typescript": "^5.4.5"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.22",
+    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.41",
     "@types/body-parser": "^1.19.2",
     "@types/express": "4.17.11",
-    "@types/jest": "^27.4.1",
+    "@types/isomorphic-fetch": "~0.0.39",
     "@types/js-yaml": "^4.0.5",
-    "@types/node": "^17.0.24",
     "@types/node-fetch": "^2.6.1",
     "@types/supertest": "^2.0.12",
-    "jest": "^27.2.7",
     "nodemon": "^2.0.15",
-    "supertest": "^6.2.2",
-    "ts-jest": "^27.0.3"
+    "supertest": "^6.2.2"
+  },
+  "peerDependencies": {
+    "web3": ">=1.5.0 <2.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
   }
 }

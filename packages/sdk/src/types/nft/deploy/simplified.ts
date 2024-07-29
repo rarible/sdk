@@ -16,52 +16,48 @@ export type CreateCollectionRequestSimplified =
   | SolanaCreateCollectionSimplified
   | AptosCreateCollectionSimplified
 
-
-export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBlockchains>
-{
-	blockchain: T
+export interface AbstractCreateCollectionSimplified<T extends CreateCollectionBlockchains> {
+  blockchain: T
 }
 
 /**
  * Ethereum create collection argument types
  */
-export interface EthereumCreatePublicCollectionSimplified extends
-	AbstractCreateCollectionSimplified<EVMBlockchain>,
-	EthereumCreateCollectionSimplifiedCommon {
-	isPublic: true
+export interface EthereumCreatePublicCollectionSimplified
+  extends AbstractCreateCollectionSimplified<EVMBlockchain>,
+    EthereumCreateCollectionSimplifiedCommon {
+  isPublic: true
 }
 
-export interface EthereumCreatePrivateCollectionSimplified extends
-	AbstractCreateCollectionSimplified<EVMBlockchain>,
-	EthereumCreateCollectionSimplifiedCommon {
-	isPublic: false
-	operators: UnionAddress[]
+export interface EthereumCreatePrivateCollectionSimplified
+  extends AbstractCreateCollectionSimplified<EVMBlockchain>,
+    EthereumCreateCollectionSimplifiedCommon {
+  isPublic: false
+  operators: UnionAddress[]
 }
 
 export type EthereumCreateCollectionSimplifiedCommon = {
-	type: "ERC721" | "ERC1155"
+  type: "ERC721" | "ERC1155"
 } & Omit<CreatePublicCollectionArguments, "isUserToken">
 
 /**
  * Tezos
  */
-export type TezosCreatePublicCollectionSimplified =
-	AbstractCreateCollectionSimplified<Blockchain.TEZOS>
-	& Omit<TezosCreateCollectionTokenAsset["arguments"], "isUserToken">
-	& {
-		type: "NFT" | "MT"
-		isPublic: boolean
-	}
+export type TezosCreatePublicCollectionSimplified = AbstractCreateCollectionSimplified<Blockchain.TEZOS> &
+  Omit<TezosCreateCollectionTokenAsset["arguments"], "isUserToken"> & {
+    type: "NFT" | "MT"
+    isPublic: boolean
+  }
 
 /**
  * Solana
  */
 export interface SolanaCreateCollectionSimplified extends AbstractCreateCollectionSimplified<Blockchain.SOLANA> {
-	metadataURI: string
+  metadataURI: string
 }
 
 /**
  * Aptos
  */
-export type AptosCreateCollectionSimplified =
-  AbstractCreateCollectionSimplified<Blockchain.APTOS> & AptosCreateCollectionTokenAsset
+export type AptosCreateCollectionSimplified = AbstractCreateCollectionSimplified<Blockchain.APTOS> &
+  AptosCreateCollectionTokenAsset

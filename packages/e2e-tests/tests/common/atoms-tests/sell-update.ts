@@ -10,31 +10,31 @@ import { Logger } from "../logger"
  * Update sell order and check stocks
  */
 export async function sellUpdate(
-	sdk: IRaribleSdk,
-	wallet: BlockchainWallet,
-	prepareOrderUpdateRequest: PrepareOrderUpdateRequest,
-	orderUpdateRequest: OrderUpdateRequest,
+  sdk: IRaribleSdk,
+  wallet: BlockchainWallet,
+  prepareOrderUpdateRequest: PrepareOrderUpdateRequest,
+  orderUpdateRequest: OrderUpdateRequest,
 ): Promise<Order> {
-	Logger.log("sellUpdate, prepare_order_update_request=", prepareOrderUpdateRequest)
-	// Get sell info
-	const prepareOrderUpdateResponse = await sdk.order.sellUpdate.prepare(prepareOrderUpdateRequest)
+  Logger.log("sellUpdate, prepare_order_update_request=", prepareOrderUpdateRequest)
+  // Get sell info
+  const prepareOrderUpdateResponse = await sdk.order.sellUpdate.prepare(prepareOrderUpdateRequest)
 
-	Logger.log("prepare_order_update_response", prepareOrderUpdateResponse)
-	Logger.log("sellUpdate, order_update_request=", orderUpdateRequest)
-	// Submit sell order
-	const orderId = await prepareOrderUpdateResponse.submit(orderUpdateRequest)
-	Logger.log("order_id", orderId)
-	// Flow create new order when update
-	if (wallet.walletType !== WalletType.FLOW) {
-		expect(orderId).toBe(prepareOrderUpdateRequest.orderId)
-	}
-	// Check order stock to be equal sell amount
-	// const nextStock = toBigNumber(orderRequest.amount.toString())
-	// return await awaitOrderStock(sdk, orderId, nextStock)
+  Logger.log("prepare_order_update_response", prepareOrderUpdateResponse)
+  Logger.log("sellUpdate, order_update_request=", orderUpdateRequest)
+  // Submit sell order
+  const orderId = await prepareOrderUpdateResponse.submit(orderUpdateRequest)
+  Logger.log("order_id", orderId)
+  // Flow create new order when update
+  if (wallet.walletType !== WalletType.FLOW) {
+    expect(orderId).toBe(prepareOrderUpdateRequest.orderId)
+  }
+  // Check order stock to be equal sell amount
+  // const nextStock = toBigNumber(orderRequest.amount.toString())
+  // return await awaitOrderStock(sdk, orderId, nextStock)
 
-	return await retry(10, 3000, async () => {
-		const order = await sdk.apis.order.getOrderById({ id: orderId })
-		expect(order.makePrice?.toString()).toEqual(orderUpdateRequest.price.toString())
-		return order
-	})
+  return await retry(10, 3000, async () => {
+    const order = await sdk.apis.order.getOrderById({ id: orderId })
+    expect(order.makePrice?.toString()).toEqual(orderUpdateRequest.price.toString())
+    return order
+  })
 }

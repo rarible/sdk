@@ -5,16 +5,16 @@ import { Warning } from "@rarible/logger/build"
  * @param date
  */
 export function convertDateToTimestamp(date: Date): number {
-	if (!(date && isDate(date))) {
-		throw new Warning("convertDateToTimestamp: expected Date type")
-	}
-	return Math.floor(date.getTime() / 1000)
+  if (!(date && isDate(date))) {
+    throw new Warning("convertDateToTimestamp: expected Date type")
+  }
+  return Math.floor(date.getTime() / 1000)
 }
 
 export function isDate(x: unknown): x is Date {
-	return x instanceof Date
+  return x instanceof Date
 }
 
 export function getDefaultExpirationDateTimestamp(): number {
-	return convertDateToTimestamp(new Date()) + 60 * 60 * 24 * 30
+  return convertDateToTimestamp(new Date()) + 60 * 60 * 24 * 30
 }

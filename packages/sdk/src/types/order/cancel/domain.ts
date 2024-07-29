@@ -3,7 +3,7 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { Action } from "@rarible/action"
 
 export type CancelOrderRequest = {
-	orderId: OrderId
+  orderId: OrderId
 }
 
 /**

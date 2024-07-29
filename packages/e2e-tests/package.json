@@ -1,35 +1,30 @@
 {
   "name": "@rarible/sdk-e2e-tests",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "private": true,
   "homepage": "",
   "license": "ISC",
   "scripts": {
-    "test": "echo run e2e-test to run e2e-tests",
     "e2e-tests": "jest --runInBand",
     "e2e-tests-all": "jest --runInBand --forceExit --testPathPattern=tests",
     "e2e-tests-ethereum": "jest --runInBand --forceExit --testPathPattern=tests/ethereum/smoke",
-    "e2e-tests-tezos": "jest --runInBand --forceExit --testPathPattern=tests/tezos/smoke",
-    "e2e-tests-solana": "jest --runInBand --forceExit --testPathPattern=tests/solana/smoke",
     "e2e-tests-flow": "jest --runInBand --forceExit --testPathPattern=tests/flow/smoke",
+    "e2e-tests-solana": "jest --runInBand --forceExit --testPathPattern=tests/solana/smoke",
+    "e2e-tests-tezos": "jest --runInBand --forceExit --testPathPattern=tests/tezos/smoke",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "test": "echo run e2e-test to run e2e-tests",
     "verify": "tsc --noEmit"
   },
   "dependencies": {
-    "@rarible/api-client": "0.16.5-alpha.12",
-    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.22",
+    "@rarible/api-client": "0.16.5-alpha.13",
+    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.41",
     "@rarible/flow-test-common": "~0.5.75-fix.1",
-    "@rarible/sdk-wallet": "^0.13.68-fix.22",
-    "@rarible/types": "~0.9.26",
-    "bignumber.js": "^9.0.1",
-    "jest-jasmine2": "^29.4.1"
+    "@rarible/sdk-wallet": "^0.13.68-fix.41",
+    "@rarible/types": "~0.9.29",
+    "bignumber.js": "^9.0.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.4.0",
-    "dotenv": "16.0.0",
-    "jest": "^29.4.1",
     "jest-allure": "^0.1.3",
-    "npm-run-all": "^4.1.5",
-    "ts-jest": "^29.0.5"
+    "jest-jasmine2": "^29.4.1"
   }
 }

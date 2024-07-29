@@ -19,73 +19,80 @@ import { deployCollectionDeployRequest } from "../../common/defaults"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	deployRequest: CreateCollectionRequestSimplified,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	currency: string,
-	sellRequest: (currency: RequestCurrency) => Promise<OrderRequest>
+  blockchain: Blockchain
+  description: string
+  wallets: { seller: BlockchainWallet; buyer: BlockchainWallet }
+  deployRequest: CreateCollectionRequestSimplified
+  mintRequest: (address: UnionAddress) => MintRequest
+  currency: string
+  sellRequest: (currency: RequestCurrency) => Promise<OrderRequest>
 }[] {
-	return [
-		{
-			blockchain: Blockchain.SOLANA,
-			description: "NFT <=> SOLANA_SOL",
-			wallets: {
-				seller: getSolanaWallet(0),
-				buyer: getSolanaWallet(1),
-			},
-			deployRequest: deployCollectionDeployRequest,
-			mintRequest: (walletAddress: UnionAddress): MintRequest => {
-				return {
-					uri: testsConfig.variables.SOLANA_URI,
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			currency: "SOLANA_SOL",
-			sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
-				return {
-					amount: 1,
-					price: toBigNumber("0.001"),
-					currency: currency,
-				}
-			},
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.SOLANA,
+      description: "NFT <=> SOLANA_SOL",
+      wallets: {
+        seller: getSolanaWallet(0),
+        buyer: getSolanaWallet(1),
+      },
+      deployRequest: deployCollectionDeployRequest,
+      mintRequest: (walletAddress: UnionAddress): MintRequest => {
+        return {
+          uri: testsConfig.variables.SOLANA_URI,
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      currency: "SOLANA_SOL",
+      sellRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+        return {
+          amount: 1,
+          price: toBigNumber("0.001"),
+          currency: currency,
+        }
+      },
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain mint => sell => cancel", (suite) => {
-	const { seller: sellerWallet } = suite.wallets
-	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
+describe.each(suites())("$blockchain mint => sell => cancel", suite => {
+  const { seller: sellerWallet } = suite.wallets
+  const sellerSdk = createSdk(suite.blockchain, sellerWallet)
 
-	test(suite.description, async () => {
-		const sellerWalletAddress = await getWalletAddressFull(sellerWallet)
+  test(suite.description, async () => {
+    const sellerWalletAddress = await getWalletAddressFull(sellerWallet)
 
-		const { address: collectionId } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
-		const collection = await getCollection(sellerSdk, collectionId)
+    const { address: collectionId } = await createCollection(sellerSdk, sellerWallet, suite.deployRequest)
+    const collection = await getCollection(sellerSdk, collectionId)
 
-		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
-			suite.mintRequest(sellerWalletAddress.unionAddress))
+    const { nft } = await mint(
+      sellerSdk,
+      sellerWallet,
+      { collection },
+      suite.mintRequest(sellerWalletAddress.unionAddress),
+    )
 
-		const requestCurrency = await getCurrency(suite.wallets, suite.currency)
-		const orderRequest = await suite.sellRequest(requestCurrency)
+    const requestCurrency = await getCurrency(suite.wallets, suite.currency)
+    const orderRequest = await suite.sellRequest(requestCurrency)
 
-		const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
+    const sellOrder = await sell(sellerSdk, sellerWallet, { itemId: nft.id }, orderRequest)
 
-		await getActivitiesByItem(sellerSdk, nft.id,
-			[ActivityType.LIST],
-			[ActivityType.LIST])
+    await getActivitiesByItem(sellerSdk, nft.id, [ActivityType.LIST], [ActivityType.LIST])
 
-		await cancel(sellerSdk, sellerWallet, { orderId: sellOrder.id })
+    await cancel(sellerSdk, sellerWallet, { orderId: sellOrder.id })
 
-		await getActivitiesByItem(sellerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.LIST, ActivityType.CANCEL_LIST],
-			[ActivityType.LIST, ActivityType.MINT, ActivityType.CANCEL_LIST])
-	})
+    await getActivitiesByItem(
+      sellerSdk,
+      nft.id,
+      [ActivityType.MINT, ActivityType.LIST, ActivityType.CANCEL_LIST],
+      [ActivityType.LIST, ActivityType.MINT, ActivityType.CANCEL_LIST],
+    )
+  })
 })

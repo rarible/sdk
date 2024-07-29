@@ -1,0 +1,7 @@
+{
+  "extends": "../../../../tsconfig.new.json",
+  "include": ["src/**/*"],
+  "compilerOptions": {
+    "lib": ["dom", "es2015"]
+  }
+}

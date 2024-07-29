@@ -5,32 +5,32 @@ import { DisconnectedStatus } from "./Statuses/disconnected-status"
 import { ConnectStatus } from "./Statuses/connection-status"
 
 function ConnectionStatus() {
-	const connection = useSdkContext()
+  const connection = useSdkContext()
 
-	switch (connection.state.status) {
-		case "connected":
-			return <ConnectedStatus state={connection.state}/>
-		case "disconnected":
-			return <DisconnectedStatus/>
-		case "connecting":
-			return <ConnectStatus status={"Connecting..."}/>
-		case "initializing":
-		default:
-			return null
-	}
+  switch (connection.state.status) {
+    case "connected":
+      return <ConnectedStatus state={connection.state} />
+    case "disconnected":
+      return <DisconnectedStatus />
+    case "connecting":
+      return <ConnectStatus status={"Connecting..."} />
+    case "initializing":
+    default:
+      return null
+  }
 }
 
 export function Header() {
-	return (
-		<AppBar position={"static"}>
-			<Container maxWidth={"xl"} disableGutters>
-				<Toolbar>
-					<Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-						Rarible SDK Example
-					</Typography>
-					<ConnectionStatus/>
-				</Toolbar>
-			</Container>
-		</AppBar>
-	)
+  return (
+    <AppBar position={"static"}>
+      <Container maxWidth={"xl"} disableGutters>
+        <Toolbar>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+            Rarible SDK Example
+          </Typography>
+          <ConnectionStatus />
+        </Toolbar>
+      </Container>
+    </AppBar>
+  )
 }

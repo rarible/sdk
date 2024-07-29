@@ -1,9 +1,13 @@
 import { Blockchain } from "@rarible/api-client"
-import type { TestSuiteHookedProvider, TestSuiteProviderDictionary, TestSuiteSDKConfig } from "../../../../common/suite/domain"
+import type {
+  TestSuiteHookedProvider,
+  TestSuiteProviderDictionary,
+  TestSuiteSDKConfig,
+} from "../../../../common/suite/domain"
 
-export const evmSuiteSupportedBlockchains = [Blockchain.ETHEREUM, Blockchain.POLYGON] as const
+export const evmSuiteSupportedBlockchains = [Blockchain.ETHEREUM] as const
 
-export type EVMSuiteSupportedBlockchain = typeof evmSuiteSupportedBlockchains[number]
+export type EVMSuiteSupportedBlockchain = (typeof evmSuiteSupportedBlockchains)[number]
 
 export type EVMSuiteProvider<T extends EVMSuiteSupportedBlockchain> = TestSuiteProviderDictionary[T]
 

@@ -13,59 +13,50 @@ import type { Item } from "./types"
 import { isErc1155Item, isErc721Item } from "./item"
 import { ItemType, MAX_INT } from "./constants"
 
-export const approvedItemAmount = async (
-	ethereum: Ethereum,
-	owner: string,
-	item: Item,
-	operator: string,
-) => {
-	if (isErc721Item(item.itemType) || isErc1155Item(item.itemType)) {
-		const erc721 = createErc721Contract(ethereum, toAddress(item.token))
-		const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
-		return allowance ? MAX_INT : toBn(0)
+export const approvedItemAmount = async (ethereum: Ethereum, owner: string, item: Item, operator: string) => {
+  if (isErc721Item(item.itemType) || isErc1155Item(item.itemType)) {
+    const erc721 = createErc721Contract(ethereum, toAddress(item.token))
+    const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
+    return allowance ? MAX_INT : toBn(0)
+  } else if (item.itemType === ItemType.ERC20) {
+    const erc20 = createErc20Contract(ethereum, toAddress(item.token))
+    return await erc20.functionCall("allowance", owner, operator).call()
+  }
 
-	} else if (item.itemType === ItemType.ERC20) {
-
-		const erc20 = createErc20Contract(ethereum, toAddress(item.token))
-		return await erc20.functionCall("allowance", owner, operator).call()
-
-	}
-
-	// We don't need to check approvals for native tokens
-	return MAX_INT
+  // We don't need to check approvals for native tokens
+  return MAX_INT
 }
 
 /**
  * Get approval actions given a list of insufficent approvals.
  */
 export function getApprovalActions(
-	ethereum: Ethereum,
-	send: SendFunction,
-	insufficientApprovals: InsufficientApprovals,
-	wrapperAddress?: Address
+  ethereum: Ethereum,
+  send: SendFunction,
+  insufficientApprovals: InsufficientApprovals,
+  wrapperAddress?: Address,
 ): Promise<EthereumTransaction[]> {
-	return Promise.all(
-		insufficientApprovals
-			.filter(
-				(approval, index) =>
-					index === insufficientApprovals.length - 1 ||
-          insufficientApprovals[index + 1].token !== approval.token
-			)
-			.map(async ({ token, operator, itemType }) => {
-				if (isErc721Item(itemType)) {
-					const erc721 = createErc721Contract(ethereum, toAddress(token))
-					return send(erc721.functionCall("setApprovalForAll", operator, true))
-				} else if (isErc1155Item(itemType)) {
-					const erc1155 = createErc1155Contract(ethereum, toAddress(token))
-					return send(erc1155.functionCall("setApprovalForAll", operator, true))
-				} else {
-					const erc20 = createErc20Contract(ethereum, toAddress(token))
-					return send(erc20.functionCall("approve", wrapperAddress ?? operator, MAX_INT.toFixed()))
-				}
-			})
-			.map(async tx => {
-				await waitTx(tx)
-				return tx
-			})
-	)
+  return Promise.all(
+    insufficientApprovals
+      .filter(
+        (approval, index) =>
+          index === insufficientApprovals.length - 1 || insufficientApprovals[index + 1].token !== approval.token,
+      )
+      .map(async ({ token, operator, itemType }) => {
+        if (isErc721Item(itemType)) {
+          const erc721 = createErc721Contract(ethereum, toAddress(token))
+          return send(erc721.functionCall("setApprovalForAll", operator, true))
+        } else if (isErc1155Item(itemType)) {
+          const erc1155 = createErc1155Contract(ethereum, toAddress(token))
+          return send(erc1155.functionCall("setApprovalForAll", operator, true))
+        } else {
+          const erc20 = createErc20Contract(ethereum, toAddress(token))
+          return send(erc20.functionCall("approve", wrapperAddress ?? operator, MAX_INT.toFixed()))
+        }
+      })
+      .map(async tx => {
+        await waitTx(tx)
+        return tx
+      }),
+  )
 }

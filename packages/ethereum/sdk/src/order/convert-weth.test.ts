@@ -12,74 +12,72 @@ import { createWethContract } from "./contracts/weth"
  * @group provider/ganache
  */
 describe("convert weth test", () => {
-	const { addresses, provider } = createGanacheProvider()
-	const [sender1Address] = addresses
-	const web3 = new Web3(provider as any)
-	const ethereum = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-	const config = getEthereumConfig("dev-ethereum")
-	const getConfig = async () => config
+  const { addresses, provider } = createGanacheProvider()
+  const [sender1Address] = addresses
+  const web3 = new Web3(provider as any)
+  const ethereum = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
+  const config = getEthereumConfig("dev-ethereum")
+  const getConfig = async () => config
 
-	const send = getSimpleSendWithInjects()
-	const converter = new ConvertWeth(ethereum, send, getConfig)
+  const send = getSimpleSendWithInjects()
+  const converter = new ConvertWeth(ethereum, send, getConfig)
 
-	const it = awaitAll({
-		deployWeth: deployWethContract(web3),
-	})
+  const it = awaitAll({
+    deployWeth: deployWethContract(web3),
+  })
 
-	test("convert eth to weth test", async () => {
-		config.weth = toAddress(it.deployWeth.options.address)
+  test("convert eth to weth test", async () => {
+    config.weth = toAddress(it.deployWeth.options.address)
 
-		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
+    const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
 
-		const startEthBalance = await web3.eth.getBalance(sender1Address)
-		const startBalance = await contract.functionCall("balanceOf", sender1Address).call()
+    const startEthBalance = await web3.eth.getBalance(sender1Address)
+    const startBalance = await contract.functionCall("balanceOf", sender1Address).call()
 
-		const tx = await converter.convert(
-			{ assetClass: "ETH" },
-			{ assetClass: "ERC20", contract: await converter.getWethContractAddress() },
-			toBn("0.1"),
-		)
-		await tx.wait()
+    const tx = await converter.convert(
+      { assetClass: "ETH" },
+      { assetClass: "ERC20", contract: await converter.getWethContractAddress() },
+      toBn("0.1"),
+    )
+    await tx.wait()
 
-		const finishBalance = await contract.functionCall("balanceOf", sender1Address).call()
-		const finishEthBalance = await web3.eth.getBalance(sender1Address)
+    const finishBalance = await contract.functionCall("balanceOf", sender1Address).call()
+    const finishEthBalance = await web3.eth.getBalance(sender1Address)
 
-		const diff = toBn(finishBalance).minus(startBalance)
-		const diffInEth = toBn(startEthBalance).minus(finishEthBalance)
+    const diff = toBn(finishBalance).minus(startBalance)
+    const diffInEth = toBn(startEthBalance).minus(finishEthBalance)
 
-		expect(diff.toString()).toBe("100000000000000000")
-		expect(diffInEth.gte("100000000000000000")).toBeTruthy()
-	})
+    expect(diff.toString()).toBe("100000000000000000")
+    expect(diffInEth.gte("100000000000000000")).toBeTruthy()
+  })
 
-	test("convert weth to eth test", async () => {
-		config.weth = toAddress(it.deployWeth.options.address)
-		const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
-		const tx = await converter.convert(
-			{ assetClass: "ETH" },
-			{ assetClass: "ERC20", contract: await converter.getWethContractAddress() },
-			toBn("0.2")
-		)
-		await tx.wait()
+  test("convert weth to eth test", async () => {
+    config.weth = toAddress(it.deployWeth.options.address)
+    const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
+    const tx = await converter.convert(
+      { assetClass: "ETH" },
+      { assetClass: "ERC20", contract: await converter.getWethContractAddress() },
+      toBn("0.2"),
+    )
+    await tx.wait()
 
-		const initWethBalance = await contract.functionCall("balanceOf", sender1Address).call()
-		const tx1 = await converter.convert(
-			{ assetClass: "ERC20", contract: await converter.getWethContractAddress() },
-			{ assetClass: "ETH" },
-			toBn("0.1")
-		)
-		await tx1.wait()
+    const initWethBalance = await contract.functionCall("balanceOf", sender1Address).call()
+    const tx1 = await converter.convert(
+      { assetClass: "ERC20", contract: await converter.getWethContractAddress() },
+      { assetClass: "ETH" },
+      toBn("0.1"),
+    )
+    await tx1.wait()
 
-		const finishWethBalance = await contract.functionCall("balanceOf", sender1Address).call()
-		const diff = toBn(initWethBalance).minus(finishWethBalance)
-		expect(diff.toString()).toBe("100000000000000000")
-	})
+    const finishWethBalance = await contract.functionCall("balanceOf", sender1Address).call()
+    const diff = toBn(initWethBalance).minus(finishWethBalance)
+    expect(diff.toString()).toBe("100000000000000000")
+  })
 
-	test("should throw error in case of unsupported contract", async () => {
-		const fakeAddress = toAddress("0x0000000000000000000000000000000000000000")
-		expect(() => converter.convert(
-			{ assetClass: "ETH" },
-			{ assetClass: "ERC20", contract: fakeAddress },
-			toBn("0.1")
-		)).rejects.toThrowError(`Contract is not supported - ${fakeAddress}`)
-	})
+  test("should throw error in case of unsupported contract", async () => {
+    const fakeAddress = toAddress("0x0000000000000000000000000000000000000000")
+    expect(() =>
+      converter.convert({ assetClass: "ETH" }, { assetClass: "ERC20", contract: fakeAddress }, toBn("0.1")),
+    ).rejects.toThrowError(`Contract is not supported - ${fakeAddress}`)
+  })
 })

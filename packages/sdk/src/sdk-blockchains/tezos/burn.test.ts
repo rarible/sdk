@@ -8,103 +8,102 @@ import { createTestWallet } from "./test/test-wallet"
 import { getTestContract } from "./test/test-contracts"
 
 describe.skip("burn test", () => {
-	const env: RaribleSdkEnvironment = "testnet"
-	const sellerWallet = createTestWallet(
-		"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-    "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-		env
-	)
-	const sdk = createSdk(sellerWallet, env)
+  const env: RaribleSdkEnvironment = "testnet"
+  const sellerWallet = createTestWallet(
+    "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+    env,
+  )
+  const sdk = createSdk(sellerWallet, env)
 
-	const nftContract: string = getTestContract(env, "nftContract")
-	const mtContract: string = getTestContract(env, "mtContract")
+  const nftContract: string = getTestContract(env, "nftContract")
+  const mtContract: string = getTestContract(env, "mtContract")
 
-	test("burn NFT token test", async () => {
-		const mintResponse = await sdk.nft.mint.prepare({
-			collectionId: toCollectionId(nftContract),
-		})
-		const mintResult = await mintResponse.submit({
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-			lazyMint: false,
-		})
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
-		await awaitItem(sdk, mintResult.itemId)
+  test("burn NFT token test", async () => {
+    const mintResponse = await sdk.nft.mint.prepare({
+      collectionId: toCollectionId(nftContract),
+    })
+    const mintResult = await mintResponse.submit({
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+      lazyMint: false,
+    })
+    if (mintResult.type === MintType.ON_CHAIN) {
+      await mintResult.transaction.wait()
+    }
+    await awaitItem(sdk, mintResult.itemId)
 
-		const transfer = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
+    const transfer = await sdk.nft.burn.prepare({ itemId: mintResult.itemId })
 
-		const result = await transfer.submit({ amount: 1 })
+    const result = await transfer.submit({ amount: 1 })
 
-		if (result) {
-		  await result.wait()
-		}
+    if (result) {
+      await result.wait()
+    }
 
-		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
-	}, 1500000)
+    await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("0"))
+  }, 1500000)
 
-	test("burn MT token test", async () => {
-		const mintResponse = await sdk.nft.mint.prepare({
-			collectionId: toCollectionId(mtContract),
-		})
-		const mintResult = await mintResponse.submit({
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 10,
-			lazyMint: false,
-		})
-		if (mintResult.type === MintType.ON_CHAIN) {
-			await mintResult.transaction.wait()
-		}
+  test("burn MT token test", async () => {
+    const mintResponse = await sdk.nft.mint.prepare({
+      collectionId: toCollectionId(mtContract),
+    })
+    const mintResult = await mintResponse.submit({
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 10,
+      lazyMint: false,
+    })
+    if (mintResult.type === MintType.ON_CHAIN) {
+      await mintResult.transaction.wait()
+    }
 
-		await awaitItem(sdk, mintResult.itemId)
+    await awaitItem(sdk, mintResult.itemId)
 
-		const transfer = await sdk.nft.burn.prepare({
-			itemId: mintResult.itemId,
-		})
-		const result = await transfer.submit({ amount: 5 })
-		if (result) {
-		  await result.wait()
-		}
+    const transfer = await sdk.nft.burn.prepare({
+      itemId: mintResult.itemId,
+    })
+    const result = await transfer.submit({ amount: 5 })
+    if (result) {
+      await result.wait()
+    }
 
-		await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
-	}, 1500000)
+    await awaitItemSupply(sdk, mintResult.itemId, toBigNumber("5"))
+  }, 1500000)
 
-	test("burn NFT token with basic function", async () => {
-		const mintResult = await sdk.nft.mint({
-			collectionId: toCollectionId(nftContract),
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-		})
-		await mintResult.transaction.wait()
-		await awaitItem(sdk, mintResult.itemId)
+  test("burn NFT token with basic function", async () => {
+    const mintResult = await sdk.nft.mint({
+      collectionId: toCollectionId(nftContract),
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+    })
+    await mintResult.transaction.wait()
+    await awaitItem(sdk, mintResult.itemId)
 
-		const burnTx = await sdk.nft.burn({
-			itemId: mintResult.itemId,
-			amount: 1,
-		})
-		if (burnTx) {
-			await burnTx.wait()
-		}
-		await awaitItemSupply(sdk, mintResult.itemId, "0")
-	}, 1500000)
+    const burnTx = await sdk.nft.burn({
+      itemId: mintResult.itemId,
+      amount: 1,
+    })
+    if (burnTx) {
+      await burnTx.wait()
+    }
+    await awaitItemSupply(sdk, mintResult.itemId, "0")
+  }, 1500000)
 
-	test("burn NFT token test with basic function", async () => {
-		const mintResult = await sdk.nft.mint({
-			collectionId: toCollectionId(nftContract),
-			uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
-			supply: 1,
-		})
-		await mintResult.transaction.wait()
-		await awaitItem(sdk, mintResult.itemId)
+  test("burn NFT token test with basic function", async () => {
+    const mintResult = await sdk.nft.mint({
+      collectionId: toCollectionId(nftContract),
+      uri: "ipfs://bafkreiaz7n5zj2qvtwmqnahz7rwt5h37ywqu7znruiyhwuav3rbbxzert4",
+      supply: 1,
+    })
+    await mintResult.transaction.wait()
+    await awaitItem(sdk, mintResult.itemId)
 
-		const transferResult = await sdk.nft.burn({
-			itemId: mintResult.itemId,
-		})
+    const transferResult = await sdk.nft.burn({
+      itemId: mintResult.itemId,
+    })
 
-		if (transferResult) {
-			await transferResult.wait()
-		}
+    if (transferResult) {
+      await transferResult.wait()
+    }
 
-		await awaitItemSupply(sdk, mintResult.itemId, "0")
-	}, 1500000)
+    await awaitItemSupply(sdk, mintResult.itemId, "0")
+  }, 1500000)
 })

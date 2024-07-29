@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-solana",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -10,12 +10,14 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.22",
-    "@rarible/solana-common": "^0.13.68-fix.22"
+    "@rarible/connector": "^0.13.68-fix.41",
+    "@rarible/solana-common": "^0.13.68-fix.41"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.54.0",

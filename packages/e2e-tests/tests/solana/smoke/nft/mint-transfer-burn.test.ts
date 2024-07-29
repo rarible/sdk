@@ -18,88 +18,99 @@ import { deployCollectionDeployRequest } from "../../common/defaults"
 import { createCollection } from "../../../common/atoms-tests/create-collection"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallets: { creator: BlockchainWallet, recipient: BlockchainWallet },
-	deployRequest: CreateCollectionRequestSimplified,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	transferRequest: (address: UnionAddress) => TransferRequest,
-	creatorBalanceAfterTransfer: string,
-	recipientBalanceAfterTransfer: string
-	burnRequest: BurnRequest,
-	totalBalanceAfterBurn: number
+  blockchain: Blockchain
+  description: string
+  wallets: { creator: BlockchainWallet; recipient: BlockchainWallet }
+  deployRequest: CreateCollectionRequestSimplified
+  mintRequest: (address: UnionAddress) => MintRequest
+  transferRequest: (address: UnionAddress) => TransferRequest
+  creatorBalanceAfterTransfer: string
+  recipientBalanceAfterTransfer: string
+  burnRequest: BurnRequest
+  totalBalanceAfterBurn: number
 }[] {
-	return [
-		{
-			blockchain: Blockchain.SOLANA,
-			description: "NFT",
-			wallets: {
-				creator: getSolanaWallet(0),
-				recipient: getSolanaWallet(1),
-			},
-			deployRequest: deployCollectionDeployRequest,
-			mintRequest: (walletAddress: UnionAddress): MintRequest => {
-				return {
-					uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			transferRequest: (walletAddress: UnionAddress): TransferRequest => {
-				return {
-					to: walletAddress,
-					amount: 1,
-				}
-			},
-			creatorBalanceAfterTransfer: "0",
-			recipientBalanceAfterTransfer: "1",
-			burnRequest: {
-				amount: 1,
-				creators: [],
-			},
-			totalBalanceAfterBurn: 0,
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.SOLANA,
+      description: "NFT",
+      wallets: {
+        creator: getSolanaWallet(0),
+        recipient: getSolanaWallet(1),
+      },
+      deployRequest: deployCollectionDeployRequest,
+      mintRequest: (walletAddress: UnionAddress): MintRequest => {
+        return {
+          uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      transferRequest: (walletAddress: UnionAddress): TransferRequest => {
+        return {
+          to: walletAddress,
+          amount: 1,
+        }
+      },
+      creatorBalanceAfterTransfer: "0",
+      recipientBalanceAfterTransfer: "1",
+      burnRequest: {
+        amount: 1,
+        creators: [],
+      },
+      totalBalanceAfterBurn: 0,
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain mint => transfer => burn", (suite) => {
-	const {
-		creator: creatorWallet,
-		recipient: recipientWallet,
-	} = suite.wallets
-	const creatorSdk = createSdk(suite.blockchain, creatorWallet)
-	const recipientSdk = createSdk(suite.blockchain, recipientWallet)
+describe.each(suites())("$blockchain mint => transfer => burn", suite => {
+  const { creator: creatorWallet, recipient: recipientWallet } = suite.wallets
+  const creatorSdk = createSdk(suite.blockchain, creatorWallet)
+  const recipientSdk = createSdk(suite.blockchain, recipientWallet)
 
-	test(suite.description, async () => {
-		const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
-		const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
+  test(suite.description, async () => {
+    const creatorWalletAddress = await getWalletAddressFull(creatorWallet)
+    const recipientWalletAddress = await getWalletAddressFull(recipientWallet)
 
-		const { address: collectionId } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
-		const collection = await getCollectionById(creatorSdk, collectionId)
+    const { address: collectionId } = await createCollection(creatorSdk, creatorWallet, suite.deployRequest)
+    const collection = await getCollectionById(creatorSdk, collectionId)
 
-		const { nft } = await mint(creatorSdk, creatorWallet, { collection },
-			suite.mintRequest(creatorWalletAddress.unionAddress))
+    const { nft } = await mint(
+      creatorSdk,
+      creatorWallet,
+      { collection },
+      suite.mintRequest(creatorWalletAddress.unionAddress),
+    )
 
-		await transfer(creatorSdk, { itemId: nft.id },
-			suite.transferRequest(recipientWalletAddress.unionAddress))
+    await transfer(creatorSdk, { itemId: nft.id }, suite.transferRequest(recipientWalletAddress.unionAddress))
 
-		await awaitForOwnershipValue(recipientSdk, nft.id, recipientWalletAddress.address,
-			toBigNumber(suite.recipientBalanceAfterTransfer))
+    await awaitForOwnershipValue(
+      recipientSdk,
+      nft.id,
+      recipientWalletAddress.address,
+      toBigNumber(suite.recipientBalanceAfterTransfer),
+    )
 
-		await getActivitiesByItem(creatorSdk, nft.id,
-			[ActivityType.MINT, ActivityType.TRANSFER],
-			[ActivityType.MINT, ActivityType.TRANSFER])
+    await getActivitiesByItem(
+      creatorSdk,
+      nft.id,
+      [ActivityType.MINT, ActivityType.TRANSFER],
+      [ActivityType.MINT, ActivityType.TRANSFER],
+    )
 
-		await burn(recipientSdk, { itemId: nft.id }, suite.burnRequest, suite.totalBalanceAfterBurn)
+    await burn(recipientSdk, { itemId: nft.id }, suite.burnRequest, suite.totalBalanceAfterBurn)
 
-		await getActivitiesByItem(creatorSdk, nft.id,
-			[ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
-			[ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN])
-
-	})
+    await getActivitiesByItem(
+      creatorSdk,
+      nft.id,
+      [ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
+      [ActivityType.MINT, ActivityType.TRANSFER, ActivityType.BURN],
+    )
+  })
 })

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-torus",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -10,20 +10,15 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.22",
+    "@rarible/connector": "^0.13.68-fix.41",
     "@toruslabs/torus-embed": "^1.19.0"
-  },
-  "devDependencies": {
-    "@babel/runtime": "^7.0.0",
-    "@types/jest": "^27.0.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
-    "ts-jest": "^27.0.3"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

@@ -1,0 +1,10 @@
+{
+  "extends": "../../../../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "build",
+    "module": "CommonJS",
+    "lib": ["dom", "es2015"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"]
+}

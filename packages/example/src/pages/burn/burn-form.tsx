@@ -8,66 +8,64 @@ import { RequestResult } from "../../components/common/request-result"
 import { useSdkContext } from "../../components/connector/sdk"
 
 interface IBurnFormProps {
-	disabled?: boolean
-	onComplete: (response: any) => void
-	prepare: PrepareBurnResponse
+  disabled?: boolean
+  onComplete: (response: any) => void
+  prepare: PrepareBurnResponse
 }
 
 export function BurnForm({ disabled, onComplete, prepare }: IBurnFormProps) {
-	const connection = useSdkContext()
-	const form = useForm()
-	const { handleSubmit } = form
-	const { result, setError } = useRequestResult()
+  const connection = useSdkContext()
+  const form = useForm()
+  const { handleSubmit } = form
+  const { result, setError } = useRequestResult()
 
-	return (
-		<>
-			<Alert severity="warning" sx={{ my: 2 }}>
-				<AlertTitle>Warning</AlertTitle>
-				Submitting this form will destroy token
-			</Alert>
-			<form onSubmit={handleSubmit(async (formData) => {
-				if (!connection.sdk) {
-					return
-				}
+  return (
+    <>
+      <Alert severity="warning" sx={{ my: 2 }}>
+        <AlertTitle>Warning</AlertTitle>
+        Submitting this form will destroy token
+      </Alert>
+      <form
+        onSubmit={handleSubmit(async formData => {
+          if (!connection.sdk) {
+            return
+          }
 
-				try {
-					onComplete(await prepare.submit({
-						amount: parseInt(formData.amount),
-					}))
-				} catch (e) {
-					setError(e)
-				}
-			})}
-			>
-				<Stack spacing={2}>
-					<FormTextInput
-						type="number"
-						inputProps={{
-							min: 1,
-							max: prepare.maxAmount,
-							step: 1,
-						}}
-						form={form}
-						options={{
-							min: 1,
-							max: Number(prepare.maxAmount),
-						}}
-						name="amount"
-						label="Amount"
-					/>
-					<Box>
-						<FormSubmit
-							form={form}
-							label="Burn"
-							state={resultToState(result.type)}
-							disabled={disabled}
-						/>
-					</Box>
-				</Stack>
-			</form>
-			<Box sx={{ my: 2 }}>
-				<RequestResult result={result}/>
-			</Box>
-		</>
-	)
+          try {
+            onComplete(
+              await prepare.submit({
+                amount: parseInt(formData.amount),
+              }),
+            )
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Stack spacing={2}>
+          <FormTextInput
+            type="number"
+            inputProps={{
+              min: 1,
+              max: prepare.maxAmount,
+              step: 1,
+            }}
+            form={form}
+            options={{
+              min: 1,
+              max: Number(prepare.maxAmount),
+            }}
+            name="amount"
+            label="Amount"
+          />
+          <Box>
+            <FormSubmit form={form} label="Burn" state={resultToState(result.type)} disabled={disabled} />
+          </Box>
+        </Stack>
+      </form>
+      <Box sx={{ my: 2 }}>
+        <RequestResult result={result} />
+      </Box>
+    </>
+  )
 }

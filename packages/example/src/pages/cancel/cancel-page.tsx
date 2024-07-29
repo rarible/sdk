@@ -11,50 +11,47 @@ import { CancelComment } from "./comments/cancel-comment"
 import { CancelForm } from "./cancel-form"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
-	return !!blockchain
+  return !!blockchain
 }
 
 export function CancelPage() {
-	const connection = useSdkContext()
-	const blockchain = connection.sdk.wallet?.walletType
+  const connection = useSdkContext()
+  const blockchain = connection.sdk.wallet?.walletType
 
-	return (
-		<Page header="Cancel Order">
-			{
-				!validateConditions(blockchain) && (
-					<CommentedBlock sx={{ my: 2 }}>
-						<UnsupportedBlockchainWarning blockchain={blockchain}/>
-					</CommentedBlock>
-				)
-			}
-			<CommentedBlock sx={{ my: 2 }} comment={<CancelComment/>}>
-				<FormStepper
-					steps={[
-						{
-							label: "Send Transaction",
-							render: (onComplete) => {
-								return <CancelForm
-									onComplete={onComplete}
-									disabled={!validateConditions(blockchain)}
-								/>
-							},
-						},
-						{
-							label: "Done",
-							render: (onComplete, lastResponse) => {
-								return <RequestResult
-									result={{ type: "complete", data: lastResponse }}
-									completeRender={(data) =>
-										<Box sx={{ my: 2 }}>
-											<TransactionInfo transaction={data}/>
-										</Box>
-									}
-								/>
-							},
-						},
-					]}
-				/>
-			</CommentedBlock>
-		</Page>
-	)
+  return (
+    <Page header="Cancel Order">
+      {!validateConditions(blockchain) && (
+        <CommentedBlock sx={{ my: 2 }}>
+          <UnsupportedBlockchainWarning blockchain={blockchain} />
+        </CommentedBlock>
+      )}
+      <CommentedBlock sx={{ my: 2 }} comment={<CancelComment />}>
+        <FormStepper
+          steps={[
+            {
+              label: "Send Transaction",
+              render: onComplete => {
+                return <CancelForm onComplete={onComplete} disabled={!validateConditions(blockchain)} />
+              },
+            },
+            {
+              label: "Done",
+              render: (onComplete, lastResponse) => {
+                return (
+                  <RequestResult
+                    result={{ type: "complete", data: lastResponse }}
+                    completeRender={data => (
+                      <Box sx={{ my: 2 }}>
+                        <TransactionInfo transaction={data} />
+                      </Box>
+                    )}
+                  />
+                )
+              },
+            },
+          ]}
+        />
+      </CommentedBlock>
+    </Page>
+  )
 }

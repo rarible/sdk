@@ -7,24 +7,19 @@ import { convertFromContractAddress, getRequiredProvider } from "./common"
 import type { MaybeProvider } from "./common"
 
 export class TezosTokenId {
-	constructor(
-		private provider: MaybeProvider<TezosProvider>,
-	) {
-		this.generateTokenId = this.generateTokenId.bind(this)
-	}
+  constructor(private provider: MaybeProvider<TezosProvider>) {
+    this.generateTokenId = this.generateTokenId.bind(this)
+  }
 
-	async generateTokenId({ collection }: GenerateTokenIdRequest): Promise<TokenId> {
-		const tokenId = await get_next_token_id(
-			getRequiredProvider(this.provider),
-			convertFromContractAddress(collection)
-		)
-		return {
-			tokenId: tokenId.toString(),
-			signature: {
-				v: 0,
-				r: toBinary("0"),
-				s: toBinary("0"),
-			},
-		}
-	}
+  async generateTokenId({ collection }: GenerateTokenIdRequest): Promise<TokenId> {
+    const tokenId = await get_next_token_id(getRequiredProvider(this.provider), convertFromContractAddress(collection))
+    return {
+      tokenId: tokenId.toString(),
+      signature: {
+        v: 0,
+        r: toBinary("0"),
+        s: toBinary("0"),
+      },
+    }
+  }
 }

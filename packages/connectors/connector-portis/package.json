@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-portis",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -10,18 +10,14 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@portis/web3": "^4.0.7",
-    "@rarible/connector": "^0.13.68-fix.22"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
-    "ts-jest": "^27.0.3"
+    "@rarible/connector": "^0.13.68-fix.41"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-provider",
-  "version": "0.13.68-fix.22",
+  "version": "0.13.68-fix.41",
   "description": "Library to abstract from web3.js or ethers.js",
   "keywords": [
     "ethereum",
@@ -11,7 +11,9 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "echo \"There's no tests yet\"",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },

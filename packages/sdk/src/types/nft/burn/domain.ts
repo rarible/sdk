@@ -2,35 +2,43 @@ import type { ItemId } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { BigNumber } from "@rarible/types/build/big-number"
 import type { Creator } from "@rarible/api-client/build/models/Creator"
+import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 export type PrepareBurnRequest = {
-	itemId: ItemId
+  itemId: ItemId
 }
 
 export type BurnRequest = {
-	/**
+  /**
    * Number of NFTs to burn
    */
-	amount?: number
-	/**
+  amount?: number
+  /**
    * Item creators
    */
-	creators?: Creator[]
+  creators?: Creator[]
 } | void
 
 export type BurnResponse = IBlockchainTransaction | void
 
-export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, BurnResponse>{
-	/**
+export interface PrepareBurnResponse extends AbstractPrepareResponse<"burn", BurnRequest, BurnResponse> {
+  /**
    * Is supports multiple values
    */
-	multiple: boolean
+  multiple: boolean
 
-	/**
+  /**
    * Maximum amount to burn
    */
-	maxAmount: BigNumber
+  maxAmount: BigNumber
+
+  /**
+   * Nft data
+   */
+  nftData: {
+    nftCollection: ContractAddress | undefined
+  }
 }
 
 /**
