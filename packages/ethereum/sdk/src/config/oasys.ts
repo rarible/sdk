@@ -11,9 +11,9 @@ export const oasysConfig: EthereumConfig = {
   blockchain: Blockchain.OASYS,
   exchange: {
     v1: ZERO_ADDRESS,
-    v2: toAddress(""),
+    v2: toAddress("0xfD79EF502b5b97E86804A9359fE5Ba48AB3658c5"),
     openseaV1: ZERO_ADDRESS,
-    wrapper: toAddress(""),
+    wrapper: toAddress("0xa3af07132CeA0573880B25d4f89653ab87774c4c"),
     looksrare: ZERO_ADDRESS,
     looksrareV2: ZERO_ADDRESS,
     x2y2: ZERO_ADDRESS,
