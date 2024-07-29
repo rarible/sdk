@@ -45,6 +45,6 @@ export const testnetOasysConfig: EthereumConfig = {
     pairFactory: ZERO_ADDRESS,
     pairRouter: ZERO_ADDRESS,
   },
-  weth: toAddress("0x60AB68d22291481de7C4C09cEEe1875d09C23f77"),
+  weth: toAddress("0x5200000000000000000000000000000000000001"),
   auction: ZERO_ADDRESS,
 }
