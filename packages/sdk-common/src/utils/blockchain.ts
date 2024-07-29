@@ -15,6 +15,8 @@ export const EVMBlockchains = [
   Blockchain.XAI,
   Blockchain.KROMA,
   Blockchain.CELO,
+  Blockchain.SAAKURU,
+  Blockchain.OASYS,
   Blockchain.SEI,
   Blockchain.MOONBEAM,
   Blockchain.PALM,

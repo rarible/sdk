@@ -41,6 +41,10 @@ import { moonbeamTestnetConfig } from "./moonbeam-testnet"
 import { moonbeamMainnetConfig } from "./moonbeam"
 import { etherlinkTestnetConfig } from "./etherlink-testnet"
 import { etherlinkConfig } from "./etherlink"
+import { testnetSaakuruConfig } from "./testnet-saakuru"
+import { saakuruConfig } from "./saakuru"
+import { testnetOasysConfig } from "./testnet-oasys"
+import { oasysConfig } from "./oasys"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -74,6 +78,10 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   "testnet-fief": fiefTestnetConfig,
   "testnet-kroma": kromaTestnetConfig,
   kroma: kromaConfig,
+  "testnet-saakuru": testnetSaakuruConfig,
+  saakuru: saakuruConfig,
+  "testnet-oasys": testnetOasysConfig,
+  oasys: oasysConfig,
   "sei-arctic-1": seiArctic1Config,
   "sei-pacific-1": seiPacific1Config,
   "moonbeam-testnet": moonbeamTestnetConfig,

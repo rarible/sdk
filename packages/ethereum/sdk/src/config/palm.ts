@@ -1,4 +1,4 @@
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
