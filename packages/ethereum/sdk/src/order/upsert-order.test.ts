@@ -1,6 +1,6 @@
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eProvider, awaitAll, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
+import { awaitAll, createE2eProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import { getEthereumConfig } from "../config"
 import { createTestProviders } from "../common/test/create-test-providers"
@@ -49,17 +49,7 @@ describe.each(providers)("upsertOrder", ethereum => {
       signature: toBinary("0x"),
       end: Date.now() + 1000 * 60 * 60 * 24 * 30,
     }
-    const upserter = new UpsertOrder(
-      orderService,
-      send,
-      getConfig,
-      checkLazyOrder,
-      approve,
-      sign,
-      getApis,
-      ethereum,
-      ZERO_WORD,
-    )
+    const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, sign, getApis, ethereum)
 
     const result = await upserter.upsert({ order })
     expect(result.hash).toBeTruthy()
@@ -81,17 +71,7 @@ describe.each(providers)("upsertOrder", ethereum => {
       payouts: [],
       originFees: [],
     }
-    const upserter = new UpsertOrder(
-      orderService,
-      send,
-      getConfig,
-      checkLazyOrder,
-      approve,
-      sign,
-      getApis,
-      ethereum,
-      ZERO_WORD,
-    )
+    const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, sign, getApis, ethereum)
 
     const price = await upserter.getPrice(request, request.takeAssetType)
     expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
@@ -114,17 +94,7 @@ describe.each(providers)("upsertOrder", ethereum => {
       payouts: [],
       originFees: [],
     }
-    const upserter = new UpsertOrder(
-      orderService,
-      send,
-      getConfig,
-      checkLazyOrder,
-      approve,
-      sign,
-      getApis,
-      ethereum,
-      ZERO_WORD,
-    )
+    const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, sign, getApis, ethereum)
 
     const price = await upserter.getPrice(request, request.takeAssetType)
     expect(price.valueOf()).toBe(MIN_PAYMENT_VALUE.toFixed())
@@ -137,17 +107,7 @@ describe.each(providers)("upsertOrder", ethereum => {
       return apis
     }
 
-    const upserter = new UpsertOrder(
-      orderService,
-      send,
-      getConfig,
-      checkLazyOrder,
-      approve,
-      sign,
-      getApis,
-      ethereum,
-      ZERO_WORD,
-    )
+    const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, sign, getApis, ethereum)
     const request = {
       maker: toAddress(wallet.getAddressString()),
       make: {
