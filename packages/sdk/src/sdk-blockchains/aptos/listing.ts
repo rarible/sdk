@@ -54,8 +54,8 @@ export class AptosListing {
               createFeeSchedule: this.sdk.order.createFeeSchedule,
             }),
             aptosItem.creators[0].account.replace("APTOS:", ""), // todo Irina prettify
-            aptosItem.itemCollection?.name ?? "",
-            "Crypto Cats N2", // todo Irina get from item
+            aptosItem.itemCollection?.name ?? "", // todo Irina aptosItem.extra["onChainCollectionName"]
+            "Crypto Cats N2", // todo Irina aptosItem.extra["onChainTokenName"]
             aptosItem.extra["propertyVersionV1"],
             startTime,
             toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
