@@ -1,6 +1,6 @@
 import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { OrderId } from "@rarible/api-client"
+import { Blockchain, OrderId } from "@rarible/api-client"
 import { Action } from "@rarible/action"
 import { extractId } from "@rarible/sdk-common"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
@@ -34,6 +34,8 @@ export class AptosListing {
       id: "send-tx" as const,
       run: async (request: OrderCommon.OrderInternalRequest) => {
         const aptosItemId = extractId(request.itemId)
+        const aptosItem = await this.apis.item.getItemById({ itemId: `${Blockchain.APTOS}:${aptosItemId}` })
+
         if (request.originFees && request.originFees.length > 1) {
           throw new Error("Origin fees should consist only 1 item")
         }
@@ -42,16 +44,34 @@ export class AptosListing {
           throw new Error("Only native token currency is available for sell operation")
         }
         const startTime = Math.floor(Date.now() / 1000)
-        const objectAddress = await this.sdk.order.sell(
-          aptosItemId,
-          await getFeeObject({
-            originFees: request.originFees || [],
-            defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
-            createFeeSchedule: this.sdk.order.createFeeSchedule,
-          }),
-          startTime,
-          toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
-        )
+
+        let objectAddress
+        if (aptosItem?.extra?.propertyVersionV1 !== undefined) {
+          objectAddress = await this.sdk.order.sellV1(
+            await getFeeObject({
+              originFees: request.originFees || [],
+              defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
+              createFeeSchedule: this.sdk.order.createFeeSchedule,
+            }),
+            aptosItem.creators[0].account.replace("APTOS:", ""), // todo Irina prettify
+            aptosItem.itemCollection?.name ?? "",
+            "Crypto Cats N2", // todo Irina get from item
+            aptosItem.extra["propertyVersionV1"],
+            startTime,
+            toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
+          )
+        } else {
+          objectAddress = await this.sdk.order.sell(
+            aptosItemId,
+            await getFeeObject({
+              originFees: request.originFees || [],
+              defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
+              createFeeSchedule: this.sdk.order.createFeeSchedule,
+            }),
+            startTime,
+            toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
+          )
+        }
         return convertAptosToUnionOrderId(objectAddress)
       },
     })

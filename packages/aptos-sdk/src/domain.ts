@@ -26,6 +26,15 @@ export interface AptosBalanceSdk {
 
 export interface AptosOrderSdk {
   sell(tokenAddress: string, feeObjectAddress: string, startTime: number, price: string): Promise<string>
+  sellV1(
+    feeObjectAddress: string,
+    creatorAddress: string | undefined,
+    collectionName: string,
+    tokenName: string,
+    propertyVersion: string,
+    startTime: number,
+    price: string,
+  ): Promise<string>
 
   buy(listing: string): Promise<CommittedTransactionResponse>
 

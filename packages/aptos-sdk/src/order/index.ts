@@ -53,6 +53,28 @@ export class AptosOrder implements AptosOrderSdk {
     return normalizeAptosAddress(change.address)
   }
 
+  sellV1 = async (
+    feeObjectAddress: string,
+    creatorAddress: string | undefined,
+    collectionName: string,
+    tokenName: string,
+    propertyVersion: string,
+    startTime: number,
+    price: string,
+  ) => {
+    const rawTx = {
+      function: `${this.config.marketplaceAddress}::coin_listing::init_fixed_price_for_tokenv1`,
+      typeArguments: [APT_TOKEN_TYPE],
+      arguments: [creatorAddress, collectionName, tokenName, propertyVersion, feeObjectAddress, startTime, price],
+    }
+    const tx = await this.sendAndWaitTx(rawTx)
+    const change = tx.changes.find(change => isChangeBelongsToType(change, type => type.includes("listing::Listing")))
+    if (!change || !("address" in change)) {
+      throw new Error("Address has not been found")
+    }
+    return normalizeAptosAddress(change.address)
+  }
+
   getListingTokenType = async (listing: string) => {
     const listingObject = await this.aptos.getAccountResources({
       accountAddress: listing,
