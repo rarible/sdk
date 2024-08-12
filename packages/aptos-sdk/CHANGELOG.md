@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.43](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.43) (2024-08-12)
+
+### Features
+
+- aptos v1 orders ([08c33f1](https://github.com/rarible/sdk/commit/08c33f1fee0f0d7a1c2d6ff36dbc9691193326e8))
+- introduce sellV1 method ([7c84a7f](https://github.com/rarible/sdk/commit/7c84a7fd883415236860b0092d87efc1b7c730e4))
+- v1 aptos token support ([8cdb9c7](https://github.com/rarible/sdk/commit/8cdb9c7b2eff2f8a792d5c13e63c85adc56d2970))
+
 ## [0.13.68-fix.42](https://github.com/rarible/sdk/compare/v0.13.68-fix.41...v0.13.68-fix.42) (2024-07-29)
 
 ### Features
