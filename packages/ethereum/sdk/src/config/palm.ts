@@ -1,4 +1,4 @@
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { EthereumConfig } from "./type"
 import { extendConfig } from "./utils"
@@ -10,7 +10,7 @@ export const palmMainnetConfig: EthereumConfig = extendConfig({
   blockchain: Blockchain.PALM,
   exchange: {
     v2: toAddress("0x5faf16A85028BE138A7178B222DeC98092FEEF97"),
-    wrapper: ZERO_ADDRESS,
+    wrapper: toAddress("0xF965237c6b3f89f8C62B45b94097899E3562A830"),
   },
   transferProxies: {
     nft: toAddress("0xF65eF65a95821A16E02973b1C2200FA58898e3c0"),

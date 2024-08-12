@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.42](https://github.com/rarible/sdk/compare/v0.13.68-fix.41...v0.13.68-fix.42) (2024-07-29)
+
+### Features
+
+- **PLTF-429:** Saakuru blockchain support ([#623](https://github.com/rarible/sdk/issues/623)) ([aa3f54c](https://github.com/rarible/sdk/commit/aa3f54cc963d9b6fa9776b8c5c7f32aa0f740617))
+
+## [0.13.68-fix.41](https://github.com/rarible/sdk/compare/v0.13.68-fix.40...v0.13.68-fix.41) (2024-07-26)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
+## [0.13.68-fix.40](https://github.com/rarible/sdk/compare/v0.13.68-fix.39...v0.13.68-fix.40) (2024-07-24)
+
+**Note:** Version bump only for package @rarible/sdk-e2e-tests
+
 ## [0.13.68-fix.39](https://github.com/rarible/sdk/compare/v0.13.68-fix.38...v0.13.68-fix.39) (2024-07-22)
 
 **Note:** Version bump only for package @rarible/sdk-e2e-tests

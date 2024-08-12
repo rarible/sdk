@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-aptos",
-  "version": "0.13.68-fix.39",
+  "version": "0.13.68-fix.42",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -17,8 +17,8 @@
   },
   "dependencies": {
     "@rarible/api-client": "0.18.0-alpha.2",
-    "@rarible/connector": "^0.13.68-fix.39",
-    "@rarible/types": "~0.9.29"
+    "@rarible/connector": "^0.13.68-fix.42",
+    "@rarible/types": "~0.9.30"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

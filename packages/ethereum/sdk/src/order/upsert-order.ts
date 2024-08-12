@@ -47,37 +47,14 @@ export type UpsertOrderAction = Action<UpsertOrderStageId, UpsertOrderActionArg,
 export type HasOrder = { orderHash: Word } | { order: SimpleOrder }
 export type HasPrice = { price: BigNumberValue } | { priceDecimal: BigNumberValue }
 
-export type OrderRequestV2 = {
-  type: "DATA_V2"
+export type OrderRequest = {
+  type: "DATA_V2" | "DATA_V3"
   maker?: Address
   payouts: Part[]
   originFees: Part[]
   start?: number
   end: number
 }
-
-export type OrderRequestV3Sell = {
-  type: "DATA_V3_SELL"
-  maker?: Address
-  payout: Part
-  originFeeFirst?: Part
-  originFeeSecond?: Part
-  maxFeesBasePoint: number
-  start?: number
-  end: number
-}
-
-export type OrderRequestV3Buy = {
-  type: "DATA_V3_BUY"
-  maker?: Address
-  payout?: Part
-  originFeeFirst?: Part
-  originFeeSecond?: Part
-  start?: number
-  end: number
-}
-
-export type OrderRequest = OrderRequestV2 | OrderRequestV3Buy | OrderRequestV3Sell
 
 export class UpsertOrder {
   constructor(
@@ -89,7 +66,6 @@ export class UpsertOrder {
     private readonly signOrder: (order: SimpleOrder) => Promise<Binary>,
     private readonly getApis: () => Promise<RaribleEthereumApis>,
     private readonly ethereum: Maybe<Ethereum>,
-    private readonly marketplaceMarker: Word | undefined,
   ) {}
 
   readonly upsert = Action.create({
@@ -168,23 +144,12 @@ export class UpsertOrder {
           isMakeFill,
         }
         break
-      case "DATA_V3_BUY":
+      case "DATA_V3":
         data = {
-          dataType: "RARIBLE_V2_DATA_V3_BUY",
-          payout: request.payout,
-          originFeeFirst: request.originFeeFirst,
-          originFeeSecond: request.originFeeSecond,
-          marketplaceMarker: this.marketplaceMarker,
-        }
-        break
-      case "DATA_V3_SELL":
-        data = {
-          dataType: "RARIBLE_V2_DATA_V3_SELL",
-          payout: request.payout,
-          originFeeFirst: request.originFeeFirst,
-          originFeeSecond: request.originFeeSecond,
-          marketplaceMarker: this.marketplaceMarker,
-          maxFeesBasePoint: request.maxFeesBasePoint,
+          dataType: "RARIBLE_V2_DATA_V3",
+          payouts: request.payouts,
+          originFees: request.originFees,
+          isMakeFill,
         }
         break
       default:

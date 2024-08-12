@@ -51,13 +51,20 @@ export class AptosBid {
           ? convertDateToTimestamp(request.expirationDate)
           : getDefaultExpirationDateTimestamp()
 
+        const collection = await this.apis.collection.getCollectionById({
+          collection: item ? item.collection! : prepareCollectionId!,
+        })
+
         if ("itemId" in prepare) {
-          if (item?.extra?.propertyVersionV1 !== undefined) {
+          if (collection.extra?.standard === "v1") {
+            if (!item?.extra) {
+              throw new Error("No extra field in API item")
+            }
             const orderId = await this.sdk.order.tokenOfferV1(
-              item.creators[0].account,
-              item.itemCollection!.name,
-              item.meta!.name,
-              item.extra["propertyVersionV1"],
+              extractId(item.creators[0].account),
+              item.extra!.onChainCollectionName,
+              item.extra!.onChainTokenName,
+              item.extra.propertyVersionV1,
               feeObject,
               toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
               expirationDate,
@@ -73,10 +80,9 @@ export class AptosBid {
             return convertAptosToUnionOrderId(orderId)
           }
         } else if ("collectionId" in prepare) {
-          const collection = await this.apis.collection.getCollectionById({ collection: prepare.collectionId })
-          if (collection.extra?.propertyVersionV1 !== undefined) {
+          if (collection.extra?.standard === "v1") {
             const orderId = await this.sdk.order.collectionOfferV1(
-              collection.owner,
+              extractId(collection.owner!),
               collection.name,
               feeObject,
               toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
@@ -142,13 +148,15 @@ export class AptosBid {
             throw new Error("ItemId property mustn't be empty")
           }
           const itemId = buyRequest.itemId
-          // @todo not sure about this
           const item = await this.apis.item.getItemById({ itemId })
-          if (item.extra?.propertyVersionV1 !== undefined) {
+          const collection = await this.apis.collection.getCollectionById({
+            collection: item.collection!,
+          })
+          if (collection.extra?.standard === "v1") {
             const tx = await this.sdk.order.acceptCollectionOfferV1(
               extractId(orderId),
-              item.meta?.name,
-              item.extra?.propertyVersionV1,
+              item.extra!.onChainTokenName,
+              item.extra!.propertyVersionV1,
             )
             return new BlockchainAptosTransaction(tx, this.network, this.sdk)
           } else {
@@ -157,6 +165,20 @@ export class AptosBid {
           }
         }
         if (order.take.type["@type"] === "NFT") {
+          const item = await this.apis.item.getItemById({
+            itemId: order.take.type.itemId,
+          })
+          const collection = await this.apis.collection.getCollectionById({
+            collection: item.collection!,
+          })
+          if (collection.extra?.standard === "v1") {
+            const tx = await this.sdk.order.acceptTokenOfferV1(
+              extractId(orderId),
+              item.extra!.onChainTokenName,
+              item.extra!.propertyVersionV1,
+            )
+            return new BlockchainAptosTransaction(tx, this.network, this.sdk)
+          }
           const tx = await this.sdk.order.acceptTokenOffer(extractId(orderId))
           return new BlockchainAptosTransaction(tx, this.network, this.sdk)
         }

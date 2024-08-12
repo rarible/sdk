@@ -1,6 +1,5 @@
 import { toBn } from "@rarible/utils"
 import type { EVMBlockchain } from "@rarible/sdk-common"
-import { Blockchain } from "@rarible/api-client"
 import { configDictionary, getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 

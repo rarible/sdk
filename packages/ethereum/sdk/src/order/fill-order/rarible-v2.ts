@@ -1,6 +1,6 @@
 import type { Address } from "@rarible/ethereum-api-client"
-import type { Ethereum, EthereumFunctionCall, EthereumSendOptions } from "@rarible/ethereum-provider"
-import { ZERO_ADDRESS, ZERO_WORD } from "@rarible/types"
+import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
+import { ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types/build/maybe"
 import { hashToSign, orderToStruct, signOrder } from "../sign-order"
 import { getAssetWithFee } from "../get-asset-with-fee"
@@ -11,12 +11,10 @@ import { waitTx } from "../../common/wait-tx"
 import type { SimpleOrder, SimpleRaribleV2Order } from "../types"
 import { isSigner } from "../../common/is-signer"
 import { fixSignature } from "../../common/fix-signature"
-import type { IRaribleEthereumSdkConfig } from "../../types"
-import { assetTypeToStruct } from "../asset-type-to-struct"
-import { encodeRaribleV2OrderData } from "../encode-rarible-v2-order-data"
 import { isETH, isWeth } from "../../nft/common"
 import type { GetConfigByChainId } from "../../config"
 import { getNetworkConfigByChainId } from "../../config"
+import { CURRENT_ORDER_TYPE_VERSION } from "../../common/order"
 import { encodeRaribleV2OrderPurchaseStruct } from "./rarible-v2/encode-rarible-v2-order"
 import { invertOrder } from "./invert-order"
 import type {
@@ -25,8 +23,7 @@ import type {
   PreparedOrderRequestDataForExchangeWrapper,
   RaribleV2OrderFillRequest,
   RaribleV2OrderFillRequestV2,
-  RaribleV2OrderFillRequestV3Buy,
-  RaribleV2OrderFillRequestV3Sell,
+  RaribleV2OrderFillRequestV3,
 } from "./types"
 import { ExchangeWrapperOrderType } from "./types"
 import { setFeesCurrency, ZERO_FEE_VALUE } from "./common/origin-fees-utils"
@@ -36,11 +33,10 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     private readonly ethereum: Maybe<Ethereum>,
     private readonly send: SendFunction,
     private readonly getConfig: GetConfigByChainId,
-    private readonly getBaseOrderFeeConfig: (type: SimpleOrder["type"]) => Promise<number>,
-    private readonly sdkConfig?: IRaribleEthereumSdkConfig,
+    private readonly getBaseFee: (type: SimpleOrder["type"]) => Promise<number>,
   ) {}
 
-  invert(request: RaribleV2OrderFillRequest, maker: Address): SimpleRaribleV2Order {
+  async invert(request: RaribleV2OrderFillRequest, maker: Address): Promise<SimpleRaribleV2Order> {
     const inverted = invertOrder(request.order, request.amount, maker)
     switch (request.order.data.dataType) {
       case "RARIBLE_V2_DATA_V1": {
@@ -52,32 +48,22 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         break
       }
       case "RARIBLE_V2_DATA_V2": {
+        const v3 = await this.shouldUseV3(request)
         inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V2",
+          dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
           originFees: (request as RaribleV2OrderFillRequestV2).originFees || [],
           payouts: (request as RaribleV2OrderFillRequestV2).payouts || [],
           isMakeFill: !request.order.data.isMakeFill,
         }
         break
       }
-      case "RARIBLE_V2_DATA_V3_BUY": {
+      case "RARIBLE_V2_DATA_V3": {
+        const v3 = await this.shouldUseV3(request)
         inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V3_SELL",
-          payout: (request as RaribleV2OrderFillRequestV3Sell).payout,
-          originFeeFirst: (request as RaribleV2OrderFillRequestV3Sell).originFeeFirst,
-          originFeeSecond: (request as RaribleV2OrderFillRequestV3Sell).originFeeSecond,
-          maxFeesBasePoint: (request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint,
-          marketplaceMarker: (request as RaribleV2OrderFillRequestV3Sell).marketplaceMarker,
-        }
-        break
-      }
-      case "RARIBLE_V2_DATA_V3_SELL": {
-        inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V3_BUY",
-          payout: (request as RaribleV2OrderFillRequestV3Buy).payout,
-          originFeeFirst: (request as RaribleV2OrderFillRequestV3Buy).originFeeFirst,
-          originFeeSecond: (request as RaribleV2OrderFillRequestV3Buy).originFeeSecond,
-          marketplaceMarker: (request as RaribleV2OrderFillRequestV3Buy).marketplaceMarker,
+          dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
+          originFees: (request as RaribleV2OrderFillRequestV3).originFees || [],
+          payouts: (request as RaribleV2OrderFillRequestV3).payouts || [],
+          isMakeFill: !request.order.data.isMakeFill,
         }
         break
       }
@@ -85,6 +71,17 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         throw new Error("Unsupported order dataType")
     }
     return inverted
+  }
+
+  private async shouldUseV3(request: RaribleV2OrderFillRequest): Promise<boolean> {
+    const originFees = (request.originFees || []).reduce((sum, prev) => sum + prev.value, 0)
+    //should not use v3 as order doesn't have fees, so protocol also should not take any fees
+    if (originFees === 0) {
+      return false
+    }
+    const baseFee = await this.getBaseFee(CURRENT_ORDER_TYPE_VERSION)
+    //if base fee is non-zero, then use v3 (with protocol fees), otherwise use v2 (without fees)
+    return baseFee !== 0
   }
 
   getAssetToApprove(inverted: SimpleRaribleV2Order) {
@@ -105,73 +102,19 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     const config = await this.getConfig()
     const exchangeContract = createExchangeV2Contract(this.ethereum, config.exchange.v2)
 
-    if (isSellOrder(initial)) {
-      const nftStruct = assetTypeToStruct(this.ethereum, initial.make.assetType)
-      const [sellOrderDataType, sellOrderData] = encodeRaribleV2OrderData(this.ethereum, initial.data)
-      const [, buyOrderData] = encodeRaribleV2OrderData(this.ethereum, inverted.data)
+    const functionCall = exchangeContract.functionCall(
+      "matchOrders",
+      await this.fixForTx(initial),
+      fixSignature(initial.signature) || "0x",
+      orderToStruct(this.ethereum, inverted),
+      fixSignature(inverted.signature) || "0x",
+    )
 
-      const functionCall = exchangeContract.functionCall("directPurchase", {
-        sellOrderMaker: initial.maker,
-        sellOrderNftAmount: initial.make.value,
-        nftAssetClass: nftStruct.assetClass,
-        nftData: nftStruct.data,
-        sellOrderPaymentAmount: initial.take.value,
-        paymentToken: initial.take.assetType.assetClass === "ETH" ? ZERO_ADDRESS : initial.take.assetType.contract,
-        sellOrderSalt: initial.salt,
-        sellOrderStart: initial.start ?? 0,
-        sellOrderEnd: initial.end ?? 0,
-        sellOrderDataType: sellOrderDataType,
-        sellOrderData: sellOrderData,
-        sellOrderSignature: fixSignature(initial.signature) || "0x",
-        buyOrderPaymentAmount: inverted.make.value,
-        buyOrderNftAmount: inverted.take.value,
-        buyOrderData: buyOrderData,
-      })
-      const options = await this.getMatchV2Options(initial, inverted)
+    const options = await this.getMatchV2Options(initial, inverted)
 
-      return {
-        functionCall,
-        options,
-      }
-    } else {
-      let functionCall: EthereumFunctionCall
-      if (isCollectionOrder(initial)) {
-        functionCall = exchangeContract.functionCall(
-          "matchOrders",
-          await this.fixForTx(initial),
-          fixSignature(initial.signature) || "0x",
-          orderToStruct(this.ethereum, inverted),
-          fixSignature(inverted.signature) || "0x",
-        )
-      } else {
-        const nftStruct = assetTypeToStruct(this.ethereum, initial.take.assetType)
-        const [, sellOrderData] = encodeRaribleV2OrderData(this.ethereum, inverted.data)
-        const [buyOrderDataType, buyOrderData] = encodeRaribleV2OrderData(this.ethereum, initial.data)
-
-        functionCall = exchangeContract.functionCall("directAcceptBid", {
-          bidMaker: initial.maker,
-          bidNftAmount: initial.take.value,
-          nftAssetClass: nftStruct.assetClass,
-          nftData: nftStruct.data,
-          bidPaymentAmount: initial.make.value,
-          paymentToken: initial.make.assetType.assetClass === "ETH" ? ZERO_ADDRESS : initial.make.assetType.contract,
-          bidSalt: initial.salt,
-          bidStart: initial.start ?? 0,
-          bidEnd: initial.end ?? 0,
-          bidDataType: buyOrderDataType,
-          bidData: buyOrderData,
-          bidSignature: fixSignature(initial.signature) || "0x",
-          sellOrderPaymentAmount: inverted.take.value,
-          sellOrderNftAmount: inverted.make.value,
-          sellOrderData: sellOrderData,
-        })
-      }
-      const options = await this.getMatchV2Options(initial, inverted)
-
-      return {
-        functionCall,
-        options,
-      }
+    return {
+      functionCall,
+      options,
     }
   }
 
@@ -188,7 +131,11 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     }
 
     // fix payouts to send bought item to buyer
-    if (inverted.data.dataType === "RARIBLE_V2_DATA_V1" || inverted.data.dataType === "RARIBLE_V2_DATA_V2") {
+    if (
+      inverted.data.dataType === "RARIBLE_V2_DATA_V1" ||
+      inverted.data.dataType === "RARIBLE_V2_DATA_V2" ||
+      inverted.data.dataType === "RARIBLE_V2_DATA_V3"
+    ) {
       if (!inverted.data.payouts?.length) {
         inverted.data.payouts = [
           {
@@ -196,16 +143,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
             value: 10000,
           },
         ]
-      }
-    } else if (
-      inverted.data.dataType === "RARIBLE_V2_DATA_V3_BUY" ||
-      inverted.data.dataType === "RARIBLE_V2_DATA_V3_SELL"
-    ) {
-      if (!inverted.data.payout) {
-        inverted.data.payout = {
-          account: inverted.maker,
-          value: 10000,
-        }
       }
     }
 
@@ -261,31 +198,24 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     switch (order.data.dataType) {
       case "RARIBLE_V2_DATA_V1":
       case "RARIBLE_V2_DATA_V2":
-        return order.data.originFees.map(f => f.value).reduce((v, acc) => v + acc, 0) + (await this.getBaseOrderFee())
-      case "RARIBLE_V2_DATA_V3_BUY":
-      case "RARIBLE_V2_DATA_V3_SELL":
+      case "RARIBLE_V2_DATA_V3":
         return (
-          (order.data.originFeeFirst?.value ?? 0) +
-          (order.data.originFeeSecond?.value ?? 0) +
-          (await this.getBaseOrderFee())
+          order.data.originFees.map(f => f.value).reduce((v, acc) => v + acc, 0) +
+          (await this.getBaseFeeByData(order.data))
         )
       default:
         throw new Error("Unsupported order dataType")
     }
   }
 
-  async getBaseOrderFee(): Promise<number> {
-    return this.getBaseOrderFeeConfig("RARIBLE_V2")
+  getBaseOrderFee(order: RaribleV2OrderFillRequest["order"]): Promise<number> | number {
+    return this.getBaseFeeByData(order.data)
   }
-}
 
-/**
- * Check if order selling something for currency
- */
-function isSellOrder(order: SimpleOrder): boolean {
-  return order.take.assetType.assetClass === "ETH" || order.take.assetType.assetClass === "ERC20"
-}
-
-function isCollectionOrder(order: SimpleOrder): boolean {
-  return order.take.assetType.assetClass === "COLLECTION"
+  async getBaseFeeByData(data: RaribleV2OrderFillRequest["order"]["data"]): Promise<number> {
+    if (data.dataType === "RARIBLE_V2_DATA_V3") {
+      return this.getBaseFee("RARIBLE_V2")
+    }
+    return 0
+  }
 }

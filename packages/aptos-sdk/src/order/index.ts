@@ -19,6 +19,7 @@ export class AptosOrder implements AptosOrderSdk {
     this.sendAndWaitTx = this.sendAndWaitTx.bind(this)
     this.getListingTokenType = this.getListingTokenType.bind(this)
     this.sell = this.sell.bind(this)
+    this.sellV1 = this.sellV1.bind(this)
     this.buy = this.buy.bind(this)
     this.cancel = this.cancel.bind(this)
     this.collectionOffer = this.collectionOffer.bind(this)
@@ -30,6 +31,7 @@ export class AptosOrder implements AptosOrderSdk {
     this.tokenOfferV1 = this.tokenOfferV1.bind(this)
     this.cancelTokenOffer = this.cancelTokenOffer.bind(this)
     this.acceptTokenOffer = this.acceptTokenOffer.bind(this)
+    this.acceptTokenOfferV1 = this.acceptTokenOfferV1.bind(this)
   }
 
   private async sendAndWaitTx(tx: AptosTransaction): Promise<CommittedTransactionResponse> {
@@ -164,7 +166,7 @@ export class AptosOrder implements AptosOrderSdk {
     endTime: number,
   ) => {
     const rawTx = {
-      function: `${this.config.marketplaceAddress}::collection_offer::init_for_tokenv2_entry`,
+      function: `${this.config.marketplaceAddress}::collection_offer::init_for_tokenv1_entry`,
       typeArguments: [APT_TOKEN_TYPE],
       arguments: [creatorAddress, collectionName, feeObjectAddress, price, amount, endTime],
     }
@@ -201,7 +203,7 @@ export class AptosOrder implements AptosOrderSdk {
 
   async acceptCollectionOfferV1(offer: string, tokenName: string, propertyVersion: string) {
     const rawTx = {
-      function: `${this.config.marketplaceAddress}::collection_offer::sell_tokenv1`,
+      function: `${this.config.marketplaceAddress}::collection_offer::sell_tokenv1_entry`,
       typeArguments: [APT_TOKEN_TYPE],
       arguments: [offer, tokenName, propertyVersion],
     }
@@ -275,7 +277,7 @@ export class AptosOrder implements AptosOrderSdk {
 
   async acceptTokenOfferV1(offer: string, tokenName: String, propertyVersion: string) {
     const rawTx = {
-      function: `${this.config.marketplaceAddress}::token_offer::sell_tokenv1`,
+      function: `${this.config.marketplaceAddress}::token_offer::sell_tokenv1_entry`,
       typeArguments: [APT_TOKEN_TYPE],
       arguments: [offer, tokenName, propertyVersion],
     }

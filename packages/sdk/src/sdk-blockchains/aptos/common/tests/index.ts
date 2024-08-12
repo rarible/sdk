@@ -15,7 +15,7 @@ export async function createAndWaitForCollection(sdk: IRaribleSdk) {
     uri: "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/",
   })
   await response.tx.wait()
-  await retry(10, 4000, () => sdk.apis.collection.getCollectionById({ collection: response.address }))
+  await retry(20, 4000, () => sdk.apis.collection.getCollectionById({ collection: response.address }))
   return response.address
 }
 

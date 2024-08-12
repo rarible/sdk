@@ -1,4 +1,6 @@
 import type { EthereumNetwork } from "../types"
+import { liskMainnetConfig } from "./lisk"
+import { liskSepoliaConfig } from "./lisk-sepolia"
 import { mainnetConfig } from "./mainnet"
 import { palmMainnetConfig } from "./palm"
 import { palmTestnetConfig } from "./palm-testnet"
@@ -39,6 +41,10 @@ import { moonbeamTestnetConfig } from "./moonbeam-testnet"
 import { moonbeamMainnetConfig } from "./moonbeam"
 import { etherlinkTestnetConfig } from "./etherlink-testnet"
 import { etherlinkConfig } from "./etherlink"
+import { testnetSaakuruConfig } from "./testnet-saakuru"
+import { saakuruConfig } from "./saakuru"
+import { testnetOasysConfig } from "./testnet-oasys"
+import { oasysConfig } from "./oasys"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -72,6 +78,10 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   "testnet-fief": fiefTestnetConfig,
   "testnet-kroma": kromaTestnetConfig,
   kroma: kromaConfig,
+  "testnet-saakuru": testnetSaakuruConfig,
+  saakuru: saakuruConfig,
+  "testnet-oasys": testnetOasysConfig,
+  oasys: oasysConfig,
   "sei-arctic-1": seiArctic1Config,
   "sei-pacific-1": seiPacific1Config,
   "moonbeam-testnet": moonbeamTestnetConfig,
@@ -80,6 +90,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   palm: palmMainnetConfig,
   "etherlink-testnet": etherlinkTestnetConfig,
   etherlink: etherlinkConfig,
+  "lisk-sepolia": liskSepoliaConfig,
+  lisk: liskMainnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {

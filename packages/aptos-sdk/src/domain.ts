@@ -80,6 +80,8 @@ export interface AptosOrderSdk {
 
   acceptTokenOffer(offer: string): Promise<CommittedTransactionResponse>
 
+  acceptTokenOfferV1(offer: string, tokenName: string, propertyVersion: string): Promise<CommittedTransactionResponse>
+
   cancelTokenOffer(offer: string): Promise<CommittedTransactionResponse>
 
   getFeeScheduleAddress: () => string

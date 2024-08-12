@@ -1,6 +1,7 @@
 import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import { Blockchain, OrderId } from "@rarible/api-client"
+import type { OrderId } from "@rarible/api-client"
+import { Blockchain } from "@rarible/api-client"
 import { Action } from "@rarible/action"
 import { extractId } from "@rarible/sdk-common"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
@@ -35,6 +36,9 @@ export class AptosListing {
       run: async (request: OrderCommon.OrderInternalRequest) => {
         const aptosItemId = extractId(request.itemId)
         const aptosItem = await this.apis.item.getItemById({ itemId: `${Blockchain.APTOS}:${aptosItemId}` })
+        const aptosCollection = await this.apis.collection.getCollectionById({
+          collection: aptosItem.collection!,
+        })
 
         if (request.originFees && request.originFees.length > 1) {
           throw new Error("Origin fees should consist only 1 item")
@@ -46,17 +50,21 @@ export class AptosListing {
         const startTime = Math.floor(Date.now() / 1000)
 
         let objectAddress
-        if (aptosItem?.extra?.propertyVersionV1 !== undefined) {
+        if (aptosCollection.extra?.standard === "v1") {
+          if (!aptosItem.extra) {
+            throw new Error("No extra field in API item")
+          }
+          const firstCreator = extractId(aptosItem.creators[0].account)
           objectAddress = await this.sdk.order.sellV1(
             await getFeeObject({
               originFees: request.originFees || [],
               defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
               createFeeSchedule: this.sdk.order.createFeeSchedule,
             }),
-            aptosItem.creators[0].account.replace("APTOS:", ""), // todo Irina prettify
-            aptosItem.itemCollection?.name ?? "", // todo Irina aptosItem.extra["onChainCollectionName"]
-            "Crypto Cats N2", // todo Irina aptosItem.extra["onChainTokenName"]
-            aptosItem.extra["propertyVersionV1"],
+            firstCreator,
+            aptosItem.extra.onChainCollectionName,
+            aptosItem.extra.onChainTokenName,
+            aptosItem.extra.propertyVersionV1,
             startTime,
             toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
           )

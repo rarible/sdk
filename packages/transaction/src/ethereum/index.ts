@@ -96,6 +96,14 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://blockscout.sepolia.kroma.network/tx/${this.hash()}`
       case "kroma":
         return `https://blockscout.kroma.network/tx/${this.hash()}`
+      case "testnet-saakuru":
+        return `https://explorer-testnet.saakuru.network/explorer-testnet/tx/${this.hash()}`
+      case "saakuru":
+        return `https://explorer.saakuru.network/explorer/tx/${this.hash()}`
+      case "testnet-oasys":
+        return `https://explorer.testnet.oasys.games/tx/${this.hash()}`
+      case "oasys":
+        return `https://explorer.oasys.games/tx/${this.hash()}`
       case "sei-arctic-1":
         return `https://seitrace.com/tx/${this.hash()}?chain=arctic-1`
       case "sei-pacific-1":
@@ -112,6 +120,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://testnet-explorer.etherlink.com/tx/${this.hash()}`
       case "etherlink":
         return `https://explorer.etherlink.com/tx/${this.hash()}`
+      case "lisk-sepolia":
+        return `https://sepolia-blockscout.lisk.com/tx/${this.hash()}`
+      case "lisk":
+        return `https://blockscout.lisk.com/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

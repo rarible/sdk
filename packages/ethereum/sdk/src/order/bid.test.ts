@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
@@ -54,17 +54,7 @@ describe.each(providers)("bid", ethereum => {
   const checkLazyAsset = checkLazyAssetTemplate.bind(null, checkLazyAssetType)
   const checkLazyOrder = checkLazyOrderTemplate.bind(null, checkLazyAsset)
 
-  const upserter = new UpsertOrder(
-    orderService,
-    send,
-    getConfig,
-    checkLazyOrder,
-    approve,
-    signOrder,
-    getApis,
-    ethereum,
-    ZERO_WORD,
-  )
+  const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, signOrder, getApis, ethereum)
   const orderSell = new OrderBid(upserter, checkAssetType)
   const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
   const treasury = createE2eWallet()
