@@ -1,4 +1,4 @@
-import { createTestAptosState, mintTestToken } from "../common/test"
+import { createTestAptosState, createV1Token, mintTestToken } from "../common/test"
 import { AptosNft } from "./nft"
 
 describe("burn nft", () => {
@@ -7,12 +7,18 @@ describe("burn nft", () => {
   const burnClass = new AptosNft(aptos, wallet, config)
 
   test("burn", async () => {
-    const testTokenAddress = await mintTestToken(state)
+    const { tokenAddress } = await mintTestToken(state)
 
-    await burnClass.burn(testTokenAddress)
+    await burnClass.burn(tokenAddress)
 
     const assets = await aptos.getOwnedDigitalAssets({ ownerAddress: account.accountAddress })
-    const tokenOfNewOwner = assets.find(asset => asset.token_data_id === testTokenAddress)
+    const tokenOfNewOwner = assets.find(asset => asset.token_data_id === tokenAddress)
     expect(tokenOfNewOwner).toBeFalsy()
+  })
+
+  test("burn v1 token", async () => {
+    const { propertyVersion, collectionName, tokenName, creator } = await createV1Token(state)
+    const tx = await burnClass.burnV1Token(creator, collectionName, tokenName, propertyVersion, "1")
+    console.log("tx", tx)
   })
 })

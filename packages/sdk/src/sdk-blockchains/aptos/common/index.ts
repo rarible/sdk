@@ -1,12 +1,18 @@
+import type { UnionAddress } from "@rarible/types"
 import { toCollectionId, toContractAddress, toCurrencyId, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
-import { extractId } from "@rarible/sdk-common"
+import { extractId, retry } from "@rarible/sdk-common"
 import { ENCODED_APT_TOKEN_TYPE } from "@rarible/aptos-sdk"
 import type { UnionPart } from "../../../types/order/common"
+import type { IRaribleSdk } from "../../../index"
 
 export const APTOS_APT_CURRENCY = toCurrencyId(`${Blockchain.APTOS}:${ENCODED_APT_TOKEN_TYPE}`)
 
 export function convertAptosToUnionAddress(address: string) {
+  return toUnionAddress(`${Blockchain.APTOS}:${address}`)
+}
+
+export function convertUnionAddressToAptos(address: UnionAddress) {
   return toUnionAddress(`${Blockchain.APTOS}:${address}`)
 }
 
@@ -52,4 +58,14 @@ export async function getFeeObject({
   } else {
     throw new Error(`Incorrect originFee value=${originFees[0].value}`)
   }
+}
+
+export async function awaitAllUserItems(sdk: IRaribleSdk, user: UnionAddress) {
+  return retry(10, 4000, async () => {
+    const items = await sdk.apis.item.getItemsByOwner({
+      owner: user,
+    })
+    if (!items.items.length) throw new Error("No items")
+    return items.items
+  })
 }

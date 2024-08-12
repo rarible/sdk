@@ -63,24 +63,24 @@ export class OrderFiller {
   looksrareV2Handler: LooksrareV2OrderHandler
   x2y2Handler: X2Y2OrderHandler
   ammHandler: AmmOrderHandler
-  private checkAssetType: CheckAssetTypeFunction
+  private readonly checkAssetType: CheckAssetTypeFunction
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   private checkLazyAssetType: (type: AssetType) => Promise<AssetType>
 
   constructor(
     private readonly ethereum: Maybe<Ethereum>,
     private readonly send: SendFunction,
-    private readonly getConfig: GetConfigByChainId,
+    getConfig: GetConfigByChainId,
     private readonly getApis: () => Promise<RaribleEthereumApis>,
-    private readonly getBaseOrderFee: (type: SimpleOrder["type"]) => Promise<number>,
-    private readonly env: EthereumNetwork,
+    getBaseOrderFee: (type: SimpleOrder["type"]) => Promise<number>,
+    env: EthereumNetwork,
     private readonly sdkConfig?: IRaribleEthereumSdkConfig,
   ) {
     this.getBaseOrderFillFee = this.getBaseOrderFillFee.bind(this)
     this.getTransactionData = this.getTransactionData.bind(this)
     this.getBuyTx = this.getBuyTx.bind(this)
     this.v1Handler = new RaribleV1OrderHandler(ethereum, getApis, send, getConfig, getBaseOrderFee, sdkConfig)
-    this.v2Handler = new RaribleV2OrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)
+    this.v2Handler = new RaribleV2OrderHandler(ethereum, send, getConfig, getBaseOrderFee)
     this.openSeaHandler = new OpenSeaOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, sdkConfig)
     this.punkHandler = new CryptoPunksOrderHandler(ethereum, send, getConfig, getBaseOrderFee, sdkConfig)
     this.seaportHandler = new SeaportOrderHandler(ethereum, send, getConfig, getApis, getBaseOrderFee, env, sdkConfig)
@@ -306,7 +306,7 @@ export class OrderFiller {
       case "RARIBLE_V1":
         return this.v1Handler.getBaseOrderFee()
       case "RARIBLE_V2":
-        return this.v2Handler.getBaseOrderFee()
+        return this.v2Handler.getBaseOrderFee(order)
       case "OPEN_SEA_V1":
         return this.openSeaHandler.getBaseOrderFee()
       case "SEAPORT_V1":

@@ -1,11 +1,10 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { ContractAddress } from "@rarible/types"
-import { toAddress, toBinary, toContractAddress, toUnionAddress, toWord } from "@rarible/types"
+import { toAddress, toContractAddress, toWord } from "@rarible/types"
 import { toBigNumber } from "@rarible/types/build/big-number"
 import type * as ApiClient from "@rarible/api-client"
 import type { AssetType, OrderId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { AssetType as EthereumAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
@@ -18,6 +17,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import { Warning } from "@rarible/logger/build"
 import type { Item } from "@rarible/api-client/build/models"
+import type { RequestCurrencyAssetType } from "../../common/domain"
 import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type {
@@ -29,7 +29,6 @@ import type {
 } from "../../types/order/bid/domain"
 import { getCommonConvertableValue } from "../../common/get-convertable-value"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
-import type { RequestCurrencyAssetType } from "../../common/domain"
 import type { BidSimplifiedRequest, BidUpdateSimplifiedRequest } from "../../types/order/bid/simplified"
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import type { IApisSdk } from "../../domain"
@@ -54,7 +53,6 @@ import {
   isWETH,
 } from "./common"
 import type { EthereumBalance } from "./balance"
-import type { IEthereumSdkConfig } from "./domain"
 
 export class EthereumBid {
   constructor(
@@ -62,7 +60,6 @@ export class EthereumBid {
     private wallet: Maybe<EthereumWallet>,
     private apis: IApisSdk,
     private balanceService: EthereumBalance,
-    private config?: IEthereumSdkConfig,
   ) {
     this.bid = this.bid.bind(this)
     this.update = this.update.bind(this)
@@ -70,80 +67,6 @@ export class EthereumBid {
     this.convertCurrency = this.convertCurrency.bind(this)
     this.bidBasic = this.bidBasic.bind(this)
     this.bidUpdateBasic = this.bidUpdateBasic.bind(this)
-  }
-
-  convertAssetType(assetType: EthereumAssetType, blockchain: EVMBlockchain): ApiClient.AssetType {
-    switch (assetType.assetClass) {
-      case "ETH": {
-        return {
-          "@type": "ETH",
-        }
-      }
-      case "ERC20": {
-        return {
-          "@type": "ERC20",
-          contract: convertEthereumContractAddress(assetType.contract, blockchain),
-        }
-      }
-      case "ERC721": {
-        return {
-          "@type": "ERC721",
-          contract: convertEthereumContractAddress(assetType.contract, blockchain),
-          tokenId: assetType.tokenId,
-        }
-      }
-      case "ERC721_LAZY": {
-        return {
-          "@type": "ERC721_Lazy",
-          contract: convertEthereumContractAddress(assetType.contract, blockchain),
-          tokenId: assetType.tokenId,
-          uri: assetType.uri,
-          creators: assetType.creators.map(c => ({
-            account: toUnionAddress(c.account),
-            value: c.value,
-          })),
-          royalties: assetType.royalties.map(r => ({
-            account: toUnionAddress(r.account),
-            value: r.value,
-          })),
-          signatures: assetType.signatures.map(str => toBinary(str)),
-        }
-      }
-      case "ERC1155": {
-        return {
-          "@type": "ERC1155",
-          contract: convertEthereumContractAddress(assetType.contract, blockchain),
-          tokenId: assetType.tokenId,
-        }
-      }
-      case "ERC1155_LAZY": {
-        return {
-          "@type": "ERC1155_Lazy",
-          contract: convertEthereumContractAddress(assetType.contract, blockchain),
-          tokenId: assetType.tokenId,
-          uri: assetType.uri,
-          supply: assetType.supply !== undefined ? toBigNumber(assetType.supply) : toBigNumber("1"),
-          creators: assetType.creators.map(c => ({
-            account: toUnionAddress(c.account),
-            value: c.value,
-          })),
-          royalties: assetType.royalties.map(r => ({
-            account: toUnionAddress(r.account),
-            value: r.value,
-          })),
-          signatures: assetType.signatures.map(toBinary),
-        }
-      }
-      case "GEN_ART": {
-        return {
-          "@type": "GEN_ART",
-          contract: convertEthereumContractAddress(assetType.contract, blockchain),
-        }
-      }
-      default: {
-        throw new Error(`Unsupported asset type ${assetType.assetClass}`)
-      }
-    }
   }
 
   async bidBasic(request: BidSimplifiedRequest): Promise<OrderId> {
@@ -178,15 +101,16 @@ export class EthereumBid {
       collection: contract,
     })
 
-    const bidAction = this.sdk.order.bid
-      .before(async (request: OrderCommon.OrderRequest) => {
+    const bidAction = this.sdk.order.bid.around(
+      async (request: OrderCommon.OrderRequest) => {
         await checkWalletBlockchain(this.wallet, blockchain)
         const expirationDate = request.expirationDate
           ? convertDateToTimestamp(request.expirationDate)
           : getDefaultExpirationDateTimestamp()
         const currencyAssetType = getCurrencyAssetType(request.currency)
+        const baseFee = await this.sdk.order.getBaseOrderFee("RARIBLE_V2")
         return {
-          type: "DATA_V2",
+          type: baseFee === 0 ? "DATA_V2" : "DATA_V3",
           makeAssetType: common.getEthTakeAssetType(currencyAssetType),
           takeAssetType: ethAssetType,
           amount: getOrderAmount(request.amount, collection),
@@ -195,11 +119,12 @@ export class EthereumBid {
           originFees: common.toEthereumParts(request.originFees),
           end: expirationDate,
         }
-      })
-      .after(async res => {
+      },
+      async res => {
         await res.approveTx?.wait()
         return common.convertEthereumOrderHash(res.order.hash, blockchain)
-      })
+      },
+    )
 
     const submit = Action.create({
       id: "convert" as const,
@@ -325,18 +250,19 @@ export class EthereumBid {
       throw new UpdateBidNotSupportedForThidKindOfOrderError(order.data["@type"])
     }
 
-    const bidUpdateAction = this.sdk.order.bidUpdate
-      .before(async (request: OrderCommon.OrderUpdateRequest) => {
+    const bidUpdateAction = this.sdk.order.bidUpdate.around(
+      async (request: OrderCommon.OrderUpdateRequest) => {
         await checkWalletBlockchain(this.wallet, blockchain)
         return {
           orderHash: toWord(hash),
           priceDecimal: request.price,
         }
-      })
-      .after(async res => {
+      },
+      async res => {
         await res.approveTx?.wait()
         return common.convertEthereumOrderHash(res.order.hash, blockchain)
-      })
+      },
+    )
 
     const actionWithConvert = Action.create({
       id: "convert" as const,

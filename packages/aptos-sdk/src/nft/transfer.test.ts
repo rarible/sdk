@@ -10,12 +10,12 @@ describe("transfer nft", () => {
   test("transfer", async () => {
     const recepientAccount = Account.generate()
     const receipentAddress = recepientAccount.accountAddress.toStringLong()
-    const testTokenAddress = await mintTestToken(state)
+    const { tokenAddress } = await mintTestToken(state)
 
-    await transferClass.transfer(testTokenAddress, receipentAddress)
+    await transferClass.transfer(tokenAddress, receipentAddress)
 
     const assets = await aptos.getOwnedDigitalAssets({ ownerAddress: receipentAddress })
-    const tokenOfNewOwner = assets.find(asset => asset.token_data_id === testTokenAddress)
+    const tokenOfNewOwner = assets.find(asset => asset.token_data_id === tokenAddress)
     expect(tokenOfNewOwner).toBeTruthy()
   })
 })
