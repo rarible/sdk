@@ -1,7 +1,7 @@
 {
 	"extends": "../../tsconfig.json",
 	"include": ["src/**/*"],
-	"exclude": ["src/**/*.test.ts", "src/**/tests/**/*"],
+	"exclude": ["src/**/*.test.ts", "src/**/tests/**/*", "src/**/test/**/*"],
 	"compilerOptions": {
 		"downlevelIteration": true
 	}
