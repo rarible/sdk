@@ -53,6 +53,7 @@ import {
   getOrderId,
 } from "../../common/utils"
 import type { IFlowCheckInitGamisodesCollections } from "../../types/nft/collection"
+import type { IGetBuyTxData } from "../../types/ethereum/domain"
 import type { MetaUploadRequest, UploadMetaResponse } from "./meta/domain"
 
 export function createUnionSdk(
@@ -281,6 +282,7 @@ class UnionEthereumSpecificSdk implements IEthereumSdk {
   wrapCryptoPunk: ICryptopunkWrap = this.ethereumSdk.wrapCryptoPunk
   unwrapCryptoPunk: ICryptopunkUnwrap = this.ethereumSdk.unwrapCryptoPunk
   getBatchBuyAmmInfo: IGetBuyAmmInfo = this.ethereumSdk.getBatchBuyAmmInfo
+  getBuyTxData: IGetBuyTxData = this.ethereumSdk.getBuyTxData
 }
 
 class UnionFlowSpecificSdk implements IFlowSdk {

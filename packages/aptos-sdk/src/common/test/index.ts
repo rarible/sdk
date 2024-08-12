@@ -175,7 +175,7 @@ export async function createV1Token(state: TestAptosState) {
   if (collectionEvent) {
     return {
       tx: commitedTx,
-      propertyVersion: collectionEvent.sequence_number,
+      propertyVersion: +collectionEvent.sequence_number + 1,
       collectionName: "Test Collection V1 - Rarible",
       tokenName: "Crypto Cats N2",
       creator: "0x1cd6ec749dfd85537f41ea6c07c135532c87ba02b13a709286e352a004657c3a",

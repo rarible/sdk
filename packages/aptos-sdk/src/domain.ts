@@ -17,6 +17,14 @@ export interface AptosNftSdk {
     tokenAddress: string
   }>
   transfer(tokenAddress: string, to: string): Promise<CommittedTransactionResponse>
+  transferV1Token(
+    to: string,
+    creator: string,
+    collection: string,
+    name: string,
+    propertyVersion: string,
+    amount: string,
+  ): Promise<CommittedTransactionResponse>
   burn(tokenAddress: string): Promise<CommittedTransactionResponse>
 }
 

@@ -19,6 +19,8 @@ import { Platform } from "@rarible/api-client"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import { extractBlockchain } from "@rarible/sdk-common"
+import type { GetOrderBuyTxRequest } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
+import type { TransactionData } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
 import type {
   BatchFillRequest,
   FillRequest,
@@ -531,6 +533,10 @@ export class EthereumFill {
       hash: request.hash,
       numNFTs: request.numNFTs,
     })
+  }
+
+  async getBuyTxData(request: GetOrderBuyTxRequest): Promise<TransactionData> {
+    return this.sdk.order.getBuyTxData(request)
   }
 
   async batchBuyBasic(

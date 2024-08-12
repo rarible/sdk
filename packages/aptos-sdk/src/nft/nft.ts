@@ -265,7 +265,7 @@ export class AptosNft implements AptosNftSdk {
   }
 
   transferV1Token = async (
-    receiver: string,
+    to: string,
     creator: string,
     collection: string,
     name: string,
@@ -273,9 +273,9 @@ export class AptosNft implements AptosNftSdk {
     amount: string,
   ) => {
     const transaction = {
-      function: "0x3::token::direct_transfer_script",
+      function: "0x3::token_transfers::offer_script",
       typeArguments: [],
-      arguments: [creator, collection, name, propertyVersion, amount],
+      arguments: [to, creator, collection, name, propertyVersion, amount],
       type: "entry_function_payload",
     }
     const pendingTx = await getRequiredWallet(this.wallet).signAndSubmitTransaction(transaction)

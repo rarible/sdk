@@ -113,6 +113,7 @@ export function createEthereumSdk(
       wrapCryptoPunk: cryptopunkService.wrap,
       unwrapCryptoPunk: cryptopunkService.unwrap,
       getBatchBuyAmmInfo: fillService.getBuyAmmInfo,
+      getBuyTxData: fillService.getBuyTxData,
     },
   }
 }
