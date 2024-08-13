@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.44](https://github.com/rarible/sdk/compare/v0.13.68-fix.43...v0.13.68-fix.44) (2024-08-13)
+
+### Features
+
+- aptos zero fee addr ([23c18f7](https://github.com/rarible/sdk/commit/23c18f7a6741ca44ee246bf502bad77273a9f355))
+
 ## [0.13.68-fix.43](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.43) (2024-08-12)
 
 ### Features
