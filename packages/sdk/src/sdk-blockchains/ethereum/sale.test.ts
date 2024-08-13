@@ -1,17 +1,18 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { createE2eProvider, getE2EConfigByNetwork } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
-import { toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAddress, toWord } from "@rarible/types"
+import { toAddress, toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAddress, toWord } from "@rarible/types"
 import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
+import { createEthereumApis } from "@rarible/protocol-ethereum-sdk/src/common/apis"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"
 import { awaitItem } from "../../common/test/await-item"
 import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
-import { createSdk } from "../../common/test/create-sdk"
+import { createSdk, getAPIKey } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
@@ -42,9 +43,34 @@ describe("sale", () => {
   const erc20 = testSuite.getContract("erc20_mintable_1")
   const erc20ContractAddress = erc20.contractAddress
 
+  const sepoliaConfig = getE2EConfigByNetwork("sepolia")
+  const { provider: providerBuyer } = createE2eProvider(
+    "0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
+    sepoliaConfig,
+  )
+  const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer), gas: 3000000 })
+  const env = "testnet" as const
+
+  const sdkBuyer = createSdk(buyerWeb3, env)
+
   beforeAll(async () => {
     const wallet2Address = wallet2.getAddressString()
     await erc20.mintWei("10000000000000000", wallet2Address)
+  })
+
+  test("get buy tx successfully", async () => {
+    const ethApis = createEthereumApis("testnet", {
+      apiKey: getAPIKey(env),
+    })
+
+    const order = await ethApis.order.getValidatedOrderByHash({
+      hash: "0x77e0d72b3fdb2e36f78abbd24bfd127471c319f2e95d7eaea19238fbf514ed1b",
+    })
+    const txData = await sdkBuyer.ethereum?.getBuyTxData({
+      request: { order: order as any, amount: 1, originFees: [] },
+      from: toAddress(await buyerWeb3.getFrom()),
+    })
+    expect(txData).toBeTruthy()
   })
 
   test("erc721 sell/buy using erc-20", async () => {

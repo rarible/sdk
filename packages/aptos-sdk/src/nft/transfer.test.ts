@@ -1,10 +1,9 @@
 import { Account } from "@aptos-labs/ts-sdk"
-import { BUYER_PK, createTestAptosState, createV1Token, mintTestToken } from "../common/test"
+import { createTestAptosState, createV1Token, mintTestToken } from "../common/test"
 import { AptosNft } from "./nft"
 
 describe("transfer nft", () => {
   const state = createTestAptosState()
-  const receiverState = createTestAptosState(BUYER_PK)
   const { aptos, wallet, config } = state
   const transferClass = new AptosNft(aptos, wallet, config)
 
@@ -24,7 +23,7 @@ describe("transfer nft", () => {
     const recepientAccount = Account.generate()
     const receipentAddress = recepientAccount.accountAddress.toStringLong()
     const { propertyVersion, collectionName, tokenName, creator } = await createV1Token(state)
-    const tx = await transferClass.transferV1Token(
+    await transferClass.transferV1Token(
       receipentAddress,
       creator,
       collectionName,

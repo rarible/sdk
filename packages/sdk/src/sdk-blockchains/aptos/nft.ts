@@ -136,7 +136,6 @@ export class AptosNft {
           })
           if (aptosCollection.extra?.standard === "v1" && item.extra) {
             const creator = extractId(item.creators[0].account)
-            // const collectionName =
             const tx = await this.sdk.nft.transferV1Token(
               recipientAddress,
               creator,

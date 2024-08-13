@@ -100,7 +100,7 @@ export function createUnionSdk(
       SOLANA: solana.restriction,
       IMMUTABLEX: immutablex.restriction,
       ECLIPSE: eclipse.restriction,
-      APTOS: eclipse.restriction,
+      APTOS: aptos.restriction,
     }),
     ethereum: new UnionEthereumSpecificSdk(evm.ethereum!),
     flow: new UnionFlowSpecificSdk(flow.flow!),

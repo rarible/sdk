@@ -19,8 +19,7 @@ import { Platform } from "@rarible/api-client"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import { extractBlockchain } from "@rarible/sdk-common"
-import type { GetOrderBuyTxRequest } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
-import type { TransactionData } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
+import type { GetOrderBuyTxRequest, TransactionData } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
 import type {
   BatchFillRequest,
   FillRequest,
@@ -77,6 +76,7 @@ export class EthereumFill {
     this.acceptBidBasic = this.acceptBidBasic.bind(this)
     this.batchBuyBasic = this.batchBuyBasic.bind(this)
     this.getBuyAmmInfo = this.getBuyAmmInfo.bind(this)
+    this.getBuyTxData = this.getBuyTxData.bind(this)
   }
 
   async buyBasic(request: BuySimplifiedRequest): Promise<IBlockchainTransaction> {
