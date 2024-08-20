@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.45](https://github.com/rarible/sdk/compare/v0.13.68-fix.44...v0.13.68-fix.45) (2024-08-20)
+
+**Note:** Version bump only for package @rarible/solana-wallet
+
 ## [0.13.68-fix.44](https://github.com/rarible/sdk/compare/v0.13.68-fix.43...v0.13.68-fix.44) (2024-08-13)
 
 **Note:** Version bump only for package @rarible/solana-wallet
