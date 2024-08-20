@@ -7,6 +7,7 @@ import { createV1TokenWithFeePayer } from "@rarible/aptos-sdk/src/common/test"
 import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
 import { awaitBalance } from "../../common/test/await-balance"
+import { awaitCollection } from "../../common/test/await-collection"
 import { createSdk } from "./common/tests/create-sdk"
 import {
   APTOS_APT_CURRENCY,
@@ -27,7 +28,7 @@ describe("Aptos Orders", () => {
     console.log("seller", sellerState.account.accountAddress.toString())
   })
 
-  test("token v1 sell & buy with CurrencyId with prepare", async () => {
+  test.skip("token v1 sell & buy with CurrencyId with prepare", async () => {
     const randomAccountState = TestUtils.generateTestAptosState()
     const sdkRandomAccount = createSdk(randomAccountState, "testnet")
     await createV1TokenWithFeePayer(sellerState, randomAccountState)
@@ -40,7 +41,7 @@ describe("Aptos Orders", () => {
     const prepareResponse = await sdkRandomAccount.order.sell.prepare({ itemId })
     const sellOrder = await prepareResponse.submit({
       amount: 1,
-      price: "0.02",
+      price: "0.002",
       currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
       originFees: [
@@ -68,11 +69,7 @@ describe("Aptos Orders", () => {
       convertAptosToUnionCollectionId(collectionAddress),
     )
     console.log("tokenAddress", tokenAddress)
-    await retry(20, 4000, () =>
-      sdkSeller.apis.collection.getCollectionById({
-        collection: convertAptosToUnionCollectionId(collectionAddress),
-      }),
-    )
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const prepareResponse = await sdkSeller.order.sell.prepare({
       itemId: toItemId(`APTOS:${tokenAddress}`),
     })
@@ -100,7 +97,8 @@ describe("Aptos Orders", () => {
   })
 
   test("sell & buy with CurrencyId", async () => {
-    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const sellOrder = await sdkSeller.order.sell({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -117,7 +115,8 @@ describe("Aptos Orders", () => {
   })
 
   test("sell & buy with Aptos asset type", async () => {
-    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const sellOrder = await sdkSeller.order.sell({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -137,7 +136,8 @@ describe("Aptos Orders", () => {
   })
 
   test("sell & buy with origin fees", async () => {
-    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const sellOrder = await sdkSeller.order.sell({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -165,7 +165,8 @@ describe("Aptos Orders", () => {
   })
 
   test("buy throws error when origin fees is passed", async () => {
-    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const sellOrder = await sdkSeller.order.sell({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,

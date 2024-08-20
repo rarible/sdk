@@ -49,4 +49,16 @@ describe("sell nft", () => {
     expect(feeAddress).toBeTruthy()
     expect(typeof feeAddress === "string").toBeTruthy()
   })
+
+  test("getFeeObject should return the same Schedule address", async () => {
+    const feeScheduleAddress = "0x9db2c77084b1507acb9cb7d16350598b1e9db1cc61ecba1b017c467398d13f03"
+    const sameFeeScheduleAddress = await sellerOrderClass.getFeeObject({ address: feeScheduleAddress, value: 0 })
+    expect(sameFeeScheduleAddress).toEqual(feeScheduleAddress)
+  })
+
+  test("getFeeObject should return new FeeSchedule address with current fee receiver", async () => {
+    const feeReceiver = "0x484e284d3b98ce736b6b6de27127176bafe30942d949f30b0ab59a17007ccf37"
+    const feeScheduleAddress = await sellerOrderClass.getFeeObject({ address: feeReceiver, value: 100 })
+    expect(feeScheduleAddress).not.toEqual(feeReceiver)
+  })
 })

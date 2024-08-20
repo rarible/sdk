@@ -35,31 +35,6 @@ export function getSupportedCurrencies(): [{ blockchain: Blockchain.APTOS; type:
   return [{ blockchain: Blockchain.APTOS, type: "NATIVE" }]
 }
 
-export async function getFeeObject({
-  originFees,
-  defaultFeeAddress,
-  createFeeSchedule,
-}: {
-  originFees: UnionPart[]
-  defaultFeeAddress: string
-  createFeeSchedule: (options: { receiveAddress: string; value: number }) => Promise<string>
-}): Promise<string> {
-  if (!originFees || !originFees.length) return defaultFeeAddress
-  if (originFees.length > 1) {
-    throw new Error("Origin fees should consist only 1 item")
-  }
-  if (originFees[0].value === 0) {
-    return extractId(originFees[0].account)
-  } else if (originFees[0].value > 0) {
-    return createFeeSchedule({
-      value: originFees[0].value,
-      receiveAddress: extractId(originFees[0].account),
-    })
-  } else {
-    throw new Error(`Incorrect originFee value=${originFees[0].value}`)
-  }
-}
-
 export async function awaitAllUserItems(sdk: IRaribleSdk, user: UnionAddress) {
   return retry(10, 4000, async () => {
     const items = await sdk.apis.item.getItemsByOwner({

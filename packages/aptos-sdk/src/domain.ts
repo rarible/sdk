@@ -94,6 +94,7 @@ export interface AptosOrderSdk {
 
   getFeeScheduleAddress: () => string
   createFeeSchedule(options: { value: number; receiveAddress?: string }): Promise<string>
+  getFeeObject(options?: { value: number; address: string }): Promise<string>
 }
 
 export const supportedNetworks = [AptosNetwork.MAINNET, AptosNetwork.TESTNET] as const

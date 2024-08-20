@@ -16,7 +16,7 @@ import type * as OrderCommon from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import { getNftContractAddress, getOrderId } from "../../common/utils"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
-import { convertAptosToUnionOrderId, getFeeObject, getSupportedCurrencies } from "./common"
+import { convertAptosToUnionOrderId, getSupportedCurrencies } from "./common"
 
 export class AptosListing {
   constructor(
@@ -43,6 +43,14 @@ export class AptosListing {
         if (request.originFees && request.originFees.length > 1) {
           throw new Error("Origin fees should consist only 1 item")
         }
+        const feeObject = await this.sdk.order.getFeeObject(
+          request.originFees?.length
+            ? {
+                address: extractId(request.originFees[0].account),
+                value: request.originFees[0].value,
+              }
+            : undefined,
+        )
         const assetType = getCurrencyAssetType(request.currency)
         if (assetType["@type"] !== "CURRENCY_NATIVE") {
           throw new Error("Only native token currency is available for sell operation")
@@ -56,11 +64,7 @@ export class AptosListing {
           }
           const firstCreator = extractId(aptosItem.creators[0].account)
           objectAddress = await this.sdk.order.sellV1(
-            await getFeeObject({
-              originFees: request.originFees || [],
-              defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
-              createFeeSchedule: this.sdk.order.createFeeSchedule,
-            }),
+            feeObject,
             firstCreator,
             aptosItem.extra.onChainCollectionName,
             aptosItem.extra.onChainTokenName,
@@ -71,11 +75,7 @@ export class AptosListing {
         } else {
           objectAddress = await this.sdk.order.sell(
             aptosItemId,
-            await getFeeObject({
-              originFees: request.originFees || [],
-              defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
-              createFeeSchedule: this.sdk.order.createFeeSchedule,
-            }),
+            feeObject,
             startTime,
             toBn(request.price.toString()).multipliedBy(APT_DIVIDER).toFixed(),
           )

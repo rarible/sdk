@@ -17,7 +17,7 @@ import type { PrepareBidRequest, PrepareBidResponse } from "../../types/order/bi
 import type { IApisSdk } from "../../domain"
 import type { AcceptBidSimplifiedRequest } from "../../types/order/fill/simplified"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
-import { convertAptosToUnionOrderId, getFeeObject, getSupportedCurrencies } from "./common"
+import { convertAptosToUnionOrderId, getSupportedCurrencies } from "./common"
 
 export class AptosBid {
   constructor(
@@ -38,11 +38,18 @@ export class AptosBid {
     const submit = Action.create({
       id: "send-tx" as const,
       run: async (request: OrderRequest) => {
-        const feeObject = await getFeeObject({
-          originFees: request.originFees || [],
-          defaultFeeAddress: this.sdk.order.getFeeScheduleAddress(),
-          createFeeSchedule: this.sdk.order.createFeeSchedule,
-        })
+        if (request.originFees && request.originFees.length > 1) {
+          throw new Error("Origin fees should consist only 1 item")
+        }
+
+        const feeObject = await this.sdk.order.getFeeObject(
+          request.originFees?.length
+            ? {
+                address: extractId(request.originFees[0].account),
+                value: request.originFees[0].value,
+              }
+            : undefined,
+        )
         const currencyAssetType = getCurrencyAssetType(request.currency)
         if (currencyAssetType["@type"] !== "CURRENCY_NATIVE") {
           throw new Error("Only native token currency is available for bid operation")

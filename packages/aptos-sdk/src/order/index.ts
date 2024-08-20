@@ -15,6 +15,7 @@ export class AptosOrder implements AptosOrderSdk {
     readonly config: AddressConfig,
   ) {
     this.createFeeSchedule = this.createFeeSchedule.bind(this)
+    this.getFeeObject = this.getFeeObject.bind(this)
     this.getFeeScheduleAddress = this.getFeeScheduleAddress.bind(this)
     this.sendAndWaitTx = this.sendAndWaitTx.bind(this)
     this.getListingTokenType = this.getListingTokenType.bind(this)
@@ -304,6 +305,30 @@ export class AptosOrder implements AptosOrderSdk {
       throw new Error("Address has not been found")
     }
     return normalizeAptosAddress(change.address)
+  }
+
+  async getFeeObject(options?: { address: string; value: number }): Promise<string> {
+    if (!options) return this.getFeeScheduleAddress()
+    if (await this.isFeeScheduleObject(options.address)) {
+      return options.address
+    }
+    return this.createFeeSchedule({
+      receiveAddress: options.address,
+      value: options.value,
+    })
+  }
+
+  private async isFeeScheduleObject(address: string): Promise<boolean> {
+    const addressObjectResources = await this.aptos.getAccountResources({
+      accountAddress: address,
+    })
+    const feeScheduleEvent = addressObjectResources.find(resource =>
+      resource.type.includes("fee_schedule::FeeSchedule"),
+    )
+    const percentageRateEvent = addressObjectResources.find(resource =>
+      resource.type.includes("fee_schedule::PercentageRateCommission"),
+    )
+    return !!feeScheduleEvent && !!percentageRateEvent
   }
 
   getFeeScheduleAddress() {
