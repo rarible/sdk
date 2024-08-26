@@ -3,7 +3,13 @@ import type { AbstractLogger, LoggableValue } from "@rarible/logger/build/domain
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import axios from "axios"
-import { UserCancelError, promiseSettledRequest, isCancelCode, isCancelMessage } from "@rarible/sdk-common"
+import {
+  UserCancelError,
+  promiseSettledRequest,
+  isCancelCode,
+  isCancelMessage,
+  getStringifiedData,
+} from "@rarible/sdk-common"
 import { WrappedError, INVALID_TX_PARAMS_EIP_1559_ERROR } from "@rarible/sdk-common"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
@@ -98,7 +104,9 @@ export function getErrorMessageString(err: any): string {
     } else if (err instanceof Error) {
       return getExecRevertedMessage(err.message)
     } else if (err.message) {
-      return typeof err.message === "string" ? getExecRevertedMessage(err.message) : JSON.stringify(err.message)
+      return typeof err.message === "string"
+        ? getExecRevertedMessage(err.message)
+        : getStringifiedData(err.message) || ""
     } else if (err.status !== undefined && err.statusText !== undefined) {
       return JSON.stringify({
         url: err.url,
@@ -106,7 +114,7 @@ export function getErrorMessageString(err: any): string {
         statusText: err.statusText,
       })
     } else {
-      return JSON.stringify(err)
+      return getStringifiedData(err) || ""
     }
   } catch (e: any) {
     return `getErrorMessageString parse error: ${e?.message}`
