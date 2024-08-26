@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.46](https://github.com/rarible/sdk/compare/v0.13.68-fix.45...v0.13.68-fix.46) (2024-08-26)
+
+### Bug Fixes
+
+- **PLTF-573:** logging return data ([6876737](https://github.com/rarible/sdk/commit/6876737bdf9122f1bdbedd67be2bd3227d5f58b6))
+
 ## [0.13.68-fix.45](https://github.com/rarible/sdk/compare/v0.13.68-fix.44...v0.13.68-fix.45) (2024-08-20)
 
 **Note:** Version bump only for package @rarible/sdk-common
