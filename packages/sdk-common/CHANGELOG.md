@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.47](https://github.com/rarible/sdk/compare/v0.13.68-fix.46...v0.13.68-fix.47) (2024-09-02)
+
+### Bug Fixes
+
+- **PLTF-552:** opensea order fix ([48c4aeb](https://github.com/rarible/sdk/commit/48c4aeb1d63ac56616185ed425284d5751437818))
+
 ## [0.13.68-fix.46](https://github.com/rarible/sdk/compare/v0.13.68-fix.45...v0.13.68-fix.46) (2024-08-26)
 
 ### Bug Fixes
