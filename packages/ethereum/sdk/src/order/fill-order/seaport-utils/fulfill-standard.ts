@@ -2,6 +2,7 @@ import { ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumber } from "@rarible/utils"
 import type { BigNumberValue } from "@rarible/utils"
 import type { EthereumContract } from "@rarible/ethereum-provider"
+import { hasMessage } from "@rarible/ethereum-provider/build/sign-typed-data"
 import type { OrderFillSendData } from "../types"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
 import { generateCriteriaResolvers } from "./criteria"
@@ -9,6 +10,7 @@ import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./typ
 import { getSummedTokenAndIdentifierAmounts, isCriteriaItem } from "./item"
 import type { TimeBasedItemParams } from "./item"
 import { mapOrderAmountsFromFilledStatus, mapOrderAmountsFromUnitsToFill } from "./order"
+import { mapTipAmountsFromUnitsToFill } from "./map-tips"
 
 export async function getFulfillStandardOrderData({
   order,
@@ -54,7 +56,14 @@ export async function getFulfillStandardOrderData({
     parameters: { offer, consideration },
   } = orderWithAdjustedFills
 
-  const considerationIncludingTips = [...consideration, ...tips]
+  let adjustedTips: ConsiderationItem[] = []
+
+  if (tips.length > 0) {
+    adjustedTips = mapTipAmountsFromUnitsToFill(tips, unitsToFill, totalSize)
+    console.log("mapTipAmountsFromUnitsToFill", adjustedTips)
+  }
+
+  const considerationIncludingTips = [...consideration, ...adjustedTips]
 
   const offerCriteriaItems = offer.filter(({ itemType }) => isCriteriaItem(itemType))
 
@@ -96,7 +105,8 @@ export async function getFulfillStandardOrderData({
   // const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
 
   if (useAdvanced) {
-    const functionCall = await seaportContract.functionCall(
+    console.log("hasCriteriaItems", hasCriteriaItems)
+    let functionCall = await seaportContract.functionCall(
       "fulfillAdvancedOrder",
       {
         ...orderAccountingForTips,
@@ -114,6 +124,38 @@ export async function getFulfillStandardOrderData({
       conduitKey,
       recipientAddress,
     )
+    try {
+      await functionCall.estimateGas({ value: totalNativeAmount?.toFixed() || "0" })
+    } catch (e: unknown) {
+      if (hasMessage(e) && e.message.includes("0xc63cf089")) {
+        const orderAccountingForTips: OrderStruct = {
+          ...order,
+          parameters: {
+            ...order.parameters,
+            consideration: [...order.parameters.consideration],
+            totalOriginalConsiderationItems: consideration.length,
+          },
+        }
+        functionCall = await seaportContract.functionCall(
+          "fulfillAdvancedOrder",
+          {
+            ...orderAccountingForTips,
+            numerator,
+            denominator,
+            extraData: extraData ?? "0x",
+          },
+          hasCriteriaItems
+            ? generateCriteriaResolvers({
+                orders: [order],
+                offerCriterias: [offerCriteria],
+                considerationCriterias: [considerationCriteria],
+              })
+            : [],
+          conduitKey,
+          recipientAddress,
+        )
+      }
+    }
     return {
       functionCall,
       options: { value: totalNativeAmount?.toFixed() || "0" },

@@ -10,6 +10,7 @@ import { getSummedTokenAndIdentifierAmounts, isCriteriaItem } from "./item"
 import { validateStandardFulfillBalancesAndApprovals } from "./balance-and-approval-check"
 import { getAdvancedOrderNumeratorDenominator } from "./fulfill"
 import { generateCriteriaResolvers } from "./criteria"
+import { mapTipAmountsFromUnitsToFill } from "./map-tips"
 
 export async function getFulfillAdvancedOrderWrapperData({
   order,
@@ -66,7 +67,13 @@ export async function getFulfillAdvancedOrderWrapperData({
     parameters: { offer, consideration },
   } = orderWithAdjustedFills
 
-  const considerationIncludingTips = [...consideration, ...tips]
+  let adjustedTips: ConsiderationItem[] = []
+
+  if (tips.length > 0) {
+    adjustedTips = mapTipAmountsFromUnitsToFill(tips, unitsToFill, totalSize)
+  }
+
+  const considerationIncludingTips = [...consideration, ...adjustedTips]
 
   const offerCriteriaItems = offer.filter(({ itemType }) => isCriteriaItem(itemType))
 
