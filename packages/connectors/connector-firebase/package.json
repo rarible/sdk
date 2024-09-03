@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-firebase",
-  "version": "0.13.68-fix.47",
+  "version": "0.13.68-fix.48",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -22,7 +22,7 @@
   "dependencies": {
     "@firebase/app": "^0.9.22",
     "@firebase/auth": "^1.3.2",
-    "@rarible/connector": "^0.13.68-fix.47",
+    "@rarible/connector": "^0.13.68-fix.48",
     "@web3auth/base-provider": "7.2.0",
     "@web3auth/ethereum-provider": "7.2.0",
     "@web3auth/no-modal": "7.2.0",

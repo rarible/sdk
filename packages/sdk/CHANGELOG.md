@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.48](https://github.com/rarible/sdk/compare/v0.13.68-fix.47...v0.13.68-fix.48) (2024-09-03)
+
+### Bug Fixes
+
+- flow cadence update ([ea6b614](https://github.com/rarible/sdk/commit/ea6b614f25c76576dcb718dfe5000865abdbdb6b))
+
 ## [0.13.68-fix.47](https://github.com/rarible/sdk/compare/v0.13.68-fix.46...v0.13.68-fix.47) (2024-09-02)
 
 **Note:** Version bump only for package @rarible/sdk
