@@ -49,6 +49,8 @@ export const ethereumNetworks = [
   "testnet-saakuru",
   "saakuru",
   "testnet-oasys",
+  "alephzero-testnet",
+  "alephzero",
 ]
 
 export type EthereumNetwork = (typeof ethereumNetworks)[number]
