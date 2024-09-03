@@ -6,7 +6,7 @@ import { FEE_CONFIG_URL } from "./common"
 
 export const alephzeroTestnetConfig: EthereumConfig = {
   basePath: "https://testnet-alephzero-api.rarible.org",
-  chainId: 11124,
+  chainId: 2039,
   environment: "testnet",
   blockchain: Blockchain.ALEPHZERO,
   exchange: {

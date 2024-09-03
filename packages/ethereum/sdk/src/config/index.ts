@@ -45,6 +45,8 @@ import { testnetSaakuruConfig } from "./testnet-saakuru"
 import { saakuruConfig } from "./saakuru"
 import { testnetOasysConfig } from "./testnet-oasys"
 import { oasysConfig } from "./oasys"
+import { alephzeroMainnetConfig } from "./alephzero"
+import { alephzeroTestnetConfig } from "./alephzero-testnet"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -92,6 +94,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   etherlink: etherlinkConfig,
   "lisk-sepolia": liskSepoliaConfig,
   lisk: liskMainnetConfig,
+  alephzero: alephzeroMainnetConfig,
+  "alephzero-testnet": alephzeroTestnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
