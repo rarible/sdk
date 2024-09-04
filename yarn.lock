@@ -7182,6 +7182,11 @@
   resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.18.0-alpha.1.tgz#144c36383feafa3b34bb3b1402a150dfc9d0655f"
   integrity sha512-N3lK7GOydbQHEEJHFbXI4hWfTw3Wq0n4aO7MEiI4XFIkn9cGwaKC2teOcrrSDKQr9neyA7V8Gj8iJ5emZZMcUg==
 
+"@rarible/api-client@0.18.0-alpha.3":
+  version "0.18.0-alpha.3"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.18.0-alpha.3.tgz#2a5aa0221d4c85f316cb6a6c17e8e898b6d22446"
+  integrity sha512-kgC/eEkmYuF7MTHcmB9J9LPNL8nM7arB4jQ08qnlb56RoD4L2uP6qF3CbA8tYDobFE3IBwAPVncLxbiyVrd5nw==
+
 "@rarible/eslint-config-react@~0.10.0-alpha.37":
   version "0.10.0-alpha.37"
   resolved "https://registry.yarnpkg.com/@rarible/eslint-config-react/-/eslint-config-react-0.10.0-alpha.37.tgz#5227b6b36e4d3efc871203075444922ef650ea7d"
