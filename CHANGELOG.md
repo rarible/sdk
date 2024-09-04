@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.49](https://github.com/rarible/sdk/compare/v0.13.68-fix.48...v0.13.68-fix.49) (2024-09-04)
+
+### Bug Fixes
+
+- barbie collection cadence 1.0 update ([3a6c1d7](https://github.com/rarible/sdk/commit/3a6c1d73c3d64283a1dcad3ce116e00675cbbc68))
+
 ## [0.13.68-fix.48](https://github.com/rarible/sdk/compare/v0.13.68-fix.47...v0.13.68-fix.48) (2024-09-03)
 
 ### Bug Fixes
