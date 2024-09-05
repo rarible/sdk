@@ -48,6 +48,7 @@ describe("cancel aptos orders", () => {
 
   test("cancel bid", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await TestUtils.delay(1000)
     const bidOrder = await sdkBuyer.order.bid({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
