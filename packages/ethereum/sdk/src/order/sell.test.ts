@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
@@ -50,14 +50,21 @@ describe.each(providers)("sell", ethereum => {
     signOrder,
     getApis,
     ethereum,
-    ZERO_WORD,
   )
   const orderSell = new OrderSell(upserter, checkAssetType)
   const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
   const treasury = createE2eWallet()
   const treasuryAddress = toAddress(treasury.getAddressString())
 
+  test("create and update of v3 works", async () => {
+    await testV2OrHigher("DATA_V3")
+  })
+
   test("create and update of v2 works", async () => {
+    await testV2OrHigher("DATA_V2")
+  })
+
+  async function testV2OrHigher(dataType: "DATA_V2" | "DATA_V3") {
     const makerAddress = toAddress(wallet.getAddressString())
     const minted = await mint({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
@@ -76,7 +83,7 @@ describe.each(providers)("sell", ethereum => {
     }
 
     const order = await orderSell.sell({
-      type: "DATA_V2",
+      type: dataType,
       maker: toAddress(wallet.getAddressString()),
       makeAssetType: {
         assetClass: "ERC721",
@@ -112,7 +119,7 @@ describe.each(providers)("sell", ethereum => {
       })
       expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
     })
-  })
+  }
 
   test("create and update of v1 works", async () => {
     const makerAddress = toAddress(wallet.getAddressString())

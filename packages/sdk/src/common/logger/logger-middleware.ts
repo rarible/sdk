@@ -84,8 +84,15 @@ export async function getWalletInfo(wallet: BlockchainWallet): Promise<Record<st
       info["wallet.starkPubkey"] = data.starkPublicKey
       break
     }
+    case WalletType.APTOS: {
+      const [data] = await promiseSettledRequest([wallet.wallet.getAccountInfo()])
+      info["wallet.address"] = data?.address
+      info["wallet.network"] = data?.network
+      break
+    }
     default:
       info["wallet.address"] = "unknown"
+      info["wallet.network"] = "unrecognized WalletType"
   }
 
   return info

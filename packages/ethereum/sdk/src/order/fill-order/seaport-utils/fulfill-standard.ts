@@ -102,10 +102,7 @@ export async function getFulfillStandardOrderData({
 
   const { numerator, denominator } = getAdvancedOrderNumeratorDenominator(order, unitsToFill)
 
-  // const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
-
   if (useAdvanced) {
-    console.log("hasCriteriaItems", hasCriteriaItems)
     let functionCall = await seaportContract.functionCall(
       "fulfillAdvancedOrder",
       {

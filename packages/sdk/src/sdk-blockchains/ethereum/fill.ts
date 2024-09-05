@@ -6,7 +6,6 @@ import type {
   FillBatchSingleOrderRequest,
   FillOrderAction,
   FillOrderRequest,
-  RaribleV2OrderFillRequestV3Sell,
 } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
@@ -48,9 +47,7 @@ import {
   isEVMBlockchain,
   isNft,
   toEthereumParts,
-  validateOrderDataV3Request,
 } from "./common"
-import type { IEthereumSdkConfig } from "./domain"
 
 export type SupportFlagsResponse = {
   originFeeSupport: OriginFeeSupport
@@ -59,14 +56,11 @@ export type SupportFlagsResponse = {
   supportsPartialFill: boolean
 }
 
-export type SimplePreparedOrder = SimpleOrder & { makeStock: BigNumber }
-
 export class EthereumFill {
   constructor(
     private sdk: RaribleSdk,
     private wallet: Maybe<EthereumWallet>,
     private apis: IApisSdk,
-    private config?: IEthereumSdkConfig,
   ) {
     this.fill = this.fill.bind(this)
     this.buy = this.buy.bind(this)
@@ -111,17 +105,6 @@ export class EthereumFill {
           infinite: fillRequest.infiniteApproval,
           payouts: toEthereumParts(fillRequest.payouts),
           originFees: toEthereumParts(fillRequest.originFees),
-        }
-
-        switch (order.data.dataType) {
-          case "RARIBLE_V2_DATA_V3_BUY":
-            validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: true })
-            ;(request as RaribleV2OrderFillRequestV3Sell).maxFeesBasePoint = fillRequest.maxFeesBasePoint!
-            break
-          case "RARIBLE_V2_DATA_V3_SELL":
-            validateOrderDataV3Request(fillRequest, { shouldProvideMaxFeesBasePoint: false })
-            break
-          default:
         }
         break
       }
@@ -218,18 +201,11 @@ export class EthereumFill {
           supportsPartialFill: true,
         }
       }
-      case "ETH_RARIBLE_V2_DATA_V3_SELL":
+      case "ETH_RARIBLE_V2_3":
         return {
           originFeeSupport: OriginFeeSupport.FULL,
-          payoutsSupport: PayoutsSupport.SINGLE,
+          payoutsSupport: PayoutsSupport.MULTIPLE,
           maxFeesBasePointSupport: MaxFeesBasePointSupport.IGNORED,
-          supportsPartialFill: true,
-        }
-      case "ETH_RARIBLE_V2_DATA_V3_BUY":
-        return {
-          originFeeSupport: OriginFeeSupport.FULL,
-          payoutsSupport: PayoutsSupport.SINGLE,
-          maxFeesBasePointSupport: MaxFeesBasePointSupport.REQUIRED,
           supportsPartialFill: true,
         }
       case "ETH_OPEN_SEA_V1": {
@@ -292,8 +268,7 @@ export class EthereumFill {
       case "ETH_RARIBLE_V1":
       case "ETH_RARIBLE_V2":
       case "ETH_RARIBLE_V2_2":
-      case "ETH_RARIBLE_V2_DATA_V3_BUY":
-      case "ETH_RARIBLE_V2_DATA_V3_SELL":
+      case "ETH_RARIBLE_V2_3":
         return Platform.RARIBLE
       case "ETH_OPEN_SEA_V1":
       case "ETH_BASIC_SEAPORT_DATA_V1":
@@ -364,8 +339,8 @@ export class EthereumFill {
     const order = await this.apis.order.getValidatedOrderById({ id: orderId })
     const ethOrder = await getEthOrder(assertWallet(this.wallet).ethereum, order)
 
-    const submit = action
-      .before(async (fillRequest: FillRequest) => {
+    const submit = action.around(
+      async (fillRequest: FillRequest) => {
         await checkWalletBlockchain(this.wallet, blockchain)
         checkPayouts(fillRequest.payouts)
         if (fillRequest.unwrap) {
@@ -375,8 +350,9 @@ export class EthereumFill {
           throw new Warning("For collection order you should pass itemId")
         }
         return this.getFillOrderRequest(ethOrder, fillRequest)
-      })
-      .after(async tx => new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet)))
+      },
+      async tx => new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet)),
+    )
 
     const nftAssetType = isBid ? order.take.type : order.make.type
     return {

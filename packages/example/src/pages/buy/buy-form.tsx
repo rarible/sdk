@@ -30,10 +30,10 @@ export function BuyForm({ prepare, order, disabled, onComplete }: IBuyFormProps)
                 amount: parseInt(formData.amount),
                 itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
                 originFees: [
-                  {
-                    account: toUnionAddress("ETHEREUM:0xC072c9889dE7206c1C18B9d9973B06B8646FC6bd"),
-                    value: 100,
-                  },
+                  // {
+                  //   account: toUnionAddress("ETHEREUM:0xC072c9889dE7206c1C18B9d9973B06B8646FC6bd"),
+                  //   value: 100,
+                  // },
                 ],
               }),
             )

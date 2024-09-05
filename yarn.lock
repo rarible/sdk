@@ -7203,10 +7203,10 @@
     eth-json-rpc-middleware "^8.0.1"
     json-rpc-engine "^6.1.0"
 
-"@rarible/ethereum-api-client@^0.1.26-beta3":
-  version "0.1.26-beta3"
-  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.1.26-beta3.tgz#a3413288d7a5297d02a7b8f254ac28fb7d65cdfc"
-  integrity sha512-q56uTLieb6utlCV12zRpx08RI/fhP5Tj2VeYxKPUmJcg2VQPr4eH4LTqtZzQj3FMWWsEN9o4MWoUKKUDde9RTQ==
+"@rarible/ethereum-api-client@^0.2.0-alpha.1":
+  version "0.2.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.2.0-alpha.1.tgz#67b2f0f22935f9bfe719678535e0a0294e22971f"
+  integrity sha512-w6VFl3uD7cDihL3SnIW6fRAXOSydRPoRaTi+5TXnkoUI7Og3QTd94RqQ7ydvVxHjyPEK6Vq1UOrr2GHoxn1o1A==
   dependencies:
     "@rarible/types" "~0.9.2"
 

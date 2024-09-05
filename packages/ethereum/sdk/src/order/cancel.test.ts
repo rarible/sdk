@@ -3,11 +3,11 @@ import {
   createE2eProvider,
   deployTestErc1155,
   deployTestErc20,
-  deployTestErc721,
+  deployTestErc721
 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
+import { toAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { Address, OrderForm } from "@rarible/ethereum-api-client"
 import { getEthereumConfig } from "../config"
 import { delay, retry } from "../common/retry"
@@ -97,17 +97,7 @@ describe("cancel order", () => {
 
   async function testOrder(form: OrderForm) {
     const checkLazyOrder = <T>(form: T) => Promise.resolve(form)
-    const upserter = new UpsertOrder(
-      orderService,
-      send,
-      getConfig,
-      checkLazyOrder,
-      approve,
-      sign,
-      getApis,
-      ethereum,
-      ZERO_WORD,
-    )
+    const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, sign, getApis, ethereum)
 
     const order = await upserter.upsert({ order: form })
     const tx = await cancel(checkLazyOrder, ethereum, send, getConfig, getApis, order)
