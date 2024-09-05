@@ -18,7 +18,7 @@ describe("burn nft", () => {
 
   test("burn v1 token", async () => {
     const { propertyVersion, collectionName, tokenName, creator } = await createV1Token(state)
-    const tx = await burnClass.burnV1Token(creator, collectionName, tokenName, propertyVersion, "1")
+    const tx = await burnClass.burnV1Token(creator, collectionName, tokenName, `${propertyVersion}`, "1")
     console.log("tx", tx)
   })
 })
