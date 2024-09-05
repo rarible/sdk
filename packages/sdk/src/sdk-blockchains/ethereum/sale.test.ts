@@ -5,7 +5,7 @@ import { toAddress, toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAd
 import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
-import { createEthereumApis } from "@rarible/protocol-ethereum-sdk/src/common/apis"
+import { createEthereumApis } from "@rarible/protocol-ethereum-sdk/build/common/apis"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
 import { awaitForOwnership } from "../tezos/test/await-for-ownership"

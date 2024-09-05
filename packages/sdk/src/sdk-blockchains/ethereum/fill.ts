@@ -18,7 +18,7 @@ import { Platform } from "@rarible/api-client"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import { extractBlockchain } from "@rarible/sdk-common"
-import type { GetOrderBuyTxRequest, TransactionData } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
+import type { GetOrderBuyTxRequest, TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type {
   BatchFillRequest,
   FillRequest,

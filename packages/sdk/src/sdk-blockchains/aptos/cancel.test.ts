@@ -1,6 +1,6 @@
 import { TestUtils } from "@rarible/aptos-sdk"
 import { toItemId } from "@rarible/types"
-import { createV1Token } from "@rarible/aptos-sdk/src/common/test"
+import { createV1Token } from "@rarible/aptos-sdk/build/common/test"
 import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
 import { awaitCollection } from "../../common/test/await-collection"

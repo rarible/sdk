@@ -1,7 +1,7 @@
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { Action } from "@rarible/action"
-import type { GetOrderBuyTxRequest } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
-import type { TransactionData } from "@rarible/protocol-ethereum-sdk/src/order/fill-order/types"
+import type { GetOrderBuyTxRequest } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 
 export type CryptopunkWrapRequest = {
   punkId: number

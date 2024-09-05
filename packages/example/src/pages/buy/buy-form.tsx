@@ -3,7 +3,6 @@ import type { Order } from "@rarible/api-client"
 import { Box, Stack } from "@mui/material"
 import type { PrepareFillResponse } from "@rarible/sdk/build/types/order/fill/domain"
 import { toItemId } from "@rarible/types/build/item-id"
-import { toUnionAddress } from "@rarible/types"
 import { FormSubmit } from "../../components/common/form/form-submit"
 import { resultToState, useRequestResult } from "../../components/hooks/use-request-result"
 import { RequestResult } from "../../components/common/request-result"
@@ -29,12 +28,7 @@ export function BuyForm({ prepare, order, disabled, onComplete }: IBuyFormProps)
               await prepare.submit({
                 amount: parseInt(formData.amount),
                 itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
-                originFees: [
-                  // {
-                  //   account: toUnionAddress("ETHEREUM:0xC072c9889dE7206c1C18B9d9973B06B8646FC6bd"),
-                  //   value: 100,
-                  // },
-                ],
+                originFees: [],
               }),
             )
           } catch (e) {
