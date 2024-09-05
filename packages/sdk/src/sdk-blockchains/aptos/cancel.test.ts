@@ -31,6 +31,7 @@ describe("cancel aptos orders", () => {
 
   test("cancel collection offer", async () => {
     const { collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await delay(1000)
     const bidOrder = await sdkBuyer.order.bid({
       collectionId: convertAptosToUnionCollectionId(collectionAddress),
       amount: 1,
@@ -49,7 +50,7 @@ describe("cancel aptos orders", () => {
 
   test("cancel bid", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    await delay(1000)
+    await delay(3000)
     const bidOrder = await sdkBuyer.order.bid({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -57,11 +58,13 @@ describe("cancel aptos orders", () => {
       currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
-
+    await delay(1000)
     await awaitOrder(sdkSeller, bidOrder)
+    await delay(1000)
     const tx = await sdkBuyer.order.cancel({
       orderId: bidOrder,
     })
+    await delay(1000)
     expect(tx.hash()).toBeTruthy()
     await awaitOrder(sdkSeller, bidOrder, order => order.status === "CANCELLED")
   })

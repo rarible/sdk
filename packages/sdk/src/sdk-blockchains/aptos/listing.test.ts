@@ -23,7 +23,7 @@ describe("Aptos Orders", () => {
 
   test("sell & buy with CurrencyId with prepare", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    await delay(1000)
+    await delay(2000)
     const prepareResponse = await sdkSeller.order.sell.prepare({
       itemId: toItemId(`APTOS:${tokenAddress}`),
     })
@@ -39,10 +39,12 @@ describe("Aptos Orders", () => {
         },
       ],
     })
+    await delay(1000)
     await awaitOrder(sdkSeller, sellOrder)
     const buyPrepare = await sdkBuyer.order.buy.prepare({
       orderId: sellOrder,
     })
+    await delay(1000)
     expect(buyPrepare.orderData.nftCollection).toBeTruthy()
     const tx = await buyPrepare.submit({
       amount: 1,
