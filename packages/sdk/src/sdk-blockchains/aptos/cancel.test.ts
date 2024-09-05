@@ -1,4 +1,5 @@
 import { TestUtils } from "@rarible/aptos-sdk"
+import { delay } from "@rarible/sdk-common"
 import { toItemId } from "@rarible/types"
 import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
@@ -48,7 +49,7 @@ describe("cancel aptos orders", () => {
 
   test("cancel bid", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    await TestUtils.delay(1000)
+    await delay(1000)
     const bidOrder = await sdkBuyer.order.bid({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,

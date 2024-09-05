@@ -20,7 +20,6 @@ export function getBlockchainFromChainId(chainId: number): EVMBlockchain {
   return getBlockchainBySDKNetwork(network)
 }
 export function getBlockchainBySDKNetwork(network: EthereumNetwork): EVMBlockchain {
-  console.log("configDictionary[network]", configDictionary[network])
   if (!configDictionary[network]?.blockchain) {
     throw new Error(`Unrecognized ethereum network ${network}`)
   }

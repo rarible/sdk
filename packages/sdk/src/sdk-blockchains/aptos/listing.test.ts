@@ -1,4 +1,5 @@
 import { TestUtils } from "@rarible/aptos-sdk"
+import { delay } from "@rarible/sdk-common"
 import { toItemId, toUnionAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { toBn } from "@rarible/utils"
@@ -7,8 +8,6 @@ import { awaitOrder } from "../../common/test/await-order"
 import { awaitBalance } from "../../common/test/await-balance"
 import { createSdk } from "./common/tests/create-sdk"
 import { APTOS_APT_CURRENCY, convertAptosToUnionAddress } from "./common"
-
-
 
 describe("Aptos Orders", () => {
   const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
@@ -24,7 +23,7 @@ describe("Aptos Orders", () => {
 
   test("sell & buy with CurrencyId with prepare", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    await TestUtils.delay(1000)
+    await delay(1000)
     const prepareResponse = await sdkSeller.order.sell.prepare({
       itemId: toItemId(`APTOS:${tokenAddress}`),
     })
