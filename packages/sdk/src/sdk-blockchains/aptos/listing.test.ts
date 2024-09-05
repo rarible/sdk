@@ -8,6 +8,8 @@ import { awaitBalance } from "../../common/test/await-balance"
 import { createSdk } from "./common/tests/create-sdk"
 import { APTOS_APT_CURRENCY, convertAptosToUnionAddress } from "./common"
 
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
 describe("Aptos Orders", () => {
   const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
   const sdkSeller = createSdk(sellerState, "development")
@@ -22,6 +24,7 @@ describe("Aptos Orders", () => {
 
   test("sell & buy with CurrencyId with prepare", async () => {
     const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await delay(1000)
     const prepareResponse = await sdkSeller.order.sell.prepare({
       itemId: toItemId(`APTOS:${tokenAddress}`),
     })
