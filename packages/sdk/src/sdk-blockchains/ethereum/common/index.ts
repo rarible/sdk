@@ -49,7 +49,7 @@ import type {
   EthErc721AssetType,
   EthErc721LazyAssetType,
 } from "@rarible/api-client/build/models/AssetType"
-import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/src/order/types"
+import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
 import type {
   OrderCryptoPunksData,
   OrderDataLegacy,

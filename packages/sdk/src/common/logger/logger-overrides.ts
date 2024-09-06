@@ -154,7 +154,7 @@ export class LoggerDataContainer {
   static getParsedArgs(args: any[]) {
     let parsedArgs
     try {
-      parsedArgs = JSON.stringify(args)
+      parsedArgs = getStringifiedData(args) || ""
     } catch (e) {
       try {
         parsedArgs = JSON.stringify(args, Object.getOwnPropertyNames(args))
@@ -172,7 +172,7 @@ export class LoggerDataContainer {
       message: "trace of " + this.input.callable.name,
       duration: (Date.now() - this.input.startTime) / 1000,
       args: this.stringifiedArgs,
-      resp: JSON.stringify(res),
+      resp: getStringifiedData(res),
       ...(this.extraFields || {}),
       ...(additionalFields || {}),
     }

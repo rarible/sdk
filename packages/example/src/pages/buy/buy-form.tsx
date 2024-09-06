@@ -28,6 +28,7 @@ export function BuyForm({ prepare, order, disabled, onComplete }: IBuyFormProps)
               await prepare.submit({
                 amount: parseInt(formData.amount),
                 itemId: formData.itemId ? toItemId(formData.itemId) : undefined,
+                originFees: [],
               }),
             )
           } catch (e) {

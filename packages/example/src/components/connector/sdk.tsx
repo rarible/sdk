@@ -68,7 +68,7 @@ function extractActiveConnection(state: ConnectionState<IWalletAndAddress> | und
 
 function createRaribleConfig(environment: RaribleSdkEnvironment): IRaribleSdkConfig {
   return {
-    logs: LogsLevel.ERROR,
+    logs: LogsLevel.TRACE,
     apiKey: getApiKey(environment),
     blockchain: {
       [WalletType.ETHEREUM]: {

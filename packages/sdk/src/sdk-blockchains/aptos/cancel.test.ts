@@ -1,19 +1,21 @@
 import { TestUtils } from "@rarible/aptos-sdk"
-import { delay } from "@rarible/sdk-common"
 import { toItemId } from "@rarible/types"
+import { createV1Token } from "@rarible/aptos-sdk/build/common/test"
 import { generateExpirationDate } from "../../common/suite/order"
 import { awaitOrder } from "../../common/test/await-order"
+import { awaitCollection } from "../../common/test/await-collection"
 import { APTOS_APT_CURRENCY, convertAptosToUnionCollectionId } from "./common"
 import { createSdk } from "./common/tests/create-sdk"
 
 describe("cancel aptos orders", () => {
   const sellerState = TestUtils.createTestAptosState(TestUtils.DEFAULT_PK)
-  const sdkSeller = createSdk(sellerState, "development")
+  const sdkSeller = createSdk(sellerState, "testnet")
   const buyerState = TestUtils.createTestAptosState(TestUtils.BUYER_PK)
-  const sdkBuyer = createSdk(buyerState, "development")
+  const sdkBuyer = createSdk(buyerState, "testnet")
 
   test("cancel sell order", async () => {
-    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const sellOrder = await sdkSeller.order.sell({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -29,9 +31,28 @@ describe("cancel aptos orders", () => {
     await awaitOrder(sdkSeller, sellOrder, order => order.status === "CANCELLED")
   })
 
+  test("cancel sell order with v1 token", async () => {
+    await createV1Token(sellerState)
+    const itemId = toItemId(`APTOS:0x3115b0cb265c1cd1ce5cf5e26730661244e08bd799efa4ea75b93076f0bab374`)
+    const sellOrder = await sdkSeller.order.sell({
+      itemId,
+      amount: 1,
+      price: "0.02",
+      currency: APTOS_APT_CURRENCY,
+      expirationDate: generateExpirationDate(),
+    })
+    await awaitOrder(sdkSeller, sellOrder)
+    const tx = await sdkSeller.order.cancel({
+      orderId: sellOrder,
+    })
+    expect(tx.hash()).toBeTruthy()
+    await awaitOrder(sdkSeller, sellOrder, order => order.status === "CANCELLED")
+  })
+
   test("cancel collection offer", async () => {
     const { collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    await delay(1000)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
+
     const bidOrder = await sdkBuyer.order.bid({
       collectionId: convertAptosToUnionCollectionId(collectionAddress),
       amount: 1,
@@ -49,8 +70,8 @@ describe("cancel aptos orders", () => {
   })
 
   test("cancel bid", async () => {
-    const { tokenAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    await delay(3000)
+    const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
+    await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const bidOrder = await sdkBuyer.order.bid({
       itemId: toItemId(`APTOS:${tokenAddress}`),
       amount: 1,
@@ -58,13 +79,11 @@ describe("cancel aptos orders", () => {
       currency: APTOS_APT_CURRENCY,
       expirationDate: generateExpirationDate(),
     })
-    await delay(1000)
+
     await awaitOrder(sdkSeller, bidOrder)
-    await delay(1000)
     const tx = await sdkBuyer.order.cancel({
       orderId: bidOrder,
     })
-    await delay(1000)
     expect(tx.hash()).toBeTruthy()
     await awaitOrder(sdkSeller, bidOrder, order => order.status === "CANCELLED")
   })

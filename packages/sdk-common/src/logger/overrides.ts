@@ -105,6 +105,8 @@ export const CANCEL_MESSAGES = [
   "The user rejected the request through Exodus",
   "Permission denied, denied",
   "user closed popup",
+  "User has rejected the request",
+  "The user rejected the request",
 ].map(msg => msg.toLowerCase())
 
 export const COMMON_INFO_MESSAGES = [

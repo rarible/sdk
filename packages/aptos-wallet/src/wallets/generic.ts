@@ -2,6 +2,7 @@ import type { Account as GenericAccount, Aptos } from "@aptos-labs/ts-sdk"
 import type { MoveFunctionId } from "@aptos-labs/ts-sdk"
 import { normalizeAptosAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface } from "../domain"
+import { Network } from "../domain"
 
 export class AptosGenericSdkWallet implements AptosWalletInterface {
   constructor(
@@ -21,6 +22,8 @@ export class AptosGenericSdkWallet implements AptosWalletInterface {
     return {
       address: normalizeAptosAddress(this.account.accountAddress.toString()),
       publicKey: this.account.publicKey.toString(),
+      //@todo "Account" doesn't include network field
+      network: Network.Testnet,
     }
   }
 

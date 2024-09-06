@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.49](https://github.com/rarible/sdk/compare/v0.13.68-fix.48...v0.13.68-fix.49) (2024-09-04)
+
+**Note:** Version bump only for package @rarible/sdk-common
+
+## [0.13.68-fix.48](https://github.com/rarible/sdk/compare/v0.13.68-fix.47...v0.13.68-fix.48) (2024-09-03)
+
+**Note:** Version bump only for package @rarible/sdk-common
+
+## [0.13.68-fix.47](https://github.com/rarible/sdk/compare/v0.13.68-fix.46...v0.13.68-fix.47) (2024-09-02)
+
+### Bug Fixes
+
+- **PLTF-552:** opensea order fix ([48c4aeb](https://github.com/rarible/sdk/commit/48c4aeb1d63ac56616185ed425284d5751437818))
+
+## [0.13.68-fix.46](https://github.com/rarible/sdk/compare/v0.13.68-fix.45...v0.13.68-fix.46) (2024-08-26)
+
+### Bug Fixes
+
+- **PLTF-573:** logging return data ([6876737](https://github.com/rarible/sdk/commit/6876737bdf9122f1bdbedd67be2bd3227d5f58b6))
+
+## [0.13.68-fix.45](https://github.com/rarible/sdk/compare/v0.13.68-fix.44...v0.13.68-fix.45) (2024-08-20)
+
+**Note:** Version bump only for package @rarible/sdk-common
+
+## [0.13.68-fix.44](https://github.com/rarible/sdk/compare/v0.13.68-fix.43...v0.13.68-fix.44) (2024-08-13)
+
+**Note:** Version bump only for package @rarible/sdk-common
+
+## [0.13.68-fix.43](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.43) (2024-08-12)
+
+**Note:** Version bump only for package @rarible/sdk-common
+
 ## [0.13.68-fix.42](https://github.com/rarible/sdk/compare/v0.13.68-fix.41...v0.13.68-fix.42) (2024-07-29)
 
 ### Features

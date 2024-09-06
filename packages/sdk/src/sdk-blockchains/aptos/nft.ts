@@ -131,6 +131,21 @@ export class AptosNft {
           const aptosNftId = extractId(item.id)
           const recipientAddress = extractId(request.to)
 
+          const aptosCollection = await this.apis.collection.getCollectionById({
+            collection: item.collection!,
+          })
+          if (aptosCollection.extra?.standard === "v1" && item.extra) {
+            const creator = extractId(item.creators[0].account)
+            const tx = await this.sdk.nft.transferV1Token(
+              recipientAddress,
+              creator,
+              aptosCollection.name,
+              item.extra.onChainTokenName,
+              item.extra.propertyVersionV1,
+              `${request.amount}`,
+            )
+            return new BlockchainAptosTransaction(tx, this.network, this.sdk)
+          }
           const tx = await this.sdk.nft.transfer(aptosNftId, recipientAddress)
 
           return new BlockchainAptosTransaction(tx, this.network, this.sdk)

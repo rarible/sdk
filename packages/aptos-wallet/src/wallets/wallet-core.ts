@@ -3,6 +3,7 @@ import type { WalletCore } from "@aptos-labs/wallet-adapter-core"
 import { randomWord } from "@rarible/types"
 import { normalizeAptosAddress } from "@rarible/sdk-common"
 import type { AptosTransaction, AptosWalletInterface } from "../domain"
+import { normalizeAptosNetwork } from "./common"
 
 export class AptosWalletCore implements AptosWalletInterface {
   constructor(public readonly wallet: WalletCore) {}
@@ -26,12 +27,13 @@ export class AptosWalletCore implements AptosWalletInterface {
 
   async getAccountInfo() {
     const accountInfo = this.wallet.account
-    if (!accountInfo) {
+    if (!accountInfo || !this.wallet.network) {
       throw new Error("AccountInfo does not exist")
     }
     return {
       address: normalizeAptosAddress(accountInfo.address),
       publicKey: Array.isArray(accountInfo.publicKey) ? accountInfo.publicKey[0] : accountInfo.publicKey,
+      network: normalizeAptosNetwork(this.wallet.network.name),
     }
   }
 
