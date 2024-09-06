@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.49](https://github.com/rarible/sdk/compare/v0.13.68-fix.48...v0.13.68-fix.49) (2024-09-04)
+
+### Bug Fixes
+
+- barbie collection cadence 1.0 update ([3a6c1d7](https://github.com/rarible/sdk/commit/3a6c1d73c3d64283a1dcad3ce116e00675cbbc68))
+
+## [0.13.68-fix.48](https://github.com/rarible/sdk/compare/v0.13.68-fix.47...v0.13.68-fix.48) (2024-09-03)
+
+### Bug Fixes
+
+- flow cadence update ([ea6b614](https://github.com/rarible/sdk/commit/ea6b614f25c76576dcb718dfe5000865abdbdb6b))
+
+## [0.13.68-fix.47](https://github.com/rarible/sdk/compare/v0.13.68-fix.46...v0.13.68-fix.47) (2024-09-02)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+## [0.13.68-fix.46](https://github.com/rarible/sdk/compare/v0.13.68-fix.45...v0.13.68-fix.46) (2024-08-26)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+## [0.13.68-fix.45](https://github.com/rarible/sdk/compare/v0.13.68-fix.44...v0.13.68-fix.45) (2024-08-20)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+## [0.13.68-fix.44](https://github.com/rarible/sdk/compare/v0.13.68-fix.43...v0.13.68-fix.44) (2024-08-13)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
+## [0.13.68-fix.43](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.43) (2024-08-12)
+
+**Note:** Version bump only for package @rarible/sdk-transaction
+
 ## [0.13.68-fix.42](https://github.com/rarible/sdk/compare/v0.13.68-fix.41...v0.13.68-fix.42) (2024-07-29)
 
 ### Features

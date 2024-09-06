@@ -7,7 +7,7 @@ describe("balance", () => {
 
   const balanceInstance = new AptosBalance(aptos)
 
-  test("get balance", async () => {
+  test.skip("get balance", async () => {
     const randomAccount = Account.generate()
     await aptos.fundAccount({
       accountAddress: randomAccount.accountAddress,

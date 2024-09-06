@@ -2,41 +2,7 @@ export * from "./promise-settled"
 export * from "./address"
 export * from "./blockchain"
 export * from "./retry"
-
-export function getStringifiedData(data: any): string | undefined {
-  try {
-    if (typeof data === "string") {
-      return data
-    }
-    const errorObject = Object.getOwnPropertyNames(data).reduce(
-      (acc, key) => {
-        acc[key] = data[key]
-        return acc
-      },
-      {} as Record<any, any>,
-    )
-    return JSON.stringify(errorObject, replaceErrors, "  ")
-  } catch (e) {
-    return undefined
-  }
-}
-
-function replaceErrors(key: string, value: unknown) {
-  try {
-    if (value instanceof Error) {
-      const error: Record<string | number | symbol, unknown> = {}
-
-      Object.getOwnPropertyNames(value).forEach(function (propName) {
-        // @ts-ignore
-        error[propName] = value[propName]
-      })
-
-      return error
-    }
-  } catch (_) {}
-
-  return value
-}
+export * from "./get-stringified-data"
 
 export enum DappType {
   AlphaWallet = "AlphaWallet",

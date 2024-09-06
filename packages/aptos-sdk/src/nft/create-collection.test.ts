@@ -5,11 +5,11 @@ describe("create collection", () => {
   const { aptos, config, wallet } = createTestAptosState()
   const deploy = new AptosNft(aptos, wallet, config)
 
-  test.skip("create collection", async () => {
+  test("create collection", async () => {
     const uri = "ipfs://QmWYpMyoaUGNRSQbwhw97xM8tcRWm4Et598qtzmzsau7ch/"
     const randomId = Math.floor(Math.random() * 100_000_000)
 
-    const { tx, collectionAddress } = await deploy.createCollection({
+    const { tx, collectionAddress } = await deploy.createNativeCollection({
       name: `Test collection #${randomId}`,
       description: "description",
       uri,

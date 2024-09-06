@@ -2,7 +2,7 @@ import type { Account as GenericAccount } from "@aptos-labs/ts-sdk"
 
 export interface AptosWalletInterface {
   signMessage(message: string, options?: { nonce: string }): Promise<{ message: string; signature: string }>
-  getAccountInfo(): Promise<{ address: string; publicKey: string }>
+  getAccountInfo(): Promise<{ address: string; publicKey: string; network: Network }>
   signAndSubmitTransaction(payload: AptosTransaction): Promise<{ hash: string }>
 }
 

@@ -43,6 +43,7 @@ import type {
 } from "./types/nft/collection"
 import type { ExternalContext } from "./common/get-sdk-context"
 import type { IFlowCheckInitGamisodesCollections } from "./types/nft/collection"
+import type { IGetBuyTxData } from "./types/ethereum/domain"
 
 export enum LogsLevel {
   DISABLED = 0,
@@ -392,6 +393,7 @@ export interface IEthereumSdk {
   wrapCryptoPunk: ICryptopunkWrap
   unwrapCryptoPunk: ICryptopunkUnwrap
   getBatchBuyAmmInfo: IGetBuyAmmInfo
+  getBuyTxData: IGetBuyTxData
 }
 
 export interface IFlowSdk {

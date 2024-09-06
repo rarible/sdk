@@ -1,7 +1,7 @@
 import type { Web3Ethereum } from "@rarible/web3-ethereum/build"
 import { Blockchain } from "@rarible/api-client"
 import { getTestContract } from "@rarible/ethereum-sdk-test-common"
-import { getEthereumConfig } from "@rarible/protocol-ethereum-sdk/src/config"
+import { getEthereumConfig } from "@rarible/protocol-ethereum-sdk/build/config"
 import type { EVMSuiteSupportedBlockchain } from "../domain"
 import type { EVMKnownTestContract, EVMContractsDictionary } from "./domain"
 import { ERC1155Contract } from "./variants/erc1155"

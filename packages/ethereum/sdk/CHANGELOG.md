@@ -3,6 +3,39 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.49](https://github.com/rarible/sdk/compare/v0.13.68-fix.48...v0.13.68-fix.49) (2024-09-04)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.48](https://github.com/rarible/sdk/compare/v0.13.68-fix.47...v0.13.68-fix.48) (2024-09-03)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.47](https://github.com/rarible/sdk/compare/v0.13.68-fix.46...v0.13.68-fix.47) (2024-09-02)
+
+### Bug Fixes
+
+- **PLTF-552:** opensea order fix ([48c4aeb](https://github.com/rarible/sdk/commit/48c4aeb1d63ac56616185ed425284d5751437818))
+
+## [0.13.68-fix.46](https://github.com/rarible/sdk/compare/v0.13.68-fix.45...v0.13.68-fix.46) (2024-08-26)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.45](https://github.com/rarible/sdk/compare/v0.13.68-fix.44...v0.13.68-fix.45) (2024-08-20)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.44](https://github.com/rarible/sdk/compare/v0.13.68-fix.43...v0.13.68-fix.44) (2024-08-13)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.43](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.43) (2024-08-12)
+
+### Features
+
+- aptos v1 orders ([08c33f1](https://github.com/rarible/sdk/commit/08c33f1fee0f0d7a1c2d6ff36dbc9691193326e8))
+- v1 aptos token support ([8cdb9c7](https://github.com/rarible/sdk/commit/8cdb9c7b2eff2f8a792d5c13e63c85adc56d2970))
+
 ## [0.13.68-fix.42](https://github.com/rarible/sdk/compare/v0.13.68-fix.41...v0.13.68-fix.42) (2024-07-29)
 
 ### Features
