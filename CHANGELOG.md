@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.51](https://github.com/rarible/sdk/compare/v0.13.68-fix.50...v0.13.68-fix.51) (2024-09-09)
+
+### Bug Fixes
+
+- getBuyTxData evm orders ([c2de553](https://github.com/rarible/sdk/commit/c2de553b9672afd6767215cfe728f29457baf8dd))
+
 ## [0.13.68-fix.50](https://github.com/rarible/sdk/compare/v0.13.68-fix.49...v0.13.68-fix.50) (2024-09-06)
 
 ### Bug Fixes
