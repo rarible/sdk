@@ -18,7 +18,7 @@ import { Platform } from "@rarible/api-client"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import { extractBlockchain, extractId } from "@rarible/sdk-common"
-import type { GetOrderBuyTxRequest, TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import type { TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type {
   BatchFillRequest,
   FillRequest,
@@ -513,8 +513,10 @@ export class EthereumFill {
   }
 
   async getBuyTxData(input: IGetBuyTxDataRequest): Promise<TransactionData> {
-    const evmOrderId = extractId(getOrderId(input.request))
-    const evmOrder = await this.sdk.apis.order.getOrderByHash({ hash: evmOrderId })
+    const unionOrderId = getOrderId(input.request)
+    const order = await this.apis.order.getValidatedOrderById({ id: unionOrderId })
+    const ethOrder = await getEthOrder(assertWallet(this.wallet).ethereum, order)
+
     let from: Address
     if (input.from) {
       from = toAddress(extractId(input.from))
@@ -523,7 +525,7 @@ export class EthereumFill {
     } else {
       throw new Error("Request doesn't contain `from` address")
     }
-    const ethRequest = this.getFillOrderRequest(evmOrder, input.request)
+    const ethRequest = this.getFillOrderRequest(ethOrder, input.request)
     return this.sdk.order.getBuyTxData({
       request: ethRequest,
       from,
