@@ -24,7 +24,6 @@ describe("cancel aptos orders", () => {
       expirationDate: generateExpirationDate(),
     })
     await awaitOrder(sdkSeller, sellOrder)
-    console.log("sellOrder", sellOrder)
     const tx = await sdkSeller.order.cancel({
       orderId: sellOrder,
     })

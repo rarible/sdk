@@ -63,11 +63,6 @@ describe("Aptos Orders", () => {
 
   test("sell & buy with CurrencyId with prepare", async () => {
     const { tokenAddress, collectionAddress } = await TestUtils.createTestCollectionAndMint(sellerState)
-    console.log(
-      "convertAptosToUnionCollectionId(collectionAddress)",
-      convertAptosToUnionCollectionId(collectionAddress),
-    )
-    console.log("tokenAddress", tokenAddress)
     await awaitCollection(sdkSeller, convertAptosToUnionCollectionId(collectionAddress))
     const prepareResponse = await sdkSeller.order.sell.prepare({
       itemId: toItemId(`APTOS:${tokenAddress}`),
