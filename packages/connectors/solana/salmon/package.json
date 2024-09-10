@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-salmon",
-  "version": "0.13.68-fix.52",
+  "version": "0.13.68-fix.53",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector-solana": "^0.13.68-fix.52"
+    "@rarible/connector-solana": "^0.13.68-fix.53"
   },
   "publishConfig": {
     "access": "public"

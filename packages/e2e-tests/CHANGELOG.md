@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.53](https://github.com/rarible/sdk/compare/v0.13.68-fix.52...v0.13.68-fix.53) (2024-09-10)
+
+### Bug Fixes
+
+- **PLTF-614:** fix transfer mattel items ([#657](https://github.com/rarible/sdk/issues/657)) ([90a85ee](https://github.com/rarible/sdk/commit/90a85ee587d729529100fbe048fac84cc5fd6674))
+
 ## [0.13.68-fix.52](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.52) (2024-09-10)
 
 ### Features
