@@ -19,7 +19,7 @@
   "dependencies": {
     "@rarible/aptos-sdk": "^0.13.68-fix.52",
     "@rarible/ethereum-provider": "^0.13.68-fix.52",
-    "@rarible/flow-sdk": "~0.5.78-fix.7",
+    "@rarible/flow-sdk": "~0.5.78-fix.8",
     "@rarible/protocol-ethereum-sdk": "^0.13.68-fix.52",
     "@rarible/solana-sdk": "^0.13.68-fix.52",
     "@rarible/tezos-sdk": "0.1.46",
