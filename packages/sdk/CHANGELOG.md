@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.52](https://github.com/rarible/sdk/compare/v0.13.68-fix.42...v0.13.68-fix.52) (2024-09-10)
+
+### Features
+
+- alephzero support ([4fbd18a](https://github.com/rarible/sdk/commit/4fbd18a7fd7bbfe3a2b97d6e38c1389d5a2145ae))
+- **alephzero:** added test fix ([80014c7](https://github.com/rarible/sdk/commit/80014c7613996f6fb06a1cd9dc9caca3b74754e5))
+- **alephzero:** attempt to fix build ([1a1b6aa](https://github.com/rarible/sdk/commit/1a1b6aa3534680513f288ccbcb4bf16579d4439b))
+- **alephzero:** code cleanup after code review ([ef72bcd](https://github.com/rarible/sdk/commit/ef72bcd48c766a837aa9a636db32ce4f04e1e54d))
+- getBuyTx update merge ([#656](https://github.com/rarible/sdk/issues/656)) ([612f311](https://github.com/rarible/sdk/commit/612f31138dfd3d693caf03f01fae6f2de200c2a3))
+- **test:** improved tests added delay for the failing test ([d3a43c1](https://github.com/rarible/sdk/commit/d3a43c10e65e33d24b4faa033a636d2dc3151fc6))
+
 ## [0.13.68-fix.51](https://github.com/rarible/sdk/compare/v0.13.68-fix.50...v0.13.68-fix.51) (2024-09-09)
 
 ### Bug Fixes
