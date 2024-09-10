@@ -1,5 +1,5 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { BigNumber } from "@rarible/types"
+import type { Address, BigNumber } from "@rarible/types"
 import { toAddress, toBigNumber } from "@rarible/types"
 import type {
   AmmOrderFillRequest,
@@ -17,8 +17,8 @@ import type { Blockchain, Order, OrderId } from "@rarible/api-client"
 import { Platform } from "@rarible/api-client"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
-import { extractBlockchain } from "@rarible/sdk-common"
-import type { GetOrderBuyTxRequest, TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
+import { extractBlockchain, extractId } from "@rarible/sdk-common"
+import type { TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type {
   BatchFillRequest,
   FillRequest,
@@ -32,6 +32,7 @@ import type { BuyAmmInfoRequest } from "../../types/balances"
 import type { AcceptBidSimplifiedRequest, BuySimplifiedRequest } from "../../types/order/fill/simplified"
 import { checkPayouts } from "../../common/check-payouts"
 import type { IApisSdk } from "../../domain"
+import type { IGetBuyTxDataRequest } from "../../types/ethereum/domain"
 import type { EVMBlockchain } from "./common"
 import {
   assertBlockchainAndChainId,
@@ -511,8 +512,24 @@ export class EthereumFill {
     })
   }
 
-  async getBuyTxData(request: GetOrderBuyTxRequest): Promise<TransactionData> {
-    return this.sdk.order.getBuyTxData(request)
+  async getBuyTxData(input: IGetBuyTxDataRequest): Promise<TransactionData> {
+    const unionOrderId = getOrderId(input.request)
+    const order = await this.apis.order.getValidatedOrderById({ id: unionOrderId })
+    const ethOrder = await getEthOrder(assertWallet(this.wallet).ethereum, order)
+
+    let from: Address
+    if (input.from) {
+      from = toAddress(extractId(input.from))
+    } else if (this.wallet) {
+      from = toAddress(await this.wallet.ethereum.getFrom())
+    } else {
+      throw new Error("Request doesn't contain `from` address")
+    }
+    const ethRequest = this.getFillOrderRequest(ethOrder, input.request)
+    return this.sdk.order.getBuyTxData({
+      request: ethRequest,
+      from,
+    })
   }
 
   async batchBuyBasic(

@@ -24,6 +24,25 @@ describe("cancel aptos orders", () => {
       expirationDate: generateExpirationDate(),
     })
     await awaitOrder(sdkSeller, sellOrder)
+    console.log("sellOrder", sellOrder)
+    const tx = await sdkSeller.order.cancel({
+      orderId: sellOrder,
+    })
+    expect(tx.hash()).toBeTruthy()
+    await awaitOrder(sdkSeller, sellOrder, order => order.status === "CANCELLED")
+  })
+
+  test("cancel sell order with v1 token", async () => {
+    await createV1Token(sellerState)
+    const itemId = toItemId(`APTOS:0x3115b0cb265c1cd1ce5cf5e26730661244e08bd799efa4ea75b93076f0bab374`)
+    const sellOrder = await sdkSeller.order.sell({
+      itemId,
+      amount: 1,
+      price: "0.02",
+      currency: APTOS_APT_CURRENCY,
+      expirationDate: generateExpirationDate(),
+    })
+    await awaitOrder(sdkSeller, sellOrder)
     const tx = await sdkSeller.order.cancel({
       orderId: sellOrder,
     })
