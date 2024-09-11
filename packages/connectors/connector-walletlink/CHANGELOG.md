@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.54](https://github.com/rarible/sdk/compare/v0.13.68-fix.53...v0.13.68-fix.54) (2024-09-11)
+
+**Note:** Version bump only for package @rarible/connector-walletlink
+
 ## [0.13.68-fix.53](https://github.com/rarible/sdk/compare/v0.13.68-fix.52...v0.13.68-fix.53) (2024-09-10)
 
 **Note:** Version bump only for package @rarible/connector-walletlink

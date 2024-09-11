@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.54](https://github.com/rarible/sdk/compare/v0.13.68-fix.53...v0.13.68-fix.54) (2024-09-11)
+
+### Features
+
+- add backpack adapter for solana wallet ([#658](https://github.com/rarible/sdk/issues/658)) ([afb57ba](https://github.com/rarible/sdk/commit/afb57ba65397217cfdcb7239bab00716d3449477))
+
 ## [0.13.68-fix.53](https://github.com/rarible/sdk/compare/v0.13.68-fix.52...v0.13.68-fix.53) (2024-09-10)
 
 ### Bug Fixes
