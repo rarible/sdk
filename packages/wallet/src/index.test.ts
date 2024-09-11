@@ -12,6 +12,7 @@ describe("exports", () => {
         "SolanaWallet",
         "TezosWallet",
         "FlowWallet",
+        "BackpackSigner",
       ]
     `)
   })
