@@ -48,8 +48,6 @@ describe("sale", () => {
     "0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a",
     sepoliaConfig,
   )
-  const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer), gas: 3000000 })
-  const env = "testnet" as const
 
   beforeAll(async () => {
     const wallet2Address = wallet2.getAddressString()

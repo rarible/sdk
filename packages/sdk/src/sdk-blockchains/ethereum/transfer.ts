@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toAddress, toBigNumber, toContractAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Maybe } from "@rarible/types/build/maybe"
@@ -11,7 +11,6 @@ import type { IApisSdk } from "../../domain"
 import type { PrepareTransferResponse } from "../../types/nft/transfer/domain"
 import {
   checkWalletBlockchain,
-  convertEthereumContractAddress,
   convertToEthereumAddress,
   getEthereumItemId,
   getWalletNetwork,
@@ -43,7 +42,7 @@ export class EthereumTransfer {
       multiple: collection.type === "ERC1155",
       maxAmount: item.supply,
       nftData: {
-        nftCollection: item.collection ? convertEthereumContractAddress(item.collection, domain) : undefined,
+        nftCollection: item.collection ? toContractAddress(item.collection) : undefined,
       },
       submit: Action.create({
         id: "transfer" as const,
