@@ -10,4 +10,3 @@ export {
   TezosWallet,
   FlowWallet,
 } from "./wallets"
-export { BackpackSigner } from "@rarible/solana-wallet"
