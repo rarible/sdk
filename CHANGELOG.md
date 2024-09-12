@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.55](https://github.com/rarible/sdk/compare/v0.13.68-fix.54...v0.13.68-fix.55) (2024-09-12)
+
+### Features
+
+- remove BackpackSigner export ([#660](https://github.com/rarible/sdk/issues/660)) ([3e35900](https://github.com/rarible/sdk/commit/3e35900cd31655a6ad1a7689d4aa86b33e317ed6))
+
 ## [0.13.68-fix.54](https://github.com/rarible/sdk/compare/v0.13.68-fix.53...v0.13.68-fix.54) (2024-09-11)
 
 ### Features
