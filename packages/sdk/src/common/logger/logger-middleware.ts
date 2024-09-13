@@ -11,6 +11,8 @@ import {
   getStringifiedData,
 } from "@rarible/sdk-common"
 import { WrappedError, INVALID_TX_PARAMS_EIP_1559_ERROR } from "@rarible/sdk-common"
+import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
+import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Middleware } from "../middleware/middleware"
 import type { ISdkContext } from "../../domain"
 import { LogsLevel } from "../../domain"
@@ -26,6 +28,9 @@ import type { PrepareBatchBuyResponse } from "../../types/order/fill/domain"
 import type { PrepareTransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareMintRequest } from "../../types/nft/mint/prepare-mint-request.type"
 import type { PrepareBurnRequest } from "../../types/nft/burn/domain"
+import type { BurnResponse } from "../../types/nft/burn/domain"
+import type { CreateCollectionResponse } from "../../types/nft/deploy/domain"
+import type { MintResponse } from "../../types/nft/mint/prepare"
 import { getExecRevertedMessage, LoggerDataContainer } from "./logger-overrides"
 
 export const loggerConfig = {
@@ -176,17 +181,16 @@ export function getInternalLoggerMiddleware(
           : responsePromise
 
         returnedPromis
-          .then(async tx => {
-            if (tx?.transaction?.constructor.name === "BlockchainEthereumTransaction") {
+          .then(async response => {
+            const tx = getTxFromMethodResponse(response)
+            if (tx) {
               try {
-                await tx.transaction.wait()
-                await remoteLogger.raw(
-                  await dataContainer.getTraceData({ method: replaceMethodPart(callable.name, "wait") }),
-                )
+                await tx.wait()
+                await remoteLogger.raw(await dataContainer.getTraceData({ method: `${callable.name}.wait` }))
               } catch (err: any) {
                 wrappedError = wrapSpecialErrors(err)
                 await remoteLogger.raw(
-                  dataContainer.getErrorData(wrappedError || err, { method: replaceMethodPart(callable.name, "wait") }),
+                  dataContainer.getErrorData(wrappedError || err, { method: `${callable.name}.wait` }),
                 )
               }
             }
@@ -198,10 +202,21 @@ export function getInternalLoggerMiddleware(
     ]
   }
 }
-function replaceMethodPart(method: string, argForReplace: string): string {
-  let parts = method.split(".")
-  parts[parts.length - 1] = argForReplace
-  return parts.join(".")
+
+function isUnionEthereumTx(original: any): boolean {
+  return BlockchainEthereumTransaction.isInstance && BlockchainEthereumTransaction.isInstance(original)
+}
+
+function getTxFromMethodResponse(
+  response: IBlockchainTransaction | BurnResponse | CreateCollectionResponse | MintResponse | any,
+): IBlockchainTransaction | undefined {
+  //burn, cancel/ buy, transfer
+  if (isUnionEthereumTx(response)) return response
+  //create collection
+  if (isUnionEthereumTx(response?.tx)) return response.tx
+  //mint
+  if (isUnionEthereumTx(response?.transaction)) return response.transaction
+  return undefined
 }
 
 function isCallable(fn: any): fn is WrappedAdvancedFn {

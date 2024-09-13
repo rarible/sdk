@@ -7227,10 +7227,10 @@
   dependencies:
     "@rarible/types" "^0.9.16"
 
-"@rarible/flow-sdk@~0.5.78-fix.8":
-  version "0.5.78-fix.8"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.78-fix.8.tgz#03fd0bb601789cebd8ab4ea6e516c4ad18c2eb52"
-  integrity sha512-ptE00TygOzZMl8vReI+gwXnu4jYCA6S6rDxTu+LLqRF0yGpKttqQhyEc3VcswTErw5n/Ji5Z2GNk3mTzgvq5Ww==
+"@rarible/flow-sdk@~0.5.78-fix.9":
+  version "0.5.78-fix.9"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-sdk/-/flow-sdk-0.5.78-fix.9.tgz#23b3b6e0823e785542a87070f6383e413a74c915"
+  integrity sha512-YazSSldHQdUQytUC2f6kCIs+3eWC07kNsLzj/U5dSMCa2jgAyx+LAFX4eGD+ps+v2Rkbb0h60oYCd7ldLizHYA==
   dependencies:
     "@onflow/fcl" "~1.3.2"
     "@onflow/types" "~0.0.5"
@@ -7238,10 +7238,10 @@
     "@rarible/flow-api-client" "~0.0.5-fix.2"
     "@rarible/utils" "~0.5.0"
 
-"@rarible/flow-test-common@~0.5.78-fix.8":
-  version "0.5.78-fix.8"
-  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.78-fix.8.tgz#96fd4bf570e82b4be1152f195190dab1e3bdccda"
-  integrity sha512-dHOCpafzhctP4FzIWV6mOzDw1Trm5PvgoXlmmvrMdzuKxUHrKXRrqG+NfverdFYx/DNwrJh3meqR0rxOg72ZQg==
+"@rarible/flow-test-common@~0.5.78-fix.9":
+  version "0.5.78-fix.9"
+  resolved "https://registry.yarnpkg.com/@rarible/flow-test-common/-/flow-test-common-0.5.78-fix.9.tgz#4a548a044628a5826bf388e3b624a8e9fa3ebac8"
+  integrity sha512-lZK5MLBZUXW7mFWlY63XLVXut4dcaM5SHDUe8ZqjMNGydIqjV+wQIiRndXIG39tTnKJMYuKGuYu79AIiZb47UQ==
   dependencies:
     "@onflow/config" "^1.0.5"
     elliptic "^6.5.4"

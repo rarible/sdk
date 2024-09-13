@@ -41,7 +41,7 @@
     "@rarible/connector-torus": "^0.13.68-fix.55",
     "@rarible/connector-walletconnect-v2": "^0.13.68-fix.55",
     "@rarible/connector-walletlink": "^0.13.68-fix.55",
-    "@rarible/flow-sdk": "~0.5.78-fix.8",
+    "@rarible/flow-sdk": "~0.5.78-fix.9",
     "@rarible/sdk": "^0.13.68-fix.55",
     "@rarible/web3-ethereum": "^0.13.68-fix.55",
     "@rixio/atom": "^0.12.1",

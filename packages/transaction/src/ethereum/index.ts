@@ -2,6 +2,7 @@ import type { Blockchain } from "@rarible/api-client"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { getBlockchainBySDKNetwork, getChainIdByNetwork } from "@rarible/protocol-ethereum-sdk/build/common"
+import { isObjectLike } from "@rarible/sdk-common"
 import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainEthereumTransaction<TransactionResult = undefined>
@@ -139,5 +140,15 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
 
   private getBlockchain(network: EthereumNetwork): Blockchain {
     return getBlockchainBySDKNetwork(network)
+  }
+
+  static isInstance(original: unknown) {
+    if (original instanceof BlockchainEthereumTransaction) return true
+
+    if (isObjectLike(original)) {
+      if (original.constructor.name === "BlockchainEthereumTransaction") return true
+      if ("hash" in original && "wait" in original && "getTxLink" in original) return true
+    }
+    return false
   }
 }

@@ -356,6 +356,10 @@ export class EthereumFill {
     )
 
     const nftAssetType = isBid ? order.take.type : order.make.type
+    console.log("orderdata", {
+      platform: this.getPlatform(order),
+      nftCollection: "contract" in nftAssetType ? nftAssetType.contract : undefined,
+    })
     return {
       ...this.getSupportFlags(order),
       multiple: await this.isMultiple(order),
