@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.56](https://github.com/rarible/sdk/compare/v0.13.68-fix.55...v0.13.68-fix.56) (2024-09-13)
+
+### Bug Fixes
+
+- **PLTF-418:** update logs with tx.wait method ([#659](https://github.com/rarible/sdk/issues/659)) ([a1d92ed](https://github.com/rarible/sdk/commit/a1d92eda85df0e8ba48e85d7700cf1d2876441e1))
+- **PLTF-623:** erc-1271 signature ([#661](https://github.com/rarible/sdk/issues/661)) ([9692b59](https://github.com/rarible/sdk/commit/9692b596604e061bf180b7a5da2e223b6c72d76f))
+
 ## [0.13.68-fix.55](https://github.com/rarible/sdk/compare/v0.13.68-fix.54...v0.13.68-fix.55) (2024-09-12)
 
 ### Features

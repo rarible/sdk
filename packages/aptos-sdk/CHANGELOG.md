@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.56](https://github.com/rarible/sdk/compare/v0.13.68-fix.55...v0.13.68-fix.56) (2024-09-13)
+
+**Note:** Version bump only for package @rarible/aptos-sdk
+
 ## [0.13.68-fix.55](https://github.com/rarible/sdk/compare/v0.13.68-fix.54...v0.13.68-fix.55) (2024-09-12)
 
 **Note:** Version bump only for package @rarible/aptos-sdk
