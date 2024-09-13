@@ -4,9 +4,11 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 
 export async function isSigner(ethereum: Ethereum, signer: string, hash: Buffer, signature: string): Promise<boolean> {
   const sig = Buffer.from(skip0x(signature), "hex")
-  if (sig.length >= 64 && recover(hash, sig) === signer) {
-    return true
-  }
+  try {
+    if (sig.length >= 64 && recover(hash, sig) === signer) {
+      return true
+    }
+  } catch (e) {}
   return isErc1271Signer(ethereum, signer, hash, signature)
 }
 
