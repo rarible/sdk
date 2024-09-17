@@ -29,7 +29,7 @@ export function ConvertForm({ sdk, walletAddress }: { sdk: IRaribleSdk, walletAd
 	const blockchain = connection.state.status === "connected" ? connection.state.connection.blockchain : connection.sdk.wallet?.walletType
 	const wethAddress = getWethAddress(blockchain, environment)
 
-	const nativeToken = blockchain === "POLYGON" ? "MATIC" : "ETH"
+	const nativeToken = blockchain === "POLYGON" ? "POL" : "ETH"
 	const convertOptions = [
 		{
 			label: `${nativeToken} -> WETH`,
