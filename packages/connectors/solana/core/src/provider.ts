@@ -86,7 +86,7 @@ export abstract class SolanaInjectableProvider<ProviderId extends string> extend
         if (isConnected && publicKey) {
           return this.adapter$.pipe(
             map(x => x.toSigner(publicKey)),
-            map(x => getStateConnected({ connection: x })),
+            map(x => getStateConnected({ connection: x, disconnect: provider.disconnect })),
           )
         }
         return of(getStateDisconnected())

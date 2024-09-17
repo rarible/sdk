@@ -7,6 +7,8 @@ import { switchMap, take } from "rxjs/operators"
 import type { PublicKey } from "@solana/web3.js"
 import type { SalmonProvider, WindowWithSalmonProvider } from "./domain"
 
+const SALMON_CONNECTION_KEY = "salmon_connected"
+
 export class SalmonConnectionProvider extends SolanaInjectableProvider<"salmon"> {
   constructor() {
     super(
@@ -20,7 +22,9 @@ export class SalmonConnectionProvider extends SolanaInjectableProvider<"salmon">
     )
   }
 
-  isAutoConnected = async () => false
+  isAutoConnected = async () => {
+    return localStorage.getItem(SALMON_CONNECTION_KEY) === "true"
+  }
 }
 
 class SalmonProviderAdapter implements SolanaProviderAdapter {
@@ -30,9 +34,16 @@ class SalmonProviderAdapter implements SolanaProviderAdapter {
       on: rawProvider.on.bind(rawProvider),
       removeListener: rawProvider.removeListener.bind(rawProvider),
       isConnected: () => Boolean(rawProvider.isConnected),
-      connect: async () => ({
-        initialPublicKey: await rawProvider.connect().then(x => x.publicKey),
-      }),
+      connect: async () => {
+        localStorage.setItem(SALMON_CONNECTION_KEY, "true")
+        return {
+          initialPublicKey: await rawProvider.connect().then(x => x.publicKey),
+        }
+      },
+      disconnect: async () => {
+        localStorage.setItem(SALMON_CONNECTION_KEY, "false")
+        return this.rawProvider.disconnect()
+      },
     }
   }
 

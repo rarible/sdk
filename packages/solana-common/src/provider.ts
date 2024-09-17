@@ -28,6 +28,7 @@ export type SolanaConnectResult = {
 export type SolanaProvider = SolanaEmitter & {
   isConnected: () => boolean
   connect: () => Promise<SolanaConnectResult>
+  disconnect?: () => Promise<void>
 }
 
 export type SolanaSigner = {
