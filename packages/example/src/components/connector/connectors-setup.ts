@@ -177,8 +177,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
         rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
         displayName: "Polygon Mumbai Testnet",
         blockExplorer: "https://mumbai.polygonscan.com/",
-        ticker: "MATIC",
-        tickerName: "Matic",
+        ticker: "POL",
+        tickerName: "Polygon",
       },
       {
         apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
@@ -203,8 +203,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
         rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
         displayName: "Polygon Mumbai Testnet",
         blockExplorer: "https://mumbai.polygonscan.com/",
-        ticker: "MATIC",
-        tickerName: "Matic",
+        ticker: "POL",
+        tickerName: "Polygon",
       },
       {
         apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
@@ -229,8 +229,8 @@ export function getConnector(environment: RaribleSdkEnvironment) {
         rpcTarget: "https://rpc.ankr.com/polygon_mumbai",
         displayName: "Polygon Mumbai Testnet",
         blockExplorer: "https://mumbai.polygonscan.com/",
-        ticker: "MATIC",
-        tickerName: "Matic",
+        ticker: "POL",
+        tickerName: "Polygon",
       },
       {
         apiKey: "AIzaSyD7h1O-nf40cRyLpP9F_Wl1Z_zuZYyZh5Y",
