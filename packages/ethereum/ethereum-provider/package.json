@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-provider",
-  "version": "0.13.68-fix.56",
+  "version": "0.13.68-fix.57",
   "description": "Library to abstract from web3.js or ethers.js",
   "keywords": [
     "ethereum",

@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.57](https://github.com/rarible/sdk/compare/v0.13.68-fix.56...v0.13.68-fix.57) (2024-09-18)
+
+### Features
+
+- autoconnect salmon wallet after refresh ([#663](https://github.com/rarible/sdk/issues/663)) ([df9c01e](https://github.com/rarible/sdk/commit/df9c01e4ebe54202e7544b3a9bacbb533efe8c00))
+
 ## [0.13.68-fix.56](https://github.com/rarible/sdk/compare/v0.13.68-fix.55...v0.13.68-fix.56) (2024-09-13)
 
 **Note:** Version bump only for package @rarible/connector-solana
