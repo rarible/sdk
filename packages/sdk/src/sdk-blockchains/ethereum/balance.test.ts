@@ -107,7 +107,7 @@ describe.skip("get polygon balance", () => {
 
   const sdk = createSdk(new EthereumWallet(ethereum), "testnet")
 
-  test.concurrent("get Matic balance", async () => {
+  test.concurrent("get Polygon balance", async () => {
     const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
     const balance = await sdk.balances.getBalance(walletAddress, {
       "@type": "ETH",
@@ -116,7 +116,7 @@ describe.skip("get polygon balance", () => {
     expect(balance.toString()).toEqual("0.009145")
   })
 
-  test.concurrent("get Matic balance with CurrencyId", async () => {
+  test.concurrent("get Polygon balance with CurrencyId", async () => {
     const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
     const currency = toCurrencyId(`POLYGON:${ZERO_ADDRESS}`)
     const balance = await sdk.balances.getBalance(walletAddress, currency)
