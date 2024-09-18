@@ -5,6 +5,8 @@ import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
 import type { AssetType } from "@rarible/ethereum-api-client"
 import type { Address } from "@rarible/types"
+import type { EthereumFunctionCall } from "@rarible/ethereum-provider"
+import type { BigNumber } from "@rarible/utils/build/bn"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
 import { compareCaseInsensitive } from "../common/compare-case-insensitive"
@@ -48,13 +50,17 @@ export class ConvertWeth {
    * @returns `EthereumTransaction`
    */
 
+  async depositWeiFunctionCall(): Promise<EthereumFunctionCall> {
+    const contract = await this.getContract()
+    return contract.functionCall("deposit")
+  }
+
   async depositWei(valueInWei: BigNumberValue): Promise<EthereumTransaction> {
     const valueBn = toBn(valueInWei)
     if (valueBn.isZero()) {
       throw new ZeroValueIsPassedError()
     }
-    const contract = await this.getContract()
-    return this.send(contract.functionCall("deposit"), {
+    return this.send(await this.depositWeiFunctionCall(), {
       value: valueBn.toString(),
     })
   }

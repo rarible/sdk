@@ -1,10 +1,16 @@
 import Web3 from "web3"
-import { awaitAll, createGanacheProvider, deployWethContract } from "@rarible/ethereum-sdk-test-common"
+import {
+  awaitAll,
+  createE2eProvider,
+  createGanacheProvider,
+  deployWethContract,
+  DEV_PK_1,
+} from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { toAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
-import { getEthereumConfig } from "../config"
+import { getEthereumConfig, getNetworkConfigByChainId } from "../config"
 import { ConvertWeth } from "./convert-weth"
 import { createWethContract } from "./contracts/weth"
 
@@ -79,5 +85,27 @@ describe("convert weth test", () => {
     expect(() =>
       converter.convert({ assetClass: "ETH" }, { assetClass: "ERC20", contract: fakeAddress }, toBn("0.1")),
     ).rejects.toThrowError(`Contract is not supported - ${fakeAddress}`)
+  })
+})
+
+describe.skip("convert weth estimate gas test", () => {
+  const providerSettings = {
+    rpcUrl: "https://rpc.matchain.io",
+    networkId: 698,
+  }
+  const { provider, wallet } = createE2eProvider(DEV_PK_1, providerSettings)
+  const web3 = new Web3(provider as any)
+  const ethereum = new Web3Ethereum({
+    web3,
+    from: wallet.getAddressString(),
+    gas: 1000000,
+  })
+  const convertClass = new ConvertWeth(ethereum, null as any, async () =>
+    getNetworkConfigByChainId(providerSettings.networkId),
+  )
+
+  test("estimateGas for deposit method", async () => {
+    const fn = await convertClass.depositWeiFunctionCall()
+    await fn.estimateGas({ from: wallet.getAddressString(), value: 0 })
   })
 })

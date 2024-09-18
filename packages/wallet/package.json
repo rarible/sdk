@@ -55,7 +55,7 @@
     "@rarible/solana-common": "^0.13.68-fix.56",
     "@rarible/solana-wallet": "^0.13.68-fix.56",
     "@rarible/tezos-sdk": "0.1.46",
-    "@rarible/types": "~0.9.31",
+    "@rarible/types": "~0.9.32",
     "@rarible/web3-ethereum": "^0.13.68-fix.56",
     "text-encoding": "~0.7.0"
   },

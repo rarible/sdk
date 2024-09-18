@@ -20,7 +20,7 @@
     "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.56",
     "@rarible/flow-test-common": "~0.5.78-fix.9",
     "@rarible/sdk-wallet": "^0.13.68-fix.56",
-    "@rarible/types": "~0.9.31",
+    "@rarible/types": "~0.9.32",
     "bignumber.js": "^9.0.1"
   },
   "devDependencies": {

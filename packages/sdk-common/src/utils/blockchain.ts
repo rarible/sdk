@@ -23,6 +23,7 @@ export const EVMBlockchains = [
   Blockchain.ETHERLINK,
   Blockchain.LISK,
   Blockchain.ALEPHZERO,
+  Blockchain.MATCH,
 ] as const
 
 export type EVMBlockchain = (typeof EVMBlockchains)[number]
