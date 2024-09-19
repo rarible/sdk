@@ -129,6 +129,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://evm-explorer-testnet.alephzero.org/tx/${this.hash()}`
       case "alephzero":
         return `https://evm-explorer.alephzero.org/tx/${this.hash()}`
+      case "match":
+        return `https://matchscan.io/tx/${this.hash()}`
+      case "match-testnet":
+        return `https://testnet.matchscan.io/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

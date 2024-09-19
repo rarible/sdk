@@ -47,6 +47,8 @@ import { testnetOasysConfig } from "./testnet-oasys"
 import { oasysConfig } from "./oasys"
 import { alephzeroMainnetConfig } from "./alephzero"
 import { alephzeroTestnetConfig } from "./alephzero-testnet"
+import { matchConfig } from "./match"
+import { matchTestnetConfig } from "./match-testnet"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -96,6 +98,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   lisk: liskMainnetConfig,
   alephzero: alephzeroMainnetConfig,
   "alephzero-testnet": alephzeroTestnetConfig,
+  match: matchConfig,
+  "match-testnet": matchTestnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
