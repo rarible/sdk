@@ -25,7 +25,7 @@
     "@rarible/sdk": "^0.13.68-fix.57",
     "@rarible/sdk-wallet": "^0.13.68-fix.57",
     "@rarible/test-provider": "~0.5.4",
-    "@rarible/types": "~0.9.32",
+    "@rarible/types": "~0.9.33",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.2",
     "web3-provider-engine": "^16.0.4"
