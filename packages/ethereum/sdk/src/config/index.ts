@@ -49,6 +49,8 @@ import { alephzeroMainnetConfig } from "./alephzero"
 import { alephzeroTestnetConfig } from "./alephzero-testnet"
 import { matchConfig } from "./match"
 import { matchTestnetConfig } from "./match-testnet"
+import { fivireConfig } from "./fivire"
+import { fivireTestnetConfig } from "./fivire-testnet"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -100,6 +102,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   "alephzero-testnet": alephzeroTestnetConfig,
   match: matchConfig,
   "match-testnet": matchTestnetConfig,
+  fivire: fivireConfig,
+  "fivire-testnet": fivireTestnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
