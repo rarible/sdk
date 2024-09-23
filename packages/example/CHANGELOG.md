@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.58](https://github.com/rarible/sdk/compare/v0.13.68-fix.57...v0.13.68-fix.58) (2024-09-23)
+
+### Features
+
+- **pol:** renamed Matic to POL ([#662](https://github.com/rarible/sdk/issues/662)) ([505d210](https://github.com/rarible/sdk/commit/505d21084e86a0044a79447adc9b1024ebbedc8e))
+
 ## [0.13.68-fix.57](https://github.com/rarible/sdk/compare/v0.13.68-fix.56...v0.13.68-fix.57) (2024-09-18)
 
 **Note:** Version bump only for package example

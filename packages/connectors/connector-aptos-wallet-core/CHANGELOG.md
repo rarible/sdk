@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.58](https://github.com/rarible/sdk/compare/v0.13.68-fix.57...v0.13.68-fix.58) (2024-09-23)
+
+### Features
+
+- **PLTF-544:** support fivire chain ([#665](https://github.com/rarible/sdk/issues/665)) ([77d15a9](https://github.com/rarible/sdk/commit/77d15a9db25deda3df8dfd740d9550de89241978))
+- **PLTF-593:** match chain support ([#664](https://github.com/rarible/sdk/issues/664)) ([3a5bd77](https://github.com/rarible/sdk/commit/3a5bd77c04d03e63fe664a40e04d39031e7f051b))
+
 ## [0.13.68-fix.57](https://github.com/rarible/sdk/compare/v0.13.68-fix.56...v0.13.68-fix.57) (2024-09-18)
 
 **Note:** Version bump only for package @rarible/connector-aptos-wallet-core
