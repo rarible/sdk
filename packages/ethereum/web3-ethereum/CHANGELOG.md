@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.59](https://github.com/rarible/sdk/compare/v0.13.68-fix.58...v0.13.68-fix.59) (2024-09-24)
+
+### Features
+
+- **PLTF-634:** support evm balance transfers ([#666](https://github.com/rarible/sdk/issues/666)) ([143e57c](https://github.com/rarible/sdk/commit/143e57cfda0d7177b5f4693bbb5c6c38a0c0d2ee))
+
 ## [0.13.68-fix.58](https://github.com/rarible/sdk/compare/v0.13.68-fix.57...v0.13.68-fix.58) (2024-09-23)
 
 **Note:** Version bump only for package @rarible/web3-ethereum
