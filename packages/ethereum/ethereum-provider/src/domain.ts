@@ -1,5 +1,5 @@
 import type { TypedMessage as EthSigUtilTypedData } from "eth-sig-util"
-import type { Binary } from "@rarible/types"
+import type { Address, Binary } from "@rarible/types"
 
 export enum SignTypedDataMethodEnum {
   V4 = "eth_signTypedData_v4",
@@ -24,6 +24,12 @@ export interface EthereumSendOptions {
   gas?: number
   gasPrice?: number
   additionalData?: Binary
+}
+
+export interface EthereumSendTransactionOptions extends EthereumSendOptions {
+  to: Address
+  value: string
+  data?: string
 }
 
 export interface EthereumEstimateGasOptions {

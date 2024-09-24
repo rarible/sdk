@@ -5,6 +5,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import BigNumber from "bignumber.js"
+import type { EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
 import { createSdk } from "../../common/test/create-sdk"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
@@ -54,6 +55,60 @@ describe("get balance", () => {
       toCurrencyId(erc20Contract.contractAddress),
       erc20ContractBalance,
       convertEthereumToUnionAddress(generatedAddress),
+    )
+  })
+
+  test("transfer ETH", async () => {
+    const generatedAddress = randomAddress()
+    const generatedUnionAddress = convertEthereumToUnionAddress(generatedAddress)
+    const ethAssetType = {
+      "@type": "ETH",
+      blockchain: Blockchain.ETHEREUM,
+    } as EthEthereumAssetType
+
+    const tx = await suiteDevETH.sdk.balances.transfer({
+      recipient: generatedUnionAddress,
+      currency: ethAssetType,
+      amount: "0.0001",
+    })
+    await tx.wait()
+    await suiteDevETH.balances.waitBalance(ethAssetType, "0.0001", generatedUnionAddress)
+  })
+
+  test("transfer ETH with currencyId", async () => {
+    const generatedAddress = randomAddress()
+    const generatedUnionAddress = convertEthereumToUnionAddress(generatedAddress)
+    const ethCurrencyId = toCurrencyId(`${Blockchain.ETHEREUM}:${ZERO_ADDRESS}`)
+
+    const tx = await suiteDevETH.sdk.balances.transfer({
+      recipient: generatedUnionAddress,
+      currency: ethCurrencyId,
+      amount: "0.00001",
+    })
+    await tx.wait()
+    await suiteDevETH.balances.waitBalance(ethCurrencyId, "0.00001", generatedUnionAddress)
+  })
+
+  test("transfer ERC-20", async () => {
+    const erc20Contract = await ERC20Mintable.deploy(Blockchain.ETHEREUM, ethereum)
+    const generatedAddress = randomAddress()
+    const generatedUnionAddress = convertEthereumToUnionAddress(generatedAddress)
+    await erc20Contract.mint(1, generatedAddress)
+    const erc20ContractBalance = await erc20Contract.fromWei(await erc20Contract.balanceOf(generatedAddress))
+
+    const tx = await suiteDevETH.sdk.balances.transfer({
+      recipient: generatedUnionAddress,
+      currency: {
+        "@type": "ETH",
+        blockchain: Blockchain.ETHEREUM,
+      },
+      amount: 1,
+    })
+    await tx.wait()
+    await suiteDevETH.balances.waitBalance(
+      ERC20.getAssetType(erc20Contract.contractAddress),
+      erc20ContractBalance,
+      generatedUnionAddress,
     )
   })
 

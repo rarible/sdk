@@ -2,7 +2,12 @@ import type { Contract } from "ethers"
 import { ethers } from "ethers"
 import type { TransactionResponse, TransactionRequest } from "@ethersproject/abstract-provider"
 import type * as EthereumProvider from "@rarible/ethereum-provider"
-import type { EthereumTransactionEvent, MessageTypes, TypedMessage } from "@rarible/ethereum-provider"
+import type {
+  EthereumTransactionEvent,
+  MessageTypes,
+  TypedMessage,
+  EthereumSendTransactionOptions,
+} from "@rarible/ethereum-provider"
 import { EthereumProviderError, Provider, signTypedData } from "@rarible/ethereum-provider"
 import type { Address, BigNumber, Binary, Word } from "@rarible/types"
 import { toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
@@ -47,6 +52,46 @@ export class EthersWeb3ProviderEthereum implements EthereumProvider.Ethereum {
         data: {
           method,
           params,
+          from: signer,
+        },
+      })
+    }
+  }
+
+  async sendTransaction(options: EthereumSendTransactionOptions): Promise<any> {
+    try {
+      let enrichedData = options.data || "0x"
+      if (options.additionalData) {
+        const additionalData = toBinary(options.additionalData).slice(2)
+        enrichedData = `0x${enrichedData}${additionalData}`
+      }
+      const signer = this.web3Provider.getSigner()
+      const txConfig: TransactionRequest = {
+        to: options.to,
+        data: enrichedData,
+        value: options.value !== undefined ? ethers.utils.hexValue(EthersBN.from(options.value)) : undefined,
+      }
+      if (options.gas !== undefined) {
+        txConfig.gasLimit = options.gas
+      }
+      if (options.gasPrice !== undefined) {
+        txConfig.gasPrice = options.gasPrice
+      }
+      const tx = await signer.sendTransaction(txConfig)
+
+      return new EthersTransaction(tx)
+    } catch (e: any) {
+      let signer: string | undefined
+      try {
+        signer = await this.getFrom()
+      } catch (e) {}
+      throw new EthereumProviderError({
+        providerId: getDappType(this.getCurrentProvider()),
+        provider: Provider.ETHERS,
+        method: "EthersWeb3ProviderEthereum.sendTransaction",
+        error: e,
+        data: {
+          options,
           from: signer,
         },
       })
@@ -205,6 +250,30 @@ export class EthersEthereum implements EthereumProvider.Ethereum {
         },
       })
     }
+  }
+
+  async sendTransaction(options: EthereumSendTransactionOptions) {
+    let enrichedData = options.data || "0x"
+    if (options.additionalData) {
+      const additionalData = toBinary(options.additionalData).slice(2)
+      enrichedData = `0x${enrichedData}${additionalData}`
+    }
+
+    const txConfig: TransactionRequest = {
+      from: await this.signer.getAddress(),
+      to: options.to,
+      data: enrichedData,
+      value: options.value !== undefined ? ethers.utils.hexValue(EthersBN.from(options.value)) : undefined,
+    }
+    if (options.gas !== undefined) {
+      txConfig.gasLimit = options.gas
+    }
+    if (options.gasPrice !== undefined) {
+      txConfig.gasPrice = options.gasPrice
+    }
+    const tx = await this.signer.sendTransaction(txConfig)
+
+    return new EthersTransaction(tx)
   }
 
   async signTypedData<T extends MessageTypes>(data: TypedMessage<T>): Promise<string> {

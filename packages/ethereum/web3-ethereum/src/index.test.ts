@@ -1,7 +1,7 @@
 import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
-import { toAddress } from "@rarible/types"
+import { randomAddress, toAddress } from "@rarible/types"
 import { deployTestContract, SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/src/test-contract"
 import { DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
 import { parseRequestError } from "./utils/parse-request-error"
@@ -21,6 +21,18 @@ describe("Web3Ethereum", () => {
 
   test("signs personal message correctly", async () => {
     await common.testPersonalSign(e2eEthereum)
+  })
+
+  test("transfer eth", async () => {
+    const recipientAccountAddress = randomAddress()
+    const tx = await ganacheEthereum.sendTransaction({
+      to: recipientAccountAddress,
+      value: "1",
+    })
+    await tx.wait()
+
+    const recipientBalance = await ganacheEthereum.getBalance(recipientAccountAddress)
+    expect(recipientBalance).toBe("1")
   })
 
   test("should correctly parse error for invalid method request", async () => {

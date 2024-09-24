@@ -39,7 +39,7 @@ import { getBaseFee } from "./common/get-base-fee"
 import { DeployErc721 } from "./nft/deploy-erc721"
 import { DeployErc1155 } from "./nft/deploy-erc1155"
 import type { DeployNft } from "./common/deploy"
-import type { BalanceRequestAssetType } from "./common/balances"
+import type { BalanceRequestAssetType, TransferBalanceAsset } from "./common/balances"
 import { Balances } from "./common/balances"
 import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "./types"
 import { LogsLevel } from "./types"
@@ -187,6 +187,12 @@ export interface RaribleBalancesSdk {
   getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumber>
 
   /**
+   * Transfer native token or ERC-20 to recipient
+   * @param address Recipient of tokens
+   * @param asset Object includes currency type and transfer value
+   */
+  transfer(address: Address, asset: TransferBalanceAsset): Promise<EthereumTransaction>
+  /**
    * Convert ETH balance from/to the Wrapped Ether (ERC-20) token
    * @depreacted please use `deposit` or `withdraw`
    *
@@ -318,6 +324,7 @@ export function createRaribleSdk(
   const checkLazyAsset = partialCall(order.checkLazyAsset, checkLazyAssetType)
   const checkLazyOrder = order.checkLazyOrder.bind(null, checkLazyAsset)
   const checkAssetType = partialCall(checkAssetTypeTemplate, getApis)
+  const balanceService = new Balances(ethereum, send, getApis)
 
   const getBaseOrderFeeOld = getBaseFee.bind(null, env, getApis)
   const getBaseOrderFee = (type?: OrderForm["type"]) => {
@@ -388,7 +395,8 @@ export function createRaribleSdk(
       },
     },
     balances: {
-      getBalance: new Balances(getApis).getBalance,
+      getBalance: balanceService.getBalance,
+      transfer: balanceService.transfer,
       convert: wethConverter.convert,
       deposit: wethConverter.deposit,
       depositWei: wethConverter.depositWei,

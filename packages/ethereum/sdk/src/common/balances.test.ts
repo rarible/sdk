@@ -1,10 +1,11 @@
 import { createE2eProvider, deployTestErc20, DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { Address, Erc20AssetType } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
+import type { EthAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { createRaribleSdk } from "../index"
 import type { EthereumNetwork } from "../types"
 import { ethereumNetworks } from "../types"
@@ -13,7 +14,7 @@ import type { BalanceRequestAssetType } from "./balances"
 import { Balances } from "./balances"
 import { createEthereumApis } from "./apis"
 import { getTestAPIKey } from "./test/test-credentials"
-import { sentTx } from "./send-transaction"
+import { getSendWithInjects, sentTx } from "./send-transaction"
 import { retry } from "./retry"
 import { getErc20AssetType } from "./asset-types"
 import { getNetworkFromChainId } from "./index"
@@ -33,7 +34,8 @@ describe("getBalance test", () => {
     return createEthereumApis(env)
   }
 
-  const balances = new Balances(getApis)
+  const send = getSendWithInjects()
+  const balances = new Balances(ethereum, send, getApis)
 
   async function awaitBalance(address: Address, assetType: BalanceRequestAssetType, value: BigNumberValue) {
     await retry(10, 3000, async () => {
@@ -58,6 +60,49 @@ describe("getBalance test", () => {
     const generatedAddress = randomAddress()
     const { erc20ContractAddress } = await deployAndMintErc20(ethereum, generatedAddress, "1000000000000000")
     const erc20AssetType = getErc20AssetType(erc20ContractAddress)
+    await awaitBalance(generatedAddress, erc20AssetType, "0.001")
+  })
+
+  test("transfer eth", async () => {
+    const generatedAddress = randomAddress()
+    const ethAssetType: EthAssetType = {
+      assetClass: "ETH",
+    }
+    const tx = await balances.transfer(generatedAddress, {
+      assetType: ethAssetType,
+      value: "1" as any,
+    })
+    await tx.wait()
+    await awaitBalance(generatedAddress, ethAssetType, "0.000000000000000001")
+  })
+
+  test("transfer erc20 with value", async () => {
+    const generatedAddress = randomAddress()
+    const sender = toAddress(await ethereum.getFrom())
+    const { erc20ContractAddress } = await deployAndMintErc20(ethereum, sender, "1000000000000000")
+    const erc20AssetType: Erc20AssetType = getErc20AssetType(erc20ContractAddress)
+    await awaitBalance(sender, erc20AssetType, "0.001")
+
+    const tx = await balances.transfer(generatedAddress, {
+      assetType: erc20AssetType,
+      value: toBigNumber("1000000000000000"),
+    })
+    await tx.wait()
+    await awaitBalance(generatedAddress, erc20AssetType, "0.001")
+  })
+
+  test("transfer erc20 with valueDecimal", async () => {
+    const generatedAddress = randomAddress()
+    const sender = toAddress(await ethereum.getFrom())
+    const { erc20ContractAddress } = await deployAndMintErc20(ethereum, sender, "1000000000000000")
+    const erc20AssetType: Erc20AssetType = getErc20AssetType(erc20ContractAddress)
+    await awaitBalance(sender, erc20AssetType, "0.001")
+
+    const tx = await balances.transfer(generatedAddress, {
+      assetType: erc20AssetType,
+      valueDecimal: toBigNumber("0.001"),
+    })
+    await tx.wait()
     await awaitBalance(generatedAddress, erc20AssetType, "0.001")
   })
 

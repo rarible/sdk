@@ -2,7 +2,7 @@ import * as common from "@rarible/ethereum-sdk-test-common"
 import { ethers } from "ethers"
 import Web3 from "web3"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { toAddress } from "@rarible/types"
+import { randomAddress, toAddress } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { parseRequestError } from "@rarible/web3-ethereum/src/utils/parse-request-error"
@@ -29,6 +29,18 @@ describe.each(data)("ethers.js Ethereum", (eth: Ethereum) => {
 
   test(`${eth.constructor.name} allows to send transactions and call functions`, async () => {
     await common.testSimpleContract(web3, eth)
+  })
+
+  test(`${eth.constructor.name} allows to send transfer ETH tx`, async () => {
+    const recipientAccountAddress = randomAddress()
+    const tx = await eth.sendTransaction({
+      to: recipientAccountAddress,
+      value: "1",
+    })
+    await tx.wait()
+
+    const recipientBalance = await eth.getBalance(recipientAccountAddress)
+    expect(recipientBalance).toBe("1")
   })
 
   test(`${eth.constructor.name} should return balance`, async () => {
