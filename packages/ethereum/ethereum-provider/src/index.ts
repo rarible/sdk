@@ -6,6 +6,7 @@ import type {
   MessageTypes,
   TypedMessage,
 } from "./domain"
+import type { EthereumSendTransactionOptions } from "./domain"
 
 export type EthereumTransactionEvent = {
   event: string
@@ -60,6 +61,7 @@ export interface Ethereum {
   getBalance(address: Address): Promise<BigNumber>
   getChainId(): Promise<number>
   getCurrentProvider(): any
+  sendTransaction(options: EthereumSendTransactionOptions): Promise<EthereumTransaction>
 }
 
 export * from "./domain"

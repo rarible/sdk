@@ -6,6 +6,8 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import type { SupportedBlockchain } from "@rarible/sdk-common/build/utils/blockchain"
+import type { EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
+import type * as ApiClient from "@rarible/api-client"
 import type { RequestCurrency } from "../common/domain"
 
 /**
@@ -53,7 +55,7 @@ export type IBalanceTransferRequest = {
   currency: IBalanceTransferCurrency
   amount: BigNumberValue
 }
-export type IBalanceTransferCurrency = FlowAssetTypeFt
+export type IBalanceTransferCurrency = ApiClient.CurrencyId | EthEthereumAssetType | EthErc20AssetType | FlowAssetTypeFt
 
 export type CurrencyOrOrder =
   | {

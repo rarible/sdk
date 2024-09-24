@@ -27,4 +27,9 @@ export class ERC20Mintable<T extends EVMSuiteSupportedBlockchain> extends ERC20<
     const contract = await deployTestErc20(provider.getWeb3Instance(), "TST", "TST")
     return new ERC20Mintable(blockchain, contract.options.address, provider)
   }
+
+  approveWei = async (value: string, to: string) => {
+    const tx = await this.contract.functionCall("approve", to, value).send()
+    return tx.wait()
+  }
 }

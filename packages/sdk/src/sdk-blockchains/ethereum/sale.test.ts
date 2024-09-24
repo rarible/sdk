@@ -16,12 +16,15 @@ import { createSdk } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
 import { initProviders } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
-import { DEV_PK_1, DEV_PK_2 } from "./test/common"
+import { DEV_PK_1 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
 import { awaitErc1155Balance } from "./test/await-erc-1155-balance"
 
 describe("sale", () => {
-  const { web31, web32, wallet1, wallet2 } = initProviders({ pk1: DEV_PK_1, pk2: DEV_PK_2 })
+  const { web31, web32, wallet1, wallet2 } = initProviders({
+    pk1: DEV_PK_1,
+    pk2: "064b2a70a2932eb5b45c760b210a2bee579d94031a8c40bff05cfd9d800d6812",
+  })
   const ethereum1 = new Web3Ethereum({ web3: web31 })
   const ethereum2 = new Web3Ethereum({ web3: web32 })
   const ethWallet1 = new EthereumWallet(ethereum1)
@@ -37,6 +40,7 @@ describe("sale", () => {
   })
 
   const testSuite = new EVMContractsTestSuite(Blockchain.ETHEREUM, ethereum1)
+  const testSuite2 = new EVMContractsTestSuite(Blockchain.ETHEREUM, ethereum2)
   const erc721Address = testSuite.getContract("erc721_1").contractAddress
   const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
@@ -89,7 +93,7 @@ describe("sale", () => {
 
     await sdk1.apis.order.getOrderById({ id: orderId })
 
-    const txData = await sdk2.ethereum?.getBuyTxData({
+    const txData = await sdk1.ethereum?.getBuyTxData({
       request: {
         orderId,
         amount: 1,
@@ -99,6 +103,11 @@ describe("sale", () => {
 
     if (!txData) throw new Error("Ethereum SDK is not init")
 
+    //approve tx to exchange transfer proxy in dev network
+    const devTransferProxyAddress = "0xa721f321f2C3838e6812b1c8b1693e3B1f6a38Bc"
+    await testSuite2.getContract("erc20_mintable_1").approveWei("10000000000000000", devTransferProxyAddress)
+
+    console.log("value", (await txData).value)
     const promiEvent = web32.eth.sendTransaction({
       from: await ethWallet2.ethereum.getFrom(),
       to: txData.to,
