@@ -18,9 +18,14 @@ export type BalanceRequestAssetType = EthAssetType | Erc20AssetType
 // export type TransferAssetType = Erc20AssetType | EthAssetType
 export type TransferBalanceAsset = {
   assetType: EthAssetType | Erc20AssetType
-  value: AssetTypeBigNumber
-  valueDecimal?: AssetTypeBigNumber
-}
+} & (
+  | {
+      value?: AssetTypeBigNumber
+    }
+  | {
+      valueDecimal?: AssetTypeBigNumber
+    }
+)
 
 export class Balances {
   constructor(
@@ -54,8 +59,8 @@ export class Balances {
   }
 
   async getNormalizedTransferValue(asset: TransferBalanceAsset): Promise<AssetTypeBigNumber> {
-    if (asset.value) return asset.value
-    if (asset.valueDecimal) {
+    if ("value" in asset && asset.value) return asset.value
+    if ("valueDecimal" in asset && asset.valueDecimal) {
       if (asset.assetType.assetClass === "ETH") {
         return toBigNumber(toBn(asset.valueDecimal).multipliedBy(ETHER_IN_WEI).toFixed())
       }
@@ -88,7 +93,7 @@ export class Balances {
           address,
           value,
         )
-        return this.send(fn, { value })
+        return this.send(fn)
       }
       default:
         throw new Error("Unrecognized asset type for transfer")

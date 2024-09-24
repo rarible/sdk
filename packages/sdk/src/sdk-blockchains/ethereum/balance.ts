@@ -28,13 +28,7 @@ import { getCurrencyAssetType, getCurrencyId, isErc20, isEth } from "../../commo
 import type { RequestCurrency } from "../../common/domain"
 import type { IApisSdk } from "../../domain"
 import type { IBalanceTransferRequest } from "../../types/balances"
-import {
-  assertWallet,
-  convertEthereumContractAddress,
-  convertToEthereumAsset,
-  getWalletNetwork,
-  isEVMBlockchain,
-} from "./common"
+import { convertEthereumContractAddress, convertToEthereumAssetType, getWalletNetwork, isEVMBlockchain } from "./common"
 
 export class EthereumBalance {
   constructor(
@@ -114,14 +108,13 @@ export class EthereumBalance {
   async transfer(request: IBalanceTransferRequest): Promise<IBlockchainTransaction> {
     const evmAddress = extractId(request.recipient)
     const assetType = getCurrencyAssetType(request.currency)
-
-    const tx = await this.sdk.balances.transfer(
-      toAddress(evmAddress),
-      (await convertToEthereumAsset(assertWallet(this.wallet).ethereum, {
-        type: assetType,
-        value: request.amount,
-      })) as TransferBalanceAsset,
-    )
+    if (!isEth(assetType) && !isErc20(assetType)) {
+      throw new Error("Transfer request is available for ETH and ERC20 tokens")
+    }
+    const tx = await this.sdk.balances.transfer(toAddress(evmAddress), {
+      assetType: convertToEthereumAssetType(assetType),
+      valueDecimal: request.amount,
+    } as TransferBalanceAsset)
     return new BlockchainEthereumTransaction(tx, await getWalletNetwork(this.wallet))
   }
 }
