@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.61](https://github.com/rarible/sdk/compare/v0.13.68-fix.60...v0.13.68-fix.61) (2024-10-01)
+
+### Bug Fixes
+
+- mint and sell retries ([#668](https://github.com/rarible/sdk/issues/668)) ([2d92f00](https://github.com/rarible/sdk/commit/2d92f0036ff0f29a3b12ce700ac0c478512997ba))
+
 ## [0.13.68-fix.60](https://github.com/rarible/sdk/compare/v0.13.68-fix.59...v0.13.68-fix.60) (2024-10-01)
 
 ### Features

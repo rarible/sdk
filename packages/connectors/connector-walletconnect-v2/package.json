@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-walletconnect-v2",
-  "version": "0.13.68-fix.60",
+  "version": "0.13.68-fix.61",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -16,7 +16,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.68-fix.60",
+    "@rarible/connector": "^0.13.68-fix.61",
     "@walletconnect/ethereum-provider": "^2.10.1",
     "@walletconnect/modal": "^2.6.2"
   },
