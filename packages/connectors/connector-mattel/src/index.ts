@@ -87,7 +87,7 @@ export class MattelConnectionProvider extends AbstractConnectionProvider<
     auth0,
   }: ConnectionResult): Observable<ConnectionState<MattelProviderConnectionResult>> {
     const disconnect = async () => {
-      await Promise.all([magic.user.logout(), magic.wallet.disconnect()])
+      await magic.user.logout()
       await auth0.logout({
         clientId: this.config.auth0ClientId,
         logoutParams: {
