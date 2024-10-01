@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.60](https://github.com/rarible/sdk/compare/v0.13.68-fix.59...v0.13.68-fix.60) (2024-10-01)
+
+### Features
+
+- **RX-960:** logout logic in magic provider ([#667](https://github.com/rarible/sdk/issues/667)) ([751817d](https://github.com/rarible/sdk/commit/751817d3c1ebbd9304977c6c89ddc2b7eff09c80))
+
 ## [0.13.68-fix.59](https://github.com/rarible/sdk/compare/v0.13.68-fix.58...v0.13.68-fix.59) (2024-09-24)
 
 **Note:** Version bump only for package @rarible/connector-mattel
