@@ -7,7 +7,7 @@ import { getRandomId } from "@rarible/utils"
 import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
-import { extractBlockchain, isSupportedBlockchain } from "@rarible/sdk-common"
+import { extractBlockchain, isSupportedBlockchain, retry } from "@rarible/sdk-common"
 import type { Item } from "@rarible/api-client/build/models"
 import type { IApisSdk, IRaribleInternalSdk, IRaribleSdk, IRaribleSdkConfig, ISdkContext } from "./domain"
 import { LogsLevel } from "./domain"
@@ -134,7 +134,7 @@ export function createRaribleSdk(
     ...instance,
     nft: {
       ...instance.nft,
-      mintAndSell: createMintAndSell(instance.nft.mint, instance.order.sell),
+      mintAndSell: createMintAndSell(instance.nft.mint, instance.order.sell, apis),
     },
     order: {
       ...instance.order,
@@ -238,7 +238,7 @@ async function getSellItemData(
   return { item, collection }
 }
 
-function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
+function createMintAndSell(mint: IMint, sell: ISellInternal, apis: IApisSdk): IMintAndSell {
   // @ts-expect-error
   return new MethodWithPrepare(
     async (request: any) => {
@@ -246,6 +246,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
       if (mintResponse.type === MintType.ON_CHAIN) {
         await (mintResponse as OnChainMintResponse).transaction.wait()
       }
+      await retry(90, 2000, () => apis.item.getItemById({ itemId: mintResponse.itemId }))
       const { supply, ...restRequest } = request
       const orderId = await sell({
         ...restRequest,
@@ -269,6 +270,7 @@ function createMintAndSell(mint: IMint, sell: ISellInternal): IMintAndSell {
           if (mintResponse.type === MintType.ON_CHAIN) {
             await mintResponse.transaction.wait()
           }
+          await retry(90, 2000, () => apis.item.getItemById({ itemId: mintResponse.itemId }))
           return { initial, mintResponse }
         },
       )
