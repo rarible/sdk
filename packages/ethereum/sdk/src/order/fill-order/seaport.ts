@@ -191,7 +191,7 @@ export class SeaportOrderHandler {
     }
   }
 
-  getBaseOrderFee() {
+  getFillOrderBaseFee() {
     return this.getBaseOrderFeeConfig("SEAPORT_V1")
   }
 

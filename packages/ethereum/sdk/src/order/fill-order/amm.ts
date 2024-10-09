@@ -116,7 +116,7 @@ export class AmmOrderHandler {
     }
   }
 
-  getBaseOrderFee() {
+  getFillOrderBaseFee() {
     return this.getBaseOrderFeeConfig("AMM")
   }
 

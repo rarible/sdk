@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Address, AssetType, OrderForm } from "@rarible/ethereum-api-client"
+import type { Address, AssetType, OrderForm, Part } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/utils"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
@@ -136,8 +136,11 @@ export interface RaribleOrderSdk {
 
   /**
    * Get base fee for filling an order (this fee will be hold by the processing platform - in basis points)
+   *
+   * @param order Order which should be filled
+   * @param originFees Origin fees which will be used for filling the order (optional)
    */
-  getBaseOrderFillFee(order: SimpleOrder): Promise<number>
+  getFillOrderBaseFee(order: SimpleOrder, originFees?: Array<Part>): Promise<number>
 
   /**
    * Get for buy pricing info from AMM
@@ -369,7 +372,7 @@ export function createRaribleSdk(
       upsert: upsertService.upsert,
       cancel: partialCall(cancelTemplate, checkLazyOrder, ethereum, send, getConfig, getApis),
       getBaseOrderFee: getBaseOrderFee,
-      getBaseOrderFillFee: filler.getBaseOrderFillFee,
+      getFillOrderBaseFee: filler.getFillOrderBaseFee,
       getBuyAmmInfo: filler.getBuyAmmInfo,
     },
     auction: {
