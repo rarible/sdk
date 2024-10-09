@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.62](https://github.com/rarible/sdk/compare/v0.13.68-fix.61...v0.13.68-fix.62) (2024-10-09)
+
+### Features
+
+- changed mantle chainId ([#669](https://github.com/rarible/sdk/issues/669)) ([8b520ee](https://github.com/rarible/sdk/commit/8b520eea59c4fb7445d0b9cad242fc9945087070))
+- changed testnet mantle chainID config ([004c74b](https://github.com/rarible/sdk/commit/004c74bacf3548fcb1901abec92d01d53d78fb4c))
+
 ## [0.13.68-fix.61](https://github.com/rarible/sdk/compare/v0.13.68-fix.60...v0.13.68-fix.61) (2024-10-01)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk
