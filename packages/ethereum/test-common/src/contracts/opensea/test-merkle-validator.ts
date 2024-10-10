@@ -1,5 +1,5 @@
 import type Web3 from "web3"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 import type { AbiItem } from "../../common/abi-item"
 
 export const merkleValidatorBytecode =
@@ -144,7 +144,7 @@ export const MERKLE_VALIDATOR_ABI: AbiItem[] = [
   },
 ]
 
-export function createTestMerkleValidatorContract(web3: Web3, address?: Address) {
+export function createTestMerkleValidatorContract(web3: Web3, address?: EVMAddress) {
   return new web3.eth.Contract(MERKLE_VALIDATOR_ABI, address)
 }
 export async function deployMerkleValidator(web3: Web3) {

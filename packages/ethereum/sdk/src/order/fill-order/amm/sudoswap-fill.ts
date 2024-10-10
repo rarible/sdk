@@ -1,5 +1,5 @@
 import type { BigNumber } from "@rarible/types"
-import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
 import type { NftItemRoyalty } from "@rarible/ethereum-api-client/build/models/NftItemRoyalty"
@@ -56,7 +56,7 @@ export class SudoswapFill {
 
   private static getRouterContract(ethereum: Ethereum, config: EthereumConfig) {
     const { pairRouter } = config.sudoswap
-    if (!pairRouter || pairRouter === ZERO_ADDRESS) {
+    if (!pairRouter || pairRouter === EVM_ZERO_ADDRESS) {
       throw new Error("Sudoswap router contract address has not been set. Change address in config")
     }
     return createSudoswapRouterV1Contract(ethereum, pairRouter)

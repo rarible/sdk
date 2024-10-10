@@ -1,4 +1,4 @@
-import type { Address, Asset, Binary, Erc1155AssetType, Erc721AssetType, Part } from "@rarible/ethereum-api-client"
+import type { Asset, Binary, Erc1155AssetType, Erc721AssetType, Part } from "@rarible/ethereum-api-client"
 import { OrderOpenSeaV1DataV1Side } from "@rarible/ethereum-api-client"
 import type {
   Ethereum,
@@ -7,12 +7,12 @@ import type {
   EthereumSendOptions,
   EthereumTransaction,
 } from "@rarible/ethereum-provider"
-import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
+import type { BigNumber, EVMAddress, Address } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary, toWord, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { backOff } from "exponential-backoff"
 import { BigNumber as BigNum, toBn } from "@rarible/utils"
 import type { OrderOpenSeaV1DataV1 } from "@rarible/ethereum-api-client/build/models/OrderData"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { EVMBlockchain } from "@rarible/sdk-common"
 import { Blockchain } from "@rarible/api-client"
@@ -58,7 +58,7 @@ import {
 } from "./open-sea-converter"
 import { originFeeValueConvert } from "./common/origin-fees-utils"
 
-export type EncodedOrderCallData = { callData: Binary; replacementPattern: Binary; target: Address }
+export type EncodedOrderCallData = { callData: Binary; replacementPattern: Binary; target: EVMAddress }
 
 export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillRequest> {
   constructor(
@@ -81,18 +81,18 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
     return config.openSea.metadata || id32("RARIBLE")
   }
 
-  async invert({ order, payouts }: OpenSeaV1OrderFillRequest, maker: Address): Promise<SimpleOpenSeaV1Order> {
+  async invert({ order, payouts }: OpenSeaV1OrderFillRequest, maker: EVMAddress): Promise<SimpleOpenSeaV1Order> {
     if (order.data.side === "BUY") {
       throw new Error("Bid opensea orders is not supported yet")
     }
 
-    if (order.data.feeRecipient === ZERO_ADDRESS) {
+    if (order.data.feeRecipient === EVM_ZERO_ADDRESS) {
       throw new Error("feeRecipient should be specified")
     }
 
     const data: OrderOpenSeaV1DataV1 = {
       ...order.data,
-      feeRecipient: ZERO_ADDRESS,
+      feeRecipient: EVM_ZERO_ADDRESS,
       side: OrderOpenSeaV1DataV1Side.BUY,
     }
     const invertedOrder: SimpleOpenSeaV1Order = {
@@ -144,15 +144,15 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
 
   async getErc721EncodedData(
     assetType: Erc721AssetType,
-    maker: Address,
+    maker: Address | EVMAddress,
     isSellSide: boolean,
-    validatorAddress: Address | undefined,
+    validatorAddress: EVMAddress | undefined,
     initialCalldata: Binary,
   ): Promise<EncodedOrderCallData> {
     const ethereum = getRequiredWallet(this.ethereum)
-    let startArgs = [maker, ZERO_ADDRESS]
+    let startArgs = [maker, EVM_ZERO_ADDRESS]
     if (!isSellSide) {
-      startArgs = [ZERO_ADDRESS, maker]
+      startArgs = [EVM_ZERO_ADDRESS, maker]
     }
 
     if (validatorAddress) {
@@ -188,14 +188,14 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
   async getErc1155EncodedData(
     assetType: Erc1155AssetType,
     value: BigNumberValue,
-    maker: Address,
+    maker: Address | EVMAddress,
     isSellSide: boolean,
-    validatorAddress: Address | undefined,
+    validatorAddress: EVMAddress | undefined,
   ): Promise<EncodedOrderCallData> {
     const ethereum = getRequiredWallet(this.ethereum)
-    let startArgs = [maker, ZERO_ADDRESS]
+    let startArgs = [maker, EVM_ZERO_ADDRESS]
     if (!isSellSide) {
-      startArgs = [ZERO_ADDRESS, maker]
+      startArgs = [EVM_ZERO_ADDRESS, maker]
     }
     if (validatorAddress) {
       const c = createMerkleValidatorContract(ethereum, validatorAddress)
@@ -221,7 +221,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
   }
 
   getOrderFee(order: SimpleOpenSeaV1Order): number {
-    if (order.data.feeRecipient === ZERO_ADDRESS) {
+    if (order.data.feeRecipient === EVM_ZERO_ADDRESS) {
       return toBn(order.data.takerProtocolFee).plus(order.data.takerRelayerFee).toNumber()
     } else {
       return toBn(order.data.makerProtocolFee).plus(order.data.makerRelayerFee).toNumber()
@@ -379,7 +379,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
   }
 
   async approveSingle(
-    maker: Address,
+    maker: EVMAddress,
     asset: Asset,
     infinite: undefined | boolean = true,
   ): Promise<EthereumTransaction | undefined> {
@@ -409,7 +409,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
     }
   }
 
-  private async getRegisteredProxy(maker: Address): Promise<Address> {
+  private async getRegisteredProxy(maker: Address | EVMAddress): Promise<EVMAddress> {
     if (!this.ethereum) {
       throw new Error("Wallet undefined")
     }
@@ -418,14 +418,14 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
     const proxyRegistryContract = createOpenseaProxyRegistryEthContract(this.ethereum, proxyRegistry)
     const proxyAddress = await getSenderProxy(proxyRegistryContract, maker)
 
-    if (proxyAddress === ZERO_ADDRESS) {
+    if (proxyAddress === EVM_ZERO_ADDRESS) {
       const registerTx = await proxyRegistryContract.functionCall("registerProxy").send()
       await registerTx.wait()
 
       return backOff(
         async () => {
           const value = await getSenderProxy(proxyRegistryContract, maker)
-          if (value === ZERO_ADDRESS) {
+          if (value === EVM_ZERO_ADDRESS) {
             throw new Error("Expected non-zero proxy address")
           }
           return value
@@ -460,8 +460,8 @@ export async function getMatchOpenseaOptions(
   }
 }
 
-async function getSenderProxy(registryContract: EthereumContract, sender: Address) {
-  return toAddress(await registryContract.functionCall("proxies", sender).call())
+async function getSenderProxy(registryContract: EthereumContract, sender: Address | EVMAddress) {
+  return toEVMAddress(await registryContract.functionCall("proxies", sender).call())
 }
 
 export function getBuySellOrders(left: SimpleOpenSeaV1Order, right: SimpleOpenSeaV1Order) {
@@ -482,12 +482,12 @@ export function getAtomicMatchArgAddresses(dto: OpenSeaOrderDTO) {
   return [dto.exchange, dto.maker, dto.taker, dto.feeRecipient, dto.target, dto.staticTarget, dto.paymentToken]
 }
 
-export function getAtomicMatchArgAddressesForOpenseaWrapper(sellDto: OpenSeaOrderDTO, openseaWrapper: Address) {
+export function getAtomicMatchArgAddressesForOpenseaWrapper(sellDto: OpenSeaOrderDTO, openseaWrapper: EVMAddress) {
   return [
     sellDto.exchange,
     openseaWrapper,
     sellDto.maker,
-    ZERO_ADDRESS,
+    EVM_ZERO_ADDRESS,
     sellDto.target,
     sellDto.staticTarget,
     sellDto.paymentToken,

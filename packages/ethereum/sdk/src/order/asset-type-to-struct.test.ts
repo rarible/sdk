@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { createTestProviders } from "../common/test/create-test-providers"
 import { assetTypeToStruct } from "./asset-type-to-struct"
@@ -13,7 +13,7 @@ describe.each(providers)("assetTypeToStruct", ethereum => {
   test("encodes ERC20", () => {
     const result = assetTypeToStruct(ethereum, {
       assetClass: "ERC20",
-      contract: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"),
+      contract: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"),
     })
     expect(result).toStrictEqual({
       assetClass: "0x8ae85d84",
@@ -24,7 +24,7 @@ describe.each(providers)("assetTypeToStruct", ethereum => {
   test("encodes GEN_ART", () => {
     const result = assetTypeToStruct(ethereum, {
       assetClass: "GEN_ART",
-      contract: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"),
+      contract: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"),
     })
     expect(result).toStrictEqual({
       assetClass: "0xa8c6716e",
@@ -57,16 +57,16 @@ describe.each(providers)("assetTypeToStruct", ethereum => {
 })
 
 const COMMON_PART = {
-  contract: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"),
+  contract: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"),
   tokenId: toBigNumber("10"),
   uri: "test",
   royalties: [
-    { account: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
-    { account: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
+    { account: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
+    { account: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
   ],
   creators: [
-    { account: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
-    { account: toAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
+    { account: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
+    { account: toEVMAddress("0x44953ab2e88391176576d49ca23df0b8acd793be"), value: 100 },
   ],
   signatures: [toBinary("0x")],
 }

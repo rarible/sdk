@@ -1,7 +1,7 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 
-export function createSeaportContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createSeaportContract(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(SeaportABI, address)
 }
 

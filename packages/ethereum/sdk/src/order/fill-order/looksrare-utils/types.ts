@@ -68,7 +68,7 @@ export interface ChainInfo {
   cloudinaryUrl: string
 }
 
-export interface Addresses {
+export interface EVMAddresses {
   LOOKS: string
   LOOKS_LP: string
   WETH: string

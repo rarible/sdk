@@ -6,7 +6,7 @@ import {
 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { getEthereumConfig } from "../config"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./cryptopunk-wrapper"
@@ -31,8 +31,8 @@ describe.skip("wrap crypto punk", () => {
   })
 
   beforeAll(async () => {
-    config.cryptoPunks.marketContract = toAddress(it.punksMarket.options.address)
-    config.cryptoPunks.wrapperContract = toAddress(it.punksWrapper.options.address)
+    config.cryptoPunks.marketContract = toEVMAddress(it.punksMarket.options.address)
+    config.cryptoPunks.wrapperContract = toEVMAddress(it.punksWrapper.options.address)
   })
 
   const punkId = 3490

@@ -1,5 +1,5 @@
-import type { Address, BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
+import type { EVMAddress, BigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { AssetType, Binary } from "@rarible/ethereum-api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
@@ -43,9 +43,9 @@ export function convertOpenSeaOrderToDTO(ethereum: Ethereum, order: SimpleOpenSe
   }
 
   return {
-    exchange: toAddress(order.data.exchange),
-    maker: toAddress(order.maker),
-    taker: toAddress(order.taker || ZERO_ADDRESS),
+    exchange: toEVMAddress(order.data.exchange),
+    maker: toEVMAddress(order.maker),
+    taker: toEVMAddress(order.taker || EVM_ZERO_ADDRESS),
     makerRelayerFee: toBigNumber(order.data.makerRelayerFee),
     takerRelayerFee: toBigNumber(order.data.takerRelayerFee),
     makerProtocolFee: toBigNumber(order.data.makerProtocolFee),
@@ -101,7 +101,7 @@ export const ERC1155_VALIDATOR_TAKE_REPLACEMENT = toBinary(
   "0x00000000ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 )
 
-function getPaymentTokenAddress(order: SimpleOrder): Address | undefined {
+function getPaymentTokenAddress(order: SimpleOrder): EVMAddress | undefined {
   const makePaymentToken = extractPaymentTokenAddress(order.make.assetType)
   if (makePaymentToken !== undefined) {
     return makePaymentToken
@@ -113,10 +113,10 @@ function getPaymentTokenAddress(order: SimpleOrder): Address | undefined {
   return undefined
 }
 
-function extractPaymentTokenAddress(assetType: AssetType): Address | undefined {
+function extractPaymentTokenAddress(assetType: AssetType): EVMAddress | undefined {
   switch (assetType.assetClass) {
     case "ETH":
-      return ZERO_ADDRESS
+      return EVM_ZERO_ADDRESS
     case "ERC20":
       return assetType.contract
     default:
@@ -124,7 +124,7 @@ function extractPaymentTokenAddress(assetType: AssetType): Address | undefined {
   }
 }
 
-function getNftAddress(order: SimpleOrder): Address | undefined {
+function getNftAddress(order: SimpleOrder): EVMAddress | undefined {
   if (isNft(order.make.assetType)) {
     return order.make.assetType.contract
   }

@@ -1,4 +1,4 @@
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import type { OrderFillSendData } from "../types"
 import type { BasicOrderParametersStruct, ConsiderationItem, Order } from "./types"
@@ -47,7 +47,7 @@ export async function getfulfillBasicOrderData({
       ...timeBasedItemParams,
       isConsiderationItem: true,
     },
-  })[ZERO_ADDRESS]?.["0"]
+  })[EVM_ZERO_ADDRESS]?.["0"]
 
   const basicOrderParameters: BasicOrderParametersStruct = {
     offerer: order.parameters.offerer,
@@ -70,7 +70,7 @@ export async function getfulfillBasicOrderData({
     zoneHash: order.parameters.zoneHash,
   }
 
-  // const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
+  // const seaportContract = createSeaportV14Contract(ethereum, toEVMAddress(CROSS_CHAIN_SEAPORT_V1_4_ADDRESS))
   const functionCall = seaportContract.functionCall("fulfillBasicOrder", basicOrderParameters)
 
   console.log("fulfillBasicOrder", JSON.stringify(basicOrderParameters, null, " "))

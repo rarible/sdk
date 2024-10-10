@@ -1,5 +1,5 @@
 import type Web3 from "web3"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 
 const testErc20Abi = [
   {
@@ -319,7 +319,7 @@ export async function deployTestErc20(web3: Web3, name: string, symbol: string) 
     .send({ from: address, gas: 4000000, gasPrice: "0" })
 }
 
-export function getTestErc20Contract(web3: Web3, address?: Address) {
+export function getTestErc20Contract(web3: Web3, address?: EVMAddress) {
   // @ts-ignore
   return new web3.eth.Contract(testErc20Abi, address)
 }

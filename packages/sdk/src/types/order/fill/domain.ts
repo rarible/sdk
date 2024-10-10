@@ -1,5 +1,5 @@
 import type { ItemId, Order, OrderId } from "@rarible/api-client"
-import type { BigNumber } from "@rarible/types/build/big-number"
+import type { BigNumber } from "@rarible/types"
 import type { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { Platform } from "@rarible/api-client/build/models/Platform"

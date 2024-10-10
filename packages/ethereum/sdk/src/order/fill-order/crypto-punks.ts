@@ -1,6 +1,6 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumFunctionCall, EthereumSendOptions } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import { getAssetWithFee } from "../get-asset-with-fee"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
@@ -22,7 +22,7 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
     private readonly sdkConfig?: IRaribleEthereumSdkConfig,
   ) {}
 
-  invert(request: CryptoPunksOrderFillRequest, maker: Address): SimpleCryptoPunkOrder {
+  invert(request: CryptoPunksOrderFillRequest, maker: EVMAddress): SimpleCryptoPunkOrder {
     const inverted = invertOrder(request.order, request.amount, maker)
     inverted.data = {
       dataType: "CRYPTO_PUNKS_DATA",

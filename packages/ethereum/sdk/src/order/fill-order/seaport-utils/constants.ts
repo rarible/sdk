@@ -1,5 +1,5 @@
 import { toBn } from "@rarible/utils"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 
 export const SEAPORT_CONTRACT_NAME = "Seaport"
 export const SEAPORT_CONTRACT_VERSION = "1.5"
@@ -124,7 +124,7 @@ export const KNOWN_CONDUIT_KEYS_TO_CONDUIT: Record<string, string> = {
   [NO_CONDUIT]: CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
 }
 
-export function getConduitByKey(key: string = NO_CONDUIT, contractAddress: Address): string {
+export function getConduitByKey(key: string = NO_CONDUIT, contractAddress: EVMAddress): string {
   if (key === OPENSEA_CONDUIT_KEY) {
     return OPENSEA_CONDUIT_ADDRESS
   }

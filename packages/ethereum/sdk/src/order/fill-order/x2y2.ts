@@ -1,8 +1,8 @@
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
-import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
 import type { SimpleOrder, SimpleX2Y2Order } from "../types"
 import type { SendFunction } from "../../common/send-transaction"
@@ -79,7 +79,7 @@ export class X2Y2OrderHandler {
     const x2y2Input = await X2Y2Utils.getOrderSign(apis, {
       sender: config.exchange.wrapper,
       orderId: request.order.data.orderId,
-      currency: ZERO_ADDRESS,
+      currency: EVM_ZERO_ADDRESS,
       price: request.order.take.value,
     })
 

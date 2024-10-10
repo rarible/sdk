@@ -1,9 +1,9 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import { toAddress, toBigNumber, toContractAddress } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toUnionContractAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { PrepareTransferRequest, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
@@ -42,7 +42,7 @@ export class EthereumTransfer {
       multiple: collection.type === "ERC1155",
       maxAmount: item.supply,
       nftData: {
-        nftCollection: item.collection ? toContractAddress(item.collection) : undefined,
+        nftCollection: item.collection ? toUnionContractAddress(item.collection) : undefined,
       },
       submit: Action.create({
         id: "transfer" as const,
@@ -52,7 +52,7 @@ export class EthereumTransfer {
 
           const tx = await this.sdk.nft.transfer(
             {
-              contract: toAddress(contract),
+              contract: toEVMAddress(contract),
               tokenId: tokenId,
             },
             convertToEthereumAddress(request.to),

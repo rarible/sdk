@@ -1,5 +1,5 @@
 import type Web3 from "web3"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 import type { AbiItem } from "../common/abi-item"
 
 const abi: AbiItem[] = [
@@ -27,6 +27,6 @@ export async function deployTestChainId(web3: Web3) {
   return empty.deploy({ data: bytecode }).send({ from: address, gas: 4000000, gasPrice: "0" })
 }
 
-function createTestChaiId(web3: Web3, address?: Address) {
+function createTestChaiId(web3: Web3, address?: EVMAddress) {
   return new web3.eth.Contract(abi, address)
 }

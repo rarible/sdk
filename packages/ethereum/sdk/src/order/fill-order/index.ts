@@ -1,8 +1,8 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
-import type { Address, AssetType } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { AssetType, EVMAddress } from "@rarible/ethereum-api-client"
+import type { Maybe } from "@rarible/types"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type {
@@ -111,7 +111,7 @@ export class OrderFiller {
         if (this.isNonInvertableOrder(request.order)) {
           return { request, inverted: request.order }
         }
-        const from = toAddress(await this.ethereum.getFrom())
+        const from = toEVMAddress(await this.ethereum.getFrom())
         const inverted = await this.invertOrder(request, from)
 
         if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
@@ -149,7 +149,9 @@ export class OrderFiller {
     if (!this.isNonInvertableOrder(request.order) && !from) {
       throw new Error("'From' field must be specified for this order type")
     }
-    const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
+    const inverted = this.isNonInvertableOrder(request.order)
+      ? request.order
+      : await this.invertOrder(request, toEVMAddress(from))
     if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
       inverted.make.assetType = await this.checkAssetType(request.assetType)
     }
@@ -166,7 +168,7 @@ export class OrderFiller {
     }
   }
 
-  private async invertOrder(request: FillOrderRequest, from: Address) {
+  private async invertOrder(request: FillOrderRequest, from: EVMAddress) {
     switch (request.order.type) {
       case "RARIBLE_V1":
         return this.v1Handler.invert(<LegacyOrderFillRequest>request, from)
@@ -262,7 +264,7 @@ export class OrderFiller {
     if (!this.ethereum) {
       throw new Error("Wallet undefined")
     }
-    const from = toAddress(await this.ethereum.getFrom())
+    const from = toEVMAddress(await this.ethereum.getFrom())
     const inverted = this.isNonInvertableOrder(request.order) ? request.order : await this.invertOrder(request, from)
     if (request.assetType && inverted.make.assetType.assetClass === "COLLECTION") {
       inverted.make.assetType = await this.checkAssetType(request.assetType)
@@ -272,7 +274,7 @@ export class OrderFiller {
     const { contract } = await functionCall.getCallInfo()
     return {
       from,
-      contract: toAddress(contract),
+      contract: toEVMAddress(contract),
       data: await functionCall.getData(),
       options,
     }

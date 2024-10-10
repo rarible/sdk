@@ -3,7 +3,7 @@ import axios from "axios"
 import type { AssetType, BigNumberLike, UnionAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { extractBlockchainFromAssetType, getEntityData, validateBlockchain, FLOW_TOKEN_MAP } from "@rarible/sdk-common"
-import { toContractAddress } from "@rarible/types"
+import { toBigNumberLike, toContractAddress, toUnionContractAddress } from "@rarible/types"
 
 const OFFRAMP_URLS = {
   PROD: "https://crypto.sardine.ai",
@@ -95,7 +95,7 @@ export class OffRampClient {
             ...token,
             assetType: {
               "@type": "FLOW_FT",
-              contract: toContractAddress(`FLOW:${contract}`),
+              contract: toUnionContractAddress(`FLOW:${contract}`),
             },
           })
         }
@@ -148,14 +148,14 @@ export class OffRampClient {
 export type GetQuotesOptions = {
   assetType: AssetType
   address?: UnionAddress
-  cryptoAmount: BigNumberLike
+  cryptoAmount: BigNumberLike | string
   paymentType?: string
   fiatCurrency?: string
 }
 
 export type GetSellLinkOptions = {
   address?: UnionAddress
-  cryptoAmount: BigNumberLike
+  cryptoAmount: BigNumberLike | string
   fiatCurrency: string
   assetType: AssetType
 }

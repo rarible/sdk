@@ -1,4 +1,4 @@
-import { randomAddress, randomWord, toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
+import { randomEVMAddress, randomWord, toEVMAddress, toBigNumber, toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
@@ -78,24 +78,24 @@ describe("buy & acceptBid orders", () => {
      */
     await sentTx(
       it.exchangeV2.methods.__ExchangeV2_init(
-        toAddress(it.transferProxy.options.address),
-        toAddress(it.erc20TransferProxy.options.address),
+        toEVMAddress(it.transferProxy.options.address),
+        toEVMAddress(it.erc20TransferProxy.options.address),
         toBigNumber("0"),
         buyerAddress,
-        toAddress(it.royaltiesProvider.options.address),
+        toEVMAddress(it.royaltiesProvider.options.address),
       ),
       { from: buyerAddress },
     )
-    config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-    config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-    config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address)
-    config.transferProxies.erc20 = toAddress(it.erc20TransferProxy.options.address)
+    config.exchange.v1 = toEVMAddress(it.exchangeV2.options.address)
+    config.exchange.v2 = toEVMAddress(it.exchangeV2.options.address)
+    config.transferProxies.cryptoPunks = toEVMAddress(it.punksTransferProxy.options.address)
+    config.transferProxies.erc20 = toEVMAddress(it.erc20TransferProxy.options.address)
     // config.chainId = 200500
 
-    await sentTx(it.transferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+    await sentTx(it.transferProxy.methods.addOperator(toEVMAddress(it.exchangeV2.options.address)), {
       from: buyerAddress,
     })
-    await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+    await sentTx(it.erc20TransferProxy.methods.addOperator(toEVMAddress(it.exchangeV2.options.address)), {
       from: buyerAddress,
     })
 
@@ -125,7 +125,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber("1"),
         },
         value: toBigNumber("5"),
@@ -134,7 +134,7 @@ describe("buy & acceptBid orders", () => {
       take: {
         assetType: {
           assetClass: "ERC20",
-          contract: toAddress(it.testErc20.options.address),
+          contract: toEVMAddress(it.testErc20.options.address),
         },
         value: toBigNumber("10"),
       },
@@ -187,7 +187,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("5"),
@@ -196,7 +196,7 @@ describe("buy & acceptBid orders", () => {
       take: {
         assetType: {
           assetClass: "ERC20",
-          contract: toAddress(it.testErc20.options.address),
+          contract: toEVMAddress(it.testErc20.options.address),
         },
         value: toBigNumber("10"),
       },
@@ -224,7 +224,7 @@ describe("buy & acceptBid orders", () => {
     const startErc20Balance = toBn(await it.testErc20.methods.balanceOf(buyerAddress).call())
     const startErc1155Balance = toBn(await it.testErc1155.methods.balanceOf(buyerAddress, tokenId).call())
 
-    const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
+    const marketplaceMarker = toBinary(`${EVM_ZERO_ADDRESS}00000001`)
     const getApis = getApisTemplate.bind(null, provider, env)
 
     const filler = new OrderFiller(provider, send, getConfig, getApis, getBaseOrderFee, env, {
@@ -248,7 +248,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber("1"),
         },
         value: toBigNumber("5"),
@@ -274,14 +274,14 @@ describe("buy & acceptBid orders", () => {
     const finalOrder = { ...left, signature }
     const originFees = [
       {
-        account: randomAddress(),
+        account: randomEVMAddress(),
         value: 100,
       },
     ]
     await filler.getTransactionData({ order: finalOrder, amount: 2, originFees })
     await filler.getBuyTx({
       request: { order: finalOrder, amount: 2, originFees },
-      from: toAddress("0xf4314839F9Fc945D3B7693E3F6c121cb1d2de066"),
+      from: toEVMAddress("0xf4314839F9Fc945D3B7693E3F6c121cb1d2de066"),
     })
   })
 
@@ -295,7 +295,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("5"),
@@ -328,7 +328,7 @@ describe("buy & acceptBid orders", () => {
     const finalOrder = { ...left, signature }
     const originFees = [
       {
-        account: randomAddress(),
+        account: randomEVMAddress(),
         value: 100,
       },
     ]
@@ -366,7 +366,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber("1"),
         },
         value: toBigNumber("5"),
@@ -400,7 +400,7 @@ describe("buy & acceptBid orders", () => {
     const finalOrder = { ...left, signature }
     const originFees = [
       {
-        account: randomAddress(),
+        account: randomEVMAddress(),
         value: 100,
       },
     ]
@@ -425,7 +425,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "CRYPTO_PUNKS",
-          contract: toAddress(it.punksMarket.options.address),
+          contract: toEVMAddress(it.punksMarket.options.address),
           tokenId: punkId,
         },
         value: toBigNumber("1"),
@@ -447,7 +447,7 @@ describe("buy & acceptBid orders", () => {
     }
 
     await sentTx(
-      it.punksMarket.methods.offerPunkForSaleToAddress(punkId, 0, toAddress(it.punksTransferProxy.options.address)),
+      it.punksMarket.methods.offerPunkForSaleToAddress(punkId, 0, toEVMAddress(it.punksTransferProxy.options.address)),
       { from: sellerAddress },
     )
     const signature = await signOrder(sellerEthereum, getConfig, left)
@@ -470,9 +470,9 @@ describe("buy & acceptBid orders", () => {
     const tx = await approveErc20(
       buyerEthereum,
       send,
-      toAddress(it.testErc20.options.address),
-      toAddress(buyerAddress),
-      toAddress(it.erc20TransferProxy.options.address),
+      toEVMAddress(it.testErc20.options.address),
+      toEVMAddress(buyerAddress),
+      toEVMAddress(it.erc20TransferProxy.options.address),
       toBigNumber("10"),
     )
     await tx?.wait()
@@ -482,14 +482,14 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC20",
-          contract: toAddress(it.testErc20.options.address),
+          contract: toEVMAddress(it.testErc20.options.address),
         },
         value: toBigNumber("1"),
       },
       take: {
         assetType: {
           assetClass: "CRYPTO_PUNKS",
-          contract: toAddress(it.punksMarket.options.address),
+          contract: toEVMAddress(it.punksMarket.options.address),
           tokenId: punkId,
         },
         value: toBigNumber("1"),
@@ -524,7 +524,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("5"),
@@ -553,7 +553,7 @@ describe("buy & acceptBid orders", () => {
       from: sellerAddress,
     })
 
-    const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000001`)
+    const marketplaceMarker = toBinary(`${EVM_ZERO_ADDRESS}00000001`)
     const sdkBuyer = createRaribleSdk(buyerEthereum, env, {
       marketplaceMarker,
     })
@@ -570,7 +570,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("5"),
@@ -614,7 +614,7 @@ describe("buy & acceptBid orders", () => {
       make: {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("5"),

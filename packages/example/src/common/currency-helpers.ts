@@ -1,7 +1,13 @@
-import type { EthErc20AssetType, EthEthereumAssetType, FlowAssetTypeFt, TezosXTZAssetType } from "@rarible/api-client"
+import type {
+  EthErc20AssetType,
+  EthEthereumAssetType,
+  FlowAssetTypeFt,
+  TezosXTZAssetType,
+  UnionContractAddress,
+} from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types"
-import { toContractAddress } from "@rarible/types"
+import { toUnionContractAddress } from "@rarible/types"
 import type { CurrencyType, RequestCurrency } from "@rarible/sdk/build/common/domain"
 import type { SolanaSolAssetType } from "@rarible/api-client/build/models/AssetType"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
@@ -13,10 +19,10 @@ function getEthNative(blockchain: Blockchain): EthEthereumAssetType {
   }
 }
 
-function getERC20(contract: ContractAddress): EthErc20AssetType {
+function getERC20(contract: ContractAddress | UnionContractAddress): EthErc20AssetType {
   return {
     "@type": "ERC20",
-    contract,
+    contract: toUnionContractAddress(contract),
   }
 }
 
@@ -30,12 +36,12 @@ const solanaNative: SolanaSolAssetType = {
 
 const flowNative: FlowAssetTypeFt = {
   "@type": "FLOW_FT",
-  contract: toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken"),
+  contract: toUnionContractAddress("FLOW:A.7e60df042a9c0868.FlowToken"),
 }
 
 const flowUSDC: FlowAssetTypeFt = {
   "@type": "FLOW_FT",
-  contract: toContractAddress("FLOW:A.a983fecbed621163.FiatToken"),
+  contract: toUnionContractAddress("FLOW:A.a983fecbed621163.FiatToken"),
 }
 
 const aptosNative = {

@@ -1,4 +1,4 @@
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumber } from "@rarible/utils"
 import type { BigNumberValue } from "@rarible/utils"
 import type { EthereumContract } from "@rarible/ethereum-provider"
@@ -85,9 +85,9 @@ export async function getFulfillStandardOrderData({
       ...timeBasedItemParams,
       isConsiderationItem: true,
     },
-  })[ZERO_ADDRESS]?.["0"]
+  })[EVM_ZERO_ADDRESS]?.["0"]
 
-  const isGift = recipientAddress !== ZERO_ADDRESS
+  const isGift = recipientAddress !== EVM_ZERO_ADDRESS
 
   const useAdvanced = Boolean(unitsToFill) || hasCriteriaItems || isGift
 

@@ -1,26 +1,26 @@
 import type Web3 from "web3"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress, Address } from "@rarible/types"
 import type { Contract } from "web3-eth-contract"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { AbiItem } from "../../../../common/abi-item"
 
-export function createErc721FactoryContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createErc721FactoryContract(ethereum: Ethereum, address?: Address | EVMAddress): EthereumContract {
   return ethereum.createContract(erc721RaribleFactoryABI, address)
 }
 
-export function createTestRaribleFactoryContract(web3: Web3, address?: Address): Contract {
+export function createTestRaribleFactoryContract(web3: Web3, address?: Address | EVMAddress): Contract {
   return new web3.eth.Contract(erc721RaribleFactoryABI, address)
 }
 
-export async function deployTestErc721RaribleFactory(web3: Web3, beaconAddress: Address) {
+export async function deployTestErc721RaribleFactory(web3: Web3, beaconAddress: Address | EVMAddress) {
   const contract = createTestRaribleFactoryContract(web3)
   const [address] = await web3.eth.getAccounts()
 
   return contract
     .deploy({
       data: erc721RaribleFactoryBytecode,
-      arguments: [beaconAddress, ZERO_ADDRESS, ZERO_ADDRESS],
+      arguments: [beaconAddress, EVM_ZERO_ADDRESS, EVM_ZERO_ADDRESS],
     })
     .send({ from: address, gas: 5000000, gasPrice: "0" })
 }

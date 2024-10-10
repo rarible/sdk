@@ -1,8 +1,8 @@
 import type { SolanaSdk } from "@rarible/solana-sdk"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import { toContractAddress } from "@rarible/types"
+import { toUnionContractAddress } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { IApisSdk } from "../../domain"
@@ -49,7 +49,7 @@ export class SolanaCollection {
 
       return {
         tx: new BlockchainSolanaTransaction(res, this.sdk),
-        address: toContractAddress(`SOLANA:${mintPrepare.mint.toString()}`),
+        address: toUnionContractAddress(`SOLANA:${mintPrepare.mint.toString()}`),
       }
     },
   })

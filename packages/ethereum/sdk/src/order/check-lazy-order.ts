@@ -1,9 +1,9 @@
 import type {
-  Address,
   Asset,
   AssetType,
   Erc1155LazyAssetType,
   Erc721LazyAssetType,
+  EVMAddress,
   OrderForm,
 } from "@rarible/ethereum-api-client"
 
@@ -25,7 +25,7 @@ export async function checkLazyOrder(
 async function checkLazyMakeAsset(
   checkLazyAsset: (asset: Asset) => Promise<Asset>,
   asset: Asset,
-  maker: Address,
+  maker: EVMAddress,
 ): Promise<Asset> {
   const make = await checkLazyAsset(asset)
   if (isLazyAsset(make.assetType) && make.assetType.creators[0].account === maker) {

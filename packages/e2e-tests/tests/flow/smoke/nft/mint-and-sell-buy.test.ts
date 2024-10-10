@@ -1,6 +1,6 @@
 import { ActivityType, Blockchain } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
-import { toBigNumber, toContractAddress } from "@rarible/types"
+import { toBigNumber, toContractAddress, toUnionContractAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { MintAndSellRequest } from "@rarible/sdk"
 import { getFlowBuyerWallet, getFlowSellerWallet, getWalletAddressFull } from "../../../common/wallet"
@@ -40,7 +40,7 @@ function suites(): {
           price: "0.0001", //min available price for flow
           currency: {
             "@type": "FLOW_FT",
-            contract: toContractAddress(`FLOW:${testsConfig.variables.FLOW_FT_CONTRACT_ADDRESS}`),
+            contract: toUnionContractAddress(`FLOW:${testsConfig.variables.FLOW_FT_CONTRACT_ADDRESS}`),
           },
         }
       },

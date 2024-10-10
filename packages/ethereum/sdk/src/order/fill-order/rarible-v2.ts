@@ -1,7 +1,7 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress, Address } from "@rarible/types"
 import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
 import { ZERO_WORD } from "@rarible/types"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import { hashToSign, orderToStruct, signOrder } from "../sign-order"
 import { getAssetWithFee } from "../get-asset-with-fee"
 import { approve } from "../approve"
@@ -36,7 +36,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     private readonly getBaseFee: (type: SimpleOrder["type"]) => Promise<number>,
   ) {}
 
-  async invert(request: RaribleV2OrderFillRequest, maker: Address): Promise<SimpleRaribleV2Order> {
+  async invert(request: RaribleV2OrderFillRequest, maker: Address | EVMAddress): Promise<SimpleRaribleV2Order> {
     const inverted = invertOrder(request.order, request.amount, maker)
     switch (request.order.data.dataType) {
       case "RARIBLE_V2_DATA_V1": {

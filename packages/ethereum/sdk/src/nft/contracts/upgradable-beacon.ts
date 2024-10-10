@@ -1,18 +1,19 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type Web3 from "web3"
 import type { Contract } from "web3-eth-contract"
+import type { Address } from "@rarible/types"
 import type { AbiItem } from "../../common/abi-item"
 
-export function createUpgradableBeaconContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createUpgradableBeaconContract(ethereum: Ethereum, address?: Address | EVMAddress): EthereumContract {
   return ethereum.createContract(upgradableBeaconABI, address)
 }
 
-export function createTestUpgradableBeaconContract(web3: Web3, address?: Address): Contract {
+export function createTestUpgradableBeaconContract(web3: Web3, address?: Address | EVMAddress): Contract {
   return new web3.eth.Contract(upgradableBeaconABI, address)
 }
 
-export async function deployTestUpgradableBeacon(web3: Web3, raribleMinimalAddress: Address) {
+export async function deployTestUpgradableBeacon(web3: Web3, raribleMinimalAddress: Address | EVMAddress) {
   const contract = createTestUpgradableBeaconContract(web3)
   const [address] = await web3.eth.getAccounts()
 

@@ -31,7 +31,7 @@
   },
   "dependencies": {
     "@rarible/action": "~0.9.1",
-    "@rarible/ethereum-api-client": "^0.2.0-alpha.1",
+    "@rarible/ethereum-api-client": "~0.2.1-beta.3",
     "@rarible/ethereum-provider": "^0.13.68-fix.61",
     "@rarible/logger": "^0.9.12",
     "@rarible/sdk-common": "^0.13.68-fix.61",

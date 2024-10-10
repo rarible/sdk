@@ -6,13 +6,13 @@ import type { ContractAddress, FlowAddress, UnionAddress, FlowContractAddress } 
 import {
   toBigNumber,
   toCollectionId,
-  toContractAddress,
+  toUnionContractAddress,
   toFlowAddress,
   toItemId,
   toOrderId,
   toUnionAddress,
+  isBlockchainSpecified,
 } from "@rarible/types"
-import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { FlowFee } from "@rarible/flow-sdk"
 import type { UnionPart } from "../../../../types/order/common"
 import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
@@ -140,7 +140,7 @@ export function convertFlowItemId(itemId: FlowItemIdSdk): ItemId {
 }
 
 export function convertFlowContractAddress(contractAddress: string): ContractAddress {
-  return toContractAddress(`${Blockchain.FLOW}:${contractAddress}`)
+  return toUnionContractAddress(`${Blockchain.FLOW}:${contractAddress}`)
 }
 
 export function convertFlowCollectionId(contractAddress: string): CollectionId {

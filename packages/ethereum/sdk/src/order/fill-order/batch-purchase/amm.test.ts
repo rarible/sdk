@@ -1,4 +1,4 @@
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
@@ -42,7 +42,7 @@ describe("amm batch buy tests", () => {
     const tx = await sdkBuyer.order.buyBatch(
       ordersToRequests(orders, [
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 100,
         },
       ]),
@@ -74,7 +74,7 @@ describe("amm batch buy tests", () => {
         amount: 1,
         originFees: [
           {
-            account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+            account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
             value: 100,
           },
         ],

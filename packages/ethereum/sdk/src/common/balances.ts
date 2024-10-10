@@ -1,9 +1,9 @@
-import type { Address, BigNumber as AssetTypeBigNumber } from "@rarible/types"
+import type { Address, EVMAddress, BigNumber as AssetTypeBigNumber } from "@rarible/types"
 import type { Erc20AssetType, EthAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBigNumber } from "@rarible/types"
 import { createErc20Contract } from "../order/contracts/erc20"
@@ -37,7 +37,7 @@ export class Balances {
     this.transfer = this.transfer.bind(this)
   }
 
-  async getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumber> {
+  async getBalance(address: EVMAddress | Address, assetType: BalanceRequestAssetType): Promise<BigNumber> {
     const apis = await this.getApis()
     switch (assetType.assetClass) {
       case "ETH": {
@@ -78,7 +78,7 @@ export class Balances {
     throw new Error("TransferAsset must includes value")
   }
 
-  async transfer(address: Address, asset: TransferBalanceAsset): Promise<EthereumTransaction> {
+  async transfer(address: Address | EVMAddress, asset: TransferBalanceAsset): Promise<EthereumTransaction> {
     const value = (await this.getNormalizedTransferValue(asset)).toString()
     switch (asset.assetType.assetClass) {
       case "ETH": {

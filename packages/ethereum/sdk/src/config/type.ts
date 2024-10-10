@@ -1,46 +1,46 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type { Word } from "@rarible/types"
 import type { EVMBlockchain } from "@rarible/sdk-common"
 import type { EthereumSdkEnvironment } from "../types"
 
 export type ExchangeAddresses = {
-  v1: Address
-  v2: Address
-  openseaV1: Address
-  wrapper: Address
-  looksrare?: Address
-  looksrareV2?: Address
-  x2y2: Address
+  v1: EVMAddress
+  v2: EVMAddress
+  openseaV1: EVMAddress
+  wrapper: EVMAddress
+  looksrare?: EVMAddress
+  looksrareV2?: EVMAddress
+  x2y2: EVMAddress
 }
 
 export type TransferProxies = {
-  nft: Address
-  erc20: Address
-  erc721Lazy: Address
-  erc1155Lazy: Address
-  openseaV1: Address
-  cryptoPunks: Address
+  nft: EVMAddress
+  erc20: EVMAddress
+  erc721Lazy: EVMAddress
+  erc1155Lazy: EVMAddress
+  openseaV1: EVMAddress
+  cryptoPunks: EVMAddress
 }
 
 export type OpenSeaConfig = {
   metadata: Word
-  proxyRegistry: Address
-  merkleValidator?: Address
+  proxyRegistry: EVMAddress
+  merkleValidator?: EVMAddress
 }
 
 export type FactoriesAddresses = {
-  erc721: Address
-  erc1155: Address
+  erc721: EVMAddress
+  erc1155: EVMAddress
 }
 
 export type CryptoPunksConfig = {
-  marketContract: Address
-  wrapperContract: Address
+  marketContract: EVMAddress
+  wrapperContract: EVMAddress
 }
 
 export type SudoswapConfig = {
-  pairFactory: Address
-  pairRouter: Address
+  pairFactory: EVMAddress
+  pairRouter: EVMAddress
 }
 
 export type EthereumConfig = {
@@ -53,9 +53,9 @@ export type EthereumConfig = {
   feeConfigUrl: string
   openSea: OpenSeaConfig
   factories: FactoriesAddresses
-  weth: Address
-  auction: Address
+  weth: EVMAddress
+  auction: EVMAddress
   cryptoPunks: CryptoPunksConfig
   sudoswap: SudoswapConfig
-  looksrareOrderValidatorV2?: Address
+  looksrareOrderValidatorV2?: EVMAddress
 }

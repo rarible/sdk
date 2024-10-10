@@ -1,6 +1,6 @@
-import type { Address, BigNumber, Binary, NftItem, NftTokenId, Part } from "@rarible/ethereum-api-client"
+import type { Binary, EVMAddress, NftItem, NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe, BigNumber } from "@rarible/types"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
 import type { SendFunction } from "../common/send-transaction"
@@ -58,9 +58,9 @@ export type MintRequestERC1155 = ERC1155RequestV1 | ERC1155RequestV2
 export type MintRequest = MintRequestERC721 | MintRequestERC1155
 
 export type MintResponseCommon = {
-  contract: Address
+  contract: EVMAddress
   tokenId: BigNumber
-  owner: Address
+  owner: EVMAddress
   itemId: string
 }
 

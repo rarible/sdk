@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
 import { awaitAll, createE2eProvider, deployTestErc20 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
@@ -39,7 +39,7 @@ describe.each(providers)("upsertOrder", ethereum => {
     const order: OrderForm = {
       ...TEST_ORDER_TEMPLATE,
       salt: toBigNumber("10") as any,
-      maker: toAddress(wallet.getAddressString()),
+      maker: toEVMAddress(wallet.getAddressString()),
       type: "RARIBLE_V2",
       data: {
         dataType: "RARIBLE_V2_DATA_V1",
@@ -57,10 +57,10 @@ describe.each(providers)("upsertOrder", ethereum => {
 
   test("getPrice should work with ETH", async () => {
     const request = {
-      maker: toAddress(wallet.getAddressString()),
+      maker: toEVMAddress(wallet.getAddressString()),
       makeAssetType: {
         assetClass: "ERC721",
-        contract: toAddress("0x0000000000000000000000000000000000000001"),
+        contract: toEVMAddress("0x0000000000000000000000000000000000000001"),
         tokenId: toBigNumber("1"),
       },
       priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
@@ -79,16 +79,16 @@ describe.each(providers)("upsertOrder", ethereum => {
 
   test("getPrice should work with ERC20", async () => {
     const request = {
-      maker: toAddress(wallet.getAddressString()),
+      maker: toEVMAddress(wallet.getAddressString()),
       makeAssetType: {
         assetClass: "ERC721",
-        contract: toAddress("0x0000000000000000000000000000000000000001"),
+        contract: toEVMAddress("0x0000000000000000000000000000000000000001"),
         tokenId: toBigNumber("1"),
       },
       priceDecimal: toBn(MIN_PAYMENT_VALUE_DECIMAL.toFixed()),
       takeAssetType: {
         assetClass: "ERC20" as const,
-        contract: toAddress(it.testErc20.options.address),
+        contract: toEVMAddress(it.testErc20.options.address),
       },
       amount: 1,
       payouts: [],
@@ -109,7 +109,7 @@ describe.each(providers)("upsertOrder", ethereum => {
 
     const upserter = new UpsertOrder(orderService, send, getConfig, checkLazyOrder, approve, sign, getApis, ethereum)
     const request = {
-      maker: toAddress(wallet.getAddressString()),
+      maker: toEVMAddress(wallet.getAddressString()),
       make: {
         assetType: {
           assetClass: "ERC721",

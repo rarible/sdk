@@ -3,6 +3,7 @@ import type { CryptoPunksAssetType, Erc1155AssetType, Erc721AssetType, Part } fr
 import type { Action } from "@rarible/action"
 import type { EthereumFunctionCall, EthereumSendOptions, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { Erc1155LazyAssetType, Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
+import type { EVMAddress } from "@rarible/types"
 import type {
   SimpleCryptoPunkOrder,
   SimpleLegacyOrder,
@@ -31,7 +32,10 @@ export type CommonFillRequest<T> = {
   assetType?: CommonFillRequestAssetType
 }
 
-export type LegacyOrderFillRequest = CommonFillRequest<SimpleLegacyOrder> & { payout?: Address; originFee: number }
+export type LegacyOrderFillRequest = CommonFillRequest<SimpleLegacyOrder> & {
+  payout?: Address | EVMAddress
+  originFee: number
+}
 
 export type RaribleV2OrderFillRequest = RaribleV2OrderFillRequestV2 | RaribleV2OrderFillRequestV3
 
@@ -138,7 +142,7 @@ export type FillOrderStageId = "approve" | "send-tx"
 export type FillBatchOrderAction = Action<FillOrderStageId, FillBatchOrderRequest, EthereumTransaction>
 
 export interface OrderHandler<T extends FillOrderRequest> {
-  invert: (request: T, maker: Address) => T["order"] | Promise<T["order"]>
+  invert: (request: T, maker: EVMAddress) => T["order"] | Promise<T["order"]>
   approve: (order: T["order"], infinite: boolean) => Promise<void>
   getTransactionData: (order: T["order"], inverted: T["order"], request: T) => Promise<OrderFillSendData>
 
@@ -155,9 +159,9 @@ export type GetOrderBuyBatchTxData = (
 
 export type OrderFillTransactionData = {
   data: string
-  contract: Address
+  contract: EVMAddress
   options: EthereumSendOptions
-  from: Address
+  from: EVMAddress
 }
 
 export type OrderFillSendData = {
@@ -169,7 +173,7 @@ export type GetOrderBuyTxData = (request: GetOrderBuyTxRequest) => Promise<Trans
 
 export type GetOrderBuyTxRequest = {
   request: FillOrderRequest
-  from: Address
+  from: Address | EVMAddress
 }
 
 export type TransactionData = {

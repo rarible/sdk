@@ -1,9 +1,10 @@
-import type { Address, NftCollectionControllerApi, NftTokenId } from "@rarible/ethereum-api-client"
+import type { NftCollectionControllerApi, NftTokenId } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 
 export async function getTokenId(
   nftCollectionApi: NftCollectionControllerApi,
-  collection: Address,
-  minter: Address,
+  collection: EVMAddress,
+  minter: EVMAddress,
   nftTokenId?: NftTokenId,
 ) {
   if (nftTokenId !== undefined) {

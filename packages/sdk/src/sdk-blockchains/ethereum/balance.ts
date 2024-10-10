@@ -6,7 +6,7 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import { Blockchain } from "@rarible/api-client"
 import { Action } from "@rarible/action"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type * as ApiClient from "@rarible/api-client"
 import { extractBlockchain, extractId } from "@rarible/sdk-common"
@@ -16,7 +16,7 @@ import type {
   NativeCurrencyAssetType,
   TokenCurrencyAssetType,
 } from "@rarible/api-client/build/models/AssetType"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { TransferBalanceAsset } from "@rarible/protocol-ethereum-sdk/src/common/balances"
 import type { ConvertRequest } from "../../types/balances"
 import type {
@@ -111,7 +111,7 @@ export class EthereumBalance {
     if (!isEth(assetType) && !isErc20(assetType)) {
       throw new Error("Transfer request is available for ETH and ERC20 tokens")
     }
-    const tx = await this.sdk.balances.transfer(toAddress(evmAddress), {
+    const tx = await this.sdk.balances.transfer(toEVMAddress(evmAddress), {
       assetType: convertToEthereumAssetType(assetType),
       valueDecimal: request.amount,
     } as TransferBalanceAsset)

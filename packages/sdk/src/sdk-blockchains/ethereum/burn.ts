@@ -1,9 +1,9 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
-import { toAddress, toBigNumber, toContractAddress } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toUnionContractAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type { BurnRequest, PrepareBurnRequest } from "../../types/nft/burn/domain"
@@ -37,7 +37,7 @@ export class EthereumBurn {
       multiple: collection.type === "ERC1155",
       maxAmount: item.supply,
       nftData: {
-        nftCollection: item.collection && toContractAddress(item.collection),
+        nftCollection: item.collection && toUnionContractAddress(item.collection),
       },
       submit: Action.create({
         id: "burn" as const,
@@ -47,7 +47,7 @@ export class EthereumBurn {
 
           const tx = await this.sdk.nft.burn({
             assetType: {
-              contract: toAddress(contract),
+              contract: toEVMAddress(contract),
               tokenId: tokenId,
             },
             amount,

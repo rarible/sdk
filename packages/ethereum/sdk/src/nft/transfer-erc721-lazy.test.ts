@@ -1,6 +1,6 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
@@ -35,9 +35,9 @@ describe("transfer Erc721 lazy", () => {
   const sign = signNft.bind(null, ethereum, getConfig)
 
   test("should transfer erc721 lazy token", async () => {
-    const from = toAddress(wallet.getAddressString())
-    const recipient = randomAddress()
-    const contract = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
+    const from = toEVMAddress(wallet.getAddressString())
+    const recipient = randomEVMAddress()
+    const contract = toEVMAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
 
     const request: ERC721RequestV3 = {
       uri: "ipfs://ipfs/hash",

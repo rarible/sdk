@@ -1,10 +1,11 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Address, AssetType, OrderForm } from "@rarible/ethereum-api-client"
+import type { EVMAddress, AssetType, OrderForm } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/utils"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Address, Maybe } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
+import { deprecatedMethod, deprecatedMethodAction } from "@rarible/sdk-common"
 import { getNetworkConfigByChainId } from "./config"
 import type { UpsertOrderAction } from "./order/upsert-order"
 import { UpsertOrder } from "./order/upsert-order"
@@ -44,21 +45,13 @@ import { Balances } from "./common/balances"
 import type { EthereumNetwork, IRaribleEthereumSdkConfig } from "./types"
 import { LogsLevel } from "./types"
 import { ConvertWeth } from "./order/convert-weth"
-import type { AuctionStartAction } from "./auction/start"
-import { StartAuction } from "./auction/start"
-import { cancelAuction } from "./auction/cancel"
-import { finishAuction } from "./auction/finish"
-import type { PutAuctionBidAction } from "./auction/put-bid"
-import { PutAuctionBid } from "./auction/put-bid"
-import type { BuyoutAuctionAction } from "./auction/buy-out"
-import { BuyoutAuction } from "./auction/buy-out"
 import { createRemoteLogger, getEnvironment } from "./common/logger/logger"
-import { getAuctionHash } from "./auction/common"
 import type { CryptoPunksWrapper } from "./common/crypto-punks"
 import { approveForWrapper, unwrapPunk, wrapPunk } from "./nft/cryptopunk-wrapper"
 import { BatchOrderFiller } from "./order/fill-order/batch-purchase/batch-purchase"
 import { getRequiredWallet } from "./common/get-required-wallet"
 import { CURRENT_ORDER_TYPE_VERSION } from "./common/order"
+import type { AuctionStartAction, PutAuctionBidAction, BuyoutAuctionAction } from "./auction/types"
 
 export interface RaribleOrderSdk {
   /**
@@ -164,7 +157,7 @@ export interface RaribleNftSdk {
    * @param to recipient address
    * @param amount for transfer
    */
-  transfer(asset: TransferAsset, to: Address, amount?: BigNumberValue): Promise<EthereumTransaction>
+  transfer(asset: TransferAsset, to: EVMAddress, amount?: BigNumberValue): Promise<EthereumTransaction>
 
   /**
    * @param request burn request
@@ -184,14 +177,14 @@ export interface RaribleBalancesSdk {
    * @param assetType type of asset. Supports ERC20 and ETH
    * @returns balance of user
    */
-  getBalance(address: Address, assetType: BalanceRequestAssetType): Promise<BigNumber>
+  getBalance(address: EVMAddress | EVMAddress, assetType: BalanceRequestAssetType): Promise<BigNumber>
 
   /**
    * Transfer native token or ERC-20 to recipient
    * @param address Recipient of tokens
    * @param asset Object includes currency type and transfer value
    */
-  transfer(address: Address, asset: TransferBalanceAsset): Promise<EthereumTransaction>
+  transfer(address: EVMAddress | EVMAddress, asset: TransferBalanceAsset): Promise<EthereumTransaction>
   /**
    * Convert ETH balance from/to the Wrapped Ether (ERC-20) token
    * @depreacted please use `deposit` or `withdraw`
@@ -349,9 +342,6 @@ export function createRaribleSdk(
   const sellService = new OrderSell(upsertService, checkAssetType)
   const bidService = new OrderBid(upsertService, checkAssetType)
   const wethConverter = new ConvertWeth(ethereum, send, getConfig)
-  const startAuctionService = new StartAuction(ethereum, send, getConfig, env, approveFn, getApis)
-  const putAuctionBidService = new PutAuctionBid(ethereum, send, getConfig, env, approveFn, getApis)
-  const buyOutAuctionService = new BuyoutAuction(ethereum, send, getConfig, env, approveFn, getApis)
 
   return {
     apis,
@@ -373,12 +363,12 @@ export function createRaribleSdk(
       getBuyAmmInfo: filler.getBuyAmmInfo,
     },
     auction: {
-      start: startAuctionService.start,
-      cancel: cancelAuction.bind(null, ethereum, send, getConfig, getApis),
-      finish: finishAuction.bind(null, ethereum, send, getConfig, getApis),
-      putBid: putAuctionBidService.putBid,
-      buyOut: buyOutAuctionService.buyout,
-      getHash: getAuctionHash.bind(null, ethereum, getConfig),
+      start: deprecatedMethodAction,
+      cancel: deprecatedMethod,
+      finish: deprecatedMethod,
+      putBid: deprecatedMethodAction,
+      buyOut: deprecatedMethodAction,
+      getHash: deprecatedMethod,
     },
     nft: {
       mint: partialCall(mintTemplate, ethereum, send, partialCall(signNftTemplate, ethereum, getConfig), getApis),

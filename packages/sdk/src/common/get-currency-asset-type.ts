@@ -1,4 +1,4 @@
-import { toBigNumber, toContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, toUnionContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
@@ -81,7 +81,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     }
     return {
       "@type": "CURRENCY_TOKEN",
-      contract: toContractAddress(id),
+      contract: toUnionContractAddress(id),
     }
   }
   const { contract, tokenId } = getDataFromCurrencyId(id)
@@ -94,13 +94,13 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     }
     return {
       "@type": "ERC20",
-      contract: toContractAddress(`${blockchain}:${contract}`),
+      contract: toUnionContractAddress(`${blockchain}:${contract}`),
     }
   }
   if (blockchain === Blockchain.FLOW) {
     return {
       "@type": "FLOW_FT",
-      contract: toContractAddress(id),
+      contract: toUnionContractAddress(id),
     }
   }
   if (blockchain === Blockchain.TEZOS) {
@@ -111,7 +111,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     }
     return {
       "@type": "TEZOS_FT",
-      contract: toContractAddress(`TEZOS:${contract}`),
+      contract: toUnionContractAddress(`TEZOS:${contract}`),
       tokenId: tokenId ? toBigNumber(tokenId) : undefined,
     }
   }

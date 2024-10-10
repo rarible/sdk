@@ -1,4 +1,4 @@
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { awaitAll, deployTestErc20, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { toBn } from "@rarible/utils/build/bn"
@@ -40,8 +40,8 @@ describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
   })
 
   test(prependProviderName(ethereum, "should approve exact value if not infinite"), async () => {
-    const operator = randomAddress()
-    const tx = await approveErc20(toAddress(it.testErc20.options.address), testAddress, operator, toBn(100), false)
+    const operator = randomEVMAddress()
+    const tx = await approveErc20(toEVMAddress(it.testErc20.options.address), testAddress, operator, toBn(100), false)
     await tx?.wait()
     const result = toBn(await it.testErc20.methods.allowance(testAddress, operator).call())
     expect(result.eq(100)).toBeTruthy()
@@ -50,8 +50,8 @@ describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
   test(prependProviderName(ethereum, "should approve if value infinite"), async () => {
     const infiniteBn = toBn(2).pow(256).minus(1)
 
-    const operator = randomAddress()
-    const addressErc20 = toAddress(it.testErc20.options.address)
+    const operator = randomEVMAddress()
+    const addressErc20 = toEVMAddress(it.testErc20.options.address)
     const tx = await approveErc20(addressErc20, testAddress, operator, toBn(infiniteBn), true)
     await tx?.wait()
     const result = toBn(await it.testErc20.methods.allowance(testAddress, operator).call())
@@ -59,13 +59,13 @@ describe.each(providers)("approveErc20", (ethereum: Ethereum) => {
   })
 
   test(prependProviderName(ethereum, "should not approve if already approved"), async () => {
-    const operator = randomAddress()
+    const operator = randomEVMAddress()
     const testBnValue = toBn(200)
 
     await sentTx(it.testErc20.methods.approve(operator, testBnValue), { from: testAddress })
 
     const result = await approveErc20(
-      toAddress(it.testErc20.options.address),
+      toEVMAddress(it.testErc20.options.address),
       testAddress,
       operator,
       toBn(testBnValue),

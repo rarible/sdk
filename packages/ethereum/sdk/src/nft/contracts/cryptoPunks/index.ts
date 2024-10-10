@@ -1,8 +1,8 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/types"
+import type { Address, EVMAddress } from "@rarible/types"
 import type { AbiItem } from "../../../common/abi-item"
 
-export function createCryptoPunksMarketContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createCryptoPunksMarketContract(ethereum: Ethereum, address?: Address | EVMAddress): EthereumContract {
   return ethereum.createContract(cryptoPunksAbi, address)
 }
 
@@ -346,7 +346,7 @@ export const cryptoPunksAbi: AbiItem[] = [
         type: "uint256",
       },
       {
-        name: "toAddress",
+        name: "toEVMAddress",
         type: "address",
       },
     ],
@@ -510,7 +510,7 @@ export const cryptoPunksAbi: AbiItem[] = [
       },
       {
         indexed: true,
-        name: "toAddress",
+        name: "toEVMAddress",
         type: "address",
       },
     ],
@@ -581,7 +581,7 @@ export const cryptoPunksAbi: AbiItem[] = [
       },
       {
         indexed: true,
-        name: "toAddress",
+        name: "toEVMAddress",
         type: "address",
       },
     ],

@@ -3,6 +3,7 @@ export * from "./address"
 export * from "./blockchain"
 export * from "./retry"
 export * from "./get-stringified-data"
+export * from "./methods"
 
 export enum DappType {
   AlphaWallet = "AlphaWallet",

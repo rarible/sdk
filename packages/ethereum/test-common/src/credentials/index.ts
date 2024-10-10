@@ -1,6 +1,6 @@
 //Wallet address 0x76C5855e93bD498B6331652854c4549d34Bc3A30
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
+import { toEVMAddress, ZERO_ADDRESS } from "@rarible/types"
 import type { E2EProviderConfig } from "../create-e2e-provider"
 
 export const DEV_PK_1 = "26250bb39160076f030517503da31e11aca80060d14f84ebdaced666efb89e21"
@@ -62,9 +62,9 @@ const testContractsDictionary: Record<TestContractsNetwork, Record<TestContractT
   },
 }
 
-export function getTestContract(env: TestContractsNetwork, contract: TestContractType): Address {
+export function getTestContract(env: TestContractsNetwork, contract: TestContractType): EVMAddress {
   const envContracts = testContractsDictionary[env]
   if (!envContracts) throw new Error(`Env ${env} hasn't created`)
   if (!envContracts[contract]) throw new Error(`Contract ${contract} in ${env} env hasn't created`)
-  return toAddress(envContracts[contract])
+  return toEVMAddress(envContracts[contract])
 }

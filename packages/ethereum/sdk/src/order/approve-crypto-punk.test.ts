@@ -1,7 +1,7 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { awaitAll, createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { approveCryptoPunk } from "./approve-crypto-punk"
 
@@ -27,9 +27,9 @@ describe("approve crypto punks", () => {
   })
 
   test("should approve", async () => {
-    const operator = randomAddress()
+    const operator = randomEVMAddress()
 
-    const tx = await approve(toAddress(it.punksMarket.options.address), sellerAddress, operator, 0)
+    const tx = await approve(toEVMAddress(it.punksMarket.options.address), sellerAddress, operator, 0)
     await tx?.wait()
     const offer = await it.punksMarket.methods.punksOfferedForSale(0).call()
 
@@ -41,11 +41,11 @@ describe("approve crypto punks", () => {
   })
 
   test("should not approve if already approved", async () => {
-    const operator = randomAddress()
+    const operator = randomEVMAddress()
 
     await sentTx(it.punksMarket.methods.offerPunkForSaleToAddress(0, 0, operator), { from: sellerAddress })
 
-    const approveResult = await approve(toAddress(it.punksMarket.options.address), sellerAddress, operator, 0)
+    const approveResult = await approve(toEVMAddress(it.punksMarket.options.address), sellerAddress, operator, 0)
 
     expect(approveResult === undefined).toBeTruthy()
   })

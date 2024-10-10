@@ -1,8 +1,8 @@
 import type Web3 from "web3"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 import type { AbiItem } from "../common/abi-item"
 
-export function createTestExchangeV2Contract(web3: Web3, address?: Address) {
+export function createTestExchangeV2Contract(web3: Web3, address?: EVMAddress) {
   return new web3.eth.Contract(EXCHANGEV2_ABI, address)
 }
 

@@ -1,5 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
 import { Warning } from "@rarible/logger/build"
@@ -60,11 +60,11 @@ export const getBalancesAndApprovals = async ({
       let approvedAmountPromise = toBn(0)
 
       if (isErc721Item(item.itemType) || isErc1155Item(item.itemType)) {
-        const erc721 = createErc721Contract(ethereum, toAddress(item.token))
+        const erc721 = createErc721Contract(ethereum, toEVMAddress(item.token))
         const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
         approvedAmountPromise = allowance ? toBn(MAX_INT) : toBn(0)
       } else if (isErc20Item(item.itemType)) {
-        const erc20 = createErc20Contract(ethereum, toAddress(item.token))
+        const erc20 = createErc20Contract(ethereum, toEVMAddress(item.token))
         approvedAmountPromise = toBn(await erc20.functionCall("allowance", owner, operator).call())
       } else {
         approvedAmountPromise = toBn(MAX_INT)

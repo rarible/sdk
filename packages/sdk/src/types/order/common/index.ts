@@ -1,6 +1,6 @@
 import type { ItemId, OrderId } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import type { BigNumber } from "@rarible/types/build/big-number"
+import type { BigNumber } from "@rarible/types"
 import type { UnionAddress } from "@rarible/types"
 import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse, CurrencyType, RequestCurrency } from "../../../common/domain"
