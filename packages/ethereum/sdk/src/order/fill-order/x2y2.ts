@@ -94,7 +94,7 @@ export class X2Y2OrderHandler {
     }
   }
 
-  getBaseOrderFee() {
+  getFillOrderBaseFee() {
     return this.getBaseOrderFeeConfig("X2Y2")
   }
 

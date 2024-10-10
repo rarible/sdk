@@ -5,9 +5,8 @@ import { getAssetWithFee } from "../get-asset-with-fee"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
 import { waitTx } from "../../common/wait-tx"
-import type { SimpleCryptoPunkOrder } from "../types"
+import type { SimpleCryptoPunkOrder, SimpleOrder } from "../types"
 import { createCryptoPunksMarketContract } from "../../nft/contracts/cryptoPunks"
-import type { SimpleOrder } from "../types"
 import type { IRaribleEthereumSdkConfig } from "../../types"
 import type { GetConfigByChainId } from "../../config"
 import { invertOrder } from "./invert-order"
@@ -83,7 +82,7 @@ export class CryptoPunksOrderHandler implements OrderHandler<CryptoPunksOrderFil
     return 0
   }
 
-  async getBaseOrderFee(): Promise<number> {
+  getFillOrderBaseFee(): Promise<number> | number {
     return this.getBaseOrderFeeConfig("CRYPTO_PUNK")
   }
 }

@@ -45,7 +45,7 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
     await waitTx(approve(this.ethereum, this.send, () => this.getConfig(), order.maker, withFee, infinite))
   }
 
-  async getBaseOrderFee(): Promise<number> {
+  async getFillOrderBaseFee(): Promise<number> {
     return this.getBaseOrderFeeConfig("RARIBLE_V1")
   }
 

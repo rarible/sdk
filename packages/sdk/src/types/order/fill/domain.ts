@@ -7,23 +7,26 @@ import type { ContractAddress } from "@rarible/types"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
-export type PrepareFillRequest =
-  | {
-      /**
-       * Order identifier to fill
-       */
-      orderId: OrderId
-    }
-  | {
-      /**
-       * Order to fill
-       */
-      order: Order
-    }
-
-export type PrepareFillInternalRequest = {
+type OrderRequest = {
+  /**
+   * Order to fill
+   */
   order: Order
 }
+
+type OrderIdRequest = {
+  /**
+   * Order identifier to fill
+   */
+  orderId: OrderId
+}
+
+export type PrepareFillRequest = {
+  /**
+   * Which originFees will be used to fill order
+   */
+  originFees?: UnionPart[]
+} & (OrderRequest | OrderIdRequest)
 
 export enum OriginFeeSupport {
   NONE = "NONE",

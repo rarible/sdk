@@ -34,6 +34,7 @@ import { checkPayouts } from "../../common/check-payouts"
 import type { IApisSdk } from "../../domain"
 import type { IGetBuyTxDataRequest } from "../../types/ethereum/domain"
 import type { EVMBlockchain } from "./common"
+import { toOptionalEthereumParts } from "./common"
 import {
   assertBlockchainAndChainId,
   assertWallet,
@@ -360,7 +361,7 @@ export class EthereumFill {
       ...this.getSupportFlags(order),
       multiple: await this.isMultiple(order),
       maxAmount: await this.getMaxAmount(order),
-      baseFee: await this.sdk.order.getBaseOrderFillFee(ethOrder),
+      baseFee: await this.sdk.order.getFillOrderBaseFee(ethOrder, toOptionalEthereumParts(request.originFees)),
       submit,
       orderData: {
         platform: this.getPlatform(order),
@@ -487,7 +488,7 @@ export class EthereumFill {
           ...this.getSupportFlags(unionOrder),
           multiple: await this.isMultiple(unionOrder),
           maxAmount: await this.getMaxAmount(unionOrder),
-          baseFee: await this.sdk.order.getBaseOrderFillFee(order),
+          baseFee: await this.sdk.order.getFillOrderBaseFee(order, toOptionalEthereumParts(req.originFees)),
           orderData: {
             platform: this.getPlatform(unionOrder),
             nftCollection:

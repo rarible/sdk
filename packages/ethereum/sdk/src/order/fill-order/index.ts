@@ -1,7 +1,7 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { toAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
-import type { Address, AssetType } from "@rarible/ethereum-api-client"
+import type { Address, AssetType, Part } from "@rarible/ethereum-api-client"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { GetAmmBuyInfoRequest } from "@rarible/ethereum-api-client/build/apis/OrderControllerApi"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client/build/models"
@@ -76,7 +76,7 @@ export class OrderFiller {
     env: EthereumNetwork,
     private readonly sdkConfig?: IRaribleEthereumSdkConfig,
   ) {
-    this.getBaseOrderFillFee = this.getBaseOrderFillFee.bind(this)
+    this.getFillOrderBaseFee = this.getFillOrderBaseFee.bind(this)
     this.getTransactionData = this.getTransactionData.bind(this)
     this.getBuyTx = this.getBuyTx.bind(this)
     this.v1Handler = new RaribleV1OrderHandler(ethereum, getApis, send, getConfig, getBaseOrderFee, sdkConfig)
@@ -301,26 +301,26 @@ export class OrderFiller {
     }
   }
 
-  async getBaseOrderFillFee(order: SimpleOrder): Promise<number> {
+  async getFillOrderBaseFee(order: SimpleOrder, originFees?: Part[]): Promise<number> {
     switch (order.type) {
       case "RARIBLE_V1":
-        return this.v1Handler.getBaseOrderFee()
+        return this.v1Handler.getFillOrderBaseFee()
       case "RARIBLE_V2":
-        return this.v2Handler.getBaseOrderFee(order)
+        return this.v2Handler.getFillOrderBaseFee(order, originFees)
       case "OPEN_SEA_V1":
-        return this.openSeaHandler.getBaseOrderFee()
+        return this.openSeaHandler.getFillOrderBaseFee()
       case "SEAPORT_V1":
-        return this.seaportHandler.getBaseOrderFee()
+        return this.seaportHandler.getFillOrderBaseFee()
       case "LOOKSRARE":
-        return this.looksrareHandler.getBaseOrderFee()
+        return this.looksrareHandler.getFillOrderBaseFee()
       case "LOOKSRARE_V2":
-        return this.looksrareV2Handler.getBaseOrderFee()
+        return this.looksrareV2Handler.getFillOrderBaseFee()
       case "CRYPTO_PUNK":
-        return this.punkHandler.getBaseOrderFee()
+        return this.punkHandler.getFillOrderBaseFee()
       case "AMM":
-        return this.ammHandler.getBaseOrderFee()
+        return this.ammHandler.getFillOrderBaseFee()
       case "X2Y2":
-        return this.ammHandler.getBaseOrderFee()
+        return this.x2y2Handler.getFillOrderBaseFee()
       default:
         throw new Error(`Unsupported order: ${JSON.stringify(order)}`)
     }
