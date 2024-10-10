@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.63](https://github.com/rarible/sdk/compare/v0.13.68-fix.62...v0.13.68-fix.63) (2024-10-10)
+
+### Bug Fixes
+
+- added originFees to prepare request for fill operation + fixed baseFee calculation ([#670](https://github.com/rarible/sdk/issues/670)) ([fd92053](https://github.com/rarible/sdk/commit/fd9205340bd4125067db3c83b93fe042130b2b38))
+
 ## [0.13.68-fix.62](https://github.com/rarible/sdk/compare/v0.13.68-fix.61...v0.13.68-fix.62) (2024-10-09)
 
 ### Features

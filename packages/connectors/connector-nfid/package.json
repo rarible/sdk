@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-nfid",
-  "version": "0.13.68-fix.62",
+  "version": "0.13.68-fix.63",
   "license": "ISC",
   "main": "build/index.js",
   "types": "build/index.d.ts",
@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@nfid/embed": "0.0.5-alpha.0",
-    "@rarible/connector": "^0.13.68-fix.62",
+    "@rarible/connector": "^0.13.68-fix.63",
     "ethers": "^5.7.2",
     "rollup": "^2.0.0"
   },
