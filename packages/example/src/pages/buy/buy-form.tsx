@@ -37,6 +37,7 @@ export function BuyForm({ prepare, order, disabled, onComplete }: IBuyFormProps)
         })}
       >
         <Stack spacing={2}>
+          <div>baseFee: {prepare.baseFee}</div>
           <FillRequestForm form={form} prepare={prepare} order={order} />
           <Box>
             <FormSubmit form={form} label="Submit" state={resultToState(result.type)} disabled={disabled} />

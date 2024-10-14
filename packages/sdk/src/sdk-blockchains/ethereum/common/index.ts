@@ -386,6 +386,11 @@ export async function getEthOrder(ethereum: Ethereum, order: Order): Promise<Sim
   } as SimpleOrder
 }
 
+export function toOptionalEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] | undefined {
+  if (parts === undefined) return undefined
+  return toEthereumParts(parts)
+}
+
 export function toEthereumParts(parts: UnionPart[] | Creator[] | undefined): Part[] {
   return parts?.map(part => convertEthereumPart(part)) || []
 }

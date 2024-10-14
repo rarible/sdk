@@ -1,4 +1,5 @@
 import type { EVMAddress, Address } from "@rarible/types"
+import type { Part } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
 import { ZERO_WORD } from "@rarible/types"
 import type { Maybe } from "@rarible/types"
@@ -48,7 +49,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         break
       }
       case "RARIBLE_V2_DATA_V2": {
-        const v3 = await this.shouldUseV3(request)
+        const v3 = await this.shouldUseV3(request.originFees)
         inverted.data = {
           dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
           originFees: (request as RaribleV2OrderFillRequestV2).originFees || [],
@@ -58,7 +59,7 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
         break
       }
       case "RARIBLE_V2_DATA_V3": {
-        const v3 = await this.shouldUseV3(request)
+        const v3 = await this.shouldUseV3(request.originFees)
         inverted.data = {
           dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
           originFees: (request as RaribleV2OrderFillRequestV3).originFees || [],
@@ -73,8 +74,8 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     return inverted
   }
 
-  private async shouldUseV3(request: RaribleV2OrderFillRequest): Promise<boolean> {
-    const originFees = (request.originFees || []).reduce((sum, prev) => sum + prev.value, 0)
+  private async shouldUseV3(fees?: Part[]): Promise<boolean> {
+    const originFees = (fees || []).reduce((sum, prev) => sum + prev.value, 0)
     //should not use v3 as order doesn't have fees, so protocol also should not take any fees
     if (originFees === 0) {
       return false
@@ -208,8 +209,16 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     }
   }
 
-  getBaseOrderFee(order: RaribleV2OrderFillRequest["order"]): Promise<number> | number {
-    return this.getBaseFeeByData(order.data)
+  /**
+   * Returns which base fee should be used when filling the order
+   * If originFees are equal to zero, then protocol fee is not used, so will return 0
+   * If originFees not provided we are thinking that protocol fee will be taken
+   */
+  async getFillOrderBaseFee(_order: RaribleV2OrderFillRequest["order"], originFees?: Part[]): Promise<number> {
+    if (originFees === undefined || (await this.shouldUseV3(originFees))) {
+      return this.getBaseFee("RARIBLE_V2")
+    }
+    return 0
   }
 
   async getBaseFeeByData(data: RaribleV2OrderFillRequest["order"]["data"]): Promise<number> {

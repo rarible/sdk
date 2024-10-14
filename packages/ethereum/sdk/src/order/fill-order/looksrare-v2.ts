@@ -227,7 +227,7 @@ export class LooksrareV2OrderHandler {
     }
   }
 
-  getBaseOrderFee() {
+  getFillOrderBaseFee() {
     return this.getBaseOrderFeeConfig("LOOKSRARE")
   }
 }

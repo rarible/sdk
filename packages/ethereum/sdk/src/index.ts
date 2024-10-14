@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { EVMAddress, AssetType, OrderForm } from "@rarible/ethereum-api-client"
+import type { EVMAddress, AssetType, OrderForm, Part } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/utils"
 import type { Address, Maybe } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
@@ -129,8 +129,11 @@ export interface RaribleOrderSdk {
 
   /**
    * Get base fee for filling an order (this fee will be hold by the processing platform - in basis points)
+   *
+   * @param order Order which should be filled
+   * @param originFees Origin fees which will be used for filling the order (optional)
    */
-  getBaseOrderFillFee(order: SimpleOrder): Promise<number>
+  getFillOrderBaseFee(order: SimpleOrder, originFees?: Array<Part>): Promise<number>
 
   /**
    * Get for buy pricing info from AMM
@@ -157,7 +160,7 @@ export interface RaribleNftSdk {
    * @param to recipient address
    * @param amount for transfer
    */
-  transfer(asset: TransferAsset, to: EVMAddress, amount?: BigNumberValue): Promise<EthereumTransaction>
+  transfer(asset: TransferAsset, to: EVMAddress | Address, amount?: BigNumberValue): Promise<EthereumTransaction>
 
   /**
    * @param request burn request
@@ -177,14 +180,14 @@ export interface RaribleBalancesSdk {
    * @param assetType type of asset. Supports ERC20 and ETH
    * @returns balance of user
    */
-  getBalance(address: EVMAddress | EVMAddress, assetType: BalanceRequestAssetType): Promise<BigNumber>
+  getBalance(address: Address | EVMAddress, assetType: BalanceRequestAssetType): Promise<BigNumber>
 
   /**
    * Transfer native token or ERC-20 to recipient
    * @param address Recipient of tokens
    * @param asset Object includes currency type and transfer value
    */
-  transfer(address: EVMAddress | EVMAddress, asset: TransferBalanceAsset): Promise<EthereumTransaction>
+  transfer(address: Address | EVMAddress, asset: TransferBalanceAsset): Promise<EthereumTransaction>
   /**
    * Convert ETH balance from/to the Wrapped Ether (ERC-20) token
    * @depreacted please use `deposit` or `withdraw`
@@ -359,7 +362,7 @@ export function createRaribleSdk(
       upsert: upsertService.upsert,
       cancel: partialCall(cancelTemplate, checkLazyOrder, ethereum, send, getConfig, getApis),
       getBaseOrderFee: getBaseOrderFee,
-      getBaseOrderFillFee: filler.getBaseOrderFillFee,
+      getFillOrderBaseFee: filler.getFillOrderBaseFee,
       getBuyAmmInfo: filler.getBuyAmmInfo,
     },
     auction: {

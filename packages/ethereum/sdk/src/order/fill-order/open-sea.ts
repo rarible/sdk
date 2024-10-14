@@ -216,7 +216,7 @@ export class OpenSeaOrderHandler implements OrderHandler<OpenSeaV1OrderFillReque
     }
   }
 
-  async getBaseOrderFee(): Promise<number> {
+  async getFillOrderBaseFee(): Promise<number> {
     return this.getBaseOrderFeeConfig("OPEN_SEA_V1")
   }
 

@@ -146,7 +146,12 @@ export interface OrderHandler<T extends FillOrderRequest> {
   approve: (order: T["order"], infinite: boolean) => Promise<void>
   getTransactionData: (order: T["order"], inverted: T["order"], request: T) => Promise<OrderFillSendData>
 
-  getBaseOrderFee(order: T["order"]): Promise<number> | number
+  /**
+   * Calculates base fee for filling the order
+   * @param order Order to fill
+   * @param originFees Fees which will be used to fill the order
+   */
+  getFillOrderBaseFee(order: T["order"], originFees?: Part[]): Promise<number> | number
 
   getOrderFee(order: T["order"]): Promise<number> | number
 }
