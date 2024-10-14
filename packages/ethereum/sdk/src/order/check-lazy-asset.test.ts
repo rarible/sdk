@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { getApis as getApisTemplate } from "../common/apis"
 import { checkLazyAssetType } from "./check-lazy-asset-type"
 import { checkLazyAsset } from "./check-lazy-asset"
@@ -11,7 +11,7 @@ describe("checkLazyAsset", () => {
     const result = await checkLazyAsset(partial, {
       assetType: {
         assetClass: "ERC721",
-        contract: toAddress("0x0000000000000000000000000000000000000001"),
+        contract: toEVMAddress("0x0000000000000000000000000000000000000001"),
         tokenId: toBigNumber("100"),
       },
       value: toBigNumber("100"),

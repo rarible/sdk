@@ -1,5 +1,5 @@
-import type { Address, Erc1155AssetType } from "@rarible/ethereum-api-client"
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
+import type { Erc1155AssetType, EVMAddress } from "@rarible/ethereum-api-client"
+import { toEVMAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Erc721AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { getRequiredWallet } from "../../../common/get-required-wallet"
@@ -15,10 +15,10 @@ export async function makeSellOrder(
   ethereum: Ethereum,
   assetType: Erc721AssetType | Erc1155AssetType,
   send: SendFunction,
-  exchangeAddress: Address,
+  exchangeAddress: EVMAddress,
 ) {
   const provider = getRequiredWallet(ethereum)
-  const signerAddress = toAddress(await provider.getFrom())
+  const signerAddress = toEVMAddress(await provider.getFrom())
   const chainId = await provider.getChainId()
   const addresses = addressesByNetwork[chainId as SupportedChainId]
   const nonce = await (provider as any).config.web3.eth.getTransactionCount(await provider.getFrom(), "pending")
@@ -44,7 +44,7 @@ export async function makeSellOrder(
   }
 
   await waitTx(
-    approveErc721(provider, send, assetType.contract, signerAddress, toAddress(addresses.TRANSFER_MANAGER_ERC721)),
+    approveErc721(provider, send, assetType.contract, signerAddress, toEVMAddress(addresses.TRANSFER_MANAGER_ERC721)),
   )
   return {
     ...makerOrder,
@@ -56,13 +56,13 @@ export async function makeRaribleSellOrder(
   ethereum: Ethereum,
   assetType: Erc721AssetType | Erc1155AssetType,
   send: SendFunction,
-  exchangeAddress: Address,
+  exchangeAddress: EVMAddress,
 ): Promise<SimpleLooksrareOrder> {
   const order = await makeSellOrder(ethereum, assetType, send, exchangeAddress)
 
   return {
     type: "LOOKSRARE",
-    maker: toAddress(order.signer),
+    maker: toEVMAddress(order.signer),
     make: {
       assetType,
       value: toBigNumber(order.amount.toString()),
@@ -77,14 +77,14 @@ export async function makeRaribleSellOrder(
     data: {
       dataType: "LOOKSRARE_DATA_V1",
       minPercentageToAsk: parseInt(order.minPercentageToAsk.toString()),
-      strategy: toAddress(order.strategy),
+      strategy: toEVMAddress(order.strategy),
       nonce: parseInt(order.nonce.toString()),
     },
     signature: toBinary(order.signature),
   }
 }
 
-async function getOrderSignature(order: MakerOrder, ethereum: Ethereum, exchangeContract: Address): Promise<string> {
+async function getOrderSignature(order: MakerOrder, ethereum: Ethereum, exchangeContract: EVMAddress): Promise<string> {
   const provider = getRequiredWallet(ethereum)
 
   if (!exchangeContract) {

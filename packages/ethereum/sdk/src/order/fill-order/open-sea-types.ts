@@ -1,4 +1,4 @@
-import type { Address, Binary } from "@rarible/ethereum-api-client"
+import type { Binary, EVMAddress } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
 
 export enum OrderOpenSeaV1DataV1FeeMethod {
@@ -22,24 +22,24 @@ export enum OrderOpenSeaV1DataV1HowToCall {
 }
 
 export type OpenSeaOrderDTO = {
-  exchange: Address
-  maker: Address
-  taker: Address
+  exchange: EVMAddress
+  maker: EVMAddress
+  taker: EVMAddress
   makerRelayerFee: BigNumber
   takerRelayerFee: BigNumber
   makerProtocolFee: BigNumber
   takerProtocolFee: BigNumber
-  feeRecipient: Address
+  feeRecipient: EVMAddress
   feeMethod: OrderOpenSeaV1DataV1FeeMethod
   side: OrderOpenSeaV1DataV1Side
   saleKind: OrderOpenSeaV1DataV1SaleKind
-  target: Address
+  target: EVMAddress
   howToCall: OrderOpenSeaV1DataV1HowToCall
   calldata: Binary
   replacementPattern: Binary
-  staticTarget: Address
+  staticTarget: EVMAddress
   staticExtradata: Binary
-  paymentToken: Address
+  paymentToken: EVMAddress
   basePrice: BigNumber
   extra: BigNumber
   listingTime: BigNumber

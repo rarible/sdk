@@ -21,7 +21,7 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/types": "~0.9.33",
+    "@rarible/types": "~0.10.0-beta.1",
     "@rarible/utils": "~0.9.10"
   },
   "devDependencies": {

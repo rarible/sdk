@@ -1,6 +1,6 @@
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import { ItemType } from "./constants"
 import type { ConsiderationItem, InputCriteria, Order, OrderParameters, OrderStatus } from "./types"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
@@ -97,7 +97,7 @@ export const shouldUseBasicFulfill = (
   //  currencies needs to be zero, and the amounts on the 721 item need to be 1
   const nativeCurrencyIsZeroAddress = currencies
     .filter(({ itemType }) => itemType === ItemType.NATIVE)
-    .every(({ token }) => token === ZERO_ADDRESS)
+    .every(({ token }) => token === EVM_ZERO_ADDRESS)
 
   const currencyIdentifiersAreZero = currencies.every(({ identifierOrCriteria }) => toBn(identifierOrCriteria).eq(0))
 

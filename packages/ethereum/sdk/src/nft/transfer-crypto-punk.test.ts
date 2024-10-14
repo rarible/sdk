@@ -1,7 +1,7 @@
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import { awaitAll, deployCryptoPunks, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { getSendWithInjects, sentTx } from "../common/send-transaction"
 import { transferCryptoPunk } from "./transfer-crypto-punk"
 
@@ -30,8 +30,8 @@ describe("transfer crypto punks", () => {
     const tx = await transferCryptoPunk(
       ethereumSeller,
       send,
-      toAddress(it.punksMarket.options.address),
-      toAddress(receipentAddress),
+      toEVMAddress(it.punksMarket.options.address),
+      toEVMAddress(receipentAddress),
       0,
     )
     await tx.wait()

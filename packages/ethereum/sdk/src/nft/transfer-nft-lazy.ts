@@ -1,4 +1,4 @@
-import type { Address, NftItemControllerApi } from "@rarible/ethereum-api-client"
+import type { EVMAddress, NftItemControllerApi } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
@@ -12,8 +12,8 @@ export async function transferNftLazy(
   send: SendFunction,
   nftItemApi: NftItemControllerApi,
   asset: TransferAsset,
-  from: Address,
-  to: Address,
+  from: EVMAddress,
+  to: EVMAddress,
   amount?: BigNumber,
 ): Promise<EthereumTransaction> {
   const lazyNft = await nftItemApi.getNftLazyItemById({

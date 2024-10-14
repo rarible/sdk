@@ -1,5 +1,5 @@
 import type { Request, Response } from "express"
-import { toAddress } from "@rarible/types/build/address"
+import { toEVMAddress } from "@rarible/types"
 import { getAddressParts, getRaribleSDK } from "../utils"
 
 export async function postFillAction(req: Request, res: Response) {
@@ -48,7 +48,7 @@ async function ethereumPostFillAction(from: string, to: string, request: any, re
       console.log(e.value)
       return res.status(e.status).json(e.value)
     }
-    const txData = await sdk.order.getBuyTxData({ from: toAddress(from), request })
+    const txData = await sdk.order.getBuyTxData({ from: toEVMAddress(from), request })
     return res.json(txData)
   }
 

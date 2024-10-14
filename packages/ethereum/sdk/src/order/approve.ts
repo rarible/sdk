@@ -1,6 +1,7 @@
-import type { Address, Asset, AssetType } from "@rarible/ethereum-api-client"
+import type { Asset, AssetType } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
+import type { EVMAddress } from "@rarible/types"
 import type { TransferProxies } from "../config/type"
 import type { SendFunction } from "../common/send-transaction"
 import type { GetConfigByChainId } from "../config"
@@ -10,7 +11,7 @@ import { approveErc1155 } from "./approve-erc1155"
 import { approveCryptoPunk } from "./approve-crypto-punk"
 
 export type ApproveFunction = (
-  owner: Address,
+  owner: EVMAddress,
   asset: Asset,
   infinite: undefined | boolean,
 ) => Promise<EthereumTransaction | undefined>
@@ -19,7 +20,7 @@ export async function approve(
   ethereum: Maybe<Ethereum>,
   send: SendFunction,
   getConfig: GetConfigByChainId,
-  owner: Address,
+  owner: EVMAddress,
   asset: Asset,
   infinite: undefined | boolean = true,
 ): Promise<EthereumTransaction | undefined> {
@@ -41,8 +42,8 @@ export async function pureApproveFn({
 }: {
   ethereum: Maybe<Ethereum>
   send: SendFunction
-  operator: Address
-  owner: Address
+  operator: EVMAddress
+  owner: EVMAddress
   asset: Asset
   infinite: undefined | boolean
 }): Promise<EthereumTransaction | undefined> {

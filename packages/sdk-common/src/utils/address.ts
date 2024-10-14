@@ -37,7 +37,7 @@ export function extractId(value: BlockchainIsh) {
   return value.substring(idx + 1)
 }
 
-export function getEntityData(entity: UnionAddress | ContractAddress | string) {
+export function getEntityData(entity: UnionAddress | ContractAddress | string | undefined) {
   if (!entity) {
     throw new Error("Entity has not been specified")
   }

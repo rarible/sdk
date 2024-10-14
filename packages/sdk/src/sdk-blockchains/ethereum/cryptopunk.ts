@@ -1,7 +1,7 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { Action } from "@rarible/action"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type {
   CryptopunkUnwrapRequest,

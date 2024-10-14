@@ -5,7 +5,7 @@ import {
   OrderOpenSeaV1DataV1SaleKind,
   OrderOpenSeaV1DataV1Side,
 } from "@rarible/ethereum-api-client"
-import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS, toEVMAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import axios from "axios"
 import { keccak256 } from "ethereumjs-util"
@@ -35,7 +35,7 @@ export function getAssetTypeBlank(assetClass: string): Asset {
       return {
         assetType: {
           assetClass: "ERC20",
-          contract: toAddress(ZERO_ADDRESS),
+          contract: toEVMAddress(EVM_ZERO_ADDRESS),
         },
         value: toBigNumber("100"),
       }
@@ -44,7 +44,7 @@ export function getAssetTypeBlank(assetClass: string): Asset {
       return {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(ZERO_ADDRESS),
+          contract: toEVMAddress(EVM_ZERO_ADDRESS),
           tokenId: toBigNumber(getRandomTokenId()),
         },
         value: toBigNumber("1"),
@@ -54,7 +54,7 @@ export function getAssetTypeBlank(assetClass: string): Asset {
       return {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(ZERO_ADDRESS),
+          contract: toEVMAddress(EVM_ZERO_ADDRESS),
           tokenId: toBigNumber(getRandomTokenId()),
         },
         value: toBigNumber("100"),
@@ -66,26 +66,26 @@ export function getAssetTypeBlank(assetClass: string): Asset {
 }
 
 export const OPENSEA_ORDER_TEMPLATE: Omit<SimpleOpenSeaV1Order, "make" | "take"> = {
-  maker: toAddress(ZERO_ADDRESS),
+  maker: toEVMAddress(EVM_ZERO_ADDRESS),
   salt: toWord("0x000000000000000000000000000000000000000000000000000000000000000a"),
   type: "OPEN_SEA_V1",
   start: 0,
   end: 0,
   data: {
     dataType: "OPEN_SEA_V1_DATA_V1",
-    exchange: toAddress(ZERO_ADDRESS),
+    exchange: toEVMAddress(EVM_ZERO_ADDRESS),
     makerRelayerFee: toBigNumber("0"),
     takerRelayerFee: toBigNumber("0"),
     makerProtocolFee: toBigNumber("0"),
     takerProtocolFee: toBigNumber("0"),
-    feeRecipient: toAddress(ZERO_ADDRESS),
+    feeRecipient: toEVMAddress(EVM_ZERO_ADDRESS),
     feeMethod: OrderOpenSeaV1DataV1FeeMethod.SPLIT_FEE,
     side: OrderOpenSeaV1DataV1Side.SELL,
     saleKind: OrderOpenSeaV1DataV1SaleKind.FIXED_PRICE,
     howToCall: OrderOpenSeaV1DataV1HowToCall.CALL,
     callData: toBinary("0x"),
     replacementPattern: toBinary("0x"),
-    staticTarget: ZERO_ADDRESS,
+    staticTarget: EVM_ZERO_ADDRESS,
     staticExtraData: toBinary("0x"),
     extra: toBigNumber("0"),
   },

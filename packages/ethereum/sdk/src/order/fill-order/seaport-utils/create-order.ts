@@ -1,5 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { randomWord, toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { randomWord, toEVMAddress, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { createSeaportV14Contract } from "../../contracts/seaport-v14"
 import { NFT_DOMAIN_TYPE } from "../../../nft/eip712-lazy"
 import { toVrs } from "../../../common/to-vrs"
@@ -28,7 +28,7 @@ export async function createOrder(
   {
     send,
     conduitKey = OPENSEA_CONDUIT_KEY,
-    zone = ZERO_ADDRESS,
+    zone = EVM_ZERO_ADDRESS,
     startTime = Math.floor(Date.now() / 1000).toString(),
     endTime = MAX_INT.toString(),
     offer,
@@ -64,7 +64,7 @@ export async function createOrder(
 
   const operator = (KNOWN_CONDUIT_KEYS_TO_CONDUIT as Record<string, string>)[conduitKey]
 
-  const seaportContract = createSeaportV14Contract(ethereum, toAddress(CROSS_CHAIN_SEAPORT_V1_5_ADDRESS))
+  const seaportContract = createSeaportV14Contract(ethereum, toEVMAddress(CROSS_CHAIN_SEAPORT_V1_5_ADDRESS))
 
   const [resolvedCounter, balancesAndApprovals] = await Promise.all([
     counter ?? seaportContract.functionCall("getCounter", offerer).call(),

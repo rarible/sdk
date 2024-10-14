@@ -1,7 +1,7 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { CancelOrderRequest } from "../../types/order/cancel/domain"
 import type { IApisSdk } from "../../domain"

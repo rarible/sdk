@@ -1,4 +1,4 @@
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { getOrderHash, getStringHash } from "./get-order-hash"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
@@ -14,11 +14,11 @@ describe("get seaport order hash", () => {
   test("get order hash", async () => {
     const orderData = {
       type: "SEAPORT_V1",
-      maker: toAddress("0x22d491bde2303f2f43325b2108d26f1eaba1e32b"),
+      maker: toEVMAddress("0x22d491bde2303f2f43325b2108d26f1eaba1e32b"),
       make: {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82"),
+          contract: toEVMAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82"),
           tokenId: "15754214302034704911334786657881932847148102202883437712117637319024858628154",
         },
         value: "1",
@@ -56,7 +56,7 @@ describe("get seaport order hash", () => {
       status: "ACTIVE",
       data: {
         dataType: "BASIC_SEAPORT_DATA_V1",
-        protocol: toAddress("0x00000000006c3852cbef3e08e8df289169ede581"),
+        protocol: toEVMAddress("0x00000000006c3852cbef3e08e8df289169ede581"),
         orderType: "PARTIAL_RESTRICTED",
         offer: [
           {

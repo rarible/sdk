@@ -2,7 +2,7 @@ import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { Part } from "@rarible/ethereum-api-client"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import { getEthereumConfig } from "../../../config"
 import type { SimpleOrder } from "../../types"
@@ -45,7 +45,7 @@ describe("Batch purchase", function () {
     await checkOwnerships(
       sdkBuyer,
       orders.map(o => o.make),
-      toAddress(await buyerWeb3.getFrom()),
+      toEVMAddress(await buyerWeb3.getFrom()),
     )
   }
 
@@ -58,7 +58,7 @@ describe("Batch purchase", function () {
 
     await buyout(orders, [
       {
-        account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+        account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
         value: 100,
       },
     ])
@@ -73,7 +73,7 @@ describe("Batch purchase", function () {
 
     await buyout(orders, [
       {
-        account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+        account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
         value: 100,
       },
     ])
@@ -88,7 +88,7 @@ describe("Batch purchase", function () {
 
     await buyout(orders, [
       {
-        account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+        account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
         value: 100,
       },
     ])
@@ -108,7 +108,7 @@ describe("Batch purchase", function () {
         [orders[0]],
         [
           {
-            account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+            account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
             value: 100,
           },
         ],
@@ -117,11 +117,11 @@ describe("Batch purchase", function () {
         [orders[1]],
         [
           {
-            account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+            account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
             value: 400,
           },
           {
-            account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+            account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
             value: 300,
           },
         ],
@@ -130,11 +130,11 @@ describe("Batch purchase", function () {
         [orders[2]],
         [
           {
-            account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+            account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
             value: 200,
           },
           {
-            account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+            account: toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
             value: 500,
           },
         ],
@@ -149,7 +149,7 @@ describe("Batch purchase", function () {
     await checkOwnerships(
       sdkBuyer,
       orders.map(o => o.make),
-      toAddress(await buyerWeb3.getFrom()),
+      toEVMAddress(await buyerWeb3.getFrom()),
     )
   })
 })

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { Box, Button, Typography } from "@mui/material"
 import { WalletType } from "@rarible/sdk-wallet"
-import { OffRampClient } from "@rarible/connector-mattel/build/off-ramp"
+import { OffRampClient } from "@rarible/connector-mattel"
 import { getFlowTokenAddressByEnv } from "../../balance/utils/currencies"
 import { useSdkContext } from "../../../components/connector/sdk"
 

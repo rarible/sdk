@@ -1,11 +1,11 @@
-import type { Address, NftCollection } from "@rarible/ethereum-api-client"
+import type { EVMAddress, NftCollection } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { ERC1155VersionEnum, ERC721VersionEnum } from "../nft/contracts/domain"
 
 export type CommonNftCollection = Omit<NftCollection, "supportsLazyMint"> & Partial<NftCollection>
 
 export function createErc721V2Collection(
-  address: Address,
+  address: EVMAddress,
 ): CommonNftCollection & { version: ERC721VersionEnum.ERC721V2 } {
   return {
     features: [NftCollectionFeatures.SECONDARY_SALE_FEES],
@@ -17,7 +17,7 @@ export function createErc721V2Collection(
 }
 
 export function createErc721V3Collection(
-  address: Address,
+  address: EVMAddress,
 ): CommonNftCollection & { version: ERC721VersionEnum.ERC721V3 } {
   return {
     features: [NftCollectionFeatures.SECONDARY_SALE_FEES, NftCollectionFeatures.MINT_AND_TRANSFER],
@@ -29,7 +29,7 @@ export function createErc721V3Collection(
 }
 
 export function createErc721V1Collection(
-  address: Address,
+  address: EVMAddress,
 ): CommonNftCollection & { version: ERC721VersionEnum.ERC721V1 } {
   return {
     features: [],
@@ -41,7 +41,7 @@ export function createErc721V1Collection(
 }
 
 export function createErc1155V1Collection(
-  address: Address,
+  address: EVMAddress,
 ): CommonNftCollection & { version: ERC1155VersionEnum.ERC1155V1 } {
   return {
     features: [NftCollectionFeatures.SECONDARY_SALE_FEES],
@@ -53,7 +53,7 @@ export function createErc1155V1Collection(
 }
 
 export function createErc1155V2Collection(
-  address: Address,
+  address: EVMAddress,
 ): CommonNftCollection & { version: ERC1155VersionEnum.ERC1155V2 } {
   return {
     features: [NftCollectionFeatures.MINT_AND_TRANSFER],

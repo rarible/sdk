@@ -1,8 +1,8 @@
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Erc1155AssetType, Erc721AssetType } from "@rarible/ethereum-api-client"
 import type { Erc1155LazyAssetType, Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Part } from "@rarible/ethereum-api-client"
@@ -33,7 +33,7 @@ export async function burn(
     throw new Error("Wallet undefined")
   }
   const checked = await checkAssetType(request.assetType)
-  const from = toAddress(await ethereum.getFrom())
+  const from = toEVMAddress(await ethereum.getFrom())
   const apis = await getApis()
 
   const ownership = await apis.nftOwnership.getNftOwnershipByIdRaw({

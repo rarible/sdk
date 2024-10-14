@@ -1,10 +1,10 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Action } from "@rarible/action"
-import type { Address, Asset, AssetType } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Asset, AssetType, EVMAddress } from "@rarible/ethereum-api-client"
+import type { Maybe } from "@rarible/types"
 import { BigNumber as BigNum, toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import type { SimpleOpenSeaV1Order, SimpleOrder, SimpleRaribleV2Order } from "../../types"
 import type { SendFunction } from "../../../common/send-transaction"
 import type { RaribleEthereumApis } from "../../../common/apis"
@@ -111,7 +111,7 @@ export class BatchOrderFiller {
         feeAddresses,
       }: {
         preparedOrders: PreparedOrder[]
-        feeAddresses: [Address, Address]
+        feeAddresses: [EVMAddress, EVMAddress]
       }) => {
         const { functionCall, options } = await this.getTransactionRequestData(preparedOrders, feeAddresses)
         return this.send(functionCall, options)
@@ -127,7 +127,7 @@ export class BatchOrderFiller {
     requests: FillBatchOrderRequest,
     feesReducer: OriginFeeReducer,
   ): Promise<PreparedOrder[]> {
-    const from = toAddress(await getRequiredWallet(this.ethereum).getFrom())
+    const from = toEVMAddress(await getRequiredWallet(this.ethereum).getFrom())
     const config = await this.getConfig()
 
     const preparedOrders = await Promise.all(
@@ -200,7 +200,7 @@ export class BatchOrderFiller {
     }
   }
 
-  private async invertOrder(request: FillBatchSingleOrderRequest, from: Address) {
+  private async invertOrder(request: FillBatchSingleOrderRequest, from: EVMAddress) {
     switch (request.order.type) {
       case "RARIBLE_V2":
         return this.v2Handler.invert(<RaribleV2OrderFillRequest>request, from)
@@ -220,7 +220,7 @@ export class BatchOrderFiller {
     const approveInput = {
       ethereum: wallet,
       send: this.send,
-      owner: toAddress(await wallet.getFrom()),
+      owner: toEVMAddress(await wallet.getFrom()),
       asset,
       infinite: isInfinite,
     }
@@ -248,7 +248,7 @@ export class BatchOrderFiller {
    */
   private async getTransactionRequestData(
     preparedOrders: PreparedOrder[],
-    feeAddresses: [Address, Address],
+    feeAddresses: [EVMAddress, EVMAddress],
   ): Promise<OrderFillSendData> {
     let totalValue = toBn(0)
 
@@ -384,7 +384,7 @@ function groupErc20AssetsByContract(assets: Asset[]) {
       }
       return acc
     },
-    new Map() as Map<Address, Asset>,
+    new Map() as Map<EVMAddress, Asset>,
   )
 }
 

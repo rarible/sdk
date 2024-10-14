@@ -1,8 +1,9 @@
+import type { UnionContractAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { RequestCurrencyAssetType } from "@rarible/sdk/build/common/domain"
 import { WalletType } from "@rarible/sdk-wallet"
 import type { ContractAddress } from "@rarible/types"
-import { toContractAddress } from "@rarible/types"
+import { toUnionContractAddress } from "@rarible/types"
 import type { RaribleSdkEnvironment } from "@rarible/sdk/build/config/domain"
 import type { SdkContextValue } from "../../../components/connector/sdk"
 
@@ -87,12 +88,12 @@ export function getCurrenciesForBlockchain(
   }
 }
 
-export function getFlowTokenAddressByEnv(env?: RaribleSdkEnvironment): ContractAddress {
+export function getFlowTokenAddressByEnv(env?: RaribleSdkEnvironment): UnionContractAddress {
   switch (env) {
     case "testnet":
-      return toContractAddress("FLOW:A.7e60df042a9c0868.FlowToken")
+      return toUnionContractAddress("FLOW:A.7e60df042a9c0868.FlowToken")
     case "prod":
-      return toContractAddress("FLOW:A.1654653399040a61.FlowToken")
+      return toUnionContractAddress("FLOW:A.1654653399040a61.FlowToken")
     default:
       throw new Error(`Can't find FlowToken address on env=${env}`)
   }

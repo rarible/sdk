@@ -1,11 +1,11 @@
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils/build/bn"
-import type { Address, AssetType } from "@rarible/ethereum-api-client"
+import type { AssetType, EVMAddress } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { Part } from "@rarible/ethereum-api-client"
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toBigNumber } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { SendFunction } from "../../common/send-transaction"
 import { getRequiredWallet } from "../../common/get-required-wallet"
@@ -42,7 +42,7 @@ export class LooksrareOrderHandler {
       throw new Error(`Amount should be less or equal to ${make.value.toString()}`)
     }
     let isOrderAsk: boolean
-    let contract: Address
+    let contract: EVMAddress
     let tokenId: string
     if (isNft(make.assetType)) {
       isOrderAsk = true
@@ -52,9 +52,9 @@ export class LooksrareOrderHandler {
       throw new Error(`Only sell orders are supported. Make=${make.assetType.assetClass} is not NFT`)
     }
 
-    let currency: Address
+    let currency: EVMAddress
     if (take.assetType.assetClass === "ETH") {
-      currency = ZERO_ADDRESS
+      currency = EVM_ZERO_ADDRESS
     } else if (take.assetType.assetClass === "ERC20") {
       currency = take.assetType.contract
     } else {

@@ -1,5 +1,5 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { ethers } from "ethers"
@@ -51,7 +51,7 @@ describe("mint test", () => {
   ]
 
   describe.each(providers)("test $label provider", ({ ethereum }) => {
-    const minter = toAddress(wallet.getAddressString())
+    const minter = toEVMAddress(wallet.getAddressString())
     const config = getEthereumConfig(env)
     const getConfig = async () => config
     const getApis = getApisTemplate.bind(null, ethereum, env)
@@ -61,7 +61,7 @@ describe("mint test", () => {
     const mint = mintTemplate.bind(null, ethereum, send, sign, getApis)
 
     test.skip("mint ERC-721 v1", async () => {
-      const address = toAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
+      const address = toEVMAddress("0x56bcdd5ab16241471765e683ca9593a6cdc42812")
       const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, address)
       const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
       const result = await mint({
@@ -78,7 +78,7 @@ describe("mint test", () => {
     })
 
     test.skip("mint ERC-721 v2", async () => {
-      const address = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
+      const address = toEVMAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
       const contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, address)
       const startBalanceOfMinter = toBn(await contract.functionCall("balanceOf", minter).call()).toFixed()
       const result = await mint({
@@ -101,7 +101,7 @@ describe("mint test", () => {
     })
 
     test.skip("use provided nftTokenId", async () => {
-      const collection = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
+      const collection = toEVMAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
       const apis = await getApis()
       const nftTokenId = await apis.nftCollection.generateNftTokenId({
         collection,
@@ -125,7 +125,7 @@ describe("mint test", () => {
     })
 
     test.skip("mint ERC-1155 v1", async () => {
-      const address = toAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
+      const address = toEVMAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
       const uri = "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5"
       const supply = 101
       const result = await mint({
@@ -157,7 +157,7 @@ describe("mint test", () => {
         uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
         creators: [
           {
-            account: toAddress(minter),
+            account: toEVMAddress(minter),
             value: 10000,
           },
         ],
@@ -180,7 +180,7 @@ describe("mint test", () => {
         supply: 100,
         creators: [
           {
-            account: toAddress(minter),
+            account: toEVMAddress(minter),
             value: 10000,
           },
         ],
@@ -203,7 +203,7 @@ describe("mint test", () => {
         uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
         creators: [
           {
-            account: toAddress(minter),
+            account: toEVMAddress(minter),
             value: 10000,
           },
         ],
@@ -228,7 +228,7 @@ describe("mint test", () => {
         supply: 100,
         creators: [
           {
-            account: toAddress(minter),
+            account: toEVMAddress(minter),
             value: 10000,
           },
         ],

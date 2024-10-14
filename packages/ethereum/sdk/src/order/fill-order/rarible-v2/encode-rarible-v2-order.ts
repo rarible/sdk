@@ -1,5 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { SimpleRaribleV2Order } from "../../types"
 import { encodeRaribleV2OrderData } from "../../encode-rarible-v2-order-data"
 import { assetTypeToStruct } from "../../asset-type-to-struct"
@@ -28,7 +28,7 @@ export function encodeRaribleV2OrderPurchaseStruct(
     nftAssetClass: nftStruct.assetClass,
     nftData: nftStruct.data,
     sellOrderPaymentAmount: sellOrder.take.value,
-    paymentToken: sellOrder.take.assetType.assetClass === "ETH" ? ZERO_ADDRESS : sellOrder.take.assetType.contract,
+    paymentToken: sellOrder.take.assetType.assetClass === "ETH" ? EVM_ZERO_ADDRESS : sellOrder.take.assetType.contract,
     sellOrderSalt: sellOrder.salt,
     sellOrderStart: sellOrder.start ?? 0,
     sellOrderEnd: sellOrder.end ?? 0,

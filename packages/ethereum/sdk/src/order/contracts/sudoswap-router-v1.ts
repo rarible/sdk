@@ -1,8 +1,8 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { AbiItem } from "../../common/abi-item"
 
-export function createSudoswapRouterV1Contract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createSudoswapRouterV1Contract(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(SUDOSWAP_ROUTER_V1_ABI, address)
 }
 

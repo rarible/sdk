@@ -1,4 +1,4 @@
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
@@ -27,7 +27,7 @@ describe("signOrder", () => {
         dataType: "LEGACY",
         fee: 100,
       },
-      maker: toAddress(signer),
+      maker: toEVMAddress(signer),
     }
 
     const signature = await signOrderE2e(order)
@@ -47,7 +47,7 @@ describe("signOrder", () => {
         payouts: [],
         originFees: [],
       },
-      maker: toAddress(signer),
+      maker: toEVMAddress(signer),
     })
     expect(signature).toEqual(
       "0xc959c911e719426947215dc612f937b79f2e9e3cec0d98237552a5a87c535493209a0a9c0dd3a9f1be39faa615076d4e47f388fa76bbb6c66b6e82d7c6669e251b",

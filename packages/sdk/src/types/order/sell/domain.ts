@@ -19,7 +19,7 @@ import type {
  *			price: "0.000000000000000002",
  *			currency: {
  *				"@type": "ERC20",
- *				contract: toContractAddress(`ETHEREUM:0x`),
+ *				contract: toUnionContractAddress(`ETHEREUM:0x`),
  *			},
  *			expirationDate: new Date(Date.now() + 200000),
  *		})

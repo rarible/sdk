@@ -1,7 +1,7 @@
-import type { Addresses } from "./types"
+import type { EVMAddresses } from "./types"
 import { SupportedChainId } from "./types"
 
-const mainnetAddresses: Addresses = {
+const mainnetAddresses: EVMAddresses = {
   LOOKS: "0xf4d2888d29D722226FafA5d9B24F9164c092421E",
   LOOKS_LP: "0xDC00bA87Cc2D99468f7f34BC04CBf72E111A32f7",
   WETH: "0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2",
@@ -29,7 +29,7 @@ const mainnetAddresses: Addresses = {
   CURRENCY_MANAGER: "0xC881ADdf409eE2C4b6bBc8B607c2C5CAFaB93d25",
 }
 
-const goerliAddresses: Addresses = {
+const goerliAddresses: EVMAddresses = {
   LOOKS: "",
   LOOKS_LP: "",
   WETH: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6",
@@ -57,7 +57,7 @@ const goerliAddresses: Addresses = {
   CURRENCY_MANAGER: "0xAC56740Fa471C0266B59B101C76Ab771f199F2eA",
 }
 
-export const addressesByNetwork: { [chainId in SupportedChainId]: Addresses } = {
+export const addressesByNetwork: { [chainId in SupportedChainId]: EVMAddresses } = {
   [SupportedChainId.MAINNET]: mainnetAddresses,
   [SupportedChainId.GOERLI]: goerliAddresses,
 }

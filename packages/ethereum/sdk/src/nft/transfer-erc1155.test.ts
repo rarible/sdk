@@ -1,4 +1,4 @@
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { awaitAll, deployTestErc1155, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
@@ -26,7 +26,7 @@ const providers = [
  */
 describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
   const [from] = addresses
-  const to = randomAddress()
+  const to = randomEVMAddress()
 
   const send = getSendWithInjects()
 
@@ -46,7 +46,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
     const hash = await transferErc1155(
       ethereum,
       send,
-      toAddress(it.testErc1155.options.address),
+      toEVMAddress(it.testErc1155.options.address),
       from,
       to,
       token1Id,
@@ -86,7 +86,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
     const hash = await transferErc1155(
       ethereum,
       send,
-      toAddress(it.testErc1155.options.address),
+      toEVMAddress(it.testErc1155.options.address),
       from,
       to,
       [token2Id, token3Id, token4Id],
@@ -128,7 +128,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
         await transferErc1155(
           ethereum,
           send,
-          toAddress(it.testErc1155.options.address),
+          toEVMAddress(it.testErc1155.options.address),
           from,
           to,
           [token2Id, token3Id],

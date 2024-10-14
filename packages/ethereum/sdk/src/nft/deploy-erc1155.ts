@@ -1,7 +1,7 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/types"
+import type { Address, EVMAddress } from "@rarible/types"
 import { randomWord } from "@rarible/types"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
 import type { GetConfigByChainId } from "../config"
 import { createErc1155FactoryContract } from "./contracts/erc1155/deploy/rarible-factory"
@@ -22,7 +22,7 @@ export class DeployErc1155 {
     symbol: string,
     baseURI: string,
     contractURI: string,
-  ): Promise<{ tx: EthereumTransaction; address: Address }> {
+  ): Promise<{ tx: EthereumTransaction; address: EVMAddress }> {
     if (!this.ethereum) {
       throw new Error("Wallet undefined")
     }
@@ -46,8 +46,8 @@ export class DeployErc1155 {
     symbol: string,
     baseURI: string,
     contractURI: string,
-    operators: Address[],
-  ): Promise<{ tx: EthereumTransaction; address: Address }> {
+    operators: (EVMAddress | Address)[],
+  ): Promise<{ tx: EthereumTransaction; address: EVMAddress }> {
     if (!this.ethereum) {
       throw new Error("Wallet undefined")
     }

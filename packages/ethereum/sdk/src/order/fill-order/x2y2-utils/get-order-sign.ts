@@ -1,5 +1,4 @@
-import type { Address } from "@rarible/ethereum-api-client"
-import type { BigNumber } from "@rarible/types"
+import type { BigNumber, EVMAddress } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { RaribleEthereumApis } from "../../../common/apis"
 
@@ -9,9 +8,9 @@ export class X2Y2Utils {
   static async getOrderSign(
     apis: RaribleEthereumApis,
     request: {
-      sender: Address
+      sender: EVMAddress
       orderId: BigNumber
-      currency: Address
+      currency: EVMAddress
       price: BigNumber
     },
   ): Promise<string> {

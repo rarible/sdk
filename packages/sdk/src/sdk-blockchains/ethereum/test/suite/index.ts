@@ -4,7 +4,7 @@ import type { BigNumberValue } from "@rarible/utils"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { Blockchain } from "@rarible/api-client"
 import type { Address } from "@rarible/types"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { SDKTestSuite } from "../../../../common/suite"
 import { devNetworkByBlockchain } from "../common"
 import type { EVMSuiteHookedProvider, EVMSuiteSupportedBlockchain, EVMSuiteTestConfig } from "./domain"
@@ -44,7 +44,7 @@ export class EVMTestSuiteFactory<T extends EVMSuiteSupportedBlockchain> {
 
 export class EVMTestSuite<T extends EVMSuiteSupportedBlockchain> extends SDKTestSuite<T> {
   readonly contracts = new EVMContractsTestSuite(this.blockchain, this.provider)
-  readonly addressEvm = toAddress(this.addressString)
+  readonly addressEvm = toEVMAddress(this.addressString)
 
   constructor(blockchain: T, hooked: EVMSuiteHookedProvider<T>, addressString: string, config?: EVMSuiteTestConfig) {
     super(blockchain, hooked, addressString, config)

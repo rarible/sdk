@@ -1,8 +1,9 @@
-import type { Address, AssetType, BigNumber } from "@rarible/ethereum-api-client"
-import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
+import type { AssetType } from "@rarible/ethereum-api-client"
+import type { Address, EVMAddress, BigNumber } from "@rarible/types"
+import { toBigNumber, EVM_ZERO_ADDRESS } from "@rarible/types"
 
 type LegacyAssetType = {
-  token: Address
+  token: Address | EVMAddress
   tokenId: BigNumber
   assetType: number
 }
@@ -11,7 +12,7 @@ export function toLegacyAssetType(assetType: AssetType): LegacyAssetType {
   switch (assetType.assetClass) {
     case "ETH":
       return {
-        token: ZERO_ADDRESS,
+        token: EVM_ZERO_ADDRESS,
         tokenId: toBigNumber("0"),
         assetType: 0,
       }

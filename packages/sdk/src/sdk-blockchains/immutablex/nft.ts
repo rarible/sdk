@@ -1,7 +1,7 @@
 import type { RaribleImxSdk } from "@rarible/immutable-sdk/src/domain"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainImmutableXTransaction } from "@rarible/sdk-transaction"
-import { toAddress, toBigNumber, toContractAddress } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toUnionContractAddress } from "@rarible/types"
 import { Action } from "@rarible/action"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
@@ -39,7 +39,7 @@ export class ImxNftService {
       multiple: false,
       maxAmount: toBigNumber("1"),
       nftData: {
-        nftCollection: item.collection && toContractAddress(item.collection),
+        nftCollection: item.collection && toUnionContractAddress(item.collection),
       },
       submit: Action.create({
         id: "burn" as const,
@@ -49,7 +49,7 @@ export class ImxNftService {
           const res = await this.sdk.nft.burn({
             assetClass: "ERC721",
             tokenId: toBigNumber(tokenId),
-            contract: toAddress(contract),
+            contract: toEVMAddress(contract),
           })
 
           return new BlockchainImmutableXTransaction(res.txId)
@@ -73,9 +73,9 @@ export class ImxNftService {
 
           const res = await this.sdk.nft.transfer({
             assetClass: "ERC721",
-            to: toAddress(address),
+            to: toEVMAddress(address),
             tokenId: toBigNumber(tokenId),
-            contract: toAddress(contract),
+            contract: toEVMAddress(contract),
           })
 
           return new BlockchainImmutableXTransaction(res.txId)

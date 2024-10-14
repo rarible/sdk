@@ -1,4 +1,4 @@
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toBigNumber } from "@rarible/types"
 import type { FlowSdk } from "@rarible/flow-sdk"
 import { Action } from "@rarible/action"
 import type { Order } from "@rarible/api-client"

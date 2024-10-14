@@ -1,7 +1,7 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { toAddress, toWord } from "@rarible/types"
+import { toEVMAddress, toWord } from "@rarible/types"
 import type { OrderId } from "@rarible/api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { extractBlockchain } from "@rarible/sdk-common"
 import type * as OrderCommon from "../../types/order/common"
@@ -74,7 +74,7 @@ export class EthereumSell {
           type: baseFee === 0 ? "DATA_V2" : "DATA_V3",
           makeAssetType: {
             tokenId: tokenId,
-            contract: toAddress(contract),
+            contract: toEVMAddress(contract),
           },
           amount: sellFormRequest.amount ?? 1,
           takeAssetType: common.getEthTakeAssetType(currencyAssetType),

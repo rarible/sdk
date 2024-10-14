@@ -1,4 +1,4 @@
-import { randomWord, toAddress, toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
+import { randomWord, toEVMAddress, toBigNumber, toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import Web3 from "web3"
 import {
@@ -57,23 +57,23 @@ describe.skip("fillOrder", () => {
      */
     await sentTx(
       it.exchangeV2.methods.__ExchangeV2_init(
-        toAddress(it.transferProxy.options.address),
-        // ZERO_ADDRESS,
-        toAddress(it.erc20TransferProxy.options.address),
+        toEVMAddress(it.transferProxy.options.address),
+        // EVM_ZERO_ADDRESS,
+        toEVMAddress(it.erc20TransferProxy.options.address),
         toBigNumber("0"),
         // sender1Address,
-        ZERO_ADDRESS,
-        // toAddress(it.royaltiesProvider.options.address)
-        ZERO_ADDRESS,
+        EVM_ZERO_ADDRESS,
+        // toEVMAddress(it.royaltiesProvider.options.address)
+        EVM_ZERO_ADDRESS,
       ),
       { from: sender1Address },
     )
-    config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-    config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-    config.transferProxies.cryptoPunks = toAddress(it.punksTransferProxy.options.address)
+    config.exchange.v1 = toEVMAddress(it.exchangeV2.options.address)
+    config.exchange.v2 = toEVMAddress(it.exchangeV2.options.address)
+    config.transferProxies.cryptoPunks = toEVMAddress(it.punksTransferProxy.options.address)
     config.chainId = 4
 
-    await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+    await sentTx(it.erc20TransferProxy.methods.addOperator(toEVMAddress(it.exchangeV2.options.address)), {
       from: sender1Address,
     })
 
@@ -94,7 +94,7 @@ describe.skip("fillOrder", () => {
       make: {
         assetType: {
           assetClass: "CRYPTO_PUNKS",
-          contract: toAddress(it.punksMarket.options.address),
+          contract: toEVMAddress(it.punksMarket.options.address),
           tokenId: 0,
         },
         value: toBigNumber("1"),
@@ -130,7 +130,7 @@ describe.skip("fillOrder", () => {
       make: {
         assetType: {
           assetClass: "CRYPTO_PUNKS",
-          contract: toAddress(it.punksMarket.options.address),
+          contract: toEVMAddress(it.punksMarket.options.address),
           tokenId: punkId,
         },
         value: toBigNumber("1"),
@@ -179,7 +179,7 @@ describe.skip("fillOrder", () => {
       take: {
         assetType: {
           assetClass: "CRYPTO_PUNKS",
-          contract: toAddress(it.punksMarket.options.address),
+          contract: toEVMAddress(it.punksMarket.options.address),
           tokenId: punkId,
         },
         value: toBigNumber("1"),

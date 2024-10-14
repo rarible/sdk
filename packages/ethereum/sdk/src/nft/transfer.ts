@@ -1,9 +1,9 @@
-import type { Address, Erc1155AssetType, Erc721AssetType } from "@rarible/ethereum-api-client"
+import type { Erc1155AssetType, Erc721AssetType, EVMAddress } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { CheckAssetTypeFunction, NftAssetType } from "../order/check-asset-type"
 import { getOwnershipId } from "../common/get-ownership-id"
 import type { SendFunction } from "../common/send-transaction"
@@ -21,13 +21,13 @@ export async function transfer(
   checkAssetType: CheckAssetTypeFunction,
   getApis: () => Promise<RaribleEthereumApis>,
   initialAsset: TransferAsset,
-  to: Address,
+  to: EVMAddress,
   amount?: BigNumber,
 ): Promise<EthereumTransaction> {
   if (!ethereum) {
     throw new Error("Wallet undefined")
   }
-  const from = toAddress(await ethereum.getFrom())
+  const from = toEVMAddress(await ethereum.getFrom())
   const apis = await getApis()
   const ownership = await apis.nftOwnership.getNftOwnershipByIdRaw({
     ownershipId: getOwnershipId(initialAsset.contract, toBigNumber(`${initialAsset.tokenId}`), from),
@@ -41,7 +41,7 @@ export async function transfer(
       if (asset.assetClass === "COLLECTION") {
         throw new Error("Transfer asset class cannot be as collection")
       }
-      return transferNftLazy(ethereum, send, apis.nftItem, asset, toAddress(from), to, amount)
+      return transferNftLazy(ethereum, send, apis.nftItem, asset, toEVMAddress(from), to, amount)
     }
     switch (asset.assetClass) {
       case "ERC721":

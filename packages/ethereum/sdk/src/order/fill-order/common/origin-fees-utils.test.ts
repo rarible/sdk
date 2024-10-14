@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { calcValueWithFees, encodeBasisPointsPlusAccount, originFeeValueConvert } from "./origin-fees-utils"
 
 describe("originFee wrapper utils", () => {
@@ -16,19 +16,19 @@ describe("originFee wrapper utils", () => {
       encodedFeesValue: "0x0000000000000000000000000000000000000000000000000000000000000000",
       totalFeeBasisPoints: 0,
       feeAddresses: [
-        toAddress("0x0000000000000000000000000000000000000000"),
-        toAddress("0x0000000000000000000000000000000000000000"),
+        toEVMAddress("0x0000000000000000000000000000000000000000"),
+        toEVMAddress("0x0000000000000000000000000000000000000000"),
       ],
     })
 
     expect(
       originFeeValueConvert([
         {
-          account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+          account: toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
           value: 10000,
         },
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 16,
         },
       ]),
@@ -36,15 +36,15 @@ describe("originFee wrapper utils", () => {
       encodedFeesValue: "0x0000000000000000000000000000000000000000000000000000000027100010",
       totalFeeBasisPoints: 10016,
       feeAddresses: [
-        toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
-        toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+        toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+        toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
       ],
     })
 
     expect(
       originFeeValueConvert([
         {
-          account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+          account: toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
           value: 3678,
         },
       ]),
@@ -52,14 +52,14 @@ describe("originFee wrapper utils", () => {
       encodedFeesValue: "0x000000000000000000000000000000000000000000000000000000000e5e0000",
       totalFeeBasisPoints: 3678,
       feeAddresses: [
-        toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
-        toAddress("0x0000000000000000000000000000000000000000"),
+        toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+        toEVMAddress("0x0000000000000000000000000000000000000000"),
       ],
     })
   })
 
   test("encode basis points plus account", async () => {
-    const account = toAddress("0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2")
+    const account = toEVMAddress("0x0d1d4e623D10F9FBA5Db95830F7d3839406C6AF2")
     expect(encodeBasisPointsPlusAccount(0, account)).toEqual("0xd1d4e623d10f9fba5db95830f7d3839406c6af2")
     expect(encodeBasisPointsPlusAccount(1, account)).toEqual("0x10d1d4e623d10f9fba5db95830f7d3839406c6af2")
     expect(encodeBasisPointsPlusAccount(10, account)).toEqual("0xa0d1d4e623d10f9fba5db95830f7d3839406c6af2")

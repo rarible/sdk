@@ -13,11 +13,11 @@ import {
 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import type { Address, Asset } from "@rarible/ethereum-api-client"
+import type { Asset, EVMAddress } from "@rarible/ethereum-api-client"
 import { OrderOpenSeaV1DataV1Side, Platform } from "@rarible/ethereum-api-client"
 import type { Contract } from "web3-eth-contract"
 import type { EthereumContract } from "@rarible/ethereum-provider"
-import { toAddress, toBigNumber, toBinary, toWord, ZERO_ADDRESS } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary, toWord, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
 import { getSimpleSendWithInjects, sentTx } from "../../common/send-transaction"
 import type { EthereumConfig } from "../../config/type"
@@ -65,7 +65,7 @@ describe.skip("fillOrder: Opensea orders", function () {
     ...getEthereumConfig(env),
     openSea: {
       metadata: id32("RARIBLE"),
-      proxyRegistry: ZERO_ADDRESS,
+      proxyRegistry: EVM_ZERO_ADDRESS,
     },
   }
   const getConfig = async () => config
@@ -108,23 +108,23 @@ describe.skip("fillOrder: Opensea orders", function () {
       web3,
       wyvernProxyRegistry.options.address,
       wyvernTokenTransferProxy.options.address,
-      ZERO_ADDRESS, //ETH
+      EVM_ZERO_ADDRESS, //ETH
       feeRecipient,
     )
     console.log("deployed wyvernExchange", wyvernExchange.options.address)
 
-    await sentTx(it.exchangeWrapper.methods.__ExchangeWrapper_init(wyvernExchange.options.address, ZERO_ADDRESS), {
+    await sentTx(it.exchangeWrapper.methods.__ExchangeWrapper_init(wyvernExchange.options.address, EVM_ZERO_ADDRESS), {
       from: sender1Address,
     })
-    config.exchange.openseaV1 = toAddress(wyvernExchange.options.address)
-    config.openSea.proxyRegistry = toAddress(wyvernProxyRegistry.options.address)
-    config.transferProxies.openseaV1 = toAddress(wyvernTokenTransferProxy.options.address)
-    config.openSea.merkleValidator = toAddress(it.merkleValidator.options.address)
-    config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
+    config.exchange.openseaV1 = toEVMAddress(wyvernExchange.options.address)
+    config.openSea.proxyRegistry = toEVMAddress(wyvernProxyRegistry.options.address)
+    config.transferProxies.openseaV1 = toEVMAddress(wyvernTokenTransferProxy.options.address)
+    config.openSea.merkleValidator = toEVMAddress(it.merkleValidator.options.address)
+    config.exchange.wrapper = toEVMAddress(it.exchangeWrapper.options.address)
 
     proxyRegistryEthContract = await createOpenseaProxyRegistryEthContract(
       ethereum1,
-      toAddress(wyvernProxyRegistry.options.address),
+      toEVMAddress(wyvernProxyRegistry.options.address),
     )
 
     await sentTx(wyvernProxyRegistry.methods.registerProxy(), { from: sender1Address })
@@ -133,7 +133,7 @@ describe.skip("fillOrder: Opensea orders", function () {
     await proxyRegistryEthContract.functionCall("endGrantAuthentication", wyvernExchange.options.address).send()
   })
 
-  async function mintTestAsset(asset: Asset, sender: Address): Promise<any> {
+  async function mintTestAsset(asset: Asset, sender: EVMAddress): Promise<any> {
     switch (asset.assetType.assetClass) {
       case "ERC20": {
         return await sentTx(it.testErc20.methods.mint(sender, toBn(asset.value).multipliedBy(10)), { from: sender })
@@ -151,7 +151,7 @@ describe.skip("fillOrder: Opensea orders", function () {
     }
   }
 
-  async function getBalance(asset: Asset, sender: Address): Promise<string> {
+  async function getBalance(asset: Asset, sender: EVMAddress): Promise<string> {
     switch (asset.assetType.assetClass) {
       case "ETH": {
         return toBn(await web3.eth.getBalance(sender)).toString()
@@ -177,7 +177,7 @@ describe.skip("fillOrder: Opensea orders", function () {
           ...side,
           assetType: {
             ...side.assetType,
-            contract: toAddress(it.testErc20.options.address),
+            contract: toEVMAddress(it.testErc20.options.address),
           },
         }
       }
@@ -186,7 +186,7 @@ describe.skip("fillOrder: Opensea orders", function () {
           ...side,
           assetType: {
             ...side.assetType,
-            contract: toAddress(it.testErc721.options.address),
+            contract: toEVMAddress(it.testErc721.options.address),
           },
         }
       }
@@ -195,7 +195,7 @@ describe.skip("fillOrder: Opensea orders", function () {
           ...side,
           assetType: {
             ...side.assetType,
-            contract: toAddress(it.testErc1155.options.address),
+            contract: toEVMAddress(it.testErc1155.options.address),
           },
         }
       }
@@ -210,8 +210,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 
     const sdkBuyer = createRaribleSdk(buyerWeb3, "polygon")
 
-    const collection = toAddress("0x35f8aee672cdE8e5FD09C93D2BfE4FF5a9cF0756")
-    const minter = toAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
+    const collection = toEVMAddress("0x35f8aee672cdE8e5FD09C93D2BfE4FF5a9cF0756")
+    const minter = toEVMAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
     const nftTokenId = await sdkBuyer.apis.nftCollection.generateNftTokenId({ collection, minter })
 
     const tx = await sdkBuyer.nft.mint({
@@ -235,16 +235,16 @@ describe.skip("fillOrder: Opensea orders", function () {
   })
 
   test("should calculate valid hash", async () => {
-    const exchangeContract = createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address))
+    const exchangeContract = createOpenseaContract(ethereum1, toEVMAddress(wyvernExchange.options.address))
 
     const order: SimpleOpenSeaV1Order = {
       ...OPENSEA_ORDER_TEMPLATE,
       make: getAssetTypeBlank("ERC721"),
-      maker: toAddress(sender1Address),
+      maker: toEVMAddress(sender1Address),
       take: getAssetTypeBlank("ETH"),
       data: {
         ...OPENSEA_ORDER_TEMPLATE.data,
-        exchange: toAddress(wyvernExchange.options.address),
+        exchange: toEVMAddress(wyvernExchange.options.address),
         side: OrderOpenSeaV1DataV1Side.SELL,
       },
     }
@@ -369,11 +369,11 @@ describe.skip("fillOrder: Opensea orders", function () {
     const order: SimpleOpenSeaV1Order = {
       ...OPENSEA_ORDER_TEMPLATE,
       make: getAssetTypeBlank("ERC721"),
-      maker: toAddress(sender1Address),
+      maker: toEVMAddress(sender1Address),
       take: getAssetTypeBlank("ETH"),
       data: {
         ...OPENSEA_ORDER_TEMPLATE.data,
-        exchange: toAddress(wyvernExchange.options.address),
+        exchange: toEVMAddress(wyvernExchange.options.address),
         side: OrderOpenSeaV1DataV1Side.SELL,
       },
     }
@@ -403,13 +403,13 @@ describe.skip("fillOrder: Opensea orders", function () {
     const order: SimpleOpenSeaV1Order = {
       ...OPENSEA_ORDER_TEMPLATE,
       make: getAssetTypeBlank("ERC721"),
-      maker: toAddress(sender1Address),
+      maker: toEVMAddress(sender1Address),
       take: getAssetTypeBlank("ETH"),
       data: {
         ...OPENSEA_ORDER_TEMPLATE.data,
-        exchange: toAddress(wyvernExchange.options.address),
+        exchange: toEVMAddress(wyvernExchange.options.address),
         side: OrderOpenSeaV1DataV1Side.SELL,
-        feeRecipient: toAddress(sender2Address),
+        feeRecipient: toEVMAddress(sender2Address),
       },
     }
     await mintTestAsset(order.take, sender1Address)
@@ -488,9 +488,9 @@ describe.skip("fillOrder: Opensea orders", function () {
       order.data.takerProtocolFee = toBigNumber("500")
       order.data.makerRelayerFee = toBigNumber("500")
       order.data.makerProtocolFee = toBigNumber("500")
-      order.data.exchange = toAddress(wyvernExchange.options.address)
-      order.data.feeRecipient = toAddress(feeRecipient)
-      order.maker = toAddress(nftOwner)
+      order.data.exchange = toEVMAddress(wyvernExchange.options.address)
+      order.data.feeRecipient = toEVMAddress(feeRecipient)
+      order.maker = toEVMAddress(nftOwner)
 
       await mintTestAsset(order.make, nftOwner)
       await mintTestAsset(order.take, nftBuyer)
@@ -522,13 +522,13 @@ describe.skip("fillOrder: Opensea orders", function () {
     const nftBuyerEthereum = ethereum1
 
     beforeEach(async () => {
-      order.data.exchange = toAddress(wyvernExchange.options.address)
+      order.data.exchange = toEVMAddress(wyvernExchange.options.address)
       order.data.makerRelayerFee = toBigNumber("500")
       order.data.makerProtocolFee = toBigNumber("500")
       order.data.takerRelayerFee = toBigNumber("500")
       order.data.takerProtocolFee = toBigNumber("500")
       order.data.feeRecipient = feeRecipient
-      order.maker = toAddress(nftBuyer)
+      order.maker = toEVMAddress(nftBuyer)
       order.make = setTestContract(order.make)
       order.take = setTestContract(order.take)
 
@@ -554,16 +554,16 @@ describe.skip("fillOrder: Opensea orders", function () {
   })
 
   async function prepareSimpleOrdersForTest() {
-    const exchangeContract = await createOpenseaContract(ethereum1, toAddress(wyvernExchange.options.address))
+    const exchangeContract = await createOpenseaContract(ethereum1, toEVMAddress(wyvernExchange.options.address))
 
     const sell: SimpleOpenSeaV1Order = {
       ...OPENSEA_ORDER_TEMPLATE,
       make: getAssetTypeBlank("ERC721"),
-      maker: toAddress(sender1Address),
+      maker: toEVMAddress(sender1Address),
       take: getAssetTypeBlank("ETH"),
       data: {
         ...OPENSEA_ORDER_TEMPLATE.data,
-        exchange: toAddress(wyvernExchange.options.address),
+        exchange: toEVMAddress(wyvernExchange.options.address),
         side: OrderOpenSeaV1DataV1Side.SELL,
         feeRecipient,
       },

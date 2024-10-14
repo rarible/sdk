@@ -1,4 +1,4 @@
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import type { Contract } from "web3-eth-contract"
 import { toBn } from "@rarible/utils/build/bn"
 import Web3 from "web3"
@@ -32,8 +32,8 @@ describe("approveErc1155", () => {
     const balance = await testErc1155.methods.balanceOf(testAddress, tokenId).call()
     expect(balance).toEqual("1")
 
-    const operator = randomAddress()
-    await approveErc1155(toAddress(testErc1155.options.address), testAddress, operator)
+    const operator = randomEVMAddress()
+    await approveErc1155(toEVMAddress(testErc1155.options.address), testAddress, operator)
 
     const result: boolean = await testErc1155.methods.isApprovedForAll(testAddress, operator).call()
     expect(result).toBeTruthy()
@@ -46,9 +46,9 @@ describe("approveErc1155", () => {
     const balance = await testErc1155.methods.balanceOf(testAddress, tokenId).call()
     expect(balance).toEqual("5")
 
-    const operator = randomAddress()
+    const operator = randomEVMAddress()
     await sentTx(testErc1155.methods.setApprovalForAll(operator, true), { from: testAddress })
-    const result = await approveErc1155(toAddress(testErc1155.options.address), testAddress, operator)
+    const result = await approveErc1155(toEVMAddress(testErc1155.options.address), testAddress, operator)
 
     expect(result === undefined).toBeTruthy()
   })

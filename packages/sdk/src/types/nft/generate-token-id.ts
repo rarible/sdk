@@ -21,7 +21,7 @@ export type TokenId = {
  * @returns {Promise<TokenId | undefined>}
  * @example
  * const {tokenId, signature} = sdk.nft.generateTokenId({
- * 		collection: toContractAddress("ETHEREUM:0x..."),
+ * 		collection: toUnionContractAddress("ETHEREUM:0x..."),
  * 		minter: toUnionAddress("ETHEREUM:0x...")},
  * 	)
  *

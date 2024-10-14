@@ -1,6 +1,6 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
-import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress, toBigNumber } from "@rarible/types"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
@@ -33,12 +33,12 @@ describe("transfer Erc721 lazy", () => {
   const send = getSendWithInjects()
 
   test("should transfer erc1155 lazy token", async () => {
-    const recipient = randomAddress()
-    const contract = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
+    const recipient = randomEVMAddress()
+    const contract = toEVMAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
 
     const request: ERC1155RequestV2 = {
       uri: "ipfs://ipfs/hash",
-      creators: [{ account: toAddress(wallet.getAddressString()), value: 10000 }],
+      creators: [{ account: toEVMAddress(wallet.getAddressString()), value: 10000 }],
       collection: createErc1155V2Collection(contract),
       royalties: [],
       supply: 100,

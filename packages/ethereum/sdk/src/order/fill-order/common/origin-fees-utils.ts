@@ -1,8 +1,8 @@
-import type { Address, Part } from "@rarible/ethereum-api-client"
+import type { EVMAddress, Part } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { BigNumber as BigNum } from "@rarible/utils"
-import { toBigNumber, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, EVM_ZERO_ADDRESS } from "@rarible/types"
 
 export const ZERO_FEE_VALUE = toBigNumber("0x" + "0".repeat(64))
 
@@ -36,7 +36,7 @@ export function getPackedFeeValue(fee: number | undefined) {
 export function originFeeValueConvert(originFees?: Part[]): {
   encodedFeesValue: BigNumber
   totalFeeBasisPoints: number
-  feeAddresses: readonly [Address, Address]
+  feeAddresses: readonly [EVMAddress, EVMAddress]
 } {
   if (originFees && originFees.length > 2) {
     throw new Error("This method supports max up to 2 origin fee values")
@@ -44,7 +44,10 @@ export function originFeeValueConvert(originFees?: Part[]): {
 
   const encodedFeesValue = packFeesToUint([originFees?.[0]?.value, originFees?.[1]?.value])
 
-  const addresses = [originFees?.[0]?.account ?? ZERO_ADDRESS, originFees?.[1]?.account ?? ZERO_ADDRESS] as const
+  const addresses = [
+    originFees?.[0]?.account ?? EVM_ZERO_ADDRESS,
+    originFees?.[1]?.account ?? EVM_ZERO_ADDRESS,
+  ] as const
 
   const totalFeeBasisPoints = (originFees?.[0]?.value ?? 0) + (originFees?.[1]?.value ?? 0)
 
@@ -66,7 +69,7 @@ export function calcValueWithFees(value: BigNumber | BigNum, feesBasisPoints: nu
   return feesValue.plus(value)
 }
 
-export function encodeBasisPointsPlusAccount(bp: number, account: Address): BigNumber {
+export function encodeBasisPointsPlusAccount(bp: number, account: EVMAddress): BigNumber {
   const bpConverted = toBn("0x" + bp.toString(16) + "0".repeat(40))
   return toBigNumber("0x" + bpConverted.plus(account).toString(16))
 }

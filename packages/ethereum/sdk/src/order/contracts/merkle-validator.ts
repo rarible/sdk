@@ -1,8 +1,9 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
+import type { Address } from "@rarible/types"
 import type { AbiItem } from "../../common/abi-item"
 
-export function createMerkleValidatorContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createMerkleValidatorContract(ethereum: Ethereum, address?: Address | EVMAddress): EthereumContract {
   return ethereum.createContract(merkleValidatorAbi, address)
 }
 

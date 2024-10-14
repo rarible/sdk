@@ -1,4 +1,4 @@
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { awaitAll, createGanacheProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
@@ -25,8 +25,8 @@ describe("approveErc721", () => {
     const tokenId = from + "b00000000000000000000001"
     await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 200000 })
 
-    const operator = randomAddress()
-    const tx = await approveErc721(toAddress(it.testErc721.options.address), from, operator)
+    const operator = randomEVMAddress()
+    const tx = await approveErc721(toEVMAddress(it.testErc721.options.address), from, operator)
     await tx?.wait()
     const result: boolean = await it.testErc721.methods.isApprovedForAll(from, operator).call()
     expect(result).toBeTruthy()
@@ -36,9 +36,9 @@ describe("approveErc721", () => {
     const tokenId = from + "b00000000000000000000002"
     await sentTx(it.testErc721.methods.mint(from, tokenId, "https://example.com"), { from, gas: 200000 })
 
-    const operator = randomAddress()
+    const operator = randomEVMAddress()
     await sentTx(it.testErc721.methods.setApprovalForAll(operator, true), { from })
-    const result = await approveErc721(toAddress(it.testErc721.options.address), from, operator)
+    const result = await approveErc721(toEVMAddress(it.testErc721.options.address), from, operator)
 
     expect(result === undefined).toBeTruthy()
   })

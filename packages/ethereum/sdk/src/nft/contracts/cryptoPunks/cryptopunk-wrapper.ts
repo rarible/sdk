@@ -1,8 +1,8 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/types"
+import type { Address, EVMAddress } from "@rarible/types"
 import type { AbiItem } from "../../../common/abi-item"
 
-export function createCryptoPunksWrapperContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createCryptoPunksWrapperContract(ethereum: Ethereum, address?: Address | EVMAddress): EthereumContract {
   return ethereum.createContract(cryptoPunksWrapperAbi, address)
 }
 

@@ -1,7 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum/build"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { X2Y2Order } from "@rarible/ethereum-api-client"
 import { createRaribleSdk } from "../../index"
 import { DEV_PK_1, getE2EConfigByNetwork } from "../../common/test/test-credentials"
@@ -22,7 +22,7 @@ describe.skip("x2y2", () => {
       amount: 1,
       originFees: [
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 100,
         },
       ],

@@ -1,6 +1,6 @@
 import type { IRaribleSdk } from "@rarible/sdk/build/domain"
 import { CircularProgress } from "@mui/material"
-import type { UnionAddress } from "@rarible/types/build/union-address"
+import type { UnionAddress } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import type { ConnectionState } from "@rarible/connector"

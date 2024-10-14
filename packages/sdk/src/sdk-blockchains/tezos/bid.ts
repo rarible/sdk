@@ -3,7 +3,7 @@ import type { TezosNetwork, TezosProvider, FTAssetType, XTZAssetType } from "@ra
 // eslint-disable-next-line camelcase
 import { put_bid } from "@rarible/tezos-sdk/dist/bids"
 import BigNumber from "bignumber.js"
-import { toBigNumber, toContractAddress, toOrderId } from "@rarible/types"
+import { toBigNumber, toUnionContractAddress, toOrderId } from "@rarible/types"
 // eslint-disable-next-line camelcase
 import { get_ft_type } from "@rarible/tezos-sdk/dist/main"
 import { AssetTypeV2 } from "@rarible/tezos-common"
@@ -12,6 +12,7 @@ import type { Bid } from "@rarible/tezos-sdk/dist/bids"
 import type { Collection } from "@rarible/api-client"
 import type { Item } from "@rarible/api-client/build/models"
 import type { OrderId } from "@rarible/api-client"
+import { notImplemented } from "@rarible/sdk-common"
 import type { OrderRequest, OrderUpdateRequest } from "../../types/order/common"
 import { MaxFeesBasePointSupport, OriginFeeSupport, PayoutsSupport } from "../../types/order/fill/domain"
 import type { PrepareOrderUpdateRequest } from "../../types/order/common"
@@ -20,7 +21,6 @@ import type { PrepareBidRequest } from "../../types/order/bid/domain"
 import type { PrepareBidUpdateResponse } from "../../types/order/bid/domain"
 import type { RequestCurrencyAssetType } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
-import { notImplemented } from "../../common/not-implemented"
 import { convertDateToTimestamp, getDefaultExpirationDateTimestamp } from "../../common/get-expiration-date"
 import type { IApisSdk } from "../../domain"
 import type { BidSimplifiedRequest } from "../../types/order/bid/simplified"
@@ -34,7 +34,7 @@ import {
   getRequiredProvider,
   getSupportedCurrencies,
   getTezosItemData,
-  convertTezosToContractAddress,
+  convertTezostoUnionContractAddress,
   getTezosAssetTypeV2,
   isNftOrMTAssetType,
   convertUnionAddress,
@@ -125,7 +125,7 @@ export class TezosBid {
       shouldTransferFunds: false,
       submit,
       nftData: {
-        nftCollection: toContractAddress(requestInfo.collection.id),
+        nftCollection: toUnionContractAddress(requestInfo.collection.id),
       },
     }
   }
@@ -228,7 +228,7 @@ export class TezosBid {
       const { contract, tokenId } = getTezosItemData(prepare.itemId)
       const [collection, item] = await Promise.all([
         this.apis.collection.getCollectionById({
-          collection: convertTezosToContractAddress(contract),
+          collection: convertTezostoUnionContractAddress(contract),
         }),
         this.apis.item.getItemById({ itemId: prepare.itemId }),
       ])

@@ -7,7 +7,7 @@ import {
   DEV_PK_1,
 } from "@rarible/ethereum-sdk-test-common"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import { getSimpleSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig, getNetworkConfigByChainId } from "../config"
@@ -33,9 +33,9 @@ describe("convert weth test", () => {
   })
 
   test("convert eth to weth test", async () => {
-    config.weth = toAddress(it.deployWeth.options.address)
+    config.weth = toEVMAddress(it.deployWeth.options.address)
 
-    const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
+    const contract = createWethContract(ethereum, toEVMAddress(it.deployWeth.options.address))
 
     const startEthBalance = await web3.eth.getBalance(sender1Address)
     const startBalance = await contract.functionCall("balanceOf", sender1Address).call()
@@ -58,8 +58,8 @@ describe("convert weth test", () => {
   })
 
   test("convert weth to eth test", async () => {
-    config.weth = toAddress(it.deployWeth.options.address)
-    const contract = createWethContract(ethereum, toAddress(it.deployWeth.options.address))
+    config.weth = toEVMAddress(it.deployWeth.options.address)
+    const contract = createWethContract(ethereum, toEVMAddress(it.deployWeth.options.address))
     const tx = await converter.convert(
       { assetClass: "ETH" },
       { assetClass: "ERC20", contract: await converter.getWethContractAddress() },
@@ -81,7 +81,7 @@ describe("convert weth test", () => {
   })
 
   test("should throw error in case of unsupported contract", async () => {
-    const fakeAddress = toAddress("0x0000000000000000000000000000000000000000")
+    const fakeAddress = toEVMAddress("0x0000000000000000000000000000000000000000")
     expect(() =>
       converter.convert({ assetClass: "ETH" }, { assetClass: "ERC20", contract: fakeAddress }, toBn("0.1")),
     ).rejects.toThrowError(`Contract is not supported - ${fakeAddress}`)

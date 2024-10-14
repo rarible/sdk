@@ -1,6 +1,6 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { NftCollectionControllerApi, Part } from "@rarible/ethereum-api-client"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
 import { createItemId } from "../common/create-item-id"
 import { sanitizeUri } from "../common/sanitize-uri"
@@ -24,7 +24,7 @@ export async function mintErc721v1(
   nftCollectionApi: NftCollectionControllerApi,
   data: ERC721RequestV1,
 ): Promise<MintOnChainResponse> {
-  const owner = toAddress(await ethereum.getFrom())
+  const owner = toEVMAddress(await ethereum.getFrom())
   const erc721Contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V1, data.collection.id)
   const nftTokenId = await getTokenId(nftCollectionApi, data.collection.id, owner, data.nftTokenId)
   const {
@@ -51,7 +51,7 @@ export async function mintErc721v2(
   nftCollectionApi: NftCollectionControllerApi,
   data: ERC721RequestV2,
 ): Promise<MintOnChainResponse> {
-  const owner = toAddress(await ethereum.getFrom())
+  const owner = toEVMAddress(await ethereum.getFrom())
   const erc721Contract = await getErc721Contract(ethereum, ERC721VersionEnum.ERC721V2, data.collection.id)
   const nftTokenId = await getTokenId(nftCollectionApi, data.collection.id, owner, data.nftTokenId)
   const {
@@ -110,7 +110,7 @@ export async function mintErc1155v1(
   nftCollectionApi: NftCollectionControllerApi,
   data: ERC1155RequestV1,
 ): Promise<MintOnChainResponse> {
-  const owner = toAddress(await ethereum.getFrom())
+  const owner = toEVMAddress(await ethereum.getFrom())
   const erc155Contract = await getErc1155Contract(ethereum, ERC1155VersionEnum.ERC1155V1, data.collection.id)
   const nftTokenId = await getTokenId(nftCollectionApi, data.collection.id, owner, data.nftTokenId)
   const {
@@ -167,7 +167,7 @@ export async function getCreators(data: ERC1155RequestV2 | ERC721RequestV3, ethe
   if (data.creators && data.creators.length > 0) {
     return data.creators
   }
-  const account = toAddress(await ethereum.getFrom())
+  const account = toEVMAddress(await ethereum.getFrom())
   return [
     {
       account,

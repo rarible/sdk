@@ -1,22 +1,22 @@
 import type Web3 from "web3"
-import type { Address } from "@rarible/types"
+import type { Address, EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { Contract } from "web3-eth-contract"
 import type { AbiItem } from "../../../../common/abi-item"
 
-export function createErc1155FactoryContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createErc1155FactoryContract(ethereum: Ethereum, address?: Address | EVMAddress): EthereumContract {
   return ethereum.createContract(erc1155FactoryABI, address)
 }
 
-export function createTestErc1155RaribleFactoryContract(web3: Web3, address?: Address): Contract {
+export function createTestErc1155RaribleFactoryContract(web3: Web3, address?: Address | EVMAddress): Contract {
   return new web3.eth.Contract(erc1155FactoryABI, address)
 }
 
 export async function deployTestErc1155RaribleFactory(
   web3: Web3,
-  beacon: Address,
-  transferProxy: Address,
-  lazyTransferProxy: Address,
+  beacon: Address | EVMAddress,
+  transferProxy: Address | EVMAddress,
+  lazyTransferProxy: Address | EVMAddress,
 ) {
   const contract = createTestErc1155RaribleFactoryContract(web3)
   const [address] = await web3.eth.getAccounts()

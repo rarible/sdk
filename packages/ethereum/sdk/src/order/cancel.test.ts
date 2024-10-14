@@ -7,8 +7,9 @@ import {
 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
-import type { Address, OrderForm } from "@rarible/ethereum-api-client"
+import { toEVMAddress, toBigNumber, toBinary } from "@rarible/types"
+import type { OrderForm } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 import { getEthereumConfig } from "../config"
 import { delay, retry } from "../common/retry"
 import { getSimpleSendWithInjects, sentTxConfirm } from "../common/send-transaction"
@@ -55,10 +56,10 @@ describe("cancel order", () => {
     testErc721: deployTestErc721(web3, "Test", "TST"),
     testErc1155: deployTestErc1155(web3, "Test"),
   })
-  let from: Address
+  let from: EVMAddress
 
   beforeAll(async () => {
-    from = toAddress(await ethereum.getFrom())
+    from = toEVMAddress(await ethereum.getFrom())
   })
 
   test("ExchangeV2 should work", async () => {
@@ -68,7 +69,7 @@ describe("cancel order", () => {
       make: {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(it.testErc721.options.address),
+          contract: toEVMAddress(it.testErc721.options.address),
           tokenId: toBigNumber("10"),
         },
         value: toBigNumber("10"),
@@ -80,7 +81,7 @@ describe("cancel order", () => {
         value: toBigNumber(MIN_PAYMENT_VALUE.toFixed()),
       },
       salt: toBigNumber("10") as any,
-      maker: toAddress(wallet.getAddressString()),
+      maker: toEVMAddress(wallet.getAddressString()),
       type: "RARIBLE_V2",
       data: {
         dataType: "RARIBLE_V2_DATA_V1",
@@ -118,12 +119,12 @@ describe.skip("test of cancelling seaport rinkeby order", () => {
   const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 1000000 })
   const sdkSeller = createRaribleSdk(ethereumSeller, "testnet")
 
-  const rinkebyErc721V3ContractAddress = toAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
+  const rinkebyErc721V3ContractAddress = toEVMAddress("0x6ede7f3c26975aad32a475e1021d8f6f39c89d82")
 
   const send = getSimpleSendWithInjects()
 
   test("cancel seaport order", async () => {
-    const accountAddressBuyer = toAddress(await ethereumSeller.getFrom())
+    const accountAddressBuyer = toEVMAddress(await ethereumSeller.getFrom())
     console.log("accountAddressBuyer", accountAddressBuyer)
     console.log("seller", await ethereumSeller.getFrom())
 

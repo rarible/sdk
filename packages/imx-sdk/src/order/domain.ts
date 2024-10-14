@@ -1,5 +1,5 @@
-import type { BigNumber, Erc20AssetType, Erc721AssetType, EthAssetType, Part } from "@rarible/ethereum-api-client"
-
+import type { Erc20AssetType, Erc721AssetType, EthAssetType, Part } from "@rarible/ethereum-api-client"
+import type { BigNumber } from "@rarible/types"
 export type OrderRequest = {
   payouts: Part[]
   originFees: Part[]

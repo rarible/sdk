@@ -1,7 +1,7 @@
 import type { RaribleImxSdk } from "@rarible/immutable-sdk/src/domain"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainImmutableXTransaction } from "@rarible/sdk-transaction"
-import { toAddress, toBigNumber, toOrderId } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toOrderId } from "@rarible/types"
 import type { OrderId } from "@rarible/api-client"
 import { Blockchain, OrderStatus } from "@rarible/api-client"
 import { Action } from "@rarible/action"
@@ -61,7 +61,7 @@ export class ImxOrderService {
           payouts: unionPartsToParts(request.payouts),
           makeAssetType: {
             assetClass: "ERC721",
-            contract: toAddress(contract),
+            contract: toEVMAddress(contract),
             tokenId: toBigNumber(tokenId),
           },
           takeAssetType: getTakeAssetType(request.currency),

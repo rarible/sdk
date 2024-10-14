@@ -1,5 +1,5 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { BigNumber, toBn } from "@rarible/utils"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
@@ -31,7 +31,7 @@ const { providers } = createTestProviders(provider, wallet)
  * @group provider/dev
  */
 describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
-  const testAddress = toAddress(wallet.getAddressString())
+  const testAddress = toEVMAddress(wallet.getAddressString())
   const env = "dev-ethereum" as const
   const config = getEthereumConfig(env)
   const getConfig = async () => config
@@ -44,9 +44,9 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
   const mint = mintTemplate.bind(null, ethereum, send, sign, getApis)
   const burn = burnTemplate.bind(null, ethereum, send, checkAssetType, getApis)
 
-  const e2eErc721V2ContractAddress = toAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
+  const e2eErc721V2ContractAddress = toEVMAddress("0x74bddd22a6b9d8fae5b2047af0e0af02c42b7dae")
   const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
-  const e2eErc1155V1ContractAddress = toAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
+  const e2eErc1155V1ContractAddress = toEVMAddress("0x6919dc0cf9d4bcd89727113fbe33e3c24909d6f5")
   const e2eErc1155V2ContractAddress = getTestContract(env, "erc1155V2")
 
   test.skip("should burn ERC-721 v2 token", async () => {
@@ -81,7 +81,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
     const minted = await mint({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
       uri: "ipfs://ipfs/hash",
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
       royalties: [],
       lazy: false,
     } as ERC721RequestV3)
@@ -138,7 +138,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
       collection: createErc1155V2Collection(e2eErc1155V2ContractAddress),
       uri: "ipfs://ipfs/hash",
       royalties: [],
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
       supply: 100,
       lazy: false,
     } as ERC1155RequestV2)
@@ -165,7 +165,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
     const minted = await mint({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
       uri: "ipfs://ipfs/hash",
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
       royalties: [],
       lazy: true,
     } as ERC721RequestV3)
@@ -178,7 +178,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
         contract: e2eErc721V3ContractAddress,
         tokenId: minted.tokenId,
       },
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
     })
     if (tx) {
       await tx.wait()
@@ -197,7 +197,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
       collection: createErc1155V2Collection(e2eErc1155V2ContractAddress),
       uri: "ipfs://ipfs/hash",
       supply: 100,
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
       royalties: [],
       lazy: true,
     } as ERC1155RequestV2)
@@ -211,7 +211,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
         tokenId: minted.tokenId,
       },
       amount: toBigNumber("50"),
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
     })
     if (tx) {
       await tx.wait()
@@ -231,7 +231,7 @@ describe.each(providers)("burn nfts", (ethereum: Ethereum) => {
       collection: createErc1155V2Collection(e2eErc1155V2ContractAddress),
       uri: "ipfs://ipfs/hash",
       supply: 100,
-      creators: [{ account: toAddress(testAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(testAddress), value: 10000 }],
       royalties: [],
       lazy: true,
     } as ERC1155RequestV2)

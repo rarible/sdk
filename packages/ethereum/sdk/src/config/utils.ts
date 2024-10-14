@@ -1,4 +1,4 @@
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import { deepMerge } from "../utils/deep-merge"
 import type { DeepPartial } from "../utils/deep-partial"
@@ -30,43 +30,43 @@ const defaultConfig: EthereumConfig = {
   blockchain: Blockchain.ETHEREUM,
   environment: "production",
   exchange: {
-    v1: ZERO_ADDRESS,
-    v2: ZERO_ADDRESS,
-    openseaV1: ZERO_ADDRESS,
-    wrapper: ZERO_ADDRESS,
-    looksrare: ZERO_ADDRESS,
-    looksrareV2: ZERO_ADDRESS,
-    x2y2: ZERO_ADDRESS,
+    v1: EVM_ZERO_ADDRESS,
+    v2: EVM_ZERO_ADDRESS,
+    openseaV1: EVM_ZERO_ADDRESS,
+    wrapper: EVM_ZERO_ADDRESS,
+    looksrare: EVM_ZERO_ADDRESS,
+    looksrareV2: EVM_ZERO_ADDRESS,
+    x2y2: EVM_ZERO_ADDRESS,
   },
   transferProxies: {
-    nft: ZERO_ADDRESS,
-    erc20: ZERO_ADDRESS,
-    erc721Lazy: ZERO_ADDRESS,
-    erc1155Lazy: ZERO_ADDRESS,
-    openseaV1: ZERO_ADDRESS,
-    cryptoPunks: ZERO_ADDRESS,
+    nft: EVM_ZERO_ADDRESS,
+    erc20: EVM_ZERO_ADDRESS,
+    erc721Lazy: EVM_ZERO_ADDRESS,
+    erc1155Lazy: EVM_ZERO_ADDRESS,
+    openseaV1: EVM_ZERO_ADDRESS,
+    cryptoPunks: EVM_ZERO_ADDRESS,
   },
   feeConfigUrl: FEE_CONFIG_URL,
   openSea: {
     metadata: id32("RARIBLE"),
-    proxyRegistry: ZERO_ADDRESS,
-    merkleValidator: ZERO_ADDRESS,
+    proxyRegistry: EVM_ZERO_ADDRESS,
+    merkleValidator: EVM_ZERO_ADDRESS,
   },
   factories: {
-    erc721: ZERO_ADDRESS,
-    erc1155: ZERO_ADDRESS,
+    erc721: EVM_ZERO_ADDRESS,
+    erc1155: EVM_ZERO_ADDRESS,
   },
   cryptoPunks: {
-    marketContract: ZERO_ADDRESS,
-    wrapperContract: ZERO_ADDRESS,
+    marketContract: EVM_ZERO_ADDRESS,
+    wrapperContract: EVM_ZERO_ADDRESS,
   },
   sudoswap: {
-    pairFactory: ZERO_ADDRESS,
-    pairRouter: ZERO_ADDRESS,
+    pairFactory: EVM_ZERO_ADDRESS,
+    pairRouter: EVM_ZERO_ADDRESS,
   },
-  weth: ZERO_ADDRESS,
-  auction: ZERO_ADDRESS,
-  looksrareOrderValidatorV2: ZERO_ADDRESS,
+  weth: EVM_ZERO_ADDRESS,
+  auction: EVM_ZERO_ADDRESS,
+  looksrareOrderValidatorV2: EVM_ZERO_ADDRESS,
 }
 
 export function extendConfig(

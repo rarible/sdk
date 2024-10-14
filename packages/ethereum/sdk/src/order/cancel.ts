@@ -1,7 +1,7 @@
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Address, CryptoPunksAssetType } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
-import { toAddress, toBigNumber } from "@rarible/types"
+import type { CryptoPunksAssetType, EVMAddress } from "@rarible/ethereum-api-client"
+import type { Maybe } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import type { ExchangeAddresses } from "../config/type"
 import { toVrs } from "../common/to-vrs"
 import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
@@ -71,12 +71,22 @@ export async function cancel(
   throw new Error("Wallet undefined")
 }
 
-async function cancelLegacyOrder(ethereum: Ethereum, send: SendFunction, contract: Address, order: SimpleLegacyOrder) {
+async function cancelLegacyOrder(
+  ethereum: Ethereum,
+  send: SendFunction,
+  contract: EVMAddress,
+  order: SimpleLegacyOrder,
+) {
   const v1 = createExchangeV1Contract(ethereum, contract)
   return send(v1.functionCall("cancel", toStructLegacyOrderKey(order)))
 }
 
-async function cancelV2Order(ethereum: Ethereum, send: SendFunction, contract: Address, order: SimpleRaribleV2Order) {
+async function cancelV2Order(
+  ethereum: Ethereum,
+  send: SendFunction,
+  contract: EVMAddress,
+  order: SimpleRaribleV2Order,
+) {
   const v2 = createExchangeV2Contract(ethereum, contract)
   return send(v2.functionCall("cancel", orderToStruct(ethereum, order)))
 }
@@ -110,7 +120,7 @@ export async function cancelX2Y2Order(
   ethereum: Ethereum,
   send: SendFunction,
   apis: RaribleEthereumApis,
-  contract: Address,
+  contract: EVMAddress,
   order: SimpleX2Y2Order,
 ) {
   function decodeCancelInput(input: string) {
@@ -215,7 +225,7 @@ export async function cancelSeaportOrder(
     order.signature = signature
   }
   const orderParams = convertAPIOrderToSeaport(order).parameters
-  const seaport = getSeaportContract(ethereum, toAddress(order.data.protocol))
+  const seaport = getSeaportContract(ethereum, toEVMAddress(order.data.protocol))
   return send(seaport.functionCall("cancel", [orderParams]))
 }
 

@@ -1,10 +1,11 @@
-import type { Binary, EIP712Domain, LazyErc1155, LazyErc721 } from "@rarible/ethereum-api-client"
-import type { Address } from "@rarible/types"
+import type { Binary, LazyErc1155, LazyErc721 } from "@rarible/ethereum-api-client"
+import type { Address, EVMAddress } from "@rarible/types"
 import { toBinary } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { TypedMessage } from "eth-sig-util"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { GetConfigByChainId } from "../config"
+import type { EIP712Domain } from "../types"
 import {
   EIP1155_DOMAIN_NFT_TEMPLATE,
   EIP1155_NFT_TYPE,
@@ -70,7 +71,7 @@ export async function signNft(
 
 function createEIP712NftDomain(
   chainId: number,
-  verifyingContract: Address,
+  verifyingContract: Address | EVMAddress,
   nftType: "ERC721" | "ERC1155",
 ): EIP712Domain {
   switch (nftType) {

@@ -1,4 +1,4 @@
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 
 export function parseOwnershipId(ownershipId: string) {
   const split = ownershipId.split(":")
@@ -6,5 +6,5 @@ export function parseOwnershipId(ownershipId: string) {
     throw new Error(`Unable to parse OwnershipId: ${ownershipId}`)
   }
   const [contract, tokenId, owner] = split
-  return { contract: toAddress(contract), tokenId, owner: toAddress(owner) }
+  return { contract: toEVMAddress(contract), tokenId, owner: toEVMAddress(owner) }
 }

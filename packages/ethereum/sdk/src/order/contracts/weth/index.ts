@@ -1,7 +1,7 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import { wethABI } from "./abi"
 
-export function createWethContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createWethContract(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(wethABI, address)
 }

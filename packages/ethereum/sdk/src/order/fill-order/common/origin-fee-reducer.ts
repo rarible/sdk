@@ -1,16 +1,16 @@
-import type { Address, Part } from "@rarible/ethereum-api-client"
+import type { EVMAddress, Part } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import { packFeesToUint, ZERO_FEE_VALUE } from "./origin-fees-utils"
 
 /**
  * Class used to reduce multiple originFee Part records (from different fill requests) to 2 values.
  */
 export class OriginFeeReducer {
-  private readonly addresses: [Address, Address]
+  private readonly addresses: [EVMAddress, EVMAddress]
 
   constructor() {
-    this.addresses = [ZERO_ADDRESS, ZERO_ADDRESS]
+    this.addresses = [EVM_ZERO_ADDRESS, EVM_ZERO_ADDRESS]
   }
 
   /**
@@ -58,7 +58,7 @@ export class OriginFeeReducer {
   /**
    * Return addresses for fees
    */
-  getAddresses(): [Address, Address] {
+  getAddresses(): [EVMAddress, EVMAddress] {
     return this.addresses
   }
 
@@ -70,10 +70,10 @@ export class OriginFeeReducer {
       firstFee += part.value
     } else if (part.account === this.addresses[1]) {
       secondFee += part.value
-    } else if (this.addresses[0] === ZERO_ADDRESS) {
+    } else if (this.addresses[0] === EVM_ZERO_ADDRESS) {
       firstFee += part.value
       this.addresses[0] = part.account
-    } else if (this.addresses[1] === ZERO_ADDRESS) {
+    } else if (this.addresses[1] === EVM_ZERO_ADDRESS) {
       secondFee += part.value
       this.addresses[1] = part.account
     } else {

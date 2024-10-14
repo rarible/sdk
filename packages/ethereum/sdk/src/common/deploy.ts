@@ -1,4 +1,4 @@
-import type { Address } from "@rarible/types"
+import type { Address, EVMAddress } from "@rarible/types"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 
 export type DeployContractRequest = (
@@ -6,15 +6,15 @@ export type DeployContractRequest = (
   symbol: string,
   baseURI: string,
   contractURI: string,
-) => Promise<{ tx: EthereumTransaction; address: Address }>
+) => Promise<{ tx: EthereumTransaction; address: EVMAddress }>
 
 export type DeployUserContractRequest = (
   name: string,
   symbol: string,
   baseURI: string,
   contractURI: string,
-  operators: Address[],
-) => Promise<{ tx: EthereumTransaction; address: Address }>
+  operators: (EVMAddress | Address)[],
+) => Promise<{ tx: EthereumTransaction; address: EVMAddress }>
 
 export interface DeployNft {
   erc721: {

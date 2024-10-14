@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toEVMAddress, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
@@ -41,9 +41,9 @@ export function getSeaportContract(ethereum: Ethereum, protocol: string): Ethere
     compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS) ||
     compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS)
   ) {
-    return createSeaportV14Contract(ethereum, toAddress(protocol))
+    return createSeaportV14Contract(ethereum, toEVMAddress(protocol))
   } else if (compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_ADDRESS)) {
-    return createSeaportContract(ethereum, toAddress(protocol))
+    return createSeaportContract(ethereum, toEVMAddress(protocol))
   } else {
     throw new Error("Unrecognized Seaport protocol")
   }
@@ -63,7 +63,7 @@ export async function fulfillOrder(
     disableCheckingBalances?: boolean
   },
 ) {
-  const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
+  const seaportContract = createSeaportV14Contract(ethereum, toEVMAddress(simpleOrder.data.protocol))
   const order = convertAPIOrderToSeaport(simpleOrder)
 
   const { parameters: orderParameters } = order
@@ -74,7 +74,7 @@ export async function fulfillOrder(
   const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
   const extraData = "0x"
-  const recipientAddress = ZERO_ADDRESS
+  const recipientAddress = EVM_ZERO_ADDRESS
   const offerCriteria: InputCriteria[] = []
   const considerationCriteria: InputCriteria[] = []
 
@@ -116,7 +116,7 @@ export async function fulfillOrder(
       recipient: tip.recipient,
     })) || []
 
-  const isRecipientSelf = recipientAddress === ZERO_ADDRESS
+  const isRecipientSelf = recipientAddress === EVM_ZERO_ADDRESS
 
   // We use basic fulfills as they are more optimal for simple and "hot" use cases
   // We cannot use basic fulfill if user is trying to partially fill though.

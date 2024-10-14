@@ -1,10 +1,10 @@
 import type { Part } from "@rarible/ethereum-api-client"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 
 export function validateParts(parts?: Part[]): Part[] {
   return (
     parts?.map(part => ({
-      account: toAddress(part.account),
+      account: toEVMAddress(part.account),
       value: validatePartValue(part.value),
     })) || []
   )

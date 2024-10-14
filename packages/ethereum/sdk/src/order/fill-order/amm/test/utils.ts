@@ -1,5 +1,5 @@
-import type { Address } from "@rarible/ethereum-api-client"
-import { toAddress } from "@rarible/types"
+import type { EVMAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { createSudoswapFactoryV1Contract } from "@rarible/ethereum-sdk-test-common/build/contracts/sudoswap/sudoswap-factory-v1"
 import { approveErc721 } from "../../../approve-erc721"
@@ -10,12 +10,12 @@ import type { SendFunction } from "../../../../common/send-transaction"
 async function createSudoswapPool(
   sellerWeb3: Ethereum,
   send: SendFunction,
-  sudoswapFactoryAddress: Address,
-  sudoswapCurveAddress: Address,
-  tokenContract: Address,
+  sudoswapFactoryAddress: EVMAddress,
+  sudoswapCurveAddress: EVMAddress,
+  tokenContract: EVMAddress,
   tokensIds: string[],
-): Promise<Address> {
-  const from = toAddress(await sellerWeb3.getFrom())
+): Promise<EVMAddress> {
+  const from = toEVMAddress(await sellerWeb3.getFrom())
 
   const approveTx = await approveErc721(sellerWeb3, send, tokenContract, from, sudoswapFactoryAddress)
   await approveTx?.wait()
@@ -39,18 +39,18 @@ async function createSudoswapPool(
   if (!e) {
     throw new Error("No create pair event found")
   }
-  return toAddress(e.returnValues.poolAddress)
+  return toEVMAddress(e.returnValues.poolAddress)
 }
 
 export async function mintTokensToNewSudoswapPool(
   sdk: RaribleSdk,
-  erc721Contract: Address,
+  erc721Contract: EVMAddress,
   sellerWeb3: Ethereum,
   send: SendFunction,
-  sudoswapFactoryAddress: Address,
-  sudoswapCurveAddress: Address,
+  sudoswapFactoryAddress: EVMAddress,
+  sudoswapCurveAddress: EVMAddress,
   tokensCount: number = 1,
-): Promise<{ poolAddress: Address; contract: Address; items: string[] }> {
+): Promise<{ poolAddress: EVMAddress; contract: EVMAddress; items: string[] }> {
   const tokensPromises = []
   for (let i = 0; i < tokensCount; i++) {
     tokensPromises.push(mintTestToken(sdk, erc721Contract))

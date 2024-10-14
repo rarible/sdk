@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber, toWord } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toWord } from "@rarible/types"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
@@ -27,8 +27,8 @@ describe.skip("test exchange v1 order", () => {
   const send2 = getSimpleSendWithInjects()
   const filler = new OrderFiller(buyerEthereum, send2, getConfig, getApis, getBaseOrderFee, "dev-ethereum")
 
-  const seller = toAddress(wallet1.getAddressString())
-  const buyer = toAddress(wallet2.getAddressString())
+  const seller = toEVMAddress(wallet1.getAddressString())
+  const buyer = toEVMAddress(wallet2.getAddressString())
 
   const it = awaitAll({
     testErc721: deployTestErc721(web31, "Test", "TST"),
@@ -45,7 +45,7 @@ describe.skip("test exchange v1 order", () => {
       make: {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(it.testErc721.options.address),
+          contract: toEVMAddress(it.testErc721.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("1"),
@@ -90,7 +90,7 @@ describe.skip("test exchange v1 order", () => {
       make: {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(it.testErc721.options.address),
+          contract: toEVMAddress(it.testErc721.options.address),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("1"),

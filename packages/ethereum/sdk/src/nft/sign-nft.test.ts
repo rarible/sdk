@@ -1,6 +1,6 @@
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { getEthereumConfig } from "../config"
 import type { SimpleLazyNft } from "./sign-nft"
@@ -23,7 +23,7 @@ describe("mint-lazy test", () => {
   test("should sign ERC721 nft", async () => {
     const nftTemplate: SimpleLazyNft<"signatures"> = {
       "@type": "ERC721",
-      contract: toAddress("0x2547760120aED692EB19d22A5d9CCfE0f7872fcE"),
+      contract: toEVMAddress("0x2547760120aED692EB19d22A5d9CCfE0f7872fcE"),
       tokenId: toBigNumber("1"),
       uri: "ipfs://ipfs/hash",
       creators: [{ account: address, value: 10000 }],

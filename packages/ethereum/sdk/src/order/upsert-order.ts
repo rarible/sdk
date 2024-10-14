@@ -11,13 +11,13 @@ import type {
   RaribleV2OrderForm,
 } from "@rarible/ethereum-api-client"
 import { Action } from "@rarible/action"
-import type { Address, Word } from "@rarible/types"
-import { randomWord, toAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
+import type { EVMAddress, Word } from "@rarible/types"
+import { randomWord, toEVMAddress, toBigNumber, toBinary, toWord } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { OrderRaribleV2Data } from "@rarible/ethereum-api-client/build/models/OrderData"
 import { toBn } from "@rarible/utils/build/bn"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { createCryptoPunksMarketContract } from "../nft/contracts/cryptoPunks"
 import type { SendFunction } from "../common/send-transaction"
@@ -49,7 +49,7 @@ export type HasPrice = { price: BigNumberValue } | { priceDecimal: BigNumberValu
 
 export type OrderRequest = {
   type: "DATA_V2" | "DATA_V3"
-  maker?: Address
+  maker?: EVMAddress
   payouts: Part[]
   originFees: Part[]
   start?: number
@@ -157,7 +157,7 @@ export class UpsertOrder {
     }
 
     return {
-      maker: await this.getOrderMaker(request),
+      maker: toEVMAddress(await this.getOrderMaker(request)),
       type: "RARIBLE_V2",
       data: data,
       salt: toBigNumber(toBn(randomWord(), 16).toString(10)),
@@ -167,11 +167,11 @@ export class UpsertOrder {
     }
   }
 
-  private async getOrderMaker(request: OrderRequest): Promise<Address> {
+  private async getOrderMaker(request: OrderRequest): Promise<string> {
     if (request.maker) {
       return request.maker
     } else {
-      return toAddress(await getRequiredWallet(this.ethereum).getFrom())
+      return await getRequiredWallet(this.ethereum).getFrom()
     }
   }
 

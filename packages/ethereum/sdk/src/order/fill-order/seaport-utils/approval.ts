@@ -1,8 +1,8 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import { createErc20Contract } from "../../contracts/erc20"
 import { createErc721Contract } from "../../contracts/erc721"
 import type { SendFunction } from "../../../common/send-transaction"
@@ -15,11 +15,11 @@ import { ItemType, MAX_INT } from "./constants"
 
 export const approvedItemAmount = async (ethereum: Ethereum, owner: string, item: Item, operator: string) => {
   if (isErc721Item(item.itemType) || isErc1155Item(item.itemType)) {
-    const erc721 = createErc721Contract(ethereum, toAddress(item.token))
+    const erc721 = createErc721Contract(ethereum, toEVMAddress(item.token))
     const allowance: boolean = await erc721.functionCall("isApprovedForAll", owner, operator).call()
     return allowance ? MAX_INT : toBn(0)
   } else if (item.itemType === ItemType.ERC20) {
-    const erc20 = createErc20Contract(ethereum, toAddress(item.token))
+    const erc20 = createErc20Contract(ethereum, toEVMAddress(item.token))
     return await erc20.functionCall("allowance", owner, operator).call()
   }
 
@@ -34,7 +34,7 @@ export function getApprovalActions(
   ethereum: Ethereum,
   send: SendFunction,
   insufficientApprovals: InsufficientApprovals,
-  wrapperAddress?: Address,
+  wrapperAddress?: EVMAddress,
 ): Promise<EthereumTransaction[]> {
   return Promise.all(
     insufficientApprovals
@@ -44,13 +44,13 @@ export function getApprovalActions(
       )
       .map(async ({ token, operator, itemType }) => {
         if (isErc721Item(itemType)) {
-          const erc721 = createErc721Contract(ethereum, toAddress(token))
+          const erc721 = createErc721Contract(ethereum, toEVMAddress(token))
           return send(erc721.functionCall("setApprovalForAll", operator, true))
         } else if (isErc1155Item(itemType)) {
-          const erc1155 = createErc1155Contract(ethereum, toAddress(token))
+          const erc1155 = createErc1155Contract(ethereum, toEVMAddress(token))
           return send(erc1155.functionCall("setApprovalForAll", operator, true))
         } else {
-          const erc20 = createErc20Contract(ethereum, toAddress(token))
+          const erc20 = createErc20Contract(ethereum, toEVMAddress(token))
           return send(erc20.functionCall("approve", wrapperAddress ?? operator, MAX_INT.toFixed()))
         }
       })

@@ -1,4 +1,5 @@
 import type * as EthereumApi from "@rarible/ethereum-api-client"
+import type { BigNumber } from "@rarible/types"
 import { toBigNumber } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { Part } from "@rarible/ethereum-api-client"
@@ -54,7 +55,7 @@ export async function mintOffChain(
 function getMintOffChainData(
   data: ERC721RequestV3 | ERC1155RequestV2,
   creators: Part[],
-  tokenId: EthereumApi.BigNumber,
+  tokenId: BigNumber,
 ): SimpleLazyNft<"signatures"> {
   const base = {
     contract: data.collection.id,

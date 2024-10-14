@@ -1,4 +1,4 @@
-import type { Address, Word } from "@rarible/types"
+import type { Address, EVMAddress, Word } from "@rarible/types"
 import { toBigNumber, toWord } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import { toBn } from "@rarible/utils/build/bn"
@@ -9,7 +9,7 @@ const ZERO = toWord("0x000000000000000000000000000000000000000000000000000000000
 export function invertOrder<T extends SimpleOrder>(
   order: T,
   amount: BigNumberValue,
-  maker: Address,
+  maker: Address | EVMAddress,
   salt: Word = ZERO,
 ): T {
   const isBid = isNft(order.take.assetType) || order.take.assetType.assetClass === "COLLECTION"

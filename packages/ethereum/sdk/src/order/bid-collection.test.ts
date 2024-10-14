@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
 import Web3 from "web3"
@@ -83,8 +83,8 @@ describe("bid", () => {
   const filler1 = new OrderFiller(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, env)
 
   test("create bid for collection", async () => {
-    const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
-    const bidderAddress = toAddress(await ethereum2.getFrom())
+    const ownerCollectionAddress = toEVMAddress(await ethereum1.getFrom())
+    const bidderAddress = toEVMAddress(await ethereum2.getFrom())
 
     await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 0, "0x"), { from: ownerCollectionAddress })
     await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 1, "0x"), { from: ownerCollectionAddress })
@@ -100,7 +100,7 @@ describe("bid", () => {
       },
       takeAssetType: {
         assetClass: "COLLECTION",
-        contract: toAddress(it.testErc721.options.address),
+        contract: toEVMAddress(it.testErc721.options.address),
       },
       price: toBn("1000000000000000000"),
       amount: 1,
@@ -114,7 +114,7 @@ describe("bid", () => {
       originFees: [],
       assetType: {
         assetClass: "ERC721",
-        contract: toAddress(it.testErc721.options.address),
+        contract: toEVMAddress(it.testErc721.options.address),
         tokenId: toBigNumber("1"),
       },
     })
@@ -122,13 +122,13 @@ describe("bid", () => {
   })
 
   test("create bid for erc-721 collection and accept bid with lazy-item", async () => {
-    const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
-    const bidderAddress = toAddress(await ethereum2.getFrom())
+    const ownerCollectionAddress = toEVMAddress(await ethereum1.getFrom())
+    const bidderAddress = toEVMAddress(await ethereum2.getFrom())
 
     const mintedItem = (await mint1({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
       uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-      creators: [{ account: toAddress(ownerCollectionAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(ownerCollectionAddress), value: 10000 }],
       royalties: [],
       lazy: true,
     } as ERC721RequestV3)) as MintOffChainResponse

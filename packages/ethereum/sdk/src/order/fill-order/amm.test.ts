@@ -1,7 +1,7 @@
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import Web3 from "web3"
 import { Web3Ethereum } from "@rarible/web3-ethereum/build"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
 import { createRaribleSdk } from "../../index"
 import { getEthereumConfig } from "../../config"
@@ -26,10 +26,10 @@ describe.skip("amm", () => {
   const sdkSeller = createRaribleSdk(sellerWeb3, env)
   const sendSeller = getSimpleSendWithInjects()
 
-  const royalty1Account = toAddress("0x8508317a912086b921F6D2532f65e343C8140Cc8")
-  const royalty2Account = toAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
-  const originFee1Account = toAddress("0xf6a21e471E07793C06D285CEa7AabA8B72029435")
-  const originFee2Account = toAddress("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE")
+  const royalty1Account = toEVMAddress("0x8508317a912086b921F6D2532f65e343C8140Cc8")
+  const royalty2Account = toEVMAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC")
+  const originFee1Account = toEVMAddress("0xf6a21e471E07793C06D285CEa7AabA8B72029435")
+  const originFee2Account = toEVMAddress("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE")
 
   test("try to fill order", async () => {
     const pair = await mintTokensToNewSudoswapPool(
@@ -115,14 +115,14 @@ describe.skip("amm", () => {
 
   async function checkEthBalance(address: string, value: string) {
     return retry(10, 3000, async () => {
-      const balance = toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
+      const balance = toBn(await buyerWeb3.getBalance(toEVMAddress(address))).div(ETHER_IN_WEI)
       expect(balance.toString()).toBe(value)
     })
   }
   async function getEthBalances(addresses: string[]) {
     return Promise.all(
       addresses.map(async address => {
-        return toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
+        return toBn(await buyerWeb3.getBalance(toEVMAddress(address))).div(ETHER_IN_WEI)
       }),
     )
   }

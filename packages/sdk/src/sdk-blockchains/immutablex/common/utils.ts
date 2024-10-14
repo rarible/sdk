@@ -1,10 +1,8 @@
-import type { Part } from "@rarible/ethereum-api-client"
+import type { EVMAddress, Part } from "@rarible/ethereum-api-client"
 import type { CollectionId, Creator, Order } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { ContractAddress } from "@rarible/types/build/contract-address"
-import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
-import { toAddress } from "@rarible/types"
-import type { Address, UnionAddress } from "@rarible/types"
+import type { ContractAddress, UnionAddress } from "@rarible/types"
+import { isRealBlockchainSpecified, toEVMAddress } from "@rarible/types"
 import type { PrepareFillRequest } from "../../../types/order/fill/domain"
 import type { IApisSdk } from "../../../domain"
 import type { UnionPart } from "../../../types/order/common"
@@ -21,7 +19,7 @@ export async function getPreparedOrder(request: PrepareFillRequest, apis: IApisS
   throw new Error("Incorrect request")
 }
 
-export function convertToEthereumAddress(contractAddress: UnionAddress | ContractAddress | CollectionId): Address {
+export function convertToEthereumAddress(contractAddress: UnionAddress | ContractAddress | CollectionId): EVMAddress {
   if (!isRealBlockchainSpecified(contractAddress)) {
     throw new Error("Not a union or contract address: " + contractAddress)
   }
@@ -30,7 +28,7 @@ export function convertToEthereumAddress(contractAddress: UnionAddress | Contrac
   if (blockchain !== Blockchain.ETHEREUM && blockchain !== Blockchain.IMMUTABLEX) {
     throw new Error("Not an Ethereum/Immutablex address")
   }
-  return toAddress(address)
+  return toEVMAddress(address)
 }
 
 export function unionPartsToParts(parts: UnionPart[] | Creator[] | undefined): Part[] {

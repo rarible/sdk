@@ -1,7 +1,7 @@
 import type { RaribleImxSdk } from "@rarible/immutable-sdk/src/domain"
 import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { RequestCurrency } from "../../common/domain"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { IApisSdk } from "../../domain"
@@ -24,7 +24,7 @@ export class ImxBalanceService {
         const [, contractAddress] = assetType.contract.split(":")
         return await this.sdk.balance.getBalance(convertToEthereumAddress(address), {
           assetClass: "ERC20",
-          contract: toAddress(contractAddress),
+          contract: toEVMAddress(contractAddress),
         })
       default:
         throw new Error("Unsupported asset type")

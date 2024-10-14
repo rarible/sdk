@@ -1,10 +1,10 @@
 import type { EthereumContract } from "@rarible/ethereum-provider/build"
-import { toAddress, toCollectionId, toContractAddress } from "@rarible/types"
+import { toEVMAddress, toCollectionId, toUnionContractAddress } from "@rarible/types"
 import type { EVMSuiteProvider, EVMSuiteSupportedBlockchain } from "../../domain"
 
 export abstract class EVMAddressful<T extends EVMSuiteSupportedBlockchain> {
-  readonly addressEVM = toAddress(this.addressString)
-  readonly contractAddress = toContractAddress(`${this.blockchain}:${this.addressString}`)
+  readonly addressEVM = toEVMAddress(this.addressString)
+  readonly contractAddress = toUnionContractAddress(`${this.blockchain}:${this.addressString}`)
 
   constructor(
     public readonly blockchain: T,

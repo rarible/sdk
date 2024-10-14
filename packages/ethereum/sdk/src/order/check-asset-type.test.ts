@@ -1,4 +1,4 @@
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { retry } from "../common/retry"
 import type { ERC721RequestV3 } from "../nft/mint"
@@ -15,14 +15,14 @@ import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 
 const { provider, wallet } = createE2eProvider(DEV_PK_1)
 const { providers } = createTestProviders(provider, wallet)
-const from = toAddress(wallet.getAddressString())
+const from = toEVMAddress(wallet.getAddressString())
 
 /**
  * @group provider/dev
  */
 describe.each(providers)("check-asset-type test", ethereum => {
   const env: EthereumNetwork = "dev-ethereum"
-  const e2eErc721ContractAddress = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
+  const e2eErc721ContractAddress = toEVMAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
   const config = getEthereumConfig(env)
 
   const getConfig = async () => config
