@@ -8,6 +8,7 @@ export const developmentConfig: RaribleSdkConfig = {
   tezosNetwork: "dev",
   polygonNetwork: "dev-polygon",
   solanaNetwork: "devnet",
+  eclipseAddress: "https://staging-rpc.dev2.eclipsenetwork.xyz",
   immutablexNetwork: "testnet",
   mantleNetwork: "testnet-mantle",
   arbitrumNetwork: "testnet-arbitrum",

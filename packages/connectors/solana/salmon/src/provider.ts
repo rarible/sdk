@@ -9,10 +9,10 @@ import type { SalmonProvider, WindowWithSalmonProvider } from "./domain"
 
 const SALMON_CONNECTION_KEY = "salmon_connected"
 
-export class SalmonConnectionProvider extends SolanaInjectableProvider<"salmon"> {
-  constructor() {
+export class SalmonConnectionProvider<T extends string> extends SolanaInjectableProvider<T> {
+  constructor(name = "salmon") {
     super(
-      "salmon",
+      name as T,
       of(null).pipe(
         switchMap(() => pollUntilConditionMetOrMaxAttempts(() => extractPhantomProvider(), 100, 10)),
         switchMap(x => (x ? of(x) : throwError(new SalmonWalletIsNotDetected()))),

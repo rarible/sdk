@@ -74,6 +74,7 @@ function createRaribleConfig(environment: RaribleSdkEnvironment): IRaribleSdkCon
       [WalletType.ETHEREUM]: {
         marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
       },
+      [WalletType.SOLANA]: {},
     },
   }
 }
@@ -84,6 +85,11 @@ function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress
   if (isEVMBlockchain(blockchain) || blockchain === Blockchain.IMMUTABLEX) {
     return toUnionAddress("ETHEREUM:" + address)
   }
+
+  if (blockchain === Blockchain.ECLIPSE) {
+    return toUnionAddress("SOLANA:" + address)
+  }
+
   return toUnionAddress(blockchain + ":" + address)
 }
 

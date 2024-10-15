@@ -8,6 +8,7 @@ export const prodConfig: RaribleSdkConfig = {
   tezosNetwork: "mainnet",
   polygonNetwork: "polygon",
   solanaNetwork: "mainnet-beta",
+  eclipseAddress: "https://mainnetbeta-rpc.eclipse.xyz",
   immutablexNetwork: "prod",
   mantleNetwork: "mantle",
   arbitrumNetwork: "arbitrum",
