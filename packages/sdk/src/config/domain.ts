@@ -14,6 +14,7 @@ export type RaribleSdkConfig = {
   tezosNetwork: TezosNetwork
   polygonNetwork: EthereumNetwork
   solanaNetwork: SolanaCluster
+  eclipseAddress: string
   immutablexNetwork: ImxEnv
   mantleNetwork: EthereumNetwork
   arbitrumNetwork: EthereumNetwork
