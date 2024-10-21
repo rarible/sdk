@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
+
+**Note:** Version bump only for package @rarible/immutable-wallet
+
 ## [0.13.68-fix.64](https://github.com/rarible/sdk/compare/v0.13.68-fix.63...v0.13.68-fix.64) (2024-10-14)
 
 **Note:** Version bump only for package @rarible/immutable-wallet

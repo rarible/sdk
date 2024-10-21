@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
+
+### Features
+
+- support eclipse native currency balance ([#673](https://github.com/rarible/sdk/issues/673)) ([d782b59](https://github.com/rarible/sdk/commit/d782b5961448f18a773f52a04607faf161455be9))
+
 ## [0.13.68-fix.64](https://github.com/rarible/sdk/compare/v0.13.68-fix.63...v0.13.68-fix.64) (2024-10-14)
 
 **Note:** Version bump only for package example
