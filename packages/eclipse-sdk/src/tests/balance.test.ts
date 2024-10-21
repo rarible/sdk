@@ -5,15 +5,15 @@ describe("eclipse sdk balance", () => {
   const sdk = createSdk()
 
   test("Should check account balance", async () => {
-    const balance = await sdk.balances.getBalance(toPublicKey("GZZvGELkzn19zMaPSGeMkcia3NXsPHakZs9nEkUvjZpV"))
+    const balance = await sdk.balances.getBalance(toPublicKey("Fs2Rm7Y6yv1Fq26XL6WbFS2inBYhPyQY2XKZiitiySGf"))
     expect(parseFloat(balance.toString())).toBeGreaterThan(0)
   })
 
-  test.skip("Should check NFT balance", async () => {
-    const mint = toPublicKey("6APnUDJXkTAbT5tpKr3WeMGQ74p1QcXZjLR6erpnLM8P")
+  test("Should check NFT balance", async () => {
+    const mint = toPublicKey("8zbJYLV3BxosdK9F8HbVojc9PZjjPZY1aRBmNFbTUHo7")
 
     const balance = await sdk.balances.getTokenBalance(
-      toPublicKey("GZZvGELkzn19zMaPSGeMkcia3NXsPHakZs9nEkUvjZpV"),
+      toPublicKey("Fs2Rm7Y6yv1Fq26XL6WbFS2inBYhPyQY2XKZiitiySGf"),
       mint,
     )
     expect(parseFloat(balance.toString())).toBeGreaterThanOrEqual(1)
