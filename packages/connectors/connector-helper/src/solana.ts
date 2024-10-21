@@ -6,10 +6,11 @@ import type { IWalletAndAddress } from "./wallet-connection"
 
 export function mapSolanaWallet<O>(
   provider: AbstractConnectionProvider<O, SolanaSigner>,
+  blockchain: Blockchain = Blockchain.SOLANA,
 ): ConnectionProvider<O, IWalletAndAddress> {
   return provider.map(signer => ({
     wallet: new SolanaWallet(signer),
     address: signer.publicKey.toString(),
-    blockchain: Blockchain.SOLANA,
+    blockchain,
   }))
 }

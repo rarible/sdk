@@ -35,6 +35,7 @@ import { createFlowSdk } from "./sdk-blockchains/flow"
 import { checkRoyalties } from "./common/check-royalties"
 import { getCollectionFromItemId } from "./common/utils"
 import { createAptosSdk } from "./sdk-blockchains/aptos"
+import { createEclipseSdk } from "./sdk-blockchains/eclipse"
 
 /**
  * @module
@@ -94,12 +95,10 @@ export function createRaribleSdk(
       blockchainConfig.solanaNetwork,
       config?.blockchain?.SOLANA,
     ),
-    createSolanaSdk(
-      filterWallet(wallet, WalletType.SOLANA),
-      apis,
-      blockchainConfig.solanaNetwork,
-      config?.blockchain?.SOLANA,
-    ),
+    createEclipseSdk(filterWallet(wallet, WalletType.SOLANA), blockchainConfig.solanaNetwork, {
+      eclipseEndpoint: blockchainConfig.eclipseAddress,
+      ...config?.blockchain?.SOLANA,
+    }),
     createImmutablexSdk(
       filterWallet(wallet, WalletType.IMMUTABLEX),
       apis,
