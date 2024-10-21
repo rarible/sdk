@@ -12,34 +12,32 @@
   "scripts": {
     "build": "run-s build:*",
     "build:ts": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "jest --runInBand --passWithNoTests",
     "verify": "tsc --noEmit  --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/api-client": "0.16.5-alpha.10",
+    "@rarible/api-client": "0.18.0-alpha.3",
     "@rarible/estimate-middleware": "~0.9.6",
     "@rarible/ethers-ethereum": "^0.13.69-beta.4",
     "@rarible/sdk": "^0.13.69-beta.4",
     "@rarible/sdk-wallet": "^0.13.69-beta.4",
     "@rarible/test-provider": "~0.5.4",
-    "@rarible/types": "~0.9.26",
-    "@rarible/web3-ethereum": "^0.13.69-beta.4",
+    "@rarible/types": "~0.10.0-beta.1",
     "ethereumjs-wallet": "^1.0.2",
     "ethers": "^5.6.2",
     "web3-provider-engine": "^16.0.4"
   },
   "devDependencies": {
     "@truffle/hdwallet-provider": "latest",
-    "@types/jest": "^27.0.2",
-    "@types/node": "^12.20.36",
     "@types/node-fetch": "^2.6.1",
-    "jest": "^27.2.7",
-    "ts-jest": "^27.0.3",
     "yargs": "^17.2.1"
   },
   "peerDependencies": {
-    "tslib": "^2.3.1"
+    "tslib": "^2.3.1",
+    "web3": ">=1.5.0 <2.0.0"
   },
   "publishConfig": {
     "access": "public"

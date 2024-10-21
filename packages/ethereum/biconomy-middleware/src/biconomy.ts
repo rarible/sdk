@@ -12,13 +12,13 @@ import type { IBiconomyConfig, IContractRegistry, ILimitsRegistry } from "./type
  * @param config config for biconomy provider instance
  */
 export function withBiconomyMiddleware(
-	provider: any,
-	registry: IContractRegistry,
-	limitsRegistry: ILimitsRegistry,
-	config: IBiconomyConfig
+  provider: any,
+  registry: IContractRegistry,
+  limitsRegistry: ILimitsRegistry,
+  config: IBiconomyConfig,
 ): SafeEventEmitterProvider {
-	const engine = new JsonRpcEngine()
-	engine.push(biconomyMiddleware(provider, registry, limitsRegistry, config))
-	engine.push(providerAsMiddleware(provider as any))
-	return providerFromEngine(engine)
+  const engine = new JsonRpcEngine()
+  engine.push(biconomyMiddleware(provider, registry, limitsRegistry, config))
+  engine.push(providerAsMiddleware(provider as any))
+  return providerFromEngine(engine)
 }

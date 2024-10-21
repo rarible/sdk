@@ -8,18 +8,17 @@ import { updateNodeGlobalVars } from "../common"
 updateNodeGlobalVars()
 
 async function cancelOrder() {
-	const wallet = new TezosWallet(
-		in_memory_provider(
-			"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-      "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-			"https://rpc.tzkt.io/ithacanet"
-		)
-	)
-	const sdk = createRaribleSdk(wallet, "testnet")
-	const cancelTx = await sdk.order.cancel({
-		orderId: toOrderId("TEZOS:YOUR_ORDER_ID"),
-	})
-	await cancelTx.wait()
-	console.log("tx", cancelTx)
+  const wallet = new TezosWallet(
+    in_memory_provider(
+      "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+      "https://rpc.tzkt.io/ithacanet",
+    ),
+  )
+  const sdk = createRaribleSdk(wallet, "testnet")
+  const cancelTx = await sdk.order.cancel({
+    orderId: toOrderId("TEZOS:YOUR_ORDER_ID"),
+  })
+  await cancelTx.wait()
+  console.log("tx", cancelTx)
 }
 cancelOrder()

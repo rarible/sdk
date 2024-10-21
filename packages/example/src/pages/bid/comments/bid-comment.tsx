@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function BidComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get sell info
 const bid = await sdk.order.bid({
   itemId: <ITEM ID>
@@ -21,6 +21,7 @@ const result = await bid.submit({
 })
 // result: string - order id
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

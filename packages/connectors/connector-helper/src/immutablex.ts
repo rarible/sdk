@@ -5,16 +5,16 @@ import { ImmutableXWallet } from "@rarible/sdk-wallet"
 import type { IWalletAndAddress } from "./wallet-connection"
 
 export interface IImmutableXProviderConnectionResult {
-	address: string
-	wallet: ImxWallet
+  address: string
+  wallet: ImxWallet
 }
 
 export function mapImmutableXWallet<O>(
-	provider: AbstractConnectionProvider<O, IImmutableXProviderConnectionResult>
+  provider: AbstractConnectionProvider<O, IImmutableXProviderConnectionResult>,
 ): ConnectionProvider<O, IWalletAndAddress> {
-	return provider.map(state => ({
-		wallet: new ImmutableXWallet(state.wallet),
-		address: state.address,
-		blockchain: Blockchain.IMMUTABLEX,
-	}))
+  return provider.map(state => ({
+    wallet: new ImmutableXWallet(state.wallet),
+    address: state.address,
+    blockchain: Blockchain.IMMUTABLEX,
+  }))
 }

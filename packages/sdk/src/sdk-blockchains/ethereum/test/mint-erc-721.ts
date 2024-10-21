@@ -9,19 +9,19 @@ import { MintType } from "../../../types/nft/mint/prepare"
 import { awaitItemSupply } from "../../../common/test/await-item-supply"
 
 export async function mintTestERC721(ethereum: Web3v4Ethereum): Promise<ItemId> {
-	const ethereumWallet = new EthereumWallet(ethereum)
-	const sdk = createSdk(ethereumWallet, "development")
-	const collectionAddress = convertEthereumCollectionId(
-		getTestContract("dev-ethereum", "erc721V3"),
-		Blockchain.ETHEREUM
-	)
-	const prepare = await sdk.nft.mint.prepare({
-		collectionId: collectionAddress,
-	})
-	const response = await prepare.submit({ uri: "ipfs://1", supply: 1, lazyMint: false })
-	if (response.type === MintType.ON_CHAIN) {
-		await response.transaction.wait()
-	}
-	await awaitItemSupply(sdk, response.itemId, "1")
-	return response.itemId
+  const ethereumWallet = new EthereumWallet(ethereum)
+  const sdk = createSdk(ethereumWallet, "development")
+  const collectionAddress = convertEthereumCollectionId(
+    getTestContract("dev-ethereum", "erc721V3"),
+    Blockchain.ETHEREUM,
+  )
+  const prepare = await sdk.nft.mint.prepare({
+    collectionId: collectionAddress,
+  })
+  const response = await prepare.submit({ uri: "ipfs://1", supply: 1, lazyMint: false })
+  if (response.type === MintType.ON_CHAIN) {
+    await response.transaction.wait()
+  }
+  await awaitItemSupply(sdk, response.itemId, "1")
+  return response.itemId
 }

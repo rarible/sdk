@@ -4,7 +4,7 @@ Check approval for specific Asset and executes approve | setApprovalForAll if ne
 
 Arguments:
 
-- owner: Address - owner of the Asset
+- owner: EVMAddress - owner of the Asset
 - asset: Asset - asset to check for approval
 - infinite: boolean - set infinite approval (only for ERC20AssetType)
 

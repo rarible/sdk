@@ -3,20 +3,15 @@ import type { Address } from "@rarible/types"
 import { utils, eth } from "web3"
 import type { ContractAbi } from "web3"
 import { deepReplaceBigInt } from "@rarible/sdk-common"
-import type { TxReceiptNumberFormatted } from "../domain"
-
+import type { NumberHexReceipt } from "../domain"
 
 export async function getTransactionReceiptEvents(
-	receiptPromise: Promise<TxReceiptNumberFormatted>,
-	address: Address,
-	abi: ContractAbi,
+  receiptPromise: Promise<NumberHexReceipt>,
+  address: Address,
+  abi: ContractAbi,
 ): Promise<EthereumProvider.EthereumTransactionEvent[]> {
-	const eventsResponse = parseReceiptEvents(
-		abi,
-		address,
-		await receiptPromise
-	)
-	return Object.values(eventsResponse) || []
+  const eventsResponse = parseReceiptEvents(abi, address, await receiptPromise)
+  return Object.values(eventsResponse) || []
 }
 
 /**
@@ -33,103 +28,106 @@ export async function getTransactionReceiptEvents(
  * @returns {TxReceiptNumberFormatted} The patched receipt.
  */
 export function parseReceiptEvents(
-	abi: ContractAbi, address: Address, receipt: TxReceiptNumberFormatted
+  abi: ContractAbi,
+  address: Address,
+  receipt: NumberHexReceipt,
 ): EthereumProvider.EthereumTransactionEvent[] {
-	// @ts-ignore
-	const events = []
+  // @ts-ignore
+  const events = []
 
-	const eventsMap = {}
-	if (receipt.logs) {
-
-		receipt.logs.forEach(function (log) {
-			// @ts-ignore
-			log.returnValues = {}
-			// @ts-ignore
-			log.signature = null
-			// @ts-ignore
-			log.raw = {
-				data: log.data,
-				topics: log.topics,
-			}
-
-			const eventNumber = log.logIndex
-			// @ts-ignore
-			eventsMap[eventNumber] = log
-		})
-
-		// @ts-ignore
-		delete receipt.logs
-	}
-
-	// @ts-ignore
-	Object.keys(eventsMap).forEach(function (n) {
-		// @ts-ignore
-		const event = eventsMap[n]
-
-		if (utils.toChecksumAddress(event.address)
+  const eventsMap = {}
+  if (receipt.logs) {
+    receipt.logs.forEach(function (log) {
       // @ts-ignore
-      !== utils.toChecksumAddress(address) || event.signature) {
-			return
-		}
+      log.returnValues = {}
+      // @ts-ignore
+      log.signature = null
+      // @ts-ignore
+      log.raw = {
+        data: log.data,
+        topics: log.topics,
+      }
 
-		const descriptor = abi
-			.filter(desc => desc.type === "event")
-			.map(desc => ({
-				...desc,
-				// @ts-ignore
-				signature: desc.signature || eth.abi.encodeEventSignature(desc),
-			}))
-		// @ts-ignore
-			.find(desc => desc.signature === event.raw.topics[0])
+      const eventNumber = log.logIndex
+      // @ts-ignore
+      eventsMap[eventNumber] = log
+    })
 
-		// @ts-ignore
-		event.event = descriptor.name
-		// @ts-ignore
-		event.signature = descriptor.signature
-		const decodedLogs = eth.abi.decodeLog(
-			// @ts-ignore
-			descriptor.inputs,
-			// @ts-ignore
-			event.raw.data,
-			// @ts-ignore
-			event.raw.topics.slice(1)
-		)
+    // @ts-ignore
+    delete receipt.logs
+  }
 
-		event.returnValues = deepReplaceBigInt(decodedLogs)
-		event.args = event.returnValues
-		events.push(event)
+  // @ts-ignore
+  Object.keys(eventsMap).forEach(function (n) {
+    // @ts-ignore
+    const event = eventsMap[n]
 
+    if (
+      utils.toChecksumAddress(event.address) !==
+        // @ts-ignore
+        utils.toChecksumAddress(address) ||
+      event.signature
+    ) {
+      return
+    }
 
-		delete event.returnValues.__length__
-		// @ts-ignore
-		delete eventsMap[n]
-	})
+    const descriptor = abi
+      .filter(desc => desc.type === "event")
+      .map(desc => ({
+        ...desc,
+        // @ts-ignore
+        signature: desc.signature || eth.abi.encodeEventSignature(desc),
+      }))
+      // @ts-ignore
+      .find(desc => desc.signature === event.raw.topics[0])
 
-	let count = 0
-	// @ts-ignore
-	events.forEach(function (ev) {
-		if (ev.event) {
-			// @ts-ignore
-			if (eventsMap[ev.event]) {
-				// @ts-ignore
-				if (Array.isArray(eventsMap[ev.event])) {
-					// @ts-ignore
-					eventsMap[ev.event].push(ev)
-				} else {
-					// @ts-ignore
-					eventsMap[ev.event] = [eventsMap[ev.event], ev]
-				}
-			} else {
-				// @ts-ignore
-				eventsMap[ev.event] = ev
-			}
-		} else {
-			// @ts-ignore
-			eventsMap[count] = ev
-			// @ts-ignore
-			count += 1
-		}
-	})
+    // @ts-ignore
+    event.event = descriptor.name
+    // @ts-ignore
+    event.signature = descriptor.signature
+    const decodedLogs = eth.abi.decodeLog(
+      // @ts-ignore
+      descriptor.inputs,
+      // @ts-ignore
+      event.raw.data,
+      // @ts-ignore
+      event.raw.topics.slice(1),
+    )
 
-	return eventsMap as any
+    event.returnValues = deepReplaceBigInt(decodedLogs)
+    event.args = event.returnValues
+    events.push(event)
+
+    delete event.returnValues.__length__
+    // @ts-ignore
+    delete eventsMap[n]
+  })
+
+  let count = 0
+  // @ts-ignore
+  events.forEach(function (ev) {
+    if (ev.event) {
+      // @ts-ignore
+      if (eventsMap[ev.event]) {
+        // @ts-ignore
+        if (Array.isArray(eventsMap[ev.event])) {
+          // @ts-ignore
+          eventsMap[ev.event].push(ev)
+        } else {
+          // @ts-ignore
+          eventsMap[ev.event] = [eventsMap[ev.event], ev]
+        }
+      } else {
+        // @ts-ignore
+        eventsMap[ev.event] = ev
+      }
+    } else {
+      // @ts-ignore
+      eventsMap[count] = ev
+      // @ts-ignore
+      count += 1
+    }
+  })
+
+  return eventsMap as any
 }

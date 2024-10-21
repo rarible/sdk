@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function SellUpdateComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get order info
 const sellUpdateResponse = await sdk.order.sellUpdate.prepare({
   orderId: <ORDER ID>
@@ -24,6 +24,7 @@ const result = await sellUpdateResponse.submit({
 })
 // result: IBlockchainTransaction
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

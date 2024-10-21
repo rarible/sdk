@@ -12,61 +12,64 @@ import { FormFileInput } from "../../components/common/form/form-file-input"
 import { useSdkContext } from "../../components/connector/sdk"
 
 interface IUploadMEtaFormProps {
-	onComplete: (response: UploadMetaResponse) => void
+  onComplete: (response: UploadMetaResponse) => void
 }
 
 export function UploadMetaForm({ onComplete }: IUploadMEtaFormProps) {
-	const connection = useSdkContext()
-	const form = useForm()
-	const { result } = useRequestResult()
-	const blockchain = connection.sdk.wallet?.walletType
-	const [disabled, setDisabled] = useState(true)
+  const connection = useSdkContext()
+  const form = useForm()
+  const { result } = useRequestResult()
+  const blockchain = connection.sdk.wallet?.walletType
+  const [disabled, setDisabled] = useState(true)
 
-	useEffect(() => {
-		const subscription = form.watch(({ name, description, image, accountAddress }) => {
-			setDisabled(!(name && description && image.length && accountAddress))
-		})
-		return () => subscription.unsubscribe()
-	}, [form, form.watch])
+  useEffect(() => {
+    const subscription = form.watch(({ name, description, image, accountAddress }) => {
+      setDisabled(!(name && description && image.length && accountAddress))
+    })
+    return () => subscription.unsubscribe()
+  }, [form, form.watch])
 
-	return (
-		<>
-			<form onSubmit={form.handleSubmit(async (formData) => {
-				const { name, description, image, animationUrl, nftStorageApiKey, accountAddress } = formData
-				onComplete(await connection.sdk.nft.uploadMeta({
-					accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
-					nftStorageApiKey,
-					properties: {
-						name,
-						description,
-						image: image[0],
-						animationUrl,
-						attributes: [],
-					},
-					royalty: "",
-				}))
-			})}
-			>
-				<Stack spacing={2}>
-					<FormTextInput form={form} name="nftStorageApiKey" label="NftStorage Api Key"/>
-					<FormTextInput form={form} name="accountAddress" label="Account address"/>
-					<FormTextInput form={form} name="name" label="Name"/>
-					<FormTextInput form={form} name="description" label="Description"/>
-					<FormFileInput form={form} name="image"/>
-					<Box>
-						<FormSubmit
-							form={form}
-							label="Next"
-							state={resultToState(result.type)}
-							icon={faChevronRight}
-							disabled={disabled}
-						/>
-					</Box>
-				</Stack>
-			</form>
-			<Box sx={{ my: 2 }}>
-				<RequestResult result={result}/>
-			</Box>
-		</>
-	)
+  return (
+    <>
+      <form
+        onSubmit={form.handleSubmit(async formData => {
+          const { name, description, image, animationUrl, nftStorageApiKey, accountAddress } = formData
+          onComplete(
+            await connection.sdk.nft.uploadMeta({
+              accountAddress: toUnionAddress(`${blockchain}:${accountAddress}`),
+              nftStorageApiKey,
+              properties: {
+                name,
+                description,
+                image: image[0],
+                animationUrl,
+                attributes: [],
+              },
+              royalty: "",
+            }),
+          )
+        })}
+      >
+        <Stack spacing={2}>
+          <FormTextInput form={form} name="nftStorageApiKey" label="NftStorage Api Key" />
+          <FormTextInput form={form} name="accountAddress" label="Account address" />
+          <FormTextInput form={form} name="name" label="Name" />
+          <FormTextInput form={form} name="description" label="Description" />
+          <FormFileInput form={form} name="image" />
+          <Box>
+            <FormSubmit
+              form={form}
+              label="Next"
+              state={resultToState(result.type)}
+              icon={faChevronRight}
+              disabled={disabled}
+            />
+          </Box>
+        </Stack>
+      </form>
+      <Box sx={{ my: 2 }}>
+        <RequestResult result={result} />
+      </Box>
+    </>
+  )
 }

@@ -1,5 +1,9 @@
 import type { EthereumNetwork } from "../types"
+import { liskMainnetConfig } from "./lisk"
+import { liskSepoliaConfig } from "./lisk-sepolia"
 import { mainnetConfig } from "./mainnet"
+import { palmMainnetConfig } from "./palm"
+import { palmTestnetConfig } from "./palm-testnet"
 import type { EthereumConfig } from "./type"
 import { mumbaiConfig } from "./mumbai"
 import { polygonConfig } from "./polygon"
@@ -31,50 +35,86 @@ import { celoTestnetConfig } from "./testnet-celo"
 import { celoConfig } from "./celo"
 import { polygonAmoyConfig } from "./polygon-amoy"
 import { astarKyotoConfig } from "./astar-kyoto"
+import { seiArctic1Config } from "./sei-arctic-1"
+import { seiPacific1Config } from "./sei-pacific-1"
+import { moonbeamTestnetConfig } from "./moonbeam-testnet"
+import { moonbeamMainnetConfig } from "./moonbeam"
+import { etherlinkTestnetConfig } from "./etherlink-testnet"
+import { etherlinkConfig } from "./etherlink"
+import { testnetSaakuruConfig } from "./testnet-saakuru"
+import { saakuruConfig } from "./saakuru"
+import { testnetOasysConfig } from "./testnet-oasys"
+import { oasysConfig } from "./oasys"
+import { alephzeroMainnetConfig } from "./alephzero"
+import { alephzeroTestnetConfig } from "./alephzero-testnet"
+import { matchConfig } from "./match"
+import { matchTestnetConfig } from "./match-testnet"
+import { fivireConfig } from "./fivire"
+import { fivireTestnetConfig } from "./fivire-testnet"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
-	mainnet: mainnetConfig,
-	mumbai: mumbaiConfig,
-	polygon: polygonConfig,
-	"amoy-polygon": polygonAmoyConfig,
-	"dev-ethereum": devEthereumConfig,
-	"dev-polygon": devPolygonConfig,
-	mantle: mantleConfig,
-	"testnet-mantle": mantleTestnetConfig,
-	testnet: testnetEthereumConfig,
-	"testnet-arbitrum": arbitrumTestnetConfig,
-	arbitrum: arbitrumConfig,
-	"testnet-zksync": zkSyncTestnetConfig,
-	zksync: zkSyncConfig,
-	chiliz: chilizConfig,
-	"testnet-chiliz": chilizTestnetConfig,
-	lightlink: lightlinkConfig,
-	"testnet-lightlink": testnetLightlinkConfig,
-	"testnet-rari": rariTestnetConfig,
-	rari: rariMainnetConfig,
-	zkatana: zkatanaConfig,
-	"astar-zkevm": astarZKEVMConfig,
-	"astar-kyoto": astarKyotoConfig,
-	base: baseConfig,
-	"base-sepolia": baseSepoliaConfig,
-	"testnet-celo": celoTestnetConfig,
-	celo: celoConfig,
-	"testnet-xai": xaiTestnetConfig,
-	xai: xaiConfig,
-	"testnet-fief": fiefTestnetConfig,
-	"testnet-kroma": kromaTestnetConfig,
-	kroma: kromaConfig,
+  mainnet: mainnetConfig,
+  mumbai: mumbaiConfig,
+  polygon: polygonConfig,
+  "amoy-polygon": polygonAmoyConfig,
+  "dev-ethereum": devEthereumConfig,
+  "dev-polygon": devPolygonConfig,
+  mantle: mantleConfig,
+  "testnet-mantle": mantleTestnetConfig,
+  testnet: testnetEthereumConfig,
+  "testnet-arbitrum": arbitrumTestnetConfig,
+  arbitrum: arbitrumConfig,
+  "testnet-zksync": zkSyncTestnetConfig,
+  zksync: zkSyncConfig,
+  chiliz: chilizConfig,
+  "testnet-chiliz": chilizTestnetConfig,
+  lightlink: lightlinkConfig,
+  "testnet-lightlink": testnetLightlinkConfig,
+  "testnet-rari": rariTestnetConfig,
+  rari: rariMainnetConfig,
+  zkatana: zkatanaConfig,
+  "astar-zkevm": astarZKEVMConfig,
+  "astar-kyoto": astarKyotoConfig,
+  base: baseConfig,
+  "base-sepolia": baseSepoliaConfig,
+  "testnet-celo": celoTestnetConfig,
+  celo: celoConfig,
+  "testnet-xai": xaiTestnetConfig,
+  xai: xaiConfig,
+  "testnet-fief": fiefTestnetConfig,
+  "testnet-kroma": kromaTestnetConfig,
+  kroma: kromaConfig,
+  "testnet-saakuru": testnetSaakuruConfig,
+  saakuru: saakuruConfig,
+  "testnet-oasys": testnetOasysConfig,
+  oasys: oasysConfig,
+  "sei-arctic-1": seiArctic1Config,
+  "sei-pacific-1": seiPacific1Config,
+  "moonbeam-testnet": moonbeamTestnetConfig,
+  moonbeam: moonbeamMainnetConfig,
+  "palm-testnet": palmTestnetConfig,
+  palm: palmMainnetConfig,
+  "etherlink-testnet": etherlinkTestnetConfig,
+  etherlink: etherlinkConfig,
+  "lisk-sepolia": liskSepoliaConfig,
+  lisk: liskMainnetConfig,
+  alephzero: alephzeroMainnetConfig,
+  "alephzero-testnet": alephzeroTestnetConfig,
+  match: matchConfig,
+  "match-testnet": matchTestnetConfig,
+  fivire: fivireConfig,
+  "fivire-testnet": fivireTestnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
-	return configDictionary[env]
+  return configDictionary[env]
 }
 
 export type GetConfigByChainId = () => Promise<EthereumConfig>
 
 const dictionaryFlat = Object.values(configDictionary)
 export function getNetworkConfigByChainId(chainId: number): EthereumConfig {
-	const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
-	if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
-	return config
+  const config = dictionaryFlat.find((x: EthereumConfig) => x.chainId === chainId)
+  if (!config) throw new Error(`ChainID ${chainId} is not found in list of supported chains`)
+  return config
 }

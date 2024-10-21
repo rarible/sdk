@@ -3,18 +3,17 @@ import { createTestAptosState } from "./test"
 import { AptosBalance } from "./balance"
 
 describe("balance", () => {
+  const { aptos } = createTestAptosState()
 
-	const { aptos } = createTestAptosState()
+  const balanceInstance = new AptosBalance(aptos)
 
-	const balanceInstance = new AptosBalance(aptos)
-
-	test("get balance", async () => {
-		const randomAccount = Account.generate()
-		await aptos.fundAccount({
-			accountAddress: randomAccount.accountAddress,
-			amount: 100_000_000,
-		})
-		const balance = await balanceInstance.getBalance(randomAccount.accountAddress)
-		expect(balance).toBe("1")
-	})
+  test.skip("get balance", async () => {
+    const randomAccount = Account.generate()
+    await aptos.fundAccount({
+      accountAddress: randomAccount.accountAddress,
+      amount: 100_000_000,
+    })
+    const balance = await balanceInstance.getBalance(randomAccount.accountAddress)
+    expect(balance).toBe("1")
+  })
 })

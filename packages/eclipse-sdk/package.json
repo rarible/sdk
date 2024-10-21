@@ -1,0 +1,36 @@
+{
+  "name": "@rarible/eclipse-sdk",
+  "version": "0.13.68-fix.64",
+  "keywords": [
+    "solana",
+    "web3"
+  ],
+  "license": "Apache-2.0",
+  "main": "build/index.js",
+  "types": "build/index.d.ts",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "build": "run-s build:*",
+    "build:esm": "tsc --project tsconfig-build.json",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
+    "test": "jest --silent --forceExit",
+    "verify": "tsc --noEmit --project tsconfig-build.json"
+  },
+  "dependencies": {
+    "@rarible/logger": "^0.9.12",
+    "@rarible/utils": "~0.10.0-beta.1",
+    "@solana/web3.js": "1.95.3"
+  },
+  "peerDependencies": {
+    "tslib": "^2.3.1"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "gitHead": "8ef3989b1aff76a6345deab53a76df3480d8cf46"
+}

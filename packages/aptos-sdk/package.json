@@ -13,29 +13,22 @@
   ],
   "scripts": {
     "build": "run-s build:*",
-    "build:esm": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "build:ts": "tsc --project tsconfig-build.json",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "jest --silent --forceExit",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@aptos-labs/ts-sdk": "^1.5.1",
-    "@rarible/logger": "^0.9.12",
-    "@rarible/types": "~0.9.26",
-    "@rarible/utils": "~0.9.10",
-    "node-fetch": "^2.6.7"
+    "@rarible/types": "~0.10.0-beta.1",
+    "@rarible/utils": "~0.10.0-beta.1"
   },
   "devDependencies": {
-    "@peculiar/webcrypto": "^1.4.6",
     "@rarible/aptos-wallet": "^0.13.69-beta.4",
-    "@types/jest": "^27.4.0",
     "@types/node-fetch": "^2.6.1",
-    "dotenv": "16.0.0",
-    "form-data": "^4.0.0",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.5.1",
-    "jest-junit": "^15.0.0",
-    "ts-jest": "^27.0.7"
+    "form-data": "^4.0.0"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

@@ -1,16 +1,16 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { WalletType } from "@rarible/sdk-wallet"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
-import type { AptosSdkConfig } from "@rarible/aptos-sdk/src/domain"
+import type { AptosSdkConfig } from "@rarible/aptos-sdk/build/domain"
 import type {
-	IConvert,
-	IDepositBiddingBalance,
-	IGetBalance,
-	IGetBiddingBalance,
-	IWithdrawBiddingBalance,
+  IConvert,
+  IDepositBiddingBalance,
+  IGetBalance,
+  IGetBiddingBalance,
+  IWithdrawBiddingBalance,
 } from "./types/balances"
 import type { IGenerateTokenId } from "./types/nft/generate-token-id"
 import type { IRestrictionSdk } from "./types/nft/restriction/domain"
@@ -37,60 +37,61 @@ import type { IGetBuyAmmInfo } from "./types/balances"
 import type { IGetSdkContext } from "./common/get-sdk-context"
 import type { IBalanceTransfer } from "./types/balances"
 import type {
-	IFlowSetupAccount,
-	IFlowCheckInitMattelCollections,
-	IFlowSetupMattelCollections,
+  IFlowSetupAccount,
+  IFlowCheckInitMattelCollections,
+  IFlowSetupMattelCollections,
 } from "./types/nft/collection"
 import type { ExternalContext } from "./common/get-sdk-context"
 import type { IFlowCheckInitGamisodesCollections } from "./types/nft/collection"
+import type { IGetBuyTxData } from "./types/ethereum/domain"
 
 export enum LogsLevel {
-	DISABLED = 0,
-	ERROR = 1,
-	TRACE = 2,
+  DISABLED = 0,
+  ERROR = 1,
+  TRACE = 2,
 }
 
 export interface ISdkContext {
-	wallet?: BlockchainWallet,
-	env: RaribleSdkEnvironment,
-	config?: IRaribleSdkConfig
-	sessionId: string
-	apiKey?: string
-	providerId?: string
-	providerMeta?: Record<string, string>
+  wallet?: BlockchainWallet
+  env: RaribleSdkEnvironment
+  config?: IRaribleSdkConfig
+  sessionId: string
+  apiKey?: string
+  providerId?: string
+  providerMeta?: Record<string, string>
 }
 
 export interface IRaribleSdkConfig {
-	/**
-	 * Parameters for requests to protocol API
-	 */
-	apiClientParams?: ApiClient.ConfigurationParameters
-	/**
-	 * Logging level
-	 */
-	logs?: LogsLevel
-	/**
-	 * Blockchain settings
-	 */
-	blockchain?: {
-		[WalletType.SOLANA]?: ISolanaSdkConfig
-		[WalletType.ETHEREUM]?: IEthereumSdkConfig
-		[WalletType.FLOW]?: { auth: AuthWithPrivateKey }
-		[WalletType.APTOS]?: AptosSdkConfig
-	}
-	/**
-	 * Middlewares
-	 */
-	middlewares?: Middleware[]
-	apiKey?: string
-	/**
+  /**
+   * Parameters for requests to protocol API
+   */
+  apiClientParams?: ApiClient.ConfigurationParameters
+  /**
+   * Logging level
+   */
+  logs?: LogsLevel
+  /**
+   * Blockchain settings
+   */
+  blockchain?: {
+    [WalletType.SOLANA]?: ISolanaSdkConfig
+    [WalletType.ETHEREUM]?: IEthereumSdkConfig
+    [WalletType.FLOW]?: { auth: AuthWithPrivateKey }
+    [WalletType.APTOS]?: AptosSdkConfig
+  }
+  /**
+   * Middlewares
+   */
+  middlewares?: Middleware[]
+  apiKey?: string
+  /**
    * @deprecated
    */
-	logger?: AbstractLogger
-	/**
+  logger?: AbstractLogger
+  /**
    * Pass extra fields to logs
    */
-	context?: ExternalContext
+  context?: ExternalContext
 }
 
 /**
@@ -105,54 +106,54 @@ export interface IRaribleSdkConfig {
  * @property [[`IEthereumSdk`]] [ethereum]
  */
 export interface IRaribleSdk {
-	/**
-	 * Protocol api methods
-	 */
-	apis: IApisSdk
-	/**
-	 * Nft methods Mint, Transfer, Burn, Meta manipulation
-	 */
-	nft: INftSdk
-	/**
-	 * Order methods, create/update/cancel sel|bid orders
-	 */
-	order: IOrderSdk
-	/**
-	 * Balance methods
-	 */
-	balances: IBalanceSdk
-	/**
-	 * Restriction methods
-	 * - canTransfer - {@link IRestrictionSdk.canTransfer}
-	 */
-	restriction: IRestrictionSdk
-	/**
-	 * Wallet methods
-	 * -
-	 * - getBalance - {@link IGetBalance}
-	 * - convert - {@link IConvert}
-	 * - getBiddingBalance - {@link IGetBiddingBalance}
-	 * - depositBiddingBalance - {@link IDepositBiddingBalance}
-	 * - withdrawBiddingBalance - {@link IWithdrawBiddingBalance}
-	 */
-	wallet: Maybe<BlockchainWallet>
-	ethereum?: IEthereumSdk
-	flow?: IFlowSdk
-	getSdkContext: IGetSdkContext
+  /**
+   * Protocol api methods
+   */
+  apis: IApisSdk
+  /**
+   * Nft methods Mint, Transfer, Burn, Meta manipulation
+   */
+  nft: INftSdk
+  /**
+   * Order methods, create/update/cancel sel|bid orders
+   */
+  order: IOrderSdk
+  /**
+   * Balance methods
+   */
+  balances: IBalanceSdk
+  /**
+   * Restriction methods
+   * - canTransfer - {@link IRestrictionSdk.canTransfer}
+   */
+  restriction: IRestrictionSdk
+  /**
+   * Wallet methods
+   * -
+   * - getBalance - {@link IGetBalance}
+   * - convert - {@link IConvert}
+   * - getBiddingBalance - {@link IGetBiddingBalance}
+   * - depositBiddingBalance - {@link IDepositBiddingBalance}
+   * - withdrawBiddingBalance - {@link IWithdrawBiddingBalance}
+   */
+  wallet: Maybe<BlockchainWallet>
+  ethereum?: IEthereumSdk
+  flow?: IFlowSdk
+  getSdkContext: IGetSdkContext
 }
 
 /**
  * Rarible Protocol Apis
  */
 export interface IApisSdk {
-	order: ApiClient.OrderControllerApi
-	currency: ApiClient.CurrencyControllerApi
-	collection: ApiClient.CollectionControllerApi
-	activity: ApiClient.ActivityControllerApi
-	item: ApiClient.ItemControllerApi
-	ownership: ApiClient.OwnershipControllerApi
-	balances: ApiClient.BalanceControllerApi
-	search: ApiClient.SearchControllerApi
+  order: ApiClient.OrderControllerApi
+  currency: ApiClient.CurrencyControllerApi
+  collection: ApiClient.CollectionControllerApi
+  activity: ApiClient.ActivityControllerApi
+  item: ApiClient.ItemControllerApi
+  ownership: ApiClient.OwnershipControllerApi
+  balances: ApiClient.BalanceControllerApi
+  search: ApiClient.SearchControllerApi
 }
 
 /**
@@ -168,17 +169,17 @@ export interface IApisSdk {
  * @property {IUploadMeta} uploadMeta - Upload meta data to nftStorage (for future minting)
  */
 export interface INftSdk {
-	/**
-	 * Transfers self owned asset to recipient
-	 * -
-	 * @param request - {itemId: ItemId}
-	 * @returns response - {
-	 *   <p>multiple: boolean</p>
-	 *   <p>maxAmount: {@link BigNumber}</p>
-	 *   <p>submit: ({to: {@link UnionAddress}, amount?: number}) => Promise<IBlockchainTransaction></p>
-	 * <p>}</p>
-	 *
-	 * @example
+  /**
+   * Transfers self owned asset to recipient
+   * -
+   * @param request - {itemId: ItemId}
+   * @returns response - {
+   *   <p>multiple: boolean</p>
+   *   <p>maxAmount: {@link BigNumber}</p>
+   *   <p>submit: ({to: {@link UnionAddress}, amount?: number}) => Promise<IBlockchainTransaction></p>
+   * <p>}</p>
+   *
+   * @example
    * * const tx = await sdk.nft.transfer({
    *    itemId: "ETHEREUM:...",
    *    to: "ETHEREUM:0x...",
@@ -187,44 +188,44 @@ export interface INftSdk {
    *
    * or with prepare/submit
    *
-	 * const prepareTransfer = await sdk.nft.transfer.prepare({
+   * const prepareTransfer = await sdk.nft.transfer.prepare({
    *    itemId: "ETHEREUM:..."
    * })
-	 * const tx = prepareTransfer.submit({to: "ETHEREUM:0x...", amount: 1})
-	 *
-	 */
-	transfer: ITransfer
-	/**
-	 * Prepare meta data before upload to ipfs storage
-	 * @param {PreprocessMetaRequest} meta metadata request for prepare
-	 * @returns {PreprocessMetaResponse}
-	 *
-	 * @example
-	 *
-	 * const prepared = sdk.nft.preprocessMeta({
-	 *   name: "Test",
-	 *   description: "Test",
-	 *   image: {File},
-	 *   animation: {File},
-	 *   external: "http://",
-	 *   attributes: [{key: "test", value: "test"}]
-	 * })
-	 */
-	preprocessMeta: IPreprocessMeta
-	/**
-	 * Mint token
-	 * @example
-	 *
-	 * import { toUnionAddress } from "@rarible/types"
-	 *
-	 * const tx = sdk.nft.mint({
+   * const tx = prepareTransfer.submit({to: "ETHEREUM:0x...", amount: 1})
+   *
+   */
+  transfer: ITransfer
+  /**
+   * Prepare meta data before upload to ipfs storage
+   * @param {PreprocessMetaRequest} meta metadata request for prepare
+   * @returns {PreprocessMetaResponse}
+   *
+   * @example
+   *
+   * const prepared = sdk.nft.preprocessMeta({
+   *   name: "Test",
+   *   description: "Test",
+   *   image: {File},
+   *   animation: {File},
+   *   external: "http://",
+   *   attributes: [{key: "test", value: "test"}]
+   * })
+   */
+  preprocessMeta: IPreprocessMeta
+  /**
+   * Mint token
+   * @example
+   *
+   * import { toUnionAddress } from "@rarible/types"
+   *
+   * const tx = sdk.nft.mint({
    *    tokenId: toTokenId("ETHEREUM:0x...")
-	 *		uri: "ipfs://..."
-	 *		supply: 1
-	 *		lazyMint: false
-	 *		creators?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
-	 *		royalties?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
-	 * })
+   *		uri: "ipfs://..."
+   *		supply: 1
+   *		lazyMint: false
+   *		creators?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
+   *		royalties?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
+   * })
    *
    * or with prepare/submit
    *
@@ -236,26 +237,26 @@ export interface INftSdk {
    *		creators?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
    *		royalties?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}]
    * })
-	 */
-	mint: IMint
-	/**
-	 * Mint token and create sell order from it
-	 * @example
-	 * import { toUnionAddress } from "@rarible/types"
-	 *
-	 * const tx = sdk.nft.mintAndSell({
+   */
+  mint: IMint
+  /**
+   * Mint token and create sell order from it
+   * @example
+   * import { toUnionAddress } from "@rarible/types"
+   *
+   * const tx = sdk.nft.mintAndSell({
    *    tokenId: toTokenId("ETHEREUM:0x...")
-	 *		uri: "ipfs://...",
-	 *		supply: 1,
-	 *		lazyMint: false,
-	 *		creators?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}],
-	 *		royalties?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}],
-	 *		price: toBn("1"),
-	 *		currency: {"@type": "ETH"},
-	 *		originFees?: [{account: toUnionAddress("ETHEREUM:0x...")}],
-	 *		payouts?: [{account: toUnionAddress("ETHEREUM:0x...")}]
-	 *		expirationDate?: 1234567890
-	 * })
+   *		uri: "ipfs://...",
+   *		supply: 1,
+   *		lazyMint: false,
+   *		creators?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}],
+   *		royalties?: [{account: toUnionAddress("ETHEREUM:0x..."), value: 100}],
+   *		price: toBn("1"),
+   *		currency: {"@type": "ETH"},
+   *		originFees?: [{account: toUnionAddress("ETHEREUM:0x...")}],
+   *		payouts?: [{account: toUnionAddress("ETHEREUM:0x...")}]
+   *		expirationDate?: 1234567890
+   * })
    *
    * or with prepare/submit
    *
@@ -264,12 +265,12 @@ export interface INftSdk {
    *		uri: "ipfs://..."
    *	  ...
    * })
-	 */
-	mintAndSell: IMintAndSell
-	/**
-	 * Burn token
-	 * -
-	 * @example
+   */
+  mintAndSell: IMintAndSell
+  /**
+   * Burn token
+   * -
+   * @example
    *  const tx = sdk.nft.burn({
    *    itemId: toUnionId("ETHEREUM:0x..."),
    *    amount?: 5,
@@ -278,53 +279,53 @@ export interface INftSdk {
    *
    * or with prepare/submit
    *
-	 * const prepare = sdk.nft.burn.prepare({itemId: toUnionId("ETHEREUM:0x...")})
-	 * const tx = prepare.submit({amount?: 5, creators?: [{account: toUnionAddress("ETHEREUM:0x...", value: 100)}]})
-	 */
-	burn: IBurn
-	/**
-	 * Generates a token id (for future minting)
-	 * -
-	 * @example
-	 * const {tokenId, signature} = sdk.nft.generateTokenId({
-	 * 		collection: toContractAddress("ETHEREUM:0x..."),
-	 * 		minter: toUnionAddress("ETHEREUM:0x...")},
-	 * 	)
-	 *
-	 */
-	generateTokenId: IGenerateTokenId
-	/**
-	 * Create collection - Deploy contract with custom properties
-	 * -
-	 * @example
-	 * const { tx, address } = sdk.nft.createCollection({
-	 *	blockchain: Blockchain.ETHEREUM,
-	 *		type: "ERC721",
-	 *		name: "name",
-	 *		symbol: "RARI",
-	 *		baseURI: "https://ipfs.rarible.com",
-	 *		contractURI: "https://ipfs.rarible.com",
-	 *		isPublic: true,
-	 * })
-	 */
-	createCollection: ICreateCollection
-	/**
-	 * Upload meta data to nftStorage (for future minting)
-	 * @example
-	 * import { toUnionAddress } from "@rarible/types"
-	 * const sdk.nft.uploadMeta({
-	 * 		nftStorageApiKey: "your_nft_storage_api_key",
-	 *  	properties: {
-	 *  	 	name: string
-	 *			description?: string
-	 *			image?: File
-	 *			animationUrl?: File
-	 *			attributes: MintAttribute[]
-	 *  	},
-	 *  	accountAddress: toUnionAddress("ETHEREUM:0x...")
-	 *  })
-	 */
-	uploadMeta: IUploadMeta
+   * const prepare = sdk.nft.burn.prepare({itemId: toUnionId("ETHEREUM:0x...")})
+   * const tx = prepare.submit({amount?: 5, creators?: [{account: toUnionAddress("ETHEREUM:0x...", value: 100)}]})
+   */
+  burn: IBurn
+  /**
+   * Generates a token id (for future minting)
+   * -
+   * @example
+   * const {tokenId, signature} = sdk.nft.generateTokenId({
+   * 		collection: toUnionContractAddress("ETHEREUM:0x..."),
+   * 		minter: toUnionAddress("ETHEREUM:0x...")},
+   * 	)
+   *
+   */
+  generateTokenId: IGenerateTokenId
+  /**
+   * Create collection - Deploy contract with custom properties
+   * -
+   * @example
+   * const { tx, address } = sdk.nft.createCollection({
+   *	blockchain: Blockchain.ETHEREUM,
+   *		type: "ERC721",
+   *		name: "name",
+   *		symbol: "RARI",
+   *		baseURI: "https://ipfs.rarible.com",
+   *		contractURI: "https://ipfs.rarible.com",
+   *		isPublic: true,
+   * })
+   */
+  createCollection: ICreateCollection
+  /**
+   * Upload meta data to nftStorage (for future minting)
+   * @example
+   * import { toUnionAddress } from "@rarible/types"
+   * const sdk.nft.uploadMeta({
+   * 		nftStorageApiKey: "your_nft_storage_api_key",
+   *  	properties: {
+   *  	 	name: string
+   *			description?: string
+   *			image?: File
+   *			animationUrl?: File
+   *			attributes: MintAttribute[]
+   *  	},
+   *  	accountAddress: toUnionAddress("ETHEREUM:0x...")
+   *  })
+   */
+  uploadMeta: IUploadMeta
 }
 
 /**
@@ -338,36 +339,36 @@ export interface INftSdk {
  * @property {ICancel} cancel Cancel order
  */
 export interface IOrderSdk {
-	/**
-	 * Create sell order
-	 */
-	sell: ISell
-	sellUpdate: ISellUpdate
-	/**
-	 * @deprecated Use {@link buy} or {@link acceptBid} instead
-	 */
-	fill: IFill
-	/**
+  /**
+   * Create sell order
+   */
+  sell: ISell
+  sellUpdate: ISellUpdate
+  /**
+   * @deprecated Use {@link buy} or {@link acceptBid} instead
+   */
+  fill: IFill
+  /**
    * Buy item(s) by filling sell order
    */
-	buy: IBuy
-	/**
+  buy: IBuy
+  /**
    * Confirm item selling by filling bid order
    */
-	acceptBid: IAcceptBid
-	batchBuy: IBatchBuy
-	/**
+  acceptBid: IAcceptBid
+  batchBuy: IBatchBuy
+  /**
    * Place a bid order on NFT
    */
-	bid: IBid
-	/**
-	 * Update bid order
-	 */
-	bidUpdate: IBidUpdate
-	/**
-	 * Cancel sell/bid order
-	 */
-	cancel: ICancel
+  bid: IBid
+  /**
+   * Update bid order
+   */
+  bidUpdate: IBidUpdate
+  /**
+   * Cancel sell/bid order
+   */
+  cancel: ICancel
 }
 /**
  * Balance methods
@@ -379,40 +380,40 @@ export interface IOrderSdk {
  * @property {IWithdrawBiddingBalance} withdrawBiddingBalance
  */
 export interface IBalanceSdk {
-	getBalance: IGetBalance
-	convert: IConvert
-	transfer: IBalanceTransfer
+  getBalance: IGetBalance
+  convert: IConvert
+  transfer: IBalanceTransfer
 
-	getBiddingBalance: IGetBiddingBalance
-	depositBiddingBalance: IDepositBiddingBalance
-	withdrawBiddingBalance: IWithdrawBiddingBalance
+  getBiddingBalance: IGetBiddingBalance
+  depositBiddingBalance: IDepositBiddingBalance
+  withdrawBiddingBalance: IWithdrawBiddingBalance
 }
 
 export interface IEthereumSdk {
-	wrapCryptoPunk: ICryptopunkWrap,
-	unwrapCryptoPunk: ICryptopunkUnwrap,
-	getBatchBuyAmmInfo: IGetBuyAmmInfo,
+  wrapCryptoPunk: ICryptopunkWrap
+  unwrapCryptoPunk: ICryptopunkUnwrap
+  getBatchBuyAmmInfo: IGetBuyAmmInfo
+  getBuyTxData: IGetBuyTxData
 }
 
 export interface IFlowSdk {
-	setupAccount: IFlowSetupAccount
-	setupMattelCollections: IFlowSetupMattelCollections
-	setupGamisodesCollections: IFlowSetupMattelCollections
-	checkInitMattelCollections: IFlowCheckInitMattelCollections
-	checkInitGamisodesCollections: IFlowCheckInitGamisodesCollections
+  setupAccount: IFlowSetupAccount
+  setupMattelCollections: IFlowSetupMattelCollections
+  setupGamisodesCollections: IFlowSetupMattelCollections
+  checkInitMattelCollections: IFlowCheckInitMattelCollections
+  checkInitGamisodesCollections: IFlowCheckInitGamisodesCollections
 }
 
-
 export type IRaribleInternalSdk = Omit<IRaribleSdk, "order" | "nft" | "apis" | "wallet" | "getSdkContext"> & {
-	nft: INftInternalSdk
-	order: IOrderInternalSdk
-	balances: IBalanceSdk
+  nft: INftInternalSdk
+  order: IOrderInternalSdk
+  balances: IBalanceSdk
 }
 
 export type INftInternalSdk = Omit<INftSdk, "mintAndSell"> & {
-	generateTokenId: IGenerateTokenId
+  generateTokenId: IGenerateTokenId
 }
 
 export type IOrderInternalSdk = Omit<IOrderSdk, "sell"> & {
-	sell: ISellInternal
+  sell: ISellInternal
 }

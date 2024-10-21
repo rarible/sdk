@@ -11,21 +11,21 @@ import type { ImxSdkConfig } from "./domain"
 import { createApis } from "./apis"
 
 export function createImxSdk(link: Maybe<Link>, environment: ImxEnv, config: ImxSdkConfig = {}): RaribleImxSdk {
-	const apis = createApis(environment, config?.apiClientParams)
-	return {
-		nft: {
-			transfer: transfer.bind(null, link),
-			burn: burn.bind(null, link),
-		},
-		order: {
-			sell: sell.bind(null, link),
-			buy: buy.bind(null, environment, link, apis),
-			cancel: cancel.bind(null, link),
-		},
-		balance: {
-			getBalance: getBalance.bind(null, environment, apis),
-		},
-	}
+  const apis = createApis(environment, config?.apiClientParams)
+  return {
+    nft: {
+      transfer: transfer.bind(null, link),
+      burn: burn.bind(null, link),
+    },
+    order: {
+      sell: sell.bind(null, link),
+      buy: buy.bind(null, environment, link, apis),
+      cancel: cancel.bind(null, link),
+    },
+    balance: {
+      getBalance: getBalance.bind(null, environment, apis),
+    },
+  }
 }
 
 export { Erc721AssetRequest }

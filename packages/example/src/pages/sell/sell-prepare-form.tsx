@@ -11,46 +11,49 @@ import { RequestResult } from "../../components/common/request-result"
 import { useSdkContext } from "../../components/connector/sdk"
 
 interface ISellPrepareFormProps {
-	onComplete: (response: PrepareSellResponse) => void
-	disabled?: boolean
-	itemId: string | undefined
+  onComplete: (response: PrepareSellResponse) => void
+  disabled?: boolean
+  itemId: string | undefined
 }
 
 export function SellPrepareForm({ disabled, onComplete, itemId }: ISellPrepareFormProps) {
-	const navigate = useNavigate()
-	const connection = useSdkContext()
-	const form = useForm()
-	const { result, setError } = useRequestResult()
+  const navigate = useNavigate()
+  const connection = useSdkContext()
+  const form = useForm()
+  const { result, setError } = useRequestResult()
 
-	return (
-		<>
-			<form onSubmit={form.handleSubmit(async (formData) => {
-				try {
-					onComplete(await connection.sdk.order.sell.prepare({
-						itemId: toItemId(formData.itemId),
-					}))
-					navigate(`/sell/${formData.itemId}`, {})
-				} catch (e) {
-					setError(e)
-				}
-			})}
-			>
-				<Stack spacing={2}>
-					<FormTextInput form={form} defaultValue={itemId} name="itemId" label="Item ID"/>
-					<Box>
-						<FormSubmit
-							form={form}
-							label="Next"
-							state={resultToState(result.type)}
-							icon={faChevronRight}
-							disabled={disabled}
-						/>
-					</Box>
-				</Stack>
-			</form>
-			<Box sx={{ my: 2 }}>
-				<RequestResult result={result}/>
-			</Box>
-		</>
-	)
+  return (
+    <>
+      <form
+        onSubmit={form.handleSubmit(async formData => {
+          try {
+            onComplete(
+              await connection.sdk.order.sell.prepare({
+                itemId: toItemId(formData.itemId),
+              }),
+            )
+            navigate(`/sell/${formData.itemId}`, {})
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Stack spacing={2}>
+          <FormTextInput form={form} defaultValue={itemId} name="itemId" label="Item ID" />
+          <Box>
+            <FormSubmit
+              form={form}
+              label="Next"
+              state={resultToState(result.type)}
+              icon={faChevronRight}
+              disabled={disabled}
+            />
+          </Box>
+        </Stack>
+      </form>
+      <Box sx={{ my: 2 }}>
+        <RequestResult result={result} />
+      </Box>
+    </>
+  )
 }

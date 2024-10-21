@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function MintComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // get collection by id			
 const collection = await sdk.apis.collection.getCollectionById({
   collection: <COLLECTION ID>
@@ -34,6 +34,7 @@ const result = await mint.submit({
 //   itemId: string
 // }
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

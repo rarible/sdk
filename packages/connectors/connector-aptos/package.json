@@ -10,19 +10,15 @@
   ],
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/api-client": "0.16.5-alpha.10",
-    "@rarible/connector": "^0.13.68-fix.22",
-    "@rarible/types": "~0.9.26"
-  },
-  "devDependencies": {
-    "@types/jest": "^27.0.2",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.2.4",
-    "ts-jest": "^27.0.3"
+    "@rarible/api-client": "0.18.0-alpha.3",
+    "@rarible/connector": "^0.13.68-fix.64",
+    "@rarible/types": "~0.10.0-beta.1"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"

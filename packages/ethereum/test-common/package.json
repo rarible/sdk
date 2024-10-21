@@ -11,15 +11,17 @@
   "types": "build/index.d.ts",
   "scripts": {
     "build": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "echo 'There has no tests'",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
     "@rarible/ethereum-provider": "^0.13.69-beta.4",
     "@rarible/sdk-common": "^0.13.69-beta.4",
-    "@rarible/test-provider": "~0.5.0",
-    "@rarible/types": "~0.9.26",
+    "@rarible/test-provider": "~0.5.4",
+    "@rarible/types": "~0.10.0-beta.1",
     "@types/web3-provider-engine": "^14.0.1",
     "eth-sig-util": "^3.0.1",
     "ethereumjs-wallet": "^1.0.1",

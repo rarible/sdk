@@ -14,7 +14,9 @@
   "scripts": {
     "build": "run-s build:*",
     "build:esm": "tsc --project tsconfig-build.json",
-    "clean": "rimraf ./build",
+    "clean": "run-s clean:*",
+    "clean:build": "rimraf ./build",
+    "clean:tsbuildinfo": "rimraf ./tsconfig.tsbuildinfo",
     "test": "jest --silent",
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
@@ -25,14 +27,9 @@
     "tweetnacl": "^1.0.0"
   },
   "devDependencies": {
-    "@types/jest": "27.0.2",
     "@types/node-fetch": "^2.5.11",
     "form-data": "^4.0.0",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.4.7",
-    "jest-junit": "^15.0.0",
-    "node-fetch": "^2.6.1",
-    "ts-jest": "^27.0.7"
+    "node-fetch": "^2.6.1"
   },
   "peerDependencies": {
     "@solana/web3.js": "^1.54.0",

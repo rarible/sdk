@@ -5,26 +5,25 @@ import { ZERO_ADDRESS } from "@rarible/types"
 import type { Erc721AssetRequest, TransferResponse } from "./domain"
 import { getTransferResponse } from "./common/get-tranfer-response"
 
-export async function burn(
-	link: Maybe<Link>,
-	request: Erc721AssetRequest,
-): Promise<TransferResponse> {
-	if (link === undefined) {
-		throw new Error("Wallet undefined")
-	}
-	const { assetClass, tokenId, contract } = request
-	if (assetClass !== ERC721TokenType.ERC721) {
-		throw new Error("Unsupported assetClass")
-	}
-	const { result } = await link.transfer([{
-		type: ERC721TokenType.ERC721,
-		tokenId: tokenId,
-		tokenAddress: contract,
-		toAddress: ZERO_ADDRESS,
-	}])
-	if (!result || !result[0]) {
-		throw new Error(`Imx burn error: result is empty (${JSON.stringify(result)})`)
-	}
-	const resp = result[0]
-	return getTransferResponse(resp)
+export async function burn(link: Maybe<Link>, request: Erc721AssetRequest): Promise<TransferResponse> {
+  if (link === undefined) {
+    throw new Error("Wallet undefined")
+  }
+  const { assetClass, tokenId, contract } = request
+  if (assetClass !== ERC721TokenType.ERC721) {
+    throw new Error("Unsupported assetClass")
+  }
+  const { result } = await link.transfer([
+    {
+      type: ERC721TokenType.ERC721,
+      tokenId: tokenId,
+      tokenAddress: contract,
+      toAddress: ZERO_ADDRESS,
+    },
+  ])
+  if (!result || !result[0]) {
+    throw new Error(`Imx burn error: result is empty (${JSON.stringify(result)})`)
+  }
+  const resp = result[0]
+  return getTransferResponse(resp)
 }

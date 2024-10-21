@@ -11,47 +11,46 @@ const { providers } = createEthereumProviders(provider, wallet)
 /**
  * @group provider/dev
  */
-describe.each(providers)("deploy erc-721 token test", (ethereum) => {
-	const env: EthereumNetwork = "dev-ethereum"
-	const config = getEthereumConfig(env)
-	const getConfig = async () => config
+describe.each(providers)("deploy erc-721 token test", ethereum => {
+  const env: EthereumNetwork = "dev-ethereum"
+  const config = getEthereumConfig(env)
+  const getConfig = async () => config
 
-	const send = getSendWithInjects()
-	const deployErc721 = new DeployErc721(ethereum, send, getConfig)
+  const send = getSendWithInjects()
+  const deployErc721 = new DeployErc721(ethereum, send, getConfig)
 
+  test("should deploy erc721 token", async () => {
+    const { tx, address } = await deployErc721.deployToken(
+      "name",
+      "RARI",
+      "https://ipfs.rarible.com",
+      "https://ipfs.rarible.com",
+    )
+    const createProxyEvent = (await tx.getEvents()).find(e => e.event === "Create721RaribleProxy")
 
-	test("should deploy erc721 token", async () => {
-		const { tx, address } = await deployErc721.deployToken(
-			"name",
-			"RARI",
-			"https://ipfs.rarible.com",
-			"https://ipfs.rarible.com",
-		)
-		const createProxyEvent = (await tx.getEvents()).find(e => e.event === "Create721RaribleProxy")
+    if (!createProxyEvent || !createProxyEvent.args) {
+      throw new Error("Proxy has not been created")
+    }
+    const proxy = createProxyEvent.args.proxy
 
-		if (!createProxyEvent || !createProxyEvent.args) {
-			throw new Error("Proxy has not been created")
-		}
-		const proxy = createProxyEvent.args.proxy
+    expect(address.toLowerCase()).toBe(proxy.toLowerCase())
+  })
 
-		expect(address.toLowerCase()).toBe(proxy.toLowerCase())
-	})
+  test("should deploy erc721 user token and mint", async () => {
+    const { tx, address } = await deployErc721.deployUserToken(
+      "name",
+      "RARI",
+      "https://ipfs.rarible.com",
+      "https://ipfs.rarible.com",
+      [],
+    )
+    const createProxyEvent = (await tx.getEvents()).find(e => e.event === "Create721RaribleUserProxy")
 
-	test("should deploy erc721 user token and mint", async () => {
-		const { tx, address } = await deployErc721.deployUserToken(
-			"name",
-			"RARI",
-			"https://ipfs.rarible.com",
-			"https://ipfs.rarible.com",
-			[],
-		)
-		const createProxyEvent = (await tx.getEvents()).find(e => e.event === "Create721RaribleUserProxy")
+    if (!createProxyEvent || !createProxyEvent.args) {
+      throw new Error("Proxy has not been created")
+    }
+    const proxy = createProxyEvent.args.proxy
 
-		if (!createProxyEvent || !createProxyEvent.args) {
-			throw new Error("Proxy has not been created")
-		}
-		const proxy = createProxyEvent.args.proxy
-
-		expect(address.toLowerCase()).toBe(proxy.toLowerCase())
-	})
+    expect(address.toLowerCase()).toBe(proxy.toLowerCase())
+  })
 })
