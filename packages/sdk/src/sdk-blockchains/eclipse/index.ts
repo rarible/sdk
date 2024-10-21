@@ -2,16 +2,18 @@ import type { Cluster } from "@solana/web3.js"
 import type { Maybe } from "@rarible/types/build/maybe"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { EclipseSdk } from "@rarible/eclipse-sdk"
-import type { IRaribleInternalSdk } from "../../domain"
+import type { IApisSdk, IRaribleInternalSdk } from "../../domain"
 import { nonImplementedAction, notImplemented } from "../../common/not-implemented"
 import { MethodWithPrepare } from "../../types/common"
 import type { GetFutureOrderFeeData } from "../../types/nft/restriction/domain"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
 import type { ISolanaSdkConfig } from "../solana/domain"
 import { EclipseBalance } from "./balance"
+import { EclipseNft } from "./nft"
 
 export function createEclipseSdk(
   wallet: Maybe<SolanaWallet>,
+  apis: IApisSdk,
   cluster: Cluster,
   config: ISolanaSdkConfig | undefined,
 ): IRaribleInternalSdk {
@@ -21,14 +23,16 @@ export function createEclipseSdk(
       endpoint: config?.eclipseEndpoint,
       commitmentOrConfig: "confirmed",
     },
+    debug: false,
   })
   const balanceService = new EclipseBalance(sdk, wallet)
+  const nftService = new EclipseNft(sdk, wallet, apis)
 
   return {
     nft: {
       mint: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
-      burn: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
-      transfer: new MethodWithPrepare(nonImplementedAction, nonImplementedAction),
+      burn: new MethodWithPrepare(nftService.burnBasic, nftService.burn),
+      transfer: new MethodWithPrepare(nftService.transferBasic, nftService.transfer),
       generateTokenId: nonImplementedAction,
       createCollection: nonImplementedAction,
       preprocessMeta: notImplemented,

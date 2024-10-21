@@ -10,3 +10,4 @@ export {
   TezosWallet,
   FlowWallet,
 } from "./wallets"
+export { getRaribleWallet } from "./get-wallet"

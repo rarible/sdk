@@ -4,9 +4,9 @@ import type { SolanaWallet } from "@rarible/sdk-wallet"
 import type { Maybe } from "@rarible/types/build/maybe"
 
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
-import { extractPublicKey } from "../solana/common/address-converters"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"
 import type { RequestCurrency } from "../../common/domain"
+import { extractPublicKey } from "../solana/common/address-converters"
 
 export class EclipseBalance {
   constructor(

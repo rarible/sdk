@@ -4,7 +4,7 @@ import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, RaribleSdkProvider, WalletByBlockchain } from "@rarible/sdk-wallet"
 import { WalletType } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
-import { getRaribleWallet } from "@rarible/sdk-wallet/build/get-wallet"
+import { getRaribleWallet } from "@rarible/sdk-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain, isSupportedBlockchain, retry } from "@rarible/sdk-common"
@@ -95,7 +95,7 @@ export function createRaribleSdk(
       blockchainConfig.solanaNetwork,
       config?.blockchain?.SOLANA,
     ),
-    createEclipseSdk(filterWallet(wallet, WalletType.SOLANA), blockchainConfig.solanaNetwork, {
+    createEclipseSdk(filterWallet(wallet, WalletType.SOLANA), apis, blockchainConfig.solanaNetwork, {
       eclipseEndpoint: blockchainConfig.eclipseAddress,
       ...config?.blockchain?.SOLANA,
     }),
@@ -151,6 +151,7 @@ export type SetupMiddlewareData = {
   sdkContext: ISdkContext
   externalLogger?: AbstractLogger
 }
+
 /**
  * Create middleware controller & wrap methods
  */
