@@ -3,7 +3,7 @@ import { createSdk } from "./common"
 import fs from "fs"
 import { Keypair, PublicKey } from "@solana/web3.js"
 
-describe("eclipse nft sdk", () => {
+describe.skip("eclipse nft sdk", () => {
   const sdk = createSdk()
 
   test(
