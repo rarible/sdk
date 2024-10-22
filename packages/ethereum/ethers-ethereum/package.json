@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethers-ethereum",
-  "version": "0.13.69-beta.4",
+  "version": "0.13.69-beta.5",
   "description": "Ethereum interface with ethers.js",
   "keywords": [
     "ethereum",
@@ -24,13 +24,13 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.69-beta.4",
-    "@rarible/sdk-common": "^0.13.69-beta.4",
+    "@rarible/ethereum-provider": "^0.13.69-beta.5",
+    "@rarible/sdk-common": "^0.13.69-beta.5",
     "ethereumjs-util": "^7.1.0",
     "ethers": "~5.4.4"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.4",
+    "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.5",
     "@rarible/types": "~0.10.0-beta.1",
     "process": "^0.11.10",
     "stream-browserify": "^3.0.0",

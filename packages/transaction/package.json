@@ -1,6 +1,6 @@
 {
   "name": "@rarible/sdk-transaction",
-  "version": "0.13.69-beta.4",
+  "version": "0.13.69-beta.5",
   "homepage": "Transaction type",
   "license": "ISC",
   "main": "build/index.js",
@@ -17,11 +17,11 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/aptos-sdk": "^0.13.69-beta.4",
-    "@rarible/ethereum-provider": "^0.13.69-beta.4",
+    "@rarible/aptos-sdk": "^0.13.69-beta.5",
+    "@rarible/ethereum-provider": "^0.13.69-beta.5",
     "@rarible/flow-sdk": "~0.6.0-beta.0",
-    "@rarible/protocol-ethereum-sdk": "^0.13.69-beta.4",
-    "@rarible/solana-sdk": "^0.13.69-beta.4",
+    "@rarible/protocol-ethereum-sdk": "^0.13.69-beta.5",
+    "@rarible/solana-sdk": "^0.13.69-beta.5",
     "@rarible/tezos-sdk": "0.1.46",
     "@rarible/types": "~0.10.0-beta.1"
   },
