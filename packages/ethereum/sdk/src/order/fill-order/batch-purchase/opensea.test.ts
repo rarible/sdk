@@ -10,8 +10,8 @@ import {
   deployTestRoyaltiesProvider,
   deployTransferProxy,
 } from "@rarible/ethereum-sdk-test-common"
-import { randomWord, toEVMAddress, toBigNumber, ZERO_ADDRESS } from "@rarible/types"
-import type { Address, Asset } from "@rarible/ethereum-api-client"
+import { randomWord, toEVMAddress, toBigNumber, ZERO_ADDRESS, EVM_ZERO_ADDRESS } from "@rarible/types"
+import type { EVMAddress, Asset } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import type { BigNumber } from "@rarible/utils"
 import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
@@ -37,7 +37,7 @@ describe.skip("fillOrder: Opensea orders", function () {
     ...getEthereumConfig(env),
     openSea: {
       metadata: id32("RARIBLE"),
-      proxyRegistry: ZERO_ADDRESS,
+      proxyRegistry: EVM_ZERO_ADDRESS,
     },
   }
   const getConfig = async () => config
@@ -90,7 +90,7 @@ describe.skip("fillOrder: Opensea orders", function () {
     // config.chainId = 17
   })
 
-  function getOrder(asset: Asset, owner: Address): SimpleRaribleV2Order {
+  function getOrder(asset: Asset, owner: EVMAddress): SimpleRaribleV2Order {
     if (asset.assetType.assetClass !== "ERC721" && asset.assetType.assetClass !== "ERC1155") {
       throw new Error("Wrong asset")
     }
@@ -104,7 +104,7 @@ describe.skip("fillOrder: Opensea orders", function () {
         value: toBigNumber(asset.value),
       },
       maker: owner,
-      taker: ZERO_ADDRESS,
+      taker: EVM_ZERO_ADDRESS,
       take: {
         assetType: {
           assetClass: "ETH",
@@ -123,8 +123,8 @@ describe.skip("fillOrder: Opensea orders", function () {
 
   async function mintTestAssetAndReturnOrder(
     asset: Asset,
-    sender: Address,
-    receiver: Address,
+    sender: EVMAddress,
+    receiver: EVMAddress,
   ): Promise<SimpleRaribleV2Order> {
     switch (asset.assetType.assetClass) {
       case "ERC721": {
@@ -157,7 +157,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 
   async function getBalance(
     assetType: "ERC721" | "ERC1155",
-    userAddress: Address,
+    userAddress: EVMAddress,
     tokenId?: string,
   ): Promise<BigNumber> {
     switch (assetType) {

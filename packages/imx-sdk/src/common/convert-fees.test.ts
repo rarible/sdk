@@ -1,5 +1,5 @@
 import type { Part } from "@rarible/ethereum-api-client"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import { convertFees, validateImxFeePercents } from "./convert-fees"
 
 describe("convertFees test", () => {
@@ -18,10 +18,10 @@ describe("convertFees test", () => {
 })
 
 const validFees: Part[] = [
-  { account: ZERO_ADDRESS, value: 10000 },
-  { account: ZERO_ADDRESS, value: 1 },
-  { account: ZERO_ADDRESS, value: 500 },
-  { account: ZERO_ADDRESS, value: 0 },
+  { account: EVM_ZERO_ADDRESS, value: 10000 },
+  { account: EVM_ZERO_ADDRESS, value: 1 },
+  { account: EVM_ZERO_ADDRESS, value: 500 },
+  { account: EVM_ZERO_ADDRESS, value: 0 },
 ]
 
-const notValidFees: Part[] = [{ account: ZERO_ADDRESS, value: 10001 }]
+const notValidFees: Part[] = [{ account: EVM_ZERO_ADDRESS, value: 10001 }]

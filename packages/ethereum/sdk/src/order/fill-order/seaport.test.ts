@@ -1,5 +1,4 @@
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import type { SeaportV1Order } from "@rarible/ethereum-api-client/build/models/Order"
 import { toEVMAddress, toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
