@@ -1,6 +1,6 @@
 {
   "name": "@rarible/eclipse-sdk",
-  "version": "0.13.68-fix.66",
+  "version": "0.13.68-fix.67",
   "keywords": [
     "solana",
     "web3"
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@rarible/logger": "^0.9.12",
-    "@rarible/solana-common": "^0.13.68-fix.66",
+    "@rarible/solana-common": "^0.13.68-fix.67",
     "@rarible/utils": "~0.9.10",
     "@solana/spl-token": "0.4.9",
     "@solana/web3.js": "1.95.3"
