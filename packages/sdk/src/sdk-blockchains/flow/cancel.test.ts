@@ -14,41 +14,41 @@ import { testFlowToken } from "./test/common"
 import { convertFlowUnionAddress } from "./common/converters"
 
 describe("Flow cancel", () => {
-	const { authUser1 } = createTestFlowAuth(fcl)
-	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
-	const apis = createApisSdk("testnet")
-	const cancel = new FlowCancel(sdk, apis, "testnet")
-	const mint = new FlowMint(sdk, apis, "testnet")
-	const sell = new FlowSell(sdk, apis)
+  const { authUser1 } = createTestFlowAuth(fcl)
+  const wallet = new FlowWallet(fcl)
+  const sdk = createFlowSdk(wallet.fcl, "testnet", {}, authUser1)
+  const apis = createApisSdk("testnet")
+  const cancel = new FlowCancel(sdk, apis, "testnet")
+  const mint = new FlowMint(sdk, apis, "testnet")
+  const sell = new FlowSell(sdk, apis)
 
-	test.skip("Should cancel flow NFT order", async () => {
-		const itemId = await createTestItem(mint)
-		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
-		const orderId = await sellItem(sell, itemId, "0.1")
-		await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
-		const tx = await cancel.cancel({ orderId })
-		expect(tx).toBeTruthy()
-	})
+  test.skip("Should cancel flow NFT order", async () => {
+    const itemId = await createTestItem(mint)
+    await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+    const orderId = await sellItem(sell, itemId, "0.1")
+    await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
+    const tx = await cancel.cancel({ orderId })
+    expect(tx).toBeTruthy()
+  })
 
-	test.skip("Should cancel flow NFT order with basic function", async () => {
-		const itemId = await createTestItem(mint)
-		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+  test.skip("Should cancel flow NFT order with basic function", async () => {
+    const itemId = await createTestItem(mint)
+    await retry(10, 4000, () => apis.item.getItemById({ itemId }))
 
-		const orderId = await sell.sellBasic({
-			amount: 1,
-			price: "0.1",
-			currency: {
-				"@type": "FLOW_FT",
-				contract: testFlowToken,
-			},
-			itemId,
-			originFees: [{ account: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_2.address), value: 200 }],
-		})
-		expect(orderId).toBeTruthy()
+    const orderId = await sell.sellBasic({
+      amount: 1,
+      price: "0.1",
+      currency: {
+        "@type": "FLOW_FT",
+        contract: testFlowToken,
+      },
+      itemId,
+      originFees: [{ account: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_2.address), value: 200 }],
+    })
+    expect(orderId).toBeTruthy()
 
-		await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
-		const tx = await cancel.cancel({ orderId })
-		expect(tx).toBeTruthy()
-	})
+    await retry(10, 4000, () => apis.order.getOrderById({ id: orderId }))
+    const tx = await cancel.cancel({ orderId })
+    expect(tx).toBeTruthy()
+  })
 })

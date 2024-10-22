@@ -1,10 +1,10 @@
-import React from "react"
 import { Code } from "../../../components/common/code"
 
 export function SignMessageComment() {
-	return <>
-		<Code>
-			{`
+  return (
+    <>
+      <Code>
+        {`
 // sign message		
 const signResult = await sdk.wallet?.signPersonalMessage(input)
 
@@ -13,6 +13,7 @@ const signResult = await sdk.wallet?.signPersonalMessage(input)
 //   publicKey: string
 // }
 		`}
-		</Code>
-	</>
+      </Code>
+    </>
+  )
 }

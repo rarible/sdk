@@ -10,17 +10,21 @@ import { Logger } from "../logger"
 /**
  * Make new bid order
  */
-export async function bid(sdk: IRaribleSdk,
-						   wallet: BlockchainWallet,
-						   prepareOrderRequest: PrepareOrderRequest | { collectionId: CollectionId },
-						   orderRequest: OrderRequest): Promise<Order> {
-	Logger.log("bid, prepare_order_update_request=", prepareOrderRequest)
-	const bidPrepare = await sdk.order.bid.prepare(prepareOrderRequest)
+export async function bid(
+  sdk: IRaribleSdk,
+  wallet: BlockchainWallet,
+  prepareOrderRequest: PrepareOrderRequest | { collectionId: CollectionId },
+  orderRequest: OrderRequest,
+): Promise<Order> {
+  Logger.log("bid, prepare_order_update_request=", prepareOrderRequest)
+  const bidPrepare = await sdk.order.bid.prepare(prepareOrderRequest)
 
-	Logger.log("bid, order_request=", orderRequest)
-	const orderId = await bidPrepare.submit(orderRequest)
-	Logger.log("order_id=", orderId)
+  Logger.log("bid, order_request=", orderRequest)
+  const orderId = await bidPrepare.submit(orderRequest)
+  Logger.log("order_id=", orderId)
 
-	const makeStock = toBn(orderRequest.price).multipliedBy(orderRequest.amount || 1).toString()
-	return await awaitOrderStock(sdk, orderId, makeStock)
+  const makeStock = toBn(orderRequest.price)
+    .multipliedBy(orderRequest.amount || 1)
+    .toString()
+  return await awaitOrderStock(sdk, orderId, makeStock)
 }

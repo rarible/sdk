@@ -1,7 +1,7 @@
-import { toAddress, toBigNumber, toBinary, ZERO_WORD } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
+import { createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
@@ -24,148 +24,160 @@ import { awaitOrder } from "./test/await-order"
 
 const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
 const { providers } = createEthereumProviders(provider, wallet)
-
 /**
  * @group provider/dev
  */
-describe.each(providers)("sell", (ethereum) => {
-	const env = "dev-ethereum" as const
-	const config = getEthereumConfig(env)
-	const getConfig = async () => config
-	const getApis = getApisTemplate.bind(null, ethereum, env)
+describe.each(providers)("sell", ethereum => {
+  const env = "dev-ethereum" as const
+  const config = getEthereumConfig(env)
+  const getConfig = async () => config
+  const getApis = getApisTemplate.bind(null, ethereum, env)
 
-	const signOrder = signOrderTemplate.bind(null, ethereum, getConfig)
-	const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
-	const signNft = signNftTemplate.bind(null, ethereum, getConfig)
-	const send = getSendWithInjects()
-	const mint = mintTemplate.bind(null, ethereum, send, signNft, getApis)
+  const signOrder = signOrderTemplate.bind(null, ethereum, getConfig)
+  const checkAssetType = checkAssetTypeTemplate.bind(null, getApis)
+  const signNft = signNftTemplate.bind(null, ethereum, getConfig)
+  const send = getSendWithInjects()
+  const mint = mintTemplate.bind(null, ethereum, send, signNft, getApis)
 
-	const getBaseOrderFee = async () => 0
-	const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
-	const upserter = new UpsertOrder(
-		orderService,
-		send,
-		getConfig,
-		(x) => Promise.resolve(x),
-		() => Promise.resolve(undefined),
-		signOrder,
-		getApis,
-		ethereum,
-		ZERO_WORD
-	)
-	const orderSell = new OrderSell(upserter, checkAssetType)
-	const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
-	const treasury = createE2eWallet()
-	const treasuryAddress = toAddress(treasury.getAddressString())
+  const getBaseOrderFee = async () => 0
+  const orderService = new OrderFiller(ethereum, send, getConfig, getApis, getBaseOrderFee, env)
+  const upserter = new UpsertOrder(
+    orderService,
+    send,
+    getConfig,
+    x => Promise.resolve(x),
+    () => Promise.resolve(undefined),
+    signOrder,
+    getApis,
+    ethereum,
+  )
+  const orderSell = new OrderSell(upserter, checkAssetType)
+  const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
+  const treasury = createE2eWallet()
+  const treasuryAddress = toEVMAddress(treasury.getAddressString())
 
-	test("create and update of v2 works", async () => {
-		const makerAddress = toAddress(wallet.getAddressString())
-		const minted = await mint({
-			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
-			uri: "ipfs://ipfs/hash",
-			creators: [{
-				account: makerAddress,
-				value: 10000,
-			}],
-			royalties: [],
-			lazy: false,
-		} as ERC721RequestV3)
-		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
-			await minted.transaction.wait()
-		}
+  test("create and update of v3 works", async () => {
+    await testV2OrHigher("DATA_V3")
+  })
 
-		const order = await orderSell.sell({
-			type: "DATA_V2",
-			maker: toAddress(wallet.getAddressString()),
-			makeAssetType: {
-				assetClass: "ERC721",
-				contract: minted.contract,
-				tokenId: minted.tokenId,
-			},
-			price: toBn(MIN_PAYMENT_VALUE.multipliedBy(2).toFixed()),
-			takeAssetType: {
-				assetClass: "ETH",
-			},
-			amount: 1,
-			payouts: [],
-			originFees: [{
-				account: treasuryAddress,
-				value: 100,
-			}],
-			start: Math.round(Date.now()/1000),
-			end: Math.round(Date.now()/1000 + 2000000),
-		})
+  test("create and update of v2 works", async () => {
+    await testV2OrHigher("DATA_V2")
+  })
 
-		expect(order.hash).toBeTruthy()
+  async function testV2OrHigher(dataType: "DATA_V2" | "DATA_V3") {
+    const makerAddress = toEVMAddress(wallet.getAddressString())
+    const minted = await mint({
+      collection: createErc721V3Collection(e2eErc721V3ContractAddress),
+      uri: "ipfs://ipfs/hash",
+      creators: [
+        {
+          account: makerAddress,
+          value: 10000,
+        },
+      ],
+      royalties: [],
+      lazy: false,
+    } as ERC721RequestV3)
+    if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
+      await minted.transaction.wait()
+    }
 
-		await awaitOrder(await getApis(), order.hash)
+    const order = await orderSell.sell({
+      type: dataType,
+      maker: toEVMAddress(wallet.getAddressString()),
+      makeAssetType: {
+        assetClass: "ERC721",
+        contract: minted.contract,
+        tokenId: minted.tokenId,
+      },
+      price: toBn(MIN_PAYMENT_VALUE.multipliedBy(2).toFixed()),
+      takeAssetType: {
+        assetClass: "ETH",
+      },
+      amount: 1,
+      payouts: [],
+      originFees: [
+        {
+          account: treasuryAddress,
+          value: 100,
+        },
+      ],
+      start: Math.round(Date.now() / 1000),
+      end: Math.round(Date.now() / 1000 + 2000000),
+    })
 
-		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
+    expect(order.hash).toBeTruthy()
 
-		await retry(5, 500, async () => {
-			const updatedOrder = await orderSell.update({
-				orderHash: order.hash,
-				price: nextPrice,
-			})
-			expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
-		})
-	})
+    await awaitOrder(await getApis(), order.hash)
 
-	test("create and update of v1 works", async () => {
-		const makerAddress = toAddress(wallet.getAddressString())
-		const minted = await mint({
-			collection: createErc721V3Collection(e2eErc721V3ContractAddress),
-			uri: "ipfs://ipfs/hash",
-			creators: [{
-				account: makerAddress,
-				value: 10000,
-			}],
-			royalties: [],
-			lazy: false,
-		} as ERC721RequestV3)
+    const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
-		if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
-			await minted.transaction.wait()
-		}
+    await retry(5, 500, async () => {
+      const updatedOrder = await orderSell.update({
+        orderHash: order.hash,
+        price: nextPrice,
+      })
+      expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
+    })
+  }
 
-		const form: OrderForm = {
-			...TEST_ORDER_TEMPLATE,
-			maker: makerAddress,
-			make: {
-				assetType: {
-					assetClass: "ERC721",
-					contract: minted.contract,
-					tokenId: minted.tokenId,
-				},
-				value: toBigNumber("1"),
-			},
-			take: {
-				assetType: {
-					assetClass: "ETH",
-				},
-				value: toBigNumber(MIN_PAYMENT_VALUE.plus(1).toFixed()),
-			},
-			salt: toBigNumber("10"),
-			type: "RARIBLE_V1",
-			data: {
-				dataType: "LEGACY",
-				fee: 250,
-			},
-			signature: toBinary("0x"),
-			end: getEndDateAfterMonth(),
-		}
-		const order = await upserter.upsert({ order: form })
+  test("create and update of v1 works", async () => {
+    const makerAddress = toEVMAddress(wallet.getAddressString())
+    const minted = await mint({
+      collection: createErc721V3Collection(e2eErc721V3ContractAddress),
+      uri: "ipfs://ipfs/hash",
+      creators: [
+        {
+          account: makerAddress,
+          value: 10000,
+        },
+      ],
+      royalties: [],
+      lazy: false,
+    } as ERC721RequestV3)
 
-		await delay(1000)
+    if (minted.type === MintResponseTypeEnum.ON_CHAIN) {
+      await minted.transaction.wait()
+    }
 
-		const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
+    const form: OrderForm = {
+      ...TEST_ORDER_TEMPLATE,
+      maker: makerAddress,
+      make: {
+        assetType: {
+          assetClass: "ERC721",
+          contract: minted.contract,
+          tokenId: minted.tokenId,
+        },
+        value: toBigNumber("1"),
+      },
+      take: {
+        assetType: {
+          assetClass: "ETH",
+        },
+        value: toBigNumber(MIN_PAYMENT_VALUE.plus(1).toFixed()),
+      },
+      salt: toBigNumber("10"),
+      type: "RARIBLE_V1",
+      data: {
+        dataType: "LEGACY",
+        fee: 250,
+      },
+      signature: toBinary("0x"),
+      end: getEndDateAfterMonth(),
+    }
+    const order = await upserter.upsert({ order: form })
 
-		await retry(5, 500, async () => {
-			const updatedOrder = await orderSell.update({
-				orderHash: order.hash,
-				price: nextPrice,
-			})
-			expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
-		})
-	})
+    await delay(1000)
+
+    const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
+
+    await retry(5, 500, async () => {
+      const updatedOrder = await orderSell.update({
+        orderHash: order.hash,
+        price: nextPrice,
+      })
+      expect(updatedOrder.take.value.toString()).toBe(nextPrice.toString())
+    })
+  })
 })

@@ -1,5 +1,5 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toEVMAddress, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
@@ -11,7 +11,8 @@ import { compareCaseInsensitive } from "../../../common/compare-case-insensitive
 import { getOrderHash } from "./get-order-hash"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
 import {
-	validateBasicFulfillBalancesAndApprovals, validateStandardFulfillBalancesAndApprovals,
+  validateBasicFulfillBalancesAndApprovals,
+  validateStandardFulfillBalancesAndApprovals,
 } from "./balance-and-approval-check"
 import { shouldUseBasicFulfill, validateAndSanitizeFromOrderStatus } from "./fulfill"
 import type { Order } from "./types"
@@ -19,290 +20,267 @@ import type { ConsiderationItem } from "./types"
 import type { InputCriteria, TipInputItem } from "./types"
 import { getMaximumSizeForOrder } from "./item"
 import type { TimeBasedItemParams } from "./item"
-import {
-	mapInputItemToOfferItem,
-	mapOrderAmountsFromFilledStatus,
-	mapOrderAmountsFromUnitsToFill,
-} from "./order"
+import { mapInputItemToOfferItem, mapOrderAmountsFromFilledStatus, mapOrderAmountsFromUnitsToFill } from "./order"
 import { getBalancesAndApprovals } from "./balance-and-approval-check"
 import { getfulfillBasicOrderData } from "./fulfill-basic"
 import { getApprovalActions } from "./approval"
 import { getFulfillStandardOrderData } from "./fulfill-standard"
 import {
-	CROSS_CHAIN_SEAPORT_ADDRESS,
-	CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
-	CROSS_CHAIN_SEAPORT_V1_5_ADDRESS, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS,
-	getConduitByKey, OPENSEA_CONDUIT_KEY,
+  CROSS_CHAIN_SEAPORT_ADDRESS,
+  CROSS_CHAIN_SEAPORT_V1_4_ADDRESS,
+  CROSS_CHAIN_SEAPORT_V1_5_ADDRESS,
+  CROSS_CHAIN_SEAPORT_V1_6_ADDRESS,
+  getConduitByKey,
+  OPENSEA_CONDUIT_KEY,
 } from "./constants"
 import { convertAPIOrderToSeaport } from "./convert-to-seaport-order"
 
 export function getSeaportContract(ethereum: Ethereum, protocol: string): EthereumContract {
-	if (
-		compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS)
-		|| compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS)
-		|| compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS)
-	) {
-	  return createSeaportV14Contract(ethereum, toAddress(protocol))
-	} else if (compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_ADDRESS)) {
-		return createSeaportContract(ethereum, toAddress(protocol))
-	} else {
-		throw new Error("Unrecognized Seaport protocol")
-	}
+  if (
+    compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS) ||
+    compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_5_ADDRESS) ||
+    compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_V1_6_ADDRESS)
+  ) {
+    return createSeaportV14Contract(ethereum, toEVMAddress(protocol))
+  } else if (compareCaseInsensitive(protocol, CROSS_CHAIN_SEAPORT_ADDRESS)) {
+    return createSeaportContract(ethereum, toEVMAddress(protocol))
+  } else {
+    throw new Error("Unrecognized Seaport protocol")
+  }
 }
 
 export async function fulfillOrder(
-	ethereum: Ethereum,
-	send: SendFunction,
-	simpleOrder: SimpleSeaportV1Order,
-	{ tips, unitsToFill, disableCheckingBalances }: {
-		tips?: TipInputItem[],
-		unitsToFill?: BigNumberValue,
-		disableCheckingBalances?: boolean
-	}
+  ethereum: Ethereum,
+  send: SendFunction,
+  simpleOrder: SimpleSeaportV1Order,
+  {
+    tips,
+    unitsToFill,
+    disableCheckingBalances,
+  }: {
+    tips?: TipInputItem[]
+    unitsToFill?: BigNumberValue
+    disableCheckingBalances?: boolean
+  },
 ) {
-	const seaportContract = createSeaportV14Contract(ethereum, toAddress(simpleOrder.data.protocol))
-	const order = convertAPIOrderToSeaport(simpleOrder)
+  const seaportContract = createSeaportV14Contract(ethereum, toEVMAddress(simpleOrder.data.protocol))
+  const order = convertAPIOrderToSeaport(simpleOrder)
 
-	const { parameters: orderParameters } = order
-	const { offerer, offer, consideration } = orderParameters
-	const fulfillerAddress = await ethereum.getFrom()
-	const conduitKey = OPENSEA_CONDUIT_KEY
-	const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
-	const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
+  const { parameters: orderParameters } = order
+  const { offerer, offer, consideration } = orderParameters
+  const fulfillerAddress = await ethereum.getFrom()
+  const conduitKey = OPENSEA_CONDUIT_KEY
+  const offererOperator = getConduitByKey(orderParameters.conduitKey, simpleOrder.data.protocol)
+  const fulfillerOperator = getConduitByKey(conduitKey, simpleOrder.data.protocol)
 
-	const extraData = "0x"
-	const recipientAddress = ZERO_ADDRESS
-	const offerCriteria: InputCriteria[] = []
-	const considerationCriteria: InputCriteria[] = []
+  const extraData = "0x"
+  const recipientAddress = EVM_ZERO_ADDRESS
+  const offerCriteria: InputCriteria[] = []
+  const considerationCriteria: InputCriteria[] = []
 
-	const [
-		offererBalancesAndApprovals,
-		fulfillerBalancesAndApprovals,
-		orderStatus,
-	] = await Promise.all([
-		getBalancesAndApprovals({
-			ethereum,
-			owner: offerer,
-			items: offer,
-			criterias: offerCriteria,
-			operator: offererOperator,
-		}),
-		getBalancesAndApprovals({
-			ethereum,
-			owner: fulfillerAddress,
-			items: [...offer, ...consideration],
-			criterias: [...offerCriteria, ...considerationCriteria],
-			operator: fulfillerOperator,
-		}),
-		seaportContract.functionCall("getOrderStatus", getOrderHash(orderParameters)).call(),
-	])
+  const [offererBalancesAndApprovals, fulfillerBalancesAndApprovals, orderStatus] = await Promise.all([
+    getBalancesAndApprovals({
+      ethereum,
+      owner: offerer,
+      items: offer,
+      criterias: offerCriteria,
+      operator: offererOperator,
+    }),
+    getBalancesAndApprovals({
+      ethereum,
+      owner: fulfillerAddress,
+      items: [...offer, ...consideration],
+      criterias: [...offerCriteria, ...considerationCriteria],
+      operator: fulfillerOperator,
+    }),
+    seaportContract.functionCall("getOrderStatus", getOrderHash(orderParameters)).call(),
+  ])
 
-	const orderStatusData = { ...orderStatus }
-	orderStatusData.totalFilled = toBn(orderStatus.totalFilled)
-	orderStatusData.totalSize = toBn(orderStatus.totalSize)
+  const orderStatusData = { ...orderStatus }
+  orderStatusData.totalFilled = toBn(orderStatus.totalFilled)
+  orderStatusData.totalSize = toBn(orderStatus.totalSize)
 
-	const { totalFilled, totalSize } = orderStatusData
-	const sanitizedOrder = validateAndSanitizeFromOrderStatus(
-		order,
-		orderStatusData
-	)
+  const { totalFilled, totalSize } = orderStatusData
+  const sanitizedOrder = validateAndSanitizeFromOrderStatus(order, orderStatusData)
 
-	const timeBasedItemParams = {
-		startTime: sanitizedOrder.parameters.startTime,
-		endTime: sanitizedOrder.parameters.endTime,
-		currentBlockTimestamp: Math.floor(Date.now() / 1000),
-		ascendingAmountTimestampBuffer: 300,
-	}
+  const timeBasedItemParams = {
+    startTime: sanitizedOrder.parameters.startTime,
+    endTime: sanitizedOrder.parameters.endTime,
+    currentBlockTimestamp: Math.floor(Date.now() / 1000),
+    ascendingAmountTimestampBuffer: 300,
+  }
 
-	const tipConsiderationItems = tips?.map((tip) => ({
-		...mapInputItemToOfferItem(tip),
-		recipient: tip.recipient,
-	})) || []
+  const tipConsiderationItems =
+    tips?.map(tip => ({
+      ...mapInputItemToOfferItem(tip),
+      recipient: tip.recipient,
+    })) || []
 
-	const isRecipientSelf = recipientAddress === ZERO_ADDRESS
+  const isRecipientSelf = recipientAddress === EVM_ZERO_ADDRESS
 
-	// We use basic fulfills as they are more optimal for simple and "hot" use cases
-	// We cannot use basic fulfill if user is trying to partially fill though.
-	if (
-		!unitsToFill &&
-    isRecipientSelf &&
-    shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled)
-	) {
-		// TODO: Use fulfiller proxy if there are approvals needed directly, but none needed for proxy
-		await approveBeforeBasicFulfillOrder({
-			ethereum,
-			send,
-			order,
-			tips: tipConsiderationItems,
-			offererBalancesAndApprovals,
-			fulfillerBalancesAndApprovals,
-			timeBasedItemParams,
-			offererOperator,
-			fulfillerOperator,
-			disableCheckingBalances,
-		})
-		return getfulfillBasicOrderData({
-			order: sanitizedOrder,
-			timeBasedItemParams,
-			conduitKey,
-			tips: tipConsiderationItems,
-			seaportContract,
-		})
-	}
+  // We use basic fulfills as they are more optimal for simple and "hot" use cases
+  // We cannot use basic fulfill if user is trying to partially fill though.
+  if (!unitsToFill && isRecipientSelf && shouldUseBasicFulfill(sanitizedOrder.parameters, totalFilled)) {
+    // TODO: Use fulfiller proxy if there are approvals needed directly, but none needed for proxy
+    await approveBeforeBasicFulfillOrder({
+      ethereum,
+      send,
+      order,
+      tips: tipConsiderationItems,
+      offererBalancesAndApprovals,
+      fulfillerBalancesAndApprovals,
+      timeBasedItemParams,
+      offererOperator,
+      fulfillerOperator,
+      disableCheckingBalances,
+    })
+    return getfulfillBasicOrderData({
+      order: sanitizedOrder,
+      timeBasedItemParams,
+      conduitKey,
+      tips: tipConsiderationItems,
+      seaportContract,
+    })
+  }
 
-	await approveBeforeStandardFulfillOrder({
-		ethereum,
-		send,
-		order: sanitizedOrder,
-		unitsToFill,
-		totalFilled,
-		totalSize: totalSize.eq(0)
-			? getMaximumSizeForOrder(sanitizedOrder)
-			: totalSize,
-		offerCriteria,
-		considerationCriteria,
-		tips: tipConsiderationItems,
-		offererBalancesAndApprovals,
-		fulfillerBalancesAndApprovals,
-		timeBasedItemParams,
-		offererOperator,
-		fulfillerOperator,
-		disableCheckingBalances,
-	})
-	return getFulfillStandardOrderData({
-		order: sanitizedOrder,
-		unitsToFill,
-		totalFilled,
-		totalSize: totalSize.eq(0)
-			? getMaximumSizeForOrder(sanitizedOrder)
-			: totalSize,
-		offerCriteria,
-		considerationCriteria,
-		tips: tipConsiderationItems,
-		extraData,
-		timeBasedItemParams,
-		conduitKey,
-		recipientAddress,
-		seaportContract,
-	})
+  await approveBeforeStandardFulfillOrder({
+    ethereum,
+    send,
+    order: sanitizedOrder,
+    unitsToFill,
+    totalFilled,
+    totalSize: totalSize.eq(0) ? getMaximumSizeForOrder(sanitizedOrder) : totalSize,
+    offerCriteria,
+    considerationCriteria,
+    tips: tipConsiderationItems,
+    offererBalancesAndApprovals,
+    fulfillerBalancesAndApprovals,
+    timeBasedItemParams,
+    offererOperator,
+    fulfillerOperator,
+    disableCheckingBalances,
+  })
+  return getFulfillStandardOrderData({
+    order: sanitizedOrder,
+    unitsToFill,
+    totalFilled,
+    totalSize: totalSize.eq(0) ? getMaximumSizeForOrder(sanitizedOrder) : totalSize,
+    offerCriteria,
+    considerationCriteria,
+    tips: tipConsiderationItems,
+    extraData,
+    timeBasedItemParams,
+    conduitKey,
+    recipientAddress,
+    seaportContract,
+  })
 }
 
-export async function approveBeforeBasicFulfillOrder(
-	{
-		ethereum,
-		send,
-		order,
-		tips = [],
-		offererBalancesAndApprovals,
-		fulfillerBalancesAndApprovals,
-		timeBasedItemParams,
-		offererOperator,
-		fulfillerOperator,
-		disableCheckingBalances,
-	}: {
-		ethereum: Ethereum,
-		send: SendFunction,
-		order: Order,
-		tips: ConsiderationItem[],
-		offererBalancesAndApprovals: BalancesAndApprovals;
-		fulfillerBalancesAndApprovals: BalancesAndApprovals;
-		timeBasedItemParams: TimeBasedItemParams;
-		offererOperator: string;
-		fulfillerOperator: string;
-		disableCheckingBalances?: boolean;
-	}) {
-	const { offer, consideration } = order.parameters
+export async function approveBeforeBasicFulfillOrder({
+  ethereum,
+  send,
+  order,
+  tips = [],
+  offererBalancesAndApprovals,
+  fulfillerBalancesAndApprovals,
+  timeBasedItemParams,
+  offererOperator,
+  fulfillerOperator,
+  disableCheckingBalances,
+}: {
+  ethereum: Ethereum
+  send: SendFunction
+  order: Order
+  tips: ConsiderationItem[]
+  offererBalancesAndApprovals: BalancesAndApprovals
+  fulfillerBalancesAndApprovals: BalancesAndApprovals
+  timeBasedItemParams: TimeBasedItemParams
+  offererOperator: string
+  fulfillerOperator: string
+  disableCheckingBalances?: boolean
+}) {
+  const { offer, consideration } = order.parameters
 
-	const considerationIncludingTips = [...consideration, ...tips]
+  const considerationIncludingTips = [...consideration, ...tips]
 
-	const insufficientApprovals = validateBasicFulfillBalancesAndApprovals({
-		offer,
-		consideration: considerationIncludingTips,
-		offererBalancesAndApprovals,
-		fulfillerBalancesAndApprovals,
-		timeBasedItemParams,
-		offererOperator,
-		fulfillerOperator,
-		disableCheckingBalances,
-	})
+  const insufficientApprovals = validateBasicFulfillBalancesAndApprovals({
+    offer,
+    consideration: considerationIncludingTips,
+    offererBalancesAndApprovals,
+    fulfillerBalancesAndApprovals,
+    timeBasedItemParams,
+    offererOperator,
+    fulfillerOperator,
+    disableCheckingBalances,
+  })
 
-	const approvalActions = await getApprovalActions(
-		ethereum,
-		send,
-		insufficientApprovals,
-	)
-	return await Promise.all(approvalActions)
+  const approvalActions = await getApprovalActions(ethereum, send, insufficientApprovals)
+  return await Promise.all(approvalActions)
 }
 
-export async function approveBeforeStandardFulfillOrder(
-	{
-		ethereum,
-		send,
-		order,
-		tips = [],
-		offererBalancesAndApprovals,
-		fulfillerBalancesAndApprovals,
-		timeBasedItemParams,
-		offererOperator,
-		fulfillerOperator,
-		unitsToFill = 0,
-		totalSize,
-		totalFilled,
-		offerCriteria,
-		considerationCriteria,
-		disableCheckingBalances,
-	}: {
-		ethereum: Ethereum,
-		send: SendFunction,
-		order: Order,
-		tips: ConsiderationItem[],
-		offererBalancesAndApprovals: BalancesAndApprovals;
-		fulfillerBalancesAndApprovals: BalancesAndApprovals;
-		timeBasedItemParams: TimeBasedItemParams;
-		offererOperator: string;
-		fulfillerOperator: string;
-		unitsToFill?: BigNumberValue;
-		totalFilled: BigNumber;
-		totalSize: BigNumber;
-		offerCriteria: InputCriteria[];
-		considerationCriteria: InputCriteria[];
-		disableCheckingBalances?: boolean;
-	}) {
-	const orderWithAdjustedFills = unitsToFill
-		? mapOrderAmountsFromUnitsToFill(order, {
-			unitsToFill,
-			totalSize,
-		})
-		: // Else, we adjust the order by the remaining order left to be fulfilled
-		mapOrderAmountsFromFilledStatus(order, {
-			totalFilled,
-			totalSize,
-		})
+export async function approveBeforeStandardFulfillOrder({
+  ethereum,
+  send,
+  order,
+  tips = [],
+  offererBalancesAndApprovals,
+  fulfillerBalancesAndApprovals,
+  timeBasedItemParams,
+  offererOperator,
+  fulfillerOperator,
+  unitsToFill = 0,
+  totalSize,
+  totalFilled,
+  offerCriteria,
+  considerationCriteria,
+  disableCheckingBalances,
+}: {
+  ethereum: Ethereum
+  send: SendFunction
+  order: Order
+  tips: ConsiderationItem[]
+  offererBalancesAndApprovals: BalancesAndApprovals
+  fulfillerBalancesAndApprovals: BalancesAndApprovals
+  timeBasedItemParams: TimeBasedItemParams
+  offererOperator: string
+  fulfillerOperator: string
+  unitsToFill?: BigNumberValue
+  totalFilled: BigNumber
+  totalSize: BigNumber
+  offerCriteria: InputCriteria[]
+  considerationCriteria: InputCriteria[]
+  disableCheckingBalances?: boolean
+}) {
+  const orderWithAdjustedFills = unitsToFill
+    ? mapOrderAmountsFromUnitsToFill(order, {
+        unitsToFill,
+        totalSize,
+      })
+    : // Else, we adjust the order by the remaining order left to be fulfilled
+      mapOrderAmountsFromFilledStatus(order, {
+        totalFilled,
+        totalSize,
+      })
 
-	const {
-		parameters: { offer, consideration },
-	} = orderWithAdjustedFills
+  const {
+    parameters: { offer, consideration },
+  } = orderWithAdjustedFills
 
+  const considerationIncludingTips = [...consideration, ...tips]
 
-	const considerationIncludingTips = [...consideration, ...tips]
+  const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
+    offer,
+    consideration: considerationIncludingTips,
+    offerCriteria,
+    considerationCriteria,
+    offererBalancesAndApprovals,
+    fulfillerBalancesAndApprovals,
+    timeBasedItemParams,
+    offererOperator,
+    fulfillerOperator,
+    disableCheckingBalances,
+  })
 
-	const insufficientApprovals = validateStandardFulfillBalancesAndApprovals({
-		offer,
-		consideration: considerationIncludingTips,
-		offerCriteria,
-		considerationCriteria,
-		offererBalancesAndApprovals,
-		fulfillerBalancesAndApprovals,
-		timeBasedItemParams,
-		offererOperator,
-		fulfillerOperator,
-		disableCheckingBalances,
-	})
-
-	const approvalActions = await getApprovalActions(
-		ethereum,
-		send,
-		insufficientApprovals,
-	)
-	return await Promise.all(approvalActions)
+  const approvalActions = await getApprovalActions(ethereum, send, insufficientApprovals)
+  return await Promise.all(approvalActions)
 }

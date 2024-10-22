@@ -1,11 +1,11 @@
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import type {
-	BasePrepareOrderResponse,
-	OrderInternalRequest,
-	OrderRequest,
-	PrepareOrderRequest,
-	PrepareOrderUpdateRequest,
-	PrepareOrderUpdateResponse,
+  BasePrepareOrderResponse,
+  OrderInternalRequest,
+  OrderRequest,
+  PrepareOrderRequest,
+  PrepareOrderUpdateRequest,
+  PrepareOrderUpdateResponse,
 } from "../common"
 
 /**
@@ -19,7 +19,7 @@ import type {
  *			price: "0.000000000000000002",
  *			currency: {
  *				"@type": "ERC20",
- *				contract: toContractAddress(`ETHEREUM:0x`),
+ *				contract: toUnionContractAddress(`ETHEREUM:0x`),
  *			},
  *			expirationDate: new Date(Date.now() + 200000),
  *		})
@@ -40,15 +40,22 @@ export type ISellInternalPrepare = (request: PrepareSellInternalRequest) => Prom
  */
 export type ISellUpdatePrepare = (request: PrepareOrderUpdateRequest) => Promise<PrepareOrderUpdateResponse>
 
-export type PrepareSellInternalResponse = BasePrepareOrderResponse<OrderInternalRequest>
+export type PrepareSellInternalResponse = BasePrepareOrderResponse<OrderInternalRequest> & PrepareSellSpecificResponse
 /**
  * Prepare sell response
  */
-export type PrepareSellResponse = BasePrepareOrderResponse<OrderRequest>
+export type PrepareSellResponse = BasePrepareOrderResponse<OrderRequest> & PrepareSellSpecificResponse
+
+export type PrepareSellSpecificResponse = {
+  /**
+   * Whether nft should be transferred during operation
+   */
+  shouldTransferNft: boolean
+}
 
 export type PrepareSellInternalRequest = {
-	/**
+  /**
    * Blockchain of request
    */
-	blockchain: SupportedBlockchain
+  blockchain: SupportedBlockchain
 }

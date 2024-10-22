@@ -5,9 +5,9 @@ import type { IRaribleSdk } from "../../../domain"
 import { convertToEthereumAddress } from "../common"
 
 export async function awaitOwnership(sdk: IRaribleSdk, item: ItemId, owner: UnionAddress) {
-	return retry(10, 2000, async () => {
-		return sdk.apis.ownership.getOwnershipById({
-			ownershipId: `${item}:${convertToEthereumAddress(owner)}`,
-		})
-	})
+  return retry(10, 2000, async () => {
+    return sdk.apis.ownership.getOwnershipById({
+      ownershipId: `${item}:${convertToEthereumAddress(owner)}`,
+    })
+  })
 }

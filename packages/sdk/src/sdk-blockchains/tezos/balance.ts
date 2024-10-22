@@ -10,30 +10,30 @@ import type { MaybeProvider } from "./common"
 import { getTezosAddress, getTezosAssetTypeV2 } from "./common"
 
 export class TezosBalance {
-	constructor(
-		private provider: MaybeProvider<TezosProvider>,
-		private network: TezosNetwork,
-	) {
-		this.getBalance = this.getBalance.bind(this)
-	}
+  constructor(
+    private provider: MaybeProvider<TezosProvider>,
+    private network: TezosNetwork,
+  ) {
+    this.getBalance = this.getBalance.bind(this)
+  }
 
-	async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
-		const assetType = getCurrencyAssetType(currency)
-		const tezosAssetType = await getTezosAssetTypeV2(this.provider.config, assetType)
-		if (assetType["@type"] !== "XTZ" && assetType["@type"] !== "TEZOS_FT") {
-			throw new Error("Unsupported asset type")
-		}
-		if (!this.provider.config.node_url) {
-			throw new Error("Node url for tezos has not been specified")
-		}
-		return new BigNumber(
-			await get_balance(
-				this.provider.config,
-				getTezosAddress(address),
-				tezosAssetType.type,
-				tezosAssetType.asset_contract,
-				tezosAssetType.asset_token_id,
-			)
-		)
-	}
+  async getBalance(address: UnionAddress, currency: RequestCurrency): Promise<BigNumberValue> {
+    const assetType = getCurrencyAssetType(currency)
+    const tezosAssetType = await getTezosAssetTypeV2(this.provider.config, assetType)
+    if (assetType["@type"] !== "XTZ" && assetType["@type"] !== "TEZOS_FT") {
+      throw new Error("Unsupported asset type")
+    }
+    if (!this.provider.config.node_url) {
+      throw new Error("Node url for tezos has not been specified")
+    }
+    return new BigNumber(
+      await get_balance(
+        this.provider.config,
+        getTezosAddress(address),
+        tezosAssetType.type,
+        tezosAssetType.asset_contract,
+        tezosAssetType.asset_token_id,
+      ),
+    )
+  }
 }

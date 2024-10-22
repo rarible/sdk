@@ -1,13 +1,6 @@
-import type {
-	Address,
-	BigNumber,
-	Binary,
-	NftItem,
-	NftTokenId,
-	Part,
-} from "@rarible/ethereum-api-client"
+import type { Binary, EVMAddress, NftItem, NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures } from "@rarible/ethereum-api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe, BigNumber } from "@rarible/types"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import { Warning } from "@rarible/logger/build"
 import type { SendFunction } from "../common/send-transaction"
@@ -26,38 +19,38 @@ type ERC1155CollectionV1 = Collection<ERC1155VersionEnum.ERC1155V1>
 type ERC1155CollectionV2 = Collection<ERC1155VersionEnum.ERC1155V2>
 
 type CommonMintRequest = {
-	uri: string
-	nftTokenId?: NftTokenId
+  uri: string
+  nftTokenId?: NftTokenId
 }
 
 export type ERC721RequestV1 = {
-	collection: ERC721CollectionV1
+  collection: ERC721CollectionV1
 } & CommonMintRequest
 
 export type ERC721RequestV2 = {
-	collection: ERC721CollectionV2
-	royalties?: Array<Part>
+  collection: ERC721CollectionV2
+  royalties?: Array<Part>
 } & CommonMintRequest
 
 export type ERC721RequestV3 = {
-	collection: ERC721CollectionV3
-	lazy: boolean
-	creators?: Array<Part>
-	royalties?: Array<Part>
+  collection: ERC721CollectionV3
+  lazy: boolean
+  creators?: Array<Part>
+  royalties?: Array<Part>
 } & CommonMintRequest
 
 export type ERC1155RequestV1 = {
-	collection: ERC1155CollectionV1
-	supply: number
-	royalties?: Array<Part>
+  collection: ERC1155CollectionV1
+  supply: number
+  royalties?: Array<Part>
 } & CommonMintRequest
 
 export type ERC1155RequestV2 = {
-	collection: ERC1155CollectionV2
-	supply: number
-	lazy: boolean
-	creators?: Array<Part>
-	royalties?: Array<Part>
+  collection: ERC1155CollectionV2
+  supply: number
+  lazy: boolean
+  creators?: Array<Part>
+  royalties?: Array<Part>
 } & CommonMintRequest
 
 export type MintRequestERC721 = ERC721RequestV1 | ERC721RequestV2 | ERC721RequestV3
@@ -65,77 +58,77 @@ export type MintRequestERC1155 = ERC1155RequestV1 | ERC1155RequestV2
 export type MintRequest = MintRequestERC721 | MintRequestERC1155
 
 export type MintResponseCommon = {
-	contract: Address
-	tokenId: BigNumber
-	owner: Address
-	itemId: string
+  contract: EVMAddress
+  tokenId: BigNumber
+  owner: EVMAddress
+  itemId: string
 }
 
 export enum MintResponseTypeEnum {
-	OFF_CHAIN = "off-chain",
-	ON_CHAIN = "on-chain"
+  OFF_CHAIN = "off-chain",
+  ON_CHAIN = "on-chain",
 }
 
 export type MintOffChainResponse = MintResponseCommon & {
-	type: MintResponseTypeEnum.OFF_CHAIN
-	item: NftItem
+  type: MintResponseTypeEnum.OFF_CHAIN
+  item: NftItem
 }
 
 export type MintOnChainResponse = MintResponseCommon & {
-	type: MintResponseTypeEnum.ON_CHAIN
-	transaction: EthereumTransaction
+  type: MintResponseTypeEnum.ON_CHAIN
+  transaction: EthereumTransaction
 }
 
 export async function mint(
-	ethereum: Maybe<Ethereum>,
-	send: SendFunction,
-	signNft: (nft: SimpleLazyNft<"signatures">) => Promise<Binary>,
-	getApis: () => Promise<RaribleEthereumApis>,
-	data: MintRequest
+  ethereum: Maybe<Ethereum>,
+  send: SendFunction,
+  signNft: (nft: SimpleLazyNft<"signatures">) => Promise<Binary>,
+  getApis: () => Promise<RaribleEthereumApis>,
+  data: MintRequest,
 ): Promise<MintOffChainResponse | MintOnChainResponse> {
-	if (!ethereum) {
-		throw new Error("Wallet undefined")
-	}
-	if (data.uri === undefined) {
-		throw new Warning("URI should be not undefined")
-	}
-	const apis = await getApis()
-	if (isERC1155Request(data)) {
-		if (isERC1155v2Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
-			return mintErc1155v2(ethereum, send, apis.nftCollection, data)
-		}
-		return mintErc1155v1(ethereum, send, apis.nftCollection, data)
-	}
-	if (isERC721Request(data)) {
-		if (isERC721v3Request(data)) {
-			if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
-			return mintErc721v3(ethereum, send, apis.nftCollection, data)
-		}
-		if (isERC721v2Request(data)) {
-			return mintErc721v2(ethereum, send, apis.nftCollection, data)
-		}
-		return mintErc721v1(ethereum, send, apis.nftCollection, data)
-	}
-	throw new Error("Unsupported collection")
+  if (!ethereum) {
+    throw new Error("Wallet undefined")
+  }
+  if (data.uri === undefined) {
+    throw new Warning("URI should be not undefined")
+  }
+  const apis = await getApis()
+  if (isERC1155Request(data)) {
+    if (isERC1155v2Request(data)) {
+      if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
+      return mintErc1155v2(ethereum, send, apis.nftCollection, data)
+    }
+    return mintErc1155v1(ethereum, send, apis.nftCollection, data)
+  }
+  if (isERC721Request(data)) {
+    if (isERC721v3Request(data)) {
+      if (data.lazy) return mintOffChain(ethereum, signNft, apis.nftCollection, apis.nftLazyMint, data)
+      return mintErc721v3(ethereum, send, apis.nftCollection, data)
+    }
+    if (isERC721v2Request(data)) {
+      return mintErc721v2(ethereum, send, apis.nftCollection, data)
+    }
+    return mintErc721v1(ethereum, send, apis.nftCollection, data)
+  }
+  throw new Error("Unsupported collection")
 }
 
 const isERC721v2Request = (data: MintRequest): data is ERC721RequestV2 => isErc721v2Collection(data.collection)
 const isERC721v3Request = (data: MintRequest): data is ERC721RequestV3 => isErc721v3Collection(data.collection)
 const isERC1155v2Request = (data: MintRequest): data is ERC1155RequestV2 => isErc1155v2Collection(data.collection)
 const isERC1155Request = (data: MintRequest): data is ERC1155RequestV1 | ERC1155RequestV2 =>
-	data.collection.type === "ERC1155"
+  data.collection.type === "ERC1155"
 const isERC721Request = (data: MintRequest): data is ERC721RequestV1 | ERC721RequestV2 | ERC721RequestV3 =>
-	data.collection.type === "ERC721"
+  data.collection.type === "ERC721"
 
 export const isErc721v3Collection = (x: CommonNftCollection): x is ERC721CollectionV3 =>
-	x.features.indexOf(NftCollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC721"
+  x.features.indexOf(NftCollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC721"
 export const isErc721v2Collection = (x: CommonNftCollection): x is ERC721CollectionV2 =>
-	x.features.indexOf(NftCollectionFeatures.SECONDARY_SALE_FEES) !== -1 && x.type === "ERC721"
+  x.features.indexOf(NftCollectionFeatures.SECONDARY_SALE_FEES) !== -1 && x.type === "ERC721"
 export const isErc721v1Collection = (x: CommonNftCollection): x is ERC721CollectionV1 =>
-	!isErc721v3Collection(x) && !isErc721v2Collection(x) && x.type === "ERC721"
+  !isErc721v3Collection(x) && !isErc721v2Collection(x) && x.type === "ERC721"
 
 export const isErc1155v2Collection = (x: CommonNftCollection): x is ERC1155CollectionV2 =>
-	x.features.indexOf(NftCollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC1155"
+  x.features.indexOf(NftCollectionFeatures.MINT_AND_TRANSFER) !== -1 && x.type === "ERC1155"
 export const isErc1155v1Collection = (x: CommonNftCollection): x is ERC1155CollectionV1 =>
-	!isErc1155v2Collection(x) && x.type === "ERC1155"
+  !isErc1155v2Collection(x) && x.type === "ERC1155"

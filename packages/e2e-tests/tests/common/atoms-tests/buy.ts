@@ -11,23 +11,23 @@ import { Logger } from "../logger"
  * Buying an nft
  */
 export async function buy(
-	sdk: IRaribleSdk,
-	wallet: BlockchainWallet,
-	itemId: ItemId,
-	prepareFillOrderRequest: PrepareFillRequest,
-	fillRequest: FillRequest,
+  sdk: IRaribleSdk,
+  wallet: BlockchainWallet,
+  itemId: ItemId,
+  prepareFillOrderRequest: PrepareFillRequest,
+  fillRequest: FillRequest,
 ): Promise<IBlockchainTransaction> {
-	Logger.log("buy, prepare_fill_order_request=", prepareFillOrderRequest)
-	const buyPrepare = await sdk.order.buy.prepare(prepareFillOrderRequest)
+  Logger.log("buy, prepare_fill_order_request=", prepareFillOrderRequest)
+  const buyPrepare = await sdk.order.buy.prepare(prepareFillOrderRequest)
 
-	Logger.log("buy, fill_request=", fillRequest)
+  Logger.log("buy, fill_request=", fillRequest)
 
-	const tx = await buyPrepare.submit(fillRequest)
-	await tx.wait()
+  const tx = await buyPrepare.submit(fillRequest)
+  await tx.wait()
 
-	Logger.log("submit_buy_response_tx", tx)
+  Logger.log("submit_buy_response_tx", tx)
 
-	const address = await getWalletAddressFull(wallet)
-	await awaitForOwnership(sdk, itemId, address.address)
-	return tx
+  const address = await getWalletAddressFull(wallet)
+  await awaitForOwnership(sdk, itemId, address.address)
+  return tx
 }

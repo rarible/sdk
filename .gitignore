@@ -22,4 +22,7 @@ storybook-static
 yarn-error.log
 lerna-debug.log
 .env
+.env.*
 .yarnrc
+.parcel-cache
+*.pem

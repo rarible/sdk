@@ -1,17 +1,18 @@
 import type { Binary, ContractAddress, UnionAddress } from "@rarible/types"
+import type { UnionContractAddress } from "@rarible/api-client"
 
 export type GenerateTokenIdRequest = {
-	collection: ContractAddress;
-	minter: UnionAddress;
+  collection: ContractAddress | UnionContractAddress
+  minter: UnionAddress
 }
 
 export type TokenId = {
-	tokenId: string;
-	signature: {
-		v: number;
-		r: Binary;
-		s: Binary;
-	};
+  tokenId: string
+  signature: {
+    v: number
+    r: Binary
+    s: Binary
+  }
 }
 
 /**
@@ -21,7 +22,7 @@ export type TokenId = {
  * @returns {Promise<TokenId | undefined>}
  * @example
  * const {tokenId, signature} = sdk.nft.generateTokenId({
- * 		collection: toContractAddress("ETHEREUM:0x..."),
+ * 		collection: toUnionContractAddress("ETHEREUM:0x..."),
  * 		minter: toUnionAddress("ETHEREUM:0x...")},
  * 	)
  *

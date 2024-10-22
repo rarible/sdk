@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useRef, useState } from "react"
 import { WalletType } from "@rarible/sdk-wallet"
 import { Box, Grid, Typography } from "@mui/material"
 import { useForm } from "react-hook-form"
@@ -9,65 +9,76 @@ import { TransactionInfo } from "../../../components/common/transaction-info"
 import { useSdkContext } from "../../../components/connector/sdk"
 
 export function SetupMattelCollections() {
-	const { result, isFetching, setError, setComplete } = useRequestResult()
-	const connection = useSdkContext()
-	const [collectionsState, setCollections] = useState("")
-	const blockchain = connection.sdk.wallet?.walletType
-	const isFlowActive = blockchain === WalletType.FLOW
-	const form = useForm()
+  const { result, isFetching, setError, setComplete } = useRequestResult()
+  const connection = useSdkContext()
+  const [collections, setCollections] = useState("")
+  const isCollectionFetching = useRef(false)
+  const blockchain = connection.sdk.wallet?.walletType
+  const isFlowActive = blockchain === WalletType.FLOW
+  const form = useForm()
 
-	function getCollectionsStatus() {
-		if (connection?.sdk?.flow) {
-			connection.sdk.flow.checkInitMattelCollections()
-				.then(status => setCollections(JSON.stringify(status, null, " ")))
-				.catch(console.error)
-		}
-	}
-	useEffect(() => {
-		getCollectionsStatus()
-	}, [])
+  const getCollectionsStatus = useCallback(() => {
+    if (connection.sdk.flow) {
+      isCollectionFetching.current = true
+      connection.sdk.flow
+        .checkInitMattelCollections()
+        .then(x => setCollections(JSON.stringify(x, null, " ")))
+        .catch(console.error)
+        .finally(() => (isCollectionFetching.current = false))
+    }
+  }, [connection])
 
-	return (
-		<div style={{ marginTop: 20 }}>
-			<form onSubmit={form.handleSubmit(async () => {
-				try {
-					const tx = await connection?.sdk?.flow?.setupMattelCollections()
-					setComplete(tx)
-					getCollectionsStatus()
-				} catch (e) {
-					setError(e)
-				}
-			})}>
-				<Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
-          			Setup Mattel collections
-				</Typography>
-				<Grid container spacing={2}>
+  useEffect(() => {
+    if (!isCollectionFetching.current) {
+      getCollectionsStatus()
+    }
+  }, [getCollectionsStatus])
 
-					<Grid item xs={4}>
-						{
-							collectionsState ? <div>Collection state: <pre>{collectionsState}</pre></div> : null
-						}
-					</Grid>
-				</Grid>
-				<Grid item xs={2}>
-					<FormSubmit
-						form={form}
-						label="Setup"
-						state={isFetching ? "normal": "success"}
-						disabled={isFetching || !isFlowActive}
-					/>
-				</Grid>
-			</form>
+  return (
+    <div style={{ marginTop: 20 }}>
+      <form
+        onSubmit={form.handleSubmit(async () => {
+          try {
+            const transaction = await connection.sdk.flow?.setupMattelCollections()
+            if (transaction) {
+              setComplete(transaction)
+              getCollectionsStatus()
+            }
+          } catch (e) {
+            setError(e)
+          }
+        })}
+      >
+        <Typography sx={{ my: 2 }} variant="h6" component="h2" gutterBottom>
+          Setup Mattel collections
+        </Typography>
+        <Grid container spacing={2}>
+          <Grid item xs={4}>
+            {collections ? (
+              <div>
+                Collection state: <pre>{collections}</pre>
+              </div>
+            ) : null}
+          </Grid>
+        </Grid>
+        <Grid item xs={2}>
+          <FormSubmit
+            form={form}
+            label="Setup"
+            state={isFetching ? "normal" : "success"}
+            disabled={isFetching || !isFlowActive}
+          />
+        </Grid>
+      </form>
 
-			<RequestResult
-				result={result}
-				completeRender={(data) =>
-					<Box sx={{ my: 2 }}>
-						<TransactionInfo transaction={data}/>
-					</Box>
-				}
-			/>
-
-		</div>
-	)
+      <RequestResult
+        result={result}
+        completeRender={data => (
+          <Box sx={{ my: 2 }}>
+            <TransactionInfo transaction={data} />
+          </Box>
+        )}
+      />
+    </div>
+  )
 }

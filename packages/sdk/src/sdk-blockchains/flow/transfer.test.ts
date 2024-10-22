@@ -11,29 +11,29 @@ import { FlowTransfer } from "./transfer"
 import { convertFlowUnionAddress } from "./common/converters"
 
 describe.skip("Flow transfer", () => {
-	const { authUser1 } = createTestFlowAuth(fcl)
-	const wallet = new FlowWallet(fcl)
-	const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
-	const apis = createApisSdk("testnet")
-	const mint = new FlowMint(sdk, apis, "testnet")
-	const transfer = new FlowTransfer(sdk, "testnet")
+  const { authUser1 } = createTestFlowAuth(fcl)
+  const wallet = new FlowWallet(fcl)
+  const sdk = createFlowSdk(wallet.fcl, "dev", {}, authUser1)
+  const apis = createApisSdk("testnet")
+  const mint = new FlowMint(sdk, apis, "testnet")
+  const transfer = new FlowTransfer(sdk, "testnet")
 
-	test.skip("Should transfer flow NFT item", async () => {
-		const itemId = await createTestItem(mint)
-		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
-		const prepare = await transfer.transfer({ itemId })
-		const to = convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_1.address)
-		const tx = await prepare.submit({ to })
-		expect(tx.transaction.status).toEqual(4)
-	})
+  test.skip("Should transfer flow NFT item", async () => {
+    const itemId = await createTestItem(mint)
+    await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+    const prepare = await transfer.transfer({ itemId })
+    const to = convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_1.address)
+    const tx = await prepare.submit({ to })
+    expect(tx.transaction.status).toEqual(4)
+  })
 
-	test.skip("Should transfer flow NFT item with basic function", async () => {
-		const itemId = await createTestItem(mint)
-		await retry(10, 4000, () => apis.item.getItemById({ itemId }))
-		const tx = await transfer.transferBasic({
-			itemId,
-			to: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_1.address),
-		})
-		expect(tx.transaction.status).toEqual(4)
-	})
+  test.skip("Should transfer flow NFT item with basic function", async () => {
+    const itemId = await createTestItem(mint)
+    await retry(10, 4000, () => apis.item.getItemById({ itemId }))
+    const tx = await transfer.transferBasic({
+      itemId,
+      to: convertFlowUnionAddress(FLOW_TESTNET_ACCOUNT_1.address),
+    })
+    expect(tx.transaction.status).toEqual(4)
+  })
 })

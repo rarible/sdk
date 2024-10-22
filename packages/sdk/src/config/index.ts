@@ -4,13 +4,13 @@ import { developmentConfig } from "./development"
 import { testnetConfig } from "./testnet"
 
 export const configsDictionary: Record<RaribleSdkEnvironment, RaribleSdkConfig> = {
-	development: developmentConfig,
-	testnet: testnetConfig,
-	prod: prodConfig,
+  development: developmentConfig,
+  testnet: testnetConfig,
+  prod: prodConfig,
 }
 
 export function getSdkConfig(env: RaribleSdkEnvironment): RaribleSdkConfig {
-	return configsDictionary[env]
+  return configsDictionary[env]
 }
 
 export const NFT_STORAGE_URL = "https://api.nft.storage/upload"

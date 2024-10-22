@@ -4,9 +4,9 @@ import type { IRaribleSdk } from "../../../domain"
 import { retry } from "../../../common/retry"
 
 export async function awaitForOrder(sdk: IRaribleSdk, orderId: OrderId): Promise<Order> {
-	return retry(30, 3000, async () => {
-		return sdk.apis.order.getOrderById({
-			id: orderId,
-		})
-	})
+  return retry(30, 3000, async () => {
+    return sdk.apis.order.getOrderById({
+      id: orderId,
+    })
+  })
 }

@@ -12,50 +12,50 @@ import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper
 import { deployCollectionDeployRequest } from "../../common/defaults"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallet: BlockchainWallet,
-	deployRequest: CreateCollectionRequestSimplified,
-	mintRequest: (address: UnionAddress) => MintRequest,
-	activities: Array<ActivityType>
+  blockchain: Blockchain
+  description: string
+  wallet: BlockchainWallet
+  deployRequest: CreateCollectionRequestSimplified
+  mintRequest: (address: UnionAddress) => MintRequest
+  activities: Array<ActivityType>
 }[] {
-	return [
-		{
-			blockchain: Blockchain.SOLANA,
-			description: "NFT",
-			wallet: getSolanaWallet(),
-			deployRequest: deployCollectionDeployRequest,
-			mintRequest: (walletAddress: UnionAddress) => {
-				return {
-					uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
-					creators: [{
-						account: walletAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			activities: [ActivityType.MINT],
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.SOLANA,
+      description: "NFT",
+      wallet: getSolanaWallet(),
+      deployRequest: deployCollectionDeployRequest,
+      mintRequest: (walletAddress: UnionAddress) => {
+        return {
+          uri: "https://arweave.net/Vt0uj2ql0ck-U5dLWDWJnwQaZPrvqkfxils8agrTiOc",
+          creators: [
+            {
+              account: walletAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      activities: [ActivityType.MINT],
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain deploy => mint", (suite) => {
-	const wallet = suite.wallet
-	const sdk = createSdk(suite.blockchain, wallet)
+describe.each(suites())("$blockchain deploy => mint", suite => {
+  const wallet = suite.wallet
+  const sdk = createSdk(suite.blockchain, wallet)
 
-	test(suite.description, async () => {
-		const walletAddress = await getWalletAddressFull(wallet)
-		const { address } = await createCollection(sdk, wallet, suite.deployRequest)
+  test(suite.description, async () => {
+    const walletAddress = await getWalletAddressFull(wallet)
+    const { address } = await createCollection(sdk, wallet, suite.deployRequest)
 
-		const collection = await getCollection(sdk, address)
+    const collection = await getCollection(sdk, address)
 
-		const { nft } = await mint(sdk, wallet, { collection },
-			suite.mintRequest(walletAddress.unionAddress))
+    const { nft } = await mint(sdk, wallet, { collection }, suite.mintRequest(walletAddress.unionAddress))
 
-		await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
-
-	})
+    await getActivitiesByItem(sdk, nft.id, [ActivityType.MINT], suite.activities)
+  })
 })

@@ -4,33 +4,39 @@ import type { TezosNetwork } from "@rarible/tezos-sdk"
 import type { IBlockchainTransaction } from "../domain"
 
 export class BlockchainTezosTransaction implements IBlockchainTransaction {
-	blockchain: Blockchain = Blockchain.TEZOS
+  blockchain: Blockchain = Blockchain.TEZOS
 
-	constructor(public transaction: OperationResult, public network: TezosNetwork) {}
+  constructor(
+    public transaction: OperationResult,
+    public network: TezosNetwork,
+  ) {}
 
-	hash() {
-		return this.transaction.hash
-	}
+  hash() {
+    return this.transaction.hash
+  }
 
-	async wait() {
-		await this.transaction.confirmation()
+  async wait() {
+    await this.transaction.confirmation()
 
-		return {
-			blockchain: this.blockchain,
-			hash: this.transaction.hash,
-		}
-	}
+    return {
+      blockchain: this.blockchain,
+      hash: this.transaction.hash,
+    }
+  }
 
-	getTxLink() {
-		switch (this.network) {
-			case "testnet":
-			case "dev": return `https://ghostnet.tzkt.io/${this.hash()}`
-			case "mainnet": return `https://tzkt.io/${this.hash()}`
-			default: throw new Error("Unsupported transaction network")
-		}
-	}
+  getTxLink() {
+    switch (this.network) {
+      case "testnet":
+      case "dev":
+        return `https://ghostnet.tzkt.io/${this.hash()}`
+      case "mainnet":
+        return `https://tzkt.io/${this.hash()}`
+      default:
+        throw new Error("Unsupported transaction network")
+    }
+  }
 
-	get isEmpty(): boolean {
-		return false
-	}
+  get isEmpty(): boolean {
+    return false
+  }
 }

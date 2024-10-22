@@ -1,7 +1,8 @@
 import type { ItemId } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { BigNumber } from "@rarible/types/build/big-number"
+import type { BigNumber } from "@rarible/types"
+import type { UnionContractAddress } from "@rarible/api-client"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 /**
@@ -12,7 +13,7 @@ import type { AbstractPrepareResponse } from "../../../common/domain"
  * const itemId = toItemId("ETHEREUM:0x395d7e3a4c0cc8fb8d19dcd0b010da43a7a98c9b:44188")
  */
 export type PrepareTransferRequest = {
-	itemId: ItemId
+  itemId: ItemId
 }
 
 /**
@@ -27,8 +28,8 @@ export type PrepareTransferRequest = {
  * }
  */
 export interface TransferRequest {
-	to: UnionAddress
-	amount?: number
+  to: UnionAddress
+  amount?: number
 }
 
 /**
@@ -37,16 +38,24 @@ export interface TransferRequest {
  * @property {function} submit: ({to: {@link UnionAddress}, amount?: number}) =>
  * {@link Promise} {@link IBlockchainTransaction}</p>
  */
-export interface PrepareTransferResponse extends AbstractPrepareResponse<"transfer", TransferRequest, IBlockchainTransaction>{
-	/**
+export interface PrepareTransferResponse
+  extends AbstractPrepareResponse<"transfer", TransferRequest, IBlockchainTransaction> {
+  /**
    * Is supports multiple values
    */
-	multiple: boolean
+  multiple: boolean
 
-	/**
+  /**
    * Maximum amount to transfer NFT
    */
-	maxAmount: BigNumber
+  maxAmount: BigNumber
+
+  /**
+   *
+   */
+  nftData: {
+    nftCollection: UnionContractAddress | undefined
+  }
 }
 
 /**

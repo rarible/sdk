@@ -14,60 +14,56 @@ import { getSdkConfig } from "../config"
  * @param logsLevel
  */
 export function createApisSdk(
-	env: RaribleSdkEnvironment,
-	params: ConfigurationParameters = {},
-	logsLevel?: LogsLevel
+  env: RaribleSdkEnvironment,
+  params: ConfigurationParameters = {},
+  logsLevel?: LogsLevel,
 ): IApisSdk {
-	const config = getSdkConfig(env)
-	const configuration = new ApiClient.Configuration({
-		basePath: config.basePath,
-		headers: typeof params.apiKey === "string" ? { "X-API-KEY": params.apiKey } : {},
-		exceptionHandler: async (error, url, init) => {
-			throw new NetworkError({
-				status: -1,
-				url: decodeURIComponent(url),
-				formData: init?.body?.toString(),
-				method: init?.method,
-				data: { message: error.message },
-			})
-		},
-		middleware: [
-			...(logsLevel !== LogsLevel.DISABLED
-				? [getErrorHandlerMiddleware()]
-				: []),
-			...(params?.middleware || []),
-		],
-		...params,
-	})
-	return {
-		collection: new ApiClient.CollectionControllerApi(configuration),
-		currency: new ApiClient.CurrencyControllerApi(configuration),
-		item: new ApiClient.ItemControllerApi(configuration),
-		ownership: new ApiClient.OwnershipControllerApi(configuration),
-		order: new ApiClient.OrderControllerApi(configuration),
-		activity: new ApiClient.ActivityControllerApi(configuration),
-		balances: new ApiClient.BalanceControllerApi(configuration),
-		search: new ApiClient.SearchControllerApi(configuration),
-	}
+  const config = getSdkConfig(env)
+  const configuration = new ApiClient.Configuration({
+    basePath: config.basePath,
+    headers: typeof params.apiKey === "string" ? { "X-API-KEY": params.apiKey } : {},
+    exceptionHandler: async (error, url, init) => {
+      throw new NetworkError({
+        status: -1,
+        url: decodeURIComponent(url),
+        formData: init?.body?.toString(),
+        method: init?.method,
+        data: { message: error.message },
+      })
+    },
+    middleware: [
+      ...(logsLevel !== LogsLevel.DISABLED ? [getErrorHandlerMiddleware()] : []),
+      ...(params?.middleware || []),
+    ],
+    ...params,
+  })
+  return {
+    collection: new ApiClient.CollectionControllerApi(configuration),
+    currency: new ApiClient.CurrencyControllerApi(configuration),
+    item: new ApiClient.ItemControllerApi(configuration),
+    ownership: new ApiClient.OwnershipControllerApi(configuration),
+    order: new ApiClient.OrderControllerApi(configuration),
+    activity: new ApiClient.ActivityControllerApi(configuration),
+    balances: new ApiClient.BalanceControllerApi(configuration),
+    search: new ApiClient.SearchControllerApi(configuration),
+  }
 }
 
-export function getErrorHandlerMiddleware(
-	errorCode?: NetworkErrorCode
-): Middleware {
-	return {
-		post: async (context: ResponseContext) => {
-			await handleFetchErrorResponse(context.response, { code: errorCode })
-			return context.response
-		},
-	}
+export function getErrorHandlerMiddleware(errorCode?: NetworkErrorCode): Middleware {
+  return {
+    post: async (context: ResponseContext) => {
+      await handleFetchErrorResponse(context.response, { code: errorCode })
+      return context.response
+    },
+  }
 }
 
 export enum NetworkErrorCode {
-	NETWORK_ERR = "NETWORK_ERR",
-	ETHEREUM_NETWORK_ERR = "ETHEREUM_NETWORK_ERR",
-	FLOW_NETWORK_ERR = "FLOW_NETWORK_ERR",
-	IMX_NETWORK_ERR = "IMX_NETWORK_ERR",
-	TEZOS_EXTERNAL_ERR = "TEZOS_EXTERNAL_ERR",
-	SOLANA_EXTERNAL_ERR = "SOLANA_EXTERNAL_ERR",
-	META_EXTERNAL_ERR = "META_EXTERNAL_ERR",
+  NETWORK_ERR = "NETWORK_ERR",
+  ETHEREUM_NETWORK_ERR = "ETHEREUM_NETWORK_ERR",
+  FLOW_NETWORK_ERR = "FLOW_NETWORK_ERR",
+  IMX_NETWORK_ERR = "IMX_NETWORK_ERR",
+  TEZOS_EXTERNAL_ERR = "TEZOS_EXTERNAL_ERR",
+  SOLANA_EXTERNAL_ERR = "SOLANA_EXTERNAL_ERR",
+  META_EXTERNAL_ERR = "META_EXTERNAL_ERR",
 }

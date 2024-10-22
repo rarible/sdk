@@ -8,29 +8,28 @@ import { updateNodeGlobalVars } from "../common"
 updateNodeGlobalVars()
 
 async function sellAndUpdate() {
-	const wallet = new TezosWallet(
-		in_memory_provider(
-			"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-      "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-			"https://rpc.tzkt.io/ithacanet"
-		)
-	)
-	const sdk = createRaribleSdk(wallet, "testnet")
-	const sellOrderId = await sdk.order.sell({
-		itemId: toItemId("TEZOS:YOUR_COLLECTION_ID:YOUR_ITEM_ID"),
-		amount: 1,
-		price: "0.000002",
-		currency: {
-			"@type": "XTZ",
-		},
-	})
-	console.log("sellOrderId", sellOrderId)
-	const updateAction = await sdk.order.sellUpdate({
-		orderId: sellOrderId,
-		price: "0.000001",
-	})
-	//You can only decrease price of sell order for security reasons
-	//If you want to force change sell price you should cancel sell order
-	await updateAction
+  const wallet = new TezosWallet(
+    in_memory_provider(
+      "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+      "https://rpc.tzkt.io/ithacanet",
+    ),
+  )
+  const sdk = createRaribleSdk(wallet, "testnet")
+  const sellOrderId = await sdk.order.sell({
+    itemId: toItemId("TEZOS:YOUR_COLLECTION_ID:YOUR_ITEM_ID"),
+    amount: 1,
+    price: "0.000002",
+    currency: {
+      "@type": "XTZ",
+    },
+  })
+  console.log("sellOrderId", sellOrderId)
+  const updateAction = await sdk.order.sellUpdate({
+    orderId: sellOrderId,
+    price: "0.000001",
+  })
+  //You can only decrease price of sell order for security reasons
+  //If you want to force change sell price you should cancel sell order
+  await updateAction
 }
 sellAndUpdate()

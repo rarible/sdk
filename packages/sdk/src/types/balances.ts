@@ -6,6 +6,8 @@ import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import type { SupportedBlockchain } from "@rarible/sdk-common/build/utils/blockchain"
+import type { EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
+import type * as ApiClient from "@rarible/api-client"
 import type { RequestCurrency } from "../common/domain"
 
 /**
@@ -24,7 +26,7 @@ import type { RequestCurrency } from "../common/domain"
  *   address: "ETHEREUM:0x....",
  *   currency: {
  *			"@type": "ERC20",
- *			contract: ContractAddress,
+ *			contract: UnionContractAddress,
  * }
  *
  * @returns {Promise<BigNumberValue>}
@@ -41,52 +43,54 @@ export type IGetBalance = (address: UnionAddress, currency: RequestCurrency) => 
 export type IConvert = (request: ConvertRequest) => Promise<IBlockchainTransaction>
 
 export type ConvertRequest = {
-	blockchain: SupportedBlockchain
-	isWrap: boolean
-	value: BigNumberValue
+  blockchain: SupportedBlockchain
+  isWrap: boolean
+  value: BigNumberValue
 }
 
-export type IBalanceTransfer = (
-	request: IBalanceTransferRequest
-) => Promise<IBlockchainTransaction>
+export type IBalanceTransfer = (request: IBalanceTransferRequest) => Promise<IBlockchainTransaction>
 
 export type IBalanceTransferRequest = {
-	recipient: UnionAddress
-	currency: IBalanceTransferCurrency
-	amount: BigNumberValue
+  recipient: UnionAddress
+  currency: IBalanceTransferCurrency
+  amount: BigNumberValue
 }
-export type IBalanceTransferCurrency = FlowAssetTypeFt
+export type IBalanceTransferCurrency = ApiClient.CurrencyId | EthEthereumAssetType | EthErc20AssetType | FlowAssetTypeFt
 
-export type CurrencyOrOrder = {
-	currency: RequestCurrency
-} | {
-	order: Order
-} | {
-	orderId: OrderId
-} | {
-	blockchain: SupportedBlockchain
-}
+export type CurrencyOrOrder =
+  | {
+      currency: RequestCurrency
+    }
+  | {
+      order: Order
+    }
+  | {
+      orderId: OrderId
+    }
+  | {
+      blockchain: SupportedBlockchain
+    }
 
 export type GetBiddingBalanceRequest = {
-	walletAddress: UnionAddress
+  walletAddress: UnionAddress
 } & CurrencyOrOrder
 
 export type IGetBiddingBalance = (request: GetBiddingBalanceRequest) => Promise<BigNumberValue>
 
 export type DepositBiddingBalanceRequest = {
-	amount: BigNumberValue
+  amount: BigNumberValue
 } & CurrencyOrOrder
 
 export type IDepositBiddingBalance = Action<"send-tx", DepositBiddingBalanceRequest, IBlockchainTransaction>
 
 export type WithdrawBiddingBalanceRequest = {
-	amount: BigNumberValue
+  amount: BigNumberValue
 } & CurrencyOrOrder
 
 export type IWithdrawBiddingBalance = Action<"send-tx", WithdrawBiddingBalanceRequest, IBlockchainTransaction>
 
 export type BuyAmmInfoRequest = {
-	hash: string
-	numNFTs: number
+  hash: string
+  numNFTs: number
 }
 export type IGetBuyAmmInfo = (request: BuyAmmInfoRequest) => Promise<AmmTradeInfo>

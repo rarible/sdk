@@ -13,63 +13,67 @@ import { BuyForm } from "./buy-form"
 import { BuyComment } from "./comments/buy-comment"
 
 function validateConditions(blockchain: WalletType | undefined): boolean {
-	return !!blockchain
+  return !!blockchain
 }
 
 export function BuyPage() {
-	const params = useParams()
-	const connection = useSdkContext()
-	const blockchain = connection.sdk.wallet?.walletType
+  const params = useParams()
+  const connection = useSdkContext()
+  const blockchain = connection.sdk.wallet?.walletType
 
-	return (
-		<Page header="Buy Token">
-			{
-				!validateConditions(blockchain) && (
-					<CommentedBlock sx={{ my: 2 }}>
-						<UnsupportedBlockchainWarning blockchain={blockchain}/>
-					</CommentedBlock>
-				)
-			}
-			<CommentedBlock sx={{ my: 2 }} comment={<BuyComment/>}>
-				<FormStepper
-					steps={[
-						{
-							label: "Get Order Info",
-							render: (onComplete) => {
-								return <BuyPrepareForm
-									onComplete={onComplete}
-									disabled={!validateConditions(blockchain)}
-									orderId={params.orderId}
-								/>
-							},
-						},
-						{
-							label: "Send Transaction",
-							render: (onComplete, lastResponse) => {
-								return <BuyForm
-									onComplete={onComplete}
-									prepare={lastResponse.prepare}
-									order={lastResponse.order}
-									disabled={!validateConditions(blockchain)}
-								/>
-							},
-						},
-						{
-							label: "Done",
-							render: (onComplete, lastResponse) => {
-								return <RequestResult
-									result={{ type: "complete", data: lastResponse }}
-									completeRender={(data) =>
-										<Box sx={{ my: 2 }}>
-											<TransactionInfo transaction={data}/>
-										</Box>
-									}
-								/>
-							},
-						},
-					]}
-				/>
-			</CommentedBlock>
-		</Page>
-	)
+  return (
+    <Page header="Buy Token">
+      {!validateConditions(blockchain) && (
+        <CommentedBlock sx={{ my: 2 }}>
+          <UnsupportedBlockchainWarning blockchain={blockchain} />
+        </CommentedBlock>
+      )}
+      <CommentedBlock sx={{ my: 2 }} comment={<BuyComment />}>
+        <FormStepper
+          steps={[
+            {
+              label: "Get Order Info",
+              render: onComplete => {
+                return (
+                  <BuyPrepareForm
+                    onComplete={onComplete}
+                    disabled={!validateConditions(blockchain)}
+                    orderId={params.orderId}
+                  />
+                )
+              },
+            },
+            {
+              label: "Send Transaction",
+              render: (onComplete, lastResponse) => {
+                return (
+                  <BuyForm
+                    onComplete={onComplete}
+                    prepare={lastResponse.prepare}
+                    order={lastResponse.order}
+                    disabled={!validateConditions(blockchain)}
+                  />
+                )
+              },
+            },
+            {
+              label: "Done",
+              render: (onComplete, lastResponse) => {
+                return (
+                  <RequestResult
+                    result={{ type: "complete", data: lastResponse }}
+                    completeRender={data => (
+                      <Box sx={{ my: 2 }}>
+                        <TransactionInfo transaction={data} />
+                      </Box>
+                    )}
+                  />
+                )
+              },
+            },
+          ]}
+        />
+      </CommentedBlock>
+    </Page>
+  )
 }

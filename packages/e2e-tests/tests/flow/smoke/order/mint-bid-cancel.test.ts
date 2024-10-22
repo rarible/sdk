@@ -15,76 +15,80 @@ import { cancel } from "../../../common/atoms-tests/cancel"
 import { getActivitiesByItem } from "../../../common/api-helpers/activity-helper"
 
 function suites(): {
-	blockchain: Blockchain,
-	description: string,
-	wallets: { seller: BlockchainWallet, buyer: BlockchainWallet },
-	collectionId: string,
-	mintRequest: (creatorAddress: UnionAddress) => MintRequest,
-	currency: string,
-	bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
+  blockchain: Blockchain
+  description: string
+  wallets: { seller: BlockchainWallet; buyer: BlockchainWallet }
+  collectionId: string
+  mintRequest: (creatorAddress: UnionAddress) => MintRequest
+  currency: string
+  bidRequest: (currency: RequestCurrency) => Promise<OrderRequest>
 }[] {
-	return [
-		{
-			blockchain: Blockchain.FLOW,
-			description: "NFT <=> FLOW_FT",
-			wallets: {
-				seller: getFlowSellerWallet(),
-				buyer: getFlowBuyerWallet(),
-			},
-			collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
-			mintRequest: (creatorAddress: UnionAddress): MintRequest => {
-				return {
-					uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-					creators: [{
-						account: creatorAddress,
-						value: 10000,
-					}],
-					royalties: [],
-					lazyMint: false,
-					supply: 1,
-				}
-			},
-			currency: "FLOW_FT",
-			bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
-				return {
-					amount: 1,
-					price: "0.0001",
-					currency: currency,
-				}
-			},
-		},
-	]
+  return [
+    {
+      blockchain: Blockchain.FLOW,
+      description: "NFT <=> FLOW_FT",
+      wallets: {
+        seller: getFlowSellerWallet(),
+        buyer: getFlowBuyerWallet(),
+      },
+      collectionId: testsConfig.variables.FLOW_RARIBLE_COLLECTION,
+      mintRequest: (creatorAddress: UnionAddress): MintRequest => {
+        return {
+          uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
+          creators: [
+            {
+              account: creatorAddress,
+              value: 10000,
+            },
+          ],
+          royalties: [],
+          lazyMint: false,
+          supply: 1,
+        }
+      },
+      currency: "FLOW_FT",
+      bidRequest: async (currency: RequestCurrency): Promise<OrderRequest> => {
+        return {
+          amount: 1,
+          price: "0.0001",
+          currency: currency,
+        }
+      },
+    },
+  ]
 }
 
-describe.each(suites())("$blockchain mint => bid => cancel", (suite) => {
-	const {
-		seller: sellerWallet,
-		buyer: buyerWallet,
-	} = suite.wallets
-	const sellerSdk = createSdk(suite.blockchain, sellerWallet)
-	const buyerSdk = createSdk(suite.blockchain, buyerWallet)
+describe.each(suites())("$blockchain mint => bid => cancel", suite => {
+  const { seller: sellerWallet, buyer: buyerWallet } = suite.wallets
+  const sellerSdk = createSdk(suite.blockchain, sellerWallet)
+  const buyerSdk = createSdk(suite.blockchain, buyerWallet)
 
-	test(suite.description, async () => {
-		const walletAddressSeller = await getWalletAddressFull(sellerWallet)
+  test(suite.description, async () => {
+    const walletAddressSeller = await getWalletAddressFull(sellerWallet)
 
-		const collection = await getCollection(sellerSdk, suite.collectionId)
+    const collection = await getCollection(sellerSdk, suite.collectionId)
 
-		const { nft } = await mint(sellerSdk, sellerWallet, { collection },
-			suite.mintRequest(walletAddressSeller.unionAddress))
+    const { nft } = await mint(
+      sellerSdk,
+      sellerWallet,
+      { collection },
+      suite.mintRequest(walletAddressSeller.unionAddress),
+    )
 
-		const requestCurrency = await getCurrency(suite.wallets, suite.currency)
-		const bidRequest = await suite.bidRequest(requestCurrency)
+    const requestCurrency = await getCurrency(suite.wallets, suite.currency)
+    const bidRequest = await suite.bidRequest(requestCurrency)
 
-		const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
+    const bidOrder = await bid(buyerSdk, buyerWallet, { itemId: nft.id }, bidRequest)
 
-		await getActivitiesByItem(buyerSdk, nft.id,
-			[ActivityType.BID],
-			[ActivityType.BID])
+    await getActivitiesByItem(buyerSdk, nft.id, [ActivityType.BID], [ActivityType.BID])
 
-		await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
+    await cancel(buyerSdk, buyerWallet, { orderId: bidOrder.id })
 
-		await getActivitiesByItem(buyerSdk, nft.id,
-			[ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID],
-			[ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID])
-	})
+    await getActivitiesByItem(
+      buyerSdk,
+      nft.id,
+      [ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID],
+      [ActivityType.MINT, ActivityType.BID, ActivityType.CANCEL_BID],
+    )
+  })
 })
