@@ -1,5 +1,5 @@
-import type { FlowNetwork } from "@rarible/flow-sdk/build/types"
-import type { FlowTransaction } from "@rarible/flow-sdk/build/types"
+import type { FlowNetwork } from "@rarible/flow-sdk"
+import type { FlowTransaction } from "@rarible/flow-sdk"
 import { BlockchainFlowTransaction } from "./"
 
 const networks: FlowNetwork[] = ["mainnet", "testnet", "emulator"]

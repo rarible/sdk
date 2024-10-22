@@ -109,7 +109,6 @@ export class OrderTestSuite<T extends SuiteSupportedBlockchain> {
       price: price.toString(),
       amount: quantity.toNumber(),
     })
-    console.log("orderid", orderId)
     await this.waitOrderSubset(orderId, {
       status: OrderStatus.ACTIVE,
     })
