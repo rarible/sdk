@@ -1,4 +1,5 @@
 import type { Maybe } from "@rarible/types/build/maybe"
+import { toBinary } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import { ZERO_ADDRESS } from "@rarible/types"
@@ -80,7 +81,7 @@ export class LooksrareV2OrderHandler {
       startTime: makerOrder.start || 0,
       endTime: makerOrder.end || 0,
       price: take.value,
-      additionalParameters: makerOrder.data.additionalParameters,
+      additionalParameters: fixOddLengthData(makerOrder.data.additionalParameters),
       amounts: [amount.toString()],
       itemIds: [tokenId],
     }
@@ -296,6 +297,18 @@ function getCollectionType(asset: AssetType): CollectionType {
   } else {
     throw new Error(`Wrong collection type: ${asset.assetClass}, expected ERC721 or ERC1155`)
   }
+}
+
+function fixOddLengthData(input: string): Binary {
+  let hexString = input
+
+  if (hexString.startsWith("0x")) {
+    hexString = hexString.slice(2)
+  }
+  if (hexString.length % 2 !== 0) {
+    hexString = "0" + hexString
+  }
+  return toBinary(`0x${hexString}`)
 }
 
 export enum OrderValidatorCode {
