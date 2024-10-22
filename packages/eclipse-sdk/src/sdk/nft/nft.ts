@@ -94,7 +94,7 @@ export class EclipseNftSdk implements IEclipseNftSdk {
 
     const preparedInstructions = {
       instructions,
-      signers: [request.signer],
+      signers: [],
     }
 
     return new PreparedTransaction(this.connection, preparedInstructions, request.signer, this.logger, () => {
@@ -122,7 +122,7 @@ export class EclipseNftSdk implements IEclipseNftSdk {
       instructions: [
         createBurnInstruction(tokenAccount, request.mint, request.owner, tokenAmountToBurn, [], TOKEN_2022_PROGRAM_ID),
       ],
-      signers: [request.signer],
+      signers: [],
     }
 
     return new PreparedTransaction(this.connection, instructions, request.signer, this.logger, () => {
