@@ -12,6 +12,7 @@ import type { SolanaSigner } from "@rarible/solana-common"
 import { getUnixTs, sleep } from "@rarible/solana-common"
 import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
+import { TransactionOrVersionedTransaction } from "@rarible/solana-common/src"
 
 export interface ITransactionPreparedInstructions {
   instructions: TransactionInstruction[]
@@ -30,24 +31,21 @@ export async function sendTransactionWithRetry(
   instructions.forEach(instruction => transaction.add(instruction))
   transaction.recentBlockhash = (await connection.getLatestBlockhash(commitment)).blockhash
 
+  let signedTransaction: TransactionOrVersionedTransaction = transaction
   if (signers.length > 0) {
-    await wallet.signTransaction(transaction)
+    signedTransaction = await wallet.signTransaction(signedTransaction)
     for (let signer of signers) {
-      await signer.signTransaction(transaction)
+      signedTransaction = await signer.signTransaction(signedTransaction)
     }
   } else {
-    await wallet.signTransaction(transaction)
+    signedTransaction = await wallet.signTransaction(signedTransaction)
   }
 
-  const rawTransaction = transaction.serialize()
-  const txId: TransactionSignature = await connection.sendRawTransaction(rawTransaction, {
-    skipPreflight: true,
-  })
-  return { txId, slot: 0 }
   return await sendSignedTransaction(
     {
       connection,
-      signedTransaction: transaction,
+      signedTransaction,
+      initialTransaction: transaction,
     },
     logger,
   )
@@ -56,10 +54,12 @@ export async function sendTransactionWithRetry(
 export async function sendSignedTransaction(
   {
     signedTransaction,
+    initialTransaction,
     connection,
     timeout = 1000 * 60,
   }: {
-    signedTransaction: Transaction
+    signedTransaction: TransactionOrVersionedTransaction
+    initialTransaction: Transaction
     connection: Connection
     sendingMessage?: string
     sentMessage?: string
@@ -112,7 +112,7 @@ export async function sendSignedTransaction(
     }
     let simulateResult: SimulatedTransactionResponse | null = null
     try {
-      simulateResult = (await simulateTransaction(connection, signedTransaction, "single", logger)).value
+      simulateResult = (await simulateTransaction(connection, initialTransaction, "single", logger)).value
     } catch (e) {
       logger?.error("Simulate Transaction error", e)
     }
