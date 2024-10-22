@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.68-fix.66](https://github.com/rarible/sdk/compare/v0.13.68-fix.65...v0.13.68-fix.66) (2024-10-22)
+
+### Bug Fixes
+
+- **PLTF-659:** hex data odd length strings looksrare ([#676](https://github.com/rarible/sdk/issues/676)) ([0e6960c](https://github.com/rarible/sdk/commit/0e6960c8814396eaaa33601a81d202a2f0f8fcf7))
+
 ## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/web3-ethereum",
-  "version": "0.13.68-fix.65",
+  "version": "0.13.68-fix.66",
   "description": "Ethereum interface with web3.js",
   "keywords": [
     "ethereum",
@@ -25,13 +25,13 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.68-fix.65",
-    "@rarible/sdk-common": "^0.13.68-fix.65",
+    "@rarible/ethereum-provider": "^0.13.68-fix.66",
+    "@rarible/sdk-common": "^0.13.68-fix.66",
     "eth-rpc-errors": "^4.0.3",
     "exponential-backoff": "^3.1.0"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.65",
+    "@rarible/ethereum-sdk-test-common": "^0.13.68-fix.66",
     "@rarible/types": "^0.9.33",
     "buffer": "^6.0.3",
     "process": "^0.11.10",

@@ -1,6 +1,6 @@
 {
   "name": "@rarible/immutable-wallet",
-  "version": "0.13.68-fix.65",
+  "version": "0.13.68-fix.66",
   "description": "Immutable wallet util",
   "license": "MIT",
   "main": "build/index.js",
