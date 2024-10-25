@@ -12,6 +12,7 @@ import { LogsLevel } from "@rarible/sdk/build/domain"
 import { isEVMBlockchain } from "@rarible/sdk-common"
 import { useEnvironmentContext } from "./env"
 import { getConnector } from "./connectors-setup"
+import { useApiKeyContext } from "./api-key"
 
 export type SdkContextValue = {
   connector: IConnector<string, IWalletAndAddress>
@@ -24,6 +25,7 @@ export const sdkContext = React.createContext<SdkContextValue | undefined>(undef
 
 export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
   const { environment } = useEnvironmentContext()
+  const { prodApiKey, testnetApiKey } = useApiKeyContext()
   const [state, setState] = useState<ConnectionState<IWalletAndAddress>>(() => getStateDisconnected())
   const connector = useMemo(() => getConnector(environment), [environment])
   const active = useMemo(() => extractActiveConnection(state), [state])
@@ -34,7 +36,10 @@ export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
   }, [connector])
 
   const sdk = useMemo(() => {
-    return createRaribleSdk(active?.wallet, environment, createRaribleConfig(environment))
+    return createRaribleSdk(active?.wallet, environment, {
+      ...createRaribleConfig(environment),
+      apiKey: environment === "prod" ? prodApiKey : testnetApiKey,
+    })
   }, [active, environment])
 
   const walletAddress = useMemo(() => {
@@ -69,7 +74,6 @@ function extractActiveConnection(state: ConnectionState<IWalletAndAddress> | und
 function createRaribleConfig(environment: RaribleSdkEnvironment): IRaribleSdkConfig {
   return {
     logs: LogsLevel.TRACE,
-    apiKey: getApiKey(environment),
     blockchain: {
       [WalletType.ETHEREUM]: {
         marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
@@ -91,18 +95,4 @@ function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress
   }
 
   return toUnionAddress(blockchain + ":" + address)
-}
-
-function getApiKey(env: RaribleSdkEnvironment) {
-  const key = apiKeyDictionary[env]
-  if (!key) {
-    throw new Error(`No api key is provided for ${env} environment`)
-  }
-  return key
-}
-
-const apiKeyDictionary: Record<RaribleSdkEnvironment, string | undefined> = {
-  prod: process.env.REACT_APP_PROD_API_KEY,
-  development: process.env.REACT_APP_TESTNETS_API_KEY,
-  testnet: process.env.REACT_APP_TESTNETS_API_KEY,
 }

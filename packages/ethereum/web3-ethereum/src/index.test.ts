@@ -8,7 +8,10 @@ import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3FunctionCall, Web3Transaction } from "./index"
 
 describe("Web3Ethereum", () => {
-  const { provider } = common.createE2eProvider(DEV_PK_1)
+  const { provider } = common.createE2eProvider(DEV_PK_1, {
+    rpcUrl: "https://rpc-moon.sepolia.mantle.xyz",
+    networkId: 5003,
+  })
   const web3e2e = new Web3(provider)
   const e2eEthereum = new Web3Ethereum({ web3: web3e2e })
   const { provider: ganache } = common.createGanacheProvider()

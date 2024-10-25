@@ -4,6 +4,7 @@ import { CommentedBlock } from "../../components/common/commented-block"
 import { ConnectOptions } from "./connect-options"
 import { ConnectorUsageComment } from "./comments/connector-usage-comment"
 import { ConnectionStatus } from "./connection-status"
+import { APIKeyForm } from "./api-key-form"
 
 export function ConnectPage() {
   return (
@@ -17,6 +18,7 @@ export function ConnectPage() {
           Connect to:{" "}
         </Typography>
         <ConnectOptions />
+        <APIKeyForm />
       </CommentedBlock>
     </Page>
   )
