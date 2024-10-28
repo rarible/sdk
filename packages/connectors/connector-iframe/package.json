@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-iframe",
-  "version": "0.13.68-fix.67",
+  "version": "0.13.68-fix.68",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@ledgerhq/iframe-provider": "^0.4.2",
-    "@rarible/connector": "^0.13.68-fix.67"
+    "@rarible/connector": "^0.13.68-fix.68"
   },
   "peerDependencies": {
     "tslib": "^2.3.1"
