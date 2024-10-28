@@ -17,10 +17,10 @@ export type EnvironmentContextProviderProps = {
 
 export function ApiKeyContextProvider({ children }: React.PropsWithChildren<{}>) {
   const [prodApiKey, setStateProdApiKey] = useState<string>(
-    () => state.getValue(LOCALSTORAGE_API_PROD_KEY) || process.env.REACT_APP_PROD_API_KEY || "",
+    () => state.getValue(LOCALSTORAGE_API_PROD_KEY) || apiKeyDictionary["prod"] || "",
   )
   const [testnetApiKey, setStateTestnetApiKey] = useState<string>(
-    () => state.getValue(LOCALSTORAGE_API_TESTNET_KEY) || process.env.REACT_APP_TESTNETS_API_KEY || "",
+    () => state.getValue(LOCALSTORAGE_API_TESTNET_KEY) || apiKeyDictionary["testnet"] || "",
   )
 
   function setProdApiKey(key: string) {
@@ -64,7 +64,7 @@ const state = {
 }
 
 const apiKeyDictionary: Record<RaribleSdkEnvironment, string | undefined> = {
-  prod: process.env.REACT_APP_PROD_API_KEY,
-  development: process.env.REACT_APP_TESTNETS_API_KEY,
-  testnet: process.env.REACT_APP_TESTNETS_API_KEY,
+  prod: process.env.REACT_APP_PROD_API_KEY || "a3a9bdfa-96c2-4e13-a3b3-aea6950d95d1",
+  development: process.env.REACT_APP_TESTNETS_API_KEY || "d6dcc43d-8423-4bb4-b1c5-307c42d26efb",
+  testnet: process.env.REACT_APP_TESTNETS_API_KEY || "d6dcc43d-8423-4bb4-b1c5-307c42d26efb",
 }

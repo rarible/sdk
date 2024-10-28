@@ -1,10 +1,12 @@
 import type { Cluster, Commitment, ConnectionConfig } from "@solana/web3.js"
 import { clusterApiUrl, Connection } from "@solana/web3.js"
+import { DebugLogger } from "../logger/debug-logger"
 import type { IEclipseBalancesSdk } from "./balance/balance"
 import { EclipseBalancesSdk } from "./balance/balance"
-import { EclipseNftSdk, IEclipseNftSdk } from "./nft/nft"
-import { EclipseAccountSdk, IEclipseAccountSdk } from "./account/account"
-import { DebugLogger } from "../logger/debug-logger"
+import type { IEclipseNftSdk } from "./nft/nft"
+import { EclipseNftSdk } from "./nft/nft"
+import type { IEclipseAccountSdk } from "./account/account"
+import { EclipseAccountSdk } from "./account/account"
 
 export interface IEclipseSdkConfig {
   connection: {

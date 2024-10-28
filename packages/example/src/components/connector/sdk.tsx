@@ -25,10 +25,11 @@ export const sdkContext = React.createContext<SdkContextValue | undefined>(undef
 
 export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
   const { environment } = useEnvironmentContext()
-  const { prodApiKey, testnetApiKey } = useApiKeyContext()
   const [state, setState] = useState<ConnectionState<IWalletAndAddress>>(() => getStateDisconnected())
   const connector = useMemo(() => getConnector(environment), [environment])
   const active = useMemo(() => extractActiveConnection(state), [state])
+  const { prodApiKey, testnetApiKey } = useApiKeyContext()
+  const currentApiKey = environment === "prod" ? prodApiKey : testnetApiKey
 
   useEffect(() => {
     const sub = connector.connection.subscribe(x => setState(x))
@@ -38,9 +39,9 @@ export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
   const sdk = useMemo(() => {
     return createRaribleSdk(active?.wallet, environment, {
       ...createRaribleConfig(environment),
-      apiKey: environment === "prod" ? prodApiKey : testnetApiKey,
+      apiKey: currentApiKey,
     })
-  }, [active, environment])
+  }, [active, environment, currentApiKey])
 
   const walletAddress = useMemo(() => {
     if (active) return getWalletAddress(active.address, active.blockchain)

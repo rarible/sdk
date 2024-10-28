@@ -1,7 +1,7 @@
 import { Blockchain } from "@rarible/api-client"
 import type { TransactionResult } from "@rarible/solana-sdk"
+import type { Cluster, Connection } from "@solana/web3.js"
 import type { IBlockchainTransaction } from "../domain"
-import { Cluster, Connection } from "@solana/web3.js"
 
 export interface ISolanaSdk {
   cluster: Cluster
