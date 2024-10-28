@@ -10,9 +10,9 @@ import type {
 import { Transaction } from "@solana/web3.js"
 import type { SolanaSigner } from "@rarible/solana-common"
 import { getUnixTs, sleep } from "@rarible/solana-common"
+import type { TransactionOrVersionedTransaction } from "@rarible/solana-common/src"
 import type { DebugLogger } from "../logger/debug-logger"
 import type { TransactionResult } from "../types"
-import { TransactionOrVersionedTransaction } from "@rarible/solana-common/src"
 
 export interface ITransactionPreparedInstructions {
   instructions: TransactionInstruction[]

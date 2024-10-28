@@ -1,9 +1,7 @@
-import { Connection, PublicKey } from "@solana/web3.js"
-import { BigNumberValue, toBn } from "@rarible/utils"
+import type { Connection, PublicKey } from "@solana/web3.js"
+import type { BigNumberValue } from "@rarible/utils"
+import { toBn } from "@rarible/utils"
 import type { SolanaSigner } from "@rarible/solana-common"
-import type { DebugLogger } from "../../logger/debug-logger"
-import type { IEclipseAccountSdk } from "../account/account"
-import { PreparedTransaction } from "../prepared-transaction"
 import {
   ASSOCIATED_TOKEN_PROGRAM_ID,
   createAssociatedTokenAccountInstruction,
@@ -12,6 +10,9 @@ import {
   getAssociatedTokenAddress,
   TOKEN_2022_PROGRAM_ID,
 } from "@solana/spl-token"
+import type { DebugLogger } from "../../logger/debug-logger"
+import type { IEclipseAccountSdk } from "../account/account"
+import { PreparedTransaction } from "../prepared-transaction"
 
 export interface ITransferRequest {
   signer: SolanaSigner

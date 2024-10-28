@@ -4,12 +4,12 @@ import { Action } from "@rarible/action"
 import { toBigNumber, toContractAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
+import type { EclipseSdk } from "@rarible/eclipse-sdk"
 import type { BurnRequest, BurnResponse, PrepareBurnRequest, PrepareBurnResponse } from "../../types/nft/burn/domain"
 import type { IApisSdk } from "../../domain"
 import type { PrepareTransferRequest, PrepareTransferResponse, TransferRequest } from "../../types/nft/transfer/domain"
 import type { TransferSimplifiedRequest } from "../../types/nft/transfer/simplified"
 import type { BurnSimplifiedRequest } from "../../types/nft/burn/simplified"
-import { EclipseSdk } from "@rarible/eclipse-sdk"
 import { extractPublicKey } from "../solana/common/address-converters"
 
 export class EclipseNft {
