@@ -19,6 +19,24 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - **PLTF-325:** support web3 v1 and v4 ([#598](https://github.com/rarible/sdk/issues/598)) ([782d417](https://github.com/rarible/sdk/commit/782d4170a3038a4f60f1b9ed4dafd990d79bf098))
 
+## [0.13.68-fix.68](https://github.com/rarible/sdk/compare/v0.13.68-fix.67...v0.13.68-fix.68) (2024-10-28)
+
+**Note:** Version bump only for package @rarible/connector-salmon
+
+## [0.13.68-fix.67](https://github.com/rarible/sdk/compare/v0.13.68-fix.66...v0.13.68-fix.67) (2024-10-22)
+
+**Note:** Version bump only for package @rarible/connector-salmon
+
+## [0.13.68-fix.66](https://github.com/rarible/sdk/compare/v0.13.68-fix.65...v0.13.68-fix.66) (2024-10-22)
+
+**Note:** Version bump only for package @rarible/connector-salmon
+
+## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
+
+### Features
+
+- support eclipse native currency balance ([#673](https://github.com/rarible/sdk/issues/673)) ([d782b59](https://github.com/rarible/sdk/commit/d782b5961448f18a773f52a04607faf161455be9))
+
 ## [0.13.68-fix.64](https://github.com/rarible/sdk/compare/v0.13.68-fix.63...v0.13.68-fix.64) (2024-10-14)
 
 **Note:** Version bump only for package @rarible/connector-salmon

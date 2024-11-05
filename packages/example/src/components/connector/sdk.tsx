@@ -12,6 +12,7 @@ import { LogsLevel } from "@rarible/sdk/build/domain"
 import { isEVMBlockchain } from "@rarible/sdk-common"
 import { useEnvironmentContext } from "./env"
 import { getConnector } from "./connectors-setup"
+import { useApiKeyContext } from "./api-key"
 
 export type SdkContextValue = {
   connector: IConnector<string, IWalletAndAddress>
@@ -27,6 +28,8 @@ export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
   const [state, setState] = useState<ConnectionState<IWalletAndAddress>>(() => getStateDisconnected())
   const connector = useMemo(() => getConnector(environment), [environment])
   const active = useMemo(() => extractActiveConnection(state), [state])
+  const { prodApiKey, testnetApiKey } = useApiKeyContext()
+  const currentApiKey = environment === "prod" ? prodApiKey : testnetApiKey
 
   useEffect(() => {
     const sub = connector.connection.subscribe(x => setState(x))
@@ -34,8 +37,11 @@ export function SdkContextProvider({ children }: React.PropsWithChildren<{}>) {
   }, [connector])
 
   const sdk = useMemo(() => {
-    return createRaribleSdk(active?.wallet, environment, createRaribleConfig(environment))
-  }, [active, environment])
+    return createRaribleSdk(active?.wallet, environment, {
+      ...createRaribleConfig(environment),
+      apiKey: currentApiKey,
+    })
+  }, [active, environment, currentApiKey])
 
   const walletAddress = useMemo(() => {
     if (active) return getWalletAddress(active.address, active.blockchain)
@@ -69,11 +75,11 @@ function extractActiveConnection(state: ConnectionState<IWalletAndAddress> | und
 function createRaribleConfig(environment: RaribleSdkEnvironment): IRaribleSdkConfig {
   return {
     logs: LogsLevel.TRACE,
-    apiKey: getApiKey(environment),
     blockchain: {
       [WalletType.ETHEREUM]: {
         marketplaceMarker: "0x12345678900000000000000000000000000123456789face",
       },
+      [WalletType.SOLANA]: {},
     },
   }
 }
@@ -84,19 +90,10 @@ function getWalletAddress(address: string, blockchain: Blockchain): UnionAddress
   if (isEVMBlockchain(blockchain) || blockchain === Blockchain.IMMUTABLEX) {
     return toUnionAddress("ETHEREUM:" + address)
   }
-  return toUnionAddress(blockchain + ":" + address)
-}
 
-function getApiKey(env: RaribleSdkEnvironment) {
-  const key = apiKeyDictionary[env]
-  if (!key) {
-    throw new Error(`No api key is provided for ${env} environment`)
+  if (blockchain === Blockchain.ECLIPSE) {
+    return toUnionAddress("SOLANA:" + address)
   }
-  return key
-}
 
-const apiKeyDictionary: Record<RaribleSdkEnvironment, string | undefined> = {
-  prod: process.env.REACT_APP_PROD_API_KEY,
-  development: process.env.REACT_APP_TESTNETS_API_KEY,
-  testnet: process.env.REACT_APP_TESTNETS_API_KEY,
+  return toUnionAddress(blockchain + ":" + address)
 }

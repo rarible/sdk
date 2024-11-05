@@ -23,66 +23,69 @@ import { SellUpdatePage } from "./pages/sell-update/sell-update-page"
 import { UtilsPage } from "./pages/utils/utils-page"
 import { EnvironmentContextProvider } from "./components/connector/env"
 import { SdkContextProvider } from "./components/connector/sdk"
+import { ApiKeyContextProvider } from "./components/connector/api-key"
 
 export function App() {
   return (
     <EnvironmentContextProvider>
-      <SdkContextProvider>
-        <Box>
-          <Header />
-          <Container
-            maxWidth="xl"
-            sx={{
-              mt: 2,
-              display: "grid",
-              gridTemplateColumns: "minmax(250px, 20%)  1fr",
-              gap: "20px",
-            }}
-          >
-            <Box component="nav">
-              <Navigation />
-            </Box>
-            <Box component="main">
-              <Routes>
-                <Route path="/" element={<AboutPage />} />
-                <Route path="about" element={<AboutPage />} />
-                <Route path="connect" element={<ConnectPage />} />
-                <Route path="balance" element={<BalancePage />} />
-                <Route path="deploy" element={<DeployPage />} />
-                <Route path="upload-meta" element={<UploadMetaPage />} />
-                <Route path="mint" element={<MintPage />} />
-                <Route path="sell" element={<SellPage />}>
-                  <Route path=":itemId" element={<SellPage />} />
-                </Route>
-                <Route path="buy" element={<BuyPage />}>
-                  <Route path=":orderId" element={<BuyPage />} />
-                </Route>
-                <Route path="sell-update" element={<SellUpdatePage />}>
-                  <Route path=":orderId" element={<SellUpdatePage />} />
-                </Route>
-                <Route path="batch-buy" element={<BatchBuyPage />} />
-                <Route path="bid" element={<BidPage />}>
-                  <Route path=":itemId" element={<BidPage />} />
-                </Route>
-                <Route path="accept-bid" element={<AcceptBidPage />}>
-                  <Route path=":orderId" element={<AcceptBidPage />} />
-                </Route>
-                <Route path="cancel" element={<CancelPage />} />
-                <Route path="transfer" element={<TransferPage />}>
-                  <Route path=":itemId" element={<TransferPage />} />
-                </Route>
-                <Route path="burn" element={<BurnPage />}>
-                  <Route path=":itemId" element={<BurnPage />} />
-                </Route>
-                <Route path="items" element={<ItemsPage />} />
-                <Route path="sign" element={<SignPage />} />
-                <Route path="utils" element={<UtilsPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </Box>
-          </Container>
-        </Box>
-      </SdkContextProvider>
+      <ApiKeyContextProvider>
+        <SdkContextProvider>
+          <Box>
+            <Header />
+            <Container
+              maxWidth="xl"
+              sx={{
+                mt: 2,
+                display: "grid",
+                gridTemplateColumns: "minmax(250px, 20%)  1fr",
+                gap: "20px",
+              }}
+            >
+              <Box component="nav">
+                <Navigation />
+              </Box>
+              <Box component="main">
+                <Routes>
+                  <Route path="/" element={<AboutPage />} />
+                  <Route path="about" element={<AboutPage />} />
+                  <Route path="connect" element={<ConnectPage />} />
+                  <Route path="balance" element={<BalancePage />} />
+                  <Route path="deploy" element={<DeployPage />} />
+                  <Route path="upload-meta" element={<UploadMetaPage />} />
+                  <Route path="mint" element={<MintPage />} />
+                  <Route path="sell" element={<SellPage />}>
+                    <Route path=":itemId" element={<SellPage />} />
+                  </Route>
+                  <Route path="buy" element={<BuyPage />}>
+                    <Route path=":orderId" element={<BuyPage />} />
+                  </Route>
+                  <Route path="sell-update" element={<SellUpdatePage />}>
+                    <Route path=":orderId" element={<SellUpdatePage />} />
+                  </Route>
+                  <Route path="batch-buy" element={<BatchBuyPage />} />
+                  <Route path="bid" element={<BidPage />}>
+                    <Route path=":itemId" element={<BidPage />} />
+                  </Route>
+                  <Route path="accept-bid" element={<AcceptBidPage />}>
+                    <Route path=":orderId" element={<AcceptBidPage />} />
+                  </Route>
+                  <Route path="cancel" element={<CancelPage />} />
+                  <Route path="transfer" element={<TransferPage />}>
+                    <Route path=":itemId" element={<TransferPage />} />
+                  </Route>
+                  <Route path="burn" element={<BurnPage />}>
+                    <Route path=":itemId" element={<BurnPage />} />
+                  </Route>
+                  <Route path="items" element={<ItemsPage />} />
+                  <Route path="sign" element={<SignPage />} />
+                  <Route path="utils" element={<UtilsPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Box>
+            </Container>
+          </Box>
+        </SdkContextProvider>
+      </ApiKeyContextProvider>
     </EnvironmentContextProvider>
   )
 }

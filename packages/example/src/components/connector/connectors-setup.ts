@@ -23,6 +23,7 @@ import type { ImxEnv } from "@rarible/immutable-wallet"
 import { mapAptosCoreWallet } from "@rarible/connector-helper/build/aptos-wallet-core"
 import { AptosWalletCoreProvider } from "@rarible/connector-aptos-wallet-core"
 import { mapEthereumWeb3v4Wallet } from "@rarible/connector-helper/build/ethereum-v4"
+import { Blockchain } from "@rarible/api-client"
 
 export const ethereumRpcMap: Record<number, string> = {
   1: "https://rarible.com/nodes/ethereum-node",
@@ -305,6 +306,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
 
   const phantomConnect = mapSolanaWallet(new PhantomConnectionProvider())
   const salmonConnect = mapSolanaWallet(new SalmonConnectionProvider())
+  const salmonEclipseConnect = mapSolanaWallet(new SalmonConnectionProvider("salmon (eclipse)"), Blockchain.ECLIPSE)
   const solflareConnect = mapSolanaWallet(
     new SolflareConnectionProvider({
       network: environment === "prod" ? "mainnet-beta" : "devnet",
@@ -324,6 +326,7 @@ export function getConnector(environment: RaribleSdkEnvironment) {
     .add(fcl)
     .add(walletConnectV2)
     .add(salmonConnect)
+    .add(salmonEclipseConnect)
     .add(phantomConnect)
     .add(solflareConnect)
     .add(imxConnector)

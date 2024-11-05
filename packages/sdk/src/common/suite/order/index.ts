@@ -110,6 +110,7 @@ export class OrderTestSuite<T extends SuiteSupportedBlockchain> {
       amount: quantity.toNumber(),
     })
     await this.waitOrderSubset(orderId, {
+      makeStock: toBigNumber(price.multipliedBy(quantity).toString()),
       status: OrderStatus.ACTIVE,
     })
     return orderId
@@ -212,6 +213,6 @@ export class OrderTestSuite<T extends SuiteSupportedBlockchain> {
   }
 }
 
-export function generateExpirationDate(seconds = 60 * 60) {
+export function generateExpirationDate(seconds = 3600) {
   return new Date(Date.now() + seconds * 1000)
 }

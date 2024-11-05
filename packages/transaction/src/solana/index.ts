@@ -1,16 +1,24 @@
 import { Blockchain } from "@rarible/api-client"
 import type { TransactionResult } from "@rarible/solana-sdk"
-import type { SolanaSdk } from "@rarible/solana-sdk"
+import type { Cluster, Connection } from "@solana/web3.js"
 import type { IBlockchainTransaction } from "../domain"
+
+export interface ISolanaSdk {
+  cluster: Cluster
+
+  confirmTransaction(
+    ...args: Parameters<typeof Connection.prototype.confirmTransaction>
+  ): ReturnType<typeof Connection.prototype.confirmTransaction>
+}
 
 export class BlockchainSolanaTransaction implements IBlockchainTransaction {
   blockchain: Blockchain = Blockchain.SOLANA
   cluster: string
-  getSdk: () => SolanaSdk
+  getSdk: () => ISolanaSdk
 
   constructor(
     public transaction: TransactionResult,
-    sdk: SolanaSdk,
+    sdk: ISolanaSdk,
   ) {
     this.cluster = sdk.cluster
     this.getSdk = () => sdk // to hide sdk from json.stringify

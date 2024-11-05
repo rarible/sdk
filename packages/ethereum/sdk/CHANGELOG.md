@@ -36,6 +36,24 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - **MPX-2230:** update web3 to latest version ([75c1913](https://github.com/rarible/sdk/commit/75c19137cd770d05862005d4d75a6038ab30cc14))
 - **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
 
+## [0.13.68-fix.68](https://github.com/rarible/sdk/compare/v0.13.68-fix.67...v0.13.68-fix.68) (2024-10-28)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.67](https://github.com/rarible/sdk/compare/v0.13.68-fix.66...v0.13.68-fix.67) (2024-10-22)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
+## [0.13.68-fix.66](https://github.com/rarible/sdk/compare/v0.13.68-fix.65...v0.13.68-fix.66) (2024-10-22)
+
+### Bug Fixes
+
+- **PLTF-659:** hex data odd length strings looksrare ([#676](https://github.com/rarible/sdk/issues/676)) ([0e6960c](https://github.com/rarible/sdk/commit/0e6960c8814396eaaa33601a81d202a2f0f8fcf7))
+
+## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
+
+**Note:** Version bump only for package @rarible/protocol-ethereum-sdk
+
 ## [0.13.68-fix.64](https://github.com/rarible/sdk/compare/v0.13.68-fix.63...v0.13.68-fix.64) (2024-10-14)
 
 **Note:** Version bump only for package @rarible/protocol-ethereum-sdk

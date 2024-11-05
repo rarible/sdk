@@ -28,8 +28,8 @@
     "@rarible/tezos-sdk": "0.1.46"
   },
   "peerDependencies": {
-    "@rarible/web3-ethereum": "^0.13.69-beta.1",
-    "@rarible/web3-v4-ethereum": "^0.13.69-beta.1",
+    "@rarible/web3-ethereum": "^0.13.69-beta.5",
+    "@rarible/web3-v4-ethereum": "^0.13.69-beta.5",
     "rxjs": ">= 6.6.7 < 8.0.0",
     "tslib": "^2.3.1"
   },

@@ -45,9 +45,21 @@ export function getCurrenciesForBlockchain(
         {
           isNative: true,
           requireContract: false,
-          getAssetType: () => ({
-            "@type": "SOLANA_SOL",
-          }),
+          getAssetType: () => {
+            const blockchain =
+              conn?.state?.status === "connected" ? conn.state.connection.blockchain : Blockchain.SOLANA
+
+            if (blockchain === Blockchain.SOLANA) {
+              return {
+                "@type": "SOLANA_SOL",
+              }
+            } else {
+              return {
+                "@type": "CURRENCY_NATIVE",
+                blockchain: blockchain,
+              }
+            }
+          },
         },
       ]
     case WalletType.TEZOS:
