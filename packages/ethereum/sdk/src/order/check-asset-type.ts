@@ -1,17 +1,17 @@
 import { toBigNumber } from "@rarible/types"
 import type {
-  Address,
   CollectionAssetType,
   CryptoPunksAssetType,
   Erc1155AssetType,
   Erc721AssetType,
+  EVMAddress,
 } from "@rarible/ethereum-api-client"
 import type { Erc721LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { Erc1155LazyAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { RaribleEthereumApis } from "../common/apis"
 
 export type NftAssetType = {
-  contract: Address
+  contract: EVMAddress
   tokenId: string | number
 }
 

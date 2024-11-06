@@ -1,4 +1,4 @@
-import { toBinary, ZERO_ADDRESS } from "@rarible/types"
+import { toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { FILL_CALLDATA_TAG } from "../../../config/common"
 import { getUpdatedCalldata } from "./get-updated-call"
 
@@ -14,12 +14,12 @@ describe("getUpdatedFunctionCall", () => {
   })
 
   test("get updated call with fillCalldata should returns correct FunctionCall", async () => {
-    const calldata = getUpdatedCalldata({ marketplaceMarker: toBinary(`${ZERO_ADDRESS}00000001`) })
-    expect(calldata).toBe(`${ZERO_ADDRESS}00000001${FILL_CALLDATA_TAG}`)
+    const calldata = getUpdatedCalldata({ marketplaceMarker: toBinary(`${EVM_ZERO_ADDRESS}00000001`) })
+    expect(calldata).toBe(`${EVM_ZERO_ADDRESS}00000001${FILL_CALLDATA_TAG}`)
   })
 
   test("get updated call with no fillCalldata should returns default value", async () => {
     const calldata = getUpdatedCalldata()
-    expect(calldata).toBe(`${ZERO_ADDRESS}00000000${FILL_CALLDATA_TAG}`)
+    expect(calldata).toBe(`${EVM_ZERO_ADDRESS}00000000${FILL_CALLDATA_TAG}`)
   })
 })

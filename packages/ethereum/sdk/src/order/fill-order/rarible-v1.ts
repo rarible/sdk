@@ -1,8 +1,8 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumSendOptions } from "@rarible/ethereum-provider"
-import { toBigNumber, toBinary, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { toBn } from "@rarible/utils"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import { approve } from "../approve"
 import type { SendFunction } from "../../common/send-transaction"
 import type { SimpleLegacyOrder } from "../types"
@@ -28,7 +28,7 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
     private readonly sdkConfig?: IRaribleEthereumSdkConfig,
   ) {}
 
-  invert(request: LegacyOrderFillRequest, maker: Address): SimpleLegacyOrder {
+  invert(request: LegacyOrderFillRequest, maker: EVMAddress): SimpleLegacyOrder {
     const inverted = invertOrder(request.order, request.amount, maker)
     inverted.data = {
       dataType: "LEGACY",
@@ -80,7 +80,7 @@ export class RaribleV1OrderHandler implements OrderHandler<LegacyOrderFillReques
       inverted.data.fee,
       toVrs(buyerFeeSig),
       inverted.take.value,
-      request.payout ?? ZERO_ADDRESS,
+      request.payout ?? EVM_ZERO_ADDRESS,
     )
     const options = getMatchV1Options(inverted)
 

@@ -1,4 +1,4 @@
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import type { SendFunction } from "../../common/send-transaction"

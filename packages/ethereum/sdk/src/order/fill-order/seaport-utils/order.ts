@@ -1,6 +1,6 @@
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import { MerkleTree } from "./merkletree"
 import type { ConsiderationItem, CreateInputItem, Fee, Item, OfferItem, Order, OrderParameters } from "./types"
 import { getMaximumSizeForOrder, isCurrencyItem } from "./item"
@@ -21,7 +21,7 @@ export const feeToConsiderationItem = ({
   baseEndAmount?: BigNumberValue
 }): ConsiderationItem => {
   return {
-    itemType: token === ZERO_ADDRESS ? ItemType.NATIVE : ItemType.ERC20,
+    itemType: token === EVM_ZERO_ADDRESS ? ItemType.NATIVE : ItemType.ERC20,
     token,
     identifierOrCriteria: "0",
     startAmount: multiplyBasisPoints(baseAmount, fee.basisPoints).toString(),
@@ -87,8 +87,8 @@ export const mapInputItemToOfferItem = (item: CreateInputItem): OfferItem => {
 
   // Item is a currency
   return {
-    itemType: item.token && item.token !== ZERO_ADDRESS ? ItemType.ERC20 : ItemType.NATIVE,
-    token: item.token ?? ZERO_ADDRESS,
+    itemType: item.token && item.token !== EVM_ZERO_ADDRESS ? ItemType.ERC20 : ItemType.NATIVE,
+    token: item.token ?? EVM_ZERO_ADDRESS,
     identifierOrCriteria: "0",
     startAmount: item.amount,
     endAmount: item.endAmount ?? item.amount,

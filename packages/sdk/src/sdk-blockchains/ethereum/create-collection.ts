@@ -1,11 +1,12 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { Address, ContractAddress, UnionAddress } from "@rarible/types"
+import type { Address, UnionAddress } from "@rarible/types"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { isEVMBlockchain } from "@rarible/sdk-common"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { getBlockchainFromChainId, getNetworkFromChainId } from "@rarible/protocol-ethereum-sdk/build/common"
+import type { UnionContractAddress } from "@rarible/api-client"
 import type { CreateCollectionResponse, EthereumCreateCollectionAsset } from "../../types/nft/deploy/domain"
 import type { CreateCollectionRequestSimplified } from "../../types/nft/deploy/simplified"
 import type {
@@ -33,7 +34,7 @@ export class EthereumCreateCollection {
   private async convertResponse(response: {
     tx: EthereumTransaction
     address: Address
-  }): Promise<{ tx: BlockchainEthereumTransaction; address: ContractAddress }> {
+  }): Promise<{ tx: BlockchainEthereumTransaction; address: UnionContractAddress }> {
     const chainId = await assertWallet(this.wallet).ethereum.getChainId()
     const network = await getNetworkFromChainId(chainId)
     const blockchain = await getBlockchainFromChainId(chainId)

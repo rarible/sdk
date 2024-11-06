@@ -1,4 +1,4 @@
-import { toBigNumber, toContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, toUnionContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
@@ -31,7 +31,7 @@ export function isRequestCurrencyAssetType(x: RequestCurrency): x is ApiClient.C
   return typeof x === "string" && !!toCurrencyId(x)
 }
 export function isAssetType(x: RequestCurrency): x is RequestCurrencyAssetType {
-  return typeof x === "object" && "@type" in x
+  return typeof x === "object" && x !== null && "@type" in x
 }
 
 export function isEth(x: AssetType): x is EthEthereumAssetType {
@@ -81,7 +81,7 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     }
     return {
       "@type": "CURRENCY_TOKEN",
-      contract: toContractAddress(id),
+      contract: toUnionContractAddress(id),
     }
   }
   const { contract, tokenId } = getDataFromCurrencyId(id)
@@ -94,13 +94,13 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     }
     return {
       "@type": "ERC20",
-      contract: toContractAddress(`${blockchain}:${contract}`),
+      contract: toUnionContractAddress(`${blockchain}:${contract}`),
     }
   }
   if (blockchain === Blockchain.FLOW) {
     return {
       "@type": "FLOW_FT",
-      contract: toContractAddress(id),
+      contract: toUnionContractAddress(id),
     }
   }
   if (blockchain === Blockchain.TEZOS) {
@@ -111,11 +111,11 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     }
     return {
       "@type": "TEZOS_FT",
-      contract: toContractAddress(`TEZOS:${contract}`),
+      contract: toUnionContractAddress(`TEZOS:${contract}`),
       tokenId: tokenId ? toBigNumber(tokenId) : undefined,
     }
   }
-  if (blockchain === Blockchain.SOLANA) {
+  if (blockchain === Blockchain.SOLANA || blockchain === Blockchain.ECLIPSE) {
     if (contract === ZERO_ADDRESS) {
       return {
         "@type": "SOLANA_SOL",
@@ -124,12 +124,6 @@ export function convertCurrencyIdToAssetType(id: ApiClient.CurrencyId): RequestC
     return {
       "@type": "SOLANA_NFT",
       itemId: toItemId("SOLANA:" + contract),
-    }
-  }
-  if (blockchain === Blockchain.ECLIPSE) {
-    return {
-      "@type": "CURRENCY_NATIVE",
-      blockchain: Blockchain.ECLIPSE,
     }
   }
   throw new Error(`Unsupported currency type: ${id}`)

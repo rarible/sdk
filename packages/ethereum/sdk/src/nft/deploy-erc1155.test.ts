@@ -1,26 +1,23 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { getSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import type { EthereumNetwork } from "../types"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import { DeployErc1155 } from "./deploy-erc1155"
+
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
+const { providers } = createEthereumProviders(provider, wallet)
 
 /**
  * @group provider/dev
  */
-describe("deploy token test", () => {
-  const { provider } = createE2eProvider(DEV_PK_1)
-  const web3 = new Web3(provider as any)
-  const ethereum1 = new Web3Ethereum({ web3 })
-
+describe.each(providers)("deploy token test", ethereum => {
   const env: EthereumNetwork = "dev-ethereum"
   const config = getEthereumConfig(env)
   const getConfig = async () => config
 
   const send = getSendWithInjects()
-  const deployErc1155 = new DeployErc1155(ethereum1, send, getConfig)
+  const deployErc1155 = new DeployErc1155(ethereum, send, getConfig)
 
   test("should deploy erc1155 token", async () => {
     const { tx, address } = await deployErc1155.deployToken("FreeMintable", "TSA", "ipfs:/", "ipfs:/")

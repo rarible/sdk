@@ -1,6 +1,6 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { WalletType } from "@rarible/sdk-wallet"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { BlockchainWallet } from "@rarible/sdk-wallet"
 import type { AuthWithPrivateKey } from "@rarible/flow-sdk"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
@@ -288,7 +288,7 @@ export interface INftSdk {
    * -
    * @example
    * const {tokenId, signature} = sdk.nft.generateTokenId({
-   * 		collection: toContractAddress("ETHEREUM:0x..."),
+   * 		collection: toUnionContractAddress("ETHEREUM:0x..."),
    * 		minter: toUnionAddress("ETHEREUM:0x...")},
    * 	)
    *

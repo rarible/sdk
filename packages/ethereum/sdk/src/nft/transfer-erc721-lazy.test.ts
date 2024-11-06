@@ -1,7 +1,4 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { randomAddress, toAddress } from "@rarible/types"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { checkAssetType as checkAssetTypeTemplate } from "../order/check-asset-type"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc721V3Collection } from "../common/mint"
@@ -9,6 +6,7 @@ import { getEthereumConfig } from "../config"
 import { getApis as getApisTemplate } from "../common/apis"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
+import { createE2eTestProvider } from "../common/test/create-test-providers"
 import { signNft } from "./sign-nft"
 import type { ERC721RequestV3 } from "./mint"
 import { mint } from "./mint"
@@ -21,9 +19,7 @@ import { getErc721Contract } from "./contracts/erc721"
  * @group provider/dev
  */
 describe("transfer Erc721 lazy", () => {
-  const { provider, wallet } = createE2eProvider(DEV_PK_1)
-  const web3 = new Web3(provider)
-  const ethereum = new Web3Ethereum({ web3 })
+  const { wallet, web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
   const env: EthereumNetwork = "dev-ethereum"
   const config = getEthereumConfig(env)
@@ -35,9 +31,9 @@ describe("transfer Erc721 lazy", () => {
   const sign = signNft.bind(null, ethereum, getConfig)
 
   test("should transfer erc721 lazy token", async () => {
-    const from = toAddress(wallet.getAddressString())
-    const recipient = randomAddress()
-    const contract = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
+    const from = toEVMAddress(wallet.getAddressString())
+    const recipient = randomEVMAddress()
+    const contract = toEVMAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
 
     const request: ERC721RequestV3 = {
       uri: "ipfs://ipfs/hash",

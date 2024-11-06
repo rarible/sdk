@@ -1,6 +1,6 @@
+import type { UnionContractAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import { retry } from "@rarible/sdk-common"
-import type { ContractAddress } from "@rarible/types"
 import { toCollectionId } from "@rarible/types"
 import type { IRaribleSdk } from "../../../../domain"
 
@@ -19,7 +19,7 @@ export async function createAndWaitForCollection(sdk: IRaribleSdk) {
   return response.address
 }
 
-export async function mintAndWaitItem(sdk: IRaribleSdk, collection: ContractAddress) {
+export async function mintAndWaitItem(sdk: IRaribleSdk, collection: UnionContractAddress) {
   const { itemId, transaction } = await sdk.nft.mint({
     uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
     collectionId: toCollectionId(collection),

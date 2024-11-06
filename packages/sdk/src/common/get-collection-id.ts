@@ -1,6 +1,5 @@
 import { Blockchain } from "@rarible/api-client"
-import type { CollectionId, Collection, CollectionControllerApi } from "@rarible/api-client"
-import type { ContractAddress } from "@rarible/types"
+import type { CollectionId, Collection, CollectionControllerApi, UnionContractAddress } from "@rarible/api-client"
 import type { HasCollection, HasCollectionId } from "../types/nft/mint/prepare-mint-request.type"
 
 export function getCollectionId(req: HasCollectionId | HasCollection): CollectionId {
@@ -19,7 +18,7 @@ export async function getApiCollection(
   })
 }
 
-export function getBlockchainCollectionId(contract: ContractAddress | CollectionId): Blockchain {
+export function getBlockchainCollectionId(contract: UnionContractAddress | CollectionId): Blockchain {
   const [blockchain] = contract.split(":")
   if (!(blockchain in Blockchain)) {
     throw new Error(`Unrecognized blockchain in contract ${contract}`)

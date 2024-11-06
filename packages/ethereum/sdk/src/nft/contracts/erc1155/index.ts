@@ -1,11 +1,11 @@
-import type { Address } from "@rarible/types"
+import type { Address, EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider/build"
 import { ERC1155VersionEnum } from "../domain"
 
 export async function getErc1155Contract(
   ethereum: Ethereum,
   version: ERC1155VersionEnum,
-  address: Address | undefined,
+  address: Address | EVMAddress | undefined,
 ): Promise<EthereumContract> {
   switch (version) {
     case ERC1155VersionEnum.ERC1155V2: {

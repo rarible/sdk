@@ -2,9 +2,9 @@ import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/types"
-import { toAddress } from "@rarible/types"
-import type { Address } from "@rarible/ethereum-api-client"
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toEVMAddress } from "@rarible/types"
+import type { EVMAddress } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import type { SendFunction } from "../../../common/send-transaction"
 import type { SimpleSeaportV1Order } from "../../types"
 import { ExchangeWrapperOrderType } from "../types"
@@ -47,7 +47,7 @@ export async function prepareSeaportExchangeData(
     disableCheckingBalances?: boolean
   },
 ): Promise<PreparedOrderRequestDataForExchangeWrapper> {
-  const seaportContract = getSeaportContract(ethereum, toAddress(simpleOrder.data.protocol))
+  const seaportContract = getSeaportContract(ethereum, toEVMAddress(simpleOrder.data.protocol))
   const order = convertAPIOrderToSeaport(simpleOrder)
 
   const fulfillerAddress = await ethereum.getFrom()
@@ -112,7 +112,7 @@ export async function prepareSeaportExchangeData(
     considerationCriteria,
     tips: [],
     extraData,
-    seaportAddress: toAddress(CROSS_CHAIN_SEAPORT_ADDRESS),
+    seaportAddress: toEVMAddress(CROSS_CHAIN_SEAPORT_ADDRESS),
     offererBalancesAndApprovals,
     fulfillerBalancesAndApprovals,
     offererOperator,
@@ -143,7 +143,7 @@ export async function prepareSeaportExchangeData(
   }
 }
 
-export function getMarketIdByOpenseaContract(contract: Address) {
+export function getMarketIdByOpenseaContract(contract: EVMAddress) {
   if (compareCaseInsensitive(contract, CROSS_CHAIN_SEAPORT_V1_4_ADDRESS)) {
     return ExchangeWrapperOrderType.SEAPORT_V14
   } else if (compareCaseInsensitive(contract, CROSS_CHAIN_SEAPORT_ADDRESS)) {

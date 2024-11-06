@@ -1,14 +1,14 @@
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import { toBinary } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { Binary, Part } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils"
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
 import type { NftItemRoyalty } from "@rarible/ethereum-api-client/build/models/NftItemRoyalty"
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import { OrderLooksRareDataV2QuoteType } from "@rarible/ethereum-api-client/build/models/OrderData"
 import type { AssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import type { SendFunction } from "../../common/send-transaction"
@@ -46,7 +46,7 @@ export class LooksrareV2OrderHandler {
     if (toBn(amount).gt(make.value)) {
       throw new Error(`Amount should be less or equal to ${make.value.toString()}`)
     }
-    let contract: Address
+    let contract: EVMAddress
     let tokenId: string
     if (isNft(make.assetType)) {
       contract = make.assetType.contract
@@ -55,9 +55,9 @@ export class LooksrareV2OrderHandler {
       throw new Error(`Only sell orders are supported. Make=${make.assetType.assetClass} is not NFT`)
     }
 
-    let currency: Address
+    let currency: EVMAddress
     if (take.assetType.assetClass === "ETH") {
-      currency = ZERO_ADDRESS
+      currency = EVM_ZERO_ADDRESS
     } else if (take.assetType.assetClass === "ERC20") {
       currency = take.assetType.contract
     } else {
@@ -131,7 +131,7 @@ export class LooksrareV2OrderHandler {
       request.order.signature,
       //merkleTree,
       merkleRoot,
-      originFees?.length && originFees[0] ? originFees[0]?.account : ZERO_ADDRESS,
+      originFees?.length && originFees[0] ? originFees[0]?.account : EVM_ZERO_ADDRESS,
     )
 
     return {

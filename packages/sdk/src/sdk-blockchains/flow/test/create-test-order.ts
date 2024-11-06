@@ -30,7 +30,6 @@ export function createTestOrder(orderId: string): Order {
       value: toBigNumber("1.025"),
     },
     salt: "",
-    pending: [],
     status: OrderStatus.ACTIVE,
     data: {
       "@type": "FLOW_RARIBLE_V1",

@@ -1,23 +1,24 @@
-import { toBigNumber, toCollectionId, toContractAddress, toOrderId, toUnionAddress } from "@rarible/types"
+import { toBigNumber, toCollectionId, toOrderId, toUnionAddress, toUnionContractAddress } from "@rarible/types"
 import type { Collection } from "@rarible/api-client"
 import { Blockchain, CollectionFeatures, CollectionType, OrderStatus, Platform } from "@rarible/api-client"
-import type { Web3Ethereum } from "@rarible/web3-ethereum"
+import type { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { MintType } from "../../types/nft/mint/prepare"
 import { retry } from "../../common/retry"
 import { generateExpirationDate } from "../../common/suite/order"
 import { createSdk } from "../../common/test/create-sdk"
-import { createEthWallets } from "./test/common"
+import { DEV_PK_1 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
+import { initProvider } from "./test/init-providers"
 
 describe("mint and sell", () => {
-  const [eth1] = createEthWallets(2)
+  const { ethereumWallet } = initProvider(DEV_PK_1)
 
-  const testSuite = new EVMContractsTestSuite(Blockchain.ETHEREUM, eth1.ethereum as Web3Ethereum)
+  const testSuite = new EVMContractsTestSuite(Blockchain.ETHEREUM, ethereumWallet.ethereum as Web3v4Ethereum)
   const erc721Address = testSuite.getContract("erc721_1").contractAddress
   const erc1155Address = testSuite.getContract("erc1155_1").contractAddress
 
   test("prepare should work even if wallet is undefined", async () => {
-    const sdk = createSdk(eth1, "development")
+    const sdk = createSdk(ethereumWallet, "development")
     const collection: Collection = {
       id: toCollectionId("ETHEREUM:0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E"),
       blockchain: Blockchain.ETHEREUM,
@@ -51,7 +52,7 @@ describe("mint and sell", () => {
         make: {
           type: {
             "@type": "ERC721",
-            contract: toContractAddress("ETHEREUM:0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E"),
+            contract: toUnionContractAddress("ETHEREUM:0x96CE5b00c75e28d7b15F25eA392Cbb513ce1DE9E"),
             tokenId: toBigNumber("!"),
           },
           value: toBigNumber("1"),
@@ -78,7 +79,7 @@ describe("mint and sell", () => {
   })
 
   test("should mint and put on sale ERC721 token", async () => {
-    const wallet = eth1
+    const wallet = ethereumWallet
     const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
     const sdk = createSdk(wallet, "development")
 
@@ -131,7 +132,7 @@ describe("mint and sell", () => {
   })
 
   test("should mint and put on sale ERC1155 token with basic function", async () => {
-    const wallet = eth1
+    const wallet = ethereumWallet
     const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
     const sdk = createSdk(wallet, "development")
 
@@ -179,7 +180,7 @@ describe("mint and sell", () => {
   })
 
   test("should mint and put on sale ERC1155 token with prepare function", async () => {
-    const wallet = eth1
+    const wallet = ethereumWallet
     const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
     const sdk = createSdk(wallet, "development")
 
@@ -232,7 +233,7 @@ describe("mint and sell", () => {
   })
 
   test("should mint and create zero-price order with ERC1155 token with basic function", async () => {
-    const wallet = eth1
+    const wallet = ethereumWallet
     const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
     const sdk = createSdk(wallet, "development")
 
@@ -279,7 +280,7 @@ describe("mint and sell", () => {
   })
 
   test("should lazy mint and put on sale ERC1155 token with basic function", async () => {
-    const wallet = eth1
+    const wallet = ethereumWallet
     const sender = toUnionAddress(`ETHEREUM:${await wallet.ethereum.getFrom()}`)
     const sdk = createSdk(wallet, "development")
 

@@ -2,7 +2,7 @@ import * as common from "@rarible/ethereum-sdk-test-common"
 import { ethers } from "ethers"
 import Web3 from "web3"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toAddress } from "@rarible/types"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
 import { parseRequestError } from "@rarible/web3-ethereum/src/utils/parse-request-error"
@@ -32,7 +32,7 @@ describe.each(data)("ethers.js Ethereum", (eth: Ethereum) => {
   })
 
   test(`${eth.constructor.name} allows to send transfer ETH tx`, async () => {
-    const recipientAccountAddress = randomAddress()
+    const recipientAccountAddress = randomEVMAddress()
     const tx = await eth.sendTransaction({
       to: recipientAccountAddress,
       value: "1",

@@ -1,7 +1,6 @@
-import type { BlockchainWallet } from "@rarible/sdk-wallet"
-import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet, WalletType } from "@rarible/sdk-wallet"
+import type { BlockchainWallet, EthereumWallet } from "@rarible/sdk-wallet"
+import { FlowWallet, SolanaWallet, TezosWallet, WalletType } from "@rarible/sdk-wallet"
 import { initProvider } from "@rarible/sdk/src/sdk-blockchains/ethereum/test/init-providers"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import fcl from "@onflow/fcl"
 import type { UnionAddress } from "@rarible/types"
 import { toUnionAddress } from "@rarible/types"
@@ -17,24 +16,16 @@ export function getEthereumWallet(pk: string = testsConfig.variables.ETHEREUM_WA
     networkId: testsConfig.variables.ETHEREUM_NETWORK_ID,
     rpcUrl: testsConfig.variables.ETHEREUM_RPC_URL,
   }
-  const { web3, wallet } = initProvider(pk, config)
-  const ethereum = new Web3Ethereum({
-    web3: web3,
-    from: wallet.getAddressString(),
-  })
-  return new EthereumWallet(ethereum)
+  const { ethereumWallet } = initProvider(pk, config)
+  return ethereumWallet
 }
 
 export function getPolygonWallet(pk?: string): EthereumWallet {
-  const { web3, wallet } = initProvider(pk, {
+  const { ethereumWallet } = initProvider(pk, {
     networkId: 80001,
     rpcUrl: "https://rpc-mumbai.maticvigil.com",
   })
-  const ethereum = new Web3Ethereum({
-    web3: web3,
-    from: wallet.getAddressString(),
-  })
-  return new EthereumWallet(ethereum)
+  return ethereumWallet
 }
 
 export function getEthereumWalletBuyer(): EthereumWallet {

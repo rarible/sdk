@@ -3,6 +3,7 @@ export * from "./address"
 export * from "./blockchain"
 export * from "./retry"
 export * from "./get-stringified-data"
+export * from "./methods"
 
 export enum DappType {
   AlphaWallet = "AlphaWallet",
@@ -93,3 +94,21 @@ export function hasName(x: unknown): x is Error {
 export function hasCode(error: unknown): error is { code: number } {
   return isObjectLike(error) && "code" in error
 }
+
+export function deepReplaceBigInt(o: unknown): any {
+  if (Array.isArray(o)) {
+    return o.map(item => deepReplaceBigInt(item))
+  }
+  if (typeof o === "object" && o !== null) {
+    const clonedObject = { ...o } as Record<string, unknown>
+    return Object.keys(clonedObject).reduce((acc, key) => {
+      acc[key] = deepReplaceBigInt(acc[key])
+      return acc
+    }, clonedObject)
+  }
+  if (typeof o === "bigint") return o.toString()
+  return o
+}
+
+export * from "./types"
+export * from "./web3"

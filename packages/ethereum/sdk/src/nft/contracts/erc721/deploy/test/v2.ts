@@ -1,9 +1,9 @@
-import type Web3 from "web3"
-import type { Contract } from "web3-eth-contract"
+import type { Web3 } from "@rarible/web3-v4-ethereum"
 import { erc721v2Abi } from "../../v2"
+import { NumberDataFormat } from "../../../../../common/contracts"
 
-export async function deployErc721V2(web3: Web3, name: string, symbol: string): Promise<Contract> {
-  const empty = new web3.eth.Contract(erc721v2Abi)
+export async function deployErc721V2(web3: Web3, name: string, symbol: string) {
+  const empty = new web3.eth.Contract(erc721v2Abi, {}, NumberDataFormat)
   const [address] = await web3.eth.getAccounts()
   const deploy = await empty.deploy({
     data: bytecodeErc721V2,
@@ -15,7 +15,7 @@ export async function deployErc721V2(web3: Web3, name: string, symbol: string): 
       "ipfs:/",
     ],
   })
-  return deploy.send({ from: address, gas: 4000000, gasPrice: "0" })
+  return deploy.send({ from: address, gas: "4000000" })
 }
 
 const bytecodeErc721V2 =

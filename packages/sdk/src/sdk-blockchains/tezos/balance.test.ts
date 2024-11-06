@@ -1,4 +1,4 @@
-import { toContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
+import { toUnionContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
 import type { RaribleSdkEnvironment } from "../../config/domain"
 import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
@@ -44,7 +44,7 @@ describe("get tezos balance", () => {
   test.concurrent("get balance FT", async () => {
     const balance = await sellerSdk.balances.getBalance(toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"), {
       "@type": "TEZOS_FT",
-      contract: toContractAddress(fa12),
+      contract: toUnionContractAddress(fa12),
     })
     expect(balance.toString()).toEqual("0.03")
   })
@@ -61,7 +61,7 @@ describe("get tezos balance", () => {
     const sellerSdk = createSdk(undefined, "testnet")
     const balance = await sellerSdk.balances.getBalance(toUnionAddress("TEZOS:tz1hnh8ET6dtP2PBQ2yj2T3ZEfMii6kEWR6N"), {
       "@type": "TEZOS_FT",
-      contract: toContractAddress("TEZOS:KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"),
+      contract: toUnionContractAddress("TEZOS:KT1LJSq4mhyLtPKrncLXerwAF2Xvk7eU3KJX"),
     })
     expect(balance.toString()).toEqual("0.03")
   })

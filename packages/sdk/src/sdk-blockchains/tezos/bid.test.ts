@@ -9,7 +9,11 @@ import { createSdk } from "../../common/test/create-sdk"
 import { createTestWallet } from "./test/test-wallet"
 import { awaitForOrder } from "./test/await-for-order"
 import { awaitForOrderStatus } from "./test/await-for-order-status"
-import { convertTezosToCollectionAddress, convertTezosToContractAddress, convertTezosToUnionAddress } from "./common"
+import {
+  convertTezosToCollectionAddress,
+  convertTezostoUnionContractAddress,
+  convertTezosToUnionAddress,
+} from "./common"
 import { awaitForOwnership } from "./test/await-for-ownership"
 import { getTestContract } from "./test/test-contracts"
 import { TEST_PK_1, TEST_PK_3 } from "./test/credentials"
@@ -32,7 +36,7 @@ describe.skip("bid test", () => {
   const eurTzContract = getTestContract(env, "eurTzContract")
   const nftContract = getTestContract(env, "nftContract")
   const mtContract = getTestContract(env, "mtContract")
-  const wXTZContract = convertTezosToContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
+  const wXTZContract = convertTezostoUnionContractAddress("KT1LkKaeLBvTBo6knGeN5RsEunERCaqVcLr9")
 
   beforeAll(async () => {
     console.log({

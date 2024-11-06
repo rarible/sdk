@@ -2,13 +2,13 @@ import { personalSign } from "eth-sig-util"
 import Wallet from "ethereumjs-wallet"
 import { fromRpcSig, bufferToHex, toBuffer, setLengthLeft } from "ethereumjs-util"
 import { randomWord } from "@rarible/types"
-import type Web3 from "web3"
+import type { Web3 } from "@rarible/web3-v4-ethereum"
 import { createGanacheProvider } from "@rarible/ethereum-sdk-test-common/build/create-ganache-provider"
 import { isSigner } from "./is-signer"
-import { createTestProviders } from "./test/create-test-providers"
+import { createEthereumProviders } from "./test/create-test-providers"
 
 const { provider, wallets } = createGanacheProvider()
-const { web3, providers } = createTestProviders(provider, wallets[0])
+const { web3v4, providers } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache
@@ -29,17 +29,17 @@ describe.each(providers)("isSigner", ethereum => {
   })
 
   test("erc1271 works", async () => {
-    const test = await deployTestErc1271(web3)
+    const test = await deployTestErc1271(web3v4)
     const from = await ethereum.getFrom()
     const hash = Buffer.from(randomWord().substring(2), "hex")
     const pk = Buffer.from(randomWord().substring(2), "hex")
     const signature = personalSign(pk, { data: randomWord() })
 
     await test.methods.setReturnSuccessfulValidSignature(false).send({ from })
-    expect(await isSigner(ethereum, test.options.address, hash, signature)).toBe(false)
+    expect(await isSigner(ethereum, test.options.address!, hash, signature)).toBe(false)
 
     await test.methods.setReturnSuccessfulValidSignature(true).send({ from })
-    expect(await isSigner(ethereum, test.options.address, hash, signature)).toBe(true)
+    expect(await isSigner(ethereum, test.options.address!, hash, signature)).toBe(true)
   })
 })
 
@@ -48,9 +48,14 @@ function toRpcSig(v: number, r: Buffer, s: Buffer) {
 }
 
 async function deployTestErc1271(web3: Web3) {
-  const empty = new web3.eth.Contract(testABI as any)
+  const empty = new web3.eth.Contract(testABI)
   const [address] = await web3.eth.getAccounts()
-  return empty.deploy({ data: bytecode, arguments: [] }).send({ from: address, gas: 1000000, gasPrice: "0" })
+  return (
+    empty
+      // @ts-ignore
+      .deploy({ data: bytecode, arguments: [] })
+      .send({ from: address, gas: "1000000" })
+  )
 }
 
 const bytecode =
@@ -132,4 +137,4 @@ const testABI = [
     stateMutability: "view",
     type: "function",
   },
-]
+] as const

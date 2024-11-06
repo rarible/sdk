@@ -3,9 +3,7 @@ import { delay, isInfoLevel } from "@rarible/sdk-common"
 import { WrongNetworkWarning } from "@rarible/protocol-ethereum-sdk/src/order/check-chain-id"
 import { Blockchain } from "@rarible/api-client"
 import { toCollectionId } from "@rarible/types"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { RemoteLogger } from "@rarible/logger/build"
 import type { LoggableValue } from "@rarible/logger/build/domain"
@@ -17,6 +15,7 @@ import { getAPIKey } from "../test/create-sdk"
 import { getSdkContext } from "../get-sdk-context"
 import { LogsLevel } from "../../domain"
 import { MintType } from "../../types/nft/mint/prepare"
+import { createE2eTestProvider } from "../../sdk-blockchains/ethereum/test/init-providers"
 import { getExecRevertedMessage, isErrorWarning } from "./logger-overrides"
 
 describe("logger overrides", () => {
@@ -104,7 +103,7 @@ describe("logger overrides", () => {
   })
 
   describe("SDK middleware extra fields", () => {
-    const { provider, wallet } = createE2eProvider(DEV_PK_1, ETH_DEV_SETTINGS)
+    const { provider, wallet } = createE2eTestProvider(DEV_PK_1, ETH_DEV_SETTINGS)
     const ethereum = new Web3Ethereum({ web3: new Web3(provider) })
 
     const ethereumWallet = new EthereumWallet(ethereum)

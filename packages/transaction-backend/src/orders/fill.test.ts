@@ -1,6 +1,5 @@
-import Web3 from "web3"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { createErc721V3Collection } from "@rarible/protocol-ethereum-sdk/build/common/mint"

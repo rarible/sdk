@@ -1,23 +1,19 @@
-import { toAddress, toBigNumber, toWord } from "@rarible/types"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { toEVMAddress, toBigNumber, toWord } from "@rarible/types"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../../config"
 import { retry } from "../../common/retry"
-import { getSimpleSendWithInjects, sentTxConfirm } from "../../common/send-transaction"
+import { getSimpleSendWithInjects } from "../../common/send-transaction"
 import { signOrder } from "../sign-order"
 import type { SimpleLegacyOrder, SimpleOrder } from "../types"
 import { getApis as getApisTemplate } from "../../common/apis"
 import { DEV_PK_1, DEV_PK_2 } from "../../common/test/test-credentials"
+import { sentTxConfirm } from "../../common/test"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { OrderFiller } from "./"
 
 describe.skip("test exchange v1 order", () => {
-  const { provider: provider1, wallet: wallet1 } = createE2eProvider(DEV_PK_1)
-  const { provider: provider2, wallet: wallet2 } = createE2eProvider(DEV_PK_2)
-  const web31 = new Web3(provider1)
-  const web32 = new Web3(provider2)
-  const sellerEthereum = new Web3Ethereum({ web3: web31 })
-  const buyerEthereum = new Web3Ethereum({ web3: web32 })
+  const { wallet: wallet1, web3v4: web31, web3Ethereum: sellerEthereum } = createE2eTestProvider(DEV_PK_1)
+  const { wallet: wallet2, web3Ethereum: buyerEthereum } = createE2eTestProvider(DEV_PK_2)
 
   const config = getEthereumConfig("dev-ethereum")
   const getConfig = async () => config
@@ -27,8 +23,8 @@ describe.skip("test exchange v1 order", () => {
   const send2 = getSimpleSendWithInjects()
   const filler = new OrderFiller(buyerEthereum, send2, getConfig, getApis, getBaseOrderFee, "dev-ethereum")
 
-  const seller = toAddress(wallet1.getAddressString())
-  const buyer = toAddress(wallet2.getAddressString())
+  const seller = toEVMAddress(wallet1.getAddressString())
+  const buyer = toEVMAddress(wallet2.getAddressString())
 
   const it = awaitAll({
     testErc721: deployTestErc721(web31, "Test", "TST"),
@@ -45,7 +41,7 @@ describe.skip("test exchange v1 order", () => {
       make: {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(it.testErc721.options.address),
+          contract: toEVMAddress(it.testErc721.options.address!),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("1"),
@@ -90,7 +86,7 @@ describe.skip("test exchange v1 order", () => {
       make: {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(it.testErc721.options.address),
+          contract: toEVMAddress(it.testErc721.options.address!),
           tokenId: toBigNumber(tokenId),
         },
         value: toBigNumber("1"),

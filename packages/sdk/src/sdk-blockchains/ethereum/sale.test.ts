@@ -1,8 +1,6 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3v4Ethereum, Web3 } from "@rarible/web3-v4-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { toCollectionId, toCurrencyId, toItemId, toOrderId, toUnionAddress, toWord } from "@rarible/types"
-import Web3 from "web3"
 import { Blockchain, BlockchainGroup } from "@rarible/api-client"
 import { id32 } from "@rarible/protocol-ethereum-sdk/build/common/id"
 import { toPromises } from "@rarible/web3-ethereum/build/utils/to-promises"
@@ -14,23 +12,19 @@ import { awaitOrderMakeStock } from "../../common/test/await-order"
 import { OriginFeeSupport } from "../../types/order/fill/domain"
 import { createSdk } from "../../common/test/create-sdk"
 import { generateExpirationDate } from "../../common/suite/order"
-import { initProviders } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1 } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
 import { awaitErc1155Balance } from "./test/await-erc-1155-balance"
+import { createE2eTestProvider, initProviders } from "./test/init-providers"
 
 describe("sale", () => {
-  const { web31, web32, wallet1, wallet2 } = initProviders({
+  const { web32, ethereum1, ethereum2, ethereumWallet1, ethereumWallet2, wallet1, wallet2 } = initProviders({
     pk1: DEV_PK_1,
     pk2: "064b2a70a2932eb5b45c760b210a2bee579d94031a8c40bff05cfd9d800d6812",
   })
-  const ethereum1 = new Web3Ethereum({ web3: web31 })
-  const ethereum2 = new Web3Ethereum({ web3: web32 })
-  const ethWallet1 = new EthereumWallet(ethereum1)
-  const ethWallet2 = new EthereumWallet(ethereum2)
-  const sdk1 = createSdk(ethWallet1, "development")
-  const sdk2 = createSdk(ethWallet2, "development", {
+  const sdk1 = createSdk(ethereumWallet1, "development")
+  const sdk2 = createSdk(ethereumWallet2, "development", {
     logs: LogsLevel.DISABLED,
     blockchain: {
       [BlockchainGroup.ETHEREUM]: {
@@ -98,7 +92,7 @@ describe("sale", () => {
         orderId,
         amount: 1,
       },
-      from: convertEthereumToUnionAddress(await ethWallet2.ethereum.getFrom()),
+      from: convertEthereumToUnionAddress(await ethereumWallet2.ethereum.getFrom()),
     })
 
     if (!txData) throw new Error("Ethereum SDK is not init")
@@ -109,13 +103,13 @@ describe("sale", () => {
 
     console.log("value", (await txData).value)
     const promiEvent = web32.eth.sendTransaction({
-      from: await ethWallet2.ethereum.getFrom(),
+      from: await ethereumWallet2.ethereum.getFrom(),
       to: txData.to,
       data: txData.data,
       value: txData.value,
     })
     //wait for confirming transaction
-    const promises = toPromises(promiEvent)
+    const promises = toPromises(promiEvent as any)
     await promises.receipt
 
     const nextStock2 = "0"
@@ -454,7 +448,12 @@ describe("sale", () => {
 
     const nextStock2 = "3"
     await awaitOrderMakeStock(sdk1, orderId, nextStock2)
-    await awaitErc1155Balance(ethWallet2, result.itemId, toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`), 2)
+    await awaitErc1155Balance(
+      ethereumWallet2,
+      result.itemId,
+      toUnionAddress(`ETHEREUM:${await ethereum2.getFrom()}`),
+      2,
+    )
   })
 
   test("get future order fees", async () => {
@@ -469,13 +468,13 @@ describe("sale", () => {
 })
 
 describe.skip("buy item with opensea order", () => {
-  const { provider } = createE2eProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
+  const { provider } = createE2eTestProvider("0x00120de4b1518cf1f16dc1b02f6b4a8ac29e870174cb1d8575f578480930250a", {
     rpcUrl: "https://node-rinkeby.rarible.com",
     networkId: 4,
   })
 
   const web3 = new Web3(provider)
-  const ethereum1 = new Web3Ethereum({ web3 })
+  const ethereum1 = new Web3v4Ethereum({ web3 })
   const meta = toWord(id32("CUSTOM_META"))
   const sdk1 = createSdk(new EthereumWallet(ethereum1), "testnet", {
     logs: LogsLevel.DISABLED,

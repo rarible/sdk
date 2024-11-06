@@ -1,7 +1,6 @@
-import type { AssetType, Order, OrderId } from "@rarible/api-client"
-import type { ContractAddress } from "@rarible/types"
+import type { AssetType, Order, OrderId, UnionContractAddress } from "@rarible/api-client"
 import type { ItemId } from "@rarible/api-client"
-import { toCollectionId, toContractAddress } from "@rarible/types"
+import { toCollectionId, toUnionContractAddress } from "@rarible/types"
 import type { CollectionId } from "@rarible/api-client"
 import type { BlockchainIsh, NonEVMBlockchains, SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain, isEVMBlockchain } from "@rarible/sdk-common"
@@ -20,7 +19,7 @@ export function getOrderIdFromFillRequest(req?: PrepareFillRequest): OrderId | u
   }
 }
 
-export function getNftContractAddress(assetType: AssetType): ContractAddress | undefined {
+export function getNftContractAddress(assetType: AssetType): UnionContractAddress | undefined {
   switch (assetType["@type"]) {
     case "FLOW_NFT":
     case "TEZOS_NFT":
@@ -35,13 +34,13 @@ export function getNftContractAddress(assetType: AssetType): ContractAddress | u
       return assetType.contract
     case "NFT":
     case "NFT_OF_COLLECTION":
-      return toContractAddress(assetType.collectionId)
+      return toUnionContractAddress(assetType.collectionId)
     default:
       return undefined
   }
 }
 
-export function getOrderNftContractAddress(order: Order): ContractAddress | undefined {
+export function getOrderNftContractAddress(order: Order): UnionContractAddress | undefined {
   return getNftContractAddress(order.make.type) || getNftContractAddress(order.take.type)
 }
 

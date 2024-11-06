@@ -5,7 +5,7 @@ export async function waitFor<T>(
   predicate?: (value: T) => boolean,
   interval: number = 1000,
 ) {
-  return retry(10, interval, async () => {
+  return retry(20, interval, async () => {
     const result = await promise()
     if (predicate) {
       if (!predicate(result)) {

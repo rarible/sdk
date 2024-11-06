@@ -1,10 +1,9 @@
-import { toAddress, toBigNumber } from "@rarible/types"
-import { awaitAll, createE2eProvider, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
+import { awaitAll, deployTestErc721 } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+
 import { getEthereumConfig } from "../config"
-import { getSendWithInjects, getSimpleSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects, getSimpleSendWithInjects } from "../common/send-transaction"
 import { delay } from "../common/retry"
 import { getApis as getApisTemplate } from "../common/apis"
 import { createErc721V3Collection } from "../common/mint"
@@ -13,6 +12,12 @@ import { mint as mintTemplate } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
 import { DEV_PK_1, DEV_PK_2, getTestContract } from "../common/test/test-credentials"
 import { MIN_PAYMENT_VALUE } from "../common/check-min-payment-value"
+import {
+  concatBuyerSellerProviders,
+  createE2eTestProvider,
+  createEthereumProviders,
+} from "../common/test/create-test-providers"
+import { sentTx } from "../common/test"
 import { OrderBid } from "./bid"
 import { signOrder as signOrderTemplate } from "./sign-order"
 import { OrderFiller } from "./fill-order"
@@ -22,18 +27,19 @@ import type { SimpleRaribleV2Order } from "./types"
 import { approve as approveTemplate } from "./approve"
 import { createErc20Contract } from "./contracts/erc20"
 
+const pk1Provider = createE2eTestProvider(DEV_PK_1)
+const pk2Provider = createE2eTestProvider(DEV_PK_2)
+
+// const { providers, web3v4 } = createEthereumProviders(provider, wallet)
+const pk1TestProviders = createEthereumProviders(pk1Provider.provider, pk1Provider.wallet)
+const pk2TestProviders = createEthereumProviders(pk2Provider.provider, pk2Provider.wallet)
+
+const providers = concatBuyerSellerProviders(pk1TestProviders.providers, pk2TestProviders.providers)
+
 /**
  * @group provider/dev
  */
-describe("bid", () => {
-  const { provider: provider1 } = createE2eProvider(DEV_PK_1)
-  const web31 = new Web3(provider1)
-  const ethereum1 = new Web3Ethereum({ web3: web31 })
-
-  const { provider: provider2 } = createE2eProvider(DEV_PK_2)
-  const web32 = new Web3(provider2)
-  const ethereum2 = new Web3Ethereum({ web3: web32 })
-
+describe.each(providers)("bid", (ethereum1, ethereum2) => {
   const env = "dev-ethereum" as const
   const config = getEthereumConfig(env)
   const getConfig = async () => config
@@ -66,7 +72,7 @@ describe("bid", () => {
   const erc20Contract = getTestContract(env, "erc20")
 
   const it = awaitAll({
-    testErc721: deployTestErc721(web31, "Test", "TST"),
+    testErc721: deployTestErc721(pk1Provider.web3v4, "Test", "TST"),
   })
 
   beforeAll(async () => {
@@ -83,8 +89,8 @@ describe("bid", () => {
   const filler1 = new OrderFiller(ethereum1, send1, getConfig, getApis1, getBaseOrderFee, env)
 
   test("create bid for collection", async () => {
-    const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
-    const bidderAddress = toAddress(await ethereum2.getFrom())
+    const ownerCollectionAddress = toEVMAddress(await ethereum1.getFrom())
+    const bidderAddress = toEVMAddress(await ethereum2.getFrom())
 
     await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 0, "0x"), { from: ownerCollectionAddress })
     await sentTx(it.testErc721.methods.mint(ownerCollectionAddress, 1, "0x"), { from: ownerCollectionAddress })
@@ -100,7 +106,7 @@ describe("bid", () => {
       },
       takeAssetType: {
         assetClass: "COLLECTION",
-        contract: toAddress(it.testErc721.options.address),
+        contract: toEVMAddress(it.testErc721.options.address),
       },
       price: toBn("1000000000000000000"),
       amount: 1,
@@ -114,7 +120,7 @@ describe("bid", () => {
       originFees: [],
       assetType: {
         assetClass: "ERC721",
-        contract: toAddress(it.testErc721.options.address),
+        contract: toEVMAddress(it.testErc721.options.address),
         tokenId: toBigNumber("1"),
       },
     })
@@ -122,13 +128,13 @@ describe("bid", () => {
   })
 
   test("create bid for erc-721 collection and accept bid with lazy-item", async () => {
-    const ownerCollectionAddress = toAddress(await ethereum1.getFrom())
-    const bidderAddress = toAddress(await ethereum2.getFrom())
+    const ownerCollectionAddress = toEVMAddress(await ethereum1.getFrom())
+    const bidderAddress = toEVMAddress(await ethereum2.getFrom())
 
     const mintedItem = (await mint1({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
       uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
-      creators: [{ account: toAddress(ownerCollectionAddress), value: 10000 }],
+      creators: [{ account: toEVMAddress(ownerCollectionAddress), value: 10000 }],
       royalties: [],
       lazy: true,
     } as ERC721RequestV3)) as MintOffChainResponse

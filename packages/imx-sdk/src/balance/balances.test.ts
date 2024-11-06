@@ -1,4 +1,4 @@
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS, toEVMAddress } from "@rarible/types"
 import { getBalance } from "../index"
 import { createApis } from "../apis"
 
@@ -8,22 +8,22 @@ describe("test imx balances", () => {
   const apis = createApis(env)
 
   test.skip("should get eth balance", async () => {
-    const ethBalance = await getBalance(env, apis, toAddress(address), { assetClass: "ETH" })
+    const ethBalance = await getBalance(env, apis, toEVMAddress(address), { assetClass: "ETH" })
     expect(parseFloat(ethBalance.toString())).toBeGreaterThan(0)
   })
 
   test.skip("should get erc20 balance", async () => {
-    const ethBalance = await getBalance(env, apis, toAddress(address), {
+    const ethBalance = await getBalance(env, apis, toEVMAddress(address), {
       assetClass: "ERC20",
-      contract: toAddress("0x26b81657e09d3a6a18ff1c6d776fd09f4bb9ee80"),
+      contract: toEVMAddress("0x26b81657e09d3a6a18ff1c6d776fd09f4bb9ee80"),
     })
     expect(parseFloat(ethBalance.toString())).toBeGreaterThan(0)
   })
 
   test("should return 0 for not exist token", async () => {
-    const nonExistableBalance = await getBalance(env, apis, toAddress(address), {
+    const nonExistableBalance = await getBalance(env, apis, toEVMAddress(address), {
       assetClass: "ERC20",
-      contract: ZERO_ADDRESS,
+      contract: EVM_ZERO_ADDRESS,
     })
     expect(parseFloat(nonExistableBalance.toString())).toEqual(0)
   })

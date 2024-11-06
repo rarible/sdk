@@ -3,21 +3,11 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.13.68-fix.68](https://github.com/rarible/sdk/compare/v0.13.68-fix.67...v0.13.68-fix.68) (2024-10-28)
+## [0.13.69-beta.5](https://github.com/rarible/sdk/compare/v0.13.69-beta.4...v0.13.69-beta.5) (2024-10-22)
 
-**Note:** Version bump only for package @rarible/connector-thirdweb
+### Features
 
-## [0.13.68-fix.67](https://github.com/rarible/sdk/compare/v0.13.68-fix.66...v0.13.68-fix.67) (2024-10-22)
-
-**Note:** Version bump only for package @rarible/connector-thirdweb
-
-## [0.13.68-fix.66](https://github.com/rarible/sdk/compare/v0.13.68-fix.65...v0.13.68-fix.66) (2024-10-22)
-
-**Note:** Version bump only for package @rarible/connector-thirdweb
-
-## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
-
-**Note:** Version bump only for package @rarible/connector-thirdweb
+- **PLTF-710:** web3 v4 integration provider with new types ([#675](https://github.com/rarible/sdk/issues/675)) ([e7ce3e5](https://github.com/rarible/sdk/commit/e7ce3e549c38fbf2e66f45bf3402926d3b0a1e07))
 
 ## [0.13.68-fix.64](https://github.com/rarible/sdk/compare/v0.13.68-fix.63...v0.13.68-fix.64) (2024-10-14)
 

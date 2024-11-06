@@ -1,20 +1,17 @@
-import type { Asset } from "@rarible/ethereum-api-client"
-import type { Address } from "@rarible/types"
+import type { Asset, EVMAddress } from "@rarible/ethereum-api-client"
 import { toBigNumber } from "@rarible/types/build/big-number"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { awaitAll, createGanacheProvider, deployWethContract } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { checkGreaterThanMinPaymentValue, checkMinPaymentValue } from "./check-min-payment-value"
 
 /**
  * @group provider/ganache
  */
 describe("check min payment value fn", function () {
-  const { addresses, provider } = createGanacheProvider()
+  const { addresses, web3 } = createGanacheProvider()
   const [address] = addresses
-  const web3 = new Web3(provider as any)
-  const ethereum = new Web3Ethereum({ web3, from: address, gas: 1000000 })
+  const ethereum = new Web3v4Ethereum({ web3, from: address, gas: 1000000 })
 
   const it = awaitAll({
     weth: deployWethContract(web3),
@@ -35,7 +32,7 @@ describe("check min payment value fn", function () {
   const erc721Asset: Asset = {
     assetType: {
       assetClass: "ERC721",
-      contract: toAddress("0x0000000000000000000000000000000000000001"),
+      contract: toEVMAddress("0x0000000000000000000000000000000000000001"),
       tokenId: toBigNumber("1"),
     },
     value: toBigNumber("1"),
@@ -47,7 +44,7 @@ describe("check min payment value fn", function () {
       const wethAsset: Asset = {
         assetType: {
           assetClass: "ERC20",
-          contract: it.weth.options.address as Address,
+          contract: it.weth.options.address as EVMAddress,
         },
         value: toBigNumber("10"),
       }

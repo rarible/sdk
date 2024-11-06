@@ -8,20 +8,19 @@ import { updateNodeGlobalVars } from "../common"
 updateNodeGlobalVars()
 
 async function burn() {
-	const wallet = new TezosWallet(
-		in_memory_provider(
-			"edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1" +
-      "D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
-			"https://rpc.tzkt.io/ithacanet"
-		)
-	)
-	const sdk = createRaribleSdk(wallet, "testnet")
-	const tx = await sdk.nft.burn({
-		itemId: toItemId("TEZOS:KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43:3"),
-		amount: 1,
-	})
-	if (tx) {
-	  await tx.wait()
-	}
+  const wallet = new TezosWallet(
+    in_memory_provider(
+      "edskRqrEPcFetuV7xDMMFXHLMPbsTawXZjH9yrEz4RBqH1D6H8CeZTTtjGA3ynjTqD8Sgmksi7p5g3u5KUEVqX2EWrRnq5Bymj",
+      "https://rpc.tzkt.io/ithacanet",
+    ),
+  )
+  const sdk = createRaribleSdk(wallet, "testnet")
+  const tx = await sdk.nft.burn({
+    itemId: toItemId("TEZOS:KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43:3"),
+    amount: 1,
+  })
+  if (tx) {
+    await tx.wait()
+  }
 }
 burn()

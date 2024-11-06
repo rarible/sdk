@@ -1,12 +1,11 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
-import type { AbiItem } from "../../common/abi-item"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 
-export function createLooksrareV2Exchange(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createLooksrareV2Exchange(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(LOOKSRARE_V2_ABI, address)
 }
 
-export const LOOKSRARE_V2_ABI: AbiItem[] = [
+export const LOOKSRARE_V2_ABI = [
   {
     inputs: [
       {
@@ -1965,4 +1964,4 @@ export const LOOKSRARE_V2_ABI: AbiItem[] = [
     stateMutability: "view",
     type: "function",
   },
-]
+] as const

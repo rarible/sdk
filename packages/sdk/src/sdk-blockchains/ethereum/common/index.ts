@@ -1,16 +1,16 @@
 import type { Address, Maybe, UnionAddress, Word } from "@rarible/types"
 import {
-  toAddress,
+  toEVMAddress,
   toBigNumber,
   toBinary,
   toCollectionId,
-  toContractAddress,
+  toUnionContractAddress,
   toItemId,
   toOrderId,
   toUnionAddress,
   toWord,
 } from "@rarible/types"
-import { isRealBlockchainSpecified } from "@rarible/types/build/blockchains"
+import { isRealBlockchainSpecified } from "@rarible/types"
 import type {
   Asset,
   AssetType,
@@ -21,17 +21,23 @@ import type {
   Order,
   OrderData,
   OrderId,
+  UnionContractAddress,
 } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { ContractAddress } from "@rarible/types/build/contract-address"
+import type { ContractAddress } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { Asset as EthereumAsset, AssetType as EthereumAssetType, Part } from "@rarible/ethereum-api-client"
+import type {
+  Asset as EthereumAsset,
+  AssetType as EthereumAssetType,
+  EVMAddress,
+  Part,
+} from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { CommonFillRequestAssetType } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { NftAssetType } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { EVMBlockchain } from "@rarible/sdk-common/build"
+import type { EVMBlockchain } from "@rarible/sdk-common"
 import { EVMBlockchains, isEVMBlockchain, WalletIsUndefinedError } from "@rarible/sdk-common/build"
 import {
   getBlockchainBySDKNetwork,
@@ -209,7 +215,7 @@ export function convertOrderDataToEth(data: OrderData): SimpleOrder["data"] {
     case "ETH_RARIBLE_V1": {
       return {
         dataType: "LEGACY",
-        fee: data.fee,
+        fee: +data.fee,
       } as OrderDataLegacy
     }
     case "ETH_RARIBLE_V2": {
@@ -403,7 +409,7 @@ export function getOriginFeesSum(originFees: Array<Part | Payout>): number {
 export function getOrderFeesSum(order: Order): number {
   switch (order.data["@type"]) {
     case "ETH_RARIBLE_V1":
-      return order.data.fee
+      return +order.data.fee
     case "ETH_RARIBLE_V2":
     case "ETH_RARIBLE_V2_2":
     case "ETH_RARIBLE_V2_3":
@@ -477,7 +483,7 @@ export function getSupportedCurrencies(
   ]
 }
 
-export function convertToEthereumAddress(contractAddress: UnionAddress | ContractAddress | CollectionId): Address {
+export function convertToEthereumAddress(contractAddress: UnionAddress | ContractAddress | CollectionId): EVMAddress {
   if (!isRealBlockchainSpecified(contractAddress)) {
     throw new Error("Not a union or contract address: " + contractAddress)
   }
@@ -486,7 +492,7 @@ export function convertToEthereumAddress(contractAddress: UnionAddress | Contrac
   if (!isEVMBlockchain(blockchain)) {
     throw new Error("Not an Ethereum address")
   }
-  return toAddress(address)
+  return toEVMAddress(address)
 }
 
 export function convertEthereumOrderHash(hash: Word, blockchain: EVMBlockchain): OrderId {
@@ -505,8 +511,12 @@ export function convertOrderIdToEthereumHash(orderId: OrderId): string {
   return orderHash
 }
 
-export function convertEthereumContractAddress(address: string, blockchain: EVMBlockchain): ContractAddress {
-  return toContractAddress(`${blockchain}:${address}`)
+export function convertEthereumContractAddress(
+  address: string | undefined,
+  blockchain: EVMBlockchain,
+): UnionContractAddress {
+  if (!address) throw new Error("Address is undefined")
+  return toUnionContractAddress(`${blockchain}:${address}`)
 }
 
 export function convertEthereumCollectionId(address: string, blockchain: EVMBlockchain): CollectionId {
@@ -560,7 +570,7 @@ export function getOrderId(fillRequest: PrepareFillRequest) {
 export function getAssetTypeFromItemId(itemId: ItemId): NftAssetType {
   const { contract, tokenId } = getEthereumItemId(itemId)
   return {
-    contract: toAddress(contract),
+    contract: toEVMAddress(contract),
     tokenId,
   }
 }
@@ -580,7 +590,7 @@ export function getAssetTypeFromFillRequest(
   return getAssetTypeFromItemId(itemId)
 }
 
-export function assertWallet(wallet: Maybe<EthereumWallet>) {
+export function assertWallet(wallet: Maybe<EthereumWallet>): EthereumWallet {
   if (!wallet) throw new WalletIsUndefinedError()
   return wallet
 }
@@ -627,7 +637,7 @@ export function isNft(
   }
 }
 
-export function isWETH(assetType: AssetType, wethAddress: Address) {
+export function isWETH(assetType: AssetType, wethAddress: EVMAddress | Address) {
   return assetType["@type"] === "ERC20" && convertToEthereumAddress(assetType.contract) === wethAddress
 }
 

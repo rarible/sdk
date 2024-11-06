@@ -1,7 +1,5 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress, toBinary, ZERO_ADDRESS } from "@rarible/types"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
+import { toEVMAddress, toBinary, EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { Erc1155AssetType, LooksRareOrder } from "@rarible/ethereum-api-client"
 import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import { ethers } from "ethers"
@@ -16,13 +14,14 @@ import { FILL_CALLDATA_TAG } from "../../config/common"
 import { DEV_PK_1, DEV_PK_2, getE2EConfigByNetwork, getTestContract } from "../../common/test/test-credentials"
 import { delay } from "../../common/retry"
 import { ETHER_IN_WEI } from "../../common"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { makeRaribleSellOrder } from "./looksrare-utils/create-order"
 
 describe.skip("looksrare fill", () => {
   const goerli = getE2EConfigByNetwork("sepolia")
-  const { provider: providerBuyer } = createE2eProvider(DEV_PK_1, goerli)
-  const { provider: providerSeller } = createE2eProvider(DEV_PK_2, goerli)
-  const { wallet: feeWallet } = createE2eProvider(undefined, goerli)
+  const { provider: providerBuyer } = createE2eTestProvider(DEV_PK_1, goerli)
+  const { provider: providerSeller } = createE2eTestProvider(DEV_PK_2, goerli)
+  const { wallet: feeWallet } = createE2eTestProvider(undefined, goerli)
   const web3Seller = new Web3(providerSeller as any)
   const ethereumSeller = new Web3Ethereum({
     web3: web3Seller,
@@ -44,7 +43,7 @@ describe.skip("looksrare fill", () => {
 
   const goerliErc721V3ContractAddress = getTestContract(env, "erc721V3")
   const goerliErc1155V2ContractAddress = getTestContract(env, "erc1155V2")
-  const originFeeAddress = toAddress(feeWallet.getAddressString())
+  const originFeeAddress = toEVMAddress(feeWallet.getAddressString())
 
   const config = getEthereumConfig("testnet")
 
@@ -73,7 +72,7 @@ describe.skip("looksrare fill", () => {
         tokenId: sellItem.tokenId,
       },
       send,
-      toAddress(config.exchange.looksrare),
+      toEVMAddress(config.exchange.looksrare),
     )
     console.log("sellOrder", sellOrder)
 
@@ -82,11 +81,11 @@ describe.skip("looksrare fill", () => {
       amount: 1,
       originFees: [
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 100,
         },
         {
-          account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+          account: toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
           value: 50,
         },
       ],
@@ -105,11 +104,11 @@ describe.skip("looksrare fill", () => {
       uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
       royalties: [
         {
-          account: toAddress("0xf6a21e471E07793C06D285CEa7AabA8B72029435"),
+          account: toEVMAddress("0xf6a21e471E07793C06D285CEa7AabA8B72029435"),
           value: 300,
         },
         {
-          account: toAddress("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE"),
+          account: toEVMAddress("0x2C3beA5Bd9adE1242Eecb327258a95516f9F45dE"),
           value: 400,
         },
       ],
@@ -133,7 +132,7 @@ describe.skip("looksrare fill", () => {
         tokenId: sellItem.tokenId,
       },
       send,
-      toAddress(config.exchange.looksrare),
+      toEVMAddress(config.exchange.looksrare),
     )
     console.log("sellOrder", sellOrder)
 
@@ -143,11 +142,11 @@ describe.skip("looksrare fill", () => {
       addRoyalty: true,
       originFees: [
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 1000,
         },
         {
-          account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+          account: toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
           value: 2000,
         },
       ],
@@ -187,10 +186,10 @@ describe.skip("looksrare fill", () => {
         tokenId: sellItem.tokenId,
       },
       send,
-      toAddress(config.exchange.looksrare),
+      toEVMAddress(config.exchange.looksrare),
     )
 
-    const seller = toAddress(await ethereumSeller.getFrom())
+    const seller = toEVMAddress(await ethereumSeller.getFrom())
     const tx = await sdkBuyer.order.buy({
       order: sellOrder,
       amount: 1,
@@ -228,7 +227,7 @@ describe.skip("looksrare fill", () => {
 
     const assetType = order.make.assetType as Erc1155AssetType
     const itemId = `${assetType.contract}:${assetType.tokenId}`
-    await awaitOwnership(sdkBuyer, itemId, toAddress(await buyerWeb3.getFrom()), "1")
+    await awaitOwnership(sdkBuyer, itemId, toEVMAddress(await buyerWeb3.getFrom()), "1")
   })
 
   test.each([
@@ -257,11 +256,11 @@ describe.skip("looksrare fill", () => {
         tokenId: sellItem.tokenId,
       },
       send,
-      toAddress(config.exchange.looksrare),
+      toEVMAddress(config.exchange.looksrare),
     )
     console.log("sellOrder", sellOrder)
 
-    const marketplaceMarker = toBinary(`${ZERO_ADDRESS}00000009`)
+    const marketplaceMarker = toBinary(`${EVM_ZERO_ADDRESS}00000009`)
     const sdkBuyer = createRaribleSdk(buyerEthereum.provider, "testnet", {
       marketplaceMarker,
     })
@@ -270,11 +269,11 @@ describe.skip("looksrare fill", () => {
       amount: 1,
       originFees: [
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 100,
         },
         {
-          account: toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
+          account: toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a"),
           value: 50,
         },
       ],
@@ -289,7 +288,7 @@ describe.skip("looksrare fill", () => {
   async function getEthBalances(addresses: string[]) {
     return Promise.all(
       addresses.map(async address => {
-        return toBn(await buyerWeb3.getBalance(toAddress(address))).div(ETHER_IN_WEI)
+        return toBn(await buyerWeb3.getBalance(toEVMAddress(address))).div(ETHER_IN_WEI)
       }),
     )
   }

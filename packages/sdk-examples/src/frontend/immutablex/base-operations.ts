@@ -11,98 +11,97 @@ import { toItemId } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 
 async function getSdk() {
-	const imxConnectorWallet = new ImxWallet("testnet")
-	await imxConnectorWallet.connect()
-	const wallet = new ImmutableXWallet(imxConnectorWallet)
+  const imxConnectorWallet = new ImxWallet("testnet")
+  await imxConnectorWallet.connect()
+  const wallet = new ImmutableXWallet(imxConnectorWallet)
 
-	console.log({
-		status: imxConnectorWallet.getConnectionData().status,
-		address: imxConnectorWallet.getConnectionData().address,
-	})
+  console.log({
+    status: imxConnectorWallet.getConnectionData().status,
+    address: imxConnectorWallet.getConnectionData().address,
+  })
 
-	return createRaribleSdk(wallet, "testnet")
+  return createRaribleSdk(wallet, "testnet")
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function burn(sdk: IRaribleSdk, itemId: ItemId) {
-	const prepare = await sdk.nft.burn.prepare({
-		itemId,
-	})
-	return await prepare.submit({
-		amount: 1,
-	})
+  const prepare = await sdk.nft.burn.prepare({
+    itemId,
+  })
+  return await prepare.submit({
+    amount: 1,
+  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function transfer(sdk: IRaribleSdk, itemId: ItemId, receiver: UnionAddress) {
-	const prepare = await sdk.nft.transfer.prepare({
-		itemId,
-	})
-	return await prepare.submit({
-		amount: 1,
-		to: receiver,
-	})
+  const prepare = await sdk.nft.transfer.prepare({
+    itemId,
+  })
+  return await prepare.submit({
+    amount: 1,
+    to: receiver,
+  })
 }
 
 async function sell(sdk: IRaribleSdk, itemId: ItemId, price: number): Promise<OrderId> {
-	const prepare = await sdk.order.sell.prepare({
-		itemId,
-	})
-	return await prepare.submit({
-		amount: 1,
-		price: price,
-		currency: { "@type": "ETH" },
-	})
+  const prepare = await sdk.order.sell.prepare({
+    itemId,
+  })
+  return await prepare.submit({
+    amount: 1,
+    price: price,
+    currency: { "@type": "ETH" },
+  })
 }
 
 async function buy(sdk: IRaribleSdk, orderId: OrderId) {
-	const prepare = await sdk.order.buy.prepare({
-		orderId,
-	})
-	return await prepare.submit({
-		amount: 1,
-	})
+  const prepare = await sdk.order.buy.prepare({
+    orderId,
+  })
+  return await prepare.submit({
+    amount: 1,
+  })
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function cancel(sdk: IRaribleSdk, orderId: OrderId) {
-	return sdk.order.cancel({
-		orderId,
-	})
+  return sdk.order.cancel({
+    orderId,
+  })
 }
 
 async function run() {
-	try {
-		const sdk = await getSdk()
-		let tx: IBlockchainTransaction
+  try {
+    const sdk = await getSdk()
+    let tx: IBlockchainTransaction
 
-		/** burn item **/
-		// tx = await burn(sdk, toItemId("IMMUTABLEX:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"))
+    /** burn item **/
+    // tx = await burn(sdk, toItemId("IMMUTABLEX:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"))
 
-		/** transfer item **/
-		// tx = await transfer(
-		// 	sdk,
-		// 	toItemId("IMMUTABLEX:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"),
-		// 	toUnionAddress("ETHEREUM:<ETHEREUM_ADDRESS>")
-		// )
+    /** transfer item **/
+    // tx = await transfer(
+    // 	sdk,
+    // 	toItemId("IMMUTABLEX:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"),
+    // 	toUnionAddress("ETHEREUM:<ETHEREUM_ADDRESS>")
+    // )
 
-		/** create sell order **/
-		const orderId = await sell(sdk, toItemId("IMMUTABLEX:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"), 0.001)
+    /** create sell order **/
+    const orderId = await sell(sdk, toItemId("IMMUTABLEX:<YOUR_COLLECTION_ID>:<YOUR_ITEM_ID>"), 0.001)
 
-		/** cancel order **/
-		// tx = await cancel(sdk, orderId)
+    /** cancel order **/
+    // tx = await cancel(sdk, orderId)
 
-		/** buy item **/
-		tx = await buy(sdk, orderId)
+    /** buy item **/
+    tx = await buy(sdk, orderId)
 
-		/** waiting for transaction **/
-		if (!tx.isEmpty) {
-			await tx.wait()
-		}
-
-	} catch (e: any) {
-		console.error(e)
-	}
+    /** waiting for transaction **/
+    if (!tx.isEmpty) {
+      await tx.wait()
+    }
+  } catch (e: any) {
+    console.error(e)
+  }
 }
 
 run()

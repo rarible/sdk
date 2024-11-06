@@ -1,6 +1,6 @@
-import type { ContractAddress } from "@rarible/types"
+import type { UnionContractAddress } from "@rarible/api-client"
 import type { RaribleSdkEnvironment } from "../../../config/domain"
-import { convertTezosToContractAddress } from "../common"
+import { convertTezostoUnionContractAddress } from "../common"
 
 export type contractType =
   | "eurTzContract"
@@ -10,7 +10,7 @@ export type contractType =
   | "mtContract"
   | "mtContract1"
 
-export function getTestContract(env: RaribleSdkEnvironment, type: contractType): ContractAddress {
+export function getTestContract(env: RaribleSdkEnvironment, type: contractType): UnionContractAddress {
   switch (env) {
     case "development": {
       const contracts: Record<contractType, string> = {
@@ -21,7 +21,7 @@ export function getTestContract(env: RaribleSdkEnvironment, type: contractType):
         nftContract1: "",
         mtContract1: "",
       }
-      return convertTezosToContractAddress(contracts[type])
+      return convertTezostoUnionContractAddress(contracts[type])
     }
     case "testnet": {
       const contracts: Record<contractType, string> = {
@@ -32,7 +32,7 @@ export function getTestContract(env: RaribleSdkEnvironment, type: contractType):
         nftContract1: "KT1EreNsT2gXRvuTUrpx6Ju4WMug5xcEpr43",
         mtContract1: "KT1RuoaCbnZpMgdRpSoLfJUzSkGz1ZSiaYwj",
       }
-      return convertTezosToContractAddress(contracts[type])
+      return convertTezostoUnionContractAddress(contracts[type])
     }
     case "prod": {
       const contracts: Record<contractType, string> = {
@@ -43,7 +43,7 @@ export function getTestContract(env: RaribleSdkEnvironment, type: contractType):
         nftContract1: "",
         mtContract1: "",
       }
-      return convertTezosToContractAddress(contracts[type])
+      return convertTezostoUnionContractAddress(contracts[type])
     }
     default:
       throw new Error("Unrecognized env")

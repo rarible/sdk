@@ -1,10 +1,10 @@
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
 import { toBn } from "@rarible/utils"
 import type { AssetType } from "@rarible/ethereum-api-client"
-import type { Address } from "@rarible/types"
+import type { EVMAddress } from "@rarible/types"
 import type { EthereumFunctionCall } from "@rarible/ethereum-provider"
 import type { SendFunction } from "../common/send-transaction"
 import { getRequiredWallet } from "../common/get-required-wallet"
@@ -127,7 +127,7 @@ export class ConvertWeth {
 }
 
 export class UnsupportedCurrencyConvertError extends Error {
-  constructor(contract: Address) {
+  constructor(contract: EVMAddress) {
     super(`Contract is not supported - ${contract}`)
     this.name = "UnsupportedCurrencyConvertError"
     Object.setPrototypeOf(this, UnsupportedCurrencyConvertError.prototype)

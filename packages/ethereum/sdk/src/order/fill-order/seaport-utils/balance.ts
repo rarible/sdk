@@ -1,5 +1,5 @@
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils"
 import type { BigNumber } from "@rarible/utils"
 import { createErc20Contract } from "../../contracts/erc20"
@@ -16,7 +16,7 @@ export const balanceOf = async (
   criteria?: InputCriteria,
 ): Promise<BigNumber> => {
   if (isErc721Item(item.itemType)) {
-    const erc721 = createErc721Contract(ethereum, toAddress(item.token))
+    const erc721 = createErc721Contract(ethereum, toEVMAddress(item.token))
 
     if (item.itemType === ItemType.ERC721_WITH_CRITERIA) {
       if (criteria) {
@@ -29,7 +29,7 @@ export const balanceOf = async (
     const ownerOf = await erc721.functionCall("ownerOf", item.identifierOrCriteria).call()
     return toBn(Number(ownerOf.toLowerCase() === owner.toLowerCase()))
   } else if (isErc1155Item(item.itemType)) {
-    const erc1155 = createErc1155Contract(ethereum, toAddress(item.token))
+    const erc1155 = createErc1155Contract(ethereum, toEVMAddress(item.token))
 
     if (item.itemType === ItemType.ERC1155_WITH_CRITERIA) {
       if (!criteria) {
@@ -45,9 +45,9 @@ export const balanceOf = async (
   }
 
   if (isErc20Item(item.itemType)) {
-    const erc20 = createErc20Contract(ethereum, toAddress(item.token))
+    const erc20 = createErc20Contract(ethereum, toEVMAddress(item.token))
     return toBn(await erc20.functionCall("balanceOf", owner).call())
   }
 
-  return toBn(await ethereum.getBalance(toAddress(owner)))
+  return toBn(await ethereum.getBalance(toEVMAddress(owner)))
 }

@@ -1,9 +1,9 @@
 import type { ItemId, Order, OrderId } from "@rarible/api-client"
-import type { BigNumber } from "@rarible/types/build/big-number"
+import type { BigNumber } from "@rarible/types"
 import type { Blockchain } from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import type { Platform } from "@rarible/api-client/build/models/Platform"
-import type { ContractAddress } from "@rarible/types"
+import type { UnionContractAddress } from "@rarible/api-client"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 import type { UnionPart } from "../common"
 
@@ -117,7 +117,7 @@ export interface PreparedFillInfo {
    */
   orderData: {
     platform: Platform
-    nftCollection: ContractAddress | undefined
+    nftCollection: UnionContractAddress | undefined
   }
 }
 

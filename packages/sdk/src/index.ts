@@ -1,10 +1,9 @@
-import type { ContractAddress, Maybe } from "@rarible/types"
-import type { Collection, CollectionId, ItemId } from "@rarible/api-client"
+import type { Maybe } from "@rarible/types"
+import type { Collection, CollectionId, ItemId, UnionContractAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { BlockchainWallet, RaribleSdkProvider, WalletByBlockchain } from "@rarible/sdk-wallet"
-import { WalletType } from "@rarible/sdk-wallet"
+import { WalletType, getRaribleWallet } from "@rarible/sdk-wallet"
 import { getRandomId } from "@rarible/utils"
-import { getRaribleWallet } from "@rarible/sdk-wallet"
 import type { AbstractLogger } from "@rarible/logger/build/domain"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain, isSupportedBlockchain, retry } from "@rarible/sdk-common"
@@ -35,7 +34,6 @@ import { createFlowSdk } from "./sdk-blockchains/flow"
 import { checkRoyalties } from "./common/check-royalties"
 import { getCollectionFromItemId } from "./common/utils"
 import { createAptosSdk } from "./sdk-blockchains/aptos"
-import { createEclipseSdk } from "./sdk-blockchains/eclipse"
 
 /**
  * @module
@@ -95,10 +93,12 @@ export function createRaribleSdk(
       blockchainConfig.solanaNetwork,
       config?.blockchain?.SOLANA,
     ),
-    createEclipseSdk(filterWallet(wallet, WalletType.SOLANA), apis, blockchainConfig.solanaNetwork, {
-      eclipseEndpoint: blockchainConfig.eclipseAddress,
-      ...config?.blockchain?.SOLANA,
-    }),
+    createSolanaSdk(
+      filterWallet(wallet, WalletType.SOLANA),
+      apis,
+      blockchainConfig.solanaNetwork,
+      config?.blockchain?.SOLANA,
+    ),
     createImmutablexSdk(
       filterWallet(wallet, WalletType.IMMUTABLEX),
       apis,
@@ -151,7 +151,6 @@ export type SetupMiddlewareData = {
   sdkContext: ISdkContext
   externalLogger?: AbstractLogger
 }
-
 /**
  * Create middleware controller & wrap methods
  */
@@ -305,7 +304,7 @@ export function getCollectionId(req: HasCollectionId | HasCollection): Collectio
   return req.collectionId
 }
 
-function getBlockchainCollectionId(contract: ContractAddress | CollectionId): SupportedBlockchain {
+function getBlockchainCollectionId(contract: UnionContractAddress | CollectionId): SupportedBlockchain {
   const [blockchain] = contract.split(":")
   if (!isSupportedBlockchain(blockchain)) {
     throw new Error(`Unrecognized blockchain in contract ${contract}`)

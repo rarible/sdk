@@ -1,12 +1,11 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { AbiItem } from "../../common/abi-item"
 
-export function createSudoswapRouterV1Contract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createSudoswapRouterV1Contract(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(SUDOSWAP_ROUTER_V1_ABI, address)
 }
 
-export const SUDOSWAP_ROUTER_V1_ABI: AbiItem[] = [
+export const SUDOSWAP_ROUTER_V1_ABI = [
   {
     inputs: [
       {
@@ -1115,4 +1114,4 @@ export const SUDOSWAP_ROUTER_V1_ABI: AbiItem[] = [
     //@ts-ignore
     type: "receive",
   },
-]
+] as const

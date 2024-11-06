@@ -1,28 +1,27 @@
-import { toAddress, toBigNumber } from "@rarible/types"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
+import { toBigNumber, toEVMAddress } from "@rarible/types"
 import { retry } from "../common/retry"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint, MintResponseTypeEnum } from "../nft/mint"
 import { signNft } from "../nft/sign-nft"
 import { getSendWithInjects } from "../common/send-transaction"
 import { createErc721V3Collection } from "../common/mint"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
 import { getEthereumConfig } from "../config"
 import { getApis as getApisTemplate } from "../common/apis"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
-const { providers } = createTestProviders(provider, wallet)
-const from = toAddress(wallet.getAddressString())
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
+const { providers } = createEthereumProviders(provider, wallet)
+const from = toEVMAddress(wallet.getAddressString())
 
 /**
  * @group provider/dev
  */
 describe.each(providers)("check-asset-type test", ethereum => {
   const env: EthereumNetwork = "dev-ethereum"
-  const e2eErc721ContractAddress = toAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
+  const e2eErc721ContractAddress = toEVMAddress("0x5fc5Fc8693211D29b53C2923222083a81fCEd33c")
   const config = getEthereumConfig(env)
 
   const getConfig = async () => config

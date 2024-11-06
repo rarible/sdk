@@ -1,7 +1,7 @@
 import type { UnionAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
 import { getCurrencyAssetType } from "../../common/get-currency-asset-type"

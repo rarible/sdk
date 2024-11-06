@@ -1,16 +1,19 @@
-import type Web3 from "web3"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { TezosProvider } from "@rarible/tezos-sdk"
 import type { Fcl } from "@rarible/fcl-types"
 import type { ImxWallet } from "@rarible/immutable-wallet"
+import type { Web3 } from "@rarible/web3-ethereum"
 import { Web3Ethereum } from "@rarible/web3-ethereum"
+import type { Web3 as Web3v4 } from "@rarible/web3-v4-ethereum"
+import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { EthersEthereum } from "@rarible/ethers-ethereum"
 import type { SolanaSigner } from "@rarible/solana-common"
-import { AptosSdkWallet } from "@rarible/aptos-wallet"
 import type { WalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
 import { AptosWalletCore } from "@rarible/aptos-wallet/build/wallets/wallet-core"
+import * as SdkCommon from "@rarible/sdk-common"
+
+import { AptosSdkWallet } from "@rarible/aptos-wallet"
 import type { ExternalAccount as AptosExternalAccount } from "@rarible/aptos-wallet"
-import { isObjectLike } from "@rarible/sdk-common"
 import {
   AptosWallet,
   ImmutableXWallet,
@@ -30,11 +33,18 @@ export function getRaribleWallet(provider: RaribleSdkProvider): BlockchainWallet
   if (isTezosProvider(provider)) return new TezosWallet(provider)
   if (isFlowProvider(provider)) return new FlowWallet(provider)
   if (isImxWallet(provider)) return new ImmutableXWallet(provider)
-  if (isWeb3(provider)) return new EthereumWallet(new Web3Ethereum({ web3: provider }))
   if (isEthersSigner(provider)) return new EthereumWallet(new EthersEthereum(provider))
   if (isAptosCoreWallet(provider)) return new AptosWallet(new AptosWalletCore(provider))
   if (isAptosExternalWallet(provider)) return new AptosWallet(new AptosSdkWallet(provider))
 
+  if (isWeb3(provider)) {
+    if (isWeb3v1(provider)) {
+      return new EthereumWallet(new Web3Ethereum({ web3: provider }))
+    }
+    if (isWeb3v4(provider)) {
+      return new EthereumWallet(new Web3v4Ethereum({ web3: provider }))
+    }
+  }
   throw new Error("Unsupported provider")
 }
 
@@ -66,13 +76,21 @@ function isImxWallet(x: any): x is ImxWallet {
   return "link" in x && "network" in x && "getConnectionData" in x
 }
 
+export function isWeb3v1(x: Web3 | Web3v4): x is Web3 {
+  return SdkCommon.isWeb3v1(x)
+}
+
+export function isWeb3v4(x: Web3 | Web3v4): x is Web3v4 {
+  return SdkCommon.isWeb3v4(x)
+}
+
 function isAptosExternalWallet(x: any): x is AptosExternalAccount {
-  return isObjectLike(x) && "signMessage" in x && "signAndSubmitTransaction" in x
+  return SdkCommon.isObjectLike(x) && "signMessage" in x && "signAndSubmitTransaction" in x
 }
 
 function isAptosCoreWallet(x: any): x is WalletCore {
   return (
-    isObjectLike(x) &&
+    SdkCommon.isObjectLike(x) &&
     "signAndSubmitTransaction" in x &&
     "signMessage" in x &&
     "setWallet" in x &&

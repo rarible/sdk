@@ -1,6 +1,6 @@
-import type { Web3Ethereum } from "@rarible/web3-ethereum/build"
 import { Blockchain } from "@rarible/api-client"
 import { getTestContract } from "@rarible/ethereum-sdk-test-common"
+import type { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { getEthereumConfig } from "@rarible/protocol-ethereum-sdk/build/config"
 import type { EVMSuiteSupportedBlockchain } from "../domain"
 import type { EVMKnownTestContract, EVMContractsDictionary } from "./domain"
@@ -10,11 +10,13 @@ import { ERC20Wrapped } from "./variants/erc20-wrapped"
 import { ERC721Contract } from "./variants/erc721"
 import { EVMNativeToken } from "./variants/native"
 import type { EVMContractsByBlockchain } from "./domain"
+import type { EVMDeployContractType } from "./domain"
+import type { EVMDeployableTestContract } from "./domain"
 
 export class EVMContractsTestSuite<T extends EVMSuiteSupportedBlockchain> {
   constructor(
     private readonly blockchain: T,
-    private readonly provider: Web3Ethereum,
+    private readonly provider: Web3v4Ethereum,
   ) {}
 
   getContract = <K extends EVMKnownTestContract>(type: K): EVMContractsDictionary<T>[K] => {
@@ -52,6 +54,16 @@ export class EVMContractsTestSuite<T extends EVMSuiteSupportedBlockchain> {
       }
       default:
         throw new Error("Unknown contract type")
+    }
+  }
+
+  deployContract = <K extends EVMDeployableTestContract>(type: K): Promise<EVMDeployContractType<T>[K]> => {
+    switch (type) {
+      case "erc20": {
+        return ERC20Mintable.deploy(this.blockchain, this.provider)
+      }
+      default:
+        throw new Error(`Unknown deploy contract type (${type})`)
     }
   }
 }

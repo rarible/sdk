@@ -1,8 +1,8 @@
 import type { ItemId } from "@rarible/api-client"
 import type { UnionAddress } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { BigNumber } from "@rarible/types/build/big-number"
-import type { ContractAddress } from "@rarible/types"
+import type { BigNumber } from "@rarible/types"
+import type { UnionContractAddress } from "@rarible/api-client"
 import type { AbstractPrepareResponse } from "../../../common/domain"
 
 /**
@@ -54,7 +54,7 @@ export interface PrepareTransferResponse
    *
    */
   nftData: {
-    nftCollection: ContractAddress | undefined
+    nftCollection: UnionContractAddress | undefined
   }
 }
 

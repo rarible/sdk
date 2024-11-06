@@ -378,13 +378,36 @@ export class EthersContract implements EthereumProvider.EthereumContract {
   }
 }
 
+const captureBracketsTextRegexp = /\(([^)]+)\)/
+
 export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall {
+  private fnSignature: string
   constructor(
     private readonly signer: TypedDataSigner & ethers.Signer,
     private readonly contract: Contract,
     private readonly name: string,
     private readonly args: any[],
-  ) {}
+  ) {
+    if (this.contract.estimateGas[this.name]) {
+      this.fnSignature = this.name
+    } else {
+      const fnSignature = Object.keys(this.contract.estimateGas).find(signature => {
+        if (!signature.includes(this.name)) {
+          return false
+        }
+        const argsText = signature.match(captureBracketsTextRegexp)
+        if (!argsText) {
+          return !this.args.length
+        }
+        const args = argsText[1].split(",")
+        return args.length === this.args.length
+      })
+      if (!fnSignature) {
+        throw new Error("Function signature is not found")
+      }
+      this.fnSignature = fnSignature
+    }
+  }
 
   async getCallInfo(): Promise<EthereumProvider.EthereumFunctionCallInfo> {
     let from: string | undefined
@@ -404,7 +427,7 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 
   async getData(): Promise<string> {
     try {
-      return (await this.contract.populateTransaction[this.name](...this.args)).data || "0x"
+      return (await this.contract.populateTransaction[this.fnSignature](...this.args)).data || "0x"
     } catch (e: any) {
       throw new EthereumProviderError({
         provider: Provider.ETHERS,
@@ -418,8 +441,8 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 
   async estimateGas(options?: EthereumProvider.EthereumSendOptions) {
     try {
-      const func = this.contract.estimateGas[this.name].bind(null, ...this.args)
-      const value = await func(options)
+      const fn = this.contract.estimateGas[this.fnSignature].bind(null, ...this.args)
+      const value = await fn(options)
       return value.toNumber()
     } catch (e) {
       throw new EthereumProviderError({
@@ -437,7 +460,7 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
 
   async call(options?: EthereumProvider.EthereumSendOptions): Promise<any> {
     try {
-      const func = this.contract[this.name].bind(null, ...this.args)
+      const func = this.contract[this.fnSignature].bind(null, ...this.args)
       if (options) {
         return await func(options)
       } else {
@@ -487,16 +510,10 @@ export class EthersFunctionCall implements EthereumProvider.EthereumFunctionCall
         return new EthersTransaction(tx, this.contract)
       }
 
-      const func = this.contract[this.name].bind(null, ...this.args)
-      if (options) {
-        const tx = await func(options)
-        hashValue = tx.hash
-        return new EthersTransaction(tx)
-      } else {
-        const tx = await func()
-        hashValue = tx.hash
-        return new EthersTransaction(tx)
-      }
+      const func = this.contract[this.fnSignature].bind(null, ...this.args)
+      const tx = await func(options || {})
+      hashValue = tx.hash
+      return new EthersTransaction(tx, this.contract)
     } catch (e: any) {
       let callInfo = null,
         callData = null

@@ -1,8 +1,9 @@
 import type * as ApiClient from "@rarible/api-client"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
-import type { ContractAddress, UnionAddress } from "@rarible/types"
+import type { UnionAddress } from "@rarible/types"
 import type { Action } from "@rarible/action"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
+import type { UnionContractAddress } from "@rarible/api-client"
 
 export type CreateCollectionRequest<T extends CreateCollectionBlockchains = CreateCollectionBlockchains> = {
   blockchain: T
@@ -63,7 +64,7 @@ export type CreatePrivateCollectionArguments = Omit<CreatePublicCollectionArgume
 
 export type CreateCollectionResponse = {
   tx: IBlockchainTransaction
-  address: ContractAddress
+  address: UnionContractAddress
 }
 
 export type AptosCreateCollectionTokenAsset = {

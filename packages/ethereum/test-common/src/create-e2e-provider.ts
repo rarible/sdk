@@ -1,13 +1,25 @@
-import Web3 from "web3"
+// @ts-ignore
 import Web3ProviderEngine from "web3-provider-engine"
 import Wallet from "ethereumjs-wallet"
 import { TestSubprovider } from "@rarible/test-provider"
+// @ts-ignore
 import RpcSubprovider from "web3-provider-engine/subproviders/rpc"
 import { randomWord } from "@rarible/types"
-import type { provider as Web3Provider } from "web3-core"
 
 export function createE2eWallet(pk: string = randomWord()): Wallet {
   return new Wallet(Buffer.from(fixPK(pk), "hex"))
+}
+
+class Web3ProviderEngineSync extends Web3ProviderEngine {
+  //@ts-ignore
+  constructor(opts) {
+    super(opts)
+  }
+  //@ts-ignore
+  send(payload, cb) {
+    //@ts-ignore
+    this.sendAsync(payload, cb)
+  }
 }
 
 export type E2EProviderConfig = {
@@ -19,19 +31,18 @@ export type E2EProviderConfig = {
 }
 
 export class E2EProvider {
-  readonly provider: Web3ProviderEngine
+  readonly provider: Web3ProviderEngineSync
   readonly config: E2EProviderConfig
   readonly wallet: Wallet
-  readonly web3: Web3
 
   constructor(pk: string = randomWord(), configOverride: Partial<E2EProviderConfig> = {}) {
     this.config = this.createConfig(configOverride)
     this.wallet = createE2eWallet(pk)
-    const provider = this.config.customEngine || this.createEngine(this.config.pollingInterval)
+    const provider = this.createEngine(this.config.pollingInterval)
     provider.addProvider(this.createWalletProvider())
     provider.addProvider(this.createRpcProvider())
+
     this.provider = provider
-    this.web3 = new Web3(provider as any)
   }
 
   private createConfig(override: Partial<E2EProviderConfig>) {
@@ -46,7 +57,7 @@ export class E2EProvider {
   }
 
   private createEngine(pollingInterval: number) {
-    return new Web3ProviderEngine({
+    return new Web3ProviderEngineSync({
       pollingInterval,
     })
   }
@@ -78,7 +89,7 @@ export function createE2eProvider(pk?: string, config?: Partial<E2EProviderConfi
   afterAll(() => provider.stop())
 
   return {
-    provider: provider.provider as Web3Provider,
+    provider: provider.provider as any,
     wallet: provider.wallet,
   }
 }

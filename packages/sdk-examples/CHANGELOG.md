@@ -3,21 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.13.68-fix.68](https://github.com/rarible/sdk/compare/v0.13.68-fix.67...v0.13.68-fix.68) (2024-10-28)
+## [0.13.69-beta.5](https://github.com/rarible/sdk/compare/v0.13.69-beta.4...v0.13.69-beta.5) (2024-10-22)
 
-**Note:** Version bump only for package @rarible/sdk-examples
+### Features
 
-## [0.13.68-fix.67](https://github.com/rarible/sdk/compare/v0.13.68-fix.66...v0.13.68-fix.67) (2024-10-22)
+- **PLTF-710:** web3 v4 integration provider with new types ([#675](https://github.com/rarible/sdk/issues/675)) ([e7ce3e5](https://github.com/rarible/sdk/commit/e7ce3e549c38fbf2e66f45bf3402926d3b0a1e07))
 
-**Note:** Version bump only for package @rarible/sdk-examples
+## [0.13.69-beta.4](https://github.com/rarible/sdk/compare/v0.13.68-fix.22...v0.13.69-beta.4) (2024-05-28)
 
-## [0.13.68-fix.66](https://github.com/rarible/sdk/compare/v0.13.68-fix.65...v0.13.68-fix.66) (2024-10-22)
+## [0.13.69-beta.3](https://github.com/rarible/sdk/compare/v0.13.69-beta.2...v0.13.69-beta.3) (2024-05-02)
 
-**Note:** Version bump only for package @rarible/sdk-examples
+## [0.13.69-beta.2](https://github.com/rarible/sdk/compare/v0.13.68-fix.21...v0.13.69-beta.2) (2024-05-02)
 
-## [0.13.68-fix.65](https://github.com/rarible/sdk/compare/v0.13.68-fix.64...v0.13.68-fix.65) (2024-10-21)
+### Features
 
-**Note:** Version bump only for package @rarible/sdk-examples
+- **PLTF-325:** support web3 v1 and v4 ([#598](https://github.com/rarible/sdk/issues/598)) ([782d417](https://github.com/rarible/sdk/commit/782d4170a3038a4f60f1b9ed4dafd990d79bf098))
+
+## [0.13.69-beta.1](https://github.com/rarible/sdk/compare/v0.13.69-beta.0...v0.13.69-beta.1) (2024-02-01)
+
+## [0.13.69-beta.0](https://github.com/rarible/sdk/compare/v0.13.68-fix.2...v0.13.69-beta.0) (2024-01-31)
+
+### Features
+
+- **MPX-2230:** update web3 to latest version ([75c1913](https://github.com/rarible/sdk/commit/75c19137cd770d05862005d4d75a6038ab30cc14))
+- **MPX-2230:** update web3 to latest version ([8984335](https://github.com/rarible/sdk/commit/8984335118b979e54388fa294818f68dd3e73d0a))
 
 ## [0.13.68-fix.64](https://github.com/rarible/sdk/compare/v0.13.68-fix.63...v0.13.68-fix.64) (2024-10-14)
 

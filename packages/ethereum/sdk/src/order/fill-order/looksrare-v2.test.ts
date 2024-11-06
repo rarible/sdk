@@ -1,20 +1,13 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import type { LooksRareOrder } from "@rarible/ethereum-api-client"
 import { createRaribleSdk } from "../../index"
+import { createE2eTestProvider } from "../../common/test/create-test-providers"
 import { DEV_PK_2, getE2EConfigByNetwork } from "../../common/test/test-credentials"
 
 describe.skip("looksrare v2 fill tests", () => {
-  const { provider: providerBuyer } = createE2eProvider(DEV_PK_2, getE2EConfigByNetwork("sepolia"))
-
-  const buyerWeb3 = new Web3Ethereum({
-    web3: new Web3(providerBuyer as any),
-    gas: 3000000,
-  })
+  const { web3v4Ethereum } = createE2eTestProvider(DEV_PK_2, getE2EConfigByNetwork("sepolia"))
 
   const env = "testnet" as const
-  const sdkBuyer = createRaribleSdk(buyerWeb3, env)
+  const sdkBuyer = createRaribleSdk(web3v4Ethereum, env)
 
   test("buy", async () => {
     const order = await sdkBuyer.apis.order.getValidatedOrderByHash({

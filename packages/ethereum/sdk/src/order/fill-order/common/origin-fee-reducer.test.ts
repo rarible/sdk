@@ -1,18 +1,18 @@
-import { toAddress, ZERO_ADDRESS } from "@rarible/types"
+import { toEVMAddress, EVM_ZERO_ADDRESS } from "@rarible/types"
 import { OriginFeeReducer } from "./origin-fee-reducer"
 import { ZERO_FEE_VALUE } from "./origin-fees-utils"
 
 describe("OriginFeeReducer", () => {
-  const addr1 = toAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a")
-  const addr2 = toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92")
-  const addr3 = toAddress("0x3eab6553bf4881D45834EF1E87047555c9a67773")
+  const addr1 = toEVMAddress("0xFc7b41fFC023bf3eab6553bf4881D45834EF1E8a")
+  const addr2 = toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92")
+  const addr3 = toEVMAddress("0x3eab6553bf4881D45834EF1E87047555c9a67773")
 
   test("no fees test", () => {
     const feeReducer = new OriginFeeReducer()
-    expect(feeReducer.getAddresses()).toEqual([ZERO_ADDRESS, ZERO_ADDRESS])
+    expect(feeReducer.getAddresses()).toEqual([EVM_ZERO_ADDRESS, EVM_ZERO_ADDRESS])
     const val = feeReducer.reduce([])
     expect(val).toEqual(ZERO_FEE_VALUE)
-    expect(feeReducer.getAddresses()).toEqual([ZERO_ADDRESS, ZERO_ADDRESS])
+    expect(feeReducer.getAddresses()).toEqual([EVM_ZERO_ADDRESS, EVM_ZERO_ADDRESS])
   })
 
   test("simple fees reduce test", () => {
@@ -24,7 +24,7 @@ describe("OriginFeeReducer", () => {
       },
     ])
     expect(val).toEqual("0x00000000000000000000000000000000000000000000000000000000000a0000")
-    expect(feeReducer.getAddresses()).toEqual([addr1, ZERO_ADDRESS])
+    expect(feeReducer.getAddresses()).toEqual([addr1, EVM_ZERO_ADDRESS])
 
     val = feeReducer.reduce([
       {
@@ -33,7 +33,7 @@ describe("OriginFeeReducer", () => {
       },
     ])
     expect(val).toEqual("0x0000000000000000000000000000000000000000000000000000000000640000")
-    expect(feeReducer.getAddresses()).toEqual([addr1, ZERO_ADDRESS])
+    expect(feeReducer.getAddresses()).toEqual([addr1, EVM_ZERO_ADDRESS])
 
     val = feeReducer.reduce([
       {
@@ -46,7 +46,7 @@ describe("OriginFeeReducer", () => {
       },
     ])
     expect(val).toEqual("0x00000000000000000000000000000000000000000000000000000000006e0000")
-    expect(feeReducer.getAddresses()).toEqual([addr1, ZERO_ADDRESS])
+    expect(feeReducer.getAddresses()).toEqual([addr1, EVM_ZERO_ADDRESS])
 
     val = feeReducer.reduce([
       {

@@ -1,8 +1,7 @@
-import Web3 from "web3"
 import fetch from "isomorphic-fetch"
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
 import { createRaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { readEnv } from "./read-env"
 
 export function getRaribleSDK(blockchain: string, from: string): RaribleSdk {

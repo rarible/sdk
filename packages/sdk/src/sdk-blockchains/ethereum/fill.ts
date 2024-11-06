@@ -1,6 +1,6 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { Address, BigNumber } from "@rarible/types"
-import { toAddress, toBigNumber } from "@rarible/types"
+import type { BigNumber, Maybe } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toUnionContractAddress } from "@rarible/types"
 import type {
   AmmOrderFillRequest,
   FillBatchSingleOrderRequest,
@@ -12,10 +12,9 @@ import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
-import type { Maybe } from "@rarible/types/build/maybe"
 import type { Blockchain, Order, OrderId } from "@rarible/api-client"
 import { Platform } from "@rarible/api-client"
-import type { AmmTradeInfo } from "@rarible/ethereum-api-client"
+import type { AmmTradeInfo, EVMAddress } from "@rarible/ethereum-api-client"
 import { Warning } from "@rarible/logger/build"
 import { extractBlockchain, extractId } from "@rarible/sdk-common"
 import type { TransactionData } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
@@ -175,7 +174,7 @@ export class EthereumFill {
       }
       const { contract, tokenId } = getEthereumItemId(fillRequest.itemId)
       request.assetType = {
-        contract: toAddress(contract),
+        contract: toEVMAddress(contract),
         tokenId,
       }
     }
@@ -298,7 +297,7 @@ export class EthereumFill {
         throw new Error("Wallet undefined")
       }
       const address = await this.wallet.ethereum.getFrom()
-      const ownershipId = `${order.take.type.contract}:${order.take.type.tokenId}:${toAddress(address)}`
+      const ownershipId = `${order.take.type.contract}:${order.take.type.tokenId}:${toEVMAddress(address)}`
       const ownership = await this.apis.ownership.getOwnershipById({ ownershipId })
 
       return toBigNumber(BigNumberClass.min(ownership.value, order.take.value).toFixed())
@@ -366,7 +365,9 @@ export class EthereumFill {
       orderData: {
         platform: this.getPlatform(order),
         nftCollection:
-          "contract" in nftAssetType ? convertEthereumContractAddress(nftAssetType.contract, blockchain) : undefined,
+          "contract" in nftAssetType && nftAssetType.contract !== undefined
+            ? toUnionContractAddress(nftAssetType.contract)
+            : undefined,
       },
     }
   }
@@ -518,11 +519,11 @@ export class EthereumFill {
     const order = await this.apis.order.getValidatedOrderById({ id: unionOrderId })
     const ethOrder = await getEthOrder(assertWallet(this.wallet).ethereum, order)
 
-    let from: Address
+    let from: EVMAddress
     if (input.from) {
-      from = toAddress(extractId(input.from))
+      from = toEVMAddress(extractId(input.from))
     } else if (this.wallet) {
-      from = toAddress(await this.wallet.ethereum.getFrom())
+      from = toEVMAddress(await this.wallet.ethereum.getFrom())
     } else {
       throw new Error("Request doesn't contain `from` address")
     }

@@ -1,9 +1,8 @@
-import { createE2eProvider, deployTestErc20, DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { randomAddress, toAddress, toBigNumber } from "@rarible/types"
+import { deployTestErc20, DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
+import type { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
+import { randomEVMAddress, toEVMAddress, toBigNumber } from "@rarible/types"
 import { toBn } from "@rarible/utils"
-import type { Address, Erc20AssetType } from "@rarible/ethereum-api-client"
+import type { Erc20AssetType, EVMAddress } from "@rarible/ethereum-api-client"
 import type { BigNumberValue } from "@rarible/utils/build/bn"
 import type { EthAssetType } from "@rarible/ethereum-api-client/build/models/AssetType"
 import { createRaribleSdk } from "../index"
@@ -13,10 +12,12 @@ import { createErc20Contract } from "../order/contracts/erc20"
 import type { BalanceRequestAssetType } from "./balances"
 import { Balances } from "./balances"
 import { createEthereumApis } from "./apis"
+import { createE2eTestProvider } from "./test/create-test-providers"
 import { getTestAPIKey } from "./test/test-credentials"
-import { getSendWithInjects, sentTx } from "./send-transaction"
+import { getSendWithInjects } from "./send-transaction"
 import { retry } from "./retry"
 import { getErc20AssetType } from "./asset-types"
+import { sentTx } from "./test"
 import { getNetworkFromChainId } from "./index"
 
 /**
@@ -24,9 +25,7 @@ import { getNetworkFromChainId } from "./index"
  * @group provider/dev
  */
 describe("getBalance test", () => {
-  const { provider } = createE2eProvider(DEV_PK_1)
-  const web3 = new Web3(provider)
-  const ethereum = new Web3Ethereum({ web3 })
+  const { web3v4Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
   const getApis = async () => {
     const chainId = await ethereum.getChainId()
@@ -37,7 +36,7 @@ describe("getBalance test", () => {
   const send = getSendWithInjects()
   const balances = new Balances(ethereum, send, getApis)
 
-  async function awaitBalance(address: Address, assetType: BalanceRequestAssetType, value: BigNumberValue) {
+  async function awaitBalance(address: EVMAddress, assetType: BalanceRequestAssetType, value: BigNumberValue) {
     await retry(10, 3000, async () => {
       const balance = await balances.getBalance(address, assetType)
       expect(balance.toString()).toBe(value.toString())
@@ -45,26 +44,26 @@ describe("getBalance test", () => {
   }
 
   test.concurrent("get eth balance", async () => {
-    const senderAddress = toAddress("0xC072c9889dE7206c1C18B9d9973B06B8646FC6bd")
+    const senderAddress = toEVMAddress("0xC072c9889dE7206c1C18B9d9973B06B8646FC6bd")
     const balance = await balances.getBalance(senderAddress, { assetClass: "ETH" })
     expect(balance.toString()).toBe("0")
   })
 
   test.concurrent("get non-zero eth balance", async () => {
-    const senderAddress = toAddress("0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
+    const senderAddress = toEVMAddress("0xa14FC5C72222FAce8A1BcFb416aE2571fA1a7a91")
     const balance = await balances.getBalance(senderAddress, { assetClass: "ETH" })
     expect(balance.toString()).toBe("0.00019355")
   })
 
   test("get erc20 balance", async () => {
-    const generatedAddress = randomAddress()
+    const generatedAddress = randomEVMAddress()
     const { erc20ContractAddress } = await deployAndMintErc20(ethereum, generatedAddress, "1000000000000000")
     const erc20AssetType = getErc20AssetType(erc20ContractAddress)
     await awaitBalance(generatedAddress, erc20AssetType, "0.001")
   })
 
   test("transfer eth", async () => {
-    const generatedAddress = randomAddress()
+    const generatedAddress = randomEVMAddress()
     const ethAssetType: EthAssetType = {
       assetClass: "ETH",
     }
@@ -77,8 +76,8 @@ describe("getBalance test", () => {
   })
 
   test("transfer erc20 with value", async () => {
-    const generatedAddress = randomAddress()
-    const sender = toAddress(await ethereum.getFrom())
+    const generatedAddress = randomEVMAddress()
+    const sender = toEVMAddress(await ethereum.getFrom())
     const { erc20ContractAddress } = await deployAndMintErc20(ethereum, sender, "1000000000000000")
     const erc20AssetType: Erc20AssetType = getErc20AssetType(erc20ContractAddress)
     await awaitBalance(sender, erc20AssetType, "0.001")
@@ -92,8 +91,8 @@ describe("getBalance test", () => {
   })
 
   test("transfer erc20 with valueDecimal", async () => {
-    const generatedAddress = randomAddress()
-    const sender = toAddress(await ethereum.getFrom())
+    const generatedAddress = randomEVMAddress()
+    const sender = toEVMAddress(await ethereum.getFrom())
     const { erc20ContractAddress } = await deployAndMintErc20(ethereum, sender, "1000000000000000")
     const erc20AssetType: Erc20AssetType = getErc20AssetType(erc20ContractAddress)
     await awaitBalance(sender, erc20AssetType, "0.001")
@@ -107,7 +106,7 @@ describe("getBalance test", () => {
   })
 
   test("erc-20 balance should be equal from contract", async () => {
-    const generatedAddress = randomAddress()
+    const generatedAddress = randomEVMAddress()
     const { erc20ContractAddress } = await deployAndMintErc20(ethereum, generatedAddress, "1000000000000000")
     const contract = createErc20Contract(ethereum, erc20ContractAddress)
     const erc20AssetType = getErc20AssetType(erc20ContractAddress)
@@ -121,7 +120,7 @@ describe("getBalance test", () => {
   })
 
   test("get erc-20 balance big value", async () => {
-    const generatedAddress = randomAddress()
+    const generatedAddress = randomEVMAddress()
     const { erc20ContractAddress } = await deployAndMintErc20(
       ethereum,
       generatedAddress,
@@ -132,14 +131,14 @@ describe("getBalance test", () => {
   })
 
   test("get erc-20 balance tiny value", async () => {
-    const generatedAddress = randomAddress()
+    const generatedAddress = randomEVMAddress()
     const { erc20ContractAddress } = await deployAndMintErc20(ethereum, generatedAddress, "1")
     const erc20AssetType = getErc20AssetType(erc20ContractAddress)
     await awaitBalance(generatedAddress, erc20AssetType, "0.000000000000000001")
   })
 })
 
-const randomEvmAddress = toAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
+const randomEvmAddress = toEVMAddress("0xE0c03F1a1a930331D88DaBEd59dc4Ae6d63DDEAD")
 
 const nonWorkingNetworks = ["testnet-rari", "testnet-fief", "dev-polygon"]
 const filteredUnworkingNetworks = ethereumNetworks.filter(network => !nonWorkingNetworks.includes(network))
@@ -154,11 +153,11 @@ describe.each(filteredUnworkingNetworks)("get balances each of environments", (e
   })
 })
 
-async function deployAndMintErc20(ethereum: Web3Ethereum, to: Address, value: BigNumberValue) {
+async function deployAndMintErc20(ethereum: Web3v4Ethereum, to: EVMAddress, value: BigNumberValue) {
   const erc20Contract = await deployTestErc20(ethereum.getWeb3Instance(), "TST", "TST")
   await sentTx(erc20Contract.methods.mint(to, value), { from: await ethereum.getFrom() })
   return {
     erc20Contract,
-    erc20ContractAddress: toAddress(erc20Contract.options.address),
+    erc20ContractAddress: toEVMAddress(erc20Contract.options.address),
   }
 }

@@ -1,7 +1,7 @@
 import type { EthereumTransaction } from "@rarible/ethereum-provider"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { ZERO_ADDRESS } from "@rarible/types"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
 import type { SendFunction } from "../common/send-transaction"
 import type { GetConfigByChainId } from "../config"
 import { createCryptoPunksWrapperContract } from "./contracts/cryptoPunks/cryptopunk-wrapper"
@@ -18,7 +18,7 @@ export async function approveForWrapper(
   }
   const config = await getConfig()
 
-  if (config.cryptoPunks.wrapperContract === ZERO_ADDRESS) {
+  if (config.cryptoPunks.wrapperContract === EVM_ZERO_ADDRESS) {
     throw new Error("Wrapper contract address is not defined")
   }
 

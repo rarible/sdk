@@ -1,5 +1,5 @@
 import type { EthErc20AssetType } from "@rarible/api-client"
-import type { Address, ContractAddress } from "@rarible/types"
+import type { Address, UnionContractAddress } from "@rarible/types"
 import type { BigNumberValue } from "@rarible/utils"
 import { toBn } from "@rarible/utils"
 import type { EthereumContract } from "@rarible/ethereum-provider/build"
@@ -19,7 +19,7 @@ export class ERC20<T extends EVMSuiteSupportedBlockchain> extends EVMContractBas
     super(blockchain, addressString, provider)
   }
 
-  static getAssetType(contract: ContractAddress): EthErc20AssetType {
+  static getAssetType(contract: UnionContractAddress): EthErc20AssetType {
     return {
       "@type": "ERC20",
       contract,

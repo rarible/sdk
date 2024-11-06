@@ -1,18 +1,18 @@
 import type { FlowCurrency, FlowItemId as FlowItemIdSdk } from "@rarible/flow-sdk"
 import { toFlowContractAddress } from "@rarible/flow-sdk"
-import type { CollectionId, ItemId, OrderId } from "@rarible/api-client"
+import type { CollectionId, ItemId, OrderId, UnionContractAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress, FlowAddress, UnionAddress, FlowContractAddress } from "@rarible/types"
 import {
   toBigNumber,
   toCollectionId,
-  toContractAddress,
+  toUnionContractAddress,
   toFlowAddress,
   toItemId,
   toOrderId,
   toUnionAddress,
+  isBlockchainSpecified,
 } from "@rarible/types"
-import { isBlockchainSpecified } from "@rarible/types/build/blockchains"
 import type { FlowFee } from "@rarible/flow-sdk"
 import type { UnionPart } from "../../../../types/order/common"
 import type { ParsedFlowItemIdFromUnionItemId } from "../domain"
@@ -23,7 +23,7 @@ const FLOW_COLLECTION_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z_]{3,}/
  * Get flow collection from union collection
  * @param collection - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFlowCollection(collection: ContractAddress | CollectionId): FlowContractAddress {
+export function getFlowCollection(collection: UnionContractAddress | CollectionId): FlowContractAddress {
   if (FLOW_COLLECTION_REGEXP.test(collection)) {
     const raw = collection.split(":")[1]
     return toFlowContractAddress(raw)
@@ -67,7 +67,9 @@ const FLOW_MAKER_ID_REGEXP = /^FLOW:0*x*[0-9a-f]{16}/
  */
 export function parseFlowAddressFromUnionAddress(maker: UnionAddress): FlowAddress {
   if (FLOW_MAKER_ID_REGEXP.test(maker)) {
-    return toFlowAddress(maker.split(":")[1])
+    const rawAddress = maker.split(":")[1]
+    if (!rawAddress.startsWith("0x")) return toFlowAddress(`0x${rawAddress}`)
+    return toFlowAddress(rawAddress)
   }
   throw new Error("Invalid maker")
 }
@@ -91,7 +93,7 @@ const FLOW_FT_CONTRACT_REGEXP = /^FLOW:A\.0*x*[0-9a-f]{16}\.[A-Za-z]{3,}/
  * Get fungible token name
  * @param contract - e.g. "FLOW:A.0xabcdef0123456789.ContractName", contract address can be unprefixed
  */
-export function getFungibleTokenName(contract: ContractAddress): FlowCurrency {
+export function getFungibleTokenName(contract: UnionContractAddress): FlowCurrency {
   if (FLOW_FT_CONTRACT_REGEXP.test(contract)) {
     const [, , name] = contract.split(".")
     switch (name) {
@@ -139,8 +141,8 @@ export function convertFlowItemId(itemId: FlowItemIdSdk): ItemId {
   return toItemId(`${Blockchain.FLOW}:${itemId}`)
 }
 
-export function convertFlowContractAddress(contractAddress: string): ContractAddress {
-  return toContractAddress(`${Blockchain.FLOW}:${contractAddress}`)
+export function convertFlowContractAddress(contractAddress: string): UnionContractAddress {
+  return toUnionContractAddress(`${Blockchain.FLOW}:${contractAddress}`)
 }
 
 export function convertFlowCollectionId(contractAddress: string): CollectionId {

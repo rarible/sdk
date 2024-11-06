@@ -1,7 +1,4 @@
-import { toAddress } from "@rarible/types"
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { toEVMAddress } from "@rarible/types"
 import { mintTokensToNewSudoswapPool } from "../amm/test/utils"
 import { retry } from "../../../common/retry"
 import type { SimpleAmmOrder } from "../../types"
@@ -10,24 +7,19 @@ import { DEV_PK_1, DEV_PK_2, getTestContract } from "../../../common/test/test-c
 import { createRaribleSdk } from "../../../index"
 import { getEthereumConfig } from "../../../config"
 import { getSimpleSendWithInjects } from "../../../common/send-transaction"
+import { createE2eTestProvider } from "../../../common/test/create-test-providers"
 import { makeAmmOrder, ordersToRequests } from "./test/common/utils"
-
 /**
  * @group provider/dev
  */
 describe("amm batch buy tests", () => {
-  const { provider: providerBuyer } = createE2eProvider(DEV_PK_1)
-  const { provider: providerSeller } = createE2eProvider(DEV_PK_2)
+  const { web3Ethereum: buyerWeb3 } = createE2eTestProvider(DEV_PK_1)
+  const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_2)
 
   const env = "dev-ethereum" as const
-  const web3Seller = new Web3(providerSeller)
-  const ethereumSeller = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
-  const ethereum = new Web3Ethereum({ web3: web3Seller, gas: 3000000 })
 
-  const buyerWeb3 = new Web3Ethereum({ web3: new Web3(providerBuyer), gas: 3000000 })
   const sdkBuyer = createRaribleSdk(buyerWeb3, env)
-  const sdkSeller = createRaribleSdk(ethereumSeller, env)
-
+  const sdkSeller = createRaribleSdk(ethereum, env)
   const config = getEthereumConfig(env)
   const send = getSimpleSendWithInjects()
   const sudoswapCurveAddress = getTestContract(env, "sudoswapCurve")
@@ -42,7 +34,7 @@ describe("amm batch buy tests", () => {
     const tx = await sdkBuyer.order.buyBatch(
       ordersToRequests(orders, [
         {
-          account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+          account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
           value: 100,
         },
       ]),
@@ -74,7 +66,7 @@ describe("amm batch buy tests", () => {
         amount: 1,
         originFees: [
           {
-            account: toAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
+            account: toEVMAddress("0x0d28e9Bd340e48370475553D21Bd0A95c9a60F92"),
             value: 100,
           },
         ],

@@ -1,6 +1,6 @@
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { toBn } from "@rarible/utils/build/bn"
-import type { Address, Asset, Part } from "@rarible/ethereum-api-client"
+import type { Asset, EVMAddress, Part } from "@rarible/ethereum-api-client"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import type { RaribleSdk } from "../../../../../index"
 import { delay, retry } from "../../../../../common/retry"
@@ -19,17 +19,17 @@ import { mintTokensToNewSudoswapPool } from "../../../amm/test/utils"
 import { getEndDateAfterMonth } from "../../../../test/utils"
 import { MIN_PAYMENT_VALUE_DECIMAL } from "../../../../../common/check-min-payment-value"
 
-export async function mintTestToken(sdk: RaribleSdk, erc721Contract: Address) {
+export async function mintTestToken(sdk: RaribleSdk, erc721Contract: EVMAddress) {
   const sellItem = await sdk.nft.mint({
     collection: createErc721V3Collection(erc721Contract),
     uri: "ipfs://ipfs/QmfVqzkQcKR1vCNqcZkeVVy94684hyLki7QcVzd9rmjuG5",
     royalties: [
       {
-        account: toAddress("0x8508317a912086b921F6D2532f65e343C8140Cc8"),
+        account: toEVMAddress("0x8508317a912086b921F6D2532f65e343C8140Cc8"),
         value: 1000,
       },
       {
-        account: toAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC"),
+        account: toEVMAddress("0xEE5DA6b5cDd5b5A22ECEB75b84C7864573EB4FeC"),
         value: 1000,
       },
     ],
@@ -44,7 +44,7 @@ export async function mintTestToken(sdk: RaribleSdk, erc721Contract: Address) {
 
 export async function makeRaribleV2Order(
   sdk: RaribleSdk,
-  erc721Contract: Address,
+  erc721Contract: EVMAddress,
   request?: {
     price?: string
   },
@@ -73,7 +73,7 @@ export async function makeRaribleV2Order(
 export async function makeSeaportOrder(
   sdk: RaribleSdk,
   ethereum: Ethereum,
-  erc721Contract: Address,
+  erc721Contract: EVMAddress,
   send: SendFunction,
 ) {
   const token = await mintTestToken(sdk, erc721Contract)
@@ -93,7 +93,7 @@ export async function makeSeaportOrder(
 export async function makeLooksrareOrder(
   sdk: RaribleSdk,
   ethereum: Ethereum,
-  erc721Contract: Address,
+  erc721Contract: EVMAddress,
   send: SendFunction,
   config: EthereumConfig,
 ) {
@@ -110,7 +110,7 @@ export async function makeLooksrareOrder(
       tokenId: token.tokenId,
     },
     send,
-    toAddress(config.exchange.looksrare),
+    toEVMAddress(config.exchange.looksrare),
   )
 
   return sellOrder
@@ -118,8 +118,8 @@ export async function makeLooksrareOrder(
 
 export async function makeAmmOrder(
   sdk: RaribleSdk,
-  erc721Contract: Address,
-  curveAddress: Address,
+  erc721Contract: EVMAddress,
+  curveAddress: EVMAddress,
   ethereum: Ethereum,
   send: SendFunction,
   config: EthereumConfig,
@@ -170,7 +170,7 @@ export function waitUntilOrderActive(sdk: RaribleSdk, orderHash: string) {
   })
 }
 
-export async function checkOwnerships(sdk: RaribleSdk, assets: Asset[], expectedOwner: Address) {
+export async function checkOwnerships(sdk: RaribleSdk, assets: Asset[], expectedOwner: EVMAddress) {
   await Promise.all(
     assets.map(async asset => {
       await retry(20, 2000, async () => {

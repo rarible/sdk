@@ -26,7 +26,7 @@ import type { RequestCurrency } from "../common/domain"
  *   address: "ETHEREUM:0x....",
  *   currency: {
  *			"@type": "ERC20",
- *			contract: ContractAddress,
+ *			contract: UnionContractAddress,
  * }
  *
  * @returns {Promise<BigNumberValue>}

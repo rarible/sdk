@@ -1,14 +1,15 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
+import type { Address } from "@rarible/types"
 import { createErc1155Contract } from "../order/contracts/erc1155"
 import type { SendFunction } from "../common/send-transaction"
 
 export async function transferErc1155(
   ethereum: Ethereum,
   send: SendFunction,
-  contract: Address,
-  from: Address,
-  to: Address,
+  contract: Address | EVMAddress,
+  from: Address | EVMAddress,
+  to: Address | EVMAddress,
   tokenId: string | string[],
   tokenAmount: string | string[],
 ): Promise<EthereumTransaction> {
@@ -26,9 +27,9 @@ export async function transferErc1155(
 async function sendTransaction(
   ethereum: Ethereum,
   send: SendFunction,
-  contract: Address,
-  from: Address,
-  to: Address,
+  contract: Address | EVMAddress,
+  from: Address | EVMAddress,
+  to: Address | EVMAddress,
   tokenId: string | string[],
   tokenAmount: string | string[],
 ): Promise<EthereumTransaction> {

@@ -1,6 +1,6 @@
 import * as EthereumApiClient from "@rarible/ethereum-api-client"
 import { NetworkError } from "@rarible/logger/build"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
 import { getApiConfig } from "../config/api-config"
 import type { EthereumNetwork } from "../types"
@@ -18,7 +18,6 @@ export type RaribleEthereumApis = {
   balances: EthereumApiClient.BalanceControllerApi
   gateway: EthereumApiClient.GatewayControllerApi
   nftLazyMint: EthereumApiClient.NftLazyMintControllerApi
-  auction: EthereumApiClient.AuctionControllerApi
 }
 
 export function createEthereumApis(
@@ -50,7 +49,6 @@ export function createEthereumApis(
     balances: new EthereumApiClient.BalanceControllerApi(configuration),
     gateway: new EthereumApiClient.GatewayControllerApi(configuration),
     nftLazyMint: new EthereumApiClient.NftLazyMintControllerApi(configuration),
-    auction: new EthereumApiClient.AuctionControllerApi(configuration),
   }
 }
 

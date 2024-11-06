@@ -2,7 +2,6 @@ import type { LoggableValue } from "@rarible/logger/build/domain"
 import { Blockchain } from "@rarible/api-client"
 import { toItemId, toOrderId } from "@rarible/types"
 import { DEV_PK_1, getTestContract } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { LogsLevel } from "../domain"
 import { MintType } from "../types/nft/mint/prepare"
@@ -14,14 +13,10 @@ import { convertEthereumCollectionId } from "../sdk-blockchains/ethereum/common"
 import { initProviders } from "../sdk-blockchains/ethereum/test/init-providers"
 
 describe("Logging", () => {
-  const { web31, wallet1 } = initProviders({
+  const { ethereum1: ethereum } = initProviders({
     pk1: DEV_PK_1,
   })
 
-  const ethereum = new Web3Ethereum({
-    web3: web31,
-    from: wallet1.getAddressString(),
-  })
   const ethereumWallet = new EthereumWallet(ethereum)
   const getLogger = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

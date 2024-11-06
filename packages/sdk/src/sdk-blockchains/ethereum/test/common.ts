@@ -1,5 +1,4 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
+import type { EthereumWallet } from "@rarible/sdk-wallet"
 import { Blockchain } from "@rarible/api-client"
 import { initProvider } from "./init-providers"
 
@@ -46,12 +45,8 @@ export const DEV_PK_5 = "0xb0e3767cc906a0bbbdf2e34e5038c103fa8bbcf6757151dde5328
 export const DEV_PK_6 = "0x9d5616ac28223d91045f8e568b69cdb57bc5d98aafd9399376460a5c9ac5e804"
 
 export function createEthWallet(pk: string): EthereumWallet {
-  const { web3, wallet } = initProvider(pk)
-  const ethereum = new Web3Ethereum({
-    web3: web3,
-    from: wallet.getAddressString(),
-  })
-  return new EthereumWallet(ethereum)
+  const { ethereumWallet } = initProvider(pk)
+  return ethereumWallet
 }
 
 export function createEthWallets(num: number) {

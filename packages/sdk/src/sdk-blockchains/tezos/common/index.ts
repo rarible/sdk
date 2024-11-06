@@ -10,6 +10,7 @@ import type {
   TezosXTZAssetType,
   UnionAddress,
   TezosOrderDataLegacy,
+  UnionContractAddress,
 } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type {
@@ -33,11 +34,11 @@ import type { Part } from "@rarible/tezos-common"
 import { get_ft_type } from "@rarible/tezos-common"
 import BigNumber from "bignumber.js"
 import type { Asset as TezosClientAsset, AssetType as TezosClientAssetType } from "tezos-api-client/build"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { ContractAddress, OrderId } from "@rarible/types"
-import { toCollectionId, toContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
-import type { BigNumber as RaribleBigNumber } from "@rarible/types/build/big-number"
-import { toBigNumber as toRaribleBigNumber } from "@rarible/types/build/big-number"
+import { toCollectionId, toUnionContractAddress, toItemId, toOrderId, toUnionAddress } from "@rarible/types"
+import type { BigNumber as RaribleBigNumber } from "@rarible/types"
+import { toBigNumber as toRaribleBigNumber } from "@rarible/types"
 import type { OrderForm } from "@rarible/tezos-sdk/dist/order"
 import type { Payout } from "@rarible/api-client/build/models/Payout"
 import type { UnionPart } from "../../../types/order/common"
@@ -457,21 +458,21 @@ export function convertTezosToUnionAsset(assetType: TezosClientAssetType): Asset
     case "FT": {
       return {
         "@type": "TEZOS_FT",
-        contract: convertTezosToContractAddress(assetType.contract),
+        contract: convertTezostoUnionContractAddress(assetType.contract),
         tokenId: assetType.tokenId ? toRaribleBigNumber(assetType.tokenId) : undefined,
       }
     }
     case "NFT": {
       return {
         "@type": "TEZOS_NFT",
-        contract: convertTezosToContractAddress(assetType.contract),
+        contract: convertTezostoUnionContractAddress(assetType.contract),
         tokenId: toRaribleBigNumber(assetType.tokenId),
       }
     }
     case "MT": {
       return {
         "@type": "TEZOS_MT",
-        contract: convertTezosToContractAddress(assetType.contract),
+        contract: convertTezostoUnionContractAddress(assetType.contract),
         tokenId: toRaribleBigNumber(assetType.tokenId),
       }
     }
@@ -501,7 +502,8 @@ export function convertUnionParts(parts?: Array<Payout>): Array<Part> {
   )
 }
 
-export function convertFromContractAddress(contract: ContractAddress): string {
+export function convertFromContractAddress(contract: UnionContractAddress | ContractAddress | undefined): string {
+  if (!contract) throw new Error("Contract is undefined")
   const [blockchain, tezosAddress] = contract.split(":")
   if (blockchain !== Blockchain.TEZOS) {
     throw new Error(`Not a tezos contract address: ${contract}`)
@@ -525,8 +527,8 @@ export function convertTezosItemId(itemId: string): ItemId {
   return toItemId(`${Blockchain.TEZOS}:${itemId}`)
 }
 
-export function convertTezosToContractAddress(address: string): ContractAddress {
-  return toContractAddress(`${Blockchain.TEZOS}:${address}`)
+export function convertTezostoUnionContractAddress(address: string): UnionContractAddress {
+  return toUnionContractAddress(`${Blockchain.TEZOS}:${address}`)
 }
 
 export function convertTezosToCollectionAddress(address: string): CollectionId {

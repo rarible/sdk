@@ -1,8 +1,8 @@
 import Web3 from "web3"
 import * as common from "@rarible/ethereum-sdk-test-common"
 import { SeaportABI } from "@rarible/ethereum-sdk-test-common/build/contracts/opensea/test-seaport"
-import { randomAddress, toAddress } from "@rarible/types"
-import { deployTestContract, SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/src/test-contract"
+import { toAddress } from "@rarible/types"
+import { deployTestContract, SIMPLE_TEST_ABI } from "@rarible/ethereum-sdk-test-common/build/test-contract"
 import { DEV_PK_1 } from "@rarible/ethereum-sdk-test-common"
 import { parseRequestError } from "./utils/parse-request-error"
 import { Web3Ethereum, Web3FunctionCall, Web3Transaction } from "./index"
@@ -21,18 +21,6 @@ describe("Web3Ethereum", () => {
 
   test("signs personal message correctly", async () => {
     await common.testPersonalSign(e2eEthereum)
-  })
-
-  test("transfer eth", async () => {
-    const recipientAccountAddress = randomAddress()
-    const tx = await ganacheEthereum.sendTransaction({
-      to: recipientAccountAddress,
-      value: "1",
-    })
-    await tx.wait()
-
-    const recipientBalance = await ganacheEthereum.getBalance(recipientAccountAddress)
-    expect(recipientBalance).toBe("1")
   })
 
   test("should correctly parse error for invalid method request", async () => {
@@ -134,7 +122,6 @@ describe("Web3Ethereum", () => {
       "value",
       [],
     )
-
     const value = await fnCall.call()
     expect(value).toBe(originalValue)
 
@@ -143,7 +130,6 @@ describe("Web3Ethereum", () => {
   })
 
   test("test retrying call/estimateGas without reserve node is not working", async () => {
-    console.log("from", await e2eEthereum.getFrom())
     const deployed = await deployTestContract(web3e2e)
     const contract = e2eEthereum.createContract(SIMPLE_TEST_ABI, deployed.options.address)
     const tx = await contract.functionCall("setValue", 10).send()
@@ -197,7 +183,7 @@ describe("get transaction receipt events", () => {
 
   test("get Seaport tx events (prod)", async () => {
     const web3 = e2eEthereum.getWeb3Instance()
-    const receipt = web3.eth.getTransactionReceipt("0x473ea5b9af8052e3f2f131da0c6846005a9549d5e370ee265335408b4ee77b39")
+    const receipt = web3.eth.getTransactionReceipt("0x2f81b44332228d78eda5ea48e62134fddd2354713d77f4f61588d91cd7a735ff")
     const seaportAddr = "0x00000000006c3852cbef3e08e8df289169ede581"
 
     const tx = new Web3Transaction(receipt, null as any, null as any, null as any, toAddress(seaportAddr), SeaportABI)

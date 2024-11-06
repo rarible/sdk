@@ -1,4 +1,4 @@
-import { toContractAddress, toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
+import { toUnionContractAddress, toCurrencyId, ZERO_ADDRESS } from "@rarible/types"
 import type { EthErc20AssetType, EthEthereumAssetType, TezosFTAssetType, TezosXTZAssetType } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
 import type {
@@ -23,7 +23,7 @@ describe("test getCurrencyAssetType", () => {
   test("get erc-20 asset type from asset type", async () => {
     const assetType = getCurrencyAssetType({
       "@type": "ERC20",
-      contract: toContractAddress("ETHEREUM:0x0000000000000000000000000000000000000001"),
+      contract: toUnionContractAddress("ETHEREUM:0x0000000000000000000000000000000000000001"),
     }) as EthErc20AssetType
     expect(assetType["@type"]).toEqual("ERC20")
     expect(assetType.contract).toEqual("ETHEREUM:0x0000000000000000000000000000000000000001")
@@ -151,7 +151,7 @@ describe("test getCurrencyAssetType", () => {
   test("get CurrencyId from token asset type", async () => {
     const currency = getCurrencyId({
       "@type": "CURRENCY_TOKEN",
-      contract: toContractAddress(
+      contract: toUnionContractAddress(
         `${Blockchain.APTOS}:0x000000000000000000000000000000000000000000000000000000000001234`,
       ),
     })

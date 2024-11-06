@@ -1,26 +1,23 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { getSendWithInjects } from "../common/send-transaction"
 import { getEthereumConfig } from "../config"
 import type { EthereumNetwork } from "../types"
 import { DEV_PK_1 } from "../common/test/test-credentials"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import { DeployErc721 } from "./deploy-erc721"
+
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
+const { providers } = createEthereumProviders(provider, wallet)
 
 /**
  * @group provider/dev
  */
-describe("deploy erc-721 token test", () => {
-  const { provider } = createE2eProvider(DEV_PK_1)
-  const web3 = new Web3(provider)
-  const ethereum1 = new Web3Ethereum({ web3, gas: 5000000 })
-
+describe.each(providers)("deploy erc-721 token test", ethereum => {
   const env: EthereumNetwork = "dev-ethereum"
   const config = getEthereumConfig(env)
   const getConfig = async () => config
 
   const send = getSendWithInjects()
-  const deployErc721 = new DeployErc721(ethereum1, send, getConfig)
+  const deployErc721 = new DeployErc721(ethereum, send, getConfig)
 
   test("should deploy erc721 token", async () => {
     const { tx, address } = await deployErc721.deployToken(

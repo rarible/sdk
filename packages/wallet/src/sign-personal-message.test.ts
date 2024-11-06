@@ -1,10 +1,9 @@
 // eslint-disable-next-line camelcase
 import { in_memory_provider } from "@rarible/tezos-sdk/dist/providers/in_memory/in_memory_provider"
 import * as fcl from "@onflow/fcl"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
+import { Web3Ethereum, Web3 } from "@rarible/web3-ethereum"
 import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
 import { getSolanaMockWallet, solanaTestWords } from "@rarible/solana-common/build/tests/wallets"
-import Web3 from "web3"
 import { SolanaKeypairWallet } from "@rarible/solana-wallet"
 import { EthereumWallet, FlowWallet, SolanaWallet, TezosWallet } from "./index"
 

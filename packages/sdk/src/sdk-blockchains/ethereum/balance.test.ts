@@ -1,5 +1,3 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
 import { randomAddress, toCurrencyId, toUnionAddress, ZERO_ADDRESS } from "@rarible/types"
 import { Blockchain } from "@rarible/api-client"
 import type { BigNumberValue } from "@rarible/utils"
@@ -7,7 +5,7 @@ import { toBn } from "@rarible/utils"
 import BigNumber from "bignumber.js"
 import type { EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
 import { createSdk } from "../../common/test/create-sdk"
-import { initProviders } from "./test/init-providers"
+import { createE2eTestProvider } from "./test/init-providers"
 import { convertEthereumToUnionAddress } from "./common"
 import { DEV_PK_1, POLYGON_TESTNET_SETTINGS } from "./test/common"
 import { EVMContractsTestSuite } from "./test/suite/contracts"
@@ -29,14 +27,8 @@ describe("get balance", () => {
     suiteDevETH.destroy()
   })
 
-  const { web31, wallet1 } = initProviders({
-    pk1: DEV_PK_1,
-  })
+  const { web3v4Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
-  const ethereum = new Web3Ethereum({
-    web3: web31,
-    from: wallet1.getAddressString(),
-  })
   const testSuite = new EVMContractsTestSuite(Blockchain.ETHEREUM, ethereum)
 
   test("should be the same ERC-20 balance from contract/api", async () => {
@@ -148,19 +140,12 @@ describe("get balance", () => {
 
 //@todo update polygon testnet balances
 describe.skip("get polygon balance", () => {
-  const { web31, wallet1 } = initProviders(
-    {
-      pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-    },
+  const { ethereumWallet } = createE2eTestProvider(
+    "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
     POLYGON_TESTNET_SETTINGS,
   )
 
-  const ethereum = new Web3Ethereum({
-    web3: web31,
-    from: wallet1.getAddressString(),
-  })
-
-  const sdk = createSdk(new EthereumWallet(ethereum), "testnet")
+  const sdk = createSdk(ethereumWallet, "testnet")
 
   test.concurrent("get Polygon balance", async () => {
     const walletAddress = toUnionAddress("ETHEREUM:0xc8f35463Ea36aEE234fe7EFB86373A78BF37e2A1")
@@ -180,19 +165,15 @@ describe.skip("get polygon balance", () => {
 })
 
 describe.skip("Bidding balance", () => {
-  const { web31, wallet1 } = initProviders({
-    pk1: "ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9",
-  })
+  const { ethereumWallet } = createE2eTestProvider("ded057615d97f0f1c751ea2795bc4b03bbf44844c13ab4f5e6fd976506c276b9")
 
-  const ethereum = new Web3Ethereum({ web3: web31 })
-  const wallet = new EthereumWallet(ethereum)
-  const sdk = createSdk(wallet, "development")
+  const sdk = createSdk(ethereumWallet, "development")
 
   test("Should check bidding balance & deposit & withdraw", async () => {
     const checkBalance = async (expecting: BigNumberValue | null) => {
       const balance = await sdk.balances.getBiddingBalance({
         blockchain: Blockchain.ETHEREUM,
-        walletAddress: toUnionAddress("ETHEREUM:" + wallet1.getAddressString()),
+        walletAddress: toUnionAddress(`ETHEREUM:${await ethereumWallet.ethereum.getFrom()}`),
       })
       if (expecting !== null) {
         expect(parseFloat(balance.toString())).toBeCloseTo(parseFloat(expecting.toString()), 5)

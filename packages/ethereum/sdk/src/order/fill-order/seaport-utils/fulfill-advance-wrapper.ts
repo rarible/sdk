@@ -1,6 +1,6 @@
 import type { BigNumberValue } from "@rarible/utils/build/bn"
-import { ZERO_ADDRESS } from "@rarible/types"
-import type { Address } from "@rarible/ethereum-api-client"
+import { EVM_ZERO_ADDRESS } from "@rarible/types"
+import type { EVMAddress } from "@rarible/types"
 import type { EthereumContract } from "@rarible/ethereum-provider"
 import type { ConsiderationItem, InputCriteria, Order, OrderStruct } from "./types"
 import type { BalancesAndApprovals } from "./balance-and-approval-check"
@@ -39,7 +39,7 @@ export async function getFulfillAdvancedOrderWrapperData({
   considerationCriteria: InputCriteria[]
   tips?: ConsiderationItem[]
   extraData?: string
-  seaportAddress: Address
+  seaportAddress: EVMAddress
   offererBalancesAndApprovals: BalancesAndApprovals
   fulfillerBalancesAndApprovals: BalancesAndApprovals
   offererOperator: string
@@ -95,7 +95,7 @@ export async function getFulfillAdvancedOrderWrapperData({
       ...timeBasedItemParams,
       isConsiderationItem: true,
     },
-  })[ZERO_ADDRESS]?.["0"]
+  })[EVM_ZERO_ADDRESS]?.["0"]
 
   validateStandardFulfillBalancesAndApprovals({
     offer,

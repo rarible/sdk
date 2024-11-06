@@ -1,5 +1,5 @@
 import type { Cluster } from "@solana/web3.js"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { EclipseSdk } from "@rarible/eclipse-sdk"
 import type { IApisSdk, IRaribleInternalSdk } from "../../domain"

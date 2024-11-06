@@ -1,8 +1,8 @@
-import type { Address } from "@rarible/ethereum-api-client"
+import type { EVMAddress } from "@rarible/types"
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
 import type { AbiItem } from "../../common/abi-item"
 
-export function createErc20Contract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createErc20Contract(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(erc20Abi, address)
 }
 

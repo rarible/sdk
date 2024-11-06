@@ -1,11 +1,11 @@
-import { toAddress, toBigNumber, toBinary } from "@rarible/types"
+import { toEVMAddress, toBigNumber, toBinary } from "@rarible/types"
 import type { OrderForm } from "@rarible/ethereum-api-client"
-import { createE2eProvider, createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { toBn } from "@rarible/utils"
+import { createE2eWallet } from "@rarible/ethereum-sdk-test-common"
 import { getEthereumConfig } from "../config"
 import type { ERC721RequestV3 } from "../nft/mint"
 import { mint as mintTemplate, MintResponseTypeEnum } from "../nft/mint"
-import { createTestProviders } from "../common/test/create-test-providers"
+import { createE2eTestProvider, createEthereumProviders } from "../common/test/create-test-providers"
 import { getSendWithInjects } from "../common/send-transaction"
 import { signNft as signNftTemplate } from "../nft/sign-nft"
 import { createErc721V3Collection } from "../common/mint"
@@ -20,10 +20,10 @@ import { UpsertOrder } from "./upsert-order"
 import { checkAssetType as checkAssetTypeTemplate } from "./check-asset-type"
 import { TEST_ORDER_TEMPLATE } from "./test/order"
 import { getEndDateAfterMonth } from "./test/utils"
+import { awaitOrder } from "./test/await-order"
 
-const { provider, wallet } = createE2eProvider(DEV_PK_1)
-const { providers } = createTestProviders(provider, wallet)
-
+const { provider, wallet } = createE2eTestProvider(DEV_PK_1)
+const { providers } = createEthereumProviders(provider, wallet)
 /**
  * @group provider/dev
  */
@@ -54,7 +54,7 @@ describe.each(providers)("sell", ethereum => {
   const orderSell = new OrderSell(upserter, checkAssetType)
   const e2eErc721V3ContractAddress = getTestContract(env, "erc721V3")
   const treasury = createE2eWallet()
-  const treasuryAddress = toAddress(treasury.getAddressString())
+  const treasuryAddress = toEVMAddress(treasury.getAddressString())
 
   test("create and update of v3 works", async () => {
     await testV2OrHigher("DATA_V3")
@@ -65,7 +65,7 @@ describe.each(providers)("sell", ethereum => {
   })
 
   async function testV2OrHigher(dataType: "DATA_V2" | "DATA_V3") {
-    const makerAddress = toAddress(wallet.getAddressString())
+    const makerAddress = toEVMAddress(wallet.getAddressString())
     const minted = await mint({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
       uri: "ipfs://ipfs/hash",
@@ -84,7 +84,7 @@ describe.each(providers)("sell", ethereum => {
 
     const order = await orderSell.sell({
       type: dataType,
-      maker: toAddress(wallet.getAddressString()),
+      maker: toEVMAddress(wallet.getAddressString()),
       makeAssetType: {
         assetClass: "ERC721",
         contract: minted.contract,
@@ -108,7 +108,7 @@ describe.each(providers)("sell", ethereum => {
 
     expect(order.hash).toBeTruthy()
 
-    await delay(1000)
+    await awaitOrder(await getApis(), order.hash)
 
     const nextPrice = toBigNumber(MIN_PAYMENT_VALUE.toFixed())
 
@@ -122,7 +122,7 @@ describe.each(providers)("sell", ethereum => {
   }
 
   test("create and update of v1 works", async () => {
-    const makerAddress = toAddress(wallet.getAddressString())
+    const makerAddress = toEVMAddress(wallet.getAddressString())
     const minted = await mint({
       collection: createErc721V3Collection(e2eErc721V3ContractAddress),
       uri: "ipfs://ipfs/hash",

@@ -2,7 +2,7 @@ import type * as EthereumProvider from "@rarible/ethereum-provider"
 import type { AbiItem } from "web3-utils"
 import type { TransactionReceipt } from "web3-core"
 import web3EthAbi from "web3-eth-abi"
-import web3Utils from "web3-utils"
+import * as web3Utils from "web3-utils"
 import type { Address } from "@rarible/types"
 
 export async function getContractMethodReceiptEvents(

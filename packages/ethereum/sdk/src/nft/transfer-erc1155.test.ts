@@ -1,52 +1,42 @@
-import { randomAddress, toAddress } from "@rarible/types"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
 import { awaitAll, deployTestErc1155, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { ethers } from "ethers"
-import { EthersEthereum, EthersWeb3ProviderEthereum } from "@rarible/ethers-ethereum"
 import type { Ethereum } from "@rarible/ethereum-provider"
+import { fromUtf8 } from "ethereumjs-util"
 import { isError } from "../common/is-error"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { getSendWithInjects } from "../common/send-transaction"
 import { prependProviderName } from "../order/test/prepend-provider-name"
+import { createEthereumProviders } from "../common/test/create-test-providers"
+import { sentTx } from "../common/test"
 import { transferErc1155 } from "./transfer-erc1155"
 
-const { provider, addresses, accounts } = createGanacheProvider()
-const ethersWeb3Provider = new ethers.providers.Web3Provider(provider as any)
-const web3 = new Web3(provider as any)
-const [account1] = accounts
-
-const providers = [
-  new Web3Ethereum({ web3, gas: 500000 }),
-  new EthersEthereum(new ethers.Wallet(account1.secretKey, ethersWeb3Provider)),
-  new EthersWeb3ProviderEthereum(ethersWeb3Provider),
-]
+const { provider, addresses, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache
  */
 describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
   const [from] = addresses
-  const to = randomAddress()
+  const to = randomEVMAddress()
 
   const send = getSendWithInjects()
 
   const it = awaitAll({
-    testErc1155: deployTestErc1155(web3, "TST"),
+    testErc1155: deployTestErc1155(web3v4, "TST"),
   })
 
   test(prependProviderName(ethereum, "should transfer erc1155 token"), async () => {
     const token1Id = from + "b00000000000000000000001"
     const token1Balance = "10"
-    await sentTx(it.testErc1155.methods.mint(from, token1Id, token1Balance, "123"), { from, gas: 200000 })
+    await sentTx(it.testErc1155.methods.mint(from, token1Id, token1Balance, fromUtf8("123")), { from, gas: "200000" })
 
     const senderBalance: string = await it.testErc1155.methods.balanceOf(from, token1Id).call()
     expect(senderBalance === token1Balance).toBeTruthy()
 
-    console.log("before transfer")
     const hash = await transferErc1155(
       ethereum,
       send,
-      toAddress(it.testErc1155.options.address),
+      toEVMAddress(it.testErc1155.options.address!),
       from,
       to,
       token1Id,
@@ -55,7 +45,6 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
     await hash.wait()
     expect(!!hash).toBeTruthy()
 
-    console.log("after transfer")
     const senderResultBalance: string = await it.testErc1155.methods.balanceOf(from, token1Id).call()
     expect(senderResultBalance === "5").toBeTruthy()
 
@@ -70,9 +59,18 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
       from + "b00000000000000000000004",
     ]
     const [token2Balance, token3Balance, token4Balance]: string[] = ["100", "200", "300"]
-    await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, "123"), { from: from, gas: 200000 })
-    await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, "123"), { from: from, gas: 200000 })
-    await sentTx(it.testErc1155.methods.mint(from, token4Id, token4Balance, "123"), { from: from, gas: 200000 })
+    await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, fromUtf8("123")), {
+      from: from,
+      gas: "200000",
+    })
+    await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, fromUtf8("123")), {
+      from: from,
+      gas: "200000",
+    })
+    await sentTx(it.testErc1155.methods.mint(from, token4Id, token4Balance, fromUtf8("123")), {
+      from: from,
+      gas: "200000",
+    })
 
     const [token2Balances, token3Balances, token4Balances] = [
       await it.testErc1155.methods.balanceOfBatch([from, to], [token2Id, token2Id]).call(),
@@ -86,7 +84,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
     const hash = await transferErc1155(
       ethereum,
       send,
-      toAddress(it.testErc1155.options.address),
+      toEVMAddress(it.testErc1155.options.address!),
       from,
       to,
       [token2Id, token3Id, token4Id],
@@ -114,8 +112,14 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
     async () => {
       const [token2Id, token3Id]: string[] = [from + "b00000000000000000000005", from + "b00000000000000000000006"]
       const [token2Balance, token3Balance]: string[] = ["100", "100"]
-      await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, "123"), { from: from, gas: 200000 })
-      await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, "123"), { from: from, gas: 200000 })
+      await sentTx(it.testErc1155.methods.mint(from, token2Id, token2Balance, fromUtf8("123")), {
+        from: from,
+        gas: "200000",
+      })
+      await sentTx(it.testErc1155.methods.mint(from, token3Id, token3Balance, fromUtf8("123")), {
+        from: from,
+        gas: "200000",
+      })
 
       const [token2Balances, token3Balances] = [
         await it.testErc1155.methods.balanceOfBatch([from, to], [token2Id, token2Id]).call(),
@@ -128,7 +132,7 @@ describe.each(providers)("transfer Erc1155", (ethereum: Ethereum) => {
         await transferErc1155(
           ethereum,
           send,
-          toAddress(it.testErc1155.options.address),
+          toEVMAddress(it.testErc1155.options.address!),
           from,
           to,
           [token2Id, token3Id],

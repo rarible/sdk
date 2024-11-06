@@ -1,21 +1,21 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
 import { awaitAll, deployCryptoPunks, createGanacheProvider } from "@rarible/ethereum-sdk-test-common"
-import { toAddress } from "@rarible/types"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { toEVMAddress } from "@rarible/types"
+import { getSendWithInjects } from "../common/send-transaction"
+import { sentTx } from "../common/test"
+import { createEthereumProviders } from "../common/test/create-test-providers"
 import { transferCryptoPunk } from "./transfer-crypto-punk"
+
+const { addresses, provider, wallets } = createGanacheProvider()
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache
  */
-describe("transfer crypto punks", () => {
-  const { addresses, provider } = createGanacheProvider()
+describe.each(providers)("transfer crypto punks", ethereumSeller => {
   const [sellerAddress, receipentAddress] = addresses
-  const web3 = new Web3(provider as any)
-  const ethereumSeller = new Web3Ethereum({ web3, from: sellerAddress, gas: 1000000 })
 
   const it = awaitAll({
-    punksMarket: deployCryptoPunks(web3),
+    punksMarket: deployCryptoPunks(web3v4),
   })
 
   const send = getSendWithInjects()
@@ -30,8 +30,8 @@ describe("transfer crypto punks", () => {
     const tx = await transferCryptoPunk(
       ethereumSeller,
       send,
-      toAddress(it.punksMarket.options.address),
-      toAddress(receipentAddress),
+      toEVMAddress(it.punksMarket.options.address!),
+      toEVMAddress(receipentAddress),
       0,
     )
     await tx.wait()

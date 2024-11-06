@@ -1,7 +1,8 @@
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
+import { toUnionContractAddress } from "@rarible/types"
 import type { SolanaWallet } from "@rarible/sdk-wallet"
 import { Action } from "@rarible/action"
-import { toBigNumber, toContractAddress } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainSolanaTransaction } from "@rarible/sdk-transaction"
 import type { EclipseSdk } from "@rarible/eclipse-sdk"
@@ -39,7 +40,7 @@ export class EclipseNft {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
       nftData: {
-        nftCollection: item.collection && toContractAddress(item.collection),
+        nftCollection: item.collection && toUnionContractAddress(item.collection),
       },
       submit: Action.create({
         id: "burn" as const,
@@ -81,7 +82,7 @@ export class EclipseNft {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
       nftData: {
-        nftCollection: item.collection ? toContractAddress(item.collection) : undefined,
+        nftCollection: item.collection ? toUnionContractAddress(item.collection) : undefined,
       },
       submit: Action.create({
         id: "transfer" as const,

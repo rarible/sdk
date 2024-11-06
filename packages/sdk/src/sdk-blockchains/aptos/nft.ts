@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import type { AptosSdk, SupportedNetwork as SupportedAptosNetwork } from "@rarible/aptos-sdk"
 import { Action } from "@rarible/action"
-import { toBigNumber, toContractAddress, toItemId } from "@rarible/types"
+import { toBigNumber, toUnionContractAddress, toItemId } from "@rarible/types"
 import { extractId } from "@rarible/sdk-common"
 import { BlockchainAptosTransaction } from "@rarible/sdk-transaction"
 import { Blockchain } from "@rarible/api-client"
@@ -68,7 +68,7 @@ export class AptosNft {
 
     return {
       tx: new BlockchainAptosTransaction(tx, this.network, this.sdk),
-      address: toContractAddress(`${Blockchain.APTOS}:${collectionAddress}`),
+      address: toUnionContractAddress(`${Blockchain.APTOS}:${collectionAddress}`),
     }
   }
 
@@ -123,7 +123,7 @@ export class AptosNft {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
       nftData: {
-        nftCollection: collectionId ? toContractAddress(collectionId) : undefined,
+        nftCollection: collectionId ? toUnionContractAddress(collectionId) : undefined,
       },
       submit: Action.create({
         id: "transfer" as const,
@@ -161,7 +161,7 @@ export class AptosNft {
       multiple: parseFloat(item.supply) > 1,
       maxAmount: toBigNumber(item.supply),
       nftData: {
-        nftCollection: collectionId ? toContractAddress(collectionId) : undefined,
+        nftCollection: collectionId ? toUnionContractAddress(collectionId) : undefined,
       },
       submit: Action.create({
         id: "burn" as const,

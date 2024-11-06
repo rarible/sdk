@@ -1,13 +1,13 @@
 import type { BigNumberValue } from "@rarible/utils"
 import { createWethContract } from "@rarible/protocol-ethereum-sdk/build/order/contracts/weth"
 import { toBn } from "@rarible/utils"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import type { EVMSuiteProvider, EVMSuiteSupportedBlockchain } from "../../domain"
 import { ERC20 } from "./erc20"
 
 export class ERC20Wrapped<T extends EVMSuiteSupportedBlockchain> extends ERC20<T> {
   constructor(blockchain: T, addressString: string, provider: EVMSuiteProvider<T>) {
-    super(createWethContract(provider, toAddress(addressString)), blockchain, addressString, provider)
+    super(createWethContract(provider, toEVMAddress(addressString)), blockchain, addressString, provider)
   }
 
   withdraw = async (valueDecimal: number) => {

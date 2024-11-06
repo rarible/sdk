@@ -1,52 +1,56 @@
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import Web3 from "web3"
-import { awaitAll, createGanacheProvider, deployCryptoPunks } from "@rarible/ethereum-sdk-test-common"
-import { randomAddress, toAddress } from "@rarible/types"
-import { getSendWithInjects, sentTx } from "../common/send-transaction"
+import { awaitAll, createGanacheProvider, deployCryptoPunks, DEV_PK_5 } from "@rarible/ethereum-sdk-test-common"
+import { randomEVMAddress, toEVMAddress } from "@rarible/types"
+import type { Ethereum } from "@rarible/ethereum-provider"
+import { getSendWithInjects } from "../common/send-transaction"
+import { sentTx } from "../common/test"
+import { createEthereumProviders } from "../common/test/create-test-providers"
+import { delay } from "../common/retry"
 import { approveCryptoPunk } from "./approve-crypto-punk"
+
+const { provider, addresses, wallets } = createGanacheProvider(DEV_PK_5)
+const { providers, web3v4 } = createEthereumProviders(provider, wallets[0])
 
 /**
  * @group provider/ganache
  */
-describe("approve crypto punks", () => {
-  const { addresses, provider } = createGanacheProvider()
+describe.each(providers)("approve crypto punks", (ethereum: Ethereum) => {
   const [sellerAddress] = addresses
-  const web3 = new Web3(provider as any)
-  const ethereumSeller = new Web3Ethereum({ web3, from: sellerAddress, gas: 1000000 })
 
   const it = awaitAll({
-    punksMarket: deployCryptoPunks(web3),
+    punksMarket: deployCryptoPunks(web3v4),
   })
 
   const send = getSendWithInjects()
-  const approve = approveCryptoPunk.bind(null, ethereumSeller, send)
+  const approve = approveCryptoPunk.bind(null, ethereum, send)
 
   beforeAll(async () => {
     await sentTx(it.punksMarket.methods.allInitialOwnersAssigned(), { from: sellerAddress })
     await sentTx(it.punksMarket.methods.getPunk(0), { from: sellerAddress })
   })
 
-  test("should approve", async () => {
-    const operator = randomAddress()
+  test(`[${ethereum.constructor.name}] should approve`, async () => {
+    const operator = randomEVMAddress()
 
-    const tx = await approve(toAddress(it.punksMarket.options.address), sellerAddress, operator, 0)
+    const tx = await approve(toEVMAddress(it.punksMarket.options.address!), sellerAddress, operator, 0)
     await tx?.wait()
     const offer = await it.punksMarket.methods.punksOfferedForSale(0).call()
 
     expect(offer.isForSale).toBe(true)
-    expect(offer.punkIndex).toBe("0")
+    expect(offer.punkIndex.toString()).toBe("0")
     expect(offer.seller.toLowerCase()).toBe(sellerAddress.toLowerCase())
-    expect(offer.minValue).toBe("0")
+    expect(offer.minValue.toString()).toBe("0")
     expect(offer.onlySellTo.toLowerCase()).toBe(operator.toLowerCase())
   })
 
-  test("should not approve if already approved", async () => {
-    const operator = randomAddress()
+  test(`[${ethereum.constructor.name}] should not approve if already approved`, async () => {
+    const operator = randomEVMAddress()
 
     await sentTx(it.punksMarket.methods.offerPunkForSaleToAddress(0, 0, operator), { from: sellerAddress })
 
-    const approveResult = await approve(toAddress(it.punksMarket.options.address), sellerAddress, operator, 0)
+    await delay(2000)
+    const approveResult = await approve(toEVMAddress(it.punksMarket.options.address!), sellerAddress, operator, 0)
 
+    console.log("approve", approveResult)
     expect(approveResult === undefined).toBeTruthy()
   })
 })

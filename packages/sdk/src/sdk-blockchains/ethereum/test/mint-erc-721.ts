@@ -1,16 +1,14 @@
-import type Web3 from "web3"
 import type { ItemId } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
 import { EthereumWallet } from "@rarible/sdk-wallet"
 import { getTestContract } from "@rarible/ethereum-sdk-test-common"
+import type { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import { createSdk } from "../../../common/test/create-sdk"
 import { convertEthereumCollectionId } from "../common"
 import { MintType } from "../../../types/nft/mint/prepare"
 import { awaitItemSupply } from "../../../common/test/await-item-supply"
 
-export async function mintTestERC721(web3: Web3): Promise<ItemId> {
-  const ethereum = new Web3Ethereum({ web3 })
+export async function mintTestERC721(ethereum: Web3v4Ethereum): Promise<ItemId> {
   const ethereumWallet = new EthereumWallet(ethereum)
   const sdk = createSdk(ethereumWallet, "development")
   const collectionAddress = convertEthereumCollectionId(

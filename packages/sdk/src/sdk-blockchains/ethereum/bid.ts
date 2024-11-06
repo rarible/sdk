@@ -1,11 +1,10 @@
 import type { RaribleSdk } from "@rarible/protocol-ethereum-sdk"
-import type { ContractAddress } from "@rarible/types"
-import { toAddress, toContractAddress, toWord } from "@rarible/types"
-import { toBigNumber } from "@rarible/types/build/big-number"
+import { toEVMAddress, toUnionContractAddress, toWord } from "@rarible/types"
+import { toBigNumber } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
-import type { AssetType, OrderId } from "@rarible/api-client"
+import type { AssetType, OrderId, UnionContractAddress } from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { AssetTypeRequest } from "@rarible/protocol-ethereum-sdk/build/order/check-asset-type"
 import { Action } from "@rarible/action"
@@ -160,7 +159,7 @@ export class EthereumBid {
       shouldTransferFunds: false,
       submit,
       nftData: {
-        nftCollection: toContractAddress(collection.id),
+        nftCollection: toUnionContractAddress(collection.id),
       },
     }
   }
@@ -319,18 +318,18 @@ export class UpdateBidNotSupportedForThidKindOfOrderError extends Error {
 async function getTakeAssetType(
   apis: IApisSdk,
   prepare: PrepareBidRequest,
-): Promise<{ ethAssetType: AssetTypeRequest; item?: Item; contract: ContractAddress; blockchain: EVMBlockchain }> {
+): Promise<{ ethAssetType: AssetTypeRequest; item?: Item; contract: UnionContractAddress; blockchain: EVMBlockchain }> {
   if ("itemId" in prepare) {
     const item = await apis.item.getItemById({ itemId: prepare.itemId })
     const { tokenId, contract, domain } = getEthereumItemId(item.id)
-
+    if (!item.contract) throw new Error("Contract is undefined")
     return {
       ethAssetType: {
         tokenId: tokenId,
-        contract: toAddress(contract),
+        contract: toEVMAddress(contract),
       },
       item,
-      contract: toContractAddress(item.contract),
+      contract: toUnionContractAddress(item.contract),
       blockchain: domain,
     }
   } else if ("collectionId" in prepare) {
@@ -339,7 +338,7 @@ async function getTakeAssetType(
         assetClass: "COLLECTION",
         contract: convertToEthereumAddress(prepare.collectionId),
       },
-      contract: toContractAddress(prepare.collectionId),
+      contract: toUnionContractAddress(prepare.collectionId),
       blockchain: extractEVMBlockchain(prepare.collectionId),
     }
   } else {

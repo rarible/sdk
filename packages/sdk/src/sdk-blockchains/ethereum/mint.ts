@@ -5,7 +5,7 @@ import { isErc1155v2Collection, isErc721v2Collection, isErc721v3Collection } fro
 import { MintResponseTypeEnum } from "@rarible/protocol-ethereum-sdk/build/nft/mint"
 import { CollectionStatus } from "@rarible/api-client/build/models/Collection"
 import { NftCollectionStatus } from "@rarible/ethereum-api-client/build/models/NftCollection"
-import { toAddress, toBigNumber } from "@rarible/types"
+import { toEVMAddress, toBigNumber } from "@rarible/types"
 import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
@@ -13,7 +13,7 @@ import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"
 import type { CommonNftCollection } from "@rarible/protocol-ethereum-sdk/build/common/mint"
-import type { Maybe } from "@rarible/types/build/maybe"
+import type { Maybe } from "@rarible/types"
 import type { EthereumWallet } from "@rarible/sdk-wallet"
 import type { SupportedBlockchain } from "@rarible/sdk-common"
 import { extractBlockchain } from "@rarible/sdk-common"
@@ -216,7 +216,7 @@ function toNftCollection(collection: Collection): CommonNftCollection {
   return {
     ...collection,
     status: toCollectionStatus(collection.status),
-    id: toAddress(convertToEthereumAddress(collection.id)),
+    id: toEVMAddress(convertToEthereumAddress(collection.id)),
     type: NftCollectionType[collection.type],
     owner: collection.owner ? convertToEthereumAddress(collection.owner) : undefined,
     features: collection.features?.reduce((acc, x) => {

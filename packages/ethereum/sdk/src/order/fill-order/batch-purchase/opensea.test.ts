@@ -10,35 +10,34 @@ import {
   deployTestRoyaltiesProvider,
   deployTransferProxy,
 } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { randomWord, toAddress, toBigNumber, ZERO_ADDRESS } from "@rarible/types"
-import type { Address, Asset } from "@rarible/ethereum-api-client"
+import { randomWord, toEVMAddress, toBigNumber, ZERO_ADDRESS, EVM_ZERO_ADDRESS } from "@rarible/types"
+import type { EVMAddress, Asset } from "@rarible/ethereum-api-client"
 import { toBn } from "@rarible/utils/build/bn"
 import type { BigNumber } from "@rarible/utils"
+import { Web3v4Ethereum } from "@rarible/web3-v4-ethereum"
 import type { EthereumNetwork } from "../../../types"
 import type { EthereumConfig } from "../../../config/type"
 import { getEthereumConfig } from "../../../config"
 import { id32 } from "../../../common/id"
 import { getApis as getApisTemplate } from "../../../common/apis"
-import { getSimpleSendWithInjects, sentTx } from "../../../common/send-transaction"
+import { getSimpleSendWithInjects } from "../../../common/send-transaction"
 import type { SimpleRaribleV2Order } from "../../types"
 import { signOrder } from "../../sign-order"
+import { sentTx } from "../../../common/test"
 import { BatchOrderFiller } from "./batch-purchase"
 
 describe.skip("fillOrder: Opensea orders", function () {
-  const { addresses, provider } = createGanacheProvider()
+  const { addresses, web3 } = createGanacheProvider()
   const [sender1Address, sender2Address] = addresses
-  const web3 = new Web3(provider as any)
-  const ethereum1 = new Web3Ethereum({ web3, from: sender1Address, gas: 1000000 })
-  const ethereum2 = new Web3Ethereum({ web3, from: sender2Address, gas: 1000000 })
+  const ethereum1 = new Web3v4Ethereum({ web3, from: sender1Address, gas: 1000000 })
+  const ethereum2 = new Web3v4Ethereum({ web3, from: sender2Address, gas: 1000000 })
 
   const env: EthereumNetwork = "dev-ethereum"
   const config: EthereumConfig = {
     ...getEthereumConfig(env),
     openSea: {
       metadata: id32("RARIBLE"),
-      proxyRegistry: ZERO_ADDRESS,
+      proxyRegistry: EVM_ZERO_ADDRESS,
     },
   }
   const getConfig = async () => config
@@ -65,33 +64,33 @@ describe.skip("fillOrder: Opensea orders", function () {
   beforeAll(async () => {
     await sentTx(
       it.exchangeV2.methods.__ExchangeV2_init(
-        toAddress(it.transferProxy.options.address),
-        toAddress(it.erc20TransferProxy.options.address),
+        toEVMAddress(it.transferProxy.options.address!),
+        toEVMAddress(it.erc20TransferProxy.options.address!),
         toBigNumber("100"),
         sender1Address,
-        toAddress(it.royaltiesProvider.options.address),
+        toEVMAddress(it.royaltiesProvider.options.address!),
       ),
       { from: sender1Address },
     )
 
-    await sentTx(it.transferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+    await sentTx(it.transferProxy.methods.addOperator(toEVMAddress(it.exchangeV2.options.address!)), {
       from: sender1Address,
     })
-    await sentTx(it.erc20TransferProxy.methods.addOperator(toAddress(it.exchangeV2.options.address)), {
+    await sentTx(it.erc20TransferProxy.methods.addOperator(toEVMAddress(it.exchangeV2.options.address!)), {
       from: sender1Address,
     })
-    await sentTx(it.exchangeWrapper.methods.__ExchangeWrapper_init(ZERO_ADDRESS, it.exchangeV2.options.address), {
+    await sentTx(it.exchangeWrapper.methods.__ExchangeWrapper_init(ZERO_ADDRESS, it.exchangeV2.options.address!), {
       from: sender1Address,
     })
-    config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
-    config.exchange.v1 = toAddress(it.exchangeV2.options.address)
-    config.exchange.v2 = toAddress(it.exchangeV2.options.address)
-    config.transferProxies.erc20 = toAddress(it.erc20TransferProxy.options.address)
-    config.exchange.wrapper = toAddress(it.exchangeWrapper.options.address)
+    config.exchange.wrapper = toEVMAddress(it.exchangeWrapper.options.address!)
+    config.exchange.v1 = toEVMAddress(it.exchangeV2.options.address!)
+    config.exchange.v2 = toEVMAddress(it.exchangeV2.options.address!)
+    config.transferProxies.erc20 = toEVMAddress(it.erc20TransferProxy.options.address!)
+    config.exchange.wrapper = toEVMAddress(it.exchangeWrapper.options.address!)
     // config.chainId = 17
   })
 
-  function getOrder(asset: Asset, owner: Address): SimpleRaribleV2Order {
+  function getOrder(asset: Asset, owner: EVMAddress): SimpleRaribleV2Order {
     if (asset.assetType.assetClass !== "ERC721" && asset.assetType.assetClass !== "ERC1155") {
       throw new Error("Wrong asset")
     }
@@ -99,13 +98,13 @@ describe.skip("fillOrder: Opensea orders", function () {
       make: {
         assetType: {
           assetClass: asset.assetType.assetClass,
-          contract: toAddress(asset.assetType.contract),
+          contract: toEVMAddress(asset.assetType.contract),
           tokenId: toBigNumber(asset.assetType.tokenId),
         },
         value: toBigNumber(asset.value),
       },
       maker: owner,
-      taker: ZERO_ADDRESS,
+      taker: EVM_ZERO_ADDRESS,
       take: {
         assetType: {
           assetClass: "ETH",
@@ -124,23 +123,28 @@ describe.skip("fillOrder: Opensea orders", function () {
 
   async function mintTestAssetAndReturnOrder(
     asset: Asset,
-    sender: Address,
-    receiver: Address,
+    sender: EVMAddress,
+    receiver: EVMAddress,
   ): Promise<SimpleRaribleV2Order> {
     switch (asset.assetType.assetClass) {
       case "ERC721": {
         await sentTx(it.testErc721.methods.mint(receiver, asset.assetType.tokenId, "0x"), { from: sender })
-        await sentTx(it.testErc721.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+        await sentTx(it.testErc721.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
           from: receiver,
         })
         break
       }
       case "ERC1155": {
         await sentTx(
-          it.testErc1155.methods.mint(receiver, asset.assetType.tokenId, toBn(asset.value).multipliedBy(10), "0x"),
+          it.testErc1155.methods.mint(
+            receiver,
+            asset.assetType.tokenId,
+            "0x" + toBn(asset.value).multipliedBy(10).toString(16),
+            "0x",
+          ),
           { from: sender },
         )
-        await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address, true), {
+        await sentTx(it.testErc1155.methods.setApprovalForAll(it.transferProxy.options.address!, true), {
           from: receiver,
         })
         break
@@ -153,7 +157,7 @@ describe.skip("fillOrder: Opensea orders", function () {
 
   async function getBalance(
     assetType: "ERC721" | "ERC1155",
-    userAddress: Address,
+    userAddress: EVMAddress,
     tokenId?: string,
   ): Promise<BigNumber> {
     switch (assetType) {
@@ -161,10 +165,11 @@ describe.skip("fillOrder: Opensea orders", function () {
         return toBn(await it.testErc721.methods.balanceOf(userAddress).call())
       }
       case "ERC1155": {
-        return toBn(await it.testErc1155.methods.balanceOf(userAddress, tokenId).call())
+        if (!tokenId) throw new Error("getBalance: tokenId")
+        return toBn(await it.testErc1155.methods.balanceOf(userAddress, toBn(tokenId).toString(16)).call())
       }
       default:
-        throw new Error("Should never heppen")
+        throw new Error("Should never happen")
     }
   }
 
@@ -175,7 +180,7 @@ describe.skip("fillOrder: Opensea orders", function () {
       {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address!),
           tokenId: toBigNumber(tokenIds[0]),
         },
         value: toBigNumber("2"),
@@ -188,7 +193,7 @@ describe.skip("fillOrder: Opensea orders", function () {
       {
         assetType: {
           assetClass: "ERC1155",
-          contract: toAddress(it.testErc1155.options.address),
+          contract: toEVMAddress(it.testErc1155.options.address!),
           tokenId: toBigNumber(tokenIds[1]),
         },
         value: toBigNumber("2"),
@@ -201,7 +206,7 @@ describe.skip("fillOrder: Opensea orders", function () {
       {
         assetType: {
           assetClass: "ERC721",
-          contract: toAddress(it.testErc721.options.address),
+          contract: toEVMAddress(it.testErc721.options.address!),
           tokenId: toBigNumber(tokenIds[2]),
         },
         value: toBigNumber("1"),

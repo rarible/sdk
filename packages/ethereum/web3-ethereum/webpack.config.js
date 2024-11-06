@@ -1,4 +1,5 @@
 const path = require("path")
+const webpack = require("webpack")
 
 module.exports = {
   entry: "./build/index.js",
@@ -15,8 +16,19 @@ module.exports = {
       stream: require.resolve("stream-browserify"),
       Buffer: require.resolve("buffer"),
       process: require.resolve("process/browser"),
+      zlib: require.resolve("browserify-zlib"),
+      http: require.resolve("stream-http"),
+      https: require.resolve("https-browserify"),
     },
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ["buffer", "Buffer"],
+    }),
+    new webpack.ProvidePlugin({
+      process: "process/browser",
+    }),
+  ],
   mode: "production",
   optimization: {
     minimize: true,

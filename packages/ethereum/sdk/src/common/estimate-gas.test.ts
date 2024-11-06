@@ -1,22 +1,18 @@
-import { createE2eProvider } from "@rarible/ethereum-sdk-test-common"
-import Web3 from "web3"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { toAddress } from "@rarible/types"
+import { toEVMAddress } from "@rarible/types"
 import { erc1155v2Abi } from "../nft/contracts/erc1155/v2"
 import { LogsLevel } from "../types"
 import { DEV_PK_1 } from "./test/test-credentials"
 import type { ILoggerConfig } from "./logger/logger"
 import { getSendWithInjects } from "./send-transaction"
+import { createE2eTestProvider } from "./test/create-test-providers"
 
 /**
  * @group provider/dev
  */
 describe("estimate gas before send tx", () => {
-  const { provider } = createE2eProvider(DEV_PK_1)
-  const web3 = new Web3(provider as any)
-  const ethereum = new Web3Ethereum({ web3, gas: 1000000 })
+  const { web3Ethereum: ethereum } = createE2eTestProvider(DEV_PK_1)
 
-  const erc1155Address = toAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
+  const erc1155Address = toEVMAddress("0x4733791eED7d0Cfe49eD855EC21dFE5D32447938")
   const logConfig: ILoggerConfig = {
     level: LogsLevel.ERROR,
     instance: {

@@ -1,7 +1,7 @@
+import { getNonImplementedAction, getNotImplementedFn } from "@rarible/sdk-common"
 import { MethodWithPrepare } from "../types/common"
 import type { IMint } from "../types/nft/mint"
 import type { IRaribleInternalSdk } from "../domain"
-import { getNonImplementedAction, getNotImplementedFn } from "./not-implemented"
 
 export function createUnavailableBlockchain(msg?: string): IRaribleInternalSdk {
   const nonAvailableFn = getNotImplementedFn(msg)

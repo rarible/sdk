@@ -1,12 +1,11 @@
 import type { Ethereum, EthereumContract } from "@rarible/ethereum-provider"
-import type { Address } from "@rarible/ethereum-api-client"
-import type { AbiItem } from "../../common/abi-item"
+import type { EVMAddress } from "@rarible/ethereum-api-client"
 
-export function createOpenseaProxyRegistryEthContract(ethereum: Ethereum, address?: Address): EthereumContract {
+export function createOpenseaProxyRegistryEthContract(ethereum: Ethereum, address?: EVMAddress): EthereumContract {
   return ethereum.createContract(proxyRegistryAbi, address)
 }
 
-export const proxyRegistryAbi: AbiItem[] = [
+export const proxyRegistryAbi = [
   {
     constant: true,
     inputs: [],

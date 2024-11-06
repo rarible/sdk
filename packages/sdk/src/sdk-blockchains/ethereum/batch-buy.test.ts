@@ -1,8 +1,5 @@
-import { createE2eProvider, getTestContract } from "@rarible/ethereum-sdk-test-common"
-import { Web3Ethereum } from "@rarible/web3-ethereum"
-import { EthereumWallet } from "@rarible/sdk-wallet"
+import { getTestContract } from "@rarible/ethereum-sdk-test-common"
 import { toCollectionId, toUnionAddress } from "@rarible/types"
-import Web3 from "web3"
 import { Blockchain } from "@rarible/api-client"
 import type { IRaribleSdk } from "../../index"
 import { awaitItem } from "../../common/test/await-item"
@@ -10,18 +7,14 @@ import { generateExpirationDate } from "../../common/suite/order"
 import { createSdk } from "../../common/test/create-sdk"
 import { DEV_PK_1, DEV_PK_2 } from "./test/common"
 import { convertEthereumCollectionId } from "./common"
+import { initProvider } from "./test/init-providers"
 
 describe("Batch buy", () => {
-  const { provider: providerSeller } = createE2eProvider(DEV_PK_1)
-  const { provider: providerBuyer } = createE2eProvider(DEV_PK_2)
+  const { ethereumWallet: ethereumWallet1 } = initProvider(DEV_PK_1)
+  const { ethereumWallet: ethereumWallet2 } = initProvider(DEV_PK_2)
 
-  const web31 = new Web3(providerSeller)
-  const ethereum1 = new Web3Ethereum({ web3: web31 })
-  const sdkSeller = createSdk(new EthereumWallet(ethereum1), "development")
-
-  const web32 = new Web3(providerBuyer)
-  const ethereum2 = new Web3Ethereum({ web3: web32 })
-  const sdkBuyer = createSdk(new EthereumWallet(ethereum2), "development")
+  const sdkSeller = createSdk(ethereumWallet1, "development")
+  const sdkBuyer = createSdk(ethereumWallet2, "development")
 
   test("batch buy rarible orders", async () => {
     const token1 = await mint(sdkSeller)

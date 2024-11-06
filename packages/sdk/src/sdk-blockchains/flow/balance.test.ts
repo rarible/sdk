@@ -1,6 +1,6 @@
 import { FlowWallet } from "@rarible/sdk-wallet"
 import * as fcl from "@onflow/fcl"
-import { toContractAddress, toCurrencyId, toUnionAddress } from "@rarible/types"
+import { toCurrencyId, toUnionAddress, toUnionContractAddress } from "@rarible/types"
 import type { FlowAssetTypeFt } from "@rarible/api-client/build/models/AssetType"
 import { toBn } from "@rarible/utils/build/bn"
 import { createApisSdk } from "../../common/apis"
@@ -21,13 +21,13 @@ describe("Test flow balance function", () => {
   test("Should get FT balance for account", async () => {
     const balance1 = await sdk.balances.getBalance(address, {
       "@type": "FLOW_FT",
-      contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
+      contract: toUnionContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
     })
     expect(balance1.toString()).toEqual("0.001")
 
     const balance2 = await sdk.balances.getBalance(address, {
       "@type": "FLOW_FT",
-      contract: toContractAddress("FLOW:A.0x3c5959b568896393.FUSD"),
+      contract: toUnionContractAddress("FLOW:A.0x3c5959b568896393.FUSD"),
     })
     expect(balance2.toString()).toEqual("0")
   })
@@ -36,13 +36,13 @@ describe("Test flow balance function", () => {
     const sdk = createFlowSdk(undefined, createApisSdk("prod"), "mainnet")
     const balance1 = await sdk.balances.getBalance(address, {
       "@type": "FLOW_FT",
-      contract: toContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
+      contract: toUnionContractAddress("FLOW:A.0x1654653399040a61.FlowToken"),
     })
     expect(balance1.toString()).toEqual("0.001")
 
     const balance2 = await sdk.balances.getBalance(address, {
       "@type": "FLOW_FT",
-      contract: toContractAddress("FLOW:A.0x3c5959b568896393.FUSD"),
+      contract: toUnionContractAddress("FLOW:A.0x3c5959b568896393.FUSD"),
     })
     expect(balance2.toString()).toEqual("0")
   })
@@ -66,7 +66,7 @@ describe.skip("Test flow transfer function", () => {
 
     const flowAssetType = {
       "@type": "FLOW_FT",
-      contract: toContractAddress("FLOW:A.0x7e60df042a9c0868.FlowToken"),
+      contract: toUnionContractAddress("FLOW:A.0x7e60df042a9c0868.FlowToken"),
     } as FlowAssetTypeFt
 
     const startBalance = await unionSdk.balances.getBalance(recipient, flowAssetType)
