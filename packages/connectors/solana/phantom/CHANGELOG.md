@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.68...v0.13.69-beta.6) (2024-11-06)
+
+### Features
+
+- web3 v4 wallet ([#680](https://github.com/rarible/sdk/issues/680)) ([6d5d2f3](https://github.com/rarible/sdk/commit/6d5d2f3c4a7bcbeed8c4071c45ec18f866537bdf))
+
 ## [0.13.69-beta.5](https://github.com/rarible/sdk/compare/v0.13.69-beta.4...v0.13.69-beta.5) (2024-10-22)
 
 ### Features
