@@ -7535,19 +7535,10 @@
   dependencies:
     callable-instance "^2.0.0"
 
-"@rarible/api-client@0.18.0-alpha.3":
-  version "0.18.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-0.18.0-alpha.3.tgz#2a5aa0221d4c85f316cb6a6c17e8e898b6d22446"
-  integrity sha512-kgC/eEkmYuF7MTHcmB9J9LPNL8nM7arB4jQ08qnlb56RoD4L2uP6qF3CbA8tYDobFE3IBwAPVncLxbiyVrd5nw==
-
-"@rarible/connector@^0.13.68-fix.64":
-  version "0.13.68-fix.64"
-  resolved "https://registry.yarnpkg.com/@rarible/connector/-/connector-0.13.68-fix.64.tgz#3122f2a711e76a6508d2a352b40856ea857b34e9"
-  integrity sha512-Qqgy1wiD0hyQYsJQcMDi4HuCAkc99O5yc2CU6AWrqbJ8jgvVEDn2aEEaneW6hMHxU6O/qEWeLk1BST574RTOEA==
-  dependencies:
-    "@fingerprintjs/fingerprintjs" "^3.3.6"
-    "@rarible/logger" "~0.9.12"
-    "@rarible/sdk-common" "^0.13.68-fix.64"
+"@rarible/api-client@1.111.0":
+  version "1.111.0"
+  resolved "https://registry.yarnpkg.com/@rarible/api-client/-/api-client-1.111.0.tgz#21f540e97b18f4b20abb02ebf028eaa95a8588cd"
+  integrity sha512-zlm6bAGIqnEH13w9o/Gkl9O9DXOk5KpYWs1WpzrSF9CvDQAjajyLXfCyU6hPurE/kzGlPBY0a1msB7krGUqc5w==
 
 "@rarible/eslint-config-react@~0.10.0-alpha.37":
   version "0.10.0-alpha.37"
@@ -7637,18 +7628,6 @@
   version "0.10.0-alpha.37"
   resolved "https://registry.yarnpkg.com/@rarible/prettier/-/prettier-0.10.0-alpha.37.tgz#d1de6e709c77f82ec5eab4a7183fb1e7d2bf74c5"
   integrity sha512-QbcNDtUvmcL8iR2DuOWlhqjsvGSFkiULEkwsmRz9BDVETZwitlD4uipA/sVunFW4Mg/7msIWf6tLK8I19MYE/A==
-
-"@rarible/sdk-common@^0.13.68-fix.64":
-  version "0.13.68-fix.64"
-  resolved "https://registry.yarnpkg.com/@rarible/sdk-common/-/sdk-common-0.13.68-fix.64.tgz#78f0dfcc3b46205116101f2bd69901f63a72d52b"
-  integrity sha512-9MHesKQdebZDXh47mCZ+nDJySFmA8Pom+kb2pSrKZUyfd8LXW7VNEMJ6B9dYqxq2OCaqabfM23BcmXgxf/3TeA==
-  dependencies:
-    "@rarible/api-client" "0.18.0-alpha.3"
-
-"@rarible/solana-common@^0.13.68-fix.68":
-  version "0.13.68-fix.68"
-  resolved "https://registry.yarnpkg.com/@rarible/solana-common/-/solana-common-0.13.68-fix.68.tgz#3e6e235d1d2236c36b6cd25097fa9df6cc37c3eb"
-  integrity sha512-WgPH4LPcMjs9+rpaM7DkF8oyrwE3ew9n84v6mZLVNKSXOobS3wx/jlYkn3dN2uHlVJ/D7ykZq6T3Wym4BjRZSQ==
 
 "@rarible/test-provider@~0.5.4":
   version "0.5.4"
