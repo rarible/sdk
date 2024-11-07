@@ -62,7 +62,7 @@
     "webpack-cli": "^5.1.4"
   },
   "peerDependencies": {
-    "@rarible/api-client": "0.18.0-alpha.3",
+    "@rarible/api-client": "1.111.0",
     "axios": "^0.26.1",
     "tslib": "^2.3.1"
   },

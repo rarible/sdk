@@ -26,5 +26,5 @@ export const shapeTestnetConfig: EthereumConfig = extendConfig({
     erc721: toEVMAddress("0x3fF5Bc44c8856165c0f84c66250AF5e2550813AC"),
     erc1155: toEVMAddress("0x0622Dd7f2351e9618a22968A266d79C73cF428EB"),
   },
-  weth: toEVMAddress("0x4200000000000000000000000000000000000006"),
+  weth: toEVMAddress("0x48a9b22b80f566e88f0f1dcc90ea15a8a3bae8a4"),
 })
