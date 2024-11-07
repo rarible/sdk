@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.7](https://github.com/rarible/sdk/compare/v0.13.69-beta.6...v0.13.69-beta.7) (2024-11-07)
+
+### Features
+
+- **shape:** support for shape ([#681](https://github.com/rarible/sdk/issues/681)) ([5d3be59](https://github.com/rarible/sdk/commit/5d3be59d5e9d31db4573c611c79daf701ffec0c3))
+
 ## [0.13.69-beta.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.68...v0.13.69-beta.6) (2024-11-06)
 
 ### Features

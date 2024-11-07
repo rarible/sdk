@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-thirdweb",
-  "version": "0.13.69-beta.6",
+  "version": "0.13.69-beta.7",
   "homepage": "https://docs.rarible.org/reference/getting-started",
   "license": "ISC",
   "exports": {
@@ -43,7 +43,7 @@
     "verify": "tsc"
   },
   "dependencies": {
-    "@rarible/connector": "^0.13.69-beta.6",
+    "@rarible/connector": "^0.13.69-beta.7",
     "bignumber.js": "^9.1.2",
     "thirdweb": "^5.24.0",
     "tiny-typed-emitter": "^2.1.0"

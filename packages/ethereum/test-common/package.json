@@ -1,6 +1,6 @@
 {
   "name": "@rarible/ethereum-sdk-test-common",
-  "version": "0.13.69-beta.6",
+  "version": "0.13.69-beta.7",
   "description": "",
   "keywords": [
     "ethereum",
@@ -18,8 +18,8 @@
     "verify": "tsc --noEmit --project tsconfig-build.json"
   },
   "dependencies": {
-    "@rarible/ethereum-provider": "^0.13.69-beta.6",
-    "@rarible/sdk-common": "^0.13.69-beta.6",
+    "@rarible/ethereum-provider": "^0.13.69-beta.7",
+    "@rarible/sdk-common": "^0.13.69-beta.7",
     "@rarible/test-provider": "~0.5.4",
     "@rarible/types": "~0.10.0-beta.1",
     "@types/web3-provider-engine": "^14.0.1",

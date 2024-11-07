@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.7](https://github.com/rarible/sdk/compare/v0.13.69-beta.6...v0.13.69-beta.7) (2024-11-07)
+
+**Note:** Version bump only for package @rarible/immutable-sdk
+
 ## [0.13.69-beta.6](https://github.com/rarible/sdk/compare/v0.13.68-fix.68...v0.13.69-beta.6) (2024-11-06)
 
 ### Features

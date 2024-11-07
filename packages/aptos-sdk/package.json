@@ -1,6 +1,6 @@
 {
   "name": "@rarible/aptos-sdk",
-  "version": "0.13.69-beta.6",
+  "version": "0.13.69-beta.7",
   "keywords": [
     "solana",
     "web3"
@@ -26,7 +26,7 @@
     "@rarible/utils": "~0.10.0-beta.1"
   },
   "devDependencies": {
-    "@rarible/aptos-wallet": "^0.13.69-beta.6",
+    "@rarible/aptos-wallet": "^0.13.69-beta.7",
     "@types/node-fetch": "^2.6.1",
     "form-data": "^4.0.0"
   },
