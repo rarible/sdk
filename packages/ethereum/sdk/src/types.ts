@@ -51,6 +51,8 @@ export const ethereumNetworks = [
   "testnet-oasys",
   "alephzero-testnet",
   "alephzero",
+  "shape-testnet",
+  "shape",
 ]
 
 export type EthereumNetwork = (typeof ethereumNetworks)[number]

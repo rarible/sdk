@@ -133,6 +133,10 @@ export class BlockchainEthereumTransaction<TransactionResult = undefined>
         return `https://matchscan.io/tx/${this.hash()}`
       case "match-testnet":
         return `https://testnet.matchscan.io/tx/${this.hash()}`
+      case "shape":
+        return `https://shapescan.xyz/tx/${this.hash()}`
+      case "shape-testnet":
+        return `https://explorer-sepolia.shape.network/tx/${this.hash()}`
       default:
         throw new Error("Unsupported transaction network")
     }

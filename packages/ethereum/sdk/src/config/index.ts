@@ -51,6 +51,8 @@ import { matchConfig } from "./match"
 import { matchTestnetConfig } from "./match-testnet"
 import { fivireConfig } from "./fivire"
 import { fivireTestnetConfig } from "./fivire-testnet"
+import { shapeMainnetConfig } from "./shape"
+import { shapeTestnetConfig } from "./shape-testnet"
 
 export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   mainnet: mainnetConfig,
@@ -104,6 +106,8 @@ export const configDictionary: Record<EthereumNetwork, EthereumConfig> = {
   "match-testnet": matchTestnetConfig,
   fivire: fivireConfig,
   "fivire-testnet": fivireTestnetConfig,
+  shape: shapeMainnetConfig,
+  "shape-testnet": shapeTestnetConfig,
 }
 
 export function getEthereumConfig(env: EthereumNetwork): EthereumConfig {
