@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.8](https://github.com/rarible/sdk/compare/v0.13.69-beta.7...v0.13.69-beta.8) (2024-11-08)
+
+**Note:** Version bump only for package @rarible/aptos-sdk
+
 ## [0.13.69-beta.7](https://github.com/rarible/sdk/compare/v0.13.69-beta.6...v0.13.69-beta.7) (2024-11-07)
 
 **Note:** Version bump only for package @rarible/aptos-sdk

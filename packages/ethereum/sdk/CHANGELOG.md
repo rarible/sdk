@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.8](https://github.com/rarible/sdk/compare/v0.13.69-beta.7...v0.13.69-beta.8) (2024-11-08)
+
+### Bug Fixes
+
+- legacy weth address for shape-testnet was removed ([12879f9](https://github.com/rarible/sdk/commit/12879f97fbafa22f25c06aa8e578e226bc6ec696))
+
 ## [0.13.69-beta.7](https://github.com/rarible/sdk/compare/v0.13.69-beta.6...v0.13.69-beta.7) (2024-11-07)
 
 ### Features
