@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.9](https://github.com/rarible/sdk/compare/v0.13.69-beta.8...v0.13.69-beta.9) (2024-11-08)
+
+### Bug Fixes
+
+- webpack dev server ([#682](https://github.com/rarible/sdk/issues/682)) ([b6baa13](https://github.com/rarible/sdk/commit/b6baa13c239e475007aa4291e3dd6ba3b1a03513))
+
+### Features
+
+- update deps ([7b57eec](https://github.com/rarible/sdk/commit/7b57eec1a7c733a476c6dfcdb93a81e8324202e2))
+
 ## [0.13.69-beta.8](https://github.com/rarible/sdk/compare/v0.13.69-beta.7...v0.13.69-beta.8) (2024-11-08)
 
 ### Bug Fixes

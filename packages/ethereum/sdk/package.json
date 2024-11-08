@@ -1,6 +1,6 @@
 {
   "name": "@rarible/protocol-ethereum-sdk",
-  "version": "0.13.69-beta.8",
+  "version": "0.13.69-beta.9",
   "keywords": [
     "axios",
     "typescript",
@@ -32,9 +32,9 @@
   "dependencies": {
     "@rarible/action": "~0.9.1",
     "@rarible/ethereum-api-client": "~0.2.1-beta.3",
-    "@rarible/ethereum-provider": "^0.13.69-beta.8",
+    "@rarible/ethereum-provider": "^0.13.69-beta.9",
     "@rarible/logger": "^0.9.12",
-    "@rarible/sdk-common": "^0.13.69-beta.8",
+    "@rarible/sdk-common": "^0.13.69-beta.9",
     "@rarible/utils": "~0.10.0-beta.1",
     "eth-sig-util": "^3.0.0",
     "ethereumjs-util": "^7.1.0",
@@ -42,11 +42,11 @@
     "merkletreejs": "^0.2.31"
   },
   "devDependencies": {
-    "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.8",
-    "@rarible/ethers-ethereum": "^0.13.69-beta.8",
+    "@rarible/ethereum-sdk-test-common": "^0.13.69-beta.9",
+    "@rarible/ethers-ethereum": "^0.13.69-beta.9",
     "@rarible/test-provider": "~0.5.4",
-    "@rarible/web3-ethereum": "^0.13.69-beta.8",
-    "@rarible/web3-v4-ethereum": "^0.13.69-beta.8",
+    "@rarible/web3-ethereum": "^0.13.69-beta.9",
+    "@rarible/web3-v4-ethereum": "^0.13.69-beta.9",
     "@types/jest": "27.0.2",
     "@types/node-fetch": "^2.5.11",
     "buffer": "^6.0.3",
