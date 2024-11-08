@@ -2,7 +2,7 @@ import path from "node:path"
 import NodePolyfillPlugin from "node-polyfill-webpack-plugin"
 import DotEnvPlugin from "dotenv-webpack"
 import HtmlWebpackPlugin from "html-webpack-plugin"
-import type { Configuration } from "webpack"
+import type { Configuration, WebpackPluginInstance } from "webpack"
 
 export const baseWebpackConfig: Configuration = {
   target: "web",
@@ -37,7 +37,7 @@ export const baseWebpackConfig: Configuration = {
       template: path.join(__dirname, "src", "index.html"),
       publicPath: "/",
     }),
-    new DotEnvPlugin(),
+    new DotEnvPlugin() as unknown as WebpackPluginInstance,
     new NodePolyfillPlugin(),
   ],
 }

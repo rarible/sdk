@@ -133,7 +133,11 @@
     "tslib": "^2.3.1",
     "typescript": "^5.4.5",
     "web3": "1.10.0",
-    "web3-eth-contract": "1.10.0"
+    "web3-eth-contract": "1.10.0",
+    "webpack": "^5.96.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.1.0",
+    "webpack-merge": "^5.10.0"
   },
   "packageManager": "yarn@1.22.22",
   "engines": {

@@ -82,9 +82,7 @@
     "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "stream-browserify": "^3.0.0",
-    "webpack": "^5.68.0",
     "webpack-bundle-analyzer": "^4.5.0",
-    "webpack-cli": "^5.1.4",
     "yargs": "^17.2.1"
   },
   "peerDependencies": {
