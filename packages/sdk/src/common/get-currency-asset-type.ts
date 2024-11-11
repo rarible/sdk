@@ -1,10 +1,16 @@
-import { toBigNumber, toUnionContractAddress, toCurrencyId, toItemId, ZERO_ADDRESS } from "@rarible/types"
+import { toBigNumber, toCurrencyId, toItemId, toUnionContractAddress, ZERO_ADDRESS } from "@rarible/types"
 import type * as ApiClient from "@rarible/api-client"
 import { Blockchain } from "@rarible/api-client"
-import type { AssetType, EthErc20AssetType, EthEthereumAssetType } from "@rarible/api-client/build/models/AssetType"
-import type { NativeCurrencyAssetType, TokenCurrencyAssetType } from "@rarible/api-client/build/models/AssetType"
+import type {
+  AssetType,
+  EthErc20AssetType,
+  EthEthereumAssetType,
+  NativeCurrencyAssetType,
+  TokenCurrencyAssetType,
+} from "@rarible/api-client/build/models/AssetType"
 import { extractBlockchain, extractId, isEVMBlockchain } from "@rarible/sdk-common"
 import { APT_TOKEN_TYPE, ENCODED_APT_TOKEN_TYPE } from "@rarible/aptos-sdk"
+import { ECLIPSE_NATIVE_CURRENCY_ADDRESS } from "@rarible/eclipse-sdk"
 import type { RequestCurrency, RequestCurrencyAssetType } from "./domain"
 
 export function getCurrencyAssetType(currency: RequestCurrency): RequestCurrencyAssetType {
@@ -60,6 +66,9 @@ export function convertAssetTypeToCurrencyId(id: RequestCurrencyAssetType): ApiC
   if (isNativeCurrencyAssetType(id)) {
     if (id.blockchain === Blockchain.APTOS) {
       return toCurrencyId(`${Blockchain.APTOS}:${ENCODED_APT_TOKEN_TYPE}`)
+    }
+    if (id.blockchain === Blockchain.ECLIPSE) {
+      return toCurrencyId(`${Blockchain.ECLIPSE}:${ECLIPSE_NATIVE_CURRENCY_ADDRESS}`)
     }
   }
   if (isTokenCurrencyAssetType(id)) {
