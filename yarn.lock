@@ -7240,7 +7240,7 @@
     eth-json-rpc-middleware "^8.0.1"
     json-rpc-engine "^6.1.0"
 
-"@rarible/ethereum-api-client@~0.2.1-beta.3":
+"@rarible/ethereum-api-client@0.2.1-beta.3":
   version "0.2.1-beta.3"
   resolved "https://registry.yarnpkg.com/@rarible/ethereum-api-client/-/ethereum-api-client-0.2.1-beta.3.tgz#77186b927a7250e324b8ea7c0e3f5feae9125234"
   integrity sha512-4dAl3fBNNK4l9cRxS+MhKqa7GCtu3/LEyNNvdJi/FoVxDHcOlDmTKyVS/sRi/GI2XAN1yazZ84TZSNOOKZJ25Q==
