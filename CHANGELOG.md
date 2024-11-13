@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.11](https://github.com/rarible/sdk/compare/v0.13.69-beta.10...v0.13.69-beta.11) (2024-11-13)
+
+### Bug Fixes
+
+- lockfile ([ee3f676](https://github.com/rarible/sdk/commit/ee3f676139d91cb1f0189c9842440d08cf2b648f))
+
 ## [0.13.69-beta.10](https://github.com/rarible/sdk/compare/v0.13.69-beta.9...v0.13.69-beta.10) (2024-11-13)
 
 ### Bug Fixes
