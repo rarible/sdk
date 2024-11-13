@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.13.69-beta.10](https://github.com/rarible/sdk/compare/v0.13.69-beta.9...v0.13.69-beta.10) (2024-11-13)
+
+### Bug Fixes
+
+- eth api client version ([7613a63](https://github.com/rarible/sdk/commit/7613a633b56efcd51ec09bc345695ab464e2857d))
+- **PLTF-754:** mantle create order error ([#684](https://github.com/rarible/sdk/issues/684)) ([f015b20](https://github.com/rarible/sdk/commit/f015b20b7a839cee73475ceacd65a2c592bb44e9))
+
 ## [0.13.69-beta.9](https://github.com/rarible/sdk/compare/v0.13.69-beta.8...v0.13.69-beta.9) (2024-11-08)
 
 ### Bug Fixes

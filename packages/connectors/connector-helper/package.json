@@ -1,6 +1,6 @@
 {
   "name": "@rarible/connector-helper",
-  "version": "0.13.69-beta.9",
+  "version": "0.13.69-beta.10",
   "homepage": "",
   "license": "ISC",
   "main": "build/index.js",
@@ -18,13 +18,13 @@
   "dependencies": {
     "@imtbl/imx-sdk": "^2.1.1",
     "@rarible/api-client": "1.111.0",
-    "@rarible/connector": "^0.13.69-beta.9",
-    "@rarible/connector-beacon": "^0.13.69-beta.9",
-    "@rarible/connector-fcl": "^0.13.69-beta.9",
-    "@rarible/connector-mattel": "^0.13.69-beta.9",
+    "@rarible/connector": "^0.13.69-beta.10",
+    "@rarible/connector-beacon": "^0.13.69-beta.10",
+    "@rarible/connector-fcl": "^0.13.69-beta.10",
+    "@rarible/connector-mattel": "^0.13.69-beta.10",
     "@rarible/estimate-middleware": "~0.9.6",
-    "@rarible/sdk-common": "^0.13.69-beta.9",
-    "@rarible/sdk-wallet": "^0.13.69-beta.9",
+    "@rarible/sdk-common": "^0.13.69-beta.10",
+    "@rarible/sdk-wallet": "^0.13.69-beta.10",
     "@rarible/tezos-sdk": "0.1.46"
   },
   "peerDependencies": {
