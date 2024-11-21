@@ -7367,17 +7367,33 @@
     text-encoder "^0.0.4"
     yargs "^17.2.1"
 
-"@rarible/types@^0.10.0-beta.2", "@rarible/types@~0.10.0-beta.2":
+"@rarible/types@^0.10.0-beta.2":
   version "0.10.0-beta.2"
   resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.2.tgz#19d36899ea826d200f41032640b1706997706f56"
   integrity sha512-lywiqWjkY5VBscIMPMMj65+kog/dkrfUoDX3V+788MZE86Yd9WGWixyceBCuqf0zFJKkeAoEOFuAJganjgtJPg==
   dependencies:
     "@rarible/utils" "^0.10.0-beta.2"
 
+"@rarible/types@~0.10.0-beta.3":
+  version "0.10.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@rarible/types/-/types-0.10.0-beta.3.tgz#34a5571f17ae95a7a661b3fe20c3333f0839cdf4"
+  integrity sha512-qno90XhQ4vvOsD+IQA5iX2w6tyN24cqMKp0S6vRcPbKS5IuwkG3ILlxNtMJmfC7tSEHg7CKkFBnPUPDPEQrj/g==
+  dependencies:
+    "@rarible/utils" "^0.10.0-beta.3"
+
 "@rarible/utils@^0.10.0-beta.2", "@rarible/utils@~0.10.0-beta.2":
   version "0.10.0-beta.2"
   resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.2.tgz#3f4887f90f3bf44c2d325d8ee79f0d7145e89a34"
   integrity sha512-Tgz8vQg+wUK98j3ty58/BvucX1dNViq1ZB/XTpn0YWqPf6kM8V5ZGveizNxeRacUzZ9h9B4cdERpuVXRDNTw/A==
+  dependencies:
+    bignumber.js "^9.0.0"
+    generic-type-guard "^3.7.2"
+    ts-custom-error "^3.3.1"
+
+"@rarible/utils@^0.10.0-beta.3":
+  version "0.10.0-beta.3"
+  resolved "https://registry.yarnpkg.com/@rarible/utils/-/utils-0.10.0-beta.3.tgz#83f00126b4f9c1780c80e16e4114910f5f5f875d"
+  integrity sha512-RTUDoB8adSNhtwqhYH5ds5oXuIBgorS+1dUcL0y2r10YyxeA7yey7OgVZPaasQ21GUGqgkS8ZWBW0p+l6sTXBg==
   dependencies:
     bignumber.js "^9.0.0"
     generic-type-guard "^3.7.2"
