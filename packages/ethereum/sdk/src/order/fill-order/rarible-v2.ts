@@ -41,10 +41,12 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
     const inverted = invertOrder(request.order, request.amount, maker)
     switch (request.order.data.dataType) {
       case "RARIBLE_V2_DATA_V1": {
+        const v3 = await this.shouldUseV3(request.originFees)
         inverted.data = {
-          dataType: "RARIBLE_V2_DATA_V1",
+          dataType: v3 ? "RARIBLE_V2_DATA_V3" : "RARIBLE_V2_DATA_V2",
           originFees: (request as RaribleV2OrderFillRequestV2).originFees || [],
           payouts: (request as RaribleV2OrderFillRequestV2).payouts || [],
+          isMakeFill: true, // for V1 order isMakeFill is always false, so inverted = true
         }
         break
       }
