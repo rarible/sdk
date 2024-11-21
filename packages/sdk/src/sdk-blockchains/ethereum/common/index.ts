@@ -26,7 +26,7 @@ import type {
 import { Blockchain } from "@rarible/api-client"
 import type { ContractAddress } from "@rarible/types"
 import type { EthereumNetwork } from "@rarible/protocol-ethereum-sdk/build/types"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type {
   Asset as EthereumAsset,
   AssetType as EthereumAssetType,

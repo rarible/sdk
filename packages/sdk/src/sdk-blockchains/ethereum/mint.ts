@@ -8,7 +8,7 @@ import { NftCollectionStatus } from "@rarible/ethereum-api-client/build/models/N
 import { toEVMAddress, toBigNumber } from "@rarible/types"
 import type { NftTokenId, Part } from "@rarible/ethereum-api-client"
 import { NftCollectionFeatures, NftCollectionType } from "@rarible/ethereum-api-client"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { Collection, CollectionControllerApi, Creator, Royalty } from "@rarible/api-client"
 import { Blockchain, CollectionType } from "@rarible/api-client"

@@ -8,7 +8,7 @@ import type {
   FillOrderRequest,
 } from "@rarible/protocol-ethereum-sdk/build/order/fill-order/types"
 import type { SimpleOrder } from "@rarible/protocol-ethereum-sdk/build/order/types"
-import { BigNumber as BigNumberClass } from "@rarible/utils/build/bn"
+import { BigNumber as BigNumberClass } from "@rarible/utils"
 import type { IBlockchainTransaction } from "@rarible/sdk-transaction"
 import { BlockchainEthereumTransaction } from "@rarible/sdk-transaction"
 import type { EthereumWallet } from "@rarible/sdk-wallet"

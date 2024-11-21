@@ -2,7 +2,7 @@ import type { EVMAddress } from "@rarible/ethereum-api-client"
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumberValue } from "@rarible/utils"
 import type { BigNumber, Maybe } from "@rarible/types"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type { SendFunction } from "../common/send-transaction"
 import { createErc20Contract } from "./contracts/erc20"
 

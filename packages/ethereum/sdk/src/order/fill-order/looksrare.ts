@@ -1,6 +1,6 @@
 import type { Maybe } from "@rarible/types"
 import type { Ethereum } from "@rarible/ethereum-provider"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type { AssetType, EVMAddress } from "@rarible/ethereum-api-client"
 import type { BigNumber } from "@rarible/types"
 import { EVM_ZERO_ADDRESS } from "@rarible/types"

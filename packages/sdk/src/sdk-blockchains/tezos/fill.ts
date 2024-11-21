@@ -28,7 +28,7 @@ import { buyV2, isExistsSaleOrder } from "@rarible/tezos-sdk/dist/sales/buy"
 import { accept_bid } from "@rarible/tezos-sdk/dist/bids"
 import type { AcceptBid } from "@rarible/tezos-sdk/dist/bids"
 import { Warning } from "@rarible/logger/build"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type {
   FillRequest,
   PrepareFillRequest,

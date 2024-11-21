@@ -1,4 +1,4 @@
-import type { BigNumberValue } from "@rarible/utils/build/bn"
+import type { BigNumberValue } from "@rarible/utils"
 import { BigNumber, toBn } from "@rarible/utils"
 import type { ConsiderationItem } from "./types"
 

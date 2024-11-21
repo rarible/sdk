@@ -2,7 +2,7 @@ import type { Erc1155AssetType, Erc721AssetType, EVMAddress } from "@rarible/eth
 import type { Ethereum, EthereumTransaction } from "@rarible/ethereum-provider"
 import type { BigNumber } from "@rarible/types"
 import { toEVMAddress, toBigNumber } from "@rarible/types"
-import { toBn } from "@rarible/utils/build/bn"
+import { toBn } from "@rarible/utils"
 import type { Maybe } from "@rarible/types"
 import type { CheckAssetTypeFunction, NftAssetType } from "../order/check-asset-type"
 import { getOwnershipId } from "../common/get-ownership-id"
