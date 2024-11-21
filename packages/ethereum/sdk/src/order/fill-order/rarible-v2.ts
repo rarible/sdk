@@ -113,18 +113,6 @@ export class RaribleV2OrderHandler implements OrderHandler<RaribleV2OrderFillReq
 
     const options = await this.getMatchV2Options(initial, inverted)
 
-    console.log(
-      "get tx data",
-      [
-        await this.fixForTx(initial),
-        fixSignature(initial.signature) || "0x",
-        orderToStruct(this.ethereum, inverted),
-        fixSignature(inverted.signature) || "0x",
-      ],
-      "inverted",
-      inverted,
-      options,
-    )
     return {
       functionCall,
       options,
